@@ -51,6 +51,7 @@ return [
         ],
     ],
     'active_project_days' => env('ACTIVE_PROJECT_DAYS', 7),
+    'autoremove_builds' => env('AUTOREMOVE_BUILDS', false),
     'builds_per_project' => env('BUILDS_PER_PROJECT', 0),
     'curl_localhost_prefix' => env('CURL_LOCALHOST_PREFIX', ''),
     'curl_request_localhost' => env('CURL_REQUEST_LOCALHOST', true),

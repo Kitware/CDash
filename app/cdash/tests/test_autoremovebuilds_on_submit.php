@@ -27,9 +27,20 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
 
     public function __destruct()
     {
-        if ($this->original) {
-            file_put_contents($this->config_file, $this->original);
+        $env_file = dirname(__FILE__) . '/../../../.env';
+        $handle = fopen($env_file, 'r');
+        $contents = fread($handle, filesize($env_file));
+        fclose($handle);
+        unset($handle);
+        $handle = fopen($env_file, 'w');
+        $lines = explode("\n", $contents);
+        foreach ($lines as $line) {
+            if (strpos($line, 'AUTOREMOVE_BUILDS') !== false) {
+                continue;
+            }
+            fwrite($handle, "$line\n");
         }
+        fclose($handle);
     }
 
     public function enableAutoRemoveConfigSetting()
@@ -43,7 +54,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         foreach ($lines as $line) {
             if (strpos($line, '?>') !== false) {
                 fwrite($handle, '// test config settings injected by file [' . __FILE__ . "]\n");
-                fwrite($handle, '$CDASH_AUTOREMOVE_BUILDS = \'1\';' . "\n");
+                fwrite($handle, '$CDASH_AUTOREMOVE_BUILDS = true;' . "\n");
                 fwrite($handle, '$CDASH_ASYNCHRONOUS_SUBMISSION = false;' . "\n");
             }
             if ($line != '') {
@@ -52,6 +63,8 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         }
         fclose($handle);
         unset($handle);
+
+        Artisan::call('config:migrate');
     }
 
     public function setAutoRemoveTimeFrame()

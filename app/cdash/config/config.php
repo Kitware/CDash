@@ -128,8 +128,6 @@ $CDASH_BACKUP_TIMEFRAME = '48'; // 48 hours
 $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';
 $CDASH_DEFAULT_IP_LOCATIONS = array();
 
-// Set to start the autoremoval on the first build of the day
-$CDASH_AUTOREMOVE_BUILDS = '0';
 // Google Map API
 $CDASH_GOOGLE_MAP_API_KEY = array();
 $CDASH_GOOGLE_MAP_API_KEY['localhost'] = 'ABQIAAAAT7I3XxP5nXC2xZUbg5AhLhQlpUmSySBnNeRIYFXQdqJETZJpYBStoWsCJtLvtHDiIJzsxJ953H3rgg';

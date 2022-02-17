@@ -14,17 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\Config;
-
 /** Remove builds by their group-specific auto-remove timeframe setting */
 function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
 {
     require_once 'include/pdo.php';
     require_once 'include/common.php';
 
-    $config = Config::getInstance();
-
-    if (!$force && !$config->get('CDASH_AUTOREMOVE_BUILDS')) {
+    if (!$force && !config('cdash.autoremove_builds')) {
         return;
     }
 
@@ -71,13 +67,8 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false, $echo 
     require_once 'include/common.php';
 
     @set_time_limit(0);
-    $config = Config::getInstance();
-    $remove_builds = $config->get('CDASH_AUTOREMOVE_BUILDS');
+    $remove_builds = config('cdash.autoremove_builds');
     if (!$force && !$remove_builds) {
-        return;
-    }
-
-    if (!$force && $remove_builds != '1') {
         return;
     }
 
