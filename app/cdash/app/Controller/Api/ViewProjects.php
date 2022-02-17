@@ -29,6 +29,7 @@ class ViewProjects extends \CDash\Controller\Api
         parent::__construct($db);
         $this->config = Config::getInstance();
         $this->showAllProjects = false;
+        $this->activeProjectDays = 7;
     }
 
     public function getResponse()
@@ -58,7 +59,8 @@ class ViewProjects extends \CDash\Controller\Api
         }
 
         $response['showoldtoggle'] = true;
-        if ($this->config->get('CDASH_ACTIVE_PROJECT_DAYS') == 0) {
+        $this->activeProjectDays = config('cdash.active_project_days');
+        if ($this->activeProjectDays == 0) {
             $this->showAllProjects = true;
             $response['showoldtoggle'] = false;
         } elseif (isset($_GET['allprojects']) && $_GET['allprojects'] == 1) {
@@ -159,13 +161,13 @@ class ViewProjects extends \CDash\Controller\Api
             }
 
             // Display if the project is considered active or not
-            $dayssincelastsubmission = $this->config->get('CDASH_ACTIVE_PROJECT_DAYS') + 1;
+            $dayssincelastsubmission = $this->activeProjectDays + 1;
             if ($project['last_build'] != 'NA') {
                 $dayssincelastsubmission = (time() - strtotime($project['last_build'])) / 86400;
             }
             $project['dayssincelastsubmission'] = $dayssincelastsubmission;
 
-            if ($project['last_build'] != 'NA' && $project['dayssincelastsubmission'] <= $this->config->get('CDASH_ACTIVE_PROJECT_DAYS')) {
+            if ($project['last_build'] != 'NA' && $project['dayssincelastsubmission'] <= $this->activeProjectDays) {
                 // Get the number of builds in the past 7 days
                 $submittime_UTCDate = gmdate(FMT_DATETIME, time() - 604800);
                 $num_builds_stmt = $this->db->prepare(
@@ -180,7 +182,7 @@ class ViewProjects extends \CDash\Controller\Api
                 $project['nbuilds'] = $num_builds_stmt->fetchColumn();
             }
 
-            if ($this->showAllProjects || $project['dayssincelastsubmission'] <= $this->config->get('CDASH_ACTIVE_PROJECT_DAYS')) {
+            if ($this->showAllProjects || $project['dayssincelastsubmission'] <= $this->activeProjectDays) {
                 $projects[] = $project;
             }
         }

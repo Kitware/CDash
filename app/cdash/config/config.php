@@ -135,9 +135,6 @@ $CDASH_GOOGLE_MAP_API_KEY = array();
 $CDASH_GOOGLE_MAP_API_KEY['localhost'] = 'ABQIAAAAT7I3XxP5nXC2xZUbg5AhLhQlpUmSySBnNeRIYFXQdqJETZJpYBStoWsCJtLvtHDiIJzsxJ953H3rgg';
 // Enable Google Analytics
 $CDASH_DEFAULT_GOOGLE_ANALYTICS = '';
-// How long since the last submission before considering a project inactive.
-// Set to 0 to always show all projects on viewProjects.php.
-$CDASH_ACTIVE_PROJECT_DAYS = '7'; // a week
 // Define the git command
 $CDASH_GIT_COMMAND = 'git';
 // The default git directory where the bare repositories should be created
