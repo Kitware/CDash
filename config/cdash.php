@@ -56,6 +56,7 @@ return [
     'daily_updates' => env('DAILY_UPDATES', true),
     'default_google_analytics' => env('DEFAULT_GOOGLE_ANALYTICS', ''),
     'default_project' => env('DEFAULT_PROJECT', null),
+    'delete_old_subprojects' => env('DELETE_OLD_SUBPROJECTS', true),
     'geolocate_ip_addresses' => env('GEOLOCATE_IP_ADDRESSES', true),
     'login_field' => env('LOGIN_FIELD', 'Email'),
     'slow_page_time' => env('SLOW_PAGE_TIME', 10),

@@ -171,10 +171,6 @@ $OAUTH2_PROVIDERS = [];
 // for projects with lots of subproject builds.
 $CDASH_SHOW_LAST_SUBMISSION = 1;
 
-// Whether to delete existing subprojects and/or dependencies that aren't
-// mentioned by a newly uploaded Project.xml
-$CDASH_DELETE_OLD_SUBPROJECTS = true;
-
 // How long should passwords last for? (in days)
 // Password rotation is disabled when this is set to 0.
 $CDASH_PASSWORD_EXPIRATION = 0;
