@@ -202,9 +202,6 @@ $CDASH_NOTIFY_PULL_REQUEST = true;
 // processor hosted somewhere other than the web server.
 $CDASH_REMOTE_PROCESSOR = false;
 
-// GitHub App ID for this CDash installation.
-$CDASH_GITHUB_APP_ID = null;
-
 // Location of the private key that allows this CDash installation to act
 // as a GitHub App.
 $CDASH_GITHUB_PRIVATE_KEY = dirname(__FILE__) . '/github.pem';

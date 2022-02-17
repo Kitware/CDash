@@ -333,6 +333,8 @@ class GitHubTest extends TestCase
 
         $sut->setApiClient($client);
         Config::getInstance()->set('CDASH_GITHUB_PRIVATE_KEY', __FILE__);
+        config(['cdash.github_app_id' => 12345]);
+
         return $sut;
     }
 

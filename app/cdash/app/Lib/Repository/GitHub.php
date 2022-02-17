@@ -136,7 +136,13 @@ class GitHub implements RepositoryInterface
             return false;
         }
 
-        $integrationId = $this->config->get('CDASH_GITHUB_APP_ID');
+        $integrationId = config('cdash.github_app_id');
+        if (is_null($integrationId)) {
+            if ($required) {
+                throw new \Exception('GITHUB_APP_ID is not set');
+            }
+            return false;
+        }
 
         $jwt = $this->jwtBuilder
             ->setIssuer($integrationId)
