@@ -1487,7 +1487,7 @@ class Project
                 $uploadQuotaGB = $this->UploadQuota / (1024 * 1024 * 1024);
             }
 
-            $max = $config->get('CDASH_MAX_UPLOAD_QUOTA');
+            $max = config('cdash.max_upload_quota');
             $response['UploadQuota'] = min($uploadQuotaGB, $max);
             $response['MaxUploadQuota'] = $max;
         } else {

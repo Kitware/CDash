@@ -145,8 +145,6 @@ $CDASH_P4_COMMAND = 'p4';
 $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT = '450';
 // Number of times to attempt processing a single submission before giving up
 $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS = '5';
-// Maximum per-project upload quota, in GB
-$CDASH_MAX_UPLOAD_QUOTA = '10';
 // Maximum size of large text fields, in php-strlen units, 0 for unlimited
 $CDASH_LARGE_TEXT_LIMIT = '0';
 

@@ -61,6 +61,7 @@ return [
     'github_app_id' => env('GITHUB_APP_ID', null),
     'geolocate_ip_addresses' => env('GEOLOCATE_IP_ADDRESSES', true),
     'login_field' => env('LOGIN_FIELD', 'Email'),
+    'max_upload_quota' => env('MAX_UPLOAD_QUOTA', 10),
     'slow_page_time' => env('SLOW_PAGE_TIME', 10),
     'token_duration' => env('TOKEN_DURATION', 15811200),
     'unlimited_projects' => $unlimited_projects,
