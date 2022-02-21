@@ -16,10 +16,11 @@ if (!is_array($unlimited_projects)) {
 return [
     'directory' => $cdash,
     'password' => [
-        'complexity' => 0,
-        'count' => 0,
-        'min' => 5,
-        'expires' => 0,
+        'complexity' => env('MINIMUM_PASSWORD_COMPLEXITY', 0),
+        'count' => env('PASSWORD_COMPLEXITY_COUNT', 0),
+        'min' => env('MINIMUM_PASSWORD_LENGTH', 5),
+        'expires' => env('PASSWORD_EXPIRATION', 0),
+        'unique' => env('UNIQUE_PASSWORD_COUNT', 0),
     ],
     'version' => '3.0.1',
     'registration' => [

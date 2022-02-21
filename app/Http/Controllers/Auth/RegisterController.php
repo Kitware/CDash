@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Password;
+use App\Models\Password;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Registered;
@@ -91,12 +91,15 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        if (is_null($data['institution'])) {
+            $data['institution'] = '';
+        }
         $user = User::create([
             'firstname' => $data['fname'],
             'lastname' => $data['lname'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'institution' => $data['institution'] || ''
+            'institution' => $data['institution']
         ]);
 
         $user->passwords()->save(new Password(['password' => $user->password]));
