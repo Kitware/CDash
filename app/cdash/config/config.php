@@ -96,10 +96,6 @@ $CDASH_LOG_DIRECTORY = $CDASH_ROOT_DIR . '/log';
 $CDASH_LOG_FILE = $CDASH_LOG_DIRECTORY . '/cdash.log';
 // Upload directory (absolute or relative)
 $CDASH_UPLOAD_DIRECTORY = $CDASH_ROOT_DIR . '/public/upload';
-// The relative path from the CDash 'public' dir to the $CDASH_UPLOAD_DIRECTORY,
-// used for downloading files.
-// http://<CDASH_URL>/<CDASH_DIR>/$CDASH_DOWNLOAD_RELATIVE_URL/<SHA-1>/<FILENAME>
-$CDASH_DOWNLOAD_RELATIVE_URL = 'upload';
 // Should normal user allowed to create projects
 $CDASH_USER_CREATE_PROJECTS = false;
 // Backup timeframe.

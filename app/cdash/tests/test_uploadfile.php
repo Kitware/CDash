@@ -80,7 +80,7 @@ class UploadFileTestCase extends KWWebTestCase
 
         // Make sure we can download the file and its contents don't change
         // during the download.
-        $url = "{$this->url}/{$this->config('CDASH_DOWNLOAD_RELATIVE_URL')}/{$this->Sha1Sum}/CMakeCache.txt";
+        $url = "{$this->url}/upload/{$this->Sha1Sum}/CMakeCache.txt";
         $tmp_file = sys_get_temp_dir() . '/CMakeCache.txt';
 
         $client = $this->getGuzzleClient();
