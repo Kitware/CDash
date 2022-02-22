@@ -228,7 +228,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                 return;
             }
 
-            $threshold = $this->config->get('CDASH_LARGE_TEXT_LIMIT');
+            $threshold = config('cdash.large_text_limit');
             if ($threshold > 0) {
                 $chunk_size = $threshold / 2;
                 foreach (['StdOutput', 'StdError'] as $field) {

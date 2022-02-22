@@ -62,6 +62,7 @@ return [
     'delete_old_subprojects' => env('DELETE_OLD_SUBPROJECTS', true),
     'github_app_id' => env('GITHUB_APP_ID', null),
     'geolocate_ip_addresses' => env('GEOLOCATE_IP_ADDRESSES', true),
+    'large_text_limit' => env('LARGE_TEXT_LIMIT', 0),
     'login_field' => env('LOGIN_FIELD', 'Email'),
     'max_upload_quota' => env('MAX_UPLOAD_QUOTA', 10),
     'slow_page_time' => env('SLOW_PAGE_TIME', 10),
