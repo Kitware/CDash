@@ -121,13 +121,8 @@ class Database extends Singleton
     public function logPdoError($error_info)
     {
         if (isset($error_info[2]) && $error_info[0] !== '00000') {
-            $critical_pdo_errors = Config::getInstance()->get('CDASH_CRITICAL_PDO_ERRORS');
             $e = new \RuntimeException($error_info[2]);
             Log::getInstance()->error($e);
-            if (in_array($error_info[1], $critical_pdo_errors)) {
-                http_response_code(500);
-                exit();
-            }
         }
     }
 }

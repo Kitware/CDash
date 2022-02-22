@@ -47,9 +47,6 @@ $CDASH_DB_TYPE = 'mysql';
 // Must be one of host, unix_socket
 $CDASH_DB_CONNECTION_TYPE = 'host';
 
-// PDO error codes which should result in an internal server error
-$CDASH_CRITICAL_PDO_ERRORS = array();
-
 // host for Selenium testing
 $CDASH_SELENIUM_HUB='localhost';
 
