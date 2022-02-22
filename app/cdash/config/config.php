@@ -135,11 +135,6 @@ $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS = '5';
 //    'domain'            => 'https://my.gitlab.example'
 $OAUTH2_PROVIDERS = [];
 
-// Should we show the last submission for a project or subproject?
-// Disabling this feature can improve rendering performance of index.php
-// for projects with lots of subproject builds.
-$CDASH_SHOW_LAST_SUBMISSION = 1;
-
 // Whether or not to use Memcache for certain pages
 $CDASH_MEMCACHE_ENABLED = false;
 

@@ -801,8 +801,7 @@ class Project
     /** Get the last submission of the subproject*/
     public function GetLastSubmission()
     {
-        $config = Config::getInstance();
-        if (!$config->get('CDASH_SHOW_LAST_SUBMISSION')) {
+        if (!config('cdash.show_last_submission')) {
             return false;
         }
 

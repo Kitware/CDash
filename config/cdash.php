@@ -65,6 +65,7 @@ return [
     'large_text_limit' => env('LARGE_TEXT_LIMIT', 0),
     'login_field' => env('LOGIN_FIELD', 'Email'),
     'max_upload_quota' => env('MAX_UPLOAD_QUOTA', 10),
+    'show_last_submission' => env('SHOW_LAST_SUBMISSION', true),
     'slow_page_time' => env('SLOW_PAGE_TIME', 10),
     'token_duration' => env('TOKEN_DURATION', 15811200),
     'unlimited_projects' => $unlimited_projects,
