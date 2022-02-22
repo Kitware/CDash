@@ -32,6 +32,7 @@ $CDASH_DB_TYPE = 'mysql';
 $CDASH_DB_NAME = 'cdash4simpletest';
 $CDASH_DB_PASS = 'my_fake_cdash_db_password';
 $CDASH_DB_LOGIN = 'my_fake_cdash_db_user';
+$CDASH_COOKIE_EXPIRATION_TIME = '7200';
 $CDASH_EMAIL_SMTP_HOST = 'cdash_smtp_host';
 $CDASH_EMAIL_SMTP_LOGIN = 'cdash_smtp_user';
 $CDASH_EMAIL_SMTP_PASS = 'cdash_smtp_password';
@@ -72,6 +73,7 @@ EOT;
 MIX_APP_URL="${APP_URL}"
 EOT;
         $this->assertContains($expected, $actual);
+        $this->assertContains('SESSION_LIFETIME=120', $actual);
         $this->assertContains('MAIL_HOST=cdash_smtp_host', $actual);
         $this->assertContains('MAIL_PASSWORD=cdash_smtp_password', $actual);
         $this->assertContains('MAIL_USERNAME=cdash_smtp_user', $actual);

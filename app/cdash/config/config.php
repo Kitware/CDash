@@ -80,8 +80,6 @@ $CDASH_ASYNC_WORKERS = 1;
 $CDASH_USE_SENDGRID = false;
 // API Key for SendGrid
 $CDASH_SENDGRID_API_KEY = null;
-// Duration of the cookie session (in seconds)
-$CDASH_COOKIE_EXPIRATION_TIME = '3600';
 // Using HTTPS protocol to access CDash
 $CDASH_USE_HTTPS = '0';
 // Name of the server running CDash.
