@@ -3,8 +3,6 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-use CDash\Config;
-
 require_once(dirname(__FILE__).'/cdash_test_case.php');
 require_once 'include/common.php';
 require_once 'include/pdo.php';
@@ -21,7 +19,6 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
     }
     public function testOpenCoverCoverage()
     {
-        Config::getInstance()->set('CDASH_TESTING_RENAME_LOGS', true);
         // Do the POST submission to get a pending buildid.
         $post_result = $this->post($this->url."/submit.php", array(
             "project" => "SubProjectExample",
@@ -72,8 +69,6 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
     }
     public function testOpenCoverCoverageWithDataJson()
     {
-        Config::getInstance()->set('CDASH_TESTING_RENAME_LOGS', true);
-
         // Do the POST submission to get a pending buildid.
         $post_result = $this->post($this->url."/submit.php", array(
             "project" => "SubProjectExample",

@@ -90,15 +90,6 @@ if(CDASH_USE_SELENIUM)
   find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php vendor/bin)
 endif(CDASH_USE_SELENIUM)
 
-option(CDASH_TESTING_RENAME_LOGS
-  "If on, kw_web_tester::deleteLog renames cdash.log instead of deleting it"
-  OFF)
-if(CDASH_TESTING_RENAME_LOGS)
-  set(rename_logs "true")
-else()
-  set(rename_logs "false")
-endif()
-
 if (CDASH_USE_REDIS_QUEUE)
   set(CDASH_BERNARD_SUBMISSION "true")
   set(CDASH_BERNARD_DRIVER "new \\Bernard\\Driver\\PredisDriver(new \\Predis\\Client('tcp://localhost'))")
@@ -120,7 +111,6 @@ date_default_timezone_set('America/New_York');
 $CDASH_DB_NAME = 'cdash4simpletest';
 $CDASH_TESTING_MODE = true;
 $CDASH_REGISTRATION_EMAIL_VERIFY = false;
-$CDASH_TESTING_RENAME_LOGS = ${rename_logs};
 $CDASH_DB_HOST = '${CDASH_DB_HOST}';
 $CDASH_DB_LOGIN = '${CDASH_DB_LOGIN}';
 $CDASH_DB_PORT = '${CDASH_DB_PORT}';

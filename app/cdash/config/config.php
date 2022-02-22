@@ -50,8 +50,6 @@ $CDASH_DB_CONNECTION_TYPE = 'host';
 // host for Selenium testing
 $CDASH_SELENIUM_HUB='localhost';
 
-$CDASH_TESTING_RENAME_LOGS = false;
-
 /**
   * If a Bernard Driver is available then CDASH_BERNARD_SUBMISSION can be enabled
   * to allow processing of submissions to take place in the background on other

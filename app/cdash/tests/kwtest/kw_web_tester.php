@@ -169,16 +169,8 @@ class KWWebTestCase extends WebTestCase
     public function deleteLog($filename)
     {
         if (file_exists($filename)) {
-            $config = Config::getInstance();
-
-            if ($config->get('CDASH_TESTING_RENAME_LOGS')) {
-                // Rename to a random name to keep for later inspection:
-                //
-                rename($filename, $config->get('CDASH_LOG_DIRECTORY') . '/cdash.' . microtime(true) . '.' . bin2hex(random_bytes(2)) . '.log');
-            } else {
-                // Delete file:
-                cdash_testsuite_unlink($filename);
-            }
+            // Delete file:
+            cdash_testsuite_unlink($filename);
         }
     }
 
