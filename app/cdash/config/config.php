@@ -50,7 +50,6 @@ $CDASH_DB_CONNECTION_TYPE = 'host';
 // host for Selenium testing
 $CDASH_SELENIUM_HUB='localhost';
 
-$CDASH_TESTING_MODE = false;
 $CDASH_TESTING_RENAME_LOGS = false;
 
 /**

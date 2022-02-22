@@ -35,14 +35,8 @@ class ConfigTest extends CDashTestCase
     public function testGetSet()
     {
         $config = Config::getInstance();
-        $testing_mode = $config->get('CDASH_TESTING_MODE');
-        $config->set('CDASH_TESTING_MODE', '5544332211abc');
         $config->set('THIS_IS_NOT_A_THING', 'ABCDEFGH');
-
-        $this->assertEquals('5544332211abc', $config->get('CDASH_TESTING_MODE'));
         $this->assertEquals('ABCDEFGH', $config->get('THIS_IS_NOT_A_THING'));
-
-        $config->set('CDASH_TESTING_MODE', $testing_mode);
         $config->set('THIS_IS_NOT_A_THING', null);
     }
 
@@ -144,7 +138,6 @@ class ConfigTest extends CDashTestCase
 
         $config = Config::getInstance();
         $config->set('CDASH_NOTIFY_PULL_REQUEST', false);
-        $config->set('CDASH_TESTING_MODE', true);
 
         post_pull_request_comment(1, 1, "this is a comment", $config->get('CDASH_BASE_URL'));
     }

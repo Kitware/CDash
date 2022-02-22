@@ -57,7 +57,7 @@ function cdashmail($to, $subject, $body, $headers = false)
         return _cdashsendgrid($to, $subject, $body);
     }
 
-    if ($config->get('CDASH_TESTING_MODE')) {
+    if (config('app.debug')) {
         add_log($to, 'TESTING: EMAIL', LOG_DEBUG);
         add_log($subject, 'TESTING: EMAILTITLE', LOG_DEBUG);
         add_log($body, 'TESTING: EMAILBODY', LOG_DEBUG);

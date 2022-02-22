@@ -16,7 +16,6 @@
 
 namespace CDash\Messaging\Notification\Email;
 
-use CDash\Config;
 use CDash\Log;
 use CDash\Messaging\Notification\NotificationInterface;
 use CDash\Singleton;
@@ -102,8 +101,7 @@ class Mail extends Singleton
 
             $this->swift = new \Swift_Mailer($transport);
 
-            $config = Config::getInstance();
-            if ($config->get('CDASH_TESTING_MODE')) {
+            if (config('app.debug')) {
                 $listener = new EmailSendListener($this);
                 $this->swift->registerPlugin($listener);
             }
