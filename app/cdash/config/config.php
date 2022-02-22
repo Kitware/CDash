@@ -76,8 +76,6 @@ $CDASH_ASYNC_EXPIRATION_TIME = 691200; // 8 days.
 // Only increase this above 1 for MySQL (not Postgres).
 $CDASH_ASYNC_WORKERS = 1;
 
-// Should CDash only register valid emails
-$CDASH_REGISTRATION_EMAIL_VERIFY = true;
 // If CDash should use the SendGrid API for email
 $CDASH_USE_SENDGRID = false;
 // API Key for SendGrid

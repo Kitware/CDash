@@ -25,7 +25,7 @@ return [
     'version' => '3.0.1',
     'registration' => [
         'email' => [
-            'verify' => true,
+            'verify' => env('REGISTRATION_EMAIL_VERIFY', true),
         ]
     ],
     'file' => [
