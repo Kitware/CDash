@@ -145,12 +145,6 @@ $CDASH_MEMCACHE_PREFIX = 'cdash';
 // Whether to use the AWS ElastiCache Auto Discovery feature
 $CDASH_USE_ELASTICACHE_AUTO_DISCOVERY = false;
 
-// Should CDash should post build/test results to a build's pull request?
-// This is enabled by default but requires CTEST_CHANGE_ID to be set by the
-// client.  Set this variable to FALSE to prevent CDash from commenting on
-// pull requests.
-$CDASH_NOTIFY_PULL_REQUEST = true;
-
 // Set to true if this copy of CDash is serving as a remote submission
 // processor hosted somewhere other than the web server.
 $CDASH_REMOTE_PROCESSOR = false;

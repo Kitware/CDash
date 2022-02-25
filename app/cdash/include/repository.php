@@ -737,10 +737,9 @@ function post_pull_request_comment($projectid, $pull_request, $comment, $cdash_u
         return;
     }
 
-    $config = Config::getInstance();
-    if (!$config->get('CDASH_NOTIFY_PULL_REQUEST')) {
+    if (!config('cdash.notify_pull_request')) {
         if (config('app.debug')) {
-            throw new Exception('pull request commenting is disabled');
+            \Log::info('pull request commenting is disabled');
         }
         return;
     }
