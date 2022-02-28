@@ -76,9 +76,8 @@ class Mail extends Singleton
     public function getSwiftMailer()
     {
         if (!$this->swift) {
-            $smtp_host = config('mail.host');
-            if (!$smtp_host) {
-                // TODO: this should never happen, discuss.
+            if (config('mail.driver') != 'stmp') {
+                // TODO:
                 /* @see https://github.com/swiftmailer/swiftmailer/issues/866#issuecomment-289291228
                  * If we want to enable the ability to send via php's native mail() function
                  * then we should create our own Transport implementing Swift_Transport
@@ -87,6 +86,7 @@ class Mail extends Singleton
                 // $transport = \Swift_MailTransport::newInstance();
                 $transport = new \Swift_SendmailTransport();
             } else {
+                $smtp_host = config('mail.host');
                 $smtp_port = config('mail.port');
                 $smtp_user = config('mail.username');
                 $smtp_pswd = config('mail.password');
