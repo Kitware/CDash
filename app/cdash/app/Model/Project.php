@@ -51,6 +51,8 @@ class Project
     public $CoverageThreshold;
     public $TestingDataUrl;
     public $NightlyTime;
+    public $NightlyDateTime;
+    public $NightlyTimezone;
     public $GoogleTracker;
     public $EmailLowCoverage;
     public $EmailTestTimingChanged;
