@@ -409,12 +409,12 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
         $project->Fill();
 
         // If the project is public we quit
-        if ($project->Public) {
+        if ($project->Public == Project::ACCESS_PUBLIC) {
             return true;
         }
 
         // If the project is private and the user is not logged in we quit
-        if (!$userid && !$project->Public) {
+        if (!$userid && $project->Public == Project::ACCESS_PRIVATE) {
             if (!$onlyreturn) {
                 return LoginController::staticShowLoginForm();
             } else {
