@@ -38,6 +38,7 @@ class Project
 
     const ACCESS_PRIVATE = 0;
     const ACCESS_PUBLIC = 1;
+    const ACCESS_PROTECTED = 2;
 
     public $Name;
     public $Id;

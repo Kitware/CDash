@@ -404,16 +404,27 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
             return true;
         }
 
-        $project = $service->get(Project::class);
+        $project = new Project();
         $project->Id = $projectid;
         $project->Fill();
 
-        // If the project is public we quit
+        // If the project is public we return true.
         if ($project->Public == Project::ACCESS_PUBLIC) {
             return true;
         }
 
-        // If the project is private and the user is not logged in we quit
+        // Logged in users can view protected projects; logged out users cannot.
+        if ($project->Public == Project::ACCESS_PROTECTED) {
+            if ($userid) {
+                return true;
+            }
+            if (!$onlyreturn) {
+                return LoginController::staticShowLoginForm();
+            }
+            return false;
+        }
+
+        // If the project is private and the user is not logged in we return false.
         if (!$userid && $project->Public == Project::ACCESS_PRIVATE) {
             if (!$onlyreturn) {
                 return LoginController::staticShowLoginForm();
