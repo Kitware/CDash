@@ -40,7 +40,7 @@ if (!isset($build_array['projectid'])) {
 }
 $projectid = $build_array['projectid'];
 
-$policy = checkUserPolicy(Auth::id(), $projectid);
+$policy = checkUserPolicy($projectid);
 if ($policy !== true) {
     return $policy;
 }

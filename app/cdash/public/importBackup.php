@@ -22,7 +22,7 @@ use CDash\Config;
 
 $config = Config::getInstance();
 
-if (checkUserPolicy(Auth::id(), 0, true)) {
+if (checkUserPolicy(0, true)) {
     include_once 'include/ctestparser.php';
 
     @set_time_limit(0);

@@ -5,6 +5,7 @@ require_once 'include/common.php';
 require_once 'include/defines.php';
 
 use App\Services\TestingDay;
+use App\Services\ProjectPermissions;
 use CDash\Model\Project;
 
 abstract class ProjectController extends ViewController
@@ -33,7 +34,7 @@ abstract class ProjectController extends ViewController
         }
 
         // Check if user is authorized to view this project.
-        if (checkUserPolicy($this->user['id'], $project->Id, 1)) {
+        if (ProjectPermissions::userCanViewProject($project)) {
             $this->authOk = true;
         } else {
             $this->authOk = false;

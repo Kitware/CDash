@@ -50,4 +50,46 @@ class ProjectPermissions
         $config = \CDash\Config::getInstance();
         return $user->IsAdmin() || $config->get('CDASH_USER_CREATE_PROJECTS');
     }
+
+    public static function userCanViewProject(Project $project)
+    {
+        if (!$project->Exists()) {
+            return false;
+        }
+
+        // If the project is public we return true.
+        $project->Fill();
+        if ($project->Public == Project::ACCESS_PUBLIC) {
+            return true;
+        }
+
+        // If not a public project, return false if the user is not logged in.
+        if (!\Auth::check()) {
+            return false;
+        }
+
+        $user = \Auth::user();
+
+        // Global admins have access to all projects.
+        if ($user->IsAdmin()) {
+            return true;
+        }
+
+        // Logged in users can view protected projects.
+        if ($project->Public == Project::ACCESS_PROTECTED) {
+            return true;
+        }
+
+        // Private projects can only be viewed by users that are members.
+        if ($project->Public == Project::ACCESS_PRIVATE) {
+            $userproject = new UserProject();
+            $userproject->UserId = $user->id;
+            $userproject->ProjectId = $project->Id;
+            if ($userproject->Exists()) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
 }

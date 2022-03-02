@@ -15,6 +15,7 @@
 =========================================================================*/
 
 //error_reporting(0); // disable error reporting
+use App\Services\ProjectPermissions;
 use CDash\Config;
 use CDash\Middleware\Queue;
 use CDash\Middleware\Queue\DriverFactory as QueueDriverFactory;
@@ -658,12 +659,15 @@ function valid_token_for_submission($projectid)
 
     // Make sure that the user associated with this token is allowed to access
     // the project in question.
-    if (!checkUserPolicy($userid, $projectid, 1)) {
-        http_response_code(403);
-        return false;
+    Auth::loginUsingId($userid);
+    $project = new Project();
+    $project->Id = $projectid;
+    $project->Fill();
+    if (ProjectPermissions::userCanViewProject($project)) {
+        return true;
     }
-
-    return true;
+    http_response_code(403);
+    return false;
 }
 
 function get_build_from_handler($handler)

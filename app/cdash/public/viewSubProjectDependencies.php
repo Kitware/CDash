@@ -53,7 +53,7 @@ if (pdo_num_rows($project) > 0) {
     $projectname = 'NA';
 }
 
-$policy = checkUserPolicy(Auth::id(), $project_array['id']);
+$policy = checkUserPolicy($project_array['id']);
 if ($policy !== true) {
     return $policy;
 }

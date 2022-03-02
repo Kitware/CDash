@@ -54,20 +54,22 @@ function can_access_project($projectid)
         return true;
     }
 
+    $project = new Project();
+    $project->Id = $projectid;
+    if (ProjectPermissions::userCanViewProject($project)) {
+        return true;
+    }
+
     $userid = get_userid_from_session(false);
     $logged_in = Auth::check();
-
-    if (!checkUserPolicy($userid, $projectid, 1)) {
-        if ($logged_in) {
-            $response = ['error' => 'You do not have permission to access this page.'];
-            json_error_response($response, 403);
-        } else {
-            $response = ['requirelogin' => 1];
-            json_error_response($response, 401);
-        }
-        return false;
+    if ($logged_in) {
+        $response = ['error' => 'You do not have permission to access this page.'];
+        json_error_response($response, 403);
+    } else {
+        $response = ['requirelogin' => 1];
+        json_error_response($response, 401);
     }
-    return true;
+    return false;
 }
 
 // Return true if this user has administrative access to this project.

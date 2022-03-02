@@ -41,7 +41,7 @@ if (!$project_array = pdo_fetch_array($project)) {
     die("Error:  project $projectname not found<br>\n");
 }
 
-$policy = checkUserPolicy(Auth::id(), $project_array['id']);
+$policy = checkUserPolicy($project_array['id']);
 if ($policy !== true) {
     return $policy;
 }

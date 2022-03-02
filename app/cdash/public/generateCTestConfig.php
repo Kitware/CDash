@@ -38,7 +38,7 @@ if (pdo_num_rows($project) == 0) {
 }
 
 $project_array = pdo_fetch_array($project);
-$policy = checkUserPolicy(Auth::id(), $project_array['id']);
+$policy = checkUserPolicy($project_array['id']);
 
 if ($policy !== true) {
     return $policy;
