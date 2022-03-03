@@ -20,6 +20,10 @@ class ConsumeSubmissionCommand extends TestCase
 
     public function tearDown() : void
     {
+        if ($this->project) {
+            $this->project->Delete();
+        }
+
         // Remove testing config file.
         if (file_exists($this->queue_config)) {
             unlink($this->queue_config);
