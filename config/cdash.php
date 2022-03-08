@@ -71,5 +71,5 @@ return [
     'token_duration' => env('TOKEN_DURATION', 15811200),
     'unlimited_projects' => $unlimited_projects,
     'use_compression' => env('USE_COMPRESSION', true),
-
+    'use_vcs_api' => env('USE_VCS_API', true),
 ];

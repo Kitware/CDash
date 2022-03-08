@@ -117,6 +117,10 @@ class GitHub implements RepositoryInterface
 
     public function authenticate($required = true)
     {
+        if (!config('cdash.use_vcs_api')) {
+            return false;
+        }
+
         if (!$this->apiClient) {
             $this->initializeApiClient();
         }
@@ -488,6 +492,11 @@ class GitHub implements RepositoryInterface
         $stmt = $this->db->prepare(
                 'UPDATE buildupdate SET priorrevision = ? WHERE id = ?');
         $this->db->execute($stmt, [$base, $update->UpdateId]);
+
+        // Return early if we are configured to not use the GitHub API.
+        if (!config('cdash.use_vcs_api')) {
+            return;
+        }
 
         // Attempt to authenticate with the GitHub API.
         // We do not check the return value of authenticate() here because

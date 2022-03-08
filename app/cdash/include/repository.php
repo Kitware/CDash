@@ -737,7 +737,7 @@ function post_pull_request_comment($projectid, $pull_request, $comment, $cdash_u
         return;
     }
 
-    if (!config('cdash.notify_pull_request')) {
+    if (!config('cdash.notify_pull_request') || !config('cdash.use_vcs_api')) {
         if (config('app.debug')) {
             \Log::info('pull request commenting is disabled');
         }
