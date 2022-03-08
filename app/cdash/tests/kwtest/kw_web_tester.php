@@ -68,10 +68,8 @@ class KWWebTestCase extends WebTestCase
         $this->db = new database($db['type']);
         $this->db->setDb($db['name']);
         $this->db->setHost($db['host']);
-        $this->db->setPort($db['port']);
         $this->db->setUser($db['login']);
         $this->db->setPassword($db['pwd']);
-        $this->db->setConnection($db['connection']);
 
         $config = Config::getInstance();
         $this->configfilename = "{$config->get('CDASH_ROOT_DIR')}/config/config.local.php";

@@ -42,8 +42,6 @@ $CDASH_DB_PASS = '';
 $CDASH_DB_NAME = 'cdash';
 // Database type
 $CDASH_DB_TYPE = 'mysql';
-// Must be one of host, unix_socket
-$CDASH_DB_CONNECTION_TYPE = 'host';
 
 // host for Selenium testing
 $CDASH_SELENIUM_HUB='localhost';
