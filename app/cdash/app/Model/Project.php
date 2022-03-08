@@ -36,6 +36,10 @@ class Project
     const SITE_MAINTAINER = 1;
     const PROJECT_USER = 0;
 
+    const ACCESS_PRIVATE = 0;
+    const ACCESS_PUBLIC = 1;
+    const ACCESS_PROTECTED = 2;
+
     public $Name;
     public $Id;
     public $Description;

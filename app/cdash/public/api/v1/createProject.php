@@ -130,7 +130,7 @@ if ($projectid > 0) {
 } else {
     // Initialize some variables for project creation.
     $project_response['AuthenticateSubmissions'] = 0;
-    $project_response['Public'] = 0;
+    $project_response['Public'] = Project::ACCESS_PRIVATE;
     $project_response['AutoremoveMaxBuilds'] = 500;
     $project_response['AutoremoveTimeframe'] = 60;
     $project_response['CoverageThreshold'] = 70;

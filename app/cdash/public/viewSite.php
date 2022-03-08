@@ -18,6 +18,7 @@ require_once 'include/pdo.php';
 require_once 'include/common.php';
 
 use App\Models\User;
+use App\Services\ProjectPermissions;
 use App\Services\TestingDay;
 use CDash\Config;
 use CDash\Model\Project;
@@ -191,12 +192,15 @@ while ($site2project_array = pdo_fetch_array($site2project)) {
     $projectid = $site2project_array['projectid'];
     $project_array = pdo_fetch_array(pdo_query("SELECT name,public FROM project WHERE id=$projectid"));
 
-    if (checkUserPolicy(Auth::id(), $projectid, 1)) {
+    $project = new Project();
+    $project->Id = $projectid;
+    $project->Fill();
+    if (ProjectPermissions::userCanViewProject($project)) {
         $xml .= '<project>';
         $xml .= add_XML_value('id', $projectid);
         $xml .= add_XML_value('submittime', $site2project_array['maxtime']);
-        $xml .= add_XML_value('name', $project_array['name']);
-        $xml .= add_XML_value('name_encoded', urlencode($project_array['name']));
+        $xml .= add_XML_value('name', $project->Name);
+        $xml .= add_XML_value('name_encoded', urlencode($project->Name));
         $xml .= '</project>';
         $displayPage = 1; // if we have at least a valid project we display the page
         $projects[] = $projectid;
@@ -235,11 +239,14 @@ echo pdo_error();
 $totalload = 0;
 while ($testtime_array = pdo_fetch_array($testtime)) {
     $projectid = $testtime_array['projectid'];
-    if (checkUserPolicy(Auth::id(), $projectid, 1)) {
+    $project = new Project();
+    $project->Id = $projectid;
+    $project->Fill();
+    if (ProjectPermissions::userCanViewProject($project)) {
         $timespent = round($testtime_array['elapsed'] / 7.0); // average over 7 days
         $xml .= '<build>';
         $xml .= add_XML_value('name', $testtime_array['buildname']);
-        $xml .= add_XML_value('project', get_project_name($projectid));
+        $xml .= add_XML_value('project', $project->Name);
         $xml .= add_XML_value('type', $testtime_array['buildtype']);
         $xml .= add_XML_value('time', $timespent);
         $totalload += $timespent;

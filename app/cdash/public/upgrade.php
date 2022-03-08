@@ -23,7 +23,7 @@ $config = Config::getInstance();
 
 @set_time_limit(0);
 
-$policy = checkUserPolicy(Auth::id(), 0); // only admin
+$policy = checkUserPolicy(0); // only admin
 if ($policy !== true) {
     return $policy;
 }

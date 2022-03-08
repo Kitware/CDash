@@ -258,19 +258,14 @@
                     <input
                       v-model="issuecreation"
                       type="checkbox"
-                      name="public"
-                      @focus="showHelp('public_help')"
+                      name="issuecreation"
+                      @focus="showHelp('issuecreation_help')"
                     >
-                    <a
-                      href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                      target="blank"
+                    <img
+                      :src="$baseURL + '/img/help.gif'"
+                      border="0"
+                      @mouseover="showHelp('issuecreation_help')"
                     >
-                      <img
-                        :src="$baseURL + '/img/help.gif'"
-                        border="0"
-                        @mouseover="showHelp('issuecreation_help')"
-                      >
-                    </a>
                     <span
                       id="issuecreation_help"
                       class="help_content"
@@ -388,15 +383,22 @@
                     </div>
                   </td>
                   <td>
-                    <input
+                    <select
                       v-model="cdash.project.Public"
-                      type="checkbox"
                       name="public"
-                      true-value="1"
-                      false-value="0"
                       @change="cdash.changesmade = true"
                       @focus="showHelp('public_help')"
                     >
+                      <option value="0">
+                        Private
+                      </option>
+                      <option value="1">
+                        Public
+                      </option>
+                      <option value="2">
+                        Protected
+                      </option>
+                    </select>
                     <a
                       href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
                       target="blank"
@@ -413,10 +415,17 @@
                     >
                       <b>Public dashboard</b>
                       <br>
-                      if the box is checked that means that the dashboard is
-                      public and anybody can access the dashboard, claim sites
-                      and look at the current status. By default dashboards are
-                      private.
+                      <ul>
+                        <li>
+                          Public projects can be accessed by anybody.
+                        </li>
+                        <li>
+                          Protected projects can only be accessed by logged in users.
+                        </li>
+                        <li>
+                          Users need to be explicitly granted access to view private projects.
+                        </li>
+                      </ul>
                     </span>
                   </td>
                 </tr>

@@ -37,7 +37,7 @@ if ($projectid == -1) {
     return;
 }
 
-$policy = checkUserPolicy(Auth::id(), $projectid);
+$policy = checkUserPolicy($projectid);
 if ($policy !== true) {
     return $policy;
 }

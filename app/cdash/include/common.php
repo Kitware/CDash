@@ -16,6 +16,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Models\User;
+use App\Services\ProjectPermissions;
 use App\Services\TestingDay;
 
 use CDash\Config;
@@ -376,64 +377,39 @@ function setVersion()
 }
 
 /** Return true if the user is allowed to see the page */
-function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
+function checkUserPolicy($projectid, $onlyreturn = 0)
 {
-    if (($userid != '' && !is_numeric($userid)) || !is_numeric($projectid)) {
+    if (!is_numeric($projectid)) {
         return response('Insufficient data to determine access');
     }
 
-    $service = ServiceContainer::getInstance();
-
-    $user = User::where('id', '=', $userid)->first();
-    if ($user === null) {
-        // user doesn't exist. Populate an empty model anyway.
-        $user = new User();
-        $user->id = $userid;
-    }
-
-    // If the projectid=0 only admin can access the page
-    if ($projectid == 0 && !$user->IsAdmin()) {
-        if (!$onlyreturn) {
-            return response('You cannot access this project');
-        } else {
-            return false;
+    // If the projectid is 0 only admin can access the page.
+    if ($projectid == 0) {
+        if (Auth::check()) {
+            $user = \Auth::user();
+            if ($user->IsAdmin()) {
+                return true;
+            }
         }
-    } elseif (@$projectid > 0) {
-        // Global admins have access to all projects.
-        if ($user->IsAdmin()) {
-            return true;
-        }
-
-        $project = $service->get(Project::class);
+    } else {
+        $project = new Project();
         $project->Id = $projectid;
         $project->Fill();
 
-        // If the project is public we quit
-        if ($project->Public) {
+        if (ProjectPermissions::userCanViewProject($project)) {
             return true;
         }
-
-        // If the project is private and the user is not logged in we quit
-        if (!$userid && !$project->Public) {
-            if (!$onlyreturn) {
-                return LoginController::staticShowLoginForm();
-            } else {
-                return false;
-            }
-        } elseif ($userid) {
-            $userproject = new UserProject();
-            $userproject->UserId = $userid;
-            $userproject->ProjectId = $projectid;
-            if (!$userproject->Exists()) {
-                if (!$onlyreturn) {
-                    return response('You cannot access this project');
-                } else {
-                    return false;
-                }
-            }
-        }
     }
-    return true;
+
+    if ($onlyreturn) {
+        return false;
+    }
+
+    if (!Auth::check()) {
+        return LoginController::staticShowLoginForm();
+    }
+
+    return response('You cannot access this project');
 }
 
 /** Clean the backup directory */

@@ -14,12 +14,16 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Services\ProjectPermissions;
+use CDash\Model\Project;
+
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 
 $projectid = pdo_real_escape_numeric($_GET['projectid']);
-
-if (!checkUserPolicy(Auth::id(), $projectid, 1)) {
+$project = new Project();
+$project->Id = $projectid;
+if (!ProjectPermissions::userCanViewProject($project)) {
     echo 'You are not authorized to view this page.';
     return;
 }

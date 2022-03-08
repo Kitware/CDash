@@ -18,6 +18,7 @@ namespace CDash\Controller\Api;
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\Banner;
+use CDash\Model\Project;
 
 /**
  * API controller for viewProjects.php.
@@ -30,6 +31,10 @@ class ViewProjects extends \CDash\Controller\Api
         $this->config = Config::getInstance();
         $this->showAllProjects = false;
         $this->activeProjectDays = 7;
+        $this->user = null;
+        if (\Auth::check()) {
+            $this->user = \Auth::user();
+        }
     }
 
     public function getResponse()
@@ -66,7 +71,9 @@ class ViewProjects extends \CDash\Controller\Api
         } elseif (isset($_GET['allprojects']) && $_GET['allprojects'] == 1) {
             $this->showAllProjects = true;
         }
-        $response['nprojects'] = $this->getNumberPublicProjects();
+
+        $this->getVisibleProjects();
+        $response['nprojects'] = count($this->projectids);
 
         $projects = $this->getProjects();
         if (count($projects) === 0) {
@@ -123,41 +130,59 @@ class ViewProjects extends \CDash\Controller\Api
         return $response;
     }
 
-    /** return the total number of public projects */
-    public function getNumberPublicProjects()
+    /**
+     * Populate $this->projectids as an array of IDs for projects
+     * that are visible to the user.
+     **/
+    public function getVisibleProjects()
     {
-        $stmt = $this->db->query("SELECT count(id) FROM project WHERE public='1'");
-        return $stmt->fetchColumn();
+        $this->projectids = [];
+        if (is_null($this->user)) {
+            $this->projectids = \DB::table('project')
+                ->where('public', Project::ACCESS_PUBLIC)
+                ->pluck('id');
+        } elseif ($this->user->admin) {
+            $this->projectids = \DB::table('project')
+                ->pluck('id');
+        } else {
+            $this->projectids = \DB::table('project')
+                ->leftJoin('user2project', 'project.id', '=', 'user2project.projectid')
+                ->where('user2project.userid', $this->user->id)
+                ->orWhere('project.public', Project::ACCESS_PUBLIC)
+                ->orWhere('project.public', Project::ACCESS_PROTECTED)
+                ->distinct()
+                ->pluck('id');
+        }
     }
 
     /** return an array of public projects */
     public function getProjects()
     {
         $projects = [];
-
-        $stmt = $this->db->query(
-                "SELECT p.id, p.name, p.description,
-                (SELECT COUNT(1) FROM subproject WHERE projectid=p.id AND
-                 endtime='1980-01-01 00:00:00') AS nsubproj
-                FROM project AS p
-                WHERE p.public='1' ORDER BY p.name");
-        while ($project_array = $stmt->fetch()) {
+        $project_rows = \DB::table('project')
+            ->whereIn('id', $this->projectids)
+            ->orderBy('name')
+            ->get();
+        foreach ($project_rows as $project_row) {
             $project = [];
-            $project['id'] = $project_array['id'];
-            $project['name'] = $project_array['name'];
-            $project['description'] = $project_array['description'];
-            $project['numsubprojects'] = $project_array['nsubproj'];
+            $project['id'] = $project_row->id;
+            $project['name'] = $project_row->name;
+            $project['description'] = $project_row->description;
             $projectid = $project['id'];
 
+            $nsubproj = \DB::table('subproject')
+                ->where('projectid', $projectid)
+                ->where('endtime', '1980-01-01 00:00:00')
+                ->count();
+            $project['numsubprojects'] = $nsubproj;
+
             $project['last_build'] = 'NA';
-            $last_build_stmt = $this->db->prepare(
-                'SELECT submittime FROM build
-                WHERE projectid = :projectid
-                ORDER BY submittime DESC LIMIT 1');
-            $this->db->execute($last_build_stmt, [':projectid' => $projectid]);
-            $submittime = $last_build_stmt->fetchColumn();
-            if ($submittime !== false) {
-                $project['last_build'] = $submittime;
+            $latest_build_row = \DB::table('build')
+                ->where('projectid', $projectid)
+                ->orderBy('submittime', 'desc')
+                ->first();
+            if ($latest_build_row) {
+                $project['last_build'] = $latest_build_row->submittime;
             }
 
             // Display if the project is considered active or not
@@ -170,16 +195,10 @@ class ViewProjects extends \CDash\Controller\Api
             if ($project['last_build'] != 'NA' && $project['dayssincelastsubmission'] <= $this->activeProjectDays) {
                 // Get the number of builds in the past 7 days
                 $submittime_UTCDate = gmdate(FMT_DATETIME, time() - 604800);
-                $num_builds_stmt = $this->db->prepare(
-                    'SELECT COUNT(id) FROM build
-                    WHERE projectid = :projectid AND
-                          starttime > :time');
-                $params = [
-                    ':projectid' => $projectid,
-                    ':time'      => $submittime_UTCDate
-                ];
-                $this->db->execute($num_builds_stmt, $params);
-                $project['nbuilds'] = $num_builds_stmt->fetchColumn();
+                $project['nbuilds'] = \DB::table('build')
+                    ->where('projectid', $projectid)
+                    ->where('starttime', '>', $submittime_UTCDate)
+                    ->count();
             }
 
             if ($this->showAllProjects || $project['dayssincelastsubmission'] <= $this->activeProjectDays) {

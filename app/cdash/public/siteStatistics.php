@@ -20,7 +20,7 @@ require_once 'include/pdo.php';
 use CDash\Config;
 
 $config = Config::getInstance();
-$policy = checkUserPolicy(Auth::id(), 0);
+$policy = checkUserPolicy(0);
 if ($policy !== true) {
     return $policy;
 }
