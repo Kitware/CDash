@@ -8,7 +8,6 @@ configure_file(${CDash_SOURCE_DIR}/CTestCustom.cmake.in
 set(CDASH_SERVER localhost CACHE STRING "CDash testing server")
 set(CDASH_DB_LOGIN "root" CACHE STRING "Database user")
 set(CDASH_DB_PASS "" CACHE STRING "Password for database user")
-set(CDASH_DB_PORT "" CACHE STRING "Port to connect to the database")
 set(CDASH_DB_HOST "localhost" CACHE STRING "Hostname of the database server")
 set(CDASH_DB_TYPE "mysql" CACHE STRING "Database type")
 set(CDASH_DB_CONNECTION_TYPE "host" CACHE STRING "Connection type (e.g. host or unix_socket)")
@@ -113,7 +112,6 @@ $CDASH_TESTING_MODE = true;
 $CDASH_REGISTRATION_EMAIL_VERIFY = false;
 $CDASH_DB_HOST = '${CDASH_DB_HOST}';
 $CDASH_DB_LOGIN = '${CDASH_DB_LOGIN}';
-$CDASH_DB_PORT = '${CDASH_DB_PORT}';
 $CDASH_DB_PASS = '${CDASH_DB_PASS}';
 $CDASH_DB_TYPE = '${CDASH_DB_TYPE}';
 $CDASH_DB_CONNECTION_TYPE = '${CDASH_DB_CONNECTION_TYPE}';

@@ -36,8 +36,6 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);
 $CDASH_DB_HOST = 'localhost';
 // Login for database access
 $CDASH_DB_LOGIN = 'root';
-// Port for the database (leave empty to use default)
-$CDASH_DB_PORT = '';
 // Password for database access
 $CDASH_DB_PASS = '';
 // Name of the database
@@ -106,8 +104,6 @@ $CDASH_DEFAULT_IP_LOCATIONS = array();
 // Google Map API
 $CDASH_GOOGLE_MAP_API_KEY = array();
 $CDASH_GOOGLE_MAP_API_KEY['localhost'] = 'ABQIAAAAT7I3XxP5nXC2xZUbg5AhLhQlpUmSySBnNeRIYFXQdqJETZJpYBStoWsCJtLvtHDiIJzsxJ953H3rgg';
-// Enable Google Analytics
-$CDASH_DEFAULT_GOOGLE_ANALYTICS = '';
 // Define the git command
 $CDASH_GIT_COMMAND = 'git';
 // The default git directory where the bare repositories should be created

@@ -26,7 +26,6 @@ $configure = array(
 
 global $db;
 $db = array('host' => $CDASH_DB_HOST,
-    'port' => $CDASH_DB_PORT,
     'login' => $CDASH_DB_LOGIN,
     'pwd' => $CDASH_DB_PASS,
     'name' => $CDASH_DB_NAME,
