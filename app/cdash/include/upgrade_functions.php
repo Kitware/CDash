@@ -794,7 +794,7 @@ function AddUniqueConstraintToSiteTable($site_table)
                          DROP CONSTRAINT IF EXISTS $constraint_name");
         }
     } else {
-        $db_name = $config->get('CDASH_DB_NAME');
+        $db_name = \DB::connection()->getDatabaseName();
         $stmt = $pdo->query("
                 SELECT INDEX_NAME FROM information_schema.STATISTICS
                 WHERE TABLE_NAME = '$site_table' AND
