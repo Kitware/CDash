@@ -24,9 +24,9 @@ function _cdashsendgrid($to, $subject, $body)
     $sg = new \SendGrid($config->get('CDASH_SENDGRID_API_KEY'));
 
     $mail = new SendGrid\Mail();
-    $mail->setFrom(new SendGrid\Email(null, $config->get('CDASH_EMAIL_FROM')));
+    $mail->setFrom(new SendGrid\Email(null, config('mail.from.address')));
     $mail->setSubject($subject);
-    $mail->setReplyTo(new SendGrid\Email(null, $config->get('CDASH_EMAIL_REPLY')));
+    $mail->setReplyTo(new SendGrid\Email(null, config('mail.reply_to.address')));
     $mail->addContent(new SendGrid\Content('text/plain', $body));
 
     foreach (explode(', ', $to) as $recipient) {
@@ -57,7 +57,7 @@ function cdashmail($to, $subject, $body, $headers = false)
         return _cdashsendgrid($to, $subject, $body);
     }
 
-    if ($config->get('CDASH_TESTING_MODE')) {
+    if (config('app.debug')) {
         add_log($to, 'TESTING: EMAIL', LOG_DEBUG);
         add_log($subject, 'TESTING: EMAILTITLE', LOG_DEBUG);
         add_log($body, 'TESTING: EMAILBODY', LOG_DEBUG);
@@ -70,8 +70,8 @@ function cdashmail($to, $subject, $body, $headers = false)
             /** @var Illuminate\Mail\Message $message */
             $message->subject($subject)
                 ->to($to)
-                ->from($config->get('CDASH_EMAIL_FROM'))
-                ->replyTo($config->get('CDASH_EMAIL_REPLY'));
+                ->from(config('mail.from.address'))
+                ->replyTo(config('mail.reply_to.address'));
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             return false;

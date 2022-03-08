@@ -51,6 +51,8 @@ class Project
     public $CoverageThreshold;
     public $TestingDataUrl;
     public $NightlyTime;
+    public $NightlyDateTime;
+    public $NightlyTimezone;
     public $GoogleTracker;
     public $EmailLowCoverage;
     public $EmailTestTimingChanged;
@@ -801,8 +803,7 @@ class Project
     /** Get the last submission of the subproject*/
     public function GetLastSubmission()
     {
-        $config = Config::getInstance();
-        if (!$config->get('CDASH_SHOW_LAST_SUBMISSION')) {
+        if (!config('cdash.show_last_submission')) {
             return false;
         }
 
@@ -1487,7 +1488,7 @@ class Project
                 $uploadQuotaGB = $this->UploadQuota / (1024 * 1024 * 1024);
             }
 
-            $max = $config->get('CDASH_MAX_UPLOAD_QUOTA');
+            $max = config('cdash.max_upload_quota');
             $response['UploadQuota'] = min($uploadQuotaGB, $max);
             $response['MaxUploadQuota'] = $max;
         } else {

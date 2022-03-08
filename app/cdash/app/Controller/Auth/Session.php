@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash\Controller\Auth;
 
-use CDash\Config;
 use CDash\System;
 
 /**
@@ -28,18 +27,15 @@ class Session
     const CACHE_NOCACHE = 'nocache';
     const CACHE_PRIVATE_NO_EXPIRE = 'private_no_expire';
 
-    private $config;
     private $system;
 
     /**
      * Session constructor.
      * @param System $system
-     * @param Config $config
      */
-    public function __construct(System $system, Config $config)
+    public function __construct(System $system)
     {
         $this->system = $system;
-        $this->config = $config;
     }
 
     /**
@@ -47,7 +43,7 @@ class Session
      */
     public function start($cache_policy)
     {
-        $lifetime = $this->config->get('CDASH_COOKIE_EXPIRATION_TIME');
+        $lifetime = config('session.lifetime');
         $maxlife = $lifetime + self::EXTEND_GC_LIFETIME;
 
         $this->system->session_name('CDash');

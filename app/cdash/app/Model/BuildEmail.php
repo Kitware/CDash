@@ -17,7 +17,6 @@
 namespace CDash\Model;
 
 use CDash\Collection\BuildEmailCollection;
-use CDash\Config;
 use CDash\Database;
 use CDash\Log;
 use CDash\Messaging\Notification\Email\EmailMessage;
@@ -64,9 +63,8 @@ class BuildEmail
      */
     public static function Log(NotificationInterface $notification, $sent)
     {
-        $config = Config::getInstance();
         $log = Log::getInstance();
-        if ($config->get('CDASH_TESTING_MODE')) {
+        if (config('app.debug')) {
             $log->add_log($notification->getRecipient(), 'TESTING: EMAIL', LOG_DEBUG);
             $log->add_log($notification->getSubject(), 'TESTING: EMAILTITLE', LOG_DEBUG);
             $log->add_log($notification->getBody(), 'TESTING: EMAILBODY', LOG_DEBUG);

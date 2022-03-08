@@ -37,7 +37,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function passwords()
     {
-        return $this->hasMany('App\Password', 'userid')->orderBy('date');
+        return $this->hasMany('App\Models\Password', 'userid')->orderBy('date');
     }
 
     /**

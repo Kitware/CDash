@@ -109,7 +109,7 @@ function safelyWriteBackupFile($filehandler, $content, $filename)
         } else {
             $got_lock = true;
             // realpath() always returns false for Google Cloud Storage.
-            if (realpath($config->get('CDASH_DATA_ROOT_DIRECTORY')) !== false) {
+            if (realpath($config->get('CDASH_BACKUP_DIRECTORY')) !== false) {
                 // Make sure the file is in the right directory.
                 $pos = strpos(realpath(dirname($filename)), realpath($backupDir));
                 if ($pos === false || $pos != 0) {

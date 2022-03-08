@@ -257,7 +257,7 @@ function populate_project($Project)
     $config = \CDash\Config::getInstance();
     if (is_numeric($Project->UploadQuota) && $Project->UploadQuota > 0) {
         $Project->UploadQuota =
-            floor(min($Project->UploadQuota, $config->get('CDASH_MAX_UPLOAD_QUOTA')) * 1024 * 1024 * 1024);
+            floor(min($Project->UploadQuota, config('cdash.max_upload_quota')) * 1024 * 1024 * 1024);
     }
 
     $Project->Save();

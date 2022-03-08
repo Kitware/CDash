@@ -41,10 +41,12 @@ class CDash extends Controller
     /**
      * Handle the incoming request.
      *
+     * @param Request $request
      * @return Response $response
      */
-    public function __invoke()
+    public function __invoke(Request $request)
     {
+        $this->request = $request;
         if ($this->isValidRequest()) {
             if ($this->isRequestForExport()) {
                 $response = $this->handleFileRequest();

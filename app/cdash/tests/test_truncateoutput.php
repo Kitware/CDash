@@ -12,9 +12,17 @@ class TruncateOutputTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->ConfigLine = "\$CDASH_LARGE_TEXT_LIMIT = '44';\n";
+        $this->ConfigFile = dirname(__FILE__) . '/../../../.env';
+        $this->Original = file_get_contents($this->ConfigFile);
+
         $this->Expected = "The beginning survives\n...\nCDash truncated output because it exceeded 44 characters.\n...\nThis part is preserved\n";
         $this->BuildId = 0;
+    }
+
+    public function __destruct()
+    {
+        file_put_contents($this->ConfigFile, $this->Original);
+        $this->removeBuild();
     }
 
     public function testTruncateOutput()
@@ -36,16 +44,14 @@ class TruncateOutputTestCase extends KWWebTestCase
         $expected = 'The rest of the test output was removed since it exceeds the threshold';
         $this->assertTrue(strpos($jsonobj['test']['output'], $expected) !== false);
 
-        // Set a limit so long output will be truncated.
-        $this->addLineToConfig($this->ConfigLine);
-        $rep  = dirname(__FILE__)."/data/TruncateOutput";
+        // Set a limit that will cause our test output to be truncated.
+        file_put_contents($this->ConfigFile, "LARGE_TEXT_LIMIT=44\n", FILE_APPEND | LOCK_EX);
 
+        $rep  = dirname(__FILE__)."/data/TruncateOutput";
         foreach (['Build_stdout.xml', 'Build_stderr.xml', 'Build_both.xml'] as $file) {
             // Submit our testing data.
             if (!$this->submission('InsightExample', "$rep/$file")) {
                 $this->fail("failed to submit $file");
-                $this->cleanup();
-                return 1;
             }
 
             // Query for the ID of the build that we just created.
@@ -69,8 +75,6 @@ class TruncateOutputTestCase extends KWWebTestCase
                 foreach ($fields as $field) {
                     if ($error[$field] != $this->Expected) {
                         $this->fail("Expected $this->Expected for $file :: $field, found " . $error[$field]);
-                        $this->cleanup();
-                        return 1;
                     }
                 }
             }
@@ -89,10 +93,7 @@ class TruncateOutputTestCase extends KWWebTestCase
         $jsonobj = json_decode($content, true);
         $actual = $jsonobj['errors'][0]['stderror'];
         $this->assertEqual($expected, $actual);
-
-        $this->cleanup();
     }
-
 
     private function removeBuild()
     {
@@ -100,12 +101,5 @@ class TruncateOutputTestCase extends KWWebTestCase
             remove_build($this->BuildId);
             $this->BuildId = 0;
         }
-    }
-
-    public function cleanup()
-    {
-        // Restore our configuration and delete the build that we created.
-        $this->removeLineFromConfig($this->ConfigLine);
-        $this->removeBuild();
     }
 }

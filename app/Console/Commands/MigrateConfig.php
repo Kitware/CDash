@@ -98,6 +98,8 @@ class MigrateConfig extends Command
             'DB_NAME' => 'DB_DATABASE',
             'DB_PASS' => 'DB_PASSWORD',
             'DB_LOGIN' => 'DB_USERNAME',
+            'EMAIL_FROM' => 'MAIL_FROM_ADDRESS',
+            'EMAIL_REPLY' => 'MAIL_REPLY_ADDRESS',
             'EMAIL_SMTP_HOST' => 'MAIL_HOST',
             'EMAIL_SMTP_PORT' => 'MAIL_PORT',
             'EMAIL_SMTP_LOGIN' => 'MAIL_USERNAME',

@@ -140,7 +140,7 @@ class TestCreator
             } else {
                 $compressed_output = base64_decode($this->testOutput);
             }
-        } elseif (env('USE_COMPRESSION', 'true')) {
+        } elseif (config('cdash.use_compression')) {
             $compressed_output = gzcompress($this->testOutput);
             if ($compressed_output === false) {
                 $compressed_output = $this->testOutput;

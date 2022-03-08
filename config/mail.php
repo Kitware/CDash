@@ -60,6 +60,11 @@ return [
         'name' => env('MAIL_FROM_NAME', 'CDash'),
     ],
 
+    'reply_to' => [
+        'address' => env('MAIL_REPLY_ADDRESS', 'noreply@cdash.org'),
+        'name' => env('MAIL_REPLY_NAME', 'CDash'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | E-Mail Encryption Protocol

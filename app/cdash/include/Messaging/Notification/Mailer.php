@@ -16,7 +16,6 @@
 
 namespace CDash\Messaging\Notification;
 
-use CDash\Config;
 use CDash\Log;
 use CDash\Messaging\Notification\Email\EmailMessage;
 use CDash\Messaging\Notification\Email\Mail;
@@ -58,10 +57,8 @@ class Mailer extends Singleton
                 throw new \Exception($message);
         }
 
-        $config = Config::getInstance();
-
         // TODO: Yikes! Remove with extreme prejudice after integration test refactor
-        $status = $config->get('CDASH_TESTING_MODE') ? 1 : $status;
+        $status = config('app.debug') ? 1 : $status;
 
         BuildEmail::Log($notification, $status);
         if ($status) {

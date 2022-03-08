@@ -41,7 +41,7 @@ class Initializer
      */
     public function initialize($key, array $properties)
     {
-        if (\CDash\Config::getInstance()->get('CDASH_TESTING_MODE')) {
+        if (config('app.debug')) {
             return;
         }
 

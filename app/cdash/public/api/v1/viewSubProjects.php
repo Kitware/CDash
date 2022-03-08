@@ -19,7 +19,6 @@ require_once 'include/common.php';
 
 use App\Services\PageTimer;
 
-use CDash\Config;
 use CDash\Model\Banner;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
@@ -45,7 +44,6 @@ if (!function_exists('echo_subprojects_dashboard_JSON')) {
         require_once 'include/pdo.php';
 
         $pageTimer = new PageTimer();
-        $config = Config::getInstance();
         $response = array();
 
         $Project = $project_instance;
@@ -75,7 +73,7 @@ if (!function_exists('echo_subprojects_dashboard_JSON')) {
         }
         $response['banners'] = $banners;
 
-        if ($config->get('CDASH_SHOW_LAST_SUBMISSION')) {
+        if (config('cdash.show_last_submission')) {
             $response['showlastsubmission'] = 1;
         }
 

@@ -110,7 +110,7 @@ class ProjectHandler extends AbstractHandler
 
         if ($name == 'PROJECT') {
             foreach ($this->SubProjects as $subproject) {
-                if ($config->get('CDASH_DELETE_OLD_SUBPROJECTS')) {
+                if (config('cdash.delete_old_subprojects')) {
                     // Remove dependencies that do not exist anymore,
                     // but only for those relationships where both sides
                     // are present in $this->SubProjects.
@@ -125,7 +125,7 @@ class ProjectHandler extends AbstractHandler
                             add_log(
                                 "Not removing dependency $dep($removeid) from " .
                                 $subproject->GetName() .
-                                'because it is not a SubProject element in this Project.xml file',
+                                ' because it is not a SubProject element in this Project.xml file',
                                 'ProjectHandler:endElement', LOG_WARNING, $this->projectid);
                         }
                     }
@@ -145,7 +145,7 @@ class ProjectHandler extends AbstractHandler
                 }
             }
 
-            if ($config->get('CDASH_DELETE_OLD_SUBPROJECTS')) {
+            if (config('cdash.delete_old_subprojects')) {
                 // Delete old subprojects that weren't included in this file.
                 $previousSubProjectIds = $this->Project->GetSubProjects();
                 foreach ($previousSubProjectIds as $previousId) {

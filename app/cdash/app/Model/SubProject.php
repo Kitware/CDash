@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use CDash\Config;
 use CDash\Database;
 
 /** Main subproject class */
@@ -361,8 +360,7 @@ class SubProject
     /** Get the last submission of the subproject*/
     public function GetLastSubmission()
     {
-        $config = Config::getInstance();
-        if (!$config->get('CDASH_SHOW_LAST_SUBMISSION')) {
+        if (!config('cdash.show_last_submission')) {
             return false;
         }
 

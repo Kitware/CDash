@@ -344,7 +344,7 @@ class UploadHandler extends AbstractHandler
                         $level = LOG_ERR;
 
                         // But if testing, log as info only:
-                        if ($config->get('CDASH_TESTING_MODE')) {
+                        if (config('app.debug')) {
                             $level = LOG_INFO;
                         }
 

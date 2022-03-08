@@ -24,7 +24,7 @@ class InitializerTest extends CDashTestCase
     public function setUp() : void
     {
         parent::setUp();
-        \CDash\Config::getInstance()->set('CDASH_TESTING_MODE', false);
+        config(['app.debug' => false]);
     }
 
     public function testInitializeFlatFile()

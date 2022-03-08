@@ -136,7 +136,7 @@ if (!$installed) {
             $xml .= "<alert>* Administrator's email should be a valid email address</alert>";
             $valid_email = false;
         }
-        $minimum_password_length = $config->get('CDASH_MINIMUM_PASSWORD_LENGTH');
+        $minimum_password_length = config('cdash.password.min');
         if ($valid_email && strlen($admin_password) < $minimum_password_length) {
             $xml .= '<db_created>0</db_created>';
             $xml .= "<alert>* Administrator's password must be at least $minimum_password_length characters</alert>";
@@ -144,9 +144,9 @@ if (!$installed) {
         }
         if ($valid_email) {
             $password_validator = new \App\Validators\Password;
-            $complexity_count = $config->get('CDASH_PASSWORD_COMPLEXITY_COUNT');
+            $complexity_count = config('cdash.password.count');
             $complexity = $password_validator->computeComplexity($admin_password, $complexity_count);
-            $minimum_complexity = $config->get('CDASH_MINIMUM_PASSWORD_COMPLEXITY');
+            $minimum_complexity = config('cdash.password.complexity');
             if ($complexity < $minimum_complexity) {
                 $xml .= "<alert>* Administrator's password is not complex enough. ";
                 if ($complexity_count > 1) {

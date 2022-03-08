@@ -135,7 +135,7 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
     $baseUrl = get_server_URI(false);
     $request = $baseUrl . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
 
-    if ($config->get('CDASH_DAILY_UPDATES') && curl_request($request) === false) {
+    if (config('cdash.daily_updates') && curl_request($request) === false) {
         return false;
     }
 

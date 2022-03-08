@@ -6,7 +6,7 @@ use Artisan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class RemoveMeasurementCheckboxesMigration extends TestCase
+class IncreaseSiteInformationCPUColumnsSizeMigration extends TestCase
 {
     use RefreshDatabase;
 

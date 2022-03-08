@@ -1,7 +1,6 @@
 <?php
 namespace CDash\Controller\Auth;
 
-use CDash\Config;
 use CDash\System;
 use CDash\Test\CDashTestCase;
 
@@ -21,8 +20,7 @@ class SessionTest extends CDashTestCase
     public function testStart()
     {
         $cache_policy = Session::CACHE_NOCACHE;
-        $config = Config::getInstance();
-        $expires = $config->get('CDASH_COOKIE_EXPIRATION_TIME');
+        $expires = config('session.lifetime');
         $gc_max = $expires + Session::EXTEND_GC_LIFETIME;
 
 
@@ -50,7 +48,7 @@ class SessionTest extends CDashTestCase
             ->method('ini_set')
             ->with('session.gc_maxlifetime', $gc_max);
 
-        $sut = new Session($this->system, Config::getInstance());
+        $sut = new Session($this->system);
         $sut->start($cache_policy);
     }
 
@@ -60,7 +58,7 @@ class SessionTest extends CDashTestCase
             ->expects($this->once())
             ->method('session_regenerate_id');
 
-        $sut = new Session($this->system, Config::getInstance());
+        $sut = new Session($this->system);
         $sut->regenerateId();
     }
 
@@ -74,7 +72,7 @@ class SessionTest extends CDashTestCase
         ];
         session(['cdash' => $cdash]);
 
-        $sut = new Session(new System(), Config::getInstance());
+        $sut = new Session(new System());
 
         $this->assertEquals($login, $sut->getSessionVar('cdash.user'));
         $this->assertEquals($paswd, $sut->getSessionVar('cdash.pass'));
@@ -88,7 +86,7 @@ class SessionTest extends CDashTestCase
             ->method('session_id')
             ->willReturn(1011);
 
-        $sut = new Session($this->system, Config::getInstance());
+        $sut = new Session($this->system);
         $this->assertEquals(1011, $sut->getSessionId());
     }
 
@@ -100,7 +98,7 @@ class SessionTest extends CDashTestCase
             ->willReturnOnConsecutiveCalls('', 101);
 
 
-        $sut = new Session($this->system, Config::getInstance());
+        $sut = new Session($this->system);
         $this->assertFalse($sut->exists());
         $this->assertTrue($sut->exists());
     }
@@ -116,7 +114,7 @@ class SessionTest extends CDashTestCase
                 PHP_SESSION_ACTIVE
             );
 
-        $sut = new Session($this->system, Config::getInstance());
+        $sut = new Session($this->system);
         $this->assertFalse($sut->isActive());
         $this->assertFalse($sut->isActive());
         $this->assertTrue($sut->isActive());
@@ -130,7 +128,7 @@ class SessionTest extends CDashTestCase
 
         $path = "cdash.oauth2.github";
         $expected = ['id' => 1, 'email' => 'ricky.bobby@talladega.tld'];
-        $sut = new Session($this->system, Config::getInstance());
+        $sut = new Session($this->system);
         $sut->setSessionVar($path, $expected);
         $actual = $sut->getSessionVar($path);
         $this->assertEquals($expected, $actual);
