@@ -215,7 +215,7 @@ if (!$displayPage) {
 }
 
 // Compute the time for all the projects (faster than individually) average of the week
-if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+if (config('database.default') == 'pgsql') {
     $timediff = 'EXTRACT(EPOCH FROM (build.submittime - buildupdate.starttime))';
     $timestampadd = "NOW()-INTERVAL'167 hours'";
 } else {

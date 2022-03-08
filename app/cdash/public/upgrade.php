@@ -50,10 +50,10 @@ $xml .= '<minversion>' . $version_array['major'] . '.' . $version_array['minor']
 @$Upgrade = $_POST['Upgrade'];
 @$Cleanup = $_POST['Cleanup'];
 
-if (!$config->get('CDASH_DB_TYPE')) {
+if (!config('database.default')) {
     $db_type = 'mysql';
 } else {
-    $db_type = $config->get('CDASH_DB_TYPE');
+    $db_type = config('database.default');
 }
 
 if (isset($_GET['upgrade-tables'])) {
@@ -225,7 +225,7 @@ if (isset($_GET['upgrade-2-6'])) {
     AddTableIndex('label2test', 'buildid');
 
     // Expand size of password field to 255 characters.
-    if ($config->get('CDASH_DB_TYPE') != 'pgsql') {
+    if (config('database.default') != 'pgsql') {
         ModifyTableField('password', 'password', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
         ModifyTableField('user', 'password', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
         ModifyTableField('usertemp', 'password', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
@@ -236,7 +236,7 @@ if (isset($_GET['upgrade-2-6'])) {
     // to share a configure.
     if (!pdo_query('SELECT id FROM configure LIMIT 1')) {
         // Add id and crc32 columns to configure table.
-        if ($config->get('CDASH_DB_TYPE') != 'pgsql') {
+        if (config('database.default') != 'pgsql') {
             pdo_query(
                 'ALTER TABLE configure
                 ADD id int(11) NOT NULL AUTO_INCREMENT,
@@ -261,7 +261,7 @@ if (isset($_GET['upgrade-2-6'])) {
         }
 
         // Remove columns from configure that have been moved to build2configure.
-        if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+        if (config('database.default') == 'pgsql') {
             pdo_query('ALTER TABLE "configure"
                         DROP COLUMN "buildid",
                         DROP COLUMN "starttime",

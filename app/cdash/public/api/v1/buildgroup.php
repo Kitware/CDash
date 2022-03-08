@@ -19,7 +19,6 @@ require_once 'include/api_common.php';
 require_once 'include/version.php';
 
 use App\Services\PageTimer;
-use CDash\Config;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
 use CDash\Model\Site;
@@ -200,9 +199,7 @@ function rest_post($pdo, $projectid)
         $inputRows = $_POST['newLayout'];
         if (count($inputRows) > 0) {
             // Remove old build group layout for this project.
-
-            $config = Config::getInstance();
-            if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+            if (config('database.default') == 'pgsql') {
                 // We use a subquery here because postgres doesn't support
                 // JOINs in a DELETE statement.
                 $sql = "

@@ -1473,11 +1473,9 @@ function get_cdash_dashboard_xml_by_name($projectname, $date)
 /** Quote SQL identifier */
 function qid($id)
 {
-    $config = Config::getInstance();
-
-    if (!$config->get('CDASH_DB_TYPE') || ($config->get('CDASH_DB_TYPE') == 'mysql')) {
+    if (!config('database.default') || (config('database.default') == 'mysql')) {
         return "`$id`";
-    } elseif ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+    } elseif (config('database.default') == 'pgsql') {
         return "\"$id\"";
     } else {
         return $id;
@@ -1487,9 +1485,7 @@ function qid($id)
 /** Quote SQL interval specifier */
 function qiv($iv)
 {
-    $config = Config::getInstance();
-
-    if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+    if (config('database.default') == 'pgsql') {
         return "'$iv'";
     } else {
         return $iv;
@@ -1499,10 +1495,9 @@ function qiv($iv)
 /** Quote SQL number */
 function qnum($num)
 {
-    $config = Config::getInstance();
-    if (!$config->get('CDASH_DB_TYPE') || ($config->get('CDASH_DB_TYPE') == 'mysql')) {
+    if (!config('database.default') || (config('database.default') == 'mysql')) {
         return "'$num'";
-    } elseif ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+    } elseif (config('database.default') == 'pgsql') {
         return $num != '' ? $num : '0';
     } else {
         return $num;

@@ -88,8 +88,7 @@ class DynamicAnalysis
             echo 'DynamicAnalysis::RemoveAll BuildId not set';
             return false;
         }
-        $config = Config::getInstance();
-        if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+        if (config('database.default') == 'pgsql') {
             // postgresql doesn't support multiple delete
 
             $query = 'BEGIN';

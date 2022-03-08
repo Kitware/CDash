@@ -87,7 +87,7 @@ if ($end_timestamp < $beginning_timestamp) {
 $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
-if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+if (config('database.default') == 'pgsql') {
     $site = pdo_query('SELECT s.id,s.name,si.processorclockfrequency,
                      si.description,
                      si.numberphysicalcpus,s.ip,s.latitude,s.longitude,
