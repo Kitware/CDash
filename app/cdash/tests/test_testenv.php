@@ -27,9 +27,6 @@ class TestEnvTestCase extends KWWebTestCase
         global $configure;
         $s = $s . 'configure=[' . print_r($configure, true) . "]\n";
 
-        global $db;
-        $s = $s . 'db=[' . print_r($db, true) . "]\n";
-
         global $inBrowser;
         $s = $s . 'inBrowser=[' . print_r($inBrowser, true) . "]\n";
 

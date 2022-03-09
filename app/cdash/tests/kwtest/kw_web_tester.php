@@ -64,13 +64,6 @@ class KWWebTestCase extends WebTestCase
         global $configure;
         $this->url = $configure['urlwebsite'];
 
-        global $db;
-        $this->db = new database($db['type']);
-        $this->db->setDb($db['name']);
-        $this->db->setHost($db['host']);
-        $this->db->setUser($db['login']);
-        $this->db->setPassword($db['pwd']);
-
         $config = Config::getInstance();
         $this->configfilename = "{$config->get('CDASH_ROOT_DIR')}/config/config.local.php";
         $this->config = $config;
@@ -78,6 +71,14 @@ class KWWebTestCase extends WebTestCase
         // Create the application on construct so that we have access to app() (container)
         $this->app = $this->createApplication();
         $this->logfilename = Log::getLogger()->getHandlers()[0]->getUrl();
+
+        $db_type = config('database.default');
+        $db_config = config("database.connections.{$db_type}");
+        $this->db = new database($db_type);
+        $this->db->setDb($db_config['database']);
+        $this->db->setHost($db_config['host']);
+        $this->db->setUser($db_config['username']);
+        $this->db->setPassword($db_config['password']);
     }
 
     public function createBrowser()

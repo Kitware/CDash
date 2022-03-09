@@ -24,13 +24,6 @@ $configure = array(
     'svnroot' => '/var/www/CDashTesting'
 );
 
-global $db;
-$db = array('host' => $CDASH_DB_HOST,
-    'login' => $CDASH_DB_LOGIN,
-    'pwd' => $CDASH_DB_PASS,
-    'name' => $CDASH_DB_NAME,
-    'type' => $CDASH_DB_TYPE);
-
 // The following heuristic is used to guess whether we are running inside the
 // web browser or via a php command line invocation...
 //

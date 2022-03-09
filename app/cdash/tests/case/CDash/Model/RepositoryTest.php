@@ -26,6 +26,8 @@ class RepositoryTest extends TestCase
 
     public function setUp() : void
     {
+        $this->createApplication();
+
         $this->project = $this->getMockBuilder(Project::class)
             ->disableOriginalConstructor()
             ->setMethods(['GetRepositories'])

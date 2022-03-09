@@ -3,6 +3,7 @@ project(CDash)
 include(CTest)
 configure_file(${CDash_SOURCE_DIR}/CTestCustom.cmake.in
   ${CDash_BINARY_DIR}/CTestCustom.cmake)
+
 # set some cache variables that can be used
 # to configure the testing install
 set(CDASH_SERVER localhost CACHE STRING "CDash testing server")
@@ -98,32 +99,48 @@ else()
   set(CDASH_BERNARD_CONSUMERS_WHITELIST "false")
 endif()
 
+# Write out a minimal, vestigial config.local.php file.
 file(WRITE "${CDash_SOURCE_DIR}/app/cdash/config/config.local.php"
 "<?php
-// WARNING: This file is unconditionally overwritten by the CMake configure
-// step: [${CMAKE_CURRENT_LIST_FILE}]
-//
-// Some of the CDash tests also inject config settings below as tests run...
-//
+// WARNING: This file is unconditionally overwritten by the CMake configure step
 date_default_timezone_set('America/New_York');
-$CDASH_DB_NAME = 'cdash4simpletest';
-$CDASH_TESTING_MODE = true;
-$CDASH_REGISTRATION_EMAIL_VERIFY = false;
-$CDASH_DB_HOST = '${CDASH_DB_HOST}';
-$CDASH_DB_LOGIN = '${CDASH_DB_LOGIN}';
-$CDASH_DB_PASS = '${CDASH_DB_PASS}';
-$CDASH_DB_TYPE = '${CDASH_DB_TYPE}';
 $CDASH_COVERAGE_DIR = '${CDASH_COVERAGE_DIR}';
-$CDASH_LOG_LEVEL = LOG_DEBUG;
 $PHP_EXE = '${PHP_EXE}';
 $PHPUNIT_EXE = '${PHPUNIT_EXE}';
 $CDASH_DEFAULT_GIT_DIRECTORY = '${CDash_BINARY_DIR}';
-$CDASH_BASE_URL = '${CDASH_TESTING_URL}';
-$CDASH_BERNARD_SUBMISSION = ${CDASH_BERNARD_SUBMISSION};
-$CDASH_BERNARD_DRIVER = ${CDASH_BERNARD_DRIVER};
-$CDASH_BERNARD_CONSUMERS_WHITELIST = ${CDASH_BERNARD_CONSUMERS_WHITELIST};
 ?>
 ")
+
+# Generate .env
+# Start with values from our CMake cache variables.
+file(WRITE ${CMAKE_SOURCE_DIR}/.env
+"
+APP_DEBUG=true
+APP_LOG_LEVEL=debug
+APP_TIMEZONE=America/New_York
+APP_URL=${CDASH_TESTING_URL}
+DB_CONNECTION=${CDASH_DB_TYPE}
+DB_DATABASE=cdash4simpletest
+DB_HOST=${CDASH_DB_HOST}
+DB_PASSWORD=${CDASH_DB_PASS}
+DB_USERNAME=${CDASH_DB_LOGIN}
+")
+
+# Next copy in the contents from our example file.
+file(READ ${CMAKE_SOURCE_DIR}/.env.example _example_contents)
+file(APPEND ${CMAKE_SOURCE_DIR}/.env "${_example_contents}")
+
+# Generate an application key.
+execute_process(
+  COMMAND ${PHP_EXE} artisan key:generate
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
+# Migrate any lingering settings from config.local.php.
+execute_process(
+  COMMAND ${PHP_EXE} artisan config:migrate
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
 
 # add the new tests directory
 add_subdirectory(tests)
