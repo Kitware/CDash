@@ -729,7 +729,7 @@ class BazelJSONTestCase extends KWWebTestCase
         try {
             $response = $client->request(
                 'POST',
-                $this->config('CDASH_BASE_URL') . '/submit.php',
+                config('app.url') . '/submit.php',
                 [
                     'form_params' => $fields
                 ]

@@ -191,8 +191,7 @@ class SubmissionService
             // (rather than delete) processed submission files.
             $query_args['dest'] = basename($this->backupFileName);
         }
-        $url = Config::getInstance()->get('CDASH_BASE_URL') .
-            '/api/v1/deleteSubmissionFile.php';
+        $url = config('app.url') . '/api/v1/deleteSubmissionFile.php';
         $this->getHttpClient()->request('DELETE', $url,
                 ['query' => $query_args]);
     }

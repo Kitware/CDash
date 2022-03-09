@@ -101,12 +101,13 @@ class ConfigTest extends CDashTestCase
 
     public function testGetBaseUrl()
     {
-        global $CDASH_BASE_URL, $CDASH_USE_HTTPS;
+        global $CDASH_USE_HTTPS;
         include 'config/config.php';
 
         $config = Config::getInstance();
+        $base_url = config('app.url');
 
-        $config->set('CDASH_BASE_URL', null);
+        config(['app.url' => null]);
         $config->set('CDASH_USE_HTTPS', true);
         $_SERVER['SERVER_NAME'] = 'www2.tonyrobins.com';
         $_SERVER['SERVER_PORT'] = 8080;
@@ -118,11 +119,11 @@ class ConfigTest extends CDashTestCase
 
         $this->assertEquals($expected, $actual);
 
-        $config->set('CDASH_BASE_URL', 'http://open.cdash.org');
+        config(['app.url' => 'http://open.cdash.org']);
         $expected = 'http://open.cdash.org';
         $this->assertEquals($expected, $config->getBaseUrl());
 
-        $config->set('CDASH_BASE_URL', $CDASH_BASE_URL);
+        config(['app.url' => $base_url]);
         $config->set('CDASH_USE_HTTPS', $CDASH_USE_HTTPS);
     }
 
@@ -134,6 +135,6 @@ class ConfigTest extends CDashTestCase
         $config = Config::getInstance();
         \Illuminate\Support\Facades\Log::shouldReceive('info')
             ->with('pull request commenting is disabled');
-        post_pull_request_comment(1, 1, "this is a comment", $config->get('CDASH_BASE_URL'));
+        post_pull_request_comment(1, 1, "this is a comment", config('app.url'));
     }
 }

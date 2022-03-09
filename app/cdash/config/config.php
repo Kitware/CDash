@@ -78,7 +78,6 @@ $CDASH_USE_HTTPS = '0';
 // Name of the server running CDash.
 // Leave empty to use current name and default port.
 $CDASH_SERVER_NAME = '';
-$CDASH_BASE_URL = '';
 // CSS file
 $CDASH_CSS_FILE = 'css/cdash.css';
 // Backup directory

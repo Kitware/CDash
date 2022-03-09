@@ -21,14 +21,15 @@ class BuildUpdateTest extends TestCase
 {
     public function testGetUrlForSelf()
     {
-        $config = \CDash\Config::getInstance();
-        $config->set('CDASH_BASE_URL', 'https://cdash.tld/');
+        $base_url = config('app.url');
+        config(['app.url' => 'https://cdash.tld/']);
+
         $sut = new BuildUpdate();
         $sut->BuildId = 1001;
-
         $expected = 'https://cdash.tld/viewUpdate.php?buildid=1001';
         $actual = $sut->GetUrlForSelf();
-
         $this->assertEquals($expected, $actual);
+
+        config(['app.url' => $base_url]);
     }
 }

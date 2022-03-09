@@ -53,7 +53,7 @@ function fileHandleFromSubmissionId($filename)
 
     $client = new GuzzleHttp\Client();
     $response = $client->request('GET',
-                                 $config->get('CDASH_BASE_URL') . '/api/v1/getSubmissionFile.php',
+                                 config('app.url') . '/api/v1/getSubmissionFile.php',
                                  array('query' => array('filename' => $filename),
                                        'save_to' => $tmpFilename));
 

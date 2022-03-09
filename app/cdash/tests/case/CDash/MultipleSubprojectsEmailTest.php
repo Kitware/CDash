@@ -59,8 +59,10 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         $config->set('CDASH_SERVER_NAME', 'open.cdash.org');
         $config->set('CDASH_BASE_URL', 'http://open.cdash.org');
 
-        // deal with timezone stuff
+        $this->originalBaseUrl = config('app.url');
+        config(['app.url' => 'http://open.cdash.org']);
 
+        // deal with timezone stuff
         self::$tz = date_default_timezone_get();
 
         // so that we can mock the database layer
@@ -72,6 +74,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         // restore state
         date_default_timezone_set(self::$tz);
         Database::setInstance(Database::class, self::$database);
+        config(['app.url' => $this->originalBaseUrl]);
 
         parent::tearDownAfterClass();
     }

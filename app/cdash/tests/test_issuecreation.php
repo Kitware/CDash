@@ -157,7 +157,7 @@ class IssueCreationTestCase extends KWWebTestCase
         pdo_execute($da_stmt, [$buildid1, 'itkGeodesicActiveContourLevelSetSegmentationModuleTest1']);
         $da_id = $da_stmt->fetchColumn();
 
-        $encoded_base_url = urlencode($this->config('CDASH_BASE_URL'));
+        $encoded_base_url = urlencode(config('app.url'));
 
         $answer_key = [
             'Buganizer' => [
