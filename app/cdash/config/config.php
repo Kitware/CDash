@@ -31,18 +31,6 @@ if (!isset($ONLY_LOAD_DEFAULTS)) {
 $CDASH_ROOT_DIR = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);
 
-
-// Hostname of the database server or name of unix socket
-$CDASH_DB_HOST = 'localhost';
-// Login for database access
-$CDASH_DB_LOGIN = 'root';
-// Password for database access
-$CDASH_DB_PASS = '';
-// Name of the database
-$CDASH_DB_NAME = 'cdash';
-// Database type
-$CDASH_DB_TYPE = 'mysql';
-
 // host for Selenium testing
 $CDASH_SELENIUM_HUB='localhost';
 

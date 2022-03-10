@@ -91,9 +91,6 @@ EOT;
         $this->assertContains('GOOGLE_ENABLE=', $actual);
         $this->assertContains('GOOGLE_CLIENT_SECRET=google_client_secret', $actual);
 
-        // Default value (mysql) does not get written to .env.
-        $this->assertNotContains('DB_CONNECTION=', $actual);
-
         // Existing values in .env will not get overwritten.
         $this->assertContains('DB_PASSWORD=my_db_password', $actual);
         $this->assertNotContains('DB_PASSWORD=my_fake_testing_db_password', $actual);
