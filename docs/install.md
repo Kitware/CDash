@@ -93,24 +93,15 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-Next, if you haven't already done so, create the file `app/cdash/config/config.local.php`
-and populate it with any non-default settings you require. The most important values
-to set here are:
+Next, open `.env` in an editor and configure your instance of CDash.
+Important values to specify here are:
 
-* The `$CDASH_DB_*` variables. These indicate how to connect to the database.
-* `$CDASH_BASE_URL` should be set to the root URL of CDash (ie `https://localhost/CDash`)
-* `$CDASH_EMAIL*` variables. These indicate how email should be sent.
-* `$CDASH_USE_HTTPS` should be set to `1` if you want to use https instead of http.
+* `APP_URL` should be set to the root URL of CDash (ie `https://localhost/CDash`)
+* The `DB_*` variables instruct CDash how to connect to its database.
+* The `MAIL_*` variables dictate how email should be sent by CDash.
 
 In most other cases, reasonable default values apply if the variables are not explicitly set.
-
-Once you're happy with the contents of `config.local.php`, run the following command to migrate
-your config settings into the `.env` file used by Laravel.
-
-```bash
-cd /path/to/CDash
-php artisan config:migrate
-```
+For a full list of config options, see `.env.example`.
 
 At this point, make sure your `.env` file has a `APP_URL` entry, and that the following line
 appears somewhere further down in the file:
@@ -123,6 +114,15 @@ Once you're happy with your config settings, run `npm` to generate CDash's front
 ```bash
 # Generate build files
 npm run dev
+```
+
+##### Migrating settings from `config.local.php`
+If you're upgrading from CDash v3.0 or earlier you can use the following command to migrate
+your settings from `config.local.php` into the `.env` file used by Laravel.
+
+```bash
+cd /path/to/CDash
+php artisan config:migrate
 ```
 
 ## Finish CDash installation
