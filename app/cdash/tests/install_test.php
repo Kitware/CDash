@@ -11,8 +11,9 @@ class BaseInstallTestCase extends KWWebTestCase
     {
         parent::__construct();
 
-        global $db;
-        $this->databaseName = $db['name'];
+        $db_type = config('database.default');
+        $db_config = config("database.connections.{$db_type}");
+        $this->databaseName = $db_config['database'];
     }
 
     public function install($start_with_empty_db = false)

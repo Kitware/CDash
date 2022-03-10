@@ -315,11 +315,10 @@ class AuthTokenTestCase extends KWWebTestCase
         }
 
         $client = new GuzzleHttp\Client();
-        global $CDASH_BASE_URL;
         try {
             $response = $client->request(
                 'POST',
-                $CDASH_BASE_URL . '/submit.php',
+                config('app.url') . '/submit.php',
                 [
                     'form_params' => $fields,
                     'headers' => $headers

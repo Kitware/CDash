@@ -62,21 +62,23 @@ if (class_exists('PDO') === false) {
     $xml .= '<extpdo>1</extpdo>';
 }
 
-if (!$config->get('CDASH_DB_TYPE')) {
-    $db_type = 'mysql';
-} else {
-    $db_type = $config->get('CDASH_DB_TYPE');
-}
+$db_type = config('database.default');
+$database_config = config("database.connections.{$db_type}");
+$db_host = $database_config['host'];
+$db_user = $database_config['username'];
+$db_pass = $database_config['password'];
+$db_name = $database_config['database'];
 
-$db_connection = $config->get('CDASH_DB_CONNECTION_TYPE');
-$db_host = $config->get('CDASH_DB_HOST');
-$db_user = $config->get('CDASH_DB_LOGIN');
-$db_pass = $config->get('CDASH_DB_PASS');
+if (array_key_exists('unix_socket', $database_config) && $database_config['unix_socket']) {
+    $db_connection = 'unix_socket';
+} else {
+    $db_connection = 'host';
+}
 
 $xml .= '<connectiondb_type>' . $db_type . '</connectiondb_type>';
 $xml .= '<connectiondb_host>' . $db_host . '</connectiondb_host>';
 $xml .= '<connectiondb_login>' . $db_user . '</connectiondb_login>';
-$xml .= '<connectiondb_name>' . $config->get('CDASH_DB_NAME') . '</connectiondb_name>';
+$xml .= '<connectiondb_name>' . $db_name  . '</connectiondb_name>';
 
 // Step 1: Check if we can connect to the database
 try {
@@ -161,7 +163,6 @@ if (!$installed) {
 
         if ($valid_email) {
             $db_created = true;
-            $db_name = $config->get('CDASH_DB_NAME');
             $sql = $db_type === 'mysql' ? "CREATE DATABASE IF NOT EXISTS `{$db_name}`" : "CREATE DATABASE {$db_name}";
 
             try {
@@ -239,7 +240,7 @@ if (!$installed) {
                     $version_array = pdo_fetch_array($result_version);
                     if (strpos(strtolower($version_array[0]), 'postgresql 9.') !== false) {
                         // For PgSQL 9.0 we need to set the bytea_output to 'escape' (it was changed to hexa)
-                        @pdo_query('ALTER DATABASE ' . $config->get('CDASH_DB_NAME') . " SET bytea_output TO 'escape'");
+                        @pdo_query("ALTER DATABASE {$db_name} SET bytea_output TO 'escape'");
                     }
                 }
 

@@ -101,7 +101,7 @@ class UniqueDiffsTestCase extends KWWebTestCase
 
         foreach ($tables as $table) {
             // Create testing tables.
-            if ($this->config('CDASH_DB_TYPE') == 'pgsql') {
+            if (config('database.default') == 'pgsql') {
                 $create_query = '
                     CREATE TABLE "' . $table . '" (
                             "buildid" integer NOT NULL,

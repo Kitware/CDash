@@ -1,6 +1,5 @@
 <?php
 
-use CDash\Config;
 use CDash\Model\BuildUpdate;
 
 /** Add a new build */
@@ -185,8 +184,7 @@ function compute_error_difference($buildid, $previousbuildid, $warning)
     } else {
         // Insert new record.
         $duplicate_sql = '';
-        $config = Config::getInstance();
-        if ($config->get('CDASH_DB_TYPE') !== 'pgsql') {
+        if (config('database.default') !== 'pgsql') {
             $duplicate_sql =
                 'ON DUPLICATE KEY UPDATE difference_positive=:npositives, difference_negative=:nnegatives';
         }
@@ -293,8 +291,7 @@ function compute_test_difference($buildid, $previousbuildid, $testtype, $project
     } else {
         // Insert new record.
         $duplicate_sql = '';
-        $config = Config::getInstance();
-        if ($config->get('CDASH_DB_TYPE') !== 'pgsql') {
+        if (config('database.default') !== 'pgsql') {
             $duplicate_sql =
                 'ON DUPLICATE KEY UPDATE difference_positive=:npositives, difference_negative=:nnegatives';
         }

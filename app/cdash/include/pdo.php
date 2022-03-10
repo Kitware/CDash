@@ -17,7 +17,6 @@
 require_once 'include/log.php';
 
 use CDash\Database;
-use CDash\Config;
 
 // pdo_single_row_query returns a single row. Useful for SELECT
 // queries that are expected to return 0 or 1 rows.
@@ -221,9 +220,8 @@ function pdo_free_result($result)
  */
 function pdo_insert_id($table_name)
 {
-    $config = Config::getInstance();
     $seq = '';
-    if ($config->get('CDASH_DB_TYPE') === 'pgsql') {
+    if (config('database.default') === 'pgsql') {
         $seq = $table_name . '_id_seq';
     }
     return get_link_identifier(null)->getPdo()->lastInsertId($seq);
@@ -282,10 +280,9 @@ function pdo_query($query, $link_identifier = null, $log_error = true)
  */
 function pdo_lock_tables($tables)
 {
-    $config = Config::getInstance();
     $table_str = implode(', ', $tables);
 
-    if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+    if (config('database.default') == 'pgsql') {
         // PgSql table locking syntax:
         // http://www.postgresql.org/docs/8.1/static/sql-lock.html
         pdo_query('BEGIN WORK');
@@ -308,8 +305,7 @@ function pdo_lock_tables($tables)
  */
 function pdo_unlock_tables()
 {
-    $config = Config::getInstance();
-    if ($config->get('CDASH_DB_TYPE') === 'pgsql') {
+    if (config('database.default') === 'pgsql') {
         // Unlock occurs automatically at transaction end for PgSql, according to:
         // http://www.postgresql.org/docs/8.1/static/sql-lock.html
         pdo_query('COMMIT WORK');
@@ -339,8 +335,7 @@ function pdo_real_escape_string($unescaped_string, $link_identifier = null)
  */
 function pdo_real_escape_numeric($unescaped_string, $link_identifier = null)
 {
-    $config = Config::getInstance();
-    if ($config->get('CDASH_DB_TYPE') == 'pgsql' && $unescaped_string == '') {
+    if (config('database.default') == 'pgsql' && $unescaped_string == '') {
         // MySQL interprets an empty string as zero when assigned to a numeric field,
         // for PostgreSQL this must be done explicitly:
         $unescaped_string = '0';
@@ -400,10 +395,9 @@ function pdo_execute($stmt, $input_parameters=null)
 
 function pdo_get_vendor_version($link_identifier = null)
 {
-    $config = Config::getInstance();
     $version = get_link_identifier($link_identifier)->getPdo()->query('SELECT version()')->fetchColumn();
 
-    if ($config->get('CDASH_DB_TYPE') === 'pgsql') {
+    if (config('database.default') === 'pgsql') {
         // Postgress returns version string similar to:
         //   PostgreSQL 9.6.1 on x86_64-apple-darwin16.1.0, compiled by Apple LLVM version 8.0.0 (clang-800.0.42.1), 64-bit
         $build = explode(" ", $version);

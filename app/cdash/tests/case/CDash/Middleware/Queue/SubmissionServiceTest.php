@@ -152,8 +152,7 @@ class SubmissionServiceTest extends CDashTestCase
         $sut->setHttpClient($mock_client);
         \CDash\Config::getInstance()->set('CDASH_REMOTE_PROCESSOR', true);
 
-        $url = \CDash\Config::getInstance()->get('CDASH_BASE_URL') .
-            '/api/v1/deleteSubmissionFile.php';
+        $url = config('app.url') . '/api/v1/deleteSubmissionFile.php';
         $query_args = [
             'filename' => basename($message->file),
             'dest' => 'descriptive_filename.xml'
@@ -227,8 +226,7 @@ class SubmissionServiceTest extends CDashTestCase
 
         $message = SubmissionService::createMessage($this->parameters);
 
-        $url = \CDash\Config::getInstance()->get('CDASH_BASE_URL') .
-            '/api/v1/deleteSubmissionFile.php';
+        $url = config('app.url') . '/api/v1/deleteSubmissionFile.php';
 
         $query_args = [
             'filename' => basename($message->file),

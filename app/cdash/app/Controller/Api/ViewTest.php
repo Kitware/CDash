@@ -227,7 +227,7 @@ class ViewTest extends BuildApi
         $labeljoin_sql = '';
         $label_sql = '';
         $groupby_sql = '';
-        if ($this->project->DisplayLabels && $this->config->get('CDASH_DB_TYPE') != 'pgsql') {
+        if ($this->project->DisplayLabels && config('database.default') != 'pgsql') {
             $labeljoin_sql = '
                 LEFT JOIN label2test AS l2t ON (l2t.outputid=bt.outputid)
                 LEFT JOIN label AS l ON (l.id=l2t.labelid)';
@@ -397,7 +397,8 @@ class ViewTest extends BuildApi
                 $numTimeFailed++;
             }
 
-            $labels_found = ($this->config->get('CDASH_DB_TYPE') != 'pgsql' && !empty($marshaledTest['labels']));
+            $labels_found = (config('database.default') != 'pgsql' && !empty($marshaledTest['labels']));
+
             $marshaledTest['measurements'] = $test_measurements[$marshaledTest['buildtestid']];
             if ($response['hasprocessors']) {
                 // Show an additional column "proc time" if these tests have
@@ -446,7 +447,7 @@ class ViewTest extends BuildApi
 
         // STRAIGHT_JOIN is a MySQL specific enhancement.
         $join_type = 'INNER JOIN';
-        if ($this->config->get('CDASH_DB_TYPE') === 'mysql') {
+        if (config('database.default') === 'mysql') {
             $join_type = 'STRAIGHT_JOIN';
         }
 
@@ -494,7 +495,7 @@ class ViewTest extends BuildApi
 
         // STRAIGHT_JOIN is a MySQL specific enhancement.
         $join_type = 'INNER JOIN';
-        if ($this->config->get('CDASH_DB_TYPE') === 'mysql') {
+        if (config('database.default') === 'mysql') {
             $join_type = 'STRAIGHT_JOIN';
         }
 

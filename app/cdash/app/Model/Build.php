@@ -1325,8 +1325,7 @@ class Build
                     WHERE buildid = :buildid AND type = 1');
         } else {
             $duplicate_sql = '';
-            $config = Config::getInstance();
-            if ($config->get('CDASH_DB_TYPE') !== 'pgsql') {
+            if (config('database.default') !== 'pgsql') {
                 $duplicate_sql = 'ON DUPLICATE KEY UPDATE difference = :difference';
             }
             $stmt = $this->PDO->prepare(
@@ -2829,9 +2828,8 @@ class Build
         $buildGroup = new BuildGroup();
         $this->GroupId = $buildGroup->GetGroupIdFromRule($this);
 
-        $config = Config::getInstance();
         $duplicate_sql = '';
-        if ($config->get('CDASH_DB_TYPE') !== 'pgsql') {
+        if (config('database.default') !== 'pgsql') {
             $duplicate_sql =
                 'ON DUPLICATE KEY UPDATE groupid = groupid';
         }

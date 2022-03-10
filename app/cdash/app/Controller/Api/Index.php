@@ -1186,7 +1186,7 @@ class Index extends ResultsApi
 
                 // Compute historical average to get approximate expected time.
                 // PostgreSQL doesn't have the necessary functions for this.
-                if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+                if (config('database.default') == 'pgsql') {
                     $query = pdo_query(
                         "SELECT submittime FROM build,build2group
                         WHERE build2group.buildid=build.id AND siteid='$siteid' AND

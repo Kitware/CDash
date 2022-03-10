@@ -15,8 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use CDash\Config;
-
 class CoverageFileLog
 {
     public $BuildId;
@@ -114,8 +112,7 @@ class CoverageFileLog
         }
 
         $row = pdo_fetch_array($result);
-        $config = Config::getInstance();
-        if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+        if (config('database.default') == 'pgsql') {
             $log = stream_get_contents($row['log']);
         } else {
             $log = $row['log'];

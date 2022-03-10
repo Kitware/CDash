@@ -1217,8 +1217,7 @@ class Project
         $today = date(FMT_DATETIMESTD, $todaytime);
 
         $straighthjoin = '';
-        $config = Config::getInstance();
-        if ($config->get('CDASH_DB_TYPE') != 'pgsql') {
+        if (config('database.default') != 'pgsql') {
             $straighthjoin = 'STRAIGHT_JOIN';
         }
 

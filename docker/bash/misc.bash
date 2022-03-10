@@ -49,9 +49,7 @@ setup_local_config() {
         echo '$'"CDASH_DB_NAME = 'cdash';"
         echo '$'"CDASH_DB_TYPE = 'mysql';"
         echo '$'"CDASH_DB_LOGIN = 'root';"
-        echo '$'"CDASH_DB_PORT = '';"
         echo '$'"CDASH_DB_PASS = '';"
-        echo '$'"CDASH_DB_CONNECTION_TYPE = 'host';"
 
         if [ '!' -z ${CDASH_CONFIG+x} ] ; then
             echo "$CDASH_CONFIG"

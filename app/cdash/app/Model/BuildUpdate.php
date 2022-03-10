@@ -43,8 +43,7 @@ class BuildUpdate
         $this->Append = false;
         $this->DuplicateSQL = '';
         $this->PDO = Database::getInstance()->getPdo();
-        $config = Config::getInstance();
-        if ($config->get('CDASH_DB_TYPE') !== 'pgsql') {
+        if (config('database.default') !== 'pgsql') {
             $this->DuplicateSQL = 'ON DUPLICATE KEY UPDATE buildid=buildid';
         }
     }
@@ -190,8 +189,7 @@ class BuildUpdate
             $nwarnings += $this->GetNumberOfWarnings();
             $nfiles += $this->GetNumberOfFiles();
 
-            $config = Config::getInstance();
-            if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+            if (config('database.default') == 'pgsql') {
                 // pgsql doesn't have concat...
 
                 $query = "UPDATE buildupdate SET

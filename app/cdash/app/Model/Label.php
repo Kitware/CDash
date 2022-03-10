@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use CDash\Config;
 use CDash\Database;
 use PDO;
 
@@ -82,8 +81,7 @@ class Label
     public function InsertAssociation($table, $field1, $value1 = null, $field2 = null, $value2 = null)
     {
         $duplicate_sql = '';
-        $config = Config::getInstance();
-        if ($config->get('CDASH_DB_TYPE') !== 'pgsql') {
+        if (config('database.default') !== 'pgsql') {
             $duplicate_sql = 'ON DUPLICATE KEY UPDATE labelid=labelid';
         }
         if (!empty($value1)) {

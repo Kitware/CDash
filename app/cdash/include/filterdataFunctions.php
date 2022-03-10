@@ -48,7 +48,7 @@ class DefaultFilters implements PageSpecificFilters
         // The way we concatenate text into a single value
         // depends on our database backend.
 
-        if (Config::getInstance()->get('CDASH_DB_TYPE') === 'pgsql') {
+        if (config('database.default') === 'pgsql') {
             $this->TextConcat = "array_to_string(array_agg(text), ', ')";
         } else {
             $this->TextConcat = "GROUP_CONCAT(text SEPARATOR ', ')";
@@ -173,7 +173,6 @@ class IndexPhpFilters extends DefaultFilters
             return '';
         }
 
-        $config = \CDash\Config::getInstance();
         $sql_field = '';
         switch (strtolower($field)) {
             case 'buildduration': {
@@ -312,7 +311,7 @@ class IndexPhpFilters extends DefaultFilters
                 break;
 
             case 'updateduration': {
-                if ($config->get("CDASH_DB_TYPE") === 'pgsql') {
+                if (config('database.default') === 'pgsql') {
                     $sql_field = 'ROUND(EXTRACT(EPOCH FROM (bu.endtime - bu.starttime))::numeric / 60, 1)';
                 } else {
                     $sql_field = 'ROUND(TIMESTAMPDIFF(SECOND,bu.starttime,bu.endtime)/60.0,1)';
@@ -1042,7 +1041,6 @@ function parse_filter_from_request($field_var, $compare_var, $value_var,
 //
 function get_filterdata_from_request($page_id = '')
 {
-    $config = Config::getInstance();
     $xml = '';
     $filterdata = [];
     $filters = [];
@@ -1126,6 +1124,7 @@ function get_filterdata_from_request($page_id = '')
     if (array_key_exists('colorblind', $_COOKIE)) {
         $filterdata['colorblind'] = intval($_COOKIE['colorblind']);
     } else {
+        $config = Config::getInstance();
         if ($config->get('CDASH_CSS_FILE') === 'css/colorblind.css') {
             $filterdata['colorblind'] = 1;
         } else {

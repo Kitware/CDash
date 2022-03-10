@@ -94,7 +94,7 @@ class Config extends Singleton
      */
     public function getBaseUrl($use_localhost = false)
     {
-        $uri = $this->get('CDASH_BASE_URL');
+        $uri = config('app.url');
 
         if (!$uri) {
             $protocol = $this->getProtocol();
