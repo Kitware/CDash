@@ -6,9 +6,11 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Models\BuildTest;
+use App\Models\BuildNote;
 use App\Models\Test;
 use App\Models\TestMeasurement;
 use App\Services\TestCreator;
+use App\Services\NoteCreator;
 
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
@@ -16,7 +18,6 @@ use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildInformation;
-use CDash\Model\BuildNote;
 use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUpdateFile;
 use CDash\Model\Coverage;
@@ -131,22 +132,22 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $configure->Insert();
 
         // BuildNote
-        $note = new BuildNote();
-        $note->Name = 'my note';
-        $note->Text = 'note text';
-        $note->Time = $time;
-        $note->BuildId = $build->Id;
-        $note->Insert();
+        $note = new NoteCreator();
+        $note->name = 'my note';
+        $note->text = 'note text';
+        $note->time = $time;
+        $note->buildid = $build->Id;
+        $note->create();
 
-        $shared_note = new BuildNote();
-        $shared_note->Name = 'my shared note';
-        $shared_note->Text = 'shared note text';
-        $shared_note->Time = $time;
-        $shared_note->BuildId = $build->Id;
-        $shared_note->Insert();
+        $shared_note = new NoteCreator();
+        $shared_note->name = 'my shared note';
+        $shared_note->text = 'shared note text';
+        $shared_note->time = $time;
+        $shared_note->buildid = $build->Id;
+        $shared_note->create();
 
-        $shared_note->BuildId = $existing_build->Id;
-        $shared_note->Insert();
+        $shared_note->buildid = $existing_build->Id;
+        $shared_note->create();
 
         // buildtesttime
         $build->SaveTotalTestsTime(8);
