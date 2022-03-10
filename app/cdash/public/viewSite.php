@@ -112,7 +112,6 @@ if ($projectid) {
     $xml .= '<backurl>index.php</backurl>';
 }
 $xml .= "<title>CDash - $sitename</title>";
-$xml .= '<menutitle>CDash</menutitle>';
 $xml .= "<menusubtitle>$sitename</menusubtitle>";
 
 $xml .= '<dashboard>';
