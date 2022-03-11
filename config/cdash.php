@@ -22,7 +22,7 @@ return [
         'expires' => env('PASSWORD_EXPIRATION', 0),
         'unique' => env('UNIQUE_PASSWORD_COUNT', 0),
     ],
-    'version' => '3.0.1',
+    'version' => '3.1.0',
     'registration' => [
         'email' => [
             'verify' => env('REGISTRATION_EMAIL_VERIFY', true),
