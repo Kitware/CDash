@@ -40,14 +40,16 @@ $config = Config::getInstance();
 $service = ServiceContainer::getInstance();
 
 // Check if we can connect to the database.
-$pdo = get_link_identifier()->getPdo();
-if (!$pdo) {
-    echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
-    echo " <status>ERROR</status>\n";
-    echo " <message>Cannot connect to the database.</message>\n";
-    echo "</cdash>\n";
-    return;
+try {
+    $pdo = \DB::connection()->getPdo();
+} catch (\Exception $e) {
+    $message = "<cdash version=\"{$config->get('CDASH_VERSION')}\">
+    <status>ERROR</status>
+    <message>Cannot connect to the database./message>
+    </cdash>";
+    return response($message, Response::HTTP_SERVICE_UNAVAILABLE);
 }
+
 @set_time_limit(0);
 
 // If we have a POST we forward to the new submission process
