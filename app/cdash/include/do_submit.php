@@ -29,6 +29,7 @@ use CDash\Model\Repository;
 use CDash\Model\Site;
 use CDash\ServiceContainer;
 use GuzzleHttp\Client as HttpClient;
+use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
@@ -74,6 +75,8 @@ function getSubmissionFileHandle($fileHandleOrSubmissionId)
 {
     if (is_resource($fileHandleOrSubmissionId)) {
         return $fileHandleOrSubmissionId;
+    } elseif (Storage::exists($fileHandleOrSubmissionId)) {
+        return fopen(Storage::path($fileHandleOrSubmissionId), 'r');
     } elseif (is_string($fileHandleOrSubmissionId)) {
         return fileHandleFromSubmissionId($fileHandleOrSubmissionId);
     } else {

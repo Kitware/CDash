@@ -94,39 +94,30 @@ function generateBackupFileName($projectname, $buildname, $sitename, $stamp,
 function safelyWriteBackupFile($filehandler, $content, $filename)
 {
     // If the file exists we append a number until we get a nonexistent file.
-    $config = Config::getInstance();
-    $backupDir = $config->get('CDASH_BACKUP_DIRECTORY');
+    $filepath = Storage::path($filename);
+    $inboxDir = Storage::path('inbox');
     $got_lock = false;
     $i = 1;
     while (!$got_lock) {
-        $lockfilename = $filename . '.lock';
+        $lockfilename = Storage::path("{$filename}.lock");
         $lockfp = fopen($lockfilename, 'w');
         flock($lockfp, LOCK_EX | LOCK_NB, $wouldblock);
         if ($wouldblock) {
-            $path_parts = pathinfo($filename);
-            $filename = $path_parts['dirname'] . '/' . $path_parts['filename'] . "_$i." . $part_parts['extension'];
+            $path_parts = pathinfo($filepath);
+            $filepath = $path_parts['dirname'] . '/' . $path_parts['filename'] . "_$i." . $path_parts['extension'];
             $i++;
         } else {
             $got_lock = true;
             // realpath() always returns false for Google Cloud Storage.
-            if (realpath($config->get('CDASH_BACKUP_DIRECTORY')) !== false) {
+            if (realpath($inboxDir) !== false) {
                 // Make sure the file is in the right directory.
-                $pos = strpos(realpath(dirname($filename)), realpath($backupDir));
+                $pos = strpos(realpath(dirname($filepath)), realpath($inboxDir));
                 if ($pos === false || $pos != 0) {
-                    echo "File cannot be stored in backup directory: $filename";
-                    add_log("File cannot be stored in backup directory: $filename (realpath = " . realpath($backupDir) . ')', 'writeBackupFile', LOG_ERR);
+                    \Log::error("File cannot be stored in inbox directory: $filepath (realpath = " . realpath($inboxDir) . ')');
                     flock($lockfp, LOCK_UN);
                     unlink($lockfilename);
                     return false;
                 }
-            }
-
-            if (!$handle = fopen($filename, 'w')) {
-                echo "Cannot open file ($filename)";
-                add_log("Cannot open file ($filename)", 'writeBackupFile', LOG_ERR);
-                flock($lockfp, LOCK_UN);
-                unlink($lockfilename);
-                return false;
             }
         }
         flock($lockfp, LOCK_UN);
@@ -136,26 +127,10 @@ function safelyWriteBackupFile($filehandler, $content, $filename)
     }
 
     // Write the file.
-    if (fwrite($handle, $content) === false) {
-        echo "ERROR: Cannot write to file ($filename)";
-        add_log("Cannot write to file ($filename)", 'writeBackupFile', LOG_ERR);
-        fclose($handle);
-        unset($handle);
+    if (!Storage::put($filename, $filehandler)) {
+        \Log::error("Cannot write to file ($filename)");
         return false;
     }
-
-    while (!feof($filehandler)) {
-        $content = fread($filehandler, 8192);
-        if (fwrite($handle, $content) === false) {
-            echo "ERROR: Cannot write to file ($filename)";
-            add_log("Cannot write to file ($filename)", 'writeBackupFile', LOG_ERR);
-            fclose($handle);
-            unset($handle);
-            return false;
-        }
-    }
-    fclose($handle);
-    unset($handle);
     return $filename;
 }
 
@@ -164,23 +139,7 @@ function safelyWriteBackupFile($filehandler, $content, $filename)
 function writeBackupFile($filehandler, $content, $projectname, $buildname,
                          $sitename, $stamp, $fileNameWithExt)
 {
-    // Make sure the backup directory exists.
-    $config = Config::getInstance();
-    $backupDir = $config->get('CDASH_BACKUP_DIRECTORY');
-    if (!file_exists($backupDir)) {
-        // try parent dir as well (for asynch submission)
-        $backupDir = "../$backupDir";
-
-        if (!file_exists($backupDir)) {
-            trigger_error(
-                'function writeBackupFile cannot process files when backup directory ' .
-                "does not exist: CDASH_BACKUP_DIRECTORY='{$config->get('CDASH_BACKUP_DIRECTORY')}'",
-                E_USER_ERROR);
-            return false;
-        }
-    }
-
-    $filename = $backupDir . '/';
+    $filename = 'inbox/';
     $filename .= generateBackupFileName($projectname, $buildname, $sitename, $stamp, $fileNameWithExt);
     return safelyWriteBackupFile($filehandler, $content, $filename);
 }
@@ -404,7 +363,10 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     } else {
         $filename = writeBackupFile($filehandler, $content, $projectname, $buildname,
                                     $sitename, $stamp, $file . '.xml');
+        // Storage relative-to-storage path in handler.
         $backup_filename = $filename;
+        // Convert to absolute path for use below.
+        $filename = Storage::path($filename);
         if ($filename === false) {
             return $handler;
         }
@@ -486,6 +448,6 @@ function check_for_immediate_deletion($filename)
     // if CDASH_BACKUP_TIMEFRAME is set to '0'.
     $config = Config::getInstance();
     if ($config->get('CDASH_BACKUP_TIMEFRAME') === '0' && is_file($filename)) {
-        unlink($filename);
+        Storage::delete($filename);
     }
 }

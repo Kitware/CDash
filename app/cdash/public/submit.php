@@ -14,6 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Jobs\ProcessSubmission;
 use Bernard\Message\DefaultMessage;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
@@ -134,7 +135,18 @@ if (isset($_GET['build']) && isset($_GET['site']) && isset($_GET['stamp'])) {
     $buildid = $build->Id;
 }
 
+// Save the incoming file in the inbox directory.
+$filename = "inbox/{$projectname}_" . \Illuminate\Support\Str::uuid()->toString() . '.xml';
 $fp = request()->getContent(true);
+if (!Storage::put($filename, $fp)) {
+    \Log::error("Failed to save submission to inbox for $projectname (md5=$expected_md5)");
+    $message = '<cdash version="' . config('cdash.version') . ">
+        <status>ERROR</status>
+        <message>Failed to save submission file.</message>
+        </cdash>";
+    return response($message, Response::HTTP_INTERNAL_SERVER_ERROR);
+}
+
 if ($config->get('CDASH_BERNARD_SUBMISSION')) {
     // Use a message queue for asynchronous submission processing.
     do_submit_queue($fp, $projectid, $buildid, $expected_md5);
@@ -145,7 +157,7 @@ if ($config->get('CDASH_BERNARD_SUBMISSION')) {
     if (!is_null($buildid)) {
         $pendingSubmissions->Increment();
     }
-    do_submit($fp, $projectid, $buildid, $expected_md5, true);
+    ProcessSubmission::dispatch($filename, $projectid, $buildid, $expected_md5);
 }
 fclose($fp);
 unset($fp);
