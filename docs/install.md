@@ -132,3 +132,14 @@ redirected to `install.php`. Fill out the installation form to create the
 database tables and the initial admin user.
 
 Once that is complete you can create a project and start submitting builds to it.
+
+## Database upgrade
+
+Run the following command whenever you upgrade an existing CDash installation to a new version.
+
+```bash
+cd /path/to/CDash
+php artisan migrate
+```
+
+This will ensure that your database schema is up-to-date.
