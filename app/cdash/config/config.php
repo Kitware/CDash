@@ -48,13 +48,6 @@ $CDASH_BERNARD_CONSUMERS_WHITELIST = false;
 // EXPERIMENTAL: Whether or not to use Bernard for submitting coverage jobs
 $CDASH_BERNARD_COVERAGE_SUBMISSION = false;
 
-// How long to keep finished async submissions in the DB.
-// Set to 0 to delete them right away.
-$CDASH_ASYNC_EXPIRATION_TIME = 691200; // 8 days.
-// How many asynchronous workers to use.
-// Only increase this above 1 for MySQL (not Postgres).
-$CDASH_ASYNC_WORKERS = 1;
-
 // If CDash should use the SendGrid API for email
 $CDASH_USE_SENDGRID = false;
 // API Key for SendGrid

@@ -187,42 +187,6 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
     return $handler;
 }
 
-function do_submit_asynchronous_file($filename, $projectid, $buildid = null,
-                                     $md5sum)
-{
-    $bytes = filesize($filename);
-
-    // Insert the filename in the database
-    $now_utc = gmdate(FMT_DATETIMESTD);
-    pdo_query('INSERT INTO submission (filename,projectid,status,attempts,filesize,filemd5sum,created) ' .
-        "VALUES ('" . $filename . "','" . $projectid . "','0','0','$bytes','$md5sum','$now_utc')");
-
-    // Get the ID associated with this submission.  We may need to reference it
-    // later if this is a CDash@home (client) submission.
-    $submissionid = pdo_insert_id('submission');
-
-    if (!is_null($buildid)) {
-        PendingSubmissions::IncrementForBuildId($buildid);
-    }
-
-    // We find the daily updates
-    $config = Config::getInstance();
-    $currentURI = $config->getBaseUrl();
-    $request = $currentURI . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
-
-    if ($config->get('CDASH_DAILY_UPDATES') && curl_request($request) === false) {
-        return;
-    }
-
-    // Save submitter IP in the database in the async case, so we have a valid
-    // IP at Site::Insert time when processing rather than 'localhost's IP:
-    pdo_insert_query('INSERT INTO submission2ip (submissionid, ip) ' .
-        "VALUES ('$submissionid', '" . $_SERVER['REMOTE_ADDR'] . "')");
-
-    // Call process submissions via cURL.
-    trigger_process_submissions($projectid);
-}
-
 /** Asynchronous submission using a message queue */
 function do_submit_queue($filehandle, $projectid, $buildid = null, $expected_md5 = '', $ip = null)
 {
@@ -486,79 +450,6 @@ function put_submit_file()
     $response_array['status'] = 0;
 
     echo json_encode($response_array);
-}
-
-// Used for parallel requests to processubmissions.php
-// Adapted from a comment found here:
-// stackoverflow.com/questions/962915/how-do-i-make-an-asynchronous-get-request-in-php
-function curl_request_async($url, $params, $type = 'POST')
-{
-    foreach ($params as $key => &$val) {
-        if (is_array($val)) {
-            $val = implode(',', $val);
-        }
-        $post_params[] = $key . '=' . urlencode($val);
-    }
-    $post_string = implode('&', $post_params);
-
-    $parts = parse_url($url);
-
-    switch ($parts['scheme']) {
-        case 'https':
-            $scheme = 'ssl://';
-            $port = 443;
-            break;
-        case 'http':
-        default:
-            $scheme = '';
-            $port = 80;
-    }
-
-    $fp = fsockopen($scheme . $parts['host'], $port, $errno, $errstr, 30);
-
-    // Data goes in the path for a GET request
-    if ('GET' == $type) {
-        $parts['path'] .= '?' . $post_string;
-    }
-
-    $out = "$type " . $parts['path'] . " HTTP/1.1\r\n";
-    $out .= 'Host: ' . $parts['host'] . "\r\n";
-    if ('POST' == $type && isset($post_string)) {
-        // Data goes in the request body for a POST request.
-        $out .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $out .= 'Content-Length: ' . strlen($post_string) . "\r\n";
-        $out .= $post_string;
-    }
-    $out .= "Connection: Close\r\n\r\n";
-
-    fwrite($fp, $out);
-    fclose($fp);
-}
-
-// Trigger processsubmissions.php using cURL.
-function trigger_process_submissions($projectid)
-{
-    $config = Config::getInstance();
-    $currentURI = $config->getBaseUrl();
-    $async_workers = $config->get('CDASH_ASYNC_WORKERS');
-
-    if ($async_workers > 1) {
-        // Parallel processing.
-        // Obtain the processing lock before firing off parallel workers.
-        $mypid = getmypid();
-        include 'include/submission_functions.php';
-        if (AcquireProcessingLock($projectid, false, $mypid)) {
-            $url = $currentURI . '/ajax/processsubmissions.php';
-            $params = array('projectid' => $projectid, 'pid' => $mypid);
-            for ($i = 0; $i < $async_workers; $i++) {
-                curl_request_async($url, $params, 'GET');
-            }
-        }
-    } else {
-        // Serial processing.
-        $request = $currentURI . '/ajax/processsubmissions.php?projectid=' . $projectid;
-        curl_request($request);
-    }
 }
 
 /**
