@@ -125,7 +125,7 @@ function curl_request($request)
  * a file handle or a filename that it can query the CDash API for.
  **/
 function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
-                   $expected_md5 = '', $do_checksum = true, $submission_id = 0)
+                   $expected_md5 = '')
 {
     $config = Config::getInstance();
     $filehandle = getSubmissionFileHandle($fileHandleOrSubmissionId);
@@ -145,7 +145,7 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
     }
 
     // Parse the XML file
-    $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5, $do_checksum);
+    $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5);
 
     //this is the md5 checksum fail case
     if ($handler == false) {

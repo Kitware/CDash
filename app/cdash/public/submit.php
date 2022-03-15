@@ -147,6 +147,19 @@ if (!Storage::put($filename, $fp)) {
     return response($message, Response::HTTP_INTERNAL_SERVER_ERROR);
 }
 
+if ($expected_md5) {
+    // Check that the md5sum of the file matches what we were told to expect.
+    $md5sum = md5_file(Storage::path($filename));
+    if ($md5sum != $expected_md5) {
+        Storage::delete($filename);
+        $message = '<cdash version="' . config('cdash.version') . ">
+            <status>ERROR</status>
+            <message>md5 mismatch. expected: {$expected_md5}, received: {$md5sum}</message>
+            </cdash>";
+        return response($message, Response::HTTP_BAD_REQUEST);
+    }
+}
+
 if ($config->get('CDASH_BERNARD_SUBMISSION')) {
     // Use a message queue for asynchronous submission processing.
     do_submit_queue($fp, $projectid, $buildid, $expected_md5);

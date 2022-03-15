@@ -233,7 +233,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 
 /** Main function to parse the incoming xml from ctest */
 function ctest_parse($filehandler, $projectid, $buildid = null,
-                     $expected_md5 = '', $do_checksum = true)
+                     $expected_md5 = '')
 {
     require_once 'include/common.php';
     include 'include/version.php';
@@ -378,31 +378,6 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     $statusarray['message'] = '';
     if (!is_null($buildid)) {
         $statusarray['buildId'] = $buildid;
-    }
-    if ($do_checksum == true) {
-        if (!file_exists($filename)) {
-            // Parsing cannot continue if this file does not exist.
-            // Perhaps another process already parsed it.
-            add_log("File does not exist, checksum cannot continue: $filename",
-                    'ctest_parse', LOG_INFO, $projectid);
-            return false;
-        }
-        $md5sum = md5_file($filename);
-        $md5error = false;
-        if ($expected_md5 == '' || $expected_md5 == $md5sum) {
-            $statusarray['status'] = 'OK';
-        } else {
-            $statusarray['status'] = 'ERROR';
-            $statusarray['message'] = 'Checksum failed for file. Expected ' . $expected_md5 . ' but got ' . $md5sum;
-            $md5error = true;
-        }
-
-        $statusarray['md5'] = $md5sum;
-        if ($md5error) {
-            displayReturnStatus($statusarray);
-            add_log("Checksum failure on file: $filename", 'ctest_parse', LOG_ERR, $projectid);
-            return false;
-        }
     }
 
     $parsingerror = '';
