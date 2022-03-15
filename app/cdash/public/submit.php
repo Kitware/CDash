@@ -150,9 +150,6 @@ if (!Storage::put($filename, $fp)) {
 if ($config->get('CDASH_BERNARD_SUBMISSION')) {
     // Use a message queue for asynchronous submission processing.
     do_submit_queue($fp, $projectid, $buildid, $expected_md5);
-} elseif ($config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
-    // If the submission is asynchronous we store in the database.
-    do_submit_asynchronous($fp, $projectid, $buildid, $expected_md5);
 } else {
     if (!is_null($buildid)) {
         $pendingSubmissions->Increment();

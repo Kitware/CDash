@@ -186,64 +186,6 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
     return $handler;
 }
 
-/** Asynchronous submission */
-function do_submit_asynchronous($filehandle, $projectid, $buildid = null,
-                                $expected_md5 = '')
-{
-    include 'include/version.php';
-    $config = Config::getInstance();
-
-    do {
-        $filename = $config->get('CDASH_BACKUP_DIRECTORY') . '/' . mt_rand() . '.xml';
-        $fp = @fopen($filename, 'x');
-    } while (!$fp);
-    fclose($fp);
-    unset($fp);
-
-    $outfile = fopen($filename, 'w');
-
-    // Save the file in the backup directory
-    while (!feof($filehandle)) {
-        $content = fread($filehandle, 8192);
-        if (fwrite($outfile, $content) === false) {
-            echo "ERROR: Cannot write to file ($filename)";
-            add_log("Cannot write to file ($filename)", 'do_submit_asynchronous',
-                LOG_ERR, $projectid);
-            fclose($outfile);
-            unset($outfile);
-            return;
-        }
-    }
-    fclose($outfile);
-    unset($outfile);
-
-    $md5sum = md5_file($filename);
-    $md5error = false;
-
-    echo "<cdash version=\"{$config->get('CDASH_VERSION')}\">\n";
-    if ($expected_md5 == '' || $expected_md5 == $md5sum) {
-        echo "  <status>OK</status>\n";
-        echo "  <message></message>\n";
-    } else {
-        echo "  <status>ERROR</status>\n";
-        echo "  <message>Checksum failed for file.  Expected $expected_md5 but got $md5sum.</message>\n";
-        $md5error = true;
-    }
-    if (!is_null($buildid)) {
-        echo " <buildId>$buildid</buildId>\n";
-    }
-    echo "  <md5>$md5sum</md5>\n";
-    echo "</cdash>\n";
-
-    if ($md5error) {
-        add_log("Checksum failure on file: $filename", 'do_submit_asynchronous',
-            LOG_ERR, $projectid);
-        return;
-    }
-
-    do_submit_asynchronous_file($filename, $projectid, $buildid, $md5sum);
-}
-
 function do_submit_asynchronous_file($filename, $projectid, $buildid = null,
                                      $md5sum)
 {
