@@ -18,6 +18,7 @@ include_once 'include/common.php';
 include_once 'include/ctestparser.php';
 
 use CDash\Config;
+use Illuminate\Support\Facades\Storage;
 
 $config = Config::getInstance();
 
@@ -40,14 +41,14 @@ if (is_array($whitelist) && !in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
     exit();
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_REQUEST['filename'])) {
     $success = true;
-    $filename = $config->get('CDASH_BACKUP_DIRECTORY') . '/' . basename($_REQUEST['filename']);
+    $filename = Storage::path('inbox') . '/' . basename($_REQUEST['filename']);
     if (file_exists($filename)) {
-        if ($config->get('CDASH_BACKUP_TIMEFRAME') == '0') {
+        if (config('cdash.backup_timeframe') == 0) {
             // Delete the file.
             $success = @unlink($filename);
         } elseif (isset($_REQUEST['dest'])) {
             // Rename the file.
-            $dest_filename = $config->get('CDASH_BACKUP_DIRECTORY') . '/' . basename($_REQUEST['dest']);
+            $dest_filename = Storage::path('parsed') . '/' . basename($_REQUEST['dest']);
             $fh = fopen($filename, 'r');
             if (!$fh) {
                 $success = false;

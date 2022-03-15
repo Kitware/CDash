@@ -49,7 +49,7 @@ function fileHandleFromSubmissionId($filename)
     $config = Config::getInstance();
 
     $ext = pathinfo($filename, PATHINFO_EXTENSION);
-    $_t = tempnam($config->get('CDASH_BACKUP_DIRECTORY'), 'cdash-submission-');
+    $_t = tempnam(Storage::path('inbox'), 'cdash-submission-');
     $tmpFilename = "{$_t}.{$ext}";
     rename($_t, $tmpFilename);
 
@@ -192,7 +192,7 @@ function do_submit_queue($filehandle, $projectid, $buildid = null, $expected_md5
 {
     $config = Config::getInstance();
     $buildSubmissionId = Uuid::uuid4()->toString();
-    $destinationFilename = $config->get('CDASH_BACKUP_DIRECTORY') . '/' . $buildSubmissionId . '.xml';
+    $destinationFilename = Storage::path('inbox') . '/' . $buildSubmissionId . '.xml';
 
     // Save the file in the backup directory.
     $outfile = fopen($destinationFilename, 'w');

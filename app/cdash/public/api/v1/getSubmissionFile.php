@@ -17,13 +17,14 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 
 use CDash\Config;
+use Illuminate\Support\Facades\Storage;
 
 $config = Config::getInstance();
 
 /**
  * Retrieve a file from a particular submission.
  * This includes XML files as well as coverage tarballs, which are temporarily
- * stored in CDASH_BACKUP_DIRECTORY.
+ * stored in storage/app/inbox.
  * These are temporarily stored files which are removed after they've been processed,
  * usually by a queue.
  *
@@ -39,7 +40,7 @@ if (is_array($whitelist) && !in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
     http_response_code(403);
     exit();
 } elseif (isset($_GET['filename'])) {
-    $filename = $config->get('CDASH_BACKUP_DIRECTORY') . '/' . basename($_REQUEST['filename']);
+    $filename = Storage::path('inbox') . '/' . basename($_REQUEST['filename']);
 
     if (!is_readable($filename)) {
         add_log('couldn\'t find ' . $filename, 'getSubmissionFile', LOG_ERR);

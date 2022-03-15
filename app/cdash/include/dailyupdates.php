@@ -981,7 +981,15 @@ function addDailyChanges($projectid)
         pdo_query("UPDATE dailyupdate SET status='1' WHERE projectid='$projectid' AND date='$date'");
 
         // Clean the backup directory
-        clean_backup_directory();
+        $timeframe = config('cdash.backup_timeframe');
+        $files = Storage::allFiles('parsed');
+        foreach ($files as $filename) {
+            $filepath = Storage::path($filename);
+            if (file_exists($filepath) && is_file($filepath) &&
+                    time() - filemtime($filepath) > $timeframe * 3600) {
+                cdash_unlink($filepath);
+            }
+        }
 
         // Delete expired authentication tokens.
         pdo_query('DELETE FROM authtoken WHERE expires < NOW()');

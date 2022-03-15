@@ -412,28 +412,6 @@ function checkUserPolicy($projectid, $onlyreturn = 0)
     return response('You cannot access this project');
 }
 
-/** Clean the backup directory */
-function clean_backup_directory()
-{
-    $config = Config::getInstance();
-    $timeframe = (int) $config->get('CDASH_BACKUP_TIMEFRAME');
-    $directory = $config->get('CDASH_BACKUP_DIRECTORY');
-
-    if ($timeframe === 0) {
-        // File are deleted upon submission, no need to do anything here.
-        return;
-    }
-
-    foreach (glob("{$directory}/*") as $filename) {
-        if (file_exists($filename) && is_file($filename) &&
-            substr($filename, -5) !== 'empty' &&
-            time() - filemtime($filename) > $timeframe * 3600
-        ) {
-            cdash_unlink($filename);
-        }
-    }
-}
-
 /** Get the build id from stamp, name and buildname */
 function get_build_id($buildname, $stamp, $projectid, $sitename)
 {

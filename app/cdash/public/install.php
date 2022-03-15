@@ -28,6 +28,7 @@ require_once 'include/version.php';
 
 use CDash\Config;
 use CDash\Model\User;
+use Illuminate\Support\Facades\Storage;
 
 $config = Config::getInstance();
 
@@ -89,7 +90,7 @@ try {
 }
 
 // check if the backup directory is writable
-if (!is_writable($config->get('CDASH_BACKUP_DIRECTORY'))) {
+if (!is_writable(Storage::path('inbox'))) {
     $xml .= '<backupwritable>0</backupwritable>';
 } else {
     $xml .= '<backupwritable>1</backupwritable>';

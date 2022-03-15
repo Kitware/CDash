@@ -1,12 +1,12 @@
 <?php
-require_once dirname(__FILE__) . '/cdash_test_case.php';
-require_once 'include/common.php';
+require_once dirname(__FILE__) . '/cdash_test_case.php'; require_once 'include/common.php';
 require_once 'include/ctestparser.php';
 require_once 'include/pdo.php';
 
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Site;
+use Illuminate\Support\Facades\Storage;
 
 class DoneHandlerTestCase extends KWWebTestCase
 {
@@ -35,7 +35,7 @@ class DoneHandlerTestCase extends KWWebTestCase
         $this->assertTrue($build->Id > 0);
 
         // Generate a Done.xml file and submit it.
-        $tmpfname = tempnam(CDash\Config::getInstance()->get('CDASH_BACKUP_DIRECTORY'), 'Done');
+        $tmpfname = tempnam(Storage::path('inbox'), 'Done');
         $handle = fopen($tmpfname, 'w');
         fwrite($handle, "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Done><buildId>$build->Id</buildId><time>$timestamp</time></Done>");
         fclose($handle);
@@ -49,6 +49,9 @@ class DoneHandlerTestCase extends KWWebTestCase
         // Mark the build as "not done" again.
         $build->MarkAsDone(0);
 
+        // Clean backup directory.
+        $this->removeParsedFiles();
+
         // Invoke the Done handler again to verify that requeuing works
         // as intended.
         $pending = new PendingSubmissions();
@@ -56,13 +59,23 @@ class DoneHandlerTestCase extends KWWebTestCase
         $pending->NumFiles = 2;
         $pending->Recheck = 1;
         $pending->Save();
-        $fp = fopen($tmpfname, 'r');
-        $handler = ctest_parse($fp, $projectid, $build->Id);
-        fclose($fp);
+        try {
+            $fp = fopen($tmpfname, 'r');
+            $handler = ctest_parse($fp, $projectid, $build->Id);
+            fclose($fp);
+        } catch (\Exception $e) {
+            echo "here you go\n";
+            echo $e->getMessage() . "\n";
+            echo $e->getTraceAsString() . "\n";
+            return;
+        }
+
         $this->assertTrue($handler instanceof DoneHandler);
         $this->assertTrue($handler->shouldRequeue());
-        $contents = file_get_contents($handler->backupFileName);
-        $this->assertTrue(strpos($contents, "Done retries=\"1\"") !== false);
+
+        $files = Storage::files('parsed');
+        $contents = file_get_contents(Storage::path($files[0]));
+        $this->assertTrue(strpos($contents, "Done retries=\"5\"") !== false);
 
         unlink($tmpfname);
         remove_build($build->Id);

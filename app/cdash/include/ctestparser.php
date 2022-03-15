@@ -28,10 +28,12 @@ require_once 'xml_handlers/upload_handler.php';
 require_once 'xml_handlers/testing_junit_handler.php';
 require_once 'xml_handlers/coverage_junit_handler.php';
 
+use App\Jobs\ProcessSubmission;
 use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\BuildFile;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\Storage;
 
 class CDashParseException extends RuntimeException
 {
@@ -40,11 +42,8 @@ class CDashParseException extends RuntimeException
 // Helper function to display the message
 function displayReturnStatus($statusarray)
 {
-    include 'include/version.php';
-
-    $config = Config::getInstance();
-
-    echo "<cdash version=\"{$config->get('CDASH_VERSION')}\">\n";
+    $version = config('cdash.version');
+    echo "<cdash version=\"{$version}\">\n";
     foreach ($statusarray as $key => $value) {
         echo '  <' . $key . '>' . $value . '</' . $key . ">\n";
     }
@@ -175,13 +174,13 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
             (SELECT siteid FROM build WHERE id=$buildid)");
     $sitename = $row['name'];
 
-    $config = Config::getInstance();
-    if ($config->get('CDASH_BACKUP_TIMEFRAME') == '0') {
+    if (config('cdash.backup_timeframe') == 0) {
         // We do not save submission files after they are parsed.
         // Work directly off the open file handle.
         $meta_data = stream_get_meta_data($filehandler);
         $filename = $meta_data['uri'];
-        $backup_filename = generateBackupFileName($projectname, $buildname,
+        $backup_filename = 'inbox/';
+        $backup_filename .= generateBackupFileName($projectname, $buildname,
                 $sitename, $stamp, $buildfile_row['filename']);
     } else {
         $filename = writeBackupFile($filehandler, '', $projectname, $buildname,
@@ -220,7 +219,14 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     $handler = new $className($buildid);
 
     // Parse the file.
-    $filepath = Storage::path($filename);
+    if (file_exists($filename)) {
+        $filepath = $filename;
+    } elseif (Storage::exists($filename)) {
+        $filepath = Storage::path($filename);
+    } else {
+        throw new CDashParseException('Failed to locate file ' . $filename);
+    }
+
     if ($handler->Parse($filepath) === false) {
         throw new CDashParseException('Failed to parse file ' . $filename);
     }
@@ -237,8 +243,6 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
 {
     require_once 'include/common.php';
     include 'include/version.php';
-
-    $config = Config::getInstance();
 
     // Check if this is a new style PUT submission.
     try {
@@ -356,10 +360,11 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
 
     // If backups are disabled, switch the filename to that of the existing handle
     // Otherwise, create a backup file and process from that
-    if ($config->get('CDASH_BACKUP_TIMEFRAME') == '0') {
+    if (config('cdash.backup_timeframe') == 0) {
         $meta_data = stream_get_meta_data($filehandler);
         $filename = $meta_data['uri'];
-        $backup_filename = generateBackupFileName($projectname, $buildname,
+        $backup_filename = 'inbox/';
+        $backup_filename .= generateBackupFileName($projectname, $buildname,
                 $sitename, $stamp, $file . '.xml');
     } else {
         $filename = writeBackupFile($filehandler, $content, $projectname, $buildname,
@@ -407,7 +412,7 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         $retry_handler = new RetryHandler($filename);
         $retry_handler->Increment();
         $build = get_build_from_handler($handler);
-        ProcessSubmission::dispatch($filename, $projectid, $build->Id, md5_file($filename));
+        ProcessSubmission::dispatch($backup_filename, $projectid, $build->Id, md5_file($filename));
     }
     displayReturnStatus($statusarray);
     $handler->backupFileName = $backup_filename;
@@ -417,9 +422,8 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
 function check_for_immediate_deletion($filename)
 {
     // Delete this file as soon as its been parsed (or an error occurs)
-    // if CDASH_BACKUP_TIMEFRAME is set to '0'.
-    $config = Config::getInstance();
-    if ($config->get('CDASH_BACKUP_TIMEFRAME') === '0' && is_file($filename)) {
+    // if backup_timeframe is set to zero.
+    if (config('cdash.backup_timeframe') === 0 && is_file($filename)) {
         Storage::delete($filename);
     }
 }

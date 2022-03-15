@@ -12,13 +12,19 @@ class NoBackupTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->ConfigLine = '$CDASH_BACKUP_TIMEFRAME = \'0\';';
+        $this->ConfigFile = dirname(__FILE__) . '/../../../.env';
+        $this->Original = file_get_contents($this->ConfigFile);
+    }
+
+    public function __destruct()
+    {
+        file_put_contents($this->ConfigFile, $this->Original);
     }
 
     public function testNoBackup()
     {
         // Enable config setting.
-        # $this->addLineToConfig($this->ConfigLine);
+        file_put_contents($this->ConfigFile, "BACKUP_TIMEFRAME=0\n", FILE_APPEND | LOCK_EX);
 
         // Submit XML file.
         $xml = dirname(__FILE__) . '/data/nobackup/Build.xml';
@@ -61,9 +67,6 @@ class NoBackupTestCase extends KWWebTestCase
         }
 
         // Make sure they were both parsed correctly.
-        echo "Waiting for async processing (2 seconds)\n";
-        sleep(2);
-
         $pdo = get_link_identifier()->getPdo();
         $stmt = $pdo->prepare(
                 'SELECT b.builderrors, cs.loctested FROM build b
@@ -80,8 +83,6 @@ class NoBackupTestCase extends KWWebTestCase
 
         $this->checkLog($this->logfilename);
 
-        // Cleanup
-        $this->removeLineFromConfig($this->ConfigLine);
         remove_build($buildid);
     }
 }

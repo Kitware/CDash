@@ -59,8 +59,6 @@ $CDASH_USE_HTTPS = '0';
 $CDASH_SERVER_NAME = '';
 // CSS file
 $CDASH_CSS_FILE = 'css/cdash.css';
-// Backup directory
-$CDASH_BACKUP_DIRECTORY = $CDASH_ROOT_DIR . '/backup';
 // Log directory
 $CDASH_LOG_DIRECTORY = $CDASH_ROOT_DIR . '/log';
 // Log file location. Set to false to log to the syslog.
@@ -69,9 +67,6 @@ $CDASH_LOG_FILE = $CDASH_LOG_DIRECTORY . '/cdash.log';
 $CDASH_UPLOAD_DIRECTORY = $CDASH_ROOT_DIR . '/public/upload';
 // Should normal user allowed to create projects
 $CDASH_USER_CREATE_PROJECTS = false;
-// Backup timeframe.
-// Set to '0' if you do not wish to backup parsed .xml files.
-$CDASH_BACKUP_TIMEFRAME = '48'; // 48 hours
 // Request full email address to add new users
 // instead of displaying a list
 $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';

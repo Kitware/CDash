@@ -46,15 +46,18 @@ class ProcessSubmission implements ShouldQueue
             return;
         }
 
-        if (property_exists($handler, 'backupFileName') && $handler->backupFileName) {
+        if (property_exists($handler, 'backupFileName') && $handler->backupFileName &&
+                Storage::exists($handler->backupFileName)) {
             $pos = strpos($handler->backupFileName, 'inbox/');
             if ($pos === false) {
                 \Log::error("Submission file ($handler->backupFileName} located outside of in app/storage/inbox");
             } else {
                 $parsed_filename = substr_replace($handler->backupFileName, 'parsed/', $pos, strlen('inbox/'));
                 Storage::move($handler->backupFileName, $parsed_filename);
-                Storage::delete($this->filename);
             }
+        }
+        if (Storage::exists($this->filename)) {
+            Storage::delete($this->filename);
         }
     }
 }
