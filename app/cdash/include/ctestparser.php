@@ -432,11 +432,7 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         $retry_handler = new RetryHandler($filename);
         $retry_handler->Increment();
         $build = get_build_from_handler($handler);
-        $requeued = requeue_submission_file($filename, $projectid, $build->Id,
-                                            md5_file($filename), $ip);
-    }
-    if (!$requeued) {
-        check_for_immediate_deletion($filename);
+        ProcessSubmission::dispatch($filename, $projectid, $build->Id, md5_file($filename));
     }
     displayReturnStatus($statusarray);
     $handler->backupFileName = $backup_filename;

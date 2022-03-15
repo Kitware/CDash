@@ -602,27 +602,3 @@ function get_build_from_handler($handler)
     }
     return $build;
 }
-
-function requeue_submission_file($filename, $projectid, $buildid = null,
-                                 $expected_md5 = '', $ip = null)
-{
-    $queued = false;
-    $config = Config::getInstance();
-
-    if ($config->get('CDASH_BERNARD_SUBMISSION')) {
-        // Worker might not live on the web server.
-        // Resubmit the whole file since we changed its contents.
-        $fp = fopen($filename, 'r');
-        do_submit_queue($fp, $projectid, $buildid, $expected_md5, $ip);
-        fclose($fp);
-        unset($fp);
-        return true;
-    } elseif ($config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
-        // Workers lives on the web server.
-        // Tell CDash to requeue the file that already exists on disk.
-        do_submit_asynchronous_file($filename, $projectid, $buildid,
-                $expected_md5);
-        return true;
-    } // else synchronous submission -> no-op.
-    return false;
-}
