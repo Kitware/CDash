@@ -55,9 +55,9 @@ $next_buildid = $build->GetNextBuildId();
 
 $menu = [];
 if ($build->GetParentId() > 0) {
-    $menu['back'] = '/index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
+    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
 } else {
-    $menu['back'] = '/index.php?project=' . urlencode($project->Name) . "&date=$date";
+    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&date=$date";
 }
 
 if ($previous_buildid > 0) {
