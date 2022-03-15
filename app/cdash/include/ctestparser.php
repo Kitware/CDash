@@ -220,7 +220,8 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     $handler = new $className($buildid);
 
     // Parse the file.
-    if ($handler->Parse($filename) === false) {
+    $filepath = Storage::path($filename);
+    if ($handler->Parse($filepath) === false) {
         throw new CDashParseException('Failed to parse file ' . $filename);
     }
 

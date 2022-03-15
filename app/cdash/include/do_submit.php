@@ -15,6 +15,7 @@
 =========================================================================*/
 
 //error_reporting(0); // disable error reporting
+use App\Jobs\ProcessSubmission;
 use App\Services\ProjectPermissions;
 use CDash\Config;
 use CDash\Middleware\Queue;
@@ -397,7 +398,7 @@ function put_submit_file()
         }
     }
 
-    // Verify buildid.
+    // Check for numeric buildid.
     $buildid = pdo_real_escape_numeric($_GET['buildid']);
     if (!is_numeric($_GET['buildid']) || $buildid < 1) {
         $response_array['status'] = 1;
@@ -406,69 +407,58 @@ function put_submit_file()
         return;
     }
 
-    $buildfile = new BuildFile();
-    $buildfile->BuildId = $buildid;
-    $buildfile->Type = htmlspecialchars(pdo_real_escape_string($_GET['type']));
-    $buildfile->md5 = htmlspecialchars(pdo_real_escape_string($_GET['md5']));
-    $buildfile->Filename = htmlspecialchars(pdo_real_escape_string($_GET['filename']));
-    $buildfile->Insert();
-
-    // Get the ID of the project associated with this build.
-    $row = pdo_single_row_query(
-        "SELECT p.id, p.authenticatesubmissions
-        FROM project p
-        JOIN build b on b.projectid = p.id
-        WHERE b.id = $buildid");
-    if (empty($row)) {
-        $response_array['status'] = 1;
-        $response_array['description'] = "Cannot find projectid for build #$buildid";
-        echo json_encode($response_array);
-        return;
+    // Get the relevant build and project.
+    $build = new Build();
+    $build->Id = $buildid;
+    $build->FillFromId($build->Id);
+    if (!$build->Exists()) {
+        return response('Build not found', Response::HTTP_NOT_FOUND);
     }
-    $projectid = $row['id'];
+    $project = $build->GetProject();
+    $project->Fill();
+    if (!$project->Exists()) {
+        return response('Project not found', Response::HTTP_NOT_FOUND);
+    }
 
     // Check if this submission requires a valid authentication token.
-    if ($row['authenticatesubmissions'] && !valid_token_for_submission($projectid)) {
+    if ($project->AuthenticateSubmissions && !valid_token_for_submission($project->Id)) {
         return response('Forbidden', Response::HTTP_FORBIDDEN);
     }
 
-    // Begin writing this file to the backup directory.
-    $uploadDir = $config->get('CDASH_BACKUP_DIRECTORY');
-    $ext = pathinfo($buildfile->Filename, PATHINFO_EXTENSION);
-    $filename = $uploadDir . '/' . $buildid . '_' . $buildfile->md5
-        . ".$ext";
+    // Populate a BuildFile object.
+    $buildfile = new BuildFile();
+    $buildfile->BuildId = $build->Id;
+    $buildfile->Type = htmlspecialchars(pdo_real_escape_string($_GET['type']));
+    $buildfile->md5 = htmlspecialchars(pdo_real_escape_string($_GET['md5']));
+    $buildfile->Filename = htmlspecialchars(pdo_real_escape_string($_GET['filename']));
 
-    if (!$handle = fopen($filename, 'w')) {
+    // Write this file to the inbox directory.
+    $ext = pathinfo($buildfile->Filename, PATHINFO_EXTENSION);
+    $filename = "inbox/{$project->Name}_{$build->Id}_{$buildfile->md5}.$ext";
+    $handle = request()->getContent(true);
+    if (!Storage::put($filename, $handle)) {
         $response_array['status'] = 1;
         $response_array['description'] = "Cannot open file ($filename)";
         echo json_encode($response_array);
         return;
     }
 
-    // Read the data 1 KB at a time and write to the file.
-    $putdata = fopen('php://input', 'r');
-    while ($data = fread($putdata, 1024)) {
-        fwrite($handle, $data);
-    }
-    // Close the streams.
-    fclose($handle);
-    fclose($putdata);
-
     // Check that the md5sum of the file matches what we were expecting.
-    $md5sum = md5_file($filename);
+    $md5sum = md5_file(Storage::path($filename));
     if ($md5sum != $buildfile->md5) {
         $response_array['status'] = 1;
         $response_array['description'] =
             "md5 mismatch. expected: $buildfile->md5, received: $md5sum";
-        unlink($filename);
+        Storage::delete($filename);
         $buildfile->Delete();
         echo json_encode($response_array);
         return;
     }
 
+    // Insert the buildfile row.
+    $buildfile->Insert();
+
     // Increment the count of pending submission files for this build.
-    $build = new Build();
-    $build->Id = $buildid;
     $pendingSubmissions = new PendingSubmissions();
     $pendingSubmissions->Build = $build;
     if (!$pendingSubmissions->Exists()) {
@@ -482,31 +472,14 @@ function put_submit_file()
         $queue = new Queue($driver);
         $message = SubmissionService::createMessage([
             'file' => $filename,
-            'project' => $projectid,
+            'project' => $project->Id,
             'md5' => $md5sum,
             'checksum' => true,
             'ip' => $_SERVER['REMOTE_ADDR']
         ]);
         $queue->produce($message);
-    } elseif ($config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
-        // Create a new entry in the submission table for this file.
-        $bytes = filesize($filename);
-        $now_utc = gmdate(FMT_DATETIMESTD);
-        pdo_query('INSERT INTO submission (filename,projectid,status,attempts,filesize,filemd5sum,created) ' .
-            "VALUES ('$filename','$projectid','0','0','$bytes','$buildfile->md5','$now_utc')");
-
-        // Trigger the processing loop in case it's not already running.
-        trigger_process_submissions($projectid);
     } else {
-        // synchronous processing.
-        $handle = fopen($filename, 'r');
-        do_submit($handle, $projectid, null, $buildfile->md5, false);
-
-        // The file is given a more appropriate name during do_submit, so we can
-        // delete the old file now.
-        if (is_file($filename)) {
-            unlink($filename);
-        }
+        ProcessSubmission::dispatch($filename, $project->Id, $build->Id, $md5sum);
     }
 
     // Returns the OK submission
