@@ -83,7 +83,7 @@ class TestDetails extends BuildTestApi
         $outputid = $testRow['outputid'];
 
         $menu = [];
-        $menu['back'] = "/viewTest.php?buildid={$this->build->Id}";
+        $menu['back'] = "viewTest.php?buildid={$this->build->Id}";
 
         // Did the user request a specific chart?
         // If so we should make that chart appears when they click next or previous.
