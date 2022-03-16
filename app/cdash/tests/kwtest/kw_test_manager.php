@@ -161,9 +161,7 @@ class TestManager
                 return false;
             }
             if ($dbcreated) {
-                $dirname = str_replace('\\', '/', dirname(__FILE__));
-                $sqlfile = str_replace('/tests/kwtest', '', $dirname) . '/sql/' . $dbtype . '/cdash.sql';
-                $database->fillDb($sqlfile);
+                Artisan::call('migrate');
             }
             return true;
         } else {

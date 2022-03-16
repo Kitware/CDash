@@ -17,7 +17,7 @@ class CreateProjectTable extends Migration
             Schema::create('project', function (Blueprint $table) {
                 $table->integer('id', true);
                 $table->string('name')->default('')->index();
-                $table->text('description', 65535);
+                $table->text('description', 65535)->default('');
                 $table->string('homeurl')->default('');
                 $table->string('cvsurl')->default('');
                 $table->string('bugtrackerurl')->default('');
@@ -38,8 +38,8 @@ class CreateProjectTable extends Migration
                 $table->tinyInteger('emailadministrator')->default(1);
                 $table->tinyInteger('showipaddresses')->default(1);
                 $table->string('cvsviewertype', 10)->nullable();
-                $table->float('testtimestd', 3, 1)->nullable()->default(4.0);
-                $table->float('testtimestdthreshold', 3, 1)->nullable()->default(1.0);
+                $table->decimal('testtimestd', 3, 1)->nullable()->default(4.0);
+                $table->decimal('testtimestdthreshold', 3, 1)->nullable()->default(1.0);
                 $table->tinyInteger('showtesttime')->nullable()->default(0);
                 $table->tinyInteger('testtimemaxstatus')->nullable()->default(3);
                 $table->tinyInteger('emailmaxitems')->nullable()->default(5);
@@ -48,8 +48,8 @@ class CreateProjectTable extends Migration
                 $table->integer('autoremovetimeframe')->nullable()->default(0);
                 $table->integer('autoremovemaxbuilds')->nullable()->default(300);
                 $table->bigInteger('uploadquota')->nullable()->default(0);
-                $table->string('webapikey', 40)->nullable();
-                $table->integer('tokenduration')->nullable();
+                $table->string('webapikey', 40)->nullable()->default('');
+                $table->integer('tokenduration')->nullable()->default(0);
                 $table->tinyInteger('showcoveragecode')->nullable()->default(1);
                 $table->tinyInteger('sharelabelfilters')->nullable()->default(0);
                 $table->tinyInteger('authenticatesubmissions')->nullable()->default(0);

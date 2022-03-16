@@ -174,36 +174,8 @@ if (!$installed) {
                 $db_created = false;
             }
 
-            /** process an SQL file */
-            function _processSQLfile($filename)
-            {
-                $file_content = file($filename);
-                $query = '';
-                foreach ($file_content as $sql_line) {
-                    $tsl = trim($sql_line);
-                    if (($sql_line != '') && (substr($tsl, 0, 2) != '--') && (substr($tsl, 0, 1) != '#')) {
-                        $query .= $sql_line;
-                        if (preg_match("/;\s*$/", $sql_line)) {
-                            // We need to remove only the last semicolon
-                            $pos = strrpos($query, ';');
-                            if ($pos !== false) {
-                                $query = substr($query, 0, $pos) . substr($query, $pos + 1);
-                            }
-
-                            $result = pdo_query($query);
-                            if (!$result) {
-                                $xml = '<db_created>0</db_created>';
-                                die(pdo_error());
-                            }
-                            $query = '';
-                        }
-                    }
-                }
-            }
-
             if ($db_created) {
-                $sqlfile = $config->get('CDASH_ROOT_DIR') . "/sql/$db_type/cdash.sql";
-                _processSQLfile($sqlfile);
+                Artisan::call('migrate --force');
 
                 // If we are with PostGreSQL we need to add some extra functions
                 if ($db_type == 'pgsql') {
