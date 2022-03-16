@@ -200,7 +200,7 @@ class BuildGroup
     public function GetSummaryEmail()
     {
         if ($this->Id < 1) {
-            add_log('BuildGroup GetSummaryEmail(): Id not set', 'GetSummaryEmail', LOG_ERR);
+            \Log::error("BuildGroup GetSummaryEmail(): Id not set");
             return false;
         }
         return $this->SummaryEmail;
@@ -518,42 +518,58 @@ class BuildGroup
 
         // Insert the build into the proper group
         // 1) Check if we have any build2grouprules for this build
-        $build2grouprule = pdo_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
-                                  WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
-                                  AND (b2g.groupid=bg.id AND bg.projectid='$projectid')
-                                  AND '$starttime'>b2g.starttime
-                                  AND ('$starttime'<b2g.endtime OR b2g.endtime='1980-01-01 00:00:00')");
-
-        if (pdo_num_rows($build2grouprule) > 0) {
-            $build2grouprule_array = pdo_fetch_array($build2grouprule);
-            return $build2grouprule_array['groupid'];
+        $rule_row = \DB::table('build2grouprule')
+            ->join('buildgroup', 'buildgroup.id', '=', 'build2grouprule.groupid')
+            ->where('buildgroup.projectid', '=', $projectid)
+            ->where('build2grouprule.buildtype', '=', $type)
+            ->where('build2grouprule.siteid', '=', $siteid)
+            ->where('build2grouprule.buildname', '=', $name)
+            ->where('build2grouprule.starttime', '<', $starttime)
+            ->where(function ($query) use ($starttime) {
+                $query->where('build2grouprule.endtime', '=', '1980-01-01 00:00:00')
+                      ->orWhere('build2grouprule.endtime', '>', $starttime);
+            })->first();
+        if ($rule_row) {
+            return $rule_row->groupid;
         }
 
         // 2) Check for buildname-based groups
-        $build2grouprule = pdo_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
-                                 WHERE b2g.buildtype='$type' AND b2g.siteid='-1' AND '$name' LIKE b2g.buildname
-                                 AND (b2g.groupid=bg.id AND bg.projectid='$projectid')
-                                 AND '$starttime'>b2g.starttime
-                                 AND ('$starttime'<b2g.endtime OR b2g.endtime='1980-01-01 00:00:00')
-                                 ORDER BY LENGTH(b2g.buildname) DESC");
-
-        if (pdo_num_rows($build2grouprule) > 0) {
-            $build2grouprule_array = pdo_fetch_array($build2grouprule);
-            return $build2grouprule_array['groupid'];
+        $name_rule_row = \DB::table('build2grouprule')
+            ->join('buildgroup', 'buildgroup.id', '=', 'build2grouprule.groupid')
+            ->where('buildgroup.projectid', '=', $projectid)
+            ->where('build2grouprule.buildtype', '=', $type)
+            ->where('build2grouprule.siteid', '=', -1)
+            ->whereRaw("'$name' LIKE build2grouprule.buildname")
+            ->where('build2grouprule.starttime', '<', $starttime)
+            ->where(function ($query) use ($starttime) {
+                $query->where('build2grouprule.endtime', '=', '1980-01-01 00:00:00')
+                      ->orWhere('build2grouprule.endtime', '>', $starttime);
+            })
+            ->orderByRaw('LENGTH(build2grouprule.buildname) DESC')
+            ->first();
+        if ($name_rule_row) {
+            return $name_rule_row->groupid;
         }
 
         // If we reach this far, none of the rules matched.
         // Just use the default group for the build type.
-        $buildgroup = pdo_query("SELECT id FROM buildgroup WHERE name='$type' AND projectid='$projectid'");
-        if (pdo_num_rows($buildgroup) == 0) {
-            // if the group does not exist we assign it to experimental
+        $default_rule_row = \DB::table('buildgroup')
+            ->where('name', '=', $type)
+            ->where('projectid', '=', $projectid)
+            ->first();
+        if ($default_rule_row) {
+            return $default_rule_row->id;
+        }
 
-            $buildgroup = pdo_query("SELECT id FROM buildgroup WHERE name='Experimental' AND projectid='$projectid'");
+        // If the group does not exist we assign it to Experimental.
+        $experimental_rule_row = \DB::table('buildgroup')
+            ->where('name', '=', 'Experimental')
+            ->where('projectid', '=', $projectid)
+            ->first();
+        if ($experimental_rule_row) {
+            return $experimental_rule_row->id;
         }
-        $buildgroup_array = pdo_fetch_array($buildgroup);
-        if (is_array($buildgroup_array)) {
-            return $buildgroup_array['id'];
-        }
+        return 0;
     }
 
     // Return an array of currently active BuildGroups
