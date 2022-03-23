@@ -2116,7 +2116,7 @@ class Build
                     'testpassed' => $numPassed,
                 ]);
 
-            // NOTE: as far as I can tell, build.testtimestatusfailed isn't used,
+        // NOTE: as far as I can tell, build.testtimestatusfailed isn't used,
             // so for now it isn't being updated for parent builds.
         }, 5);
     }
@@ -2284,8 +2284,11 @@ class Build
 
     protected function UpdateDuration($field, $duration, $update_parent = true)
     {
-        if ($duration === 0 || !$this->Id || !is_numeric($this->Id) ||
-                !$this->Exists()) {
+        if ($duration === 0) {
+            return;
+        }
+
+        if (!$this->Id || !is_numeric($this->Id) || !$this->Exists()) {
             return;
         }
 

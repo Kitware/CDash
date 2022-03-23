@@ -53,8 +53,8 @@ function displayReturnStatus($statusarray)
 /** Determine the descriptive filename for a submission file.
   * Called by writeBackupFile().
   **/
-function generateBackupFileName($projectname, $buildname, $sitename, $stamp,
-                                $fileNameWithExt)
+function generateBackupFileName($projectname, $subprojectname, $buildname,
+                                $sitename, $stamp, $fileNameWithExt)
 {
     // Generate a timestamp to include in the filename.
     $currenttimestamp = microtime(true) * 100;
@@ -63,6 +63,7 @@ function generateBackupFileName($projectname, $buildname, $sitename, $stamp,
     $sitename_escaped = preg_replace('/[^\w\-~_]+/u', '-', $sitename);
     $buildname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $buildname);
     $projectname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $projectname);
+    $subprojectname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $subprojectname);
 
     // Separate the extension from the filename.
     $ext = '.' . pathinfo($fileNameWithExt, PATHINFO_EXTENSION);
@@ -72,7 +73,7 @@ function generateBackupFileName($projectname, $buildname, $sitename, $stamp,
     if ($file != 'Project') {
         // Project.xml files aren't associated with a particular build, so we
         // only record the site and buildname for other types of submissions.
-        $filename .= $sitename_escaped . '_' . $buildname_escaped . '_' . $stamp . '_';
+        $filename .= $subprojectname_escaped . '_' . $sitename_escaped . '_' . $buildname_escaped . '_' . $stamp . '_';
     }
     $filename .=  $currenttimestamp . '_' . $file . $ext;
 
@@ -135,11 +136,11 @@ function safelyWriteBackupFile($filehandler, $content, $filename)
 
 /** Function used to write a submitted file to our backup directory with a
  * descriptive name. */
-function writeBackupFile($filehandler, $content, $projectname, $buildname,
-                         $sitename, $stamp, $fileNameWithExt)
+function writeBackupFile($filehandler, $content, $projectname, $subprojectname,
+                         $buildname, $sitename, $stamp, $fileNameWithExt)
 {
     $filename = 'inbox/';
-    $filename .= generateBackupFileName($projectname, $buildname, $sitename, $stamp, $fileNameWithExt);
+    $filename .= generateBackupFileName($projectname, $subprojectname, $buildname, $sitename, $stamp, $fileNameWithExt);
     return safelyWriteBackupFile($filehandler, $content, $filename);
 }
 
@@ -174,19 +175,9 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
             (SELECT siteid FROM build WHERE id=$buildid)");
     $sitename = $row['name'];
 
-    if (config('cdash.backup_timeframe') == 0) {
-        // We do not save submission files after they are parsed.
-        // Work directly off the open file handle.
-        $meta_data = stream_get_meta_data($filehandler);
-        $filename = $meta_data['uri'];
-        $backup_filename = 'inbox/';
-        $backup_filename .= generateBackupFileName($projectname, $buildname,
-                $sitename, $stamp, $buildfile_row['filename']);
-    } else {
-        $filename = writeBackupFile($filehandler, '', $projectname, $buildname,
-            $sitename, $stamp, $buildfile_row['filename']);
-        $backup_filename = $filename;
-    }
+    // Work directly off the open file handle.
+    $meta_data = stream_get_meta_data($filehandler);
+    $filename = $meta_data['uri'];
 
     // Instantiate a buildfile object so we can delete it from the database
     // once we're done parsing it.
@@ -201,7 +192,6 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
         add_log("No handler include file for $type (tried $include_file)",
             'parse_put_submission',
             LOG_ERR, $projectid);
-        check_for_immediate_deletion($filename);
         $buildfile->Delete();
         return true;
     }
@@ -212,7 +202,6 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     if (!class_exists($className)) {
         add_log("No handler class for $type", 'parse_put_submission',
             LOG_ERR, $projectid);
-        check_for_immediate_deletion($filename);
         $buildfile->Delete();
         return true;
     }
@@ -231,14 +220,16 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
         throw new CDashParseException('Failed to parse file ' . $filename);
     }
 
-    check_for_immediate_deletion($filename);
     $buildfile->Delete();
-    $handler->backupFileName = $backup_filename;
+
+    $handler->backupFileName = generateBackupFileName(
+        $projectname, '', $buildname, $sitename, $stamp, $buildfile_row['filename']);
+
     return $handler;
 }
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($filehandler, $projectid, $buildid = null,
+function ctest_parse($filehandle, $projectid, $buildid = null,
                      $expected_md5 = '')
 {
     require_once 'include/common.php';
@@ -246,7 +237,7 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
 
     // Check if this is a new style PUT submission.
     try {
-        $handler = parse_put_submission($filehandler, $projectid, $expected_md5);
+        $handler = parse_put_submission($filehandle, $projectid, $expected_md5);
         if ($handler) {
             return $handler;
         }
@@ -267,8 +258,8 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     // Figure out what type of XML file this is.
     $handler = null;
     $file = '';
-    while (is_null($handler) && !feof($filehandler)) {
-        $content = fread($filehandler, 8192);
+    while (is_null($handler) && !feof($filehandle)) {
+        $content = fread($filehandle, 8192);
         if (strpos($content, '<Update') !== false) {
             // Should be first otherwise confused with Build
             $handler = new UpdateHandler($projectid);
@@ -314,8 +305,8 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         }
     }
 
-    rewind($filehandler);
-    $content = fread($filehandler, 8192);
+    rewind($filehandle);
+    $content = fread($filehandle, 8192);
 
     if ($handler == null) {
         echo 'no handler found';
@@ -337,12 +328,14 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
 
     $sitename = '';
     $buildname = '';
+    $subprojectname = '';
     $stamp = '';
     if ($file != 'Project') {
         // projects don't have some of these fields.
 
         $sitename = $handler->getSiteName();
         $buildname = $handler->getBuildName();
+        $subprojectname = $handler->getSubProjectName();
         $stamp = $handler->getBuildStamp();
     }
 
@@ -358,26 +351,6 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         return false;
     }
 
-    // If backups are disabled, switch the filename to that of the existing handle
-    // Otherwise, create a backup file and process from that
-    if (config('cdash.backup_timeframe') == 0) {
-        $meta_data = stream_get_meta_data($filehandler);
-        $filename = $meta_data['uri'];
-        $backup_filename = 'inbox/';
-        $backup_filename .= generateBackupFileName($projectname, $buildname,
-                $sitename, $stamp, $file . '.xml');
-    } else {
-        $filename = writeBackupFile($filehandler, $content, $projectname, $buildname,
-                                    $sitename, $stamp, $file . '.xml');
-        // Storage relative-to-storage path in handler.
-        $backup_filename = $filename;
-        // Convert to absolute path for use below.
-        $filename = Storage::path($filename);
-        if ($filename === false) {
-            return $handler;
-        }
-    }
-
     $statusarray = [];
     $statusarray['status'] = 'OK';
     $statusarray['message'] = '';
@@ -385,45 +358,20 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         $statusarray['buildId'] = $buildid;
     }
 
-    $parsingerror = '';
-    if (!$parseHandle = fopen($filename, 'r')) {
-        $statusarray['status'] = 'ERROR';
-        $statusarray['message'] = "ERROR: Cannot open file ($filename)";
-        displayReturnStatus($statusarray);
-        add_log("Cannot open file ($filename)", 'parse_xml_file', LOG_ERR);
-        return $handler;
-    }
-
-    //burn the first 8192 since we have already parsed it
-    $content = fread($parseHandle, 8192);
-    while (!feof($parseHandle)) {
-        $content = fread($parseHandle, 8192);
+    while (!feof($filehandle)) {
+        $content = fread($filehandle, 8192);
         xml_parse($parser, $content, false);
     }
     xml_parse($parser, null, true);
     xml_parser_free($parser);
     unset($parser);
-    fclose($parseHandle);
-    unset($parseHandle);
 
-    $requeued = false;
-    if ($handler instanceof DoneHandler && $handler->shouldRequeue()) {
-        require_once 'include/do_submit.php';
-        $retry_handler = new RetryHandler($filename);
-        $retry_handler->Increment();
-        $build = get_build_from_handler($handler);
-        ProcessSubmission::dispatch($backup_filename, $projectid, $build->Id, md5_file($filename));
-    }
-    displayReturnStatus($statusarray);
+    // Generate a pretty, "relative to storage" filepath and store it in the handler.
+    $backup_filename = generateBackupFileName(
+            $projectname, $subprojectname, $buildname, $sitename, $stamp, $file . '.xml');
     $handler->backupFileName = $backup_filename;
-    return $handler;
-}
 
-function check_for_immediate_deletion($filename)
-{
-    // Delete this file as soon as its been parsed (or an error occurs)
-    // if backup_timeframe is set to zero.
-    if (config('cdash.backup_timeframe') === 0 && is_file($filename)) {
-        Storage::delete($filename);
-    }
+    displayReturnStatus($statusarray);
+
+    return $handler;
 }

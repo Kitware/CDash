@@ -59,19 +59,8 @@ class DoneHandlerTestCase extends KWWebTestCase
         $pending->NumFiles = 2;
         $pending->Recheck = 1;
         $pending->Save();
-        try {
-            $fp = fopen($tmpfname, 'r');
-            $handler = ctest_parse($fp, $projectid, $build->Id);
-            fclose($fp);
-        } catch (\Exception $e) {
-            echo "here you go\n";
-            echo $e->getMessage() . "\n";
-            echo $e->getTraceAsString() . "\n";
-            return;
-        }
 
-        $this->assertTrue($handler instanceof DoneHandler);
-        $this->assertTrue($handler->shouldRequeue());
+        $this->submission_assign_buildid($tmpfname, 'InsightExample', $buildname, $site->GetName(), $stamp);
 
         $files = Storage::files('parsed');
         $contents = file_get_contents(Storage::path($files[0]));

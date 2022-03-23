@@ -81,6 +81,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
             $this->BuildInformation = $this->ModelFactory->create(BuildInformation::class);
             $this->BuildName = "";
             $this->BuildStamp = "";
+            $this->SubProjectName = "";
             $this->Generator = "";
             $this->PullRequest = "";
 
@@ -309,6 +310,11 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
     public function getBuildName()
     {
         return $this->BuildName;
+    }
+
+    public function getSubProjectName()
+    {
+        return $this->SubProjectName;
     }
 
     /**

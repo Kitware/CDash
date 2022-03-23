@@ -92,6 +92,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             $this->BuildInformation = $factory->create(BuildInformation::class);
             $this->BuildName = "";
             $this->BuildStamp = "";
+            $this->SubProjectName = "";
             $this->Generator = "";
             $this->PullRequest = "";
 
@@ -311,6 +312,11 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
     public function getBuildName()
     {
         return $this->BuildName;
+    }
+
+    public function getSubProjectName()
+    {
+        return $this->SubProjectName;
     }
 
     private function createBuild()

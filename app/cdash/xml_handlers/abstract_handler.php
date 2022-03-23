@@ -115,6 +115,11 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
         return $this->Build->Name;
     }
 
+    public function getSubProjectName()
+    {
+        return $this->Build->SubProjectName;
+    }
+
     public function getBuilds()
     {
         return [$this->Build];

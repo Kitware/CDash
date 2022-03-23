@@ -136,9 +136,9 @@ if (isset($_GET['build']) && isset($_GET['site']) && isset($_GET['stamp'])) {
 }
 
 // Save the incoming file in the inbox directory.
-$filename = "inbox/{$projectname}_" . \Illuminate\Support\Str::uuid()->toString() . '.xml';
+$filename = "{$projectname}_" . \Illuminate\Support\Str::uuid()->toString() . '.xml';
 $fp = request()->getContent(true);
-if (!Storage::put($filename, $fp)) {
+if (!Storage::put("inbox/{$filename}", $fp)) {
     \Log::error("Failed to save submission to inbox for $projectname (md5=$expected_md5)");
     $message = '<cdash version="' . config('cdash.version') . ">
         <status>ERROR</status>
@@ -149,9 +149,9 @@ if (!Storage::put($filename, $fp)) {
 
 if ($expected_md5) {
     // Check that the md5sum of the file matches what we were told to expect.
-    $md5sum = md5_file(Storage::path($filename));
+    $md5sum = md5_file(Storage::path("inbox/{$filename}"));
     if ($md5sum != $expected_md5) {
-        Storage::delete($filename);
+        Storage::delete("inbox/{$filename}");
         $message = '<cdash version="' . config('cdash.version') . ">
             <status>ERROR</status>
             <message>md5 mismatch. expected: {$expected_md5}, received: {$md5sum}</message>

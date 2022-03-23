@@ -146,6 +146,8 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
 
     // Parse the XML file
     $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5);
+    fclose($filehandle);
+    unset($filehandle);
 
     //this is the md5 checksum fail case
     if ($handler == false) {
@@ -398,22 +400,23 @@ function put_submit_file()
 
     // Write this file to the inbox directory.
     $ext = pathinfo($buildfile->Filename, PATHINFO_EXTENSION);
-    $filename = "inbox/{$project->Name}_{$build->Id}_{$buildfile->md5}.$ext";
+    $filename = "{$project->Name}_{$build->Id}_{$buildfile->md5}.$ext";
+    $inbox_filename = "inbox/{$filename}";
     $handle = request()->getContent(true);
-    if (!Storage::put($filename, $handle)) {
+    if (!Storage::put($inbox_filename, $handle)) {
         $response_array['status'] = 1;
-        $response_array['description'] = "Cannot open file ($filename)";
+        $response_array['description'] = "Cannot open file ($inbox_filename)";
         echo json_encode($response_array);
         return;
     }
 
     // Check that the md5sum of the file matches what we were expecting.
-    $md5sum = md5_file(Storage::path($filename));
+    $md5sum = md5_file(Storage::path($inbox_filename));
     if ($md5sum != $buildfile->md5) {
         $response_array['status'] = 1;
         $response_array['description'] =
             "md5 mismatch. expected: $buildfile->md5, received: $md5sum";
-        Storage::delete($filename);
+        Storage::delete($inbox_filename);
         $buildfile->Delete();
         echo json_encode($response_array);
         return;
@@ -435,7 +438,7 @@ function put_submit_file()
         $driver = QueueDriverFactory::create();
         $queue = new Queue($driver);
         $message = SubmissionService::createMessage([
-            'file' => $filename,
+            'file' => $inbox_filename,
             'project' => $project->Id,
             'md5' => $md5sum,
             'checksum' => true,

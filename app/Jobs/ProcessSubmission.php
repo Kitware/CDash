@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use CDash\Model\PendingSubmissions;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -10,6 +12,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 
 require_once 'include/do_submit.php';
+require_once 'xml_handlers/done_handler.php';
+require_once 'xml_handlers/retry_handler.php';
 
 class ProcessSubmission implements ShouldQueue
 {
@@ -40,24 +44,45 @@ class ProcessSubmission implements ShouldQueue
      */
     public function handle()
     {
-        $handler = do_submit($this->filename, $this->projectid, $this->buildid, $this->expected_md5, true);
+        // Move file from inbox to inprogress.
+        if (!Storage::move("inbox/{$this->filename}", "inprogress/{$this->filename}")) {
+            // Return early if the rename operation fails.
+            // Presumably this means some other runner picked up the job before us.
+            return;
+        }
+
+        // Parse file.
+        $handler = do_submit("inprogress/{$this->filename}", $this->projectid, $this->buildid, $this->expected_md5, true);
 
         if (!is_object($handler)) {
             return;
         }
 
-        if (property_exists($handler, 'backupFileName') && $handler->backupFileName &&
-                Storage::exists($handler->backupFileName)) {
-            $pos = strpos($handler->backupFileName, 'inbox/');
-            if ($pos === false) {
-                \Log::error("Submission file ($handler->backupFileName} located outside of in app/storage/inbox");
-            } else {
-                $parsed_filename = substr_replace($handler->backupFileName, 'parsed/', $pos, strlen('inbox/'));
-                Storage::move($handler->backupFileName, $parsed_filename);
-            }
+        // Resubmit the file if necessary.
+        if (is_a($handler, 'DoneHandler') && $handler->shouldRequeue()) {
+            // Increment retry count.
+            $retry_handler = new \RetryHandler(Storage::path("inprogress/{$this->filename}"));
+            $retry_handler->Increment();
+            $build = get_build_from_handler($handler);
+
+            // Move file back to inbox.
+            Storage::move("inprogress/{$this->filename}", "inbox/{$this->filename}");
+
+            // Requeue the file.
+            PendingSubmissions::IncrementForBuildId($this->buildid);
+            self::dispatch($this->filename, $this->projectid, $build->Id, md5_file(Storage::path("inbox/{$this->filename}")));
+            return;
         }
-        if (Storage::exists($this->filename)) {
-            Storage::delete($this->filename);
+
+        if (config('cdash.backup_timeframe') === 0 && is_file($filename)) {
+            // We are configured not to store parsed files. Delete it now.
+            Storage::delete("inprogress/{$this->filename}");
+        } else {
+            // Move the file to a pretty name in the parsed directory.
+            Storage::move("inprogress/{$this->filename}", "parsed/{$handler->backupFileName}");
         }
+
+        unset($handler);
+        $handler = null;
     }
 }
