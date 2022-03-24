@@ -15,13 +15,6 @@
 =========================================================================*/
 
 use App\Jobs\ProcessSubmission;
-use Bernard\Message\DefaultMessage;
-use Bernard\Producer;
-use Bernard\QueueFactory\PersistentFactory;
-use Bernard\Serializer;
-use CDash\Middleware\Queue;
-use CDash\Middleware\Queue\DriverFactory as QueueDriverFactory;
-use CDash\Middleware\Queue\SubmissionService;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 require_once 'include/pdo.php';
@@ -160,14 +153,9 @@ if ($expected_md5) {
     }
 }
 
-if ($config->get('CDASH_BERNARD_SUBMISSION')) {
-    // Use a message queue for asynchronous submission processing.
-    do_submit_queue($fp, $projectid, $buildid, $expected_md5);
-} else {
-    if (!is_null($buildid)) {
-        $pendingSubmissions->Increment();
-    }
-    ProcessSubmission::dispatch($filename, $projectid, $buildid, $expected_md5);
+if (!is_null($buildid)) {
+    $pendingSubmissions->Increment();
 }
+ProcessSubmission::dispatch($filename, $projectid, $buildid, $expected_md5);
 fclose($fp);
 unset($fp);

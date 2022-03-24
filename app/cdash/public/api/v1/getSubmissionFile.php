@@ -35,11 +35,7 @@ $config = Config::getInstance();
  * filename=[string] Filename to retrieve, must live in tmp_submissions directory
  **/
 
-$whitelist = $config->get('CDASH_BERNARD_CONSUMERS_WHITELIST');
-if (is_array($whitelist) && !in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
-    http_response_code(403);
-    exit();
-} elseif (isset($_GET['filename'])) {
+if (isset($_GET['filename'])) {
     $filename = Storage::path('inbox') . '/' . basename($_REQUEST['filename']);
 
     if (!is_readable($filename)) {

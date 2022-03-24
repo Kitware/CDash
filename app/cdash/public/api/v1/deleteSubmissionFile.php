@@ -34,12 +34,7 @@ $config = Config::getInstance();
  * dest=[string] Instead of deleting, rename filename to dest
  **/
 
-$whitelist = $config->get('CDASH_BERNARD_CONSUMERS_WHITELIST');
-
-if (is_array($whitelist) && !in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
-    http_response_code(403);
-    exit();
-} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_REQUEST['filename'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_REQUEST['filename'])) {
     $success = true;
     $filename = Storage::path('inbox') . '/' . basename($_REQUEST['filename']);
     if (file_exists($filename)) {

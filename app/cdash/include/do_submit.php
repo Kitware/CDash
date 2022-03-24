@@ -18,9 +18,6 @@
 use App\Jobs\ProcessSubmission;
 use App\Services\ProjectPermissions;
 use CDash\Config;
-use CDash\Middleware\Queue;
-use CDash\Middleware\Queue\DriverFactory as QueueDriverFactory;
-use CDash\Middleware\Queue\SubmissionService;
 use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\BuildFile;
@@ -187,61 +184,6 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
     }
 
     return $handler;
-}
-
-/** Asynchronous submission using a message queue */
-function do_submit_queue($filehandle, $projectid, $buildid = null, $expected_md5 = '', $ip = null)
-{
-    $config = Config::getInstance();
-    $buildSubmissionId = Uuid::uuid4()->toString();
-    $destinationFilename = Storage::path('inbox') . '/' . $buildSubmissionId . '.xml';
-
-    // Save the file in the backup directory.
-    $outfile = fopen($destinationFilename, 'w');
-    while (!feof($filehandle)) {
-        $content = fread($filehandle, 8192);
-        if (fwrite($outfile, $content) === false) {
-            add_log('Failed to copy build submission XML', 'do_submit_queue', LOG_ERR);
-
-            // TODO: Handle the HTTP status code in CDash controller...
-            // header('HTTP/1.1 500 Internal Server Error');
-            echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
-            echo " <status>ERROR</status>\n";
-            echo " <message>Failed to copy build submission XML.</message>\n";
-            echo "</cdash>\n";
-            fclose($outfile);
-            unset($outfile);
-            return;
-        }
-    }
-    fclose($outfile);
-    unset($outfile);
-
-    $driver = QueueDriverFactory::create();
-    $queue = new Queue($driver);
-
-    if (is_null($ip)) {
-        $ip = $_SERVER['REMOTE_ADDR'];
-    }
-
-    $message = SubmissionService::createMessage([
-        'file'          => $destinationFilename,
-        'project'       => $projectid,
-        'md5'           => $expected_md5,
-        'checksum'      => true,
-        'ip'            => $ip
-    ]);
-    $queue->produce($message);
-
-    echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
-    echo " <status>OK</status>\n";
-    echo " <message>Build submitted successfully.</message>\n";
-    echo " <submissionId>$buildSubmissionId</submissionId>\n";
-    if (!is_null($buildid)) {
-        echo " <buildId>$buildid</buildId>\n";
-        PendingSubmissions::IncrementForBuildId($buildid);
-    }
-    echo "</cdash>\n";
 }
 
 /** Function to deal with the external tool mechanism */
@@ -433,21 +375,7 @@ function put_submit_file()
         $pendingSubmissions->Save();
     }
     $pendingSubmissions->Increment();
-
-    if ($config->get('CDASH_BERNARD_COVERAGE_SUBMISSION')) {
-        $driver = QueueDriverFactory::create();
-        $queue = new Queue($driver);
-        $message = SubmissionService::createMessage([
-            'file' => $inbox_filename,
-            'project' => $project->Id,
-            'md5' => $md5sum,
-            'checksum' => true,
-            'ip' => $_SERVER['REMOTE_ADDR']
-        ]);
-        $queue->produce($message);
-    } else {
-        ProcessSubmission::dispatch($filename, $project->Id, $build->Id, $md5sum);
-    }
+    ProcessSubmission::dispatch($filename, $project->Id, $build->Id, $md5sum);
 
     // Returns the OK submission
     $response_array['status'] = 0;

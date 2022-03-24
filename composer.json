@@ -20,7 +20,6 @@
     "ext-xsl": "*",
     "adldap2/adldap2-laravel": "6.0.8",
     "aws/aws-sdk-php": "^3.57",
-    "bernard/bernard": "1.0.0-alpha9",
     "doctrine/dbal": "^2.5",
     "fideloper/proxy": "^4.0",
     "friendsofphp/php-cs-fixer": "^2.16",
