@@ -17,10 +17,7 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 include_once 'include/ctestparser.php';
 
-use CDash\Config;
 use Illuminate\Support\Facades\Storage;
-
-$config = Config::getInstance();
 
 /**
  * Delete the temporary file related to a particular submission.
@@ -33,6 +30,10 @@ $config = Config::getInstance();
  * Optional Params:
  * dest=[string] Instead of deleting, rename filename to dest
  **/
+
+if (!config('cdash.remote_workers')) {
+    return response('This feature is disabled', Response::HTTP_CONFLICT);
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_REQUEST['filename'])) {
     $success = true;

@@ -16,10 +16,7 @@
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 
-use CDash\Config;
 use Illuminate\Support\Facades\Storage;
-
-$config = Config::getInstance();
 
 /**
  * Retrieve a file from a particular submission.
@@ -34,6 +31,10 @@ $config = Config::getInstance();
  * Required Params:
  * filename=[string] Filename to retrieve, must live in tmp_submissions directory
  **/
+
+if (!config('cdash.remote_workers')) {
+    return response('This feature is disabled', Response::HTTP_CONFLICT);
+}
 
 if (isset($_GET['filename'])) {
     $filename = Storage::path('inbox') . '/' . basename($_REQUEST['filename']);
