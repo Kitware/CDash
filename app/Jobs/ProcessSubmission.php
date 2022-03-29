@@ -85,4 +85,16 @@ class ProcessSubmission implements ShouldQueue
         unset($handler);
         $handler = null;
     }
+
+    /**
+     * The job failed to process.
+     *
+     * @param  Exception  $exception
+     * @return void
+     */
+    public function failed(\Exception $exception)
+    {
+        \Log::warning("Failed to process {$this->filename}");
+        Storage::move("inprogress/{$this->filename}", "failed/{$this->filename}");
+    }
 }
