@@ -293,7 +293,16 @@ class AuthTokenTestCase extends KWWebTestCase
         $this->setRequestHeaders($headers);
         $this->putCtestFile($file, ['project' => $this->project]);
         $browser = $this->getBrowser();
-        return $browser->getResponseCode() === 200;
+        $content = $browser->getContent();
+        if (strpos($content, '<status>') === false) {
+            $this->fail('No status in response from submit.php');
+        }
+
+        if (strpos($content, '<status>OK') !== false) {
+            return true;
+        }
+
+        return false;
     }
 
     public function postSubmit($token)
@@ -346,7 +355,15 @@ class AuthTokenTestCase extends KWWebTestCase
         $this->setRequestHeaders($headers);
         $this->putCtestFile($file, $query);
         $browser = $this->getBrowser();
-        return $browser->getResponseCode() == 200;
+        $content = $browser->getContent();
+        $response_json = json_decode($content, true);
+        if (is_null($response_json)) {
+            return false;
+        }
+        if (!array_key_exists('status', $response_json)) {
+            $this->fail('No status in PUT response');
+        }
+        return $response_json['status'] == 0;
     }
 
     public function testRevokeToken()

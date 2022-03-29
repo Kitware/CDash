@@ -39,17 +39,6 @@ class CDashParseException extends RuntimeException
 {
 }
 
-// Helper function to display the message
-function displayReturnStatus($statusarray)
-{
-    $version = config('cdash.version');
-    echo "<cdash version=\"{$version}\">\n";
-    foreach ($statusarray as $key => $value) {
-        echo '  <' . $key . '>' . $value . '</' . $key . ">\n";
-    }
-    echo "</cdash>\n";
-}
-
 /** Determine the descriptive filename for a submission file.
   * Called by writeBackupFile().
   **/
@@ -351,13 +340,6 @@ function ctest_parse($filehandle, $projectid, $buildid = null,
         return false;
     }
 
-    $statusarray = [];
-    $statusarray['status'] = 'OK';
-    $statusarray['message'] = '';
-    if (!is_null($buildid)) {
-        $statusarray['buildId'] = $buildid;
-    }
-
     while (!feof($filehandle)) {
         $content = fread($filehandle, 8192);
         xml_parse($parser, $content, false);
@@ -370,8 +352,6 @@ function ctest_parse($filehandle, $projectid, $buildid = null,
     $backup_filename = generateBackupFileName(
             $projectname, $subprojectname, $buildname, $sitename, $stamp, $file . '.xml');
     $handler->backupFileName = $backup_filename;
-
-    displayReturnStatus($statusarray);
 
     return $handler;
 }

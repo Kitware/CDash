@@ -33,15 +33,34 @@ use Symfony\Component\Process\InputStream;
 $config = Config::getInstance();
 $service = ServiceContainer::getInstance();
 
+// Helper function to display the message
+if (!function_exists('displayReturnStatus')) {
+    function displayReturnStatus($statusarray, $response_code)
+    {
+        // NOTE: we can't use Laravel's response() helper function
+        // until CTest learns how to properly parse the XML out of it.
+        http_response_code($response_code);
+
+        $version = config('cdash.version');
+        echo "<cdash version=\"{$version}\">\n";
+        foreach ($statusarray as $key => $value) {
+            echo "  <{$key}>{$value}</{$key}>\n";
+        }
+        echo "</cdash>\n";
+
+        return $response_code;
+    }
+}
+
+$statusarray = [];
+
 // Check if we can connect to the database.
 try {
     $pdo = \DB::connection()->getPdo();
 } catch (\Exception $e) {
-    $message = "<cdash version=\"{$config->get('CDASH_VERSION')}\">
-    <status>ERROR</status>
-    <message>Cannot connect to the database./message>
-    </cdash>";
-    return response($message, Response::HTTP_SERVICE_UNAVAILABLE);
+    $statusarray['status'] = 'ERROR';
+    $statusarray['message'] = 'Cannot connect to the database.';
+    return displayReturnStatus($statusarray, Response::HTTP_SERVICE_UNAVAILABLE);
 }
 
 @set_time_limit(0);
@@ -69,12 +88,10 @@ if (pdo_execute($stmt, [$projectname])) {
 
 // If not a valid project we return
 if (!$projectid) {
-    echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
-    echo " <status>ERROR</status>\n";
-    echo " <message>Not a valid project.</message>\n";
-    echo "</cdash>\n";
-    add_log('Not a valid project. projectname: ' . $projectname, 'global:submit.php');
-    return;
+    \Log::info("Not a valid project. projectname: $projectname in submit.php");
+    $statusarray['status'] = 'ERROR';
+    $statusarray['message'] = 'Not a valid project.';
+    return displayReturnStatus($statusarray, Response::HTTP_NOT_FOUND);
 }
 
 // Catch the fatal errors during submission
@@ -88,11 +105,9 @@ $project->CheckForTooManyBuilds();
 
 // Check for valid authentication token if this project requires one.
 if ($authenticate_submissions && !valid_token_for_submission($projectid)) {
-    $message = "<cdash version=\"{$config->get('CDASH_VERSION')}\">
-    <status>ERROR</status>
-    <message>Invalid Token</message>
-    </cdash>";
-    return response($message, Response::HTTP_FORBIDDEN);
+    $statusarray['status'] = 'ERROR';
+    $statusarray['message'] = 'Invalid Token';
+    return displayReturnStatus($statusarray, Response::HTTP_FORBIDDEN);
 }
 
 $expected_md5 = isset($_GET['MD5']) ? htmlspecialchars(pdo_real_escape_string($_GET['MD5'])) : '';
@@ -133,11 +148,9 @@ $filename = "{$projectname}_" . \Illuminate\Support\Str::uuid()->toString() . '.
 $fp = request()->getContent(true);
 if (!Storage::put("inbox/{$filename}", $fp)) {
     \Log::error("Failed to save submission to inbox for $projectname (md5=$expected_md5)");
-    $message = '<cdash version="' . config('cdash.version') . ">
-        <status>ERROR</status>
-        <message>Failed to save submission file.</message>
-        </cdash>";
-    return response($message, Response::HTTP_INTERNAL_SERVER_ERROR);
+    $statusarray['status'] = 'ERROR';
+    $statusarray['message'] = 'Failed to save submission file.';
+    return displayReturnStatus($statusarray, Response::HTTP_INTERNAL_SERVER_ERROR);
 }
 
 if ($expected_md5) {
@@ -145,11 +158,9 @@ if ($expected_md5) {
     $md5sum = md5_file(Storage::path("inbox/{$filename}"));
     if ($md5sum != $expected_md5) {
         Storage::delete("inbox/{$filename}");
-        $message = '<cdash version="' . config('cdash.version') . ">
-            <status>ERROR</status>
-            <message>md5 mismatch. expected: {$expected_md5}, received: {$md5sum}</message>
-            </cdash>";
-        return response($message, Response::HTTP_BAD_REQUEST);
+        $statusarray['status'] = 'ERROR';
+        $statusarray['message'] = "md5 mismatch. expected: {$expected_md5}, received: {$md5sum}";
+        return displayReturnStatus($statusarray, Response::HTTP_BAD_REQUEST);
     }
 }
 
@@ -159,3 +170,10 @@ if (!is_null($buildid)) {
 ProcessSubmission::dispatch($filename, $projectid, $buildid, $expected_md5);
 fclose($fp);
 unset($fp);
+
+$statusarray['status'] = 'OK';
+$statusarray['message'] = '';
+if (!is_null($buildid)) {
+    $statusarray['buildId'] = $buildid;
+}
+return displayReturnStatus($statusarray, Response::HTTP_OK);
