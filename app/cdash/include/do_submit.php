@@ -43,8 +43,6 @@ include 'include/sendemail.php';
  **/
 function fileHandleFromSubmissionId($filename)
 {
-    $config = Config::getInstance();
-
     $ext = pathinfo($filename, PATHINFO_EXTENSION);
     $_t = tempnam(Storage::path('inbox'), 'cdash-submission-');
     $tmpFilename = "{$_t}.{$ext}";
@@ -75,7 +73,7 @@ function getSubmissionFileHandle($fileHandleOrSubmissionId)
         return $fileHandleOrSubmissionId;
     } elseif (Storage::exists($fileHandleOrSubmissionId)) {
         return fopen(Storage::path($fileHandleOrSubmissionId), 'r');
-    } elseif (is_string($fileHandleOrSubmissionId)) {
+    } elseif (is_string($fileHandleOrSubmissionId) && config('cdash.remote_workers')) {
         return fileHandleFromSubmissionId($fileHandleOrSubmissionId);
     } else {
         add_log('Failed to get a file handle for submission (was type ' . gettype($fileHandleOrSubmissionId) . ')',

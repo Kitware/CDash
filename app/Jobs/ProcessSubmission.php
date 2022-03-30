@@ -37,6 +37,58 @@ class ProcessSubmission implements ShouldQueue
         $this->expected_md5 = $expected_md5;
     }
 
+    private function renameSubmissionFile($src, $dst)
+    {
+        if (config('cdash.remote_workers')) {
+            $url = config('app.url') . '/api/v1/deleteSubmissionFile.php';
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('DELETE', $url, ['query' => ['filename' => $src, 'dest' => $dst]]);
+            return $response->getStatusCode() == 200;
+        } else {
+            return Storage::move($src, $dst);
+        }
+        return false;
+    }
+
+    private function deleteSubmissionFile($filename)
+    {
+        if (config('cdash.remote_workers')) {
+            $url = config('app.url') . '/api/v1/deleteSubmissionFile.php';
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('DELETE', $url, ['query' => ['filename' => $filename]]);
+            return $response->getStatusCode() == 200;
+        } else {
+            return Storage::delete($filename);
+        }
+        return false;
+    }
+
+    private function requeueSubmissionFile($buildid)
+    {
+        if (config('cdash.remote_workers')) {
+            $url = config('app.url') . '/api/v1/requeueSubmissionFile.php';
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('POST', $url, ['query' => [
+                    'filename' => $this->filename,
+                    'buildid' => $buildid,
+                    'projectid' => $this->projectid
+                ]]);
+            return $response->getStatusCode() == 200;
+        } else {
+            // Increment retry count.
+            $retry_handler = new \RetryHandler(Storage::path("inprogress/{$this->filename}"));
+            $retry_handler->Increment();
+
+            // Move file back to inbox.
+            Storage::move("inprogress/{$this->filename}", "inbox/{$this->filename}");
+
+            // Requeue the file.
+            PendingSubmissions::IncrementForBuildId($this->buildid);
+            self::dispatch($this->filename, $this->projectid, $buildid, md5_file(Storage::path("inbox/{$this->filename}")));
+            return true;
+        }
+    }
+
     /**
      * Execute the job.
      *
@@ -45,7 +97,7 @@ class ProcessSubmission implements ShouldQueue
     public function handle()
     {
         // Move file from inbox to inprogress.
-        if (!Storage::move("inbox/{$this->filename}", "inprogress/{$this->filename}")) {
+        if (!$this->renameSubmissionFile("inbox/{$this->filename}", "inprogress/{$this->filename}")) {
             // Return early if the rename operation fails.
             // Presumably this means some other runner picked up the job before us.
             return;
@@ -60,26 +112,16 @@ class ProcessSubmission implements ShouldQueue
 
         // Resubmit the file if necessary.
         if (is_a($handler, 'DoneHandler') && $handler->shouldRequeue()) {
-            // Increment retry count.
-            $retry_handler = new \RetryHandler(Storage::path("inprogress/{$this->filename}"));
-            $retry_handler->Increment();
             $build = get_build_from_handler($handler);
-
-            // Move file back to inbox.
-            Storage::move("inprogress/{$this->filename}", "inbox/{$this->filename}");
-
-            // Requeue the file.
-            PendingSubmissions::IncrementForBuildId($this->buildid);
-            self::dispatch($this->filename, $this->projectid, $build->Id, md5_file(Storage::path("inbox/{$this->filename}")));
-            return;
+            return $this->requeueSubmissionFile($build->Id);
         }
 
         if (config('cdash.backup_timeframe') === 0 && is_file($filename)) {
             // We are configured not to store parsed files. Delete it now.
-            Storage::delete("inprogress/{$this->filename}");
+            $this->deleteSubmissionFile("inprogress/{$this->filename}");
         } else {
             // Move the file to a pretty name in the parsed directory.
-            Storage::move("inprogress/{$this->filename}", "parsed/{$handler->backupFileName}");
+            $this->renameSubmissionFile("inprogress/{$this->filename}", "parsed/{$handler->backupFileName}");
         }
 
         unset($handler);
@@ -95,6 +137,6 @@ class ProcessSubmission implements ShouldQueue
     public function failed(\Exception $exception)
     {
         \Log::warning("Failed to process {$this->filename}");
-        Storage::move("inprogress/{$this->filename}", "failed/{$this->filename}");
+        $this->renameSubmissionFile("inprogress/{$this->filename}", "failed/{$this->filename}");
     }
 }
