@@ -47,9 +47,9 @@ class ViewNotes extends BuildApi
         // Menu
         $menu = [];
         if ($this->build->GetParentId() > 0) {
-            $menu['back'] = '/index.php?project=' . urlencode($this->project->Name) . "&parentid={$this->build->GetParentId()}";
+            $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . "&parentid={$this->build->GetParentId()}";
         } else {
-            $menu['back'] = '/index.php?project=' . urlencode($this->project->Name) . '&date=' . $this->date;
+            $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . '&date=' . $this->date;
         }
 
         $previous_buildid = $this->build->GetPreviousBuildId();
