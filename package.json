@@ -52,7 +52,7 @@
     "expect": "^27.3.1",
     "jest": "^27.3.1",
     "jquery": "^3.5",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "postcss": "^8.3.5",
     "protractor": "^7.0.0",
     "resolve-url-loader": "^5.0.0",
