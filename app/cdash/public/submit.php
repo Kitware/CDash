@@ -33,6 +33,50 @@ use Symfony\Component\Process\InputStream;
 $config = Config::getInstance();
 $service = ServiceContainer::getInstance();
 
+/* Catch any PHP fatal errors */
+//
+// This is a registered shutdown function (see register_shutdown_function help)
+// and gets called at script exit time, regardless of reason for script exit.
+// i.e. -- it gets called when a script exits normally, too.
+//
+global $PHP_ERROR_BUILD_ID;
+global $PHP_ERROR_RESOURCE_TYPE;
+global $PHP_ERROR_RESOURCE_ID;
+
+if (!function_exists('PHPErrorHandler')) {
+    function PHPErrorHandler($projectid)
+    {
+        if (connection_aborted()) {
+            add_log('PHPErrorHandler', "connection_aborted()='" . connection_aborted() . "'", LOG_INFO, $projectid);
+            add_log('PHPErrorHandler', "connection_status()='" . connection_status() . "'", LOG_INFO, $projectid);
+        }
+
+        if ($error = error_get_last()) {
+            switch ($error['type']) {
+                case E_ERROR:
+                case E_CORE_ERROR:
+                case E_COMPILE_ERROR:
+                case E_USER_ERROR:
+                    if (strlen($GLOBALS['PHP_ERROR_RESOURCE_TYPE']) == 0) {
+                        $GLOBALS['PHP_ERROR_RESOURCE_TYPE'] = 0;
+                    }
+                    if (strlen($GLOBALS['PHP_ERROR_BUILD_ID']) == 0) {
+                        $GLOBALS['PHP_ERROR_BUILD_ID'] = 0;
+                    }
+                    if (strlen($GLOBALS['PHP_ERROR_RESOURCE_ID']) == 0) {
+                        $GLOBALS['PHP_ERROR_RESOURCE_ID'] = 0;
+                    }
+
+                    add_log('Fatal error:' . $error['message'], $error['file'] . ' (' . $error['line'] . ')',
+                        LOG_ERR, $projectid, $GLOBALS['PHP_ERROR_BUILD_ID'],
+                        $GLOBALS['PHP_ERROR_RESOURCE_TYPE'], $GLOBALS['PHP_ERROR_RESOURCE_ID']);
+                    exit();  // stop the script
+                    break;
+            }
+        }
+    }
+}
+
 // Helper function to display the message
 if (!function_exists('displayReturnStatus')) {
     function displayReturnStatus($statusarray, $response_code)

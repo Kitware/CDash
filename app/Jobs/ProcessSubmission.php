@@ -2,7 +2,10 @@
 
 namespace App\Jobs;
 
+use CDash\Config;
+use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
+use CDash\Model\Repository;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,9 +14,12 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 
-require_once 'include/do_submit.php';
-require_once 'xml_handlers/done_handler.php';
-require_once 'xml_handlers/retry_handler.php';
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\Response;
+
+include_once 'include/common.php';
+require_once 'include/ctestparser.php';
+require_once 'include/sendemail.php';
 
 class ProcessSubmission implements ShouldQueue
 {
@@ -104,7 +110,7 @@ class ProcessSubmission implements ShouldQueue
         }
 
         // Parse file.
-        $handler = do_submit("inprogress/{$this->filename}", $this->projectid, $this->buildid, $this->expected_md5, true);
+        $handler = $this->doSubmit("inprogress/{$this->filename}", $this->projectid, $this->buildid, $this->expected_md5, true);
 
         if (!is_object($handler)) {
             return;
@@ -112,7 +118,7 @@ class ProcessSubmission implements ShouldQueue
 
         // Resubmit the file if necessary.
         if (is_a($handler, 'DoneHandler') && $handler->shouldRequeue()) {
-            $build = get_build_from_handler($handler);
+            $build = $this->getBuildFromHandler($handler);
             return $this->requeueSubmissionFile($build->Id);
         }
 
@@ -138,5 +144,151 @@ class ProcessSubmission implements ShouldQueue
     {
         \Log::warning("Failed to process {$this->filename}");
         $this->renameSubmissionFile("inprogress/{$this->filename}", "failed/{$this->filename}");
+    }
+
+    /**
+     * This method could be running on a worker that is either remote or local, so it accepts
+     * a file handle or a filename that it can query the CDash API for.
+     **/
+    private function doSubmit($fileHandleOrSubmissionId, $projectid, $buildid = null,
+                       $expected_md5 = '')
+    {
+        $filehandle = $this->getSubmissionFileHandle($fileHandleOrSubmissionId);
+
+        if ($filehandle === false) {
+            // Logs will have already captured this issue at this point
+            return false;
+        }
+
+        // We find the daily updates
+        // If we have php curl we do it asynchronously
+        $baseUrl = get_server_URI(false);
+        $request = $baseUrl . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
+
+        if (config('cdash.daily_updates') && $this->curlRequest($request) === false) {
+            return false;
+        }
+
+        // Parse the XML file
+        $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5);
+        fclose($filehandle);
+        unset($filehandle);
+
+        //this is the md5 checksum fail case
+        if ($handler == false) {
+            //no need to log an error since ctest_parse already did
+            return false;
+        }
+
+        $build = $this->getBuildFromHandler($handler);
+        if (!is_null($build)) {
+            $pendingSubmissions = new PendingSubmissions();
+            $pendingSubmissions->Build = $build;
+            if ($pendingSubmissions->Exists()) {
+                $pendingSubmissions->Decrement();
+            }
+        }
+
+        // Set status on repository.
+        if ($handler instanceof UpdateHandler ||
+            $handler instanceof BuildPropertiesJSONHandler
+        ) {
+            Repository::setStatus($build, false);
+        }
+
+        // Send emails about update problems.
+        if ($handler instanceof UpdateHandler) {
+            send_update_email($handler, $projectid);
+        }
+
+        // Send more general build emails.
+        if (is_a($handler, 'TestingHandler') ||
+            is_a($handler, 'BuildHandler') ||
+            is_a($handler, 'ConfigureHandler') ||
+            is_a($handler, 'DynamicAnalysisHandler') ||
+            is_a($handler, 'UpdateHandler')
+        ) {
+            sendemail($handler, $projectid);
+        }
+
+        return $handler;
+    }
+
+    /**
+     * Given a filename, query the CDash API for its contents and return
+     * a read-only file handle.
+     * This is useful for workers running on other machines that need access to build xml.
+     **/
+    private function fileHandleFromSubmissionId($filename)
+    {
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        $_t = tempnam(Storage::path('inbox'), 'cdash-submission-');
+        $tmpFilename = "{$_t}.{$ext}";
+        rename($_t, $tmpFilename);
+
+        $client = new GuzzleHttp\Client();
+        $response = $client->request('GET',
+                                     config('app.url') . '/api/v1/getSubmissionFile.php',
+                                     array('query' => array('filename' => $filename),
+                                           'save_to' => $tmpFilename));
+
+        if ($response->getStatusCode() === 200) {
+            // @todo I'm sure Guzzle can be used to return a file handle from the stream, but for now
+            // I'm just creating a temporary file with the output
+            return fopen($tmpFilename, 'r');
+        } else {
+            // Log the status code and build submission UUID (404 means it's already been processed)
+            add_log('Failed to retrieve a file handle from filename ' .
+                    $filename . '(' . (string) $response->getStatusCode() . ')',
+                    'fileHandleFromSubmissionId', LOG_WARNING);
+            return false;
+        }
+    }
+
+    private function getSubmissionFileHandle($fileHandleOrSubmissionId)
+    {
+        if (is_resource($fileHandleOrSubmissionId)) {
+            return $fileHandleOrSubmissionId;
+        } elseif (Storage::exists($fileHandleOrSubmissionId)) {
+            return fopen(Storage::path($fileHandleOrSubmissionId), 'r');
+        } elseif (is_string($fileHandleOrSubmissionId) && config('cdash.remote_workers')) {
+            return $this->fileHandleFromSubmissionId($fileHandleOrSubmissionId);
+        } else {
+            add_log('Failed to get a file handle for submission (was type ' . gettype($fileHandleOrSubmissionId) . ')',
+                    'getSubmissionFileHandle', LOG_ERR);
+            return false;
+        }
+    }
+
+    private function getBuildFromHandler($handler)
+    {
+        $build = null;
+        $builds = $handler->getBuilds();
+        if (count($builds) > 1) {
+            // More than one build referenced by the handler.
+            // Return the parent build.
+            $build = new Build();
+            $build->Id = $builds[0]->GetParentId();
+        } elseif (count($builds) === 1 && $builds[0] instanceof Build) {
+            $build = $builds[0];
+        }
+        return $build;
+    }
+
+    private function curlRequest($request)
+    {
+        $use_https = Config::getInstance()->get('CDASH_USE_HTTPS');
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $request);
+        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+        if ($use_https) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        }
+        curl_exec($ch);
+        curl_close($ch);
+        return true;
     }
 }
