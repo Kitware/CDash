@@ -16,7 +16,15 @@ class CheckDatabaseConnection
      */
     public function handle($request, Closure $next)
     {
-        if (strpos($request->fullUrl(), 'install.php') === false) {
+        $exempted_endpoints = ['install.php', 'submit.php'];
+        $skip_check = false;
+        foreach ($exempted_endpoints as $exempted_endpoint) {
+            if (strpos($request->fullUrl(), $exempted_endpoint) !== false) {
+                $skip_check = true;
+            }
+        }
+
+        if (!$skip_check) {
             try {
                 \DB::connection()->getPdo();
                 if (!Schema::hasTable('build')) {
