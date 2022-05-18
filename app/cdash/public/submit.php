@@ -98,15 +98,6 @@ if (!function_exists('displayReturnStatus')) {
 
 $statusarray = [];
 
-// Check if we can connect to the database.
-try {
-    $pdo = \DB::connection()->getPdo();
-} catch (\Exception $e) {
-    $statusarray['status'] = 'ERROR';
-    $statusarray['message'] = 'Cannot connect to the database.';
-    return displayReturnStatus($statusarray, Response::HTTP_SERVICE_UNAVAILABLE);
-}
-
 @set_time_limit(0);
 
 // If we have a POST we forward to the new submission process
@@ -117,11 +108,43 @@ if (isset($_GET['buildid'])) {
     return put_submit_file();
 }
 
+$projectname = $_GET['project'];
+$expected_md5 = isset($_GET['MD5']) ? htmlspecialchars($_GET['MD5']) : '';
+
+// Save the incoming file in the inbox directory.
+$filename = "{$projectname}_" . \Illuminate\Support\Str::uuid()->toString() . '.xml';
+$fp = request()->getContent(true);
+if (!Storage::put("inbox/{$filename}", $fp)) {
+    \Log::error("Failed to save submission to inbox for $projectname (md5=$expected_md5)");
+    $statusarray['status'] = 'ERROR';
+    $statusarray['message'] = 'Failed to save submission file.';
+    return displayReturnStatus($statusarray, Response::HTTP_INTERNAL_SERVER_ERROR);
+}
+
+// Check that the md5sum of the file matches what we were told to expect.
+if ($expected_md5) {
+    $md5sum = md5_file(Storage::path("inbox/{$filename}"));
+    if ($md5sum != $expected_md5) {
+        Storage::delete("inbox/{$filename}");
+        $statusarray['status'] = 'ERROR';
+        $statusarray['message'] = "md5 mismatch. expected: {$expected_md5}, received: {$md5sum}";
+        return displayReturnStatus($statusarray, Response::HTTP_BAD_REQUEST);
+    }
+}
+
+// Check if we can connect to the database before proceeding any further.
+try {
+    $pdo = \DB::connection()->getPdo();
+} catch (\Exception $e) {
+    $statusarray['status'] = 'ERROR';
+    $statusarray['message'] = 'Cannot connect to the database.';
+    return displayReturnStatus($statusarray, Response::HTTP_SERVICE_UNAVAILABLE);
+}
+
+// Get some more info about this project.
+$projectid = null;
 $stmt = $pdo->prepare(
     'SELECT id, authenticatesubmissions FROM project WHERE name = ?');
-
-$projectid = null;
-$projectname = $_GET['project'];
 if (pdo_execute($stmt, [$projectname])) {
     $row = $stmt->fetch();
     if ($row) {
@@ -130,7 +153,7 @@ if (pdo_execute($stmt, [$projectname])) {
     }
 }
 
-// If not a valid project we return
+// Return an error message if this is not a valid project.
 if (!$projectid) {
     \Log::info("Not a valid project. projectname: $projectname in submit.php");
     $statusarray['status'] = 'ERROR';
@@ -153,8 +176,6 @@ if ($authenticate_submissions && !valid_token_for_submission($projectid)) {
     $statusarray['message'] = 'Invalid Token';
     return displayReturnStatus($statusarray, Response::HTTP_FORBIDDEN);
 }
-
-$expected_md5 = isset($_GET['MD5']) ? htmlspecialchars(pdo_real_escape_string($_GET['MD5'])) : '';
 
 // Check if CTest provided us enough info to assign a buildid.
 $pendingSubmissions = $service->create(PendingSubmissions::class);
@@ -185,27 +206,6 @@ if (isset($_GET['build']) && isset($_GET['site']) && isset($_GET['stamp'])) {
         $pendingSubmissions->Save();
     }
     $buildid = $build->Id;
-}
-
-// Save the incoming file in the inbox directory.
-$filename = "{$projectname}_" . \Illuminate\Support\Str::uuid()->toString() . '.xml';
-$fp = request()->getContent(true);
-if (!Storage::put("inbox/{$filename}", $fp)) {
-    \Log::error("Failed to save submission to inbox for $projectname (md5=$expected_md5)");
-    $statusarray['status'] = 'ERROR';
-    $statusarray['message'] = 'Failed to save submission file.';
-    return displayReturnStatus($statusarray, Response::HTTP_INTERNAL_SERVER_ERROR);
-}
-
-if ($expected_md5) {
-    // Check that the md5sum of the file matches what we were told to expect.
-    $md5sum = md5_file(Storage::path("inbox/{$filename}"));
-    if ($md5sum != $expected_md5) {
-        Storage::delete("inbox/{$filename}");
-        $statusarray['status'] = 'ERROR';
-        $statusarray['message'] = "md5 mismatch. expected: {$expected_md5}, received: {$md5sum}";
-        return displayReturnStatus($statusarray, Response::HTTP_BAD_REQUEST);
-    }
 }
 
 if (!is_null($buildid)) {
