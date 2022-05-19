@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="deferred_submission"
+	BuildStamp="20220519-1920-Experimental"
+	Name="hesperides.kitware"
+	Generator="ctest-3.23"
+	>
+	<Configure>
+		<StartDateTime>May 19 15:20 EDT</StartDateTime>
+		<StartConfigureTime>1652988055</StartConfigureTime>
+		<ConfigureCommand>"/usr/local/CMake.app/Contents/bin/cmake" "-DCMAKE_BUILD_TYPE=Debug" "-DCMAKE_CXX_FLAGS=-g -O0 --coverage -Wall" "-DCMAKE_C_FLAGS=-g -O0 --coverage -Wall" "-DCMAKE_EXE_LINKER_FLAGS=--coverage" "-DCMAKE_SHARED_LINKER_FLAGS=--coverage" "-GUnix Makefiles" "/tmp/src"</ConfigureCommand>
+		<Log>-- The C compiler identification is AppleClang 13.1.6.13160021
+-- The CXX compiler identification is AppleClang 13.1.6.13160021
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/zack/projects/tmp_for_cdash/bin
+</Log>
+		<ConfigureStatus>0</ConfigureStatus>
+		<EndDateTime>May 19 15:20 EDT</EndDateTime>
+		<EndConfigureTime>1652988056</EndConfigureTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Configure>
+</Site>

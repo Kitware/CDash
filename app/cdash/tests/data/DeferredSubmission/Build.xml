@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="deferred_submission"
+	BuildStamp="20220519-1920-Experimental"
+	Name="hesperides.kitware"
+	Generator="ctest-3.23"
+	>
+	<Build>
+		<StartDateTime>May 19 15:20 EDT</StartDateTime>
+		<StartBuildTime>1652988056</StartBuildTime>
+		<BuildCommand>/usr/local/CMake.app/Contents/bin/cmake --build . --config "Release" -- -i</BuildCommand>
+		<Warning>
+			<BuildLogLine>2</BuildLogLine>
+			<Text>/.../src/fails.cxx:4:19: warning: unused variable 'alphanum' [-Wunused-const-variable]</Text>
+			<SourceFile>fails.cxx</SourceFile>
+			<SourceLineNumber>4</SourceLineNumber>
+			<PreContext>[ 25%] Building CXX object CMakeFiles/fails.dir/fails.cxx.o
+</PreContext>
+			<PostContext>static const char alphanum[] =
+                  ^
+1 warning generated.
+[ 50%] Linking CXX executable fails
+[ 50%] Built target fails
+[ 75%] Building CXX object CMakeFiles/passes.dir/main.cxx.o
+[100%] Linking CXX executable passes
+[100%] Built target passes
+</PostContext>
+			<RepeatCount>0</RepeatCount>
+		</Warning>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>May 19 15:20 EDT</EndDateTime>
+		<EndBuildTime>1652988058</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>

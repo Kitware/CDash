@@ -156,6 +156,8 @@ if (NOT CDASH_DB_TYPE STREQUAL "pgsql")
   add_php_test(parallelsubmissions)
 endif()
 
+add_php_test(deferredsubmissions)
+
 if(COVERAGE_COMMAND)
   add_coverage_test(simple_async InsightExample simple manageCoverageTest.php enable_async)
 else(COVERAGE_COMMAND)
