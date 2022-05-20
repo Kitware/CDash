@@ -513,9 +513,12 @@ class BazelJSONHandler extends NonSaxHandler
                 // Parse out the command line that created this file.
                 $this->CommandLine = "bazel ";
                 $this->CommandLine .= $json_array['started']['command'];
-                $this->CommandLine .= $json_array['started']['optionsDescription'];
-
-                $this->WorkingDirectory = $json_array['started']['workingDirectory'];
+                if (array_key_exists('optionsDescription', $json_array['started'])) {
+                    $this->CommandLine .= $json_array['started']['optionsDescription'];
+                }
+                if (array_key_exists('workingDirectory', $json_array['started'])) {
+                    $this->WorkingDirectory = $json_array['started']['workingDirectory'];
+                }
                 break;
 
             case 'testResult':
