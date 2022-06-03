@@ -8,4 +8,3 @@
 <link rel="stylesheet" type="text/css" href="css/nv.d3.css"/>
 <link rel="stylesheet" href="css/bootstrap.min.css"/>
 <script src="js/CDash_{{ $js_version  }}.min.js"></script>
-<link rel="stylesheet" type="text/css" href="css/jqModal.css" />
