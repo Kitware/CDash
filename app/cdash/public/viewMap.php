@@ -52,15 +52,8 @@ $xml .= '<dashboard>';
 $xml .= '<title>CDash</title>';
 $xml .= '<date>' . $date . '</date>';
 
-$apikey = null;
+$apikey = config('cdash.google_map_api_key');
 
-// Find the correct google map key
-foreach ($config->get('CDASH_GOOGLE_MAP_API_KEY') as $key => $value) {
-    if (strstr($_SERVER['HTTP_HOST'], $key) !== false) {
-        $apikey = $value;
-        break;
-    }
-}
 $xml .= add_XML_value('googlemapkey', $apikey);
 $xml .= add_XML_value('projectname', $projectname);
 $xml .= add_XML_value('projectname_encoded', urlencode($projectname));

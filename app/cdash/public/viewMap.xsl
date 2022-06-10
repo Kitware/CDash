@@ -32,6 +32,7 @@
 </xsl:choose>
 <br/>
 
+<xsl:if test="string-length(cdash/googlemapkey)>0">
  <script type="text/javascript">
       <xsl:attribute name="src">http://maps.google.com/maps?file=api&amp;v=2&amp;key=<xsl:value-of select="cdash/dashboard/googlemapkey"/></xsl:attribute>
    </script>
@@ -65,6 +66,7 @@
     }
     &lt;/script&gt;
     </xsl:text>
+</xsl:if>
 
 <div style="position:relative;">
 <div style="float:left; padding-right:20px;">
@@ -102,8 +104,10 @@
 </table>
 </div>
 
-<!-- Display the map -->
-<div id="map" style="width: 700px; height: 400px; float:left;"></div>
+<xsl:if test="string-length(cdash/googlemapkey)>0">
+  <!-- Display the map -->
+  <div id="map" style="width: 700px; height: 400px; float:left;"></div>
+</xsl:if>
 </div>
 
 <!-- FOOTER -->
