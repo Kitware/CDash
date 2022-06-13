@@ -18,7 +18,6 @@
          </link>
 
         <!-- Include JQuery -->
-        <script src="js/jquery-1.6.2.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/cdashManageCoverageSorter.js" type="text/javascript" charset="utf-8"></script>

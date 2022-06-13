@@ -19,7 +19,6 @@
        <script language="javascript" type="text/javascript" src="js/excanvas.js">
        </script>
        <![endif]]]></xsl:comment>
-       <script language="javascript" type="text/javascript" src="js/jquery-1.6.2.js" charset="utf-8"></script>
        <script language="javascript" type="text/javascript" src="js/jquery.flot.min.js" charset="utf-8"></script>
        <script src="js/jquery.flot.selection.min.js" type="text/javascript" charset="utf-8"></script>
        <script language="javascript" type="text/javascript" src="js/jquery.flot.pie.min.js" charset="utf-8"></script>
