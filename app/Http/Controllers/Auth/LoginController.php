@@ -66,6 +66,7 @@ class LoginController extends Controller
                     [
                         'errors' => $e->validator->getMessageBag(),
                         'title' => 'Login',
+                        'js_version' => self::getJsVersion(),
                     ],
                     401
                 );
@@ -101,6 +102,10 @@ class LoginController extends Controller
      */
     public static function staticShowLoginForm()
     {
-        return view('auth.login', ['title' => 'Login']);
+        return view('auth.login',
+            [
+                'title' => 'Login',
+                'js_version' => self::getJsVersion()
+            ]);
     }
 }
