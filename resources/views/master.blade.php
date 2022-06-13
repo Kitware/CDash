@@ -13,7 +13,6 @@
     </script>
     <![endif]-->
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery-ui-1.10.4.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/jqModal.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ asset('css/jquery.qtip.min.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ asset('css/jquery.dataTables.css') }}" />

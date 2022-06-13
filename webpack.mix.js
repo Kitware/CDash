@@ -87,13 +87,14 @@ mix.copy('public/css/colorblind.css', 'public/build/css/colorblind_' + version +
 mix.copy('public/css/common.css', 'public/build/css/common.css');
 mix.styles([
   'node_modules/bootstrap/dist/css/bootstrap.css',
-  'node_modules/bootstrap-vue/dist/bootstrap-vue.css'
+  'node_modules/bootstrap-vue/dist/bootstrap-vue.css',
+  'node_modules/jquery-ui-dist/jquery-ui.css'
 ], 'public/build/css/3rdparty.css').version();
 
 // Concatenate and minify 3rd party javascript.
 mix.scripts([
   'node_modules/jquery/dist/jquery.min.js',
-  'public/js/jquery-ui-1.10.4.min.js',
+  'node_modules/jquery-ui-dist/jquery-ui.js',
   'public/js/jquery.cookie.js',
   'public/js/jquery.flot.min.js',
   'public/js/jquery.flot.navigate.min.js',

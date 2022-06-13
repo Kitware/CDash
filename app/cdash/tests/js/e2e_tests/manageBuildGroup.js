@@ -23,7 +23,6 @@ describe("manageBuildGroup", function() {
 
     // Make sure they're both on our list of current BuildGroups.
     browser.get('manageBuildGroup.php?projectid=5');
-    element(by.linkText('Current BuildGroups')).click();
     expect(element(by.id('current')).getText()).toContain("aaNewBuildGroup");
     expect(element(by.id('current')).getText()).toContain("latestBuildGroup");
   });
@@ -44,7 +43,6 @@ describe("manageBuildGroup", function() {
 
   it("can modify a buildgroup", function() {
     browser.get('manageBuildGroup.php?projectid=5');
-    element(by.linkText('Current BuildGroups')).click();
     // Select the 4th buildgroup in the list & expand its details.
     var buildgroup = element(by.repeater('buildgroup in cdash.buildgroups').row(3));
     buildgroup.element(by.className('glyphicon-chevron-right')).click();
@@ -71,7 +69,6 @@ describe("manageBuildGroup", function() {
 
       // Verify that our changes went through successfully.
       browser.get('manageBuildGroup.php?projectid=5');
-      element(by.linkText('Current BuildGroups')).click();
       var buildgroup = element(by.repeater('buildgroup in cdash.buildgroups').row(3));
       expect(buildgroup.element(by.name("name")).getAttribute("value")).toBe("aaaNewBuildGroup");
       expect(buildgroup.element(by.name("description")).getAttribute("value")).toBe("temporary BuildGroup for testing");
@@ -177,30 +174,9 @@ describe("manageBuildGroup", function() {
   });
 
 
-  it("can change buildgroup order", function() {
-    browser.get('manageBuildGroup.php?projectid=5');
-    element(by.linkText('Current BuildGroups')).click();
-    // The BuildGroup we're gonna move.
-    var buildgroup = element(by.repeater('buildgroup in cdash.buildgroups').row(3));
-    // And the position on-screen where we're gonna move it to.
-    var position = element(by.repeater('buildgroup in cdash.buildgroups').row(0)).getLocation();
-    position.y -= 10;
-
-    browser.actions().dragAndDrop(buildgroup, position).perform();
-    element(by.buttonText('Update Order')).click();
-    browser.waitForAngular();
-
-    // Make sure it's on the top after we reload.
-    browser.get('manageBuildGroup.php?projectid=5');
-    element(by.linkText('Current BuildGroups')).click();
-    expect(element(by.repeater('buildgroup in cdash.buildgroups').row(0)).getText()).toContain("aaaNewBuildGroup");
-  });
-
-
   it("can delete buildgroups", function() {
     function deleteBuildGroup(idx, buildGroupName) {
       browser.get('manageBuildGroup.php?projectid=5');
-      element(by.linkText('Current BuildGroups')).click();
       // Select the buildgroup & expand its details.
       var buildgroup = element(by.repeater('buildgroup in cdash.buildgroups').row(idx));
       buildgroup.element(by.className('glyphicon-chevron-right')).click();
@@ -225,12 +201,11 @@ describe("manageBuildGroup", function() {
 
         // Reload the page to make sure it's really gone from the database too.
         browser.get('manageBuildGroup.php?projectid=5');
-        element(by.linkText('Current BuildGroups')).click();
         expect(element(by.id('current')).getText()).not.toContain(buildGroupName);
       });
     }
 
-    deleteBuildGroup(0, "aaaNewBuildGroup");
+    deleteBuildGroup(3, "aaaNewBuildGroup");
     deleteBuildGroup(3, "latestBuildGroup");
   });
 

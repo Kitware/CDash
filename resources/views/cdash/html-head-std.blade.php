@@ -16,7 +16,6 @@
 <script src="js/jquery.flot.selection.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/tooltip.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.qtip.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/jquery-ui-1.10.4.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.dataTables.min.js" type="text/javascript" charset="utf-8"></script>
@@ -24,7 +23,6 @@
 <script src="js/jtip.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jqModal.js" type="text/javascript" charset="utf-8"></script>
 
-<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
 <link rel="stylesheet" type="text/css" href="css/jqModal.css" />
 <link type="text/css" rel="stylesheet" href="css/jquery.qtip.min.css" />
 <link type="text/css" rel="stylesheet" media="all" href="css/jquery.dataTables.css" />
