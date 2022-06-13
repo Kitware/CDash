@@ -92,7 +92,7 @@ mix.styles([
 
 // Concatenate and minify 3rd party javascript.
 mix.scripts([
-  'public/js/jquery-1.10.2.js',
+  'node_modules/jquery/dist/jquery.min.js',
   'public/js/jquery-ui-1.10.4.min.js',
   'public/js/jquery.cookie.js',
   'public/js/jquery.flot.min.js',

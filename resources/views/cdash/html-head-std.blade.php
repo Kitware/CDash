@@ -10,7 +10,7 @@
 </script>
 <![endif]-->
 
-<script src="js/jquery-1.10.2.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/CDash_{{ $js_version  }}.min.js"></script>
 <script src="js/jquery.flot.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.flot.time.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.flot.selection.min.js" type="text/javascript" charset="utf-8"></script>
