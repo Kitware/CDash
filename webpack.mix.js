@@ -87,21 +87,18 @@ mix.copy('public/css/colorblind.css', 'public/build/css/colorblind_' + version +
 mix.copy('public/css/common.css', 'public/build/css/common.css');
 mix.styles([
   'node_modules/bootstrap/dist/css/bootstrap.css',
-  'node_modules/bootstrap-vue/dist/bootstrap-vue.css'
+  'node_modules/bootstrap-vue/dist/bootstrap-vue.css',
+  'node_modules/jquery-ui-dist/jquery-ui.css'
 ], 'public/build/css/3rdparty.css').version();
 
 // Concatenate and minify 3rd party javascript.
 mix.scripts([
-  'public/js/jquery-1.10.2.js',
-  'public/js/jquery-ui-1.10.4.min.js',
-  'public/js/jquery.cookie.js',
-  'public/js/jquery.flot.min.js',
-  'public/js/jquery.flot.navigate.min.js',
-  'public/js/jquery.flot.selection.min.js',
-  'public/js/jquery.flot.symbol.min.js',
-  'public/js/jquery.flot.time.min.js',
-  'public/js/jquery.qtip.min.js',
-  'public/js/jqModal.js',
+  'node_modules/jquery/dist/jquery.min.js',
+  'node_modules/jquery-ui-dist/jquery-ui.js',
+  'node_modules/flot/dist/es5/jquery.flot.js',
+  'node_modules/flot/source/jquery.flot.pie.js',
+  'node_modules/flot/source/jquery.flot.selection.js',
+  'node_modules/jquery.cookie/jquery.cookie.js',
   'public/js/bootstrap.min.js',
   'public/js/tooltip.js',
   'public/js/je_compare.js',

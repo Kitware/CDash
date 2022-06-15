@@ -29,7 +29,6 @@
             <script type="text/javascript">
               var version='<xsl:value-of select="cdash/minversion"/>';
             </script>
-            <script src="js/jquery-1.6.2.js" type="text/javascript" charset="utf-8"></script>
             <script src="js/cdashUpgrade.js" type="text/javascript" charset="utf-8"></script>
           </xsl:if>
         </xsl:if>

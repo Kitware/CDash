@@ -520,14 +520,6 @@ div#labelcolorblind {
   margin-right: 10px;
 }
 
-div#helpmenu {
-  position: relative;
-  top: -18px;
-  margin-left: 3px;
-  float: right;
-  width: 50px;
-}
-
 div#autorefresh {
   position: relative;
   top: -18px;
