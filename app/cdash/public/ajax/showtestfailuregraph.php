@@ -82,7 +82,7 @@ for ($beginning_timestamp = $starttime; $beginning_timestamp > $starttime - 3600
         <?php
         $tarray = array();
         foreach ($failures as $key=>$value) {
-            $t['x'] = $key * 1000;
+            $t['x'] = $key;
             $t['y'] = $value;
             $tarray[] = $t;
         }
@@ -96,38 +96,39 @@ for ($beginning_timestamp = $starttime; $beginning_timestamp > $starttime - 3600
         } ?>
 
         var options = {
-            bars: {
-                show: true,
-                barWidth: 35000000,
-                lineWidth: 0.9
+            series: {
+                bars: {
+                    show: true,
+                    barWidth: 0.5,
+                },
             },
-            //points: { show: true },
+            legend: {
+              show: true,
+              position: "ne",
+            },
             yaxis: {min: 0},
-            xaxis: {mode: "time"},
+            xaxis: {
+              mode: "time",
+              min: <?php echo $t - 604800 ?>,
+              max: <?php echo $t + 100000 ?>,
+          },
             grid: {backgroundColor: "#fffaff"},
             selection: {mode: "x"},
             colors: ["#0000FF", "#dba255", "#919733"]
         };
 
-        $("#testfailuregrapholder").bind("selected", function (event, area) {
-            $.plot($("#testfailuregrapholder"), [{label: "# builds failed", data: d1}],
-                $.extend(true, {}, options, {xaxis: {min: area.x1, max: area.x2}}));
-        });
+        var plot = $.plot($("#testfailuregrapholder"), [{label: "# builds failed", data: d1}], options);
 
-        <?php if (isset($zoomout)) {
-            ?>
-        $.plot($("#testfailuregrapholder"), [{label: "# builds failed", data: d1}], options);
-        <?php
-        } else {
-            ?>
-        $.plot($("#testfailuregrapholder"), [{label: "# builds failed", data: d1}],
-            $.extend(true, {}, options, {
-                xaxis: {
-                    min: <?php echo $t - 604800000?>,
-                    max: <?php echo $t + 100000000 ?>}
-            }));
-        <?php
-        } ?>
+        $("#testfailuregrapholder").bind("plotselected", function (event, ranges) {
+            $.each(plot.getXAxes(), function(_, axis) {
+              var opts = axis.options;
+              opts.min = ranges.xaxis.from;
+              opts.max = ranges.xaxis.to;
+            });
+            plot.setupGrid();
+            plot.draw();
+            plot.clearSelection();
+        });
     });
 
 </script>
