@@ -17,8 +17,6 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
 
-        <!-- Include JQuery -->
-        <script src="js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/cdashManageCoverageSorter.js" type="text/javascript" charset="utf-8"></script>
 

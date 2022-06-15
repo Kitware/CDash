@@ -11,12 +11,8 @@
 <![endif]-->
 
 <script src="js/CDash_{{ $js_version  }}.min.js"></script>
-<script src="js/jquery.flot.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/jquery.flot.time.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/jquery.flot.selection.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/tooltip.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.qtip.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.dataTables.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.metadata.js" type="text/javascript" charset="utf-8"></script>
