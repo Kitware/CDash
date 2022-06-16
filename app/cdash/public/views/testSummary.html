@@ -12,7 +12,7 @@
       </h4>
 
       <!-- Failure Graph -->
-      <a ng-click="showgraph = !showgraph" id="GraphLink">
+      <a ng-click="toggleGraph()" id="GraphLink">
         {{ showgraph ? 'Hide Test Failure Trend' : 'Show Test Failure Trend' }}
       </a>
       <div ng-show="showgraph" id="TestFailureGraph">

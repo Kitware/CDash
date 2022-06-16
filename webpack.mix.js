@@ -95,9 +95,9 @@ mix.styles([
 mix.scripts([
   'node_modules/jquery/dist/jquery.min.js',
   'node_modules/jquery-ui-dist/jquery-ui.js',
+  'node_modules/flot/lib/jquery.event.drag.js',
   'node_modules/flot/dist/es5/jquery.flot.js',
   'node_modules/flot/source/jquery.flot.pie.js',
-  'node_modules/flot/source/jquery.flot.selection.js',
   'node_modules/jquery.cookie/jquery.cookie.js',
   'public/js/bootstrap.min.js',
   'public/js/tooltip.js',
