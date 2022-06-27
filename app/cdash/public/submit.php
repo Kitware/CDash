@@ -15,7 +15,7 @@
 =========================================================================*/
 
 use App\Jobs\ProcessSubmission;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use App\Services\UnparsedSubmissionProcessor;
 
 require_once 'include/pdo.php';
 require_once 'include/do_submit.php';
@@ -27,6 +27,7 @@ use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\ServiceContainer;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Process\InputStream;
 
@@ -100,12 +101,14 @@ $statusarray = [];
 
 @set_time_limit(0);
 
-// If we have a POST we forward to the new submission process
+// If we have a POST or PUT we defer to the unparsed submission processor.
 if (isset($_POST['project'])) {
-    return post_submit();
+    $processor = new UnparsedSubmissionProcessor();
+    return $processor->postSubmit();
 }
 if (isset($_GET['buildid'])) {
-    return put_submit_file();
+    $processor = new UnparsedSubmissionProcessor();
+    return $processor->putSubmitFile();
 }
 
 $projectname = $_GET['project'];
