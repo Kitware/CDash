@@ -13,8 +13,6 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-include_once 'include/do_submit.php';
-
 use App\Jobs\ProcessSubmission;
 use CDash\Model\PendingSubmissions;
 

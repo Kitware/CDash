@@ -16,7 +16,12 @@
 namespace CDash\Model;
 
 use App\Models\User;
+use App\Services\ProjectPermissions;
+
 use CDash\Database;
+use CDash\Model\Project;
+
+use Illuminate\Support\Facades\Auth;
 
 require_once 'include/pdo.php';
 
@@ -298,5 +303,32 @@ class AuthToken
         }
 
         return $this->UserId;
+    }
+
+
+    /**
+     * Return true if the header contains a valid authentication token
+     * for this project.  Otherwise return false and set the appropriate
+     * response code.
+     **/
+    public function validForProject($projectid)
+    {
+        $userid = $this->getUserIdFromRequest();
+        if (is_null($userid)) {
+            http_response_code(401);
+            return false;
+        }
+
+        // Make sure that the user associated with this token is allowed to access
+        // the project in question.
+        Auth::loginUsingId($userid);
+        $project = new Project();
+        $project->Id = $projectid;
+        $project->Fill();
+        if (ProjectPermissions::userCanViewProject($project)) {
+            return true;
+        }
+        http_response_code(403);
+        return false;
     }
 }

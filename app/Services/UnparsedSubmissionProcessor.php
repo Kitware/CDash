@@ -30,7 +30,6 @@ use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
 require_once 'include/common.php';
-require_once 'include/do_submit.php';
 
 /**
  * This class handles submissions that should be parsed on the server-side
@@ -121,7 +120,8 @@ class UnparsedSubmissionProcessor
         $projectid = $project_row->id;
 
         // Check if this submission requires a valid authentication token.
-        if ($project_row->authenticatesubmissions && !valid_token_for_submission($projectid)) {
+        $authtoken = new AuthToken();
+        if ($project_row->authenticatesubmissions && !$authtoken->validForProject($projectid)) {
             return response('Forbidden', Response::HTTP_FORBIDDEN);
         }
 
@@ -227,7 +227,8 @@ class UnparsedSubmissionProcessor
         }
 
         // Check if this submission requires a valid authentication token.
-        if ($project->AuthenticateSubmissions && !valid_token_for_submission($project->Id)) {
+        $authtoken = new AuthToken();
+        if ($project->AuthenticateSubmissions && !$authtoken->validForProject($project->Id)) {
             return response('Forbidden', Response::HTTP_FORBIDDEN);
         }
 

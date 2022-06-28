@@ -18,10 +18,10 @@ use App\Jobs\ProcessSubmission;
 use App\Services\UnparsedSubmissionProcessor;
 
 require_once 'include/pdo.php';
-require_once 'include/do_submit.php';
 require_once 'include/version.php';
 
 use CDash\Config;
+use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
@@ -174,7 +174,8 @@ $project->Id = $projectid;
 $project->CheckForTooManyBuilds();
 
 // Check for valid authentication token if this project requires one.
-if ($authenticate_submissions && !valid_token_for_submission($projectid)) {
+$authtoken = new AuthToken();
+if ($authenticate_submissions && !$authtoken->validForProject($projectid)) {
     $statusarray['status'] = 'ERROR';
     $statusarray['message'] = 'Invalid Token';
     return displayReturnStatus($statusarray, Response::HTTP_FORBIDDEN);
