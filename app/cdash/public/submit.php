@@ -161,6 +161,7 @@ if (!$projectid) {
     \Log::info("Not a valid project. projectname: $projectname in submit.php");
     $statusarray['status'] = 'ERROR';
     $statusarray['message'] = 'Not a valid project.';
+    Storage::delete("inbox/{$filename}");
     return displayReturnStatus($statusarray, Response::HTTP_NOT_FOUND);
 }
 
@@ -178,6 +179,7 @@ $authtoken = new AuthToken();
 if ($authenticate_submissions && !$authtoken->validForProject($projectid)) {
     $statusarray['status'] = 'ERROR';
     $statusarray['message'] = 'Invalid Token';
+    Storage::delete("inbox/{$filename}");
     return displayReturnStatus($statusarray, Response::HTTP_FORBIDDEN);
 }
 
