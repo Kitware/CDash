@@ -150,10 +150,10 @@ class ProcessSubmission implements ShouldQueue
      * This method could be running on a worker that is either remote or local, so it accepts
      * a file handle or a filename that it can query the CDash API for.
      **/
-    private function doSubmit($fileHandleOrSubmissionId, $projectid, $buildid = null,
+    private function doSubmit($filename, $projectid, $buildid = null,
                        $expected_md5 = '')
     {
-        $filehandle = $this->getSubmissionFileHandle($fileHandleOrSubmissionId);
+        $filehandle = $this->getSubmissionFileHandle($filename);
 
         if ($filehandle === false) {
             // Logs will have already captured this issue at this point
@@ -217,9 +217,9 @@ class ProcessSubmission implements ShouldQueue
     /**
      * Given a filename, query the CDash API for its contents and return
      * a read-only file handle.
-     * This is useful for workers running on other machines that need access to build xml.
+     * This is used by workers running on other machines that need access to build xml.
      **/
-    private function fileHandleFromSubmissionId($filename)
+    private function getRemoteSubmissionFileHandle($filename)
     {
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
         $_t = tempnam(Storage::path('inbox'), 'cdash-submission-');
@@ -229,33 +229,30 @@ class ProcessSubmission implements ShouldQueue
         $client = new GuzzleHttp\Client();
         $response = $client->request('GET',
                                      config('app.url') . '/api/v1/getSubmissionFile.php',
-                                     array('query' => array('filename' => $filename),
-                                           'save_to' => $tmpFilename));
+                                     ['query' => ['filename' => $filename],
+                                           'save_to' => $tmpFilename]);
 
         if ($response->getStatusCode() === 200) {
             // @todo I'm sure Guzzle can be used to return a file handle from the stream, but for now
             // I'm just creating a temporary file with the output
             return fopen($tmpFilename, 'r');
         } else {
-            // Log the status code and build submission UUID (404 means it's already been processed)
-            add_log('Failed to retrieve a file handle from filename ' .
-                    $filename . '(' . (string) $response->getStatusCode() . ')',
-                    'fileHandleFromSubmissionId', LOG_WARNING);
+            // Log the status code and requested filename.
+            // (404 status means it's already been processed).
+            \Log::warning('Failed to retrieve a file handle from filename ' .
+                    $filename . '(' . (string) $response->getStatusCode() . ')');
             return false;
         }
     }
 
-    private function getSubmissionFileHandle($fileHandleOrSubmissionId)
+    private function getSubmissionFileHandle($filename)
     {
-        if (is_resource($fileHandleOrSubmissionId)) {
-            return $fileHandleOrSubmissionId;
-        } elseif (Storage::exists($fileHandleOrSubmissionId)) {
-            return fopen(Storage::path($fileHandleOrSubmissionId), 'r');
-        } elseif (is_string($fileHandleOrSubmissionId) && config('cdash.remote_workers')) {
-            return $this->fileHandleFromSubmissionId($fileHandleOrSubmissionId);
+        if (Storage::exists($filename)) {
+            return fopen(Storage::path($filename), 'r');
+        } elseif (is_string($filename) && config('cdash.remote_workers')) {
+            return $this->getRemoteSubmissionFileHandle($filename);
         } else {
-            add_log('Failed to get a file handle for submission (was type ' . gettype($fileHandleOrSubmissionId) . ')',
-                    'getSubmissionFileHandle', LOG_ERR);
+            \Log::error('Failed to get a file handle for submission (was type ' . gettype($filename) . ')');
             return false;
         }
     }
