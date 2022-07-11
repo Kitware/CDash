@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Services\UnparsedSubmissionProcessor;
+
 use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
@@ -122,7 +124,7 @@ class ProcessSubmission implements ShouldQueue
             return $this->requeueSubmissionFile($build->Id);
         }
 
-        if (config('cdash.backup_timeframe') === 0 && is_file($filename)) {
+        if (config('cdash.backup_timeframe') === 0) {
             // We are configured not to store parsed files. Delete it now.
             $this->deleteSubmissionFile("inprogress/{$this->filename}");
         } else {
@@ -154,10 +156,19 @@ class ProcessSubmission implements ShouldQueue
                        $expected_md5 = '')
     {
         $filehandle = $this->getSubmissionFileHandle($filename);
-
         if ($filehandle === false) {
-            // Logs will have already captured this issue at this point
             return false;
+        }
+
+        // Special handling for "build metadata" files created while the DB was down.
+        if (strpos($filename, '_build_metadata_') !== false && strpos($filename, '.json') !== false) {
+            $handler = new UnparsedSubmissionProcessor();
+            $handler->backupFileName = $this->filename;
+            $handler->deserializeBuildMetadata($filehandle);
+            fclose($filehandle);
+            $handler->initializeBuild();
+            $handler->populateBuildFileRow();
+            return $handler;
         }
 
         // We find the daily updates

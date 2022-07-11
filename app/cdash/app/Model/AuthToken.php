@@ -269,7 +269,7 @@ class AuthToken
     /**
      * Get access token from header.
      **/
-    private static function getBearerToken()
+    public static function getBearerToken()
     {
         $headers = AuthToken::getAuthorizationHeader();
         if (!empty($headers)) {
@@ -282,27 +282,27 @@ class AuthToken
     }
 
     // Check for the presence of a bearer token in the request.
-    // If one is found, return the corresponding userid.
-    // Otherwise return null.
+    // If one is found, set this->UserId.
+    // Otherwise return false.
     // If the specified token has expired it will be deleted.
     public function getUserIdFromRequest()
     {
         $token = AuthToken::getBearerToken();
         if (!$token) {
-            return null;
+            return false;
         }
 
         $this->Hash = $this->HashToken($token);
 
         if (!$this->Exists()) {
-            return null;
+            return false;
         }
         if ($this->Expired()) {
             $this->Delete();
-            return null;
+            return false;
         }
 
-        return $this->UserId;
+        return true;
     }
 
 
@@ -313,15 +313,39 @@ class AuthToken
      **/
     public function validForProject($projectid)
     {
-        $userid = $this->getUserIdFromRequest();
-        if (is_null($userid)) {
+        if (!$this->getUserIdFromRequest()) {
             http_response_code(401);
             return false;
         }
+        return $this->userCanViewProject($projectid);
+    }
 
+    /**
+     * Return true if $this-Hash is valid for the given project.
+     **/
+    public function hashValidForProject($projectid)
+    {
+        if (!$this->Exists()) {
+            return false;
+        }
+        if ($this->Expired()) {
+            $this->Delete();
+            return false;
+        }
+        if (!User::find($this->UserId)) {
+            return false;
+        }
+        return $this->userCanViewProject($projectid);
+    }
+
+    /**
+     * Return true if $this->User can view the given project.
+     */
+    private function userCanViewProject($projectid)
+    {
         // Make sure that the user associated with this token is allowed to access
         // the project in question.
-        Auth::loginUsingId($userid);
+        Auth::loginUsingId($this->UserId);
         $project = new Project();
         $project->Id = $projectid;
         $project->Fill();

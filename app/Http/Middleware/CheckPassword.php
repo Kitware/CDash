@@ -38,9 +38,8 @@ class CheckPassword
             // Check for the presence of a bearer token if we are not
             // already authenticated.
             $authtoken = new AuthToken();
-            $userid = $authtoken->getUserIdFromRequest();
-            if (!is_null($userid)) {
-                Auth::loginUsingId($userid);
+            if ($authtoken->getUserIdFromRequest()) {
+                Auth::loginUsingId($authtoken->UserId);
             }
         }
 

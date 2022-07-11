@@ -115,7 +115,7 @@ $projectname = $_GET['project'];
 $expected_md5 = isset($_GET['MD5']) ? htmlspecialchars($_GET['MD5']) : '';
 
 // Save the incoming file in the inbox directory.
-$filename = "{$projectname}_" . \Illuminate\Support\Str::uuid()->toString() . '.xml';
+$filename = "{$projectname}_" . \Illuminate\Support\Str::uuid()->toString() . "_{$expected_md5}_.xml";
 $fp = request()->getContent(true);
 if (!Storage::put("inbox/{$filename}", $fp)) {
     \Log::error("Failed to save submission to inbox for $projectname (md5=$expected_md5)");
