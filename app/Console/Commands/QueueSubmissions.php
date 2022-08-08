@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\ProcessSubmission;
+use CDash\Model\AuthToken;
 use CDash\Model\Project;
 
 use Illuminate\Console\Command;
@@ -63,17 +64,37 @@ class QueueSubmissions extends Command
         $filename = str_replace('inbox/', '', $inboxFile);
         $pos = strpos($filename, '_');
         if ($pos === false) {
+            \Storage::move("inbox/{$filename}", "failed/{$filename}");
             echo "Could not extract projectname from $filename\n";
             return;
         }
 
         $projectname = substr($filename, 0, $pos);
         $project = new Project();
-        $project->Name = $projectname;
-        $project->GetIdByName();
+        $project->FindByName($projectname);
         if (!$project->Id) {
+            \Storage::move("inbox/{$filename}", "failed/{$filename}");
             echo "Could not find project $projectname\n";
             return;
+        }
+
+        if ($project->AuthenticateSubmissions) {
+            // Get authtoken hash from filename.
+            $begin = $pos + 1;
+            $end = strpos($filename, '_', $begin);
+            if ($end === false) {
+                \Storage::move("inbox/{$filename}", "failed/{$filename}");
+                echo "Could not extract authtoken from $filename\n";
+                return;
+            }
+            $authtoken = new AuthToken();
+            $len = $end - $begin;
+            $authtoken->Hash = substr($filename, $begin, $len);
+            if (!$authtoken->hashValidForProject($project->Id)) {
+                \Storage::move("inbox/{$filename}", "failed/{$filename}");
+                echo "Invalid authentication token for $filename\n";
+                return;
+            }
         }
 
         // Get md5 from filename (if any).

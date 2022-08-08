@@ -114,8 +114,13 @@ if (isset($_GET['buildid'])) {
 $projectname = $_GET['project'];
 $expected_md5 = isset($_GET['MD5']) ? htmlspecialchars($_GET['MD5']) : '';
 
+// Get auth token (if any).
+$token = AuthToken::getBearerToken();
+$authtoken = new AuthToken();
+$authtoken->Hash = $authtoken->HashToken($token);
+
 // Save the incoming file in the inbox directory.
-$filename = "{$projectname}_" . \Illuminate\Support\Str::uuid()->toString() . "_{$expected_md5}_.xml";
+$filename = "{$projectname}_{$authtoken->Hash}_" . \Illuminate\Support\Str::uuid()->toString() . "_{$expected_md5}_.xml";
 $fp = request()->getContent(true);
 if (!Storage::put("inbox/{$filename}", $fp)) {
     \Log::error("Failed to save submission to inbox for $projectname (md5=$expected_md5)");
@@ -175,8 +180,7 @@ $project->Id = $projectid;
 $project->CheckForTooManyBuilds();
 
 // Check for valid authentication token if this project requires one.
-$authtoken = new AuthToken();
-if ($authenticate_submissions && !$authtoken->validForProject($projectid)) {
+if ($authenticate_submissions && !$authtoken->hashValidForProject($projectid)) {
     $statusarray['status'] = 'ERROR';
     $statusarray['message'] = 'Invalid Token';
     Storage::delete("inbox/{$filename}");

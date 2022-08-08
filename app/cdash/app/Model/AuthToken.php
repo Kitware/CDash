@@ -39,7 +39,14 @@ class AuthToken
     public function __construct()
     {
         $this->Filled = false;
-        $this->PDO = Database::getInstance()->getPdo();
+        $this->PDO = null;
+    }
+
+    private function getPdo()
+    {
+        if (!$this->PDO) {
+            $this->PDO = Database::getInstance()->getPdo();
+        }
     }
 
     // Generate a new authentication token.
@@ -72,6 +79,7 @@ class AuthToken
         if (!$this->Hash) {
             return false;
         }
+        $this->getPdo();
         $stmt = $this->PDO->prepare(
             'SELECT COUNT(*) FROM authtoken WHERE hash = ?');
         pdo_execute($stmt, [$this->Hash]);
@@ -136,6 +144,7 @@ class AuthToken
             return false;
         }
 
+        $this->getPdo();
         $stmt = $this->PDO->prepare(
             'DELETE FROM authtoken WHERE hash = ? AND userid = ?');
         return pdo_execute($stmt, [$this->Hash, $this->UserId]);
@@ -152,6 +161,7 @@ class AuthToken
             return false;
         }
 
+        $this->getPdo();
         $stmt = $this->PDO->prepare(
             'SELECT * FROM authtoken WHERE hash = ?');
         if (!pdo_execute($stmt, [$this->Hash])) {
@@ -345,11 +355,13 @@ class AuthToken
     {
         // Make sure that the user associated with this token is allowed to access
         // the project in question.
-        Auth::loginUsingId($this->UserId);
         $project = new Project();
         $project->Id = $projectid;
         $project->Fill();
-        if (ProjectPermissions::userCanViewProject($project)) {
+
+        $user = new User();
+        $user->id = $this->UserId;
+        if (ProjectPermissions::canViewProject($project, $user)) {
             return true;
         }
         http_response_code(403);

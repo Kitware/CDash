@@ -26,8 +26,12 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
             $this->project->Delete();
         }
         $this->project->Id = $this->createProject([
-            'Name' => $this->projectname, 'DisplayLabels' => '1'
+            'Name' => $this->projectname,
+            'DisplayLabels' => '1',
         ]);
+        $this->project->Fill();
+
+        $this->token = '';
     }
 
     public function __destruct()
@@ -37,20 +41,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
 
     public function testDeferredSubmissions()
     {
-        $this->deleteLog($this->logfilename);
-
-        // Delete the existing build if it exists.
-        $existing_build_row = \DB::table('build')
-            ->where('projectid', '=', $this->project->Id)
-            ->where('name', '=', 'deferred_submission')
-            ->first();
-        if ($existing_build_row) {
-            remove_build($existing_build_row->id);
-        }
-
-        // Make sure inbox is empty.
-        $files = Storage::allFiles('inbox');
-        Storage::delete($files);
+        $this->prepareForNormalSubmission();
 
         // Change CDash config to point to a nonexistent database.
         file_put_contents($this->ConfigFile, "DB_DATABASE=cdash4simpletestfake\n", FILE_APPEND | LOCK_EX);
@@ -72,6 +63,32 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         Artisan::call('submission:queue');
 
         // Verify the results.
+        $this->verifyNormalSubmission();
+    }
+
+    private function prepareForNormalSubmission()
+    {
+        $this->deleteLog($this->logfilename);
+
+        // Delete the existing build if it exists.
+        $existing_build_row = \DB::table('build')
+            ->where('projectid', '=', $this->project->Id)
+            ->where('name', '=', 'deferred_submission')
+            ->first();
+        if ($existing_build_row) {
+            remove_build($existing_build_row->id);
+        }
+
+        // Make sure inbox is empty.
+        $files = Storage::allFiles('inbox');
+        $files = Storage::allFiles('parsed');
+        $files = Storage::allFiles('inprogress');
+        $files = Storage::allFiles('failed');
+        Storage::delete($files);
+    }
+
+    private function verifyNormalSubmission()
+    {
         $build_row = \DB::table('build')
             ->where('projectid', '=', $this->project->Id)
             ->where('name', '=', 'deferred_submission')
@@ -84,6 +101,98 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->assertEqual(1, $build_row->buildwarnings);
         $this->assertEqual(1, $build_row->testpassed);
         $this->assertEqual(1, $build_row->testfailed);
+    }
+
+    private function getToken()
+    {
+        if ($this->token) {
+            return;
+        }
+
+        // Log in as non-admin user.
+        $this->login('user1@kw', 'user1');
+
+        // Use API to generate token.
+        $response =
+            $this->post($this->url . '/api/v1/authtoken.php', ['description' => 'mytoken']);
+        $response = json_decode($response, true);
+        $this->token = $response['token']['token'];
+        $hash = $response['token']['hash'];
+        $this->logout();
+    }
+
+    public function testNormalSubmitWithValidToken()
+    {
+        // Reconfigure project to require authenticated submissions.
+        $this->project->AuthenticateSubmissions = true;
+        $this->project->Public = 1;
+        $this->project->Save();
+
+        // Get bearer token.
+        $this->getToken();
+
+        // Start form a clean slate.
+        $this->prepareForNormalSubmission();
+
+        // Change CDash config to point to a nonexistent database.
+        file_put_contents($this->ConfigFile, "DB_DATABASE=cdash4simpletestfake\n", FILE_APPEND | LOCK_EX);
+
+        // Submit test data with bearer token.
+        $dir = dirname(__FILE__) . '/data/DeferredSubmission';
+        $header = ["Authorization: Bearer {$this->token}"];
+        $this->submission($this->projectname, "$dir/Build.xml", $header);
+        $this->submission($this->projectname, "$dir/Configure.xml", $header);
+        $this->submission($this->projectname, "$dir/Test.xml", $header);
+
+        // Verify that files exist in the inbox directory.
+        $this->assertEqual(3, count(Storage::files('inbox')));
+
+        // Restore original database configuration.
+        file_put_contents($this->ConfigFile, $this->Original);
+
+        // Exercise the Artisan command to queue the previously submitted files.
+        // This also parses them since we're currently configured for synchronous submissions.
+        Artisan::call('submission:queue');
+
+        // Verify the results.
+        $this->verifyNormalSubmission();
+
+        $this->project->AuthenticateSubmissions = false;
+        $this->project->Save();
+    }
+
+    public function testNormalSubmitWithInvalidToken()
+    {
+        // Reconfigure project to require authenticated submissions.
+        $this->project->AuthenticateSubmissions = true;
+        $this->project->Save();
+
+        // Start form a clean slate.
+        $this->prepareForNormalSubmission();
+
+        // Change CDash config to point to a nonexistent database.
+        file_put_contents($this->ConfigFile, "DB_DATABASE=cdash4simpletestfake\n", FILE_APPEND | LOCK_EX);
+
+        // Submit test data with invalid bearer token.
+        $dir = dirname(__FILE__) . '/data/DeferredSubmission';
+        $header = ["Authorization: Bearer asdf"];
+        $this->submission($this->projectname, "$dir/Build.xml", $header);
+
+        // Verify that files exist in the inbox directory.
+        $this->assertEqual(1, count(Storage::files('inbox')));
+
+        // Restore original database configuration.
+        file_put_contents($this->ConfigFile, $this->Original);
+
+        // Exercise the Artisan command to queue the previously submitted files.
+        // This also parses them since we're currently configured for synchronous submissions.
+        Artisan::call('submission:queue');
+
+        // Verify one failed submission.
+        $this->assertEqual(1, count(Storage::files('failed')));
+
+        $this->project->AuthenticateSubmissions = false;
+        $this->project->Save();
     }
 
     public function testDeferredUnparsedSubmission()

@@ -280,7 +280,7 @@ class UnparsedSubmissionProcessor
             return;
         }
 
-        if ($this->populateBuildFileRow()) {
+        if ($this->populateBuildFileRow() === true) {
             $filename = str_replace('inbox/', '', $this->inboxdatafilename);
             ProcessSubmission::dispatch($filename, $this->project->Id, $this->build->Id, $this->md5);
         }
