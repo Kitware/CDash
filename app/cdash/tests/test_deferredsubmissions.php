@@ -81,8 +81,11 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
 
         // Make sure inbox is empty.
         $files = Storage::allFiles('inbox');
+        Storage::delete($files);
         $files = Storage::allFiles('parsed');
+        Storage::delete($files);
         $files = Storage::allFiles('inprogress');
+        Storage::delete($files);
         $files = Storage::allFiles('failed');
         Storage::delete($files);
     }
@@ -131,7 +134,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Get bearer token.
         $this->getToken();
 
-        // Start form a clean slate.
+        // Start from a clean slate.
         $this->prepareForNormalSubmission();
 
         // Change CDash config to point to a nonexistent database.
@@ -167,7 +170,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->AuthenticateSubmissions = true;
         $this->project->Save();
 
-        // Start form a clean slate.
+        // Start from a clean slate.
         $this->prepareForNormalSubmission();
 
         // Change CDash config to point to a nonexistent database.
@@ -195,10 +198,45 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->Save();
     }
 
+    public function testNormalSubmitWithMissingToken()
+    {
+        // Reconfigure project to require authenticated submissions.
+        $this->project->AuthenticateSubmissions = true;
+        $this->project->Save();
+
+        // Start from a clean slate.
+        $this->prepareForNormalSubmission();
+
+        // Change CDash config to point to a nonexistent database.
+        file_put_contents($this->ConfigFile, "DB_DATABASE=cdash4simpletestfake\n", FILE_APPEND | LOCK_EX);
+
+        // Submit test data with invalid bearer token.
+        $dir = dirname(__FILE__) . '/data/DeferredSubmission';
+        $header = [];
+        $this->submission($this->projectname, "$dir/Build.xml", $header);
+
+        // Verify that files exist in the inbox directory.
+        $this->assertEqual(1, count(Storage::files('inbox')));
+
+        // Restore original database configuration.
+        file_put_contents($this->ConfigFile, $this->Original);
+
+        // Exercise the Artisan command to queue the previously submitted files.
+        // This also parses them since we're currently configured for synchronous submissions.
+        Artisan::call('submission:queue');
+
+        // Verify one failed submission.
+        $this->assertEqual(1, count(Storage::files('failed')));
+
+        $this->project->AuthenticateSubmissions = false;
+        $this->project->Save();
+    }
+
+
     public function testDeferredUnparsedSubmission()
     {
         // Delete existing results (if any).
-        $this->clearPriorResults();
+        $this->clearPriorBranchCoverageResults();
 
         // Make sure inbox is empty.
         $files = Storage::allFiles('inbox');
@@ -233,5 +271,138 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
 
         // Verify the results.
         $this->verifyResults();
+    }
+
+    public function testDeferredSubmitWithValidToken()
+    {
+        // Reconfigure project to require authenticated submissions.
+        $this->project->AuthenticateSubmissions = true;
+        $this->project->Public = 1;
+        $this->project->Save();
+
+        // Get bearer token.
+        $this->getToken();
+
+        // Delete existing results (if any).
+        $this->clearPriorBranchCoverageResults();
+
+        // Make sure inbox is empty.
+        $files = Storage::allFiles('inbox');
+        Storage::delete($files);
+
+        // Change CDash config to point to a nonexistent database.
+        file_put_contents($this->ConfigFile, "DB_DATABASE=cdash4simpletestfake\n", FILE_APPEND | LOCK_EX);
+
+        // Submit data.
+        $this->postSubmit($this->token);
+        $this->putSubmit($this->token);
+
+        // Verify that files exist in the inbox directory.
+        $this->assertEqual(2, count(Storage::files('inbox')));
+
+        // Restore original database configuration.
+        file_put_contents($this->ConfigFile, $this->Original);
+
+        // Exercise the Artisan command to queue the previously submitted files.
+        // This also parses them since we're currently configured for synchronous submissions.
+        Artisan::call('submission:queue');
+
+        // Get the newly created buildid.
+        $build_row = \DB::table('build')
+            ->where('projectid', '=', $this->project->Id)
+            ->where('name', '=', 'branch_coverage')
+            ->first();
+        if (!$build_row) {
+            $this->fail('Could not locate branch coverage build id');
+        }
+        $this->buildid = $build_row->id;
+
+        // Verify the results.
+        $this->verifyResults();
+
+        $this->project->AuthenticateSubmissions = false;
+        $this->project->Save();
+    }
+
+    public function testDeferredSubmitWithInvalidToken()
+    {
+        // Reconfigure project to require authenticated submissions.
+        $this->project->AuthenticateSubmissions = true;
+        $this->project->Public = 1;
+        $this->project->Save();
+
+        // Get bearer token.
+        $this->getToken();
+
+        // Delete existing results (if any).
+        $this->clearPriorBranchCoverageResults();
+
+        // Make sure inbox is empty.
+        $files = Storage::allFiles('inbox');
+        Storage::delete($files);
+
+        // Change CDash config to point to a nonexistent database.
+        file_put_contents($this->ConfigFile, "DB_DATABASE=cdash4simpletestfake\n", FILE_APPEND | LOCK_EX);
+
+        // Submit data.
+        $this->postSubmit('asdf');
+        $this->putSubmit('asdf');
+
+        // Verify that files exist in the inbox directory.
+        $this->assertEqual(2, count(Storage::files('inbox')));
+
+        // Restore original database configuration.
+        file_put_contents($this->ConfigFile, $this->Original);
+
+        // Exercise the Artisan command to queue the previously submitted files.
+        // This also parses them since we're currently configured for synchronous submissions.
+        Artisan::call('submission:queue');
+
+        // Verify two failed submission files.
+        $this->assertEqual(2, count(Storage::files('failed')));
+
+        $this->project->AuthenticateSubmissions = false;
+        $this->project->Save();
+    }
+
+    public function testDeferredSubmitWithMissingToken()
+    {
+        // Reconfigure project to require authenticated submissions.
+        $this->project->AuthenticateSubmissions = true;
+        $this->project->Public = 1;
+        $this->project->Save();
+
+        // Get bearer token.
+        $this->getToken();
+
+        // Delete existing results (if any).
+        $this->clearPriorBranchCoverageResults();
+
+        // Make sure inbox is empty.
+        $files = Storage::allFiles('inbox');
+        Storage::delete($files);
+
+        // Change CDash config to point to a nonexistent database.
+        file_put_contents($this->ConfigFile, "DB_DATABASE=cdash4simpletestfake\n", FILE_APPEND | LOCK_EX);
+
+        // Submit data.
+        $this->postSubmit();
+        $this->putSubmit();
+
+        // Verify that files exist in the inbox directory.
+        $this->assertEqual(2, count(Storage::files('inbox')));
+
+        // Restore original database configuration.
+        file_put_contents($this->ConfigFile, $this->Original);
+
+        // Exercise the Artisan command to queue the previously submitted files.
+        // This also parses them since we're currently configured for synchronous submissions.
+        Artisan::call('submission:queue');
+
+        // Verify two failed submission files.
+        $this->assertEqual(2, count(Storage::files('failed')));
+
+        $this->project->AuthenticateSubmissions = false;
+        $this->project->Save();
     }
 }

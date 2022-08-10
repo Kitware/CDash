@@ -22,7 +22,7 @@ class BranchCoverageTestCase extends KWWebTestCase
         $this->client = $this->getGuzzleClient();
     }
 
-    protected function clearPriorResults()
+    protected function clearPriorBranchCoverageResults()
     {
         // Remove the build created by this test if it ran previously.
         $pdo = \CDash\Database::getInstance()->getPdo();
@@ -32,9 +32,20 @@ class BranchCoverageTestCase extends KWWebTestCase
         if ($existing_buildid !== false) {
             remove_build($existing_buildid);
         }
+
+        $files = Storage::allFiles('inbox');
+        Storage::delete($files);
+        $files = Storage::allFiles('parsed');
+        Storage::delete($files);
+        $files = Storage::allFiles('inprogress');
+        Storage::delete($files);
+        $files = Storage::allFiles('failed');
+        Storage::delete($files);
+
+        $this->deleteLog($this->logfilename);
     }
 
-    protected function postSubmit()
+    protected function postSubmit($token=null)
     {
         // Do the POST submission to get a pending buildid.
         $post_params = [
@@ -54,6 +65,9 @@ class BranchCoverageTestCase extends KWWebTestCase
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_params);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if ($token) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer {$token}"]);
+        }
         $response = curl_exec($ch);
         curl_close($ch);
         $post_json = json_decode($response, true);
@@ -72,12 +86,16 @@ class BranchCoverageTestCase extends KWWebTestCase
         }
     }
 
-    protected function putSubmit()
+    protected function putSubmit($token=null)
     {
         // Do the PUT submission to actually upload our data.
         $puturl = $this->url . "/submit.php?type=GcovTar&md5=5454e16948a1d58d897e174b75cc5633&filename=gcov.tar&buildid={$this->buildid}";
         $filename = dirname(__FILE__) . '/data/gcov.tar';
-        $put_result = $this->uploadfile($puturl, $filename);
+        $headers = [];
+        if ($token) {
+            $headers = ["Authorization: Bearer {$token}"];
+        }
+        $put_result = $this->uploadfile($puturl, $filename, $headers);
         if (strpos($put_result, '{"status":0}') === false) {
             $this->fail(
                 "status:0 not found in PUT results:\n$put_result\n");

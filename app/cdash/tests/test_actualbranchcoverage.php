@@ -24,7 +24,7 @@ class ActualBranchCoverageTestCase extends BranchCoverageTestCase
 
     public function testBranchCoverage()
     {
-        $this->clearPriorResults();
+        $this->clearPriorBranchCoverageResults();
         $this->postSubmit();
         $this->putSubmit();
         $this->verifyResults();

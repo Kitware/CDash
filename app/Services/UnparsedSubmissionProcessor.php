@@ -130,6 +130,8 @@ class UnparsedSubmissionProcessor
             $this->subprojectname = htmlspecialchars($_POST['subproject']);
         }
 
+        $this->getAuthTokenHash();
+
         return true;
     }
 
@@ -237,13 +239,13 @@ class UnparsedSubmissionProcessor
             $this->project = $this->build->GetProject();
             $this->project->Fill();
             $this->projectname = $this->project->Name;
-            $this->inboxdatafilename = "inbox/{$this->projectname}_{$this->type}_{$this->buildid}_{$this->md5}_.$ext";
+            $this->inboxdatafilename = "inbox/{$this->projectname}_{$this->token}_{$this->type}_{$this->buildid}_{$this->md5}_.$ext";
         } else {
             // Get project name from build metadata file on disk.
             $projectname = null;
             foreach (Storage::files('inbox') as $inboxFile) {
                 $filename = str_replace('inbox/', '', $inboxFile);
-                $pos = strpos($filename, "_build_metadata_{$this->buildid}");
+                $pos = strpos($filename, "_build-metadata_{$this->buildid}");
                 if ($pos === false) {
                     continue;
                 }
@@ -260,7 +262,7 @@ class UnparsedSubmissionProcessor
                 return response('Build not found', Response::HTTP_NOT_FOUND);
             }
             $this->projectname = $projectname;
-            $this->inboxdatafilename = "inbox/{$this->projectname}_{$this->type}_{$this->buildid}_{$this->md5}_.$ext";
+            $this->inboxdatafilename = "inbox/{$this->projectname}_{$this->token}_{$this->type}_{$this->buildid}_{$this->md5}_.$ext";
             $this->serializeDataFileParameters();
         }
 
@@ -357,6 +359,8 @@ class UnparsedSubmissionProcessor
         $this->type = htmlspecialchars($_GET['type']);
         $this->md5 = htmlspecialchars($_GET['md5']);
         $this->backupfilename = htmlspecialchars($_GET['filename']);
+
+        $this->getAuthTokenHash();
     }
 
     // Check if CDash's database is down.
@@ -382,16 +386,10 @@ class UnparsedSubmissionProcessor
             'endtime' => $this->endtime,
             'generator' => $this->generator,
             'subprojectname' => $this->subprojectname,
+            'token' => $this->token,
         ];
 
-        $token = AuthToken::getBearerToken();
-        if ($token) {
-            $build_metadata['token'] = AuthToken::HashToken($token);
-        } else {
-            $build_metadata['token'] = '';
-        }
-
-        $build_metadata_filename = "{$this->projectname}_build_metadata_{$uuid}__.json";
+        $build_metadata_filename = "{$this->projectname}_{$this->token}_build-metadata_{$uuid}__.json";
         $inbox_build_metadata_filename = "inbox/{$build_metadata_filename}";
         Storage::put($inbox_build_metadata_filename, json_encode($build_metadata));
     }
@@ -399,7 +397,7 @@ class UnparsedSubmissionProcessor
     // Append data file parameters to the build metadata JSON file.
     private function serializeDataFileParameters()
     {
-        $inbox_filename = "inbox/{$this->projectname}_build_metadata_{$this->buildid}__.json";
+        $inbox_filename = "inbox/{$this->projectname}_{$this->token}_build-metadata_{$this->buildid}__.json";
         if (!Storage::exists($inbox_filename)) {
             \Log::warn("Could not find build metadata file {$inbox_filename}");
             return false;
@@ -439,5 +437,18 @@ class UnparsedSubmissionProcessor
         $this->md5 = $build_metadata['md5'];
         $this->backupfilename = $build_metadata['backupfilename'];
         $this->inboxdatafilename = $build_metadata['inboxdatafilename'];
+    }
+
+    private function getAuthTokenHash()
+    {
+        if ($this->token) {
+            return;
+        }
+        $token = AuthToken::getBearerToken();
+        if ($token) {
+            $this->token = AuthToken::HashToken($token);
+        } else {
+            $this->token = '';
+        }
     }
 }

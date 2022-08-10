@@ -44,7 +44,7 @@ class QueueSubmissions extends Command
         // Queue the "build metadata" JSON files first, so they have a chance
         // to get parsed before the subsequent payload files.
         foreach (\Storage::files('inbox') as $inboxFile) {
-            if (strpos($inboxFile, '_build_metadata_') === false || strpos($inboxFile, '.json') === false) {
+            if (strpos($inboxFile, '_build-metadata_') === false || strpos($inboxFile, '.json') === false) {
                 continue;
             }
             $this->queueFile($inboxFile);
@@ -52,7 +52,7 @@ class QueueSubmissions extends Command
 
         // Iterate over our inbox files again, queueing them for parsing.
         foreach (\Storage::files('inbox') as $inboxFile) {
-            if (strpos($inboxFile, '_build_metadata_') !== false && strpos($inboxFile, '.json') !== false) {
+            if (strpos($inboxFile, '_build-metadata_') !== false && strpos($inboxFile, '.json') !== false) {
                 continue;
             }
             $this->queueFile($inboxFile);
