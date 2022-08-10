@@ -298,7 +298,6 @@ class UnparsedSubmissionProcessor
         $buildfile->Filename = $this->backupfilename;
 
         $response_array = ['status' => 0];
-        // TODO: think about whether these checks can go somewhere else.
         if (!$this->project->Exists()) {
             Storage::delete($this->inboxdatafilename);
             return response('Project not found', Response::HTTP_NOT_FOUND);
@@ -325,7 +324,6 @@ class UnparsedSubmissionProcessor
         // endthink
 
         // Insert the buildfile row.
-        // TODO: make sure this uses PDO.
         $buildfile->Insert();
 
         // Increment the count of pending submission files for this build.
