@@ -1052,6 +1052,7 @@ function get_filterdata_from_request($page_id = '')
         $page_id = substr($request_path, $pos + 1);
     }
 
+    $page_id = htmlentities($page_id);
     $filterdata['pageId'] = $page_id;
 
     $pageSpecificFilters = createPageSpecificFilters($page_id);

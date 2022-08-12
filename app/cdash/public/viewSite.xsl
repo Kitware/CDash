@@ -19,10 +19,6 @@
        <script language="javascript" type="text/javascript" src="js/excanvas.js">
        </script>
        <![endif]]]></xsl:comment>
-       <script language="javascript" type="text/javascript" src="js/jquery-1.6.2.js" charset="utf-8"></script>
-       <script language="javascript" type="text/javascript" src="js/jquery.flot.min.js" charset="utf-8"></script>
-       <script src="js/jquery.flot.selection.min.js" type="text/javascript" charset="utf-8"></script>
-       <script language="javascript" type="text/javascript" src="js/jquery.flot.pie.min.js" charset="utf-8"></script>
        </head>
        <body bgcolor="#ffffff">
 
@@ -94,48 +90,50 @@
 </xsl:if>
 
 <!-- Display the map -->
-<xsl:if test="string-length(cdash/site/ip)>0">
-  <b>IP address: </b><xsl:value-of select="cdash/site/ip"/><br/>
-  <b>Map:</b><br/>
-  <script type="text/javascript">
-      <xsl:attribute name="src">http://maps.google.com/maps?file=api&amp;v=2&amp;key=<xsl:value-of select="cdash/dashboard/googlemapkey"/></xsl:attribute>
-   </script>
-    <xsl:text disable-output-escaping="yes">
-    &lt;script type="text/javascript"&gt;
-      // Creates a marker whose info window displays the letter corresponding
-      // to the given index.
-      function createMarker(point,title)
-        {
-        var marker = new GMarker(point);
-        GEvent.addListener(marker, "click", function()
+<xsl:if test="string-length(cdash/googlemapkey)>0">
+  <xsl:if test="string-length(cdash/site/ip)>0">
+    <b>IP address: </b><xsl:value-of select="cdash/site/ip"/><br/>
+    <b>Map:</b><br/>
+    <script type="text/javascript">
+        <xsl:attribute name="src">http://maps.google.com/maps?file=api&amp;v=2&amp;key=<xsl:value-of select="cdash/dashboard/googlemapkey"/></xsl:attribute>
+     </script>
+      <xsl:text disable-output-escaping="yes">
+      &lt;script type="text/javascript"&gt;
+        // Creates a marker whose info window displays the letter corresponding
+        // to the given index.
+        function createMarker(point,title)
           {
-          marker.openInfoWindowHtml(title);
-          });
-        return marker;
-      }
+          var marker = new GMarker(point);
+          GEvent.addListener(marker, "click", function()
+            {
+            marker.openInfoWindowHtml(title);
+            });
+          return marker;
+        }
 
-    function load() {
-      if (GBrowserIsCompatible()) {
-        var map = new GMap2(document.getElementById("map"));
-    </xsl:text>
-    <xsl:if test="string-length(cdash/site/latitude)>0">
-        map.setCenter(new GLatLng(<xsl:value-of select="cdash/site/latitude"/>,<xsl:value-of select="cdash/site/longitude"/>),5);
-        map.addControl(new GLargeMapControl());
-        var point = new GLatLng(<xsl:value-of select="cdash/site/latitude"/>,<xsl:value-of select="cdash/site/longitude"/>);
-        map.addOverlay(createMarker(point,'<xsl:value-of select="cdash/site/name"/>'));
-    </xsl:if>
-    <!-- if no geolocation found -->
-    <xsl:if test="string-length(cdash/site/latitude)=0">
-     map.setCenter(new GLatLng(0,0),1);
-    </xsl:if>
-    <xsl:text disable-output-escaping="yes">
+      function load() {
+        if (GBrowserIsCompatible()) {
+          var map = new GMap2(document.getElementById("map"));
+      </xsl:text>
+      <xsl:if test="string-length(cdash/site/latitude)>0">
+          map.setCenter(new GLatLng(<xsl:value-of select="cdash/site/latitude"/>,<xsl:value-of select="cdash/site/longitude"/>),5);
+          map.addControl(new GLargeMapControl());
+          var point = new GLatLng(<xsl:value-of select="cdash/site/latitude"/>,<xsl:value-of select="cdash/site/longitude"/>);
+          map.addOverlay(createMarker(point,'<xsl:value-of select="cdash/site/name"/>'));
+      </xsl:if>
+      <!-- if no geolocation found -->
+      <xsl:if test="string-length(cdash/site/latitude)=0">
+       map.setCenter(new GLatLng(0,0),1);
+      </xsl:if>
+      <xsl:text disable-output-escaping="yes">
+        }
       }
-    }
-    &lt;/script&gt;
-    </xsl:text>
-   <body onload="load()" onunload="GUnload()">
-  <center><div id="map" style="width: 700px; height: 400px"></div></center>
-  </body>
+      &lt;/script&gt;
+      </xsl:text>
+     <body onload="load()" onunload="GUnload()">
+    <center><div id="map" style="width: 700px; height: 400px"></div></center>
+    </body>
+  </xsl:if>
 </xsl:if>
 <br/>
 

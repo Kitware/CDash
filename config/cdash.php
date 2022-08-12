@@ -61,6 +61,7 @@ return [
     'default_google_analytics' => env('DEFAULT_GOOGLE_ANALYTICS', ''),
     'default_project' => env('DEFAULT_PROJECT', null),
     'delete_old_subprojects' => env('DELETE_OLD_SUBPROJECTS', true),
+    'google_map_api_key' => env('GOOGLE_MAP_API_KEY', null),
     'github_app_id' => env('GITHUB_APP_ID', null),
     'geolocate_ip_addresses' => env('GEOLOCATE_IP_ADDRESSES', true),
     'large_text_limit' => env('LARGE_TEXT_LIMIT', 0),

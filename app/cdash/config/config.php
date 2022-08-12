@@ -58,9 +58,6 @@ $CDASH_USER_CREATE_PROJECTS = false;
 $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';
 $CDASH_DEFAULT_IP_LOCATIONS = array();
 
-// Google Map API
-$CDASH_GOOGLE_MAP_API_KEY = array();
-$CDASH_GOOGLE_MAP_API_KEY['localhost'] = 'ABQIAAAAT7I3XxP5nXC2xZUbg5AhLhQlpUmSySBnNeRIYFXQdqJETZJpYBStoWsCJtLvtHDiIJzsxJ953H3rgg';
 // Define the git command
 $CDASH_GIT_COMMAND = 'git';
 // The default git directory where the bare repositories should be created

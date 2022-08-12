@@ -520,14 +520,6 @@ div#labelcolorblind {
   margin-right: 10px;
 }
 
-div#helpmenu {
-  position: relative;
-  top: -18px;
-  margin-left: 3px;
-  float: right;
-  width: 50px;
-}
-
 div#autorefresh {
   position: relative;
   top: -18px;
@@ -1437,6 +1429,27 @@ background-color: #adcae6
 #footerlinks #footertext a {
   font-size: 12px;
   color: #4A4A4A;
+}
+
+
+/* flot legend display */
+.legend { display: block;
+		-webkit-padding-start: 2px;
+		-webkit-padding-end: 2px;
+		border-width: initial;
+		border-style: none;
+		border-color: initial;
+		border-image: initial;
+		padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+}
+
+.legendLayer .background {
+    fill: rgba(255, 255, 255, 0.85);
+    stroke: rgba(0, 0, 0, 0.85);
+    stroke-width: 1;
 }
 
 

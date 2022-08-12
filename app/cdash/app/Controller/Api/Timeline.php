@@ -56,7 +56,7 @@ class Timeline extends Index
     public function getResponse()
     {
         $this->filterdata = json_decode($_REQUEST['filterdata'], true);
-        $page = $this->filterdata['pageId'];
+        $page = htmlentities($this->filterdata['pageId']);
         $this->filterSQL = generate_filterdata_sql($this->filterdata);
         $this->generateColorMap();
 
@@ -79,7 +79,7 @@ class Timeline extends Index
                 return $this->chartForBuildGroup();
                 break;
             default:
-                json_error_response("Unexpected value for page: $page");
+                json_error_response('Unexpected value for page');
                 break;
         }
     }

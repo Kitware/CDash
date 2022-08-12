@@ -560,10 +560,22 @@ class ViewTest extends BuildApi
             return;
         }
 
-        $previous_builds = '';
+        $projectid = pdo_real_escape_numeric($_GET['projectid']);
+
+        $previous_buildids = [];
         if (array_key_exists('previous_builds', $_GET)) {
-            $previous_builds = pdo_real_escape_string($_GET['previous_builds']);
+            foreach (explode(', ', $_GET['previous_builds']) as $previous_buildid) {
+                if (is_numeric($previous_buildid) && $previous_buildid > 1) {
+                    $previous_build_row = \DB::table('build')
+                        ->where('id', $previous_buildid)
+                        ->first();
+                    if ($previous_build_row->projectid == $projectid) {
+                        $previous_buildids[] = $previous_buildid;
+                    }
+                }
+            }
         }
+        $previous_builds = implode(', ', $previous_buildids);
         $time_begin = '';
         if (array_key_exists('time_begin', $_GET)) {
             $time_begin = pdo_real_escape_string($_GET['time_begin']);
@@ -572,7 +584,6 @@ class ViewTest extends BuildApi
         if (array_key_exists('time_end', $_GET)) {
             $time_end = pdo_real_escape_string($_GET['time_end']);
         }
-        $projectid = pdo_real_escape_numeric($_GET['projectid']);
         $groupid = pdo_real_escape_numeric($_GET['groupid']);
 
         $response = [];

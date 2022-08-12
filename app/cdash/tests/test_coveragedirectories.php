@@ -44,7 +44,7 @@ class CoverageDirectoriesTestCase extends KWWebTestCase
         }
 
         // Find buildid for coverage.
-        $content = $this->connect($this->url . '/api/v1/index.php?project=CoverageDirectories&date=20180119');
+        $content = $this->connect($this->url . '/api/v1/index.php?project=CoverageDirectories&date=2018-01-19');
         $jsonobj = json_decode($content, true);
         if (count($jsonobj['coverages']) < 1) {
             $this->fail('No coverage build found when expected');

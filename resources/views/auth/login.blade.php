@@ -35,7 +35,7 @@ $login_field = config('cdash.login_field');
                         <div align="right">Password:</div>
                     </td>
                     <td width="70%" class="nob">
-                        <input class="textbox" type="password" name="password" size="20">
+                        <input class="textbox" type="password" name="password" size="20" autocomplete="off">
                         <input class="textbox" type="checkbox" name="remember" id="remember" {{old('remember') ? 'checked' : ''}}> Remember Me
                         @if ($errors->has('password'))
                             <div>
