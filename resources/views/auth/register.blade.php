@@ -73,7 +73,7 @@
                     <div align="right">Password:</div>
                 </td>
                 <td width="80%" height="2" class="nob">
-                    <input class="form-control{{ $errors->has('password') ? ' is-invalid' : ''}}" type="password" name="password" size="20" required/>
+                    <input class="form-control{{ $errors->has('password') ? ' is-invalid' : ''}}" type="password" name="password" size="20" autocomplete="off" required/>
                     @if ($errors->has('password'))
                         <div>
                             <span class="invalid-feedback" role="alert">
@@ -88,7 +88,7 @@
                 <td width="20%" height="2" class="nob">
                     <div align="right">Confirm Password:</div>
                 </td>
-                <td width="80%" height="2" class="nob"><input class="form-control" type="password" name="password_confirmation" size="20"/>
+                <td width="80%" height="2" class="nob"><input class="form-control" type="password" name="password_confirmation" size="20" autocomplete="off"/>
                 </td>
             </tr>
             <tr class="trodd">

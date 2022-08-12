@@ -117,14 +117,7 @@ $xml .= "<menusubtitle>$sitename</menusubtitle>";
 $xml .= '<dashboard>';
 $xml .= '<title>CDash</title>';
 
-$apikey = '';
-// Find the correct google map key
-foreach ($config->get('CDASH_GOOGLE_MAP_API_KEY') as $key => $value) {
-    if (strstr($_SERVER['HTTP_HOST'], $key) !== false) {
-        $apikey = $value;
-        break;
-    }
-}
+$apikey = config('cdash.google_map_api_key');
 
 const MB = 1048576;
 

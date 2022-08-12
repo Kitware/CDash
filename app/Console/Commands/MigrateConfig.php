@@ -138,18 +138,25 @@ class MigrateConfig extends Command
             if (strpos($key, 'CDASH_') !== 0) {
                 continue;
             }
+            $key = substr($key, strlen('CDASH_'));
 
             if (is_array($value)) {
                 if (empty($value)) {
                     continue;
                 }
-                $value = '["' . implode('","', $value) . '"]';
+                if ($key === 'GOOGLE_MAP_API_KEY') {
+                    $v = reset($value);
+                    if ($v !== 'ABQIAAAAT7I3XxP5nXC2xZUbg5AhLhQlpUmSySBnNeRIYFXQdqJETZJpYBStoWsCJtLvtHDiIJzsxJ953H3rgg') {
+                        $value = $v;
+                    }
+                } else {
+                    $value = '["' . implode('","', $value) . '"]';
+                }
             }
             if (array_key_exists($key, $legacy_defaults) &&
                     $value === $legacy_defaults[$key]) {
                 continue;
             }
-            $key = substr($key, strlen('CDASH_'));
             if (array_key_exists($key, $legacy_to_laravel_names)) {
                 $key = $legacy_to_laravel_names[$key];
             }
@@ -181,8 +188,7 @@ class MigrateConfig extends Command
             }
 
             /* still TODO for special handling:
-             * associative arrays that will need code-level changes:
-                 MEMCACHE_SERVER, GOOGLE_MAP_API_KEY
+             * associative arrays that will need code-level changes: MEMCACHE_SERVER
              */
             // End special handling
 

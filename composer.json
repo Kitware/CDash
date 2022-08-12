@@ -23,7 +23,7 @@
     "doctrine/dbal": "^2.5",
     "fideloper/proxy": "^4.0",
     "friendsofphp/php-cs-fixer": "^2.16",
-    "guzzlehttp/guzzle": "~6.2",
+    "guzzlehttp/guzzle": "6.*",
     "iron-io/iron_mq": "~2.0",
     "knplabs/github-api": "^3.2",
     "laravel/framework": "6.20.42",

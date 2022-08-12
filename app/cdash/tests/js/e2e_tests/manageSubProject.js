@@ -4,16 +4,18 @@ describe("manageSubProject", function() {
 
   it("is protected by login", function () {
     var loginPage = new LoginPage();
-    loginPage.login("manageSubProject.php?projectid=8#/add");
+    loginPage.login("manageSubProject.php?projectid=8");
   });
 
   it("can add a subproject", function() {
 
-    browser.get('manageSubProject.php?projectid=8#/add');
+    browser.get('manageSubProject.php?projectid=8');
+    element(by.linkText('Add a SubProject')).click();
     element(by.name('newsubproject')).sendKeys('aaaNewSubProject');
     element(by.buttonText('Add SubProject')).click();
 
-    browser.get('manageSubProject.php?projectid=8#/current');
+    browser.get('manageSubProject.php?projectid=8');
+    element(by.linkText('Current SubProjects')).click();
     expect(element(by.id('current')).getText()).toContain("aaaNewSubProject");
   });
 
@@ -70,7 +72,8 @@ describe("manageSubProject", function() {
 
 
   it("can create subproject groups", function() {
-    browser.get('manageSubProject.php?projectid=8#/groups');
+    browser.get('manageSubProject.php?projectid=8');
+    element(by.linkText('SubProject Groups')).click();
 
     element(by.name('newgroup')).sendKeys('group1');
     element(by.name('isdefault')).click();
@@ -80,7 +83,8 @@ describe("manageSubProject", function() {
     element(by.name('newgroup')).sendKeys('gorup2'); // intentional typo.
     element(by.buttonText('Add group')).click();
 
-    browser.get('manageSubProject.php?projectid=8#/groups');
+    browser.get('manageSubProject.php?projectid=8');
+    element(by.linkText('SubProject Groups')).click();
     var rows = element(by.tagName('tbody')).all(by.tagName('tr'));
     expect(rows.get(0).element(by.name("group_name")).getAttribute("value")).toBe("group1");
     expect(rows.get(1).element(by.name("group_name")).getAttribute("value")).toBe("gorup2");
@@ -88,7 +92,8 @@ describe("manageSubProject", function() {
 
 
   it("can modify a subproject group", function() {
-    browser.get('manageSubProject.php?projectid=8#/groups');
+    browser.get('manageSubProject.php?projectid=8');
+    element(by.linkText('SubProject Groups')).click();
 
     // Change name to group2, change its threshold to 65,
     // and make it the default group.
@@ -103,7 +108,8 @@ describe("manageSubProject", function() {
     row.element(by.buttonText('Update')).click();
 
     // Verify these changes.
-    browser.get('manageSubProject.php?projectid=8#/groups');
+    browser.get('manageSubProject.php?projectid=8');
+    element(by.linkText('SubProject Groups')).click();
     row = element(by.tagName('tbody')).all(by.tagName('tr')).get(1);
     expect(row.element(by.name("group_name")).getAttribute("value")).toBe("group2");
     expect(row.element(by.name("coverage_threshold")).getAttribute("value")).toBe("65");
@@ -113,7 +119,8 @@ describe("manageSubProject", function() {
 
   it("can assign a subproject to a group", function() {
     // Expand the details for our test subproject.
-    browser.get('manageSubProject.php?projectid=8#/current');
+    browser.get('manageSubProject.php?projectid=8');
+    element(by.linkText('Current SubProjects')).click();
     var subproject = element(by.repeater('subproject in cdash.subprojects').row(0));
     subproject.element(by.className('glyphicon-chevron-right')).click();
 
@@ -125,7 +132,8 @@ describe("manageSubProject", function() {
     });
 
     // Reload the page to make sure this assignment stuck.
-    browser.get('manageSubProject.php?projectid=8#/current');
+    browser.get('manageSubProject.php?projectid=8');
+    element(by.linkText('Current SubProjects')).click();
     subproject = element(by.repeater('subproject in cdash.subprojects').row(0));
     subproject.element(by.className('glyphicon-chevron-right')).click();
     select = subproject.element(By.className('subproject_group'));
@@ -136,14 +144,16 @@ describe("manageSubProject", function() {
 
 
   it("can filter subprojects by group", function() {
-    browser.get('manageSubProject.php?projectid=8#/current');
+    browser.get('manageSubProject.php?projectid=8');
+    element(by.linkText('Current SubProjects')).click();
     element(by.name("groupSelection")).element(by.cssContainingText('option', 'group1')).click();
     expect(element.all(by.repeater('subproject in cdash.subprojects')).count()).toBe(1);
   });
 
 
   it("can delete subproject groups", function() {
-    browser.get('manageSubProject.php?projectid=8#/groups');
+    browser.get('manageSubProject.php?projectid=8');
+    element(by.linkText('SubProject Groups')).click();
 
     // Click on the first visible "delete group" icon twice.
     element(by.className('table-striped')).element(by.className('glyphicon-trash')).click();
@@ -152,7 +162,7 @@ describe("manageSubProject", function() {
     // Make sure our groups don't exist anymore.
     expect(element(by.id('groups')).getText()).not.toContain("group1");
     expect(element(by.id('groups')).getText()).not.toContain("group2");
-    browser.get('manageSubProject.php?projectid=8#/groups');
+    element(by.linkText('SubProject Groups')).click();
     expect(element(by.id('groups')).getText()).not.toContain("group1");
     expect(element(by.id('groups')).getText()).not.toContain("group2");
   });
