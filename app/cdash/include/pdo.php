@@ -351,33 +351,6 @@ function pdo_real_escape_numeric($unescaped_string, $link_identifier = null)
 }
 
 /**
- * Begin a transaction with PDO.
- * @param PDO|null $link_identifier
- */
-function pdo_begin_transaction($link_identifier = null)
-{
-    get_link_identifier($link_identifier)->getPdo()->beginTransaction();
-}
-
-/**
- * Commit a transaction with PDO.
- * @param PDO|null $link_identifier
- */
-function pdo_commit($link_identifier = null)
-{
-    get_link_identifier($link_identifier)->getPdo()->commit();
-}
-
-/**
- * Roll back a transaction with PDO.
- * @param PDO|null $link_identifier
- */
-function pdo_rollback($link_identifier = null)
-{
-    get_link_identifier($link_identifier)->getPdo()->rollBack();
-}
-
-/**
  * DEPRECATED - use Database::getInstance()->execute(...)
  *
  * Execute a prepared statement and log any errors that occur.

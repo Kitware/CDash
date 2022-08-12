@@ -171,6 +171,13 @@ class MigrateConfig extends Command
                 require_once 'include/log.php';
                 $key = 'APP_LOG_LEVEL';
                 $value = to_psr3_level($value);
+            } elseif ($key === 'ASYNCHRONOUS_SUBMISSION') {
+                $key = 'QUEUE_CONNECTION';
+                if ($value) {
+                    $value = 'database';
+                } else {
+                    $value = 'sync';
+                }
             }
 
             /* still TODO for special handling:

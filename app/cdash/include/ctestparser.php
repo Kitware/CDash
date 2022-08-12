@@ -16,46 +16,35 @@
 
 require_once 'xml_handlers/build_handler.php';
 require_once 'xml_handlers/configure_handler.php';
-require_once 'xml_handlers/testing_handler.php';
-require_once 'xml_handlers/update_handler.php';
 require_once 'xml_handlers/coverage_handler.php';
+require_once 'xml_handlers/coverage_junit_handler.php';
 require_once 'xml_handlers/coverage_log_handler.php';
 require_once 'xml_handlers/done_handler.php';
-require_once 'xml_handlers/note_handler.php';
 require_once 'xml_handlers/dynamic_analysis_handler.php';
+require_once 'xml_handlers/note_handler.php';
 require_once 'xml_handlers/project_handler.php';
-require_once 'xml_handlers/upload_handler.php';
+require_once 'xml_handlers/retry_handler.php';
+require_once 'xml_handlers/testing_handler.php';
 require_once 'xml_handlers/testing_junit_handler.php';
-require_once 'xml_handlers/coverage_junit_handler.php';
+require_once 'xml_handlers/update_handler.php';
+require_once 'xml_handlers/upload_handler.php';
 
+use App\Jobs\ProcessSubmission;
 use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\BuildFile;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\Storage;
 
 class CDashParseException extends RuntimeException
 {
 }
 
-// Helper function to display the message
-function displayReturnStatus($statusarray)
-{
-    include 'include/version.php';
-
-    $config = Config::getInstance();
-
-    echo "<cdash version=\"{$config->get('CDASH_VERSION')}\">\n";
-    foreach ($statusarray as $key => $value) {
-        echo '  <' . $key . '>' . $value . '</' . $key . ">\n";
-    }
-    echo "</cdash>\n";
-}
-
 /** Determine the descriptive filename for a submission file.
   * Called by writeBackupFile().
   **/
-function generateBackupFileName($projectname, $buildname, $sitename, $stamp,
-                                $fileNameWithExt)
+function generateBackupFileName($projectname, $subprojectname, $buildname,
+                                $sitename, $stamp, $fileNameWithExt)
 {
     // Generate a timestamp to include in the filename.
     $currenttimestamp = microtime(true) * 100;
@@ -64,6 +53,7 @@ function generateBackupFileName($projectname, $buildname, $sitename, $stamp,
     $sitename_escaped = preg_replace('/[^\w\-~_]+/u', '-', $sitename);
     $buildname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $buildname);
     $projectname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $projectname);
+    $subprojectname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $subprojectname);
 
     // Separate the extension from the filename.
     $ext = '.' . pathinfo($fileNameWithExt, PATHINFO_EXTENSION);
@@ -73,7 +63,7 @@ function generateBackupFileName($projectname, $buildname, $sitename, $stamp,
     if ($file != 'Project') {
         // Project.xml files aren't associated with a particular build, so we
         // only record the site and buildname for other types of submissions.
-        $filename .= $sitename_escaped . '_' . $buildname_escaped . '_' . $stamp . '_';
+        $filename .= $subprojectname_escaped . '_' . $sitename_escaped . '_' . $buildname_escaped . '_' . $stamp . '_';
     }
     $filename .=  $currenttimestamp . '_' . $file . $ext;
 
@@ -94,39 +84,30 @@ function generateBackupFileName($projectname, $buildname, $sitename, $stamp,
 function safelyWriteBackupFile($filehandler, $content, $filename)
 {
     // If the file exists we append a number until we get a nonexistent file.
-    $config = Config::getInstance();
-    $backupDir = $config->get('CDASH_BACKUP_DIRECTORY');
+    $filepath = Storage::path($filename);
+    $inboxDir = Storage::path('inbox');
     $got_lock = false;
     $i = 1;
     while (!$got_lock) {
-        $lockfilename = $filename . '.lock';
+        $lockfilename = Storage::path("{$filename}.lock");
         $lockfp = fopen($lockfilename, 'w');
         flock($lockfp, LOCK_EX | LOCK_NB, $wouldblock);
         if ($wouldblock) {
-            $path_parts = pathinfo($filename);
-            $filename = $path_parts['dirname'] . '/' . $path_parts['filename'] . "_$i." . $part_parts['extension'];
+            $path_parts = pathinfo($filepath);
+            $filepath = $path_parts['dirname'] . '/' . $path_parts['filename'] . "_$i." . $path_parts['extension'];
             $i++;
         } else {
             $got_lock = true;
             // realpath() always returns false for Google Cloud Storage.
-            if (realpath($config->get('CDASH_BACKUP_DIRECTORY')) !== false) {
+            if (realpath($inboxDir) !== false) {
                 // Make sure the file is in the right directory.
-                $pos = strpos(realpath(dirname($filename)), realpath($backupDir));
+                $pos = strpos(realpath(dirname($filepath)), realpath($inboxDir));
                 if ($pos === false || $pos != 0) {
-                    echo "File cannot be stored in backup directory: $filename";
-                    add_log("File cannot be stored in backup directory: $filename (realpath = " . realpath($backupDir) . ')', 'writeBackupFile', LOG_ERR);
+                    \Log::error("File cannot be stored in inbox directory: $filepath (realpath = " . realpath($inboxDir) . ')');
                     flock($lockfp, LOCK_UN);
                     unlink($lockfilename);
                     return false;
                 }
-            }
-
-            if (!$handle = fopen($filename, 'w')) {
-                echo "Cannot open file ($filename)";
-                add_log("Cannot open file ($filename)", 'writeBackupFile', LOG_ERR);
-                flock($lockfp, LOCK_UN);
-                unlink($lockfilename);
-                return false;
             }
         }
         flock($lockfp, LOCK_UN);
@@ -136,52 +117,20 @@ function safelyWriteBackupFile($filehandler, $content, $filename)
     }
 
     // Write the file.
-    if (fwrite($handle, $content) === false) {
-        echo "ERROR: Cannot write to file ($filename)";
-        add_log("Cannot write to file ($filename)", 'writeBackupFile', LOG_ERR);
-        fclose($handle);
-        unset($handle);
+    if (!Storage::put($filename, $filehandler)) {
+        \Log::error("Cannot write to file ($filename)");
         return false;
     }
-
-    while (!feof($filehandler)) {
-        $content = fread($filehandler, 8192);
-        if (fwrite($handle, $content) === false) {
-            echo "ERROR: Cannot write to file ($filename)";
-            add_log("Cannot write to file ($filename)", 'writeBackupFile', LOG_ERR);
-            fclose($handle);
-            unset($handle);
-            return false;
-        }
-    }
-    fclose($handle);
-    unset($handle);
     return $filename;
 }
 
 /** Function used to write a submitted file to our backup directory with a
  * descriptive name. */
-function writeBackupFile($filehandler, $content, $projectname, $buildname,
-                         $sitename, $stamp, $fileNameWithExt)
+function writeBackupFile($filehandler, $content, $projectname, $subprojectname,
+                         $buildname, $sitename, $stamp, $fileNameWithExt)
 {
-    // Make sure the backup directory exists.
-    $config = Config::getInstance();
-    $backupDir = $config->get('CDASH_BACKUP_DIRECTORY');
-    if (!file_exists($backupDir)) {
-        // try parent dir as well (for asynch submission)
-        $backupDir = "../$backupDir";
-
-        if (!file_exists($backupDir)) {
-            trigger_error(
-                'function writeBackupFile cannot process files when backup directory ' .
-                "does not exist: CDASH_BACKUP_DIRECTORY='{$config->get('CDASH_BACKUP_DIRECTORY')}'",
-                E_USER_ERROR);
-            return false;
-        }
-    }
-
-    $filename = $backupDir . '/';
-    $filename .= generateBackupFileName($projectname, $buildname, $sitename, $stamp, $fileNameWithExt);
+    $filename = 'inbox/';
+    $filename .= generateBackupFileName($projectname, $subprojectname, $buildname, $sitename, $stamp, $fileNameWithExt);
     return safelyWriteBackupFile($filehandler, $content, $filename);
 }
 
@@ -216,19 +165,9 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
             (SELECT siteid FROM build WHERE id=$buildid)");
     $sitename = $row['name'];
 
-    $config = Config::getInstance();
-    if ($config->get('CDASH_BACKUP_TIMEFRAME') == '0') {
-        // We do not save submission files after they are parsed.
-        // Work directly off the open file handle.
-        $meta_data = stream_get_meta_data($filehandler);
-        $filename = $meta_data['uri'];
-        $backup_filename = generateBackupFileName($projectname, $buildname,
-                $sitename, $stamp, $buildfile_row['filename']);
-    } else {
-        $filename = writeBackupFile($filehandler, '', $projectname, $buildname,
-            $sitename, $stamp, $buildfile_row['filename']);
-        $backup_filename = $filename;
-    }
+    // Work directly off the open file handle.
+    $meta_data = stream_get_meta_data($filehandler);
+    $filename = $meta_data['uri'];
 
     // Instantiate a buildfile object so we can delete it from the database
     // once we're done parsing it.
@@ -243,7 +182,6 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
         add_log("No handler include file for $type (tried $include_file)",
             'parse_put_submission',
             LOG_ERR, $projectid);
-        check_for_immediate_deletion($filename);
         $buildfile->Delete();
         return true;
     }
@@ -254,35 +192,42 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     if (!class_exists($className)) {
         add_log("No handler class for $type", 'parse_put_submission',
             LOG_ERR, $projectid);
-        check_for_immediate_deletion($filename);
         $buildfile->Delete();
         return true;
     }
     $handler = new $className($buildid);
 
     // Parse the file.
-    if ($handler->Parse($filename) === false) {
+    if (file_exists($filename)) {
+        $filepath = $filename;
+    } elseif (Storage::exists($filename)) {
+        $filepath = Storage::path($filename);
+    } else {
+        throw new CDashParseException('Failed to locate file ' . $filename);
+    }
+
+    if ($handler->Parse($filepath) === false) {
         throw new CDashParseException('Failed to parse file ' . $filename);
     }
 
-    check_for_immediate_deletion($filename);
     $buildfile->Delete();
-    $handler->backupFileName = $backup_filename;
+
+    $handler->backupFileName = generateBackupFileName(
+        $projectname, '', $buildname, $sitename, $stamp, $buildfile_row['filename']);
+
     return $handler;
 }
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($filehandler, $projectid, $buildid = null,
-                     $expected_md5 = '', $do_checksum = true)
+function ctest_parse($filehandle, $projectid, $buildid = null,
+                     $expected_md5 = '')
 {
     require_once 'include/common.php';
     include 'include/version.php';
 
-    $config = Config::getInstance();
-
     // Check if this is a new style PUT submission.
     try {
-        $handler = parse_put_submission($filehandler, $projectid, $expected_md5);
+        $handler = parse_put_submission($filehandle, $projectid, $expected_md5);
         if ($handler) {
             return $handler;
         }
@@ -303,8 +248,8 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     // Figure out what type of XML file this is.
     $handler = null;
     $file = '';
-    while (is_null($handler) && !feof($filehandler)) {
-        $content = fread($filehandler, 8192);
+    while (is_null($handler) && !feof($filehandle)) {
+        $content = fread($filehandle, 8192);
         if (strpos($content, '<Update') !== false) {
             // Should be first otherwise confused with Build
             $handler = new UpdateHandler($projectid);
@@ -350,8 +295,8 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         }
     }
 
-    rewind($filehandler);
-    $content = fread($filehandler, 8192);
+    rewind($filehandle);
+    $content = fread($filehandle, 8192);
 
     if ($handler == null) {
         echo 'no handler found';
@@ -373,12 +318,14 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
 
     $sitename = '';
     $buildname = '';
+    $subprojectname = '';
     $stamp = '';
     if ($file != 'Project') {
         // projects don't have some of these fields.
 
         $sitename = $handler->getSiteName();
         $buildname = $handler->getBuildName();
+        $subprojectname = $handler->getSubProjectName();
         $stamp = $handler->getBuildStamp();
     }
 
@@ -394,98 +341,18 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         return false;
     }
 
-    // If backups are disabled, switch the filename to that of the existing handle
-    // Otherwise, create a backup file and process from that
-    if ($config->get('CDASH_BACKUP_TIMEFRAME') == '0') {
-        $meta_data = stream_get_meta_data($filehandler);
-        $filename = $meta_data['uri'];
-        $backup_filename = generateBackupFileName($projectname, $buildname,
-                $sitename, $stamp, $file . '.xml');
-    } else {
-        $filename = writeBackupFile($filehandler, $content, $projectname, $buildname,
-                                    $sitename, $stamp, $file . '.xml');
-        $backup_filename = $filename;
-        if ($filename === false) {
-            return $handler;
-        }
-    }
-
-    $statusarray = [];
-    $statusarray['status'] = 'OK';
-    $statusarray['message'] = '';
-    if (!is_null($buildid)) {
-        $statusarray['buildId'] = $buildid;
-    }
-    if ($do_checksum == true) {
-        if (!file_exists($filename)) {
-            // Parsing cannot continue if this file does not exist.
-            // Perhaps another process already parsed it.
-            add_log("File does not exist, checksum cannot continue: $filename",
-                    'ctest_parse', LOG_INFO, $projectid);
-            return false;
-        }
-        $md5sum = md5_file($filename);
-        $md5error = false;
-        if ($expected_md5 == '' || $expected_md5 == $md5sum) {
-            $statusarray['status'] = 'OK';
-        } else {
-            $statusarray['status'] = 'ERROR';
-            $statusarray['message'] = 'Checksum failed for file. Expected ' . $expected_md5 . ' but got ' . $md5sum;
-            $md5error = true;
-        }
-
-        $statusarray['md5'] = $md5sum;
-        if ($md5error) {
-            displayReturnStatus($statusarray);
-            add_log("Checksum failure on file: $filename", 'ctest_parse', LOG_ERR, $projectid);
-            return false;
-        }
-    }
-
-    $parsingerror = '';
-    if (!$parseHandle = fopen($filename, 'r')) {
-        $statusarray['status'] = 'ERROR';
-        $statusarray['message'] = "ERROR: Cannot open file ($filename)";
-        displayReturnStatus($statusarray);
-        add_log("Cannot open file ($filename)", 'parse_xml_file', LOG_ERR);
-        return $handler;
-    }
-
-    //burn the first 8192 since we have already parsed it
-    $content = fread($parseHandle, 8192);
-    while (!feof($parseHandle)) {
-        $content = fread($parseHandle, 8192);
+    while (!feof($filehandle)) {
+        $content = fread($filehandle, 8192);
         xml_parse($parser, $content, false);
     }
     xml_parse($parser, null, true);
     xml_parser_free($parser);
     unset($parser);
-    fclose($parseHandle);
-    unset($parseHandle);
 
-    $requeued = false;
-    if ($handler instanceof DoneHandler && $handler->shouldRequeue()) {
-        require_once 'include/do_submit.php';
-        $retry_handler = new RetryHandler($filename);
-        $retry_handler->Increment();
-        $build = get_build_from_handler($handler);
-        $requeued = requeue_submission_file($filename, $projectid, $build->Id,
-                                            md5_file($filename), $ip);
-    }
-    if (!$requeued) {
-        check_for_immediate_deletion($filename);
-    }
-    displayReturnStatus($statusarray);
+    // Generate a pretty, "relative to storage" filepath and store it in the handler.
+    $backup_filename = generateBackupFileName(
+            $projectname, $subprojectname, $buildname, $sitename, $stamp, $file . '.xml');
     $handler->backupFileName = $backup_filename;
-    return $handler;
-}
 
-function check_for_immediate_deletion($filename)
-{
-    // Delete this file as soon as its been parsed (or an error occurs)
-    // if CDASH_BACKUP_TIMEFRAME is set to '0'.
-    $config = Config::getInstance();
-    if ($config->get('CDASH_BACKUP_TIMEFRAME') === '0' && is_file($filename)) {
-        unlink($filename);
-    }
+    return $handler;
 }

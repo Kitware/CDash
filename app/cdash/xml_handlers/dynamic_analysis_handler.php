@@ -257,6 +257,11 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
         return $this->BuildName;
     }
 
+    public function getSubProjectName()
+    {
+        return $this->SubProjectName;
+    }
+
     private function createBuild($subprojectName)
     {
         $factory = $this->getModelFactory();

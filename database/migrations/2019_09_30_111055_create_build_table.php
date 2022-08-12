@@ -26,8 +26,8 @@ class CreateBuildTable extends Migration
                 $table->dateTime('starttime')->default('1980-01-01 00:00:00');
                 $table->dateTime('endtime')->default('1980-01-01 00:00:00');
                 $table->dateTime('submittime')->default('1980-01-01 00:00:00');
-                $table->text('command', 65535);
-                $table->text('log', 65535);
+                $table->text('command', 65535)->default('');
+                $table->text('log', 65535)->default('');
                 $table->smallInteger('configureerrors')->nullable()->default(-1);
                 $table->smallInteger('configurewarnings')->nullable()->default(-1);
                 $table->integer('configureduration')->default(0);

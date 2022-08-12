@@ -16,7 +16,7 @@ class CreateBuildtesttimeTable extends Migration
         if (!Schema::hasTable('buildtesttime')) {
             Schema::create('buildtesttime', function (Blueprint $table) {
                 $table->integer('buildid')->default(0)->primary();
-                $table->float('time', 7)->default(0.00);
+                $table->decimal('time', 7, 2)->default(0.00);
             });
         }
     }

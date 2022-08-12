@@ -17,6 +17,5 @@ if (strpos($env_contents, 'DB_DATABASE=cdash4simpletest') === false) {
 }
 
 $manager = new HtmlTestManager();
-$manager->removeLogAndBackupFiles(\CDash\Config::getInstance()->get('CDASH_LOG_FILE'));
 $reporter = new TextReporter();
 $manager->runFileTest($reporter, $argv[1]);

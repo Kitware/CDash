@@ -81,8 +81,6 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
 
     public function testBuildsRemovedOnSubmission()
     {
-        // due to the asynchronous nature of do_submit.php line 144, this
-        // is, unfortunately, still necessary
         $this->enableAutoRemoveConfigSetting();
 
         $config = Config::getInstance();

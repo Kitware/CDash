@@ -14,7 +14,6 @@ set(CDASH_DB_TYPE "mysql" CACHE STRING "Database type")
 set(CDASH_SELENIUM_HUB "localhost" CACHE STRING "Location of selenium server")
 option(CDASH_USE_SELENIUM "Should CDash use Selenium to test ajax functionality?" OFF)
 option(CDASH_USE_PROTRACTOR "Should CDash use Protractor to test angular functionality?" ON)
-option(CDASH_USE_REDIS_QUEUE "Should CDash use a message queue (Redis) for submitting/processing builds?" OFF)
 set(CMake_SOURCE_DIR CACHE FILEPATH "Path to CMake source dir.  Set this to import tests from CMake")
 
 get_filename_component(CDASH_DIR_NAME_DEFAULT ${CDash_SOURCE_DIR} NAME)
@@ -88,16 +87,6 @@ execute_process(
 if(CDASH_USE_SELENIUM)
   find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php vendor/bin)
 endif(CDASH_USE_SELENIUM)
-
-if (CDASH_USE_REDIS_QUEUE)
-  set(CDASH_BERNARD_SUBMISSION "true")
-  set(CDASH_BERNARD_DRIVER "new \\Bernard\\Driver\\PredisDriver(new \\Predis\\Client('tcp://localhost'))")
-  set(CDASH_BERNARD_CONSUMERS_WHITELIST "array('127.0.0.1')")
-else()
-  set(CDASH_BERNARD_SUBMISSION "false")
-  set(CDASH_BERNARD_DRIVER "false")
-  set(CDASH_BERNARD_CONSUMERS_WHITELIST "false")
-endif()
 
 # Write out a minimal, vestigial config.local.php file.
 file(WRITE "${CDash_SOURCE_DIR}/app/cdash/config/config.local.php"

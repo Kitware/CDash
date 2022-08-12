@@ -1001,28 +1001,6 @@ CREATE INDEX "coveragefilepriority_fullpath" on "coveragefilepriority" ("fullpat
 CREATE INDEX "coveragefilepriority_projectid" on "coveragefilepriority" ("projectid");
 
 
---
--- Table: submission
---
-CREATE TABLE "submission" (
-  "id" serial NOT NULL,
-  "filename" character varying(500) DEFAULT '' NOT NULL,
-  "projectid" bigint  NOT NULL,
-  "status" smallint NOT NULL,
-  "attempts" bigint DEFAULT '0' NOT NULL,
-  "filesize" bigint DEFAULT '0' NOT NULL,
-  "filemd5sum" character varying(32) DEFAULT '' NOT NULL,
-  "lastupdated" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "created" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "started" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "finished" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  PRIMARY KEY ("id")
-);
-CREATE INDEX "submission_projectid" on "submission" ("projectid");
-CREATE INDEX "submission_status" on "submission" ("status");
-CREATE INDEX "submission_finished" on "submission" ("finished");
-
-
 CREATE TABLE "blockbuild" (
   "id" serial NOT NULL,
   "projectid" bigint  NOT NULL,
@@ -1060,16 +1038,6 @@ CREATE TABLE "filesum" (
 );
 CREATE INDEX "filesum_md5sum" on "filesum" ("md5sum");
 
---
--- Table: submissionprocessor
---
-CREATE TABLE "submissionprocessor" (
-  "projectid" bigint NOT NULL,
-  "pid" bigint NOT NULL,
-  "lastupdated" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "locked" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  PRIMARY KEY ("projectid")
-);
 
 --
 -- Table: user2repository
@@ -1112,15 +1080,6 @@ CREATE TABLE "build2uploadfile" (
 );
 CREATE INDEX "build2uploadfile_fileid" on "build2uploadfile" ("fileid");
 CREATE INDEX "build2uploadfile_buildid" on "build2uploadfile" ("buildid");
-
---
--- Table: submission2ip
---
-CREATE TABLE "submission2ip" (
-  "submissionid" bigint NOT NULL UNIQUE,
-  "ip" character varying(255) DEFAULT '' NOT NULL,
-  PRIMARY KEY("submissionid")
-);
 
 CREATE TABLE "measurement" (
   "id" serial NOT NULL,

@@ -17,9 +17,8 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 include_once 'include/ctestparser.php';
 
-use CDash\Config;
-
-$config = Config::getInstance();
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Delete the temporary file related to a particular submission.
@@ -33,40 +32,31 @@ $config = Config::getInstance();
  * dest=[string] Instead of deleting, rename filename to dest
  **/
 
-$whitelist = $config->get('CDASH_BERNARD_CONSUMERS_WHITELIST');
+if (!config('cdash.remote_workers')) {
+    return response('This feature is disabled', Response::HTTP_CONFLICT);
+}
 
-if (is_array($whitelist) && !in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
-    http_response_code(403);
-    exit();
-} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_REQUEST['filename'])) {
-    $success = true;
-    $filename = $config->get('CDASH_BACKUP_DIRECTORY') . '/' . basename($_REQUEST['filename']);
-    if (file_exists($filename)) {
-        if ($config->get('CDASH_BACKUP_TIMEFRAME') == '0') {
-            // Delete the file.
-            $success = @unlink($filename);
-        } elseif (isset($_REQUEST['dest'])) {
-            // Rename the file.
-            $dest_filename = $config->get('CDASH_BACKUP_DIRECTORY') . '/' . basename($_REQUEST['dest']);
-            $fh = fopen($filename, 'r');
-            if (!$fh) {
-                $success = false;
-            } else {
-                if (safelyWriteBackupFile($fh, '', $dest_filename) === false) {
-                    $success = false;
-                }
-                fclose($fh);
-                if ($success && @!unlink($filename)) {
-                    $success = false;
-                }
-            }
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_REQUEST['filename'])) {
+    $filename = $_REQUEST['filename'];
+    if (!Storage::exists($filename)) {
+        return response('File not found', Response::HTTP_NOT_FOUND);
+    }
+    if (config('cdash.backup_timeframe') == 0) {
+        // Delete the file.
+        if (Storage::delete($filename)) {
+            return response('OK', Response::HTTP_OK);
+        } else {
+            return response('Deletion failed', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    } elseif (isset($_REQUEST['dest'])) {
+        // Rename the file.
+        $dest = $_REQUEST['dest'];
+        if (Storage::move($filename, $dest)) {
+            return response('OK', Response::HTTP_OK);
+        } else {
+            return response('Rename failed', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    if (!$success) {
-        http_response_code(500);
-        exit();
-    }
 } else {
-    http_response_code(400);
-    exit();
+    return response('Bad request', Response::HTTP_BAD_REQUEST);
 }

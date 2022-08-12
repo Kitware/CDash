@@ -75,26 +75,48 @@ class RedundantTestsTestCase extends KWWebTestCase
         );
         $this->assertTrue(2 === count($results));
 
-        $buildtestid1 = $results[0]->id;
-        $buildtestid2 = $results[1]->id;
-
         // Verify expected output from 'test details' API.
-        $this->get("{$this->url}/api/v1/testDetails.php?buildtestid={$buildtestid1}");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $this->assertEqual("this is a test\n", $jsonobj['test']['output']);
-
-        $this->get("{$this->url}/api/v1/testDetails.php?buildtestid={$buildtestid2}");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $this->assertEqual("this is the same test but with different output\n", $jsonobj['test']['output']);
+        $test1found = false;
+        $test2found = false;
+        foreach ($results as $row) {
+            $this->get("{$this->url}/api/v1/testDetails.php?buildtestid={$row->id}");
+            $content = $this->getBrowser()->getContent();
+            $jsonobj = json_decode($content, true);
+            if ($jsonobj['test']['output'] == "this is a test\n") {
+                $test1found = true;
+            }
+            if ($jsonobj['test']['output'] == "this is the same test but with different output\n") {
+                $test2found = true;
+            }
+        }
+        if (!$test1found) {
+            $this->fail("test #1 output not found when expected");
+        }
+        if (!$test2found) {
+            $this->fail("test #2 output not found when expected");
+        }
 
         // Verify expected output from 'view tests' API.
         $this->get("{$this->url}/api/v1/viewTest.php?buildid={$buildid}");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $this->assertEqual(2, count($jsonobj['tests']));
-        $this->assertEqual('purple', $jsonobj['tests'][0]['measurements'][0]);
-        $this->assertEqual('orange', $jsonobj['tests'][1]['measurements'][0]);
+
+        $purple_found = false;
+        $orange_found = false;
+        foreach ($jsonobj['tests'] as $test) {
+            if ($test['measurements'][0] === 'purple') {
+                $purple_found = true;
+            }
+            if ($test['measurements'][0] === 'orange') {
+                $orange_found = true;
+            }
+        }
+        if (!$purple_found) {
+            $this->fail("purple test not found when expected");
+        }
+        if (!$orange_found) {
+            $this->fail("orange test not found when expected");
+        }
     }
 }

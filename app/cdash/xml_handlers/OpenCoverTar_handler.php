@@ -22,6 +22,7 @@ use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
+use Illuminate\Support\Facades\Storage;
 
 class OpenCoverTarHandler extends AbstractHandler
 {
@@ -141,7 +142,7 @@ class OpenCoverTarHandler extends AbstractHandler
         $config = Config::getInstance();
 
         // Create a new directory where we can extract our tarball.
-        $dirName = $config->get('CDASH_BACKUP_DIRECTORY') . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_FILENAME);
+        $dirName = Storage::path('parsed') . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_FILENAME);
         mkdir($dirName);
         $this->tarDir = $dirName;
         $result = extract_tar($filename, $dirName);

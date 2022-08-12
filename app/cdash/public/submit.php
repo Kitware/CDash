@@ -14,55 +14,145 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use Bernard\Message\DefaultMessage;
-use Bernard\Producer;
-use Bernard\QueueFactory\PersistentFactory;
-use Bernard\Serializer;
-use CDash\Middleware\Queue;
-use CDash\Middleware\Queue\DriverFactory as QueueDriverFactory;
-use CDash\Middleware\Queue\SubmissionService;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use App\Jobs\ProcessSubmission;
+use App\Services\UnparsedSubmissionProcessor;
 
 require_once 'include/pdo.php';
-require_once 'include/do_submit.php';
 require_once 'include/version.php';
 
 use CDash\Config;
+use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\ServiceContainer;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Process\InputStream;
 
 $config = Config::getInstance();
 $service = ServiceContainer::getInstance();
 
-// Check if we can connect to the database.
-$pdo = get_link_identifier()->getPdo();
-if (!$pdo) {
-    echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
-    echo " <status>ERROR</status>\n";
-    echo " <message>Cannot connect to the database.</message>\n";
-    echo "</cdash>\n";
-    return;
+/* Catch any PHP fatal errors */
+//
+// This is a registered shutdown function (see register_shutdown_function help)
+// and gets called at script exit time, regardless of reason for script exit.
+// i.e. -- it gets called when a script exits normally, too.
+//
+global $PHP_ERROR_BUILD_ID;
+global $PHP_ERROR_RESOURCE_TYPE;
+global $PHP_ERROR_RESOURCE_ID;
+
+if (!function_exists('PHPErrorHandler')) {
+    function PHPErrorHandler($projectid)
+    {
+        if (connection_aborted()) {
+            add_log('PHPErrorHandler', "connection_aborted()='" . connection_aborted() . "'", LOG_INFO, $projectid);
+            add_log('PHPErrorHandler', "connection_status()='" . connection_status() . "'", LOG_INFO, $projectid);
+        }
+
+        if ($error = error_get_last()) {
+            switch ($error['type']) {
+                case E_ERROR:
+                case E_CORE_ERROR:
+                case E_COMPILE_ERROR:
+                case E_USER_ERROR:
+                    if (strlen($GLOBALS['PHP_ERROR_RESOURCE_TYPE']) == 0) {
+                        $GLOBALS['PHP_ERROR_RESOURCE_TYPE'] = 0;
+                    }
+                    if (strlen($GLOBALS['PHP_ERROR_BUILD_ID']) == 0) {
+                        $GLOBALS['PHP_ERROR_BUILD_ID'] = 0;
+                    }
+                    if (strlen($GLOBALS['PHP_ERROR_RESOURCE_ID']) == 0) {
+                        $GLOBALS['PHP_ERROR_RESOURCE_ID'] = 0;
+                    }
+
+                    add_log('Fatal error:' . $error['message'], $error['file'] . ' (' . $error['line'] . ')',
+                        LOG_ERR, $projectid, $GLOBALS['PHP_ERROR_BUILD_ID'],
+                        $GLOBALS['PHP_ERROR_RESOURCE_TYPE'], $GLOBALS['PHP_ERROR_RESOURCE_ID']);
+                    exit();  // stop the script
+                    break;
+            }
+        }
+    }
 }
+
+// Helper function to display the message
+if (!function_exists('displayReturnStatus')) {
+    function displayReturnStatus($statusarray, $response_code)
+    {
+        // NOTE: we can't use Laravel's response() helper function
+        // until CTest learns how to properly parse the XML out of it.
+        http_response_code($response_code);
+
+        $version = config('cdash.version');
+        echo "<cdash version=\"{$version}\">\n";
+        foreach ($statusarray as $key => $value) {
+            echo "  <{$key}>{$value}</{$key}>\n";
+        }
+        echo "</cdash>\n";
+
+        return $response_code;
+    }
+}
+
+$statusarray = [];
+
 @set_time_limit(0);
 
-// If we have a POST we forward to the new submission process
+// If we have a POST or PUT we defer to the unparsed submission processor.
 if (isset($_POST['project'])) {
-    return post_submit();
+    $processor = new UnparsedSubmissionProcessor();
+    return $processor->postSubmit();
 }
 if (isset($_GET['buildid'])) {
-    return put_submit_file();
+    $processor = new UnparsedSubmissionProcessor();
+    return $processor->putSubmitFile();
 }
 
+$projectname = $_GET['project'];
+$expected_md5 = isset($_GET['MD5']) ? htmlspecialchars($_GET['MD5']) : '';
+
+// Get auth token (if any).
+$token = AuthToken::getBearerToken();
+$authtoken = new AuthToken();
+$authtoken->Hash = $authtoken->HashToken($token);
+
+// Save the incoming file in the inbox directory.
+$filename = "{$projectname}_{$authtoken->Hash}_" . \Illuminate\Support\Str::uuid()->toString() . "_{$expected_md5}_.xml";
+$fp = request()->getContent(true);
+if (!Storage::put("inbox/{$filename}", $fp)) {
+    \Log::error("Failed to save submission to inbox for $projectname (md5=$expected_md5)");
+    $statusarray['status'] = 'ERROR';
+    $statusarray['message'] = 'Failed to save submission file.';
+    return displayReturnStatus($statusarray, Response::HTTP_INTERNAL_SERVER_ERROR);
+}
+
+// Check that the md5sum of the file matches what we were told to expect.
+if ($expected_md5) {
+    $md5sum = md5_file(Storage::path("inbox/{$filename}"));
+    if ($md5sum != $expected_md5) {
+        Storage::delete("inbox/{$filename}");
+        $statusarray['status'] = 'ERROR';
+        $statusarray['message'] = "md5 mismatch. expected: {$expected_md5}, received: {$md5sum}";
+        return displayReturnStatus($statusarray, Response::HTTP_BAD_REQUEST);
+    }
+}
+
+// Check if we can connect to the database before proceeding any further.
+try {
+    $pdo = \DB::connection()->getPdo();
+} catch (\Exception $e) {
+    $statusarray['status'] = 'ERROR';
+    $statusarray['message'] = 'Cannot connect to the database.';
+    return displayReturnStatus($statusarray, Response::HTTP_SERVICE_UNAVAILABLE);
+}
+
+// Get some more info about this project.
+$projectid = null;
 $stmt = $pdo->prepare(
     'SELECT id, authenticatesubmissions FROM project WHERE name = ?');
-
-$projectid = null;
-$projectname = $_GET['project'];
 if (pdo_execute($stmt, [$projectname])) {
     $row = $stmt->fetch();
     if ($row) {
@@ -71,14 +161,13 @@ if (pdo_execute($stmt, [$projectname])) {
     }
 }
 
-// If not a valid project we return
+// Return an error message if this is not a valid project.
 if (!$projectid) {
-    echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
-    echo " <status>ERROR</status>\n";
-    echo " <message>Not a valid project.</message>\n";
-    echo "</cdash>\n";
-    add_log('Not a valid project. projectname: ' . $projectname, 'global:submit.php');
-    return;
+    \Log::info("Not a valid project. projectname: $projectname in submit.php");
+    $statusarray['status'] = 'ERROR';
+    $statusarray['message'] = 'Not a valid project.';
+    Storage::delete("inbox/{$filename}");
+    return displayReturnStatus($statusarray, Response::HTTP_NOT_FOUND);
 }
 
 // Catch the fatal errors during submission
@@ -91,15 +180,12 @@ $project->Id = $projectid;
 $project->CheckForTooManyBuilds();
 
 // Check for valid authentication token if this project requires one.
-if ($authenticate_submissions && !valid_token_for_submission($projectid)) {
-    $message = "<cdash version=\"{$config->get('CDASH_VERSION')}\">
-    <status>ERROR</status>
-    <message>Invalid Token</message>
-    </cdash>";
-    return response($message, Response::HTTP_FORBIDDEN);
+if ($authenticate_submissions && !$authtoken->hashValidForProject($projectid)) {
+    $statusarray['status'] = 'ERROR';
+    $statusarray['message'] = 'Invalid Token';
+    Storage::delete("inbox/{$filename}");
+    return displayReturnStatus($statusarray, Response::HTTP_FORBIDDEN);
 }
-
-$expected_md5 = isset($_GET['MD5']) ? htmlspecialchars(pdo_real_escape_string($_GET['MD5'])) : '';
 
 // Check if CTest provided us enough info to assign a buildid.
 $pendingSubmissions = $service->create(PendingSubmissions::class);
@@ -132,18 +218,16 @@ if (isset($_GET['build']) && isset($_GET['site']) && isset($_GET['stamp'])) {
     $buildid = $build->Id;
 }
 
-$fp = request()->getContent(true);
-if ($config->get('CDASH_BERNARD_SUBMISSION')) {
-    // Use a message queue for asynchronous submission processing.
-    do_submit_queue($fp, $projectid, $buildid, $expected_md5);
-} elseif ($config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
-    // If the submission is asynchronous we store in the database.
-    do_submit_asynchronous($fp, $projectid, $buildid, $expected_md5);
-} else {
-    if (!is_null($buildid)) {
-        $pendingSubmissions->Increment();
-    }
-    do_submit($fp, $projectid, $buildid, $expected_md5, true);
+if (!is_null($buildid)) {
+    $pendingSubmissions->Increment();
 }
+ProcessSubmission::dispatch($filename, $projectid, $buildid, $expected_md5);
 fclose($fp);
 unset($fp);
+
+$statusarray['status'] = 'OK';
+$statusarray['message'] = '';
+if (!is_null($buildid)) {
+    $statusarray['buildId'] = $buildid;
+}
+return displayReturnStatus($statusarray, Response::HTTP_OK);

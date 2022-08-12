@@ -53,6 +53,11 @@ class ProjectPermissions
 
     public static function userCanViewProject(Project $project)
     {
+        return self::canViewProject($project, \Auth::user());
+    }
+
+    public static function canViewProject(Project $project, $user)
+    {
         if (!$project->Exists()) {
             return false;
         }
@@ -64,11 +69,9 @@ class ProjectPermissions
         }
 
         // If not a public project, return false if the user is not logged in.
-        if (!\Auth::check()) {
+        if (!$user) {
             return false;
         }
-
-        $user = \Auth::user();
 
         // Global admins have access to all projects.
         if ($user->IsAdmin()) {

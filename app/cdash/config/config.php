@@ -34,29 +34,6 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);
 // host for Selenium testing
 $CDASH_SELENIUM_HUB='localhost';
 
-/**
-  * If a Bernard Driver is available then CDASH_BERNARD_SUBMISSION can be enabled
-  * to allow processing of submissions to take place in the background on other
-  * machines.
-  * Note: Enabling these require CDASH_SERVER_NAME be set properly for emails, since they may
-  * be constructed on other machines (with a different SERVER_NAME).
-  **/
-$CDASH_BERNARD_SUBMISSION = false;
-$CDASH_BERNARD_DRIVER = false;
-$CDASH_BERNARD_CONSUMERS_WHITELIST = false;
-
-// EXPERIMENTAL: Whether or not to use Bernard for submitting coverage jobs
-$CDASH_BERNARD_COVERAGE_SUBMISSION = false;
-
-// Should we use asynchronous submission
-$CDASH_ASYNCHRONOUS_SUBMISSION = false;
-// How long to keep finished async submissions in the DB.
-// Set to 0 to delete them right away.
-$CDASH_ASYNC_EXPIRATION_TIME = 691200; // 8 days.
-// How many asynchronous workers to use.
-// Only increase this above 1 for MySQL (not Postgres).
-$CDASH_ASYNC_WORKERS = 1;
-
 // If CDash should use the SendGrid API for email
 $CDASH_USE_SENDGRID = false;
 // API Key for SendGrid
@@ -68,8 +45,6 @@ $CDASH_USE_HTTPS = '0';
 $CDASH_SERVER_NAME = '';
 // CSS file
 $CDASH_CSS_FILE = 'css/cdash.css';
-// Backup directory
-$CDASH_BACKUP_DIRECTORY = $CDASH_ROOT_DIR . '/backup';
 // Log directory
 $CDASH_LOG_DIRECTORY = $CDASH_ROOT_DIR . '/log';
 // Log file location. Set to false to log to the syslog.
@@ -78,9 +53,6 @@ $CDASH_LOG_FILE = $CDASH_LOG_DIRECTORY . '/cdash.log';
 $CDASH_UPLOAD_DIRECTORY = $CDASH_ROOT_DIR . '/public/upload';
 // Should normal user allowed to create projects
 $CDASH_USER_CREATE_PROJECTS = false;
-// Backup timeframe.
-// Set to '0' if you do not wish to backup parsed .xml files.
-$CDASH_BACKUP_TIMEFRAME = '48'; // 48 hours
 // Request full email address to add new users
 // instead of displaying a list
 $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';

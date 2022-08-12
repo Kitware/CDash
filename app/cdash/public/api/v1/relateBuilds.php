@@ -15,6 +15,7 @@
 =========================================================================*/
 require_once 'include/api_common.php';
 
+use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\BuildRelationship;
 use CDash\Model\Project;
@@ -71,8 +72,10 @@ if ($request_method == 'DELETE') {
 if ($request_method == 'POST') {
     // Check for valid authentication token if this project requires one.
     $project->Fill();
+
+    $authtoken = new AuthToken();
     if ($project->AuthenticateSubmissions &&
-            !valid_token_for_submission($project->Id)) {
+            !$authtoken->validForProject($project->Id)) {
         return;
     }
 

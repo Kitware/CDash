@@ -26,6 +26,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Tests\CreatesApplication;
@@ -94,7 +95,14 @@ class KWWebTestCase extends WebTestCase
 
     public function setUp()
     {
+        $this->removeParsedFiles();
         $this->startCodeCoverage();
+    }
+
+    public function removeParsedFiles()
+    {
+        $files = Storage::allFiles('parsed');
+        Storage::delete($files);
     }
 
     public function tearDown()

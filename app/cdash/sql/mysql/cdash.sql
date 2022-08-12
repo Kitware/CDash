@@ -1063,25 +1063,6 @@ CREATE TABLE IF NOT EXISTS `coveragefilepriority` (
 );
 
 
-CREATE TABLE IF NOT EXISTS `submission` (
-  `id` bigint(11) NOT NULL AUTO_INCREMENT,
-  `filename` varchar(500) NOT NULL,
-  `projectid` int(11) NOT NULL,
-  `status` tinyint(4) NOT NULL,
-  `attempts` int(11) NOT NULL DEFAULT '0',
-  `filesize` int(11) NOT NULL DEFAULT '0',
-  `filemd5sum` varchar(32) NOT NULL DEFAULT '',
-  `lastupdated` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
-  `created` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
-  `started` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
-  `finished` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
-  PRIMARY KEY (`id`),
-  KEY `projectid` (`projectid`),
-  KEY `status` (`status`),
-  KEY `finished` (`finished`)
-);
-
-
 CREATE TABLE IF NOT EXISTS `blockbuild` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `projectid` int(11) NOT NULL,
@@ -1120,14 +1101,6 @@ CREATE TABLE IF NOT EXISTS `filesum` (
 );
 
 
-CREATE TABLE IF NOT EXISTS `submissionprocessor` (
-  `projectid` int(11) NOT NULL,
-  `pid` int(11) NOT NULL,
-  `lastupdated` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
-  `locked` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
-  PRIMARY KEY (`projectid`)
-);
-
 CREATE TABLE IF NOT EXISTS `user2repository` (
   `userid` int(11) NOT NULL,
   `credential` varchar(255) NOT NULL,
@@ -1142,12 +1115,6 @@ CREATE TABLE IF NOT EXISTS `apitoken` (
   `token` varchar(40),
   `expiration_date` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
   KEY `token` (`token`)
-);
-
-CREATE TABLE IF NOT EXISTS `submission2ip` (
-  `submissionid` bigint(11) NOT NULL,
-  `ip` varchar(255) NOT NULL default '',
-  PRIMARY KEY (`submissionid`)
 );
 
 CREATE TABLE IF NOT EXISTS `measurement` (

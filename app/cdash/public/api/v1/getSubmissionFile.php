@@ -16,14 +16,13 @@
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 
-use CDash\Config;
-
-$config = Config::getInstance();
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Retrieve a file from a particular submission.
  * This includes XML files as well as coverage tarballs, which are temporarily
- * stored in CDASH_BACKUP_DIRECTORY.
+ * stored in storage/app/inbox.
  * These are temporarily stored files which are removed after they've been processed,
  * usually by a queue.
  *
@@ -34,21 +33,17 @@ $config = Config::getInstance();
  * filename=[string] Filename to retrieve, must live in tmp_submissions directory
  **/
 
-$whitelist = $config->get('CDASH_BERNARD_CONSUMERS_WHITELIST');
-if (is_array($whitelist) && !in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
-    http_response_code(403);
-    exit();
-} elseif (isset($_GET['filename'])) {
-    $filename = $config->get('CDASH_BACKUP_DIRECTORY') . '/' . basename($_REQUEST['filename']);
+if (!config('cdash.remote_workers')) {
+    return response('This feature is disabled', Response::HTTP_CONFLICT);
+}
 
+if (isset($_GET['filename'])) {
+    $filename = Storage::path('inbox') . '/' . basename($_REQUEST['filename']);
     if (!is_readable($filename)) {
-        add_log('couldn\'t find ' . $filename, 'getSubmissionFile', LOG_ERR);
-        http_response_code(404);
-        exit();
+        return response('Not found', Response::HTTP_NOT_FOUND);
     } else {
         exit(file_get_contents($filename));
     }
 } else {
-    http_response_code(400);
-    exit();
+    return response('Bad request', Response::HTTP_BAD_REQUEST);
 }

@@ -18,9 +18,9 @@ class CreateBuild2testTable extends Migration
                 $table->integer('buildid')->default(0);
                 $table->integer('testid')->default(0);
                 $table->string('status', 10)->default('');
-                $table->float('time', 7)->default(0.00);
-                $table->float('timemean', 7)->default(0.00);
-                $table->float('timestd', 7)->default(0.00);
+                $table->decimal('time', 7, 2)->default(0.00);
+                $table->decimal('timemean', 7, 2)->default(0.00);
+                $table->decimal('timestd', 7, 2)->default(0.00);
                 $table->tinyInteger('timestatus')->default(0);
                 $table->tinyInteger('newstatus')->default(0);
 

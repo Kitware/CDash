@@ -16,7 +16,12 @@
 namespace CDash\Model;
 
 use App\Models\User;
+use App\Services\ProjectPermissions;
+
 use CDash\Database;
+use CDash\Model\Project;
+
+use Illuminate\Support\Facades\Auth;
 
 require_once 'include/pdo.php';
 
@@ -34,7 +39,14 @@ class AuthToken
     public function __construct()
     {
         $this->Filled = false;
-        $this->PDO = Database::getInstance()->getPdo();
+        $this->PDO = null;
+    }
+
+    private function getPdo()
+    {
+        if (!$this->PDO) {
+            $this->PDO = Database::getInstance()->getPdo();
+        }
     }
 
     // Generate a new authentication token.
@@ -67,6 +79,7 @@ class AuthToken
         if (!$this->Hash) {
             return false;
         }
+        $this->getPdo();
         $stmt = $this->PDO->prepare(
             'SELECT COUNT(*) FROM authtoken WHERE hash = ?');
         pdo_execute($stmt, [$this->Hash]);
@@ -131,6 +144,7 @@ class AuthToken
             return false;
         }
 
+        $this->getPdo();
         $stmt = $this->PDO->prepare(
             'DELETE FROM authtoken WHERE hash = ? AND userid = ?');
         return pdo_execute($stmt, [$this->Hash, $this->UserId]);
@@ -147,6 +161,7 @@ class AuthToken
             return false;
         }
 
+        $this->getPdo();
         $stmt = $this->PDO->prepare(
             'SELECT * FROM authtoken WHERE hash = ?');
         if (!pdo_execute($stmt, [$this->Hash])) {
@@ -264,7 +279,7 @@ class AuthToken
     /**
      * Get access token from header.
      **/
-    private static function getBearerToken()
+    public static function getBearerToken()
     {
         $headers = AuthToken::getAuthorizationHeader();
         if (!empty($headers)) {
@@ -277,26 +292,79 @@ class AuthToken
     }
 
     // Check for the presence of a bearer token in the request.
-    // If one is found, return the corresponding userid.
-    // Otherwise return null.
+    // If one is found, set this->UserId.
+    // Otherwise return false.
     // If the specified token has expired it will be deleted.
     public function getUserIdFromRequest()
     {
         $token = AuthToken::getBearerToken();
         if (!$token) {
-            return null;
+            return false;
         }
 
         $this->Hash = $this->HashToken($token);
 
         if (!$this->Exists()) {
-            return null;
+            return false;
         }
         if ($this->Expired()) {
             $this->Delete();
-            return null;
+            return false;
         }
 
-        return $this->UserId;
+        return true;
+    }
+
+
+    /**
+     * Return true if the header contains a valid authentication token
+     * for this project.  Otherwise return false and set the appropriate
+     * response code.
+     **/
+    public function validForProject($projectid)
+    {
+        if (!$this->getUserIdFromRequest()) {
+            http_response_code(401);
+            return false;
+        }
+        return $this->userCanViewProject($projectid);
+    }
+
+    /**
+     * Return true if $this-Hash is valid for the given project.
+     **/
+    public function hashValidForProject($projectid)
+    {
+        if (!$this->Exists()) {
+            return false;
+        }
+        if ($this->Expired()) {
+            $this->Delete();
+            return false;
+        }
+        if (!User::find($this->UserId)) {
+            return false;
+        }
+        return $this->userCanViewProject($projectid);
+    }
+
+    /**
+     * Return true if $this->User can view the given project.
+     */
+    private function userCanViewProject($projectid)
+    {
+        // Make sure that the user associated with this token is allowed to access
+        // the project in question.
+        $project = new Project();
+        $project->Id = $projectid;
+        $project->Fill();
+
+        $user = new User();
+        $user->id = $this->UserId;
+        if (ProjectPermissions::canViewProject($project, $user)) {
+            return true;
+        }
+        http_response_code(403);
+        return false;
     }
 }

@@ -943,6 +943,13 @@ function addDailyChanges($projectid)
         cleanBuildEmail();
         cleanUserTemp();
 
+        // Delete old records from the failed jobs database table.
+        $dt = new \DateTime();
+        $dt->setTimestamp(time() - (config('cdash.backup_timeframe') * 3600));
+        \DB::table('failed_jobs')
+            ->where('failed_at', '<', $dt)
+            ->delete();
+
         // If the status of daily update is set to 2 that means we should send an email
         $query = pdo_query("SELECT status FROM dailyupdate WHERE projectid='$projectid' AND date='$date'");
         $dailyupdate_array = pdo_fetch_array($query);
@@ -980,8 +987,19 @@ function addDailyChanges($projectid)
 
         pdo_query("UPDATE dailyupdate SET status='1' WHERE projectid='$projectid' AND date='$date'");
 
-        // Clean the backup directory
-        clean_backup_directory();
+        // Clean the backup directories.
+        $timeframe = config('cdash.backup_timeframe');
+        $dirs_to_clean = ['parsed', 'failed'];
+        foreach ($dirs_to_clean as $dir_to_clean) {
+            $files = Storage::allFiles($dir_to_clean);
+            foreach ($files as $filename) {
+                $filepath = Storage::path($filename);
+                if (file_exists($filepath) && is_file($filepath) &&
+                        time() - filemtime($filepath) > $timeframe * 3600) {
+                    cdash_unlink($filepath);
+                }
+            }
+        }
 
         // Delete expired authentication tokens.
         pdo_query('DELETE FROM authtoken WHERE expires < NOW()');
