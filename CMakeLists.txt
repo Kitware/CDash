@@ -124,6 +124,7 @@ DB_DATABASE=cdash4simpletest
 DB_HOST=${CDASH_DB_HOST}
 DB_PASSWORD=${CDASH_DB_PASS}
 DB_USERNAME=${CDASH_DB_LOGIN}
+REGISTRATION_EMAIL_VERIFY=false
 ")
 
 # Next copy in the contents from our example file.
