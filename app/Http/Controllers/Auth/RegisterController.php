@@ -50,9 +50,10 @@ class RegisterController extends Controller
         // We can route a user here with our form pre-populated
         $params = [
             'title' => 'Register',
+            'js_version' => self::getJsVersion(),
             'fname' => $request->get('fname'),
             'lname' => $request->get('lname'),
-            'email' => $request->get('email')
+            'email' => $request->get('email'),
         ];
         return view('auth.register', $params);
     }
@@ -138,6 +139,7 @@ class RegisterController extends Controller
                     [
                         'errors' => $e->validator->getMessageBag(),
                         'title' => 'Register',
+                        'js_version' => self::getJsVersion(),
                         'fname' => $request->get('fname'),
                         'lname' => $request->get('lname'),
                         'email' => $request->get('email'),
