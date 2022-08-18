@@ -30,32 +30,6 @@ class EmailTestCase extends KWWebTestCase
 
     public function testRegisterUser()
     {
-        /* Test 'register user' belongs in the register user test and not the email test
-        $url = $this->url . '/register.php';
-        $content = $this->connect($url);
-        if ($content == false) {
-            return;
-        }
-
-        $this->setField('fname', 'Firstname');
-        $this->setField('lname', 'Lastname');
-        $this->setField('email', 'user1@kw');
-        $this->setField('passwd', 'user1');
-        $this->setField('passwd2', 'user1');
-        $this->setField('institution', 'Kitware Inc');
-        $this->clickSubmitByName('sent', array('url' => 'catchbot'));
-
-        // Make sure the user was created successfully.
-        if (!$this->userExists('user1@kw')) {
-            $this->fail("Failed to register new user");
-        }
-
-        // Login as the user.
-        $this->login('user1@kw', 'user1');
-        */
-
-        // If we want to test the app if registration works, that sort of thing belongs in a
-        // registration works test.
         $this->deleteLog($this->logfilename);
 
         $user = $this->createUser([
