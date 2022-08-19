@@ -212,6 +212,7 @@ CDash.filter("showEmptyBuildsLast", function () {
     $scope.cdash.extrafilterurl = '';
     if ($scope.cdash.sharelabelfilters) {
       $scope.cdash.extrafilterurl = filters.getLabelString($scope.cdash.filterdata);
+      $scope.cdash.querytestfilters = $scope.cdash.extrafilterurl;
     }
 
     // Read simple/advanced view cookie setting.

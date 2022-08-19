@@ -157,6 +157,12 @@ export default {
 
   mounted() {
     this.$root.$on('api-loaded', cdash => {
+      this.handleApiResponse(cdash);
+    });
+  },
+
+  methods: {
+    handleApiResponse: function (cdash) {
       var extraurl = '';
       if (cdash.extraurl) {
         extraurl = cdash.extraurl;
@@ -164,6 +170,7 @@ export default {
       var extrafilterurl = '';
       if (cdash.extrafilterurl) {
         extrafilterurl = cdash.extrafilterurl;
+        cdash.querytestfilters = extrafilterurl;
       }
 
       if (cdash.menu.back) {
@@ -190,9 +197,9 @@ export default {
       this.testsUrl = `${this.$baseURL}/testOverview.php?project=${cdash.projectname_encoded}&date=${cdash.date}${extraurl}`;
 
       if (cdash.parentid > 0) {
-        this.testQueryUrl = `${this.$baseURL}/queryTests.php?project=${cdash.projectname_encoded}&parentid=${cdash.parentid}${extraurl}${extrafilterurl}`;
+        this.testQueryUrl = `${this.$baseURL}/queryTests.php?project=${cdash.projectname_encoded}&parentid=${cdash.parentid}${extraurl}${cdash.querytestfilters}`;
       } else {
-        this.testQueryUrl = `${this.$baseURL}/queryTests.php?project=${cdash.projectname_encoded}&date=${cdash.date}${extraurl}${extrafilterurl}`;
+        this.testQueryUrl = `${this.$baseURL}/queryTests.php?project=${cdash.projectname_encoded}&date=${cdash.date}${extraurl}${cdash.querytestfilters}`;
       }
 
       this.statisticsUrl = `${this.$baseURL}/userStatistics.php?project=${cdash.projectname_encoded}&date=${cdash.date}`;
@@ -222,9 +229,8 @@ export default {
         this.subProjectSettingsUrl = `${this.$baseURL}/manageSubProject.php?projectid=${cdash.projectid}`;
         this.overviewSettingsUrl = `${this.$baseURL}/manageOverview.php?projectid=${cdash.projectid}`;
       }
-    });
+    },
   },
-
 }
 </script>
 

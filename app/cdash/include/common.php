@@ -1680,6 +1680,7 @@ function begin_JSON_response()
     }
     $user_response['id'] = $userid;
     $response['user'] = $user_response;
+    $response['querytestfilters'] = '&filtercount=1&showfilters=1&field1=status&compare1=62&value1=Passed';
     return $response;
 }
 

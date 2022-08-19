@@ -37,6 +37,9 @@ CDash.controller('QueryTestsController',
 
       // Check for label filters
       $scope.cdash.extrafilterurl = filters.getLabelString($scope.cdash.filterdata);
+      if ($scope.cdash.extrafilterurl) {
+        $scope.cdash.querytestfilters = $scope.cdash.extrafilterurl;
+      }
       $scope.cdash.builds = $filter('orderBy')($scope.cdash.builds, $scope.orderByFields);
       $scope.pageChanged();
     };

@@ -5,6 +5,13 @@ describe("viewTest", function() {
     expect(browser.getPageSource()).toContain("kwsys.testHashSTL");
   });
 
+  it("shows link to queryTests.php", function() {
+    browser.get('viewTest.php?buildid=1');
+    browser.actions().mouseMove(element(by.linkText('Dashboard'))).perform();
+    var link = element(by.linkText('Tests Query'));
+    expect(link.getAttribute('href')).toContain('&filtercount=1&showfilters=1&field1=status&compare1=62&value1=Passed');
+  });
+
   describe("Missing Tests", function() {
 
     beforeEach(async function() {

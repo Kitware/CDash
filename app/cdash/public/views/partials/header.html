@@ -72,8 +72,8 @@
               </a>
             </li>
             <li>
-              <a ng-if="cdash.parentid <= 0"
-                 ng-href="queryTests.php?project={{::cdash.projectname_encoded}}&date={{::cdash.date}}{{::cdash.extraurl}}{{::cdash.extrafilterurl}}">
+              <a ng-if="!cdash.parentid || cdash.parentid <= 0"
+                 ng-href="queryTests.php?project={{::cdash.projectname_encoded}}&date={{::cdash.date}}{{::cdash.extraurl}}{{::cdash.querytestfilters}}">
                 Tests Query
               </a>
               <a ng-if="cdash.parentid > 0"
