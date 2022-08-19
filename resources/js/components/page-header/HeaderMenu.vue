@@ -157,6 +157,12 @@ export default {
 
   mounted() {
     this.$root.$on('api-loaded', cdash => {
+      this.handleApiResponse(cdash);
+    });
+  },
+
+  methods: {
+    handleApiResponse: function (cdash) {
       var extraurl = '';
       if (cdash.extraurl) {
         extraurl = cdash.extraurl;
@@ -223,9 +229,8 @@ export default {
         this.subProjectSettingsUrl = `${this.$baseURL}/manageSubProject.php?projectid=${cdash.projectid}`;
         this.overviewSettingsUrl = `${this.$baseURL}/manageOverview.php?projectid=${cdash.projectid}`;
       }
-    });
+    },
   },
-
 }
 </script>
 
