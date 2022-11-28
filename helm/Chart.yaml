@@ -1,0 +1,12 @@
+name: CDash
+description: A Helm Chart to install a CDash instance.
+icon: https://www.cdash.org/wp-content/uploads/2019/05/CDash-logo-header.png
+version: 3.1.0
+apiVersion: v1
+keywords:
+  - CDash
+  - testing server
+  - open source
+sources:
+  - https://github.com/Kitware/CDash
+home: https://www.cdash.org/

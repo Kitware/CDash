@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.version: 1.27.0 (b0ed6a2c9)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: cdash
+    app.kubernetes.io/name: cdash
+  name: cdash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: cdash
+      app.kubernetes.io/name: cdash
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -c
+        kompose.version: 1.27.0 (b0ed6a2c9)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: cdash
+        app.kubernetes.io/name: cdash
+    spec:
+      containers:
+        - env:
+            - name: CDASH_ROOT_ADMIN_PASS
+              value: secret
+            - name: CDASH_STATIC_USERS
+              value: |
+                USER jdoe@acme.com jdoe_secret
+                  John Doe "ACME Inc."
+
+                ADMIN {{ .Values.adminEmail }} {{ .Values.adminSecret}}
+                  Admin User "Example Foundation"
+
+                donotreply@example.org oldsecret newsecret
+
+                strange.name@gmail.com strange_secret
+                INFO Str@nge N@me "Str@nge Rese@rch Gr0up LLC."
+
+                DELETE remove.this.user@example.org delete_secret
+          image: {{ .Values.dockerImage }}
+          name: cdash
+          ports:
+            - containerPort: 80
+          resources: {}
+      restartPolicy: Always
+status: {}

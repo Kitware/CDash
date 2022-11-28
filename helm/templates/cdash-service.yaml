@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.version: 1.27.0 (b0ed6a2c9)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: cdash
+  name: cdash
+spec:
+  type: LoadBalancer
+  selector:
+    app: cdash
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 80
+  selector:
+    io.kompose.service: cdash
+status:
+  loadBalancer: {}

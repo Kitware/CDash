@@ -1,0 +1,3 @@
+adminEmail: admin@example.org
+adminSecret: admin_secret
+dockerImage: kitware/cdash
