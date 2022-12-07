@@ -144,6 +144,10 @@ if ($expected_md5) {
 try {
     $pdo = \DB::connection()->getPdo();
 } catch (\Exception $e) {
+    // Write a marker file so we know to process these files when the DB comes back up.
+    if (!Storage::exists("DB_WAS_DOWN")) {
+        Storage::put("DB_WAS_DOWN", "");
+    }
     $statusarray['status'] = 'ERROR';
     $statusarray['message'] = 'Cannot connect to the database.';
     return displayReturnStatus($statusarray, Response::HTTP_SERVICE_UNAVAILABLE);
@@ -224,6 +228,12 @@ if (!is_null($buildid)) {
 ProcessSubmission::dispatch($filename, $projectid, $buildid, $expected_md5);
 fclose($fp);
 unset($fp);
+
+// Check for marker file to see if we need to queue deferred submissions.
+if (Storage::exists("DB_WAS_DOWN")) {
+    Storage::delete("DB_WAS_DOWN");
+    Artisan::call('submission:queue');
+}
 
 $statusarray['status'] = 'OK';
 $statusarray['message'] = '';

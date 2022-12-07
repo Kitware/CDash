@@ -32,6 +32,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->Fill();
 
         $this->token = '';
+        $this->dataDir = dirname(__FILE__) . '/data/DeferredSubmission';
     }
 
     public function __destruct()
@@ -47,10 +48,9 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         file_put_contents($this->ConfigFile, "DB_DATABASE=cdash4simpletestfake\n", FILE_APPEND | LOCK_EX);
 
         // Submit the build files.
-        $dir = dirname(__FILE__) . '/data/DeferredSubmission';
-        $this->submission($this->projectname, "$dir/Build.xml");
-        $this->submission($this->projectname, "$dir/Configure.xml");
-        $this->submission($this->projectname, "$dir/Test.xml");
+        $this->submission($this->projectname, "$this->dataDir/Build.xml");
+        $this->submission($this->projectname, "$this->dataDir/Configure.xml");
+        $this->submission($this->projectname, "$this->dataDir/Test.xml");
 
         // Verify that files exist in the inbox directory.
         $this->assertEqual(3, count(Storage::files('inbox')));
@@ -58,9 +58,10 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Restore original database configuration.
         file_put_contents($this->ConfigFile, $this->Original);
 
-        // Exercise the Artisan command to queue the previously submitted files.
-        // This also parses them since we're currently configured for synchronous submissions.
-        Artisan::call('submission:queue');
+        // Submit one more file.
+        // This automatically parses the deferred files now that the database
+        // is available again.
+        $this->submission($this->projectname, "$this->dataDir/Notes.xml");
 
         // Verify the results.
         $this->verifyNormalSubmission();
@@ -141,11 +142,10 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         file_put_contents($this->ConfigFile, "DB_DATABASE=cdash4simpletestfake\n", FILE_APPEND | LOCK_EX);
 
         // Submit test data with bearer token.
-        $dir = dirname(__FILE__) . '/data/DeferredSubmission';
         $header = ["Authorization: Bearer {$this->token}"];
-        $this->submission($this->projectname, "$dir/Build.xml", $header);
-        $this->submission($this->projectname, "$dir/Configure.xml", $header);
-        $this->submission($this->projectname, "$dir/Test.xml", $header);
+        $this->submission($this->projectname, "$this->dataDir/Build.xml", $header);
+        $this->submission($this->projectname, "$this->dataDir/Configure.xml", $header);
+        $this->submission($this->projectname, "$this->dataDir/Test.xml", $header);
 
         // Verify that files exist in the inbox directory.
         $this->assertEqual(3, count(Storage::files('inbox')));
@@ -153,9 +153,10 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Restore original database configuration.
         file_put_contents($this->ConfigFile, $this->Original);
 
-        // Exercise the Artisan command to queue the previously submitted files.
-        // This also parses them since we're currently configured for synchronous submissions.
-        Artisan::call('submission:queue');
+        // Submit one more file.
+        // This automatically parses the deferred files now that the database
+        // is available again.
+        $this->submission($this->projectname, "$this->dataDir/Notes.xml", $header);
 
         // Verify the results.
         $this->verifyNormalSubmission();
@@ -177,9 +178,8 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         file_put_contents($this->ConfigFile, "DB_DATABASE=cdash4simpletestfake\n", FILE_APPEND | LOCK_EX);
 
         // Submit test data with invalid bearer token.
-        $dir = dirname(__FILE__) . '/data/DeferredSubmission';
         $header = ["Authorization: Bearer asdf"];
-        $this->submission($this->projectname, "$dir/Build.xml", $header);
+        $this->submission($this->projectname, "$this->dataDir/Build.xml", $header);
 
         // Verify that files exist in the inbox directory.
         $this->assertEqual(1, count(Storage::files('inbox')));
@@ -187,9 +187,11 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Restore original database configuration.
         file_put_contents($this->ConfigFile, $this->Original);
 
-        // Exercise the Artisan command to queue the previously submitted files.
-        // This also parses them since we're currently configured for synchronous submissions.
-        Artisan::call('submission:queue');
+        // Submit one more file.
+        // This automatically parses the deferred files now that the database
+        // is available again.
+        $valid_header = ["Authorization: Bearer {$this->token}"];
+        $this->submission($this->projectname, "$this->dataDir/Notes.xml", $valid_header);
 
         // Verify one failed submission.
         $this->assertEqual(1, count(Storage::files('failed')));
@@ -211,9 +213,8 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         file_put_contents($this->ConfigFile, "DB_DATABASE=cdash4simpletestfake\n", FILE_APPEND | LOCK_EX);
 
         // Submit test data with invalid bearer token.
-        $dir = dirname(__FILE__) . '/data/DeferredSubmission';
         $header = [];
-        $this->submission($this->projectname, "$dir/Build.xml", $header);
+        $this->submission($this->projectname, "$this->dataDir/Build.xml", $header);
 
         // Verify that files exist in the inbox directory.
         $this->assertEqual(1, count(Storage::files('inbox')));
@@ -221,9 +222,11 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Restore original database configuration.
         file_put_contents($this->ConfigFile, $this->Original);
 
-        // Exercise the Artisan command to queue the previously submitted files.
-        // This also parses them since we're currently configured for synchronous submissions.
-        Artisan::call('submission:queue');
+        // Submit one more file.
+        // This automatically parses the deferred files now that the database
+        // is available again.
+        $valid_header = ["Authorization: Bearer {$this->token}"];
+        $this->submission($this->projectname, "$this->dataDir/Notes.xml", $valid_header);
 
         // Verify one failed submission.
         $this->assertEqual(1, count(Storage::files('failed')));
@@ -231,7 +234,6 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->AuthenticateSubmissions = false;
         $this->project->Save();
     }
-
 
     public function testDeferredUnparsedSubmission()
     {
@@ -255,9 +257,10 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Restore original database configuration.
         file_put_contents($this->ConfigFile, $this->Original);
 
-        // Exercise the Artisan command to queue the previously submitted files.
-        // This also parses them since we're currently configured for synchronous submissions.
-        Artisan::call('submission:queue');
+        // Submit one more file.
+        // This automatically parses the deferred files now that the database
+        // is available again.
+        $this->submission($this->projectname, "$this->dataDir/Notes.xml");
 
         // Get the newly created buildid.
         $build_row = \DB::table('build')
@@ -303,9 +306,11 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Restore original database configuration.
         file_put_contents($this->ConfigFile, $this->Original);
 
-        // Exercise the Artisan command to queue the previously submitted files.
-        // This also parses them since we're currently configured for synchronous submissions.
-        Artisan::call('submission:queue');
+        // Submit one more file.
+        // This automatically parses the deferred files now that the database
+        // is available again.
+        $valid_header = ["Authorization: Bearer {$this->token}"];
+        $this->submission($this->projectname, "$this->dataDir/Notes.xml", $valid_header);
 
         // Get the newly created buildid.
         $build_row = \DB::table('build')
@@ -354,9 +359,11 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Restore original database configuration.
         file_put_contents($this->ConfigFile, $this->Original);
 
-        // Exercise the Artisan command to queue the previously submitted files.
-        // This also parses them since we're currently configured for synchronous submissions.
-        Artisan::call('submission:queue');
+        // Submit one more file.
+        // This automatically parses the deferred files now that the database
+        // is available again.
+        $valid_header = ["Authorization: Bearer {$this->token}"];
+        $this->submission($this->projectname, "$this->dataDir/Notes.xml", $valid_header);
 
         // Verify two failed submission files.
         $this->assertEqual(2, count(Storage::files('failed')));
@@ -395,9 +402,11 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Restore original database configuration.
         file_put_contents($this->ConfigFile, $this->Original);
 
-        // Exercise the Artisan command to queue the previously submitted files.
-        // This also parses them since we're currently configured for synchronous submissions.
-        Artisan::call('submission:queue');
+        // Submit one more file.
+        // This automatically parses the deferred files now that the database
+        // is available again.
+        $valid_header = ["Authorization: Bearer {$this->token}"];
+        $this->submission($this->projectname, "$this->dataDir/Notes.xml", $valid_header);
 
         // Verify two failed submission files.
         $this->assertEqual(2, count(Storage::files('failed')));

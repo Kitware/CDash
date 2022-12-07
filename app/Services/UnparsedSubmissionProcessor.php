@@ -89,6 +89,11 @@ class UnparsedSubmissionProcessor
             $uuid = \Illuminate\Support\Str::uuid()->toString();
             $this->serializeBuildMetadata($uuid);
 
+            // Write a marker file so we know to process these files when the DB comes back up.
+            if (!Storage::exists("DB_WAS_DOWN")) {
+                Storage::put("DB_WAS_DOWN", "");
+            }
+
             // Respond with success even though the database is down so that CTest will
             // proceed to upload the data file.
             $response_array['status'] = 0;
@@ -264,6 +269,10 @@ class UnparsedSubmissionProcessor
             $this->projectname = $projectname;
             $this->inboxdatafilename = "inbox/{$this->projectname}_{$this->token}_{$this->type}_{$this->buildid}_{$this->md5}_.$ext";
             $this->serializeDataFileParameters();
+
+            if (!Storage::exists("DB_WAS_DOWN")) {
+                Storage::put("DB_WAS_DOWN", "");
+            }
         }
 
         // Write this file to the inbox directory.
@@ -285,6 +294,12 @@ class UnparsedSubmissionProcessor
         if ($this->populateBuildFileRow() === true) {
             $filename = str_replace('inbox/', '', $this->inboxdatafilename);
             ProcessSubmission::dispatch($filename, $this->project->Id, $this->build->Id, $this->md5);
+        }
+
+        // Check for marker file to see if we need to queue deferred submissions.
+        if (Storage::exists("DB_WAS_DOWN")) {
+            Storage::delete("DB_WAS_DOWN");
+            Artisan::call('submission:queue');
         }
     }
 

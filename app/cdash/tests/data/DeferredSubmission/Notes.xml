@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="deferred_submission"  BuildStamp="20220519-1920-Experimental" Name="hesperides.kitware" Generator="ctest-3.23">
+	<Notes>
+		<Note Name="my_note.txt">
+		  <Time>1652988059</Time>
+		  <DateTime>May 19 15:20 EDT</DateTime>
+			<Text>this is my note
+</Text>
+		</Note>
+	</Notes>
+</Site>
