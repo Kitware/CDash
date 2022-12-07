@@ -56,7 +56,7 @@ test('HeaderMenu has a "Builds" link', () => {
 });
 
 test('HeaderMenu has a "Tests Query" link', () => {
-  var expected = "http://localhost/queryTests.php?project=TestProject&date=2022-08-19&filtercount=1&showfilters=1&field1=status&compare1=62&value1=Passed";
+  var expected = `http://localhost/queryTests.php?project=TestProject&date=${today}&filtercount=1&showfilters=1&field1=status&compare1=62&value1=Passed`;
   expect(component.vm.testQueryUrl).toBe(expected);
   verifyLink(expected, 'Tests Query');
 });
