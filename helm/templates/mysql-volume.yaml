@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  creationTimestamp: null
+  name: mysql-data-volume
+spec:
+  storageClassName: manual
+  capacity:
+    storage: {{ .Values.mysqlVolumeSize }}
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"

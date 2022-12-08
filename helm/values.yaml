@@ -1,3 +1,6 @@
 adminEmail: admin@example.org
 adminSecret: admin_secret
 dockerImage: kitware/cdash
+
+mysqlVolumeSize: 10Gi
+requestedVolumeClaimSize: 3Gi
