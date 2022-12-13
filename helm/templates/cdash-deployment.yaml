@@ -30,6 +30,8 @@ spec:
         - env:
             - name: CDASH_ROOT_ADMIN_PASS
               value: secret
+            - name: APP_URL
+              value: {{ .Values.applicationURL }}
             - name: CDASH_STATIC_USERS
               value: |
                 USER jdoe@acme.com jdoe_secret

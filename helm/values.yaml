@@ -4,3 +4,6 @@ dockerImage: kitware/cdash
 
 mysqlVolumeSize: 10Gi
 requestedVolumeClaimSize: 3Gi
+
+# Sets the base url for CDash, where redirects will attempt to resolve to.
+applicationURL: http://localhost
