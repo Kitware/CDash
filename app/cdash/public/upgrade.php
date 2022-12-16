@@ -50,6 +50,7 @@ $xml .= '<minversion>' . $version_array['major'] . '.' . $version_array['minor']
 
 @$Upgrade = $_POST['Upgrade'];
 @$Cleanup = $_POST['Cleanup'];
+@$Dependencies = $_POST['Dependencies'];
 
 if (!config('database.default')) {
     $db_type = 'mysql';
@@ -418,6 +419,12 @@ if ($ComputeUpdateStatistics) {
         $xml .= add_XML_value('alert', 'Wrong number of days.');
     }
 }
+
+if ($Dependencies) {
+    $returnVal = Artisan::call("dependencies:update");
+    $xml .= add_XML_value('alert', "The call to update CDash's dependencies was run. The call exited with value: $returnVal");
+}
+
 
 /* Cleanup the database */
 if ($Cleanup) {
