@@ -18,7 +18,7 @@
     "ext-pdo": "*",
     "ext-posix": "*",
     "ext-xsl": "*",
-    "adldap2/adldap2-laravel": "6.0.8",
+    "adldap2/adldap2-laravel": "6.*",
     "aws/aws-sdk-php": "^3.57",
     "doctrine/dbal": "^2.5",
     "fideloper/proxy": "^4.0",
@@ -26,11 +26,11 @@
     "guzzlehttp/guzzle": "6.*",
     "iron-io/iron_mq": "~2.0",
     "knplabs/github-api": "^3.2",
-    "laravel/framework": "6.20.42",
+    "laravel/framework": "^7.0",
+    "laravel/ui": "*",
     "lcobucci/jwt": "3.2.0",
     "league/oauth2-github": "^2.0",
     "league/oauth2-google": "^2.0",
-    "monolog/monolog": "~1.19",
     "nyholm/psr7": "^1.4",
     "omines/oauth2-gitlab": "^3.1",
     "paragonie/random_compat": "2.0.4",
@@ -42,13 +42,12 @@
     "sendgrid/sendgrid": "5.0.4"
   },
   "require-dev": {
-    "beyondcode/laravel-dump-server": "^1.0",
+    "ext-dom": "*",
     "ext-gd": "*",
     "ext-xdebug": "*",
-    "ext-dom": "*",
     "fzaninotto/faker": "^1.4",
     "mockery/mockery": "^1.0",
-    "phpunit/phpunit": "^7.0"
+    "phpunit/phpunit": "^8.5"
   },
   "suggest": {
     "ext-memcached": "",

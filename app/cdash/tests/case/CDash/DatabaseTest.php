@@ -10,14 +10,14 @@ class DatabaseTest extends CDashTestCase
 {
     private static $_backup;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         parent::setUpBeforeClass();
         $log = new TestLog();
         Log::setInstance(Log::class, $log);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void
     {
         Config::setInstance(Config::class, null);
         Log::setInstance(Log::class, null);

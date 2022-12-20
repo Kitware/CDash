@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Adldap\Connections\ConnectionInterface;
+use Adldap\Connections\Ldap;
 use Adldap\Laravel\Facades\Adldap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -26,9 +26,7 @@ abstract class LdapTest extends TestCase
 
     protected function makeLdapUser(array $attributes = [])
     {
-        $mock_ldap = $this->getMockBuilder(ConnectionInterface::class)
-            ->getMockForAbstractClass();
-
+        $mock_ldap = $this->getMockBuilder(Ldap::class)->getMock();
         $provider = config('ldap_auth.connection');
         $user = Adldap::getProvider($provider)->make()->user($attributes);
         $user->getQuery()->setConnection($mock_ldap);

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log as LogFacade;
 
 class LogTest extends CDashTestCase
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         parent::setUpBeforeClass();
     }

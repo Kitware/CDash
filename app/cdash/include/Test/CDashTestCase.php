@@ -43,7 +43,7 @@ class CDashTestCase extends TestCase
     /** @var String $endpoint */
     private $endpoint;
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void
     {
         ServiceContainer::setInstance(ServiceContainer::class, self::$originalServiceContainer);
         parent::tearDownAfterClass();
