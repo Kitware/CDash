@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateLabel2testTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

@@ -161,8 +161,8 @@ class ProjectHandler extends AbstractHandler
                         $subProjectToRemove->SetId($previousId);
                         $subProjectToRemove->Delete();
                         add_log("Deleted " . $subProjectToRemove->GetName() . " because it was not mentioned in Project.xml",
-                                'ProjectHandler:endElement', LOG_WARNING,
-                                $this->projectid);
+                            'ProjectHandler:endElement', LOG_WARNING,
+                            $this->projectid);
                     }
                 }
             }

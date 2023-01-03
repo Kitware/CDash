@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateImageTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

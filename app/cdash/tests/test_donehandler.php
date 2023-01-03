@@ -1,5 +1,6 @@
 <?php
-require_once dirname(__FILE__) . '/cdash_test_case.php'; require_once 'include/common.php';
+require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once 'include/common.php';
 require_once 'include/ctestparser.php';
 require_once 'include/pdo.php';
 
@@ -60,7 +61,7 @@ class DoneHandlerTestCase extends KWWebTestCase
         fwrite($handle, "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Done><buildId>$build->Id</buildId><time>$timestamp</time></Done>");
         fclose($handle);
         $received_buildid = $this->submission_assign_buildid(
-                $tmpfname, 'InsightExample', $buildname, $site->GetName(), $stamp);
+            $tmpfname, 'InsightExample', $buildname, $site->GetName(), $stamp);
         if ($remote) {
             Artisan::call('queue:work --once');
         }

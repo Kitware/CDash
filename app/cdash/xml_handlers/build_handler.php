@@ -339,11 +339,11 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
         } elseif ($parent == 'RESULT') {
             switch ($element) {
                 case 'STDOUT':
-                        $this->Error->StdOutput .= $data;
+                    $this->Error->StdOutput .= $data;
                     break;
 
                 case 'STDERR':
-                        $this->Error->StdError .= $data;
+                    $this->Error->StdError .= $data;
                     break;
 
                 case 'EXITCONDITION':

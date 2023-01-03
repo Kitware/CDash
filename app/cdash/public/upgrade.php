@@ -326,7 +326,6 @@ if (isset($_GET['upgrade-2-8'])) {
 
 // 3.0 Upgrade
 if (isset($_GET['upgrade-3-0'])) {
-
     // Add Laravel required columns to user and password tables.
     AddTableField('user', 'updated_at', 'TIMESTAMP', 'TIMESTAMP', '1980-01-01 00:00:00');
     AddTableField('user', 'created_at', 'TIMESTAMP', 'TIMESTAMP', '1980-01-01 00:00:00');

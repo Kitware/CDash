@@ -68,8 +68,8 @@ if (isset($_POST['saveLayout'])) {
     if (!is_null($inputRows)) {
         // Remove any old overview layout from this project.
         pdo_query(
-                'DELETE FROM overview_components WHERE projectid=' .
-                qnum(pdo_real_escape_numeric($projectid)));
+            'DELETE FROM overview_components WHERE projectid=' .
+            qnum(pdo_real_escape_numeric($projectid)));
         add_last_sql_error('manageOverview::saveLayout::DELETE', $projectid);
 
         // Construct a query to insert the new layout.

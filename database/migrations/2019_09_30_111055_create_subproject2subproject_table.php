@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateSubproject2subprojectTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

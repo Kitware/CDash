@@ -216,7 +216,7 @@ class TestHistoryTestCase extends KWWebTestCase
         // Get the IDs for the five builds that we just created.
         $builds = \DB::select(
             DB::raw(
-            "SELECT b.id AS buildid, b2g.groupid
+                "SELECT b.id AS buildid, b2g.groupid
             FROM build b
             JOIN build2group b2g ON (b2g.buildid = b.id)
             WHERE name='TestHistory'
@@ -233,8 +233,8 @@ class TestHistoryTestCase extends KWWebTestCase
         $url = "{$this->url}/api/v1/viewTest.php?buildid={$buildids[4]}&groupid={$groupid}&previous_builds=exit(1)&projectid={$this->project->Id}&tests%5B%5D=fails&tests%5B%5D=flaky&tests%5B%5D=notrun&tests%5B%5D=passes&tests%5B%5D=sporadic&time_begin=2015-11-16T01:00:00&time_end=2015-11-17T01:00:00";
         $client = $this->getGuzzleClient();
         $response = $client->request('GET',
-                $url,
-                ['http_errors' => false]);
+            $url,
+            ['http_errors' => false]);
         $expected = '     {"tests":[{"name":"fails","summary":"Broken","summaryclass":"error"},{"name":"flaky","summary":"Unstable","summaryclass":"warning"},{"name":"notrun","summary":"Inactive","summaryclass":"warning"},{"name":"passes","summary":"Stable","summaryclass":"normal"},{"name":"sporadic","summary":"Stable","summaryclass":"normal"}]}';
         $this->assertEqual($expected, $response->getBody());
 
@@ -243,8 +243,8 @@ class TestHistoryTestCase extends KWWebTestCase
         $url = "{$this->url}/api/v1/viewTest.php?buildid={$buildids[4]}&groupid={$groupid}&previous_builds={$previous_buildids}&projectid={$this->project->Id}&tests%5B%5D=fails&tests%5B%5D=flaky&tests%5B%5D=notrun&tests%5B%5D=passes&tests%5B%5D=sporadic&time_begin=2015-11-16T01:00:00&time_end=2015-11-17T01:00:00";
         $client = $this->getGuzzleClient();
         $response = $client->request('GET',
-                $url,
-                ['http_errors' => false]);
+            $url,
+            ['http_errors' => false]);
         $jsonobj = json_decode($response->getBody(), true);
         foreach ($jsonobj['tests'] as $test) {
             $history = $test['history'];

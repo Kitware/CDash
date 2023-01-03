@@ -196,7 +196,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
 
         // Get parentid.
         $row = pdo_single_row_query(
-                "SELECT id FROM build
+            "SELECT id FROM build
                 WHERE name = 'Aggregate Coverage' AND
                 parentid=-1 AND
                 projectid=

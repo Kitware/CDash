@@ -157,7 +157,7 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
         // Delete builds.
         $pdo = get_link_identifier()->getPdo();
         $stmt = $pdo->prepare(
-                "SELECT id FROM build WHERE name='GithubUserStats'");
+            "SELECT id FROM build WHERE name='GithubUserStats'");
         $stmt->execute();
         while ($row = $stmt->fetch()) {
             remove_build($row['id']);

@@ -75,7 +75,7 @@ class Site
             }
         }
         $stmt = $this->PDO->prepare(
-                'SELECT id FROM site WHERE name = :name');
+            'SELECT id FROM site WHERE name = :name');
         pdo_execute($stmt, [':name' => $this->Name]);
         $id = $stmt->fetchColumn();
         if ($id !== false) {
@@ -125,7 +125,7 @@ class Site
 
             // Otherwise log the error and return false.
             add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(),
-                    'Site::Update', LOG_ERR);
+                'Site::Update', LOG_ERR);
             return false;
         }
     }
@@ -208,7 +208,7 @@ class Site
             }
             // Otherwise log the error and return false.
             add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(),
-                    'Site::Update', LOG_ERR);
+                'Site::Update', LOG_ERR);
             return false;
         }
     }

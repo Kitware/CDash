@@ -108,7 +108,7 @@ class CDashTestCase extends TestCase
             ->will($this->returnCallback(function ($arg) {
                 return "'" . $arg . "'";
             })
-        );
+            );
 
         Database::setInstance(Database::class, $mock_pdo);
     }

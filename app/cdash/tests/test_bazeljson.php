@@ -25,7 +25,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
                         configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
@@ -107,7 +107,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
                         configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
@@ -173,7 +173,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the parent build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
                         configureerrors, configurewarnings
                 FROM build WHERE id = $parentid");
         $row = $stmt->fetch();
@@ -195,7 +195,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the children builds.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
                         configureerrors, configurewarnings,
                         sp.name
                 FROM build b
@@ -255,7 +255,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
                         configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
@@ -311,7 +311,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
                         configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
@@ -367,7 +367,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
                         configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
@@ -403,7 +403,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
                         configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
@@ -439,7 +439,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
                         configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
@@ -484,7 +484,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
                         configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
@@ -540,7 +540,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
                         configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
@@ -636,7 +636,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
                         configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();

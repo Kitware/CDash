@@ -351,7 +351,7 @@ function ctest_parse($filehandle, $projectid, $buildid = null,
 
     // Generate a pretty, "relative to storage" filepath and store it in the handler.
     $backup_filename = generateBackupFileName(
-            $projectname, $subprojectname, $buildname, $sitename, $stamp, $file . '.xml');
+        $projectname, $subprojectname, $buildname, $sitename, $stamp, $file . '.xml');
     $handler->backupFileName = $backup_filename;
 
     return $handler;

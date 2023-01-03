@@ -60,14 +60,13 @@ abstract class UseCase
                 $useCase = new UpdateUseCase();
                 break;
             case self::BUILD:
-              $useCase = new BuildUseCase();
-              break;
+                $useCase = new BuildUseCase();
+                break;
             case self::DYNAMIC_ANALYSIS:
                 $useCase = new DynamicAnalysisUseCase();
                 break;
             default:
                 $useCase = null;
-
         }
         $testCase->setUseCaseModelFactory($useCase);
         return $useCase;

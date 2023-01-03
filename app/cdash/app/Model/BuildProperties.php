@@ -69,7 +69,7 @@ class BuildProperties
         $properties_str = json_encode($this->Properties);
         if ($properties_str === false) {
             add_log('Failed to encode JSON: ' . json_last_error_msg(),
-                    'BuildProperties::Save', LOG_ERR);
+                'BuildProperties::Save', LOG_ERR);
             return false;
         }
 
@@ -92,7 +92,7 @@ class BuildProperties
         }
         if (!$this->Exists()) {
             add_log('No properties exist for this build',
-                    'BuildProperties::Delete', LOG_ERR);
+                'BuildProperties::Delete', LOG_ERR);
             return false;
         }
 

@@ -64,7 +64,7 @@ class TestingDay
             // that occurs before it is part of the previous testing day.
             if (date(FMT_TIME, $build_start_timestamp) <
                     date(FMT_TIME, $nightly_start_timestamp)
-               ) {
+            ) {
                 $build_datetime->sub(new \DateInterval('P1D'));
                 $build_start_timestamp = $build_datetime->getTimestamp();
             }
@@ -73,7 +73,7 @@ class TestingDay
             // that occurs after it is part of the next testing day.
             if (date(FMT_TIME, $build_start_timestamp) >=
                     date(FMT_TIME, $nightly_start_timestamp)
-               ) {
+            ) {
                 $build_datetime->add(new \DateInterval('P1D'));
                 $build_start_timestamp = $build_datetime->getTimestamp();
             }

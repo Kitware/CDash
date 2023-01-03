@@ -60,8 +60,8 @@ EOT;
         // Make a copy of the example .env file and add a database password.
         copy(base_path('.env.example'), $this->test_file);
         file_put_contents($this->test_file,
-                "\nDB_PASSWORD=my_db_password\n",
-                FILE_APPEND);
+            "\nDB_PASSWORD=my_db_password\n",
+            FILE_APPEND);
 
         // Run the migration command.
         $this->artisan('config:migrate', ['output' => $this->test_file]);

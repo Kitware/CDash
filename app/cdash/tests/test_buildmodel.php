@@ -170,7 +170,7 @@ class BuildModelTestCase extends KWWebTestCase
         $build->SetSubProject('8567');
 
         if ($this->config('CDASH_LOG_FILE ')!== false && strpos(file_get_contents($this->logfilename),
-                'New subproject detected') === false
+            'New subproject detected') === false
         ) {
             $this->fail("'New subproject detected' not found in log after calling SetSubProject for invalid subproject id");
             return 1;

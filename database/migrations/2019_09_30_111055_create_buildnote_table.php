@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateBuildnoteTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

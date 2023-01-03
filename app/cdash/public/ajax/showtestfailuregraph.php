@@ -81,19 +81,19 @@ for ($beginning_timestamp = $starttime; $beginning_timestamp > $starttime - 3600
 
         <?php
         $tarray = array();
-        foreach ($failures as $key=>$value) {
-            $t['x'] = $key;
-            $t['y'] = $value;
-            $tarray[] = $t;
-        }
+foreach ($failures as $key=>$value) {
+    $t['x'] = $key;
+    $t['y'] = $value;
+    $tarray[] = $t;
+}
 
-        $tarray = array_reverse($tarray);
-        foreach ($tarray as $axis) {
-            ?>
+$tarray = array_reverse($tarray);
+foreach ($tarray as $axis) {
+    ?>
         d1.push([<?php echo $axis['x']; ?>,<?php echo $axis['y']; ?>]);
         <?php
         $t = $axis['x'];
-        } ?>
+} ?>
 
         var options = {
             series: {

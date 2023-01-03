@@ -172,8 +172,8 @@ class ManageMeasurementsTestCase extends KWWebTestCase
                 ];
                 try {
                     $response = $client->request('POST',
-                            $this->url . '/api/v1/manageMeasurements.php',
-                            ['json' => ['projectid' => $projectid, 'measurements' => $measurements]]);
+                        $this->url . '/api/v1/manageMeasurements.php',
+                        ['json' => ['projectid' => $projectid, 'measurements' => $measurements]]);
                 } catch (GuzzleHttp\Exception\ClientException $e) {
                     $this->fail($e->getMessage());
                     return false;
@@ -188,7 +188,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
                 $this->MeasurementIds[] = $measurement_id;
                 // Check that the measurement actually got added to the database.
                 $stmt = $this->PDO->query(
-                        "SELECT id FROM measurement WHERE id = $measurement_id");
+                    "SELECT id FROM measurement WHERE id = $measurement_id");
                 $found = $stmt->fetchColumn();
                 if ($found != $measurement_id) {
                     $this->fail("Expected $measurement_id but found $found for DB measurement ID");

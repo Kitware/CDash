@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateLockoutTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

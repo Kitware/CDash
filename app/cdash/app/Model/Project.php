@@ -858,7 +858,7 @@ class Project
     {
         if (!$this->Id) {
             add_log('Id not set', 'Project::GetNumberOfBuilds', LOG_ERR,
-                    $this->Id);
+                $this->Id);
             return false;
         }
 
@@ -1555,7 +1555,7 @@ class Project
     public function AddBlockedBuild($buildname, $sitename, $ip)
     {
         $stmt = $this->PDO->prepare(
-                'INSERT INTO blockbuild (projectid,buildname,sitename,ipaddress)
+            'INSERT INTO blockbuild (projectid,buildname,sitename,ipaddress)
                 VALUES (:projectid, :buildname, :sitename, :ip)');
         $stmt->bindParam(':projectid', $this->Id);
         $stmt->bindParam(':buildname', $buildname);
@@ -1597,7 +1597,7 @@ class Project
         removeFirstBuilds($this->Id, -1, $num_to_remove, true, false);
 
         add_log("Too many builds for $this->Name", 'project_has_too_many_builds',
-                LOG_INFO, $this->Id);
+            LOG_INFO, $this->Id);
         return true;
     }
 
@@ -1701,7 +1701,7 @@ class Project
         if ($buildErrorFilter->GetErrorsFilter() != $this->ErrorsFilter ||
                 $buildErrorFilter->GetWarningsFilter() != $this->WarningsFilter) {
             return $buildErrorFilter->AddOrUpdateFilters(
-                    $this->WarningsFilter, $this->ErrorsFilter);
+                $this->WarningsFilter, $this->ErrorsFilter);
         }
         return true;
     }

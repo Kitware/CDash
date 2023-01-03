@@ -59,7 +59,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
 
         // Verify that the coverage data was successfully parsed.
         $content = $this->get(
-        $this->url."/viewCoverage.php?buildid=$buildid&status=6");
+            $this->url."/viewCoverage.php?buildid=$buildid&status=6");
         if (strpos($content, '47.37') === false) {
             $this->fail('\"47.37\" not found when expected');
             return 1;
@@ -110,7 +110,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
 
         // Verify that the coverage data was successfully parsed.
         $content = $this->get(
-        $this->url."/viewCoverage.php?buildid=$buildid&status=6");
+            $this->url."/viewCoverage.php?buildid=$buildid&status=6");
         if (strpos($content, '69.23') === false) {
             $this->fail('\"69.23\" not found when expected');
             return 1;

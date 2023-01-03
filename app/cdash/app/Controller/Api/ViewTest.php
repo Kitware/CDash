@@ -276,7 +276,7 @@ class ViewTest extends BuildApi
         $response['hasprocessors'] = false;
         $processors_idx = -1;
         $extra_measurements_stmt = $this->db->prepare(
-                'SELECT name FROM measurement
+            'SELECT name FROM measurement
                 WHERE projectid = ?
                 ORDER BY position');
         $this->db->execute($extra_measurements_stmt, [$this->project->Id]);
@@ -327,7 +327,7 @@ class ViewTest extends BuildApi
         $etestquery = null;
         if ($this->numExtraMeasurements > 0) {
             $etestquery = $this->db->prepare(
-                    "SELECT build2test.id, test.projectid, build2test.buildid,
+                "SELECT build2test.id, test.projectid, build2test.buildid,
                     build2test.status, build2test.timestatus, test.name, testmeasurement.name,
                     testmeasurement.value, build.starttime,
                     build2test.time FROM test
@@ -364,7 +364,7 @@ class ViewTest extends BuildApi
 
         // Find the time to run all the tests
         $time_stmt = $this->db->prepare(
-                'SELECT SUM(time) FROM build2test WHERE buildid = ?');
+            'SELECT SUM(time) FROM build2test WHERE buildid = ?');
         $this->db->execute($time_stmt, [$buildid]);
         $time = $time_stmt->fetchColumn();
         $response['totaltime'] = time_difference($time, true, '', true);
@@ -602,7 +602,7 @@ class ViewTest extends BuildApi
 
             if ($time_begin && $time_end) {
                 $summary_response = $this->getTestSummary($test, $projectid, $groupid,
-                        $time_begin, $time_end);
+                    $time_begin, $time_end);
                 if (!empty($summary_response)) {
                     $test_response = array_merge($test_response, $summary_response);
                     $data_found = true;

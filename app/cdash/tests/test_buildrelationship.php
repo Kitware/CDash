@@ -36,32 +36,32 @@ class BuildRelationshipTestCase extends KWWebTestCase
         // Check for expected error messages when missing parameters.
         // No project.
         $response = $client->request('GET',
-                $this->url .  '/api/v1/relateBuilds.php',
-                ['http_errors' => false]);
+            $this->url .  '/api/v1/relateBuilds.php',
+            ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
         $this->assertEqual($response->error, 'Valid project required');
 
         // No buildid.
         $response = $client->request('GET',
-                $this->url .  '/api/v1/relateBuilds.php?project=InsightExample',
-                ['http_errors' => false]);
+            $this->url .  '/api/v1/relateBuilds.php?project=InsightExample',
+            ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
         $this->assertEqual($response->error, 'Valid buildid required');
 
         // No relatedid.
         $response = $client->request('GET',
-                $this->url .  '/api/v1/relateBuilds.php?project=InsightExample&buildid=7',
-                ['http_errors' => false]);
+            $this->url .  '/api/v1/relateBuilds.php?project=InsightExample&buildid=7',
+            ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
         $this->assertEqual($response->error, 'Valid relatedid required');
 
         // No existing relationship.
         $response = $client->request('GET',
-                $this->url .  '/api/v1/relateBuilds.php?project=InsightExample&buildid=7&relatedid=44',
-                ['http_errors' => false]);
+            $this->url .  '/api/v1/relateBuilds.php?project=InsightExample&buildid=7&relatedid=44',
+            ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
         $this->assertEqual($response->error, 'No relationship exists between Builds 7 and 44');
@@ -96,8 +96,8 @@ class BuildRelationshipTestCase extends KWWebTestCase
             'relatedid'  => $build1->Id
         ];
         $response = $client->request('POST',
-                $this->url .  '/api/v1/relateBuilds.php',
-                ['json' => $payload, 'http_errors' => false]);
+            $this->url .  '/api/v1/relateBuilds.php',
+            ['json' => $payload, 'http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
         $this->assertEqual($response->error, 'Valid relationship required');
@@ -120,8 +120,8 @@ class BuildRelationshipTestCase extends KWWebTestCase
         foreach ($payloads as $payload) {
             try {
                 $response = $client->request('POST',
-                        $this->url .  '/api/v1/relateBuilds.php',
-                        ['json' => $payload]);
+                    $this->url .  '/api/v1/relateBuilds.php',
+                    ['json' => $payload]);
             } catch (GuzzleHttp\Exception\ClientException $e) {
                 $this->fail($e->getMessage());
             }
@@ -129,7 +129,7 @@ class BuildRelationshipTestCase extends KWWebTestCase
 
         // Verify relateBuilds API can show existing relationships.
         $response = $client->request('GET',
-                $this->url . "/api/v1/relateBuilds.php?project=InsightExample&buildid={$build2->Id}&relatedid={$build1->Id}");
+            $this->url . "/api/v1/relateBuilds.php?project=InsightExample&buildid={$build2->Id}&relatedid={$build1->Id}");
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'buildid'));
         $this->assertTrue(property_exists($response, 'relatedid'));
@@ -151,21 +151,21 @@ class BuildRelationshipTestCase extends KWWebTestCase
         // Make sure that normal users can't delete relationships.
         $user_client = $this->getGuzzleClient('user1@kw', 'user1');
         $response = $user_client->request('DELETE',
-                $this->url .  "/api/v1/relateBuilds.php?project=InsightExample&buildid={$build1->Id}&relatedid={$build2->Id}",
-                ['http_errors' => false]);
+            $this->url .  "/api/v1/relateBuilds.php?project=InsightExample&buildid={$build1->Id}&relatedid={$build2->Id}",
+            ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
         $this->assertEqual($response->error, 'You do not have permission to access this page.');
 
         // Exercise successful delete via API.
         $response = $client->request('DELETE',
-                $this->url .  "/api/v1/relateBuilds.php?project=InsightExample&buildid={$build2->Id}&relatedid={$build1->Id}",
-                ['http_errors' => false]);
+            $this->url .  "/api/v1/relateBuilds.php?project=InsightExample&buildid={$build2->Id}&relatedid={$build1->Id}",
+            ['http_errors' => false]);
         $this->assertEqual('', $response->getBody());
 
         $response = $client->request('GET',
-                $this->url . "/api/v1/relateBuilds.php?project=InsightExample&buildid={$build2->Id}&relatedid={$build1->Id}",
-                ['http_errors' => false]);
+            $this->url . "/api/v1/relateBuilds.php?project=InsightExample&buildid={$build2->Id}&relatedid={$build1->Id}",
+            ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
         $this->assertEqual($response->error, "No relationship exists between Builds {$build2->Id} and {$build1->Id}");

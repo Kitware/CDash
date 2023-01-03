@@ -488,7 +488,7 @@ class GitHub implements RepositoryInterface
 
         // Record the previous revision in the buildupdate table.
         $stmt = $this->db->prepare(
-                'UPDATE buildupdate SET priorrevision = ? WHERE id = ?');
+            'UPDATE buildupdate SET priorrevision = ? WHERE id = ?');
         $this->db->execute($stmt, [$base, $update->UpdateId]);
 
         // Return early if we are configured to not use the GitHub API.
@@ -585,7 +585,7 @@ class GitHub implements RepositoryInterface
                 if (is_null($commit)) {
                     // Next, check the database.
                     $stmt = $this->db->prepare(
-                            'SELECT DISTINCT revision FROM updatefile
+                        'SELECT DISTINCT revision FROM updatefile
                             WHERE filename = ?');
                     $this->db->execute($stmt, [$modified_file['filename']]);
                     while ($row = $stmt->fetch()) {

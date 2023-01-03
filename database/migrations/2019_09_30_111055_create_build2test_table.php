@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateBuild2testTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

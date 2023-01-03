@@ -66,7 +66,7 @@ echo pdo_error();
 
         <?php
     }
-    ?>
+?>
 
 </table>
 

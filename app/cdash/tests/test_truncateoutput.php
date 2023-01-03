@@ -56,7 +56,7 @@ class TruncateOutputTestCase extends KWWebTestCase
 
             // Query for the ID of the build that we just created.
             $buildid_results = pdo_single_row_query(
-                    "SELECT id FROM build WHERE name='TruncateOutput'");
+                "SELECT id FROM build WHERE name='TruncateOutput'");
             $this->BuildId = $buildid_results['id'];
 
             // Verify that the output was properly truncated.
@@ -86,7 +86,7 @@ class TruncateOutputTestCase extends KWWebTestCase
         $expected = "[CTest: warning matched] This part survives\n";
         $this->submission('InsightExample', "$rep/Build_suppressed.xml");
         $buildid_results = pdo_single_row_query(
-                "SELECT id FROM build WHERE name='TruncateOutput'");
+            "SELECT id FROM build WHERE name='TruncateOutput'");
         $this->BuildId = $buildid_results['id'];
         $this->get($this->url . "/api/v1/viewBuildError.php?type=1&buildid=" . $this->BuildId);
         $content = $this->getBrowser()->getContent();

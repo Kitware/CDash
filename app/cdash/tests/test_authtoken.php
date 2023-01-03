@@ -55,7 +55,7 @@ class AuthTokenTestCase extends KWWebTestCase
 
         // Subscribe a non-administrative user to it.
         $stmt = $this->PDO->query(
-                'SELECT * FROM ' . qid('user') . " WHERE email = 'user1@kw'");
+            'SELECT * FROM ' . qid('user') . " WHERE email = 'user1@kw'");
         $row = $stmt->fetch();
         if (!$row) {
             $this->fail('Failed to find non-admin user');
@@ -104,7 +104,7 @@ class AuthTokenTestCase extends KWWebTestCase
         $exception_thrown = false;
         try {
             $response = $client->request('GET',
-                    $this->url . '/api/v1/index.php?project=AuthTokenProject');
+                $this->url . '/api/v1/index.php?project=AuthTokenProject');
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $exception_thrown = true;
             $status_code = $e->getResponse()->getStatusCode();
@@ -120,8 +120,8 @@ class AuthTokenTestCase extends KWWebTestCase
         // bearer token.
         try {
             $response = $client->request('GET',
-                    $this->url . '/api/v1/index.php?project=AuthTokenProject',
-                    [ 'headers' => ['Authorization' => "Bearer $this->Token"] ]);
+                $this->url . '/api/v1/index.php?project=AuthTokenProject',
+                [ 'headers' => ['Authorization' => "Bearer $this->Token"] ]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
             return 1;
@@ -227,8 +227,8 @@ class AuthTokenTestCase extends KWWebTestCase
         $exception_thrown = false;
         try {
             $response = $client->request('POST',
-                    $this->url . '/api/v1/addBuild.php?XDEBUG_SESSION_START',
-                    ['form_params' => $add_build_params]);
+                $this->url . '/api/v1/addBuild.php?XDEBUG_SESSION_START',
+                ['form_params' => $add_build_params]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $exception_thrown = true;
             $status_code = $e->getResponse()->getStatusCode();
@@ -244,9 +244,9 @@ class AuthTokenTestCase extends KWWebTestCase
         // bearer token.
         try {
             $response = $client->request('POST',
-                    $this->url . '/api/v1/addBuild.php',
-                    [ 'headers' => ['Authorization' => "Bearer $this->Token"], 'form_params' => $add_build_params
-                    ]);
+                $this->url . '/api/v1/addBuild.php',
+                [ 'headers' => ['Authorization' => "Bearer $this->Token"], 'form_params' => $add_build_params
+                ]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
         }
@@ -268,11 +268,11 @@ class AuthTokenTestCase extends KWWebTestCase
         // It should give us a 200 response instead of 201 this time.
         try {
             $response = $client->request('POST',
-                    $this->url . '/api/v1/addBuild.php',
-                    [
-                    'headers' => ['Authorization' => "Bearer $this->Token"],
-                    'form_params' => $add_build_params
-                    ]);
+                $this->url . '/api/v1/addBuild.php',
+                [
+                'headers' => ['Authorization' => "Bearer $this->Token"],
+                'form_params' => $add_build_params
+                ]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
         }

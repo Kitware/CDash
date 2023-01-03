@@ -43,7 +43,7 @@ class TestDetails extends BuildTestApi
         // If we have a fileid we download it.
         if (isset($_GET['fileid']) && is_numeric($_GET['fileid'])) {
             $stmt = $this->db->prepare(
-                    "SELECT id, value, name FROM testmeasurement
+                "SELECT id, value, name FROM testmeasurement
                     WHERE outputid = :outputid AND type = 'file'
                     ORDER BY id");
             $this->db->execute($stmt, [':outputid' => $this->buildtest->outputid]);
@@ -73,7 +73,7 @@ class TestDetails extends BuildTestApi
         $response['project'] = $project_response;
 
         $stmt = $this->db->prepare(
-                'SELECT * FROM build2test b2t
+            'SELECT * FROM build2test b2t
                 JOIN test t ON t.id = b2t.testid
                 JOIN testoutput ON testoutput.id = b2t.outputid
                 WHERE b2t.id = :buildtestid');
@@ -166,7 +166,7 @@ class TestDetails extends BuildTestApi
             'revisiondiff' => ''
         ];
         $stmt = $this->db->prepare(
-                'SELECT status, revision, priorrevision, path
+            'SELECT status, revision, priorrevision, path
                 FROM buildupdate bu
                 JOIN build2update b2u ON (b2u.updateid = bu.id)
                 WHERE b2u.buildid = :buildid');
@@ -209,7 +209,7 @@ class TestDetails extends BuildTestApi
         // Get any images associated with this test.
         $compareimages_response = [];
         $stmt = $this->db->prepare(
-                "SELECT imgid, role FROM test2image
+            "SELECT imgid, role FROM test2image
                 WHERE outputid = :outputid AND
                 (role = 'TestImage' OR role = 'ValidImage' OR role = 'BaselineImage' OR
                  role ='DifferenceImage2')
@@ -227,7 +227,7 @@ class TestDetails extends BuildTestApi
 
         $images_response = [];
         $stmt = $this->db->prepare(
-                "SELECT imgid, role FROM test2image
+            "SELECT imgid, role FROM test2image
                 WHERE outputid = :outputid AND
                 role != 'ValidImage' AND role != 'BaselineImage' AND
                 role != 'DifferenceImage2'
@@ -246,7 +246,7 @@ class TestDetails extends BuildTestApi
         // Get any measurements associated with this test.
         $measurements_response = [];
         $stmt = $this->db->prepare(
-                'SELECT name, type, value FROM testmeasurement
+            'SELECT name, type, value FROM testmeasurement
                 WHERE outputid = :outputid
                 ORDER BY id');
         $this->db->execute($stmt, [':outputid' => $outputid]);
@@ -293,7 +293,7 @@ class TestDetails extends BuildTestApi
 
         // Get the list of extra test measurements that have been explicitly added to this project.
         $stmt = $this->db->prepare(
-                'SELECT name FROM measurement WHERE projectid = ? ORDER BY position');
+            'SELECT name FROM measurement WHERE projectid = ? ORDER BY position');
         $this->db->execute($stmt, [$this->project->Id]);
         $extra_measurements = [];
         while ($row = $stmt->fetch()) {

@@ -32,8 +32,8 @@ class BuildErrorFilterTest extends CDashTestCase
         $container->set(Project::class, $this->mock_project);
 
         $this->sut = $container->make(
-                BuildErrorFilter::class,
-                ['project' => $this->mock_project]);
+            BuildErrorFilter::class,
+            ['project' => $this->mock_project]);
     }
 
     public function testExists()

@@ -256,7 +256,7 @@ class DynamicAnalysis
     private function GetRelatedId($build, $order, $time_clause = null)
     {
         $stmt = $this->PDO->prepare(
-        "SELECT dynamicanalysis.id FROM dynamicanalysis
+            "SELECT dynamicanalysis.id FROM dynamicanalysis
         JOIN build ON (dynamicanalysis.buildid = build.id)
         WHERE build.siteid = :siteid AND
               build.type = :buildtype AND

@@ -463,7 +463,6 @@ if (!function_exists('echo_main_dashboard_JSON')) {
             // Dynamic Analysis
             //
             if (!empty($build_array['checker'])) {
-
                 // Determine if this is a parent build with no dynamic analysis
                 // of its own.
                 $linkToChildren = false;
@@ -663,7 +662,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         // This is only shown if this project is setup to display
         // an extra test measurement called 'Processors'.
         $stmt = $PDO->prepare(
-                "SELECT id FROM measurement
+            "SELECT id FROM measurement
                 WHERE projectid = ? and name = 'Processors'");
         pdo_execute($stmt, [$projectid]);
         if ($stmt->fetchColumn() !== false) {

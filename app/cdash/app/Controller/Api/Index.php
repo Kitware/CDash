@@ -365,7 +365,7 @@ class Index extends ResultsApi
 
         if (strlen($build_row['updatestatus']) > 0 &&
                 $build_row['updatestatus'] != '0'
-           ) {
+        ) {
             $build_row['countupdateerrors'] = 1;
         } else {
             $build_row['countupdateerrors'] = 0;
@@ -466,8 +466,8 @@ class Index extends ResultsApi
         }
         if ($i == -1) {
             add_log("BuildGroup '$groupid' not found for build #" . $build_array['id'],
-                    __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
-                    LOG_WARNING);
+                __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
+                LOG_WARNING);
             return false;
         }
 
@@ -482,7 +482,7 @@ class Index extends ResultsApi
         $siteid = $build_array['siteid'];
 
         $countChildrenResult = pdo_single_row_query(
-                'SELECT count(id) AS numchildren
+            'SELECT count(id) AS numchildren
                 FROM build WHERE parentid=' . qnum($buildid));
         $numchildren = $countChildrenResult['numchildren'];
         $build_response['numchildren'] = $numchildren;
@@ -565,11 +565,11 @@ class Index extends ResultsApi
             $buildplatform = 'windows';
         } elseif (strtolower(substr($build_array['osname'], 0, 8)) == 'mac os x'
                 || strtolower(substr($build_array['osname'], 0, 5)) == 'macos'
-                ) {
+        ) {
             $buildplatform = 'mac';
         } elseif (strtolower(substr($build_array['osname'], 0, 5)) == 'linux'
                 || strtolower(substr($build_array['osname'], 0, 3)) == 'aix'
-                ) {
+        ) {
             $buildplatform = 'linux';
         } elseif (strtolower(substr($build_array['osname'], 0, 7)) == 'freebsd') {
             $buildplatform = 'freebsd';
@@ -625,7 +625,7 @@ class Index extends ResultsApi
         // Figure out how many labels to report for this build.
         if (!array_key_exists('numlabels', $build_array) ||
                 $build_array['numlabels'] == 0
-           ) {
+        ) {
             $num_labels = 0;
         } else {
             $num_labels = $build_array['numlabels'];
@@ -648,7 +648,7 @@ class Index extends ResultsApi
                 // Whitelist case
                 if ($this->includeSubProjects &&
                         in_array($label_row['text'], $this->includedSubProjects)
-                   ) {
+                ) {
                     $num_labels++;
                     $build_labels[] = $label_row['text'];
                 }

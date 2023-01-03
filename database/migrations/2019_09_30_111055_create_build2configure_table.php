@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateBuild2configureTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

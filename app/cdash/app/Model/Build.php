@@ -1633,8 +1633,8 @@ class Build
 
         // Insert or update appropriately.
         \DB::transaction(function () use ($checkindate, $nfailederrors, $nfailedtests,
-                                          $nfailedwarnings, $nfixederrors, $nfixedtests,
-                                          $nfixedwarnings, $totalbuilds, $userid) {
+            $nfailedwarnings, $nfixederrors, $nfixedtests,
+            $nfixedwarnings, $totalbuilds, $userid) {
             $row = \DB::table('userstatistics')
                 ->where('userid', $userid)
                 ->where('projectid', $this->ProjectId)
@@ -2117,7 +2117,7 @@ class Build
                 ]);
 
         // NOTE: as far as I can tell, build.testtimestatusfailed isn't used,
-            // so for now it isn't being updated for parent builds.
+        // so for now it isn't being updated for parent builds.
         }, 5);
     }
 

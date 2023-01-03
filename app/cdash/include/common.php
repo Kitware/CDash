@@ -782,7 +782,7 @@ function remove_build($buildid)
     // Delete the configure if not shared.
     $configureids = '(';
     $build2configure = pdo_query(
-            "SELECT a.configureid, COUNT(b.configureid) AS c
+        "SELECT a.configureid, COUNT(b.configureid) AS c
             FROM build2configure AS a
             LEFT JOIN build2configure AS b
             ON (a.configureid=b.configureid AND b.buildid NOT IN $buildids)
@@ -904,7 +904,7 @@ function remove_build($buildid)
         // because they are shared with builds that are not about to be deleted.
         $testids = '(' . implode(',', $all_testids) . ')';
         $save_test_result = pdo_query(
-                "SELECT DISTINCT testid FROM build2test
+            "SELECT DISTINCT testid FROM build2test
                 WHERE testid IN $testids AND buildid NOT IN $buildids");
         $tests_to_save = array();
         while ($save_test_row = pdo_fetch_array($save_test_result)) {
@@ -925,7 +925,7 @@ function remove_build($buildid)
         // because they are shared with builds that are not about to be deleted.
         $outputids = '(' . implode(',', $all_outputids) . ')';
         $save_test_result = pdo_query(
-                "SELECT DISTINCT outputid FROM build2test
+            "SELECT DISTINCT outputid FROM build2test
                 WHERE outputid IN $outputids AND buildid NOT IN $buildids");
         $testoutputs_to_save = [];
         while ($save_test_row = pdo_fetch_array($save_test_result)) {

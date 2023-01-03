@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateMeasurementTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

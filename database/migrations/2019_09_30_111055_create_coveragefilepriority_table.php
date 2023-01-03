@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateCoveragefilepriorityTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

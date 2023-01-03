@@ -12,8 +12,8 @@ class SubmissionAssignBuildIdTestCase extends KWWebTestCase
         $begin_test_time = time();
         $file_to_submit = dirname(__FILE__) .  '/data/AssignBuildId/Configure.xml';
         $buildid = $this->submission_assign_buildid(
-                $file_to_submit, 'InsightExample', 'assign_buildid',
-                'localhost', '20180918-0100-Nightly');
+            $file_to_submit, 'InsightExample', 'assign_buildid',
+            'localhost', '20180918-0100-Nightly');
         if (!$buildid || !is_numeric($buildid)) {
             $this->fail('Did not receive a numeric buildid for submission');
         }

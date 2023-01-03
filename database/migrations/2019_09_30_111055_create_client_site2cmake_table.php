@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateClientSite2cmakeTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

@@ -79,7 +79,7 @@ class BuildRelationship
             if (!$build->Exists()) {
                 $error_msg = "Build #{$build->Id} does not exist";
                 add_log($error_msg, 'BuildRelationship::Save',
-                        LOG_ERR, $this->Project->Id, $build->Id);
+                    LOG_ERR, $this->Project->Id, $build->Id);
                 return false;
             }
 
@@ -87,8 +87,8 @@ class BuildRelationship
             if ($build->ProjectId != $this->Project->Id) {
                 $error_msg = 'Build does not belong to this project';
                 add_log($error_msg,
-                        'BuildRelationship::Save', LOG_ERR, $this->Project->Id,
-                        $build->Id);
+                    'BuildRelationship::Save', LOG_ERR, $this->Project->Id,
+                    $build->Id);
                 return false;
             }
         }
@@ -96,8 +96,8 @@ class BuildRelationship
         if ($this->Build->Id == $this->RelatedBuild->Id) {
             $error_msg = 'A build cannot be related to itself';
             add_log($error_msg,
-                    'BuildRelationship::Save', LOG_ERR, $this->Project->Id,
-                    $this->Build->Id);
+                'BuildRelationship::Save', LOG_ERR, $this->Project->Id,
+                $this->Build->Id);
         }
 
         if ($this->Exists()) {
@@ -135,7 +135,7 @@ class BuildRelationship
         if (!$this->Exists()) {
             $error_msg = 'Relationship does not exist';
             add_log($error_msg, 'BuildRelationship::Delete',
-                    LOG_ERR);
+                LOG_ERR);
             return false;
         }
 

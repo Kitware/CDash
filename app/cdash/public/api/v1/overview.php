@@ -318,7 +318,7 @@ while ($build_row = pdo_fetch_array($builds_array)) {
         foreach ($build_measurements as $measurement) {
             $clean_measurement = $clean_measurements[$measurement];
             if (!array_key_exists($measurement,
-                    $overview_data[$day][$group_name])) {
+                $overview_data[$day][$group_name])) {
                 $overview_data[$day][$group_name][$measurement] =
                     intval($build_row[$clean_measurement]);
             } else {
@@ -334,7 +334,6 @@ while ($build_row = pdo_fetch_array($builds_array)) {
 
     // Check if coverage was performed for this build.
     if ($build_row['loctested'] + $build_row['locuntested'] > 0) {
-
         // Check for multiple nightly coverage builds in a single day.
         if ($group_name !== 'Aggregate' && $build_row['type'] === 'Nightly') {
             if (array_key_exists($day, $aggregate_tracker)) {
@@ -519,7 +518,7 @@ foreach ($coverage_categories as $coverage_category) {
 
         $chart_data =
             get_coverage_chart_data($build_group_name, $category_name, $date_range, $coverage_data,
-                                    $beginning_timestamp);
+                $beginning_timestamp);
         $coverage_response['chart'] = $chart_data;
         $coverage_category_response['groups'][] = $coverage_response;
     }

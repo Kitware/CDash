@@ -276,7 +276,7 @@ function populate_project($Project)
         }
         if (!empty($repo_urls)) {
             $Project->AddRepositories($repo_urls, $repo_usernames,
-                    $repo_passwords, $repo_branches);
+                $repo_passwords, $repo_branches);
         }
     }
 }
@@ -284,7 +284,7 @@ function populate_project($Project)
 function add_blocked_build($Project, $blocked_build)
 {
     return $Project->AddBlockedBuild($blocked_build['buildname'],
-            $blocked_build['sitename'], $blocked_build['ipaddress']);
+        $blocked_build['sitename'], $blocked_build['ipaddress']);
 }
 
 function remove_blocked_build($Project, $blocked_build)

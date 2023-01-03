@@ -113,7 +113,7 @@ class MultiCoverageTestCase extends KWWebTestCase
 
         // Verify details about our covered files.
         $result = pdo_query(
-                "SELECT c.loctested, c.locuntested, c.fileid, cf.fullpath
+            "SELECT c.loctested, c.locuntested, c.fileid, cf.fullpath
                 FROM coverage AS c
                 INNER JOIN coveragefile AS cf ON c.fileid=cf.id
                 WHERE c.buildid=$this->BuildId");

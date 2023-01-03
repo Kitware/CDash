@@ -95,7 +95,7 @@ class PendingSubmissions
         }
         if (!$this->Exists()) {
             add_log('Record does not exist', 'PendingSubmission::Delete',
-                    LOG_ERR);
+                LOG_ERR);
             return false;
         }
 
@@ -177,7 +177,7 @@ class PendingSubmissions
             if ($this->GetNumFiles() > 0) {
                 // Otherwise log the error and return false.
                 add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(),
-                        'IncrementOrDecrement', LOG_ERR);
+                    'IncrementOrDecrement', LOG_ERR);
                 return false;
             }
         }

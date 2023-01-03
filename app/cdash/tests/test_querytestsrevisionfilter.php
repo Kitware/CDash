@@ -3,7 +3,6 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class QueryTestsFilterLabelsTestCase extends KWWebTestCase
 {
-
     // Note: this test reuses existing data from 'EmailProjectExample'.
     public function testQueryTestsFilterLabels()
     {
