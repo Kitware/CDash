@@ -101,6 +101,6 @@ class DatabaseTest extends CDashTestCase
         $db->execute($stmt, $input_params);
 
         $log = Log::getInstance()->getLogEntries();
-        $this->assertContains('This is an exceptional message', $log[0]['message']);
+        $this->assertStringContainsString('This is an exceptional message', $log[0]['message']);
     }
 }

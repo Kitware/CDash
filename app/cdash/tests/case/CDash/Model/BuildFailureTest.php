@@ -17,7 +17,7 @@ use CDash\Model\Project;
 use CDash\ServiceContainer;
 use CDash\Test\CDashTestCase;
 
-class BuildFailureModelTest extends CDashTestCase
+class BuildFailureTest extends CDashTestCase
 {
     public function setUp() : void
     {

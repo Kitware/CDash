@@ -47,16 +47,14 @@ class GitHubTest extends TestCase
         $sut->setStatus($options);
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Unable to find installation ID for repository
-     */
     public function testAuthenticateThrowsExceptionGivenNoInstallationId()
     {
         $this->project->expects($this->once())
             ->method('GetRepositories')
             ->willReturn([]);
         $sut = new GitHub($this->project);
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Unable to find installation ID for repository');
         $sut->authenticate();
     }
 
@@ -281,27 +279,6 @@ class GitHubTest extends TestCase
 
         $sut = new GitHub($this->project);
 
-        $builder = $this->getMockBuilder(\Lcobucci\JWT\Builder::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['setIssuer', 'setIssuedAt', 'setExpiration', 'sign',
-                          'getToken'])
-            ->getMock();
-        $builder->expects($this->once())
-            ->method('setIssuer')
-            ->will($this->returnSelf());
-        $builder->expects($this->once())
-            ->method('setIssuedAt')
-            ->will($this->returnSelf());
-        $builder->expects($this->once())
-            ->method('setExpiration')
-            ->will($this->returnSelf());
-        $builder->expects($this->once())
-            ->method('sign')
-            ->will($this->returnSelf());
-        $builder->expects($this->once())
-            ->method('getToken');
-        $sut->setJwtBuilder($builder);
-
         $statuses = $this->getMockBuilder(\Github\Api\Apps::class)
             ->disableOriginalConstructor()
             ->setMethods(['create'])
@@ -325,14 +302,14 @@ class GitHubTest extends TestCase
             ->setMethods(['api', 'authenticate', 'getHttpClient'])
             ->getMock();
         $client->expects($this->any())
-            ->method('authenticate')
-            ->willReturn(true);
+            ->method('authenticate');
         $client->expects($this->any())
             ->method('api')
             ->willReturn($api);
 
         $sut->setApiClient($client);
-        Config::getInstance()->set('CDASH_GITHUB_PRIVATE_KEY', __FILE__);
+        $pem =  base_path() . "/app/cdash/tests/data/key_for_testing_only";
+        Config::getInstance()->set('CDASH_GITHUB_PRIVATE_KEY', $pem);
         config(['cdash.github_app_id' => 12345]);
 
         return $sut;

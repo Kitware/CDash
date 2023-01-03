@@ -45,8 +45,8 @@ class LogTest extends CDashTestCase
         $e = new Exception("TESTING Log::info");
         $log->info($e);
         $output = file_get_contents($this->log);
-        $this->assertContains('INFO: TESTING Log::info', $output);
-        $this->assertContains('"function":"testInfo"', $output);
+        $this->assertStringContainsString('INFO: TESTING Log::info', $output);
+        $this->assertStringContainsString('"function":"testInfo"', $output);
     }
 
     public function testError()
@@ -55,8 +55,8 @@ class LogTest extends CDashTestCase
         $e = new Exception("TESTING Log::error");
         $log->error($e);
         $output = file_get_contents($this->log);
-        $this->assertContains('ERROR: TESTING Log::error', $output);
-        $this->assertContains('"function":"testError"', $output);
+        $this->assertStringContainsString('ERROR: TESTING Log::error', $output);
+        $this->assertStringContainsString('"function":"testError"', $output);
     }
 
     public function testDebug()
@@ -65,7 +65,7 @@ class LogTest extends CDashTestCase
         $e = new Exception("TESTING Log::debug");
         $log->debug($e);
         $output = file_get_contents($this->log);
-        $this->assertContains('DEBUG: TESTING Log::debug', $output);
-        $this->assertContains('"function":"testDebug"', $output);
+        $this->assertStringContainsString('DEBUG: TESTING Log::debug', $output);
+        $this->assertStringContainsString('"function":"testDebug"', $output);
     }
 }

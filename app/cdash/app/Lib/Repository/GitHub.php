@@ -18,10 +18,12 @@ namespace CDash\Lib\Repository;
 
 use Github\Client as GitHubClient;
 use Github\HttpClient\Builder as GitHubBuilder;
-use Http\Adapter\Guzzle6\Client as GuzzleClient;
-use Lcobucci\JWT\Builder as JwtBuilder;
-use Lcobucci\JWT\Signer\Key;
+
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
+use Lcobucci\JWT\Signer\Key\LocalFileReference;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\Token\Builder as JwtBuilder;
 
 use CDash\Config;
 use CDash\Database;
@@ -60,7 +62,6 @@ class GitHub implements RepositoryInterface
     private $foundConfigureErrors;
     private $foundBuildErrors;
     private $foundTestFailures;
-    private $jwtBuilder;
     private $numPassed;
     private $numFailed;
     private $numPending;
@@ -98,20 +99,10 @@ class GitHub implements RepositoryInterface
         $this->apiClient = $client;
     }
 
-    public function setJwtBuilder(JwtBuilder $builder)
-    {
-        $this->jwtBuilder = $builder;
-    }
-
     protected function initializeApiClient()
     {
-        if (!$this->jwtBuilder) {
-            $this->setJwtBuilder(new JwtBuilder());
-        }
-
-        $builder = new GitHubBuilder(new GuzzleClient());
-        $apiClient = new GitHubClient($builder, 'machine-man-preview');
-        $builder->addHeaderValue('Accept', 'application/vnd.github.antiope-preview+json');
+        $builder = new GitHubBuilder();
+        $apiClient = new GithubClient($builder, 'machine-man-preview');
         $this->setApiClient($apiClient);
     }
 
@@ -139,6 +130,7 @@ class GitHub implements RepositoryInterface
             }
             return false;
         }
+        $pem = "file://" . $pem;
 
         $integrationId = config('cdash.github_app_id');
         if (is_null($integrationId)) {
@@ -148,14 +140,20 @@ class GitHub implements RepositoryInterface
             return false;
         }
 
-        $jwt = $this->jwtBuilder
-            ->setIssuer($integrationId)
-            ->setIssuedAt(time())
-            ->setExpiration(time() + 60)
-            ->sign(new Sha256(), new Key("file://{$pem}"))
-            ->getToken();
+        $config = Configuration::forSymmetricSigner(
+            new Sha256(),
+            LocalFileReference::file($pem)
+        );
 
-        $this->apiClient->authenticate($jwt, null, GitHubClient::AUTH_JWT);
+        $now = new \DateTimeImmutable();
+        $jwt = $config->builder(ChainedFormatter::withUnixTimestampDates())
+            ->issuedBy($integrationId)
+            ->issuedAt($now)
+            ->expiresAt($now->modify('+1 minute'))
+            ->getToken($config->signer(), $config->signingKey())
+        ;
+
+        $this->apiClient->authenticate($jwt->toString(), null, \Github\AuthMethod::JWT);
 
         try {
             $token = $this->apiClient->api('apps')->createInstallationToken($this->installationId);

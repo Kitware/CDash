@@ -125,7 +125,7 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
         /** @var ActionableBuildInterface|PHPUnit_Framework_MockObject_MockObject $mock_handler */
         $mock_handler = $this->getMockBuilder($handler_class)
             ->disableOriginalConstructor()
-            ->setMethods(['GetProject', 'GetSite', 'GetBuildCollection', 'GetCommitAuthors', 'GetBuildGroup'])
+            ->setMethods(['GetProject', 'GetSite', 'GetBuildCollection', 'GetCommitAuthors', 'GetBuildGroup', 'GetTopicCollectionForSubscriber'])
             ->getMock();
 
         $mock_handler->expects($this->any())

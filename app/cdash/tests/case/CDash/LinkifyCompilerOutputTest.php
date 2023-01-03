@@ -4,7 +4,7 @@ use CDash\Test\CDashTestCase;
 
 require_once 'include/repository.php';
 
-class LogTest extends CDashTestCase
+class LinkifyCompilerOutputTest extends CDashTestCase
 {
     public function testLinkifyCompilerOutput()
     {
