@@ -55,11 +55,11 @@ class DatabaseTest extends CDashTestCase
         $this->assertInstanceOf(PDO::class, $pdo);
     }
 
-    public function testGetPdoReturnsInstanceOfDBALSymphonyDriver()
+    public function testGetPdoReturnsInstanceOfPDO()
     {
         $db = Database::getInstance();
         $pdo = $db->getPdo();
-        $this->assertInstanceOf('Doctrine\DBAL\Driver\PDOConnection', $pdo);
+        $this->assertInstanceOf('PDO', $pdo);
     }
 
     public function testExecute()
@@ -75,32 +75,5 @@ class DatabaseTest extends CDashTestCase
 
         $db = Database::getInstance();
         $db->execute($stmt, $input_params);
-    }
-
-    public function testExecuteStatementLogsRuntimeException()
-    {
-        $input_params = ['param1', 'param2'];
-        $message = 'This is an exceptional message';
-        $exception = new \Doctrine\DBAL\Driver\PDOException(new PDOException($message));
-
-        /** @var PDOStatement|PHPUnit_Framework_MockObject_MockObject $stmt */
-        $stmt = $this->getMockBuilder('\PDOStatement')
-            ->getMock();
-        $stmt
-            ->expects($this->once())
-            ->method('execute')
-            ->with($this->equalTo($input_params))
-            ->willThrowException($exception);
-
-        $stmt
-            ->expects($this->once())
-            ->method('errorInfo')
-            ->willReturn(['54321', '12345', 'This is an exceptional message' ]);
-
-        $db = Database::getInstance();
-        $db->execute($stmt, $input_params);
-
-        $log = Log::getInstance()->getLogEntries();
-        $this->assertStringContainsString('This is an exceptional message', $log[0]['message']);
     }
 }
