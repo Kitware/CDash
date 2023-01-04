@@ -3,13 +3,10 @@
 namespace Tests\Feature;
 
 use Artisan;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class TestSchemaMigration extends TestCase
 {
-    use RefreshDatabase;
-
     /**
      * Test case for the migration of test, build2test, etc. tables.
      *
@@ -17,6 +14,9 @@ class TestSchemaMigration extends TestCase
      */
     public function testMigrationOfTestTables()
     {
+        Artisan::call('migrate:fresh', [
+            '--force' => true]);
+
         // Rollback some migrations to drop the relevant tables.
         Artisan::call('migrate:rollback', [
             '--path' => 'database/migrations/2020_02_17_112005_reformat_test_data.php',
@@ -256,5 +256,8 @@ class TestSchemaMigration extends TestCase
         $this->assertDatabaseHas('testmeasurement', $testmeasurement2);
         $this->assertDatabaseHas('testmeasurement', $testmeasurement3);
         $this->assertDatabaseHas('testmeasurement', $testmeasurement4);
+
+        Artisan::call('migrate:fresh', [
+            '--force' => true]);
     }
 }

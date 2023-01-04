@@ -3,13 +3,10 @@
 namespace Tests\Feature;
 
 use Artisan;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class IncreaseSiteInformationCPUColumnsSizeMigration extends TestCase
 {
-    use RefreshDatabase;
-
     /**
      * Test case for the migration that increases the size of the CPU columns
      * on the `siteinformation` table.
@@ -18,6 +15,9 @@ class IncreaseSiteInformationCPUColumnsSizeMigration extends TestCase
      */
     public function testIncreaseSiteInformationCPUColumnsSizeMigration()
     {
+        Artisan::call('migrate:fresh', [
+            '--force' => true]);
+
         // Rollback the relevant migration.
         Artisan::call('migrate:rollback', [
             '--path' => 'database/migrations/2021_12_07_110105_increase_site_information_cpu_columns_size.php',
@@ -46,5 +46,8 @@ class IncreaseSiteInformationCPUColumnsSizeMigration extends TestCase
             $this->assertEquals('smallint', \DB::getSchemaBuilder()->getColumnType('siteinformation', 'numberlogicalcpus'));
             $this->assertEquals('smallint', \DB::getSchemaBuilder()->getColumnType('siteinformation', 'numberphysicalcpus'));
         }
+
+        Artisan::call('migrate:fresh', [
+            '--force' => true]);
     }
 }
