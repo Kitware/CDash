@@ -1480,7 +1480,7 @@ class Project
             $v = $this->$k;
             $response[$k] = $v;
         }
-        $response['name_encoded'] = urlencode($this->Name);
+        $response['name_encoded'] = urlencode($this->Name ?? '');
 
         $includeQuota = !$config->get('CDASH_USER_CREATE_PROJECTS') || $user->IsAdmin();
 

@@ -25,6 +25,8 @@ class LimitedBuildsTestCase extends KWWebTestCase
         $this->PDO = Database::getInstance();
         $this->get_build_stmt =  $this->PDO->prepare('SELECT id FROM build WHERE projectid = ?');
         $this->Projects = [];
+
+        $this->deleteLog($this->logfilename);
     }
 
     public function testSetup()

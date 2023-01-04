@@ -52,20 +52,20 @@ class BuildError
 
         $text = pdo_real_escape_string($this->Text);
 
-        if (strlen($this->PreContext) == 0) {
+        if (strlen($this->PreContext ?? '') == 0) {
             $precontext = 'NULL';
         } else {
             $precontext = "'" . pdo_real_escape_string($this->PreContext) . "'";
         }
 
-        if (strlen($this->PostContext) == 0) {
+        if (strlen($this->PostContext ?? '') == 0) {
             $postcontext = 'NULL';
         } else {
             $postcontext = "'" . pdo_real_escape_string($this->PostContext) . "'";
         }
 
         $sourcefile = '';
-        if (strlen($this->SourceFile) > 0) {
+        if (strlen($this->SourceFile ?? '') > 0) {
             $sourcefile = pdo_real_escape_string($this->SourceFile);
         }
 

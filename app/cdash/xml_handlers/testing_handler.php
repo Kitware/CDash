@@ -208,7 +208,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                     $image->Name = $this->TestMeasurement->name;
                     $this->TestCreator->images->push($image);
                 } else {
-                    $this->TestMeasurement->value = trim($this->TestMeasurement->value);
+                    $this->TestMeasurement->value = trim($this->TestMeasurement->value ?? '');
                     $this->TestCreator->measurements->push($this->TestMeasurement);
                 }
             }

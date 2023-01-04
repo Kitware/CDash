@@ -97,8 +97,11 @@ class BuildGroup
             return false;
         }
         $project_array = pdo_fetch_array($project);
-        $this->Name = $project_array['name'];
-        return $this->Name;
+        if (is_array($project_array)) {
+            $this->Name = $project_array['name'];
+            return $this->Name;
+        }
+        return false;
     }
 
     /** Set the Name of the buildgroup. */

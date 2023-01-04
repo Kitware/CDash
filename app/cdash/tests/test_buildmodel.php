@@ -22,6 +22,8 @@ class BuildModelTestCase extends KWWebTestCase
     {
         parent::__construct();
 
+        $this->deleteLog($this->logfilename);
+
         $this->testDataDir = dirname(__FILE__) . '/data/BuildModel';
         $this->testDataFiles = array('build1.xml', 'build2.xml', 'build3.xml', 'build4.xml',
                                      'build5.xml', 'configure1.xml');
@@ -57,6 +59,7 @@ class BuildModelTestCase extends KWWebTestCase
 
     public function getBuildModel($n, $builds=false)
     {
+        $this->deleteLog($this->logfilename);
         if ($builds === false) {
             $builds = $this->builds;
         }
@@ -70,6 +73,8 @@ class BuildModelTestCase extends KWWebTestCase
 
     public function testBuildModel()
     {
+        $this->deleteLog($this->logfilename);
+
         $build = new Build();
         $builderror = new BuildError();
         $builderror->Type = 0;

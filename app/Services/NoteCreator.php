@@ -39,6 +39,7 @@ class NoteCreator
         $this->name = '';
         $this->time = '';
         $this->text = '';
+        $this->crc32 = '';
     }
 
     /** Get the CRC32 */

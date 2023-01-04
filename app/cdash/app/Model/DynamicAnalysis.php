@@ -151,11 +151,11 @@ class DynamicAnalysis
         $max_log_length = 1024 * 1024;
 
         // Handle log decoding/decompression
-        if (strtolower($this->LogEncoding) == 'base64') {
+        if (strtolower($this->LogEncoding ?? '') == 'base64') {
             $this->Log = str_replace(array("\r\n", "\n", "\r"), '', $this->Log);
             $this->Log = base64_decode($this->Log);
         }
-        if (strtolower($this->LogCompression) == 'gzip') {
+        if (strtolower($this->LogCompression ?? '') == 'gzip') {
             // Avoid memory exhaustion errors by buffering data as we
             // decompress the gzipped log.
             $uncompressed_log = '';

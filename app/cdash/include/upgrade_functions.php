@@ -581,7 +581,7 @@ function UpgradeConfigureDuration()
 
     while ($row = pdo_fetch_array($result)) {
         $id = $row['id'];
-        $duration = strtotime($row['endtime']) - strtotime($row['starttime']);
+        $duration = strtotime($row['endtime'] ?? '') - strtotime($row['starttime'] ?? '');
         if ($duration === 0) {
             continue;
         }

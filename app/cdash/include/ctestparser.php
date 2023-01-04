@@ -53,7 +53,7 @@ function generateBackupFileName($projectname, $subprojectname, $buildname,
     $sitename_escaped = preg_replace('/[^\w\-~_]+/u', '-', $sitename);
     $buildname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $buildname);
     $projectname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $projectname);
-    $subprojectname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $subprojectname);
+    $subprojectname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $subprojectname ?? '');
 
     // Separate the extension from the filename.
     $ext = '.' . pathinfo($fileNameWithExt, PATHINFO_EXTENSION);
@@ -345,7 +345,7 @@ function ctest_parse($filehandle, $projectid, $buildid = null,
         $content = fread($filehandle, 8192);
         xml_parse($parser, $content, false);
     }
-    xml_parse($parser, null, true);
+    xml_parse($parser, '', true);
     xml_parser_free($parser);
     unset($parser);
 

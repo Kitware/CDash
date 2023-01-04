@@ -16,6 +16,7 @@ class UpgradeTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
+        $this->deleteLog($this->logfilename);
     }
 
     public function testAssignBuildsToDefaultGroups()
