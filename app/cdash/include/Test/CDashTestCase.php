@@ -78,7 +78,7 @@ class CDashTestCase extends TestCase
         $mock_stmt = $this->getMockBuilder(\PDOStatement::class)
             ->disableOriginalConstructor()
             ->setMethods([
-                'prepare', 'fetch', 'fetchAll', 'fetchColumn'])
+                'prepare', 'fetch', 'fetchAll', 'fetchColumn', 'bindParam', 'bindValue', 'rowCount', 'closeCursor'])
             ->getMock();
 
         $mock_pdo = $this->getMockBuilder(Database::class)
