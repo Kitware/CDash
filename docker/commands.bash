@@ -73,6 +73,7 @@ cdash_run_and_submit_ctest() {
   site=$(cdash_site)
   branch=$(cdash_branch)
 
+  docker exec cdash bash -c "git config --global --add safe.directory /home/kitware/cdash"
   docker exec cdash bash -c "cd /home/kitware/cdash && /usr/bin/git checkout ."
   docker exec cdash bash -c "chown -R www-data:www-data /home/kitware/cdash"
 
