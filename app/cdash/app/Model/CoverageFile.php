@@ -60,7 +60,7 @@ class CoverageFile
         }
 
         $stmt = $this->PDO->prepare(
-                'SELECT id FROM coveragefile WHERE crc32=:crc32');
+            'SELECT id FROM coveragefile WHERE crc32=:crc32');
         $stmt->bindParam(':crc32', $this->Crc32);
         pdo_execute($stmt);
         $existing_file_row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -73,7 +73,7 @@ class CoverageFile
             // First we query for the old fileid used by this coverage entry,
             // just to be sure that we're updating the correct record.
             $stmt = $this->PDO->prepare(
-                    'SELECT c.fileid FROM coverage AS c
+                'SELECT c.fileid FROM coverage AS c
                     INNER JOIN coveragefile AS cf ON (cf.id=c.fileid)
                     WHERE c.buildid=:buildid AND cf.fullpath=:fullpath');
             $stmt->bindParam(':buildid', $buildid);
@@ -84,7 +84,7 @@ class CoverageFile
                 $prevfileid = $old_fileid_row['fileid'];
 
                 $stmt = $this->PDO->prepare(
-                        'UPDATE coverage SET fileid=:fileid
+                    'UPDATE coverage SET fileid=:fileid
                         WHERE buildid=:buildid AND fileid=:prevfileid');
                 $stmt->bindParam(':fileid', $this->Id);
                 $stmt->bindParam(':buildid', $buildid);
@@ -93,7 +93,7 @@ class CoverageFile
 
                 // Similarly update any labels if necessary.
                 $stmt = $this->PDO->prepare(
-                        'SELECT COUNT(*) AS c FROM label2coveragefile
+                    'SELECT COUNT(*) AS c FROM label2coveragefile
                         WHERE buildid=:buildid AND coveragefileid=:prevfileid');
                 $stmt->bindParam(':buildid', $buildid);
                 $stmt->bindParam(':prevfileid', $prevfileid);
@@ -101,7 +101,7 @@ class CoverageFile
                 $count_labels_row = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($count_labels_row['c'] > 0) {
                     $stmt = $this->PDO->prepare(
-                            'UPDATE label2coveragefile SET coveragefileid=:fileid
+                        'UPDATE label2coveragefile SET coveragefileid=:fileid
                             WHERE buildid=:buildid AND coveragefileid=:prevfileid');
                     $stmt->bindParam(':fileid', $this->Id);
                     $stmt->bindParam(':buildid', $buildid);
@@ -111,7 +111,7 @@ class CoverageFile
 
                 // Remove the file if the crc32 is NULL
                 $stmt = $this->PDO->prepare(
-                        'DELETE FROM coveragefile
+                    'DELETE FROM coveragefile
                         WHERE id=:prevfileid AND file IS NULL AND crc32 IS NULL');
                 $stmt->bindParam(':prevfileid', $prevfileid);
                 pdo_execute($stmt);
@@ -121,7 +121,7 @@ class CoverageFile
 
             // We find the current fileid based on the name and the file should be null
             $stmt = $this->PDO->prepare(
-                    'SELECT cf.id, cf.file
+                'SELECT cf.id, cf.file
                     FROM coverage AS c
                     INNER JOIN coveragefile AS cf ON (cf.id=c.fileid)
                     WHERE c.buildid=:buildid AND cf.fullpath=:fullpath
@@ -137,7 +137,7 @@ class CoverageFile
                 $this->Id = $coveragefile_row['id'];
             } else {
                 $stmt = $this->PDO->prepare(
-                        'SELECT id, file FROM coveragefile
+                    'SELECT id, file FROM coveragefile
                         WHERE fullpath=:fullpath AND file IS NULL
                         ORDER BY id ASC');
                 $stmt->bindParam(':fullpath', $this->FullPath);
@@ -150,7 +150,7 @@ class CoverageFile
                 // If we still haven't found an existing fileid
                 // we insert one here.
                 $stmt = $this->PDO->prepare(
-                        'INSERT INTO coveragefile (fullpath, crc32)
+                    'INSERT INTO coveragefile (fullpath, crc32)
                         VALUES (:fullpath, 0)');
                 $stmt->bindParam(':fullpath', $this->FullPath);
                 pdo_execute($stmt);
@@ -158,7 +158,7 @@ class CoverageFile
             }
 
             $stmt = $this->PDO->prepare(
-                    'UPDATE coveragefile SET file=:file, crc32=:crc32 WHERE id=:id');
+                'UPDATE coveragefile SET file=:file, crc32=:crc32 WHERE id=:id');
             $stmt->bindParam(':file', $file, PDO::PARAM_LOB);
             $stmt->bindParam(':crc32', $this->Crc32);
             $stmt->bindParam(':id', $this->Id);
@@ -176,7 +176,7 @@ class CoverageFile
         }
 
         $stmt = $this->PDO->prepare(
-                'SELECT fullpath FROM coveragefile WHERE id=:id');
+            'SELECT fullpath FROM coveragefile WHERE id=:id');
         $stmt->bindParam(':id', $this->Id);
         if (!pdo_execute($stmt)) {
             return false;
@@ -194,7 +194,7 @@ class CoverageFile
         }
 
         $stmt = $this->PDO->prepare(
-                'SELECT loctested, locuntested, branchstested, branchsuntested,
+            'SELECT loctested, locuntested, branchstested, branchsuntested,
                 functionstested, functionsuntested
                 FROM coverage WHERE fileid=:id');
         $stmt->bindParam(':id', $this->Id);
@@ -247,7 +247,7 @@ class CoverageFile
     public function GetIdFromName($file, $buildid)
     {
         $stmt = $this->PDO->prepare(
-                'SELECT id FROM coveragefile
+            'SELECT id FROM coveragefile
                 INNER JOIN coverage ON (coveragefile.id=coverage.fileid)
                 WHERE fullpath LIKE :fullpath AND coverage.buildid=:buildid');
         $file_with_wildcard = "%$file%";

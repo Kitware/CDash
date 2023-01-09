@@ -14,13 +14,11 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $this->assertInstanceOf(TestUseCase::class, $sut);
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Site properties not initialized
-     */
     public function testBuildThrowsExceptionIfNameNotSet()
     {
         $sut = UseCase::createBuilder($this, UseCase::TEST);
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Site properties not initialized');
         $sut->build();
     }
 

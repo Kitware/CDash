@@ -69,7 +69,7 @@ class NoBackupTestCase extends KWWebTestCase
         // Make sure they were both parsed correctly.
         $pdo = get_link_identifier()->getPdo();
         $stmt = $pdo->prepare(
-                'SELECT b.builderrors, cs.loctested FROM build b
+            'SELECT b.builderrors, cs.loctested FROM build b
                 JOIN coveragesummary cs ON (cs.buildid=b.id)
                 WHERE b.id=?');
         $stmt->execute(array($buildid));

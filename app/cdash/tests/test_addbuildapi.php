@@ -26,39 +26,39 @@ class AddBuildAPITestCase extends KWWebTestCase
         // Check for expected error messages when missing parameters.
         // No project.
         $response = $client->request('POST',
-                $this->url .  '/api/v1/addBuild.php',
-                ['http_errors' => false]);
+            $this->url .  '/api/v1/addBuild.php',
+            ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
         $this->assertEqual($response->error, 'Valid project required');
 
         // No site.
         $response = $client->request('POST',
-                $this->url .  '/api/v1/addBuild.php?project=InsightExample',
-                ['http_errors' => false]);
+            $this->url .  '/api/v1/addBuild.php?project=InsightExample',
+            ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
         $this->assertEqual($response->error, 'Valid site required');
 
         // No build name.
         $response = $client->request('POST',
-                $this->url .  '/api/v1/addBuild.php?project=InsightExample&site=HOME',
-                ['http_errors' => false]);
+            $this->url .  '/api/v1/addBuild.php?project=InsightExample&site=HOME',
+            ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
         $this->assertEqual($response->error, 'Valid name required');
 
         $response = $client->request('POST',
-                $this->url .  '/api/v1/addBuild.php?project=InsightExample&site=HOME&name=testaddbuildapi',
-                ['http_errors' => false]);
+            $this->url .  '/api/v1/addBuild.php?project=InsightExample&site=HOME&name=testaddbuildapi',
+            ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
         $this->assertEqual($response->error, 'Valid stamp required');
 
         // API actually adds a build.
         $response = $client->request('POST',
-                $this->url .  '/api/v1/addBuild.php?project=InsightExample&site=HOME&name=testaddbuildapi&stamp=20180705-0100-Experimental',
-                ['http_errors' => false]);
+            $this->url .  '/api/v1/addBuild.php?project=InsightExample&site=HOME&name=testaddbuildapi&stamp=20180705-0100-Experimental',
+            ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertFalse(property_exists($response, 'error'));
         $this->assertTrue(property_exists($response, 'buildid'));

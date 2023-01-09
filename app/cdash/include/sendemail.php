@@ -272,7 +272,6 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         }
         $information .= "\n";
     } elseif ($errorkey == 'test_errors') {
-
         // Local function to add a set of tests to our email message body.
         // This reduces copied & pasted code below.
         $AddTestsToEmail = function ($tests, $section_title) use ($buildid, $maxchars, $maxitems, $serverURI) {

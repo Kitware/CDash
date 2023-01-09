@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateLabel2buildfailureTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

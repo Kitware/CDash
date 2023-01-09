@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateBuildfailure2argumentTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

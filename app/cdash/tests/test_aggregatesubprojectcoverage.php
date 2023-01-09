@@ -326,8 +326,8 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
                     $subproject_name = $coverage['label'];
                     $success &=
                       $this->checkCoverage($coverage, $to_find[$subproject_name]['loctested'],
-                      $to_find[$subproject_name]['locuntested'], $to_find[$subproject_name]['percentage'],
-                      $subproject_name);
+                          $to_find[$subproject_name]['locuntested'], $to_find[$subproject_name]['percentage'],
+                          $subproject_name);
                 }
                 break;
             }

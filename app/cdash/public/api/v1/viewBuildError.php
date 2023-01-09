@@ -178,7 +178,7 @@ if (isset($_GET['onlydeltan'])) {
 
         if ($project->DisplayLabels) {
             get_labels_JSON_from_query_results(
-                    "SELECT text FROM label, label2buildfailure
+                "SELECT text FROM label, label2buildfailure
                     WHERE label.id=label2buildfailure.labelid AND
                     label2buildfailure.buildfailureid='" . $resolvedBuildFailure['id']  . "'
                     ORDER BY text ASC", $marshaledResolvedBuildFailure);

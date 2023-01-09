@@ -95,26 +95,26 @@ if ($testfailing) {
 ?>
 <table width="100%" border="0">
     <?php if ($buildfailing) {
-    ?>
+        ?>
         <tr>
             <td bgcolor="#DDDDDD" id="nob"><font size="2">Build has been failing since <b>
                         <?php
-                        if ($buildfailingdays > 1) {
-                            $date = date2year($datefirstbuildfailing) . date2month($datefirstbuildfailing) . date2day($datefirstbuildfailing);
-                            echo '<a href="index.php?project=' . urlencode($project_array['name']) . '&date=' . $date . '">' . $datefirstbuildfailing . '</a> (' . $buildfailingdays . ' days)';
-                        } elseif ($buildfailingdays == 1) {
-                            $date = date2year($datefirstbuildfailing) . date2month($datefirstbuildfailing) . date2day($datefirstbuildfailing);
-                            echo '<a href="index.php?project=' . urlencode($project_array['name']) . '&date=' . $date . '">' . $datefirstbuildfailing . '</a> (' . $buildfailingdays . ' day)';
-                        } else {
-                            echo $datefirstbuildfailing . ' (today)';
-                        } ?>
+                            if ($buildfailingdays > 1) {
+                                $date = date2year($datefirstbuildfailing) . date2month($datefirstbuildfailing) . date2day($datefirstbuildfailing);
+                                echo '<a href="index.php?project=' . urlencode($project_array['name']) . '&date=' . $date . '">' . $datefirstbuildfailing . '</a> (' . $buildfailingdays . ' days)';
+                            } elseif ($buildfailingdays == 1) {
+                                $date = date2year($datefirstbuildfailing) . date2month($datefirstbuildfailing) . date2day($datefirstbuildfailing);
+                                echo '<a href="index.php?project=' . urlencode($project_array['name']) . '&date=' . $date . '">' . $datefirstbuildfailing . '</a> (' . $buildfailingdays . ' day)';
+                            } else {
+                                echo $datefirstbuildfailing . ' (today)';
+                            } ?>
                     </b></font></td>
         </tr>
         <?php
-} // end buildfailing?>
+    } // end buildfailing?>
 
     <?php if ($testfailing) {
-                            ?>
+        ?>
         <tr>
             <td bgcolor="#DDDDDD" id="nob"><font size="2">Tests have been failing since <b>
                         <?php
@@ -129,7 +129,7 @@ if ($testfailing) {
                     </b></font></td>
         </tr>
         <?php
-                        } ?>
+    } ?>
 
 
 </table>

@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateSubmission2ipTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

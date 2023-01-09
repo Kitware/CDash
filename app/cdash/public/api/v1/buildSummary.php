@@ -251,7 +251,7 @@ $response['update'] = $update_response;
 // Configure
 $configure_response = [];
 $configure = pdo_query(
-        "SELECT * FROM configure c
+    "SELECT * FROM configure c
         JOIN build2configure b2c ON b2c.configureid=c.id
         WHERE b2c.buildid='$buildid'");
 $configure_array = pdo_fetch_array($configure);

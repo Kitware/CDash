@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateBuildemailTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

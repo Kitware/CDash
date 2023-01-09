@@ -118,10 +118,10 @@ class CoverageLogHandler extends AbstractHandler
                     // Make sure this file gets associated with the correct
                     // subproject based on its path.
                     $subproject = SubProject::GetSubProjectFromPath(
-                            $coverageFile->FullPath, $this->projectid);
+                        $coverageFile->FullPath, $this->projectid);
                     if (!is_null($subproject)) {
                         $subprojectBuild = Build::GetSubProjectBuild(
-                                $this->Build->GetParentId(), $subproject->GetId());
+                            $this->Build->GetParentId(), $subproject->GetId());
                         if (is_null($subprojectBuild)) {
                             // This SubProject build doesn't exist yet, add it here.
                             $subprojectBuild = new Build();

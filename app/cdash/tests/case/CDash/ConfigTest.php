@@ -22,7 +22,7 @@ class ConfigTest extends CDashTestCase
     {
         // check some random values to ensure that they match that of the Config instance
         global $CDASH_CSS_FILE,
-               $CDASH_UPLOAD_DIRECTORY;
+        $CDASH_UPLOAD_DIRECTORY;
 
         include 'config/config.php';
 

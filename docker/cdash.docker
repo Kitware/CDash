@@ -1,4 +1,4 @@
-FROM php:7.4-apache-buster
+FROM php:8.1-apache-buster
 LABEL MAINTAINER="Kitware, Inc. <cdash@public.kitware.com>"
 
 ARG CDASH_DB_HOST=localhost
@@ -12,10 +12,10 @@ ENV DEVELOPMENT_BUILD=$DEVELOPMENT_BUILD
 
 RUN apt-get update                                                         \
  && apt-get install -y gnupg                                               \
- && curl -sL https://deb.nodesource.com/setup_12.x | bash                   \
- && apt-get install -y git libbz2-dev libfreetype6-dev libjpeg62-turbo-dev \
-    libmcrypt-dev libpng-dev libpq-dev libxslt-dev libxss1 nodejs unzip    \
-    wget zip libldap2-dev                                                  \
+ && curl -fsSL https://deb.nodesource.com/setup_19.x | bash                \
+ && apt-get install -y apt-utils git libbz2-dev libfreetype6-dev           \
+    libjpeg62-turbo-dev libldap2-dev libmcrypt-dev libpng-dev libpq-dev    \
+    libxslt-dev libxss1 nodejs unzip wget zip                              \
  && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql           \
  && docker-php-ext-configure gd --with-freetype=/usr/include/              \
                                 --with-jpeg=/usr/include/                  \
@@ -60,7 +60,7 @@ COPY ./jest.config.js ./jest.config.js
 COPY ./LICENSE ./LICENSE
 COPY ./package.json ./package.json
 COPY ./package-lock.json ./package-lock.json
-COPY ./.php_cs.dist ./.php_cs.dist
+COPY ./.php-cs-fixer.dist.php ./.php-cs-fixer.dist.php
 COPY ./phpunit.xml ./phpunit.xml
 COPY ./public ./public
 COPY ./README.md ./README.md
@@ -125,11 +125,11 @@ RUN chown -R www-data:www-data .
 RUN cp /home/kitware/cdash/docker/cdash-site.conf                          \
        /etc/apache2/sites-available/cdash-site.conf
 
-# Remove default site, add cdash-site, enable mod_rewrite, enable php7
+# Remove default site, add cdash-site, enable mod_rewrite, enable php
 RUN a2dissite 000-default                                                  \
  && a2ensite cdash-site                                                    \
  && a2enmod rewrite                                                        \
- && a2enmod php7
+ && a2enmod php
 
 COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
 COPY docker/bash /bash-lib

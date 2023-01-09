@@ -323,7 +323,7 @@ function pdo_unlock_tables()
  */
 function pdo_real_escape_string($unescaped_string, $link_identifier = null)
 {
-    $str = get_link_identifier($link_identifier)->getPdo()->quote($unescaped_string);
+    $str = get_link_identifier($link_identifier)->getPdo()->quote($unescaped_string ?? '');
     return substr($str, 1, strlen($str) - 2); // remove enclosing quotes
 }
 

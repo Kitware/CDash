@@ -262,7 +262,6 @@ class IndexPhpFilters extends DefaultFilters
 
             case 'label': {
                 $sql_field = "(SELECT $this->TextConcat FROM label, label2build WHERE label2build.labelid=label.id AND label2build.buildid=b.id)";
-
             }
                 break;
 
@@ -523,22 +522,22 @@ class ViewCoveragePhpFilters extends DefaultFilters
             }
                 break;
 
-            //case 'percentage':
-            //{
-            //  $sql_field = "TODO.percentage";
-            //}
-            //break;
+                //case 'percentage':
+                //{
+                //  $sql_field = "TODO.percentage";
+                //}
+                //break;
 
             case 'priority': {
                 $sql_field = 'cfp.priority';
             }
                 break;
 
-            //case 'status':
-            //{
-            //  $sql_field = "TODO.status";
-            //}
-            //break;
+                //case 'status':
+                //{
+                //  $sql_field = "TODO.status";
+                //}
+                //break;
 
             case 'totallines': {
                 $sql_field = '(c.loctested + c.locuntested)';
@@ -1083,13 +1082,13 @@ function get_filterdata_from_request($page_id = '')
             ];
             for ($j = 1; $j <= $subfiltercount; ++$j) {
                 $filter['filters'][] = parse_filter_from_request(
-                        "field{$i}field{$j}", "field{$i}compare${j}",
-                        "field{$i}value{$j}", $filterdata);
+                    "field{$i}field{$j}", "field{$i}compare${j}",
+                    "field{$i}value{$j}", $filterdata);
             }
             $filters[] = $filter;
         } else {
             $filters[] = parse_filter_from_request(
-                    "field{$i}", "compare${i}", "value{$i}", $filterdata);
+                "field{$i}", "compare${i}", "value{$i}", $filterdata);
         }
     }
 
@@ -1243,7 +1242,7 @@ function get_label_ids_from_filterdata($filterdata)
     foreach ($filterdata['filters'] as $filter) {
         if ($filter['field'] == 'label') {
             $cv = get_sql_compare_and_value($filter['compare'],
-                    $filter['value']);
+                $filter['value']);
             $sql_compare = $cv[0];
             $sql_value = $cv[1];
             if ($clauses > 0) {

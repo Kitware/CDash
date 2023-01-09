@@ -28,18 +28,18 @@ class RegisterUserTestCase extends KWWebTestCase
 
             // POST to /register to create a new user.
             $response = $client->request('POST',
-                    $this->url . '/register',
-                    ['form_params' => [
-                        '_token' => "{$token}",
-                        'fname' => 'Temp',
-                        'lname' => 'Testuser',
-                        'email' => 'temp@testuser.com',
-                        'password' => 'temptestuser',
-                        'password_confirmation' => 'temptestuser',
-                        'institution' => 'Test Users',
-                        'url' => 'catchbot',
-                        'sent' => 'Register',
-                    ]]);
+                $this->url . '/register',
+                ['form_params' => [
+                    '_token' => "{$token}",
+                    'fname' => 'Temp',
+                    'lname' => 'Testuser',
+                    'email' => 'temp@testuser.com',
+                    'password' => 'temptestuser',
+                    'password_confirmation' => 'temptestuser',
+                    'institution' => 'Test Users',
+                    'url' => 'catchbot',
+                    'sent' => 'Register',
+                ]]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
             return false;

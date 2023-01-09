@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateBuilderrordiffTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

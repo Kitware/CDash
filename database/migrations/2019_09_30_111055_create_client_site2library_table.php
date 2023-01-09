@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateClientSite2libraryTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

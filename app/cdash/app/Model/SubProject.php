@@ -278,7 +278,7 @@ class SubProject
         }
 
         $stmt = $this->PDO->prepare(
-           "SELECT * FROM subproject
+            "SELECT * FROM subproject
            WHERE projectid = ?  AND name = ? AND
                  endtime = '1980-01-01 00:00:00'");
 
@@ -710,8 +710,8 @@ class SubProject
         $id = $stmt->fetchColumn();
         if (!$id) {
             add_log(
-                    "No SubProject found for '$path'", 'GetSubProjectFromPath',
-                    LOG_INFO, $projectid, 0);
+                "No SubProject found for '$path'", 'GetSubProjectFromPath',
+                LOG_INFO, $projectid, 0);
             return null;
         }
         $subproject = new SubProject();

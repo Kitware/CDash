@@ -3,13 +3,10 @@
 namespace Tests\Feature;
 
 use Artisan;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class MeasurementPositionMigration extends TestCase
 {
-    use RefreshDatabase;
-
     /**
      * Test case for the migration that adds the `position` column to
      * the `measurement` table.
@@ -18,6 +15,9 @@ class MeasurementPositionMigration extends TestCase
      */
     public function testMeasurementPositionMigration()
     {
+        Artisan::call('migrate:fresh', [
+            '--force' => true]);
+
         // Rollback the relevant migration.
         Artisan::call('migrate:rollback', [
             '--path' => 'database/migrations/2021_09_23_124054_add_measurement_order.php',
@@ -101,5 +101,8 @@ class MeasurementPositionMigration extends TestCase
             '--path' => 'database/migrations/2021_09_23_124054_add_measurement_order.php',
             '--force' => true]);
         $this->assertFalse(\Schema::hasColumn('measurement', 'position'));
+
+        Artisan::call('migrate:fresh', [
+            '--force' => true]);
     }
 }

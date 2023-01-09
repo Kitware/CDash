@@ -1,7 +1,8 @@
 <?php
 namespace App\Http\Controllers\Views;
 
-require_once 'include/common.php'; require_once 'include/defines.php';
+require_once 'include/common.php';
+require_once 'include/defines.php';
 
 use CDash\Model\Project;
 use App\Services\ProjectPermissions;

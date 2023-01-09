@@ -60,8 +60,8 @@ class RepositoryService
     public function setStatusOnStart(Build $build, $context)
     {
         $this->setStatus($context, "Build: {$build->Name}",
-                $build->GetBuildUpdate()->Revision, 'pending',
-                $build->GetBuildSummaryUrl());
+            $build->GetBuildUpdate()->Revision, 'pending',
+            $build->GetBuildSummaryUrl());
     }
 
     public function setStatusOnComplete(Build $build, $context)

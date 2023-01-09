@@ -139,8 +139,8 @@ class GCovTarHandler extends NonSaxHandler
         // Search for uncovered files.
         if (file_exists("$dirName/uncovered")) {
             $iterator = new RecursiveIteratorIterator(
-                    new RecursiveDirectoryIterator("$dirName/uncovered"),
-                    RecursiveIteratorIterator::LEAVES_ONLY);
+                new RecursiveDirectoryIterator("$dirName/uncovered"),
+                RecursiveIteratorIterator::LEAVES_ONLY);
             foreach ($iterator as $fileinfo) {
                 if ($fileinfo->isFile()) {
                     // Get the path of this uncovered file relative to its

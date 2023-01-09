@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateCoveragesummaryTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

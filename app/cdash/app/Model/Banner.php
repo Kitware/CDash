@@ -33,7 +33,7 @@ class Banner
     public function GetText()
     {
         $stmt = $this->PDO->prepare(
-          'SELECT text FROM banner WHERE projectid = ?');
+            'SELECT text FROM banner WHERE projectid = ?');
         if (!pdo_execute($stmt, [$this->ProjectId])) {
             return false;
         }

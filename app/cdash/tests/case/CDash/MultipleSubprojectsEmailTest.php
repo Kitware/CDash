@@ -50,7 +50,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
     /** @var UseCase $useCase */
     private $useCase;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         parent::setUpBeforeClass();
 
@@ -67,7 +67,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         self::$database = Database::getInstance();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void
     {
         // restore state
         date_default_timezone_set(self::$tz);

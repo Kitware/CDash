@@ -128,11 +128,11 @@ class CoverageHandler extends AbstractHandler
                 if ($this->HasSubProjects) {
                     // Make sure this file gets associated with the correct SubProject.
                     $subproject = SubProject::GetSubProjectFromPath(
-                            $coverageFile->FullPath, $this->projectid);
+                        $coverageFile->FullPath, $this->projectid);
                     if (!is_null($subproject)) {
                         // Find the sibling build that performed this SubProject.
                         $subprojectBuild = Build::GetSubProjectBuild(
-                                $this->Build->GetParentId(), $subproject->GetId());
+                            $this->Build->GetParentId(), $subproject->GetId());
                         if (is_null($subprojectBuild)) {
                             // Build doesn't exist yet, add it here.
                             $subprojectBuild = new Build();

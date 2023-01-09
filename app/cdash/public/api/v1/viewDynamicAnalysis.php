@@ -134,7 +134,7 @@ $rows = \DB::table('dynamicanalysis')
 
                 if ($project->DisplayLabels) {
                     get_labels_JSON_from_query_results(
-                    "SELECT text FROM label, label2dynamicanalysis
+                        "SELECT text FROM label, label2dynamicanalysis
                     WHERE label.id = label2dynamicanalysis.labelid AND
                     label2dynamicanalysis.dynamicanalysisid = '$dynid'
                     ORDER BY text ASC", $dynamic_analysis);

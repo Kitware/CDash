@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateOverviewComponentsTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

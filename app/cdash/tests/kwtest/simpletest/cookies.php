@@ -142,9 +142,9 @@ class SimpleCookie
     public function isValidPath($path)
     {
         return (strncmp(
-                $this->fixPath($path),
-                $this->getPath(),
-                strlen($this->getPath())) == 0);
+            $this->fixPath($path),
+            $this->getPath(),
+            strlen($this->getPath())) == 0);
     }
 
     /**

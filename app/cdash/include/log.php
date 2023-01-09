@@ -19,10 +19,6 @@ require_once 'include/pdo.php';
 
 use CDash\Config;
 
-use \Monolog\Handler\StreamHandler;
-use \Monolog\Handler\SyslogHandler;
-use \Monolog\Logger;
-use \Monolog\Registry;
 use \Psr\Log\LogLevel;
 
 function cdash_unlink($filename)

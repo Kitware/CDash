@@ -109,7 +109,7 @@ class QueryTests extends ResultsApi
         foreach ($this->testOutputIncludeRegex as $include_regex) {
             $include_regex = $this->applySafeDelimiter($include_regex);
             if (preg_match($include_regex, $test_output, $matches,
-                        PREG_OFFSET_CAPTURE)) {
+                PREG_OFFSET_CAPTURE)) {
                 if (!$first_match_idx) {
                     $first_match_idx = $matches[0][1];
                     $match_length = strlen($include_regex);
@@ -135,8 +135,8 @@ class QueryTests extends ResultsApi
                 // Show context surrounding the match.
                 $build['matchingoutput'] =
                     substr($test_output,
-                            $first_match_idx - $pre_post_context_size,
-                            $context_size);
+                        $first_match_idx - $pre_post_context_size,
+                        $context_size);
             }
         } else {
             // Showing tests whose output does NOT include some string(s).

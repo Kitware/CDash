@@ -261,7 +261,7 @@ class Timeline extends Index
                     Build::ConvertMissingToZero($row['configureerrors']);
                 if (strlen($row['updatestatus']) > 0 &&
                         $row['updatestatus'] != '0'
-                   ) {
+                ) {
                     $build['errors'] += 1;
                 }
                 $build['testfailed'] = $row['testfailed'];

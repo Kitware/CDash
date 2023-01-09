@@ -42,30 +42,30 @@ class BuildUserNote
 
         if (!isset($this->UserId) || $this->UserId < 1) {
             add_log('UserId is not set', 'BuildUserNote::Insert()', LOG_ERR,
-                    0, $this->BuildId);
+                0, $this->BuildId);
             return false;
         }
 
         if (!isset($this->Note)) {
             add_log('Note is not set', 'BuildUserNote::Insert()', LOG_ERR,
-                    0, $this->BuildId);
+                0, $this->BuildId);
             return false;
         }
 
         if (!isset($this->TimeStamp)) {
             add_log('TimeStamp is not set', 'BuildUserNote::Insert()', LOG_ERR,
-                    0, $this->BuildId);
+                0, $this->BuildId);
             return false;
         }
 
         if (!isset($this->Status)) {
             add_log('Status is not set', 'BuildUserNote::Insert()', LOG_ERR,
-                    0, $this->BuildId);
+                0, $this->BuildId);
             return false;
         }
 
         $stmt = $this->PDO->prepare(
-                'INSERT INTO buildnote
+            'INSERT INTO buildnote
                 (buildid, userid, note, timestamp, status)
                 VALUES
                 (:buildid, :userid, :TextNote, :now, :Status)');

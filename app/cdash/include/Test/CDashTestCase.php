@@ -43,7 +43,7 @@ class CDashTestCase extends TestCase
     /** @var String $endpoint */
     private $endpoint;
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void
     {
         ServiceContainer::setInstance(ServiceContainer::class, self::$originalServiceContainer);
         parent::tearDownAfterClass();
@@ -78,7 +78,7 @@ class CDashTestCase extends TestCase
         $mock_stmt = $this->getMockBuilder(\PDOStatement::class)
             ->disableOriginalConstructor()
             ->setMethods([
-                'prepare', 'fetch', 'fetchAll', 'fetchColumn'])
+                'prepare', 'fetch', 'fetchAll', 'fetchColumn', 'bindParam', 'bindValue', 'rowCount', 'closeCursor'])
             ->getMock();
 
         $mock_pdo = $this->getMockBuilder(Database::class)
@@ -108,7 +108,7 @@ class CDashTestCase extends TestCase
             ->will($this->returnCallback(function ($arg) {
                 return "'" . $arg . "'";
             })
-        );
+            );
 
         Database::setInstance(Database::class, $mock_pdo);
     }

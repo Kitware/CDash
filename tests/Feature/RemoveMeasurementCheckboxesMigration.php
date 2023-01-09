@@ -3,13 +3,10 @@
 namespace Tests\Feature;
 
 use Artisan;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class RemoveMeasurementCheckboxesMigration extends TestCase
 {
-    use RefreshDatabase;
-
     /**
      * Test case for the migration that removes the `testpage` and `summarypage`
      * columns from the `measurement` table.
@@ -18,6 +15,9 @@ class RemoveMeasurementCheckboxesMigration extends TestCase
      */
     public function testRemoveMeasurementCheckboxesMigration()
     {
+        Artisan::call('migrate:fresh', [
+            '--force' => true]);
+
         // Rollback the relevant migration.
         Artisan::call('migrate:rollback', [
             '--path' => 'database/migrations/2021_10_29_151020_remove_test_checkboxes.php',
@@ -35,5 +35,8 @@ class RemoveMeasurementCheckboxesMigration extends TestCase
         // Verify that worked.
         $this->assertFalse(\Schema::hasColumn('measurement', 'testpage'));
         $this->assertFalse(\Schema::hasColumn('measurement', 'summarypage'));
+
+        Artisan::call('migrate:fresh', [
+            '--force' => true]);
     }
 }

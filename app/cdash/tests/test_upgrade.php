@@ -16,6 +16,7 @@ class UpgradeTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
+        $this->deleteLog($this->logfilename);
     }
 
     public function testAssignBuildsToDefaultGroups()
@@ -315,7 +316,7 @@ class UpgradeTestCase extends KWWebTestCase
         $saved_build_duration = $row['buildduration'];
         $saved_test_duration = $row['testduration'];
         pdo_query(
-                "UPDATE build SET buildduration = 0, testduration = 0
+            "UPDATE build SET buildduration = 0, testduration = 0
                 WHERE id = $id");
 
         UpgradeBuildDuration($id);
@@ -334,7 +335,7 @@ class UpgradeTestCase extends KWWebTestCase
         }
 
         pdo_query(
-                "UPDATE build
+            "UPDATE build
                 SET buildduration = $saved_build_duration,
                     testduration = $saved_test_duration
                 WHERE id = $id");
@@ -695,7 +696,7 @@ class UpgradeTestCase extends KWWebTestCase
             $count_results = pdo_single_row_query($count_query);
             if ($count_results['numrows'] != 3) {
                 $this->fail(
-                        "Expected 3 rows in $table_name, found " . $count_results['numrows']);
+                    "Expected 3 rows in $table_name, found " . $count_results['numrows']);
                 $retval = 1;
             }
         }
@@ -796,18 +797,18 @@ class UpgradeTestCase extends KWWebTestCase
         $buildids = [1, 2];
         foreach ($buildids as $buildid) {
             $pdo->exec(
-                    "INSERT INTO $build_table_name
+                "INSERT INTO $build_table_name
                     (id, testduration)
                     VALUES ($buildid, 0)");
             $pdo->exec(
-                    "INSERT INTO $btt_table_name
+                "INSERT INTO $btt_table_name
                     (buildid, time)
                     VALUES ($buildid, $buildid)");
         }
 
         // Also insert one build with no test timing.
         $pdo->exec(
-                "INSERT INTO $build_table_name
+            "INSERT INTO $build_table_name
                 (id, testduration)
                 VALUES (3, 0)");
 
@@ -818,7 +819,7 @@ class UpgradeTestCase extends KWWebTestCase
             $found = $stmt->fetchColumn();
             if ($found != $expected) {
                 $this->fail(
-                        "Expected $expected rows in $table_name, found $found");
+                    "Expected $expected rows in $table_name, found $found");
             }
         }
 
@@ -857,7 +858,7 @@ class UpgradeTestCase extends KWWebTestCase
 
         // Drop testing tables.
         $pdo->exec(
-        "DROP TABLE $build_table_name");
+            "DROP TABLE $build_table_name");
         pdo_query("DROP TABLE $btt_table_name");
     }
 
@@ -885,7 +886,7 @@ class UpgradeTestCase extends KWWebTestCase
         // Verify that the outdated rule gets fixed.
         $this->PDO = Database::getInstance();
         $stmt = $this->PDO->prepare(
-                'SELECT * FROM build2grouprule WHERE groupid = :groupid');
+            'SELECT * FROM build2grouprule WHERE groupid = :groupid');
         $this->PDO->execute($stmt, [':groupid' => $buildgroup->GetId()]);
         $row = $stmt->fetch();
         $this->assertEqual('%this needs wildcards%', $row['buildname']);

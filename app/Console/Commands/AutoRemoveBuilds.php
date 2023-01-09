@@ -73,16 +73,16 @@ class AutoRemoveBuilds extends Command
             $db->execute($stmt, $args);
             while ($project_array = $stmt->fetch()) {
                 removeFirstBuilds(
-                        $project_array['id'],
-                        $project_array['autoremovetimeframe'],
-                        $project_array['autoremovemaxbuilds'],
-                        true // force the autoremove
-                        );
+                    $project_array['id'],
+                    $project_array['autoremovetimeframe'],
+                    $project_array['autoremovemaxbuilds'],
+                    true // force the autoremove
+                );
                 removeBuildsGroupwise(
-                        $project_array['id'],
-                        $project_array['autoremovemaxbuilds'],
-                        true // force the autoremove
-                        );
+                    $project_array['id'],
+                    $project_array['autoremovemaxbuilds'],
+                    true // force the autoremove
+                );
             }
         }
     }

@@ -84,13 +84,13 @@ $response['menu'] = $menu;
 // that occurred during this day will be included.
 $timestamp = $response['unixtimestamp'] + 3600 * 24;
 $beginning_UTCDate = gmdate(FMT_DATETIME,
-        strtotime("-1 $range", $timestamp));
+    strtotime("-1 $range", $timestamp));
 $end_UTCDate = gmdate(FMT_DATETIME, $timestamp);
 
 // Lookup stats for this time period.
 $pdo = get_link_identifier()->getPdo();
 $stmt = $pdo->prepare(
-        'SELECT * FROM userstatistics
+    'SELECT * FROM userstatistics
         WHERE checkindate<:end AND checkindate>=:beginning
         AND projectid=:projectid');
 $stmt->bindParam(':end', $end_UTCDate);

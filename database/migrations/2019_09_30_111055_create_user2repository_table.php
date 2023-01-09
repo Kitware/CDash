@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateUser2repositoryTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

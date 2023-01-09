@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateBuild2groupTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

@@ -142,7 +142,7 @@ class ProcessSubmission implements ShouldQueue
      * @param  Exception  $exception
      * @return void
      */
-    public function failed(\Exception $exception)
+    public function failed(\Throwable $exception)
     {
         \Log::warning("Failed to process {$this->filename}");
         $this->renameSubmissionFile("inprogress/{$this->filename}", "failed/{$this->filename}");
@@ -239,9 +239,9 @@ class ProcessSubmission implements ShouldQueue
 
         $client = new GuzzleHttp\Client();
         $response = $client->request('GET',
-                                     config('app.url') . '/api/v1/getSubmissionFile.php',
-                                     ['query' => ['filename' => $filename],
-                                           'save_to' => $tmpFilename]);
+            config('app.url') . '/api/v1/getSubmissionFile.php',
+            ['query' => ['filename' => $filename],
+                  'save_to' => $tmpFilename]);
 
         if ($response->getStatusCode() === 200) {
             // @todo I'm sure Guzzle can be used to return a file handle from the stream, but for now

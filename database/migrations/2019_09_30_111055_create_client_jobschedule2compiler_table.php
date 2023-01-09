@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateClientJobschedule2compilerTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

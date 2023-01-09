@@ -45,8 +45,8 @@ class RedundantTestsTestCase extends KWWebTestCase
         ];
         try {
             $response = $client->request('POST',
-                    $this->url . '/api/v1/manageMeasurements.php',
-                    ['json' => ['projectid' => $this->project->Id, 'measurements' => $measurements]]);
+                $this->url . '/api/v1/manageMeasurements.php',
+                ['json' => ['projectid' => $this->project->Id, 'measurements' => $measurements]]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
             return false;

@@ -98,7 +98,7 @@ class OutputColorTestCase extends KWWebTestCase
     {
         $buildtestid_results = \DB::select(
             DB::raw(
-            "SELECT build2test.id FROM build2test
+                "SELECT build2test.id FROM build2test
             JOIN test ON (build2test.testid = test.id)
             WHERE test.name = '$testname'")
         );

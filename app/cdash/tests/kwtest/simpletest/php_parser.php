@@ -94,9 +94,9 @@ class ParallelRegex
         if ($this->regex == null) {
             for ($i = 0, $count = count($this->patterns); $i < $count; $i++) {
                 $this->patterns[$i] = '(' . str_replace(
-                        array('/', '(', ')'),
-                        array('\/', '\(', '\)'),
-                        $this->patterns[$i]) . ')';
+                    array('/', '(', ')'),
+                    array('\/', '\(', '\)'),
+                    $this->patterns[$i]) . ')';
             }
             $this->regex = '/' . implode('|', $this->patterns) . '/' . $this->getPerlMatchingFlags();
         }

@@ -581,7 +581,7 @@ function UpgradeConfigureDuration()
 
     while ($row = pdo_fetch_array($result)) {
         $id = $row['id'];
-        $duration = strtotime($row['endtime']) - strtotime($row['starttime']);
+        $duration = strtotime($row['endtime'] ?? '') - strtotime($row['starttime'] ?? '');
         if ($duration === 0) {
             continue;
         }
@@ -1048,7 +1048,7 @@ function PopulateBuild2Configure($configure_table, $b2c_table)
         if ($current_batch_size >= 5000) {
             // Insert this batch.
             pdo_query(
-            "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
+                "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
              VALUES " . implode(',', $inserts));
             $total_inserted += $current_batch_size;
             $inserts = [];
@@ -1065,7 +1065,7 @@ function PopulateBuild2Configure($configure_table, $b2c_table)
     if (!empty($inserts)) {
         add_log("Inserting b2c rows for duplicate crc32s (100%)", 'PopulateBuild2Configure');
         pdo_query(
-        "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
+            "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
          VALUES " . implode(',', $inserts));
     }
 

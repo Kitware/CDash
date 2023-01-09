@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateCoveragefile2userTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

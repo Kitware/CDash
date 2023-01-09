@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateClientSite2programTable extends Migration
 {
-
     /**
      * Run the migrations.
      *

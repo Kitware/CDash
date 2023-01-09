@@ -15,7 +15,7 @@
 =========================================================================*/
 namespace CDash;
 
-use Doctrine\DBAL\Driver\PDOConnection;
+use Doctrine\DBAL\Driver\PDO\Connection;
 use PDO;
 use PDOException;
 

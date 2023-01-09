@@ -169,9 +169,11 @@ if (!$installed) {
             try {
                 $pdo->exec($sql);
             } catch (Exception $exception) {
-                $xml .= '<db_created>0</db_created>';
-                $xml .= '<alert>' . pdo_error() . '</alert>';
-                $db_created = false;
+                if ($db_type !== 'pgsql' || strpos($exception->getMessage(), 'already exists') === false) {
+                    $xml .= '<db_created>0</db_created>';
+                    $xml .= '<alert>' . pdo_error() . '</alert>';
+                    $db_created = false;
+                }
             }
 
             if ($db_created) {

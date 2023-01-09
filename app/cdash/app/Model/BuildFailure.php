@@ -287,16 +287,16 @@ class BuildFailure
             }
 
             $marshaled['cvsurl'] = \get_diff_url($project->Id,
-                                                $project->CvsUrl,
-                                                $directory,
-                                                $file,
-                                                $revision);
+                $project->CvsUrl,
+                $directory,
+                $file,
+                $revision);
 
             if ($source_dir !== null && $linkifyOutput) {
                 $marshaled['stderror'] = linkify_compiler_output($project->CvsUrl, $source_dir,
-                                                                 $revision, $data['stderror']);
+                    $revision, $data['stderror']);
                 $marshaled['stdoutput'] = linkify_compiler_output($project->CvsUrl, $source_dir,
-                                                                  $revision, $data['stdoutput']);
+                    $revision, $data['stdoutput']);
             }
         }
 

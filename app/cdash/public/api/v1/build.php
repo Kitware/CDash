@@ -86,7 +86,7 @@ function rest_post($build)
             'INSERT INTO build2group(groupid, buildid)
             VALUES (:groupid, :buildid)');
         $pdo->execute($insert_stmt,
-                [':groupid' => $newgroupid, ':buildid' => $build->Id]);
+            [':groupid' => $newgroupid, ':buildid' => $build->Id]);
 
         // Mark any previous buildgroup rule as finished as of this time.
         $now = gmdate(FMT_DATETIME);

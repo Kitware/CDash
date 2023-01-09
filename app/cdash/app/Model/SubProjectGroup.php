@@ -359,7 +359,7 @@ class SubProjectGroup
     public function GetNextPosition()
     {
         $query = pdo_query(
-                "SELECT position FROM subprojectgroup
+            "SELECT position FROM subprojectgroup
                 WHERE projectid='$this->ProjectId'
                 AND endtime='1980-01-01 00:00:00'
                 ORDER BY position DESC LIMIT 1");

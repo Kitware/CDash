@@ -198,7 +198,7 @@ class BuildGroupRule
     private function HardDelete()
     {
         $stmt = $this->PDO->prepare(
-                'DELETE FROM build2grouprule
+            'DELETE FROM build2grouprule
                 WHERE groupid       = :groupid AND
                       parentgroupid = :parentgroupid AND
                       buildtype     = :buildtype AND

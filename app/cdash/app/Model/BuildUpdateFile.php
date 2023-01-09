@@ -40,7 +40,7 @@ class BuildUpdateFile
         $this->Filename = pdo_real_escape_string($this->Filename);
 
         // Sometimes the checkin date is not found in that case we put the usual date
-        if ($this->CheckinDate == 'Unknown') {
+        if (is_null($this->CheckinDate) || $this->CheckinDate == 'Unknown') {
             $this->CheckinDate = '1980-01-01';
         }
 

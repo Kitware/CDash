@@ -25,7 +25,7 @@ class System
      * @param array $args
      * @return mixed
      */
-    final private static function call(callable $process_name, array $args)
+    private static function call(callable $process_name, array $args)
     {
         $args = empty($args) ? $args : self::trimNullArguments($args);
         return call_user_func_array($process_name, $args);
@@ -35,7 +35,7 @@ class System
      * @param array $args
      * @return array
      */
-    final private static function trimNullArguments(array $args)
+    private static function trimNullArguments(array $args)
     {
         $reversed = array_reverse($args);
         $length = count($args);

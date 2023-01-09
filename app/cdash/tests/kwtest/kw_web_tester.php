@@ -571,8 +571,8 @@ class KWWebTestCase extends WebTestCase
         // Create project.
         try {
             $response = $client->request('POST',
-                    $this->url . '/api/v1/project.php',
-                    ['json' => [$submit_button => true, 'project' => $settings]]);
+                $this->url . '/api/v1/project.php',
+                ['json' => [$submit_button => true, 'project' => $settings]]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
             return false;
@@ -629,8 +629,8 @@ class KWWebTestCase extends WebTestCase
         $project_array = array('Id' => $projectid);
         try {
             $response = $client->delete(
-                    $this->url . '/api/v1/project.php',
-                    ['json' => ['project' => $project_array]]);
+                $this->url . '/api/v1/project.php',
+                ['json' => ['project' => $project_array]]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
             return false;
@@ -658,12 +658,12 @@ class KWWebTestCase extends WebTestCase
                 ->getAttribute('value');
 
             $response = $client->request('POST',
-                    $this->url . '/login',
-                    ['form_params' => [
-                        '_token' => "{$token}",
-                    'email' => $username,
-                    'password' => $password,
-                    'sent' => 'Login >>']]);
+                $this->url . '/login',
+                ['form_params' => [
+                    '_token' => "{$token}",
+                'email' => $username,
+                'password' => $password,
+                'sent' => 'Login >>']]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
             return false;

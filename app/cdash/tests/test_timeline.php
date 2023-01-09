@@ -28,8 +28,8 @@ class TimelineTestCase extends KWWebTestCase
         ];
         try {
             $response = $client->request('POST',
-                    $this->url .  '/api/v1/build.php',
-                    ['json' => $payload]);
+                $this->url .  '/api/v1/build.php',
+                ['json' => $payload]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
         }
