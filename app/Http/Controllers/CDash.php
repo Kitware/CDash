@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\ResponseTrait;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use League\Flysystem\Adapter\AbstractAdapter;
 use Storage;
 
 /**
@@ -154,11 +152,8 @@ class CDash extends Controller
      */
     public function getRequestContents()
     {
-        /** @var  AbstractAdapter $adapter */
-        $adapter = $this->getDiskAdapter();
         $file = $this->getAbsolutePath();
-
-        chdir($adapter->getPathPrefix());
+        chdir($this->disk->path(''));
 
         ob_start();
         $redirect = require $file;
@@ -287,17 +282,9 @@ class CDash extends Controller
      */
     public function getAbsolutePath()
     {
-        /** @var  AbstractAdapter $adapter */
-        $adapter = $this->getDiskAdapter();
         $path = $this->getPath();
-
-        $file = $adapter->applyPathPrefix($path);
+        $file = $this->disk->path($path);
         return $file;
-    }
-
-    public function getDiskAdapter()
-    {
-        return $this->disk->getDriver()->getAdapter();
     }
 
     /**
