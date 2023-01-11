@@ -34,8 +34,6 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);
 // host for Selenium testing
 $CDASH_SELENIUM_HUB='localhost';
 
-// If CDash should use the SendGrid API for email
-$CDASH_USE_SENDGRID = false;
 // API Key for SendGrid
 $CDASH_SENDGRID_API_KEY = null;
 // Using HTTPS protocol to access CDash

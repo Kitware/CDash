@@ -39,8 +39,7 @@
     "pear/archive_tar": "~1.4",
     "php-di/php-di": "6.3.2",
     "predis/predis": "~0.8",
-    "ramsey/uuid": "^4",
-    "sendgrid/sendgrid": "5.0.4"
+    "ramsey/uuid": "^4"
   },
   "require-dev": {
     "ext-dom": "*",
