@@ -16,21 +16,24 @@
 
 namespace CDash\Messaging\Notification\Email;
 
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Transport\SendmailTransport;
+use Symfony\Component\Mime\Email;
+
 use CDash\Log;
 use CDash\Messaging\Notification\NotificationInterface;
 use CDash\Singleton;
 
 class Mail extends Singleton
 {
-    protected $swift;
+    protected $mailer;
     protected $recipient;
     protected $defaultSender;
     protected $defaultReplyTo;
     protected $emails;
 
     /**
-     * TODO: probably better implemented with DI
-     * (e.g.: __construct(Swift_)
      * Mail constructor.
      */
     public function __construct()
@@ -71,74 +74,56 @@ class Mail extends Singleton
     }
 
     /**
-     * @return null|\Swift_Mailer
+     * @return null|Mailer
      */
-    public function getSwiftMailer()
+    public function getMailer()
     {
-        if (!$this->swift) {
-            if (config('mail.driver') != 'stmp') {
-                // TODO:
-                /* @see https://github.com/swiftmailer/swiftmailer/issues/866#issuecomment-289291228
-                 * If we want to enable the ability to send via php's native mail() function
-                 * then we should create our own Transport implementing Swift_Transport
-                 * that guarantees proper sanitization of vulnerable input, namely email addresses
-                 */
-                // $transport = \Swift_MailTransport::newInstance();
-                $transport = new \Swift_SendmailTransport();
-            } else {
+        if (!$this->mailer) {
+            if (config('mail.driver') == 'stmp') {
                 $smtp_host = config('mail.host');
                 $smtp_port = config('mail.port');
                 $smtp_user = config('mail.username');
                 $smtp_pswd = config('mail.password');
-
-                $transport = new \Swift_SmtpTransport($smtp_host, $smtp_port);
-                if ($smtp_host && $smtp_pswd) {
-                    $transport
-                        ->setUsername($smtp_user)
-                        ->setPassword($smtp_pswd);
+                if ($smtp_user && $smtp_pswd) {
+                    $smtp_dsn = "smtp://{$smtp_user}:{$smtp_pswd}@{$smtp_host}:{$smtp_port}";
+                } else {
+                    $smtp_dsn = "smtp://{$smtp_host}:{$smtp_port}";
                 }
+                $transport = Transport::fromDsn($dsn);
+            } else {
+                $transport = new SendmailTransport();
             }
 
-            $this->swift = new \Swift_Mailer($transport);
-
-            if (config('app.debug')) {
-                $listener = new EmailSendListener($this);
-                $this->swift->registerPlugin($listener);
-            }
+            $this->mailer = new Mailer($transport);
         }
-        return $this->swift;
+        return $this->mailer;
     }
 
     public function send(EmailMessage $message)
     {
+        if (config('app.debug')) {
+            return;
+        }
         $sender = $message->getSender() ?: $this->getDefaultSender();
-        $swift_mailer = $this->getSwiftMailer();
-        $swift_message = new \Swift_Message();
+        $mailer = $this->getMailer();
+
         try {
-            $swift_message->setTo($this->recipient)
-                ->setFrom($sender)
-                ->setSubject($message->getSubject())
-                ->setBody($message->getBody());
+            $email = (new Email())
+                ->from($sender)
+                ->to($this->recipient)
+                ->subject($message->getSubject())
+                ->text($message->getBody());
         } catch (\Exception $e) {
             $log = Log::getInstance();
             $log->add_log($e->getMessage(), __METHOD__);
         }
-        $failed_recipients = [];
 
         try {
-            $status = $swift_mailer->send($swift_message, $failed_recipients);
+            $mailer->send($email);
         } catch (\Exception $e) {
-            $status = 0;
             $log = Log::getInstance();
             $log->add_log($e->getMessage(), __METHOD__);
         }
-
-        if (!empty($failed_recipients)) {
-            $log = Log::getInstance();
-            $message = "Failed to send message titled {$message->getSubject()} to {$failed_recipients[0]}";
-            $log->add_log($message, __METHOD__);
-        }
-        return $status;
     }
 
     public static function to($address)
@@ -148,9 +133,9 @@ class Mail extends Singleton
         return $mail;
     }
 
-    public function addEmail(\Swift_Message $message)
+    public function addEmail(Email $email)
     {
-        $this->emails[] = $message;
+        $this->emails[] = $email;
     }
 
     public function getEmails()
