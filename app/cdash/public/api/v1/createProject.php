@@ -147,6 +147,7 @@ if ($projectid > 0) {
     }
     $project_response['WarningsFilter'] = "";
     $project_response['ErrorsFilter'] = "";
+    $project_response['ViewSubProjectsLink'] = 1;
 }
 
 // Make sure we have at least one repository.

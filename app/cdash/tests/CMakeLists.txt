@@ -239,6 +239,7 @@ add_php_test(querytestsrevisionfilter)
 add_php_test(redundanttests)
 add_php_test(configureappend)
 add_php_test(notesparsererrormessages)
+add_php_test(viewsubprojectslinkoption)
 
 add_subdirectory(ctest)
 

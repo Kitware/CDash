@@ -551,6 +551,7 @@ class KWWebTestCase extends WebTestCase
                     'TestTimeStd' => 4,
                     'TestTimeStdThreshold' => 1,
                     'UploadQuota' => 1,
+                    'ViewSubProjectsLink' => 1,
                     'WarningsFilter' => '',
                     'ErrorsFilter' => '');
             $submit_button = 'Submit';
