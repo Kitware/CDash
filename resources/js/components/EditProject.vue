@@ -1843,6 +1843,45 @@
                   <td />
                   <td>
                     <div align="right">
+                      <strong>View SubProjects Link</strong>
+                    </div>
+                  </td>
+                  <td>
+                    <input
+                      v-model="cdash.project.ViewSubProjectsLink"
+                      type="checkbox"
+                      name="viewSubProjectsLink"
+                      true-value="1"
+                      false-value="0"
+                      @change="cdash.changesmade = true"
+                      @focus="showHelp('viewSubProjectsLink_help')"
+                    >
+                    <a
+                      href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                      target="blank"
+                    >
+                      <img
+                        :src="$baseURL + '/img/help.gif'"
+                        border="0"
+                        @mouseover="showHelp('viewSubProjectsLink_help')"
+                      >
+                    </a>
+                    <span
+                      id="viewSubProjectsLink_help"
+                      class="help_content"
+                    >
+                      <b>View SubProjects Link</b>
+                      <br>
+                      If this Project uses SubProjects, show a per-SubProject
+                      breakdown by default. If unchecked, CDash will show per-build
+                      results instead.
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td />
+                  <td>
+                    <div align="right">
                       <strong>Show coverage code:</strong>
                     </div>
                   </td>

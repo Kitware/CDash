@@ -91,10 +91,10 @@ class ViewProjects extends \CDash\Controller\Api
             $name_encoded = urlencode($project['name']);
             $project_response['name_encoded'] = $name_encoded;
             $project_response['description'] = $project['description'];
-            if ($project['numsubprojects'] == 0) {
-                $project_response['link'] = "index.php?project=$name_encoded";
-            } else {
+            if ($project['numsubprojects'] > 0 && $project['viewsubprojectslink']) {
                 $project_response['link'] = "viewSubProjects.php?project=$name_encoded";
+            } else {
+                $project_response['link'] = "index.php?project=$name_encoded";
             }
 
             if ($project['last_build'] == 'NA') {
@@ -168,6 +168,7 @@ class ViewProjects extends \CDash\Controller\Api
             $project['id'] = $project_row->id;
             $project['name'] = $project_row->name;
             $project['description'] = $project_row->description;
+            $project['viewsubprojectslink'] = $project_row->viewsubprojectslink;
             $projectid = $project['id'];
 
             $nsubproj = \DB::table('subproject')

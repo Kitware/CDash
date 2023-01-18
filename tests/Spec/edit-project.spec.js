@@ -79,6 +79,7 @@ beforeEach(function() {
       TestTimeStd: 4,
       TestTimeStdThreshold: 1,
       UploadQuota: 1,
+      ViewSubProjectsLink: 1,
       WarningsFilter: "",
       blockedbuilds: [],
       name_encoded: "MyTestingProject",
