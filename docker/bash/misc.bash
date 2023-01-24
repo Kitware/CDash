@@ -56,7 +56,7 @@ setup_local_config() {
         fi
 
     ) > "$__local_config_file"
-    cd /home/kitware/cdash && php artisan config:migrate && git config --global --add safe.directory /home/kitware/cdash && npm run dev
+    cd /home/kitware/cdash && php artisan config:migrate && npm run dev
 }
 
 local_service_teardown() {

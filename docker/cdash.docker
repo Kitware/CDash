@@ -29,64 +29,82 @@ RUN apt-get update                                                         \
  && php -r "unlink('composer-setup.php');"                                 \
  && composer self-update --no-interaction
 
-# Creates the kitware home directory with directory for cdash
-WORKDIR /home/kitware/cdash
-
-# Copy CDash (current folder) into /home/kitware/cdash
-COPY ./app ./app
-COPY ./artisan ./artisan
-COPY ./babel.config.js ./babel.config.js
-COPY ./bootstrap ./bootstrap
-COPY ./.circleci ./.circleci
-COPY ./CMakeLists.txt ./CMakeLists.txt
-COPY ./composer.json ./composer.json
-COPY ./composer.lock ./composer.lock
-COPY ./config ./config
-COPY ./CTestConfig.cmake ./CTestConfig.cmake
-COPY ./CTestCustom.cmake.in ./CTestCustom.cmake.in
-COPY ./database ./database
-COPY ./docs ./docs
-COPY ./docker-compose.yml ./docker-compose.yml
-COPY ./docker ./docker
-COPY ./.dockerignore ./.dockerignore
-COPY ./.editorconfig  ./.editorconfig
-COPY ./.env.example ./.env
-COPY ./.env.example ./.env.example
-COPY ./.eslintrc.js ./.eslintrc.js
-COPY ./.gitattributes ./.gitattributes
-COPY ./.git ./.git
-COPY ./.gitignore ./.gitignore
-COPY ./jest.config.js ./jest.config.js
-COPY ./LICENSE ./LICENSE
-COPY ./package.json ./package.json
-COPY ./package-lock.json ./package-lock.json
-COPY ./.php-cs-fixer.dist.php ./.php-cs-fixer.dist.php
-COPY ./phpunit.xml ./phpunit.xml
-COPY ./public ./public
-COPY ./README.md ./README.md
-COPY ./resources ./resources
-COPY ./routes ./routes
-COPY ./server.php ./server.php
-COPY ./storage ./storage
-COPY ./tests ./tests
-COPY ./webpack.mix.js ./webpack.mix.js
-
-# Install newer version of CMake
+# Install xdebug and newer version of CMake for development builds
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
   wget -q -O cmake-linux.sh https://github.com/Kitware/CMake/releases/download/v3.20.2/cmake-3.20.2-linux-x86_64.sh                                                                       \
   && sh cmake-linux.sh -- --skip-license --prefix=/usr                     \
-  && rm cmake-linux.sh;                                                    \
+  && rm cmake-linux.sh                                                     \
+  && pecl install xdebug                                                   \
+  && docker-php-ext-enable xdebug;                                         \
 fi
 
+# Create an npm cache directory for www-data
+RUN mkdir -p /var/www/.npm                                                 \
+  && chown -R www-data:www-data /var/www/.npm
+
+# Create /home/kitware/cdash
+RUN mkdir -p /home/kitware/cdash                                           \
+  && chown www-data:www-data /home/kitware/cdash
+
+# Configure Apache
+COPY ./docker/cdash-site.conf                                              \
+     /etc/apache2/sites-available/cdash-site.conf
+
+# Remove default site, add cdash-site, enable mod_rewrite, enable php
+RUN a2dissite 000-default                                                  \
+ && a2ensite cdash-site                                                    \
+ && a2enmod rewrite                                                        \
+ && a2enmod php
+
+# Run the rest of the commands as www-data
+USER www-data
+
 WORKDIR /home/kitware/cdash
+
+# Copy CDash (current folder) into /home/kitware/cdash
+COPY --chown=www-data:www-data ./app ./app
+COPY --chown=www-data:www-data ./artisan ./artisan
+COPY --chown=www-data:www-data ./babel.config.js ./babel.config.js
+COPY --chown=www-data:www-data ./bootstrap ./bootstrap
+COPY --chown=www-data:www-data ./.circleci ./.circleci
+COPY --chown=www-data:www-data ./CMakeLists.txt ./CMakeLists.txt
+COPY --chown=www-data:www-data ./composer.json ./composer.json
+COPY --chown=www-data:www-data ./composer.lock ./composer.lock
+COPY --chown=www-data:www-data ./config ./config
+COPY --chown=www-data:www-data ./CTestConfig.cmake ./CTestConfig.cmake
+COPY --chown=www-data:www-data ./CTestCustom.cmake.in ./CTestCustom.cmake.in
+COPY --chown=www-data:www-data ./database ./database
+COPY --chown=www-data:www-data ./docs ./docs
+COPY --chown=www-data:www-data ./docker-compose.yml ./docker-compose.yml
+COPY --chown=www-data:www-data ./docker ./docker
+COPY --chown=www-data:www-data ./.dockerignore ./.dockerignore
+COPY --chown=www-data:www-data ./.editorconfig  ./.editorconfig
+COPY --chown=www-data:www-data ./.env.example ./.env
+COPY --chown=www-data:www-data ./.env.example ./.env.example
+COPY --chown=www-data:www-data ./.eslintrc.js ./.eslintrc.js
+COPY --chown=www-data:www-data ./.gitattributes ./.gitattributes
+COPY --chown=www-data:www-data ./.git ./.git
+COPY --chown=www-data:www-data ./.gitignore ./.gitignore
+COPY --chown=www-data:www-data ./jest.config.js ./jest.config.js
+COPY --chown=www-data:www-data ./LICENSE ./LICENSE
+COPY --chown=www-data:www-data ./package.json ./package.json
+COPY --chown=www-data:www-data ./package-lock.json ./package-lock.json
+COPY --chown=www-data:www-data ./.php-cs-fixer.dist.php ./.php-cs-fixer.dist.php
+COPY --chown=www-data:www-data ./phpunit.xml ./phpunit.xml
+COPY --chown=www-data:www-data ./public ./public
+COPY --chown=www-data:www-data ./README.md ./README.md
+COPY --chown=www-data:www-data ./resources ./resources
+COPY --chown=www-data:www-data ./routes ./routes
+COPY --chown=www-data:www-data ./server.php ./server.php
+COPY --chown=www-data:www-data ./storage ./storage
+COPY --chown=www-data:www-data ./tests ./tests
+COPY --chown=www-data:www-data ./webpack.mix.js ./webpack.mix.js
+COPY ./app/cdash/php.ini /usr/local/etc/php/conf.d/cdash.ini
 
 # Install PHP dependencies with composer
 # Set up testing environment if this is a development build
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
- pecl install xdebug                                                       \
- && docker-php-ext-enable xdebug                                           \
- && mkdir -p /var/www/.npm && chown www-data:www-data /var/www/.npm        \
- && composer install --no-interaction --no-progress --prefer-dist          \
+ composer install --no-interaction --no-progress --prefer-dist             \
  && mkdir _build && cd _build                                              \
  && cmake                                                                  \
   -DCDASH_DB_HOST=$CDASH_DB_HOST                                           \
@@ -104,8 +122,6 @@ else                                                                       \
  && echo "LOG_CHANNEL=stderr" >> .env;                                     \
 fi
 
-RUN cp app/cdash/php.ini /usr/local/etc/php/conf.d/cdash.ini
-
 # Install javascript dependencies
 RUN npm install
 
@@ -118,21 +134,8 @@ RUN php artisan config:migrate
 # Run laravel-mix to builds assets
 RUN npm run dev
 
-# Set www-data user as the owner of the CDash directory
-RUN chown -R www-data:www-data .
-
-# Configure Apache
-RUN cp /home/kitware/cdash/docker/cdash-site.conf                          \
-       /etc/apache2/sites-available/cdash-site.conf
-
-# Remove default site, add cdash-site, enable mod_rewrite, enable php
-RUN a2dissite 000-default                                                  \
- && a2ensite cdash-site                                                    \
- && a2enmod rewrite                                                        \
- && a2enmod php
-
-COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
-COPY docker/bash /bash-lib
+COPY --chown=www-data:www-data docker/docker-entrypoint.sh /docker-entrypoint.sh
+COPY --chown=www-data:www-data docker/bash /bash-lib
 
 RUN chmod +x /docker-entrypoint.sh
 
