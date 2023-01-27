@@ -290,7 +290,7 @@
 
               // required for webkit-based browser as images arrive later 
               if(!imgs[0].complete) {
-                img0.load(function(){
+                img0.on("load", function(){
                             var im, parent, l, w, h;
                             im=$(this);
                             parent=im.parent();
