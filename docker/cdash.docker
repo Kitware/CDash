@@ -122,17 +122,17 @@ else                                                                       \
  && echo "LOG_CHANNEL=stderr" >> .env;                                     \
 fi
 
-# Install javascript dependencies
-RUN npm install
-
 # Generate Laravel application key
 RUN php artisan key:generate
 
 # Expose CDash config to Laravel
 RUN php artisan config:migrate
 
-# Run laravel-mix to builds assets
-RUN npm run dev
+RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                            \
+  php artisan dependencies:update -D;                                  \
+else                                                                   \
+  php artisan dependencies:update;                                     \
+fi
 
 COPY --chown=www-data:www-data docker/docker-entrypoint.sh /docker-entrypoint.sh
 COPY --chown=www-data:www-data docker/bash /bash-lib

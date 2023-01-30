@@ -74,6 +74,10 @@
     <td><input type="submit" name="Cleanup" value="Cleanup database"/></td>
   </tr>
   <tr>
+    <td><div align="right">Attempt to update CDash dependencies:</div></td>
+    <td><input type="submit" name="Dependencies" value="Upgrade dependencies"/></td>
+  </tr>
+  <tr>
     <td><div align="right">Upgrade CDash: (this might take some time)</div></td>
     <td><div align="left"><input type="submit" name="Upgrade" value="Upgrade CDash"/></div></td>
   </tr>
