@@ -56,6 +56,9 @@ RUN a2dissite 000-default                                                  \
  && a2enmod rewrite                                                        \
  && a2enmod php
 
+# Assign www-data ownership of apache2 configuration files
+RUN chown -R www-data:www-data /etc/apache2
+
 # Run the rest of the commands as www-data
 USER www-data
 
