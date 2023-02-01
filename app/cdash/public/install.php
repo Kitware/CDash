@@ -66,6 +66,7 @@ if (class_exists('PDO') === false) {
 $db_type = config('database.default');
 $database_config = config("database.connections.{$db_type}");
 $db_host = $database_config['host'];
+$db_port = $database_config['port'];
 $db_user = $database_config['username'];
 $db_pass = $database_config['password'];
 $db_name = $database_config['database'];
@@ -74,6 +75,9 @@ if (array_key_exists('unix_socket', $database_config) && $database_config['unix_
     $db_connection = 'unix_socket';
 } else {
     $db_connection = 'host';
+    if ($db_port != '') {
+        $db_host = $db_host . ';port=' . $db_port;
+    }
 }
 
 $xml .= '<connectiondb_type>' . $db_type . '</connectiondb_type>';
