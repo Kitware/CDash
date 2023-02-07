@@ -14,9 +14,14 @@ services:
       - mysql
     ports:
      - "8080:80"
+    volumes:
+      - type: volume
+        source: storage
+        target: /home/kitware/cdash/storage
     environment:
+      QUEUE_CONNECTION: database
+      REMOTE_WORKERS: 1
       CDASH_ROOT_ADMIN_PASS: secret
-
       CDASH_STATIC_USERS: |
         USER jdoe@acme.com jdoe_secret
           John Doe "ACME Inc."
@@ -31,6 +36,27 @@ services:
 
         DELETE remove.this.user@example.org delete_secret
 
+  worker:
+    image: "kitware/cdash-worker"
+    environment:
+      CDASH_ROOT_ADMIN_PASS: secret
+      CDASH_REMOTE_PROCESSOR: 1
+      QUEUE_CONNECTION: database
+    build:
+      context: .
+      dockerfile: ./docker/cdash-worker.docker
+      args:
+        - CDASH_DB_HOST=mysql
+    deploy:
+      replicas: 1
+    depends_on:
+      - mysql
+      - cdash
+    volumes:
+      - type: volume
+        source: storage
+        target: /home/kitware/cdash/storage
+
   mysql:
     image: "mysql/mysql-server:5.7"
     environment:
@@ -38,3 +64,5 @@ services:
       MYSQL_ROOT_PASSWORD: ''
       MYSQL_DATABASE: 'cdash'
       MYSQL_ROOT_HOST: '%'
+volumes:
+  storage:
