@@ -1,5 +1,19 @@
 version: '3.3'
 services:
+  common:
+    image: kitware/cdash_common
+    build:
+      context: .
+      dockerfile: ./docker/common.docker
+      args:
+        - CDASH_DB_HOST=mysql
+    volumes:
+      - type: volume
+        source: storage
+        target: /home/kitware/cdash/storage
+    profiles:
+      - donotstart
+
   cdash:
     image: "kitware/cdash"
     container_name: cdash
@@ -14,13 +28,8 @@ services:
       - mysql
     ports:
      - "8080:80"
-    volumes:
-      - type: volume
-        source: storage
-        target: /home/kitware/cdash/storage
     environment:
       QUEUE_CONNECTION: database
-      REMOTE_WORKERS: 1
       CDASH_ROOT_ADMIN_PASS: secret
       CDASH_STATIC_USERS: |
         USER jdoe@acme.com jdoe_secret
@@ -35,6 +44,10 @@ services:
         INFO Str@nge N@me "Str@nge Rese@rch Gr0up LLC."
 
         DELETE remove.this.user@example.org delete_secret
+    volumes:
+      - type: volume
+        source: storage
+        target: /home/kitware/cdash/storage
 
   worker:
     image: "kitware/cdash-worker"
