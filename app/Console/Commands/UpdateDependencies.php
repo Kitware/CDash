@@ -12,7 +12,7 @@ class UpdateDependencies extends Command
      *
      * @var string
      */
-    protected $signature = 'dependencies:update {--D|dev}';
+    protected $signature = 'dependencies:update {--D|dev} {--U|upgrade}';
 
     /**
      * The console command description.
@@ -33,18 +33,24 @@ class UpdateDependencies extends Command
 
     public function handle()
     {
-        $composerArgs = "--no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader";
+        $composerInstallArgs = "--no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader";
+        $composerUpdateArgs = "--no-dev --prefer-lowest --prefer-stable";
         if ($this->option("dev"))
         {
-            $composerArgs = "--no-interaction --no-progress --prefer-dist";
+            $composerInstallArgs = "--no-interaction --no-progress --prefer-dist";
+            $composerUpdateArgs = "--prefer-lowest --prefer-stable";
         }
 
-        // Update PHP dependencies via composer
-        exec("composer update");
-        exec("composer install $composerArgs");
+        if ($this->option("upgrade"))
+        {
+            exec("npm update");
+            exec("composer update $composerUpdateArgs");
+        }
+
+        //  PHP dependencies via composer
+        exec("composer install $composerInstallArgs");
 
         // Update JavaScript dependencies via npm
-        exec("npm update");
         exec("npm install");
 
         // Run laravel-mix to builds assets
