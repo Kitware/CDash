@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 
 class UpdateDependencies extends Command
 {
-
     /**
      * The name and signature of the console command.
      *
@@ -35,14 +34,12 @@ class UpdateDependencies extends Command
     {
         $composerInstallArgs = "--no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader";
         $composerUpdateArgs = "--no-dev --prefer-lowest --prefer-stable";
-        if ($this->option("dev"))
-        {
+        if ($this->option("dev")) {
             $composerInstallArgs = "--no-interaction --no-progress --prefer-dist";
             $composerUpdateArgs = "--prefer-lowest --prefer-stable";
         }
 
-        if ($this->option("upgrade"))
-        {
+        if ($this->option("upgrade")) {
             exec("npm update");
             exec("composer update $composerUpdateArgs");
         }
