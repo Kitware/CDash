@@ -49,12 +49,18 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
+
+              cp docker/common.docker Dockerfile
+              docker build -t kitware/cdash-common:latest .
               cp docker/cdash.docker Dockerfile
               docker build -t kitware/cdash:latest .
+              cp docker/cdash-worker.docker Dockerfile
+              docker build -t kitware/cdash-worker:latest .
       - run:
           name: Publish Docker Image
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
               docker push kitware/cdash:latest
+              docker push kitware/cdash_worker:latest
             fi
