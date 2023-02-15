@@ -118,7 +118,7 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
   -DCTEST_UPDATE_VERSION_ONLY=1 ..                                         \
  && cp /home/kitware/cdash/docker/conf.js                                  \
        /home/kitware/cdash/_build/app/cdash/tests/js/e2e_tests/conf.js     \
- && cp /home/kitware/cdash/docker/.env.laravel /home/kitware/cdash/.env;   \
+ && cp /home/kitware/cdash/docker/.env.testing /home/kitware/cdash/.env;   \
 else                                                                       \
  composer install --no-interaction --no-progress --prefer-dist --no-dev    \
                   --optimize-autoloader                                    \
