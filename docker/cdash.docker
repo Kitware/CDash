@@ -1,9 +1,6 @@
 FROM kitware/cdash_common
 LABEL MAINTAINER="Kitware, Inc. <cdash@public.kitware.com>"
 
-# Generate Laravel application key
-RUN php artisan key:generate
-
 EXPOSE 80
 
 WORKDIR /home/kitware/cdash/_build
