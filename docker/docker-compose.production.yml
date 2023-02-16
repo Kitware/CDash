@@ -31,19 +31,6 @@ services:
     environment:
       QUEUE_CONNECTION: database
       CDASH_ROOT_ADMIN_PASS: secret
-      CDASH_STATIC_USERS: |
-        USER jdoe@acme.com jdoe_secret
-          John Doe "ACME Inc."
-
-        ADMIN admin@example.org admin_secret
-          Admin User "Example Foundation"
-
-        donotreply@example.org oldsecret newsecret
-
-        strange.name@gmail.com strange_secret
-        INFO Str@nge N@me "Str@nge Rese@rch Gr0up LLC."
-
-        DELETE remove.this.user@example.org delete_secret
     volumes:
       - type: volume
         source: storage
