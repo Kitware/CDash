@@ -62,5 +62,5 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
               docker push kitware/cdash:latest
-              docker push kitware/cdash_worker:latest
+              docker push kitware/cdash-worker:latest
             fi
