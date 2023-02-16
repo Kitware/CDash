@@ -10,6 +10,7 @@ cdash_environment() {
 }
 
 cdash_build_image() {
+  docker-compose -f ./docker-compose.local.yml build --force-rm --no-cache common
   docker-compose -f ./docker-compose.local.yml build --force-rm --no-cache cdash
 }
 

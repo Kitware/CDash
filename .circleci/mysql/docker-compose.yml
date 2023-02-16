@@ -1,5 +1,19 @@
 version: '3.3'
 services:
+  common:
+    image: kitware/cdash_common
+    build:
+      context: .
+      dockerfile: ./docker/common.docker
+      args:
+        - CDASH_DB_HOST=mysql
+        - DEVELOPMENT_BUILD=1
+    volumes:
+      - type: volume
+        source: storage
+        target: /home/kitware/cdash/storage
+    profiles:
+      - donotstart
   cdash:
     image: "kitware/cdash:testing"
     container_name: cdash
@@ -8,8 +22,8 @@ services:
       dockerfile: ./docker/cdash.docker
       args:
         - CDASH_DB_HOST=mysql
-        - DEVELOPMENT_BUILD=1
     depends_on:
+      - common
       - mysql
       - selenium-hub
       - chrome
@@ -56,3 +70,5 @@ services:
     environment:
       - HUB_HOST=selenium-hub
       - HUB_PORT=4444
+volumes:
+  storage:

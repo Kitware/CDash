@@ -4,9 +4,4 @@ LABEL MAINTAINER="Kitware, Inc. <cdash@public.kitware.com>"
 # Generate Laravel application key
 RUN php artisan key:generate
 
-EXPOSE 80
-
-WORKDIR /home/kitware/cdash/_build
-
-ENTRYPOINT ["/bin/bash", "/docker-entrypoint.sh"]
-CMD ["serve"]
+ENTRYPOINT ["/bin/bash", "/docker-entrypoint.sh", "start-worker"]

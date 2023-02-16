@@ -341,6 +341,12 @@ usage() {
     echo "      run CDash's database cleanup process"
     echo ""
 
+
+    echo "  start-worker"
+    echo "      Start the Laravel asynchronus submission parsing"
+    echo ""
+
+
     echo "  serve"
     echo "      serve web traffic (default operation)"
     echo ""
@@ -435,6 +441,9 @@ while [ -n "$*" ] ; do
             do_cleanup=1
             local_service_needed=1
             ;;
+        start-worker)
+            start_worker=1
+            ;;
         serve)
             do_serve=1
             ;;
@@ -526,6 +535,10 @@ fi
 
 if [ "$local_service_needed" '=' '1' ] ; then
     local_service_teardown
+fi
+
+if [ "$start_worker" '=' '1' ] ; then
+   exec php artisan queue:work
 fi
 
 if [ "$do_serve" '!=' '1' ] ; then
