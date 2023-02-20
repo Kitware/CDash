@@ -19,11 +19,11 @@ include_once 'include/common.php';
 // TODO: dunno what this is or why it seems to exist here and there willy nilly, RWEP.
 redirect_to_https();
 
+use App\Services\AuthTokenService;
 use App\Services\PageTimer;
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\Project;
-use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildUpdate;
@@ -91,8 +91,7 @@ foreach ($project_rows as $project_row) {
 }
 $response['projects'] = $projects_response;
 
-$authTokens = AuthToken::getTokensForUser($userid);
-$response['authtokens'] = $authTokens;
+$response['authtokens'] = AuthTokenService::getTokensForUser($userid);
 
 // Find all the public projects that this user is not subscribed to.
 $stmt = $PDO->prepare(

@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use CDash\Model\AuthToken;
+use App\Services\AuthTokenService;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -35,11 +35,9 @@ class CheckPassword
                 return $next($request);
             }
 
-            // Check for the presence of a bearer token if we are not
-            // already authenticated.
-            $authtoken = new AuthToken();
-            if ($authtoken->getUserIdFromRequest()) {
-                Auth::loginUsingId($authtoken->UserId);
+            $user_id = AuthTokenService::getUserIdFromRequest();
+            if ($user_id !== null) {
+                Auth::loginUsingId($user_id);
             }
         }
 

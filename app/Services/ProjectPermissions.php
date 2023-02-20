@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use CDash\Model\Project;
@@ -26,7 +28,8 @@ use App\Models\User;
  **/
 class ProjectPermissions
 {
-    public static function userCanEditProject(User $user, Project $project)
+    // TODO: (William Allen) swap the order of these parameters to match canViewProject()
+    public static function userCanEditProject(User $user, Project $project): bool
     {
         // Check if this user is a global admin.
         if ($user->IsAdmin()) {
@@ -38,25 +41,25 @@ class ProjectPermissions
         $user2project->UserId = $user->id;
         $user2project->ProjectId = $project->Id;
         $user2project->FillFromUserId();
-        if ($user2project->Role == UserProject::PROJECT_ADMIN) {
+        if ($user2project->Role === UserProject::PROJECT_ADMIN) {
             return true;
         }
 
         return false;
     }
 
-    public static function userCanCreateProject(User $user)
+    public static function userCanCreateProject(User $user): bool
     {
         $config = \CDash\Config::getInstance();
         return $user->IsAdmin() || $config->get('CDASH_USER_CREATE_PROJECTS');
     }
 
-    public static function userCanViewProject(Project $project)
+    public static function userCanViewProject(Project $project):  bool
     {
         return self::canViewProject($project, \Auth::user());
     }
 
-    public static function canViewProject(Project $project, $user)
+    public static function canViewProject(Project $project, ?User $user): bool
     {
         if (!$project->Exists()) {
             return false;
@@ -69,7 +72,7 @@ class ProjectPermissions
         }
 
         // If not a public project, return false if the user is not logged in.
-        if (!$user) {
+        if ($user === null) {
             return false;
         }
 
@@ -94,5 +97,10 @@ class ProjectPermissions
             return false;
         }
         return false;
+    }
+
+    public static function userCanCreateProjectAuthToken(Project $project): bool
+    {
+        return self::userCanViewProject($project);
     }
 }

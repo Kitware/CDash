@@ -2,11 +2,24 @@ CDash.controller('UserController', function UserController($scope, $http, $timeo
   apiLoader.loadPageData($scope, 'api/v1/user.php');
 
   $scope.generateToken = function() {
-    var parameters = { description: $scope.cdash.tokendescription };
+    const parameters = {
+      description: $scope.cdash.tokendescription,
+      scope: $scope.cdash.tokenscope === 'full_access' ? 'full_access' : 'submit_only',
+      projectid: $scope.cdash.tokenscope === 'full_access'
+                 || $scope.cdash.tokenscope === 'submit_only' ? -1 : $scope.cdash.tokenscope
+    };
     $http.post('api/v1/authtoken.php', parameters)
     .then(function success(s) {
-      var authtoken = s.data.token;
+      const authtoken = s.data.token;
       authtoken.copied = false;
+      authtoken.raw_token = s.data.raw_token;
+
+      $scope.cdash.projects.forEach(project => {
+        if (project.id === authtoken.projectid) {
+          authtoken.projectname = project.name;
+        }
+      });
+
       $scope.cdash.authtokens.push(authtoken);
     }, function error(e) {
       $scope.cdash.message = e.data.error;
@@ -22,15 +35,14 @@ CDash.controller('UserController', function UserController($scope, $http, $timeo
   };
 
   $scope.revokeToken = function(authtoken) {
-    var parameters = { hash: authtoken.hash };
     $http({
       url: 'api/v1/authtoken.php',
       method: 'DELETE',
-      params: parameters
+      params: { hash: authtoken.hash }
     }).then(function success() {
       // Remove this token from our list.
-      var index = -1;
-      for(var i = 0, len = $scope.cdash.authtokens.length; i < len; i++) {
+      let index = -1;
+      for(let i = 0, len = $scope.cdash.authtokens.length; i < len; i++) {
         if ($scope.cdash.authtokens[i].hash === authtoken.hash) {
           index = i;
           break;
