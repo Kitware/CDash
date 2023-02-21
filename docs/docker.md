@@ -11,6 +11,7 @@ If you haven't done so already, begin by cloning the CDash repository. Then star
 ```bash
 git clone https://github.com/Kitware/CDash
 cd CDash
+docker-compose pull
 docker-compose up -d cdash
 ```
 
@@ -84,7 +85,7 @@ docker-compose up -d
 
 If you prefer to build your own images locally, run:
 ```
-docker-compose up -d --no-deps --build cdash
+docker-compose up -d --no-deps --build common cdash
 ````
 
 ## Container Variables
