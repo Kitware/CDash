@@ -25,6 +25,11 @@
     </span>
   </div>
 </div>
+<script>
+  // Insert a dummy element before the footer, which will push the footer to the bottom of the page
+  // This has to be the child of the parent "include" element and cannot be done with CSS (at least currently).
+  $( '<div style="flex:1;"></div>' ).insertBefore($("#footer").parent());
+</script>
 
 <!-- Google Analytics -->
 <script type="text/ng-template" id="google-analytics-snippet">

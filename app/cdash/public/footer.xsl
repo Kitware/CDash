@@ -4,7 +4,7 @@
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
 <xsl:template name="footer">
-
+<div style="flex:1;"></div>
 <div id="footer" class="clearfix">
   <div id="kitwarelogo">
       <a href="http://www.kitware.com"><img src="img/kitware_logo_footer.svg" border="0" alt="logo" /></a>
