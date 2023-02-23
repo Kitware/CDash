@@ -55,7 +55,7 @@ if (Auth::check()) {
         echo_git_output('diff');
 
         $config = Config::getInstance();
-        echo_file_contents($config->get('CDASH_ROOT_DIR') . '/config/config.local.php');
+        echo_file_contents($config->get('CDASH_ROOT_DIR') . '../../.env');
         echo_file_contents($config->get('CDASH_ROOT_DIR') . '/tests/config.test.local.php');
         echo '<br/>';
     } else {

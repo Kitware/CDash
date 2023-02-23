@@ -6,7 +6,7 @@ source "$BASH_LIB/cdash.bash"
 source "$BASH_LIB/on_exit.bash"
 
 
-__local_config_file="/home/kitware/cdash/app/cdash/config/config.local.php"
+__local_config_file="/home/kitware/cdash/.env"
 
 missing_root_admin_pass() {
     if [ -z "$CDASH_ROOT_ADMIN_PASS" ] && [ -z "$DEVELOPMENT_BUILD" ]; then
@@ -28,7 +28,7 @@ local_service_setup() {
     sed -i 's/^Listen [0-9][0-9]*/Listen '"$PORT"'/g' /etc/apache2/ports.conf
     sed -i 's/^<VirtualHost \*:[0-9][0-9]*>/<VirtualHost \*:'"$PORT"'>/g' \
         /etc/apache2/sites-enabled/cdash-site.conf
-    echo "\$CDASH_FULL_EMAIL_WHEN_ADDING_USER = '1';" >> "$__local_config_file"
+    echo "CDASH_FULL_EMAIL_WHEN_ADDING_USER = '1';" >> "$__local_config_file"
 
     /usr/sbin/apache2ctl -D FOREGROUND &
     __apache_pid="$!"
@@ -43,19 +43,17 @@ local_service_setup() {
 
 setup_local_config() {
     (
-        echo '<?php'
-
-        echo '$'"CDASH_DB_HOST = 'mysql';"
-        echo '$'"CDASH_DB_NAME = 'cdash';"
-        echo '$'"CDASH_DB_TYPE = 'mysql';"
-        echo '$'"CDASH_DB_LOGIN = 'root';"
-        echo '$'"CDASH_DB_PASS = '';"
+        echo "DB_HOST=mysql"
+        echo "DB_NAME=cdash"
+        echo "DB_TYPE=mysql"
+        echo "DB_LOGIN=root"
+        echo "DB_PASS="
 
         if [ '!' -z ${CDASH_CONFIG+x} ] ; then
             echo "$CDASH_CONFIG"
         fi
 
-    ) > "$__local_config_file"
+    ) >> "$__local_config_file"
     cd /home/kitware/cdash && php artisan config:migrate && php artisan key:generate && npm run dev
 }
 

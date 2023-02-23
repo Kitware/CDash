@@ -80,7 +80,11 @@ class MigrateConfig extends Command
         // Get default values of legacy configuration variables.
         $legacy_defaults = [];
         $ONLY_LOAD_DEFAULTS = true;
-        include $cdash_app_dir . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
+        $config_dir = $cdash_app_dir . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR;
+        include $config_dir  . 'config.php';
+        if (file_exists($config_dir . 'config.local.php')) {
+            include $config_dir . 'config.local.php';
+        }
         include $cdash_app_dir . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'version.php';
         foreach (get_defined_vars() as $key => $value) {
             if (strpos($key, 'CDASH_') === 0) {
@@ -114,7 +118,10 @@ class MigrateConfig extends Command
 
         // Read CDash config files, parsing their variables and changing
         // the names to Laravel equivalents as necessary.
-        include $cdash_app_dir . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
+        include $config_dir  . 'config.php';
+        if (file_exists($config_dir . 'config.local.php')) {
+            include $config_dir . 'config.local.php';
+        }
         include $cdash_app_dir . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'version.php';
         foreach (get_defined_vars() as $key => $value) {
             if ($key == 'OAUTH2_PROVIDERS') {

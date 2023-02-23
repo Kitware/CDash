@@ -68,6 +68,7 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false, $echo 
 
     @set_time_limit(0);
     $remove_builds = config('cdash.autoremove_builds');
+
     if (!$force && !$remove_builds) {
         return;
     }

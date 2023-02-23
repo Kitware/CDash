@@ -16,55 +16,23 @@ require_once 'include/common.php';
 
 class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
 {
-    private $original;
     private $config_file;
 
     public function __construct()
     {
         parent::__construct();
-        $this->config_file = dirname(__FILE__) . '/../config/config.local.php';
+        $this->config_file = base_path('.env');
     }
 
     public function __destruct()
     {
-        $env_file = dirname(__FILE__) . '/../../../.env';
-        $handle = fopen($env_file, 'r');
-        $contents = fread($handle, filesize($env_file));
-        fclose($handle);
-        unset($handle);
-        $handle = fopen($env_file, 'w');
-        $lines = explode("\n", $contents);
-        foreach ($lines as $line) {
-            if (strpos($line, 'AUTOREMOVE_BUILDS') !== false) {
-                continue;
-            }
-            fwrite($handle, "$line\n");
-        }
-        fclose($handle);
+        rename("{$this->config_file}.bak", $this->config_file);
     }
 
     public function enableAutoRemoveConfigSetting()
     {
-        $handle = fopen($this->config_file, 'r');
-        $this->original = fread($handle, filesize($this->config_file));
-        fclose($handle);
-        unset($handle);
-        $handle = fopen($this->config_file, 'w');
-        $lines = explode("\n", $this->original);
-        foreach ($lines as $line) {
-            if (strpos($line, '?>') !== false) {
-                fwrite($handle, '// test config settings injected by file [' . __FILE__ . "]\n");
-                fwrite($handle, '$CDASH_AUTOREMOVE_BUILDS = true;' . "\n");
-                fwrite($handle, '$CDASH_ASYNCHRONOUS_SUBMISSION = false;' . "\n");
-            }
-            if ($line != '') {
-                fwrite($handle, "$line\n");
-            }
-        }
-        fclose($handle);
-        unset($handle);
-
-        Artisan::call('config:migrate');
+        copy($this->config_file, "{$this->config_file}.bak");
+        file_put_contents($this->config_file, "AUTOREMOVE_BUILDS=true", FILE_APPEND);
     }
 
     public function setAutoRemoveTimeFrame()
@@ -82,14 +50,6 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
     public function testBuildsRemovedOnSubmission()
     {
         $this->enableAutoRemoveConfigSetting();
-
-        $config = Config::getInstance();
-
-        // for the time being these don't really do much, but no harm in leaving
-        // them here as the represent the actual state of the app and will be
-        // needed once a different methodology is found for testing this behavior
-        $config->set('CDASH_AUTOREMOVE_BUILDS', 1);
-        $config->set('CDASH_AYNCHONOUS_SUBMISSION', false);
 
         $this->setAutoRemoveTimeFrame();
         $this->deleteLog($this->logfilename);
@@ -125,6 +85,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
             return 1;
         }
         $query_array = pdo_fetch_array($stmt);
+
         if ($query_array[0] != 'Win32-MSVC2009') {
             echo $query_array[0];
             $this->fail('First build not inserted correctly');
@@ -197,7 +158,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         }
 
         // Make sure we didn't inadvertently delete the whole upload directory.
-        if (!file_exists("{$config->get('CDASH_ROOT_DIR')}/public/upload")) {
+        if (!file_exists(base_path('app/cdash/public/upload'))) {
             $this->fail('upload directory does not exist');
         }
 

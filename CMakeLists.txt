@@ -82,18 +82,6 @@ if(CDASH_USE_SELENIUM)
   find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php vendor/bin)
 endif(CDASH_USE_SELENIUM)
 
-# Write out a minimal, vestigial config.local.php file.
-file(WRITE "${CDash_SOURCE_DIR}/app/cdash/config/config.local.php"
-"<?php
-// WARNING: This file is unconditionally overwritten by the CMake configure step
-date_default_timezone_set('America/New_York');
-$CDASH_COVERAGE_DIR = '${CDASH_COVERAGE_DIR}';
-$PHP_EXE = '${PHP_EXE}';
-$PHPUNIT_EXE = '${PHPUNIT_EXE}';
-$CDASH_DEFAULT_GIT_DIRECTORY = '${CDash_BINARY_DIR}';
-?>
-")
-
 # Generate .env
 # Start with values from our CMake cache variables.
 file(WRITE ${CMAKE_SOURCE_DIR}/.env
@@ -108,6 +96,11 @@ DB_HOST=${CDASH_DB_HOST}
 DB_PASSWORD=${CDASH_DB_PASS}
 DB_USERNAME=${CDASH_DB_LOGIN}
 REGISTRATION_EMAIL_VERIFY=false
+
+CDASH_COVERAGE_DIR = '${CDASH_COVERAGE_DIR}'
+PHP_EXE = '${PHP_EXE}'
+PHPUNIT_EXE = '${PHPUNIT_EXE}'
+CDASH_DEFAULT_GIT_DIRECTORY = '${CDash_BINARY_DIR}'
 ")
 
 # Next copy in the contents from our example file.
@@ -120,7 +113,7 @@ execute_process(
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
-# Migrate any lingering settings from config.local.php.
+# Migrate any lingering settings
 execute_process(
   COMMAND ${PHP_EXE} artisan config:migrate
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}

@@ -93,7 +93,8 @@ docker-compose up -d --no-deps --build common cdash
 ### `CDASH_CONFIG`
 
 The contents, verbatim, to be included in the local CDash configuration file
-(`/var/www/cdash/config/config.local.php`), excluding the initial `<?php` line.
+(`/var/www/cdash/.env`)
+
 When running the container on the command line, consider writing the contents to
 a local file:
 
