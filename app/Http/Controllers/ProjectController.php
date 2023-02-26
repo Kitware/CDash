@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Views;
+namespace App\Http\Controllers;
 
 require_once 'include/common.php';
 require_once 'include/defines.php';
@@ -7,8 +7,9 @@ require_once 'include/defines.php';
 use App\Services\TestingDay;
 use App\Services\ProjectPermissions;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\Auth;
 
-abstract class ProjectController extends ViewController
+abstract class ProjectController extends AbstractController
 {
     protected $authOk;
     protected $date;
@@ -24,11 +25,9 @@ abstract class ProjectController extends ViewController
         $this->logo = env('APP_URL') . '/img/cdash.png';
     }
 
-    // Retrieve common data used by all project-specific pages in CDash.
-    protected function setup(Project $project = null)
+    /** Retrieve common data used by all project-specific pages in CDash. */
+    protected function setup(Project $project = null): void
     {
-        parent::setup();
-
         if (is_null($project)) {
             return;
         }
@@ -38,7 +37,7 @@ abstract class ProjectController extends ViewController
             $this->authOk = true;
         } else {
             $this->authOk = false;
-            if (\Auth::check()) {
+            if (Auth::check()) {
                 abort(403, 'You do not have permission to access this page.');
             }
             // redirectToLogin() gets called later on.

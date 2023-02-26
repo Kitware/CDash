@@ -1,12 +1,9 @@
 <?php
-namespace App\Http\Controllers\Views;
+namespace App\Http\Controllers;
 
 require_once 'include/defines.php';
 
 use App\Models\BuildTest;
-use App\Models\Test;
-use App\Services\TestingDay;
-use CDash\Model\Build;
 use CDash\Model\Project;
 
 class TestController extends ProjectController
@@ -18,7 +15,7 @@ class TestController extends ProjectController
         parent::__construct();
     }
 
-    protected function setup(Project $project = null)
+    protected function setup(Project $project = null): void
     {
         parent::setup($this->project);
     }

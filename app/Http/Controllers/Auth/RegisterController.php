@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\Password;
 use App\Models\User;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AbstractController;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
-class RegisterController extends Controller
+class RegisterController extends AbstractController
 {
     /*
     |--------------------------------------------------------------------------

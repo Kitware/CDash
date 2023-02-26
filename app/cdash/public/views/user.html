@@ -246,7 +246,7 @@
           <tbody>
             <tr class="table-heading1">
               <td colspan="4" id="nob">
-                <h3>Authentication Tokens</h3>
+                <h3>My Authentication Tokens</h3>
               </td>
             </tr>
             <tr class="table-heading"
@@ -260,7 +260,7 @@
                 ng-repeat-start="authtoken in cdash.authtokens"
                 ng-class-odd="'trodd'" ng-class-even="'treven'">
               <td align="center">{{::authtoken.description}}</td>
-              <td align="center" ng-if="::authtoken.scope === 'full_access'">
+              <td align="center" ng-if="::authtoken.scope !== 'submit_only'">
                 Full Access
               </td>
               <td align="center" ng-if="authtoken.scope === 'submit_only'">
@@ -384,6 +384,11 @@
             </td>
           </tr>
           <tr class="trodd">
+            <td id="nob">
+              <a href="/authtokens/manage">Manage authentication tokens</a>
+            </td>
+          </tr>
+          <tr class="treven">
             <td id="nob">
               <a href="upgrade.php">Maintenance</a>
             </td>

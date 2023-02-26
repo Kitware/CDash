@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use CDash\Model\Image;
-use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class ImageController extends Controller
+class ImageController extends AbstractController
 {
-    public function image(Image $image)
+    public function image(Image $image): StreamedResponse
     {
         return response()->stream(function () use ($image) {
             echo $image->Data;

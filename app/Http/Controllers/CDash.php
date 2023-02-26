@@ -11,10 +11,12 @@ use Illuminate\Support\Str;
 use Storage;
 
 /**
+ * TODO: (williamjallen) should some of this logic be moved to AbstractController.php?
+ *
  * Class CDash
  * @package App\Http\Controllers
  */
-class CDash extends Controller
+class CDash extends AbstractController
 {
     /** @var Request $request */
     private $request;

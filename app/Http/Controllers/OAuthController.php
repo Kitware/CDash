@@ -14,7 +14,7 @@ use RuntimeException;
  * Class OAuthController
  * @package App\Http\Controllers
  */
-class OAuthController extends Controller
+class OAuthController extends AbstractController
 {
     /**
      * @param Request $request

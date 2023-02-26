@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Views;
+namespace App\Http\Controllers;
 
 require_once 'include/common.php';
 require_once 'include/defines.php';
 
-use CDash\Model\Project;
 use App\Services\ProjectPermissions;
+use CDash\Model\Project;
+use Illuminate\Support\Facades\Auth;
 
 class ManageMeasurementsController extends ProjectController
 {
@@ -17,7 +18,7 @@ class ManageMeasurementsController extends ProjectController
         parent::__construct();
     }
 
-    protected function setup($project_id = null)
+    protected function setup($project_id = null): void
     {
         if (!is_null($project_id)) {
             $this->project = new Project();
@@ -30,13 +31,13 @@ class ManageMeasurementsController extends ProjectController
     public function show($project_id)
     {
         $this->setup($project_id);
-        if (!\Auth::check()) {
+        if (!Auth::check()) {
             return $this->redirectToLogin();
         }
         if (!$this->project->Exists()) {
             abort(404);
         }
-        if (ProjectPermissions::userCanEditProject(\Auth::user(), $this->project)) {
+        if (ProjectPermissions::userCanEditProject(Auth::user(), $this->project)) {
             return view('admin.measurements')
                 ->with('cdashCss', $this->cdashCss)
                 ->with('date', json_encode($this->date))

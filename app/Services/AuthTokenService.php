@@ -8,6 +8,7 @@ use App\Models\AuthToken;
 use App\Models\User;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
+use Illuminate\Database\Eloquent\Collection;
 use InvalidArgumentException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,7 @@ class AuthTokenService
      * ensure that the $user_id has been properly authenticated.
      *
      * @return array{raw_token: string, token: AuthToken}
+     * @throws InvalidArgumentException
      */
     public static function generateToken(int $user_id, int $project_id, string $scope, string $description): array
     {
@@ -59,7 +61,7 @@ class AuthTokenService
         $project->Fill();
         if ($project_id >= 0 && !ProjectPermissions::userCanCreateProjectAuthToken($project)) {
             Log::error('Permissions error');
-            throw new InvalidArgumentException('Permissions error'.$project_id);
+            throw new InvalidArgumentException('Permissions error');
         }
 
         $auth_token = AuthToken::create($params);
@@ -181,13 +183,28 @@ class AuthTokenService
      * auth tokens for the user requested.  It is your responsibility as a user of this method
      * to ensure that $user_id is validated appropriately.
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int,\App\Models\AuthToken>
+     * @return Collection<int,AuthToken>
      */
-    public static function getTokensForUser(int $user_id): \Illuminate\Database\Eloquent\Collection
+    public static function getTokensForUser(int $user_id): Collection
     {
         return AuthToken::select('authtoken.*', 'project.name AS projectname')
             ->leftJoin('project', 'project.id', '=', 'authtoken.projectid')
             ->where('authtoken.userid', '=', $user_id)
+            ->get();
+    }
+
+    /**
+     * Contract: we assume that the user has already been validated and blindly return a list of
+     * all auth tokens.  It is your responsibility as a user of this method to ensure that only
+     * administrators can access it.
+     *
+     * @return Collection<int,AuthToken>
+     */
+    public static function getAllTokens(): Collection
+    {
+        return AuthToken::select('authtoken.*', 'project.name AS projectname', 'user.firstname AS owner_firstname', 'user.lastname AS owner_lastname')
+            ->leftJoin('project', 'project.id', '=', 'authtoken.projectid')
+            ->leftJoin('user', 'user.id', '=', 'authtoken.userid')
             ->get();
     }
 
