@@ -285,18 +285,18 @@ function populate_project($Project)
     }
 }
 
-function add_blocked_build($Project, $blocked_build)
+function add_blocked_build(Project $Project, $blocked_build)
 {
     return $Project->AddBlockedBuild($blocked_build['buildname'],
         $blocked_build['sitename'], $blocked_build['ipaddress']);
 }
 
-function remove_blocked_build($Project, $blocked_build)
+function remove_blocked_build(Project $Project, $blocked_build): void
 {
     $Project->RemoveBlockedBuild($blocked_build['id']);
 }
 
-function set_logo($Project)
+function set_logo($Project): void
 {
     $handle = fopen($_FILES['logo']['tmp_name'], 'r');
     $contents = 0;

@@ -17,40 +17,61 @@ require_once 'include/pdo.php';
 require_once 'include/common.php';
 
 use CDash\Config;
+use CDash\Database;
 
 $config = Config::getInstance();
 
-$projectid = pdo_real_escape_numeric($_GET['projectid']);
+$projectid = $_GET['projectid'];
 if (!isset($projectid) || !is_numeric($projectid)) {
     echo 'Not a valid projectid!';
     return;
 }
+$projectid = intval($projectid);
 
-$search = pdo_real_escape_string($_GET['search']);
-$config = \CDash\Config::getInstance();
+$config = Config::getInstance();
 
-if ($config->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER') == 1) {
-    $sql = "email='$search'";
+$search = $_GET['search'];
+$params = [];
+if (intval($config->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER')) === 1) {
+    $sql = 'email=?';
+    $params[] = $search;
 } else {
-    $sql = "(email LIKE '%$search%' OR firstname LIKE '%$search%' OR lastname LIKE '%$search%')";
+    $sql = "(email LIKE '%' || ? || '%' OR firstname LIKE '%' || ? || '%' OR lastname LIKE '%' || ? || '%')";
+    $params[] = $search;
+    $params[] = $search;
+    $params[] = $search;
 }
-$user = pdo_query('SELECT id,email,firstname,lastname FROM ' . qid('user') . ' WHERE ' . $sql . " AND
-                   id NOT IN (SELECT userid as id FROM user2project WHERE projectid='$projectid')");
+
+$db = Database::getInstance();
+$params[] = $projectid;
+$user = $db->executePrepared('
+            SELECT id, email, firstname, lastname
+            FROM user
+            WHERE
+                ' . $sql . '
+                AND id NOT IN (
+                    SELECT userid as id
+                    FROM user2project
+                    WHERE projectid=?
+                )
+        ', $params);
 echo pdo_error();
 
 ?>
 
 <table width="100%" border="0">
     <?php
-    if (pdo_num_rows($user) == 0) {
+    if (count($user) === 0) {
         echo '<tr><td>[none]</tr></td>';
     }
-    while ($user_array = pdo_fetch_array($user)) {
+    foreach ($user as $user_array) {
         ?>
         <tr>
-            <td width="20%" bgcolor="#EEEEEE"><font
-                    size="2"><?php echo $user_array['firstname'] . ' ' . $user_array['lastname'] . ' (' . $user_array['email'] . ')'; ?></font></td>
-            <td bgcolor="#EEEEEE"><font size="2">
+            <td width="20%" bgcolor="#EEEEEE">
+                <font size="2"><?php echo $user_array['firstname'] . ' ' . $user_array['lastname'] . ' (' . $user_array['email'] . ')'; ?></font>
+            </td>
+            <td bgcolor="#EEEEEE">
+                <font size="2">
                     <form method="post" action="" name="formuser_<?php echo $user_array['id'] ?>">
                         <input name="userid" type="hidden" value="<?php echo $user_array['id'] ?>">
                         role: <select name="role">
@@ -61,12 +82,9 @@ echo pdo_error();
                         Repository credential: <input name="repositoryCredential" type="text" size="20"/>
                         <input name="adduser" type="submit" value="add user">
                     </form>
-                </font></td>
+                </font>
+            </td>
         </tr>
-
-        <?php
-    }
-?>
-
+    <?php } ?>
 </table>
 

@@ -16,8 +16,14 @@
 
 require_once 'xml_handlers/abstract_handler.php';
 
+use CDash\Model\Build;
+use CDash\Model\BuildInformation;
 use CDash\Model\Coverage;
+use CDash\Model\CoverageFile;
+use CDash\Model\CoverageSummary;
 use CDash\Model\Label;
+use CDash\Model\Site;
+use CDash\Model\SiteInformation;
 
 class CoverageJUnitHandler extends AbstractHandler
 {
@@ -26,7 +32,7 @@ class CoverageJUnitHandler extends AbstractHandler
 
     private $Coverage;
     private $CoverageFile;
-    private $CoverageSummary;
+    private CoverageSummary $CoverageSummary;
     private $Label;
 
     /** Constructor */

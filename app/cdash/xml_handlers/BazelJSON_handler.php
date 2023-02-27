@@ -220,7 +220,7 @@ class BazelJSONHandler extends NonSaxHandler
                 if ($this->HasSubProjects) {
                     $target_name = $json_array['id']['pattern']['pattern'][0];
                     $subproject_name = SubProject::GetSubProjectForPath(
-                        $target_name, $this->Project->Id);
+                        $target_name, intval($this->Project->Id));
                     if (!empty($subproject_name)) {
                         $this->InitializeSubProjectBuild($subproject_name);
                     }
@@ -364,7 +364,7 @@ class BazelJSONHandler extends NonSaxHandler
                                 $subproject_name = '';
                                 if ($this->HasSubProjects) {
                                     $subproject_name = SubProject::GetSubProjectForPath(
-                                        $source_file, $this->Project->Id);
+                                        $source_file, intval($this->Project->Id));
                                     // Skip this defect if we cannot deduce what SubProject
                                     // it belongs to.
                                     if (empty($subproject_name)) {
@@ -485,7 +485,7 @@ class BazelJSONHandler extends NonSaxHandler
                                     // Look up the subproject (if any) that contains
                                     // this source file.
                                     $subproject_name = SubProject::GetSubProjectForPath(
-                                        $source_file, $this->Project->Id);
+                                        $source_file, intval($this->Project->Id));
                                     // Skip this defect if we cannot deduce what SubProject
                                     // it belongs to.
                                     if (empty($subproject_name)) {
@@ -533,7 +533,7 @@ class BazelJSONHandler extends NonSaxHandler
                         // builds instead.
                         $target_name = $json_array['id']['testResult']['label'];
                         $subproject_name = SubProject::GetSubProjectForPath(
-                            $target_name, $this->Project->Id);
+                            $target_name, intval($this->Project->Id));
                         // Skip this defect if we cannot deduce what SubProject
                         // it belongs to.
                         if (empty($subproject_name)) {
@@ -588,7 +588,7 @@ class BazelJSONHandler extends NonSaxHandler
                     // builds instead.
                     $target_name = $json_array['id']['testSummary']['label'];
                     $subproject_name = SubProject::GetSubProjectForPath(
-                        $target_name, $this->Project->Id);
+                        $target_name, intval($this->Project->Id));
                     // Skip this defect if we cannot deduce what SubProject
                     // it belongs to.
                     if (empty($subproject_name)) {

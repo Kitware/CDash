@@ -180,11 +180,14 @@ if (isset($_GET['onlydeltan'])) {
         $marshaledResolvedBuildFailure = BuildFailure::marshal($resolvedBuildFailure, $project, $revision, false, $buildfailure);
 
         if ($project->DisplayLabels) {
-            get_labels_JSON_from_query_results(
-                "SELECT text FROM label, label2buildfailure
-                    WHERE label.id=label2buildfailure.labelid AND
-                    label2buildfailure.buildfailureid='" . $resolvedBuildFailure['id']  . "'
-                    ORDER BY text ASC", $marshaledResolvedBuildFailure);
+            get_labels_JSON_from_query_results('
+                SELECT text
+                FROM label, label2buildfailure
+                WHERE
+                    label.id=label2buildfailure.labelid
+                    AND label2buildfailure.buildfailureid=?
+                ORDER BY text ASC
+            ', [intval($resolvedBuildFailure['id'])], $marshaledResolvedBuildFailure);
         }
 
         $marshaledResolvedBuildFailure = array_merge($marshaledResolvedBuildFailure, array(
@@ -217,6 +220,7 @@ if (isset($_GET['onlydeltan'])) {
         $failure = BuildFailure::marshal($fail, $project, $revision, true, $buildfailure);
 
         if ($project->DisplayLabels) {
+            /** @var Label $label */
             $label = $service->get(Label::class);
             $label->BuildFailureId = $fail['id'];
             $rows = $label->GetTextFromBuildFailure(PDO::FETCH_OBJ);

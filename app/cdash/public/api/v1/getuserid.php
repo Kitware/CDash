@@ -21,6 +21,7 @@ require_once 'include/pdo.php';
 
 use App\Models\User;
 use CDash\Model\Project;
+use CDash\Database;
 use Illuminate\Support\Facades\Auth;
 
 $userid = Auth::id();
@@ -73,14 +74,21 @@ if (!$project->FindByName($projectname)) {
     return response($xml, 404)->header('Content-Type', 'application/xml');
 }
 
-$userquery = pdo_query("SELECT up.userid FROM user2project AS up,user2repository AS ur
-                        WHERE ur.userid=up.userid
-                          AND up.projectid='$project->Id'
-                          AND ur.credential='$author'
-                          AND (ur.projectid='$project->Id' OR ur.projectid=0)");
+$db = Database::getInstance();
+$userarray = $db->executePreparedSingleRow('
+                 SELECT up.userid
+                 FROM user2project AS up, user2repository AS ur
+                 WHERE
+                     ur.userid=up.userid
+                     AND up.projectid=?
+                     AND ur.credential=?
+                     AND (
+                         ur.projectid=?
+                         OR ur.projectid=0
+                     )
+             ', [intval($project->Id), $author, intval($project->Id)]);
 
-if (pdo_num_rows($userquery) > 0) {
-    $userarray = pdo_fetch_array($userquery);
+if (!empty($userarray)) {
     $userid = $userarray['userid'];
     $xml .= $userid . '</userid>';
     return response($xml, 200)->header('Content-Type', 'application/xml');

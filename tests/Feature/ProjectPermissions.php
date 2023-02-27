@@ -2,8 +2,7 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\URL;
 use App\Models\User;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
@@ -68,7 +67,7 @@ class ProjectPermissions extends TestCase
      */
     public function testProjectPermissions()
     {
-        \URL::forceRootUrl('http://localhost');
+        URL::forceRootUrl('http://localhost');
 
         // Create some projects.
         $this->public_project = new Project();

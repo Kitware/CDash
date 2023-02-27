@@ -481,12 +481,14 @@ class Index extends ResultsApi
         $buildid = $build_array['id'];
         $siteid = $build_array['siteid'];
 
-        $countChildrenResult = pdo_single_row_query(
-            'SELECT count(id) AS numchildren
-                FROM build WHERE parentid=' . qnum($buildid));
+        $db = Database::getInstance();
+        $countChildrenResult = $db->executePreparedSingleRow('
+                                   SELECT count(id) AS numchildren
+                                   FROM build
+                                   WHERE parentid=?
+                               ', [intval($buildid)]);
         $numchildren = $countChildrenResult['numchildren'];
         $build_response['numchildren'] = $numchildren;
-        $child_builds_hyperlink = '';
 
         $selected_configure_errors = 0;
         $selected_configure_warnings = 0;
@@ -631,11 +633,12 @@ class Index extends ResultsApi
             $num_labels = $build_array['numlabels'];
         }
 
-        $label_query =
-            'SELECT l.text FROM label AS l
-            INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
-            INNER JOIN build AS b ON (l2b.buildid=b.id)
-            WHERE b.id=' . qnum($buildid);
+        $label_query = 'SELECT l.text
+                        FROM label AS l
+                        INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
+                        INNER JOIN build AS b ON (l2b.buildid=b.id)
+                        WHERE b.id=?';
+        $label_query_params = [intval($buildid)];
 
         $build_labels = [];
         if ($this->numSelectedSubProjects > 0) {
@@ -643,8 +646,8 @@ class Index extends ResultsApi
             if ($this->includeSubProjects) {
                 $num_labels = 0;
             }
-            $labels_result = pdo_query($label_query);
-            while ($label_row = pdo_fetch_array($labels_result)) {
+            $labels_result = $db->executePrepared($label_query, $label_query_params);
+            foreach ($labels_result as $label_row) {
                 // Whitelist case
                 if ($this->includeSubProjects &&
                         in_array($label_row['text'], $this->includedSubProjects)
@@ -680,7 +683,7 @@ class Index extends ResultsApi
                 $build_label = $build_labels[0];
             } else {
                 // Otherwise we look it up here.
-                $label_result = pdo_single_row_query($label_query);
+                $label_result = $db->executePreparedSingleRow($label_query, $label_query_params);
                 $build_label = $label_result['text'];
             }
         } else {
@@ -1134,14 +1137,12 @@ class Index extends ResultsApi
         return false;
     }
 
-    // Find expected builds that haven't submitted yet.
-    public function addExpectedBuilds($i, $currentstarttime)
+    /** Find expected builds that haven't submitted yet. */
+    public function addExpectedBuilds($i, $currentstarttime): array
     {
-        $config = Config::getInstance();
-
         if (isset($_GET['parentid'])) {
             // Don't add expected builds when viewing a single subproject result.
-            return;
+            return [];
         }
 
         $groupid = $this->buildgroupsResponse[$i]['id'];
@@ -1149,18 +1150,35 @@ class Index extends ResultsApi
         if ($this->buildGroupName && $this->buildGroupName != $groupname) {
             // When viewing results from a single build group don't check for
             // expected builds from other groups.
-            return;
+            return [];
         }
+
+        $db = Database::getInstance();
 
         $currentUTCTime = gmdate(FMT_DATETIME, $currentstarttime + 3600 * 24);
         $response = [];
-        $build2grouprule = pdo_query(
-            "SELECT g.siteid, g.buildname, g.buildtype, s.name, s.outoforder
-            FROM build2grouprule AS g, site AS s
-            WHERE g.expected='1' AND g.groupid='$groupid' AND s.id=g.siteid AND
-            g.starttime<'$currentUTCTime' AND
-            (g.endtime>'$currentUTCTime' OR g.endtime='1980-01-01 00:00:00')");
-        while ($build2grouprule_array = pdo_fetch_array($build2grouprule)) {
+        $build2grouprule = $db->executePrepared("
+                               SELECT
+                                   g.siteid,
+                                   g.buildname,
+                                   g.buildtype,
+                                   s.name,
+                                   s.outoforder
+                               FROM
+                                   build2grouprule AS g,
+                                   site AS s
+                               WHERE
+                                   g.expected=1
+                                   AND g.groupid=?
+                                   AND s.id=g.siteid
+                                   AND g.starttime<?
+                                   AND (
+                                       g.endtime>?
+                                       OR g.endtime='1980-01-01 00:00:00'
+                                   )
+                           ", [intval($groupid), $currentUTCTime, $currentUTCTime]);
+
+        foreach ($build2grouprule as $build2grouprule_array) {
             $key = $build2grouprule_array['name'] . '_' . $build2grouprule_array['buildname'];
             if (array_search($key, $this->receivedBuilds[$groupname]) === false) {
                 // add only if not found
@@ -1187,32 +1205,48 @@ class Index extends ResultsApi
                 // Compute historical average to get approximate expected time.
                 // PostgreSQL doesn't have the necessary functions for this.
                 if (config('database.default') == 'pgsql') {
-                    $query = pdo_query(
-                        "SELECT submittime FROM build,build2group
-                        WHERE build2group.buildid=build.id AND siteid='$siteid' AND
-                        name='$buildname' AND type='$buildtype' AND
-                        build2group.groupid='$groupid'
-                        ORDER BY id DESC LIMIT 5");
+                    $query = $db->executePrepared("
+                                 SELECT submittime
+                                 FROM
+                                     build,
+                                     build2group
+                                 WHERE
+                                     build2group.buildid=build.id
+                                     AND siteid=?
+                                     AND name=?
+                                     AND type=?
+                                     AND build2group.groupid=?
+                                 ORDER BY id DESC
+                                 LIMIT 5
+                             ", [intval($siteid), $buildname, $buildtype, intval($groupid)]);
+
                     $time = 0;
-                    while ($query_array = pdo_fetch_array($query)) {
+                    foreach ($query as $query_array) {
                         $time += strtotime(date('H:i:s', strtotime($query_array['submittime'])));
                     }
-                    if (pdo_num_rows($query) > 0) {
-                        $time /= pdo_num_rows($query);
+                    if (!empty($query)) {
+                        $time /= count($query);
                     }
                     $nextExpected = strtotime(date('H:i:s', $time) . ' UTC');
                 } else {
-                    $query = pdo_query(
-                        "SELECT AVG(TIME_TO_SEC(TIME(submittime)))
-                        FROM
-                        (SELECT submittime FROM build,build2group
-                         WHERE build2group.buildid=build.id AND siteid='$siteid' AND
-                         name='$buildname' AND type='$buildtype' AND
-                         build2group.groupid='$groupid'
-                         ORDER BY id DESC LIMIT 5)
-                        AS t");
-                    $query_array = pdo_fetch_array($query);
-                    $time = $query_array[0];
+                    $query = $db->executePreparedSingleRow('
+                                 SELECT AVG(TIME_TO_SEC(TIME(submittime))) AS a
+                                 FROM (
+                                     SELECT submittime
+                                     FROM
+                                         build,
+                                         build2group
+                                     WHERE
+                                         build2group.buildid=build.id
+                                         AND siteid=?
+                                         AND name=?
+                                         AND type=?
+                                         AND build2group.groupid=?
+                                     ORDER BY id DESC
+                                     LIMIT 5
+                                 ) AS t
+                             ', [intval($siteid), $buildname, $buildtype, $groupid]);
+                    $time = intval($query['a']);
                     $hours = floor($time / 3600);
                     $time = ($time % 3600);
                     $minutes = floor($time / 60);

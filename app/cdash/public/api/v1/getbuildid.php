@@ -19,17 +19,13 @@ namespace CDash\Api\v1\GetBuildID;
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
-@$project = $_GET['project'];
-@$site = $_GET['site'];
-@$siteid = $_GET['siteid'];
-@$stamp = $_GET['stamp'];
-@$name = $_GET['name'];
+use CDash\Database;
 
-$project = htmlspecialchars(pdo_real_escape_string($project));
-$site = htmlspecialchars(pdo_real_escape_string($site));
-$siteid = pdo_real_escape_numeric($siteid);
-$stamp = htmlspecialchars(pdo_real_escape_string($stamp));
-$name = htmlspecialchars(pdo_real_escape_string($name));
+$project = htmlspecialchars($_GET['project'] ?? '');
+$site = htmlspecialchars($_GET['site'] ?? '');
+$siteid = intval($_GET['siteid'] ?? 0);
+$stamp = htmlspecialchars($_GET['stamp'] ?? '');
+$name = htmlspecialchars($_GET['name'] ?? '');
 
 $projectid = get_project_id($project);
 
@@ -41,25 +37,27 @@ if (!is_numeric($projectid)) {
     return response($xml, 404)->header('Content-Type', 'application/xml');
 }
 
+$db = Database::getInstance();
+
 if (!array_key_exists('siteid', $_GET)) {
-    $sitequery = pdo_query("SELECT id FROM site WHERE name='$site'");
-    if (pdo_num_rows($sitequery) > 0) {
-        $site_array = pdo_fetch_array($sitequery);
-        $siteid = $site_array['id'];
+    $site_array = $db->executePreparedSingleRow('SELECT id FROM site WHERE name=?', [$site]);
+    if (!empty($site_array)) {
+        $siteid = intval($site_array['id']);
     }
 }
 
-if (!is_numeric($siteid)) {
-    $xml .= 'wrong site</buildid>';
-    return response($xml, 404)->header('Content-Type', 'application/xml');
-}
+$build_array = $db->executePreparedSingleRow('
+                  SELECT id
+                  FROM build
+                  WHERE
+                      siteid=?
+                      AND projectid=?
+                      AND name=?
+                      AND stamp=?
+              ', [$siteid, $projectid, $name, $stamp]);
 
-$buildquery = pdo_query("SELECT id FROM build WHERE siteid='$siteid' AND projectid='$projectid'
-                         AND name='$name' AND stamp='$stamp'");
-
-if (pdo_num_rows($buildquery) > 0) {
-    $buildarray = pdo_fetch_array($buildquery);
-    $buildid = $buildarray['id'];
+if (!empty($build_array)) {
+    $buildid = intval($build_array['id']);
     $xml .= $buildid . '</buildid>';
     return response($xml, 400)->header('Content-Type', 'application/xml');
 }

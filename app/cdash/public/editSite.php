@@ -15,6 +15,8 @@
 =========================================================================*/
 
 use App\Http\Controllers\Auth\LoginController;
+use Illuminate\Support\Facades\Auth;
+use CDash\Database;
 
 require_once 'include/pdo.php';
 include_once 'include/common.php';
@@ -52,8 +54,13 @@ if (Auth::check()) {
     @$updatesite = $_POST['updatesite'];
     @$geolocation = $_POST['geolocation'];
 
+    $db = Database::getInstance();
+
     if (isset($_POST['unclaimsite']) && isset($_GET['siteid'])) {
-        pdo_query('DELETE FROM site2user WHERE siteid=' . qnum(pdo_real_escape_numeric($_GET['siteid'])) . ' AND userid=' . qnum($userid));
+        $db->executePrepared('
+            DELETE FROM site2user
+            WHERE siteid=? AND userid=?
+        ', [intval($_GET['siteid']), $userid]);
         echo "<script language=\"javascript\">window.location='user.php'</script>";
         return;
     }
@@ -136,7 +143,7 @@ if (Auth::check()) {
         $projectid = pdo_real_escape_numeric($projectid);
     }
     if (isset($projectid) && is_numeric($projectid)) {
-        $project_array = pdo_fetch_array(pdo_query("SELECT name FROM project WHERE id='$projectid'"));
+        $project_array = $db->executePreparedSingleRow('SELECT name FROM project WHERE id=?', [intval($projectid)]);
         $xml .= '<project>';
         $xml .= add_XML_value('id', $projectid);
         $xml .= add_XML_value('name', $project_array['name']);
@@ -144,17 +151,27 @@ if (Auth::check()) {
 
         // Select sites that belong to this project
         $beginUTCTime = gmdate(FMT_DATETIME, time() - 3600 * 7 * 24); // 7 days
-        $site2project = pdo_query("SELECT DISTINCT site.id,site.name FROM build,site WHERE build.projectid='$projectid'
-                               AND build.starttime>'$beginUTCTime'
-                               AND site.id=build.siteid ORDER BY site.name ASC"); //group by is slow
+        $site2project = $db->executePrepared('
+                            SELECT DISTINCT site.id, site.name
+                            FROM build, site
+                            WHERE
+                                build.projectid=?
+                                AND build.starttime>?
+                                AND site.id=build.siteid
+                            ORDER BY site.name ASC
+                        ', [intval($projectid), $beginUTCTime]);
 
-        while ($site2project_array = pdo_fetch_array($site2project)) {
-            $siteid = $site2project_array['id'];
+        foreach ($site2project as $site2project_array) {
+            $siteid = intval($site2project_array['id']);
             $xml .= '<site>';
             $xml .= add_XML_value('id', $siteid);
             $xml .= add_XML_value('name', $site2project_array['name']);
-            $user2site = pdo_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
-            if (pdo_num_rows($user2site) == 0) {
+            $user2site = $db->executePreparedSingleRow('
+                             SELECT COUNT(*) AS c
+                             FROM site2user
+                             WHERE siteid=? AND userid=?
+                         ', [$siteid, intval($userid)]);
+            if (count($user2site['c']) === 0) {
                 $xml .= add_XML_value('claimed', '0');
             } else {
                 $xml .= add_XML_value('claimed', '1');
@@ -171,7 +188,7 @@ if (Auth::check()) {
     if (isset($siteid) && is_numeric($siteid)) {
         $xml .= '<user>';
         $xml .= '<site>';
-        $site_array = pdo_fetch_array(pdo_query("SELECT * FROM site WHERE id='$siteid'"));
+        $site_array = $db->executePreparedSingleRow('SELECT * FROM site WHERE id=?', [intval($siteid)]);
 
         $siteinformation_array = array();
         $siteinformation_array['description'] = 'NA';
@@ -189,9 +206,15 @@ if (Auth::check()) {
         $siteinformation_array['processorclockfrequency'] = 'NA';
 
         // Get the last information about the size
-        $query = pdo_query("SELECT * FROM siteinformation WHERE siteid='$siteid' ORDER BY timestamp DESC LIMIT 1");
-        if (pdo_num_rows($query) > 0) {
-            $siteinformation_array = pdo_fetch_array($query);
+        $query = $db->executePreparedSingleRow('
+                     SELECT *
+                     FROM siteinformation
+                     WHERE siteid=?
+                     ORDER BY timestamp DESC
+                     LIMIT 1
+                 ', [intval($siteid)]);
+        if (!empty($query)) {
+            $siteinformation_array = $query;
             if ($siteinformation_array['processoris64bits'] == -1) {
                 $siteinformation_array['processoris64bits'] = 'NA';
             }
@@ -245,10 +268,19 @@ if (Auth::check()) {
         $xml .= add_XML_value('outoforder', $site_array['outoforder']);
         $xml .= '</site>';
 
-        $user2site = pdo_query("SELECT su.userid FROM site2user AS su,user2project AS up
-                            WHERE su.userid=up.userid AND up.role>0 AND su.siteid='$siteid' and su.userid='$userid'");
+        $user2site = $db->executePreparedSingleRow('
+                         SELECT su.userid
+                         FROM
+                             site2user AS su,
+                             user2project AS up
+                         WHERE
+                             su.userid=up.userid
+                             AND up.role>0
+                             AND su.siteid=?
+                             AND su.userid=?
+                     ', [intval($siteid), intval($userid)]);
         echo pdo_error();
-        if (pdo_num_rows($user2site) == 0) {
+        if (!empty($user2site)) {
             $xml .= add_XML_value('siteclaimed', '0');
         } else {
             $xml .= add_XML_value('siteclaimed', '1');

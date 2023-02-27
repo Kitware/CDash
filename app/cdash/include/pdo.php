@@ -18,16 +18,19 @@ require_once 'include/log.php';
 
 use CDash\Database;
 
-// pdo_single_row_query returns a single row. Useful for SELECT
-// queries that are expected to return 0 or 1 rows.
-//
-function pdo_single_row_query($qry)
+/**
+ * pdo_single_row_query returns a single row. Useful for SELECT
+ * queries that are expected to return 0 or 1 rows.
+ *
+ * @deprecated 04/01/2023
+ */
+function pdo_single_row_query($qry): array|null|false
 {
     $result = pdo_query($qry);
     if (false === $result) {
         add_log('error: pdo_query failed: ' . pdo_error(),
             'pdo_single_row_query', LOG_ERR);
-        return array();
+        return [];
     }
 
     $num_rows = pdo_num_rows($result);
@@ -40,132 +43,29 @@ function pdo_single_row_query($qry)
     }
 
     $row = pdo_fetch_array($result);
-    pdo_free_result($result);
+
+    if ($result instanceof \PDOStatement && !$result->closeCursor()) {
+        return false;
+    }
+
     return $row;
 }
 
-// pdo_all_rows_query returns all rows. Useful for SELECT
-// queries that return any number of rows. Only use
-// this one on queries expected to return small result
-// sets.
-//
-function pdo_all_rows_query($qry)
-{
-    $result = pdo_query($qry);
-    if (false === $result) {
-        add_log('error: pdo_query failed: ' . pdo_error(),
-            'pdo_all_rows_query', LOG_ERR);
-        return array();
-    }
-
-    $all_rows = array();
-    while ($row = pdo_fetch_array($result)) {
-        $all_rows[] = $row;
-    }
-    pdo_free_result($result);
-    return $all_rows;
-}
-
-// pdo_get_field_value executes the given query, expected to return 0 rows
-// or 1 row. If it gets a row, it retrieves the value of the named field
-// and returns it. Otherwise, it returns the passed in default value.
-//
-function pdo_get_field_value($qry, $fieldname, $default)
-{
-    $row = pdo_single_row_query($qry);
-
-    if (!empty($row)) {
-        $f = $row["$fieldname"];
-    } else {
-        $f = $default;
-    }
-    return $f;
-}
-
-// pdo_query_and_log_if_failed executes the given query, could be any
-// type of query, and logs an error if there was one.
-//
-// Returns true on success, false on error.
-//
-function pdo_query_and_log_if_failed($qry, $caller)
-{
-    $result = pdo_query($qry);
-
-    if (false === $result) {
-        add_log('error: pdo_query failed: ' . pdo_error(),
-            $caller, LOG_ERR);
-
-        // Also log a bit of the query so we can tell where it came from:
-        if (strlen($qry) > 100) {
-            $log_qry = substr($qry, 0, 100) . '...';
-        } else {
-            $log_qry = $qry;
-        }
-        add_log('query: ' . $log_qry,
-            $caller, LOG_INFO);
-        return false;
-    }
-    return true;
-}
-
-// pdo_insert_query executes the given query, expected to be an INSERT
-// query, and logs an error if there was one.
-//
-// Returns true on success, false on error.
-//
-function pdo_insert_query($qry)
-{
-    return pdo_query_and_log_if_failed($qry, 'pdo_insert_query');
-}
-
-// pdo_delete_query executes the given query, expected to be a DELETE
-// query, and logs an error if there was one.
-//
-// Returns true on success, false on error.
-//
-function pdo_delete_query($qry)
-{
-    return pdo_query_and_log_if_failed($qry, 'pdo_delete_query');
-}
-
-/**
- * Connect to the database.
- * Using PDO, we cannot connect without a database name, so store the
- * information for later use.
- * @param null|string $server the server to connect to
- * @param null|string $username the database user
- * @param null|string $password the password to use
- * @param null|string $database the name of the database
- * @return CDash\Database
- */
-function pdo_connect($server = null, $username = null, $password = null, $database = null)
+function get_link_identifier(): Database
 {
     return Database::getInstance();
-}
-
-function get_link_identifier($link_identifier = null)
-{
-    return Database::getInstance();
-}
-
-function pdo_select_db($database, $link_identifier = null)
-{
-    $db = Database::getInstance();
-    return ($db->getPdo() instanceof PDO);
 }
 
 /**
  * Get the last pdo error or empty string in the case of no error.
- * @param CDash\Database|null $link_identifier
+ *
+ * @deprecated 04/01/2023
  * @return string containing error message (or not in the case of production)
  */
-function pdo_error($link_identifier = null, $log_error = true)
+function pdo_error(): string
 {
-    $error_info = get_link_identifier($link_identifier)->getPdo()->errorInfo();
+    $error_info = get_link_identifier()->getPdo()->errorInfo();
     if (isset($error_info[2]) && $error_info[0] !== '00000') {
-        if ($log_error) {
-            add_log($error_info[2], 'pdo_error', LOG_ERR);
-        }
         if (config('app.env') === 'production') {
             return 'SQL error encountered, query hidden.';
         }
@@ -177,11 +77,10 @@ function pdo_error($link_identifier = null, $log_error = true)
 
 /**
  * A light wrapper around PDOStatement::fetch.
- * @param PDOStatement $result the statementto fetch results from
- * @param int $result_type passes through to fetch
- * @return array|false
+ *
+ * @deprecated 04/01/2023
  */
-function pdo_fetch_array($result, $result_type = PDO::FETCH_BOTH)
+function pdo_fetch_array(PDOStatement|false $result, int $result_type = PDO::FETCH_BOTH): array|null|false
 {
     if ($result === false) {
         return false;
@@ -191,50 +90,27 @@ function pdo_fetch_array($result, $result_type = PDO::FETCH_BOTH)
 }
 
 /**
- * Emulate mysql_fetch_row with PDO.
- * @param PDOStatement $result
- * @return array|false
- */
-function pdo_fetch_row($result)
-{
-    return pdo_fetch_array($result,
-        PDO::FETCH_NUM);
-}
-
-/**
- * Emulate mysql_free_result with PDO.
- * @param PDOStatement $result
- * @return bool
- */
-function pdo_free_result($result)
-{
-    if ($result instanceof \PDOStatement) {
-        return $result->closeCursor();
-    }
-}
-
-/**
  * Emulate mysql_insert_id using PDO
- * @param string $table_name
- * @return string
+ *
+ * @deprecated 04/01/2023
  */
-function pdo_insert_id($table_name)
+function pdo_insert_id(string $table_name): string|false
 {
     $seq = '';
     if (config('database.default') === 'pgsql') {
         $seq = $table_name . '_id_seq';
     }
-    return get_link_identifier(null)->getPdo()->lastInsertId($seq);
+    return get_link_identifier()->getPdo()->lastInsertId($seq);
 }
 
 /**
  * Emulate mysql_num_rows with PDO.
- *   Do not use for select queries.
+ * Do not use for select queries.
  *
+ * @deprecated 04/01/2023
  * @param PDOStatement $result
- * @return false|int
  */
-function pdo_num_rows($result)
+function pdo_num_rows($result): int|false
 {
     if (!$result) {
         return false;
@@ -250,100 +126,42 @@ function pdo_num_rows($result)
 }
 
 /**
- * Emulate mysql_affected_rows with PDO.
- * @param PDOStatement $result
- * @return int
- */
-function pdo_affected_rows($result)
-{
-    return pdo_num_rows($result);
-}
-
-/**
  * Emulate mysql_query with PDO.
- * @param string $query
- * @param PDO|null $link_identifier
- * @param bool $log_error
- * @return PDOStatement|false
+ *
+ * @deprecated 04/01/2023
  */
-function pdo_query($query, $link_identifier = null, $log_error = true)
+function pdo_query(string $query): PDOStatement|false
 {
     $db = Database::getInstance();
     return $db->query($query);
 }
 
 /**
- * Lock a table. This is bad. Don't use this function.
- * @deprecated
- * @param array $tables an array of table names
- * @return bool
- */
-function pdo_lock_tables($tables)
-{
-    $table_str = implode(', ', $tables);
-
-    if (config('database.default') == 'pgsql') {
-        // PgSql table locking syntax:
-        // http://www.postgresql.org/docs/8.1/static/sql-lock.html
-        pdo_query('BEGIN WORK');
-        $locked = pdo_query('LOCK TABLE ' . $table_str);
-        if (!$locked) {
-            pdo_query('COMMIT WORK');
-        }
-        return $locked;
-    } else {
-        // MySQL table locking:
-        // http://dev.mysql.com/doc/refman/5.0/en/lock-tables.html
-        return pdo_query('LOCK TABLES ' . $table_str . ' WRITE');
-    }
-}
-
-/**
- * Unlock tables. This is bad. Don't lock or unlock tables manually.
- * @deprecated
- * @return bool|false
- */
-function pdo_unlock_tables()
-{
-    if (config('database.default') === 'pgsql') {
-        // Unlock occurs automatically at transaction end for PgSql, according to:
-        // http://www.postgresql.org/docs/8.1/static/sql-lock.html
-        pdo_query('COMMIT WORK');
-        return true;
-    } else {
-        return pdo_query('UNLOCK TABLES');
-    }
-}
-
-/**
  * Emulate mysql_real_escape_string with PDO.
- * @param string $unescaped_string
- * @param PDO|null $link_identifier
- * @return string
+ *
+ * @deprecated 04/01/2023
  */
-function pdo_real_escape_string($unescaped_string, $link_identifier = null)
+function pdo_real_escape_string(mixed $unescaped_string): string|false
 {
-    $str = get_link_identifier($link_identifier)->getPdo()->quote($unescaped_string ?? '');
+    $str = get_link_identifier()->getPdo()->quote($unescaped_string ?? '');
     return substr($str, 1, strlen($str) - 2); // remove enclosing quotes
 }
 
 /**
  * Case for numeric empty string in Postgres.
- * @param string $unescaped_string
- * @param PDO|null $link_identifier
- * @return string
+ *
+ * @deprecated 04/01/2023
  */
-function pdo_real_escape_numeric($unescaped_string, $link_identifier = null)
+function pdo_real_escape_numeric(mixed $unescaped_string): float|int|string
 {
-    if (config('database.default') == 'pgsql' && $unescaped_string == '') {
+    if (config('database.default') === 'pgsql' && $unescaped_string == '') {
         // MySQL interprets an empty string as zero when assigned to a numeric field,
         // for PostgreSQL this must be done explicitly:
         $unescaped_string = '0';
     }
 
     // Return zero if we don't end up with a numeric value.
-    $escaped_string =
-        pdo_real_escape_string($unescaped_string, $link_identifier);
+    $escaped_string = pdo_real_escape_string($unescaped_string);
     if (!is_numeric($escaped_string)) {
         return 0;
     }
@@ -355,20 +173,17 @@ function pdo_real_escape_numeric($unescaped_string, $link_identifier = null)
  *
  * Execute a prepared statement and log any errors that occur.
  *
- * @param PDOStatement $stmt
- * @param array|null $input_parameters
- * @return bool
  * @deprecated v2.5.0 01/22/2018
  */
-function pdo_execute($stmt, $input_parameters=null)
+function pdo_execute(PDOStatement $stmt, array|null $input_parameters=null): bool|null
 {
     $db = Database::getInstance();
     return $db->execute($stmt, $input_parameters);
 }
 
-function pdo_get_vendor_version($link_identifier = null)
+function pdo_get_vendor_version()
 {
-    $version = get_link_identifier($link_identifier)->getPdo()->query('SELECT version()')->fetchColumn();
+    $version = get_link_identifier()->getPdo()->query('SELECT version()')->fetchColumn();
 
     if (config('database.default') === 'pgsql') {
         // Postgress returns version string similar to:

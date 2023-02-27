@@ -43,8 +43,6 @@ class SummaryEmailTestCase extends KWWebTestCase
             $this->submission('SummaryEmailProject', $file);
         }
 
-        $config = Config::getInstance();
-        $url = $config->getBaseUrl();
         $expected = [
             'simpletest@localhost',
             'FAILED (w=3): SummaryEmailProject - Win32-MSVC2009 - Nightly',

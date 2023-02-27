@@ -15,6 +15,8 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Database;
+
 // It is assumed that appropriate headers should be included before including this file
 class LabelEmail
 {
@@ -30,24 +32,27 @@ class LabelEmail
     }
 
     /** Return if a project exists */
-    public function Exists()
+    public function Exists(): bool
     {
         // If no id specify return false
         if (!$this->ProjectId || !$this->UserId) {
             return false;
         }
 
-        $query = pdo_query('SELECT count(*) FROM labelemail WHERE userid=' . qnum($this->UserId) .
-            ' AND projectid=' . qnum($this->ProjectId) .
-            ' AND labelid=' . qnum($this->LabelId));
-        $query_array = pdo_fetch_array($query);
-        if ($query_array[0] > 0) {
-            return true;
-        }
-        return false;
+        $db = Database::getInstance();
+        $query = $db->executePreparedSingleRow('
+                     SELECT count(*) AS c
+                     FROM labelemail
+                     WHERE
+                         userid=?
+                         AND projectid=?
+                         AND labelid=?
+                 ', [intval($this->UserId), intval($this->ProjectId), intval($this->LabelId)]);
+
+        return intval($query['c']) > 0;
     }
 
-    public function Insert()
+    public function Insert(): bool
     {
         if (!$this->ProjectId) {
             echo 'LabelEmail Insert(): ProjectId not set';
@@ -65,10 +70,12 @@ class LabelEmail
         }
 
         if (!$this->Exists()) {
-            $query = pdo_query('INSERT INTO labelemail (userid,projectid,labelid) VALUES(' . qnum($this->UserId) .
-                ',' . qnum($this->ProjectId) .
-                ',' . qnum($this->LabelId) . ')');
-            if (!$query) {
+            $db = Database::getInstance();
+            $query = $db->executePrepared('
+                         INSERT INTO labelemail (userid, projectid, labelid)
+                         VALUES (?, ?, ?)
+                    ', [intval($this->UserId), intval($this->ProjectId), intval($this->LabelId)]);
+            if ($query === false) {
                 return false;
             }
         }
@@ -76,7 +83,7 @@ class LabelEmail
     }
 
     /** Update the labels given a projectid and userid */
-    public function UpdateLabels($labels)
+    public function UpdateLabels(array|null $labels): bool
     {
         if (!$this->ProjectId) {
             echo 'LabelEmail UpdateLabels(): ProjectId not set';
@@ -88,8 +95,8 @@ class LabelEmail
             return false;
         }
 
-        if (!$labels) {
-            $labels = array();
+        if ($labels === null) {
+            $labels = [];
         }
 
         $existinglabels = $this->GetLabels();
@@ -108,8 +115,12 @@ class LabelEmail
         return true;
     }
 
-    /** Get the labels given a projectid and userid */
-    public function GetLabels()
+    /**
+     * Get the labels given a projectid and userid
+     *
+     * @return array<int>|false
+     */
+    public function GetLabels(): array|false
     {
         if (empty($this->ProjectId)) {
             echo 'LabelEmail GetLabels(): ProjectId not set';
@@ -121,15 +132,20 @@ class LabelEmail
             return false;
         }
 
-        $labels = pdo_query('SELECT labelid FROM labelemail WHERE projectid=' . qnum($this->ProjectId) . ' AND userid=' . qnum($this->UserId));
-        if (!$labels) {
+        $db = Database::getInstance();
+        $labels = $db->executePrepared('
+                      SELECT labelid
+                      FROM labelemail
+                      WHERE projectid=? AND userid=?
+                  ', [intval($this->ProjectId), intval($this->UserId)]);
+        if ($labels === false) {
             add_last_sql_error('LabelEmail GetLabels');
             return false;
         }
 
         $labelids = array();
-        while ($labels_array = pdo_fetch_array($labels)) {
-            $labelids[] = $labels_array['labelid'];
+        foreach ($labels as $labels_array) {
+            $labelids[] = intval($labels_array['labelid']);
         }
         return $labelids;
     }

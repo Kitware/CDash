@@ -17,6 +17,7 @@ namespace CDash\Model;
 
 use CDash\Config;
 use CDash\Database;
+use Illuminate\Support\Facades\DB;
 use PDO;
 
 class BuildUpdate
@@ -44,18 +45,18 @@ class BuildUpdate
         $this->PDO = Database::getInstance()->getPdo();
     }
 
-    public function AddFile($file)
+    public function AddFile($file): void
     {
         $this->Files[] = $file;
     }
 
-    public function GetFiles()
+    public function GetFiles(): array
     {
         return $this->Files;
     }
 
     // Insert the update
-    public function Insert()
+    public function Insert(): int|bool
     {
         if (strlen($this->BuildId) == 0 || !is_numeric($this->BuildId)) {
             echo 'BuildUpdate:Insert BuildId not set';
@@ -63,10 +64,10 @@ class BuildUpdate
         }
 
         // Avoid a race condition when parallel processing.
-        return \DB::transaction(function () {
+        return DB::transaction(function () {
             // Check if this update already exists.
             $build2update_row =
-            \DB::table('build2update')
+            DB::table('build2update')
                 ->where('buildid', $this->BuildId)
                 ->lockForUpdate()
                 ->first();
@@ -81,30 +82,30 @@ class BuildUpdate
                 // Parent builds share updates with their children.
                 // So if this is a parent build remove any build2update rows
                 // from the children here.
-                $child_buildids = \DB::table('build')
+                $child_buildids = DB::table('build')
                     ->where('parentid', $this->BuildId)
                     ->pluck('id');
                 if (!empty($child_buildids)) {
-                    \DB::table('build2update')
+                    DB::table('build2update')
                         ->whereIn('buildid', $child_buildids)
                         ->delete();
                 }
 
                 // If the buildupdate and updatefile are not shared
                 // we delete them as well.
-                $num_shared_updates = \DB::table('build2update')
+                $num_shared_updates = DB::table('build2update')
                     ->where('updateid', $this->UpdateId)
                     ->count();
 
                 if ($num_shared_updates === 1) {
-                    \DB::table('buildupdate')
+                    DB::table('buildupdate')
                         ->where('id', $this->UpdateId)
                         ->delete();
-                    \DB::table('updatefile')
+                    DB::table('updatefile')
                         ->where('updateid', $this->UpdateId)
                         ->delete();
                 }
-                \DB::table('build2update')
+                DB::table('build2update')
                     ->where('buildid', $this->BuildId)
                     ->delete();
                 $exists = false;
@@ -137,7 +138,7 @@ class BuildUpdate
             }
 
             if (!$exists) {
-                $this->UpdateId = \DB::table('buildupdate')->insertGetId([
+                $this->UpdateId = DB::table('buildupdate')->insertGetId([
                     'starttime' => $this->StartTime,
                     'endtime' => $this->EndTime,
                     'command' => $this->Command,
@@ -150,7 +151,7 @@ class BuildUpdate
                     'path' => $this->Path,
                 ]);
 
-                \DB::table('build2update')->insertOrIgnore([
+                DB::table('build2update')->insertOrIgnore([
                     'buildid' => $this->BuildId,
                     'updateid' => $this->UpdateId,
                 ]);
@@ -158,7 +159,7 @@ class BuildUpdate
                 // If this is a parent build, make sure that all of its children
                 // are also associated with a buildupdate.
                 $rows_to_insert = [];
-                $children_needing_buildupdates = \DB::table('build')
+                $children_needing_buildupdates = DB::table('build')
                     ->leftJoin('build2update', 'build.id', '=', 'build2update.buildid')
                     ->where('build.parentid', $this->BuildId)
                     ->whereNull('build2update.buildid')
@@ -167,7 +168,7 @@ class BuildUpdate
                     $rows_to_insert[] = ['buildid' => $child_buildid, 'updateid' => $this->UpdateId];
                 }
                 if (!empty($rows_to_insert)) {
-                    \DB::table('build2update')->insert($rows_to_insert);
+                    DB::table('build2update')->insert($rows_to_insert);
                 }
             } else {
                 $nwarnings += $this->GetNumberOfWarnings();
@@ -175,22 +176,22 @@ class BuildUpdate
 
                 if (config('database.default') == 'pgsql') {
                     // pgsql doesn't have concat...
-                    \DB::table('buildupdate')
+                    DB::table('buildupdate')
                         ->where('id', $this->UpdateId)
                         ->update([
                             'endtime' => $this->EndTime,
                             'status' => $this->Status,
-                            'command' => \DB::raw("command || '$this->Command'"),
+                            'command' => DB::raw("command || '$this->Command'"),
                             'nfiles' => $nfiles,
                             'warnings' => $nwarnings,
                         ]);
                 } else {
-                    \DB::table('buildupdate')
+                    DB::table('buildupdate')
                         ->where('id', $this->UpdateId)
                         ->update([
                             'endtime' => $this->EndTime,
                             'status' => $this->Status,
-                            'command' => \DB::raw("CONCAT(command, '$this->Command')"),
+                            'command' => DB::raw("CONCAT(command, '$this->Command')"),
                             'nfiles' => $nfiles,
                             'warnings' => $nwarnings,
                         ]);
@@ -207,14 +208,14 @@ class BuildUpdate
     }
 
     /** Get the number of files for an update */
-    public function GetNumberOfFiles()
+    public function GetNumberOfFiles(): int|false
     {
         if (!$this->UpdateId) {
             echo 'BuildUpdate::GetNumberOfFiles(): Id not set';
             return false;
         }
 
-        $row = \DB::table('buildupdate')
+        $row = DB::table('buildupdate')
             ->where('id', $this->UpdateId)
             ->first();
         if ($row) {
@@ -225,11 +226,8 @@ class BuildUpdate
 
     /**
      * Returns the update for the buildid
-     *
-     * @param int $fetchType
-     * @return bool|mixed
      */
-    public function GetUpdateForBuild($fetchType = PDO::FETCH_ASSOC)
+    public function GetUpdateForBuild(): array|false
     {
         if (!$this->BuildId) {
             echo 'BuildUpdate::GetUpdateStatusForBuild(): BuildId not set';
@@ -250,46 +248,49 @@ class BuildUpdate
         $query = $this->PDO->prepare($sql);
         $query->bindParam(':buildid', $this->BuildId);
 
-        return $query->fetch($fetchType);
+        return $query->fetch(PDO::FETCH_ASSOC);
     }
 
     /** Get the number of warnings for an update */
-    public function GetNumberOfWarnings()
+    public function GetNumberOfWarnings(): int
     {
         if (!$this->UpdateId) {
             return 0;
         }
 
-        $row = \DB::table('buildupdate')
+        $row = DB::table('buildupdate')
             ->where('id', $this->UpdateId)
             ->first();
         if ($row) {
-            return $row->warnings;
+            return intval($row->warnings);
         }
         return 0;
     }
 
     /** Get the number of errors for a build */
-    public function GetNumberOfErrors()
+    public function GetNumberOfErrors(): int|false
     {
         if (!$this->BuildId) {
             echo 'BuildUpdate::GetNumberOfErrors(): BuildId not set';
             return false;
         }
 
-        $builderror = pdo_query('SELECT status FROM buildupdate AS u, build2update AS b2u WHERE u.id=b2u.updateid AND b2u.buildid=' . qnum($this->BuildId));
-        $updatestatus_array = pdo_fetch_array($builderror);
+        $db = Database::getInstance();
+        $builderror = $db->executePreparedSingleRow('
+                          SELECT status
+                          FROM buildupdate AS u, build2update AS b2u
+                          WHERE u.id=b2u.updateid AND b2u.buildid=?
+                      ', [intval($this->BuildId)]);
 
-        if (is_array($updatestatus_array) &&
-                strlen($updatestatus_array['status']) > 0 &&
-                $updatestatus_array['status'] != '0') {
+        // TODO: (williamjallen) Investigate the proper return value of this function
+        if (!empty($builderror) && strlen($builderror['status']) > 0 && $builderror['status'] != '0') {
             return 1;
         }
         return 0;
     }
 
     /** Associate a buildupdate to a build. */
-    public function AssociateBuild($siteid, $name, $stamp)
+    public function AssociateBuild(int $siteid, string $name, $stamp): bool
     {
         if (!$this->BuildId) {
             echo 'BuildUpdate::AssociateBuild(): BuildId not set';
@@ -297,12 +298,12 @@ class BuildUpdate
         }
 
         // If we already have something in the databse we return
-        if (\DB::table('build2update')->where('buildid', $this->BuildId)->exists()) {
+        if (DB::table('build2update')->where('buildid', $this->BuildId)->exists()) {
             return true;
         }
 
         // Find the update id from a similar build
-        $similar_b2u_row = \DB::table('build2update')
+        $similar_b2u_row = DB::table('build2update')
             ->join('build', 'build2update.buildid', '=', 'build.id')
             ->where('build.stamp', '=', $stamp)
             ->where('build.siteid', '=', $siteid)
@@ -314,14 +315,14 @@ class BuildUpdate
         }
 
         $this->updateId = $similar_b2u_row->updateid;
-        \DB::table('build2update')->insertOrIgnore([
+        DB::table('build2update')->insertOrIgnore([
             'buildid' => $this->BuildId,
             'updateid' => $this->updateId,
         ]);
 
         // check if this build's parent also needs to be associated with
         // this update.
-        $build_row = \DB::table('build')->where('id', '=', $this->BuildId)->first();
+        $build_row = DB::table('build')->where('id', '=', $this->BuildId)->first();
         if (!$build_row) {
             return false;
         }
@@ -329,8 +330,8 @@ class BuildUpdate
             return true;
         }
         $parentid = $build_row->parentid;
-        if (!\DB::table('build2update')->where('buildid', '=', $parentid)->exists()) {
-            \DB::table('build2update')->insertOrIgnore([
+        if (!DB::table('build2update')->where('buildid', '=', $parentid)->exists()) {
+            DB::table('build2update')->insertOrIgnore([
                 'buildid' => $parentid,
                 'updateid' => $this->updateId,
             ]);
@@ -341,36 +342,42 @@ class BuildUpdate
     /** Update a child build so that it shares the parent's updates.
      *  This function does not change the data model unless the parent
      * has an update and the child does not. **/
-    public static function AssignUpdateToChild($childid, $parentid)
+    public static function AssignUpdateToChild(int $childid, int $parentid): void
     {
-        $childid = qnum($childid);
-        $parentid = qnum($parentid);
+        $db = Database::getInstance();
 
         // Make sure the child does not already have an update.
-        $result = pdo_query(
-            "SELECT updateid FROM build2update WHERE buildid=$childid");
-        if (pdo_num_rows($result) > 0) {
+        $result = $db->executePreparedSingleRow('
+                      SELECT COUNT(*) AS c
+                      FROM build2update
+                      WHERE buildid=?
+                  ', [$childid]);
+        if (intval($result['c']) > 0) {
             return;
         }
 
         // Get the parent's update.
-        $result = pdo_query(
-            "SELECT updateid FROM build2update WHERE buildid=$parentid");
-        if (pdo_num_rows($result) < 1) {
+        $result = $db->executePreparedSingleRow('
+                      SELECT updateid
+                      FROM build2update
+                      WHERE buildid=?
+                  ', [$parentid]);
+        if (empty($result)) {
             return;
         }
-        $row = pdo_fetch_array($result);
-        $updateid = qnum($row['updateid']);
+        $updateid = intval($result['updateid']);
 
         // Assign the parent's update to the child.
-        $query = "INSERT INTO build2update (buildid, updateid)
-          VALUES ($childid, $updateid)";
-        if (!pdo_query($query)) {
+        $query = $db->executePrepared('
+                     INSERT INTO build2update (buildid, updateid)
+                     VALUES (?, ?)
+                 ', [$childid, $updateid]);
+        if ($query === false) {
             add_last_sql_error('AssignUpdateToChild', 0, $childid);
         }
     }
 
-    public function FillFromBuildId()
+    public function FillFromBuildId(): bool
     {
         if (!$this->BuildId) {
             return false;
@@ -427,10 +434,8 @@ class BuildUpdate
 
     /**
      * Returns a self referencing URI for the current BuildUpdate.
-     *
-     * @return string
      */
-    public function GetUrlForSelf()
+    public function GetUrlForSelf(): string
     {
         $config = Config::getInstance();
         return "{$config->getBaseUrl()}/viewUpdate.php?buildid={$this->BuildId}";

@@ -16,7 +16,9 @@
 namespace CDash\Model;
 
 use CDash\Database;
+use Illuminate\Support\Facades\DB;
 use CDash\Model\BuildGroupRule;
+use Illuminate\Support\Facades\Log;
 
 class BuildGroup
 {
@@ -53,24 +55,23 @@ class BuildGroup
     }
 
     /** Get the id */
-    public function GetId()
+    public function GetId(): int
     {
-        return $this->Id;
+        return intval($this->Id);
     }
 
     /** Set the id.  Also loads remaining data for this
      * buildgroup from the database.
      **/
-    public function SetId($id)
+    public function SetId($id): bool
     {
         if (!is_numeric($id)) {
             return false;
         }
 
-        $this->Id = $id;
+        $this->Id = intval($id);
 
-        $row = pdo_single_row_query(
-            'SELECT * FROM buildgroup WHERE id=' . qnum($this->Id));
+        $row = $this->PDO->executePreparedSingleRow('SELECT * FROM buildgroup WHERE id=?', [$this->Id]);
         if (empty($row)) {
             return false;
         }
@@ -80,7 +81,7 @@ class BuildGroup
     }
 
     /** Get the Name of the buildgroup */
-    public function GetName()
+    public function GetName(): string|false
     {
         if (strlen($this->Name) > 0) {
             return $this->Name;
@@ -91,23 +92,19 @@ class BuildGroup
             return false;
         }
 
-        $project = pdo_query('SELECT name FROM buildgroup WHERE id=' . qnum($this->Id));
+        $project = $this->PDO->executePreparedSingleRow('SELECT name FROM buildgroup WHERE id=?', [$this->Id]);
         if (!$project) {
             add_last_sql_error('BuildGroup GetName');
             return false;
         }
-        $project_array = pdo_fetch_array($project);
-        if (is_array($project_array)) {
-            $this->Name = $project_array['name'];
-            return $this->Name;
-        }
-        return false;
+        $this->Name = $project['name'];
+        return $this->Name;
     }
 
     /** Set the Name of the buildgroup. */
-    public function SetName($name)
+    public function SetName($name): void
     {
-        $this->Name = pdo_real_escape_string($name);
+        $this->Name = $name ?? '';
         if ($this->ProjectId > 0) {
             $this->Fill();
         }
@@ -120,7 +117,7 @@ class BuildGroup
     }
 
     /** Set the project id */
-    public function SetProjectId($projectid)
+    public function SetProjectId($projectid): bool
     {
         if (is_numeric($projectid)) {
             $this->ProjectId = $projectid;
@@ -172,16 +169,17 @@ class BuildGroup
         return $this->AutoRemoveTimeFrame;
     }
 
-    public function SetAutoRemoveTimeFrame($timeframe)
+    public function SetAutoRemoveTimeFrame($timeframe): bool
     {
         if (!is_numeric($timeframe)) {
             return false;
         }
         $this->AutoRemoveTimeFrame = $timeframe;
+        return true;
     }
 
     /** Get/Set the description */
-    public function GetDescription()
+    public function GetDescription(): string|false
     {
         if ($this->Id < 1) {
             add_log('BuildGroup GetDescription(): Id not set', 'GetDescription', LOG_ERR);
@@ -190,9 +188,9 @@ class BuildGroup
         return $this->Description;
     }
 
-    public function SetDescription($desc)
+    public function SetDescription(string $desc): void
     {
-        $this->Description = pdo_real_escape_string($desc);
+        $this->Description = $desc;
     }
 
     /** Get/Set the email settings for this BuildGroup.
@@ -203,31 +201,32 @@ class BuildGroup
     public function GetSummaryEmail()
     {
         if ($this->Id < 1) {
-            \Log::error("BuildGroup GetSummaryEmail(): Id not set");
+            Log::error("BuildGroup GetSummaryEmail(): Id not set");
             return false;
         }
         return $this->SummaryEmail;
     }
 
-    public function SetSummaryEmail($email)
+    public function SetSummaryEmail($email): bool
     {
         if (!is_numeric($email)) {
             return false;
         }
         $this->SummaryEmail = $email;
+        return true;
     }
 
     /** Get/Set whether or not this group should include subproject total. */
-    public function GetIncludeSubProjectTotal()
+    public function GetIncludeSubProjectTotal(): int|false
     {
         if ($this->Id < 1) {
             add_log('BuildGroup GetIncludeSubProjectTotal(): Id not set', 'GetIncludeSubProjectTotal', LOG_ERR);
             return false;
         }
-        return $this->IncludeSubProjectTotal;
+        return intval($this->IncludeSubProjectTotal);
     }
 
-    public function SetIncludeSubProjectTotal($b)
+    public function SetIncludeSubProjectTotal($b): void
     {
         if ($b) {
             $this->IncludeSubProjectTotal = 1;
@@ -240,11 +239,10 @@ class BuildGroup
      * Returns true if the current BuildGroup is configured to email actionable builds items
      * to email addresses belonging to those persons who executed the commit (vs. the acutal
      * author).
-     *
-     * @return bool
      */
-    public function isNotifyingCommitters()
+    public function isNotifyingCommitters(): bool
     {
+        // TODO: (williamjallen) is the double negation here intentional?
         return !!$this->GetEmailCommitters();
     }
 
@@ -277,15 +275,15 @@ class BuildGroup
         return $this->Type;
     }
 
-    public function SetType($type)
+    public function SetType($type): void
     {
-        $this->Type = pdo_real_escape_string($type);
+        $this->Type = $type ?? '';
     }
 
     /** Populate the ivars of an existing buildgroup.
      * Called automatically once name & projectid are set.
      **/
-    public function Fill()
+    public function Fill(): bool
     {
         if ($this->Name == '' || $this->ProjectId == 0) {
             add_log(
@@ -295,9 +293,15 @@ class BuildGroup
             return false;
         }
 
-        $row = pdo_single_row_query(
-            'SELECT * FROM buildgroup
-       WHERE projectid=' . qnum($this->ProjectId) . " AND name='$this->Name'");
+        $db = Database::getInstance();
+
+        $row = $db->executePreparedSingleRow('
+                   SELECT *
+                   FROM buildgroup
+                   WHERE
+                       projectid=?
+                       AND name=?
+               ', [intval($this->ProjectId), $this->Name]);
 
         if (empty($row)) {
             return false;
@@ -308,7 +312,7 @@ class BuildGroup
     }
 
     /** Helper function for filling in a buildgroup instance */
-    public function FillFromRow($row)
+    public function FillFromRow($row): void
     {
         $this->Id = $row['id'];
         $this->Name = $row['name'];
@@ -324,10 +328,10 @@ class BuildGroup
     }
 
     /** Get/Set this BuildGroup's position (the order it should appear in) */
-    public function GetPosition()
+    public function GetPosition(): int|false
     {
         if ($this->Position > 0) {
-            return $this->Position;
+            return intval($this->Position);
         }
 
         if ($this->Id < 1) {
@@ -350,88 +354,125 @@ class BuildGroup
             return false;
         }
 
-        $this->Position = $position;
+        $this->Position = intval($position);
         return $this->Position;
     }
 
-    public function SetPosition(BuildGroupPosition $position)
-    {
-        $position->GroupId = $this->Id;
-        $position->Add();
-    }
-
     /** Get the next position available for that group */
-    public function GetNextPosition()
+    public function GetNextPosition(): int
     {
-        $query = pdo_query("SELECT bg.position FROM buildgroupposition as bg,buildgroup as g
-                        WHERE bg.buildgroupid=g.id AND g.projectid='" . $this->ProjectId . "'
-                        AND bg.endtime='1980-01-01 00:00:00'
-                        ORDER BY bg.position DESC LIMIT 1");
-        if (pdo_num_rows($query) > 0) {
-            $query_array = pdo_fetch_array($query);
-            return $query_array['position'] + 1;
+        $query = $this->PDO->executePreparedSingleRow("
+                     SELECT bg.position
+                     FROM buildgroupposition AS bg, buildgroup AS g
+                     WHERE
+                         bg.buildgroupid=g.id
+                         AND g.projectid=?
+                          AND bg.endtime='1980-01-01 00:00:00'
+                     ORDER BY bg.position DESC
+                     LIMIT 1
+                 ", [$this->ProjectId]);
+        if (!empty($query)) {
+            return intval($query['position']) + 1;
         }
         return 1;
     }
 
     /** Check if the group already exists */
-    public function Exists()
+    public function Exists(): bool
     {
         // If no id specify return false
         if (!$this->Id || !$this->ProjectId) {
             return false;
         }
 
-        $query = pdo_query("SELECT count(*) AS c FROM buildgroup WHERE id='" . $this->Id . "' AND projectid='" . $this->ProjectId . "'");
+        $query = $this->PDO->executePreparedSingleRow('
+                     SELECT count(*) AS c
+                     FROM buildgroup
+                     WHERE id=? AND projectid=?
+                 ', [$this->Id, $this->ProjectId]);
         add_last_sql_error('BuildGroup:Exists', $this->ProjectId);
-        $query_array = pdo_fetch_array($query);
-        if ($query_array['c'] == 0) {
+        if (!$query || intval($query['c']) === 0) {
             return false;
         }
         return true;
     }
 
     /** Save the group */
-    public function Save()
+    public function Save(): bool
     {
         if ($this->Exists()) {
             // Update the project
-            $query = "
-        UPDATE buildgroup SET
-          name='$this->Name',
-          projectid='$this->ProjectId',
-          starttime='$this->StartTime',
-          endtime='$this->EndTime',
-          autoremovetimeframe='$this->AutoRemoveTimeFrame',
-          description='$this->Description',
-          summaryemail='$this->SummaryEmail',
-          includesubprojectotal='$this->IncludeSubProjectTotal',
-          emailcommitters='$this->EmailCommitters',
-          type='$this->Type'
-        WHERE id='$this->Id'";
-            if (!pdo_query($query)) {
+            $query = $this->PDO->executePrepared('
+                         UPDATE buildgroup
+                         SET
+                             name=?,
+                             projectid=?,
+                             starttime=?,
+                             endtime=?,
+                             autoremovetimeframe=?,
+                             description=?,
+                             summaryemail=?,
+                             includesubprojectotal=?,
+                             emailcommitters=?,
+                             type=?
+                         WHERE id=?
+                     ', [
+                         $this->Name,
+                         $this->ProjectId,
+                         $this->StartTime,
+                         $this->EndTime,
+                         $this->AutoRemoveTimeFrame,
+                         $this->Description,
+                         $this->SummaryEmail,
+                         $this->IncludeSubProjectTotal,
+                         $this->EmailCommitters,
+                         $this->Type,
+                         $this->Id
+                     ]);
+
+            if ($query === false) {
                 add_last_sql_error('BuildGroup:Update', $this->ProjectId);
                 return false;
             }
         } else {
             $id = '';
-            $idvalue = '';
+            $values = [];
             if ($this->Id > 0) {
                 $id = 'id,';
-                $idvalue = "'" . $this->Id . "',";
+                $values[] = $this->Id;
             }
+            $values = array_merge($values, [
+                $this->Name,
+                $this->ProjectId,
+                $this->StartTime,
+                $this->EndTime,
+                $this->AutoRemoveTimeFrame,
+                $this->Description,
+                $this->SummaryEmail,
+                $this->IncludeSubProjectTotal,
+                $this->EmailCommitters,
+                $this->Type
+            ]);
 
-            $query = '
-        INSERT INTO buildgroup
-          (' . $id . 'name,projectid,starttime,endtime,autoremovetimeframe,
-           description,summaryemail,includesubprojectotal,emailcommitters, type)
-        VALUES
-          (' . $idvalue . "'$this->Name','$this->ProjectId','$this->StartTime',
-           '$this->EndTime','$this->AutoRemoveTimeFrame','$this->Description',
-           '$this->SummaryEmail','$this->IncludeSubProjectTotal',
-           '$this->EmailCommitters','$this->Type')";
+            $prepared_array = $this->PDO->createPreparedArray(count($values));
+            $query = $this->PDO->executePrepared("
+                         INSERT INTO buildgroup (
+                              $id
+                              name,
+                              projectid,
+                              starttime,
+                              endtime,
+                              autoremovetimeframe,
+                              description,
+                              summaryemail,
+                              includesubprojectotal,
+                              emailcommitters,
+                              type
+                         )
+                         VALUES $prepared_array
+                     ", $values);
 
-            if (!pdo_query($query)) {
+            if ($query === false) {
                 add_last_sql_error('Buildgroup Insert', $this->ProjectId);
                 return false;
             }
@@ -443,75 +484,97 @@ class BuildGroup
             // Insert the default position for this group
             // Find the position for this group
             $position = $this->GetNextPosition();
-            pdo_query("
-        INSERT INTO buildgroupposition
-          (buildgroupid,position,starttime,endtime)
-        VALUES
-          ('$this->Id','$position','$this->StartTime','$this->EndTime')");
+            $this->PDO->executePrepared('
+                INSERT INTO buildgroupposition
+                    (buildgroupid, position, starttime, endtime)
+                VALUES
+                    (?, ?, ?, ?)
+            ', [$this->Id, $position, $this->StartTime, $this->EndTime]);
         }
         return true;
     }
 
     /** Delete this BuildGroup. */
-    public function Delete()
+    public function Delete(): bool
     {
         if (!$this->Exists()) {
             return false;
         }
 
         // We delete all the build2grouprule associated with the group
-        pdo_query("DELETE FROM build2grouprule WHERE groupid='$this->Id'");
+        $this->PDO->executePrepared('DELETE FROM build2grouprule WHERE groupid=?', [$this->Id]);
 
         // We delete the buildgroup
-        pdo_query("DELETE FROM buildgroup WHERE id='$this->Id'");
+        $this->PDO->executePrepared('DELETE FROM buildgroup WHERE id=?', [$this->Id]);
 
         // Restore the builds that were associated with this group
-        $oldbuilds = pdo_query("
-      SELECT id,type FROM build WHERE id IN
-        (SELECT buildid AS id FROM build2group WHERE groupid='$this->Id')");
+        $oldbuilds = $this->PDO->executePrepared('
+                         SELECT id, type
+                         FROM build
+                         WHERE id IN (
+                             SELECT buildid AS id
+                             FROM build2group
+                             WHERE groupid=?
+                         )
+                     ', [$this->Id]);
         echo pdo_error();
-        while ($oldbuilds_array = pdo_fetch_array($oldbuilds)) {
+
+        foreach ($oldbuilds as $oldbuilds_array) {
             // Move the builds
             $buildid = $oldbuilds_array['id'];
             $buildtype = $oldbuilds_array['type'];
 
             // Find the group corresponding to the build type
-            $query = pdo_query("
-        SELECT id FROM buildgroup
-        WHERE name='$buildtype' AND projectid='$this->ProjectId'");
-            if (pdo_num_rows($query) == 0) {
-                $query = pdo_query("
-          SELECT id FROM buildgroup
-          WHERE name='Experimental' AND projectid='$this->ProjectId'");
+            $query = $this->PDO->executePrepared('
+                         SELECT id
+                         FROM buildgroup
+                         WHERE name=? AND projectid=?
+                     ', [$buildtype, $this->ProjectId]);
+
+            if (empty($query)) {
+                $query = $this->PDO->executePrepared("
+                             SELECT id
+                             FROM buildgroup
+                             WHERE name='Experimental' AND projectid=?
+                         ", [$this->ProjectId]);
             }
             echo pdo_error();
-            $grouptype_array = pdo_fetch_array($query);
-            $grouptype = $grouptype_array['id'];
+            $grouptype = $query['id'];
 
-            pdo_query("
-        UPDATE build2group SET groupid='$grouptype' WHERE buildid='$buildid'");
+            $this->PDO->executePrepared('
+                UPDATE build2group
+                SET groupid=?
+                WHERE buildid=?
+            ', [$grouptype, $buildid]);
             echo pdo_error();
         }
 
         // Delete the buildgroupposition and update the position
         // of the other groups.
-        pdo_query("DELETE FROM buildgroupposition WHERE buildgroupid='$this->Id'");
-        $buildgroupposition = pdo_query("
-      SELECT bg.buildgroupid FROM buildgroupposition AS bg, buildgroup AS g
-      WHERE g.projectid='$this->ProjectId' AND bg.buildgroupid=g.id
-      ORDER BY bg.position ASC");
+        $this->PDO->executePrepared('DELETE FROM buildgroupposition WHERE buildgroupid=?', [$this->Id]);
+        $buildgroupposition = $this->PDO->executePrepared('
+                                  SELECT bg.buildgroupid
+                                  FROM buildgroupposition AS bg, buildgroup AS g
+                                  WHERE g.projectid=? AND bg.buildgroupid=g.id
+                                  ORDER BY bg.position ASC
+                              ', [strval($this->ProjectId)]);
 
         $p = 1;
-        while ($buildgroupposition_array = pdo_fetch_array($buildgroupposition)) {
+        foreach ($buildgroupposition as $buildgroupposition_array) {
+            // TODO: (williamjallen) Refactor this to make a constant number of queries
             $buildgroupid = $buildgroupposition_array['buildgroupid'];
-            pdo_query("
-        UPDATE buildgroupposition SET position='$p'
-        WHERE buildgroupid='$buildgroupid'");
+            $this->PDO->executePrepared('
+                UPDATE buildgroupposition
+                SET position=?
+                WHERE buildgroupid=?
+            ', [$p, $buildgroupid]);
             $p++;
         }
+
+        return true;
     }
 
-    public function GetGroupIdFromRule($build)
+    public function GetGroupIdFromRule($build): int
     {
         $name = $build->Name;
         $type = $build->Type;
@@ -521,7 +584,7 @@ class BuildGroup
 
         // Insert the build into the proper group
         // 1) Check if we have any build2grouprules for this build
-        $rule_row = \DB::table('build2grouprule')
+        $rule_row = DB::table('build2grouprule')
             ->join('buildgroup', 'buildgroup.id', '=', 'build2grouprule.groupid')
             ->where('buildgroup.projectid', '=', $projectid)
             ->where('build2grouprule.buildtype', '=', $type)
@@ -533,11 +596,11 @@ class BuildGroup
                       ->orWhere('build2grouprule.endtime', '>', $starttime);
             })->first();
         if ($rule_row) {
-            return $rule_row->groupid;
+            return intval($rule_row->groupid);
         }
 
         // 2) Check for buildname-based groups
-        $name_rule_row = \DB::table('build2grouprule')
+        $name_rule_row = DB::table('build2grouprule')
             ->join('buildgroup', 'buildgroup.id', '=', 'build2grouprule.groupid')
             ->where('buildgroup.projectid', '=', $projectid)
             ->where('build2grouprule.buildtype', '=', $type)
@@ -551,33 +614,33 @@ class BuildGroup
             ->orderByRaw('LENGTH(build2grouprule.buildname) DESC')
             ->first();
         if ($name_rule_row) {
-            return $name_rule_row->groupid;
+            return intval($name_rule_row->groupid);
         }
 
         // If we reach this far, none of the rules matched.
         // Just use the default group for the build type.
-        $default_rule_row = \DB::table('buildgroup')
+        $default_rule_row = DB::table('buildgroup')
             ->where('name', '=', $type)
             ->where('projectid', '=', $projectid)
             ->first();
         if ($default_rule_row) {
-            return $default_rule_row->id;
+            return intval($default_rule_row->id);
         }
 
         // If the group does not exist we assign it to Experimental.
-        $experimental_rule_row = \DB::table('buildgroup')
+        $experimental_rule_row = DB::table('buildgroup')
             ->where('name', '=', 'Experimental')
             ->where('projectid', '=', $projectid)
             ->first();
         if ($experimental_rule_row) {
-            return $experimental_rule_row->id;
+            return intval($experimental_rule_row->id);
         }
         return 0;
     }
 
     // Return an array of currently active BuildGroups
     // given a projectid and a starting datetime string.
-    public static function GetBuildGroups($projectid, $begin)
+    public static function GetBuildGroups($projectid, $begin): array
     {
         $pdo = Database::getInstance();
         $buildgroups = [];
@@ -603,7 +666,7 @@ class BuildGroup
     }
 
     // Get the active rules for this build group.
-    public function GetRules()
+    public function GetRules(): array|false
     {
         $stmt = $this->PDO->prepare("
                 SELECT * FROM build2grouprule

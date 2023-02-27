@@ -16,18 +16,10 @@
 
 namespace CDash\Api\v1\Index;
 
-// Redirect to the previous version of api/index.php if it seems like
-// that's what the user wants.
-if (isset($_GET['method'])) {
-    require __DIR__ . '/index_old.php';
-    exit(0);
-}
-
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/filterdataFunctions.php';
 
-use CDash\Config;
 use CDash\Controller\Api\Index as IndexController;
 use CDash\Database;
 use CDash\Model\Banner;
@@ -57,9 +49,8 @@ $projectid = $Project->Id;
 $db = Database::getInstance();
 $controller = new IndexController($db, $Project);
 
-$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-if (pdo_num_rows($project) > 0) {
-    $project_array = pdo_fetch_array($project);
+$project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid]);
+if (!empty($project_array)) {
     $projectname = $project_array['name'];
 
     if (isset($project_array['testingdataurl']) && $project_array['testingdataurl'] != '') {
@@ -348,7 +339,7 @@ $show_aggregate = false;
 $response['comparecoverage'] = 0;
 
 foreach ($build_rows as $build_array) {
-    $build_response = $controller->GenerateBuildResponseFromRow($build_array);
+    $build_response = $controller->generateBuildResponseFromRow($build_array);
     if ($build_response === false) {
         continue;
     }
@@ -358,18 +349,20 @@ foreach ($build_rows as $build_array) {
     // Determine if this is a parent build with no actual coverage of its own.
     $linkToChildCoverage = false;
     if ($build_response['numchildren'] > 0) {
-        $countChildrenResult = pdo_single_row_query(
-            'SELECT count(fileid) AS nfiles FROM coverage
-            WHERE buildid=' . qnum($build_response['id']));
-        if ($countChildrenResult['nfiles'] == 0) {
+        $countChildrenResult = $db->executePreparedSingleRow('
+                                   SELECT count(fileid) AS nfiles
+                                   FROM coverage
+                                   WHERE buildid=?
+                               ', [intval($build_response['id'])]);
+        if (intval($countChildrenResult['nfiles']) === 0) {
             $linkToChildCoverage = true;
         }
     }
 
     $coverageIsGrouped = false;
 
-    $loctested = $build_array['loctested'];
-    $locuntested = $build_array['locuntested'];
+    $loctested = intval($build_array['loctested']);
+    $locuntested = intval($build_array['locuntested']);
     if ($loctested + $locuntested > 0) {
         $coverage_response = array();
         $coverage_response['buildid'] = $build_array['id'];
@@ -461,10 +454,12 @@ foreach ($build_rows as $build_array) {
         // of its own.
         $linkToChildren = false;
         if ($build_response['numchildren'] > 0) {
-            $countChildrenResult = pdo_single_row_query(
-                'SELECT count(id) AS num FROM dynamicanalysis
-                WHERE buildid=' . qnum($build_array['id']));
-            if ($countChildrenResult['num'] == 0) {
+            $countChildrenResult = $db->executePreparedSingleRow('
+                                       SELECT count(id) AS num
+                                       FROM dynamicanalysis
+                                       WHERE buildid=?
+                                   ', [intval($build_array['id'])]);
+            if (intval($countChildrenResult['num']) === 0) {
                 $linkToChildren = true;
             }
         }
@@ -502,8 +497,6 @@ foreach ($build_rows as $build_array) {
 
 // Put some finishing touches on our buildgroups now that we're done
 // iterating over all the builds.
-$addExpected =
-    empty($filter_sql) && (count($build_data) > 0);
 for ($i = 0; $i < count($controller->buildgroupsResponse); $i++) {
     $controller->buildgroupsResponse[$i]['testduration'] = time_difference(
         $controller->buildgroupsResponse[$i]['testduration'], true);
@@ -520,7 +513,6 @@ for ($i = 0; $i < count($controller->buildgroupsResponse); $i++) {
     }
     // Show how many builds this group has.
     $num_builds = count($controller->buildgroupsResponse[$i]['builds']);
-    $num_builds_label = '';
     if ($num_expected_builds > 0) {
         $num_actual_builds = $num_builds - $num_expected_builds;
         $num_builds_label = "$num_actual_builds of $num_builds builds";
@@ -569,10 +561,12 @@ if ($response['childview'] == 1) {
     if (!empty($controller->buildgroupsResponse)) {
         $numchildren = count($controller->buildgroupsResponse[0]['builds']);
     } else {
-        $row = pdo_single_row_query(
-            'SELECT count(id) AS numchildren
-            FROM build WHERE parentid=' . qnum($parentid));
-        $numchildren = $row['numchildren'];
+        $row = $db->executePreparedSingleRow('
+                   SELECT count(id) AS numchildren
+                   FROM build
+                   WHERE parentid=?
+               ', [intval($parentid)]);
+        $numchildren = intval($row['numchildren']);
     }
     $response['numchildren'] = $numchildren;
 

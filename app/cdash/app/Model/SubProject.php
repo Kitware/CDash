@@ -40,7 +40,7 @@ class SubProject
     }
 
     /** Function to get the id */
-    public function GetId()
+    public function GetId(): int
     {
         return $this->Id;
     }
@@ -48,7 +48,7 @@ class SubProject
     /** Function to set the id.  Also loads remaining data for this
      * subproject from the database.
      **/
-    public function SetId($id)
+    public function SetId($id): bool
     {
         if (!is_numeric($id)) {
             return false;
@@ -56,9 +56,15 @@ class SubProject
 
         $this->Id = $id;
 
-        $row = pdo_single_row_query(
-            'SELECT name, projectid, groupid, path, position FROM subproject
-       WHERE id=' . qnum($this->Id) . " AND endtime='1980-01-01 00:00:00'");
+        $db = Database::getInstance();
+        $row = $db->executePreparedSingleRow("
+                   SELECT name, projectid, groupid, path, position
+                   FROM subproject
+                   WHERE
+                       id=?
+                       AND endtime='1980-01-01 00:00:00'
+               ", [intval($this->Id)]);
+
         if (empty($row)) {
             return false;
         }
@@ -72,16 +78,16 @@ class SubProject
     }
 
     /** Function to get the project id */
-    public function GetProjectId()
+    public function GetProjectId(): int
     {
         return $this->ProjectId;
     }
 
     /** Function to set the project id */
-    public function SetProjectId($projectid)
+    public function SetProjectId($projectid): bool
     {
         if (is_numeric($projectid)) {
-            $this->ProjectId = $projectid;
+            $this->ProjectId = intval($projectid);
             if ($this->Name != '') {
                 $this->Fill();
             }
@@ -91,62 +97,66 @@ class SubProject
     }
 
     /** Delete a subproject */
-    public function Delete($keephistory = true)
+    public function Delete($keephistory = true): bool
     {
         if ($this->Id < 1) {
             return false;
         }
 
+        $db = Database::getInstance();
+
         // If there is no build in the subproject we remove
-        $query = pdo_query('SELECT count(*) FROM subproject2build WHERE subprojectid=' . qnum($this->Id));
-        if (!$query) {
-            add_last_sql_error('SubProject Delete');
-            return false;
-        }
-        $query_array = pdo_fetch_array($query);
-        if ($query_array[0] == 0) {
+        $query = $db->executePreparedSingleRow('
+                     SELECT count(*) AS c
+                     FROM subproject2build
+                     WHERE subprojectid=?
+                 ', [intval($this->Id)]);
+        if (intval($query['c']) === 0) {
             $keephistory = false;
         }
 
         // Regardless of whether or not we're performing a "soft delete",
         // we should remove any dependencies on this subproject.
-        pdo_query(
-            'DELETE FROM subproject2subproject WHERE dependsonid=' . qnum($this->Id));
+        $db->executePrepared('DELETE FROM subproject2subproject WHERE dependsonid=?', [intval($this->Id)]);
 
         if (!$keephistory) {
-            pdo_query('DELETE FROM subproject2build WHERE subprojectid=' . qnum($this->Id));
-            pdo_query('DELETE FROM subproject2subproject WHERE subprojectid=' . qnum($this->Id));
-            pdo_query('DELETE FROM subproject WHERE id=' . qnum($this->Id));
+            $db->executePrepared('DELETE FROM subproject2build WHERE subprojectid=?', [intval($this->Id)]);
+            $db->executePrepared('DELETE FROM subproject2subproject WHERE subprojectid=?', [intval($this->Id)]);
+            $db->executePrepared('DELETE FROM subproject WHERE id=?', [intval($this->Id)]);
         } else {
             $endtime = gmdate(FMT_DATETIME);
-            $query = 'UPDATE subproject SET ';
-            $query .= "endtime='" . $endtime . "'";
-            $query .= ' WHERE id=' . qnum($this->Id) . '';
-            if (!pdo_query($query)) {
+            $query = $db->executePrepared('UPDATE subproject SET endtime=? WHERE id=?', [$endtime, intval($this->Id)]);
+            if ($query === false) {
                 add_last_sql_error('SubProject Delete');
                 return false;
             }
         }
+        return true;
     }
 
     /** Return if a subproject exists */
-    public function Exists()
+    public function Exists(): bool
     {
         // If no id specify return false
         if ($this->Id < 1) {
             return false;
         }
 
-        $query = pdo_query("SELECT count(*) FROM subproject WHERE id='" . $this->Id . "' AND endtime='1980-01-01 00:00:00'");
-        $query_array = pdo_fetch_array($query);
-        if ($query_array[0] > 0) {
+        $db = Database::getInstance();
+
+        $query = $db->executePreparedSingleRow("
+                     SELECT count(*) AS c
+                     FROM subproject
+                     WHERE id=? AND endtime='1980-01-01 00:00:00'
+                 ", [intval($this->Id)]);
+        if (intval($query['c']) > 0) {
             return true;
         }
         return false;
     }
 
     // Save the subproject in the database
-    public function Save()
+    public function Save(): bool
     {
         // Assign it to the default group if necessary.
         if ($this->GroupId < 1) {
@@ -235,7 +245,7 @@ class SubProject
     }
 
     /** Get the Name of the subproject */
-    public function GetName()
+    public function GetName(): string|false
     {
         if (strlen($this->Name) > 0) {
             return $this->Name;
@@ -245,20 +255,20 @@ class SubProject
             return false;
         }
 
-        $project = pdo_query('SELECT name FROM subproject WHERE id=' . qnum($this->Id));
-        if (!$project) {
+        $db = Database::getInstance();
+        $project = $db->executePreparedSingleRow('SELECT name FROM subproject WHERE id=?', [intval($this->Id)]);
+        if ($project === false) {
             add_last_sql_error('SubProject GetName');
             return false;
         }
-        $project_array = pdo_fetch_array($project);
-        $this->Name = $project_array['name'];
+        $this->Name = $project['name'];
         return $this->Name;
     }
 
     /** Set the Name of the subproject. */
-    public function SetName($name)
+    public function SetName(string $name): void
     {
-        $this->Name = pdo_real_escape_string($name);
+        $this->Name = $name;
         if ($this->ProjectId > 0) {
             $this->Fill();
         }
@@ -267,9 +277,9 @@ class SubProject
     /** Populate the ivars of an existing subproject.
      * Called automatically once name & projectid are set.
      **/
-    public function Fill()
+    public function Fill(): bool
     {
-        if ($this->Name == '' || $this->ProjectId == 0) {
+        if ($this->Name === '' || $this->ProjectId === 0) {
             add_log(
                 "Name='" . $this->Name . "' or ProjectId='" . $this->ProjectId . "' not set",
                 'SubProject::Fill',
@@ -290,36 +300,41 @@ class SubProject
             return false;
         }
 
-        $this->Id = $row['id'];
-        $this->GroupId = $row['groupid'];
+        $this->Id = intval($row['id']);
+        $this->GroupId = intval($row['groupid']);
         $this->Path = $row['path'];
-        $this->Position = $row['position'];
+        $this->Position = intval($row['position']);
         return true;
     }
 
     /** Get the group that this subproject belongs to. */
-    public function GetGroupId()
+    public function GetGroupId(): int|false
     {
         if ($this->Id < 1) {
             return false;
         }
 
-        $row = pdo_single_row_query(
-            'SELECT groupid FROM subproject WHERE id=' . qnum($this->Id));
+        $db = Database::getInstance();
+        $row = $db->executePreparedSingleRow('SELECT groupid FROM subproject WHERE id=?', [$this->Id]);
         if (empty($row)) {
             return false;
         }
-        $this->GroupId = $row['groupid'];
+        $this->GroupId = intval($row['groupid']);
         return $this->GroupId;
     }
 
     /** Function to set this subproject's group. */
-    public function SetGroup($groupName)
+    public function SetGroup(string $groupName): bool
     {
-        $groupName = pdo_real_escape_string($groupName);
-        $row = pdo_single_row_query(
-            "SELECT id from subprojectgroup
-            WHERE name = '$groupName' AND endtime='1980-01-01 00:00:00'");
+        $db = Database::getInstance();
+        $row = $db->executePreparedSingleRow("
+                   SELECT id
+                   FROM subprojectgroup
+                   WHERE
+                       name=?
+                       AND endtime='1980-01-01 00:00:00'
+               ", [$groupName]);
+
         if (empty($row)) {
             // Create the group if it doesn't exist yet.
             $subprojectGroup = new SubProjectGroup();
@@ -331,34 +346,34 @@ class SubProject
             $this->GroupId = $subprojectGroup->GetId();
             return true;
         }
-        $this->GroupId = $row['id'];
+        $this->GroupId = intval($row['id']);
         return true;
     }
 
     /** Get/Set this SubProject's path. */
-    public function GetPath()
+    public function GetPath(): string
     {
         return $this->Path;
     }
 
-    public function SetPath($path)
+    public function SetPath(string $path): void
     {
         $this->Path = $path;
     }
 
     /** Get/Set this SubProject's position. */
-    public function GetPosition()
+    public function GetPosition(): int
     {
         return $this->Position;
     }
 
-    public function SetPosition($position)
+    public function SetPosition(int $position): void
     {
         $this->Position = $position;
     }
 
     /** Get the last submission of the subproject*/
-    public function GetLastSubmission()
+    public function GetLastSubmission(): string|false
     {
         if (!config('cdash.show_last_submission')) {
             return false;
@@ -368,26 +383,39 @@ class SubProject
             return false;
         }
 
-        $project = pdo_query('SELECT submittime FROM build,subproject2build,build2group,buildgroup WHERE subprojectid=' . qnum($this->Id) .
-            ' AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
+        $db = Database::getInstance();
+        $project = $db->executePreparedSingleRow('
+                       SELECT submittime
+                       FROM build, subproject2build, build2group, buildgroup
+                       WHERE
+                           subprojectid=?
+                           AND build2group.buildid=build.id
+                           AND build2group.groupid=buildgroup.id
                            AND buildgroup.includesubprojectotal=1
-                           AND subproject2build.buildid=build.id ORDER BY submittime DESC LIMIT 1');
-        if (!$project) {
+                           AND subproject2build.buildid=build.id
+                       ORDER BY submittime DESC
+                       LIMIT 1
+                   ', [intval($this->Id)]);
+        if ($project === false) {
             add_last_sql_error('SubProject GetLastSubmission');
             return false;
         }
-        $project_array = pdo_fetch_array($project);
 
-        if (!is_array($project_array) ||
-                !array_key_exists('submittime', $project_array)) {
+        if (!is_array($project) || !array_key_exists('submittime', $project)) {
             return false;
         }
 
-        return date(FMT_DATETIMESTD, strtotime($project_array['submittime'] . 'UTC'));
+        return date(FMT_DATETIMESTD, strtotime($project['submittime'] . 'UTC'));
     }
 
-    /** Encapsulate common logic for build queries in this class. */
-    private function CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $extraCriteria)
+    /**
+     * Encapsulate common logic for build queries in this class.
+     *
+     * Use caution when calling this function.  The $extraCriteria argument will be inserted
+     * directly into the SQL, which potentially leaves us open to SQL injection if user-controllable
+     * variables are inserted into the query string.
+     */
+    private function CommonBuildQuery($startUTCdate, $endUTCdate, bool $allSubProjects, string $extraCriteria): int|array|false
     {
         if (!$allSubProjects && $this->Id < 1) {
             return false;
@@ -395,218 +423,244 @@ class SubProject
 
         $extraSelect = '';
         $extraWhere = '';
+        $params = [];
         if ($allSubProjects) {
             $extraSelect = 'subprojectid, ';
         } else {
-            $extraWhere = 'subprojectid = ' . qnum($this->Id) . 'AND ';
+            $extraWhere = 'subprojectid = ? AND ';
+            $params[] = intval($this->Id);
         }
 
         $query =
-            "SELECT $extraSelect COUNT(*) FROM build b
+            "SELECT $extraSelect COUNT(*) AS c
+            FROM build b
             JOIN build2group b2g ON (b2g.buildid = b.id)
             JOIN buildgroup bg ON (bg.id = b2g.groupid)
             JOIN subproject2build sp2b ON (sp2b.buildid = b.id)
-            WHERE $extraWhere
-            b.projectid = $this->ProjectId AND
-            b.starttime > '$startUTCdate' AND
-            b.starttime <= '$endUTCdate' AND
-            $extraCriteria AND
-            bg.includesubprojectotal = 1";
+            WHERE
+                $extraWhere
+                b.projectid = ? AND
+                b.starttime > ? AND
+                b.starttime <= ? AND
+                $extraCriteria AND
+                bg.includesubprojectotal = 1";
+        $params = array_merge($params, [intval($this->ProjectId), $startUTCdate, $endUTCdate]);
         if ($allSubProjects) {
             $query .= ' GROUP BY subprojectid';
         }
-        $project = pdo_query($query);
 
-        if (!$project) {
+        $db = Database::getInstance();
+        $project = $db->executePrepared($query, $params);
+
+        if ($project === false) {
             add_last_sql_error("SubProject CommonBuildQuery($extraCriteria)");
             return false;
         }
         if ($allSubProjects) {
-            $project_array = array();
-            while ($row = pdo_fetch_array($project)) {
-                $project_array[$row['subprojectid']] = $row;
+            $project_array = [];
+            foreach ($project as $row) {
+                $project_array[intval($row['subprojectid'])] = $row;
             }
-            pdo_free_result($project);
             return $project_array;
         } else {
-            $project_array = pdo_fetch_array($project);
-            return intval($project_array[0]);
+            return intval($project['c']);
         }
     }
 
     /** Get the number of warning builds given a date range */
-    public function GetNumberOfWarningBuilds($startUTCdate, $endUTCdate, $allSubProjects = false)
+    public function GetNumberOfWarningBuilds($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
     {
         $criteria = 'b.buildwarnings > 0';
         return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
     }
 
     /** Get the number of error builds given a date range */
-    public function GetNumberOfErrorBuilds($startUTCdate, $endUTCdate, $allSubProjects = false)
+    public function GetNumberOfErrorBuilds($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
     {
         $criteria = 'b.builderrors > 0';
         return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
     }
 
     /** Get the number of failing builds given a date range */
-    public function GetNumberOfPassingBuilds($startUTCdate, $endUTCdate, $allSubProjects = false)
+    public function GetNumberOfPassingBuilds($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
     {
         $criteria = 'b.builderrors = 0 AND b.buildwarnings = 0';
         return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
     }
 
     /** Get the number of failing configure given a date range */
-    public function GetNumberOfWarningConfigures($startUTCdate, $endUTCdate, $allSubProjects = false)
+    public function GetNumberOfWarningConfigures($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
     {
         $criteria = 'b.configurewarnings > 0';
         return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
     }
 
     /** Get the number of failing configure given a date range */
-    public function GetNumberOfErrorConfigures($startUTCdate, $endUTCdate, $allSubProjects = false)
+    public function GetNumberOfErrorConfigures($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
     {
         $criteria = 'b.configureerrors > 0';
         return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
     }
 
     /** Get the number of failing configure given a date range */
-    public function GetNumberOfPassingConfigures($startUTCdate, $endUTCdate, $allSubProjects = false)
+    public function GetNumberOfPassingConfigures($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
     {
         $criteria = 'b.configureerrors = 0 AND b.configurewarnings = 0';
         return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
     }
 
     /** Get the number of tests given a date range */
-    public function GetNumberOfPassingTests($startUTCdate, $endUTCdate, $allSubProjects = false)
+    public function GetNumberOfPassingTests($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
     {
         if (!$allSubProjects && $this->Id < 1) {
             return false;
         }
 
+        $params = [];
         $queryStr = 'SELECT ';
         if ($allSubProjects) {
             $queryStr .= 'subprojectid, ';
         }
-        $queryStr .= 'SUM(build.testpassed) FROM build,subproject2build,build2group,buildgroup WHERE ';
+        $queryStr .= 'SUM(build.testpassed) AS s FROM build, subproject2build ,build2group, buildgroup WHERE ';
         if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
+            $queryStr .= 'subprojectid=? AND ';
+            $params[] = intval($this->Id);
         }
 
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
+        $queryStr .= "build2group.buildid=build.id
+                  AND build2group.groupid=buildgroup.id
                   AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND build.testpassed>=0 ";
+                  AND subproject2build.buildid=build.id
+                  AND build.starttime>?
+                  AND build.starttime<=?
+                  AND build.testpassed>=0 ";
+        $params[] = $startUTCdate;
+        $params[] = $endUTCdate;
 
         if ($allSubProjects) {
             $queryStr .= 'GROUP BY subprojectid';
         }
-        $project = pdo_query($queryStr);
 
-        if (!$project) {
+        $db = Database::getInstance();
+        $project = $db->executePrepared($queryStr, $params);
+
+        if ($project === false) {
             add_last_sql_error('SubProject GetNumberOfPassingTests');
             return false;
         }
         if ($allSubProjects) {
-            $project_array = array();
-            while ($row = pdo_fetch_array($project)) {
-                $project_array[$row['subprojectid']] = $row;
+            $project_array = [];
+            foreach ($project as $row) {
+                $project_array[intval($row['subprojectid'])] = $row;
             }
-            pdo_free_result($project);
             return $project_array;
         } else {
-            $project_array = pdo_fetch_array($project);
-            return intval($project_array[0]);
+            return intval($project['s']);
         }
     }
 
     /** Get the number of tests given a date range */
-    public function GetNumberOfFailingTests($startUTCdate, $endUTCdate, $allSubProjects = false)
+    public function GetNumberOfFailingTests($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
     {
         if (!$allSubProjects && $this->Id < 1) {
             return false;
         }
 
+        $params = [];
         $queryStr = 'SELECT ';
         if ($allSubProjects) {
             $queryStr .= 'subprojectid, ';
         }
-        $queryStr .= 'SUM(build.testfailed) FROM build,subproject2build,build2group,buildgroup WHERE ';
+        $queryStr .= 'SUM(build.testfailed) AS s FROM build, subproject2build, build2group, buildgroup WHERE ';
         if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
+            $queryStr .= 'subprojectid=? AND ';
+            $params[] = intval($this->Id);
         }
 
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
+        $queryStr .= "build2group.buildid=build.id
+                  AND build2group.groupid=buildgroup.id
                   AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND build.testfailed>=0 ";
+                  AND subproject2build.buildid=build.id
+                  AND build.starttime>?
+                  AND build.starttime<=?
+                  AND build.testfailed>=0 ";
+        $params[] = $startUTCdate;
+        $params[] = $endUTCdate;
 
         if ($allSubProjects) {
             $queryStr .= 'GROUP BY subprojectid';
         }
-        $project = pdo_query($queryStr);
 
-        if (!$project) {
+        $db = Database::getInstance();
+        $project = $db->executePrepared($queryStr, $params);
+
+        if ($project === false) {
             add_last_sql_error('SubProject GetNumberOfFailingTests');
             return false;
         }
         if ($allSubProjects) {
-            $project_array = array();
-            while ($row = pdo_fetch_array($project)) {
-                $project_array[$row['subprojectid']] = $row;
+            $project_array = [];
+            foreach ($project as $row) {
+                $project_array[intval($row['subprojectid'])] = $row;
             }
-            pdo_free_result($project);
             return $project_array;
         } else {
-            $project_array = pdo_fetch_array($project);
-            return intval($project_array[0]);
+            return intval($project['s']);
         }
     }
 
     /** Get the number of tests given a date range */
-    public function GetNumberOfNotRunTests($startUTCdate, $endUTCdate, $allSubProjects = false)
+    public function GetNumberOfNotRunTests($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
     {
         if (!$allSubProjects && $this->Id < 1) {
             return false;
         }
 
+        $params = [];
         $queryStr = 'SELECT ';
         if ($allSubProjects) {
             $queryStr .= 'subprojectid, ';
         }
-        $queryStr .= 'SUM(build.testnotrun) FROM build,subproject2build,build2group,buildgroup WHERE ';
+        $queryStr .= 'SUM(build.testnotrun) AS s FROM build, subproject2build, build2group, buildgroup WHERE ';
         if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
+            $queryStr .= 'subprojectid=? AND ';
+            $params[] = $this->Id;
         }
 
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
+        $queryStr .= "build2group.buildid=build.id
+                  AND build2group.groupid=buildgroup.id
                   AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND build.testnotrun>=0 ";
+                  AND subproject2build.buildid=build.id
+                  AND build.starttime>?
+                  AND build.starttime<=?
+                  AND build.testnotrun>=0 ";
+        $params[] = $startUTCdate;
+        $params[] = $endUTCdate;
 
         if ($allSubProjects) {
             $queryStr .= 'GROUP BY subprojectid';
         }
-        $project = pdo_query($queryStr);
 
-        if (!$project) {
+        $db = Database::getInstance();
+        $project = $db->executePrepared($queryStr, $params);
+
+        if ($project === false) {
             add_last_sql_error('SubProject GetNumberOfNotRunTests');
             return false;
         }
         if ($allSubProjects) {
-            $project_array = array();
-            while ($row = pdo_fetch_array($project)) {
-                $project_array[$row['subprojectid']] = $row;
+            $project_array = [];
+            foreach ($project as $row) {
+                $project_array[intval($row['subprojectid'])] = $row;
             }
-            pdo_free_result($project);
             return $project_array;
         } else {
-            $project_array = pdo_fetch_array($project);
-            return intval($project_array[0]);
+            return intval($project['s']);
         }
     }
 
     /** Get the subprojectids of the subprojects depending on this one */
-    public function GetDependencies($date = null)
+    public function GetDependencies(?string $date = null): array|false
     {
         if ($this->Id < 1) {
             add_log(
@@ -617,53 +671,70 @@ class SubProject
         }
 
         // If not set, the date is now
-        if ($date == null) {
+        if ($date === null) {
             $date = gmdate(FMT_DATETIME);
         }
 
-        $project = pdo_query('SELECT dependsonid FROM subproject2subproject
-                          WHERE subprojectid=' . qnum($this->Id) . " AND
-                          starttime<='" . $date . "' AND (endtime>'" . $date . "' OR endtime='1980-01-01 00:00:00')"
-        );
-        if (!$project) {
+        $db = Database::getInstance();
+        $project = $db->executePrepared("
+                       SELECT dependsonid
+                       FROM subproject2subproject
+                       WHERE
+                           subprojectid=?
+                           AND starttime<=?
+                           AND (
+                               endtime>?
+                               OR endtime='1980-01-01 00:00:00'
+                           )
+                       ", [intval($this->Id), $date, $date]);
+
+        if ($project === false) {
             add_last_sql_error('SubProject GetDependencies');
             return false;
         }
-        $ids = array();
-        while ($project_array = pdo_fetch_array($project)) {
-            $ids[] = $project_array['dependsonid'];
+
+        $ids = [];
+        foreach ($project as $project_array) {
+            $ids[] = intval($project_array['dependsonid']);
         }
         return $ids;
     }
 
     /** Add a dependency */
-    public function AddDependency($subprojectid)
+    public function AddDependency(int $subprojectid): bool
     {
-        if ($this->Id < 1 || !isset($subprojectid) || !is_numeric($subprojectid)) {
+        if ($this->Id < 1) {
             return false;
         }
 
+        $db = Database::getInstance();
+
         // Check that the dependency doesn't exist
-        $project = pdo_query('SELECT count(*) FROM subproject2subproject WHERE subprojectid=' . qnum($this->Id) .
-            ' AND dependsonid=' . qnum($subprojectid) . " AND endtime='1980-01-01 00:00:00'"
-        );
-        if (!$project) {
+        $project = $db->executePreparedSingleRow("
+                       SELECT count(*) AS c
+                       FROM subproject2subproject
+                       WHERE
+                           subprojectid=?
+                           AND dependsonid=?
+                           AND endtime='1980-01-01 00:00:00'
+                   ", [intval($this->Id), $subprojectid]);
+
+        if ($project === false) {
             add_last_sql_error('SubProject AddDependency');
             return false;
         }
 
-        $project_array = pdo_fetch_array($project);
-        if ($project_array[0] > 0) {
+        if (intval($project['c']) > 0) {
             return false;
         }
 
         // Add the dependency
         $starttime = gmdate(FMT_DATETIME);
-        $endtime = '1980-01-01 00:00:00';
-        $project = pdo_query('INSERT INTO subproject2subproject (subprojectid,dependsonid,starttime,endtime)
-                         VALUES (' . qnum($this->Id) .
-            ',' . qnum($subprojectid) . ",'" . $starttime . "','" . $endtime . "')");
-        if (!$project) {
+        $project = $db->executePrepared("
+                       INSERT INTO subproject2subproject (subprojectid, dependsonid, starttime, endtime)
+                       VALUES (?, ?, '$starttime', '1980-01-01 00:00:00')
+                   ", [intval($this->Id), intval($subprojectid)]);
+        if ($project === false) {
             add_last_sql_error('SubProject AddDependency');
             return false;
         }
@@ -671,22 +742,26 @@ class SubProject
     }
 
     /** Remove a dependency */
-    public function RemoveDependency($subprojectid)
+    public function RemoveDependency(int $subprojectid): bool
     {
         if ($this->Id < 1) {
             return false;
         }
 
-        if (!isset($subprojectid) || !is_numeric($subprojectid)) {
-            return false;
-        }
+        $db = Database::getInstance();
 
         // Set the date of the dependency to be now
         $now = gmdate(FMT_DATETIME);
-        $project = pdo_query("UPDATE subproject2subproject SET endtime='" . $now . "'
-                          WHERE subprojectid=" . qnum($this->Id) .
-            ' AND dependsonid=' . qnum($subprojectid) . " AND endtime='1980-01-01 00:00:00'");
-        if (!$project) {
+        $project = $db->executePrepared("
+                       UPDATE subproject2subproject
+                       SET endtime=?
+                       WHERE
+                           subprojectid=?
+                           AND dependsonid=?
+                           AND endtime='1980-01-01 00:00:00'
+                   ", [$now, intval($this->Id), $subprojectid]);
+
+        if ($project === false) {
             add_last_sql_error('SubProject RemoveDependency');
             return false;
         }
@@ -694,7 +769,7 @@ class SubProject
     }
 
     /** Return a subproject object for a given file path and projectid. */
-    public static function GetSubProjectFromPath($path, $projectid)
+    public static function GetSubProjectFromPath(string $path, int $projectid): SubProject|null
     {
         $pdo = Database::getInstance()->getPdo();
         $stmt = $pdo->prepare(
@@ -719,9 +794,11 @@ class SubProject
         return $subproject;
     }
 
-    /** Return the name of the subproject whose path contains the specified
-      * source file. */
-    public static function GetSubProjectForPath($filepath, $projectid)
+    /**
+     * Return the name of the subproject whose path contains the specified
+     * source file.
+     */
+    public static function GetSubProjectForPath(string $filepath, int $projectid): string
     {
         $pdo = get_link_identifier()->getPdo();
         // Get all the subprojects for this project that have a path defined.
@@ -734,7 +811,7 @@ class SubProject
         while ($row = $stmt->fetch()) {
             // Return the name of the subproject with the longest path
             // that matches our input path.
-            if (strpos($filepath, $row['path']) !== false) {
+            if (str_contains($filepath, $row['path'])) {
                 return $row['name'];
             }
         }

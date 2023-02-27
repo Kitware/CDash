@@ -17,6 +17,7 @@
 require_once 'xml_handlers/abstract_handler.php';
 
 use CDash\Config;
+use \CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
 use CDash\Model\Label;
@@ -118,8 +119,11 @@ class UploadHandler extends AbstractHandler
             // This associates the build with the correct day if it is only
             // an upload.  Otherwise we defer to the values set by the
             // other handlers.
-            $row = pdo_single_row_query(
-                "SELECT nightlytime FROM project where id='$this->projectid'");
+
+            $db = Database::getInstance();
+            $row = $db->executePreparedSingleRow('
+                       SELECT nightlytime FROM project where id=?
+                   ', [intval($this->projectid)]);
             $nightly_time = $row['nightlytime'];
             $build_date =
                 extract_date_from_buildstamp($this->Build->GetStamp());

@@ -30,7 +30,7 @@ function add_build($build)
     if (isset($build->SubProjectName) && $build->SubProjectName != '') {
         $BuildUpdate = new BuildUpdate();
         $BuildUpdate->BuildId = $build->Id;
-        $BuildUpdate->AssociateBuild($build->SiteId, $build->Name, $build->GetStamp());
+        $BuildUpdate->AssociateBuild(intval($build->SiteId), $build->Name, $build->GetStamp());
     }
 
     return $build->Id;

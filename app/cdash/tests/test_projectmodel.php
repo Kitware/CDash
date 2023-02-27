@@ -28,7 +28,7 @@ class ProjectModelTestCase extends KWWebTestCase
         $this->assertTrue($project->GetNumberOfPassingTests(0, 0) === false, 'GetNumberOfPassingTests!=false');
         $this->assertTrue($project->GetNumberOfFailingTests(0, 0) === false, 'GetNumberOfFailingTests!=false');
         $this->assertTrue($project->GetNumberOfNotRunTests(0, 0) === false, 'GetNumberOfNotRunTests!=false');
-        $this->assertTrue($project->SendEmailToAdmin(0, 0) === false, 'SendEmailToAdmin!=false');
+        $this->assertTrue($project->SendEmailToAdmin('', '') === false, 'SendEmailToAdmin!=false');
 
         if (!($project->Delete() === false)) {
             $this->fail("Project::Delete didn't return false for no id");

@@ -19,21 +19,23 @@ namespace CDash\Api\v1\HasFile;
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
-$md5sums_get = isset($_GET['md5sums']) ? htmlspecialchars(pdo_real_escape_string($_GET['md5sums'])) : '';
-if ($md5sums_get == '') {
+use CDash\Database;
+
+$md5sums_get = isset($_GET['md5sums']) ? htmlspecialchars($_GET['md5sums']) : '';
+if ($md5sums_get === '') {
     return response('md5sum not specified', 400);
 }
 
 $md5sums = preg_split('#[|.:,;]+#', $md5sums_get);
 
+$db = Database::getInstance();
 foreach ($md5sums as $md5sum) {
-    if ($md5sum == '') {
+    if ($md5sum === '') {
         continue;
     }
-    $md5sum = pdo_real_escape_string($md5sum);
-    $result = pdo_query("SELECT id FROM filesum WHERE md5sum='$md5sum'");
+    $result = $db->executePreparedSingleRow('SELECT id FROM filesum WHERE md5sum=?', [$md5sum]);
     //we don't have this file, add it to the list to send
-    if (pdo_num_rows($result) == 0) {
+    if (empty($result)) {
         return response($md5sum, 200);
     }
 }

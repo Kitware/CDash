@@ -23,6 +23,8 @@ use App\Services\ProjectPermissions;
 
 use CDash\Model\Banner;
 use CDash\Model\Project;
+use CDash\Database;
+use Illuminate\Support\Facades\Auth;
 
 if (Auth::check()) {
     $userid = Auth::id();
@@ -32,6 +34,7 @@ if (Auth::check()) {
         return;
     }
 
+    /** @var User $user */
     $user = Auth::user();
 
     $xml = begin_XML_for_XSLT();
@@ -42,7 +45,7 @@ if (Auth::check()) {
 
     @$projectid = $_GET['projectid'];
     if ($projectid != null) {
-        $projectid = pdo_real_escape_numeric($projectid);
+        $projectid = intval($projectid);
     }
 
     if (empty($projectid)) {
@@ -77,12 +80,16 @@ if (Auth::check()) {
         $xml .= '</availableproject>';
     }
 
-    $sql = 'SELECT id,name FROM project';
-    if ($user->IsAdmin() == false) {
-        $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
+    $sql = 'SELECT id, name FROM project';
+    $params = [];
+    if (!$user->IsAdmin()) {
+        $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)";
+        $params[] = intval($userid);
     }
-    $projects = pdo_query($sql);
-    while ($project_array = pdo_fetch_array($projects)) {
+
+    $db = Database::getInstance();
+    $projects = $db->executePrepared($sql, $params);
+    foreach ($projects as $project_array) {
         $xml .= '<availableproject>';
         $xml .= add_XML_value('id', $project_array['id']);
         $xml .= add_XML_value('name', $project_array['name']);
@@ -98,7 +105,7 @@ if (Auth::check()) {
     // If submit has been pressed
     @$updateMessage = $_POST['updateMessage'];
     if (isset($updateMessage)) {
-        $Banner->SetText(htmlspecialchars(pdo_real_escape_string($_POST['message'])));
+        $Banner->SetText(htmlspecialchars($_POST['message']));
     }
 
     /* We start generating the XML here */

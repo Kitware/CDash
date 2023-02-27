@@ -13,7 +13,10 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
+
+use CDash\Database;
 
 class BuildGroupPosition
 {
@@ -37,30 +40,35 @@ class BuildGroupPosition
             return false;
         }
 
-        $query = pdo_query("SELECT count(*) AS c FROM buildgroupposition WHERE
-                        buildgroupid='" . $this->GroupId . "' AND position='" . $this->Position . "'
-                        AND starttime='" . $this->StartTime . "'
-                        AND endtime='" . $this->EndTime . "'"
-        );
-        $query_array = pdo_fetch_array($query);
-        if ($query_array['c'] == 0) {
-            return false;
-        }
-        return true;
+        $db = Database::getInstance();
+        $query = $db->executePreparedSingleRow('
+                     SELECT count(*) AS c
+                     FROM buildgroupposition
+                     WHERE
+                         buildgroupid=?
+                         AND position=?
+                         AND starttime=?
+                         AND endtime=?
+                     ', [intval($this->GroupId), intval($this->Position), $this->StartTime, $this->EndTime]);
+        return intval($query['c']) !== 0;
     }
 
     /** Save the goup position */
     public function Add()
     {
-        if (!$this->Exists()) {
-            if (!pdo_query("INSERT INTO buildgroupposition (buildgroupid,position,starttime,endtime)
-                     VALUES ('$this->GroupId','$this->Position','$this->StartTime','$this->EndTime')")
-            ) {
-                add_last_sql_error('BuildGroupPosition Insert()');
-                return false;
-            }
-            return true;
+        if ($this->Exists()) {
+            return false;
         }
-        return false;
+
+        $db = Database::getInstance();
+        $query = $db->executePrepared('
+                     INSERT INTO buildgroupposition (buildgroupid, position, starttime, endtime)
+                     VALUES (?, ?, ?, ?)
+                 ', [intval($this->GroupId), intval($this->Position), $this->StartTime, $this->EndTime]);
+        if ($query === false) {
+            add_last_sql_error('BuildGroupPosition Insert()');
+            return false;
+        }
+        return true;
     }
 }

@@ -29,27 +29,29 @@ use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 @set_time_limit(0);
 
-function get_related_dates($projectnightlytime, $basedate)
+function get_related_dates(string $projectnightlytime, string $basedate): array
 {
     $dates = array();
     $nightlytime = $projectnightlytime;
 
-    if (!isset($basedate) || strlen($basedate) == 0) {
+    if (strlen($basedate) == 0) {
         $basedate = gmdate(FMT_DATE);
     }
 
     // Convert the nightly time into GMT
     $nightlytime = gmdate(FMT_TIME, strtotime($nightlytime));
 
-    $nightlyhour = time2hour($nightlytime);
-    $nightlyminute = time2minute($nightlytime);
-    $nightlysecond = time2second($nightlytime);
-    $basemonth = date2month($basedate);
-    $baseday = date2day($basedate);
-    $baseyear = date2year($basedate);
+    $nightlyhour = intval(time2hour($nightlytime));
+    $nightlyminute = intval(time2minute($nightlytime));
+    $nightlysecond = intval(time2second($nightlytime));
+    $basemonth = intval(date2month($basedate));
+    $baseday = intval(date2day($basedate));
+    $baseyear = intval(date2year($basedate));
 
     $dates['nightly+2'] = gmmktime($nightlyhour, $nightlyminute, $nightlysecond,
         $basemonth, $baseday + 2, $baseyear);
@@ -63,17 +65,14 @@ function get_related_dates($projectnightlytime, $basedate)
         $basemonth, $baseday - 2, $baseyear);
 
     // Snapshot of "now"
-    //
     $currentgmtime = time();
     $currentgmdate = gmdate(FMT_DATE, $currentgmtime);
 
     // Find the most recently past nightly time:
-    //
-    $todaymonth = date2month($currentgmdate);
-    $todayday = date2day($currentgmdate);
-    $todayyear = date2year($currentgmdate);
-    $currentnightly = gmmktime($nightlyhour, $nightlyminute, $nightlysecond,
-        $todaymonth, $todayday, $todayyear);
+    $todaymonth = intval(date2month($currentgmdate));
+    $todayday = intval(date2day($currentgmdate));
+    $todayyear = intval(date2year($currentgmdate));
+    $currentnightly = gmmktime($nightlyhour, $nightlyminute, $nightlysecond, $todaymonth, $todayday, $todayyear);
     while ($currentnightly > $currentgmtime) {
         $todayday = $todayday - 1;
         $currentnightly = gmmktime($nightlyhour, $nightlyminute, $nightlysecond,
@@ -97,7 +96,7 @@ function get_related_dates($projectnightlytime, $basedate)
 }
 
 /** */
-function remove_directory_from_filename(&$filename)
+function remove_directory_from_filename(&$filename): string
 {
     $npos = strrpos($filename, '/');
 
@@ -113,7 +112,7 @@ function remove_directory_from_filename(&$filename)
 // If the string $root begins with one of the known cvs protocol
 // indicators, then return true. Otherwise, return false.
 //
-function is_cvs_root($root)
+function is_cvs_root($root): bool
 {
     $npos = strpos($root, ':pserver:');
     if ($npos !== false && $npos === 0) {
@@ -128,7 +127,7 @@ function is_cvs_root($root)
 }
 
 /** Get the CVS repository commits */
-function get_cvs_repository_commits($cvsroot, $dates)
+function get_cvs_repository_commits($cvsroot, $dates): array
 {
     $commits = array();
 
@@ -265,7 +264,7 @@ function get_cvs_repository_commits($cvsroot, $dates)
 }
 
 /** Get the Perforce repository commits */
-function get_p4_repository_commits($root, $branch, $dates)
+function get_p4_repository_commits($root, $branch, $dates): array
 {
     $config = Config::getInstance();
     $commits = array();
@@ -344,7 +343,7 @@ function get_p4_repository_commits($root, $branch, $dates)
 }
 
 /** Get the GIT repository commits */
-function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision)
+function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision): array
 {
     $config = Config::getInstance();
     $commits = array();
@@ -440,7 +439,7 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
 }
 
 /** Get the SVN repository commits */
-function get_svn_repository_commits($svnroot, $dates, $username = '', $password = '')
+function get_svn_repository_commits($svnroot, $dates, $username = '', $password = ''): array
 {
     $commits = array();
 
@@ -596,7 +595,7 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
 }
 
 /** Get BZR repository commits */
-function get_bzr_repository_commits($bzrroot, $dates)
+function get_bzr_repository_commits($bzrroot, $dates): array
 {
     $commits = array();
 
@@ -640,27 +639,36 @@ function get_bzr_repository_commits($bzrroot, $dates)
 // have the following named elements:
 //   directory, filename, revision, time, author, comment
 //
-function get_repository_commits($projectid, $dates)
+function get_repository_commits(int $projectid, $dates): array
 {
     global $xml;
-    $roots = array();
+
+    $db = Database::getInstance();
 
     // Find the repository
-    $repositories = pdo_query("SELECT repositories.url,repositories.username,repositories.password,repositories.branch
-                        FROM repositories,project2repositories
-                        WHERE repositories.id=project2repositories.repositoryid
-                        AND project2repositories.projectid='$projectid'");
+    $repositories = $db->executePrepared('
+                        SELECT
+                            repositories.url,
+                            repositories.username,
+                            repositories.password,
+                            repositories.branch
+                        FROM
+                            repositories,
+                            project2repositories
+                        WHERE
+                            repositories.id=project2repositories.repositoryid
+                            AND project2repositories.projectid=?
+                    ', [$projectid]);
 
-    $cvsviewers = pdo_query("SELECT cvsviewertype FROM project
-                        WHERE id='$projectid'");
-
-    $cvsviewers_array = pdo_fetch_array($cvsviewers);
-    $cvsviewer = $cvsviewers_array[0];
+    $cvsviewers_array = $db->executePreparedSingleRow('
+                            SELECT cvsviewertype FROM project WHERE id=?
+                        ', [$projectid]);
+    $cvsviewer = $cvsviewers_array['cvsviewertype'];
 
     // Start with an empty array:
     $commits = array();
 
-    while ($repositories_array = pdo_fetch_array($repositories)) {
+    foreach ($repositories as $repositories_array) {
         $root = $repositories_array['url'];
         $username = $repositories_array['username'];
         $password = $repositories_array['password'];
@@ -677,8 +685,13 @@ function get_repository_commits($projectid, $dates)
                 // Update the current revision
                 if (isset($results['currentrevision'])) {
                     $currentdate = gmdate(FMT_DATE, $dates['nightly-0']);
-                    $prevrev = pdo_query("UPDATE dailyupdate SET revision='" . $results['currentrevision'] . "'
-                                WHERE projectid='$projectid' AND date='" . $currentdate . "'");
+                    $db->executePrepared('
+                        UPDATE dailyupdate
+                        SET revision=?
+                        WHERE
+                            projectid=?
+                            AND date=?
+                    ', [$results['currentrevision'], $projectid, $currentdate]);
                     add_last_sql_error('get_repository_commits');
                 }
                 $new_commits = $results['commits'];
@@ -687,13 +700,15 @@ function get_repository_commits($projectid, $dates)
 
                 // Find the prior revision
                 $previousdate = gmdate(FMT_DATE, $dates['nightly-1']);
-                $prevrev = pdo_query("SELECT revision FROM dailyupdate
-                              WHERE projectid='$projectid' AND date='" . $previousdate . "'");
+                $prevrev = $db->executePreparedSingleRow('
+                               SELECT revision
+                               FROM dailyupdate
+                               WHERE projectid=? AND date=?
+                           ', [$projectid, $previousdate]);
 
                 $previousrevision = '';
-                if (pdo_num_rows($prevrev) > 0) {
-                    $prevrev_array = pdo_fetch_array($prevrev);
-                    $previousrevision = $prevrev_array[0];
+                if (!empty($prevrev)) {
+                    $previousrevision = $prevrev['revision'];
                 }
 
                 $results = get_git_repository_commits($root, $dates, $branch, $previousrevision);
@@ -701,8 +716,11 @@ function get_repository_commits($projectid, $dates)
                 // Update the current revision
                 if (isset($results['currentrevision'])) {
                     $currentdate = gmdate(FMT_DATE, $dates['nightly-0']);
-                    $prevrev = pdo_query("UPDATE dailyupdate SET revision='" . $results['currentrevision'] . "'
-                                WHERE projectid='$projectid' AND date='" . $currentdate . "'");
+                    $db->executePrepared('
+                        UPDATE dailyupdate
+                        SET revision=?
+                        WHERE projectid=? AND date=?
+                    ', [$results['currentrevision'], $projectid, $currentdate]);
                     add_last_sql_error('get_repository_commits');
                 }
                 $new_commits = $results['commits'];
@@ -719,40 +737,96 @@ function get_repository_commits($projectid, $dates)
 }
 
 /** Send email if expected build from last day have not been submitting */
-function sendEmailExpectedBuilds($projectid, $currentstarttime)
+function sendEmailExpectedBuilds($projectid, $currentstarttime): void
 {
     $config = Config::getInstance();
     $currentURI = get_server_URI();
 
+    $db = Database::getInstance();
+
     $currentEndUTCTime = gmdate(FMT_DATETIME, $currentstarttime);
     $currentBeginUTCTime = gmdate(FMT_DATETIME, $currentstarttime - 3600 * 24);
-    $sql = "SELECT buildtype,buildname,siteid,groupid,site.name FROM (SELECT g.siteid,g.buildtype,g.buildname,g.groupid FROM build2grouprule as g  LEFT JOIN build as b ON(
-          g.expected='1' AND (b.type=g.buildtype AND b.name=g.buildname AND b.siteid=g.siteid)
-          AND b.projectid='$projectid' AND b.starttime>'$currentBeginUTCTime' AND b.starttime<'$currentEndUTCTime')
-          WHERE (b.type is null AND b.name is null AND b.siteid is null)
-          AND g.expected='1'
-          AND g.starttime<'$currentBeginUTCTime' AND (g.endtime>'$currentEndUTCTime' OR g.endtime='1980-01-01 00:00:00')) as t1, buildgroup as bg, site
-          WHERE t1.groupid=bg.id AND bg.projectid='$projectid' AND bg.starttime<'$currentBeginUTCTime' AND (bg.endtime>'$currentEndUTCTime' OR bg.endtime='1980-01-01 00:00:00')
-          AND site.id=t1.siteid
-          ";
-    $build2grouprule = pdo_query($sql);
+    $build2grouprule = $db->executePrepared("
+                           SELECT
+                               buildtype,
+                               buildname,
+                               siteid,
+                               groupid,
+                               site.name
+                           FROM (
+                               SELECT
+                                   g.siteid,
+                                   g.buildtype,
+                                   g.buildname,
+                                   g.groupid
+                               FROM build2grouprule as g
+                               LEFT JOIN build as b ON (
+                                   g.expected='1'
+                                   AND b.type=g.buildtype
+                                   AND b.name=g.buildname
+                                   AND b.siteid=g.siteid
+                                   AND b.projectid=?
+                                   AND b.starttime>?
+                                   AND b.starttime<?
+                               )
+                               WHERE
+                                   b.type IS NULL
+                                   AND b.name IS NULL
+                                   AND b.siteid IS NULL
+                                   AND g.expected='1'
+                                   AND g.starttime<?
+                                   AND (
+                                       g.endtime>?
+                                       OR g.endtime='1980-01-01 00:00:00'
+                                   )
+                           ) as t1,
+                           buildgroup as bg,
+                           site
+                           WHERE
+                               t1.groupid=bg.id
+                               AND bg.projectid=?
+                               AND bg.starttime<?
+                               AND (
+                                   bg.endtime>?
+                                   OR bg.endtime='1980-01-01 00:00:00'
+                               )
+                               AND site.id=t1.siteid
+                       ", [
+                           $projectid,
+                           $currentBeginUTCTime,
+                           $currentEndUTCTime,
+                           $currentBeginUTCTime,
+                           $currentEndUTCTime,
+                           $projectid,
+                           $currentBeginUTCTime,
+                           $currentEndUTCTime
+                       ]);
+
     $projectname = get_project_name($projectid);
     $summary = 'The following expected build(s) for the project *' . $projectname . "* didn't submit yesterday:\n";
     $missingbuilds = 0;
 
     $serverName = $config->getServer();
 
-    while ($build2grouprule_array = pdo_fetch_array($build2grouprule)) {
+    foreach ($build2grouprule as $build2grouprule_array) {
         $builtype = $build2grouprule_array['buildtype'];
         $buildname = $build2grouprule_array['buildname'];
         $sitename = $build2grouprule_array['name'];
-        $siteid = $build2grouprule_array['siteid'];
+        $siteid = intval($build2grouprule_array['siteid']);
         $summary .= '* ' . $sitename . ' - ' . $buildname . ' (' . $builtype . ")\n";
 
         // Find the site maintainers
         $recipients = [];
-        $emails = pdo_query('SELECT email FROM ' . qid('user') . ',site2user WHERE ' . qid('user') . ".id=site2user.userid AND site2user.siteid='$siteid'");
-        while ($emails_array = pdo_fetch_array($emails)) {
+        $emails = $db->executePrepared('
+                      SELECT email
+                      FROM
+                          ' . qid('user') . ' AS u,
+                          site2user
+                      WHERE
+                          u.id=site2user.userid
+                          AND site2user.siteid=?
+                  ', [$siteid]);
+        foreach ($emails as $emails_array) {
             $recipients[] = $emails_array['email'];
         }
 
@@ -783,9 +857,21 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime)
 
         // Find the site administrators or users who want to receive the builds
         $recipients = [];
-        $emails = pdo_query('SELECT email FROM ' . qid('user') . ',user2project WHERE ' . qid('user') . ".id=user2project.userid
-                         AND user2project.projectid='$projectid' AND (user2project.role='2' OR user2project.emailmissingsites=1)");
-        while ($emails_array = pdo_fetch_array($emails)) {
+        $emails = $db->executePrepared('
+                      SELECT email
+                      FROM
+                          ' . qid('user') . ' AS u,
+                          user2project
+                      WHERE
+                          u.id=user2project.userid
+                          AND user2project.projectid=?
+                          AND (
+                              user2project.role=2
+                              OR user2project.emailmissingsites=1
+                          )
+                  ', [$projectid]);
+
+        foreach ($emails as $emails_array) {
             $recipients[] = $emails_array['email'];
         }
 
@@ -802,23 +888,27 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime)
 }
 
 /** Remove the buildemail that have been there from more than 48h */
-function cleanBuildEmail()
+function cleanBuildEmail(): void
 {
     include_once 'include/common.php';
     $now = date(FMT_DATETIME, time() - 3600 * 48);
-    pdo_query("DELETE FROM buildemail WHERE time<'$now'");
+
+    $db = Database::getInstance();
+    $db->executePrepared('DELETE FROM buildemail WHERE time<?', [$now]);
 }
 
 /** Clean the usertemp table if more than 24hrs */
-function cleanUserTemp()
+function cleanUserTemp(): void
 {
     include_once 'include/common.php';
     $now = date(FMT_DATETIME, time() - 3600 * 24);
-    pdo_query("DELETE FROM usertemp WHERE registrationdate<'$now'");
+
+    $db = Database::getInstance();
+    $db->executePrepared('DELETE FROM usertemp WHERE registrationdate<?', [$now]);
 }
 
 /** Send an email to administrator of the project for users who are not registered */
-function sendEmailUnregisteredUsers($projectid, $cvsauthors)
+function sendEmailUnregisteredUsers(int $projectid, $cvsauthors): void
 {
     include_once 'include/common.php';
     $config = Config::getInstance();
@@ -839,11 +929,20 @@ function sendEmailUnregisteredUsers($projectid, $cvsauthors)
 
     // Send the email if any
     if (count($unregisteredusers) > 0) {
+        $db = Database::getInstance();
+
         // Find the project administrators
         $recipients = [];
-        $emails = pdo_query('SELECT email FROM ' . qid('user') . ',user2project WHERE ' . qid('user') . '.id=user2project.userid
-                         AND user2project.projectid=' . qnum($projectid) . " AND user2project.role='2'");
-        while ($emails_array = pdo_fetch_array($emails)) {
+        $emails = $db->executePrepared('
+                      SELECT email
+                      FROM
+                          ' . qid('user') . ' AS u,
+                          user2project
+                      WHERE
+                          u.id=user2project.userid
+                          AND user2project.projectid=?
+                          AND user2project.role=2', [$projectid]);
+        foreach ($emails as $emails_array) {
             $recipients[] = $emails_array['email'];
         }
 
@@ -874,7 +973,7 @@ function sendEmailUnregisteredUsers($projectid, $cvsauthors)
 }
 
 /** Add daily changes if necessary */
-function addDailyChanges($projectid)
+function addDailyChanges(int $projectid): void
 {
     include_once 'include/common.php';
     include_once 'include/sendemail.php';
@@ -885,14 +984,24 @@ function addDailyChanges($projectid)
     list($previousdate, $currentstarttime, $nextdate) = get_dates('now', $project->NightlyTime);
     $date = gmdate(FMT_DATE, $currentstarttime);
 
+    $db = Database::getInstance();
+
     // Check if we already have it somwhere
-    $query = pdo_query("SELECT id FROM dailyupdate WHERE projectid='$projectid' AND date='$date'");
-    if (pdo_num_rows($query) == 0) {
+    $query = $db->executePreparedSingleRow('
+                 SELECT COUNT(*) AS c
+                 FROM dailyupdate
+                 WHERE
+                     projectid=?
+                     AND date=?
+             ', [$projectid, $date]);
+    if (intval($query['c']) === 0) {
         $cvsauthors = array();
 
-        pdo_query("INSERT INTO dailyupdate (projectid,date,command,type,status)
-               VALUES ($projectid,'$date','NA','NA','0')");
-        $updateid = pdo_insert_id('dailyupdate');
+        $db->executePrepared("
+            INSERT INTO dailyupdate (projectid, date, command, type, status)
+            VALUES (?, ?,'NA','NA','0')
+        ", [$projectid, $date]);
+        $updateid = intval(pdo_insert_id('dailyupdate'));
         $dates = get_related_dates($project->NightlyTime, $date);
         $commits = get_repository_commits($projectid, $dates);
 
@@ -910,12 +1019,16 @@ function addDailyChanges($projectid)
             $priorrevision = $commit['priorrevision'];
 
             // Check if we have a robot file for this build
-            $robot = pdo_query('SELECT authorregex FROM projectrobot
-                  WHERE projectid=' . qnum($projectid) . " AND robotname='" . $author . "'");
+            $robot = $db->executePreparedSingleRow('
+                         SELECT authorregex
+                         FROM projectrobot
+                         WHERE
+                             projectid=?
+                             AND robotname=?
+                     ', [$projectid, $author]);
 
-            if (pdo_num_rows($robot) > 0) {
-                $robot_array = pdo_fetch_array($robot);
-                $regex = $robot_array['authorregex'];
+            if (!empty($robot)) {
+                $regex = $robot['authorregex'];
                 preg_match($regex, $commit['comment'], $matches);
                 if (isset($matches[1])) {
                     $author = addslashes($matches[1]);
@@ -926,8 +1039,28 @@ function addDailyChanges($projectid)
                 $cvsauthors[] = stripslashes($author);
             }
 
-            pdo_query("INSERT INTO dailyupdatefile (dailyupdateid,filename,checkindate,author,email,log,revision,priorrevision)
-                   VALUES ($updateid,'$filename','$checkindate','$author','$email','$log','$revision','$priorrevision')");
+            $db->executePreparedSingleRow('
+                INSERT INTO dailyupdatefile (
+                    dailyupdateid,
+                    filename,
+                    checkindate,
+                    author,
+                    email,
+                    log,
+                    revision,
+                    priorrevision
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ', [
+                $updateid,
+                $filename,
+                $checkindate,
+                $author,
+                $email,
+                $log,
+                $revision,
+                $priorrevision
+            ]);
             add_last_sql_error('addDailyChanges', $projectid);
         }
 
@@ -944,48 +1077,84 @@ function addDailyChanges($projectid)
         cleanUserTemp();
 
         // Delete old records from the failed jobs database table.
-        $dt = new \DateTime();
+        $dt = new DateTime();
         $dt->setTimestamp(time() - (config('cdash.backup_timeframe') * 3600));
-        \DB::table('failed_jobs')
+        DB::table('failed_jobs')
             ->where('failed_at', '<', $dt)
             ->delete();
 
         // If the status of daily update is set to 2 that means we should send an email
-        $query = pdo_query("SELECT status FROM dailyupdate WHERE projectid='$projectid' AND date='$date'");
-        $dailyupdate_array = pdo_fetch_array($query);
-        $dailyupdate_status = $dailyupdate_array['status'];
-        if ($dailyupdate_status == 2) {
+        $dailyupdate_array = $db->executePreparedSingleRow('
+                                 SELECT status
+                                 FROM dailyupdate
+                                 WHERE
+                                     projectid=?
+                                     AND date=?
+                             ', [$projectid, $date]);
+        $dailyupdate_status = intval($dailyupdate_array['status']);
+        if ($dailyupdate_status === 2) {
             // Find the groupid
-            $group_query = pdo_query("SELECT buildid,groupid FROM summaryemail WHERE date='$date'");
-            while ($group_array = pdo_fetch_array($group_query)) {
-                $groupid = $group_array['groupid'];
-                $buildid = $group_array['buildid'];
+            $group_query = $db->executePrepared('
+                               SELECT buildid, groupid
+                               FROM summaryemail
+                               WHERE date=?
+                           ', [$date]);
+            foreach ($group_query as $group_array) {
+                $groupid = intval($group_array['groupid']);
+                $buildid = intval($group_array['buildid']);
 
                 // Find if the build has any errors
-                $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
-                $builderror_array = pdo_fetch_array($builderror);
-                $nbuilderrors = $builderror_array[0];
+                $builderror = $db->executePreparedSingleRow('
+                                  SELECT count(buildid) AS c
+                                  FROM builderror
+                                  WHERE
+                                      buildid=?
+                                      AND type=0
+                              ', [$buildid]);
+                $nbuilderrors = intval($builderror['c']);
 
                 // Find if the build has any warnings
-                $buildwarning = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='1'");
-                $buildwarning_array = pdo_fetch_array($buildwarning);
-                $nbuildwarnings = $buildwarning_array[0];
+                $buildwarning = $db->executePreparedSingleRow('
+                                    SELECT count(buildid) AS c
+                                    FROM builderror
+                                    WHERE
+                                        buildid=?
+                                        AND type=1
+                                ', [$buildid]);
+                $nbuildwarnings = intval($buildwarning['c']);
 
                 // Find if the build has any test failings
                 if ($project->EmailTestTimingChanged) {
-                    $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND (status='failed' OR timestatus>" . qnum($project->TestTimeMaxStatus) . ')';
+                    $sql = "SELECT count(testid) AS c
+                            FROM build2test
+                            WHERE
+                                buildid=?
+                                AND (
+                                    status='failed'
+                                    OR timestatus>?
+                                )";
+                    $params = [$buildid, intval($project->TestTimeMaxStatus)];
                 } else {
-                    $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'";
+                    $sql = "SELECT count(testid) AS c
+                            FROM build2test
+                            WHERE
+                                buildid=?
+                                AND status='failed'";
+                    $params = [$buildid];
                 }
 
-                $nfail_array = pdo_fetch_array(pdo_query($sql));
-                $nfailingtests = $nfail_array[0];
-
-                sendsummaryemail($projectid, $groupid, $nbuildwarnings, $nbuilderrors, $nfailingtests);
+                $nfail_array = $db->executePreparedSingleRow($sql, $params);
+                $nfailingtests = intval($nfail_array['c']);
             }
         }
 
-        pdo_query("UPDATE dailyupdate SET status='1' WHERE projectid='$projectid' AND date='$date'");
+        $db->executePrepared('
+            UPDATE dailyupdate
+            SET status=1
+            WHERE
+                projectid=?
+                AND date=?
+        ', [$projectid, $date]);
 
         // Clean the backup directories.
         $timeframe = config('cdash.backup_timeframe');
@@ -1002,7 +1171,7 @@ function addDailyChanges($projectid)
         }
 
         // Delete expired authentication tokens.
-        pdo_query('DELETE FROM authtoken WHERE expires < NOW()');
+        $db->executePrepared('DELETE FROM authtoken WHERE expires < NOW()');
 
         // Delete expired buildgroups and rules.
         $current_date = gmdate(FMT_DATETIME);
@@ -1011,7 +1180,6 @@ function addDailyChanges($projectid)
         $cutoff_date = gmdate(FMT_DATETIME, $datetime->getTimestamp());
         BuildGroupRule::DeleteExpiredRulesForProject($project->Id, $cutoff_date);
 
-        $db = Database::getInstance();
         $stmt = $db->prepare(
             "SELECT id FROM buildgroup
             WHERE projectid = :projectid AND

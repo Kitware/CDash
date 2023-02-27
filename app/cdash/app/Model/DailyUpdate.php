@@ -15,6 +15,8 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Database;
+
 class DailyUpdate
 {
     public $Id;
@@ -24,8 +26,12 @@ class DailyUpdate
     public $Status;
     public $ProjectId;
 
-    /** Get all the authors of a file */
-    public function GetAuthors($filename, $onlylast = false)
+    /**
+     * Get all the authors of a file
+     *
+     * @return array<int>|false
+     */
+    public function GetAuthors(string $filename, bool $onlylast = false): array|false
     {
         if (!$this->ProjectId) {
             echo 'DailyUpdate::GetAuthors(): ProjectId is not set<br>';
@@ -33,10 +39,8 @@ class DailyUpdate
         }
 
         // Check if the note already exists
-        $filename = pdo_real_escape_string($filename);
-
         // Remove
-        if (substr($filename, 0, 2) == './') {
+        if (str_starts_with($filename, './')) {
             $filename = substr($filename, 2);
         }
 
@@ -45,23 +49,33 @@ class DailyUpdate
             $sql = ' ORDER BY dailyupdate.id DESC LIMIT 1';
         }
 
-        $query = pdo_query('SELECT DISTINCT up.userid,dailyupdate.id FROM user2project AS up,user2repository AS ur,dailyupdatefile,dailyupdate
-                        WHERE dailyupdatefile.dailyupdateid=dailyupdate.id
-                        AND dailyupdate.projectid=up.projectid
-                        AND ur.credential=dailyupdatefile.author
-                        AND up.projectid=' . qnum($this->ProjectId) . '
-                        AND up.userid=ur.userid
-                        AND (ur.projectid=0 OR ur.projectid=' . qnum($this->ProjectId) . ")
-                        AND dailyupdatefile.filename LIKE '%" . $filename . "'" . $sql);
+        $db = Database::getInstance();
+        $query = $db->executePrepared("
+                     SELECT DISTINCT up.userid, dailyupdate.id
+                     FROM
+                         user2project AS up,
+                         user2repository AS ur,
+                         dailyupdatefile,
+                         dailyupdate
+                     WHERE
+                         dailyupdatefile.dailyupdateid=dailyupdate.id
+                         AND dailyupdate.projectid=up.projectid
+                         AND ur.credential=dailyupdatefile.author
+                         AND up.projectid=?
+                         AND up.userid=ur.userid
+                         AND (ur.projectid=0 OR ur.projectid=?)
+                         AND dailyupdatefile.filename LIKE '%' || ?
+                     $sql
+                 ", [intval($this->ProjectId), intval($this->ProjectId), $filename]);
 
-        if (!$query) {
+        if ($query === false) {
             add_last_sql_error('DailyUpdate GetAuthors', $this->ProjectId);
             return false;
         }
 
-        $authorids = array();
-        while ($query_array = pdo_fetch_array($query)) {
-            $authorids[] = $query_array['userid'];
+        $authorids = [];
+        foreach ($query as $query_array) {
+            $authorids[] = intval($query_array['userid']);
         }
         return $authorids;
     }

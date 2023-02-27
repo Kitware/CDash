@@ -16,56 +16,69 @@
 
 use App\Services\ProjectPermissions;
 use CDash\Model\Project;
+use CDash\Database;
 
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 
-$projectid = pdo_real_escape_numeric($_GET['projectid']);
+$projectid = $_GET['projectid'];
 $project = new Project();
-$project->Id = $projectid;
+$project->Id = intval($projectid);
 if (!ProjectPermissions::userCanViewProject($project)) {
     echo 'You are not authorized to view this page.';
     return;
 }
 
-$testname = htmlspecialchars(pdo_real_escape_string($_GET['testname']));
-$starttime = pdo_real_escape_numeric($_GET['starttime']);
+$testname = htmlspecialchars($_GET['testname']);
+$starttime = $_GET['starttime'];
 @$zoomout = $_GET['zoomout'];
 
 if (!isset($projectid) || !is_numeric($projectid)) {
     echo 'Not a valid projectid!';
     return;
 }
+$projectid = intval($projectid);
+
 if (!isset($testname)) {
     echo 'Not a valid test name!';
     return;
 }
+
 if (!isset($starttime)) {
     echo 'Not a valid starttime!';
     return;
 }
 
+$db = Database::getInstance();
+
 // We have to loop for the previous days
-$failures = array();
+$failures = [];
 for ($beginning_timestamp = $starttime; $beginning_timestamp > $starttime - 3600 * 24 * 7; $beginning_timestamp -= 3600 * 24) {
     $end_timestamp = $beginning_timestamp + 3600 * 24;
 
     $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
     $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
-    $query = "SELECT min(starttime) AS starttime, count(*) AS count
-            FROM build
-            JOIN build2test ON (build.id = build2test.buildid)
-            WHERE build.projectid = '$projectid'
-            AND build.starttime>='$beginning_UTCDate'
-            AND build.starttime<'$end_UTCDate'
-            AND build2test.testid IN (SELECT id FROM test WHERE name='$testname')
-            AND (build2test.status!='passed' OR build2test.timestatus!=0)
-            ";
-    $result = pdo_query($query);
+    $result = $db->executePreparedSingleRow("
+                 SELECT count(*) AS c
+                 FROM build
+                 JOIN build2test ON (build.id = build2test.buildid)
+                 WHERE
+                     build.projectid = ?
+                     AND build.starttime >= ?
+                     AND build.starttime < ?
+                     AND build2test.testid IN (
+                         SELECT id
+                         FROM test
+                         WHERE name = ?
+                     )
+                     AND (
+                         build2test.status <> 'passed'
+                         OR build2test.timestatus <> 0
+                     )
+            ", [$projectid, $beginning_UTCDate, $end_UTCDate, $testname]);
     echo pdo_error();
-    $result_array = pdo_fetch_array($result);
-    $failures[$beginning_timestamp] = $result_array['count'];
+    $failures[$beginning_timestamp] = intval($result['c']);
 }
 ?>
 
@@ -76,8 +89,6 @@ for ($beginning_timestamp = $starttime; $beginning_timestamp > $starttime - 3600
     $(function () {
         var d1 = [];
         var ty = [];
-        //ty.push([-1,"Failed"]);
-        //ty.push([1,"Passed"]);
 
         <?php
         $tarray = array();

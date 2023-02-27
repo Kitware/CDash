@@ -15,6 +15,8 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Database;
+
 /** Coverage file to users */
 class CoverageFile2User
 {
@@ -30,12 +32,12 @@ class CoverageFile2User
         $this->UserId = 0;
         $this->FileId = 0;
         $this->Priority = 0;
-        $this->Fullpath = '';
+        $this->FullPath = '';
         $this->ProjectId = 0;
     }
 
     /** Return if exists */
-    public function Exists()
+    public function Exists(): bool
     {
         $fileid = $this->GetId();
 
@@ -43,17 +45,20 @@ class CoverageFile2User
             return false;
         }
 
-        $query = pdo_query('SELECT count(*) AS c FROM coveragefile2user WHERE userid=' . qnum($this->UserId) . '
-                        AND fileid=' . qnum($fileid));
-        $query_array = pdo_fetch_array($query);
-        if ($query_array['c'] > 0) {
+        $db = Database::getInstance();
+        $query_array = $db->executePreparedSingleRow('
+                           SELECT count(*) AS c
+                           FROM coveragefile2user
+                           WHERE userid=? AND fileid=?
+                       ', [intval($this->UserId), intval($fileid)]);
+        if (intval($query_array['c']) > 0) {
             return true;
         }
         return false;
     }
 
     /** Insert the new user */
-    public function Insert()
+    public function Insert(): bool
     {
         if (!isset($this->UserId) || $this->UserId < 1) {
             echo 'CoverageFile2User:Insert: UserId not set';
@@ -68,25 +73,33 @@ class CoverageFile2User
         // Check if is already in the database
         if (!$this->Exists()) {
             $this->FileId = $this->GetId();
+            $db = Database::getInstance();
 
             if ($this->FileId == 0) {
-                $query = 'INSERT INTO coveragefilepriority (projectid,fullpath,priority)
-                  VALUES (' . qnum($this->ProjectId) . ",'" . $this->FullPath . "',0)";
-                if (!pdo_query($query)) {
+                $insert_result = $db->executePrepared('
+                                     INSERT INTO coveragefilepriority (projectid, fullpath, priority)
+                                     VALUES (?, ?, 0)
+                                 ', [intval($this->ProjectId), $this->FullPath]);
+                if ($insert_result === false) {
                     add_last_sql_error('CoverageFile2User:Insert');
                     return false;
                 }
-                $this->FileId = pdo_insert_id('coveragefilepriority');
+                $this->FileId = intval(pdo_insert_id('coveragefilepriority'));
             }
 
             // Find the new position
-            $query = pdo_query('SELECT count(*) AS c FROM coveragefile2user WHERE fileid=' . qnum($this->FileId));
-            $query_array = pdo_fetch_array($query);
-            $position = $query_array['c'] + 1;
+            $query_array = $db->executePreparedSingleRow('
+                               SELECT count(*) AS c
+                               FROM coveragefile2user
+                               WHERE fileid=?
+                           ', [intval($this->FileId)]);
+            $position = intval($query_array['c']) + 1;
 
-            $query = 'INSERT INTO coveragefile2user (userid,fileid,position)
-                VALUES (' . qnum($this->UserId) . ',' . qnum($this->FileId) . ',' . qnum($position) . ')';
-            if (!pdo_query($query)) {
+            $insert_result = $db->executePrepared('
+                                 INSERT INTO coveragefile2user (userid, fileid, position)
+                                 VALUES (?, ?, ?)
+                             ', [intval($this->UserId), intval($this->FileId), $position]);
+            if ($insert_result === false) {
                 add_last_sql_error('CoverageFile2User:Insert');
                 return false;
             }
@@ -96,23 +109,24 @@ class CoverageFile2User
     } // function Insert
 
     /** Remove authors */
-    public function RemoveAuthors()
+    public function RemoveAuthors(): bool
     {
         if ($this->FullPath == '' || $this->ProjectId < 1) {
             echo 'CoverageFile2User:RemoveAuthors: FullPath or ProjectId not set';
             return false;
         }
 
-        $query = 'DELETE FROM coveragefile2user WHERE fileid=' . qnum($this->GetId());
-        if (!pdo_query($query)) {
+        $db = Database::getInstance();
+        $query_result = $db->executePrepared('DELETE FROM coveragefile2user WHERE fileid=?', [$this->GetId()]);
+        if (!$query_result) {
             add_last_sql_error('CoverageFile2User:RemoveAuthors');
-            echo $query;
             return false;
         }
+        return true;
     }
 
     /** Remove the new user */
-    public function Remove()
+    public function Remove(): bool
     {
         if (!isset($this->UserId) || $this->UserId < 1) {
             return false;
@@ -121,9 +135,14 @@ class CoverageFile2User
             return false;
         }
 
-        $query = 'DELETE FROM coveragefile2user WHERE userid=' . qnum($this->UserId) . '
-                AND fileid=' . qnum($this->FileId);
-        if (!pdo_query($query)) {
+        $db = Database::getInstance();
+        $query_result = $db->executePrepared('
+                            DELETE FROM coveragefile2user
+                            WHERE
+                                userid=?
+                                AND fileid=?
+                        ', [$this->UserId, $this->FileId]);
+        if ($query_result === false) {
             add_last_sql_error('CoverageFile2User:Remove');
             return false;
         }
@@ -133,141 +152,187 @@ class CoverageFile2User
     }
 
     /** Fix the position given a file */
-    private function FixPosition()
+    private function FixPosition(): bool
     {
         if (!isset($this->FileId) || $this->FileId < 1) {
             return false;
         }
 
-        $query = pdo_query('SELECT userid FROM coveragefile2user WHERE fileid=' . qnum($this->FileId) . ' ORDER BY position ASC');
-        if (!$query) {
+        $db = Database::getInstance();
+        $query_result = $db->executePrepared('
+                            SELECT userid FROM coveragefile2user
+                            WHERE fileid=?
+                            ORDER BY position ASC
+                        ', [intval($this->FileId)]);
+        if ($query_result === false) {
             add_last_sql_error('CoverageFile2User:FixPosition');
             return false;
         }
 
         $position = 1;
-        while ($query_array = pdo_fetch_array($query)) {
-            pdo_query('UPDATE coveragefile2user SET position=' . qnum($position) . ' WHERE fileid=' . qnum($this->FileId) . '
-                 AND userid=' . qnum($query_array['userid']));
+        foreach ($query_result as $query_array) {
+            // TODO: (williamjallen) Optimize this loop to execute a constant number of queries
+            $db->executePrepared('
+                UPDATE coveragefile2user
+                SET position=?
+                WHERE fileid=? AND userid=?
+            ', [$position, intval($this->FileId), intval($query_array['userid'])]);
             $position++;
         }
         return true;
     }
 
-    /** Get authors of a file */
-    public function GetAuthors()
+    /**
+     * Get authors of a file
+     *
+     * @return array<int>|false
+     */
+    public function GetAuthors(): array|false
     {
         if ($this->FullPath == '' || $this->ProjectId < 1) {
             echo 'CoverageFile2User:GetAuthors: FullPath or ProjectId not set';
             return false;
         }
-        $query = pdo_query("SELECT userid FROM coveragefile2user,coveragefilepriority WHERE
-                       coveragefile2user.fileid=coveragefilepriority.id AND
-                       coveragefilepriority.fullpath='" . $this->FullPath . "' AND coveragefilepriority.projectid=" . qnum($this->ProjectId) . ' ORDER BY position ASC');
-        if (!$query) {
+
+        $db = Database::getInstance();
+        $query_result = $db->executePrepared('
+                            SELECT userid
+                            FROM coveragefile2user, coveragefilepriority
+                            WHERE
+                                coveragefile2user.fileid=coveragefilepriority.id
+                                AND coveragefilepriority.fullpath=?
+                                AND coveragefilepriority.projectid=?
+                            ORDER BY position ASC
+                        ', [$this->FullPath, $this->ProjectId]);
+        if ($query_result === false) {
             add_last_sql_error('CoverageFile2User:GetAuthors');
             return false;
         }
-        $authorids = array();
-        while ($query_array = pdo_fetch_array($query)) {
-            $authorids[] = $query_array['userid'];
+        $authorids = [];
+        foreach ($query_result as $query_array) {
+            $authorids[] = intval($query_array['userid']);
         }
         return $authorids;
     }
 
     /** Get id of a file */
-    public function GetId()
+    public function GetId(): int|false
     {
         if ($this->FullPath == '' || $this->ProjectId < 1) {
             echo 'CoverageFile2User:GetId: FullPath or ProjectId not set';
             return false;
         }
-        $query = pdo_query("SELECT id FROM coveragefilepriority WHERE
-                       coveragefilepriority.fullpath='" . $this->FullPath . "' AND coveragefilepriority.projectid=" . qnum($this->ProjectId));
-        if (!$query) {
+
+        $db = Database::getInstance();
+        $query_result = $db->executePreparedSingleRow('
+                            SELECT id
+                            FROM coveragefilepriority
+                            WHERE
+                                coveragefilepriority.fullpath=?
+                                AND coveragefilepriority.projectid=?
+                        ', [$this->FullPath, intval($this->ProjectId)]);
+        if ($query_result === false) {
             add_last_sql_error('CoverageFile2User:GetId');
             return false;
         }
-        if (pdo_num_rows($query) == 0) {
+        if (empty($query_result)) {
             return 0;
         }
-        $query_array = pdo_fetch_array($query);
-        return $query_array['id'];
+        return intval($query_result['id']);
     }
 
-    /** Get files given an author */
-    public function GetFiles()
+    /**
+     * Get files given an author
+     *
+     *@return array<int>|false
+     */
+    public function GetFiles(): array|false
     {
         if (!isset($this->UserId) || $this->UserId < 1) {
             echo 'CoverageFile2User:GetFiles: UserId not set';
             return false;
         }
-        $query = pdo_query('SELECT fileid FROM coveragefile2user WHERE userid=' . qnum($this->UserId));
-        if (!$query) {
+
+        $db = Database::getInstance();
+        $query_result = $db->executePrepared('SELECT fileid FROM coveragefile2user WHERE userid=?', [$this->UserId]);
+        if (empty($query_result)) {
             add_last_sql_error('CoverageFile2User:GetFiles');
             return false;
         }
 
-        $fileids = array();
-        while ($query_array = pdo_fetch_array($query)) {
-            $fileids[] = $query_array['fileid'];
+        $fileids = [];
+        foreach ($query_result as $query_array) {
+            $fileids[] = intval($query_array['fileid']);
         }
         return $fileids;
     }
 
-    /** Return the actualy coverage file id */
-    public function GetCoverageFileId($buildid)
+    /** Return the actual coverage file id */
+    public function GetCoverageFileId($buildid): int|false
     {
         if ($this->FileId == 0) {
             echo 'CoverageFile2User:GetCoverageFileId: FileId not set';
             return false;
         }
 
-        $query = pdo_query('SELECT coveragefile.id AS id FROM coveragefile,coveragefilepriority,coverage WHERE
-                        coveragefilepriority.id=' . qnum($this->FileId) . '
-                        AND coverage.buildid=' . qnum($buildid) . '
-                        AND coverage.fileid=coveragefile.id
-                        AND coveragefilepriority.fullpath=coveragefile.fullpath');
-        if (!$query) {
+        $db = Database::getInstance();
+        $query_result = $db->executePreparedSingleRow('
+                            SELECT coveragefile.id AS id
+                            FROM coveragefile, coveragefilepriority, coverage
+                            WHERE
+                                coveragefilepriority.id=?
+                                AND coverage.buildid=?
+                                AND coverage.fileid=coveragefile.id
+                                AND coveragefilepriority.fullpath=coveragefile.fullpath
+                            ', [intval($this->FileId), intval($buildid)]);
+        if (empty($query_result)) {
             add_last_sql_error('CoverageFile2User:GetCoverageFileId');
             return false;
         }
 
-        $query_array = pdo_fetch_array($query);
-        return $query_array['id'];
+        return intval($query_result['id']);
     }
 
-    /** Get the list of authors for the project */
-    public function GetUsersFromProject()
+    /**
+     * Get the list of authors for the project
+     *
+     * @return array<int>|false
+     */
+    public function GetUsersFromProject(): array|false
     {
         if (!isset($this->ProjectId) || $this->ProjectId < 1) {
             echo 'CoverageFile2User:GetUsersFromProject: projectid not valid';
             return false;
         }
 
-        $query = pdo_query('SELECT DISTINCT userid FROM coveragefile2user,coveragefilepriority WHERE
-                        coveragefilepriority.id=coveragefile2user.fileid
-                        AND coveragefilepriority.projectid=' . qnum($this->ProjectId));
-        if (!$query) {
+        $db = Database::getInstance();
+        $query_result = $db->executePrepared('
+                            SELECT DISTINCT userid
+                            FROM coveragefile2user, coveragefilepriority
+                            WHERE
+                                coveragefilepriority.id=coveragefile2user.fileid
+                                AND coveragefilepriority.projectid=?
+                        ', [intval($this->ProjectId)]);
+        if (empty($query_result)) {
             add_last_sql_error('CoverageFile2User:GetUsersFromProject');
             return false;
         }
-        $userids = array();
-        while ($query_array = pdo_fetch_array($query)) {
-            $userids[] = $query_array['userid'];
+        $userids = [];
+        foreach ($query_result as $query_array) {
+            $userids[] = intval($query_array['userid']);
         }
         return $userids;
     }
 
     /** Assign the last author */
-    public function AssignLastAuthor($buildid, $beginUTCTime, $currentUTCTime)
+    public function AssignLastAuthor(int $buildid): bool
     {
         if (!isset($this->ProjectId) || $this->ProjectId < 1) {
             echo 'CoverageFile2User:AssignLastAuthor: ProjectId not set';
             return false;
         }
 
-        if ($buildid == 0) {
+        if ($buildid === 0) {
             echo 'CoverageFile2User:AssignLastAuthor: buildid not valid';
             return false;
         }
@@ -295,14 +360,14 @@ class CoverageFile2User
     }
 
     /** Assign all author author */
-    public function AssignAllAuthors($buildid, $beginUTCTime, $currentUTCTime)
+    public function AssignAllAuthors(int $buildid): bool
     {
         if (!isset($this->ProjectId) || $this->ProjectId < 1) {
             echo 'CoverageFile2User:AssignLastAuthor: ProjectId not set';
             return false;
         }
 
-        if ($buildid == 0) {
+        if ($buildid === 0) {
             echo 'CoverageFile2User:AssignLastAuthor: buildid not valid';
             return false;
         }
@@ -329,29 +394,29 @@ class CoverageFile2User
         return true;
     }
 
-    // Function get the priority to a file
-    public function GetPriority()
+    /** Function get the priority to a file */
+    public function GetPriority(): int|false
     {
         if ($this->FullPath == '' || $this->ProjectId < 1) {
             echo 'CoverageFile2User:GetPriority: FullPath or ProjectId not set';
             return false;
         }
 
-        $query = pdo_query("SELECT priority FROM coveragefilepriority WHERE fullpath='" . $this->FullPath . "' AND projectid=" . qnum($this->ProjectId));
-        if (!$query) {
+        $db = Database::getInstance();
+        $query_result = $db->executePreparedSingleRow('
+                            SELECT priority
+                            FROM coveragefilepriority
+                            WHERE fullpath=? AND projectid=?
+                        ', [$this->FullPath, intval($this->ProjectId)]);
+        if ($query_result === false) {
             add_last_sql_error('CoverageFile2User:GetPriority');
             return false;
         }
-
-        if (pdo_num_rows($query) == 0) {
-            return 0;
-        }
-        $query_array = pdo_fetch_array($query);
-        return $query_array[0];
+        return empty($query_result) ? 0 : intval($query_result['priority']);
     }
 
-    // Function set the priority to a file
-    public function SetPriority($priority)
+    /** Function set the priority to a file */
+    public function SetPriority(int $priority): bool
     {
         if ($this->ProjectId == 0) {
             echo 'CoverageFile2User:SetPriority:ProjectId not set';
@@ -361,22 +426,31 @@ class CoverageFile2User
             echo 'CoverageFile2User:SetPriority:FullPath not set';
             return false;
         }
-        $query = pdo_query("SELECT count(*) FROM coveragefilepriority WHERE FullPath='" . $this->FullPath . "'");
-        if (!$query) {
+        $db = Database::getInstance();
+        $query_result = $db->executePreparedSingleRow('
+                            SELECT count(*) AS c
+                            FROM coveragefilepriority
+                            WHERE FullPath=?
+                        ', [$this->FullPath]);
+        if ($query_result === false) {
             add_last_sql_error('CoverageFile2User:SetPriority');
             return false;
         }
 
-        $sql = '';
-        $query_array = pdo_fetch_array($query);
-        if ($query_array[0] == 0) {
-            $sql = 'INSERT INTO coveragefilepriority (projectid,priority,fullpath) VALUES (' . qnum($this->ProjectId) . ',' . qnum($priority) . ",'" . $this->FullPath . "')";
+        if (intval($query_result['c']) === 0) {
+            $query_result = $db->executePrepared('
+                                INSERT INTO coveragefilepriority (projectid, priority, fullpath)
+                                VALUES (?, ?, ?)
+                            ', [$this->ProjectId, $priority, $this->FullPath]);
         } else {
-            $sql = 'UPDATE coveragefilepriority set priority=' . qnum($priority) . " WHERE fullpath='" . $this->FullPath . "' AND projectid=" . qnum($this->ProjectId);
+            $query_result = $db->executePrepared('
+                                UPDATE coveragefilepriority
+                                SET priority=?
+                                WHERE fullpath=? AND projectid=?
+                            ', [$priority, $this->FullPath, $this->ProjectId]);
         }
 
-        $query = pdo_query($sql);
-        if (!$query) {
+        if ($query_result === false) {
             add_last_sql_error('CoverageFile2User:SetPriority');
             return false;
         }

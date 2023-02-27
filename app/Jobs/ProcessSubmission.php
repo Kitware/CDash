@@ -4,11 +4,13 @@ namespace App\Jobs;
 
 use App\Services\UnparsedSubmissionProcessor;
 
+use BuildPropertiesJSONHandler;
 use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Repository;
 
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -18,6 +20,7 @@ use Illuminate\Support\Facades\Storage;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
+use UpdateHandler;
 
 include_once 'include/common.php';
 require_once 'include/ctestparser.php';
@@ -209,7 +212,7 @@ class ProcessSubmission implements ShouldQueue
 
         // Send emails about update problems.
         if ($handler instanceof UpdateHandler) {
-            send_update_email($handler, $projectid);
+            send_update_email($handler, intval($projectid));
         }
 
         // Send more general build emails.
@@ -219,7 +222,7 @@ class ProcessSubmission implements ShouldQueue
             is_a($handler, 'DynamicAnalysisHandler') ||
             is_a($handler, 'UpdateHandler')
         ) {
-            sendemail($handler, $projectid);
+            sendemail($handler, intval($projectid));
         }
 
         return $handler;

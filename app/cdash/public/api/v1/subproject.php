@@ -22,6 +22,7 @@ include_once 'include/common.php';
 use App\Services\PageTimer;
 use App\Services\ProjectPermissions;
 
+use CDash\Database;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
 use CDash\Model\SubProjectGroup;
@@ -84,6 +85,8 @@ function rest_get($projectid): bool
         return true;
     }
 
+    $projectid = intval($projectid);
+
     $pageTimer = new PageTimer();
     $response = begin_JSON_response();
     $response['projectid'] = $projectid;
@@ -94,11 +97,15 @@ function rest_get($projectid): bool
     $response['name'] = $SubProject->GetName();
     $response['group'] = $SubProject->GetGroupId();
 
-    $query = pdo_query('
-SELECT id, name FROM subproject WHERE projectid=' . qnum($projectid) . "
-AND endtime='1980-01-01 00:00:00'");
+    $db = Database::getInstance();
 
-    if (!$query) {
+    $query = $db->executePrepared("
+                 SELECT id, name
+                 FROM subproject
+                 WHERE projectid=? AND endtime='1980-01-01 00:00:00'
+             ", [$projectid]);
+
+    if ($query === false) {
         add_last_sql_error('getSubProject Select');
         return false;
     }
@@ -107,18 +114,18 @@ AND endtime='1980-01-01 00:00:00'");
     $dependencies_response = array();
     $available_dependencies_response = array();
 
-    while ($row = pdo_fetch_array($query)) {
-        if ($row['id'] == $subprojectid) {
+    foreach ($query as $row) {
+        if (intval($row['id']) === $subprojectid) {
             continue;
         }
         if (is_array($dependencies) && in_array($row['id'], $dependencies)) {
             $dep = array();
-            $dep['id'] = $row['id'];
+            $dep['id'] = intval($row['id']);
             $dep['name'] = $row['name'];
             $dependencies_response[] = $dep;
         } else {
             $avail = array();
-            $avail['id'] = $row['id'];
+            $avail['id'] = intval($row['id']);
             $avail['name'] = $row['name'];
             $available_dependencies_response[] = $avail;
         }
@@ -140,7 +147,7 @@ function rest_delete(): void
         // Delete subproject group.
         $groupid = pdo_real_escape_numeric($_GET['groupid']);
         $Group = new SubProjectGroup();
-        $Group->SetId($groupid);
+        $Group->SetId(intval($groupid));
         $Group->Delete();
         return;
     }
@@ -152,10 +159,9 @@ function rest_delete(): void
 
     if (isset($_GET['dependencyid'])) {
         // Remove dependency from subproject.
-        $dependencyid = pdo_real_escape_numeric($_GET['dependencyid']);
         $SubProject = new SubProject();
         $SubProject->SetId($subprojectid);
-        $SubProject->RemoveDependency($dependencyid);
+        $SubProject->RemoveDependency(intval($_GET['dependencyid']));
     } else {
         // Delete subproject.
         $SubProject = new SubProject();
@@ -173,12 +179,12 @@ function rest_post($projectid)
         $SubProject->SetProjectId($projectid);
 
         $newSubProject =
-            htmlspecialchars(pdo_real_escape_string($_POST['newsubproject']));
+            htmlspecialchars($_POST['newsubproject']);
         $SubProject->SetName($newSubProject);
 
         if (isset($_POST['group'])) {
             $SubProject->SetGroup(
-                htmlspecialchars(pdo_real_escape_string($_POST['group'])));
+                htmlspecialchars($_POST['group']));
         }
 
         $SubProject->Save();
@@ -195,15 +201,14 @@ function rest_post($projectid)
     if (isset($_POST['newgroup'])) {
         // Create a new group
         $Group = new SubProjectGroup();
-        $Group->SetProjectId($projectid);
+        $Group->SetProjectId(intval($projectid));
 
-        $newGroup =
-            htmlspecialchars(pdo_real_escape_string($_POST['newgroup']));
+        $newGroup = htmlspecialchars($_POST['newgroup'] ?? '');
         $Group->SetName($newGroup);
         if (isset($_POST['isdefault'])) {
-            $Group->SetIsDefault($_POST['isdefault']);
+            $Group->SetIsDefault($_POST['isdefault'] === 'true' ? 1 : 0);
         }
-        $Group->SetCoverageThreshold(pdo_real_escape_numeric($_POST['threshold']));
+        $Group->SetCoverageThreshold(intval($_POST['threshold']));
         $Group->Save();
 
         // Respond with a JSON representation of this new group
@@ -216,13 +221,15 @@ function rest_post($projectid)
     }
 
     if (isset($_POST['newLayout'])) {
+        $db = Database::getInstance();
+
         // Update the order of the SubProject groups.
         $inputRows = $_POST['newLayout'];
         foreach ($inputRows as $inputRow) {
-            $id = qnum(pdo_real_escape_numeric($inputRow['id']));
-            $position = qnum(pdo_real_escape_numeric($inputRow['position']));
-            $query = "UPDATE subprojectgroup SET position=$position WHERE id=$id";
-            pdo_query($query);
+            // TODO: (williamjallen) refactor this to execute a constant number of queries
+            $id = intval($inputRow['id'] ?? 0);
+            $position = intval($inputRow['position'] ?? 0);
+            $db->executePrepared('UPDATE subprojectgroup SET position=? WHERE id=?', [$position, $id]);
             add_last_sql_error('API::subproject::newLayout::INSERT', $projectid);
         }
     }
@@ -233,18 +240,18 @@ function rest_put($projectid)
 {
     if (isset($_GET['threshold'])) {
         // Modify an existing subproject group.
-        $groupid = pdo_real_escape_numeric($_GET['groupid']);
+        $groupid = intval($_GET['groupid']);
         $Group = new SubProjectGroup();
-        $Group->SetProjectId($projectid);
+        $Group->SetProjectId(intval($projectid));
         $Group->SetId($groupid);
 
-        $name = pdo_real_escape_string($_GET['name']);
+        $name = $_GET['name'] ?? '';
         $Group->SetName($name);
 
-        $threshold = pdo_real_escape_numeric($_GET['threshold']);
+        $threshold = intval($_GET['threshold']);
         $Group->SetCoverageThreshold($threshold);
 
-        $Group->SetIsDefault($_GET['is_default']);
+        $Group->SetIsDefault($_GET['is_default'] === 'true' ? 1 : 0);
 
         $Group->Save();
         return;
@@ -259,17 +266,16 @@ function rest_put($projectid)
 
     if (isset($_GET['dependencyid'])) {
         // Add dependency to existing subproject.
-        $dependencyid = pdo_real_escape_numeric($_GET['dependencyid']);
+        $dependencyid = intval($_GET['dependencyid']);
         $SubProject->AddDependency($dependencyid);
         return;
     }
 
     if (isset($_GET['groupname'])) {
         // Change which group a subproject belongs to.
-        $groupName = pdo_real_escape_string($_GET['groupname']);
+        $groupName = $_GET['groupname'];
         $SubProject->SetGroup($groupName);
         $SubProject->Save();
-        return;
     }
 }
 
@@ -279,8 +285,7 @@ function get_subprojectid()
         echo_error('subprojectid not specified.');
         return false;
     }
-    $subprojectid = pdo_real_escape_numeric($_GET['subprojectid']);
-    return $subprojectid;
+    return intval($_GET['subprojectid']);
 }
 
 function echo_error($msg, $status = 400)

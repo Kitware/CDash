@@ -15,6 +15,8 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Database;
+
 /** Coverage class. Used by CoverageSummary */
 class Coverage
 {
@@ -75,13 +77,14 @@ class Coverage
 
         $fileids = array();
 
-        $coverage = pdo_query('SELECT fileid FROM coverage WHERE buildid=' . qnum($this->BuildId));
+        $db = Database::getInstance();
+        $coverage = $db->executePrepared('SELECT fileid FROM coverage WHERE buildid=?', [$this->BuildId]);
         if (!$coverage) {
             add_last_sql_error('Coverage GetFiles');
             return false;
         }
 
-        while ($coverage_array = pdo_fetch_array($coverage)) {
+        foreach ($coverage as $coverage_array) {
             $fileids[] = $coverage_array['fileid'];
         }
         return $fileids;
@@ -95,12 +98,16 @@ class Coverage
         if (!$this->BuildId || !$this->CoverageFile || !$this->CoverageFile->Id) {
             return false;
         }
-        $query =
-            'SELECT buildid FROM coverage
-            WHERE buildid=' . qnum($this->BuildId) . '
-            AND fileid=' . qnum($this->CoverageFile->Id);
-        $result = pdo_query($query);
-        if (pdo_num_rows($result) > 0) {
+
+        $db = Database::getInstance();
+        $result = $db->executePreparedSingleRow('
+                      SELECT COUNT(*) AS c
+                      FROM coverage
+                      WHERE
+                          buildid=?
+                          AND fileid=?
+                  ', [$this->BuildId, $this->CoverageFile->Id]);
+        if ($result['c'] > 0) {
             return true;
         }
         return false;

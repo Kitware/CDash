@@ -23,9 +23,12 @@ use CDash\Model\Project;
 use CDash\Model\Label;
 use CDash\Model\LabelEmail;
 use CDash\Model\UserProject;
+use CDash\Database;
+use Illuminate\Support\Facades\Auth;
 
 redirect_to_https();
 if (Auth::check()) {
+    /** @var User $user */
     $user = Auth::user();
     $userid = $user->id;
 
@@ -50,7 +53,8 @@ if (Auth::check()) {
         echo 'Not a valid projectid!';
         return;
     }
-    if (isset($edit) && $edit != 1) {
+    $projectid = intval($projectid);
+    if (isset($edit) && intval($edit) !== 1) {
         echo 'Not a valid edit!';
         return;
     }
@@ -61,8 +65,13 @@ if (Auth::check()) {
         $xml .= '<edit>0</edit>';
     }
 
-    $project = pdo_query("SELECT id,name,public,emailbrokensubmission FROM project WHERE id='$projectid'");
-    $project_array = pdo_fetch_array($project);
+    $db = Database::getInstance();
+
+    $project_array = $db->executePreparedSingleRow('
+                         SELECT id, name, public, emailbrokensubmission
+                         FROM project
+                         WHERE id=?
+                     ', [$projectid]);
     $Project = new Project;
     $Project->Id = $projectid;
 
@@ -79,15 +88,17 @@ if (Auth::check()) {
     }
 
     // Check if the user is not already in the database
-    $user2project = pdo_query("SELECT role,emailtype,emailcategory,emailmissingsites,emailsuccess
-                             FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-    if (pdo_num_rows($user2project) > 0) {
-        $user2project_array = pdo_fetch_array($user2project);
-        $xml .= add_XML_value('role', $user2project_array['role']);
-        $xml .= add_XML_value('emailtype', $user2project_array['emailtype']);
-        $xml .= add_XML_value('emailmissingsites', $user2project_array['emailmissingsites']);
-        $xml .= add_XML_value('emailsuccess', $user2project_array['emailsuccess']);
-        $emailcategory = $user2project_array['emailcategory'];
+    $user2project = $db->executePreparedSingleRow('
+                        SELECT role, emailtype, emailcategory, emailmissingsites, emailsuccess
+                        FROM user2project
+                        WHERE userid=? AND projectid=?
+                    ', [$userid, $projectid]);
+    if (!empty($user2project)) {
+        $xml .= add_XML_value('role', $user2project['role']);
+        $xml .= add_XML_value('emailtype', $user2project['emailtype']);
+        $xml .= add_XML_value('emailmissingsites', $user2project['emailmissingsites']);
+        $xml .= add_XML_value('emailsuccess', $user2project['emailsuccess']);
+        $emailcategory = $user2project['emailcategory'];
         $xml .= add_XML_value('emailcategory_update', check_email_category('update', $emailcategory));
         $xml .= add_XML_value('emailcategory_configure', check_email_category('configure', $emailcategory));
         $xml .= add_XML_value('emailcategory_warning', check_email_category('warning', $emailcategory));
@@ -130,36 +141,55 @@ if (Auth::check()) {
     $LabelEmail->UserId = $userid;
 
     if ($Unsubscribe) {
-        pdo_query("DELETE FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-        pdo_query("DELETE FROM user2repository WHERE userid='$userid' AND projectid='$projectid'");
+        $db->executePrepared('DELETE FROM user2project WHERE userid=? AND projectid=?', [$userid, $projectid]);
+        $db->executePrepared('DELETE FROM user2repository WHERE userid=? AND projectid=?', [$userid, $projectid]);
 
         // Remove the claim sites for this project if they are only part of this project
-        pdo_query("DELETE FROM site2user WHERE userid='$userid'
-               AND siteid NOT IN
-              (SELECT build.siteid FROM build,user2project as up WHERE
-               up.projectid = build.projectid AND up.userid='$userid' AND up.role>0
-               GROUP BY build.siteid)");
+        $db->executePrepared('
+            DELETE FROM site2user
+            WHERE
+                userid=?
+                AND siteid NOT IN (
+                    SELECT build.siteid
+                    FROM build, user2project AS up
+                    WHERE
+                        up.projectid = build.projectid
+                        AND up.userid=?
+                        AND up.role>0
+                    GROUP BY build.siteid
+                )
+        ', [$userid, $userid]);
         return redirect('user.php?note=unsubscribedtoproject');
     } elseif ($UpdateSubscription) {
-        @$emailcategory_update = $_POST['emailcategory_update'];
-        @$emailcategory_configure = $_POST['emailcategory_configure'];
-        @$emailcategory_warning = $_POST['emailcategory_warning'];
-        @$emailcategory_error = $_POST['emailcategory_error'];
-        @$emailcategory_test = $_POST['emailcategory_test'];
-        @$emailcategory_dynamicanalysis = $_POST['emailcategory_dynamicanalysis'];
+        $emailcategory_update = intval($_POST['emailcategory_update'] ?? 0);
+        $emailcategory_configure = intval($_POST['emailcategory_configure'] ?? 0);
+        $emailcategory_warning = intval($_POST['emailcategory_warning'] ?? 0);
+        $emailcategory_error = intval($_POST['emailcategory_error'] ?? 0);
+        $emailcategory_test = intval($_POST['emailcategory_test'] ?? 0);
+        $emailcategory_dynamicanalysis = intval($_POST['emailcategory_dynamicanalysis'] ?? 0);
 
         $EmailCategory = $emailcategory_update + $emailcategory_configure + $emailcategory_warning + $emailcategory_error + $emailcategory_test + $emailcategory_dynamicanalysis;
-        if (pdo_num_rows($user2project) > 0) {
-            $Role = pdo_real_escape_numeric($Role);
-            $EmailType = pdo_real_escape_numeric($EmailType);
-            $EmailCategory = pdo_real_escape_numeric($EmailCategory);
-            $EmailMissingSites = pdo_real_escape_numeric($EmailMissingSites);
-            $EmailSuccess = pdo_real_escape_numeric($EmailSuccess);
-            pdo_query("UPDATE user2project SET role='$Role',emailtype='$EmailType',
-                         emailcategory='$EmailCategory',
-                         emailmissingsites='$EmailMissingSites',
-                         emailsuccess='$EmailSuccess'
-                         WHERE userid='$userid' AND projectid='$projectid'");
+        if (!empty($user2project)) {
+            $db->executePrepared('
+                UPDATE user2project
+                SET
+                    role=?,
+                    emailtype=?,
+                    emailcategory=?,
+                    emailmissingsites=?,
+                    emailsuccess=?
+                WHERE
+                    userid=?
+                    AND projectid=?
+            ', [
+                $Role,
+                $EmailType,
+                $EmailCategory,
+                $EmailMissingSites,
+                $EmailSuccess,
+                $userid,
+                $projectid
+            ]);
 
             // Update the repository credential
             $UserProject = new UserProject();
@@ -169,11 +199,20 @@ if (Auth::check()) {
 
             if ($Role == 0) {
                 // Remove the claim sites for this project if they are only part of this project
-                pdo_query("DELETE FROM site2user WHERE userid='$userid'
-                 AND siteid NOT IN
-                (SELECT build.siteid FROM build,user2project as up WHERE
-                 up.projectid = build.projectid AND up.userid='$userid' AND up.role>0
-                 GROUP BY build.siteid)");
+                $db->executePrepared('
+                    DELETE FROM site2user
+                    WHERE
+                        userid=?
+                        AND siteid NOT IN (
+                            SELECT build.siteid
+                            FROM build, user2project AS up
+                            WHERE
+                                up.projectid=build.projectid
+                                AND up.userid=?
+                                AND up.role>0
+                            GROUP BY build.siteid
+                        )
+                ', [$userid, $userid]);
             }
         }
 
@@ -185,20 +224,35 @@ if (Auth::check()) {
         // Redirect
         return \redirect('user.php');
     } elseif ($Subscribe) {
-        @$emailcategory_update = $_POST['emailcategory_update'];
-        @$emailcategory_configure = $_POST['emailcategory_configure'];
-        @$emailcategory_warning = $_POST['emailcategory_warning'];
-        @$emailcategory_error = $_POST['emailcategory_error'];
-        @$emailcategory_test = $_POST['emailcategory_test'];
-        @$emailcategory_dynamicanalysis = $_POST['emailcategory_dynamicanalysis'];
+        $emailcategory_update = intval($_POST['emailcategory_update'] ?? 0);
+        $emailcategory_configure = intval($_POST['emailcategory_configure'] ?? 0);
+        $emailcategory_warning = intval($_POST['emailcategory_warning'] ?? 0);
+        $emailcategory_error = intval($_POST['emailcategory_error'] ?? 0);
+        $emailcategory_test = intval($_POST['emailcategory_test'] ?? 0);
+        $emailcategory_dynamicanalysis = intval($_POST['emailcategory_dynamicanalysis'] ?? 0);
 
         $EmailCategory = $emailcategory_update + $emailcategory_configure + $emailcategory_warning + $emailcategory_error + $emailcategory_test + $emailcategory_dynamicanalysis;
-        if (pdo_num_rows($user2project) > 0) {
-            pdo_query("UPDATE user2project SET role='$Role',emailtype='$EmailType',
-                         emailcategory='$EmailCategory'.
-                         emailmissingsites='$EmailMissingSites',
-                         emailsuccess='$EmailSuccess'
-                         WHERE userid='$userid' AND projectid='$projectid'");
+        if (!empty($user2project)) {
+            $db->executePrepared("
+                UPDATE user2project
+                SET
+                    role=?,
+                    emailtype=?,
+                    emailcategory=?.
+                    emailmissingsites=?,
+                    emailsuccess=?
+                WHERE
+                    userid=?
+                    AND projectid=?
+            ", [
+                $Role,
+                $EmailType,
+                $EmailCategory,
+                $EmailMissingSites,
+                $EmailSuccess,
+                $userid,
+                $projectid
+            ]);
 
             // Update the repository credential
             $UserProject = new UserProject();
@@ -208,17 +262,42 @@ if (Auth::check()) {
 
             if ($Role == 0) {
                 // Remove the claim sites for this project if they are only part of this project
-                pdo_query("DELETE FROM site2user WHERE userid='$userid'
-                 AND siteid NOT IN
-                (SELECT build.siteid FROM build,user2project as up WHERE
-                 up.projectid = build.projectid AND up.userid='$userid' AND up.role>0
-                 GROUP BY build.siteid)");
+                $db->executePrepared('
+                    DELETE FROM site2user
+                    WHERE
+                        userid=?
+                        AND siteid NOT IN (
+                            SELECT build.siteid
+                            FROM build, user2project AS up
+                            WHERE
+                                up.projectid0=build.projectid
+                                AND up.userid=?
+                                AND up.role>0
+                            GROUP BY build.siteid
+                        )
+                ', [$userid, $userid]);
             }
         } else {
-            pdo_query("INSERT INTO user2project (role,userid,projectid,emailtype,emailcategory,emailsuccess,
-                                           emailmissingsites)
-                 VALUES ('$Role','$userid','$projectid','$EmailType','$EmailCategory',
-                         '$EmailSuccess','$EmailMissingSites')");
+            $db->executePrepared('
+                INSERT INTO user2project (
+                    role,
+                    userid,
+                    projectid,
+                    emailtype,
+                    emailcategory,
+                    emailsuccess,
+                    emailmissingsites
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            ', [
+                $Role,
+                $userid,
+                $projectid,
+                $EmailType,
+                $EmailCategory,
+                $EmailSuccess,
+                $EmailMissingSites
+            ]);
 
             $UserProject = new UserProject();
             $UserProject->ProjectId = $projectid;
@@ -232,11 +311,20 @@ if (Auth::check()) {
 
     // XML
     // Show the current credentials for the user
-    $query = pdo_query("SELECT credential,projectid FROM user2repository WHERE userid='" . $userid . "'
-                      AND (projectid='" . $projectid . "' OR projectid=0)");
+    $query = $db->executePrepared('
+                 SELECT credential, projectid
+                 FROM user2repository
+                 WHERE
+                     userid=?
+                      AND (
+                          projectid=?
+                          OR projectid=0
+                      )
+             ', [$userid, $projectid]);
+
     $credential_num = 0;
-    while ($credential_array = pdo_fetch_array($query)) {
-        if ($credential_array['projectid'] == 0) {
+    foreach ($query as $credential_array) {
+        if (intval($credential_array['projectid']) === 0) {
             $xml .= add_XML_value('global_credential', $credential_array['credential']);
         } else {
             $xml .= add_XML_value('credential_' . $credential_num++, $credential_array['credential']);
@@ -271,16 +359,18 @@ if (Auth::check()) {
 
     $xml .= '</project>';
 
-    $sql = 'SELECT id,name FROM project';
-    if ($user->IsAdmin() == false) {
-        $sql .= " WHERE public=1 OR id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
+    $sql = 'SELECT id, name FROM project';
+    $params = [];
+    if ($user->IsAdmin() === false) {
+        $sql .= " WHERE public=1 OR id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)";
+        $params[] = $userid;
     }
-    $projects = pdo_query($sql);
-    while ($project_array = pdo_fetch_array($projects)) {
+    $projects = $db->executePrepared($sql, $params);
+    foreach ($projects as $project_array) {
         $xml .= '<availableproject>';
         $xml .= add_XML_value('id', $project_array['id']);
         $xml .= add_XML_value('name', $project_array['name']);
-        if ($project_array['id'] == $projectid) {
+        if (intval($project_array['id']) === $projectid) {
             $xml .= add_XML_value('selected', '1');
         }
         $xml .= '</availableproject>';

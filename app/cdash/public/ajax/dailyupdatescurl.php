@@ -15,5 +15,4 @@
 =========================================================================*/
 require_once 'include/dailyupdates.php';
 
-$projectid = pdo_real_escape_numeric($_GET['projectid']);
-addDailyChanges($projectid);
+addDailyChanges(intval($_GET['projectid']));

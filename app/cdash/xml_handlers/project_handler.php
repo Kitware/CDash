@@ -23,6 +23,7 @@ use CDash\Model\LabelEmail;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
 use CDash\Model\UserProject;
+use CDash\Database;
 
 class ProjectHandler extends AbstractHandler
 {
@@ -102,7 +103,6 @@ class ProjectHandler extends AbstractHandler
     public function endElement($parser, $name)
     {
         parent::endElement($parser, $name);
-        $config = \CDash\Config::getInstance();
 
         if (!$this->ProjectNameMatches) {
             return;
@@ -114,14 +114,18 @@ class ProjectHandler extends AbstractHandler
                     // Remove dependencies that do not exist anymore,
                     // but only for those relationships where both sides
                     // are present in $this->SubProjects.
-                    //
                     $dependencyids = $subproject->GetDependencies();
                     $removeids = array_diff($dependencyids, $this->Dependencies[$subproject->GetId()]);
+
+                    $db = Database::getInstance();
+
                     foreach ($removeids as $removeid) {
                         if (array_key_exists($removeid, $this->SubProjects)) {
-                            $subproject->RemoveDependency($removeid);
+                            $subproject->RemoveDependency(intval($removeid));
                         } else {
-                            $dep = pdo_get_field_value("SELECT name FROM subproject WHERE id='$removeid'", 'name', "$removeid");
+                            // TODO: (williamjallen) Rewrite this loop to not make repetitive queries
+                            $dep = $db->executePreparedSingleRow('SELECT name FROM subproject WHERE id=?', [intval($removeid)]);
+                            $dep = !empty($dep) && array_key_exists('name', $dep) ? $dep['name'] : intval($removeid);
                             add_log(
                                 "Not removing dependency $dep($removeid) from " .
                                 $subproject->GetName() .
@@ -136,7 +140,7 @@ class ProjectHandler extends AbstractHandler
                 //
                 foreach ($this->Dependencies[$subproject->GetId()] as $addid) {
                     if (array_key_exists($addid, $this->SubProjects)) {
-                        $subproject->AddDependency($addid);
+                        $subproject->AddDependency(intval($addid));
                     } else {
                         add_log(
                             'impossible condition: should NEVER see this: unknown DEPENDENCY clause should prevent this case',

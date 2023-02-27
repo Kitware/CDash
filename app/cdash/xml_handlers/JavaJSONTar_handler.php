@@ -16,6 +16,7 @@
 require_once 'xml_handlers/NonSaxHandler.php';
 
 use CDash\Config;
+use \CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
@@ -106,6 +107,8 @@ class JavaJSONTarHandler extends NonSaxHandler
             return;
         }
 
+        $db = Database::getInstance();
+
         foreach ($jsonDecoded as $row) {
             if (!array_key_exists('package', $row) ||
                 !array_key_exists('subproject', $row)
@@ -116,13 +119,15 @@ class JavaJSONTarHandler extends NonSaxHandler
             $subprojectName = $row['subproject'];
 
             // get the buildid that corresponds to this subproject.
-            $query =
-                "SELECT buildid FROM subproject2build AS sp2b
-         INNER JOIN subproject AS sp ON (sp.id = sp2b.subprojectid)
-         INNER JOIN build AS b ON (b.id = sp2b.buildid)
-         WHERE sp.name = '$subprojectName'
-         AND b.parentid=" . qnum($this->Build->GetParentId());
-            $buildid_result = pdo_single_row_query($query);
+            $buildid_result = $db->executePreparedSingleRow('
+                                  SELECT buildid
+                                  FROM subproject2build AS sp2b
+                                  INNER JOIN subproject AS sp ON (sp.id = sp2b.subprojectid)
+                                  INNER JOIN build AS b ON (b.id = sp2b.buildid)
+                                  WHERE
+                                      sp.name = ?
+                                      AND b.parentid=?
+                     ', [$subprojectName, $this->Build->GetParentId()]);
 
             // If we found a different buildid, create a new CoverageSummary.
             if ($buildid_result && array_key_exists('buildid', $buildid_result) &&

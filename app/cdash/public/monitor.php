@@ -15,15 +15,19 @@
 =========================================================================*/
 
 use App\Http\Controllers\Auth\LoginController;
+use CDash\Database;
+use Illuminate\Support\Facades\Auth;
 
 function echo_currently_processing_submissions()
 {
+    $db = Database::getInstance();
+
     if (config('database.default') == 'pgsql') {
         $sql_query = "SELECT now() AT TIME ZONE 'UTC'";
     } else {
         $sql_query = 'SELECT UTC_TIMESTAMP()';
     }
-    $current_time = pdo_single_row_query($sql_query);
+    $current_time = $db->executePreparedSingleRow($sql_query);
 
     $sql_query = 'SELECT project.name, submission.*, ';
     if (config('database.default') == 'pgsql') {
@@ -32,9 +36,8 @@ function echo_currently_processing_submissions()
         $sql_query .= 'ROUND(TIMESTAMPDIFF(SECOND, created, UTC_TIMESTAMP)/3600, 2) AS hours_ago ';
     }
 
-    $sql_query .= 'FROM ' . qid('project') . ', ' . qid('submission') . ' ' .
-        'WHERE project.id = submission.projectid AND status = 1';
-    $rows = pdo_all_rows_query($sql_query);
+    $sql_query .= 'FROM project, submission WHERE project.id = submission.projectid AND status = 1';
+    $rows = $db->executePrepared($sql_query);
 
     $sep = ', ';
 
@@ -69,13 +72,15 @@ function echo_currently_processing_submissions()
 
 function echo_pending_submissions()
 {
-    $rows = pdo_all_rows_query(
-        'SELECT project.name, project.id, COUNT(submission.id) AS c FROM ' .
-        qid('project') . ', ' . qid('submission') . ' ' .
-        'WHERE project.id = submission.projectid ' .
-        'AND status = 0 ' .
-        'GROUP BY project.name,project.id'
-    );
+    $db = Database::getInstance();
+    $rows = $db->executePrepared('
+                SELECT project.name, project.id, COUNT(submission.id) AS c
+                FROM project, submission
+                WHERE
+                    project.id = submission.projectid
+                    AND status = 0
+                GROUP BY project.name, project.id
+            ');
 
     $sep = ', ';
 
@@ -108,7 +113,7 @@ function echo_average_wait_time($projectid)
             avg(extract(EPOCH FROM finished - started)) AS mean,
             min(extract(EPOCH FROM finished - started)) AS shortest,
             max(extract(EPOCH FROM finished - started)) AS longest
-            FROM submission WHERE status = 2 AND projectid = $projectid
+            FROM submission WHERE status = 2 AND projectid = ?
             GROUP BY hours_ago ORDER BY hours_ago ASC LIMIT 48";
     } else {
         $sql_query = "SELECT TIMESTAMPDIFF(HOUR, created, UTC_TIMESTAMP) as hours_ago,
@@ -118,12 +123,12 @@ function echo_average_wait_time($projectid)
             AVG(TIMESTAMPDIFF(SECOND, started, finished)) AS mean,
             MIN(TIMESTAMPDIFF(SECOND, started, finished)) AS shortest,
             MAX(TIMESTAMPDIFF(SECOND, started, finished)) AS longest
-            FROM submission WHERE status = 2 AND projectid = $projectid
+            FROM submission WHERE status = 2 AND projectid = ?
             GROUP BY hours_ago ORDER BY hours_ago ASC LIMIT 48";
     }
 
-
-    $rows = pdo_all_rows_query($sql_query);
+    $db = Database::getInstance();
+    $rows = $db->executePrepared($sql_query, [intval($projectid)]);
 
     if (count($rows) > 0) {
         echo "<h2>Wait times for $project_name</h2>\n";
@@ -156,9 +161,13 @@ function echo_average_wait_time($projectid)
 
 function echo_average_wait_times()
 {
-    $rows = pdo_all_rows_query(
-        'SELECT projectid, COUNT(*) AS c FROM submission ' .
-        'WHERE status=2 GROUP BY projectid');
+    $db = Database::getInstance();
+    $rows = $db->executePrepared('
+                SELECT projectid, COUNT(*) AS c
+                FROM submission
+                WHERE status=2
+                GROUP BY projectid
+            ');
 
     echo '<h1>Average Wait Times per Project</h1>';
     if (count($rows) > 0) {
@@ -175,11 +184,12 @@ function echo_average_wait_times()
 
 function echo_submissionprocessor_table()
 {
-    $rows = pdo_all_rows_query(
-        'SELECT project.name, submissionprocessor.* FROM ' .
-        qid('project') . ', ' . qid('submissionprocessor') . ' ' .
-        'WHERE project.id = submissionprocessor.projectid '
-    );
+    $db = Database::getInstance();
+    $rows = $db->executePrepared('
+                SELECT project.name, submissionprocessor.*
+                FROM project, submissionprocessor
+                WHERE project.id = submissionprocessor.projectid
+            ');
 
     echo '<h1>Table `submissionprocessor` (one row per project)</h1>';
     echo "<table border=1>\n";
@@ -209,7 +219,7 @@ function echo_submission_table()
     if (!isset($limit)) {
         $limit = 25;
     } else {
-        $limit = pdo_real_escape_numeric($limit);
+        $limit = intval($limit);
     }
 
     echo "<h1>Table `submission` (most recently queued $limit)</h1>";
@@ -228,9 +238,8 @@ function echo_submission_table()
     echo "<th>finished</th>\n";
     echo "</tr>\n";
 
-    $rows = pdo_all_rows_query(
-        'SELECT * FROM ' . qid('submission') . ' ORDER BY id DESC LIMIT ' . $limit
-    );
+    $db = Database::getInstance();
+    $rows = $db->executePrepared('SELECT * FROM submission ORDER BY id DESC LIMIT ?', [$limit]);
 
 
     foreach ($rows as $row) {
