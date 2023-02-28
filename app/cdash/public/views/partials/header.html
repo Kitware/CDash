@@ -110,14 +110,15 @@
             <li>
               <a ng-href="{{::cdash.home}}">Home</a>
             </li>
-            <li>
+            <li ng-if="cdash.documentation.replace('https://', '').replace('http://', '').trim() !== ''">
               <a ng-href="{{::cdash.documentation}}">Documentation</a>
             </li>
-            <li>
+            <li ng-if="cdash.vcs.replace('https://', '').replace('http://', '').trim() !== ''">
               <a ng-href="{{::cdash.vcs}}">Repository</a>
             </li>
-            <li ng-class="::{endsubmenu: cdash.projectrole}">
-              <a ng-href="{{::cdash.bugtracker}}">Bug Tracker</a>
+            <li ng-if="cdash.bugtracker.replace('https://', '').replace('http://', '').trim() !== ''"
+                ng-class="::{endsubmenu: cdash.projectrole}">
+              <a ng-href="{{::cdash.bugtracker}}"> Bug Tracker</a>
             </li>
             <li ng-if="!cdash.projectrole" class="endsubmenu">
               <a ng-href="subscribeProject.php?projectid={{::cdash.projectid}}">Subscribe</a>
