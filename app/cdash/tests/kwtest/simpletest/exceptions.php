@@ -39,7 +39,7 @@ class SimpleExceptionTrappingInvoker extends SimpleInvokerDecorator
         try {
             $has_thrown = false;
             parent::invoke($method);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $has_thrown = true;
             if (!$trap->isExpected($this->getTestCase(), $exception)) {
                 $this->getTestCase()->exception($exception);

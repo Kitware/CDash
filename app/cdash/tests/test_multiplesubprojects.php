@@ -551,7 +551,11 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':buildid', $build['id'], PDO::PARAM_INT);
             $stmt->execute();
-            $rows = array_unique($stmt->fetchAll(PDO::FETCH_COLUMN, 'text'));
+            $rows = [];
+            foreach ($stmt->fetchAll() as $row) {
+                $rows[] = $row['text'];
+            }
+            $rows = array_unique($rows);
 
             $count = count($rows);
 
