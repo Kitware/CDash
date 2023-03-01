@@ -91,6 +91,7 @@ mix.styles([
   'node_modules/jquery-ui-dist/jquery-ui.css',
   'node_modules/nvd3/build/nv.d3.min.css'
 ], 'public/build/css/3rdparty.css').version();
+mix.copy('node_modules/nvd3/build/nv.d3.min.css.map', 'public/build/css/nv.d3.min.css.map');
 
 // Concatenate and minify 3rd party javascript.
 mix.scripts([
@@ -117,6 +118,7 @@ mix.scripts([
   'node_modules/nvd3/build/nv.d3.js',
   'public/js/ui-bootstrap-tpls-0.14.2.min.js'
 ], 'public/js/3rdparty.min.js');
+mix.copy('node_modules/nvd3/build/nv.d3.js.map', 'public/js/nv.d3.js.map');
 
 // Concatenate and minify 1st party javascript.
 mix.scripts([
