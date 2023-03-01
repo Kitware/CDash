@@ -18,4 +18,4 @@
 
 <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css" />
 <link rel="stylesheet" type="text/css" href="css/cdash.css" />
-<link rel="stylesheet" type="text/css" href="build/css/3rdparty.css"/>
+<link rel="stylesheet" type="text/css" href="{{ asset(mix('build/css/3rdparty.css')) }}" />

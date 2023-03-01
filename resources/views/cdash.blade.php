@@ -10,7 +10,7 @@
         <link rel="shortcut icon" href="favicon.ico" />
         <title ng-bind="::title">CDash</title>
         <link rel="stylesheet" type="text/css" ng-href="build/css/cdash_{{ $js_version }}.css" />
-        <link rel="stylesheet" type="text/css" href="css/nv.d3.css"/>
+        <link rel="stylesheet" type="text/css" href="{{ asset(mix('build/css/3rdparty.css')) }}" />
         <link rel="stylesheet" href="css/bootstrap.min.css"/>
         <script src="js/CDash_{{ $js_version  }}.min.js"></script>
     @endif

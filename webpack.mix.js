@@ -88,7 +88,8 @@ mix.copy('public/css/common.css', 'public/build/css/common.css');
 mix.styles([
   'node_modules/bootstrap/dist/css/bootstrap.css',
   'node_modules/bootstrap-vue/dist/bootstrap-vue.css',
-  'node_modules/jquery-ui-dist/jquery-ui.css'
+  'node_modules/jquery-ui-dist/jquery-ui.css',
+  'node_modules/nvd3/build/nv.d3.min.css'
 ], 'public/build/css/3rdparty.css').version();
 
 // Concatenate and minify 3rd party javascript.
@@ -136,6 +137,9 @@ mix.scripts([
   'public/js/3rdparty.min.js',
   'public/js/1stparty.min.js',
 ], 'public/js/CDash_' + version + '.min.js');
+
+// Copy jquery-ui images to public/css/images/
+mix.copyDirectory('node_modules/jquery-ui-dist/images', 'public/build/css/images');
 
 // Boilerplate.
 mix.js('resources/js/app.js', 'public/laravel/js').vue().version();
