@@ -18,6 +18,9 @@ use CDash\Database;
 
 class SubProjectEmailTestCase extends KWWebTestCase
 {
+    protected $PDO;
+    protected $Project;
+
     public function __construct()
     {
         parent::__construct();

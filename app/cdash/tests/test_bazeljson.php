@@ -7,6 +7,8 @@ use CDash\Model\Project;
 
 class BazelJSONTestCase extends KWWebTestCase
 {
+    protected $PDO;
+
     public function __construct()
     {
         parent::__construct();

@@ -12,6 +12,14 @@ use Tests\TestCase;
 
 class ProjectPermissions extends TestCase
 {
+    protected $public_project;
+    protected $protected_project;
+    protected $private_project1;
+    protected $private_project2;
+    protected $normal_user;
+    protected $admin_user;
+    protected $mock_system;
+
     protected function setUp() : void
     {
         parent::setUp();

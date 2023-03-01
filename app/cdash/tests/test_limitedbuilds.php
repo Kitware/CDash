@@ -16,6 +16,8 @@ class LimitedBuildsTestCase extends KWWebTestCase
 {
     private $testDataDir;
     private $Projects;
+    private $PDO;
+    private $get_build_stmt;
 
     public function __construct()
     {

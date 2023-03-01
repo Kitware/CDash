@@ -14,6 +14,8 @@ use CDash\Model\BuildRelationship;
 
 class BuildRelationshipTestCase extends KWWebTestCase
 {
+    protected $PDO;
+
     public function __construct()
     {
         parent::__construct();

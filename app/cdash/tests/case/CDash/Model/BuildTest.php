@@ -20,7 +20,7 @@ use CDash\Test\CDashTestCase;
 
 class BuildTest extends CDashTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setDatabaseMocked();
     }

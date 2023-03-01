@@ -12,6 +12,10 @@ use CDash\Model\PendingSubmissions;
 
 class BranchCoverageTestCase extends KWWebTestCase
 {
+    protected $projectname;
+    protected $buildid;
+    protected $client;
+
     public function __construct()
     {
         parent::__construct();

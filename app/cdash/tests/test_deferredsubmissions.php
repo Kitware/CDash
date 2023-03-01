@@ -12,6 +12,14 @@ use CDash\Model\Project;
 
 class DeferredSubmissionsTestCase extends BranchCoverageTestCase
 {
+    protected $ConfigFile;
+    protected $Original;
+    protected $project;
+    protected $projectname;
+    protected $token;
+    protected $dataDir;
+    protected $buildid;
+
     public function __construct()
     {
         parent::__construct();

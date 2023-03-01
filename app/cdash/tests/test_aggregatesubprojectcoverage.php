@@ -16,6 +16,8 @@
 
 class AggregateSubProjectCoverageTestCase extends KWWebTestCase
 {
+    protected $DataDir;
+
     public function __construct()
     {
         parent::__construct();

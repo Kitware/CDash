@@ -6,6 +6,9 @@ use Tests\TestCase;
 
 class MigrateConfigCommand extends TestCase
 {
+    protected $config_file;
+    protected $test_file;
+
     public function setUp() : void
     {
         parent::setUp();

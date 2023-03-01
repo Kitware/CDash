@@ -16,6 +16,8 @@ class ManageMeasurementsTestCase extends KWWebTestCase
     private $BuildId;
     private $SubProjectBuildId;
     private $MeasurementIds;
+    private $ProjectId;
+    private $SubProjectId;
 
     public function __construct()
     {

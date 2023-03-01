@@ -22,6 +22,10 @@ use CDash\Model\UserProject;
 
 class UpdateOnlyUserStatsTestCase extends KWWebTestCase
 {
+    protected $DataDir;
+    protected $ProjectId;
+    protected $Users;
+
     public function __construct()
     {
         parent::__construct();

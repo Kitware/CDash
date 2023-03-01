@@ -18,6 +18,8 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class PasswordComplexityTestCase extends KWWebTestCase
 {
+    protected $validator;
+
     public function __construct()
     {
         parent::__construct();

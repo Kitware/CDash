@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Artisan;
 
 class UserCommand extends TestCase
 {
+    protected $user;
+
     /**
      * Feature test for the build:remove artisan command.
      *

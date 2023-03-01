@@ -46,6 +46,8 @@
     "ext-xdebug": "*",
     "fakerphp/faker": "^1.21",
     "mockery/mockery": "^1.0",
+    "nunomaduro/larastan": "^2.4",
+    "phpstan/phpstan": "^1.10",
     "phpunit/phpunit": "^9.0"
   },
   "suggest": {

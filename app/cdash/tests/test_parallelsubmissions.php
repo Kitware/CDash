@@ -13,6 +13,9 @@ use CDash\Model\Project;
 
 class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
 {
+    protected $ConfigFile;
+    protected $Original;
+
     public function __construct()
     {
         parent::__construct();

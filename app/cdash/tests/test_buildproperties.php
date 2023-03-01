@@ -15,6 +15,9 @@ class BuildPropertiesTestCase extends KWWebTestCase
 {
     /** @var Project Project */
     private $Project;
+    private $PDO;
+    private $Builds;
+
     public function __construct()
     {
         parent::__construct();

@@ -9,6 +9,11 @@ require_once 'include/pdo.php';
 
 class TruncateOutputTestCase extends KWWebTestCase
 {
+    protected $ConfigFile;
+    protected $Original;
+    protected $Expected;
+    protected $BuildId;
+
     public function __construct()
     {
         parent::__construct();

@@ -9,6 +9,9 @@ require_once 'include/pdo.php';
 
 class IndexFiltersTestCase extends KWWebTestCase
 {
+    protected $InsightUrl;
+    protected $EmailUrl;
+
     public function __construct()
     {
         parent::__construct();

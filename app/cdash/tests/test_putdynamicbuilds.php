@@ -14,6 +14,11 @@ use CDash\Model\Site;
 
 class PutDynamicBuildsTestCase extends KWWebTestCase
 {
+    protected $PDO;
+    protected $ProjectId;
+    protected $ParentGroupId;
+    protected $ChildGroupId;
+
     public function __construct()
     {
         parent::__construct();

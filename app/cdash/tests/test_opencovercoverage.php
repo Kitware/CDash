@@ -9,6 +9,8 @@ require_once 'include/pdo.php';
 
 class OpenCoverCoverageTestCase extends KWWebTestCase
 {
+    protected $buildId;
+
     public function __construct()
     {
         parent::__construct();

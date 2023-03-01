@@ -48,6 +48,14 @@ add_test(
   COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/php-cs-fixer fix --dry-run
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+# Run PHPStan static analysis tool
+add_test(
+  NAME php_static_analysis
+  # Giving PHPStan 2GB of memory makes it run faster, and should be well inside the limits of the CI machines
+  COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/phpstan analyse --memory-limit=2G
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
 add_php_test(install)
 add_laravel_test(/Unit/app/Validators/PasswordTest)
 add_laravel_test(/Feature/CDashTest)

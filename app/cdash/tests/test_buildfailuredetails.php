@@ -9,6 +9,8 @@ require_once 'include/pdo.php';
 
 class BuildFailureDetailsTestCase extends KWWebTestCase
 {
+    protected $OriginalConfigSettings;
+
     public function __construct()
     {
         parent::__construct();
