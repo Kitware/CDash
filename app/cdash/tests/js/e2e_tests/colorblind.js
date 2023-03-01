@@ -1,3 +1,4 @@
+require('../pages/catchConsoleErrors.page.js');
 describe("colorblind", function() {
   it("toggle", function() {
     // Classic colors by default.

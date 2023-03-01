@@ -1,3 +1,4 @@
+require('../pages/catchConsoleErrors.page.js');
 describe("multiSort", function() {
 
   function check_build_order(first_value, second_value, third_value) {

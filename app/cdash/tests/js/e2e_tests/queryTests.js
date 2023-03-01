@@ -1,3 +1,4 @@
+require('../pages/catchConsoleErrors.page.js');
 describe("queryTests", function() {
   function filter_test(field, compare, value, num_builds) {
     // Load the filtered page.

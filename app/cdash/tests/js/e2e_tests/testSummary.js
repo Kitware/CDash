@@ -1,3 +1,4 @@
+require('../pages/catchConsoleErrors.page.js');
 describe("testSummary", function() {
   it("display test failure graph", function() {
     browser.get('testSummary.php?project=3&name=curl&date=2009-02-23');

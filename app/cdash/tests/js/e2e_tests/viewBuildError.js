@@ -1,3 +1,4 @@
+require('../pages/catchConsoleErrors.page.js');
 describe("viewBuildError", function() {
 
   it("shows 0 errors'", function() {

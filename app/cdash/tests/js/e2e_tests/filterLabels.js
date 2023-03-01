@@ -1,3 +1,4 @@
+require('../pages/catchConsoleErrors.page.js');
 describe("filterLabels", function() {
 
   it("pass filters to viewTest", function() {

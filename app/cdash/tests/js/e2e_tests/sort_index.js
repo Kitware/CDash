@@ -1,3 +1,4 @@
+require('../pages/catchConsoleErrors.page.js');
 describe("sort_index", function() {
 
   function sort_test(field, column_index, first_value, last_value) {

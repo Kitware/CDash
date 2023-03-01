@@ -1,3 +1,4 @@
+require('../pages/catchConsoleErrors.page.js');
 describe("viewTest", function() {
 
   it("shows the test we expect", function() {
