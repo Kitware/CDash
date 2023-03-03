@@ -9,6 +9,7 @@ use App\Models\User;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 use InvalidArgumentException;
+use Illuminate\Support\Facades\Log;
 
 class AuthTokenService
 {
@@ -31,7 +32,7 @@ class AuthTokenService
         $params['created'] = gmdate(FMT_DATETIME, $now);
 
         if (!is_numeric($duration) || intval($duration) < 0) {
-            add_log("Invalid token_duration configuration {$duration}", 'AuthTokenService::generateToken', LOG_ERR);
+            Log::error("Invalid token_duration configuration {$duration}");
             throw new InvalidArgumentException("Invalid token_duration configuration");
         }
 
@@ -45,7 +46,7 @@ class AuthTokenService
         $params['description'] = $description;
 
         if (!self::validScope($scope)) {
-            add_log("Invalid token scope {$scope}", 'AuthTokenService::generateToken', LOG_ERR);
+            Log::error("Invalid token scope {$scope}");
             throw new InvalidArgumentException("Invalid token scope {$scope}");
         }
         $params['scope'] = $scope;
@@ -56,7 +57,7 @@ class AuthTokenService
         $project->Id = $project_id;
         $project->Fill();
         if ($project_id >= 0 && !ProjectPermissions::userCanCreateProjectAuthToken($project)) {
-            add_log('Permissions error', 'AuthTokenService::generateToken', LOG_ERR);
+            Log::error('Permissions error');
             throw new InvalidArgumentException('Permissions error'.$project_id);
         }
 
@@ -75,19 +76,19 @@ class AuthTokenService
     {
         $auth_token = AuthToken::find($token_hash);
         if ($auth_token === null) {
-            add_log('Invalid Token', 'AuthTokenService::checkToken', LOG_ERR);
+            Log::error('Invalid Token');
             return false;
         }
 
         $user = User::find($auth_token['userid']);
         if ($user === null) {
-            add_log('Invalid UserId', 'AuthTokenService::checkToken', LOG_ERR);
+            Log::error('Invalid UserId');
             return false;
         }
 
         // Check for token expiration, deleting the token if expired
         if (self::isTokenExpired($auth_token)) {
-            add_log('Invalid Token', 'AuthTokenService::checkToken', LOG_ERR);
+            Log::error('Invalid Token');
             return false;
         }
 
@@ -95,7 +96,7 @@ class AuthTokenService
         $project->Id = $project_id;
         $project->Fill();
         if (!ProjectPermissions::canViewProject($project, $user)) {
-            add_log('Invalid Project', 'AuthTokenService::checkToken', LOG_ERR);
+            Log::error('Invalid Project');
             return false;
         }
 
@@ -103,7 +104,7 @@ class AuthTokenService
             case AuthToken::SCOPE_SUBMIT_ONLY:
                 // If a token is submit-only and is project-specific, make sure it matches the right project
                 if ($auth_token['projectid'] !== null && $project_id !== $auth_token['projectid']) {
-                    add_log('Invalid Project', 'AuthTokenService::checkToken', LOG_ERR);
+                    Log::error('Invalid Project');
                     return false;
                 }
                 break;
@@ -111,8 +112,7 @@ class AuthTokenService
                 break;
             default:
                 # In theory, this case should never be possible
-                add_log("Invalid scope listed for auth token with hash {$token_hash}",
-                    'AuthTokenService::checkToken', LOG_ERR);
+                Log::error("Invalid scope listed for auth token with hash {$token_hash}");
                 return false;
         }
 
@@ -128,7 +128,7 @@ class AuthTokenService
     {
         $auth_token = AuthToken::find($token_hash);
         if ($auth_token === null) {
-            add_log('Invalid Token3', 'AuthTokenService::deleteToken', LOG_ERR);
+            Log::error('Invalid Token');
             return false;
         }
 
@@ -166,8 +166,7 @@ class AuthTokenService
                 break;
             default:
                 # In theory, this case should never be possible
-                add_log("Invalid scope listed for auth token with hash {$token_hash}",
-                    'AuthTokenService::deleteToken', LOG_ERR);
+                Log::error("Invalid scope listed for auth token with hash {$token_hash}");
                 return false;
         }
         return $auth_token->delete() > 0;
