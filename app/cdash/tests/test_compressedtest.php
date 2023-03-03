@@ -25,13 +25,11 @@ class CompressedTestCase extends KWWebTestCase
                 'BugTrackerFileUrl' =>  'http://public.kitware.com/Bug/view.php?id=',
                 'RobotName' => 'itkrobot',
                 'RobotRegex' => '^(?:(?:\w|\.)+)\s+((?:\w|\.|\@)+)^');
-        $projectid = $this->createProject($settings);
+        $this->createProject($settings);
 
         // Make sure we can submit to it.
         $file = dirname(__FILE__) . '/data/CompressedTest.xml';
-        if (!$this->submission('TestCompressionExample', $file)) {
-            return;
-        }
+        $this->submission('TestCompressionExample', $file);
     }
 
     /** */

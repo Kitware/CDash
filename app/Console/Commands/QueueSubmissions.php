@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\ProcessSubmission;
-use CDash\Model\AuthToken;
+use App\Services\AuthTokenService;
 use CDash\Model\Project;
 
 use Illuminate\Console\Command;
@@ -87,10 +87,8 @@ class QueueSubmissions extends Command
                 echo "Could not extract authtoken from $filename\n";
                 return;
             }
-            $authtoken = new AuthToken();
             $len = $end - $begin;
-            $authtoken->Hash = substr($filename, $begin, $len);
-            if (!$authtoken->hashValidForProject($project->Id)) {
+            if (!AuthTokenService::checkToken(substr($filename, $begin, $len), $project->Id)) {
                 \Storage::move("inbox/{$filename}", "failed/{$filename}");
                 echo "Invalid authentication token for $filename\n";
                 return;

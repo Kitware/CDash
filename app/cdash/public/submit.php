@@ -15,13 +15,13 @@
 =========================================================================*/
 
 use App\Jobs\ProcessSubmission;
+use App\Services\AuthTokenService;
 use App\Services\UnparsedSubmissionProcessor;
 
 require_once 'include/pdo.php';
 require_once 'include/version.php';
 
 use CDash\Config;
-use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
@@ -112,15 +112,28 @@ if (isset($_GET['buildid'])) {
 }
 
 $projectname = $_GET['project'];
+
+if (str_contains($projectname, '..')) {
+    \Log::error("Project name contains invalid pattern '..': $projectname");
+    $statusarray['status'] = 'ERROR';
+    $statusarray['message'] = "Project name contains invalid pattern '..'.";
+    return displayReturnStatus($statusarray, Response::HTTP_BAD_REQUEST);
+}
+
 $expected_md5 = isset($_GET['MD5']) ? htmlspecialchars($_GET['MD5']) : '';
 
+if ($expected_md5 !== '' && !preg_match('/^[a-f0-9]{32}$/i', $expected_md5)) {
+    $statusarray['status'] = 'ERROR';
+    $statusarray['message'] = "Provided md5 hash '{$expected_md5}' is improperly formatted.";
+    return displayReturnStatus($statusarray, Response::HTTP_BAD_REQUEST);
+}
+
 // Get auth token (if any).
-$token = AuthToken::getBearerToken();
-$authtoken = new AuthToken();
-$authtoken->Hash = $authtoken->HashToken($token);
+$authtoken = AuthTokenService::getBearerToken();
+$authtoken_hash = $authtoken === null || $authtoken === '' ? '' : AuthTokenService::hashToken($authtoken);
 
 // Save the incoming file in the inbox directory.
-$filename = "{$projectname}_{$authtoken->Hash}_" . \Illuminate\Support\Str::uuid()->toString() . "_{$expected_md5}_.xml";
+$filename = "{$projectname}_{$authtoken_hash}_" . \Illuminate\Support\Str::uuid()->toString() . "_{$expected_md5}_.xml";
 $fp = request()->getContent(true);
 if (!Storage::put("inbox/{$filename}", $fp)) {
     \Log::error("Failed to save submission to inbox for $projectname (md5=$expected_md5)");
@@ -155,6 +168,7 @@ try {
 
 // Get some more info about this project.
 $projectid = null;
+$authenticate_submissions = null;
 $stmt = $pdo->prepare(
     'SELECT id, authenticatesubmissions FROM project WHERE name = ?');
 if (pdo_execute($stmt, [$projectname])) {
@@ -184,7 +198,7 @@ $project->Id = $projectid;
 $project->CheckForTooManyBuilds();
 
 // Check for valid authentication token if this project requires one.
-if ($authenticate_submissions && !$authtoken->hashValidForProject($projectid)) {
+if ($authenticate_submissions && !AuthTokenService::checkToken($authtoken_hash, $projectid)) {
     $statusarray['status'] = 'ERROR';
     $statusarray['message'] = 'Invalid Token';
     Storage::delete("inbox/{$filename}");

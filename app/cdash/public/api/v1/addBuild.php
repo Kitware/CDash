@@ -15,7 +15,7 @@
 =========================================================================*/
 require_once 'include/api_common.php';
 
-use CDash\Model\AuthToken;
+use App\Services\AuthTokenService;
 use CDash\Model\Build;
 use CDash\Model\Site;
 use CDash\ServiceContainer;
@@ -29,11 +29,9 @@ init_api_request();
 $project = just_get_project_from_request();
 $project->Fill();
 
-$authtoken = new AuthToken();
-if ($project->AuthenticateSubmissions && !$authtoken->validForProject($project->Id)) {
-    return;
-} elseif (!$project->AuthenticateSubmissions && !can_access_project($project->Id)) {
-    return;
+$token_hash = AuthTokenService::hashToken(AuthTokenService::getBearerToken());
+if ($project->AuthenticateSubmissions && !AuthTokenService::checkToken($token_hash, $project->Id)) {
+    return response('Unauthorized', Response::HTTP_UNAUTHORIZED);
 }
 
 // Get the id of the specified site.

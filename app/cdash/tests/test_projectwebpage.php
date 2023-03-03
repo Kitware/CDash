@@ -29,50 +29,35 @@ class ProjectWebPageTestCase extends KWWebTestCase
     {
         $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Build.xml";
-        if (!$this->submission('BatchmakeExample', $file)) {
-            return;
-        }
-        $this->assertTrue(true, "Submission of $file has succeeded");
+        $this->assertTrue($this->submission('BatchmakeExample', $file), "Submission of $file failed");
     }
 
     public function testSubmissionBatchmakeConfigure()
     {
         $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Configure.xml";
-        if (!$this->submission('BatchmakeExample', $file)) {
-            return;
-        }
-        $this->assertTrue(true, "Submission of $file has succeeded");
+        $this->assertTrue($this->submission('BatchmakeExample', $file), "Submission of $file failed");
     }
 
     public function testSubmissionBatchmakeNotes()
     {
         $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Notes.xml";
-        if (!$this->submission('BatchmakeExample', $file)) {
-            return;
-        }
-        $this->assertTrue(true, "Submission of $file has succeeded");
+        $this->assertTrue($this->submission('BatchmakeExample', $file), "Submission of $file failed");
     }
 
     public function testSubmissionBatchmakeTest()
     {
         $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Test.xml";
-        if (!$this->submission('BatchmakeExample', $file)) {
-            return;
-        }
-        $this->assertTrue(true, "Submission of $file has succeeded");
+        $this->assertTrue($this->submission('BatchmakeExample', $file), "Submission of $file failed");
     }
 
     public function testSubmissionBatchmakeUpdate()
     {
         $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Update.xml";
-        if (!$this->submission('BatchmakeExample', $file)) {
-            return;
-        }
-        $this->assertTrue(true, "Submission of $file has succeeded");
+        $this->assertTrue($this->submission('BatchmakeExample', $file), "Submission of $file failed");
     }
 
     public function testSubmissionInsightBuild()
@@ -80,10 +65,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $url = $this->url . '/submit.php?project=InsightExample';
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Build.xml";
-        if (!$this->submission('InsightExample', $file)) {
-            return;
-        }
-        $this->assertTrue(true, "Submission of $file has succeeded");
+        $this->assertTrue($this->submission('InsightExample', $file), "Submission of $file failed");
     }
 
     public function testSubmissionInsightConfigure()
@@ -91,10 +73,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $url = $this->url . '/submit.php?project=InsightExample';
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Configure.xml";
-        if (!$this->submission('InsightExample', $file)) {
-            return;
-        }
-        $this->assertTrue(true, "Submission of $file has succeeded");
+        $this->assertTrue($this->submission('InsightExample', $file), "Submission of $file failed");
     }
 
     public function testSubmissionInsightCoverage()
@@ -102,10 +81,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $url = $this->url . '/submit.php?project=InsightExample';
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Coverage.xml";
-        if (!$this->submission('InsightExample', $file)) {
-            return;
-        }
-        $this->assertTrue(true, "Submission of $file has succeeded");
+        $this->assertTrue($this->submission('InsightExample', $file), "Submission of $file failed");
     }
 
     public function testSubmissionInsightCoverageLog()
@@ -189,7 +165,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionInDb()
     {
-        $query = 'SELECT id, stamp, name, type, generator,command FROM build WHERE id=6';
+        $query = 'SELECT id, stamp, name, type, generator, command FROM build WHERE id=6';
         $result = $this->db->query($query);
         $expected = array('id' => '6',
             'stamp' => '20090223-0100-Nightly',

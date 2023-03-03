@@ -17,8 +17,7 @@
 namespace App\Services;
 
 use App\Jobs\ProcessSubmission;
-use App\Services\ProjectPermissions;
-use CDash\Model\AuthToken;
+use App\Services\AuthTokenService;
 use CDash\Model\Build;
 use CDash\Model\BuildFile;
 use CDash\Model\PendingSubmissions;
@@ -158,16 +157,8 @@ class UnparsedSubmissionProcessor
         $projectid = $project_row->id;
 
         // Check if this submission requires a valid authentication token.
-        $authtoken = new AuthToken();
-        if ($this->token) {
-            $authtoken->Hash = $this->token;
-            if (!$authtoken->hashValidForProject($projectid)) {
-                return response('Forbidden', Response::HTTP_FORBIDDEN);
-            }
-        } else {
-            if ($project_row->authenticatesubmissions && !$authtoken->validForProject($projectid)) {
-                return response('Forbidden', Response::HTTP_FORBIDDEN);
-            }
+        if (($this->token || $project_row->authenticatesubmissions) && !AuthTokenService::checkToken($this->token, $projectid)) {
+            return response('Forbidden', Response::HTTP_FORBIDDEN);
         }
 
         // Remove some old builds if the project has too many.
@@ -319,10 +310,13 @@ class UnparsedSubmissionProcessor
         }
 
         // Check if this submission requires a valid authentication token.
-        $authtoken = new AuthToken();
-        if ($this->project->AuthenticateSubmissions && !$authtoken->validForProject($this->project->Id)) {
-            Storage::delete($this->inboxdatafilename);
-            return response('Forbidden', Response::HTTP_FORBIDDEN);
+        if ($this->project->AuthenticateSubmissions) {
+            $token = AuthTokenService::getBearerToken();
+            $authtoken_hash = AuthTokenService::hashToken($token);
+            if (!AuthTokenService::checkToken($authtoken_hash, $this->project->Id)) {
+                Storage::delete($this->inboxdatafilename);
+                return response('Forbidden', Response::HTTP_FORBIDDEN);
+            }
         }
 
         // Check that the md5sum of the file matches what we were expecting.
@@ -457,9 +451,9 @@ class UnparsedSubmissionProcessor
         if ($this->token) {
             return;
         }
-        $token = AuthToken::getBearerToken();
+        $token = AuthTokenService::getBearerToken();
         if ($token) {
-            $this->token = AuthToken::HashToken($token);
+            $this->token = AuthTokenService::hashToken($token);
         } else {
             $this->token = '';
         }

@@ -3,7 +3,8 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
-use CDash\Model\AuthToken;
+use App\Models\AuthToken;
+use App\Services\AuthTokenService;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 
@@ -75,15 +76,12 @@ class AuthTokenTestCase extends KWWebTestCase
 
         // Use API to generate token.
         $response =
-            $this->post($this->url . '/api/v1/authtoken.php', ['description' => 'mytoken']);
+            $this->post($this->url . '/api/v1/authtoken.php', ['description' => 'mytoken', 'scope' => AuthToken::SCOPE_FULL_ACCESS]);
         $response = json_decode($response, true);
-        if (!array_key_exists('token', $response)) {
+        if (!array_key_exists('raw_token', $response)) {
             $this->fail('Failed to generate token');
         }
-        if (!array_key_exists('token', $response['token'])) {
-            $this->fail('Failed to generate access token');
-        }
-        $this->Token = $response['token']['token'];
+        $this->Token = $response['raw_token'];
 
         // Test that the model agrees that this token exists.
         $tokenmodel = new AuthToken();
@@ -346,9 +344,7 @@ class AuthTokenTestCase extends KWWebTestCase
         $this->delete($this->url . "/api/v1/authtoken.php?hash=$this->Hash");
 
         // Make sure the token is really gone.
-        $tokenmodel = new AuthToken();
-        $tokenmodel->Hash = $this->Hash;
-        if ($tokenmodel->Exists()) {
+        if (AuthToken::find($this->Hash)) {
             $this->fail('Token still exists after it was revoked');
         }
     }
@@ -356,11 +352,11 @@ class AuthTokenTestCase extends KWWebTestCase
     public function testRemoveExpiredToken()
     {
         // Put an expired token in the database.
-        $authtoken = new AuthToken();
-        $token = $authtoken->Generate();
-        $authtoken->UserId = 1;
-        $authtoken->Expires = gmdate(FMT_DATETIME, 1);
-        $authtoken->Save();
+        $result = AuthTokenService::generateToken(1, -1, AuthToken::SCOPE_FULL_ACCESS, "Test Token 1");
+        $token = $result['raw_token'];
+        $authtoken = $result['token'];
+        $authtoken['expires'] = gmdate(FMT_DATETIME, 1);
+        $authtoken->save();
 
         // Try to submit using this token.
         // This will cause it to be revoked since it has already expired.
@@ -370,7 +366,7 @@ class AuthTokenTestCase extends KWWebTestCase
         }
 
         // Make sure this token does not exist anymore.
-        if ($authtoken->Exists()) {
+        if (AuthToken::find($this->Hash)) {
             $this->fail("Expired token still exists after submission");
         }
     }
