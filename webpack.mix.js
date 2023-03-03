@@ -88,8 +88,10 @@ mix.copy('public/css/common.css', 'public/build/css/common.css');
 mix.styles([
   'node_modules/bootstrap/dist/css/bootstrap.css',
   'node_modules/bootstrap-vue/dist/bootstrap-vue.css',
-  'node_modules/jquery-ui-dist/jquery-ui.css'
+  'node_modules/jquery-ui-dist/jquery-ui.css',
+  'node_modules/nvd3/build/nv.d3.min.css'
 ], 'public/build/css/3rdparty.css').version();
+mix.copy('node_modules/nvd3/build/nv.d3.min.css.map', 'public/build/css/nv.d3.min.css.map');
 
 // Concatenate and minify 3rd party javascript.
 mix.scripts([
@@ -116,6 +118,7 @@ mix.scripts([
   'node_modules/nvd3/build/nv.d3.js',
   'public/js/ui-bootstrap-tpls-0.14.2.min.js'
 ], 'public/js/3rdparty.min.js');
+mix.copy('node_modules/nvd3/build/nv.d3.js.map', 'public/js/nv.d3.js.map');
 
 // Concatenate and minify 1st party javascript.
 mix.scripts([
@@ -136,6 +139,9 @@ mix.scripts([
   'public/js/3rdparty.min.js',
   'public/js/1stparty.min.js',
 ], 'public/js/CDash_' + version + '.min.js');
+
+// Copy jquery-ui images to public/css/images/
+mix.copyDirectory('node_modules/jquery-ui-dist/images', 'public/build/css/images');
 
 // Boilerplate.
 mix.js('resources/js/app.js', 'public/laravel/js').vue().version();

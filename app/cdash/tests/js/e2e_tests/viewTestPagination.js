@@ -1,3 +1,4 @@
+require('../pages/catchConsoleErrors.page.js');
 describe("viewTestPagination", function() {
 
   it("display all tests", function() {

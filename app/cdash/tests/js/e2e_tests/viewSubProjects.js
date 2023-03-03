@@ -1,3 +1,4 @@
+require('../pages/catchConsoleErrors.page.js');
 describe("viewSubProjects", function() {
 
   it("navigates between SubProjects", function() {
