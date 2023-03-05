@@ -78,12 +78,6 @@ endif()
 
 find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php)
 
-# Run PHP style fixer.
-execute_process(
-  COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/php-cs-fixer fix
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-
 if(CDASH_USE_SELENIUM)
   find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php vendor/bin)
 endif(CDASH_USE_SELENIUM)
