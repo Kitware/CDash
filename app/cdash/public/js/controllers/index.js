@@ -57,11 +57,11 @@ CDash.filter("showEmptyBuildsLast", function () {
   $scope.showsettings = false;
 
   // Check if we have a cookie for auto-refresh.
-  var timer, refresh_cookie = $.cookie('cdash_refresh');
-  if(refresh_cookie) {
+  const refresh_cookie = $.cookie('cdash_refresh') === 'true';
+  if (refresh_cookie) {
     $scope.autoRefresh = true;
-    timer = $timeout(function () {
-      window.location.reload(true);
+    $timeout(function () {
+      window.location.reload();
     }, 5000);
   } else {
     $scope.autoRefresh = false;
@@ -461,15 +461,14 @@ CDash.filter("showEmptyBuildsLast", function () {
   };
 
   $scope.toggleAutoRefresh = function() {
-    var refresh_cookie = $.cookie('cdash_refresh');
-    if(refresh_cookie) {
-      // Disable autorefresh and remove the cookie.
-      $timeout.cancel(timer);
-      $scope.autoRefresh = false;
+    const refresh_cookie = $.cookie('cdash_refresh') === 'true';
+    if (refresh_cookie) {
+      // Delete the cookie and reload
       $.cookie('cdash_refresh', null);
+      window.location.reload();
     } else {
-      $.cookie('cdash_refresh', 1);
-      window.location.reload(true);
+      $.cookie('cdash_refresh', 'true');
+      window.location.reload();
     }
   };
 
