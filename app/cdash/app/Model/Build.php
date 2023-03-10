@@ -1173,7 +1173,7 @@ class Build
         $diff = [];
 
         $stmt = $this->PDO->prepare(
-            'SELECT id,
+            'SELECT build.id,
                     builderrordiff.type AS builderrortype,
                     builderrordiff.difference_positive AS builderrorspositive,
                     builderrordiff.difference_negative AS builderrorsnegative,
@@ -1186,7 +1186,7 @@ class Build
               LEFT JOIN builderrordiff ON builderrordiff.buildid=build.id
               LEFT JOIN configureerrordiff ON configureerrordiff.buildid=build.id
               LEFT JOIN testdiff ON testdiff.buildid=build.id
-              WHERE id = ?');
+              WHERE build.id = ?');
         if (!pdo_execute($stmt, [$this->Id])) {
             return false;
         }
