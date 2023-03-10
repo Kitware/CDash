@@ -285,4 +285,50 @@ class EmailTestCase extends KWWebTestCase
             $this->pass('Passed');
         }
     }
+
+    public function testVerifyTestDiffValues() : void
+    {
+        // Verify that we have three builds for this project.
+        $project = \DB::table('project')->where('name', 'EmailProjectExample')->first();
+        $builds = \DB::table('build')->where('projectid', $project->id)->get();
+        $this->assertTrue(count($builds) === 3);
+
+        // Verify that we have four rows in the testdiff table for these builds.
+        $testdiffs = \DB::table('testdiff')
+            ->where('buildid', $builds[1]->id)
+            ->orWhere('buildid', $builds[2]->id)
+            ->get();
+        $this->assertTrue(count($testdiffs) === 4);
+
+        $found = [0 => false, 1 => false, 2 => false, 3 => false];
+        $expected = [0 => true, 1 => true, 2 => true, 3 => true];
+        foreach ($testdiffs as $testdiff) {
+            if ($testdiff->buildid === $builds[1]->id &&
+                $testdiff->type === 1 &&
+                $testdiff->difference_positive === 0 &&
+                $testdiff->difference_negative === 2) {
+                $found[0] = true;
+            }
+            if ($testdiff->buildid === $builds[1]->id &&
+                $testdiff->type === 2 &&
+                $testdiff->difference_positive === 2 &&
+                $testdiff->difference_negative === 0) {
+                $found[1] = true;
+            }
+            if ($testdiff->buildid === $builds[2]->id &&
+                $testdiff->type === 1 &&
+                $testdiff->difference_positive === 1 &&
+                $testdiff->difference_negative === 0) {
+                $found[2] = true;
+            }
+            if ($testdiff->buildid === $builds[2]->id &&
+                $testdiff->type === 2 &&
+                $testdiff->difference_positive === 0 &&
+                $testdiff->difference_negative === 1) {
+                $found[3] = true;
+            }
+        }
+
+        $this->assertTrue($found === $expected);
+    }
 }
