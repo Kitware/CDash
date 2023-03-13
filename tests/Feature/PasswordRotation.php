@@ -7,6 +7,8 @@ use Tests\TestCase;
 
 class PasswordRotation extends TestCase
 {
+    protected $user;
+
     protected function setUp() : void
     {
         parent::setUp();

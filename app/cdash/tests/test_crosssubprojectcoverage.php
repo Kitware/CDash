@@ -18,6 +18,8 @@ require_once 'include/pdo.php';
 
 class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
 {
+    protected $DataDir;
+
     public function __construct()
     {
         parent::__construct();

@@ -9,6 +9,9 @@ require_once 'include/pdo.php';
 
 class NoBackupTestCase extends KWWebTestCase
 {
+    protected $ConfigFile;
+    protected $Originals;
+
     public function __construct()
     {
         parent::__construct();

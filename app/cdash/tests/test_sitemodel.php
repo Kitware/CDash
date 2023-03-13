@@ -12,6 +12,9 @@ use CDash\Model\Site;
 
 class SiteModelTestCase extends KWWebTestCase
 {
+    protected $PDO;
+    protected $site;
+
     public function __construct()
     {
         parent::__construct();

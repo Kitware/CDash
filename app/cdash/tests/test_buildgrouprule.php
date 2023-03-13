@@ -15,6 +15,8 @@ use CDash\Model\BuildGroupRule;
 
 class BuildGroupRuleTestCase extends KWWebTestCase
 {
+    protected $PDO;
+
     public function __construct()
     {
         parent::__construct();

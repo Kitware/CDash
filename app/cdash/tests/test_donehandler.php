@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Storage;
 
 class DoneHandlerTestCase extends KWWebTestCase
 {
+    protected $PDO;
+    protected $ConfigFile;
+    protected $Original;
+
     public function __construct()
     {
         parent::__construct();

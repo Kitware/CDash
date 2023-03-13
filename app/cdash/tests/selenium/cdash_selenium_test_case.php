@@ -23,6 +23,8 @@ require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
 
 class CDashSeleniumTestCase extends PHPUnit_Extensions_SeleniumTestCase
 {
+    protected $webPath;
+
     protected function browserSetUp()
     {
         global $argv;

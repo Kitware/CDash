@@ -22,7 +22,6 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->OriginalConfigSettings = '';
         $this->dataDir = dirname(__FILE__) . '/data/MultipleSubprojects';
     }
 

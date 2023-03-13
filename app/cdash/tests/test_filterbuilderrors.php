@@ -11,6 +11,8 @@ use CDash\Model\Project;
 
 class FilterBuildErrorsTestCase extends KWWebTestCase
 {
+    protected $PDO;
+
     public function __construct()
     {
         parent::__construct();

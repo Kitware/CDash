@@ -11,6 +11,8 @@ use CDash\Config;
 
 class CreateProjectPermissionsTestCase extends KWWebTestCase
 {
+    protected $BuildId;
+
     public function __construct()
     {
         parent::__construct();

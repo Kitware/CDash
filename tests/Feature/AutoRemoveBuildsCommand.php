@@ -12,6 +12,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AutoRemoveBuildsCommand extends TestCase
 {
+    protected $project;
+
     /**
      * Feature test for the build:remove artisan command.
      *

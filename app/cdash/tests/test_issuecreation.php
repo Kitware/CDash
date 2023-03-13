@@ -10,6 +10,10 @@ use CDash\Model\UserProject;
 
 class IssueCreationTestCase extends KWWebTestCase
 {
+    protected $PDO;
+    protected $Builds;
+    protected $Projects;
+
     public function __construct()
     {
         parent::__construct();

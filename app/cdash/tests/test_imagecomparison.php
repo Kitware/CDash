@@ -11,6 +11,8 @@ use CDash\Model\Image;
 
 class ImageComparisonTestCase extends KWWebTestCase
 {
+    protected $BuildId;
+
     public function __construct()
     {
         parent::__construct();

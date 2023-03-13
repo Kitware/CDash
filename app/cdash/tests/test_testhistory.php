@@ -12,6 +12,8 @@ use CDash\Model\Project;
 
 class TestHistoryTestCase extends KWWebTestCase
 {
+    protected $project;
+
     public function __construct()
     {
         parent::__construct();

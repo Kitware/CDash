@@ -13,6 +13,8 @@ use CDash\Model\PendingSubmissions;
 
 class ActualBranchCoverageTestCase extends BranchCoverageTestCase
 {
+    protected $projectname;
+
     public function __construct()
     {
         parent::__construct();

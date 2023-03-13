@@ -15,6 +15,8 @@ use CDash\Model\Label;
 
 class BuildConfigureTestCase extends KWWebTestCase
 {
+    protected $PDO;
+
     public function __construct()
     {
         parent::__construct();

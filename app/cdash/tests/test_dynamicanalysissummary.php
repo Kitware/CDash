@@ -19,6 +19,11 @@ require_once 'include/pdo.php';
 
 class DynamicAnalysisSummaryTestCase extends KWWebTestCase
 {
+    protected $DataDir;
+    protected $ParentId;
+    protected $StandaloneBuildId;
+    protected $ChildIds;
+
     public function __construct()
     {
         parent::__construct();
