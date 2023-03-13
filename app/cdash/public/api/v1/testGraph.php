@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+namespace CDash\Api\v1\TestGraph;
+
 require_once 'include/api_common.php';
 
 use App\Models\BuildTest;
@@ -31,7 +33,8 @@ if (is_null($build)) {
 
 $testid = pdo_real_escape_numeric($_GET['testid']);
 if (!isset($testid) || !is_numeric($testid)) {
-    return json_error_response(['error' => 'A valid test was not specified.']);
+    json_error_response(['error' => 'A valid test was not specified.']);
+    return;
 }
 
 $buildtest = BuildTest::where('buildid', '=', $build->Id)

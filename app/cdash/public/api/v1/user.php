@@ -13,6 +13,9 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\User;
+
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 
@@ -29,6 +32,7 @@ use CDash\Model\BuildConfigure;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Site;
 use CDash\Model\UserProject;
+use Illuminate\Support\Facades\Auth;
 
 $config = Config::getInstance();
 $response = [];
@@ -48,6 +52,7 @@ if (!Auth::check()) {
 
 $pageTimer = new PageTimer();
 
+/** @var \App\Models\User $user */
 $user = Auth::user();
 $userid = $user->id;
 

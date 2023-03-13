@@ -9936,6 +9936,11 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/UpdateErrorTopic.php
 
 		-
+			message: "#^Method CDash\\\\Submission\\\\CommitAuthorHandlerInterface\\:\\:GetCommitAuthors\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/include/Submission/CommitAuthorHandlerInterface.php
+
+		-
 			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: app/cdash/include/Test/CDashTestCase.php
@@ -15521,82 +15526,52 @@ parameters:
 			path: app/cdash/public/api/v1/GitHub/webhook.php
 
 		-
-			message: "#^Property CDashAPI\\:\\:\\$Parameters has no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/api.php
-
-		-
-			message: "#^Method RepositoryAPI\\:\\:ExampleURL\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/api_repository.php
-
-		-
-			message: "#^Method RepositoryAPI\\:\\:Run\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/api_repository.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with string\\|false will always evaluate to false\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/authtoken.php
 
 		-
-			message: "#^Function rest_delete\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Authtoken\\\\rest_delete\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/authtoken.php
 
 		-
-			message: "#^Function rest_post\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Authtoken\\\\rest_post\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/authtoken.php
 
 		-
-			message: "#^Function rest_delete\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_delete\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/build.php
 
 		-
-			message: "#^Function rest_delete\\(\\) has parameter \\$build with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_delete\\(\\) has parameter \\$build with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/build.php
 
 		-
-			message: "#^Function rest_get\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_get\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/build.php
 
 		-
-			message: "#^Function rest_get\\(\\) has parameter \\$build with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_get\\(\\) has parameter \\$build with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/build.php
 
 		-
-			message: "#^Function rest_post\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_post\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/build.php
 
 		-
-			message: "#^Function rest_post\\(\\) has parameter \\$build with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_post\\(\\) has parameter \\$build with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/build.php
 
 		-
-			message: "#^Function rest_put\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Function rest_put\\(\\) has parameter \\$build with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Parameter \\#1 \\$userid of function rest_delete expects int, CDash\\\\Model\\\\Build given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Parameter \\#1 \\$userid of function rest_post expects int, CDash\\\\Model\\\\Build given\\.$#"
+			message: "#^Function rest_put not found\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/build.php
 
@@ -15611,12 +15586,37 @@ parameters:
 			path: app/cdash/public/api/v1/buildProperties.php
 
 		-
-			message: "#^Function defect_type_selected\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildProperties\\\\defect_type_selected\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildProperties.php
 
 		-
-			message: "#^Function defect_type_selected\\(\\) has parameter \\$defect_type with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildProperties\\\\defect_type_selected\\(\\) has parameter \\$defect_type with no type specified\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/buildProperties.php
+
+		-
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildProperties\\\\gather_defects\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/buildProperties.php
+
+		-
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildProperties\\\\gather_defects\\(\\) has parameter \\$defects_response with no type specified\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/buildProperties.php
+
+		-
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildProperties\\\\gather_defects\\(\\) has parameter \\$prettyname with no type specified\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/buildProperties.php
+
+		-
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildProperties\\\\gather_defects\\(\\) has parameter \\$stmt with no type specified\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/buildProperties.php
+
+		-
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildProperties\\\\get_defects_for_builds\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildProperties.php
 
@@ -15626,32 +15626,12 @@ parameters:
 			path: app/cdash/public/api/v1/buildProperties.php
 
 		-
-			message: "#^Function gather_defects\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Function gather_defects\\(\\) has parameter \\$defects_response with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Function gather_defects\\(\\) has parameter \\$prettyname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Function gather_defects\\(\\) has parameter \\$stmt with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Function get_defects_for_builds\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
 			message: "#^Inner named functions are not supported by PHPStan\\. Consider refactoring to an anonymous function, class method, or a top\\-level\\-defined function\\. See issue \\#165 \\(https\\://github\\.com/phpstan/phpstan/issues/165\\) for more details\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/buildProperties.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function array_filter expects callable\\(array\\{name\\: 'builderrors', prettyname\\: 'Errors', selected\\: false\\}\\|array\\{name\\: 'buildwarnings', prettyname\\: 'Warnings', selected\\: false\\}\\|array\\{name\\: 'testfailed', prettyname\\: 'Test Failures', selected\\: false\\}\\)\\: mixed, 'defect_type_selected' given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildProperties.php
 
@@ -15666,29 +15646,9 @@ parameters:
 			path: app/cdash/public/api/v1/buildProperties.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$admin\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildSummary.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildSummary.php
-
-		-
 			message: "#^Variable \\$previous_build might not be defined\\.$#"
 			count: 7
 			path: app/cdash/public/api/v1/buildSummary.php
-
-		-
-			message: "#^Access to property \\$GroupId on an unknown class Build\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Access to property \\$Id on an unknown class Build\\.$#"
-			count: 3
-			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
 			message: "#^Call to an undefined method CDash\\\\Model\\\\BuildGroup\\:\\:GetDependencies\\(\\)\\.$#"
@@ -15701,87 +15661,57 @@ parameters:
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
-			message: "#^Call to method FillFromId\\(\\) on an unknown class Build\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\convert_wildcards\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
-			message: "#^Function convert_wildcards\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\convert_wildcards\\(\\) has parameter \\$match with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
-			message: "#^Function convert_wildcards\\(\\) has parameter \\$match with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_delete\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
-			message: "#^Function rest_delete\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_get\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
-			message: "#^Function rest_delete\\(\\) has parameter \\$pdo with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_get\\(\\) has parameter \\$pdo with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
-			message: "#^Function rest_get invoked with 2 parameters, 1 required\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_get\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
-			message: "#^Function rest_get\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_post\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
-			message: "#^Function rest_get\\(\\) has parameter \\$pdo with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_post\\(\\) has parameter \\$pdo with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
-			message: "#^Function rest_get\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_post\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
-			message: "#^Function rest_post invoked with 2 parameters, 1 required\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_put\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
-			message: "#^Function rest_post\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Function rest_post\\(\\) has parameter \\$pdo with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Function rest_post\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Function rest_put\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Function rest_put\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Instantiated class Build not found\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Parameter \\#1 \\$build of class CDash\\\\Model\\\\BuildGroupRule constructor expects CDash\\\\Model\\\\Build\\|null, Build given\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_put\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
@@ -15791,107 +15721,112 @@ parameters:
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function create_subproject\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\create_subproject\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function create_subproject\\(\\) has parameter \\$builds with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\create_subproject\\(\\) has parameter \\$builds with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function create_subproject\\(\\) has parameter \\$coverage with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\create_subproject\\(\\) has parameter \\$coverage with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function get_build_data\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\get_build_data\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function get_build_data\\(\\) has parameter \\$beginning_UTCDate with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\get_build_data\\(\\) has parameter \\$beginning_UTCDate with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function get_build_data\\(\\) has parameter \\$end_UTCDate with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\get_build_data\\(\\) has parameter \\$end_UTCDate with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function get_build_data\\(\\) has parameter \\$filter_sql with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\get_build_data\\(\\) has parameter \\$filter_sql with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function get_build_data\\(\\) has parameter \\$parentid with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\get_build_data\\(\\) has parameter \\$parentid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function get_build_data\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\get_build_data\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function get_build_label\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\get_build_label\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function get_build_label\\(\\) has parameter \\$build_array with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\get_build_label\\(\\) has parameter \\$build_array with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function get_build_label\\(\\) has parameter \\$buildid with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\get_build_label\\(\\) has parameter \\$buildid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function get_coverage\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\get_coverage\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function get_coverage\\(\\) has parameter \\$build_data with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\get_coverage\\(\\) has parameter \\$build_data with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function get_coverage\\(\\) has parameter \\$subproject_groups with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\get_coverage\\(\\) has parameter \\$subproject_groups with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function is_coveragegroup_nonempty\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\is_coveragegroup_nonempty\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function is_coveragegroup_nonempty\\(\\) has parameter \\$group with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\is_coveragegroup_nonempty\\(\\) has parameter \\$group with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function populate_subproject\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\populate_subproject\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function populate_subproject\\(\\) has parameter \\$coverage with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\populate_subproject\\(\\) has parameter \\$coverage with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function populate_subproject\\(\\) has parameter \\$key with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\populate_subproject\\(\\) has parameter \\$key with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function populate_subproject\\(\\) has parameter \\$subproject with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\populate_subproject\\(\\) has parameter \\$subproject with no type specified\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/compareCoverage.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function array_filter expects callable\\(array\\<int\\|string, mixed\\>\\)\\: mixed, 'is_coveragegroup…' given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
@@ -15901,92 +15836,77 @@ parameters:
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function compute_classifier_score\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\compute_classifier_score\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Function compute_classifier_score\\(\\) has parameter \\$inGroup with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\compute_classifier_score\\(\\) has parameter \\$inGroup with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Function compute_classifier_score\\(\\) has parameter \\$outGroup with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\compute_classifier_score\\(\\) has parameter \\$outGroup with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Function count_samples\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\count_samples\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Function count_samples\\(\\) has parameter \\$samples with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\count_samples\\(\\) has parameter \\$samples with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Function decode_build\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\decode_build\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Function decode_build\\(\\) has parameter \\$build with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\decode_build\\(\\) has parameter \\$build with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Function find_numerical_classifier\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\find_numerical_classifier\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Function find_numerical_classifier\\(\\) has parameter \\$builds with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\find_numerical_classifier\\(\\) has parameter \\$builds with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Function find_numerical_classifier\\(\\) has parameter \\$propertyData with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\find_numerical_classifier\\(\\) has parameter \\$propertyData with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Function find_numerical_classifier\\(\\) has parameter \\$propertyName with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\find_numerical_classifier\\(\\) has parameter \\$propertyName with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Function value_to_string\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\value_to_string\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Function value_to_string\\(\\) has parameter \\$value with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\value_to_string\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:IsAdmin\\(\\)\\.$#"
+			message: "#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(mixed\\)\\: mixed\\)\\|null, 'decode_build' given\\.$#"
 			count: 1
-			path: app/cdash/public/api/v1/createProject.php
+			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Parameter \\#1 \\$user of method CDash\\\\Model\\\\Project\\:\\:ConvertToJSON\\(\\) expects App\\\\Models\\\\User, Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/createProject.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of static method App\\\\Services\\\\ProjectPermissions\\:\\:userCanCreateProject\\(\\) expects App\\\\Models\\\\User, Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/createProject.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of static method App\\\\Services\\\\ProjectPermissions\\:\\:userCanEditProject\\(\\) expects App\\\\Models\\\\User, Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/createProject.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of static method CDash\\\\Model\\\\UserProject\\:\\:GetProjectsForUser\\(\\) expects App\\\\Models\\\\User, Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null given\\.$#"
+			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/createProject.php
 
@@ -15996,107 +15916,82 @@ parameters:
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function rest_delete invoked with 4 parameters, 1 required\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_delete\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function rest_delete\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_delete\\(\\) has parameter \\$buildgroupid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function rest_delete\\(\\) has parameter \\$buildgroupid with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_delete\\(\\) has parameter \\$buildname with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function rest_delete\\(\\) has parameter \\$buildname with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_delete\\(\\) has parameter \\$buildtype with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function rest_delete\\(\\) has parameter \\$buildtype with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_delete\\(\\) has parameter \\$siteid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function rest_delete\\(\\) has parameter \\$siteid with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function rest_get invoked with 5 parameters, 1 required\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has parameter \\$buildgroupid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function rest_get\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has parameter \\$buildname with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function rest_get\\(\\) has parameter \\$buildgroupid with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has parameter \\$buildtype with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function rest_get\\(\\) has parameter \\$buildname with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function rest_get\\(\\) has parameter \\$buildtype with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has parameter \\$siteid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function rest_get\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function rest_get\\(\\) has parameter \\$siteid with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has parameter \\$buildgroupid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function rest_post invoked with 4 parameters, 1 required\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has parameter \\$buildname with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function rest_post\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has parameter \\$buildtype with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function rest_post\\(\\) has parameter \\$buildgroupid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function rest_post\\(\\) has parameter \\$buildname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function rest_post\\(\\) has parameter \\$buildtype with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function rest_post\\(\\) has parameter \\$siteid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Parameter \\#1 \\$userid of function rest_delete expects int, string given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Parameter \\#1 \\$userid of function rest_post expects int, string given\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has parameter \\$siteid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
@@ -16111,32 +16006,32 @@ parameters:
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
-			message: "#^Function getFiltersForPage\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\FilterData\\\\getFiltersForPage\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/filterdata.php
 
 		-
-			message: "#^Function getFiltersForPage\\(\\) has parameter \\$page_id with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\FilterData\\\\getFiltersForPage\\(\\) has parameter \\$page_id with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/filterdata.php
 
 		-
-			message: "#^Function get_filterdata_array_from_request\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\FilterData\\\\get_filterdata_array_from_request\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/filterdata.php
 
 		-
-			message: "#^Function get_filterdata_array_from_request\\(\\) has parameter \\$page_id with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\FilterData\\\\get_filterdata_array_from_request\\(\\) has parameter \\$page_id with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/filterdata.php
 
 		-
-			message: "#^Function isDatePage\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\FilterData\\\\isDatePage\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/filterdata.php
 
 		-
-			message: "#^Function isDatePage\\(\\) has parameter \\$page_id with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\FilterData\\\\isDatePage\\(\\) has parameter \\$page_id with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/filterdata.php
 
@@ -16156,22 +16051,22 @@ parameters:
 			path: app/cdash/public/api/v1/index.php
 
 		-
-			message: "#^Function echo_main_dashboard_JSON\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Index\\\\echo_main_dashboard_JSON\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/index.php
 
 		-
-			message: "#^Function echo_main_dashboard_JSON\\(\\) has parameter \\$project_instance with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Index\\\\echo_main_dashboard_JSON\\(\\) has parameter \\$project_instance with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/index.php
 
 		-
-			message: "#^Function is_buildgroup_nonempty\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Index\\\\is_buildgroup_nonempty\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/index.php
 
 		-
-			message: "#^Function is_buildgroup_nonempty\\(\\) has parameter \\$group with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Index\\\\is_buildgroup_nonempty\\(\\) has parameter \\$group with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/index.php
 
@@ -16201,12 +16096,7 @@ parameters:
 			path: app/cdash/public/api/v1/index.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:IsAdmin\\(\\)\\.$#"
+			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
 			count: 2
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
@@ -16216,47 +16106,32 @@ parameters:
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
-			message: "#^Function rest_delete invoked with 0 parameters, 1 required\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ManageMeasurements\\\\rest_delete\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/manageMeasurements.php
 
 		-
-			message: "#^Function rest_delete\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ManageMeasurements\\\\rest_get\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/manageMeasurements.php
 
 		-
-			message: "#^Function rest_get\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ManageMeasurements\\\\rest_get\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/manageMeasurements.php
 
 		-
-			message: "#^Function rest_get\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ManageMeasurements\\\\rest_post\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/manageMeasurements.php
 
 		-
-			message: "#^Function rest_post\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ManageMeasurements\\\\rest_post\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/manageMeasurements.php
 
 		-
-			message: "#^Function rest_post\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageMeasurements.php
-
-		-
-			message: "#^Parameter \\#1 \\$userid of function rest_post expects int, string given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageMeasurements.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageSubProject.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:IsAdmin\\(\\)\\.$#"
+			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/manageSubProject.php
 
@@ -16276,242 +16151,242 @@ parameters:
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_DA_chart_data\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_DA_chart_data\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_DA_chart_data\\(\\) has parameter \\$checker with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_DA_chart_data\\(\\) has parameter \\$checker with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_DA_chart_data\\(\\) has parameter \\$date_range with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_DA_chart_data\\(\\) has parameter \\$date_range with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_DA_chart_data\\(\\) has parameter \\$dynamic_analysis_data with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_DA_chart_data\\(\\) has parameter \\$dynamic_analysis_data with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_DA_chart_data\\(\\) has parameter \\$group_name with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_DA_chart_data\\(\\) has parameter \\$group_name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_build_group_name\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_build_group_name\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_build_group_name\\(\\) has parameter \\$build_groups with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_build_group_name\\(\\) has parameter \\$build_groups with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_build_group_name\\(\\) has parameter \\$id with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_build_group_name\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_chart_data\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_chart_data\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_chart_data\\(\\) has parameter \\$beginning_timestamp with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_chart_data\\(\\) has parameter \\$beginning_timestamp with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_chart_data\\(\\) has parameter \\$date_range with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_chart_data\\(\\) has parameter \\$date_range with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_chart_data\\(\\) has parameter \\$group_name with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_chart_data\\(\\) has parameter \\$group_name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_chart_data\\(\\) has parameter \\$measurement with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_chart_data\\(\\) has parameter \\$measurement with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_chart_data\\(\\) has parameter \\$overview_data with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_chart_data\\(\\) has parameter \\$overview_data with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_coverage_chart_data\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_coverage_chart_data\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_coverage_chart_data\\(\\) has parameter \\$beginning_timestamp with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_coverage_chart_data\\(\\) has parameter \\$beginning_timestamp with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_coverage_chart_data\\(\\) has parameter \\$build_group_name with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_coverage_chart_data\\(\\) has parameter \\$build_group_name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_coverage_chart_data\\(\\) has parameter \\$coverage_category with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_coverage_chart_data\\(\\) has parameter \\$coverage_category with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_coverage_chart_data\\(\\) has parameter \\$coverage_data with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_coverage_chart_data\\(\\) has parameter \\$coverage_data with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_coverage_chart_data\\(\\) has parameter \\$date_range with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_coverage_chart_data\\(\\) has parameter \\$date_range with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_current_DA_value\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_current_DA_value\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_current_DA_value\\(\\) has parameter \\$checker with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_current_DA_value\\(\\) has parameter \\$checker with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_current_DA_value\\(\\) has parameter \\$date_range with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_current_DA_value\\(\\) has parameter \\$date_range with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_current_DA_value\\(\\) has parameter \\$dynamic_analysis_data with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_current_DA_value\\(\\) has parameter \\$dynamic_analysis_data with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_current_DA_value\\(\\) has parameter \\$group_name with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_current_DA_value\\(\\) has parameter \\$group_name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_current_value\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_current_value\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_current_value\\(\\) has parameter \\$date_range with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_current_value\\(\\) has parameter \\$date_range with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_current_value\\(\\) has parameter \\$group_name with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_current_value\\(\\) has parameter \\$group_name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_current_value\\(\\) has parameter \\$measurement with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_current_value\\(\\) has parameter \\$measurement with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_current_value\\(\\) has parameter \\$overview_data with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_current_value\\(\\) has parameter \\$overview_data with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_date_from_index invoked with 3 parameters, 2 required\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_date_from_index invoked with 3 parameters, 2 required\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_date_from_index\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_date_from_index\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_date_from_index\\(\\) has parameter \\$beginning_timestamp with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_date_from_index\\(\\) has parameter \\$beginning_timestamp with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_date_from_index\\(\\) has parameter \\$i with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_date_from_index\\(\\) has parameter \\$i with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_day_index\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_day_index\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_day_index\\(\\) has parameter \\$beginning_timestamp with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_day_index\\(\\) has parameter \\$beginning_timestamp with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_day_index\\(\\) has parameter \\$date_range with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_day_index\\(\\) has parameter \\$date_range with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_day_index\\(\\) has parameter \\$datetime with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_day_index\\(\\) has parameter \\$datetime with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_recent_coverage_values\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_recent_coverage_values\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_recent_coverage_values\\(\\) has parameter \\$build_group_name with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_recent_coverage_values\\(\\) has parameter \\$build_group_name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_recent_coverage_values\\(\\) has parameter \\$coverage_category with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_recent_coverage_values\\(\\) has parameter \\$coverage_category with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_recent_coverage_values\\(\\) has parameter \\$coverage_data with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_recent_coverage_values\\(\\) has parameter \\$coverage_data with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_recent_coverage_values\\(\\) has parameter \\$date_range with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_recent_coverage_values\\(\\) has parameter \\$date_range with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_static_group_name\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_static_group_name\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_static_group_name\\(\\) has parameter \\$id with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_static_group_name\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function get_static_group_name\\(\\) has parameter \\$static_groups with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_static_group_name\\(\\) has parameter \\$static_groups with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function sanitize_string\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\sanitize_string\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
 		-
-			message: "#^Function sanitize_string\\(\\) has parameter \\$input_string with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\sanitize_string\\(\\) has parameter \\$input_string with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
@@ -16541,142 +16416,127 @@ parameters:
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function add_blocked_build\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\add_blocked_build\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function add_blocked_build\\(\\) has parameter \\$Project with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\add_blocked_build\\(\\) has parameter \\$Project with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function add_blocked_build\\(\\) has parameter \\$blocked_build with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\add_blocked_build\\(\\) has parameter \\$blocked_build with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function create_project\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\create_project\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function create_project\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\create_project\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function create_project\\(\\) has parameter \\$user with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\create_project\\(\\) has parameter \\$user with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function get_project\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\get_project\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function get_project\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\get_project\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function get_repo_url_example\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\get_repo_url_example\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function populate_project\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\populate_project\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function populate_project\\(\\) has parameter \\$Project with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\populate_project\\(\\) has parameter \\$Project with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function remove_blocked_build\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\remove_blocked_build\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function remove_blocked_build\\(\\) has parameter \\$Project with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\remove_blocked_build\\(\\) has parameter \\$Project with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function remove_blocked_build\\(\\) has parameter \\$blocked_build with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\remove_blocked_build\\(\\) has parameter \\$blocked_build with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function rest_delete\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\rest_delete\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function rest_delete\\(\\) has parameter \\$user with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\rest_get\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function rest_get\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\rest_get\\(\\) has parameter \\$user with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function rest_get\\(\\) has parameter \\$user with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\rest_post\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function rest_post\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\rest_post\\(\\) has parameter \\$user with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function rest_post\\(\\) has parameter \\$user with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\set_logo\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function set_logo\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\set_logo\\(\\) has parameter \\$Project with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function set_logo\\(\\) has parameter \\$Project with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\update_project\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function update_project\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\update_project\\(\\) has parameter \\$Project with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function update_project\\(\\) has parameter \\$Project with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\update_project\\(\\) has parameter \\$User with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function update_project\\(\\) has parameter \\$User with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			message: "#^Function update_project\\(\\) has parameter \\$response with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			message: "#^Parameter \\#1 \\$userid of function rest_delete expects int, Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			message: "#^Parameter \\#1 \\$userid of function rest_post expects int, Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null given\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\update_project\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
@@ -16691,89 +16551,54 @@ parameters:
 			path: app/cdash/public/api/v1/relateBuilds.php
 
 		-
-			message: "#^Function echo_error\\(\\) has no return type specified\\.$#"
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$Id\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function echo_error\\(\\) has parameter \\$msg with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\echo_error\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function echo_error\\(\\) has parameter \\$status with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\echo_error\\(\\) has parameter \\$msg with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function get_subprojectid\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\echo_error\\(\\) has parameter \\$status with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function rest_delete\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\get_subprojectid\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function rest_delete\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\rest_get\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function rest_get\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\rest_post\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function rest_get\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\rest_post\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function rest_post\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\rest_put\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function rest_post\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\rest_put\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			message: "#^Function rest_put\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			message: "#^Function rest_put\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of static method App\\\\Services\\\\ProjectPermissions\\:\\:userCanEditProject\\(\\) expects App\\\\Models\\\\User, Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			message: "#^Parameter \\#1 \\$userid of function rest_delete expects int, string given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			message: "#^Parameter \\#1 \\$userid of function rest_post expects int, string given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			message: "#^Variable \\$userid might not be defined\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\BuildTest\\:\\:\\$test\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/testDetails.php
 
 		-
 			message: "#^Variable \\$testid in isset\\(\\) always exists and is not nullable\\.$#"
@@ -16826,52 +16651,37 @@ parameters:
 			path: app/cdash/public/api/v1/timeline.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$admin\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\User\\\\ReportLastBuild\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/user.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$firstname\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\User\\\\ReportLastBuild\\(\\) has parameter \\$PDO with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/user.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\User\\\\ReportLastBuild\\(\\) has parameter \\$nightlytime with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/user.php
 
 		-
-			message: "#^Function ReportLastBuild\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\User\\\\ReportLastBuild\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/user.php
 
 		-
-			message: "#^Function ReportLastBuild\\(\\) has parameter \\$PDO with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\User\\\\ReportLastBuild\\(\\) has parameter \\$projectname with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/user.php
 
 		-
-			message: "#^Function ReportLastBuild\\(\\) has parameter \\$nightlytime with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\User\\\\ReportLastBuild\\(\\) has parameter \\$siteid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/user.php
 
 		-
-			message: "#^Function ReportLastBuild\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/user.php
-
-		-
-			message: "#^Function ReportLastBuild\\(\\) has parameter \\$projectname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/user.php
-
-		-
-			message: "#^Function ReportLastBuild\\(\\) has parameter \\$siteid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/user.php
-
-		-
-			message: "#^Function ReportLastBuild\\(\\) has parameter \\$type with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\User\\\\ReportLastBuild\\(\\) has parameter \\$type with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/user.php
 
@@ -16881,82 +16691,92 @@ parameters:
 			path: app/cdash/public/api/v1/user.php
 
 		-
-			message: "#^Function addErrorResponse\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewBuildError\\\\addErrorResponse\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewBuildError.php
 
 		-
-			message: "#^Function addErrorResponse\\(\\) has parameter \\$data with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewBuildError\\\\addErrorResponse\\(\\) has parameter \\$data with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewBuildError.php
 
 		-
-			message: "#^Function addErrorResponse\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewBuildError\\\\addErrorResponse\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewBuildError.php
 
 		-
-			message: "#^Function echo_subprojects_dashboard_JSON\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewSubProjects\\\\echo_subprojects_dashboard_JSON\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewSubProjects.php
 
 		-
-			message: "#^Function echo_subprojects_dashboard_JSON\\(\\) has parameter \\$date with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewSubProjects\\\\echo_subprojects_dashboard_JSON\\(\\) has parameter \\$date with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewSubProjects.php
 
 		-
-			message: "#^Function echo_subprojects_dashboard_JSON\\(\\) has parameter \\$project_instance with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewSubProjects\\\\echo_subprojects_dashboard_JSON\\(\\) has parameter \\$project_instance with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewSubProjects.php
 
 		-
-			message: "#^Function add_file\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\add_file\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewUpdate.php
 
 		-
-			message: "#^Function add_file\\(\\) has parameter \\$directory with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\add_file\\(\\) has parameter \\$directory with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewUpdate.php
 
 		-
-			message: "#^Function add_file\\(\\) has parameter \\$file with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\add_file\\(\\) has parameter \\$file with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewUpdate.php
 
 		-
-			message: "#^Function add_file\\(\\) has parameter \\$list_of_files with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\add_file\\(\\) has parameter \\$list_of_files with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewUpdate.php
 
 		-
-			message: "#^Function sort_array_by_directory\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\sort_array_by_directory\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewUpdate.php
 
 		-
-			message: "#^Function sort_array_by_directory\\(\\) has parameter \\$a with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\sort_array_by_directory\\(\\) has parameter \\$a with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewUpdate.php
 
 		-
-			message: "#^Function sort_array_by_directory\\(\\) has parameter \\$b with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\sort_array_by_directory\\(\\) has parameter \\$b with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewUpdate.php
 
 		-
-			message: "#^Function sort_array_by_filename\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\sort_array_by_filename\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewUpdate.php
 
 		-
-			message: "#^Function sort_array_by_filename\\(\\) has parameter \\$a with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\sort_array_by_filename\\(\\) has parameter \\$a with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewUpdate.php
 
 		-
-			message: "#^Function sort_array_by_filename\\(\\) has parameter \\$b with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\sort_array_by_filename\\(\\) has parameter \\$b with no type specified\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/viewUpdate.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function usort expects callable\\(array\\{filename\\: mixed, author\\: mixed, status\\: mixed, email\\: mixed, log\\: mixed, revision\\: mixed\\}, array\\{filename\\: mixed, author\\: mixed, status\\: mixed, email\\: mixed, log\\: mixed, revision\\: mixed\\}\\)\\: int, 'sort_array_by…' given\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/viewUpdate.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function usort expects callable\\(string, string\\)\\: int, 'sort_array_by…' given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewUpdate.php
 

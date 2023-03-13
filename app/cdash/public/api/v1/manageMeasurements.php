@@ -12,6 +12,9 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\ManageMeasurements;
+
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/api_common.php';
@@ -43,7 +46,7 @@ switch ($method) {
         break;
 }
 
-/* Handle DELETE requests */
+/** Handle DELETE requests */
 function rest_delete()
 {
     $id = $_REQUEST['id'];
@@ -55,7 +58,7 @@ function rest_delete()
     http_response_code(200);
 }
 
-/* Handle POST requests */
+/** Handle POST requests */
 function rest_post($projectid)
 {
     if (!array_key_exists('measurements', $_REQUEST)) {
@@ -93,7 +96,7 @@ function rest_post($projectid)
     }
 }
 
-/* Handle GET requests */
+/** Handle GET requests */
 function rest_get($projectid)
 {
     $pageTimer = new PageTimer();
@@ -110,7 +113,7 @@ function rest_get($projectid)
     $menu_response = [];
     $menu_response['back'] = 'user.php';
     $response['menu'] = $menu_response;
-    $response['hidenav'] =  true;
+    $response['hidenav'] = true;
 
     // Get any measurements associated with this project's tests.
     $measurements_response = [];

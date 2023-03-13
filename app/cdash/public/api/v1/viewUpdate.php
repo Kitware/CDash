@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+namespace CDash\Api\v1\ViewUpdate;
+
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/api_common.php';
@@ -26,6 +28,7 @@ use CDash\Model\BuildUpdate;
 use CDash\Database;
 use CDash\Model\Project;
 use CDash\Model\Site;
+use Illuminate\Support\Facades\Auth;
 
 $pageTimer = new PageTimer();
 $build = get_request_build();

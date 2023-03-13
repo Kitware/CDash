@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+namespace CDash\Api\v1\Index;
+
 // Redirect to the previous version of api/index.php if it seems like
 // that's what the user wants.
 if (isset($_GET['method'])) {
@@ -36,7 +38,6 @@ use CDash\Model\Project;
 use CDash\Model\SubProject;
 
 @set_time_limit(0);
-$config = Config::getInstance();
 
 @$projectname = $_GET['project'];
 $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
@@ -50,7 +51,6 @@ if (!function_exists('echo_main_dashboard_JSON')) {
     function echo_main_dashboard_JSON($project_instance)
     {
         require_once 'include/pdo.php';
-        $config = Config::getInstance();
 
         $PDO = get_link_identifier()->getPdo();
         $response = array();
@@ -173,7 +173,6 @@ if (!function_exists('echo_main_dashboard_JSON')) {
 
         // Check if a SubProject parameter was specified.
         $subproject_name = @$_GET['subproject'];
-        $subprojectid = false;
         if ($subproject_name) {
             $SubProject = new SubProject();
             $subproject_name = htmlspecialchars(pdo_real_escape_string($subproject_name));
@@ -279,7 +278,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         // Get info about our buildgroups.
         $buildgroups = BuildGroup::GetBuildGroups($projectid, $beginning_UTCDate);
         foreach ($buildgroups as $buildgroup) {
-            $buildgroup_response = $controller->beginResponseForBuildgroup($buildgroup);
+            $controller->beginResponseForBuildgroup($buildgroup);
         }
         if (empty($buildgroups)) {
             $response['banners'][] = 'No builds found';
@@ -391,9 +390,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
                     }
                 }
 
-                $percent = round(
-                    compute_percentcoverage($loctested,
-                        $locuntested), 2);
+                $percent = round(compute_percentcoverage($loctested, $locuntested), 2);
 
                 if ($build_array['subprojectgroup']) {
                     $groupId = $build_array['subprojectgroup'];

@@ -16,12 +16,16 @@
 
 declare(strict_types=1);
 
+namespace CDash\Api\v1\Authtoken;
+
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
 use App\Models\AuthToken;
 use App\Services\AuthTokenService;
+use Illuminate\Support\Facades\Auth;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Response;
 
 /* Handle DELETE requests */

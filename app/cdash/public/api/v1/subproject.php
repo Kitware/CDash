@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+namespace CDash\Api\v1\SubProject;
+
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 
@@ -23,12 +25,14 @@ use App\Services\ProjectPermissions;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
 use CDash\Model\SubProjectGroup;
+use Illuminate\Support\Facades\Auth;
 
 // Make sure we have a valid login.
 if (!Auth::check()) {
     return;
 }
 
+/** @var \App\Models\User $user */
 $user = Auth::user();
 
 // Check required parameter.
@@ -48,6 +52,7 @@ $projectid = pdo_real_escape_numeric($projectid);
 $project = new Project;
 $project->Id = $projectid;
 if (!ProjectPermissions::userCanEditProject($user, $project)) {
+    $userid = $user->Id;
     echo_error("You ($userid) don't have the permissions to access this page ($projectid)", 403);
     return;
 }
@@ -57,7 +62,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'DELETE':
-        rest_delete($projectid);
+        rest_delete();
         break;
     case 'POST':
         rest_post($projectid);
@@ -71,12 +76,12 @@ switch ($method) {
         break;
 }
 
-/* Handle GET requests */
-function rest_get($projectid)
+/** Handle GET requests */
+function rest_get($projectid): bool
 {
     $subprojectid = get_subprojectid();
     if ($subprojectid === false) {
-        return;
+        return true;
     }
 
     $pageTimer = new PageTimer();
@@ -90,8 +95,8 @@ function rest_get($projectid)
     $response['group'] = $SubProject->GetGroupId();
 
     $query = pdo_query('
-    SELECT id, name FROM subproject WHERE projectid=' . qnum($projectid) . "
-    AND endtime='1980-01-01 00:00:00'");
+SELECT id, name FROM subproject WHERE projectid=' . qnum($projectid) . "
+AND endtime='1980-01-01 00:00:00'");
 
     if (!$query) {
         add_last_sql_error('getSubProject Select');
@@ -124,10 +129,12 @@ function rest_get($projectid)
 
     $pageTimer->end($response);
     echo json_encode(cast_data_for_JSON($response));
+
+    return true;
 }
 
-/* Handle DELETE requests */
-function rest_delete($projectid)
+/** Handle DELETE requests */
+function rest_delete(): void
 {
     if (isset($_GET['groupid'])) {
         // Delete subproject group.
@@ -157,7 +164,7 @@ function rest_delete($projectid)
     }
 }
 
-/* Handle POST requests */
+/** Handle POST requests */
 function rest_post($projectid)
 {
     if (isset($_POST['newsubproject'])) {
@@ -218,11 +225,10 @@ function rest_post($projectid)
             pdo_query($query);
             add_last_sql_error('API::subproject::newLayout::INSERT', $projectid);
         }
-        return;
     }
 }
 
-/* Handle PUT requests */
+/** Handle PUT requests */
 function rest_put($projectid)
 {
     if (isset($_GET['threshold'])) {

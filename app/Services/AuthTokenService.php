@@ -10,6 +10,7 @@ use CDash\Model\Project;
 use CDash\Model\UserProject;
 use InvalidArgumentException;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class AuthTokenService
 {
@@ -132,8 +133,8 @@ class AuthTokenService
             return false;
         }
 
-        /** @var \App\Models\User $user */
-        $user = \Auth::user();
+        /** @var User $user */
+        $user = Auth::user();
 
         switch ($auth_token['scope']) {
             case AuthToken::SCOPE_SUBMIT_ONLY:
@@ -182,7 +183,7 @@ class AuthTokenService
      *
      * @return \Illuminate\Database\Eloquent\Collection<int,\App\Models\AuthToken>
      */
-    public static function getTokensForUser(int $user_id)
+    public static function getTokensForUser(int $user_id): \Illuminate\Database\Eloquent\Collection
     {
         return AuthToken::select('authtoken.*', 'project.name AS projectname')
             ->leftJoin('project', 'project.id', '=', 'authtoken.projectid')

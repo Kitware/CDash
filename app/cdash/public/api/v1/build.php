@@ -13,6 +13,9 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\Build;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
@@ -21,7 +24,6 @@ use CDash\Model\BuildGroupRule;
 use CDash\Model\Project;
 
 init_api_request();
-$response = [];
 $build = get_request_build();
 
 if (is_null($build)) {
@@ -51,14 +53,14 @@ switch ($method) {
         break;
 }
 
-/* Handle DELETE requests */
+/** Handle DELETE requests */
 function rest_delete($build)
 {
     add_log('Build #' . $build->Id . ' removed manually', 'buildAPI');
     remove_build($build->Id);
 }
 
-/* Handle POST requests */
+/** Handle POST requests */
 function rest_post($build)
 {
     $pdo = Database::getInstance();
@@ -105,12 +107,7 @@ function rest_post($build)
     }
 }
 
-/* Handle PUT requests */
-function rest_put($build)
-{
-}
-
-/* Handle GET requests */
+/** Handle GET requests */
 function rest_get($build)
 {
     $pdo = Database::getInstance()->getPdo();

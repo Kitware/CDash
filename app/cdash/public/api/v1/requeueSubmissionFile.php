@@ -13,6 +13,9 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\RequeueSubmissionFile;
+
 use App\Jobs\ProcessSubmission;
 use CDash\Model\PendingSubmissions;
 

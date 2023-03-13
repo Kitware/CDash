@@ -27,6 +27,9 @@
  * onlydeltan=[anything] Only show errors that were resolved by this build (not supported for parent builds)
  * onlydeltap=[anything] Only show new errors that arose from this build
  **/
+
+namespace CDash\Api\v1\ViewBuildError;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include_once 'include/repository.php';
@@ -42,6 +45,7 @@ use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\ServiceContainer;
+use PDO;
 
 $build = get_request_build();
 if (is_null($build)) {

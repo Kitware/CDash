@@ -13,11 +13,15 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\GetUserID;
+
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
 use App\Models\User;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\Auth;
 
 $userid = Auth::id();
 // Check for authenticated user.

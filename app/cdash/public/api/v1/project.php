@@ -13,6 +13,9 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\Project;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/common.php';
@@ -21,6 +24,7 @@ use App\Services\ProjectPermissions;
 
 use CDash\Model\Project;
 use CDash\Model\UserProject;
+use Illuminate\Support\Facades\Auth;
 
 // Read input parameters (if any).
 $rest_input = file_get_contents('php://input');
@@ -36,13 +40,13 @@ if (!Auth::check()) {
 }
 
 // Get the authenticated user.
-$user = \Auth::user();
+$user = Auth::user();
 
 // Route based on what type of request this is.
 $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case 'DELETE':
-        rest_delete($user);
+        rest_delete();
         break;
     case 'POST':
         rest_post($user);
@@ -53,8 +57,8 @@ switch ($method) {
         break;
 }
 
-/* Handle DELETE requests */
-function rest_delete($user)
+/** Handle DELETE requests */
+function rest_delete()
 {
     $response = [];
     $project = get_project($response);
@@ -70,7 +74,7 @@ function rest_delete($user)
     http_response_code(200);
 }
 
-/* Handle POST requests */
+/** Handle POST requests */
 function rest_post($user)
 {
     $response = [];
@@ -85,7 +89,7 @@ function rest_post($user)
             // User does not have permission to create a new project.
             $response['error'] = 'You do not have permission to access this page.';
             http_response_code(403);
-            return false;
+            return;
         }
         create_project($response, $user);
         echo json_encode($response);
@@ -118,12 +122,13 @@ function rest_post($user)
 
     // If we should remove a build from the blocked list.
     if (isset($_REQUEST['RemoveBlockedBuild']) && !empty($_REQUEST['RemoveBlockedBuild'])) {
-        return remove_blocked_build($project, $_REQUEST['RemoveBlockedBuild']);
+        remove_blocked_build($project, $_REQUEST['RemoveBlockedBuild']);
+        return;
     }
 
     // If we should set the logo.
     if (isset($_FILES['logo']) && strlen($_FILES['logo']['tmp_name']) > 0) {
-        return set_logo($project);
+        set_logo($project);
     }
 }
 
@@ -139,7 +144,7 @@ function get_repo_url_example()
     return true;
 }
 
-/* Handle GET requests */
+/** Handle GET requests */
 function rest_get($user)
 {
     // Repository URL examples?
@@ -254,7 +259,6 @@ function populate_project($Project)
     }
 
     // Convert UploadQuota from GB to bytes.
-    $config = \CDash\Config::getInstance();
     if (is_numeric($Project->UploadQuota) && $Project->UploadQuota > 0) {
         $Project->UploadQuota =
             floor(min($Project->UploadQuota, config('cdash.max_upload_quota')) * 1024 * 1024 * 1024);
