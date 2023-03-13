@@ -132,6 +132,9 @@ class AuthTokenService
             return false;
         }
 
+        /** @var \App\Models\User $user */
+        $user = \Auth::user();
+
         switch ($auth_token['scope']) {
             case AuthToken::SCOPE_SUBMIT_ONLY:
                 if ($auth_token['projectid'] !== null) {
@@ -139,7 +142,7 @@ class AuthTokenService
                     // 1. The user who created them
                     // 2. A project administrator
                     // 3. A system administrator
-                    $user = \Auth::user();
+
                     $user2project = new UserProject();
                     $user2project->UserId = $user->id;
                     $user2project->ProjectId = $auth_token['projectid'];
@@ -147,7 +150,7 @@ class AuthTokenService
                     if (
                         $expected_user_id !== $auth_token['userid']
                         && $user2project->Role !== UserProject::PROJECT_ADMIN
-                        && !$user->IsAdmin()
+                        && $user->admin != 1
                     ) {
                         return false;
                     }
@@ -160,7 +163,7 @@ class AuthTokenService
                 // Full-access tokens can be deleted by:
                 // 1. The user who created them
                 // 2. A system administrator
-                if ($expected_user_id !== $auth_token['userid'] && !\Auth::user()->IsAdmin()) {
+                if ($expected_user_id !== $auth_token['userid'] && $user->admin != 1) {
                     return false;
                 }
                 break;
@@ -177,7 +180,7 @@ class AuthTokenService
      * auth tokens for the user requested.  It is your responsibility as a user of this method
      * to ensure that $user_id is validated appropriately.
      *
-     * @return array<AuthToken>
+     * @return \Illuminate\Database\Eloquent\Collection<int,\App\Models\AuthToken>
      */
     public static function getTokensForUser(int $user_id)
     {
@@ -272,8 +275,9 @@ class AuthTokenService
 
     /**
      * If getallheaders does not exist this method will provide a simulacrum
+     * @return array<string>
      */
-    private static function getAllHeaders(): array|false
+    private static function getAllHeaders(): array
     {
         if (function_exists('getallheaders')) {
             return getallheaders();
