@@ -16556,47 +16556,47 @@ parameters:
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\echo_error\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\SubProject\\\\echo_error\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\echo_error\\(\\) has parameter \\$msg with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\SubProject\\\\echo_error\\(\\) has parameter \\$msg with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\echo_error\\(\\) has parameter \\$status with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\SubProject\\\\echo_error\\(\\) has parameter \\$status with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\get_subprojectid\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\SubProject\\\\get_subprojectid\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\rest_get\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\SubProject\\\\rest_get\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\rest_post\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\SubProject\\\\rest_post\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\rest_post\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\SubProject\\\\rest_post\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\rest_put\\(\\) has no return type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\SubProject\\\\rest_put\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Subproject\\\\rest_put\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			message: "#^Function CDash\\\\Api\\\\v1\\\\SubProject\\\\rest_put\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
