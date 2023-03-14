@@ -8,8 +8,6 @@ use CDash\Test\Log as TestLog;
 
 class DatabaseTest extends CDashTestCase
 {
-    private static $_backup;
-
     public static function setUpBeforeClass() : void
     {
         parent::setUpBeforeClass();

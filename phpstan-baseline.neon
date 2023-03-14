@@ -15586,13 +15586,8 @@ parameters:
 			path: app/cdash/public/api/v1/buildProperties.php
 
 		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildProperties\\\\defect_type_selected\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildProperties\\\\defect_type_selected\\(\\) has parameter \\$defect_type with no type specified\\.$#"
-			count: 1
+			message: "#^Empty array passed to foreach\\.$#"
+			count: 2
 			path: app/cdash/public/api/v1/buildProperties.php
 
 		-
@@ -15627,11 +15622,6 @@ parameters:
 
 		-
 			message: "#^Inner named functions are not supported by PHPStan\\. Consider refactoring to an anonymous function, class method, or a top\\-level\\-defined function\\. See issue \\#165 \\(https\\://github\\.com/phpstan/phpstan/issues/165\\) for more details\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Parameter \\#2 \\$callback of function array_filter expects callable\\(array\\{name\\: 'builderrors', prettyname\\: 'Errors', selected\\: false\\}\\|array\\{name\\: 'buildwarnings', prettyname\\: 'Warnings', selected\\: false\\}\\|array\\{name\\: 'testfailed', prettyname\\: 'Test Failures', selected\\: false\\}\\)\\: mixed, 'defect_type_selected' given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildProperties.php
 
@@ -15796,16 +15786,6 @@ parameters:
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\is_coveragegroup_nonempty\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/compareCoverage.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\is_coveragegroup_nonempty\\(\\) has parameter \\$group with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/compareCoverage.php
-
-		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\populate_subproject\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
@@ -15822,11 +15802,6 @@ parameters:
 
 		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\populate_subproject\\(\\) has parameter \\$subproject with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/compareCoverage.php
-
-		-
-			message: "#^Parameter \\#2 \\$callback of function array_filter expects callable\\(array\\<int\\|string, mixed\\>\\)\\: mixed, 'is_coveragegroup…' given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
 
@@ -15861,16 +15836,6 @@ parameters:
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\decode_build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/computeClassifier.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\decode_build\\(\\) has parameter \\$build with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/computeClassifier.php
-
-		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\find_numerical_classifier\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
@@ -15897,11 +15862,6 @@ parameters:
 
 		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\value_to_string\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/computeClassifier.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(mixed\\)\\: mixed\\)\\|null, 'decode_build' given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
@@ -16047,36 +16007,6 @@ parameters:
 
 		-
 			message: "#^Comparison operation \"\\>\" between \\(array\\|float\\|int\\) and 0 results in an error\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Index\\\\echo_main_dashboard_JSON\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Index\\\\echo_main_dashboard_JSON\\(\\) has parameter \\$project_instance with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Index\\\\is_buildgroup_nonempty\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Index\\\\is_buildgroup_nonempty\\(\\) has parameter \\$group with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			message: "#^Inner named functions are not supported by PHPStan\\. Consider refactoring to an anonymous function, class method, or a top\\-level\\-defined function\\. See issue \\#165 \\(https\\://github\\.com/phpstan/phpstan/issues/165\\) for more details\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			message: "#^Parameter \\#2 \\$callback of function array_filter expects callable\\(mixed\\)\\: mixed, 'is_buildgroup…' given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/index.php
 
@@ -16737,46 +16667,6 @@ parameters:
 
 		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\add_file\\(\\) has parameter \\$list_of_files with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewUpdate.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\sort_array_by_directory\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewUpdate.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\sort_array_by_directory\\(\\) has parameter \\$a with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewUpdate.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\sort_array_by_directory\\(\\) has parameter \\$b with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewUpdate.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\sort_array_by_filename\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewUpdate.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\sort_array_by_filename\\(\\) has parameter \\$a with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewUpdate.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\sort_array_by_filename\\(\\) has parameter \\$b with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewUpdate.php
-
-		-
-			message: "#^Parameter \\#2 \\$callback of function usort expects callable\\(array\\{filename\\: mixed, author\\: mixed, status\\: mixed, email\\: mixed, log\\: mixed, revision\\: mixed\\}, array\\{filename\\: mixed, author\\: mixed, status\\: mixed, email\\: mixed, log\\: mixed, revision\\: mixed\\}\\)\\: int, 'sort_array_by…' given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewUpdate.php
-
-		-
-			message: "#^Parameter \\#2 \\$callback of function usort expects callable\\(string, string\\)\\: int, 'sort_array_by…' given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewUpdate.php
 
@@ -17542,16 +17432,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<int, string\\> given\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
-			message: "#^Property DatabaseTest\\:\\:\\$_backup has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
-			message: "#^Static property DatabaseTest\\:\\:\\$_backup is unused\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
 
@@ -25651,6 +25531,186 @@ parameters:
 			path: app/cdash/xml_handlers/abstract_handler.php
 
 		-
+			message: "#^Call to an undefined method object\\:\\:AddLabel\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:GetCommitAuthors\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:__construct\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:endElement\\(\\) has parameter \\$parser with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:getBuildName\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:getBuildStamp\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:getSubProjectName\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:removeSuppressedWarnings\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:removeSuppressedWarnings\\(\\) has parameter \\$input with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:startElement\\(\\) has parameter \\$attributes with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:startElement\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:startElement\\(\\) has parameter \\$parser with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:text\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:text\\(\\) has parameter \\$data with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Method BuildHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$BuildCommand has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$BuildErrorFilter has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$BuildGroup has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$BuildGroup is unused\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$BuildInformation has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$BuildLog has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$BuildName has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$BuildStamp has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$Builds has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$EndTimeStamp has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$Error has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$ErrorSubProjectName has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$Generator has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$Label has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$Labels has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$PullRequest has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$StartTimeStamp has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Property BuildHandler\\:\\:\\$SubProjects has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
 			message: "#^Call to an undefined method CDash\\\\Messaging\\\\Preferences\\\\NotificationPreferencesInterface\\:\\:get\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/configure_handler.php
@@ -26841,6 +26901,171 @@ parameters:
 			path: app/cdash/xml_handlers/stack.php
 
 		-
+			message: "#^Access to an undefined property TestingHandler\\:\\:\\$Labels\\.$#"
+			count: 3
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Call to an undefined method CDash\\\\Messaging\\\\Preferences\\\\NotificationPreferencesInterface\\:\\:get\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Method TestingHandler\\:\\:GetCommitAuthors\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Method TestingHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Method TestingHandler\\:\\:createBuild\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Method TestingHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Method TestingHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Method TestingHandler\\:\\:endElement\\(\\) has parameter \\$parser with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Method TestingHandler\\:\\:getBuildName\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Method TestingHandler\\:\\:getBuildStamp\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Method TestingHandler\\:\\:getSubProjectName\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Method TestingHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Method TestingHandler\\:\\:startElement\\(\\) has parameter \\$attributes with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Method TestingHandler\\:\\:startElement\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Method TestingHandler\\:\\:startElement\\(\\) has parameter \\$parser with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Method TestingHandler\\:\\:text\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Method TestingHandler\\:\\:text\\(\\) has parameter \\$data with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Method TestingHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Property TestingHandler\\:\\:\\$BuildInformation has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Property TestingHandler\\:\\:\\$BuildName has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Property TestingHandler\\:\\:\\$BuildStamp has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Property TestingHandler\\:\\:\\$EndTimeStamp has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Property TestingHandler\\:\\:\\$Generator has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Property TestingHandler\\:\\:\\$Label has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Property TestingHandler\\:\\:\\$NumberTestsFailed has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Property TestingHandler\\:\\:\\$NumberTestsNotRun has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Property TestingHandler\\:\\:\\$NumberTestsPassed has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Property TestingHandler\\:\\:\\$PullRequest has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Property TestingHandler\\:\\:\\$StartTimeStamp has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Property TestingHandler\\:\\:\\$SubProjects has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Property TestingHandler\\:\\:\\$TestCreator has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Property TestingHandler\\:\\:\\$TestMeasurement has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Property TestingHandler\\:\\:\\$TestSubProjectName has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
 			message: "#^Access to an undefined property TestingJUnitHandler\\:\\:\\$TestCreator\\.$#"
 			count: 8
 			path: app/cdash/xml_handlers/testing_junit_handler.php
@@ -26984,6 +27209,96 @@ parameters:
 			message: "#^Property TestingJUnitHandler\\:\\:\\$UpdateEndTime has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/testing_junit_handler.php
+
+		-
+			message: "#^Call to an undefined method CDash\\\\Messaging\\\\Preferences\\\\NotificationPreferencesInterface\\:\\:get\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Method UpdateHandler\\:\\:GetCommitAuthors\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Method UpdateHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Method UpdateHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Method UpdateHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Method UpdateHandler\\:\\:endElement\\(\\) has parameter \\$parser with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Method UpdateHandler\\:\\:getActionableBuilds\\(\\) should return array\\<CDash\\\\Model\\\\Build\\> but returns array\\<Build\\>\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Method UpdateHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Method UpdateHandler\\:\\:startElement\\(\\) has parameter \\$attributes with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Method UpdateHandler\\:\\:startElement\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Method UpdateHandler\\:\\:startElement\\(\\) has parameter \\$parser with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Method UpdateHandler\\:\\:text\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Method UpdateHandler\\:\\:text\\(\\) has parameter \\$data with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Method UpdateHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Property UpdateHandler\\:\\:\\$EndTimeStamp has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Property UpdateHandler\\:\\:\\$StartTimeStamp has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Property UpdateHandler\\:\\:\\$Update has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Property UpdateHandler\\:\\:\\$UpdateFile has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/update_handler.php
 
 		-
 			message: "#^Method UploadHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
