@@ -56,7 +56,9 @@ class ProjectPermissions
 
     public static function userCanViewProject(Project $project):  bool
     {
-        return self::canViewProject($project, \Auth::user());
+        /** @var \App\Models\User $user */
+        $user = \Auth::user();
+        return self::canViewProject($project, $user);
     }
 
     public static function canViewProject(Project $project, ?User $user): bool
@@ -77,7 +79,7 @@ class ProjectPermissions
         }
 
         // Global admins have access to all projects.
-        if ($user->IsAdmin()) {
+        if ($user->admin == 1) {
             return true;
         }
 

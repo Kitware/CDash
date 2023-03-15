@@ -2116,8 +2116,8 @@ class Build
                     'testpassed' => $numPassed,
                 ]);
 
-        // NOTE: as far as I can tell, build.testtimestatusfailed isn't used,
-        // so for now it isn't being updated for parent builds.
+            // NOTE: as far as I can tell, build.testtimestatusfailed isn't used,
+            // so for now it isn't being updated for parent builds.
         }, 5);
     }
 

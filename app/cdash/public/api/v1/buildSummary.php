@@ -13,6 +13,9 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\BuildSummary;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
@@ -26,6 +29,7 @@ use CDash\Model\BuildUserNote;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
+use Illuminate\Support\Facades\Auth;
 
 $pageTimer = new PageTimer();
 $response = [];

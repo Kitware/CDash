@@ -13,6 +13,9 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\ViewDynamicAnalysis;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
@@ -21,6 +24,7 @@ use App\Services\TestingDay;
 
 use CDash\Model\Project;
 use CDash\Model\Site;
+use Illuminate\Support\Facades\DB;
 
 $pageTimer = new PageTimer();
 $response = [];
@@ -93,7 +97,7 @@ $defect_types = [];
 $dynamic_analyses = [];
 
 // Process 50 rows at a time so we don't run out of memory.
-$rows = \DB::table('dynamicanalysis')
+DB::table('dynamicanalysis')
         ->where('buildid', '=', $build->Id)
         ->orderBy('status', 'desc')
         ->chunk(50, function ($rows) use ($pdo, &$dynamic_analyses, &$defect_types, $defect_nice_names, $project) {

@@ -13,6 +13,9 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\ViewConfigure;
+
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/api_common.php';

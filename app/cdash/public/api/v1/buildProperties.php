@@ -13,15 +13,20 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\BuildProperties;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/filterdataFunctions.php';
 
 use App\Services\PageTimer;
 use CDash\Database;
-use CDash\Model\Project;
+use DateInterval;
+use DateTime;
+use Illuminate\Support\Facades\Session;
 
-if (!function_exists('get_defects_for_builds')) {
+if (!function_exists('CDash\Api\v1\BuildProperties\get_defects_for_builds')) {
     function get_defects_for_builds()
     {
         if (!array_key_exists('buildid', $_GET)) {
@@ -41,7 +46,7 @@ if (!function_exists('get_defects_for_builds')) {
         $pdo = Database::getInstance()->getPdo();
         $placeholder_str = str_repeat('?,', count($_GET['buildid']) - 1). '?';
 
-        if (!function_exists('gather_defects')) {
+        if (!function_exists('CDash\Api\v1\BuildProperties\gather_defects')) {
             function gather_defects($stmt, $prettyname, &$defects_response)
             {
                 $results_found = false;
@@ -128,18 +133,7 @@ if (!function_exists('get_defects_for_builds')) {
     }
 }
 
-// From now on, we are only concerned with the types of defects that were
-// selected by the user (or by default).
-// Filter out those that were not selected.
-if (!function_exists('defect_type_selected')) {
-    function defect_type_selected($defect_type)
-    {
-        return $defect_type['selected'];
-    }
-}
-
 $pageTimer = new PageTimer();
-$response = [];
 
 if (array_key_exists('buildid', $_GET)) {
     get_defects_for_builds();
@@ -241,7 +235,9 @@ if (isset($_GET['defects'])) {
 }
 $response['defecttypes'] = $defect_types;
 
-$defect_types = array_filter($defect_types, 'defect_type_selected');
+$defect_types = array_filter($defect_types, function ($defect_type) {
+    return $defect_type['selected'];
+});
 
 // Construct an SQL SELECT clause for the requested types of defects.
 $defect_keys = [];
@@ -301,7 +297,7 @@ $response['properties'] = $all_properties;
 
 // Timeline chart needs to know what defects we care about
 // and what page we're coming from.
-\Session::put('defecttypes', $defect_types);
+Session::put('defecttypes', $defect_types);
 
 $response['filterdata']['pageId'] = 'buildProperties.php';
 

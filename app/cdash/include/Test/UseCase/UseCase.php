@@ -325,16 +325,6 @@ abstract class UseCase
     }
 
     /**
-     * @param int $minutes
-     * @return $this
-     */
-    public function setConfigureElapsedMinutes($minutes)
-    {
-        $this->properties['Config']['elapsed'] = $minutes;
-        return $this;
-    }
-
-    /**
      * Checks if an array is associative, sequential or a mixture of both. Will return true
      * only if all array keys are ints.
      *

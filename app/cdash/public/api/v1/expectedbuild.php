@@ -13,9 +13,13 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\ExpectedBuild;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
+use App\Models\User;
 use App\Services\ProjectPermissions;
 
 use CDash\Database;
@@ -24,8 +28,12 @@ use CDash\Model\BuildGroupRule;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Auth;
 
-if (!function_exists('rest_delete')) {
-    /* Handle DELETE requests */
+if (!function_exists('CDash\Api\v1\ExpectedBuild\rest_delete')) {
+    /**
+     * Handle DELETE requests
+     *
+     * TODO: (williamjallen) Determine why this gets included twice
+     */
     function rest_delete($siteid, $buildgroupid, $buildname, $buildtype)
     {
         $rule = new BuildGroupRule();
@@ -37,8 +45,12 @@ if (!function_exists('rest_delete')) {
     }
 }
 
-if (!function_exists('rest_get')) {
-    /* Handle GET requests */
+if (!function_exists('CDash\Api\v1\ExpectedBuild\rest_get')) {
+    /**
+     * Handle GET requests
+     *
+     * TODO: (williamjallen) Determine why this gets included twice
+     */
     function rest_get($siteid, $buildgroupid, $buildname, $buildtype, $projectid)
     {
         $response = array();
@@ -86,8 +98,12 @@ if (!function_exists('rest_get')) {
     }
 }
 
-if (!function_exists('rest_post')) {
-    /* Handle POST requests */
+if (!function_exists('CDash\Api\v1\ExpectedBuild\rest_post')) {
+    /**
+     * Handle POST requests
+     *
+     * TODO: (williamjallen) Determine why this gets included twice
+     */
     function rest_post($siteid, $buildgroupid, $buildname, $buildtype)
     {
         if (!array_key_exists('newgroupid', $_REQUEST)) {
@@ -150,7 +166,9 @@ if ($method != 'GET') {
 
     $project = new Project();
     $project->Id = $projectid;
-    if (!ProjectPermissions::userCanEditProject(Auth::user(), $project)) {
+    /** @var User $user */
+    $user = Auth::user();
+    if (!ProjectPermissions::userCanEditProject($user, $project)) {
         $response['error'] = 'You do not have permission to access this page';
         json_error_response($response, 403);
         return;

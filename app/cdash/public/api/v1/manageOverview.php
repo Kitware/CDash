@@ -14,11 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+namespace CDash\Api\v1\ManageOverview;
+
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 
 use App\Services\PageTimer;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\Auth;
 
 $pageTimer = new PageTimer();
 $response = begin_JSON_response();

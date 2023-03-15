@@ -19,6 +19,8 @@
 * was run.  This includes test output and image comparison information
 */
 
+namespace CDash\Api\v1\TestDetails;
+
 require_once 'include/api_common.php';
 
 use App\Models\BuildTest;
@@ -41,7 +43,6 @@ if ($buildtest === null) {
 }
 
 
-$testid = $buildtest->test->id;
 $build = new Build();
 $build->Id = $buildtest->buildid;
 $build->FillFromId($build->Id);

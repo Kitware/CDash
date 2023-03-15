@@ -14,5 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-$version = CDash\Config::getInstance()->get('CDASH_VERSION');
+namespace CDash\Api\v1\GetVersion;
+
+use CDash\Config;
+
+$version = Config::getInstance()->get('CDASH_VERSION');
 return response($version, 200);

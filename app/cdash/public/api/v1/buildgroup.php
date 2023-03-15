@@ -14,11 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+namespace CDash\Api\v1\BuildGroup;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/version.php';
 
 use App\Services\PageTimer;
+use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
 use CDash\Model\Site;
@@ -43,7 +46,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'DELETE':
-        rest_delete($pdo);
+        rest_delete();
         break;
     case 'POST':
         rest_post($pdo, $projectid);
@@ -57,7 +60,7 @@ switch ($method) {
         break;
 }
 
-/* Handle GET requests */
+/** Handle GET requests */
 function rest_get($pdo, $projectid)
 {
     if (!isset($_GET['buildgroupid'])) {
@@ -108,11 +111,9 @@ function rest_get($pdo, $projectid)
     echo json_encode(cast_data_for_JSON($response));
 }
 
-/* Handle DELETE requests */
-function rest_delete($pdo)
+/** Handle DELETE requests */
+function rest_delete()
 {
-    $now = gmdate(FMT_DATETIME);
-
     if (isset($_GET['buildgroupid'])) {
         // Delete the specified BuildGroup.
         $buildgroupid = pdo_real_escape_numeric($_GET['buildgroupid']);
@@ -163,7 +164,7 @@ function rest_delete($pdo)
     }
 }
 
-/* Handle POST requests */
+/** Handle POST requests */
 function rest_post($pdo, $projectid)
 {
     $now = gmdate(FMT_DATETIME);
@@ -263,11 +264,6 @@ function rest_post($pdo, $projectid)
                 SET groupid = :groupid
                 WHERE groupid = :prevgroupid AND
                       buildid = :buildid');
-            $query_params = [
-                ':groupid'     => $groupid,
-                ':prevgroupid' => $prevgroupid,
-                ':buildid'     => $buildid
-            ];
             pdo_execute($stmt, [$groupid, $prevgroupid, $buildid]);
 
             // Soft delete any previous rules.
@@ -355,11 +351,10 @@ function rest_post($pdo, $projectid)
             $response['parentgroupname'] = 'Any';
         }
         echo json_encode(cast_data_for_JSON($response));
-        return;
     }
 }
 
-/* Handle PUT requests */
+/** Handle PUT requests */
 function rest_put($projectid)
 {
     if (isset($_GET['buildgroup'])) {
@@ -456,7 +451,7 @@ function rest_put($projectid)
     }
 }
 
-/* Convert wildcard characters to SQL format */
+/** Convert wildcard characters to SQL format */
 function convert_wildcards($match)
 {
     if (empty($match)) {

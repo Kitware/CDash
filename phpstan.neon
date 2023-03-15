@@ -16,10 +16,6 @@ parameters:
             - app/cdash/tests/kwtest/simpletest
             - app/cdash/tests/selenium/cdash_selenium_test_case.php
             - app/cdash/include/Collection/Collection.php
-            - app/cdash/include/Submission/CommitAuthorHandlerInterface.php
-            - app/cdash/xml_handlers/build_handler.php
-            - app/cdash/xml_handlers/update_handler.php
-            - app/cdash/xml_handlers/testing_handler.php
 
     level: 6
 

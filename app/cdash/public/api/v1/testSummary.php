@@ -20,6 +20,8 @@
  * about each copy of the test that was run.
  */
 
+namespace CDash\Api\v1\TestSummary;
+
 use App\Services\PageTimer;
 
 require_once 'include/pdo.php';
@@ -195,6 +197,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
         $filecontent .= "{$row['sitename']},{$row['name']},{$row['stamp']},{$row['time']},";
 
         if ($projectshowtesttime) {
+            // TODO: (williamjallen) $testtimemaxstatus is undefined here.  Fix it.
             if ($row['timestatus'] < $testtimemaxstatus) {
                 $filecontent .= 'Passed,';
             } else {

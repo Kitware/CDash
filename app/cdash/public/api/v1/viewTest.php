@@ -42,6 +42,8 @@
  * export=[presence]
  **/
 
+namespace CDash\Api\v1\ViewTest;
+
 require_once 'include/api_common.php';
 
 use CDash\Controller\Api\ViewTest as Controller;

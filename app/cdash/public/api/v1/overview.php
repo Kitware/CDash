@@ -7,6 +7,9 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
   =========================================================================*/
+
+namespace CDash\Api\v1\Overview;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/memcache_functions.php';
@@ -25,7 +28,6 @@ if (!isset($projectname)) {
 }
 
 $pageTimer = new PageTimer();
-$response = [];
 
 // Connect to memcache
 if ($config->get('CDASH_MEMCACHE_ENABLED')) {
@@ -783,6 +785,7 @@ function get_DA_chart_data($group_name, $checker, $date_range, $dynamic_analysis
             continue;
         }
 
+        // TODO: (williamjallen) $beginning_timestamp is undefined here. Fix it.
         $chart_date = get_date_from_index($i, $beginning_timestamp);
         $chart_data[] =
             array($chart_date, $dynamic_analysis_data[$i][$group_name][$checker]);

@@ -9,18 +9,18 @@ function cdash_autoload($className)
     $xml_dir = "{$cdash_root}/xml_handlers";
     $filenames = null;
 
-    if (strpos($className, 'CDash\\') !== false) {
+    if (str_contains($className, 'CDash\\')) {
         $loc1 = substr($className, 5);
         $loc1 = $loc2 = preg_replace('/\\\/', '/', $loc1);
         $loc1 = "{$inc_dir}/{$loc1}.php";
         $loc2 = "{$app_dir}/{$loc2}.php";
 
         $filenames = [realpath($loc1), realpath($loc2)];
-    } elseif (preg_match('/Handler$/', $className)) {
+    } elseif (str_ends_with($className, 'Handler') || str_contains($className, 'ActionableBuildInterface')) {
         $name_parts = preg_split('/(?=[A-Z])/', $className);
         $filenames = "{$xml_dir}/" . strtolower(implode('_', array_slice($name_parts, 1))) . '.php';
     } else {
-        if (strpos($className, '\\') !== false) {
+        if (str_contains($className, '\\')) {
             $filenames = preg_replace('/\\\/', '/', $className);
         } else {
             $filenames = strtolower($className);

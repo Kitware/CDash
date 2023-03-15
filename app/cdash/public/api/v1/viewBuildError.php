@@ -27,6 +27,9 @@
  * onlydeltan=[anything] Only show errors that were resolved by this build (not supported for parent builds)
  * onlydeltap=[anything] Only show new errors that arose from this build
  **/
+
+namespace CDash\Api\v1\ViewBuildError;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include_once 'include/repository.php';
@@ -42,6 +45,7 @@ use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\ServiceContainer;
+use PDO;
 
 $build = get_request_build();
 if (is_null($build)) {
@@ -66,9 +70,6 @@ $response = begin_JSON_response();
 $response['title'] = "CDash : $project->Name";
 
 $siteid = $build->SiteId;
-$buildtype = $build->Type;
-$buildname = $build->Name;
-$starttime = $build->StartTime;
 
 if (isset($_GET['type'])) {
     $type = pdo_real_escape_numeric($_GET['type']);
@@ -151,8 +152,10 @@ $response['numErrors'] = 0;
  * the numErrors response key.
  * @todo id should probably just be a unique id for the builderror?
  * builderror table currently has no integer that serves as a unique identifier.
+ *
+ * TODO: (williamjallen) determine why this is being included multiple times...
  **/
-if (!function_exists('addErrorResponse')) {
+if (!function_exists('CDash\Api\v1\ViewBuildError\addErrorResponse')) {
     function addErrorResponse($data, &$response)
     {
         $data['id'] = $response['numErrors'];

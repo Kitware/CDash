@@ -16,16 +16,20 @@
 
 declare(strict_types=1);
 
+namespace CDash\Api\v1\Authtoken;
+
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
 use App\Models\AuthToken;
 use App\Services\AuthTokenService;
+use Illuminate\Support\Facades\Auth;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Response;
 
 /* Handle DELETE requests */
-if (!function_exists('rest_delete')) {
+if (!function_exists('CDash\Api\v1\Authtoken\rest_delete')) {
     function rest_delete(int $userid)
     {
         $json = [];
@@ -50,7 +54,7 @@ if (!function_exists('rest_delete')) {
 }
 
 /* Handle POST requests */
-if (!function_exists('rest_post')) {
+if (!function_exists('CDash\Api\v1\Authtoken\rest_post')) {
     function rest_post(int $userid)
     {
         $response = [];

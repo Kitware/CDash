@@ -146,7 +146,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
 
     public function testComputeClassifiers()
     {
-        $response = $this->get($this->url . "/api/v1/buildProperties.php?project=BuildPropertiesProject&begin=2017-05-26&end=2017-05-29");
+        $this->get($this->url . "/api/v1/buildProperties.php?project=BuildPropertiesProject&begin=2017-05-26&end=2017-05-29");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $builds = [];
@@ -160,7 +160,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
         }
 
         $query_string = http_build_query(['builds' => $builds]);
-        $response = $this->get($this->url . "/api/v1/computeClassifier.php?$query_string");
+        $this->get($this->url . "/api/v1/computeClassifier.php?$query_string");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $num_classifiers = count($jsonobj);

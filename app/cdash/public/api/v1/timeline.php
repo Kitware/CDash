@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+namespace CDash\Api\v1\Timeline;
+
 require_once 'include/api_common.php';
 
 use CDash\Controller\Api\Timeline as Controller;

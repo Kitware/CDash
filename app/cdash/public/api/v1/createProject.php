@@ -13,6 +13,9 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\CreateProject;
+
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
@@ -24,6 +27,7 @@ use CDash\Model\Project;
 use CDash\Model\Repository;
 use CDash\Model\UserProject;
 use CDash\ServiceContainer;
+use Illuminate\Support\Facades\Auth;
 
 $pageTimer = new PageTimer();
 $service = ServiceContainer::getInstance();
@@ -56,7 +60,8 @@ if (isset($_GET['projectid'])) {
     }
 }
 
-$User = \Auth::user();
+/** @var \App\Models\User $User */
+$User = Auth::user();
 
 // Check if the user has the necessary permissions.
 $userHasAccess = false;
