@@ -16636,21 +16636,6 @@ parameters:
 			path: app/cdash/public/api/v1/viewBuildError.php
 
 		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewSubProjects\\\\echo_subprojects_dashboard_JSON\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewSubProjects.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewSubProjects\\\\echo_subprojects_dashboard_JSON\\(\\) has parameter \\$date with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewSubProjects.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewSubProjects\\\\echo_subprojects_dashboard_JSON\\(\\) has parameter \\$project_instance with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewSubProjects.php
-
-		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\add_file\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewUpdate.php
