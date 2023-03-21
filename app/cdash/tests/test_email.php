@@ -1,10 +1,8 @@
 <?php
-//
-// After including cdash_test_case.php, subsequent require_once calls are
-// relative to the top of the CDash source tree
-//
-use App\Models\User;
+
+use App\Enums\TestDiffType;
 use App\Models\TestDiff;
+use App\Models\User;
 use CDash\Config;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
@@ -305,25 +303,25 @@ class EmailTestCase extends KWWebTestCase
         $expected = [0 => true, 1 => true, 2 => true, 3 => true];
         foreach ($testdiffs as $testdiff) {
             if ($testdiff->buildid === $builds[1]->id &&
-                $testdiff->type === TestDiff::TEST_TYPE_FAILED &&
+                $testdiff->type === TestDiffType::Failed->value &&
                 $testdiff->difference_positive === 0 &&
                 $testdiff->difference_negative === 2) {
                 $found[0] = true;
             }
             if ($testdiff->buildid === $builds[1]->id &&
-                $testdiff->type === TestDiff::TEST_TYPE_PASSED &&
+                $testdiff->type === TestDiffType::Passed->value &&
                 $testdiff->difference_positive === 2 &&
                 $testdiff->difference_negative === 0) {
                 $found[1] = true;
             }
             if ($testdiff->buildid === $builds[2]->id &&
-                $testdiff->type === TestDiff::TEST_TYPE_FAILED &&
+                $testdiff->type === TestDiffType::Failed->value &&
                 $testdiff->difference_positive === 1 &&
                 $testdiff->difference_negative === 0) {
                 $found[2] = true;
             }
             if ($testdiff->buildid === $builds[2]->id &&
-                $testdiff->type === TestDiff::TEST_TYPE_PASSED &&
+                $testdiff->type === TestDiffType::Passed->value &&
                 $testdiff->difference_positive === 0 &&
                 $testdiff->difference_negative === 1) {
                 $found[3] = true;

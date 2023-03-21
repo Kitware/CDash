@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enums\TestDiffType;
 use App\Models\TestDiff;
 use CDash\Model\Build;
 use Illuminate\Support\Facades\DB;
@@ -27,10 +28,10 @@ class TestDiffService
         $previous_build->Id = $previous_build_id;
         $previous_build->FillFromId($previous_build->Id);
 
-        return self::computeDifferencesForType($build, $previous_build, TestDiff::TEST_TYPE_NOTRUN) &&
-            self::computeDifferencesForType($build, $previous_build, TestDiff::TEST_TYPE_FAILED) &&
-            self::computeDifferencesForType($build, $previous_build, TestDiff::TEST_TYPE_PASSED) &&
-            self::computeDifferencesForType($build, $previous_build, TestDiff::TEST_TYPE_FAILED_TIMESTATUS);
+        return self::computeDifferencesForType($build, $previous_build, TestDiffType::NotRun->value) &&
+            self::computeDifferencesForType($build, $previous_build, TestDiffType::Failed->value) &&
+            self::computeDifferencesForType($build, $previous_build, TestDiffType::Passed->value) &&
+            self::computeDifferencesForType($build, $previous_build, TestDiffType::FailedTimeStatus->value);
     }
 
     private static function computeDifferencesForType(Build $build, Build $previous_build, int $type) : bool
@@ -39,19 +40,19 @@ class TestDiffService
         $previous_tests = [];
 
         switch ($type) {
-            case TestDiff::TEST_TYPE_NOTRUN:
+            case TestDiffType::NotRun->value:
                 $tests = $build->GetNotRunTests();
                 $previous_tests = $previous_build->GetNotRunTests();
                 break;
-            case TestDiff::TEST_TYPE_FAILED:
+            case TestDiffType::Failed->value:
                 $tests = $build->GetFailedTests();
                 $previous_tests = $previous_build->GetFailedTests();
                 break;
-            case TestDiff::TEST_TYPE_PASSED:
+            case TestDiffType::Passed->value:
                 $tests = $build->GetPassedTests();
                 $previous_tests = $previous_build->GetPassedTests();
                 break;
-            case TestDiff::TEST_TYPE_NOTRUN:
+            case TestDiffType::FailedTimeStatus->value:
                 $tests = $build->GetFailedTimeStatusTests();
                 $previous_tests = $previous_build->GetFailedTimeStatusTests();
                 break;
