@@ -166,7 +166,7 @@ class Build
     /**
      * @param $stamp
      */
-    public function SetStamp($stamp)
+    public function SetStamp(string $stamp) : void
     {
         $this->Stamp = $stamp;
         if (strlen($this->Type) == 0) {
@@ -615,9 +615,6 @@ class Build
     /**
      * Returns all errors, including warnings, from the database, caches, and
      * returns the filtered results
-     *
-     * @param int $fetchStyle
-     * @param array $filters
      */
     public function GetErrors(array $propertyFilters = [], int $fetchStyle = PDO::FETCH_ASSOC) : array|false
     {
@@ -1066,8 +1063,8 @@ class Build
 
     /**
      * Get this build's tests that match the supplied WHERE clause.
-     **/
-    private function GetTests($criteria, $maxitems = 0) : array
+     */
+    private function GetTests($criteria, $maxitems = 0) : array|false
     {
         if (!$this->Id) {
             add_log('BuildId is not set', 'Build::GetTests', LOG_ERR,

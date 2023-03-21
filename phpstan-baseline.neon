@@ -3001,11 +3001,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetTests\\(\\) should return array but returns false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetUploadedFilesOrUrls\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -3171,16 +3166,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetStamp\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetStamp\\(\\) has parameter \\$stamp with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetSubProject\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -3332,11 +3317,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateTestNumbers\\(\\) has parameter \\$numberTestsPassed with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$filters$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
