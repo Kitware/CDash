@@ -456,7 +456,7 @@ class Build
     }
 
     /** Get the previous build id. */
-    public function GetPreviousBuildId($previous_parentid = null)
+    public function GetPreviousBuildId(int|null $previous_parentid = null) : int
     {
         if (!$this->Id) {
             return 0;
@@ -471,7 +471,7 @@ class Build
     }
 
     /** Get the next build id. */
-    public function GetNextBuildId($next_parentid = null)
+    public function GetNextBuildId(int|null $next_parentid = null) : int
     {
         if (!$this->Id) {
             return 0;
@@ -485,7 +485,7 @@ class Build
     }
 
     /** Get the most recent build id. */
-    public function GetCurrentBuildId($current_parentid = null)
+    public function GetCurrentBuildId(int|null $current_parentid = null) : int
     {
         if (!$this->Id) {
             return 0;
@@ -498,10 +498,11 @@ class Build
 
     /** Private helper function to encapsulate the common parts of
      * Get{Previous,Next,Current}BuildId()
+     * @param array<string, string> $extra_values_to_bind
      **/
-    private function GetRelatedBuildId($which_build_criteria,
-                                       $extra_values_to_bind = [],
-                                       $related_parentid = null)
+    private function GetRelatedBuildId(string $which_build_criteria,
+                                       array $extra_values_to_bind = [],
+                                       int|null $related_parentid = null) : int
     {
         $related_build_criteria =
             'WHERE siteid = :siteid
@@ -587,7 +588,7 @@ class Build
         if (!$related_buildid) {
             return 0;
         }
-        return $related_buildid;
+        return (int)$related_buildid;
     }
 
     /**
