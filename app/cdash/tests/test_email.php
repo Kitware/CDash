@@ -4,6 +4,7 @@ use App\Enums\TestDiffType;
 use App\Models\TestDiff;
 use App\Models\User;
 use CDash\Config;
+use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/pdo.php';
@@ -288,12 +289,12 @@ class EmailTestCase extends KWWebTestCase
     public function testVerifyTestDiffValues() : void
     {
         // Verify that we have three builds for this project.
-        $project = \DB::table('project')->where('name', 'EmailProjectExample')->first();
-        $builds = \DB::table('build')->where('projectid', $project->id)->get();
+        $project = DB::table('project')->where('name', 'EmailProjectExample')->first();
+        $builds = DB::table('build')->where('projectid', $project->id)->get();
         $this->assertTrue(count($builds) === 3);
 
         // Verify that we have four rows in the testdiff table for these builds.
-        $testdiffs = \DB::table('testdiff')
+        $testdiffs = DB::table('testdiff')
             ->where('buildid', $builds[1]->id)
             ->orWhere('buildid', $builds[2]->id)
             ->get();
