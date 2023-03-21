@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
-use Artisan;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class MeasurementPositionMigration extends TestCase
@@ -24,7 +26,7 @@ class MeasurementPositionMigration extends TestCase
             '--force' => true]);
 
         // Verify that worked.
-        $this->assertFalse(\Schema::hasColumn('measurement', 'position'));
+        $this::assertFalse(Schema::hasColumn('measurement', 'position'));
 
         // Populate some data to migrate.
         $base_measurement = [
@@ -50,7 +52,7 @@ class MeasurementPositionMigration extends TestCase
         $measurement6['projectid'] = '2';
         $measurement6['name'] = 'b';
 
-        \DB::table('measurement')->insert(
+        DB::table('measurement')->insert(
             [$measurement1, $measurement2, $measurement3, $measurement4, $measurement5, $measurement6]);
 
         // Run the migrations under test.
@@ -59,7 +61,7 @@ class MeasurementPositionMigration extends TestCase
             '--force' => true]);
 
         // Verify results.
-        $this->assertEquals(\DB::table('measurement')->count(), 6);
+        $this::assertEquals(DB::table('measurement')->count(), 6);
         $expected_measurements = [
             [
                 'projectid' => 1,
@@ -100,7 +102,7 @@ class MeasurementPositionMigration extends TestCase
         Artisan::call('migrate:rollback', [
             '--path' => 'database/migrations/2021_09_23_124054_add_measurement_order.php',
             '--force' => true]);
-        $this->assertFalse(\Schema::hasColumn('measurement', 'position'));
+        $this::assertFalse(Schema::hasColumn('measurement', 'position'));
 
         Artisan::call('migrate:fresh', [
             '--force' => true]);

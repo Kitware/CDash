@@ -67,7 +67,7 @@ Route::get('/testDetails.php', function (Request $request) {
     $buildid = $request->query('build');
     $testid = $request->query('test');
     $buildtest = \App\Models\BuildTest::where('buildid', $buildid)->where('testid', $testid)->first();
-    if ($buildtest) {
+    if ($buildtest !== null) {
         return redirect("/test/{$buildtest->id}");
     }
     abort(404);

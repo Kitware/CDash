@@ -52,7 +52,7 @@ class OpenLdapAuthWithOverrides extends LdapTest
             ->andReturn(true);
 
         $this->post(route('login'), $credentials)->assertRedirect('/');
-        $this->assertInstanceOf(User::class, Auth::user());
+        $this::assertInstanceOf(User::class, Auth::user());
         $this->assertDatabaseHas('user', ['email' => $email]);
     }
 
@@ -74,6 +74,6 @@ class OpenLdapAuthWithOverrides extends LdapTest
                 'givenName' => 'Ricky'
         ]);
 
-        $this->assertEquals($email, $user->getConvertedGuid());
+        $this::assertEquals($email, $user->getConvertedGuid());
     }
 }

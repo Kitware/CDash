@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
-use Artisan;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class IncreaseSiteInformationCPUColumnsSizeMigration extends TestCase
@@ -26,11 +28,11 @@ class IncreaseSiteInformationCPUColumnsSizeMigration extends TestCase
         // Verify that worked.
         $is_postgres = config('database.default') === 'pgsql';
         if ($is_postgres) {
-            $this->assertEquals(-1, \Schema::getConnection()->getDoctrineColumn('siteinformation', 'numberlogicalcpus')->getDefault());
-            $this->assertEquals(-1, \Schema::getConnection()->getDoctrineColumn('siteinformation', 'numberphysicalcpus')->getDefault());
+            $this::assertEquals(-1, Schema::getConnection()->getDoctrineColumn('siteinformation', 'numberlogicalcpus')->getDefault());
+            $this::assertEquals(-1, Schema::getConnection()->getDoctrineColumn('siteinformation', 'numberphysicalcpus')->getDefault());
         } else {
-            $this->assertEquals('boolean', \DB::getSchemaBuilder()->getColumnType('siteinformation', 'numberlogicalcpus'));
-            $this->assertEquals('boolean', \DB::getSchemaBuilder()->getColumnType('siteinformation', 'numberphysicalcpus'));
+            $this::assertEquals('boolean', DB::getSchemaBuilder()->getColumnType('siteinformation', 'numberlogicalcpus'));
+            $this::assertEquals('boolean', DB::getSchemaBuilder()->getColumnType('siteinformation', 'numberphysicalcpus'));
         }
 
         // Run the migrations under test.
@@ -40,11 +42,11 @@ class IncreaseSiteInformationCPUColumnsSizeMigration extends TestCase
 
         // Verify that worked.
         if ($is_postgres) {
-            $this->assertEquals(0, \Schema::getConnection()->getDoctrineColumn('siteinformation', 'numberlogicalcpus')->getDefault());
-            $this->assertEquals(0, \Schema::getConnection()->getDoctrineColumn('siteinformation', 'numberphysicalcpus')->getDefault());
+            $this::assertEquals(0, Schema::getConnection()->getDoctrineColumn('siteinformation', 'numberlogicalcpus')->getDefault());
+            $this::assertEquals(0, Schema::getConnection()->getDoctrineColumn('siteinformation', 'numberphysicalcpus')->getDefault());
         } else {
-            $this->assertEquals('smallint', \DB::getSchemaBuilder()->getColumnType('siteinformation', 'numberlogicalcpus'));
-            $this->assertEquals('smallint', \DB::getSchemaBuilder()->getColumnType('siteinformation', 'numberphysicalcpus'));
+            $this::assertEquals('smallint', DB::getSchemaBuilder()->getColumnType('siteinformation', 'numberlogicalcpus'));
+            $this::assertEquals('smallint', DB::getSchemaBuilder()->getColumnType('siteinformation', 'numberphysicalcpus'));
         }
 
         Artisan::call('migrate:fresh', [
