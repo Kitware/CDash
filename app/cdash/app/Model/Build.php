@@ -1063,8 +1063,9 @@ class Build
 
     /**
      * Get this build's tests that match the supplied WHERE clause.
+     * @return array<mixed>|false
      */
-    private function GetTests($criteria, $maxitems = 0) : array|false
+    private function GetTests(string $criteria, int $maxitems = 0) : array|false
     {
         if (!$this->Id) {
             add_log('BuildId is not set', 'Build::GetTests', LOG_ERR,
@@ -1073,9 +1074,8 @@ class Build
         }
 
         $limit_clause = '';
-        $limit = (int)trim($maxitems);
-        if ($limit > 0) {
-            $limit_clause = "LIMIT $limit";
+        if ($maxitems > 0) {
+            $limit_clause = "LIMIT $maxitems";
         }
 
         $sql = "
@@ -1098,9 +1098,9 @@ class Build
 
     /**
      * Get this build's tests that passed.
-     * @return array<mixed>
+     * @return array<mixed>|false
      */
-    public function GetPassedTests(int $maxitems = 0) : array
+    public function GetPassedTests(int $maxitems = 0) : array|false
     {
         $criteria = "b2t.status = 'passed'";
         return $this->GetTests($criteria, $maxitems);
@@ -1108,9 +1108,9 @@ class Build
 
     /**
      * Get this build's tests that failed but did not timeout.
-     * @return array<mixed>
+     * @return array<mixed>|false
      */
-    public function GetFailedTests(int $maxitems = 0) : array
+    public function GetFailedTests(int $maxitems = 0) : array|false
     {
         $criteria = "b2t.status = 'failed'";
         return $this->GetTests($criteria, $maxitems);
@@ -1118,9 +1118,9 @@ class Build
 
     /**
      * Get this build's tests that failed the time status check.
-     * @return array<mixed>
+     * @return array<mixed>|false
      */
-    public function GetFailedTimeStatusTests(int $maxitems = 0, int $max_time_status = 3) : array
+    public function GetFailedTimeStatusTests(int $maxitems = 0, int $max_time_status = 3) : array|false
     {
         $criteria = "b2t.timestatus > $max_time_status";
         return $this->GetTests($criteria, $maxitems);
@@ -1128,9 +1128,9 @@ class Build
 
     /**
      * Get this build's tests whose details indicate a timeout.
-     * @return array<mixed>
+     * @return array<mixed>|false
      */
-    public function GetTimedoutTests(int $maxitems = 0) : array
+    public function GetTimedoutTests(int $maxitems = 0) : array|false
     {
         $criteria = "b2t.status = 'failed' AND b2t.details LIKE '%%Timeout%%'";
         return $this->GetTests($criteria, $maxitems);
@@ -1139,9 +1139,9 @@ class Build
     /**
      * Get this build's tests whose status is "Not Run" and whose details
      * is not 'Disabled'.
-     * @return array<mixed>
+     * @return array<mixed>|false
      */
-    public function GetNotRunTests(int $maxitems = 0) : array
+    public function GetNotRunTests(int $maxitems = 0) : array|false
     {
         $criteria = "b2t.status = 'notrun' AND b2t.details != 'Disabled'";
         return $this->GetTests($criteria, $maxitems);

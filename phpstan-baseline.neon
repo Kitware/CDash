@@ -2986,21 +2986,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetTests\\(\\) has parameter \\$criteria with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetTests\\(\\) has parameter \\$maxitems with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetTests\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetUploadedFilesOrUrls\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
