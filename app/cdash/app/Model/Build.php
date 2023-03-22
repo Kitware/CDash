@@ -22,6 +22,7 @@ include_once 'include/repository.php';
 
 use App\Models\Test;
 use App\Services\TestingDay;
+use App\Services\TestDiffService;
 
 use CDash\Collection\BuildEmailCollection;
 use CDash\Collection\CollectionCollection;
@@ -139,10 +140,7 @@ class Build
         $this->PDO = Database::getInstance()->getPdo();
     }
 
-    /**
-     * @return bool
-     */
-    public function IsParentBuild()
+    public function IsParentBuild() : bool
     {
         return $this->ParentId == -1;
     }
@@ -168,7 +166,7 @@ class Build
     /**
      * @param $stamp
      */
-    public function SetStamp($stamp)
+    public function SetStamp(string $stamp) : void
     {
         $this->Stamp = $stamp;
         if (strlen($this->Type) == 0) {
@@ -176,10 +174,7 @@ class Build
         }
     }
 
-    /**
-     * @return string
-     */
-    public function GetStamp()
+    public function GetStamp() : string
     {
         return $this->Stamp;
     }
@@ -436,9 +431,8 @@ class Build
     /**
      * @param Build $build
      * @param array $optional_values
-     * @return array
      */
-    public static function MarshalResponseArray($build, $optional_values = [])
+    public static function MarshalResponseArray($build, $optional_values = []) : array
     {
         $response = [
             'id' => $build->Id,
@@ -462,7 +456,7 @@ class Build
     }
 
     /** Get the previous build id. */
-    public function GetPreviousBuildId($previous_parentid = null)
+    public function GetPreviousBuildId(int|null $previous_parentid = null) : int
     {
         if (!$this->Id) {
             return 0;
@@ -477,7 +471,7 @@ class Build
     }
 
     /** Get the next build id. */
-    public function GetNextBuildId($next_parentid = null)
+    public function GetNextBuildId(int|null $next_parentid = null) : int
     {
         if (!$this->Id) {
             return 0;
@@ -491,7 +485,7 @@ class Build
     }
 
     /** Get the most recent build id. */
-    public function GetCurrentBuildId($current_parentid = null)
+    public function GetCurrentBuildId(int|null $current_parentid = null) : int
     {
         if (!$this->Id) {
             return 0;
@@ -504,10 +498,11 @@ class Build
 
     /** Private helper function to encapsulate the common parts of
      * Get{Previous,Next,Current}BuildId()
+     * @param array<string, string> $extra_values_to_bind
      **/
-    private function GetRelatedBuildId($which_build_criteria,
-                                       $extra_values_to_bind = [],
-                                       $related_parentid = null)
+    private function GetRelatedBuildId(string $which_build_criteria,
+                                       array $extra_values_to_bind = [],
+                                       int|null $related_parentid = null) : int
     {
         $related_build_criteria =
             'WHERE siteid = :siteid
@@ -593,7 +588,7 @@ class Build
         if (!$related_buildid) {
             return 0;
         }
-        return $related_buildid;
+        return (int)$related_buildid;
     }
 
     /**
@@ -620,12 +615,8 @@ class Build
     /**
      * Returns all errors, including warnings, from the database, caches, and
      * returns the filtered results
-     *
-     * @param int $fetchStyle
-     * @param array $filters
-     * @return array|bool
      */
-    public function GetErrors(array $propertyFilters = [], $fetchStyle = PDO::FETCH_ASSOC)
+    public function GetErrors(array $propertyFilters = [], int $fetchStyle = PDO::FETCH_ASSOC) : array|false
     {
         // This needs to take into account that this build may be a parent build
         if (!$this->Errors) {
@@ -649,9 +640,8 @@ class Build
      * Returns all failures (errors), including warnings, for current build
      *
      * @param int $fetchStyle
-     * @return array|bool
      */
-    public function GetFailures(array $propertyFilters = [], $fetchStyle = PDO::FETCH_ASSOC)
+    public function GetFailures(array $propertyFilters = [], int $fetchStyle = PDO::FETCH_ASSOC) : array|false
     {
         // This needs to take into account that this build may be a parent build
         if (!$this->Failures) {
@@ -675,9 +665,8 @@ class Build
      * Apply filter to rows
      *
      * @param array $filters
-     * @return array
      */
-    protected function PropertyFilter(array $rows, array $filters)
+    protected function PropertyFilter(array $rows, array $filters) : array
     {
         return array_filter($rows, function ($row) use ($filters) {
             foreach ($filters as $prop => $value) {
@@ -816,10 +805,7 @@ class Build
         return 0;
     }
 
-    /**
-     * @return bool
-     */
-    public function InsertLabelAssociations()
+    public function InsertLabelAssociations() : bool
     {
         if (!$this->Id) {
             add_log('No Build::Id - cannot call $label->Insert...', 'Build::InsertLabelAssociations', LOG_ERR,
@@ -1020,10 +1006,9 @@ class Build
 
     /**
      * Get missing tests' names relative to previous build
-     *
-     * @return array
+     * @return array<int, string>
      */
-    public function GetMissingTests()
+    public function GetMissingTests() : array
     {
         if (!$this->MissingTests) {
             $this->MissingTests = [];
@@ -1031,7 +1016,7 @@ class Build
             if (!$this->Id) {
                 add_log('BuildId is not set', 'Build::GetMissingTests', LOG_ERR,
                     $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
-                return false;
+                return $this->MissingTests;
             }
 
             $previous_build_tests = [];
@@ -1065,10 +1050,8 @@ class Build
 
     /**
      * Gut the number of missing tests relative to previous build
-     *
-     * @return int
-     */
-    public function GetNumberOfMissingTests()
+     **/
+    public function GetNumberOfMissingTests() : int
     {
         if (!is_array($this->MissingTests)) {
             // feels clumsy but necessary for testing :( (for the time being)
@@ -1080,10 +1063,9 @@ class Build
 
     /**
      * Get this build's tests that match the supplied WHERE clause.
-     *
-     * @return array
+     * @return array<mixed>|false
      */
-    private function GetTests($criteria, $maxitems = 0)
+    private function GetTests(string $criteria, int $maxitems = 0) : array|false
     {
         if (!$this->Id) {
             add_log('BuildId is not set', 'Build::GetTests', LOG_ERR,
@@ -1092,9 +1074,8 @@ class Build
         }
 
         $limit_clause = '';
-        $limit = (int)trim($maxitems);
-        if ($limit > 0) {
-            $limit_clause = "LIMIT $limit";
+        if ($maxitems > 0) {
+            $limit_clause = "LIMIT $maxitems";
         }
 
         $sql = "
@@ -1116,11 +1097,20 @@ class Build
     }
 
     /**
-     * Get this build's tests that failed but did not timeout.
-     *
-     * @return array
+     * Get this build's tests that passed.
+     * @return array<mixed>|false
      */
-    public function GetFailedTests($maxitems = 0)
+    public function GetPassedTests(int $maxitems = 0) : array|false
+    {
+        $criteria = "b2t.status = 'passed'";
+        return $this->GetTests($criteria, $maxitems);
+    }
+
+    /**
+     * Get this build's tests that failed but did not timeout.
+     * @return array<mixed>|false
+     */
+    public function GetFailedTests(int $maxitems = 0) : array|false
     {
         $criteria = "b2t.status = 'failed'";
         return $this->GetTests($criteria, $maxitems);
@@ -1128,22 +1118,19 @@ class Build
 
     /**
      * Get this build's tests that failed the time status check.
-     *
-     * @return array
+     * @return array<mixed>|false
      */
-    public function GetFailedTimeStatusTests($maxitems = 0, $max_time_status = 3)
+    public function GetFailedTimeStatusTests(int $maxitems = 0, int $max_time_status = 3) : array|false
     {
-        $max_time_status = (int)trim($max_time_status);
         $criteria = "b2t.timestatus > $max_time_status";
         return $this->GetTests($criteria, $maxitems);
     }
 
     /**
      * Get this build's tests whose details indicate a timeout.
-     *
-     * @return array
+     * @return array<mixed>|false
      */
-    public function GetTimedoutTests($maxitems = 0)
+    public function GetTimedoutTests(int $maxitems = 0) : array|false
     {
         $criteria = "b2t.status = 'failed' AND b2t.details LIKE '%%Timeout%%'";
         return $this->GetTests($criteria, $maxitems);
@@ -1152,10 +1139,9 @@ class Build
     /**
      * Get this build's tests whose status is "Not Run" and whose details
      * is not 'Disabled'.
-     *
-     * @return array
+     * @return array<mixed>|false
      */
-    public function GetNotRunTests($maxitems = 0)
+    public function GetNotRunTests(int $maxitems = 0) : array|false
     {
         $criteria = "b2t.status = 'notrun' AND b2t.details != 'Disabled'";
         return $this->GetTests($criteria, $maxitems);
@@ -1173,7 +1159,7 @@ class Build
         $diff = [];
 
         $stmt = $this->PDO->prepare(
-            'SELECT id,
+            'SELECT build.id,
                     builderrordiff.type AS builderrortype,
                     builderrordiff.difference_positive AS builderrorspositive,
                     builderrordiff.difference_negative AS builderrorsnegative,
@@ -1186,7 +1172,7 @@ class Build
               LEFT JOIN builderrordiff ON builderrordiff.buildid=build.id
               LEFT JOIN configureerrordiff ON configureerrordiff.buildid=build.id
               LEFT JOIN testdiff ON testdiff.buildid=build.id
-              WHERE id = ?');
+              WHERE build.id = ?');
         if (!pdo_execute($stmt, [$this->Id])) {
             return false;
         }
@@ -1326,6 +1312,10 @@ class Build
             return false;
         }
 
+        // Record test differences from the previous build.
+        // (+/- number of tests that failed, etc.)
+        TestDiffService::computeDifferences($this);
+
         $project_stmt = $this->PDO->prepare(
             'SELECT testtimestd, testtimestdthreshold, testtimemaxstatus
             FROM project WHERE id = ?');
@@ -1344,13 +1334,6 @@ class Build
         $projecttimestd = $project_array['testtimestd'];
         $projecttimestdthreshold = $project_array['testtimestdthreshold'];
         $projecttestmaxstatus = $project_array['testtimemaxstatus'];
-
-        // Record test differences from the previous build.
-        // (+/- number of tests that failed, etc.)
-        compute_test_difference($this->Id, $previousbuildid, 0, $projecttestmaxstatus); // not run
-        compute_test_difference($this->Id, $previousbuildid, 1, $projecttestmaxstatus); // fail
-        compute_test_difference($this->Id, $previousbuildid, 2, $projecttestmaxstatus); // pass
-        compute_test_difference($this->Id, $previousbuildid, 3, $projecttestmaxstatus); // time
 
         // Get the tests performed by the previous build.
         $previous_tests_stmt = $this->PDO->prepare(

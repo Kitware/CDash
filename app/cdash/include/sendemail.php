@@ -61,7 +61,7 @@ function check_email_errors($buildid, $checktesttimeingchanged, $testtimemaxstat
     $errors['test_errors'] = $Build->GetNumberOfFailedTests();
     $errors['test_errors'] += $Build->GetNumberOfNotRunTests();
     if ($checktesttimeingchanged) {
-        $errors['test_errors'] += $Build->GetFailedTimeStatusTests(0, $testtimemaxstatus);
+        $errors['test_errors'] += count($Build->GetFailedTimeStatusTests(0, $testtimemaxstatus));
     }
 
     // Dynamic analysis errors
@@ -69,7 +69,7 @@ function check_email_errors($buildid, $checktesttimeingchanged, $testtimemaxstat
     $DynamicAnalysis->BuildId = $buildid;
     $errors['dynamicanalysis_errors'] = $DynamicAnalysis->GetNumberOfErrors();
 
-    // Green build we return
+    // Check if this is a clean build.
     if ($errors['configure_errors'] == 0
         && $errors['build_errors'] == 0
         && $errors['build_warnings'] == 0

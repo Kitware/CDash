@@ -1,10 +1,10 @@
 <?php
-//
-// After including cdash_test_case.php, subsequent require_once calls are
-// relative to the top of the CDash source tree
-//
+
+use App\Enums\TestDiffType;
+use App\Models\TestDiff;
 use App\Models\User;
 use CDash\Config;
+use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/pdo.php';
@@ -284,5 +284,51 @@ class EmailTestCase extends KWWebTestCase
         if ($this->assertLogContains($expected, 41)) {
             $this->pass('Passed');
         }
+    }
+
+    public function testVerifyTestDiffValues() : void
+    {
+        // Verify that we have three builds for this project.
+        $project = DB::table('project')->where('name', 'EmailProjectExample')->first();
+        $builds = DB::table('build')->where('projectid', $project->id)->get();
+        $this->assertTrue(count($builds) === 3);
+
+        // Verify that we have four rows in the testdiff table for these builds.
+        $testdiffs = DB::table('testdiff')
+            ->where('buildid', $builds[1]->id)
+            ->orWhere('buildid', $builds[2]->id)
+            ->get();
+        $this->assertTrue(count($testdiffs) === 4);
+
+        $found = [0 => false, 1 => false, 2 => false, 3 => false];
+        $expected = [0 => true, 1 => true, 2 => true, 3 => true];
+        foreach ($testdiffs as $testdiff) {
+            if ($testdiff->buildid === $builds[1]->id &&
+                $testdiff->type === TestDiffType::Failed->value &&
+                $testdiff->difference_positive === 0 &&
+                $testdiff->difference_negative === 2) {
+                $found[0] = true;
+            }
+            if ($testdiff->buildid === $builds[1]->id &&
+                $testdiff->type === TestDiffType::Passed->value &&
+                $testdiff->difference_positive === 2 &&
+                $testdiff->difference_negative === 0) {
+                $found[1] = true;
+            }
+            if ($testdiff->buildid === $builds[2]->id &&
+                $testdiff->type === TestDiffType::Failed->value &&
+                $testdiff->difference_positive === 1 &&
+                $testdiff->difference_negative === 0) {
+                $found[2] = true;
+            }
+            if ($testdiff->buildid === $builds[2]->id &&
+                $testdiff->type === TestDiffType::Passed->value &&
+                $testdiff->difference_positive === 0 &&
+                $testdiff->difference_negative === 1) {
+                $found[3] = true;
+            }
+        }
+
+        $this->assertTrue($found === $expected);
     }
 }

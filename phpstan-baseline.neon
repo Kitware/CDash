@@ -2806,16 +2806,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetCurrentBuildId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetCurrentBuildId\\(\\) has parameter \\$current_parentid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetDate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -2847,31 +2837,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetErrorsForChildren\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetFailedTests\\(\\) has parameter \\$maxitems with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetFailedTests\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetFailedTimeStatusTests\\(\\) has parameter \\$max_time_status with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetFailedTimeStatusTests\\(\\) has parameter \\$maxitems with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetFailedTimeStatusTests\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -2926,37 +2891,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetMissingTests\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetMissingTests\\(\\) should return array but returns false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetNextBuildId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetNextBuildId\\(\\) has parameter \\$next_parentid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetNotRunTests\\(\\) has parameter \\$maxitems with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetNotRunTests\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -3001,37 +2936,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetPreviousBuildId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetPreviousBuildId\\(\\) has parameter \\$previous_parentid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetPullRequest\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetRelatedBuildId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetRelatedBuildId\\(\\) has parameter \\$extra_values_to_bind with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetRelatedBuildId\\(\\) has parameter \\$related_parentid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetRelatedBuildId\\(\\) has parameter \\$which_build_criteria with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -3077,36 +2982,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetTestCollection\\(\\) has invalid return type CDash\\\\Model\\\\TestCollection\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetTests\\(\\) has parameter \\$criteria with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetTests\\(\\) has parameter \\$maxitems with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetTests\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetTests\\(\\) should return array but returns false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetTimedoutTests\\(\\) has parameter \\$maxitems with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetTimedoutTests\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -3276,16 +3151,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetStamp\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetStamp\\(\\) has parameter \\$stamp with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetSubProject\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -3437,11 +3302,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateTestNumbers\\(\\) has parameter \\$numberTestsPassed with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$filters$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -12441,31 +12301,6 @@ parameters:
 			path: app/cdash/include/ctestparserutils.php
 
 		-
-			message: "#^Function compute_test_difference\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Function compute_test_difference\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Function compute_test_difference\\(\\) has parameter \\$previousbuildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Function compute_test_difference\\(\\) has parameter \\$projecttestmaxstatus with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Function compute_test_difference\\(\\) has parameter \\$testtype with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
 			message: "#^Function extract_date_from_buildstamp\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparserutils.php
@@ -12483,11 +12318,6 @@ parameters:
 		-
 			message: "#^Function extract_type_from_buildstamp\\(\\) has parameter \\$buildstamp with no type specified\\.$#"
 			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Variable \\$status might not be defined\\.$#"
-			count: 3
 			path: app/cdash/include/ctestparserutils.php
 
 		-
