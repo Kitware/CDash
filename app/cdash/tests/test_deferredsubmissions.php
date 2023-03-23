@@ -132,7 +132,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->login('user1@kw', 'user1');
 
         // Use API to generate token.
-        $response = $this->post($this->url . '/api/v1/authtoken.php', [
+        $response = $this->post($this->url . '/api/authtokens/create', [
             'description' => 'mytoken',
             'scope' => $scope,
             'projectid' => $this->project->Id

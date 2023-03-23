@@ -56,6 +56,16 @@ parameters:
 			path: app/Exceptions/Handler.php
 
 		-
+			message: "#^Property App\\\\Http\\\\Controllers\\\\AbstractController\\:\\:\\$cdashCss has no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/AbstractController.php
+
+		-
+			message: "#^Property App\\\\Http\\\\Controllers\\\\AbstractController\\:\\:\\$user has no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/AbstractController.php
+
+		-
 			message: "#^Access to an undefined property App\\\\Http\\\\Controllers\\\\Auth\\\\LoginController\\:\\:\\$decayMinutes\\.$#"
 			count: 1
 			path: app/Http/Controllers/Auth/LoginController.php
@@ -84,6 +94,76 @@ parameters:
 			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\RegisterController\\:\\:validator\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Http/Controllers/Auth/RegisterController.php
+
+		-
+			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/AuthTokenController.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$page_name follows optional parameter \\$build_id\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:configure\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:configure\\(\\) has parameter \\$build_id with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:notes\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:notes\\(\\) has parameter \\$build_id with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:renderBuildPage\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:renderBuildPage\\(\\) has parameter \\$build_id with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:renderBuildPage\\(\\) has parameter \\$page_name with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:renderBuildPage\\(\\) has parameter \\$page_title with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:setup\\(\\) has parameter \\$build_id with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:summary\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:summary\\(\\) has parameter \\$build_id with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Property App\\\\Http\\\\Controllers\\\\BuildController\\:\\:\\$build has no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
 
 		-
 			message: "#^Call to function is_array\\(\\) with Illuminate\\\\Http\\\\RedirectResponse\\|string will always evaluate to false\\.$#"
@@ -131,9 +211,49 @@ parameters:
 			path: app/Http/Controllers/CDash.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\ImageController\\:\\:image\\(\\) has no return type specified\\.$#"
+			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:create\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/Http/Controllers/ImageController.php
+			path: app/Http/Controllers/EditProjectController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:edit\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/EditProjectController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:edit\\(\\) has parameter \\$project_id with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/EditProjectController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:setup\\(\\) has parameter \\$project_id with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/EditProjectController.php
+
+		-
+			message: "#^Property App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:\\$build has no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/EditProjectController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageMeasurementsController\\:\\:setup\\(\\) has parameter \\$project_id with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageMeasurementsController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageMeasurementsController\\:\\:show\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageMeasurementsController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageMeasurementsController\\:\\:show\\(\\) has parameter \\$project_id with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageMeasurementsController.php
+
+		-
+			message: "#^Property App\\\\Http\\\\Controllers\\\\ManageMeasurementsController\\:\\:\\$project has no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
 			message: "#^Call to an undefined method CDash\\\\Middleware\\\\OAuth2\\\\OAuth2Interface\\:\\:getPrimaryEmail\\(\\)\\.$#"
@@ -151,214 +271,44 @@ parameters:
 			path: app/Http/Controllers/OAuthController.php
 
 		-
-			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$page_name follows optional parameter \\$build_id\\.$#"
+			message: "#^Property App\\\\Http\\\\Controllers\\\\ProjectController\\:\\:\\$authOk has no type specified\\.$#"
 			count: 1
-			path: app/Http/Controllers/Views/BuildController.php
+			path: app/Http/Controllers/ProjectController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\BuildController\\:\\:configure\\(\\) has no return type specified\\.$#"
+			message: "#^Property App\\\\Http\\\\Controllers\\\\ProjectController\\:\\:\\$date has no type specified\\.$#"
 			count: 1
-			path: app/Http/Controllers/Views/BuildController.php
+			path: app/Http/Controllers/ProjectController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\BuildController\\:\\:configure\\(\\) has parameter \\$build_id with no type specified\\.$#"
+			message: "#^Property App\\\\Http\\\\Controllers\\\\ProjectController\\:\\:\\$logo has no type specified\\.$#"
 			count: 1
-			path: app/Http/Controllers/Views/BuildController.php
+			path: app/Http/Controllers/ProjectController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\BuildController\\:\\:notes\\(\\) has no return type specified\\.$#"
+			message: "#^Property App\\\\Http\\\\Controllers\\\\ProjectController\\:\\:\\$project has no type specified\\.$#"
 			count: 1
-			path: app/Http/Controllers/Views/BuildController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\BuildController\\:\\:notes\\(\\) has parameter \\$build_id with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/BuildController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\BuildController\\:\\:renderBuildPage\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/BuildController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\BuildController\\:\\:renderBuildPage\\(\\) has parameter \\$build_id with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/BuildController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\BuildController\\:\\:renderBuildPage\\(\\) has parameter \\$page_name with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/BuildController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\BuildController\\:\\:renderBuildPage\\(\\) has parameter \\$page_title with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/BuildController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\BuildController\\:\\:setup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/BuildController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\BuildController\\:\\:setup\\(\\) has parameter \\$build_id with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/BuildController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\BuildController\\:\\:summary\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/BuildController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\BuildController\\:\\:summary\\(\\) has parameter \\$build_id with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/BuildController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\Views\\\\BuildController\\:\\:\\$build has no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/BuildController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\EditProjectController\\:\\:create\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/EditProjectController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\EditProjectController\\:\\:edit\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/EditProjectController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\EditProjectController\\:\\:edit\\(\\) has parameter \\$project_id with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/EditProjectController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\EditProjectController\\:\\:setup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/EditProjectController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\EditProjectController\\:\\:setup\\(\\) has parameter \\$project_id with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/EditProjectController.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of static method App\\\\Services\\\\ProjectPermissions\\:\\:userCanCreateProject\\(\\) expects App\\\\Models\\\\User, Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null given\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/EditProjectController.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of static method App\\\\Services\\\\ProjectPermissions\\:\\:userCanEditProject\\(\\) expects App\\\\Models\\\\User, Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null given\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/EditProjectController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\Views\\\\EditProjectController\\:\\:\\$build has no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/EditProjectController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\ManageMeasurementsController\\:\\:setup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/ManageMeasurementsController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\ManageMeasurementsController\\:\\:setup\\(\\) has parameter \\$project_id with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/ManageMeasurementsController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\ManageMeasurementsController\\:\\:show\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/ManageMeasurementsController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\ManageMeasurementsController\\:\\:show\\(\\) has parameter \\$project_id with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/ManageMeasurementsController.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of static method App\\\\Services\\\\ProjectPermissions\\:\\:userCanEditProject\\(\\) expects App\\\\Models\\\\User, Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null given\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/ManageMeasurementsController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\Views\\\\ManageMeasurementsController\\:\\:\\$project has no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/ManageMeasurementsController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\ProjectController\\:\\:setup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/ProjectController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\Views\\\\ProjectController\\:\\:\\$authOk has no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/ProjectController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\Views\\\\ProjectController\\:\\:\\$date has no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/ProjectController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\Views\\\\ProjectController\\:\\:\\$logo has no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/ProjectController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\Views\\\\ProjectController\\:\\:\\$project has no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/ProjectController.php
+			path: app/Http/Controllers/ProjectController.php
 
 		-
 			message: "#^Access to an undefined property App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\:\\:\\$test\\.$#"
 			count: 1
-			path: app/Http/Controllers/Views/TestController.php
+			path: app/Http/Controllers/TestController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\TestController\\:\\:details\\(\\) has no return type specified\\.$#"
+			message: "#^Method App\\\\Http\\\\Controllers\\\\TestController\\:\\:details\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/Http/Controllers/Views/TestController.php
+			path: app/Http/Controllers/TestController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\TestController\\:\\:details\\(\\) has parameter \\$buildtest_id with no type specified\\.$#"
+			message: "#^Method App\\\\Http\\\\Controllers\\\\TestController\\:\\:details\\(\\) has parameter \\$buildtest_id with no type specified\\.$#"
 			count: 1
-			path: app/Http/Controllers/Views/TestController.php
+			path: app/Http/Controllers/TestController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\TestController\\:\\:setup\\(\\) has no return type specified\\.$#"
+			message: "#^Property App\\\\Http\\\\Controllers\\\\TestController\\:\\:\\$project has no type specified\\.$#"
 			count: 1
-			path: app/Http/Controllers/Views/TestController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\Views\\\\TestController\\:\\:\\$project has no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/TestController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\ViewController\\:\\:redirectToLogin\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/ViewController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Views\\\\ViewController\\:\\:setup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/ViewController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\Views\\\\ViewController\\:\\:\\$cdashCss has no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/ViewController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\Views\\\\ViewController\\:\\:\\$user has no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/Views/ViewController.php
+			path: app/Http/Controllers/TestController.php
 
 		-
 			message: "#^PHPDoc type array of property App\\\\Http\\\\Kernel\\:\\:\\$middleware is not covariant with PHPDoc type array\\<int, string\\> of overridden property Illuminate\\\\Foundation\\\\Http\\\\Kernel\\:\\:\\$middleware\\.$#"

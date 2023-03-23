@@ -1058,8 +1058,7 @@ div#index_top {
 }
 
 div#main_content {
-  padding-left: 30px;
-  padding-right: 30px;
+  padding: 1em 2em;
 }
 
 #settings {

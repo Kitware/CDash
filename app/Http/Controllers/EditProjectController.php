@@ -1,11 +1,12 @@
 <?php
-namespace App\Http\Controllers\Views;
+namespace App\Http\Controllers;
 
 require_once 'include/common.php';
 require_once 'include/defines.php';
 
-use CDash\Model\Project;
 use App\Services\ProjectPermissions;
+use CDash\Model\Project;
+use Illuminate\Support\Facades\Auth;
 
 class EditProjectController extends ProjectController
 {
@@ -16,23 +17,22 @@ class EditProjectController extends ProjectController
         parent::__construct();
     }
 
-    protected function setup($project_id = null)
+    protected function setup($project_id = null): void
     {
         if (!is_null($project_id)) {
             $this->project = new Project();
             $this->project->Id = $project_id;
         }
-        parent::setup($this->project);
     }
 
     // Render the create project form.
     public function create()
     {
         $this->setup();
-        if (!\Auth::check()) {
+        if (!Auth::check()) {
             return $this->redirectToLogin();
         }
-        if (ProjectPermissions::userCanCreateProject(\Auth::user())) {
+        if (ProjectPermissions::userCanCreateProject(Auth::user())) {
             $project_name = 'CDash';
             return view('admin.project')
                 ->with('cdashCss', $this->cdashCss)
@@ -50,13 +50,13 @@ class EditProjectController extends ProjectController
     public function edit($project_id)
     {
         $this->setup($project_id);
-        if (!\Auth::check()) {
+        if (!Auth::check()) {
             return $this->redirectToLogin();
         }
         if (!$this->project->Exists()) {
             abort(404);
         }
-        if (ProjectPermissions::userCanEditProject(\Auth::user(), $this->project)) {
+        if (ProjectPermissions::userCanEditProject(Auth::user(), $this->project)) {
             return view('admin.project')
                 ->with('cdashCss', $this->cdashCss)
                 ->with('date', json_encode($this->date))

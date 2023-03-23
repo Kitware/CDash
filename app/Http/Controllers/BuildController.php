@@ -1,12 +1,11 @@
 <?php
-namespace App\Http\Controllers\Views;
+namespace App\Http\Controllers;
 
 require_once 'include/common.php';
 require_once 'include/defines.php';
 
 use App\Services\TestingDay;
 use CDash\Model\Build;
-use CDash\Model\Project;
 
 class BuildController extends ProjectController
 {
@@ -20,7 +19,7 @@ class BuildController extends ProjectController
     }
 
     // Fetch data used by all build-specific pages in CDash.
-    protected function setup($build_id = null)
+    protected function setup($build_id = null): void
     {
         if (!$build_id) {
             abort(404);

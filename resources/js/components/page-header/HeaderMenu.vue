@@ -173,7 +173,7 @@ export default {
         cdash.querytestfilters = extrafilterurl;
       }
 
-      if (cdash.menu.back) {
+      if (cdash.menu && cdash.menu.back) {
         this.showBack = true;
         this.backUrl = `${this.$baseURL}/${cdash.menu.back}${extrafilterurl}`;
       }

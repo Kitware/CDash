@@ -19,6 +19,9 @@ export default {
 
         // Add vuejs render time to page load time in footer.
         var renderTime = +((new Date().getTime() - vm.start) / 1000);
+        if (vm.cdash.generationtime === undefined) {
+          vm.cdash.generationtime = 0;
+        }
         var generationTimeStr = (renderTime + vm.cdash.generationtime).toFixed(2);
         generationTimeStr += `s (${vm.cdash.generationtime}s)`;
         vm.cdash.generationtime = generationTimeStr;

@@ -8,7 +8,7 @@ CDash.controller('UserController', function UserController($scope, $http, $timeo
       projectid: $scope.cdash.tokenscope === 'full_access'
                  || $scope.cdash.tokenscope === 'submit_only' ? -1 : $scope.cdash.tokenscope
     };
-    $http.post('api/v1/authtoken.php', parameters)
+    $http.post('/api/authtokens/create', parameters)
     .then(function success(s) {
       const authtoken = s.data.token;
       authtoken.copied = false;
@@ -19,6 +19,9 @@ CDash.controller('UserController', function UserController($scope, $http, $timeo
           authtoken.projectname = project.name;
         }
       });
+
+      // A terrible hack to format the date the same way the DB returns them on initial page load
+      authtoken.expires = authtoken.expires.replace('T', ' ');
 
       $scope.cdash.authtokens.push(authtoken);
     }, function error(e) {
@@ -36,9 +39,8 @@ CDash.controller('UserController', function UserController($scope, $http, $timeo
 
   $scope.revokeToken = function(authtoken) {
     $http({
-      url: 'api/v1/authtoken.php',
+      url: `/api/authtokens/delete/${authtoken.hash}`,
       method: 'DELETE',
-      params: { hash: authtoken.hash }
     }).then(function success() {
       // Remove this token from our list.
       let index = -1;

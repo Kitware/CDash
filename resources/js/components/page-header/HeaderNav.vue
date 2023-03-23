@@ -83,6 +83,10 @@ export default {
 
   mounted() {
     this.$root.$on('api-loaded', cdash => {
+      if (!cdash.menu) {
+        return;
+      }
+
       if (cdash.menu.previous) {
         this.previous = this.$baseURL + cdash.menu.previous;
       }

@@ -75,8 +75,7 @@ class AuthTokenTestCase extends KWWebTestCase
         $this->login('user1@kw', 'user1');
 
         // Use API to generate token.
-        $response =
-            $this->post($this->url . '/api/v1/authtoken.php', ['description' => 'mytoken', 'scope' => AuthToken::SCOPE_FULL_ACCESS]);
+        $response = $this->post($this->url . '/api/authtokens/create', ['description' => 'mytoken', 'scope' => AuthToken::SCOPE_FULL_ACCESS]);
         $response = json_decode($response, true);
         if (!array_key_exists('raw_token', $response)) {
             $this->fail('Failed to generate token');
@@ -341,7 +340,7 @@ class AuthTokenTestCase extends KWWebTestCase
         $this->login('user1@kw', 'user1');
 
         // Use API to revoke token.
-        $this->delete($this->url . "/api/v1/authtoken.php?hash=$this->Hash");
+        $this->delete($this->url . "/api/authtokens/delete/$this->Hash");
 
         // Make sure the token is really gone.
         if (AuthToken::find($this->Hash)) {
