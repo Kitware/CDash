@@ -66,7 +66,7 @@ class KWWebTestCase extends WebTestCase
         $this->url = $configure['urlwebsite'];
 
         $config = Config::getInstance();
-        $this->configfilename = "{$config->get('CDASH_ROOT_DIR')}/config/config.local.php";
+        $this->configfilename = "{$config->get('CDASH_ROOT_DIR')}/../../.env";
         $this->config = $config;
 
         // Create the application on construct so that we have access to app() (container)
@@ -138,8 +138,7 @@ class KWWebTestCase extends WebTestCase
             $data = xdebug_get_code_coverage();
             xdebug_stop_code_coverage();
             //echo "xdebug_stop_code_coverage called...\n";
-
-            $file = $config->get('CDASH_COVERAGE_DIR') . DIRECTORY_SEPARATOR .
+            $file = config('cdash.coverage_dir') . DIRECTORY_SEPARATOR .
                 md5($_SERVER['SCRIPT_FILENAME']);
             file_put_contents(
                 $file . '.' . md5(uniqid(rand(), true)) . '.' . get_class(),

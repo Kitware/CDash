@@ -14,6 +14,9 @@ class MigrateConfigCommand extends TestCase
         parent::setUp();
         $this->config_file = base_path('app/cdash/config/config.local.php');
         $this->test_file = base_path('tests/.env.testing');
+        if (!file_exists($this->config_file)) {
+            file_put_contents($this->config_file, "");
+        }
     }
 
     /**
