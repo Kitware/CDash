@@ -51,7 +51,7 @@ class LdapAuthWithRulesTest extends LdapTest
             ->andReturn(true);
 
         $this->post(route('login'), $credentials)->assertRedirect('/');
-        $this->assertInstanceOf(User::class, Auth::user());
+        $this::assertInstanceOf(User::class, Auth::user());
         $this->assertDatabaseHas('user', ['email' => $email]);
     }
 
@@ -76,11 +76,11 @@ class LdapAuthWithRulesTest extends LdapTest
         $mock_ldap_resource = fopen(__FILE__, 'r');
         $mock_ldap = $user->getQuery()->getConnection();
 
-        $mock_ldap->expects($this->once())
+        $mock_ldap->expects($this::once())
             ->method('search')
             ->willReturn($mock_ldap_resource);
 
-        $mock_ldap->expects($this->once())
+        $mock_ldap->expects($this::once())
             ->method('countEntries')
             ->with($mock_ldap_resource)
             ->willReturn(0);
@@ -104,7 +104,7 @@ class LdapAuthWithRulesTest extends LdapTest
 
         $this->post(route('login'), $credentials)
             ->assertStatus(Response::HTTP_UNAUTHORIZED);
-        $this->assertNull(Auth::user());
+        $this::assertNull(Auth::user());
         $this->assertDatabaseMissing('user', ['email' => $email]);
     }
 
@@ -129,11 +129,11 @@ class LdapAuthWithRulesTest extends LdapTest
         $mock_ldap_resource = fopen(__FILE__, 'r');
         $mock_ldap = $user->getQuery()->getConnection();
 
-        $mock_ldap->expects($this->once())
+        $mock_ldap->expects($this::once())
             ->method('search')
             ->willReturn($mock_ldap_resource);
 
-        $mock_ldap->expects($this->once())
+        $mock_ldap->expects($this::once())
             ->method('countEntries')
             ->with($mock_ldap_resource)
             ->willReturn(1);
@@ -157,7 +157,7 @@ class LdapAuthWithRulesTest extends LdapTest
 
         $this->post(route('login'), $credentials)
             ->assertStatus(Response::HTTP_FOUND);
-        $this->assertInstanceOf(User::class, Auth::user());
+        $this::assertInstanceOf(User::class, Auth::user());
         $this->assertDatabaseHas('user', ['email' => $email]);
     }
 }

@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
-use Artisan;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class TestSchemaMigration extends TestCase
@@ -41,12 +43,12 @@ class TestSchemaMigration extends TestCase
             '--force' => true]);
 
         // Make sure they're really gone.
-        $this->assertFalse(\Schema::hasTable('build2test'));
-        $this->assertFalse(\Schema::hasTable('label2test'));
-        $this->assertFalse(\Schema::hasTable('test'));
-        $this->assertFalse(\Schema::hasTable('test2image'));
-        $this->assertFalse(\Schema::hasTable('testmeasurement'));
-        $this->assertFalse(\Schema::hasTable('testoutput'));
+        $this::assertFalse(Schema::hasTable('build2test'));
+        $this::assertFalse(Schema::hasTable('label2test'));
+        $this::assertFalse(Schema::hasTable('test'));
+        $this::assertFalse(Schema::hasTable('test2image'));
+        $this::assertFalse(Schema::hasTable('testmeasurement'));
+        $this::assertFalse(Schema::hasTable('testoutput'));
 
         // Recreate testing tables with original schema using migrations.
         Artisan::call('migrate', [
@@ -66,11 +68,11 @@ class TestSchemaMigration extends TestCase
             '--force' => true]);
 
         // Make sure they exist now.
-        $this->assertTrue(\Schema::hasTable('build2test'));
-        $this->assertTrue(\Schema::hasTable('label2test'));
-        $this->assertTrue(\Schema::hasTable('test'));
-        $this->assertTrue(\Schema::hasTable('test2image'));
-        $this->assertTrue(\Schema::hasTable('testmeasurement'));
+        $this::assertTrue(Schema::hasTable('build2test'));
+        $this::assertTrue(Schema::hasTable('label2test'));
+        $this::assertTrue(Schema::hasTable('test'));
+        $this::assertTrue(Schema::hasTable('test2image'));
+        $this::assertTrue(Schema::hasTable('testmeasurement'));
 
         // Populate some data.
         $base_test = [
@@ -96,7 +98,7 @@ class TestSchemaMigration extends TestCase
         $test4['name'] = 'another test';
         $test4['output'] = 'something else';
 
-        \DB::table('test')->insert([$test1, $test2, $test3, $test4]);
+        DB::table('test')->insert([$test1, $test2, $test3, $test4]);
 
         $base_buildtest = [
             'buildid' => 1,
@@ -116,7 +118,7 @@ class TestSchemaMigration extends TestCase
         $buildtest3['testid'] = 3;
         $buildtest4 = $base_buildtest;
         $buildtest4['testid'] = 4;
-        \DB::table('build2test')->insert([$buildtest1, $buildtest2, $buildtest3, $buildtest4]);
+        DB::table('build2test')->insert([$buildtest1, $buildtest2, $buildtest3, $buildtest4]);
 
         $base_testlabel = [
             'labelid' => 1,
@@ -130,7 +132,7 @@ class TestSchemaMigration extends TestCase
         $testlabel3['testid'] = 3;
         $testlabel4 = $base_testlabel;
         $testlabel4['testid'] = 4;
-        \DB::table('label2test')->insert([$testlabel1, $testlabel2, $testlabel3, $testlabel4]);
+        DB::table('label2test')->insert([$testlabel1, $testlabel2, $testlabel3, $testlabel4]);
 
         $base_testimage = [
             'imgid' => 1,
@@ -146,7 +148,7 @@ class TestSchemaMigration extends TestCase
         $testimage3['role'] = 'TestImage';
         $testimage4 = $base_testimage;
         $testimage4['testid'] = 4;
-        \DB::table('test2image')->insert([$testimage1, $testimage2, $testimage3, $testimage4]);
+        DB::table('test2image')->insert([$testimage1, $testimage2, $testimage3, $testimage4]);
 
         $base_testmeasurement = [
             'testid' => 1,
@@ -161,7 +163,7 @@ class TestSchemaMigration extends TestCase
         $testmeasurement3['testid'] = 3;
         $testmeasurement4 = $base_testmeasurement;
         $testmeasurement4['testid'] = 4;
-        \DB::table('testmeasurement')->insert([$testmeasurement1, $testmeasurement2, $testmeasurement3, $testmeasurement4]);
+        DB::table('testmeasurement')->insert([$testmeasurement1, $testmeasurement2, $testmeasurement3, $testmeasurement4]);
 
         // Run the migrations under test.
         Artisan::call('migrate', [
@@ -172,7 +174,7 @@ class TestSchemaMigration extends TestCase
             '--force' => true]);
 
         // Verify results.
-        $this->assertEquals(\DB::table('test')->count(), 3);
+        $this::assertEquals(DB::table('test')->count(), 3);
         $expected_tests = [
             [
                 'name' => 'a test',
@@ -191,7 +193,7 @@ class TestSchemaMigration extends TestCase
             $this->assertDatabaseHas('test', $expected_test);
         }
 
-        $this->assertEquals(\DB::table('testoutput')->count(), 4);
+        $this::assertEquals(DB::table('testoutput')->count(), 4);
         $expected_testoutputs = [
             [
                 'crc32' => 123,
@@ -217,7 +219,7 @@ class TestSchemaMigration extends TestCase
         }
 
         foreach (['build2test', 'label2test', 'test2image', 'testmeasurement'] as $table) {
-            $this->assertEquals(\DB::table($table)->count(), 4);
+            $this::assertEquals(DB::table($table)->count(), 4);
             $this->assertDatabaseHas($table, ['outputid' => 1]);
             $this->assertDatabaseHas($table, ['outputid' => 2]);
             $this->assertDatabaseHas($table, ['outputid' => 3]);
@@ -231,7 +233,7 @@ class TestSchemaMigration extends TestCase
         Artisan::call('migrate:rollback', [
             '--path' => 'database/migrations/2020_02_17_111951_add_test_output_table.php',
             '--force' => true]);
-        $this->assertFalse(\Schema::hasTable('testoutput'));
+        $this::assertFalse(Schema::hasTable('testoutput'));
         $this->assertDatabaseHas('test', $test1);
         $this->assertDatabaseHas('test', $test2);
         $this->assertDatabaseHas('test', $test3);

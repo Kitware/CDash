@@ -6,9 +6,8 @@ use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
 
+use DateTime;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AutoRemoveBuildsCommand extends TestCase
 {
@@ -40,7 +39,7 @@ class AutoRemoveBuildsCommand extends TestCase
         $build->AddBuild();
 
         // Make a new build for the project.
-        $datetime = new \DateTime('now', new \DateTimeZone('UTC'));
+        $datetime = new DateTime('now', new \DateTimeZone('UTC'));
         $buildstamp = $datetime->format('Ymd-His') . '-Experimental';
         $db_datetime_str = $datetime->format('Y-m-d H:i:s');
 
@@ -58,21 +57,21 @@ class AutoRemoveBuildsCommand extends TestCase
         $db = new Database();
         $stmt = $db->prepare('SELECT COUNT(1) FROM build WHERE projectid = ?');
         $db->execute($stmt, [$this->project->Id]);
-        $this->assertEquals(2, $stmt->fetchColumn());
+        $this::assertEquals(2, $stmt->fetchColumn());
 
         // Run the command.
         $this->artisan('build:remove', ['project' => 'AutoRemoveProject']);
 
         // Confirm that the project only has one build now.
         $db->execute($stmt, [$this->project->Id]);
-        $this->assertEquals(1, $stmt->fetchColumn());
+        $this::assertEquals(1, $stmt->fetchColumn());
 
         // Run the command again with the '--all-builds' option.
         $this->artisan('build:remove', ['project' => 'AutoRemoveProject', '--all-builds' => 1]);
 
         // Confirm that the project has no builds.
         $db->execute($stmt, [$this->project->Id]);
-        $this->assertEquals(0, $stmt->fetchColumn());
+        $this::assertEquals(0, $stmt->fetchColumn());
     }
 
     public function tearDown() : void
@@ -80,5 +79,7 @@ class AutoRemoveBuildsCommand extends TestCase
         if ($this->project) {
             $this->project->Delete();
         }
+
+        parent::tearDown();
     }
 }

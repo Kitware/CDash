@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
 class PasswordRotation extends TestCase
@@ -18,7 +20,7 @@ class PasswordRotation extends TestCase
     protected function tearDown() : void
     {
         if ($this->user) {
-            \DB::table('password')->where('userid', $this->user->id)->delete();
+            DB::table('password')->where('userid', $this->user->id)->delete();
             $this->user->delete();
         }
         parent::tearDown();
@@ -31,7 +33,7 @@ class PasswordRotation extends TestCase
      */
     public function testPasswordRotation()
     {
-        \URL::forceRootUrl('http://localhost');
+        URL::forceRootUrl('http://localhost');
 
         // Enable password rotation.
         config(['cdash.password.expires' => 1]);
@@ -48,18 +50,18 @@ class PasswordRotation extends TestCase
             'url' => 'catchbot',
         ];
 
-        $eesponse = $this->post(route('register'), $post_data);
+        $this->post(route('register'), $post_data);
         $this->assertDatabaseHas('user', ['email' => 'jane@smith']);
 
         // Get the id for this user.
         $this->user = User::where('email', 'jane@smith')->first();
-        $this->assertEquals('me', $this->user->institution);
+        $this::assertEquals('me', $this->user->institution);
 
         // Make sure the password was recorded for rotation.
         $this->assertDatabaseHas('password', ['userid' => $this->user->id]);
 
         // Make the password too old.
-        \DB::table('password')
+        DB::table('password')
             ->where('userid', $this->user->id)
             ->update(['date' => '2011-07-22 15:37:57']);
 
@@ -78,10 +80,10 @@ class PasswordRotation extends TestCase
         $response->assertSee('You have recently used this password');
 
         // Get the current password hash to compare against later.
-        $password_hash = \DB::table('password')
+        $password_hash = DB::table('password')
             ->where('userid', $this->user->id)
             ->value('password');
-        $this->assertIsString($password_hash);
+        $this::assertIsString($password_hash);
 
         // Enable unique password count.
         config(['cdash.password.unique' => 2]);
@@ -107,10 +109,10 @@ class PasswordRotation extends TestCase
 
         // Make sure the oldest password was deleted since we're only keeping
         // the two most recent entries.
-        $password_rows = \DB::table('password')
+        $password_rows = DB::table('password')
             ->where('userid', $this->user->id)
             ->get();
-        $this->assertEquals(2, count($password_rows));
+        $this::assertEquals(2, count($password_rows));
         $this->assertDatabaseMissing('password', ['password' => $password_hash]);
 
         // Verify that we can set our password back to the original one
