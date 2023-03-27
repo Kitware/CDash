@@ -3,6 +3,7 @@
 use CDash\Middleware\OAuth2\GitHub;
 use CDash\Middleware\OAuth2\GitLab;
 use CDash\Middleware\OAuth2\Google;
+use CDash\Middleware\OAuth2\LCOAuth;
 
 return [
     'github' => [
@@ -24,5 +25,14 @@ return [
         'hostedDomain' => '*',
         'className' => Google::class,
         'enable' => env('GOOGLE_ENABLE', false),
+    ],
+    'lcoauth' => [
+        'clientId' => env('LCOAUTH_CLIENT_ID'),
+        'clientSecret' => env('LCOAUTH_CLIENT_SECRET'),
+        'urlAuthorize' => env('LCOAUTH_URL_AUTHORIZE'),
+        'urlAccessToken' => env('LCOAUTH_URL_ACCESSTOKEN'),
+        'urlResourceOwnerDetails' => env('LCOAUTH_URL_RESOURCEOWNERDETAILS'),
+        'className' => LCOAuth::class,
+        'enable' => env('LCOAUTH_ENABLE', false),
     ]
 ];

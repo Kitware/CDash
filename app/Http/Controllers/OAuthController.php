@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use RuntimeException;
 
 /**
@@ -65,10 +66,12 @@ class OAuthController extends AbstractController
         $user = $user_table->whereIn('email', $emails)->first();
 
         if (!$user) {
-            return $this->handleRegistration($service);
+             $this->handleRegistration($service);
         }
 
-        Auth::login($user, true);
+        $user = $user_table->whereIn('email', $emails)->first();
+
+        Auth::login($user);
 
         // TODO: create a default route, i.e. route('default') or route('index')
         $to = $session->remove('auth.oauth.destination') ?: '/viewProjects.php';
@@ -80,6 +83,9 @@ class OAuthController extends AbstractController
      * @param OAuth2Interface $service
      * @param Collection $emails
      * @return RedirectResponse
+     * LLNL override.  Automatically register users on their behalf.
+     * Register their account with a random password to make it inaccessible.
+     * They'll be forced to use OAuth.
      */
     public function handleRegistration(OAuth2Interface $service)
     {
@@ -87,9 +93,14 @@ class OAuthController extends AbstractController
         $lname = array_pop($names);
         $fname = implode(' ', $names);
         $email = $service->getPrimaryEmail();
-        $parameters = compact('fname', 'lname', 'email');
-        $to = route('register', $parameters);
-        return redirect($to);
+
+        $user = User::create([
+            'firstname' => $fname,
+            'lastname' => $lname,
+            'email' => $email,
+            'password' => Hash::make(substr(md5(rand()), 0, 32)),
+            'institution' => ''
+        ]);
     }
 
     /**

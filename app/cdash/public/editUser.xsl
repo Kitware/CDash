@@ -37,11 +37,11 @@
 <tr class="table-heading1">
      <td colspan="5" id="nob"><h3>My Profile</h3></td>
  </tr>
-<form method="post" action="" name="updatprofile_form">
 <tr class="treven">
   <td width="20%" height="2"><div align="right">First Name</div></td>
   <td  width="80%" height="2" id="nob"><input class="textbox" name="fname" size="20">
  <xsl:attribute name="value"><xsl:value-of select="cdash/user/firstname"/></xsl:attribute>
+ <xsl:attribute name="disabled">disabled</xsl:attribute>
  </input>
  </td>
 </tr>
@@ -49,6 +49,7 @@
   <td width="20%" height="2"><div align="right">Last Name</div></td>
   <td  width="80%" height="2" id="nob"><input class="textbox" name="lname" size="20">
  <xsl:attribute name="value"><xsl:value-of select="cdash/user/lastname"/></xsl:attribute>
+ <xsl:attribute name="disabled">disabled</xsl:attribute>
  </input>
  </td>
 </tr>
@@ -56,6 +57,7 @@
   <td width="20%" height="2"><div align="right">Email</div></td>
   <td  width="80%" height="2" id="nob"><input class="textbox" name="email" size="20">
  <xsl:attribute name="value"><xsl:value-of select="cdash/user/email"/></xsl:attribute>
+ <xsl:attribute name="disabled">disabled</xsl:attribute>
  </input>
  </td>
 </tr>
@@ -63,33 +65,11 @@
   <td width="20%" height="2"><div align="right"> Institution</div></td>
   <td  width="80%" height="2" id="nob"><input class="textbox" name="institution" size="20">
  <xsl:attribute name="value"><xsl:value-of select="cdash/user/institution"/></xsl:attribute>
+ <xsl:attribute name="disabled">disabled</xsl:attribute>
  </input>
  </td>
 </tr>
-<tr class="treven">
-  <td width="20%" id="nob"></td>
-  <td width="80%" id="nob"><input type="submit" value="Update Profile" name="updateprofile" class="textbox"/>
-  </td>
-</tr>
-</form>
 <form method="post" action="" name="updatemail_form">
-<tr class="trodd">
-    <td width="20%" height="2" ><div align="right">Current Password</div></td>
-    <td width="80%" height="2" id="nob"><input class="textbox" type="password" name="oldpasswd" size="20"/></td>
-</tr>
-<tr class="treven">
-    <td width="20%" height="2" ><div align="right">New Password</div></td>
-    <td width="80%" height="2" id="nob"><input class="textbox" type="password"  name="passwd" size="20"/></td>
-</tr>
-<tr class="trodd">
-    <td width="20%" height="2" ><div align="right">Confirm Password</div></td>
-    <td width="80%" height="2" id="nob"><input class="textbox" type="password"  name="passwd2" size="20"/></td>
-</tr>
-<tr class="treven">
-  <td width="20%" id="nob"></td>
-  <td width="80%" id="nob"><input type="submit" value="Update Password" name="updatepassword" class="textbox"/>
- </td>
-</tr>
 <tr class="trodd">
     <td width="20%" height="2" ><div align="right">Repository Credential #1</div></td>
     <td width="80%" height="2" id="nob"><xsl:value-of select="cdash/user/credential_0"/></td>

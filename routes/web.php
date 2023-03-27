@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
-Auth::routes(['verify' => true]);
+Auth::routes(['verify' => false, 'register' => false, 'confirm' => false, 'reset' => false]);
 
 Route::get('/oauth/{service}', 'OAuthController@authenticate');
 Route::get('/oauth/callback/{service}', 'OAuthController@login')

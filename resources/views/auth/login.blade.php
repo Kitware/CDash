@@ -63,9 +63,9 @@ $login_field = config('cdash.login_field');
                     <td width="10%" class="nob"></td>
                     <td width="70%" class="nob">
                         <hr>
-                        <p>
-                            Sign in with:
-                            @foreach($collection as $key => $config)
+                        <p style="text-align:center; font-size:large;">
+                            <span>Sign in with OAuth:</span><br/>
+                                @foreach($collection as $key => $config)
                                 @if ($config['enable'])
                                     <a href="/oauth/{{ $key  }}"><img class="paddr" src="img/{{ $key }}_signin.png" title="Log in with your {{ $key }} account"/></a>
                                 @endif

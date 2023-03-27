@@ -93,10 +93,6 @@ if (Auth::check()) {
     @$credentials = $_POST['credentials'];
     @$repositoryCredential = $_POST['repositoryCredential'];
     @$updateuser = $_POST['updateuser'];
-    @$importUsers = $_POST['importUsers'];
-    @$registerUsers = $_POST['registerUsers'];
-
-    @$registerUser = $_POST['registerUser'];
 
     // Register a user and send the email
     if (!function_exists('register_user')) {
@@ -223,53 +219,6 @@ if (Auth::check()) {
         }
     }
 
-    // Register a user
-    if ($registerUser) {
-        @$email = $_POST['registeruseremail'];
-        if ($email != null) {
-            $email = htmlspecialchars(pdo_real_escape_string($email));
-        }
-        @$firstName = $_POST['registeruserfirstname'];
-        if ($firstName != null) {
-            $firstName = htmlspecialchars(pdo_real_escape_string($firstName));
-        }
-        @$lastName = $_POST['registeruserlastname'];
-        if ($lastName != null) {
-            $lastName = htmlspecialchars(pdo_real_escape_string($lastName));
-        }
-        @$repositoryCredential = $_POST['registeruserrepositorycredential'];
-
-        if (strlen($email) < 3 || strlen($firstName) < 2 || strlen($lastName) < 2) {
-            $xml .= '<error>Email, first name and last name should be filled out.</error>';
-        } else {
-            // Call the register_user function
-            $xml .= register_user($projectid, $email, $firstName, $lastName, $repositoryCredential);
-        }
-    }
-
-    // Register CVS users
-    if ($registerUsers) {
-        $cvslogins = $_POST['cvslogin'];
-        $emails = $_POST['email'];
-        $firstnames = $_POST['firstname'];
-        $lastnames = $_POST['lastname'];
-        $cvsuser = $_POST['cvsuser'];
-
-        for ($logini = 0; $logini < count($cvslogins); $logini++) {
-            if (!isset($cvsuser[$logini])) {
-                continue;
-            }
-
-            $cvslogin = $cvslogins[$logini];
-            $email = $emails[$logini];
-            $firstName = $firstnames[$logini];
-            $lastName = $lastnames[$logini];
-
-            // Call the register_user function
-            $xml .= register_user($projectid, $email, $firstName, $lastName, $cvslogin);
-        }
-    }
-
     // Add a user
     if ($adduser) {
         $UserProject = new UserProject();
@@ -303,70 +252,6 @@ if (Auth::check()) {
         $UserProject->Role = $role;
         $UserProject->EmailType = $emailtype;
         $UserProject->Save();
-    }
-
-    // Import the users from CVS
-    if ($importUsers) {
-        $contents = file_get_contents($_FILES['cvsUserFile']['tmp_name']);
-        if (strlen($contents) > 0) {
-            $id = 0;
-            $pos = 0;
-            $pos2 = strpos($contents, "\n");
-            while ($pos !== false) {
-                $line = substr($contents, $pos, $pos2 - $pos);
-
-                $email = '';
-                $svnlogin = '';
-                $firstname = '';
-                $lastname = '';
-
-                // first is the svnuser
-                $possvn = strpos($line, ':');
-                if ($possvn !== false) {
-                    $svnlogin = trim(substr($line, 0, $possvn));
-
-                    $posemail = strpos($line, ':', $possvn + 1);
-                    if ($posemail !== false) {
-                        $email = trim(substr($line, $possvn + 1, $posemail - $possvn - 1));
-
-                        $name = substr($line, $posemail + 1);
-                        $posname = strpos($name, ',');
-                        if ($posname !== false) {
-                            $name = substr($name, 0, $posname);
-                        }
-
-                        $name = trim($name);
-
-                        // Find the firstname
-                        $posfirstname = strrpos($name, ' ');
-                        if ($posfirstname !== false) {
-                            $firstname = trim(substr($name, 0, $posfirstname));
-                            $lastname = trim(substr($name, $posfirstname));
-                        } else {
-                            $firstname = $name;
-                        }
-                    } else {
-                        $email = trim(substr($line, $possvn + 1));
-                    }
-                }
-
-                if (strlen($email) > 0 && $email != 'kitware@kitware.com') {
-                    $xml .= '<cvsuser>';
-                    $xml .= '<email>' . $email . '</email>';
-                    $xml .= '<cvslogin>' . $svnlogin . '</cvslogin>';
-                    $xml .= '<firstname>' . $firstname . '</firstname>';
-                    $xml .= '<lastname>' . $lastname . '</lastname>';
-                    $xml .= '<id>' . $id . '</id>';
-                    $xml .= '</cvsuser>';
-                    $id++;
-                }
-
-                $pos = $pos2;
-                $pos2 = strpos($contents, "\n", $pos2 + 1);
-            }
-        } else {
-            echo 'Cannot parse CVS users file';
-        }
     }
 
     $sql = 'SELECT id,name FROM project';
