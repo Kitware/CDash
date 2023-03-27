@@ -9,24 +9,24 @@ CDash.controller('UserController', function UserController($scope, $http, $timeo
                  || $scope.cdash.tokenscope === 'submit_only' ? -1 : $scope.cdash.tokenscope
     };
     $http.post('/api/authtokens/create', parameters)
-    .then(function success(s) {
-      const authtoken = s.data.token;
-      authtoken.copied = false;
-      authtoken.raw_token = s.data.raw_token;
+      .then(function success(s) {
+        const authtoken = s.data.token;
+        authtoken.copied = false;
+        authtoken.raw_token = s.data.raw_token;
 
-      $scope.cdash.projects.forEach(project => {
-        if (project.id === authtoken.projectid) {
-          authtoken.projectname = project.name;
-        }
+        $scope.cdash.projects.forEach(project => {
+          if (project.id === authtoken.projectid) {
+            authtoken.projectname = project.name;
+          }
+        });
+
+        // A terrible hack to format the date the same way the DB returns them on initial page load
+        authtoken.expires = authtoken.expires.replace('T', ' ');
+
+        $scope.cdash.authtokens.push(authtoken);
+      }, function error(e) {
+        $scope.cdash.message = e.data.error;
       });
-
-      // A terrible hack to format the date the same way the DB returns them on initial page load
-      authtoken.expires = authtoken.expires.replace('T', ' ');
-
-      $scope.cdash.authtokens.push(authtoken);
-    }, function error(e) {
-      $scope.cdash.message = e.data.error;
-    });
   };
 
   $scope.copyTokenSuccess = function(token) {
@@ -57,4 +57,19 @@ CDash.controller('UserController', function UserController($scope, $http, $timeo
       $scope.cdash.message = e.data.error;
     });
   };
+
+  $scope.finishSetup = function() {
+    if ($scope.cdash.allow_full_access_tokens) {
+      $scope.cdash.tokenscope = 'full_access';
+    }
+    else if ($scope.cdash.allow_submit_only_tokens) {
+      $scope.cdash.tokenscope = 'submit_only';
+    }
+    else if ($scope.cdash.projects.length > 0) {
+      $scope.cdash.tokenscope = $scope.cdash.projects[0].id.toString();
+    }
+    else {
+      $scope.cdash.tokenscope = '';
+    }
+  }
 });

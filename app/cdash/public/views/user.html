@@ -302,10 +302,11 @@
                        ng-model="cdash.tokendescription" />
               </td>
               <td align="center">
-                <select ng-model="cdash.tokenscope" class="form-select"
-                        ng-init="cdash.tokenscope = 'full_access'">
-                  <option selected="selected" value="full_access">Full Access</option>
-                  <option value="submit_only">All Projects (Submit Only)</option>
+                <select ng-model="cdash.tokenscope" class="form-select">
+                  <option selected="selected" value="full_access" ng-if="cdash.allow_full_access_tokens">
+                    Full Access
+                  </option>
+                  <option value="submit_only" ng-if="cdash.allow_submit_only_tokens">All Projects (Submit Only)</option>
                   <option ng-repeat="project in ::cdash.projects" value="{{::project.id}}">{{::project.name}} (Submit Only)</option>
                 </select>
               </td>

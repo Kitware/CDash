@@ -9,9 +9,11 @@ use App\Models\User;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use RuntimeException;
 
 class AuthTokenService
 {
@@ -30,7 +32,7 @@ class AuthTokenService
 
         $params['userid'] = $user_id;
 
-        $duration = config('cdash.token_duration');
+        $duration = Config::get('cdash.token_duration');
         $now = time();
         $params['created'] = gmdate(FMT_DATETIME, $now);
 
@@ -51,6 +53,15 @@ class AuthTokenService
         if (!self::validScope($scope)) {
             Log::error("Invalid token scope {$scope}");
             throw new InvalidArgumentException("Invalid token scope {$scope}");
+        }
+        if ($scope === AuthToken::SCOPE_FULL_ACCESS && Config::get('cdash.allow_full_access_tokens') !== true) {
+            Log::error('Full-access tokens are prohibited by config');
+            throw new InvalidArgumentException('Full-access tokens are prohibited by config');
+        }
+        if ($scope === AuthToken::SCOPE_SUBMIT_ONLY && $project_id < 0
+                && Config::get('cdash.allow_submit_only_tokens') !== true) {
+            Log::error('Only project-specific submit-only tokens allowed by config');
+            throw new InvalidArgumentException('Only project-specific submit-only tokens allowed by config');
         }
         $params['scope'] = $scope;
 
@@ -110,13 +121,22 @@ class AuthTokenService
                     Log::error('Invalid Project');
                     return false;
                 }
+                if (($auth_token['projectid'] === null || $project_id !== $auth_token['projectid'])
+                        && Config::get('cdash.allow_submit_only_tokens') !== true) {
+                    Log::error('Submit-only token used when disallowed by config');
+                    return false;
+                }
                 break;
             case AuthToken::SCOPE_FULL_ACCESS:
+                if (Config::get('cdash.allow_full_access_tokens') !== true) {
+                    Log::error('Full-access token used when disallowed by config');
+                    return false;
+                }
                 break;
             default:
                 # In theory, this case should never be possible
                 Log::error("Invalid scope listed for auth token with hash {$token_hash}");
-                return false;
+                throw new RuntimeException("Invalid scope listed for auth token with hash {$token_hash}");
         }
 
         return true;
@@ -173,7 +193,7 @@ class AuthTokenService
             default:
                 # In theory, this case should never be possible
                 Log::error("Invalid scope listed for auth token with hash {$token_hash}");
-                return false;
+                throw new RuntimeException("Invalid scope listed for auth token with hash {$token_hash}");
         }
         return $auth_token->delete() > 0;
     }

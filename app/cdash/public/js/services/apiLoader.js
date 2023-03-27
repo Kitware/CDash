@@ -1,6 +1,6 @@
 // Encapsulate common code involved in loading our page data from the API.
 CDash.factory('apiLoader', function ($http, $rootScope, $window, renderTimer) {
-  var loadPageData = function(controllerScope, endpoint) {
+  const loadPageData = function(controllerScope, endpoint) {
     controllerScope.loading = true;
 
     $http({
@@ -8,7 +8,7 @@ CDash.factory('apiLoader', function ($http, $rootScope, $window, renderTimer) {
       method: 'GET',
       params: $rootScope.queryString
     }).then(function success(s) {
-      var cdash = s.data;
+      const cdash = s.data;
 
       // Check if we should display filters.
       if (cdash.filterdata && cdash.filterdata.showfilters == 1) {

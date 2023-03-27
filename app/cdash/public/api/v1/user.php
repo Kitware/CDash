@@ -97,6 +97,8 @@ foreach ($project_rows as $project_row) {
 $response['projects'] = $projects_response;
 
 $response['authtokens'] = AuthTokenService::getTokensForUser($userid);
+$response['allow_full_access_tokens'] = config('cdash.allow_full_access_tokens') === true;
+$response['allow_submit_only_tokens'] = config('cdash.allow_submit_only_tokens') === true;
 
 // Find all the public projects that this user is not subscribed to.
 $stmt = $PDO->prepare(
