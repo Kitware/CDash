@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateBlockbuildTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,13 +12,15 @@ class CreateBlockbuildTable extends Migration
      */
     public function up()
     {
-        Schema::create('blockbuild', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->integer('projectid')->index();
-            $table->string('buildname')->index();
-            $table->string('sitename')->index();
-            $table->string('ipaddress', 50)->index();
-        });
+        if (!Schema::hasTable('blockbuild')) {
+            Schema::create('blockbuild', function (Blueprint $table) {
+                $table->integer('id', true);
+                $table->integer('projectid')->index();
+                $table->string('buildname')->index();
+                $table->string('sitename')->index();
+                $table->string('ipaddress', 50)->index();
+            });
+        }
     }
 
 

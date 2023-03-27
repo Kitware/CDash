@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="TruncateOutput"
+	BuildStamp="20151029-1832-Experimental"
+	Name="localhost"
+	Generator="ctest-3.4.20151019-g383ab"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="localhost"
+	OSRelease="3.13.0-66-generic"
+	OSVersion="#108-Ubuntu SMP Wed Oct 7 15:20:27 UTC 2015"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="45"
+	ProcessorCacheSize="12288"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="32690"
+	TotalPhysicalMemory="32100"
+	LogicalProcessorsPerPhysical="12"
+	ProcessorClockFrequency="1200"
+	>
+	<Build>
+		<StartDateTime>Oct 29 14:32 EDT</StartDateTime>
+		<StartBuildTime>1446143533</StartBuildTime>
+		<BuildCommand>/opt/cmake/bin/cmake --build . --config "Debug" -- -i</BuildCommand>
+		<Failure type="Error">
+			<!-- Meta-information about the build action -->
+			<Action>
+				<TargetName>foo</TargetName>
+				<Language>C++</Language>
+				<SourceFile>foo.cxx</SourceFile>
+				<OutputFile>CMakeFiles/foo.dir/foo.cxx.o</OutputFile>
+				<OutputType>object file</OutputType>
+			</Action>
+			<!-- Details of command -->
+			<Command>
+				<WorkingDirectory>/tmp/bin</WorkingDirectory>
+				<Argument>/usr/local/bin/c++</Argument>
+				<Argument>-o</Argument>
+				<Argument>CMakeFiles/foo.dir/foo.cxx.o</Argument>
+				<Argument>-c</Argument>
+				<Argument>/tmp/src/foo.cxx</Argument>
+			</Command>
+			<!-- Result of command -->
+			<Result>
+				<StdOut>The beginning survives|The middle gets truncated|This part is preserved</StdOut>
+				<ExitCondition>1</ExitCondition>
+			</Result>
+		</Failure>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>Oct 29 14:32 EDT</EndDateTime>
+		<EndBuildTime>1446143534</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>

@@ -47,17 +47,17 @@ $previousbuilds = pdo_query("SELECT id,starttime,endtime,loctested,locuntested F
         var buildids = [];
         <?php
         $i = 0;
-        while ($build_array = pdo_fetch_array($previousbuilds)) {
-            $t = strtotime($build_array['starttime']) * 1000; //flot expects milliseconds
-            @$percent = round($build_array['loctested'] / ($build_array['loctested'] + $build_array['locuntested']) * 100, 2); ?>
+while ($build_array = pdo_fetch_array($previousbuilds)) {
+    $t = strtotime($build_array['starttime']) * 1000; //flot expects milliseconds
+    @$percent = round($build_array['loctested'] / ($build_array['loctested'] + $build_array['locuntested']) * 100, 2); ?>
         percent_array.push([<?php echo $t; ?>,<?php echo $percent; ?>]);
         loctested_array.push([<?php echo $t; ?>,<?php echo $build_array['loctested']; ?>]);
         locuntested_array.push([<?php echo $t; ?>,<?php echo $build_array['locuntested']; ?>]);
         buildids[<?php echo $t; ?>] = <?php echo $build_array['id']; ?>;
         <?php
         $i++;
-        }
-        ?>
+}
+?>
 
         var options = {
             lines: {show: true},
@@ -88,7 +88,7 @@ $previousbuilds = pdo_query("SELECT id,starttime,endtime,loctested,locuntested F
             if (item) {
                 plot.highlight(item.series, item.datapoint);
                 buildid = buildids[item.datapoint[0]];
-                window.location = "buildSummary.php?buildid=" + buildid;
+                window.location = "build/" + buildid;
             }
         });
 

@@ -28,7 +28,7 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
 {
     protected $stack;
     protected $projectid;
-    protected $scheduleid;
+    protected $Append;
     /** @var  Build $Build */
     protected $Build;
     /** @var  Site $Site */
@@ -39,10 +39,10 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
     protected $Project;
     protected $conifg;
 
-    public function __construct($projectid, $scheduleid)
+    public function __construct($projectid)
     {
         $this->projectid = $projectid;
-        $this->scheduleid = $scheduleid;
+        $this->Append = false;
         $this->stack = new Stack();
         $this->config = Config::getInstance();
     }
@@ -63,6 +63,10 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
 
         if ($name == 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
+        }
+
+        if (array_key_exists('APPEND', $attributes) && strtolower($attributes['APPEND']) == 'true') {
+            $this->Append = true;
         }
     }
 
@@ -109,6 +113,11 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
     public function getBuildName()
     {
         return $this->Build->Name;
+    }
+
+    public function getSubProjectName()
+    {
+        return $this->Build->SubProjectName;
     }
 
     public function getBuilds()

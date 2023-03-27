@@ -19,9 +19,9 @@ require_once 'include/common.php';
 require_once 'include/cdashmail.php';
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Models\User;
 use CDash\Config;
 use CDash\Model\Project;
-use CDash\Model\User;
 use CDash\Model\UserProject;
 
 $config = Config::getInstance();
@@ -33,6 +33,8 @@ if (Auth::check()) {
         echo 'Not a valid usersessionid!';
         return;
     }
+
+    $current_user = Auth::user();
 
     @$projectid = $_GET['projectid'];
     if ($projectid != null) {
@@ -50,9 +52,6 @@ if (Auth::check()) {
     }
 
     $role = 0;
-    $current_user = new User();
-    $current_user->Id = $usersessionid;
-
     if ($projectid && is_numeric($projectid)) {
         $current_user_project = new UserProject();
         $current_user_project->ProjectId = $projectid;
@@ -61,7 +60,7 @@ if (Auth::check()) {
         $role = $current_user_project->Role;
     }
 
-    if (!$current_user->IsAdmin() && $role <= 1) {
+    if (!$current_user->admin && $role <= 1) {
         echo "You don't have the permissions to access this page";
         return;
     }
@@ -106,10 +105,10 @@ if (Auth::check()) {
             $UserProject = new UserProject();
             $UserProject->ProjectId = $projectid;
 
-            $user = new User();
-            $userid = $user->GetIdFromEmail($email);
+            $user = User::where('email', $email)->first();
             // Check if the user is already registered
-            if ($userid) {
+            if ($user) {
+                $userid = $user->id;
                 // Check if the user has been registered to the project
                 $UserProject->UserId = $userid;
                 if (!$UserProject->Exists()) {
@@ -140,19 +139,20 @@ if (Auth::check()) {
             // Register the user
             // Create a new password
             $pass = generate_password(10);
-            $passwordHash = User::PasswordHash($pass);
+            $passwordHash = password_hash($pass, PASSWORD_DEFAULT);
+
             if ($passwordHash === false) {
                 $xml .= '<error>Failed to hash password.</error>';
                 return false;
             }
 
             $user = new User();
-            $user->Password = $passwordHash;
-            $user->Email = $email;
-            $user->FirstName = $firstName;
-            $user->LastName = $lastName;
-            $user->Save();
-            $userid = $user->Id;
+            $user->password = $passwordHash;
+            $user->email = $email;
+            $user->firstname = $firstName;
+            $user->lastname = $lastName;
+            $user->save();
+            $userid = $user->id;
 
             // Insert the user into the project
             $UserProject->UserId = $userid;
@@ -370,7 +370,7 @@ if (Auth::check()) {
     }
 
     $sql = 'SELECT id,name FROM project';
-    if (!$current_user->IsAdmin()) {
+    if (!$current_user->admin) {
         $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$usersessionid' AND role>0)";
     }
     $sql .= ' ORDER BY name';
@@ -434,28 +434,30 @@ if (Auth::check()) {
             $xml .= '</user>';
         }
 
-        // Check if a user is committing without being registered to CDash or with email disabled
-        $date = date(FMT_DATETIME, strtotime(date(FMT_DATETIME) . ' -30 days'));
-        $sql = 'SELECT DISTINCT author,emailtype,' . qid('user') . '.email FROM dailyupdate,dailyupdatefile
-            LEFT JOIN user2repository ON (dailyupdatefile.author=user2repository.credential
-            AND (user2repository.projectid=0 OR user2repository.projectid=' . qnum($project_array['id']) . ')
-            )
-            LEFT JOIN user2project ON (user2repository.userid= user2project.userid AND
-            user2project.projectid=' . qnum($project_array['id']) . ')
-            LEFT JOIN ' . qid('user') . ' ON (user2project.userid=' . qid('user') . '.id)
-            WHERE
-             dailyupdatefile.dailyupdateid=dailyupdate.id
-             AND dailyupdate.projectid=' . qnum($project_array['id']) .
-            " AND dailyupdatefile.checkindate>'" . $date . "' AND (emailtype=0 OR emailtype IS NULL)";
+        if (is_array($project_array)) {
+            // Check if a user is committing without being registered to CDash or with email disabled
+            $date = date(FMT_DATETIME, strtotime(date(FMT_DATETIME) . ' -30 days'));
+            $sql = 'SELECT DISTINCT author,emailtype,' . qid('user') . '.email FROM dailyupdate,dailyupdatefile
+                LEFT JOIN user2repository ON (dailyupdatefile.author=user2repository.credential
+                        AND (user2repository.projectid=0 OR user2repository.projectid=' . qnum($project_array['id']) . ')
+                        )
+                LEFT JOIN user2project ON (user2repository.userid= user2project.userid AND
+                        user2project.projectid=' . qnum($project_array['id']) . ')
+                LEFT JOIN ' . qid('user') . ' ON (user2project.userid=' . qid('user') . '.id)
+                WHERE
+                dailyupdatefile.dailyupdateid=dailyupdate.id
+                AND dailyupdate.projectid=' . qnum($project_array['id']) .
+                " AND dailyupdatefile.checkindate>'" . $date . "' AND (emailtype=0 OR emailtype IS NULL)";
 
-        $query = pdo_query($sql);
-        add_last_sql_error('ManageProjectRole');
-        while ($query_array = pdo_fetch_array($query)) {
-            $xml .= '<baduser>';
-            $xml .= add_XML_value('author', $query_array['author']);
-            $xml .= add_XML_value('emailtype', $query_array['emailtype']);
-            $xml .= add_XML_value('email', $query_array['email']);
-            $xml .= '</baduser>';
+            $query = pdo_query($sql);
+            add_last_sql_error('ManageProjectRole');
+            while ($query_array = pdo_fetch_array($query)) {
+                $xml .= '<baduser>';
+                $xml .= add_XML_value('author', $query_array['author']);
+                $xml .= add_XML_value('emailtype', $query_array['emailtype']);
+                $xml .= add_XML_value('email', $query_array['email']);
+                $xml .= '</baduser>';
+            }
         }
     }
 

@@ -95,13 +95,8 @@ class CoverageSummary
             return false;
         }
 
-        // Add the coverages
-        // Construct the SQL query
         if (count($this->Coverages) > 0) {
             foreach ($this->Coverages as &$coverage) {
-                $sql = 'INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,
-                    functionstested,functionsuntested) VALUES ';
-
                 $fullpath = $coverage->CoverageFile->FullPath;
 
                 // GcovTarHandler creates its own coveragefiles, no need to do
@@ -162,45 +157,46 @@ class CoverageSummary
                 $this->LocTested += $loctested;
                 $this->LocUntested += $locuntested;
 
+                $existing_row_updated = false;
                 if ($append) {
                     // UPDATE (instead of INSERT) if this coverage already
                     // exists.
-                    pdo_begin_transaction();
-                    $row = pdo_single_row_query(
-                        'SELECT * FROM coverage
-                            WHERE buildid=' . qnum($this->BuildId) . ' AND
-                            fileid=' . qnum($coverage->CoverageFile->Id) . '
-                            FOR UPDATE');
-                    if ($row && array_key_exists('1', $row)) {
-                        $query = 'UPDATE coverage SET
-                            covered=' . qnum($covered) . ',
-                            loctested=' . qnum($loctested) . ',
-                            locuntested=' . qnum($locuntested) . ',
-                            branchstested=' . qnum($branchstested) . ',
-                            branchsuntested=' . qnum($branchsuntested) . ',
-                            functionstested=' . qnum($functionstested) . ',
-                            functionsuntested=' . qnum($functionsuntested) . '
-                            WHERE buildid=' . qnum($this->BuildId) . ' AND
-                            fileid=' . qnum($coverage->CoverageFile->Id);
-                        if (!pdo_query($query)) {
-                            add_last_sql_error('CoverageSummary Update Coverage');
-                            pdo_rollback();
-                            return false;
+                    $existing_row_updated = \DB::transaction(function () use ($coverage, $covered, $loctested, $locuntested, $branchstested, $branchsuntested, $functionstested, $functionsuntested) {
+                        $existing_coverage_row = \DB::table('coverage')
+                            ->where('buildid', $this->BuildId)
+                            ->where('fileid', $coverage->CoverageFile->Id)
+                            ->lockForUpdate()
+                            ->first();
+                        if ($existing_coverage_row) {
+                            \DB::table('coverage')
+                                ->where('buildid', $this->BuildId)
+                                ->where('fileid', $coverage->CoverageFile->Id)
+                                ->update([
+                                    'covered' => $covered,
+                                    'loctested' => $loctested,
+                                    'locuntested' => $locuntested,
+                                    'branchstested' => $branchstested,
+                                    'branchsuntested' => $branchsuntested,
+                                    'functionstested' => $functionstested,
+                                    'functionsuntested' => $functionsuntested,
+                                ]);
+                            return true;
                         }
-                        pdo_commit();
-                        continue;
-                    }
-                    pdo_commit();
+                        return false;
+                    });
                 }
-
-                $sql .= '(' . qnum($this->BuildId) . ',' . qnum($fileid) . ',' . qnum($covered) . ',' . qnum($loctested) . ',' . qnum($locuntested) . ',
-                    ' . qnum($branchstested) . ',' . qnum($branchsuntested) .
-                    ',' . qnum($functionstested) . ',' . qnum($functionsuntested) . ')';
-
-                // Insert into coverage
-                if (!pdo_query($sql)) {
-                    add_last_sql_error('CoverageSummary Insert Coverage');
-                    return false;
+                if (!$existing_row_updated) {
+                    \DB::table('coverage')->insert([
+                        'buildid' => $this->BuildId,
+                        'fileid' => $fileid,
+                        'covered' => $covered,
+                        'loctested' => $loctested,
+                        'locuntested' => $locuntested,
+                        'branchstested' => $branchstested,
+                        'branchsuntested' => $branchsuntested,
+                        'functionstested' => $functionstested,
+                        'functionsuntested' => $functionsuntested,
+                    ]);
                 }
             }
 
@@ -213,96 +209,84 @@ class CoverageSummary
         $summary_updated = false;
         if ($append) {
             // Check if a coveragesummary already exists for this build.
-            pdo_begin_transaction();
-            $row = pdo_single_row_query(
-                'SELECT loctested, locuntested FROM coveragesummary
-                    WHERE buildid=' . qnum($this->BuildId) . '
-                    FOR UPDATE');
-            if ($row && array_key_exists('loctested', $row)) {
-                $previous_loctested = $row['loctested'];
-                $previous_locuntested = $row['locuntested'];
+            $summary_updated = \DB::transaction(function () use (&$delta_tested, &$delta_untested) {
+                $existing_summary_row = \DB::table('coveragesummary')
+                    ->where('buildid', $this->BuildId)
+                    ->lockForUpdate()
+                    ->first();
+                if (!$existing_summary_row) {
+                    return false;
+                }
+                $previous_loctested = $existing_summary_row->loctested;
+                $previous_locuntested = $existing_summary_row->locuntested;
+
                 // Recompute how many lines were tested & untested
                 // based on all files covered by this build.
                 $this->LocTested = 0;
                 $this->LocUntested = 0;
-                $query = 'SELECT loctested, locuntested FROM coverage
-                    WHERE buildid=' . qnum($this->BuildId);
-                $results = pdo_query($query);
-                if (!$results) {
-                    add_last_sql_error('CoverageSummary:GetExistingCoverage');
-                    pdo_rollback();
-                    return false;
-                }
-                while ($row = pdo_fetch_array($results)) {
-                    $this->LocTested += $row['loctested'];
-                    $this->LocUntested += $row['locuntested'];
+                $rows = \DB::table('coverage')->where('buildid', $this->BuildId)->get();
+                foreach ($rows as $row) {
+                    $this->LocTested += $row->loctested;
+                    $this->LocUntested += $row->locuntested;
                 }
 
                 // Update the existing record with this information.
-                $query = 'UPDATE coveragesummary SET
-                    loctested=' . qnum($this->LocTested) . ',
-                    locuntested=' . qnum($this->LocUntested) . '
-                    WHERE buildid=' . qnum($this->BuildId);
-                if (!pdo_query($query)) {
-                    add_last_sql_error('CoverageSummary Update');
-                    pdo_rollback();
-                    return false;
-                }
-                $summary_updated = true;
+                \DB::table('coveragesummary')
+                    ->where('buildid', $this->BuildId)
+                    ->update([
+                        'loctested' => $this->LocTested,
+                        'locuntested' => $this->LocUntested,
+                    ]);
 
                 // Record how loctested and locuntested changed as a result
                 // of this update.
                 $delta_tested = $this->LocTested - $previous_loctested;
                 $delta_untested = $this->LocUntested - $previous_locuntested;
-            }
-            pdo_commit();
+
+                return true;
+            });
         }
 
         if (!$summary_updated) {
-            $query = 'INSERT INTO coveragesummary
-                (buildid,loctested,locuntested)
-                VALUES (' . qnum($this->BuildId) . ',' . qnum($this->LocTested) . ',' . qnum($this->LocUntested) . ')';
-            if (!pdo_query($query)) {
-                add_last_sql_error('CoverageSummary Insert');
-                return false;
-            }
+            \DB::table('coveragesummary')->insert([
+                'buildid' => $this->BuildId,
+                'loctested' => $this->LocTested,
+                'locuntested' => $this->LocUntested,
+            ]);
         }
 
         // If this is a child build then update the parent's summary as well.
-        $parent = pdo_single_row_query(
-            'SELECT parentid FROM build WHERE id=' . qnum($this->BuildId));
-        if ($parent && array_key_exists('parentid', $parent)) {
-            $parentid = $parent['parentid'];
+        $build_row = \DB::table('build')->where('id', $this->BuildId)->first();
+        if ($build_row) {
+            $parentid = $build_row->parentid;
             if ($parentid > 0) {
-                pdo_begin_transaction();
-                $exists = pdo_query(
-                    'SELECT * FROM coveragesummary
-                        WHERE buildid=' . qnum($parentid) . '
-                        FOR UPDATE');
-                if (pdo_num_rows($exists) == 0) {
-                    $query = 'INSERT INTO coveragesummary
-                        (buildid,loctested,locuntested)
-                        VALUES
-                        (' . qnum($parentid) . ',' . qnum($this->LocTested) . ',' . qnum($this->LocUntested) . ')';
-                } else {
-                    if (!isset($delta_tested)) {
-                        $delta_tested = $this->LocTested;
+                \DB::transaction(function () use ($parentid, $delta_tested, $delta_untested) {
+                    $parent_summary = \DB::table('coveragesummary')
+                        ->where('buildid', $parentid)
+                        ->lockForUpdate()
+                        ->first();
+
+                    if (!$parent_summary) {
+                        \DB::table('coveragesummary')->insert([
+                            'buildid' => $parentid,
+                            'loctested' => $this->LocTested,
+                            'locuntested' => $this->LocUntested,
+                        ]);
+                    } else {
+                        if (!isset($delta_tested)) {
+                            $delta_tested = $this->LocTested;
+                        }
+                        if (!isset($delta_untested)) {
+                            $delta_untested = $this->LocUntested;
+                        }
+                        \DB::table('coveragesummary')
+                        ->where('buildid', $parentid)
+                        ->update([
+                            'loctested' => \DB::raw("loctested + $delta_tested"),
+                            'locuntested' => \DB::raw("locuntested + $delta_untested"),
+                        ]);
                     }
-                    if (!isset($delta_untested)) {
-                        $delta_untested = $this->LocUntested;
-                    }
-                    $query =
-                        'UPDATE coveragesummary SET
-                        loctested = loctested + ' . qnum($delta_tested) . ',
-                        locuntested = locuntested + ' . qnum($delta_untested) . '
-                            WHERE buildid=' . qnum($parentid);
-                }
-                if (!pdo_query($query)) {
-                    add_last_sql_error('CoverageSummary Parent Update');
-                    pdo_rollback();
-                    return false;
-                }
-                pdo_commit();
+                });
             }
         }
         return true;

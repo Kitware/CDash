@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateClientJobschedule2cmakeTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,11 +12,13 @@ class CreateClientJobschedule2cmakeTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_jobschedule2cmake', function (Blueprint $table) {
-            $table->bigInteger('scheduleid');
-            $table->integer('cmakeid');
-            $table->unique(['scheduleid','cmakeid'], 'client_jobschedule2cmake_scheduleid');
-        });
+        if (!Schema::hasTable('client_jobschedule2cmake')) {
+            Schema::create('client_jobschedule2cmake', function (Blueprint $table) {
+                $table->bigInteger('scheduleid');
+                $table->integer('cmakeid');
+                $table->unique(['scheduleid','cmakeid'], 'client_jobschedule2cmake_scheduleid');
+            });
+        }
     }
 
 

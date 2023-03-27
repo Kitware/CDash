@@ -28,11 +28,12 @@ require_once 'include/version.php';
 
 use CDash\Config;
 use CDash\Model\User;
+use Illuminate\Support\Facades\Storage;
 
 $config = Config::getInstance();
 
-if ($config->get('CDASH_PRODUCTION_MODE')) {
-    echo 'CDash is in production mode. Install cannot be accessed. Change the variable in your config.php if you want to access the installation.';
+if (config('app.env') === 'production') {
+    echo 'CDash is in production mode. Install cannot be accessed. Set APP_ENV=development in your .env file if you want to access the installation.';
     return;
 }
 
@@ -62,32 +63,38 @@ if (class_exists('PDO') === false) {
     $xml .= '<extpdo>1</extpdo>';
 }
 
-if (!$config->get('CDASH_DB_TYPE')) {
-    $db_type = 'mysql';
-} else {
-    $db_type = $config->get('CDASH_DB_TYPE');
-}
+$db_type = config('database.default');
+$database_config = config("database.connections.{$db_type}");
+$db_host = $database_config['host'];
+$db_port = $database_config['port'];
+$db_user = $database_config['username'];
+$db_pass = $database_config['password'];
+$db_name = $database_config['database'];
 
-$db_connection = $config->get('CDASH_DB_CONNECTION_TYPE');
-$db_host = $config->get('CDASH_DB_HOST');
-$db_user = $config->get('CDASH_DB_LOGIN');
-$db_pass = $config->get('CDASH_DB_PASS');
+if (array_key_exists('unix_socket', $database_config) && $database_config['unix_socket']) {
+    $db_connection = 'unix_socket';
+} else {
+    $db_connection = 'host';
+    if ($db_port != '') {
+        $db_host = $db_host . ';port=' . $db_port;
+    }
+}
 
 $xml .= '<connectiondb_type>' . $db_type . '</connectiondb_type>';
 $xml .= '<connectiondb_host>' . $db_host . '</connectiondb_host>';
 $xml .= '<connectiondb_login>' . $db_user . '</connectiondb_login>';
-$xml .= '<connectiondb_name>' . $config->get('CDASH_DB_NAME') . '</connectiondb_name>';
+$xml .= '<connectiondb_name>' . $db_name  . '</connectiondb_name>';
 
 // Step 1: Check if we can connect to the database
 try {
     $pdo = new \PDO("{$db_type}:{$db_connection}={$db_host}", $db_user, $db_pass);
     $xml .= '<connectiondb>1</connectiondb>';
-} catch (\PDOException $exception) {
+} catch (\Exception $exception) {
     $xml .= '<connectiondb>0</connectiondb>';
 }
 
 // check if the backup directory is writable
-if (!is_writable($config->get('CDASH_BACKUP_DIRECTORY'))) {
+if (!is_writable(Storage::path('inbox'))) {
     $xml .= '<backupwritable>0</backupwritable>';
 } else {
     $xml .= '<backupwritable>1</backupwritable>';
@@ -107,19 +114,15 @@ if (!is_writable($config->get('CDASH_UPLOAD_DIRECTORY'))) {
     $xml .= '<uploadwritable>1</uploadwritable>';
 }
 
-// check if the rss directory is writable
-if (!is_writable('rss')) {
-    $xml .= '<rsswritable>0</rsswritable>';
-} else {
-    $xml .= '<rsswritable>1</rsswritable>';
-}
-
+$installed = false;
 try {
-    $installed = pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1');
-    $installed = is_object($installed) ? 1 : (int) $installed;
-    $xml .= '<database>' . $installed . '</database>';
-} catch (PDOException $e) {
-    $installed = false;
+    if (\Schema::hasTable(qid('user'))) {
+        $xml .= '<database>1</database>';
+        $installed = true;
+    } else {
+        $xml .= '<database>0</database>';
+    }
+} catch (\Exception $e) {
     $xml .= '<database>0</database>';
 }
 
@@ -140,16 +143,17 @@ if (!$installed) {
             $xml .= "<alert>* Administrator's email should be a valid email address</alert>";
             $valid_email = false;
         }
-        $minimum_password_length = $config->get('CDASH_MINIMUM_PASSWORD_LENGTH');
+        $minimum_password_length = config('cdash.password.min');
         if ($valid_email && strlen($admin_password) < $minimum_password_length) {
             $xml .= '<db_created>0</db_created>';
             $xml .= "<alert>* Administrator's password must be at least $minimum_password_length characters</alert>";
             $valid_email = false;
         }
         if ($valid_email) {
-            $complexity = getPasswordComplexity($admin_password);
-            $minimum_complexity = $config->get('CDASH_MINIMUM_PASSWORD_COMPLEXITY');
-            $complexity_count = $config->get('CDASH_PASSWORD_COMPLEXITY_COUNT');
+            $password_validator = new \App\Validators\Password;
+            $complexity_count = config('cdash.password.count');
+            $complexity = $password_validator->computeComplexity($admin_password, $complexity_count);
+            $minimum_complexity = config('cdash.password.complexity');
             if ($complexity < $minimum_complexity) {
                 $xml .= "<alert>* Administrator's password is not complex enough. ";
                 if ($complexity_count > 1) {
@@ -164,55 +168,20 @@ if (!$installed) {
 
         if ($valid_email) {
             $db_created = true;
-            $db_name = $config->get('CDASH_DB_NAME');
             $sql = $db_type === 'mysql' ? "CREATE DATABASE IF NOT EXISTS `{$db_name}`" : "CREATE DATABASE {$db_name}";
 
             try {
                 $pdo->exec($sql);
             } catch (Exception $exception) {
-                $xml .= '<db_created>0</db_created>';
-                $xml .= '<alert>' . pdo_error() . '</alert>';
-                $db_created = false;
-            }
-
-            /** process an SQL file */
-            function _processSQLfile($filename)
-            {
-                $file_content = file($filename);
-                $query = '';
-                foreach ($file_content as $sql_line) {
-                    $tsl = trim($sql_line);
-                    if (($sql_line != '') && (substr($tsl, 0, 2) != '--') && (substr($tsl, 0, 1) != '#')) {
-                        $query .= $sql_line;
-                        if (preg_match("/;\s*$/", $sql_line)) {
-                            // We need to remove only the last semicolon
-                            $pos = strrpos($query, ';');
-                            if ($pos !== false) {
-                                $query = substr($query, 0, $pos) . substr($query, $pos + 1);
-                            }
-
-                            $result = pdo_query($query);
-                            if (!$result) {
-                                $xml = '<db_created>0</db_created>';
-                                die(pdo_error());
-                            }
-                            $query = '';
-                        }
-                    }
+                if ($db_type !== 'pgsql' || strpos($exception->getMessage(), 'already exists') === false) {
+                    $xml .= '<db_created>0</db_created>';
+                    $xml .= '<alert>' . pdo_error() . '</alert>';
+                    $db_created = false;
                 }
             }
 
             if ($db_created) {
-                $sqlfile = $config->get('CDASH_ROOT_DIR') . "/sql/$db_type/cdash.sql";
-                _processSQLfile($sqlfile);
-
-                // If we have a local directory we process the sql in that directory
-                if ($config->get('CDASH_USE_LOCAL_DIRECTORY')) {
-                    $sqlfile = $config->get('CDASH_ROOT_DIR') . "/local/sql/$db_type/cdash.sql";
-                    if (file_exists($sqlfile)) {
-                        _processSQLfile($sqlfile);
-                    }
-                }
+                Artisan::call('migrate --force');
 
                 // If we are with PostGreSQL we need to add some extra functions
                 if ($db_type == 'pgsql') {
@@ -250,7 +219,7 @@ if (!$installed) {
                     $version_array = pdo_fetch_array($result_version);
                     if (strpos(strtolower($version_array[0]), 'postgresql 9.') !== false) {
                         // For PgSQL 9.0 we need to set the bytea_output to 'escape' (it was changed to hexa)
-                        @pdo_query('ALTER DATABASE ' . $config->get('CDASH_DB_NAME') . " SET bytea_output TO 'escape'");
+                        @pdo_query("ALTER DATABASE {$db_name} SET bytea_output TO 'escape'");
                     }
                 }
 

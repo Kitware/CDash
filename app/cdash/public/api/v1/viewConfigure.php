@@ -13,15 +13,21 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\ViewConfigure;
+
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/api_common.php';
+
+use App\Services\PageTimer;
+use App\Services\TestingDay;
 
 use CDash\Model\BuildConfigure;
 use CDash\Model\Project;
 use CDash\Model\Site;
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 
 $build = get_request_build();
 if (is_null($build)) {
@@ -32,7 +38,7 @@ $project = new Project();
 $project->Id = $build->ProjectId;
 $project->Fill();
 
-$date = $project->GetTestingDay($build->StartTime);
+$date = TestingDay::get($project, $build->StartTime);
 $response = begin_JSON_response();
 get_dashboard_JSON($project->Name, $date, $response);
 $response['title'] = "$project->Name : Configure";
@@ -50,15 +56,15 @@ $next_buildid = $build->GetNextBuildId();
 $current_buildid = $build->GetCurrentBuildId();
 
 if ($previous_buildid > 0) {
-    $menu_response['previous'] = "viewConfigure.php?buildid=$previous_buildid";
+    $menu_response['previous'] = "/build/$previous_buildid/configure";
 } else {
     $menu_response['previous'] = false;
 }
 
-$menu_response['current'] = "viewConfigure.php?buildid=$current_buildid";
+$menu_response['current'] = "/build/$current_buildid/configure";
 
 if ($next_buildid > 0) {
-    $menu_response['next'] = "viewConfigure.php?buildid=$next_buildid";
+    $menu_response['next'] = "/build/$next_buildid/configure";
 } else {
     $menu_response['next'] = false;
 }
@@ -87,6 +93,5 @@ $build_response['buildid'] = $build->Id;
 $build_response['hassubprojects'] = $has_subprojects;
 $response['build'] = $build_response;
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

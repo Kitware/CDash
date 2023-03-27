@@ -1,3 +1,4 @@
+require('../pages/catchConsoleErrors.page.js');
 describe("viewUpdate", function() {
   it("can toggle activity graph", function() {
     // Navigate to viewUpdate.php for a particular build.

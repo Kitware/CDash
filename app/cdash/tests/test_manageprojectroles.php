@@ -7,6 +7,8 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class ManageProjectRolesTestCase extends KWWebTestCase
 {
+    protected $projectid;
+
     public function __construct()
     {
         parent::__construct();

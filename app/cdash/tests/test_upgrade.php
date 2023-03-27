@@ -8,12 +8,17 @@ require_once 'include/upgrade_functions.php';
 
 use CDash\Config;
 use CDash\Database;
+use CDash\Model\BuildGroup;
+use CDash\Model\BuildGroupRule;
 
 class UpgradeTestCase extends KWWebTestCase
 {
+    protected $PDO;
+
     public function __construct()
     {
         parent::__construct();
+        $this->deleteLog($this->logfilename);
     }
 
     public function testAssignBuildsToDefaultGroups()
@@ -126,12 +131,6 @@ class UpgradeTestCase extends KWWebTestCase
         }
         //fake the javascript calls...
         $this->get($this->url . '/upgrade.php?upgrade-tables=1');
-        $this->get($this->url . '/upgrade.php?upgrade-0-8=1');
-        $this->get($this->url . '/upgrade.php?upgrade-1-0=1');
-        $this->get($this->url . '/upgrade.php?upgrade-1-2=1');
-        $this->get($this->url . '/upgrade.php?upgrade-1-4=1');
-        $this->get($this->url . '/upgrade.php?upgrade-1-6=1');
-        $this->get($this->url . '/upgrade.php?upgrade-1-8=1');
         //some of these upgrades pollute the log file
         //clear it out so that it doesn't cause subsequent tests to fail
         $this->deleteLog($this->logfilename);
@@ -149,7 +148,7 @@ class UpgradeTestCase extends KWWebTestCase
         $old_table = 'testbuildfailure';
         $new_table = 'testdetails';
 
-        if ($this->config('CDASH_DB_TYPE') == 'pgsql') {
+        if (config('database.default') == 'pgsql') {
             $create_old_query = '
                 CREATE TABLE "' . $old_table . '" (
                         "id" bigserial NOT NULL,
@@ -319,7 +318,7 @@ class UpgradeTestCase extends KWWebTestCase
         $saved_build_duration = $row['buildduration'];
         $saved_test_duration = $row['testduration'];
         pdo_query(
-                "UPDATE build SET buildduration = 0, testduration = 0
+            "UPDATE build SET buildduration = 0, testduration = 0
                 WHERE id = $id");
 
         UpgradeBuildDuration($id);
@@ -338,7 +337,7 @@ class UpgradeTestCase extends KWWebTestCase
         }
 
         pdo_query(
-                "UPDATE build
+            "UPDATE build
                 SET buildduration = $saved_build_duration,
                     testduration = $saved_test_duration
                 WHERE id = $id");
@@ -369,7 +368,7 @@ class UpgradeTestCase extends KWWebTestCase
         $retval = 0;
         $table_name = 'testsite';
 
-        if ($this->config('CDASH_DB_TYPE') == 'pgsql') {
+        if (config('database.default') == 'pgsql') {
             $create_query = '
                 CREATE TABLE "' . $table_name . '" (
                         "id" serial NOT NULL,
@@ -598,7 +597,7 @@ class UpgradeTestCase extends KWWebTestCase
         $b2c_table_name = 'testbuild2configure';
         $error_table_name = 'testconfigureerror';
 
-        if ($this->config('CDASH_DB_TYPE') == 'pgsql') {
+        if (config('database.default') == 'pgsql') {
             $create_query_1 = '
                 CREATE TABLE "' . $configure_table_name . '" (
                 "id" serial NOT NULL,
@@ -699,7 +698,7 @@ class UpgradeTestCase extends KWWebTestCase
             $count_results = pdo_single_row_query($count_query);
             if ($count_results['numrows'] != 3) {
                 $this->fail(
-                        "Expected 3 rows in $table_name, found " . $count_results['numrows']);
+                    "Expected 3 rows in $table_name, found " . $count_results['numrows']);
                 $retval = 1;
             }
         }
@@ -763,7 +762,7 @@ class UpgradeTestCase extends KWWebTestCase
         $build_table_name = 'testbuild';
         $btt_table_name = 'testbuildtesttime';
 
-        if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+        if (config('database.default') == 'pgsql') {
             $create_query_1 = '
                 CREATE TABLE "' . $build_table_name . '" (
                 "id" serial NOT NULL,
@@ -800,18 +799,18 @@ class UpgradeTestCase extends KWWebTestCase
         $buildids = [1, 2];
         foreach ($buildids as $buildid) {
             $pdo->exec(
-                    "INSERT INTO $build_table_name
+                "INSERT INTO $build_table_name
                     (id, testduration)
                     VALUES ($buildid, 0)");
             $pdo->exec(
-                    "INSERT INTO $btt_table_name
+                "INSERT INTO $btt_table_name
                     (buildid, time)
                     VALUES ($buildid, $buildid)");
         }
 
         // Also insert one build with no test timing.
         $pdo->exec(
-                "INSERT INTO $build_table_name
+            "INSERT INTO $build_table_name
                 (id, testduration)
                 VALUES (3, 0)");
 
@@ -822,7 +821,7 @@ class UpgradeTestCase extends KWWebTestCase
             $found = $stmt->fetchColumn();
             if ($found != $expected) {
                 $this->fail(
-                        "Expected $expected rows in $table_name, found $found");
+                    "Expected $expected rows in $table_name, found $found");
             }
         }
 
@@ -861,7 +860,44 @@ class UpgradeTestCase extends KWWebTestCase
 
         // Drop testing tables.
         $pdo->exec(
-        "DROP TABLE $build_table_name");
+            "DROP TABLE $build_table_name");
         pdo_query("DROP TABLE $btt_table_name");
+    }
+
+    public function testUpdateDynamicRules()
+    {
+        // Populate some testing data.
+        $buildgroup = new BuildGroup();
+        $buildgroup->SetProjectId(1);
+        $buildgroup->SetName('TempLatest');
+        $buildgroup->SetType('Latest');
+        $buildgroup->Save();
+
+        $buildgrouprule = new BuildGroupRule();
+        $buildgrouprule->GroupId = $buildgroup->GetId();
+        $buildgrouprule->SiteId = 0;
+        $buildgrouprule->ParentGroupId = 1;
+        $buildgrouprule->StartTime = gmdate(FMT_DATETIME);
+        $buildgrouprule->BuildName = 'this needs wildcards';
+        $buildgrouprule->BuildType = 'this should be blank';
+        $buildgrouprule->Save();
+
+        // Run the upgrade function.
+        UpdateDynamicRules();
+
+        // Verify that the outdated rule gets fixed.
+        $this->PDO = Database::getInstance();
+        $stmt = $this->PDO->prepare(
+            'SELECT * FROM build2grouprule WHERE groupid = :groupid');
+        $this->PDO->execute($stmt, [':groupid' => $buildgroup->GetId()]);
+        $row = $stmt->fetch();
+        $this->assertEqual('%this needs wildcards%', $row['buildname']);
+        $this->assertEqual('', $row['buildtype']);
+
+        // Delete testing data.
+        $buildgroup->Delete();
+        $buildgrouprule->BuildName = $row['buildname'];
+        $buildgrouprule->BuildType = '';
+        $buildgrouprule->Delete(true);
     }
 }

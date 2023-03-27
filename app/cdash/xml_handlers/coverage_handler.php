@@ -39,9 +39,9 @@ class CoverageHandler extends AbstractHandler
     private $Label;
 
     /** Constructor */
-    public function __construct($projectID, $scheduleID)
+    public function __construct($projectID)
     {
-        parent::__construct($projectID, $scheduleID);
+        parent::__construct($projectID);
         $this->Build = new Build();
         $this->Site = new Site();
         $this->Coverages = [];
@@ -115,7 +115,7 @@ class CoverageHandler extends AbstractHandler
             // If the build doesn't exist we add it
             if ($this->Build->Id == 0) {
                 $this->Build->InsertErrors = false;
-                add_build($this->Build, $this->scheduleid);
+                add_build($this->Build);
             } else {
                 // Otherwise make sure that it's up-to-date.
                 $this->Build->UpdateBuild($this->Build->Id, -1, -1);
@@ -128,11 +128,11 @@ class CoverageHandler extends AbstractHandler
                 if ($this->HasSubProjects) {
                     // Make sure this file gets associated with the correct SubProject.
                     $subproject = SubProject::GetSubProjectFromPath(
-                            $coverageFile->FullPath, $this->projectid);
+                        $coverageFile->FullPath, $this->projectid);
                     if (!is_null($subproject)) {
                         // Find the sibling build that performed this SubProject.
                         $subprojectBuild = Build::GetSubProjectBuild(
-                                $this->Build->GetParentId(), $subproject->GetId());
+                            $this->Build->GetParentId(), $subproject->GetId());
                         if (is_null($subprojectBuild)) {
                             // Build doesn't exist yet, add it here.
                             $subprojectBuild = new Build();

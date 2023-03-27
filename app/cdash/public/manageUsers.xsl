@@ -5,11 +5,6 @@
    <xsl:include href="headscripts.xsl"/>
    <xsl:include href="headeradminproject.xsl"/>
 
-   <!-- Include local common files -->
-   <xsl:include href="local/footer.xsl"/>
-   <xsl:include href="local/headscripts.xsl"/>
-   <xsl:include href="local/headeradminproject.xsl"/>
-
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
@@ -23,11 +18,20 @@
          </link>
 
         <!-- Include project roles -->
-        <script src="js/jquery-1.6.2.js" type="text/javascript"></script>
         <script src="js/cdashManageUsers.js" type="text/javascript"></script>
         <!-- Functions to confirm the email -->
         <xsl:text disable-output-escaping="yes">
               &lt;script language="JavaScript" type="text/javascript"&gt;
+
+              $(document).ready(function() {
+                $(window).keydown(function(event){
+                  if(event.keyCode == 13) {
+                  event.preventDefault();
+                  return false;
+                  }
+                });
+              });
+
               function confirmRemove() {
                  if (window.confirm("Are you sure you want to remove this user from the database?")){
                     return true;

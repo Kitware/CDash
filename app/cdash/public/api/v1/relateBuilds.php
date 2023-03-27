@@ -13,8 +13,12 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\RelateBuilds;
+
 require_once 'include/api_common.php';
 
+use App\Services\AuthTokenService;
 use CDash\Model\Build;
 use CDash\Model\BuildRelationship;
 use CDash\Model\Project;
@@ -71,8 +75,9 @@ if ($request_method == 'DELETE') {
 if ($request_method == 'POST') {
     // Check for valid authentication token if this project requires one.
     $project->Fill();
-    if ($project->AuthenticateSubmissions &&
-            !valid_token_for_submission($project->Id)) {
+
+    $token_hash = AuthTokenService::hashToken(AuthTokenService::getBearerToken());
+    if ($project->AuthenticateSubmissions && !AuthTokenService::checkToken($token_hash, $project->Id)) {
         return;
     }
 

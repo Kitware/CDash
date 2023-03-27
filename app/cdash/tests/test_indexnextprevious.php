@@ -27,6 +27,12 @@ class IndexNextPreviousTestCase extends KWWebTestCase
         // Make a separate project for this test.
         $project->Id = $this->createProject(['Name' => $projectname]);
 
+        // Verify 'No builds' message by default.
+        $this->get($this->url . "/api/v1/index.php?project=$projectname");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $this->assertEqual($jsonobj['banners'][0], 'No builds found');
+
         // Make some builds.
         $first_date = '2016-10-10';
         $second_date = '2017-10-10';

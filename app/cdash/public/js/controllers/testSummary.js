@@ -1,5 +1,5 @@
 CDash.controller('TestSummaryController',
-  function TestSummaryController($scope, apiLoader, multisort) {
+  function TestSummaryController($scope, $timeout, apiLoader, multisort) {
     // Hide filters and graph by default.
     $scope.showfilters = false;
     $scope.showgraph = false;
@@ -29,6 +29,13 @@ CDash.controller('TestSummaryController',
     $scope.failureGraphUrl = function() {
       return 'ajax/showtestfailuregraph.php?testname=' + $scope.cdash.testName + '&projectid=' + $scope.cdash.projectid + '&starttime=' + $scope.cdash.currentstarttime;
     };
+
+    $scope.toggleGraph = function() {
+      $scope.showgraph = !$scope.showgraph;
+      $timeout(function() {
+        $scope.resetZoom();
+      }, 10);
+    }
 
     $scope.resetZoom = function() {
       // ng-include won't reload if graphurl doesn't change, so simply

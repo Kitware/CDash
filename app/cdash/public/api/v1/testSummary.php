@@ -19,6 +19,11 @@
  * on a specific day.  It also displays information (success, execution time)
  * about each copy of the test that was run.
  */
+
+namespace CDash\Api\v1\TestSummary;
+
+use App\Services\PageTimer;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include_once 'include/repository.php';
@@ -51,7 +56,7 @@ if (!isset($testName)) {
     return;
 }
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
 if (pdo_num_rows($project) > 0) {
@@ -98,15 +103,14 @@ $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 // Count how many extra test measurements we have.
 $getcolumnnumber = pdo_query(
     "SELECT testmeasurement.name, COUNT(DISTINCT test.name) as xxx FROM test
-        JOIN testmeasurement ON (test.id = testmeasurement.testid)
         JOIN build2test ON (build2test.testid = test.id)
         JOIN build ON (build.id = build2test.buildid)
+        JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
         JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
         WHERE test.name='$testName'
         AND build.starttime>='$beginning_UTCDate'
         AND build.starttime<'$end_UTCDate'
         AND test.projectid=$projectid
-        AND measurement.summarypage= 1
         GROUP by testmeasurement.name
         ");
 
@@ -140,23 +144,22 @@ if ($columncount > 0) {
         "SELECT test.id, test.projectid, build2test.buildid,
             build2test.status, build2test.timestatus, test.name,
             testmeasurement.name, testmeasurement.value, build.starttime,
-            build2test.time, measurement.testpage FROM test
-            JOIN testmeasurement ON (test.id = testmeasurement.testid)
+            build2test.time FROM test
             JOIN build2test ON (build2test.testid = test.id)
             JOIN build ON (build.id = build2test.buildid)
-            JOIN measurements ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
+            JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
+            JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
             WHERE test.name='$testName'
             AND build.starttime>='$beginning_UTCDate'
             AND build.starttime<'$end_UTCDate'
             AND test.projectid=$projectid
-            AND measurement.summarypage= 1
             ORDER BY build2test.buildid, testmeasurement.name
             ");
 }
 
 $query = "
-    SELECT b.id AS buildid, b.name, b.stamp, b2t.status,
-           b2t.time, t.id AS testid, s.name AS sitename
+    SELECT b.id AS buildid, b.name, b.stamp, b2t.id AS buildtestid,
+           b2t.status, b2t.time, s.name AS sitename
     FROM test AS t
     LEFT JOIN build2test AS b2t ON (t.id = b2t.testid)
     LEFT JOIN build AS b ON (b.id = b2t.buildid)
@@ -194,6 +197,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
         $filecontent .= "{$row['sitename']},{$row['name']},{$row['stamp']},{$row['time']},";
 
         if ($projectshowtesttime) {
+            // TODO: (williamjallen) $testtimemaxstatus is undefined here.  Fix it.
             if ($row['timestatus'] < $testtimemaxstatus) {
                 $filecontent .= 'Passed,';
             } else {
@@ -214,7 +218,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
         }
         // start writing test results
         for ($t = 0; $t < count($columns); $t++) {
-            $filecontent .= $etest[$row['id']][$columns[$t]] . ',';
+            $filecontent .= $etest[$row['buildid']][$columns[$t]] . ',';
         }
         $filecontent .= "\n";
     }
@@ -237,24 +241,32 @@ while ($row = pdo_fetch_array($result)) {
     $build_response = array();
 
     // Find the repository revision
-    $update_response = array();
+    $update_response = [
+        'revision' => '',
+        'priorrevision' => '',
+        'path' => '',
+        'revisionurl' => '',
+        'revisiondiff' => ''
+    ];
     // Return the status
     $status_array = pdo_fetch_array(pdo_query("SELECT status,revision,priorrevision,path
                 FROM buildupdate,build2update AS b2u
                 WHERE b2u.updateid=buildupdate.id
                 AND b2u.buildid='$buildid'"));
-    if (strlen($status_array['status']) > 0 && $status_array['status'] != '0') {
-        $update_response['status'] = $status_array['status'];
-    } else {
-        $update_response['status'] = ''; // empty status
+    if (is_array($status_array)) {
+        if (strlen($status_array['status']) > 0 && $status_array['status'] != '0') {
+            $update_response['status'] = $status_array['status'];
+        } else {
+            $update_response['status'] = ''; // empty status
+        }
+        $update_response['revision'] = $status_array['revision'];
+        $update_response['priorrevision'] = $status_array['priorrevision'];
+        $update_response['path'] = $status_array['path'];
+        $update_response['revisionurl'] =
+            get_revision_url($projectid, $status_array['revision'], $status_array['priorrevision']);
+        $update_response['revisiondiff'] =
+            get_revision_url($projectid, $status_array['priorrevision'], ''); // no prior prior revision...
     }
-    $update_response['revision'] = $status_array['revision'];
-    $update_response['priorrevision'] = $status_array['priorrevision'];
-    $update_response['path'] = $status_array['path'];
-    $update_response['revisionurl'] =
-        get_revision_url($projectid, $status_array['revision'], $status_array['priorrevision']);
-    $update_response['revisiondiff'] =
-        get_revision_url($projectid, $status_array['priorrevision'], ''); // no prior prior revision...
     $build_response['update'] = $update_response;
 
     $build_response['site'] = $row['sitename'];
@@ -265,8 +277,8 @@ while ($row = pdo_fetch_array($result)) {
     $buildLink = "viewTest.php?buildid=$buildid";
     $build_response['buildid'] = $buildid;
     $build_response['buildLink'] = $buildLink;
-    $testid = $row['testid'];
-    $testLink = "testDetails.php?test=$testid&build=$buildid";
+    $buildtestid = $row['buildtestid'];
+    $testLink = "test/$buildtestid";
     $build_response['testLink'] = $testLink;
     switch ($row['status']) {
         case 'passed':
@@ -301,16 +313,15 @@ if ($columncount > 0) {
         "SELECT test.id, test.projectid, build2test.buildid,
             build2test.status, build2test.timestatus, test.name,
             testmeasurement.name, testmeasurement.value, build.starttime,
-            build2test.time, measurement.testpage FROM test
-            JOIN testmeasurement ON (test.id = testmeasurement.testid)
+            build2test.time FROM test
             JOIN build2test ON (build2test.testid = test.id)
             JOIN build ON (build.id = build2test.buildid)
+            JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
             JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
             WHERE test.name='$testName'
             AND build.starttime>='$beginning_UTCDate'
             AND build.starttime<'$end_UTCDate'
             AND test.projectid=$projectid
-            AND measurement.summarypage= 1
             ORDER BY build2test.buildid, testmeasurement.name
             ");
     while ($etestquery && $row = pdo_fetch_array($etestquery)) {
@@ -339,13 +350,11 @@ foreach ($builds_response as $i => $build_response) {
 }
 
 $response['builds'] = $builds_response;
-$response['csvlink'] = htmlspecialchars($_SERVER['REQUEST_URI']) . '&amp;export=csv';
+$response['csvlink'] = $_SERVER['REQUEST_URI'] . '&export=csv';
 $response['columncount'] = count($columns);
 $response['numfailed'] = $numfailed;
 $response['numtotal'] = $numtotal;
 $response['percentagepassed'] = round($numpassed / $numtotal, 2) * 100;
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
-
+$pageTimer->end($response);
 echo json_encode($response);

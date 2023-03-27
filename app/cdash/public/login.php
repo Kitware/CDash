@@ -26,11 +26,13 @@ $session_OK = (int)cdash_auth();
 
 if (!$session_OK && !@$noforcelogin) {
     $errors = Collection::make([]);
+    $js_version = \App\Http\Controllers\AbstractController::getJsVersion();
     echo view(
         'auth.login',
         [
             'title' => 'Login',
             'errors' => $errors,
+            'js_version' => $js_version,
         ]
     )->render();
     return;

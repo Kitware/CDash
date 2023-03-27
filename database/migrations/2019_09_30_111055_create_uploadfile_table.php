@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateUploadfileTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,13 +12,15 @@ class CreateUploadfileTable extends Migration
      */
     public function up()
     {
-        Schema::create('uploadfile', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->string('filename');
-            $table->integer('filesize')->default(0);
-            $table->string('sha1sum', 40)->index();
-            $table->tinyInteger('isurl')->default(0);
-        });
+        if (!Schema::hasTable('uploadfile')) {
+            Schema::create('uploadfile', function (Blueprint $table) {
+                $table->integer('id', true);
+                $table->string('filename');
+                $table->integer('filesize')->default(0);
+                $table->string('sha1sum', 40)->index();
+                $table->tinyInteger('isurl')->default(0);
+            });
+        }
     }
 
 

@@ -3,6 +3,9 @@
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
+use App\Models\TestMeasurement;
+use App\Services\TestCreator;
+
 use CDash\Collection\BuildCollection;
 use CDash\Collection\Collection;
 use CDash\Collection\SubscriptionBuilderCollection;
@@ -15,16 +18,12 @@ use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildInformation;
-use CDash\Model\BuildTest;
-use CDash\Model\Feed;
 use CDash\Model\Image;
 use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Model\SiteInformation;
 use CDash\Model\SubscriberInterface;
-use CDash\Model\Test;
-use CDash\Model\TestMeasurement;
 use CDash\Submission\CommitAuthorHandlerInterface;
 use CDash\Submission\CommitAuthorHandlerTrait;
 
@@ -35,12 +34,10 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
     private $StartTimeStamp;
     private $EndTimeStamp;
 
-    /** @var Test Test */
-    private $Test;
-    private $BuildTest;
     private $TestMeasurement;
     private $Label;
-    private $Append;
+
+    private $TestCreator;
 
     /** @var Build[] Builds */
     private $Builds;
@@ -60,12 +57,10 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
     private $NumberTestsNotRun;
     private $NumberTestsPassed;
 
-    private $Feed;
-
     /** Constructor */
-    public function __construct($projectID, $scheduleID)
+    public function __construct($projectID)
     {
-        parent::__construct($projectID, $scheduleID);
+        parent::__construct($projectID);
         $this->Builds = [];
         $this->SubProjects = [];
         $this->NumberTestsFailed = [];
@@ -73,11 +68,6 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         $this->NumberTestsPassed = [];
         $this->StartTimeStamp = 0;
         $this->EndTimeStamp = 0;
-    }
-
-    /** Destructor */
-    public function __destruct()
-    {
     }
 
     /** Start Element */
@@ -102,6 +92,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             $this->BuildInformation = $factory->create(BuildInformation::class);
             $this->BuildName = "";
             $this->BuildStamp = "";
+            $this->SubProjectName = "";
             $this->Generator = "";
             $this->PullRequest = "";
 
@@ -125,12 +116,6 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                 $this->BuildName = '(empty)';
             }
             $this->Site->SetInformation($siteInformation);
-
-            if (array_key_exists('APPEND', $attributes)) {
-                $this->Append = $attributes['APPEND'];
-            } else {
-                $this->Append = false;
-            }
         } elseif ($name == 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
@@ -138,23 +123,23 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                 $this->createBuild();
             }
         } elseif ($name == 'TEST' && count($attributes) > 0) {
-            $this->Test = $factory->create(Test::class);
-            $this->Test->ProjectId = $this->projectid;
-            $this->BuildTest = $factory->create(BuildTest::class);
-            $this->BuildTest->Status = $attributes['STATUS'];
-            $this->TestSubProjectName = "";
-        } elseif ($name == 'NAMEDMEASUREMENT') {
+            $this->TestCreator = new TestCreator;
+            $this->TestCreator->projectid = $this->projectid;
+            $this->TestCreator->testStatus = $attributes['STATUS'];
+            $this->TestSubProjectName = '';
+            $this->Labels = [];
+        } elseif ($name == 'NAMEDMEASUREMENT' && array_key_exists('TYPE', $attributes)) {
             $this->TestMeasurement = $factory->create(TestMeasurement::class);
 
             if ($attributes['TYPE'] == 'file') {
-                $this->TestMeasurement->Name = $attributes['FILENAME'];
+                $this->TestMeasurement->name = $attributes['FILENAME'];
             } else {
-                $this->TestMeasurement->Name = $attributes['NAME'];
+                $this->TestMeasurement->name = $attributes['NAME'];
             }
-            $this->TestMeasurement->Type = $attributes['TYPE'];
+            $this->TestMeasurement->type = $attributes['TYPE'];
         } elseif ($name == 'VALUE' && $parent == 'MEASUREMENT') {
             if (isset($attributes['COMPRESSION']) && $attributes['COMPRESSION'] == 'gzip') {
-                $this->Test->CompressedOutput = true;
+                $this->TestCreator->alreadyCompressed = true;
             }
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             $this->Label = $factory->create(Label::class);
@@ -180,64 +165,51 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 
             $GLOBALS['PHP_ERROR_BUILD_ID'] = $build->Id;
 
-            if ($this->BuildTest->Status == 'passed') {
+            if ($this->TestCreator->testStatus == 'passed') {
                 $this->NumberTestsPassed[$this->SubProjectName]++;
-            } elseif ($this->BuildTest->Status == 'failed') {
+            } elseif ($this->TestCreator->testStatus == 'failed') {
                 $this->NumberTestsFailed[$this->SubProjectName]++;
-            } elseif ($this->BuildTest->Status == 'notrun') {
+            } elseif ($this->TestCreator->testStatus == 'notrun') {
                 $this->NumberTestsNotRun[$this->SubProjectName]++;
             }
-
-            $this->Test->Insert();
-            $build->AddTest($this->Test);
-            $this->Test->SetBuildTest($this->BuildTest);
-            if ($this->Test->Id > 0) {
-                $this->BuildTest->TestId = $this->Test->Id;
-                $this->BuildTest->BuildId = $build->Id;
-                $this->BuildTest->Insert();
-
-                $this->Test->InsertLabelAssociations($build->Id);
-            } else {
-                add_log('Cannot insert test', 'Test XML parser', LOG_ERR,
-                    $this->projectid, $build->Id);
+            if ($this->Labels) {
+                $this->TestCreator->labels = $this->Labels;
             }
+            $this->TestCreator->create($build);
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             if (!empty($this->TestSubProjectName)) {
                 $this->SubProjectName = $this->TestSubProjectName;
             }
-            if (isset($this->Test)) {
-                $this->Test->AddLabel($this->Label);
-            }
         } elseif ($name == 'NAMEDMEASUREMENT') {
-            if ($this->TestMeasurement->Name == 'Execution Time') {
-                $this->BuildTest->Time = $this->TestMeasurement->Value;
-            } elseif ($this->TestMeasurement->Name == 'Exit Code') {
-                if (strlen($this->Test->Details) > 0 && $this->TestMeasurement->Value) {
-                    $this->Test->Details .= ' (' . $this->TestMeasurement->Value . ')';
-                } elseif ($this->TestMeasurement->Value) {
-                    $this->Test->Details = $this->TestMeasurement->Value;
+            if ($this->TestMeasurement->name == 'Execution Time') {
+                $this->TestCreator->buildTestTime = $this->TestMeasurement->value;
+            } elseif ($this->TestMeasurement->name == 'Exit Code') {
+                if (strlen($this->TestCreator->testDetails) > 0 && $this->TestMeasurement->value) {
+                    $this->TestCreator->testDetails .= ' (' . $this->TestMeasurement->value . ')';
+                } elseif ($this->TestMeasurement->value) {
+                    $this->TestCreator->testDetails = $this->TestMeasurement->value;
                 }
-            } elseif ($this->TestMeasurement->Name == 'Completion Status') {
-                if (strlen($this->Test->Details) > 0) {
-                    $this->Test->Details = $this->TestMeasurement->Value . ' (' . $this->Test->Details . ')';
+            } elseif ($this->TestMeasurement->name == 'Completion Status') {
+                if (strlen($this->TestCreator->testDetails) > 0) {
+                    $this->TestCreator->testDetails = $this->TestMeasurement->value . ' (' . $this->TestCreator->testDetails . ')';
                 } else {
-                    $this->Test->Details = $this->TestMeasurement->Value;
+                    $this->TestCreator->testDetails = $this->TestMeasurement->value;
                 }
-            } elseif ($this->TestMeasurement->Name == 'Command Line') {
+            } elseif ($this->TestMeasurement->name == 'Command Line') {
                 // don't do anything since it should already be in the FullCommandLine
             } else {
                 // explicit measurement
 
                 // If it's an image we add it as an image
-                if (strpos($this->TestMeasurement->Type, 'image') !== false) {
+                if (strpos($this->TestMeasurement->type, 'image') !== false) {
                     $image = $factory->create(Image::class);
-                    $image->Extension = $this->TestMeasurement->Type;
-                    $image->Data = $this->TestMeasurement->Value;
-                    $image->Name = $this->TestMeasurement->Name;
-                    $this->Test->AddImage($image);
+                    $image->Extension = $this->TestMeasurement->type;
+                    $image->Data = $this->TestMeasurement->value;
+                    $image->Name = $this->TestMeasurement->name;
+                    $this->TestCreator->images->push($image);
                 } else {
-                    $this->TestMeasurement->Value = trim($this->TestMeasurement->Value);
-                    $this->Test->AddMeasurement($this->TestMeasurement);
+                    $this->TestMeasurement->value = trim($this->TestMeasurement->value ?? '');
+                    $this->TestCreator->measurements->push($this->TestMeasurement);
                 }
             }
         } elseif ($name == 'SITE') {
@@ -276,13 +248,6 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                     }
                 }
                 $build->SaveTotalTestsTime();
-
-                $config = \CDash\Config::getInstance();
-                if ($config->get('CDASH_ENABLE_FEED')) {
-                    // Insert the build into the feed
-                    $this->Feed = $factory->create(Feed::class);
-                    $this->Feed->InsertTest($this->projectid, $build->Id);
-                }
             }
         }
     }
@@ -305,30 +270,27 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         } elseif ($parent == 'TEST') {
             switch ($element) {
                 case 'NAME':
-                    $this->Test->Name = $data;
+                    $this->TestCreator->testName = $data;
                     break;
                 case 'PATH':
-                    $this->Test->Path = $data;
-                    break;
-                case 'FULLNAME':
-                    //$this->Test->Command = $data;
+                    $this->TestCreator->testPath = $data;
                     break;
                 case 'FULLCOMMANDLINE':
-                    $this->Test->Command .= $data;
+                    $this->TestCreator->testCommand .= $data;
                     break;
             }
         } elseif ($parent == 'NAMEDMEASUREMENT' && $element == 'VALUE') {
-            if (!isset($this->TestMeasurement->Value)) {
-                $this->TestMeasurement->Value = $data;
+            if (!isset($this->TestMeasurement->value)) {
+                $this->TestMeasurement->value = $data;
             } else {
-                $this->TestMeasurement->Value .= $data;
+                $this->TestMeasurement->value .= $data;
             }
         } elseif ($parent == 'MEASUREMENT' && $element == 'VALUE') {
-            $this->Test->Output .= $data;
+            $this->TestCreator->testOutput .= $data;
         } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
             $this->SubProjects[$this->SubProjectName][] =  $data;
         } elseif ($parent == 'LABELS' && $element == 'LABEL') {
-            // First, check if this label belongs to a SubProject
+            // Check if this label belongs to a SubProject.
             foreach ($this->SubProjects as $subproject => $labels) {
                 if (in_array($data, $labels)) {
                     $this->TestSubProjectName = $subproject;
@@ -337,6 +299,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             }
             if (is_a($this->Label, Label::class)) {
                 $this->Label->SetText($data);
+                $this->Labels[] = $this->Label;
             }
         }
     }
@@ -349,6 +312,11 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
     public function getBuildName()
     {
         return $this->BuildName;
+    }
+
+    public function getSubProjectName()
+    {
+        return $this->SubProjectName;
     }
 
     private function createBuild()
@@ -391,7 +359,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         if ($build->Id == 0) {
             $build->Append = $this->Append;
             $build->InsertErrors = false;
-            add_build($build, $this->scheduleid);
+            add_build($build);
         } else {
             // Otherwise make sure that the build is up-to-date.
             $build->UpdateBuild($build->Id, -1, -1);
@@ -473,7 +441,9 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         $factory = $this->getModelFactory();
         $buildGroup = $factory->create(BuildGroup::class);
         foreach ($this->Builds as $build) {
-            $buildGroup->SetId($build->GroupId);
+            // TODO: this used to work:
+            // $buildGroup->SetId($build->GroupId);
+            $buildGroup->SetId($build->GetGroup());
             break;
         }
         return $buildGroup;

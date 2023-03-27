@@ -10,6 +10,7 @@ cdash_environment() {
 }
 
 cdash_build_image() {
+  docker-compose -f ./docker-compose.local.yml build --force-rm --no-cache common
   docker-compose -f ./docker-compose.local.yml build --force-rm --no-cache cdash
 }
 
@@ -73,7 +74,7 @@ cdash_run_and_submit_ctest() {
   site=$(cdash_site)
   branch=$(cdash_branch)
 
-  docker exec cdash bash -c "cd /home/kitware/cdash && /usr/bin/git checkout ."
+  docker exec --user www-data cdash bash -c "cd /home/kitware/cdash && /usr/bin/git checkout ."
 
   echo "site=$site"
   echo "branch=$branch"

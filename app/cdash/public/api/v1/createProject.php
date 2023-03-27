@@ -13,22 +13,25 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\CreateProject;
+
 require_once 'include/common.php';
 require_once 'include/pdo.php';
+
+use App\Services\PageTimer;
+use App\Services\ProjectPermissions;
 
 use CDash\Config;
 use CDash\Model\Project;
 use CDash\Model\Repository;
-use CDash\Model\User;
 use CDash\Model\UserProject;
 use CDash\ServiceContainer;
-use CDash\Controller\Auth\Session;
+use Illuminate\Support\Facades\Auth;
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 $service = ServiceContainer::getInstance();
 $config = Config::getInstance();
-/** @var Session $session */
-$session = $service->get(Session::class);
 
 $response = [];
 if (!Auth::check()) {
@@ -57,25 +60,17 @@ if (isset($_GET['projectid'])) {
     }
 }
 
-/** @var User $User */
-$User = $service->create(User::class);
-
-$User->Id = $userid;
-$role = $Project->GetUserRole($userid);
-$isAdmin = $User->IsAdmin();
+/** @var \App\Models\User $User */
+$User = Auth::user();
 
 // Check if the user has the necessary permissions.
 $userHasAccess = false;
 if (!is_null($projectid)) {
     // Can they edit this project?
-    if ($isAdmin || $role > 1) {
-        $userHasAccess = true;
-    }
+    $userHasAccess = ProjectPermissions::UserCanEditProject($User, $Project);
 } else {
     // Can they create a new project?
-    if ($isAdmin || $session->getSessionVar('cdash.user_can_create_project')) {
-        $userHasAccess = true;
-    }
+    $userHasAccess = ProjectPermissions::userCanCreateProject($User);
 }
 if (!$userHasAccess) {
     $response['error'] = 'You do not have permission to access this page.';
@@ -91,7 +86,6 @@ $response['hidenav'] = 1;
 $menu =[];
 $menu['back'] = 'user.php';
 $response['menu'] = $menu;
-$response['manageclient'] =  $config->get('CDASH_MANAGE_CLIENTS');
 
 $nRepositories = 0;
 $repositories_response = [];
@@ -140,8 +134,8 @@ if ($projectid > 0) {
     }
 } else {
     // Initialize some variables for project creation.
-    $project_response['AuthenticateSubmissions'] = config('cdash.allow.authenticated_submissions');
-    $project_response['Public'] = 0;
+    $project_response['AuthenticateSubmissions'] = 0;
+    $project_response['Public'] = Project::ACCESS_PRIVATE;
     $project_response['AutoremoveMaxBuilds'] = 500;
     $project_response['AutoremoveTimeframe'] = 60;
     $project_response['CoverageThreshold'] = 70;
@@ -153,11 +147,12 @@ if ($projectid > 0) {
     $project_response['TestTimeMaxStatus'] = 3;
     $project_response['TestTimeStd'] = 4.0;
     $project_response['TestTimeStdThreshold'] = 1.0;
-    if (!$config->get('CDASH_USER_CREATE_PROJECTS') || $isAdmin) {
+    if (!$config->get('CDASH_USER_CREATE_PROJECTS') || $User->IsAdmin()) {
         $project_response['UploadQuota'] = 1;
     }
     $project_response['WarningsFilter'] = "";
     $project_response['ErrorsFilter'] = "";
+    $project_response['ViewSubProjectsLink'] = 1;
 }
 
 // Make sure we have at least one repository.
@@ -189,6 +184,5 @@ $callback = function ($key) use ($Project, $viewers, &$response) {
 
 $response['vcsviewers'] = array_map($callback, array_keys($viewers));
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateBuildfailureargumentTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,10 +12,12 @@ class CreateBuildfailureargumentTable extends Migration
      */
     public function up()
     {
-        Schema::create('buildfailureargument', function (Blueprint $table) {
-            $table->bigInteger('id', true);
-            $table->string('argument')->index();
-        });
+        if (!Schema::hasTable('buildfailureargument')) {
+            Schema::create('buildfailureargument', function (Blueprint $table) {
+                $table->bigInteger('id', true);
+                $table->string('argument')->index();
+            });
+        }
     }
 
 

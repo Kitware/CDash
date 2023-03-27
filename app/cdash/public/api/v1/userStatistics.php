@@ -13,13 +13,17 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\UserStatistics;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
-use CDash\Model\User;
+use App\Models\User;
+use App\Services\PageTimer;
 
-$start = microtime_float();
-$response = array();
+$pageTimer = new PageTimer();
+$response = [];
 
 // Handle required project argument.
 $project_ok = true;
@@ -83,13 +87,13 @@ $response['menu'] = $menu;
 // that occurred during this day will be included.
 $timestamp = $response['unixtimestamp'] + 3600 * 24;
 $beginning_UTCDate = gmdate(FMT_DATETIME,
-        strtotime("-1 $range", $timestamp));
+    strtotime("-1 $range", $timestamp));
 $end_UTCDate = gmdate(FMT_DATETIME, $timestamp);
 
 // Lookup stats for this time period.
 $pdo = get_link_identifier()->getPdo();
 $stmt = $pdo->prepare(
-        'SELECT * FROM userstatistics
+    'SELECT * FROM userstatistics
         WHERE checkindate<:end AND checkindate>=:beginning
         AND projectid=:projectid');
 $stmt->bindParam(':end', $end_UTCDate);
@@ -127,10 +131,8 @@ while ($row = $stmt->fetch()) {
 $users_response = array();
 foreach ($users as $key => $user) {
     $user_response = array();
-    $user_obj = new User();
-    $user_obj->Id = $key;
-    $user_obj->Fill();
-    $user_response['name'] = $user_obj->GetName();
+    $user_obj = User::where('id', $key)->first();
+    $user_response['name'] = $user_obj->full_name;
     $user_response['id'] = $key;
     $user_response['failed_errors'] = $user['nfailederrors'];
     $user_response['fixed_errors'] = $user['nfixederrors'];
@@ -142,7 +144,5 @@ foreach ($users as $key => $user) {
     $users_response[] = $user_response;
 }
 $response['users'] = $users_response;
-
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

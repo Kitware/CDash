@@ -15,6 +15,8 @@
 =========================================================================*/
 namespace CDash\Controller\Api;
 
+use App\Services\TestingDay;
+
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -76,8 +78,18 @@ class ResultsApi extends ProjectApi
         return $this->endDate;
     }
 
+    public function validateDateString($date)
+    {
+        $dt = \DateTime::createFromFormat("Y-m-d", $date);
+        if ($dt !== false && !array_sum($dt::getLastErrors())) {
+            return $date;
+        }
+        return false;
+    }
+
     public function setDate($date)
     {
+        $this->project->Fill();
         list($previousdate, $beginning_timestamp, $nextdate, $d) =
             get_dates($date, $this->project->NightlyTime);
         if (is_null($date)) {
@@ -97,43 +109,56 @@ class ResultsApi extends ProjectApi
 
     public function determineDateRange(&$response)
     {
-        if (isset($_REQUEST['begin']) || isset($_REQUEST['end'])) {
+        $date_set = false;
+
+        $begin = false;
+        if (isset($_REQUEST['begin'])) {
+            $begin = $this->validateDateString($_REQUEST['begin']);
+        }
+
+        $end = false;
+        if (isset($_REQUEST['end'])) {
+            $end = $this->validateDateString($_REQUEST['end']);
+        }
+
+        if ($begin && $end) {
             // Honor 'begin' & 'end' parameters to specify a range of dates.
-            if (isset($_REQUEST['begin']) && isset($_REQUEST['end'])) {
-                // Compute a date range if both arguments were specified.
-                $begin = $_REQUEST['begin'];
-                list($unused, $beginning_timestamp) =
-                    get_dates($begin, $this->project->NightlyTime);
-                $this->currentStartTime = $beginning_timestamp;
-                $this->beginDate = gmdate(FMT_DATETIME, $beginning_timestamp);
-                $response['begin'] = $begin;
+            // Compute a date range if both arguments were specified.
+            list($unused, $beginning_timestamp) =
+                get_dates($begin, $this->project->NightlyTime);
+            $this->currentStartTime = $beginning_timestamp;
+            $this->beginDate = gmdate(FMT_DATETIME, $beginning_timestamp);
+            $response['begin'] = $begin;
 
-                $this->date = $_REQUEST['end'];
-                $response['end'] = $this->date;
-                list($previousdate, $end_timestamp, $nextdate) =
-                    get_dates($this->date, $this->project->NightlyTime);
-                $this->previousDate = $previousdate;
-                $this->nextDate = $nextdate;
+            $this->date = $end;
+            $response['end'] = $this->date;
+            list($previousdate, $end_timestamp, $nextdate) =
+                get_dates($this->date, $this->project->NightlyTime);
+            $this->previousDate = $previousdate;
+            $this->nextDate = $nextdate;
 
-                $this->datetime->setTimeStamp($end_timestamp);
-                $this->datetime->add(new \DateInterval('P1D'));
-                $end_timestamp = $this->datetime->getTimestamp();
-                $this->endDate = gmdate(FMT_DATETIME, $end_timestamp);
-            } else {
-                // If not, just use whichever one was set.
-                if (isset($_REQUEST['begin'])) {
-                    $this->date = $_REQUEST['begin'];
-                } else {
-                    $this->date = $_REQUEST['end'];
-                }
-            }
-            $response['date_set'] = true;
+            $this->datetime->setTimeStamp($end_timestamp);
+            $this->datetime->add(new \DateInterval('P1D'));
+            $end_timestamp = $this->datetime->getTimestamp();
+            $this->endDate = gmdate(FMT_DATETIME, $end_timestamp);
+            $date_set = true;
+        } elseif ($begin) {
+            // If not, just use whichever one was set.
+            $this->date = $begin;
+            $date_set = true;
+        } elseif ($end) {
+            $this->date = $end;
+            $date_set = true;
         } elseif (isset($_REQUEST['date'])) {
-            $this->date = $_REQUEST['date'];
-            $response['date_set'] = true;
-        } else {
-            // No date specified. Look up the most recent date with results.
-            $response['date_set'] = false;
+            $date = $this->validateDateString($_REQUEST['date']);
+            if ($date) {
+                $this->date = $date;
+                $date_set = true;
+            }
+        }
+
+        if (!$date_set) {
+            // No (valid) date specified. Look up the most recent date with results.
             $stmt = $this->db->prepare('
                 SELECT starttime FROM build
                 WHERE projectid = :projectid
@@ -141,9 +166,11 @@ class ResultsApi extends ProjectApi
             $this->db->execute($stmt, [':projectid' => $this->project->Id]);
             $starttime = $stmt->fetchColumn();
             if ($starttime) {
-                $this->date = $this->project->GetTestingDay($starttime);
+                $this->date = TestingDay::get($this->project, $starttime);
             }
         }
+
+        $response['date_set'] = $date_set;
 
         if ($this->beginDate == self::BEGIN_EPOCH) {
             $this->setDate($this->date);

@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateProjectrobotTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,11 +12,13 @@ class CreateProjectrobotTable extends Migration
      */
     public function up()
     {
-        Schema::create('projectrobot', function (Blueprint $table) {
-            $table->integer('projectid')->index();
-            $table->string('robotname')->index();
-            $table->string('authorregex', 512);
-        });
+        if (!Schema::hasTable('projectrobot')) {
+            Schema::create('projectrobot', function (Blueprint $table) {
+                $table->integer('projectid')->index();
+                $table->string('robotname')->index();
+                $table->string('authorregex', 512);
+            });
+        }
     }
 
 

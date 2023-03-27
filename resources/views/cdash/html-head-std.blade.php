@@ -10,25 +10,12 @@
 </script>
 <![endif]-->
 
-<script src="js/jquery-1.10.2.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/jquery.flot.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/jquery.flot.time.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/jquery.flot.selection.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/CDash_{{ $js_version  }}.min.js"></script>
 <script src="js/tooltip.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/jquery.qtip.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/jquery-ui-1.10.4.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/cdashmenu.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.dataTables.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/cdashTableSorter.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.metadata.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/jtip.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/jqModal.js" type="text/javascript" charset="utf-8"></script>
 
-<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
-<link rel="stylesheet" type="text/css" href="css/jqModal.css" />
-<link type="text/css" rel="stylesheet" href="css/jquery.qtip.min.css" />
-<link type="text/css" rel="stylesheet" media="all" href="css/jquery.dataTables.css" />
-<link rel="StyleSheet" type="text/css" href="css/cdash.css" />
-
+<link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css" />
+<link rel="stylesheet" type="text/css" href="css/cdash.css" />
+<link rel="stylesheet" type="text/css" href="{{ asset(mix('build/css/3rdparty.css')) }}" />

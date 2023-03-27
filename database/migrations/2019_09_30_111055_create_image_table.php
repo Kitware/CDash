@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateImageTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,12 +12,14 @@ class CreateImageTable extends Migration
      */
     public function up()
     {
-        Schema::create('image', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->binary('img');
-            $table->text('extension');
-            $table->bigInteger('checksum')->index();
-        });
+        if (!Schema::hasTable('image')) {
+            Schema::create('image', function (Blueprint $table) {
+                $table->integer('id', true);
+                $table->binary('img');
+                $table->text('extension');
+                $table->bigInteger('checksum')->index();
+            });
+        }
     }
 
 

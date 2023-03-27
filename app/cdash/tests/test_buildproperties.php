@@ -3,18 +3,21 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
+use App\Services\TestCreator;
+
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
-use CDash\Model\BuildTest;
 use CDash\Model\Project;
-use CDash\Model\Test;
 
 class BuildPropertiesTestCase extends KWWebTestCase
 {
     /** @var Project Project */
     private $Project;
+    private $PDO;
+    private $Builds;
+
     public function __construct()
     {
         parent::__construct();
@@ -57,28 +60,24 @@ class BuildPropertiesTestCase extends KWWebTestCase
         $this->create_build('fixed', 'fixed.json', '20170529-0500', '0d7a8415c91ea126550bdff6f5b18b2f');
 
         // Add a test for these builds.
-        $test = new Test();
-        $test->ProjectId = $this->Project->Id;
-        $test->Details = '';
-        $test->Name = 'BuildPropUnitTest';
-        $test->Path = '/tmp';
-        $test->Command = 'echo foo';
-        $test->Output = 'foo';
-        $test->Insert();
+        $testcreator = new TestCreator;
+        $testcreator->projectid = $this->Project->Id;
+        $testcreator->testDetails = '';
+        $testcreator->testName = 'BuildPropUnitTest';
+        $testcreator->testPath = '/tmp';
+        $testcreator->testCommand = 'echo foo';
+        $testcreator->testOutput = 'foo';
         foreach ($this->Builds as $name => $build) {
-            $buildtest = new BuildTest();
-            $buildtest->BuildId = $build->Id;
-            $buildtest->TestId = $test->Id;
             $numpass = 0;
             $numfail = 0;
             if (strpos($name, 'failedtest') !== false) {
-                $buildtest->Status = 'failed';
+                $testcreator->testStatus = 'failed';
                 $numfail = 1;
             } else {
-                $buildtest->Status = 'passed';
+                $testcreator->testStatus = 'passed';
                 $numpass = 1;
             }
-            $buildtest->Insert();
+            $testcreator->create($build);
             $build->UpdateTestNumbers($numpass, $numfail, 0);
         }
 
@@ -147,7 +146,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
 
     public function testComputeClassifiers()
     {
-        $response = $this->get($this->url . "/api/v1/buildProperties.php?project=BuildPropertiesProject&begin=2017-05-26&end=2017-05-29");
+        $this->get($this->url . "/api/v1/buildProperties.php?project=BuildPropertiesProject&begin=2017-05-26&end=2017-05-29");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $builds = [];
@@ -161,7 +160,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
         }
 
         $query_string = http_build_query(['builds' => $builds]);
-        $response = $this->get($this->url . "/api/v1/computeClassifier.php?$query_string");
+        $this->get($this->url . "/api/v1/computeClassifier.php?$query_string");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $num_classifiers = count($jsonobj);
@@ -211,7 +210,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
         try {
             $response = $client->request(
                 'POST',
-                $this->config('CDASH_BASE_URL') . '/submit.php',
+                config('app.url') . '/submit.php',
                 [
                     'form_params' => $fields
                 ]

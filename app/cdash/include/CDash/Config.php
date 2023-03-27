@@ -29,7 +29,7 @@ class Config extends Singleton
      */
     public static function getVersion()
     {
-        return self::getInstance()->get('CDASH_VERSION');
+        return file_get_contents(public_path('VERSION'));
     }
 
     /**
@@ -80,7 +80,7 @@ class Config extends Singleton
 
     public function getPath()
     {
-        $path = $this->get('CDASH_CURL_LOCALHOST_PREFIX') ?: $_SERVER['REQUEST_URI'];
+        $path = config('cdash.curl_localhost_prefix') ?: $_SERVER['REQUEST_URI'];
         if (strpos($path, '/') !== 0) {
             $path = "/{$path}";
         }
@@ -94,7 +94,7 @@ class Config extends Singleton
      */
     public function getBaseUrl($use_localhost = false)
     {
-        $uri = $this->get('CDASH_BASE_URL');
+        $uri = config('app.url');
 
         if (!$uri) {
             $protocol = $this->getProtocol();

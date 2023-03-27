@@ -17,9 +17,10 @@ require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/filterdataFunctions.php';
 
+use App\Services\TestingDay;
+
 use CDash\Model\Build;
 use CDash\Model\Project;
-use CDash\Model\User;
 
 @set_time_limit(0);
 
@@ -64,7 +65,7 @@ if (!isset($projectid) || $projectid == 0 || !is_numeric($projectid)) {
     exit();
 }
 
-$policy = checkUserPolicy(Auth::id(), $projectid);
+$policy = checkUserPolicy($projectid);
 if ($policy !== true) {
     return $policy;
 }
@@ -109,7 +110,7 @@ if ($build_array['groupid'] > 0) {
     }
 }
 
-$date = $project->GetTestingDay($build_array['starttime']);
+$date = TestingDay::get($project, $build_array['starttime']);
 $xml .= '<menu>';
 $xml .= add_XML_value('back', 'index.php?project=' . urlencode($project->Name) . "&date=$date");
 
@@ -242,9 +243,9 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
 
     // Compute the coverage metric for bullseye.  (branch coverage without line coverage)
     if (
-            ($coveragefile_array['loctested'] == 0 && $coveragefile_array['locuntested'] == 0) &&
-            ($coveragefile_array['branchstested'] > 0 || $coveragefile_array['branchsuntested'] > 0 ||
-            $coveragefile_array['functionstested'] > 0 || $coveragefile_array['functionsuntested'] > 0)) {
+        ($coveragefile_array['loctested'] == 0 && $coveragefile_array['locuntested'] == 0) &&
+        ($coveragefile_array['branchstested'] > 0 || $coveragefile_array['branchsuntested'] > 0 ||
+        $coveragefile_array['functionstested'] > 0 || $coveragefile_array['functionsuntested'] > 0)) {
         // Metric coverage
         $metric = 0;
         if ($coveragefile_array['functionstested'] + $coveragefile_array['functionsuntested'] > 0) {

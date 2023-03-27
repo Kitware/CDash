@@ -14,7 +14,6 @@
  * =========================================================================
  */
 
-use CDash\Collection\TestCollection;
 use CDash\Messaging\Topic\MissingTestTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
@@ -56,7 +55,7 @@ class MissingTestTopicTest extends TestCase
         $sut = new MissingTestTopic();
 
         $collection = $sut->getTopicCollection();
-        $this->assertInstanceOf(TestCollection::class, $collection);
+        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $collection);
     }
 
     public function testGetTopicDescription()
@@ -104,17 +103,16 @@ class MissingTestTopicTest extends TestCase
         $this->assertTrue($collection->has('TestA'));
         $this->assertTrue($collection->has('TestC'));
 
-        /** @var \CDash\Model\Test $a */
         $a = $collection->get('TestA');
         $c = $collection->get('TestC');
 
-        $this->assertEquals('101', $a->Id);
-        $this->assertEquals('TestA', $a->Name);
-        $this->assertEquals('2', $a->GetBuildTest()->BuildId);
+        $this->assertEquals('101', $a->test->id);
+        $this->assertEquals('TestA', $a->test->name);
+        $this->assertEquals('2', $a->buildid);
 
-        $this->assertEquals('303', $c->Id);
-        $this->assertEquals('TestC', $c->Name);
-        $this->assertEquals('2', $c->GetBuildTest()->BuildId);
+        $this->assertEquals('303', $c->test->id);
+        $this->assertEquals('TestC', $c->test->name);
+        $this->assertEquals('2', $c->buildid);
 
         $this->assertEquals(2, $sut->getTopicCount());
     }

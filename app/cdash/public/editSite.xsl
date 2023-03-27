@@ -4,10 +4,6 @@
    <xsl:include href="footer.xsl"/>
    <xsl:include href="headerback.xsl"/>
 
-   <!-- Local includes -->
-   <xsl:include href="local/footer.xsl"/>
-   <xsl:include href="local/headerback.xsl"/>
-
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
     <xsl:template match="/">

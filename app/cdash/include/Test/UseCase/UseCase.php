@@ -26,7 +26,6 @@ abstract class UseCase
     protected $subprojects = [];
     protected $properties = [];
     protected $projectId = 321;
-    protected $scheduleId = 0;
     protected $startTime;
     protected $endTime;
 
@@ -61,14 +60,13 @@ abstract class UseCase
                 $useCase = new UpdateUseCase();
                 break;
             case self::BUILD:
-              $useCase = new BuildUseCase();
-              break;
+                $useCase = new BuildUseCase();
+                break;
             case self::DYNAMIC_ANALYSIS:
                 $useCase = new DynamicAnalysisUseCase();
                 break;
             default:
                 $useCase = null;
-
         }
         $testCase->setUseCaseModelFactory($useCase);
         return $useCase;
@@ -323,16 +321,6 @@ abstract class UseCase
     public function setConfigureLog($log)
     {
         $this->properties['Config']['log'] = $log;
-        return $this;
-    }
-
-    /**
-     * @param int $minutes
-     * @return $this
-     */
-    public function setConfigureElapsedMinutes($minutes)
-    {
-        $this->properties['Config']['elapsed'] = $minutes;
         return $this;
     }
 

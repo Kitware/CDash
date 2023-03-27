@@ -15,8 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use CDash\Config;
-
 class CoverageFileLog
 {
     public $BuildId;
@@ -31,17 +29,17 @@ class CoverageFileLog
 
     public function __construct()
     {
-        $this->Lines = array();
-        $this->Branches = array();
+        $this->Lines = [];
+        $this->Branches = [];
         $this->PreviousAggregateParentId = null;
     }
 
     public function AddLine($number, $code)
     {
         if (array_key_exists($number, $this->Lines)) {
-            $this->Lines[$number] += $code;
+            $this->Lines[$number] += (int)$code;
         } else {
-            $this->Lines[$number] = $code;
+            $this->Lines[$number] = (int)$code;
         }
     }
 
@@ -65,66 +63,70 @@ class CoverageFileLog
             return false;
         }
 
-        pdo_begin_transaction();
-        $update = false;
-        if ($append) {
-            // Load any previously existing results for this file & build.
-            $update = $this->Load(true);
-        }
-
-        $log = '';
-        foreach ($this->Lines as $lineNumber => $code) {
-            $log .= $lineNumber . ':' . $code . ';';
-        }
-        foreach ($this->Branches as $lineNumber => $code) {
-            $log .= 'b' . $lineNumber . ':' . $code . ';';
-        }
-
-        if ($log != '') {
-            if ($update) {
-                $sql_command = 'UPDATE';
-                $sql = "UPDATE coveragefilelog SET log='$log'
-                WHERE buildid=" . qnum($this->BuildId) . ' AND
-                fileid=' . qnum($this->FileId);
-            } else {
-                $sql_command = 'INSERT';
-                $sql = 'INSERT INTO coveragefilelog (buildid,fileid,log) VALUES ';
-                $sql .= '(' . qnum($this->BuildId) . ',' . qnum($this->FileId) . ",'" . $log . "')";
+        \DB::transaction(function () use ($append) {
+            $update = false;
+            if ($append) {
+                // Load any previously existing results for this file & build.
+                $update = $this->Load(true);
             }
-            pdo_query($sql);
-            add_last_sql_error("CoverageFileLog::$sql_command()");
-        }
-        pdo_commit();
+
+            $log = '';
+            foreach ($this->Lines as $lineNumber => $code) {
+                $log .= $lineNumber . ':' . $code . ';';
+            }
+            foreach ($this->Branches as $lineNumber => $code) {
+                $log .= 'b' . $lineNumber . ':' . $code . ';';
+            }
+
+            if ($log != '') {
+                if ($update) {
+                    \DB::table('coveragefilelog')
+                        ->where('buildid', $this->BuildId)
+                        ->where('fileid', $this->FileId)
+                        ->update(['log' => $log]);
+                } else {
+                    \DB::table('coveragefilelog')
+                        ->insert([
+                            'buildid' => $this->BuildId,
+                            'fileid' => $this->FileId,
+                            'log' => $log
+                        ]);
+                }
+            }
+        });
         $this->UpdateAggregate();
         return true;
     }
 
     public function Load($for_update = false)
     {
-        $query = 'SELECT log FROM coveragefilelog
-            WHERE fileid=' . qnum($this->FileId) . '
-            AND buildid=' . qnum($this->BuildId);
         if ($for_update) {
-            $query .= ' FOR UPDATE';
+            $row = \DB::table('coveragefilelog')
+                ->where('buildid', $this->BuildId)
+                ->where('fileid', $this->FileId)
+                ->lockForUpdate()
+                ->first();
+        } else {
+            $row = \DB::table('coveragefilelog')
+                ->where('buildid', $this->BuildId)
+                ->where('fileid', $this->FileId)
+                ->first();
         }
 
-        $result = pdo_query($query);
-        if (!$result || pdo_num_rows($result) < 1) {
+        if (!$row) {
             return false;
         }
 
-        $row = pdo_fetch_array($result);
-        $config = Config::getInstance();
-        if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
-            $log = stream_get_contents($row['log']);
+        if (config('database.default') == 'pgsql') {
+            $log = stream_get_contents($row->log);
         } else {
-            $log = $row['log'];
+            $log = $row->log;
         }
 
         $log_entries = explode(';', $log);
         // Make an initial pass through $log_entries to see what lines
         // it contains.
-        $lines_retrieved = array();
+        $lines_retrieved = [];
         foreach ($log_entries as $log_entry) {
             if (empty($log_entry)) {
                 continue;
@@ -178,7 +180,7 @@ class CoverageFileLog
 
     public function GetStats()
     {
-        $stats = array();
+        $stats = [];
         $stats['loctested'] = 0;
         $stats['locuntested'] = 0;
         $stats['branchestested'] = 0;

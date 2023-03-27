@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="test_submit"
+	BuildStamp="20210405-1424-Experimental"
+	Name="hesperides"
+	Generator="ctest-3.20.0"
+	>
+	<Testing>
+		<StartDateTime>Apr 05 10:24 EDT</StartDateTime>
+		<StartTestTime>1617632667</StartTestTime>
+		<TestList>
+			<Test>./multi_labels</Test>
+		</TestList>
+		<Test Status="passed">
+			<Name>multi_labels</Name>
+			<Path>.</Path>
+			<FullName>./multi_labels</FullName>
+			<FullCommandLine>/tmp/bin/multi_labels</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="numeric/double" name="Execution Time">
+					<Value>0.117901</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="Processors">
+					<Value>1</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/tmp/bin/multi_labels</Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value></Value>
+				</Measurement>
+			</Results>
+			<Labels>
+				<Label>label1</Label>
+				<Label>label2</Label>
+				<Label>label3</Label>
+			</Labels>
+		</Test>
+		<EndDateTime>Apr 05 10:24 EDT</EndDateTime>
+		<EndTestTime>1617632668</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>

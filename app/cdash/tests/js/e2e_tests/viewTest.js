@@ -1,3 +1,4 @@
+require('../pages/catchConsoleErrors.page.js');
 describe("viewTest", function() {
 
   it("shows the test we expect", function() {
@@ -5,11 +6,21 @@ describe("viewTest", function() {
     expect(browser.getPageSource()).toContain("kwsys.testHashSTL");
   });
 
+  it("shows link to queryTests.php", function() {
+    browser.get('viewTest.php?buildid=1');
+    browser.actions().mouseMove(element(by.linkText('Dashboard'))).perform();
+    var link = element(by.linkText('Tests Query'));
+    expect(link.getAttribute('href')).toContain('&filtercount=1&showfilters=1&field1=status&compare1=62&value1=Passed');
+  });
+
   describe("Missing Tests", function() {
 
-    beforeEach(function(){
-      browser.get('index.php?project=EmailProjectExample');
-      element(by.cssContainingText('a','Win32-MSVC2009')).click();
+    beforeEach(async function() {
+      browser.get('index.php?project=EmailProjectExample&date=2009-02-26');
+      var href = await element(by.cssContainingText('a','Win32-MSVC2009')).getAttribute('href');
+      var matches = href.match(/\/build\/([0-9]+)/);
+      var buildid = matches[1];
+      browser.get('viewTest.php?buildid=' + buildid);
     });
 
       it("should display missing tests", function() {

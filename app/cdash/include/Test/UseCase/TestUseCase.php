@@ -60,7 +60,7 @@ class TestUseCase extends UseCase
         $endTestTime->appendChild(new DOMText($this->endTime));
 
         $xml_str = $xml->saveXML($xml);
-        $handler = new TestingHandler($this->projectId, $this->scheduleId);
+        $handler = new TestingHandler($this->projectId);
         return $this->getXmlHandler($handler, $xml_str);
     }
 

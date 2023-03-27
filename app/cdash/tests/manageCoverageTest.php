@@ -125,7 +125,7 @@ class ManageCoverageTestCase extends KWWebTestCase
         $this->get("{$this->url}/manageCoverage.php?buildid={$buildid}&projectid={$projectid}");
         $this->clickSubmitByName('sendEmail');
         if (strpos($this->getBrowser()->getContentAsText(),
-                'email has been sent successfully') === false
+            'email has been sent successfully') === false
         ) {
             $this->fail(
                 "'email has been sent successfully' not found when expected");

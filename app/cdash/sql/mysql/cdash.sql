@@ -312,7 +312,7 @@ CREATE TABLE `dynamicanalysis` (
 
 CREATE TABLE `dynamicanalysisdefect` (
   `dynamicanalysisid` int(11) NOT NULL default '0',
-  `type` varchar(50) NOT NULL default '',
+  `type` varchar(255) NOT NULL default '',
   `value` int(11) NOT NULL default '0',
   KEY `buildid` (`dynamicanalysisid`)
 );
@@ -356,11 +356,11 @@ CREATE TABLE `image` (
 CREATE TABLE `test2image` (
   `id` bigint(20) NOT NULL auto_increment,
   `imgid` int(11) NOT NULL,
-  `testid` int(11) NOT NULL,
+  `outputid` int(11) NOT NULL,
   `role` tinytext NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `imgid` (`imgid`),
-  KEY `testid` (`testid`)
+  KEY `outputid` (`outputid`)
 );
 
 -- --------------------------------------------------------
@@ -491,8 +491,8 @@ CREATE TABLE `siteinformation` (
   `processorfamilyid` int(11) NOT NULL default '-1',
   `processormodelid` int(11) NOT NULL default '-1',
   `processorcachesize` int(11) NOT NULL default '-1',
-  `numberlogicalcpus` tinyint(4) NOT NULL default '-1',
-  `numberphysicalcpus` tinyint(4) NOT NULL default '-1',
+  `numberlogicalcpus` smallint(6) unsigned NOT NULL default '0',
+  `numberphysicalcpus` smallint(6) unsigned NOT NULL default '0',
   `totalvirtualmemory` int(11) NOT NULL default '-1',
   `totalphysicalmemory` int(11) NOT NULL default '-1',
   `logicalprocessorsperphysical` int(11) NOT NULL default '-1',
@@ -535,32 +535,45 @@ CREATE TABLE `site2user` (
 CREATE TABLE `test` (
   `id` int(11) NOT NULL auto_increment,
   `projectid` int(11) NOT NULL,
-  `crc32` bigint(20) NOT NULL,
   `name` varchar(255) NOT NULL default '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `test_name_projectid_unique` (`name`,`projectid`)
+);
+
+--
+-- Table structure for table `testoutput`
+--
+CREATE TABLE `testoutput` (
+  `id` int(11) NOT NULL auto_increment,
+  `testid` int(11) NOT NULL,
+  `crc32` bigint(20) NOT NULL,
   `path` varchar(255) NOT NULL default '',
   `command` text NOT NULL,
-  `details` text NOT NULL,
   `output` MEDIUMBLOB NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `projectid` (`projectid`),
   KEY `crc32` (`crc32`),
-  KEY `name` (`name`)
+  KEY `testoutput_testid_index` (`testid`)
 );
 
 --
 -- Table structure for table `build2test`
 --
 CREATE TABLE `build2test` (
+  `id` int(11) NOT NULL auto_increment,
   `buildid` int(11) NOT NULL default '0',
-  `testid` int(11) NOT NULL default '0',
+  `outputid` int(11) NOT NULL default '0',
+  `testid` int(11) NOT NULL,
   `status` varchar(10) NOT NULL default '',
+  `details` varchar(255) NOT NULL default '',
   `time` float(7,2) NOT NULL default '0.00',
   `timemean` float(7,2) NOT NULL default '0.00',
   `timestd` float(7,2) NOT NULL default '0.00',
   `timestatus` tinyint(4) NOT NULL default '0',
   `newstatus` tinyint(4) NOT NULL default '0',
+  PRIMARY KEY (`id`),
   KEY `buildid` (`buildid`),
-  KEY `testid` (`testid`),
+  KEY `outputid` (`outputid`),
+  KEY `build2test_testid_index` (`testid`),
   KEY `status` (`status`),
   KEY `timestatus` (`timestatus`),
   KEY `newstatus` (`newstatus`)
@@ -699,12 +712,12 @@ CREATE TABLE `project2repositories` (
 -- --------------------------------------------------------
 CREATE TABLE `testmeasurement` (
   `id` bigint(20) NOT NULL auto_increment,
-  `testid` bigint(20) NOT NULL,
+  `outputid` bigint(20) NOT NULL,
   `name` varchar(70) NOT NULL,
   `type` varchar(70) NOT NULL,
-  `value` text NOT NULL,
+  `value` mediumtext NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `testid` (`testid`)
+  KEY `outputid` (`outputid`)
 );
 
 
@@ -898,10 +911,10 @@ CREATE TABLE `label2dynamicanalysis` (
 CREATE TABLE `label2test` (
   `labelid` bigint(20) NOT NULL,
   `buildid` bigint(20) NOT NULL,
-  `testid` bigint(20) NOT NULL,
-  PRIMARY KEY (`labelid`,`buildid`,`testid`),
+  `outputid` bigint(20) NOT NULL,
+  PRIMARY KEY (`labelid`,`buildid`,`outputid`),
   KEY `buildid` (`buildid`),
-  KEY `testid` (`testid`)
+  KEY `outputid` (`outputid`)
 );
 
 --
@@ -1050,25 +1063,6 @@ CREATE TABLE IF NOT EXISTS `coveragefilepriority` (
 );
 
 
-CREATE TABLE IF NOT EXISTS `submission` (
-  `id` bigint(11) NOT NULL AUTO_INCREMENT,
-  `filename` varchar(500) NOT NULL,
-  `projectid` int(11) NOT NULL,
-  `status` tinyint(4) NOT NULL,
-  `attempts` int(11) NOT NULL DEFAULT '0',
-  `filesize` int(11) NOT NULL DEFAULT '0',
-  `filemd5sum` varchar(32) NOT NULL DEFAULT '',
-  `lastupdated` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
-  `created` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
-  `started` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
-  `finished` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
-  PRIMARY KEY (`id`),
-  KEY `projectid` (`projectid`),
-  KEY `status` (`status`),
-  KEY `finished` (`finished`)
-);
-
-
 CREATE TABLE IF NOT EXISTS `blockbuild` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `projectid` int(11) NOT NULL,
@@ -1080,282 +1074,6 @@ CREATE TABLE IF NOT EXISTS `blockbuild` (
   KEY `buildname` (`buildname`),
   KEY `sitename` (`sitename`),
   KEY `ipaddress` (`ipaddress`)
-);
-
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_cmake'
---
-
-CREATE TABLE IF NOT EXISTS client_cmake (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  version varchar(255) NOT NULL,
-  PRIMARY KEY (id)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_compiler'
---
-
-CREATE TABLE IF NOT EXISTS client_compiler (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  version varchar(255) NOT NULL,
-  PRIMARY KEY (id)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_job'
---
-
-CREATE TABLE IF NOT EXISTS client_job (
-  id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  scheduleid bigint(20) NOT NULL,
-  osid tinyint(4) NOT NULL,
-  siteid int(11) DEFAULT NULL,
-  startdate timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
-  enddate timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
-  `status` int(11) DEFAULT NULL,
-  output text,
-  cmakeid int(11) NOT NULL,
-  compilerid int(11) NOT NULL,
-  UNIQUE KEY id (id),
-  KEY scheduleid (scheduleid),
-  KEY startdate (startdate),
-  KEY enddate (enddate),
-  KEY `status` (`status`)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_jobschedule'
---
-
-CREATE TABLE IF NOT EXISTS client_jobschedule (
-  `id` bigint(20) unsigned NOT NULL auto_increment,
-  `userid` int(11) default NULL,
-  `projectid` int(11) default NULL,
-  `cmakecache` mediumtext NOT NULL,
-  `clientscript` text default '',
-  `startdate` timestamp NOT NULL default '1980-01-01 00:00:00',
-  `enddate` timestamp NOT NULL default '1980-01-01 00:00:00',
-  `type` tinyint(4) NOT NULL,
-  `starttime` time NOT NULL default '00:00:00',
-  `repeattime` decimal(6,2) NOT NULL default '0.00',
-  `enable` tinyint(4) NOT NULL,
-  `lastrun` timestamp NOT NULL default '1980-01-01 00:00:00',
-  `repository` varchar(512) default '',
-  `module` varchar(255) default '',
-  `buildnamesuffix` varchar(255) default '',
-  `tag` varchar(255) default '',
-  `buildconfiguration` tinyint(4) default '0',
-  `description` text default '',
-  UNIQUE KEY `id` (`id`),
-  KEY `userid` (`userid`),
-  KEY `projectid` (`projectid`),
-  KEY `enable` (`enable`),
-  KEY `starttime` (`starttime`),
-  KEY `repeattime` (`repeattime`)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_jobschedule2build'
---
-
-CREATE TABLE IF NOT EXISTS client_jobschedule2build (
-  scheduleid bigint(20) unsigned NOT NULL,
-  buildid int(11) NOT NULL,
-  UNIQUE KEY scheduleid (scheduleid,buildid)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_jobschedule2cmake'
---
-
-CREATE TABLE IF NOT EXISTS client_jobschedule2cmake (
-  scheduleid bigint(20) NOT NULL,
-  cmakeid int(11) NOT NULL,
-  UNIQUE KEY scheduleid (scheduleid,cmakeid)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_jobschedule2compiler'
---
-
-CREATE TABLE IF NOT EXISTS client_jobschedule2compiler (
-  scheduleid bigint(20) NOT NULL,
-  compilerid int(11) NOT NULL,
-  UNIQUE KEY scheduleid (scheduleid,compilerid)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_jobschedule2library'
---
-
-CREATE TABLE IF NOT EXISTS client_jobschedule2library (
-  scheduleid bigint(20) NOT NULL,
-  libraryid int(11) NOT NULL,
-  UNIQUE KEY scheduleid (scheduleid,libraryid)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_jobschedule2os'
---
-
-CREATE TABLE IF NOT EXISTS client_jobschedule2os (
-  scheduleid bigint(20) NOT NULL,
-  osid int(11) NOT NULL,
-  UNIQUE KEY scheduleid (scheduleid,osid)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_jobschedule2site'
---
-
-CREATE TABLE IF NOT EXISTS client_jobschedule2site (
-  scheduleid bigint(20) NOT NULL,
-  siteid int(11) NOT NULL,
-  UNIQUE KEY scheduleid (scheduleid,siteid)
-);
-
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_jobschedule2submission'
---
-
-CREATE TABLE IF NOT EXISTS client_jobschedule2submission (
-  scheduleid bigint(20) NOT NULL,
-  submissionid bigint(11) NOT NULL,
-  PRIMARY KEY (`submissionid`),
-  UNIQUE KEY `scheduleid` (`scheduleid`)
-);
-
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_library'
---
-
-CREATE TABLE IF NOT EXISTS client_library (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  version varchar(255) NOT NULL,
-  PRIMARY KEY (id)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_os'
---
-
-CREATE TABLE IF NOT EXISTS client_os (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  version varchar(255) NOT NULL,
-  bits tinyint(4) NOT NULL DEFAULT '32',
-  PRIMARY KEY (id),
-  KEY `name` (`name`),
-  KEY version (version),
-  KEY bits (bits)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_site'
---
-
-CREATE TABLE IF NOT EXISTS client_site (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `osid` int(11) DEFAULT NULL,
-  `systemname` varchar(255) DEFAULT NULL,
-  `host` varchar(255) DEFAULT NULL,
-  `basedirectory` varchar(512) NOT NULL,
-  `lastping` timestamp NOT NULL default '1980-01-01 00:00:00',
-  PRIMARY KEY (id),
-  KEY `name` (`name`),
-  KEY `lastping` (`lastping`),
-  KEY system (osid)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_site2cmake'
---
-
-CREATE TABLE IF NOT EXISTS client_site2cmake (
-  siteid int(11) DEFAULT NULL,
-  cmakeid int(11) DEFAULT NULL,
-  path varchar(512) DEFAULT NULL,
-  KEY siteid (siteid),
-  KEY version (cmakeid)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_site2compiler'
---
-
-CREATE TABLE IF NOT EXISTS client_site2compiler (
-  siteid int(11) DEFAULT NULL,
-  compilerid int(11) DEFAULT NULL,
-  command varchar(512) DEFAULT NULL,
-  generator varchar(255) NOT NULL,
-  KEY siteid (siteid)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'client_site2library'
---
-
-CREATE TABLE IF NOT EXISTS client_site2library (
-  siteid int(11) DEFAULT NULL,
-  libraryid int(11) DEFAULT NULL,
-  path varchar(512) DEFAULT NULL,
-  include varchar(512) NOT NULL,
-  KEY siteid (siteid)
-);
-
-CREATE TABLE IF NOT EXISTS `client_site2program` (
-  `siteid` int(11) NOT NULL,
-  `name` varchar(30) NOT NULL,
-  `version` varchar(30) NOT NULL,
-  `path` varchar(512) NOT NULL,
-  KEY `siteid` (`siteid`)
-);
-
-CREATE TABLE IF NOT EXISTS `client_site2project` (
-  `projectid` int(11) DEFAULT NULL,
-  `siteid` int(11) DEFAULT NULL,
-  KEY `siteid` (`siteid`)
 );
 
 --
@@ -1383,23 +1101,6 @@ CREATE TABLE IF NOT EXISTS `filesum` (
 );
 
 
-CREATE TABLE IF NOT EXISTS `projectjobscript` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `projectid` int(11) NOT NULL,
-  `script` longtext NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `projectid` (`projectid`)
-);
-
-
-CREATE TABLE IF NOT EXISTS `submissionprocessor` (
-  `projectid` int(11) NOT NULL,
-  `pid` int(11) NOT NULL,
-  `lastupdated` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
-  `locked` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
-  PRIMARY KEY (`projectid`)
-);
-
 CREATE TABLE IF NOT EXISTS `user2repository` (
   `userid` int(11) NOT NULL,
   `credential` varchar(255) NOT NULL,
@@ -1416,33 +1117,14 @@ CREATE TABLE IF NOT EXISTS `apitoken` (
   KEY `token` (`token`)
 );
 
-CREATE TABLE IF NOT EXISTS `submission2ip` (
-  `submissionid` bigint(11) NOT NULL,
-  `ip` varchar(255) NOT NULL default '',
-  PRIMARY KEY (`submissionid`)
-);
-
 CREATE TABLE IF NOT EXISTS `measurement` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `projectid` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `testpage` tinyint(1) NOT NULL,
-  `summarypage` tinyint(1) NOT NULL,
+  `position` smallint(6) unsigned NOT NULL default '0',
   PRIMARY KEY (`id`),
   KEY `projectid` (`projectid`),
   KEY `name` (`name`)
-);
-
-CREATE TABLE IF NOT EXISTS `feed` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `projectid` int(11) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `buildid` bigint(20) NOT NULL,
-  `type` int(11) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `projectid` (`projectid`),
-  KEY `date` (`date`)
 );
 
 CREATE TABLE IF NOT EXISTS `overview_components` (

@@ -750,27 +750,24 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime)
         $summary .= '* ' . $sitename . ' - ' . $buildname . ' (' . $builtype . ")\n";
 
         // Find the site maintainers
-        $email = '';
+        $recipients = [];
         $emails = pdo_query('SELECT email FROM ' . qid('user') . ',site2user WHERE ' . qid('user') . ".id=site2user.userid AND site2user.siteid='$siteid'");
         while ($emails_array = pdo_fetch_array($emails)) {
-            if ($email != '') {
-                $email .= ', ';
-            }
-            $email .= $emails_array['email'];
+            $recipients[] = $emails_array['email'];
         }
 
-        if ($email != '') {
+        if (!empty($recipients)) {
             $missingTitle = 'CDash [' . $projectname . '] - Missing Build for ' . $sitename;
             $missingSummary = 'The following expected build(s) for the project ' . $projectname . " didn't submit yesterday:\n";
             $missingSummary .= '* ' . $sitename . ' - ' . $buildname . ' (' . $builtype . ")\n";
             $missingSummary .= "\n" . $currentURI . '/index.php?project=' . urlencode($projectname) . "\n";
             $missingSummary .= "\n-CDash on " . $serverName . "\n";
 
-            if (cdashmail("$email", $missingTitle, $missingSummary)) {
-                add_log('email sent to: ' . $email, 'sendEmailExpectedBuilds');
+            if (cdashmail($recipients, $missingTitle, $missingSummary)) {
+                add_log('email sent to: ' . implode(', ', $recipients), 'sendEmailExpectedBuilds');
                 return;
             } else {
-                add_log('cannot send email to: ' . $email, 'sendEmailExpectedBuilds');
+                add_log('cannot send email to: ' . implode(', ', $recipients), 'sendEmailExpectedBuilds');
             }
         }
         $missingbuilds = 1;
@@ -785,23 +782,20 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime)
         $title = 'CDash [' . $projectname . '] - Missing Builds';
 
         // Find the site administrators or users who want to receive the builds
-        $email = '';
+        $recipients = [];
         $emails = pdo_query('SELECT email FROM ' . qid('user') . ',user2project WHERE ' . qid('user') . ".id=user2project.userid
                          AND user2project.projectid='$projectid' AND (user2project.role='2' OR user2project.emailmissingsites=1)");
         while ($emails_array = pdo_fetch_array($emails)) {
-            if ($email != '') {
-                $email .= ', ';
-            }
-            $email .= $emails_array['email'];
+            $recipients[] = $emails_array['email'];
         }
 
         // Send the email
-        if ($email != '') {
-            if (cdashmail("$email", $title, $summary)) {
-                add_log('email sent to: ' . $email, 'sendEmailExpectedBuilds');
+        if (!empty($recipients)) {
+            if (cdashmail($recipients, $title, $summary)) {
+                add_log('email sent to: ' . implode(', ', $recipients), 'sendEmailExpectedBuilds');
                 return;
             } else {
-                add_log('cannot send email to: ' . $email, 'sendEmailExpectedBuilds');
+                add_log('cannot send email to: ' . implode(', ', $recipients), 'sendEmailExpectedBuilds');
             }
         }
     }
@@ -846,18 +840,15 @@ function sendEmailUnregisteredUsers($projectid, $cvsauthors)
     // Send the email if any
     if (count($unregisteredusers) > 0) {
         // Find the project administrators
-        $email = '';
+        $recipients = [];
         $emails = pdo_query('SELECT email FROM ' . qid('user') . ',user2project WHERE ' . qid('user') . '.id=user2project.userid
                          AND user2project.projectid=' . qnum($projectid) . " AND user2project.role='2'");
         while ($emails_array = pdo_fetch_array($emails)) {
-            if ($email != '') {
-                $email .= ', ';
-            }
-            $email .= $emails_array['email'];
+            $recipients[] = $emails_array['email'];
         }
 
         // Send the email
-        if ($email != '') {
+        if (!empty($recipients)) {
             $projectname = get_project_name($projectid);
             $serverName = $config->getServer();
 
@@ -870,13 +861,13 @@ function sendEmailUnregisteredUsers($projectid, $cvsauthors)
             $body .= "\n You should register these users to your project. They are currently not receiving any emails from CDash.\n";
             $body .= "\n-CDash on " . $serverName . "\n";
 
-            add_log($title . ' : ' . $body . ' : ' . $email, 'sendEmailUnregisteredUsers');
+            add_log($title . ' : ' . $body . ' : ' . implode(', ', $recipients), 'sendEmailUnregisteredUsers');
 
-            if (cdashmail("$email", $title, $body)) {
-                add_log('email sent to: ' . $email, 'sendEmailUnregisteredUsers');
+            if (cdashmail($recipients, $title, $body)) {
+                add_log('email sent to: ' . implode(', ', $recipients), 'sendEmailUnregisteredUsers');
                 return;
             } else {
-                add_log('cannot send email to: ' . $email, 'sendEmailUnregisteredUsers');
+                add_log('cannot send email to: ' . implode(', ', $recipients), 'sendEmailUnregisteredUsers');
             }
         }
     }
@@ -891,8 +882,7 @@ function addDailyChanges($projectid)
     $project = new Project();
     $project->Id = $projectid;
     $project->Fill();
-    $date = ''; // now
-    list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project->NightlyTime);
+    list($previousdate, $currentstarttime, $nextdate) = get_dates('now', $project->NightlyTime);
     $date = gmdate(FMT_DATE, $currentstarttime);
 
     // Check if we already have it somwhere
@@ -953,6 +943,13 @@ function addDailyChanges($projectid)
         cleanBuildEmail();
         cleanUserTemp();
 
+        // Delete old records from the failed jobs database table.
+        $dt = new \DateTime();
+        $dt->setTimestamp(time() - (config('cdash.backup_timeframe') * 3600));
+        \DB::table('failed_jobs')
+            ->where('failed_at', '<', $dt)
+            ->delete();
+
         // If the status of daily update is set to 2 that means we should send an email
         $query = pdo_query("SELECT status FROM dailyupdate WHERE projectid='$projectid' AND date='$date'");
         $dailyupdate_array = pdo_fetch_array($query);
@@ -990,8 +987,19 @@ function addDailyChanges($projectid)
 
         pdo_query("UPDATE dailyupdate SET status='1' WHERE projectid='$projectid' AND date='$date'");
 
-        // Clean the backup directory
-        clean_backup_directory();
+        // Clean the backup directories.
+        $timeframe = config('cdash.backup_timeframe');
+        $dirs_to_clean = ['parsed', 'failed'];
+        foreach ($dirs_to_clean as $dir_to_clean) {
+            $files = Storage::allFiles($dir_to_clean);
+            foreach ($files as $filename) {
+                $filepath = Storage::path($filename);
+                if (file_exists($filepath) && is_file($filepath) &&
+                        time() - filemtime($filepath) > $timeframe * 3600) {
+                    cdash_unlink($filepath);
+                }
+            }
+        }
 
         // Delete expired authentication tokens.
         pdo_query('DELETE FROM authtoken WHERE expires < NOW()');

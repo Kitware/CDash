@@ -6,7 +6,6 @@
   <Build>
     <StartDateTime>Feb 21 05:02 Eastern Standard Time</StartDateTime>
     <StartBuildTime>1235383223</StartBuildTime>
-    <BuildCommand>./build</BuildCommand>
 
     <Failure type="Error">
       <Command>

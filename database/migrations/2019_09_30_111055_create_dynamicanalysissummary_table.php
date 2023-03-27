@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateDynamicanalysissummaryTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,11 +12,13 @@ class CreateDynamicanalysissummaryTable extends Migration
      */
     public function up()
     {
-        Schema::create('dynamicanalysissummary', function (Blueprint $table) {
-            $table->integer('buildid')->default(0)->primary();
-            $table->string('checker', 60)->default('');
-            $table->integer('numdefects')->default(0);
-        });
+        if (!Schema::hasTable('dynamicanalysissummary')) {
+            Schema::create('dynamicanalysissummary', function (Blueprint $table) {
+                $table->integer('buildid')->default(0)->primary();
+                $table->string('checker', 60)->default('');
+                $table->integer('numdefects')->default(0);
+            });
+        }
     }
 
 

@@ -15,7 +15,6 @@
 =========================================================================*/
 
 use CDash\Config;
-use CDash\Model\User;
 
 function echo_git_output($cmd)
 {
@@ -48,18 +47,15 @@ function echo_file_contents($filename)
 }
 
 if (Auth::check()) {
-    $userid = Auth::id();
-
-    $user = new User();
-    $user->Id = $userid;
-    if ($user->IsAdmin()) {
+    $user = Auth::user();
+    if ($user->admin) {
         echo_git_output('--version');
         echo_git_output('remote -v');
         echo_git_output('status');
         echo_git_output('diff');
 
         $config = Config::getInstance();
-        echo_file_contents($config->get('CDASH_ROOT_DIR') . '/config/config.local.php');
+        echo_file_contents($config->get('CDASH_ROOT_DIR') . '../../.env');
         echo_file_contents($config->get('CDASH_ROOT_DIR') . '/tests/config.test.local.php');
         echo '<br/>';
     } else {

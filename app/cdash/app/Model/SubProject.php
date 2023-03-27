@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use CDash\Config;
 use CDash\Database;
 
 /** Main subproject class */
@@ -279,7 +278,7 @@ class SubProject
         }
 
         $stmt = $this->PDO->prepare(
-           "SELECT * FROM subproject
+            "SELECT * FROM subproject
            WHERE projectid = ?  AND name = ? AND
                  endtime = '1980-01-01 00:00:00'");
 
@@ -361,8 +360,7 @@ class SubProject
     /** Get the last submission of the subproject*/
     public function GetLastSubmission()
     {
-        $config = Config::getInstance();
-        if (!$config->get('CDASH_SHOW_LAST_SUBMISSION')) {
+        if (!config('cdash.show_last_submission')) {
             return false;
         }
 
@@ -712,8 +710,8 @@ class SubProject
         $id = $stmt->fetchColumn();
         if (!$id) {
             add_log(
-                    "No SubProject found for '$path'", 'GetSubProjectFromPath',
-                    LOG_INFO, $projectid, 0);
+                "No SubProject found for '$path'", 'GetSubProjectFromPath',
+                LOG_INFO, $projectid, 0);
             return null;
         }
         $subproject = new SubProject();

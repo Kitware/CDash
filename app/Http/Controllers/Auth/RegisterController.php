@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Password;
-use App\User;
-use App\Http\Controllers\Controller;
+use App\Models\Password;
+use App\Models\User;
+use App\Http\Controllers\AbstractController;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
-class RegisterController extends Controller
+class RegisterController extends AbstractController
 {
     /*
     |--------------------------------------------------------------------------
@@ -50,9 +50,10 @@ class RegisterController extends Controller
         // We can route a user here with our form pre-populated
         $params = [
             'title' => 'Register',
+            'js_version' => self::getJsVersion(),
             'fname' => $request->get('fname'),
             'lname' => $request->get('lname'),
-            'email' => $request->get('email')
+            'email' => $request->get('email'),
         ];
         return view('auth.register', $params);
     }
@@ -87,10 +88,13 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return \App\User
+     * @return \App\Models\User
      */
     protected function create(array $data)
     {
+        if (is_null($data['institution'])) {
+            $data['institution'] = '';
+        }
         $user = User::create([
             'firstname' => $data['fname'],
             'lastname' => $data['lname'],
@@ -135,6 +139,7 @@ class RegisterController extends Controller
                     [
                         'errors' => $e->validator->getMessageBag(),
                         'title' => 'Register',
+                        'js_version' => self::getJsVersion(),
                         'fname' => $request->get('fname'),
                         'lname' => $request->get('lname'),
                         'email' => $request->get('email'),

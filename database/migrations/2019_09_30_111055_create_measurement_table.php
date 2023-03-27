@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateMeasurementTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,13 +12,15 @@ class CreateMeasurementTable extends Migration
      */
     public function up()
     {
-        Schema::create('measurement', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->integer('projectid')->index();
-            $table->string('name')->index();
-            $table->tinyInteger('testpage');
-            $table->tinyInteger('summarypage');
-        });
+        if (!Schema::hasTable('measurement')) {
+            Schema::create('measurement', function (Blueprint $table) {
+                $table->integer('id', true);
+                $table->integer('projectid')->index();
+                $table->string('name')->index();
+                $table->tinyInteger('testpage');
+                $table->tinyInteger('summarypage');
+            });
+        }
     }
 
 

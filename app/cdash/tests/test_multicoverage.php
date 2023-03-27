@@ -9,6 +9,8 @@ require_once 'include/pdo.php';
 
 class MultiCoverageTestCase extends KWWebTestCase
 {
+    protected $BuildId;
+
     public function __construct()
     {
         parent::__construct();
@@ -94,12 +96,9 @@ class MultiCoverageTestCase extends KWWebTestCase
         $filename = dirname(__FILE__) . '/data/MultiCoverage/gcov.tar';
 
         $put_result = $this->uploadfile($puturl, $filename);
-        $put_json = json_decode($put_result, true);
-
-        if ($put_json['status'] != 0) {
+        if (strpos($put_result, '{"status":0}') === false) {
             $this->fail(
-                'PUT returned ' . $put_json['status'] . ":\n" .
-                $put_json['description'] . "\n");
+                "status:0 not found in PUT results:\n$put_result\n");
             return false;
         }
         return true;
@@ -116,7 +115,7 @@ class MultiCoverageTestCase extends KWWebTestCase
 
         // Verify details about our covered files.
         $result = pdo_query(
-                "SELECT c.loctested, c.locuntested, c.fileid, cf.fullpath
+            "SELECT c.loctested, c.locuntested, c.fileid, cf.fullpath
                 FROM coverage AS c
                 INNER JOIN coveragefile AS cf ON c.fileid=cf.id
                 WHERE c.buildid=$this->BuildId");

@@ -233,8 +233,8 @@ CREATE TABLE IF NOT EXISTS client_site (
   `host` varchar(255) DEFAULT NULL,
   basedirectory varchar(512) NOT NULL,
   PRIMARY KEY (id),
-  KEY `name` (`name`),
-  KEY system (osid)
+  KEY name (name),
+  KEY osid (osid)
 );
 
 -- --------------------------------------------------------
@@ -248,7 +248,7 @@ CREATE TABLE IF NOT EXISTS client_site2cmake (
   cmakeid int(11) DEFAULT NULL,
   path varchar(512) DEFAULT NULL,
   KEY siteid (siteid),
-  KEY version (cmakeid)
+  KEY cmakeid (cmakeid)
 );
 
 -- --------------------------------------------------------

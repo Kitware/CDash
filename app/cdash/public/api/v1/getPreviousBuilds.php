@@ -13,6 +13,9 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\GetPreviousBuilds;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
@@ -39,7 +42,7 @@ if ($build->SubProjectId > 0) {
 
 // Get details about previous builds.
 // Currently just grabbing the info used for the graphs and charts
-// on buildSummary.php.
+// on /build/.
 $pdo = get_link_identifier()->getPdo();
 $stmt = $pdo->prepare(
     "SELECT b.id, nfiles, configureerrors, configurewarnings,

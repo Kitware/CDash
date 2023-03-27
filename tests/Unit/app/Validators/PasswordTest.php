@@ -41,7 +41,7 @@ class PasswordTest extends TestCase
             'count' => 0,
         ];
         $actual = $sut->getComplexityConfiguration();
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
     }
 
     public function testGetComplexityConfigurationFavorsConfigurationOverDefault()
@@ -49,7 +49,7 @@ class PasswordTest extends TestCase
         $sut = new PasswordValidator();
         $expected = config('cdash.password');
         $actual = $sut->getComplexityConfiguration();
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
 
         $complexity = 4;
         $count = 3;
@@ -64,7 +64,7 @@ class PasswordTest extends TestCase
             'count' => $count,
         ];
         $actual = $sut->getComplexityConfiguration();
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
     }
 
     public function testGetComplexityFavorsArgumentsOverConfiguration()
@@ -80,7 +80,7 @@ class PasswordTest extends TestCase
             'count' => 3,
         ];
         $actual = $sut->getComplexityConfiguration();
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
 
         $arguments = [
             'complexity' => 3,
@@ -89,7 +89,7 @@ class PasswordTest extends TestCase
 
         // important, parameters are passed in without keys, so just send values here
         $actual = $sut->getComplexityConfiguration($arguments);
-        $this->assertEquals($arguments, $actual);
+        $this::assertEquals($arguments, $actual);
     }
 
     public function testComplexityFailsGivenEmptyPassword()
@@ -101,22 +101,22 @@ class PasswordTest extends TestCase
         $parameters = array_values(['complexity' => 1, 'count' => 1]);
 
         $validator = $this->getMockValidator();
-        $this->assertFalse($sut->complexity($attribute, $value, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $value, $parameters, $validator));
 
         $value = '';
-        $this->assertFalse($sut->complexity($attribute, $value, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $value, $parameters, $validator));
 
         $value = 0;
-        $this->assertFalse($sut->complexity($attribute, $value, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $value, $parameters, $validator));
 
         $value = '0';
-        $this->assertFalse($sut->complexity($attribute, $value, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $value, $parameters, $validator));
 
         $value = false;
-        $this->assertFalse($sut->complexity($attribute, $value, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $value, $parameters, $validator));
 
         $value = 'false';
-        $this->assertTrue($sut->complexity($attribute, $value, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $value, $parameters, $validator));
     }
 
     public function testComplexityGivenGivenCountOfZeroOrComplexityOfZero()
@@ -134,7 +134,7 @@ class PasswordTest extends TestCase
         $password = self::LOWERCASE;
         // array_values for readability's sake
         $parameters = array_values(['complexity' => 4, 'count' => 0]);
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         /*
          * Given the password is any value
@@ -142,7 +142,7 @@ class PasswordTest extends TestCase
          * Then complexity returns true
          */
         $parameters = array_values(['complexity' => 0, 'count' => 10]);
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
     }
 
     public function testComplexityGivenComplexityOfValue1()
@@ -161,19 +161,19 @@ class PasswordTest extends TestCase
          */
         $password = self::LOWERCASE;
 
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::UPPERCASE;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::DIGITS;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::SYMBOLS;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::UNDERSCORE;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         /*
          * Given complexity = 1
@@ -183,23 +183,23 @@ class PasswordTest extends TestCase
          */
         $password = self::LOWERCASE;
         $parameters = array_values(['complexity' => 1, 'count' => strlen($password) + 1]);
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::UPPERCASE;
         $parameters[1] = strlen($password) + 1;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::DIGITS;
         $parameters[1] = strlen($password) + 1;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::SYMBOLS;
         $parameters[1] = strlen($password) + 1;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::UNDERSCORE;
         $parameters[1] = strlen($password) + 1;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
     }
 
     public function testComplexityGivenComplexityOfValue2()
@@ -215,19 +215,19 @@ class PasswordTest extends TestCase
          * Then complexity returns false
          */
         $password = self::LOWERCASE;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::UPPERCASE;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::DIGITS;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::SYMBOLS;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::UNDERSCORE;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         /*
          * Given complexity = 2
@@ -236,19 +236,19 @@ class PasswordTest extends TestCase
          * Then complexity returns true
          */
         $password = self::LOWERCASE . self::DIGITS;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::UPPERCASE . self::SYMBOLS;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::DIGITS . self::UPPERCASE;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::SYMBOLS . self::LOWERCASE;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::UNDERSCORE . self::DIGITS;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
     }
 
     public function testComplexityGivenComplexityOfValue3()
@@ -265,17 +265,17 @@ class PasswordTest extends TestCase
          * Then complexity returns false
          */
         $password = self::LOWERCASE . self::DIGITS;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::UPPERCASE . self::SYMBOLS;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::SYMBOLS . self::LOWERCASE;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
 
         $password = self::UNDERSCORE . self::DIGITS;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         /*
          * Given complexity = 3
@@ -284,19 +284,19 @@ class PasswordTest extends TestCase
          * Then complexity returns true
          */
         $password = self::LOWERCASE . self::DIGITS . self::UPPERCASE;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::UPPERCASE . self::SYMBOLS . self::DIGITS;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::DIGITS . self::UPPERCASE . self::SYMBOLS;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::SYMBOLS . self::LOWERCASE . self::DIGITS;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::UNDERSCORE . self::DIGITS . self::UPPERCASE;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
     }
 
     public function testComplexityOfValue4()
@@ -313,19 +313,19 @@ class PasswordTest extends TestCase
          * Then complexity returns false
          */
         $password = self::LOWERCASE . self::DIGITS . self::UPPERCASE;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::UPPERCASE . self::SYMBOLS . self::DIGITS;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::DIGITS . self::UPPERCASE . self::SYMBOLS;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::SYMBOLS . self::LOWERCASE . self::DIGITS;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::UNDERSCORE . self::DIGITS . self::UPPERCASE;
-        $this->assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
         /*
          * Given complexity = 4
@@ -334,19 +334,19 @@ class PasswordTest extends TestCase
          * Then complexity returns true
          */
         $password = self::LOWERCASE . self::DIGITS . self::UPPERCASE . self::SYMBOLS;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::UPPERCASE . self::SYMBOLS . self::DIGITS . self::LOWERCASE;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::DIGITS . self::UPPERCASE . self::SYMBOLS . self::LOWERCASE;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::SYMBOLS . self::LOWERCASE . self::DIGITS . self::UPPERCASE;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
 
         $password = self::UNDERSCORE . self::DIGITS . self::UPPERCASE . self::LOWERCASE;
-        $this->assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
+        $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
     }
 
     public function testSetErrorOutput()
@@ -359,7 +359,7 @@ class PasswordTest extends TestCase
         $parameters = array_values(['complexity' => 1, 'count' => 1]);
         $password = self::LOWERCASE;
         $sut->complexity($attribute, $password, $parameters, $validator);
-        $this->assertEmpty($validator->customMessages);
+        $this::assertEmpty($validator->customMessages);
 
         $length = strlen($password) + 1;
         $parameters = array_values(['complexity' => 1, 'count' => $length]);
@@ -370,7 +370,7 @@ class PasswordTest extends TestCase
             => "Your :attribute must contain at least {$length} characters from 1 of the following types: uppercase, lowercase, numbers, and symbols",
         ];
         $actual = $validator->customMessages;
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
 
 
         $parameters = array_values(['complexity' => 2, 'count' => 1]);
@@ -380,7 +380,7 @@ class PasswordTest extends TestCase
             => "Your :attribute must contain at least 2 of the following types: uppercase, lowercase, numbers, and symbols",
         ];
         $actual = $validator->customMessages;
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
 
         $parameters = array_values(['complexity' => 4, 'count' => 2]);
         $sut->complexity($attribute, $password, $parameters, $validator);
@@ -389,7 +389,7 @@ class PasswordTest extends TestCase
             => "Your :attribute must contain at least 2 characters from each of the following types: uppercase, lowercase, numbers, and symbols",
         ];
         $actual = $validator->customMessages;
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
 
         $parameters = array_values(['complexity' => 4, 'count' => 1]);
         $sut->complexity($attribute, $password, $parameters, $validator);
@@ -400,7 +400,7 @@ class PasswordTest extends TestCase
             => "Your :attribute must contain  each of the following types: uppercase, lowercase, numbers, and symbols",
         ];
         $actual = $validator->customMessages;
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
     }
 
     /**

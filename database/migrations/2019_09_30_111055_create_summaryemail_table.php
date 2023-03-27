@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateSummaryemailTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,11 +12,13 @@ class CreateSummaryemailTable extends Migration
      */
     public function up()
     {
-        Schema::create('summaryemail', function (Blueprint $table) {
-            $table->bigInteger('buildid');
-            $table->date('date')->index();
-            $table->smallInteger('groupid')->index();
-        });
+        if (!Schema::hasTable('summaryemail')) {
+            Schema::create('summaryemail', function (Blueprint $table) {
+                $table->bigInteger('buildid');
+                $table->date('date')->index();
+                $table->smallInteger('groupid')->index();
+            });
+        }
     }
 
 

@@ -18,11 +18,8 @@ require_once 'include/pdo.php';
 require_once 'include/login_functions.php';
 
 use App\Http\Controllers\Auth\LoginController;
-use CDash\Config;
 use CDash\Model\User;
 use CDash\Model\UserProject;
-
-$config = Config::getInstance();
 
 if (Auth::check()) {
     require_once 'include/common.php';
@@ -79,7 +76,7 @@ if (Auth::check()) {
             $error_msg = 'Passwords do not match.';
         }
 
-        $minimum_length = $config->get('CDASH_MINIMUM_PASSWORD_LENGTH');
+        $minimum_length = config('cdash.password.min');
         if ($password_is_good && strlen($passwd) < $minimum_length) {
             $password_is_good = false;
             $error_msg = "Password must be at least $minimum_length characters.";
@@ -91,9 +88,9 @@ if (Auth::check()) {
             $error_msg = 'Failed to hash password.  Contact an admin.';
         }
 
-        if ($password_is_good && $config->get('CDASH_PASSWORD_EXPIRATION') > 0) {
+        if ($password_is_good && config('cdash.password.expires') > 0) {
             $query = 'SELECT password FROM password WHERE userid=?';
-            $unique_count = $config->get('CDASH_UNIQUE_PASSWORD_COUNT');
+            $unique_count = config('cdash.password.unique');
             if ($unique_count) {
                 $query .= " ORDER BY date DESC LIMIT $unique_count";
             }
@@ -109,9 +106,10 @@ if (Auth::check()) {
         }
 
         if ($password_is_good) {
-            $complexity = getPasswordComplexity($passwd);
-            $minimum_complexity = $config->get('CDASH_MINIMUM_PASSWORD_COMPLEXITY');
-            $complexity_count = $config->get('CDASH_PASSWORD_COMPLEXITY_COUNT');
+            $password_validator = new \App\Validators\Password;
+            $complexity_count = config('cdash.password.count');
+            $complexity = $password_validator->computeComplexity($passwd, $complexity_count);
+            $minimum_complexity = config('cdash.password.complexity');
             if ($complexity < $minimum_complexity) {
                 $password_is_good = false;
                 if ($complexity_count > 1) {

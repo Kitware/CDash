@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use CDash\Collection\LabelCollection;
 use PDO;
 use CDash\Database;
 
@@ -29,7 +28,6 @@ class BuildConfigure
     public $Log;
     public $Status;
     public $BuildId;
-    public $Labels;
     public $NumberOfWarnings;
     public $NumberOfErrors;
     private $Crc32;
@@ -44,6 +42,7 @@ class BuildConfigure
         $this->Command = '';
         $this->Log = '';
         $this->Status = '';
+        $this->LabelCollection = collect();
         $this->PDO = Database::getInstance()->getPdo();
     }
 
@@ -61,12 +60,8 @@ class BuildConfigure
 
     public function AddLabel($label)
     {
-        if (!isset($this->Labels)) {
-            $this->Labels = array();
-        }
-
         $label->BuildId = $this->BuildId;
-        $this->Labels[] = $label;
+        $this->LabelCollection->put($label->Text, $label);
     }
 
     /** Check if the configure exists */
@@ -109,7 +104,7 @@ class BuildConfigure
     /** Check if a configure record exists for these contents. */
     public function ExistsByCrc32()
     {
-        if ($this->Command === '' || $this->Log === '' || $this->Status === '') {
+        if ($this->Command === '' || $this->Status === '') {
             return false;
         }
         $this->Crc32 = crc32($this->Command . $this->Log . $this->Status);
@@ -121,14 +116,14 @@ class BuildConfigure
     {
         if (!$this->BuildId) {
             add_log('BuildId not set',
-                    'BuildConfigure::Exists', LOG_ERR,
-                    0, 0, ModelType::CONFIGURE, 0);
+                'BuildConfigure::Exists', LOG_ERR,
+                0, 0, ModelType::CONFIGURE, 0);
             return false;
         }
         if (!is_numeric($this->BuildId)) {
             add_log('BuildId is not numeric',
-                    'BuildConfigure::Exists', LOG_ERR,
-                    0, 0, ModelType::CONFIGURE, 0);
+                'BuildConfigure::Exists', LOG_ERR,
+                0, 0, ModelType::CONFIGURE, 0);
             return false;
         }
 
@@ -151,8 +146,8 @@ class BuildConfigure
     {
         if (!$this->Exists()) {
             add_log('this configure does not exist',
-                    'BuildConfigure::Delete', LOG_ERR,
-                    0, 0, ModelType::CONFIGURE, 0);
+                'BuildConfigure::Delete', LOG_ERR,
+                0, 0, ModelType::CONFIGURE, 0);
             return false;
         }
 
@@ -184,11 +179,11 @@ class BuildConfigure
     public function InsertLabelAssociations()
     {
         if ($this->BuildId) {
-            if (!isset($this->Labels)) {
+            if ($this->LabelCollection->isEmpty()) {
                 return;
             }
 
-            foreach ($this->Labels as $label) {
+            foreach ($this->LabelCollection as $label) {
                 $label->BuildId = $this->BuildId;
                 $label->Insert();
             }
@@ -205,15 +200,15 @@ class BuildConfigure
     {
         if (!$this->BuildId) {
             add_log('BuildId not set',
-                    'BuildConfigure::Insert', LOG_ERR,
-                    0, 0, ModelType::CONFIGURE, $this->Id);
+                'BuildConfigure::Insert', LOG_ERR,
+                0, 0, ModelType::CONFIGURE, $this->Id);
             return false;
         }
 
         if ($this->ExistsByBuildId()) {
             add_log('This build already has a configure',
-                    'BuildConfigure::Insert', LOG_ERR,
-                    0, $this->BuildId, ModelType::CONFIGURE, $this->Id);
+                'BuildConfigure::Insert', LOG_ERR,
+                0, $this->BuildId, ModelType::CONFIGURE, $this->Id);
             return false;
         }
 
@@ -246,7 +241,7 @@ class BuildConfigure
                     return true;
                 } else {
                     add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(),
-                            'Configure Insert', LOG_ERR);
+                        'Configure Insert', LOG_ERR);
                     return false;
                 }
             }
@@ -390,20 +385,15 @@ class BuildConfigure
     {
         $config = \CDash\Config::getInstance();
         $id = is_null($default_id) ? $this->BuildId : $default_id;
-        return "{$config->getBaseUrl()}/viewConfigure.php?buildid={$id}";
+        return "{$config->getBaseUrl()}/build/{$id}/configure";
     }
 
     /**
      * Returns the current BuildConfigure's Label property as a LabelCollection.
-     * @return LabelCollection
+     * @return Collection
      */
     public function GetLabelCollection()
     {
-        $collection = new LabelCollection();
-        $this->Labels = is_null($this->Labels) ? [] : $this->Labels;
-        foreach ($this->Labels as $label) {
-            $collection->add($label);
-        }
-        return $collection;
+        return $this->LabelCollection;
     }
 }

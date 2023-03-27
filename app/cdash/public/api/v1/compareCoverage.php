@@ -13,13 +13,17 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\CompareCoverage;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/filterdataFunctions.php';
 
+use App\Services\PageTimer;
 use CDash\Model\Project;
 
-if (!function_exists('create_subproject')) {
+if (!function_exists('CDash\Api\v1\CompareCoverage\create_subproject')) {
     function create_subproject($coverage, $builds)
     {
         $subproject = array();
@@ -32,7 +36,7 @@ if (!function_exists('create_subproject')) {
     }
 }
 
-if (!function_exists('populate_subproject')) {
+if (!function_exists('CDash\Api\v1\CompareCoverage\populate_subproject')) {
     function populate_subproject($subproject, $key, $coverage)
     {
         $subproject[$key] = $coverage['percentage'];
@@ -48,7 +52,7 @@ if (!function_exists('populate_subproject')) {
 }
 
 
-if (!function_exists('get_build_label')) {
+if (!function_exists('CDash\Api\v1\CompareCoverage\get_build_label')) {
     function get_build_label($buildid, $build_array)
     {
         // Figure out how many labels to report for this build.
@@ -82,7 +86,7 @@ if (!function_exists('get_build_label')) {
 }
 
 
-if (!function_exists('get_coverage')) {
+if (!function_exists('CDash\Api\v1\CompareCoverage\get_coverage')) {
     function get_coverage($build_data, $subproject_groups)
     {
         $response = array();
@@ -181,7 +185,7 @@ if (!function_exists('get_coverage')) {
     }
 }
 
-if (!function_exists('get_build_data')) {
+if (!function_exists('CDash\Api\v1\CompareCoverage\get_build_data')) {
     function get_build_data($parentid, $projectid, $beginning_UTCDate, $end_UTCDate, $filter_sql='')
     {
         $date_clause = "AND b.starttime<'$end_UTCDate' AND b.starttime>='$beginning_UTCDate' ";
@@ -222,7 +226,7 @@ if (!function_exists('get_build_data')) {
 }
 
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 $response = [];
 
 // Check if a valid project was specified.
@@ -432,15 +436,10 @@ foreach ($response['builds'] as $build_response) {
 
 if (!empty($subproject_groups)) {
     // At this point it is safe to remove any empty $coveragegroups from our response.
-    if (!function_exists('is_coveragegroup_nonempty')) {
-        function is_coveragegroup_nonempty($group)
-        {
-            return $group['label'] === 'Total' || !empty($group['coverages']);
-        }
-    }
-
     $coveragegroups_response =
-        array_filter($coveragegroups, 'is_coveragegroup_nonempty');
+        array_filter($coveragegroups, function ($group) {
+            return $group['label'] === 'Total' || !empty($group['coverages']);
+        });
 
     // Report coveragegroups as a list, not an associative array.
     $coveragegroups_response = array_values($coveragegroups_response);
@@ -455,7 +454,5 @@ if (!empty($subproject_groups)) {
     $response['coverages'] = array_values($coverages);
 }
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
-
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

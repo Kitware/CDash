@@ -18,12 +18,13 @@ include_once 'include/common.php';
 include_once 'include/upgrade_functions.php';
 
 use CDash\Config;
+use Illuminate\Support\Facades\Storage;
 
 $config = Config::getInstance();
 
 @set_time_limit(0);
 
-$policy = checkUserPolicy(Auth::id(), 0); // only admin
+$policy = checkUserPolicy(0); // only admin
 if ($policy !== true) {
     return $policy;
 }
@@ -49,11 +50,12 @@ $xml .= '<minversion>' . $version_array['major'] . '.' . $version_array['minor']
 
 @$Upgrade = $_POST['Upgrade'];
 @$Cleanup = $_POST['Cleanup'];
+@$Dependencies = $_POST['Dependencies'];
 
-if (!$config->get('CDASH_DB_TYPE')) {
+if (!config('database.default')) {
     $db_type = 'mysql';
 } else {
-    $db_type = $config->get('CDASH_DB_TYPE');
+    $db_type = config('database.default');
 }
 
 if (isset($_GET['upgrade-tables'])) {
@@ -81,534 +83,6 @@ if (isset($_GET['upgrade-tables'])) {
             }
         }
     }
-    return;
-}
-
-if (isset($_GET['upgrade-0-8'])) {
-    // Add the index if they don't exist
-    $querycrc32 = pdo_query('SELECT crc32 FROM coveragefile LIMIT 1');
-    if (!$querycrc32) {
-        pdo_query('ALTER TABLE coveragefile ADD crc32 int(11)');
-        pdo_query('ALTER TABLE coveragefile ADD INDEX (crc32)');
-    }
-
-    // Compression the coverage
-    CompressCoverage();
-    return;
-}
-
-if (isset($_GET['upgrade-1-0'])) {
-    $description = pdo_query('SELECT description FROM buildgroup LIMIT 1');
-    if (!$description) {
-        pdo_query('ALTER TABLE buildgroup ADD description text');
-    }
-    $cvsviewertype = pdo_query('SELECT cvsviewertype FROM project LIMIT 1');
-    if (!$cvsviewertype) {
-        pdo_query('ALTER TABLE project ADD cvsviewertype varchar(10)');
-    }
-
-    if (pdo_query('ALTER TABLE site2user DROP PRIMARY KEY')) {
-        pdo_query('ALTER TABLE site2user ADD INDEX (siteid)');
-        pdo_query('ALTER TABLE build ADD INDEX (starttime)');
-    }
-
-    // Add test timing as well as key 'name' for test
-    $timestatus = pdo_query('SELECT timestatus FROM build2test LIMIT 1');
-    if (!$timestatus) {
-        pdo_query("ALTER TABLE build2test ADD timemean float(7,2) default '0.00'");
-        pdo_query("ALTER TABLE build2test ADD timestd float(7,2) default '0.00'");
-        pdo_query("ALTER TABLE build2test ADD timestatus tinyint(4) default '0'");
-        pdo_query('ALTER TABLE build2test ADD INDEX (timestatus)');
-        // Add timing test fields in the table project
-        pdo_query("ALTER TABLE project ADD testtimestd float(3,1) default '4.0'");
-        // Add the index name in the table test
-        pdo_query('ALTER TABLE test ADD INDEX (name)');
-    }
-
-    // Add the testtimethreshold
-    if (!pdo_query('SELECT testtimestdthreshold FROM project LIMIT 1')) {
-        pdo_query("ALTER TABLE project ADD testtimestdthreshold float(3,1) default '1.0'");
-    }
-
-    // Add an option to show the testtime or not
-    if (!pdo_query('SELECT showtesttime FROM project LIMIT 1')) {
-        pdo_query("ALTER TABLE project ADD showtesttime tinyint(4) default '0'");
-    }
-    return;
-}
-
-if (isset($_GET['upgrade-1-2'])) {
-    // Replace the field 'output' in the table test from 'text' to 'mediumtext'
-    $result = pdo_query('SELECT output FROM test LIMIT 1');
-    $column_meta = $result->getColumnMeta(0);
-
-    $type = isset($column_meta['driver:decl_type']) ? $column_meta['driver:decl_type'] : 'unknown';
-    if ($type == 'blob' || $type == 'text') {
-        $result = pdo_query('ALTER TABLE test CHANGE output output MEDIUMTEXT');
-    }
-
-    // Change the file from blob to longblob
-    $result = pdo_query('SELECT file FROM coveragefile LIMIT 1');
-    $meta = $result->getColumnMeta(0);
-    $length = $meta['len'];
-    if ($length == 65535) {
-        $result = pdo_query('ALTER TABLE coveragefile CHANGE file file LONGBLOB');
-    }
-
-    // Compress the notes
-    if (!pdo_query('SELECT crc32 FROM note LIMIT 1')) {
-        CompressNotes();
-    }
-
-    // Change the dates for the groups from 0000-00-00 to 1000-01-01
-    // This is for mySQL
-    pdo_query("UPDATE buildgroup SET starttime='1980-01-01 00:00:00' WHERE starttime=0");
-    pdo_query("UPDATE buildgroup SET endtime='1980-01-01 00:00:00' WHERE endtime=0");
-    pdo_query("UPDATE build2grouprule SET starttime='1980-01-01 00:00:00' WHERE starttime=0");
-    pdo_query("UPDATE build2grouprule SET endtime='1980-01-01 00:00:00' WHERE endtime=0");
-    pdo_query("UPDATE buildgroupposition SET starttime='1980-01-01 00:00:00' WHERE starttime=0");
-    pdo_query("UPDATE buildgroupposition SET endtime='1980-01-01 00:00:00' WHERE endtime=0");
-
-    pdo_query("ALTER TABLE buildgroup MODIFY starttime timestamp NOT NULL default '1980-01-01 00:00:00'");
-    pdo_query("ALTER TABLE buildgroup MODIFY endtime timestamp NOT NULL default '1980-01-01 00:00:00'");
-    pdo_query("ALTER TABLE build2grouprule MODIFY starttime timestamp NOT NULL default '1980-01-01 00:00:00'");
-    pdo_query("ALTER TABLE build2grouprule MODIFY endtime timestamp NOT NULL default '1980-01-01 00:00:00'");
-    pdo_query("ALTER TABLE buildgroupposition MODIFY starttime timestamp NOT NULL default '1980-01-01 00:00:00'");
-    pdo_query("ALTER TABLE buildgroupposition MODIFY endtime timestamp NOT NULL default '1980-01-01 00:00:00'");
-
-    //  Add fields in the project table
-    $timestatus = pdo_query('SELECT testtimemaxstatus FROM project LIMIT 1');
-    if (!$timestatus) {
-        pdo_query("ALTER TABLE project ADD testtimemaxstatus tinyint(4) default '3'");
-        pdo_query("ALTER TABLE project ADD emailmaxitems tinyint(4) default '5'");
-        pdo_query("ALTER TABLE project ADD emailmaxchars int(11) default '255'");
-    }
-
-    // Add summary email
-    $summaryemail = pdo_query('SELECT summaryemail FROM buildgroup LIMIT 1');
-    if (!$summaryemail) {
-        if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
-            pdo_query("ALTER TABLE \"buildgroup\" ADD \"summaryemail\" smallint DEFAULT '0'");
-        } else {
-            pdo_query("ALTER TABLE buildgroup ADD summaryemail tinyint(4) default '0'");
-        }
-    }
-
-    // Add emailcategory
-    $emailcategory = pdo_query('SELECT emailcategory FROM user2project LIMIT 1');
-    if (!$emailcategory) {
-        if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
-            pdo_query("ALTER TABLE \"user2project\" ADD \"emailcategory\" smallint DEFAULT '62'");
-        } else {
-            pdo_query("ALTER TABLE user2project ADD emailcategory tinyint(4) default '62'");
-        }
-    }
-    return;
-}
-
-// 1.4 Upgrade
-if (isset($_GET['upgrade-1-4'])) {
-    //  Add fields in the project table
-    $starttime = pdo_query('SELECT starttime FROM subproject LIMIT 1');
-    if (!$starttime) {
-        pdo_query("ALTER TABLE subproject ADD starttime TIMESTAMP NOT NULL default '1980-01-01 00:00:00'");
-        pdo_query("ALTER TABLE subproject ADD endtime TIMESTAMP NOT NULL default '1980-01-01 00:00:00'");
-    }
-
-    // Create the right indexes if necessary
-    AddTableIndex('buildfailure', 'buildid');
-    AddTableIndex('buildfailure', 'type');
-
-    // Create the new table buildfailure arguments if the old one is still there
-    if (pdo_query('SELECT buildfailureid FROM buildfailureargument')) {
-        pdo_query('DROP TABLE IF EXISTS buildfailureargument');
-        pdo_query('CREATE TABLE IF NOT EXISTS `buildfailureargument` (
-              `id` bigint(20) NOT NULL auto_increment,
-              `argument` varchar(60) NOT NULL,
-              PRIMARY KEY  (`id`),
-              KEY `argument` (`argument`))');
-    }
-
-    AddTableIndex('buildfailureargument', 'argument');
-
-    //  Add fields in the buildgroup table
-    AddTableField('project', 'emailadministrator', 'tinyint(4)', 'smallint', '1');
-    AddTableField('project', 'showipaddresses', 'tinyint(4)', 'smallint', '1');
-    AddTableField('buildgroup', 'includesubprojectotal', 'tinyint(4)', 'smallint', '1');
-    AddTableField('project', 'emailredundantfailures', 'tinyint(4)', 'smallint', '0');
-    AddTableField('buildfailure2argument', 'place', 'int(11)', 'bigint', '0');
-
-    if ($config->get('CDASH_DB_TYPE') != 'pgsql') {
-        pdo_query('ALTER TABLE `builderror` CHANGE `precontext` `precontext` TEXT NULL');
-        pdo_query('ALTER TABLE `builderror` CHANGE `postcontext` `postcontext` TEXT NULL');
-    }
-
-    ModifyTableField('buildfailureargument', 'argument', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
-    ModifyTableField('buildfailure', 'exitcondition', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
-    ModifyTableField('buildfailure', 'language', 'VARCHAR( 64 )', 'VARCHAR( 64 )', '', true, false);
-    ModifyTableField('buildfailure', 'sourcefile', 'VARCHAR( 512)', 'VARCHAR( 512 )', '', true, false);
-    RemoveTableField('buildfailure', 'arguments');
-    ModifyTableField('configure', 'log', 'MEDIUMTEXT', 'TEXT', '', true, false);
-
-    AddTableIndex('coverage', 'covered');
-    AddTableIndex('build2grouprule', 'starttime');
-    AddTableIndex('build2grouprule', 'endtime');
-    AddTableIndex('build2grouprule', 'buildtype');
-    AddTableIndex('build2grouprule', 'buildname');
-    AddTableIndex('build2grouprule', 'expected');
-    AddTableIndex('build2grouprule', 'siteid');
-    RemoveTableIndex('build2note', 'buildid');
-    AddTableIndex('build2note', 'buildid');
-    AddTableIndex('build2note', 'noteid');
-    AddTableIndex('user2project', 'cvslogin');
-    AddTableIndex('user2project', 'emailtype');
-    AddTableIndex('user', 'email');
-    AddTableIndex('project', 'public');
-    AddTableIndex('buildgroup', 'starttime');
-    AddTableIndex('buildgroup', 'endtime');
-    AddTableIndex('buildgroupposition', 'position');
-    AddTableIndex('buildgroupposition', 'starttime');
-    AddTableIndex('buildgroupposition', 'endtime');
-    AddTableIndex('dailyupdate', 'date');
-    AddTableIndex('dailyupdate', 'projectid');
-    AddTableIndex('builderror', 'type');
-    AddTableIndex('build', 'starttime');
-    AddTableIndex('build', 'submittime');
-
-    RemoveTableIndex('build', 'siteid');
-    AddTableIndex('build', 'siteid');
-    AddTableIndex('build', 'name');
-    AddTableIndex('build', 'stamp');
-    AddTableIndex('build', 'type');
-    AddTableIndex('project', 'name');
-    AddTableIndex('site', 'name');
-
-    ModifyTableField('image', 'id', 'BIGINT( 11 )', 'BIGINT', '', true, false);
-    RemoveTableIndex('image', ' id');
-    RemoveTablePrimaryKey('image');
-    AddTablePrimaryKey('image', 'id');
-    ModifyTableField('image', 'id', 'BIGINT( 11 )', 'BIGINT', '', true, true);
-
-    ModifyTableField('dailyupdate', 'id', 'BIGINT( 11 )', 'BIGINT', '', true, false);
-    RemoveTableIndex('dailyupdate', ' buildid');
-    RemoveTablePrimaryKey('dailyupdate');
-    AddTablePrimaryKey('dailyupdate', 'id');
-    ModifyTableField('dailyupdate', 'id', 'BIGINT( 11 )', 'BIGINT', '', true, true);
-
-    ModifyTableField('dynamicanalysisdefect', 'value', 'INT', 'INT', '0', true, false);
-
-    RemoveTablePrimaryKey('test2image');
-    AddTableIndex('test2image', 'imgid');
-    AddTableIndex('test2image', 'testid');
-
-    ModifyTableField('image', 'checksum', 'BIGINT( 20 )', 'BIGINT', '', true, false);
-    ModifyTableField('note ', 'crc32', 'BIGINT( 20 )', 'BIGINT', '', true, false);
-    ModifyTableField('test ', 'crc32', 'BIGINT( 20 )', 'BIGINT', '', true, false);
-    ModifyTableField('coveragefile ', 'crc32', 'BIGINT( 20 )', 'BIGINT', '', true, false);
-
-    // Remove duplicates in buildfailureargument
-    //pdo_query("DELETE FROM buildfailureargument WHERE id NOT IN (SELECT buildfailureid as id FROM buildfailure2argument)");
-
-    AddTableField('project', 'displaylabels', 'tinyint(4)', 'smallint', '1');
-    AddTableField('project', 'autoremovetimeframe', 'int(11)', 'bigint', '0');
-    AddTableField('project', 'autoremovemaxbuilds', 'int(11)', 'bigint', '300');
-    AddTableIndex('coveragefilelog', 'line');
-
-    // Set the database version
-    setVersion();
-
-    // Put that the upgrade is done in the log
-    add_log('Upgrade done.', 'upgrade-1-4');
-    return;
-}
-
-// 1.6 Upgrade
-if (isset($_GET['upgrade-1-6'])) {
-    if ($config->get('CDASH_DB_TYPE') != 'pgsql') {
-        pdo_query("ALTER TABLE configure CHANGE starttime starttime TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
-        pdo_query("ALTER TABLE buildupdate CHANGE starttime starttime TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
-        pdo_query('ALTER TABLE test CHANGE output output MEDIUMBLOB NOT NULL '); // change it to blob (cannot do that in PGSQL)
-        pdo_query("ALTER TABLE updatefile CHANGE checkindate checkindate TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
-        pdo_query("ALTER TABLE build2note CHANGE time time TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
-        pdo_query("ALTER TABLE buildemail CHANGE time time TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
-    }
-
-    RemoveTableField('project', 'emailbuildmissing');
-    AddTableField('project', 'displaylabels', 'tinyint(4)', 'smallint', '1');
-    AddTableField('project', 'autoremovetimeframe', 'int(11)', 'bigint', '0');
-    AddTableField('project', 'autoremovemaxbuilds', 'int(11)', 'bigint', '300');
-    AddTableField('updatefile', 'status', 'VARCHAR(12)', 'VARCHAR( 12 )', '');
-    AddTableField('project', 'bugtrackerfileurl', 'VARCHAR(255)', 'VARCHAR( 255 )', '');
-    AddTableField('repositories', 'username', 'VARCHAR(50)', 'VARCHAR( 50 )', '');
-    AddTableField('repositories', 'password', 'VARCHAR(50)', 'VARCHAR( 50 )', '');
-    AddTableIndex('coveragefilelog', 'line');
-    AddTableIndex('dailyupdatefile', 'author');
-
-    RenameTableField('testdiff', 'difference', 'difference_positive', 'int(11)', 'bigint', '0');
-    AddTableField('testdiff', 'difference_negative', 'int(11)', 'bigint', '0');
-    AddTableIndex('testdiff', 'difference_positive');
-    AddTableIndex('testdiff', 'difference_negative');
-    AddTableField('build2test', 'newstatus', 'tinyint(4)', 'smallint', '0');
-    AddTableIndex('build2test', 'newstatus');
-
-    RenameTableField('builderrordiff', 'difference', 'difference_positive', 'int(11)', 'bigint', '0');
-    AddTableField('builderrordiff', 'difference_negative', 'int(11)', 'bigint', '0');
-    AddTableIndex('builderrordiff', 'difference_positive');
-    AddTableIndex('builderrordiff', 'difference_negative');
-
-    AddTableField('builderror', 'crc32', 'bigint(20)', 'BIGINT', '0');
-    AddTableField('builderror', 'newstatus', 'tinyint(4)', 'smallint', '0');
-    AddTableIndex('builderror', 'crc32');
-    AddTableIndex('builderror', 'newstatus');
-
-    AddTableField('buildfailure', 'crc32', 'bigint(20)', 'BIGINT', '0');
-    AddTableField('buildfailure', 'newstatus', 'tinyint(4)', 'smallint', '0');
-    AddTableIndex('buildfailure', 'crc32');
-    AddTableIndex('buildfailure', 'newstatus');
-
-    AddTableField('client_jobschedule', 'repository', 'VARCHAR(512)', 'VARCHAR(512)', '');
-    AddTableField('client_jobschedule', 'module', 'VARCHAR(255)', 'VARCHAR(255)', '');
-    AddTableField('client_jobschedule', 'buildnamesuffix', 'VARCHAR(255)', 'VARCHAR(255)', '');
-    AddTableField('client_jobschedule', 'tag', 'VARCHAR(255)', 'VARCHAR(255)', '');
-
-    ModifyTableField('updatefile', 'revision', 'VARCHAR(60)', 'VARCHAR(60)', '', true, false);
-    ModifyTableField('updatefile', 'priorrevision', 'VARCHAR(60)', 'VARCHAR(60)', '', true, false);
-    AddTableField('buildupdate', 'revision', 'VARCHAR(60)', 'VARCHAR(60)', '0');
-    AddTableField('buildupdate', 'priorrevision', 'VARCHAR(60)', 'VARCHAR(60)', '0');
-    AddTableField('buildupdate', 'path', 'VARCHAR(255)', 'VARCHAR(255)', '');
-
-    AddTableField('user2project', 'emailsuccess', 'tinyint(4)', 'smallint', '0');
-    AddTableIndex('user2project', 'emailsuccess');
-    AddTableField('user2project', 'emailmissingsites', 'tinyint(4)', 'smallint', '0');
-    AddTableIndex('user2project', 'emailmissingsites');
-
-    if (!pdo_query('SELECT projectid FROM test LIMIT 1')) {
-        AddTableField('test', 'projectid', 'int(11)', 'bigint', '0');
-        AddTableIndex('test', 'projectid');
-
-        // Set the project id
-        pdo_query('UPDATE test SET projectid=(SELECT projectid FROM build,build2test
-               WHERE build2test.testid=test.id AND build2test.buildid=build.id LIMIT 1)');
-
-        echo pdo_error();
-    }
-
-    // Add the cookiekey field
-    AddTableField('user', 'cookiekey', 'VARCHAR(40)', 'VARCHAR( 40 )', '');
-    ModifyTableField('dynamicanalysis', 'log', 'MEDIUMTEXT', 'TEXT', '', true, false);
-
-    // New build, buildupdate and configure fields to speedup reading
-    if (!pdo_query('SELECT builderrors FROM build LIMIT 1')) {
-        AddTableField('build', 'builderrors', 'smallint(6)', 'smallint', '-1');
-        AddTableField('build', 'buildwarnings', 'smallint(6)', 'smallint', '-1');
-        AddTableField('build', 'testnotrun', 'smallint(6)', 'smallint', '-1');
-        AddTableField('build', 'testfailed', 'smallint(6)', 'smallint', '-1');
-        AddTableField('build', 'testpassed', 'smallint(6)', 'smallint', '-1');
-        AddTableField('build', 'testtimestatusfailed', 'smallint(6)', 'smallint', '-1');
-
-        AddTableField('buildupdate', 'nfiles', 'smallint(6)', 'smallint', '-1');
-        AddTableField('buildupdate', 'warnings', 'smallint(6)', 'smallint', '-1');
-        AddTableField('configure', 'warnings', 'smallint(6)', 'smallint', '-1');
-
-        pdo_query("UPDATE configure SET warnings=(SELECT count(buildid) FROM configureerror WHERE buildid=configure.buildid AND type='1')
-                 WHERE warnings=-1");
-        pdo_query("UPDATE buildupdate SET
-                warnings=(SELECT count(buildid) FROM updatefile WHERE buildid=buildupdate.buildid AND revision='-1' AND author='Local User'),
-                nfiles=(SELECT count(buildid) FROM updatefile WHERE buildid=buildupdate.buildid)
-                WHERE warnings=-1");
-
-        pdo_query("UPDATE build SET
-                 builderrors=(SELECT count(buildid) FROM builderror WHERE buildid=build.id AND type='0'),
-                 buildwarnings=(SELECT count(buildid) FROM builderror WHERE buildid=build.id AND type='1'),
-                 builderrors=builderrors+(SELECT count(buildid) FROM buildfailure WHERE buildid=build.id AND type='0'),
-                 buildwarnings=buildwarnings+(SELECT count(buildid) FROM buildfailure WHERE buildid=build.id AND type='1'),
-                 testpassed=(SELECT count(buildid) FROM build2test WHERE buildid=build.id AND status='passed'),
-                 testfailed=(SELECT count(buildid) FROM build2test WHERE buildid=build.id AND status='failed'),
-                 testnotrun=(SELECT count(buildid) FROM build2test WHERE buildid=build.id AND status='notrun'),
-                 testtimestatusfailed=(SELECT count(buildid) FROM build2test,project WHERE project.id=build.id
-                                       AND buildid=build.id AND timestatus>=project.testtimemaxstatus)
-                 WHERE builderrors=-1");
-
-        echo pdo_error();
-    }
-
-    // Set the database version
-    setVersion();
-
-    // Put that the upgrade is done in the log
-    add_log('Upgrade done.', 'upgrade-1-6');
-    return;
-}
-
-// 1.8 Upgrade
-if (isset($_GET['upgrade-1-8'])) {
-    // If the new coveragefilelog is not set
-    if (!pdo_query('SELECT log FROM coveragefilelog LIMIT 1')) {
-        AddTableField('coveragefilelog', 'log', 'LONGBLOB', 'bytea', false);
-
-        // Get the lines for each buildid/fileid
-        $query = pdo_query('SELECT DISTINCT buildid,fileid FROM coveragefilelog ORDER BY buildid,fileid');
-        while ($query_array = pdo_fetch_array($query)) {
-            $buildid = $query_array['buildid'];
-            $fileid = $query_array['fileid'];
-
-            // Get the lines
-            $firstline = false;
-            $log = '';
-            $lines = pdo_query("SELECT line,code FROM coveragefilelog WHERE buildid='" . $buildid . "' AND fileid='" . $fileid . "' ORDER BY line");
-            while ($lines_array = pdo_fetch_array($lines)) {
-                $line = $lines_array['line'];
-                $code = $lines_array['code'];
-
-                if ($firstline === false) {
-                    $firstline = $line;
-                }
-                $log .= $line . ':' . $code . ';';
-            }
-
-            // Update the first line
-            pdo_query("UPDATE coveragefilelog SET log='" . $log . "'
-                WHERE buildid='" . $buildid . "' AND fileid='" . $fileid . "' AND line='" . $firstline . "'");
-
-            // Delete the other lines
-            pdo_query("DELETE FROM coveragefilelog
-                 WHERE buildid='" . $buildid . "' AND fileid='" . $fileid . "' AND line!='" . $firstline . "'");
-        }
-
-        RemoveTableField('coveragefilelog', 'line');
-        RemoveTableField('coveragefilelog', 'code');
-    }
-
-    // Missing fields in the client_jobschedule table
-    if (!pdo_query('SELECT repository FROM client_jobschedule LIMIT 1')) {
-        AddTableField('client_jobschedule', 'repository', 'varchar(512)', 'character varying(512)', '');
-        AddTableField('client_jobschedule', 'module', 'varchar(255)', 'character varying(255)', '');
-        AddTableField('client_jobschedule', 'buildnamesuffix', 'varchar(255)', 'character varying(255)', '');
-        AddTableField('client_jobschedule', 'tag', 'varchar(255)', 'character varying(255)', '');
-    }
-
-    AddTableField('project', 'testingdataurl', 'varchar(255)', 'character varying(255)', '');
-    AddTableField('buildgroup', 'autoremovetimeframe', 'int(11)', 'bigint', '0');
-
-    ModifyTableField('dailyupdatefile', 'revision', 'VARCHAR(60)', 'VARCHAR(60)', '', true, false);
-    ModifyTableField('dailyupdatefile', 'priorrevision', 'VARCHAR(60)', 'VARCHAR(60)', '', true, false);
-    AddTableField('dailyupdatefile', 'email', 'VARCHAR(255)', 'character varying(255)', '');
-    AddTableIndex('dailyupdatefile', 'email');
-
-    AddTableField('client_jobschedule', 'buildconfiguration', 'tinyint(4)', 'smallint', '0');
-
-    // Remove the toolkits tables
-    pdo_query('DROP TABLE IF EXISTS client_toolkit');
-    pdo_query('DROP TABLE IF EXISTS client_toolkitconfiguration');
-    pdo_query('DROP TABLE IF EXISTS client_toolkitconfiguration2os');
-    pdo_query('DROP TABLE IF EXISTS client_toolkitversion');
-    pdo_query('DROP TABLE IF EXISTS client_jobschedule2toolkit');
-
-    // Add lastping to the client_site table
-    AddTableField('client_site', 'lastping', 'timestamp', 'timestamp(0)', '1980-01-01 00:00:00');
-    AddTableIndex('client_site', 'lastping');
-
-    // Remove img index for table test2image
-    RenameTableField('test2image', 'imgid', 'imgid', 'int(11)', 'bigint', '0');
-    RemoveTablePrimaryKey('test2image');
-    AddTableIndex('test2image', 'imgid');
-
-    ModifyTableField('buildfailure', 'stdoutput', 'MEDIUMTEXT', 'TEXT', '', true, false);
-    ModifyTableField('buildfailure', 'stderror', 'MEDIUMTEXT', 'TEXT', '', true, false);
-    AddTableIndex('builderrordiff', 'type');
-
-    AddTableField('dailyupdate', 'revision', 'varchar(60)', 'character varying(60)', '');
-    AddTableField('repositories', 'branch', 'varchar(60)', 'character varying(60)', '');
-
-    // New fields for the submission table to make asynchronous submission
-    // processing more robust:
-    //
-    AddTableField('submission', 'attempts', 'int(11)', 'bigint', '0');
-    AddTableField('submission', 'filesize', 'int(11)', 'bigint', '0');
-    AddTableField('submission', 'filemd5sum', 'varchar(32)', 'character varying(32)', '');
-    AddTableField('submission', 'lastupdated', 'timestamp', 'timestamp(0)', '1980-01-01 00:00:00');
-    AddTableField('submission', 'created', 'timestamp', 'timestamp(0)', '1980-01-01 00:00:00');
-    AddTableField('submission', 'started', 'timestamp', 'timestamp(0)', '1980-01-01 00:00:00');
-    AddTableField('submission', 'finished', 'timestamp', 'timestamp(0)', '1980-01-01 00:00:00');
-    AddTableIndex('submission', 'finished');
-
-    AddTableField('client_jobschedule', 'clientscript', 'text', 'text', '');
-
-    AddTableField('project', 'webapikey', 'varchar(40)', 'character varying(40)', '');
-    AddTableField('project', 'tokenduration', 'int(11)', 'bigint', '0');
-
-    // Add the users' cvslogin to the user2repository table (by default all projects)
-    if (pdo_query('SELECT cvslogin FROM user2project')) {
-        // Add all the user's email to the user2repository table
-        $emailarray = array();
-        $query = pdo_query('SELECT id,email FROM user');
-        while ($query_array = pdo_fetch_array($query)) {
-            $userid = $query_array['id'];
-            $email = $query_array['email'];
-            $emailarray[] = $email;
-            pdo_query("INSERT INTO user2repository (userid,credential) VALUES ('" . $userid . "','" . $email . "')");
-        }
-
-        // Add the repository login
-        $query = pdo_query('SELECT userid,projectid,cvslogin FROM user2project GROUP BY userid,cvslogin');
-        while ($query_array = pdo_fetch_array($query)) {
-            $userid = $query_array['userid'];
-            $cvslogin = $query_array['cvslogin'];
-            if (!empty($cvslogin) && !in_array($cvslogin, $emailarray)) {
-                pdo_query("INSERT INTO user2repository (userid,projectid,credential)
-                   VALUES ('" . $userid . "','" . $projectid . "','" . $cvslogin . "')");
-            }
-        }
-        RemoveTableField('user2project', 'cvslogin');
-    }
-
-    // Set the database version
-    setVersion();
-
-    // Put that the upgrade is done in the log
-    add_log('Upgrade done.', 'upgrade-1-8');
-    return;
-}
-
-// 2.0 Upgrade
-if (isset($_GET['upgrade-2-0'])) {
-    // Add column id to test2image and testmeasurement
-    if (!pdo_query('SELECT id FROM test2image LIMIT 1')) {
-        if ($config->get('CDASH_DB_TYPE') != 'pgsql') {
-            pdo_query('ALTER TABLE testmeasurement ADD id BIGINT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id)');
-            pdo_query('ALTER TABLE test2image ADD id BIGINT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id)');
-        } else {
-            pdo_query('ALTER TABLE testmeasurement ADD id SERIAL NOT NULL, ADD PRIMARY KEY (id)');
-            pdo_query('ALTER TABLE test2image ADD id SERIAL NOT NULL, ADD PRIMARY KEY (id)');
-        }
-    }
-    AddTableField('project', 'webapikey', 'varchar(40)', 'character varying(40)', '');
-    AddTableField('project', 'tokenduration', 'int(11)', 'bigint', '0');
-    AddTableField('project', 'uploadquota', 'bigint(20)', 'bigint', '0');
-    AddTableField('updatefile', 'committer', 'varchar(255)', 'character varying(255)', '');
-    AddTableField('updatefile', 'committeremail', 'varchar(255)', 'character varying(255)', '');
-    AddTableField('buildgroup', 'emailcommitters', 'tinyint(4)', 'smallint', '0');
-    AddTableField('uploadfile', 'isurl', 'tinyint(1)', 'smallint', '0');
-
-    // Add indexes for the label2... tables
-    AddTableIndex('label2build', 'buildid');
-    AddTableIndex('label2buildfailure', 'buildfailureid');
-    AddTableIndex('label2coveragefile', 'buildid');
-    AddTableIndex('label2dynamicanalysis', 'dynamicanalysisid');
-    AddTableIndex('label2test', 'buildid');
-    AddTableIndex('label2update', 'updateid');
-
-    ModifyTableField('client_jobschedule', 'repeattime', 'decimal(6,2)', 'decimal(6,2)', '0.00', true, false);
-    AddTableField('client_jobschedule', 'description', 'text', 'text', '');
-    AddTableField('project', 'showcoveragecode', 'tinyint(1)', 'smallint', '1');
-
-    AddTableIndex('updatefile', 'author');
-
-    // Set the database version
-    setVersion();
-
-    // Put that the upgrade is done in the log
-    add_log('Upgrade done.', 'upgrade-2-0');
     return;
 }
 
@@ -753,7 +227,7 @@ if (isset($_GET['upgrade-2-6'])) {
     AddTableIndex('label2test', 'buildid');
 
     // Expand size of password field to 255 characters.
-    if ($config->get('CDASH_DB_TYPE') != 'pgsql') {
+    if (config('database.default') != 'pgsql') {
         ModifyTableField('password', 'password', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
         ModifyTableField('user', 'password', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
         ModifyTableField('usertemp', 'password', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
@@ -764,7 +238,7 @@ if (isset($_GET['upgrade-2-6'])) {
     // to share a configure.
     if (!pdo_query('SELECT id FROM configure LIMIT 1')) {
         // Add id and crc32 columns to configure table.
-        if ($config->get('CDASH_DB_TYPE') != 'pgsql') {
+        if (config('database.default') != 'pgsql') {
             pdo_query(
                 'ALTER TABLE configure
                 ADD id int(11) NOT NULL AUTO_INCREMENT,
@@ -789,7 +263,7 @@ if (isset($_GET['upgrade-2-6'])) {
         }
 
         // Remove columns from configure that have been moved to build2configure.
-        if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+        if (config('database.default') == 'pgsql') {
             pdo_query('ALTER TABLE "configure"
                         DROP COLUMN "buildid",
                         DROP COLUMN "starttime",
@@ -848,18 +322,20 @@ if (isset($_GET['upgrade-2-8'])) {
 
     // Put that the upgrade is done in the log
     add_log('Upgrade done.', 'upgrade-2-8');
-    return;
+    $_GET['upgrade-3-0'] = 1;
 }
 
 // 3.0 Upgrade
 if (isset($_GET['upgrade-3-0'])) {
-
     // Add Laravel required columns to user and password tables.
     AddTableField('user', 'updated_at', 'TIMESTAMP', 'TIMESTAMP', '1980-01-01 00:00:00');
     AddTableField('user', 'created_at', 'TIMESTAMP', 'TIMESTAMP', '1980-01-01 00:00:00');
     AddTableField('user', 'remember_token', 'varchar(100)', 'character varying(16)', 'NULL');
     AddTableField('password', 'updated_at', 'TIMESTAMP', 'TIMESTAMP', '1980-01-01 00:00:00');
     AddTableField('password', 'created_at', 'TIMESTAMP', 'TIMESTAMP', '1980-01-01 00:00:00');
+
+    // Call artisan to run Laravel database migrations.
+    Artisan::call('migrate --force');
 
     // Set the database version
     setVersion();
@@ -873,7 +349,7 @@ if (isset($_GET['upgrade-3-0'])) {
 // and here as well
 if ($Upgrade) {
     // check if the backup directory is writable
-    if (!is_writable($config->get('CDASH_BACKUP_DIRECTORY'))) {
+    if (!is_writable(Storage::path('inbox'))) {
         $xml .= '<backupwritable>0</backupwritable>';
     } else {
         $xml .= '<backupwritable>1</backupwritable>';
@@ -893,29 +369,23 @@ if ($Upgrade) {
         $xml .= '<uploadwritable>1</uploadwritable>';
     }
 
-    // check if the rss directory is writable
-    if ($config->get('CDASH_ENABLE_FEED') > 0 && !is_writable('rss')) {
-        $xml .= '<rsswritable>0</rsswritable>';
-    } else {
-        $xml .= '<rsswritable>1</rsswritable>';
-    }
     $xml .= '<upgrade>1</upgrade>';
 }
 
 // Compress the test output
 if (isset($_POST['CompressTestOutput'])) {
     // Do it slowly so we don't take all the memory
-    $query = pdo_query('SELECT count(*) FROM test');
+    $query = pdo_query('SELECT count(*) FROM testoutput');
     $query_array = pdo_fetch_array($query);
     $ntests = $query_array[0];
     $ngroup = 1024;
     for ($i = 0; $i < $ntests; $i += $ngroup) {
-        $query = pdo_query('SELECT id,output FROM test ORDER BY id ASC LIMIT ' . $ngroup . ' OFFSET ' . $i);
+        $query = pdo_query('SELECT id,output FROM testoutput ORDER BY id ASC LIMIT ' . $ngroup . ' OFFSET ' . $i);
         while ($query_array = pdo_fetch_array($query)) {
             // Try uncompressing to see if it's already compressed
             if (@gzuncompress($query_array['output']) === false) {
                 $compressed = pdo_real_escape_string(gzcompress($query_array['output']));
-                pdo_query("UPDATE test SET output='" . $compressed . "' WHERE id=" . $query_array['id']);
+                pdo_query("UPDATE testoutput SET output='" . $compressed . "' WHERE id=" . $query_array['id']);
                 echo pdo_error();
             }
         }
@@ -949,6 +419,12 @@ if ($ComputeUpdateStatistics) {
         $xml .= add_XML_value('alert', 'Wrong number of days.');
     }
 }
+
+if ($Dependencies) {
+    $returnVal = Artisan::call("dependencies:update");
+    $xml .= add_XML_value('alert', "The call to update CDash's dependencies was run. The call exited with value: $returnVal");
+}
+
 
 /* Cleanup the database */
 if ($Cleanup) {
@@ -998,9 +474,9 @@ if ($Cleanup) {
     delete_unused_rows('coveragefile2user', 'fileid', 'coveragefile');
 
     delete_unused_rows('dailyupdatefile', 'dailyupdateid', 'dailyupdate');
-    delete_unused_rows('test2image', 'testid', 'test');
-    delete_unused_rows('testmeasurement', 'testid', 'test');
-    delete_unused_rows('label2test', 'testid', 'test');
+    delete_unused_rows('test2image', 'outputid', 'testoutput');
+    delete_unused_rows('testmeasurement', 'outputid', 'testoutput');
+    delete_unused_rows('label2test', 'outputid', 'testoutput');
 
     $xml .= add_XML_value('alert', 'Database cleanup complete.');
 }

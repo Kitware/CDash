@@ -16,16 +16,16 @@
 
 namespace CDash\Messaging\Topic;
 
-use CDash\Collection\TestCollection;
+use App\Models\BuildTest;
+use App\Models\Test;
+
 use CDash\Model\Build;
-use CDash\Model\BuildTest;
-use CDash\Model\Test;
 
 class MissingTestTopic extends Topic
 {
     use IssueTemplateTrait;
 
-    /** @var TestCollection $collection */
+    /** @var Illuminate\Support\Collection $collection */
     private $collection;
 
     /**
@@ -52,22 +52,22 @@ class MissingTestTopic extends Topic
         $rows = $build->GetMissingTests();
         foreach ($rows as $id => $name) {
             $test = new Test();
-            $test->Id = $id;
-            $test->Name = $name;
+            $test->id = $id;
+            $test->name = $name;
             $buildTest = new BuildTest();
-            $buildTest->BuildId = $build->Id;
-            $test->SetBuildTest($buildTest);
-            $collection->add($test);
+            $buildTest->buildid = $build->Id;
+            $buildTest->test = $test;
+            $collection->put($name, $buildTest);
         }
     }
 
     /**
-     * @return TestCollection
+     * @return Illuminate\Support\Collection
      */
     public function getTopicCollection()
     {
         if (!$this->collection) {
-            $this->collection = new TestCollection();
+            $this->collection = collect();
         }
         return $this->collection;
     }

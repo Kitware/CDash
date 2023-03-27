@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateClientCmakeTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,10 +12,12 @@ class CreateClientCmakeTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_cmake', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->string('version');
-        });
+        if (!Schema::hasTable('client_cmake')) {
+            Schema::create('client_cmake', function (Blueprint $table) {
+                $table->integer('id', true);
+                $table->string('version');
+            });
+        }
     }
 
 

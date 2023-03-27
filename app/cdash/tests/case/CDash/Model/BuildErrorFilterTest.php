@@ -17,9 +17,9 @@ use CDash\Model\Project;
 use CDash\ServiceContainer;
 use CDash\Test\CDashTestCase;
 
-class BuildErrorFilterModelTest extends CDashTestCase
+class BuildErrorFilterTest extends CDashTestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
         $this->setDatabaseMocked();
         $this->service = ServiceContainer::getInstance();
@@ -32,8 +32,8 @@ class BuildErrorFilterModelTest extends CDashTestCase
         $container->set(Project::class, $this->mock_project);
 
         $this->sut = $container->make(
-                BuildErrorFilter::class,
-                ['project' => $this->mock_project]);
+            BuildErrorFilter::class,
+            ['project' => $this->mock_project]);
     }
 
     public function testExists()

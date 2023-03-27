@@ -14,24 +14,10 @@ class EnableAsynchronousTestCase extends KWWebTestCase
 
     public function testEnableAsynchronous()
     {
-        $filename = dirname(__FILE__) . '/../config/config.local.php';
-        $handle = fopen($filename, 'r');
-        $contents = fread($handle, filesize($filename));
-        fclose($handle);
-        unset($handle);
-        $handle = fopen($filename, 'w');
-        $lines = explode("\n", $contents);
-        foreach ($lines as $line) {
-            if (strpos($line, '?>') !== false) {
-                fwrite($handle, '// test config settings injected by file [' . __FILE__ . "]\n");
-                fwrite($handle, '$CDASH_ASYNCHRONOUS_SUBMISSION = true;' . "\n");
-            }
-            if ($line != '') {
-                fwrite($handle, "$line\n");
-            }
-        }
-        fclose($handle);
-        unset($handle);
+        $filename = dirname(__FILE__) . '/../../../.env';
+        // Using .env, we no longer have to worry about being inside the closing PHP bracket.
+        $injectedText = "// test config settings injected by file [' . __FILE__ . ']\nCDASH_ASYNCHRONOUS_SUBMISSION = true";
+        file_put_contents($filename, $injectedText, FILE_APPEND);
         $this->pass('Passed');
     }
 }

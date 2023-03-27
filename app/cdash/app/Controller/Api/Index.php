@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Controller\Api;
 
+use App\Services\TestingDay;
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
@@ -41,6 +42,7 @@ class Index extends ResultsApi
     public $childView;
     public $shareLabelFilters;
     public $siteResponse;
+    public $subProjectTestFilters;
     public $updateType;
 
     public function __construct(Database $db, Project $project)
@@ -62,6 +64,7 @@ class Index extends ResultsApi
         $this->excludedSubProjects = [];
         $this->numSelectedSubProjects = 0;
         $this->selectedSubProjects = '';
+        $this->subProjectTestFilters = '';
 
         $this->labelIds = '';
         $this->parentId = false;
@@ -197,7 +200,7 @@ class Index extends ResultsApi
                     $whereClauses[] = "b.name LIKE '" . $rule['buildname'] . "'";
                 }
                 if (!empty($whereClauses)) {
-                    $where = 'WHERE ' . implode($whereClauses, ' AND ');
+                    $where = 'WHERE ' . implode(' AND ', $whereClauses);
                     $where .= " AND b.starttime<'{$this->endDate}'";
                 }
 
@@ -362,7 +365,7 @@ class Index extends ResultsApi
 
         if (strlen($build_row['updatestatus']) > 0 &&
                 $build_row['updatestatus'] != '0'
-           ) {
+        ) {
             $build_row['countupdateerrors'] = 1;
         } else {
             $build_row['countupdateerrors'] = 0;
@@ -463,8 +466,8 @@ class Index extends ResultsApi
         }
         if ($i == -1) {
             add_log("BuildGroup '$groupid' not found for build #" . $build_array['id'],
-                    __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
-                    LOG_WARNING);
+                __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
+                LOG_WARNING);
             return false;
         }
 
@@ -479,7 +482,7 @@ class Index extends ResultsApi
         $siteid = $build_array['siteid'];
 
         $countChildrenResult = pdo_single_row_query(
-                'SELECT count(id) AS numchildren
+            'SELECT count(id) AS numchildren
                 FROM build WHERE parentid=' . qnum($buildid));
         $numchildren = $countChildrenResult['numchildren'];
         $build_response['numchildren'] = $numchildren;
@@ -560,11 +563,13 @@ class Index extends ResultsApi
         $buildplatform = '';
         if (strtolower(substr($build_array['osname'], 0, 7)) == 'windows') {
             $buildplatform = 'windows';
-        } elseif (strtolower(substr($build_array['osname'], 0, 8)) == 'mac os x') {
+        } elseif (strtolower(substr($build_array['osname'], 0, 8)) == 'mac os x'
+                || strtolower(substr($build_array['osname'], 0, 5)) == 'macos'
+        ) {
             $buildplatform = 'mac';
         } elseif (strtolower(substr($build_array['osname'], 0, 5)) == 'linux'
                 || strtolower(substr($build_array['osname'], 0, 3)) == 'aix'
-                ) {
+        ) {
             $buildplatform = 'linux';
         } elseif (strtolower(substr($build_array['osname'], 0, 7)) == 'freebsd') {
             $buildplatform = 'freebsd';
@@ -620,7 +625,7 @@ class Index extends ResultsApi
         // Figure out how many labels to report for this build.
         if (!array_key_exists('numlabels', $build_array) ||
                 $build_array['numlabels'] == 0
-           ) {
+        ) {
             $num_labels = 0;
         } else {
             $num_labels = $build_array['numlabels'];
@@ -643,7 +648,7 @@ class Index extends ResultsApi
                 // Whitelist case
                 if ($this->includeSubProjects &&
                         in_array($label_row['text'], $this->includedSubProjects)
-                   ) {
+                ) {
                     $num_labels++;
                     $build_labels[] = $label_row['text'];
                 }
@@ -692,7 +697,7 @@ class Index extends ResultsApi
                 $this->subProjectPositions[] = $build_array['subprojectposition'];
             }
         } else {
-            $build_response['position'] = 0;
+            $build_response['position'] = -1;
         }
 
         // We maintain a list of distinct build start times when viewing
@@ -916,7 +921,7 @@ class Index extends ResultsApi
                     "SELECT b2t.status, b2t.newstatus
                     FROM build2test AS b2t
                     INNER JOIN label2test AS l2t ON
-                    (l2t.testid=b2t.testid AND l2t.buildid=b2t.buildid)
+                    (l2t.outputid=b2t.outputid AND l2t.buildid=b2t.buildid)
                     WHERE b2t.buildid = '$buildid' AND
                     l2t.labelid IN $this->labelIds";
                 $label_filter_query = $label_query_base . $this->limitSQL;
@@ -1181,7 +1186,7 @@ class Index extends ResultsApi
 
                 // Compute historical average to get approximate expected time.
                 // PostgreSQL doesn't have the necessary functions for this.
-                if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+                if (config('database.default') == 'pgsql') {
                     $query = pdo_query(
                         "SELECT submittime FROM build,build2group
                         WHERE build2group.buildid=build.id AND siteid='$siteid' AND
@@ -1266,15 +1271,51 @@ class Index extends ResultsApi
             $this->selectedSubProjects = "('" . $this->selectedSubProjects . "')";
             $this->excludeSubProjects = true;
         }
+
+        if (!$this->childView) {
+            // Determine subproject filters to pass to viewTest.php.
+            $subproject_test_filters = [];
+            $selected_subprojects = null;
+            $compare = '';
+            if ($this->includeSubProjects) {
+                $selected_subprojects = $this->includedSubProjects;
+                $compare = '61'; // string is equal
+                $combine = 'or';
+            } elseif ($this->excludeSubProjects) {
+                $selected_subprojects = $this->excludedSubProjects;
+                $compare = '62'; // string is not equal
+                $combine = 'and';
+            }
+            if ($selected_subprojects) {
+                foreach ($selected_subprojects as $i => $subproject) {
+                    $idx = $i + 1;
+                    $subproject_test_filters[] = "field{$idx}=subproject";
+                    $subproject_test_filters[] = "compare{$idx}=$compare";
+                    $subproject_test_filters[] = "value{$idx}=$subproject";
+                }
+                $this->subProjectTestFilters = '&';
+                $this->subProjectTestFilters .= implode('&', $subproject_test_filters);
+                $this->subProjectTestFilters .= "&filtercount={$this->numSelectedSubProjects}";
+                $this->subProjectTestFilters .= "&filtercombine=$combine";
+                $this->subProjectTestFilters .= '&showfilters=1';
+            }
+        }
     }
 
-    // Normalize subproject order so it's always 1 to N with no gaps.
+    // Normalize subproject order so it's always 1 to N with no gaps and no duplicates.
     public function normalizeSubProjectOrder()
     {
         sort($this->subProjectPositions);
         for ($i = 0; $i < count($this->buildgroupsResponse); $i++) {
             for ($j = 0; $j < count($this->buildgroupsResponse[$i]['builds']); $j++) {
-                $idx = array_search($this->buildgroupsResponse[$i]['builds'][$j]['position'], $this->subProjectPositions);
+                $position = $this->buildgroupsResponse[$i]['builds'][$j]['position'];
+                if ($position === -1) {
+                    // No SubProject position found for this build, stick it on the end of the list.
+                    $idx = count($this->subProjectPositions);
+                    $this->subProjectPositions[] = $idx;
+                } else {
+                    $idx = array_search($position, $this->subProjectPositions);
+                }
                 $this->buildgroupsResponse[$i]['builds'][$j]['position'] = $idx + 1;
             }
         }
@@ -1321,7 +1362,7 @@ class Index extends ResultsApi
         $this->db->execute($previous_stmt, $query_params);
         $starttime = $previous_stmt->fetchColumn();
         if ($starttime) {
-            $previous_date = $this->project->GetTestingDay($starttime);
+            $previous_date = TestingDay::get($this->project, $starttime);
             $response['menu']['previous'] = "$base_url&date=$previous_date";
         } else {
             $response['menu']['previous'] = false;
@@ -1339,7 +1380,7 @@ class Index extends ResultsApi
         $this->db->execute($next_stmt, $query_params);
         $starttime = $next_stmt->fetchColumn();
         if ($starttime) {
-            $next_date = $this->project->GetTestingDay($starttime);
+            $next_date = TestingDay::get($this->project, $starttime);
             $response['menu']['next'] = "$base_url&date=$next_date";
         } else {
             $response['menu']['next'] = false;
@@ -1355,5 +1396,10 @@ class Index extends ResultsApi
                 }
             }
         }
+    }
+
+    public function recordGenerationTime(&$response)
+    {
+        $this->pageTimer->end($response);
     }
 }

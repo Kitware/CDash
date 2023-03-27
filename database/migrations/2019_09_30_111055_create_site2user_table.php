@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateSite2userTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,10 +12,12 @@ class CreateSite2userTable extends Migration
      */
     public function up()
     {
-        Schema::create('site2user', function (Blueprint $table) {
-            $table->integer('siteid')->default(0)->index();
-            $table->integer('userid')->default(0)->index();
-        });
+        if (!Schema::hasTable('site2user')) {
+            Schema::create('site2user', function (Blueprint $table) {
+                $table->integer('siteid')->default(0)->index();
+                $table->integer('userid')->default(0)->index();
+            });
+        }
     }
 
 

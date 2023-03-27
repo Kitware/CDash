@@ -20,13 +20,15 @@ include_once 'include/common.php';
 include_once 'include/ctestparserutils.php';
 include_once 'include/repository.php';
 
+use App\Models\Test;
+use App\Services\TestingDay;
+use App\Services\TestDiffService;
+
 use CDash\Collection\BuildEmailCollection;
 use CDash\Collection\CollectionCollection;
 use CDash\Collection\DynamicAnalysisCollection;
-use CDash\Collection\LabelCollection;
 use CDash\Config;
 use CDash\Log;
-use CDash\Collection\TestCollection;
 use CDash\Database;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\ActionableTypes;
@@ -73,7 +75,6 @@ class Build
     public $SubProjectName;
     public $Append;
     public $Done;
-    public $Labels;
 
     // Only the build.xml has information about errors and warnings
     // when the InsertErrors is false the build is created but not the errors and warnings
@@ -97,7 +98,6 @@ class Build
     private $BuildUpdate;
     private $Project;
     private $CommitAuthors;
-    private $AggregateLabels;
     private $ActionableType;
     private $BuildConfigure;
     private $LabelCollection;
@@ -132,16 +132,15 @@ class Build
         $this->SubmitTime = '1980-01-01 00:00:00';
         $this->Type = '';
         $this->Uuid = '';
-        $this->TestCollection = new TestCollection();
+        $this->TestCollection = collect();
         $this->CommitAuthors = [];
+
+        $this->LabelCollection = collect();
 
         $this->PDO = Database::getInstance()->getPdo();
     }
 
-    /**
-     * @return bool
-     */
-    public function IsParentBuild()
+    public function IsParentBuild() : bool
     {
         return $this->ParentId == -1;
     }
@@ -160,18 +159,14 @@ class Build
      */
     public function AddLabel($label)
     {
-        // TODO: turn into collection only
-        if (!isset($this->Labels)) {
-            $this->Labels = [];
-        }
         $label->BuildId = $this->Id;
-        $this->Labels[] = $label;
+        $this->LabelCollection->put($label->Text, $label);
     }
 
     /**
      * @param $stamp
      */
-    public function SetStamp($stamp)
+    public function SetStamp(string $stamp) : void
     {
         $this->Stamp = $stamp;
         if (strlen($this->Type) == 0) {
@@ -179,10 +174,7 @@ class Build
         }
     }
 
-    /**
-     * @return string
-     */
-    public function GetStamp()
+    public function GetStamp() : string
     {
         return $this->Stamp;
     }
@@ -251,7 +243,7 @@ class Build
         return true;
     }
 
-    /** Return the subproject id */
+    /** Return the subproject name */
     public function GetSubProjectName()
     {
         if (empty($this->Id)) {
@@ -291,21 +283,18 @@ class Build
         // tests.
         $total_proc_time = 0.0;
         foreach ($this->TestCollection as $test) {
-            $exec_time = $test->GetExecutionTime();
+            $exec_time = (double)$test->time;
             $num_procs = 1.0;
-            foreach ($test->Measurements as $measurement) {
-                if ($measurement->Name == 'Processors') {
-                    $num_procs *= $measurement->Value;
+            foreach ($test->measurements as $measurement) {
+                if ($measurement->name == 'Processors') {
+                    $num_procs *= $measurement->value;
                     break;
                 }
             }
             $total_proc_time += ($exec_time * $num_procs);
         }
 
-        if (!$this->UpdateBuildTestTime($total_proc_time)) {
-            return false;
-        }
-
+        $this->UpdateBuildTestTime($total_proc_time);
 
         if (!$update_parent) {
             return true;
@@ -326,36 +315,23 @@ class Build
      **/
     protected function UpdateBuildTestTime($test_exec_time)
     {
-        // Check if an entry already exists for this build.
-        $this->PDO->beginTransaction();
-        $exists_stmt = $this->PDO->prepare(
-                'SELECT time FROM buildtesttime WHERE buildid = ?');
-        if (!pdo_execute($exists_stmt, [$this->Id])) {
-            $this->PDO->rollBack();
-            return false;
-        }
-
-        $existing_time = $exists_stmt->fetchColumn();
-        $query_params = [':buildid' => $this->Id];
-        if ($existing_time !== false) {
-            $stmt = $this->PDO->prepare(
-                    'UPDATE buildtesttime
-                    SET time = :time
-                    WHERE buildid = :buildid');
-            $query_params[':time'] = $test_exec_time + $existing_time;
-        } else {
-            $stmt = $this->PDO->prepare(
-                    'INSERT INTO buildtesttime (buildid, time)
-                    VALUES (:buildid, :time)');
-            $query_params[':time'] = $test_exec_time;
-        }
-        if (!pdo_execute($stmt, $query_params)) {
-            $this->PDO->rollBack();
-            return false;
-        }
-
-        $this->PDO->commit();
-        return true;
+        \DB::transaction(function () use ($test_exec_time) {
+            $buildtesttime_row =
+            \DB::table('buildtesttime')
+                ->where('buildid', $this->Id)
+                ->lockForUpdate()
+                ->first();
+            if ($buildtesttime_row) {
+                // Add to the running total if an entry already exists for this build.
+                \DB::table('buildtesttime')
+                    ->where('buildid', $this->Id)
+                    ->update(['time' => $test_exec_time + $buildtesttime_row->time]);
+            } else {
+                // Otherwise insert a new record.
+                \DB::table('buildtesttime')->insert(
+                    ['buildid' => $this->Id, 'time' => $test_exec_time]);
+            }
+        }, 5);
     }
 
     /** Update the end time */
@@ -365,7 +341,7 @@ class Build
             return false;
         }
 
-        $stmt = $this->PDO->preapre(
+        $stmt = $this->PDO->prepare(
             'UPDATE build SET endtime = ? WHERE id = ?');
         if (!pdo_execute($stmt, [$end_time, $this->Id])) {
             return false;
@@ -421,6 +397,10 @@ class Build
         }
 
         $build_array = $stmt->fetch();
+        if (!is_array($build_array)) {
+            return false;
+        }
+
         $this->Name = $build_array['name'];
         $this->SetStamp($build_array['stamp']);
         $this->Type = $build_array['type'];
@@ -451,9 +431,8 @@ class Build
     /**
      * @param Build $build
      * @param array $optional_values
-     * @return array
      */
-    public static function MarshalResponseArray($build, $optional_values = [])
+    public static function MarshalResponseArray($build, $optional_values = []) : array
     {
         $response = [
             'id' => $build->Id,
@@ -469,11 +448,15 @@ class Build
 
         ];
 
+        if ($build->GetSubProjectName()) {
+            $response['subproject'] = $build->SubProjectName;
+        }
+
         return array_merge($response, $optional_values);
     }
 
     /** Get the previous build id. */
-    public function GetPreviousBuildId($previous_parentid = null)
+    public function GetPreviousBuildId(int|null $previous_parentid = null) : int
     {
         if (!$this->Id) {
             return 0;
@@ -488,7 +471,7 @@ class Build
     }
 
     /** Get the next build id. */
-    public function GetNextBuildId($next_parentid = null)
+    public function GetNextBuildId(int|null $next_parentid = null) : int
     {
         if (!$this->Id) {
             return 0;
@@ -502,7 +485,7 @@ class Build
     }
 
     /** Get the most recent build id. */
-    public function GetCurrentBuildId($current_parentid = null)
+    public function GetCurrentBuildId(int|null $current_parentid = null) : int
     {
         if (!$this->Id) {
             return 0;
@@ -515,10 +498,11 @@ class Build
 
     /** Private helper function to encapsulate the common parts of
      * Get{Previous,Next,Current}BuildId()
+     * @param array<string, string> $extra_values_to_bind
      **/
-    private function GetRelatedBuildId($which_build_criteria,
-                                       $extra_values_to_bind = [],
-                                       $related_parentid = null)
+    private function GetRelatedBuildId(string $which_build_criteria,
+                                       array $extra_values_to_bind = [],
+                                       int|null $related_parentid = null) : int
     {
         $related_build_criteria =
             'WHERE siteid = :siteid
@@ -604,7 +588,7 @@ class Build
         if (!$related_buildid) {
             return 0;
         }
-        return $related_buildid;
+        return (int)$related_buildid;
     }
 
     /**
@@ -631,12 +615,8 @@ class Build
     /**
      * Returns all errors, including warnings, from the database, caches, and
      * returns the filtered results
-     *
-     * @param int $fetchStyle
-     * @param array $filters
-     * @return array|bool
      */
-    public function GetErrors(array $propertyFilters = [], $fetchStyle = PDO::FETCH_ASSOC)
+    public function GetErrors(array $propertyFilters = [], int $fetchStyle = PDO::FETCH_ASSOC) : array|false
     {
         // This needs to take into account that this build may be a parent build
         if (!$this->Errors) {
@@ -660,9 +640,8 @@ class Build
      * Returns all failures (errors), including warnings, for current build
      *
      * @param int $fetchStyle
-     * @return array|bool
      */
-    public function GetFailures(array $propertyFilters = [], $fetchStyle = PDO::FETCH_ASSOC)
+    public function GetFailures(array $propertyFilters = [], int $fetchStyle = PDO::FETCH_ASSOC) : array|false
     {
         // This needs to take into account that this build may be a parent build
         if (!$this->Failures) {
@@ -686,9 +665,8 @@ class Build
      * Apply filter to rows
      *
      * @param array $filters
-     * @return array
      */
-    protected function PropertyFilter(array $rows, array $filters)
+    protected function PropertyFilter(array $rows, array $filters) : array
     {
         return array_filter($rows, function ($row) use ($filters) {
             foreach ($filters as $prop => $value) {
@@ -778,7 +756,7 @@ class Build
                     FROM configure c
                     JOIN build2configure b2c ON b2c.configureid = c.id
                     JOIN build b ON b.id = b2c.buildid
-                    WHERE c.id = ?');
+                    WHERE c.id = ? LIMIT 1');
                 pdo_execute($stmt, [$configure_rows[0]['id']]);
                 return $stmt;
             }
@@ -827,26 +805,24 @@ class Build
         return 0;
     }
 
-    /**
-     * @return bool|void
-     */
-    public function InsertLabelAssociations()
+    public function InsertLabelAssociations() : bool
     {
-        if ($this->Id) {
-            if (!isset($this->Labels)) {
-                return;
-            }
-
-            foreach ($this->Labels as $label) {
-                $label->BuildId = $this->Id;
-                $label->Insert();
-            }
-        } else {
+        if (!$this->Id) {
             add_log('No Build::Id - cannot call $label->Insert...', 'Build::InsertLabelAssociations', LOG_ERR,
                 $this->ProjectId, $this->Id,
                 ModelType::BUILD, $this->Id);
             return false;
         }
+
+        if ($this->LabelCollection->isEmpty()) {
+            return true;
+        }
+
+        foreach ($this->LabelCollection as $label) {
+            $label->BuildId = $this->Id;
+            $label->Insert();
+        }
+        return true;
     }
 
     /** Return if exists */
@@ -1030,10 +1006,9 @@ class Build
 
     /**
      * Get missing tests' names relative to previous build
-     *
-     * @return array
+     * @return array<int, string>
      */
-    public function GetMissingTests()
+    public function GetMissingTests() : array
     {
         if (!$this->MissingTests) {
             $this->MissingTests = [];
@@ -1041,7 +1016,7 @@ class Build
             if (!$this->Id) {
                 add_log('BuildId is not set', 'Build::GetMissingTests', LOG_ERR,
                     $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
-                return false;
+                return $this->MissingTests;
             }
 
             $previous_build_tests = [];
@@ -1075,10 +1050,8 @@ class Build
 
     /**
      * Gut the number of missing tests relative to previous build
-     *
-     * @return int
-     */
-    public function GetNumberOfMissingTests()
+     **/
+    public function GetNumberOfMissingTests() : int
     {
         if (!is_array($this->MissingTests)) {
             // feels clumsy but necessary for testing :( (for the time being)
@@ -1090,10 +1063,9 @@ class Build
 
     /**
      * Get this build's tests that match the supplied WHERE clause.
-     *
-     * @return array
+     * @return array<mixed>|false
      */
-    private function GetTests($criteria, $maxitems = 0)
+    private function GetTests(string $criteria, int $maxitems = 0) : array|false
     {
         if (!$this->Id) {
             add_log('BuildId is not set', 'Build::GetTests', LOG_ERR,
@@ -1102,13 +1074,12 @@ class Build
         }
 
         $limit_clause = '';
-        $limit = (int)trim($maxitems);
-        if ($limit > 0) {
-            $limit_clause = "LIMIT $limit";
+        if ($maxitems > 0) {
+            $limit_clause = "LIMIT $maxitems";
         }
 
         $sql = "
-            SELECT t.name, t.id, t.details
+            SELECT t.name, b2t.id AS buildtestid, b2t.details
             FROM test t
             JOIN build2test b2t ON t.id = b2t.testid
             WHERE b2t.buildid = :buildid
@@ -1126,11 +1097,20 @@ class Build
     }
 
     /**
-     * Get this build's tests that failed but did not timeout.
-     *
-     * @return array
+     * Get this build's tests that passed.
+     * @return array<mixed>|false
      */
-    public function GetFailedTests($maxitems = 0)
+    public function GetPassedTests(int $maxitems = 0) : array|false
+    {
+        $criteria = "b2t.status = 'passed'";
+        return $this->GetTests($criteria, $maxitems);
+    }
+
+    /**
+     * Get this build's tests that failed but did not timeout.
+     * @return array<mixed>|false
+     */
+    public function GetFailedTests(int $maxitems = 0) : array|false
     {
         $criteria = "b2t.status = 'failed'";
         return $this->GetTests($criteria, $maxitems);
@@ -1138,36 +1118,32 @@ class Build
 
     /**
      * Get this build's tests that failed the time status check.
-     *
-     * @return array
+     * @return array<mixed>|false
      */
-    public function GetFailedTimeStatusTests($maxitems = 0, $max_time_status = 3)
+    public function GetFailedTimeStatusTests(int $maxitems = 0, int $max_time_status = 3) : array|false
     {
-        $max_time_status = (int)trim($max_time_status);
         $criteria = "b2t.timestatus > $max_time_status";
         return $this->GetTests($criteria, $maxitems);
     }
 
     /**
      * Get this build's tests whose details indicate a timeout.
-     *
-     * @return array
+     * @return array<mixed>|false
      */
-    public function GetTimedoutTests($maxitems = 0)
+    public function GetTimedoutTests(int $maxitems = 0) : array|false
     {
-        $criteria = "b2t.status = 'failed' AND t.details LIKE '%%Timeout%%'";
+        $criteria = "b2t.status = 'failed' AND b2t.details LIKE '%%Timeout%%'";
         return $this->GetTests($criteria, $maxitems);
     }
 
     /**
      * Get this build's tests whose status is "Not Run" and whose details
      * is not 'Disabled'.
-     *
-     * @return array
+     * @return array<mixed>|false
      */
-    public function GetNotRunTests($maxitems = 0)
+    public function GetNotRunTests(int $maxitems = 0) : array|false
     {
-        $criteria = "b2t.status = 'notrun' AND t.details != 'Disabled'";
+        $criteria = "b2t.status = 'notrun' AND b2t.details != 'Disabled'";
         return $this->GetTests($criteria, $maxitems);
     }
 
@@ -1183,7 +1159,7 @@ class Build
         $diff = [];
 
         $stmt = $this->PDO->prepare(
-            'SELECT id,
+            'SELECT build.id,
                     builderrordiff.type AS builderrortype,
                     builderrordiff.difference_positive AS builderrorspositive,
                     builderrordiff.difference_negative AS builderrorsnegative,
@@ -1196,7 +1172,7 @@ class Build
               LEFT JOIN builderrordiff ON builderrordiff.buildid=build.id
               LEFT JOIN configureerrordiff ON configureerrordiff.buildid=build.id
               LEFT JOIN testdiff ON testdiff.buildid=build.id
-              WHERE id = ?');
+              WHERE build.id = ?');
         if (!pdo_execute($stmt, [$this->Id])) {
             return false;
         }
@@ -1268,9 +1244,7 @@ class Build
     public function ComputeConfigureDifferences()
     {
         if (!$this->Id) {
-            add_log('BuildId is not set', 'Build::ComputeConfigureDifferences',
-                LOG_ERR, $this->ProjectId, $this->Id, ModelType::BUILD,
-                $this->Id);
+            \Log::error('Buildid is not set');
             return false;
         }
 
@@ -1281,61 +1255,38 @@ class Build
 
         // Look up the number of configure warnings for this build
         // and the previous one.
-        $stmt = $this->PDO->prepare(
-            'SELECT configurewarnings FROM build WHERE id = ?');
+        $nwarnings = \DB::table('build')->where('id', $this->Id)->first()->configurewarnings;
+        $npreviouswarnings = \DB::table('build')->where('id', $previousbuildid)->first()->configurewarnings;
 
-        pdo_execute($stmt, [$this->Id]);
-        $row = $stmt->fetch();
-        $nwarnings = $row['configurewarnings'];
+        \DB::transaction(function () use ($nwarnings, $npreviouswarnings) {
+            // Check if a diff already exists for this build.
+            $existing_diff_row = \DB::table('configureerrordiff')
+                ->where('buildid', $this->Id)
+                ->lockForUpdate()
+                ->first();
 
-        pdo_execute($stmt, [$previousbuildid]);
-        $row = $stmt->fetch();
-        $npreviouswarnings = $row['configurewarnings'];
-
-        // Check if a diff already exists for this build.
-        $this->PDO->beginTransaction();
-        $stmt = $this->PDO->prepare(
-            'SELECT * FROM configureerrordiff
-                WHERE buildid = :buildid AND type = 1 FOR UPDATE');
-        $stmt->bindParam(':buildid', $this->Id);
-        pdo_execute($stmt);
-        $row = $stmt->fetch();
-        $existing_diff = 0;
-        if ($row) {
-            $existing_diff = $row['difference'];
-        }
-
-        // Don't log if no diff.
-        $warningdiff = $nwarnings - $npreviouswarnings;
-        if ($warningdiff == 0 && $existing_diff == 0) {
-            $this->PDO->commit();
-            return;
-        }
-
-        // UPDATE or INSERT a new record as necessary.
-        if ($row) {
-            $stmt = $this->PDO->prepare(
-                'UPDATE configureerrordiff SET difference = :difference
-                    WHERE buildid = :buildid AND type = 1');
-        } else {
-            $duplicate_sql = '';
-            $config = Config::getInstance();
-            if ($config->get('CDASH_DB_TYPE') !== 'pgsql') {
-                $duplicate_sql = 'ON DUPLICATE KEY UPDATE difference = :difference';
+            $existing_diff = 0;
+            if ($existing_diff_row) {
+                $existing_diff = $existing_diff_row->difference;
             }
-            $stmt = $this->PDO->prepare(
-                "INSERT INTO configureerrordiff (buildid, type, difference)
-                    VALUES(:buildid, 1, :difference)
-                    $duplicate_sql");
-        }
 
-        $stmt->bindValue(':buildid', $this->Id);
-        $stmt->bindValue(':difference', $warningdiff);
-        if (!pdo_execute($stmt)) {
-            $this->PDO->rollBack();
-            return;
-        }
-        $this->PDO->commit();
+            // Don't log if no diff.
+            $warningdiff = $nwarnings - $npreviouswarnings;
+            if ($warningdiff == 0 && $existing_diff == 0) {
+                return;
+            }
+
+            // UPDATE or INSERT a new record as necessary.
+            if ($existing_diff_row) {
+                \DB::table('configureerrordiff')
+                    ->where('buildid', $this->Id)
+                    ->update(['difference' => $warniningdiff]);
+            } else {
+                \DB::table('configureerrordiff')->insertOrIgnore([
+                    ['buildid' => $this->Id, 'difference' => $warningdiff],
+                ]);
+            }
+        }, 5);
     }
 
     /** Compute the test timing as a weighted average of the previous test.
@@ -1361,6 +1312,10 @@ class Build
             return false;
         }
 
+        // Record test differences from the previous build.
+        // (+/- number of tests that failed, etc.)
+        TestDiffService::computeDifferences($this);
+
         $project_stmt = $this->PDO->prepare(
             'SELECT testtimestd, testtimestdthreshold, testtimemaxstatus
             FROM project WHERE id = ?');
@@ -1380,16 +1335,9 @@ class Build
         $projecttimestdthreshold = $project_array['testtimestdthreshold'];
         $projecttestmaxstatus = $project_array['testtimemaxstatus'];
 
-        // Record test differences from the previous build.
-        // (+/- number of tests that failed, etc.)
-        compute_test_difference($this->Id, $previousbuildid, 0, $projecttestmaxstatus); // not run
-        compute_test_difference($this->Id, $previousbuildid, 1, $projecttestmaxstatus); // fail
-        compute_test_difference($this->Id, $previousbuildid, 2, $projecttestmaxstatus); // pass
-        compute_test_difference($this->Id, $previousbuildid, 3, $projecttestmaxstatus); // time
-
         // Get the tests performed by the previous build.
         $previous_tests_stmt = $this->PDO->prepare(
-            'SELECT b2t.testid, t.name
+            'SELECT b2t.id AS buildtestid, b2t.testid, t.name
             FROM build2test b2t
             JOIN test t ON t.id = b2t.testid
             WHERE b2t.buildid = ?');
@@ -1400,6 +1348,7 @@ class Build
         $testarray = [];
         while ($row = $previous_tests_stmt->fetch()) {
             $test = [];
+            $test['buildtestid'] = $row['buildtestid'];
             $test['id'] = $row['testid'];
             $test['name'] = $row['name'];
             $testarray[] = $test;
@@ -1407,8 +1356,8 @@ class Build
 
         // Loop through the tests performed by this build.
         $tests_stmt = $this->PDO->prepare(
-            'SELECT b2t.time, b2t.testid, t.name, b2t.status,
-                    b2t.timestatus
+            'SELECT b2t.id AS buildtestid, b2t.time, b2t.testid, t.name,
+                    b2t.status, b2t.timestatus
             FROM build2test b2t
             JOIN test t ON b2t.testid = t.id
             WHERE b2t.buildid = ?');
@@ -1417,26 +1366,25 @@ class Build
         }
         while ($row = $tests_stmt->fetch()) {
             $testtime = $row['time'];
+            $buildtestid = $row['buildtestid'];
             $testid = $row['testid'];
             $teststatus = $row['status'];
             $testname = $row['name'];
-            $previoustestid = 0;
+            $previousbuildtestid = 0;
             $timestatus = $row['timestatus'];
 
             foreach ($testarray as $test) {
                 if ($test['name'] == $testname) {
-                    $previoustestid = $test['id'];
+                    $previousbuildtestid = $test['buildtestid'];
                     break;
                 }
             }
 
-            if ($previoustestid > 0) {
+            if ($previousbuildtestid > 0) {
                 $previous_test_stmt = $this->PDO->prepare(
-                    'SELECT timemean, timestd, timestatus
-                    FROM build2test
-                    WHERE buildid = ? AND testid = ?');
-                if (!pdo_execute($previous_test_stmt,
-                    [$previousbuildid, $previoustestid])) {
+                    'SELECT timemean, timestd, timestatus FROM build2test
+                    WHERE id = ?');
+                if (!pdo_execute($previous_test_stmt, [$previousbuildtestid])) {
                     continue;
                 }
 
@@ -1486,15 +1434,18 @@ class Build
                 $timemean = $testtime;
             }
 
-            $update_stmt = $this->PDO->prepare(
-                'UPDATE build2test
-                SET timemean = ?, timestd = ?, timestatus = ?
-                WHERE buildid = ? AND testid = ?');
-            if (!pdo_execute($update_stmt,
-                [$timemean, $timestd, $timestatus, $this->Id,
-                    $testid])) {
-                continue;
-            }
+            $buildtest = \App\Models\BuildTest::find($buildtestid);
+            $buildtest->timestatus = $timestatus;
+
+            // TODO: remove these cast-to-strings after upgrading to Laravel 6.x.
+            // https://github.com/laravel/framework/issues/23850
+            $buildtest->timemean = "$timemean";
+            $buildtest->timestd = "$timestd";
+
+            \DB::transaction(function () use ($buildtest) {
+                $buildtest->save();
+            });
+
             if ($timestatus >= $projecttestmaxstatus) {
                 $testtimestatusfailed++;
             }
@@ -1664,66 +1615,50 @@ class Build
         }
 
         // Insert or update appropriately.
-        $this->PDO->beginTransaction();
-        $stmt = $this->PDO->prepare(
-            'SELECT totalupdatedfiles FROM userstatistics
-                WHERE userid=:userid AND projectid=:projectid AND
-                checkindate=:checkindate FOR UPDATE');
-        $stmt->bindParam(':userid', $userid);
-        $stmt->bindParam(':projectid', $this->ProjectId);
-        $stmt->bindParam(':checkindate', $checkindate);
-        pdo_execute($stmt);
-        $row = $stmt->fetch();
+        \DB::transaction(function () use ($checkindate, $nfailederrors, $nfailedtests,
+            $nfailedwarnings, $nfixederrors, $nfixedtests,
+            $nfixedwarnings, $totalbuilds, $userid) {
+            $row = \DB::table('userstatistics')
+                ->where('userid', $userid)
+                ->where('projectid', $this->ProjectId)
+                ->where('checkindate', $checkindate)
+                ->lockForUpdate()
+                ->first();
 
-        if ($row) {
-            // Update existing entry.
-            $stmt = $this->PDO->prepare(
-                'UPDATE userstatistics SET
-                    totalupdatedfiles=totalupdatedfiles+1,
-                    totalbuilds=totalbuilds+:totalbuilds,
-                    nfixedwarnings=nfixedwarnings+:nfixedwarnings,
-                    nfailedwarnings=nfailedwarnings+:nfailedwarnings,
-                    nfixederrors=nfixederrors+:nfixederrors,
-                    nfailederrors=nfailederrors+:nfailederrors,
-                    nfixedtests=nfixedtests+:nfixedtests,
-                    nfailedtests=nfailedtests+:nfailedtests
-                    WHERE userid=:userid AND projectid=:projectid AND
-                    checkindate=:checkindate');
-            $stmt->bindParam(':totalbuilds', $totalbuilds);
-            $stmt->bindParam(':nfixedwarnings', $nfixedwarnings);
-            $stmt->bindParam(':nfailedwarnings', $nfailedwarnings);
-            $stmt->bindParam(':nfixederrors', $nfixederrors);
-            $stmt->bindParam(':nfailederrors', $nfailederrors);
-            $stmt->bindParam(':nfixedtests', $nfixedtests);
-            $stmt->bindParam(':nfailedtests', $nfailedtests);
-            $stmt->bindParam(':userid', $userid);
-            $stmt->bindParam(':projectid', $this->ProjectId);
-            $stmt->bindParam(':checkindate', $checkindate);
-            pdo_execute($stmt);
-        } else {
-            // Insert a new row into the database.
-            $stmt = $this->PDO->prepare(
-                'INSERT INTO userstatistics
-                    (userid,projectid,checkindate,totalupdatedfiles,totalbuilds,
-                     nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,
-                     nfixedtests,nfailedtests)
-                    VALUES
-                    (:userid,:projectid,:checkindate,1,:totalbuilds,
-                    :nfixedwarnings,:nfailedwarnings,:nfixederrors,
-                    :nfailederrors,:nfixedtests,:nfailedtests)');
-            $stmt->bindParam(':userid', $userid);
-            $stmt->bindParam(':projectid', $this->ProjectId);
-            $stmt->bindParam(':checkindate', $checkindate);
-            $stmt->bindParam(':totalbuilds', $totalbuilds);
-            $stmt->bindParam(':nfixedwarnings', $nfixedwarnings);
-            $stmt->bindParam(':nfailedwarnings', $nfailedwarnings);
-            $stmt->bindParam(':nfixederrors', $nfixederrors);
-            $stmt->bindParam(':nfailederrors', $nfailederrors);
-            $stmt->bindParam(':nfixedtests', $nfixedtests);
-            $stmt->bindParam(':nfailedtests', $nfailedtests);
-            pdo_execute($stmt);
-        }
-        $this->PDO->commit();
+            if ($row) {
+                // Update existing entry.
+                \DB::table('userstatistics')
+                    ->where('userid', $userid)
+                    ->where('projectid', $this->ProjectId)
+                    ->where('checkindate', $checkindate)
+                    ->update([
+                        'totalupdatedfiles' => \DB::raw('totalupdatedfiles + 1'),
+                        'totalbuilds' => \DB::raw("totalbuilds + $totalbuilds"),
+                        'nfixedwarnings' => \DB::raw("nfixedwarnings + $nfixedwarnings"),
+                        'nfailedwarnings' => \DB::raw("nfailedwarnings + $nfailedwarnings"),
+                        'nfixederrors' => \DB::raw("nfixederrors + $nfixederrors"),
+                        'nfailederrors' => \DB::raw("nfailederrors + $nfailederrors"),
+                        'nfixedtests' => \DB::raw("nfixedtests + $nfixedtests"),
+                        'nfailedtests' => \DB::raw("nfailedtests + $nfailedtests"),
+                    ]);
+            } else {
+                // Insert a new row into the database.
+                \DB::table('userstatistics')
+                    ->insert([
+                        'userid' => $userid,
+                        'projectid' => $this->ProjectId,
+                        'checkindate' => $checkindate,
+                        'totalupdatedfiles' => 1,
+                        'totalbuilds' => $totalbuilds,
+                        'nfixedwarnings' => $nfixedwarnings,
+                        'nfailedwarnings' => $nfailedwarnings,
+                        'nfixederrors' => $nfixederrors,
+                        'nfailederrors' => $nfailederrors,
+                        'nfixedtests' => $nfixedtests,
+                        'nfailedtests' => $nfailedtests,
+                    ]);
+            }
+        }, 5);
     }
 
     /** Find the errors associated with a user
@@ -2008,145 +1943,126 @@ class Build
      * Update our database record of a build so that it accurately reflects
      * this object and the specified number of new warnings & errors.
      **/
-    public function UpdateBuild($buildid, $newErrors, $newWarnings)
+    public function UpdateBuild($buildid, $newErrors, $newWarnings, $lock=true)
     {
         if ($buildid < 1) {
             return;
         }
 
-        // Avoid a race condition when parallel processing.
-        pdo_begin_transaction();
-
-        $clauses = [];
-        $params = [];
-
-        $stmt = $this->PDO->prepare('
-            SELECT builderrors, buildwarnings, starttime, endtime,
-            submittime, log, command, generator, parentid, changeid
-            FROM build WHERE id = ? FOR UPDATE');
-        pdo_execute($stmt, [$buildid]);
-        $build = $stmt->fetch();
-        if (!$build) {
-            pdo_commit();
-            return;
-        }
-
-        // Special case: check if we should move from -1 to 0 errors/warnings.
-        $errorsHandled = false;
-        $warningsHandled = false;
-        if ($this->InsertErrors) {
-            if ($build['builderrors'] == -1 && $newErrors == 0) {
-                $clauses[] = 'builderrors = 0';
-                $errorsHandled = true;
-            }
-            if ($build['buildwarnings'] == -1 && $newWarnings == 0) {
-                $clauses[] = 'buildwarnings = 0';
-                $warningsHandled = true;
-            }
-        }
-
-        // Check if we still need to modify builderrors or buildwarnings.
-        if (!$errorsHandled) {
-            $build['builderrors'] = self::ConvertMissingToZero($build['builderrors']);
-            if ($newErrors > 0) {
-                $numErrors = $build['builderrors'] + $newErrors;
-                $clauses[] = 'builderrors = ?';
-                $params[] = $numErrors;
-            }
-        }
-        if (!$warningsHandled) {
-            $build['buildwarnings'] = self::ConvertMissingToZero($build['buildwarnings']);
-            if ($newWarnings > 0) {
-                $numWarnings = $build['buildwarnings'] + $newWarnings;
-                $clauses[] = 'buildwarnings = ?';
-                $params[] = $numWarnings;
-            }
-        }
-
-        // Check if we need to modify starttime or endtime.
-        // TODO: reference testing_handler.php line 368
-        if (strtotime($build['starttime']) > strtotime($this->StartTime)) {
-            $clauses[] = 'starttime = ?';
-            $params[] = $this->StartTime;
-        }
-        if (strtotime($build['endtime']) < strtotime($this->EndTime)) {
-            $clauses[] = 'endtime = ?';
-            $params[] = $this->EndTime;
-        }
-
-        if ($build['parentid'] != -1) {
-            // If this is not a parent build, check if its log or command
-            // has changed.
-            if ($this->Log && $this->Log != $build['log']) {
-                if (!empty($build['log'])) {
-                    $log = $build['log'] . " " . $this->Log;
-                } else {
-                    $log = $this->Log;
+        \DB::transaction(function () use ($buildid, $newErrors, $newWarnings, $lock) {
+            if ($lock) {
+                $build = \DB::table('build')
+                    ->where('id', $buildid)
+                    ->lockForUpdate()
+                    ->first();
+                if ($build && $build->parentid > 0) {
+                    $parent_build = \DB::table('build')
+                        ->where('id', $build->parentid)
+                        ->lockForUpdate()
+                        ->first();
                 }
-                $clauses[] = 'log = ?';
-                $params[] = $log;
+            } else {
+                $build = \DB::table('build')
+                    ->where('id', $buildid)
+                    ->first();
             }
-            if ($this->Command && $this->Command != $build['command']) {
-                if (!empty($build['command'])) {
-                    $command = $build['command'] . "; " . $this->Command;
-                } else {
-                    $command = $this->Command;
-                }
-                $clauses[] = 'command = ?';
-                $params[] = $command;
-            }
-        }
 
-        // Check if the build's changeid has changed.
-        if ($this->PullRequest && $this->PullRequest != $build['changeid']) {
-            $clauses[] = 'changeid = ?';
-            $params[] = $this->PullRequest;
-        }
-
-        // Check if the build's generator has changed.
-        if ($this->Generator && $this->Generator != $build['generator']) {
-            $clauses[] = 'generator = ?';
-            $params[] = $this->Generator;
-        }
-
-        $num_clauses = count($clauses);
-        if ($num_clauses > 0) {
-            $query = 'UPDATE build SET ' . $clauses[0];
-            for ($i = 1; $i < $num_clauses; $i++) {
-                $query .= ', ' . $clauses[$i];
-            }
-            $query .= ' WHERE id = ?';
-            $params[] = $buildid;
-            $stmt = $this->PDO->prepare($query);
-            if (!pdo_execute($stmt, $params)) {
-                pdo_rollback();
-                return false;
-            }
-        }
-
-        pdo_commit();
-
-        $this->SaveInformation();
-
-        // Also update the parent if necessary.
-        $stmt = $this->PDO->prepare('SELECT parentid FROM build WHERE id = ?');
-        pdo_execute($stmt, [$buildid]);
-        $parentid = $stmt->fetchColumn();
-        if ($parentid > 0) {
-            if ($buildid == $parentid) {
-                // Avoid infinite recursion.
-                // This should never happen, but we might as well be careful.
-                add_log("$buildid is its own parent",
-                    'Build::UpdateBuild', LOG_ERR,
-                    $this->ProjectId, $this->Id,
-                    ModelType::BUILD, $this->Id);
+            if (!$build) {
                 return;
             }
-            $this->UpdateBuild($parentid, $newErrors, $newWarnings);
-            if ($buildid == $this->Id) {
-                $this->SetParentId($parentid);
+
+            $fields_to_update = [];
+
+            // Special case: check if we should move from -1 to 0 errors/warnings.
+            $errorsHandled = false;
+            $warningsHandled = false;
+            if ($this->InsertErrors) {
+                if ($build->builderrors == -1 && $newErrors == 0) {
+                    $fields_to_update['builderrors'] = 0;
+                    $errorsHandled = true;
+                }
+                if ($build->buildwarnings == -1 && $newWarnings == 0) {
+                    $fields_to_update['buildwarnings'] = 0;
+                    $warningsHandled = true;
+                }
             }
-        }
+
+            // Check if we still need to modify builderrors or buildwarnings.
+            if (!$errorsHandled && $newErrors > 0) {
+                $builderrors = self::ConvertMissingToZero($build->builderrors);
+                $fields_to_update['builderrors'] = $builderrors + $newErrors;
+            }
+            if (!$warningsHandled && $newWarnings > 0) {
+                $buildwarnings = self::ConvertMissingToZero($build->buildwarnings);
+                $fields_to_update['buildwarnings'] = $buildwarnings + $newWarnings;
+                $nwarnings = $buildwarnings + $newWarnings;
+            }
+
+            // Check if we need to modify starttime or endtime.
+            // TODO: reference testing_handler.php line 368
+            if (strtotime($build->starttime) > strtotime($this->StartTime)) {
+                $fields_to_update['starttime'] = $this->StartTime;
+            }
+            if (strtotime($build->endtime) < strtotime($this->EndTime)) {
+                $fields_to_update['endtime'] = $this->EndTime;
+            }
+
+            if ($build->parentid != -1) {
+                // If this is not a parent build, check if its log or command
+                // has changed.
+                if ($this->Log && $this->Log != $build->log) {
+                    if (!empty($build->log)) {
+                        $log = $build->log . " " . $this->Log;
+                    } else {
+                        $log = $this->Log;
+                    }
+                    $fields_to_update['log'] = $log;
+                }
+                if ($this->Command && $this->Command != $build->command) {
+                    if (!empty($build->command)) {
+                        $command = $build->command . "; " . $this->Command;
+                    } else {
+                        $command = $this->Command;
+                    }
+                    $fields_to_update['command'] = $command;
+                }
+            }
+
+            // Check if the build's changeid has changed.
+            if ($this->PullRequest && $this->PullRequest != $build->changeid) {
+                $fields_to_update['changeid'] = $this->PullRequest;
+            }
+
+            // Check if the build's generator has changed.
+            if ($this->Generator && $this->Generator != $build->generator) {
+                $fields_to_update['generator'] = $this->Generator;
+            }
+
+            if (!empty($fields_to_update)) {
+                \DB::table('build')
+                    ->where('id', $buildid)
+                    ->update($fields_to_update);
+            }
+
+            $this->SaveInformation();
+
+            // Also update the parent if necessary.
+            $build = \DB::table('build')
+                ->where('id', $buildid)
+                ->first();
+            if ($build->parentid > 0) {
+                if ($buildid == $build->parentid) {
+                    // Avoid infinite recursion.
+                    // This should never happen, but we might as well be careful.
+                    \Log::error("$buildid is its own parent");
+                    return;
+                }
+                $this->UpdateBuild($build->parentid, $newErrors, $newWarnings, false);
+                if ($buildid == $this->Id) {
+                    $this->SetParentId($build->parentid);
+                }
+            }
+        }, 5);
     }
 
     /** Update the testing numbers for our parent build. */
@@ -2156,35 +2072,36 @@ class Build
             return;
         }
 
-        // Avoid a race condition when parallel processing.
-        pdo_begin_transaction();
+        \DB::transaction(function () use ($newFailed, $newNotRun, $newPassed) {
+            $numFailed = 0;
+            $numNotRun = 0;
+            $numPassed = 0;
 
-        $numFailed = 0;
-        $numNotRun = 0;
-        $numPassed = 0;
+            $parent = \DB::table('build')
+                ->where('id', $this->ParentId)
+                ->lockForUpdate()
+                ->first();
 
-        $stmt = $this->PDO->prepare(
-            'SELECT testfailed, testnotrun, testpassed
-            FROM build WHERE id = ? FOR UPDATE');
-        pdo_execute($stmt, [$this->ParentId]);
-        $parent = $stmt->fetch();
+            // Don't let the -1 default value screw up our math.
+            $parent_testfailed = self::ConvertMissingToZero($parent->testfailed);
+            $parent_testnotrun = self::ConvertMissingToZero($parent->testnotrun);
+            $parent_testpassed = self::ConvertMissingToZero($parent->testpassed);
 
-        // Don't let the -1 default value screw up our math.
-        $parent['testfailed'] = self::ConvertMissingToZero($parent['testfailed']);
-        $parent['testnotrun'] = self::ConvertMissingToZero($parent['testnotrun']);
-        $parent['testpassed'] = self::ConvertMissingToZero($parent['testpassed']);
+            $numFailed = $newFailed + $parent_testfailed;
+            $numNotRun = $newNotRun + $parent_testnotrun;
+            $numPassed = $newPassed + $parent_testpassed;
 
-        $numFailed = $newFailed + $parent['testfailed'];
-        $numNotRun = $newNotRun + $parent['testnotrun'];
-        $numPassed = $newPassed + $parent['testpassed'];
+            \DB::table('build')
+                ->where('id', $this->ParentId)
+                ->update([
+                    'testnotrun' => $numNotRun,
+                    'testfailed' => $numFailed,
+                    'testpassed' => $numPassed,
+                ]);
 
-        $stmt = $this->PDO->prepare(
-            'UPDATE build SET testnotrun = ?, testfailed = ?, testpassed = ?
-            WHERE id = ?');
-        pdo_execute($stmt, [$numNotRun, $numFailed, $numPassed, $this->ParentId]);
-        pdo_commit();
-        // NOTE: as far as I can tell, build.testtimestatusfailed isn't used,
-        // so for now it isn't being updated for parent builds.
+            // NOTE: as far as I can tell, build.testtimestatusfailed isn't used,
+            // so for now it isn't being updated for parent builds.
+        }, 5);
     }
 
     /** Get/Set number of configure warnings for this build. */
@@ -2236,7 +2153,7 @@ class Build
         if (!empty($this->PullRequest) && $numErrors > 0) {
             $message = "$this->Name failed to configure";
             $url = get_server_URI(false) .
-                "/viewConfigure.php?buildid=$this->Id";
+                "/build/{$this->Id}/configure";
             $this->NotifyPullRequest($message, $url);
         }
     }
@@ -2271,30 +2188,30 @@ class Build
         if ($this->ParentId < 1) {
             return;
         }
-        // Avoid a race condition when parallel processing.
-        pdo_begin_transaction();
 
-        $numErrors = 0;
-        $numWarnings = 0;
+        \DB::transaction(function () use ($newWarnings, $newErrors) {
+            $numErrors = 0;
+            $numWarnings = 0;
 
-        $stmt = $this->PDO->prepare(
-            'SELECT configureerrors, configurewarnings
-            FROM build WHERE id = ? FOR UPDATE');
-        pdo_execute($stmt, [$this->ParentId]);
-        $parent = $stmt->fetch();
+            $parent = \DB::table('build')
+                ->where('id', $this->ParentId)
+                ->lockForUpdate()
+                ->first();
 
-        // Don't let the -1 default value screw up our math.
-        $parent['configureerrors'] = self::ConvertMissingToZero($parent['configureerrors']);
-        $parent['configurewarnings'] = self::ConvertMissingToZero($parent['configurewarnings']);
+            // Don't let the -1 default value screw up our math.
+            $parent_configureerrors = self::ConvertMissingToZero($parent->configureerrors);
+            $parent_configurewarnings = self::ConvertMissingToZero($parent->configurewarnings);
 
-        $numErrors = $newErrors + $parent['configureerrors'];
-        $numWarnings = $newWarnings + $parent['configurewarnings'];
+            $numErrors = $newErrors + $parent_configureerrors;
+            $numWarnings = $newWarnings + $parent_configurewarnings;
 
-        $stmt = $this->PDO->prepare(
-            'UPDATE build SET configureerrors = ?, configurewarnings = ?
-            WHERE id = ?');
-        pdo_execute($stmt, [$numErrors, $numWarnings, $this->ParentId]);
-        pdo_commit();
+            \DB::table('build')
+                ->where('id', $this->ParentId)
+                ->update([
+                    'configureerrors' => $numErrors,
+                    'configurewarnings' => $numWarnings,
+                ]);
+        }, 5);
     }
 
     /** Get/set pull request for this build. */
@@ -2350,50 +2267,43 @@ class Build
 
     protected function UpdateDuration($field, $duration, $update_parent = true)
     {
-        if ($duration === 0 || !$this->Id || !is_numeric($this->Id) ||
-                !$this->Exists()) {
+        if ($duration === 0) {
             return;
         }
 
-        // Avoid a race condition when parallel processing.
-        pdo_begin_transaction();
-        $select_stmt = $this->PDO->prepare(
-            'SELECT id FROM build WHERE id = :id FOR UPDATE');
-        if (!pdo_execute($select_stmt, [':id' => $this->Id])) {
-            $this->PDO->rollBack();
+        if (!$this->Id || !is_numeric($this->Id) || !$this->Exists()) {
             return;
         }
 
-        // Update duration of specified step for this build.
-        $update_stmt = $this->PDO->prepare(
-            "UPDATE build SET {$field}duration = {$field}duration + :duration
-            WHERE id = :id");
-        if (!pdo_execute($update_stmt,
-            [':duration' => $duration, ':id' => $this->Id])) {
-            $this->PDO->rollBack();
-            return;
-        }
-        $this->PDO->commit();
+        \DB::transaction(function () use ($field, $duration, $update_parent) {
+            $build_row = \DB::table('build')
+                ->where('id', $this->Id)
+                ->lockForUpdate()
+                ->first();
 
-        if (!$update_parent) {
-            return;
-        }
+            // Update duration of specified step for this build.
+            \DB::table('build')
+                ->where('id', $this->Id)
+                ->increment("{$field}duration", $duration);
 
-        // If this is a child build, add this duration to the parent's sum.
-        $this->SetParentId($this->LookupParentBuildId());
-        if ($this->ParentId > 0) {
-            pdo_begin_transaction();
-            if (!pdo_execute($select_stmt, [':id' => $this->ParentId])) {
-                $this->PDO->rollBack();
+            if (!$update_parent) {
                 return;
             }
-            if (!pdo_execute($update_stmt,
-                [':duration' => $duration, ':id' => $this->ParentId])) {
-                $this->PDO->rollBack();
-                return;
+
+            // If this is a child build, add this duration to the parent's sum.
+            $this->SetParentId($this->LookupParentBuildId());
+            if ($this->ParentId > 0) {
+                $build_row = \DB::table('build')
+                    ->where('id', $this->ParentId)
+                    ->lockForUpdate()
+                    ->first();
+
+                // Update duration of specified step for this build.
+                \DB::table('build')
+                    ->where('id', $this->ParentId)
+                    ->increment("{$field}duration", $duration);
             }
-            $this->PDO->commit();
-        }
+        }, 5);
     }
 
     /**
@@ -2427,7 +2337,7 @@ class Build
         }
         $this->FillFromId($this->Id);
         $this->GetProject()->Fill();
-        return $this->Project->GetTestingDay($this->StartTime);
+        return TestingDay::get($this->Project, $this->StartTime);
     }
 
     /** Return whether or not this build has been marked as done. */
@@ -2649,14 +2559,14 @@ class Build
     }
 
     /**
-     * Given a $test, this method adds a Test to the current Build's TestCollection.
+     * Given a $buildtest, this method adds a BuildTest to the current Build's TestCollection.
      *
-     * @param Test $test
+     * @param BuildTest $test
      * @return $this
      */
-    public function AddTest(Test $test)
+    public function AddTest(\App\Models\BuildTest $buildtest)
     {
-        $this->TestCollection->add($test);
+        $this->TestCollection->put($buildtest->test->name, $buildtest);
         return $this;
     }
 
@@ -2724,120 +2634,94 @@ class Build
         }
 
         // Build doesn't exist yet, create it here.
-        $query_params = [
-            ':siteid'         => $this->SiteId,
-            ':projectid'      => $this->ProjectId,
-            ':stamp'          => $this->Stamp,
-            ':name'           => $this->Name,
-            ':type'           => $this->Type,
-            ':generator'      => $this->Generator,
-            ':starttime'      => $this->StartTime,
-            ':endtime'        => $this->EndTime,
-            ':submittime'     => $this->SubmitTime,
-            ':command'        => $this->Command,
-            ':log'            => $this->Log,
-            ':nbuilderrors'   => $nbuilderrors,
-            ':nbuildwarnings' => $nbuildwarnings,
-            ':parentid'       => $this->ParentId,
-            ':uuid'           => $this->Uuid,
-            ':pullrequest'    => $this->PullRequest
-        ];
-        $this->PDO->beginTransaction();
-        $stmt = $this->PDO->prepare(
-            "INSERT INTO build
-                (siteid, projectid, stamp, name, type, generator,
-                 starttime, endtime, submittime, command, log,
-                 builderrors, buildwarnings, parentid, uuid,
-                 changeid)
-                VALUES
-                (:siteid, :projectid, :stamp, :name, :type, :generator,
-                 :starttime, :endtime, :submittime, :command, :log,
-                 :nbuilderrors, :nbuildwarnings, :parentid, :uuid,
-                 :pullrequest)");
+        $build_created = false;
         try {
-            if ($stmt->execute($query_params)) {
-                $this->Id = pdo_insert_id('build');
-                $this->PDO->commit();
-                $retval = true;
-            } else {
-                // The INSERT statement didn't execute cleanly.
-                $error_info = $stmt->errorInfo();
-                $error = $error_info[2];
-                $this->PDO->rollBack();
-                throw new \Exception($error);
-            }
+            \DB::transaction(function () use ($nbuilderrors, $nbuildwarnings, &$build_created) {
+                $new_id = \DB::table('build')->insertGetId([
+                    'siteid'         => $this->SiteId,
+                    'projectid'      => $this->ProjectId,
+                    'stamp'          => $this->Stamp,
+                    'name'           => $this->Name,
+                    'type'           => $this->Type,
+                    'generator'      => $this->Generator,
+                    'starttime'      => $this->StartTime,
+                    'endtime'        => $this->EndTime,
+                    'submittime'     => $this->SubmitTime,
+                    'command'        => $this->Command,
+                    'log'            => $this->Log,
+                    'builderrors'    => $nbuilderrors,
+                    'buildwarnings'  => $nbuildwarnings,
+                    'parentid'       => $this->ParentId,
+                    'uuid'           => $this->Uuid,
+                    'changeid'       => $this->PullRequest
+                ]);
+                $build_created = true;
+                $this->Id = $new_id;
+                $this->AssignToGroup();
+            });
         } catch (\Exception $e) {
             // This error might be due to a unique key violation on the UUID.
             // Check again for a previously existing build.
-            $id = Build::GetIdFromUuid($this->Uuid);
-            if ($id) {
-                $this->Id = $id;
-                $retval = false;
+            $existing_id = Build::GetIdFromUuid($this->Uuid);
+            if ($existing_id) {
+                $this->Id = $existing_id;
+                $build_created = false;
             } else {
                 // Otherwise log the error and return false.
-                add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(),
-                        'AddBuild', LOG_ERR, $this->ProjectId);
+                report($e);
                 return false;
             }
         }
 
         $this->SaveInformation();
-        $this->AssignToGroup();
+
+        if (!$build_created) {
+            return false;
+        }
 
         if ($this->ParentId > 0 && !$justCreatedParent) {
             // Update parent's tally of total build errors & warnings.
             $this->UpdateBuild($this->ParentId, $nbuilderrors, $nbuildwarnings);
-        } elseif ($retval && $this->ParentId > 0) {
+        } elseif ($this->ParentId > 0) {
             // If we just created a child build, associate it with
             // the parent's updates (if any).
             BuildUpdate::AssignUpdateToChild($this->Id, $this->ParentId);
         }
 
-        return $retval;
+        return true;
     }
 
     public function AssignToGroup()
     {
         // Return early if this build already belongs to a group.
-        $exists_stmt = $this->PDO->prepare(
-            'SELECT groupid FROM build2group WHERE buildid = ?');
-        if (!pdo_execute($exists_stmt, [$this->Id])) {
-            return false;
-        }
-        if ($exists_stmt->fetchColumn() !== false) {
+        $existing_groupid_row = \DB::table('build2group')->where('buildid', $this->Id)->first();
+        if ($existing_groupid_row) {
+            $this->GroupId = $existing_groupid_row->groupid;
             return false;
         }
 
         // Find and record the groupid for this build.
         $buildGroup = new BuildGroup();
         $this->GroupId = $buildGroup->GetGroupIdFromRule($this);
-
-        $config = Config::getInstance();
-        $duplicate_sql = '';
-        if ($config->get('CDASH_DB_TYPE') !== 'pgsql') {
-            $duplicate_sql =
-                'ON DUPLICATE KEY UPDATE groupid = groupid';
-        }
-        $stmt = $this->PDO->prepare(
-                "INSERT INTO build2group (groupid, buildid)
-                VALUES (?, ?)
-                $duplicate_sql");
-        pdo_execute($stmt, [$this->GroupId, $this->Id]);
+        \DB::table('build2group')->insertOrIgnore([
+            ['groupid' => $this->GroupId, 'buildid' => $this->Id],
+        ]);
 
         // Associate the parent with this build's group if necessary.
         if ($this->ParentId > 0) {
-            pdo_execute($exists_stmt, [$this->ParentId]);
-            if ($exists_stmt->fetchColumn() === false) {
-                pdo_execute($stmt, [$this->GroupId, $this->ParentId]);
+            $existing_parent_groupid_row = \DB::table('build2group')->where('buildid', $this->ParentId)->first();
+            if (!$existing_parent_groupid_row) {
+                \DB::table('build2group')->insertOrIgnore([
+                        ['groupid' => $this->GroupId, 'buildid' => $this->ParentId],
+                ]);
             }
         }
 
         // Add the subproject2build relationship if necessary.
         if ($this->SubProjectId) {
-            $stmt = $this->PDO->prepare(
-                'INSERT INTO subproject2build (subprojectid, buildid)
-                VALUES (?, ?)');
-            pdo_execute($stmt, [$this->SubProjectId, $this->Id]);
+            \DB::table('subproject2build')->insertOrIgnore([
+                ['subprojectid' => $this->SubProjectId, 'buildid' => $this->Id],
+            ]);
         }
     }
 
@@ -2847,7 +2731,7 @@ class Build
     public function GetBuildSummaryUrl()
     {
         $base = Config::getInstance()->getBaseUrl();
-        return "{$base}/buildSummary.php?buildid={$this->Id}";
+        return "{$base}/build/{$this->Id}";
     }
 
     /**
@@ -3028,17 +2912,10 @@ class Build
 
     /**
      * Returns the current Build's LabelCollection.
-     * @return LabelCollection
+     * @return Collection
      */
     public function GetLabelCollection()
     {
-        $this->LabelCollection = new LabelCollection();
-
-        if ($this->Labels) {
-            foreach ($this->Labels as $label) {
-                $this->LabelCollection->add($label);
-            }
-        }
         return $this->LabelCollection;
     }
 
@@ -3192,15 +3069,15 @@ class Build
                     return $count;
                 }, 0);
                 $passed = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test->GetStatus() === Test::PASSED ? 1 : 0;
+                    $count += $test['status'] === Test::PASSED ? 1 : 0;
                     return $count;
                 }, 0);
                 $failed = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test->GetStatus() === Test::FAILED ? 1 : 0;
+                    $count += $test['status'] === Test::FAILED ? 1 : 0;
                     return $count;
                 }, 0);
                 $notrun = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test->GetStatus() === Test::NOTRUN ? 1 : 0;
+                    $count += $test['status'] === Test::NOTRUN ? 1 : 0;
                     return $count;
                 }, 0);
 

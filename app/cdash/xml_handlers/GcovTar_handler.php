@@ -22,6 +22,7 @@ use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 use CDash\Model\Label;
 use CDash\Model\SubProject;
+use Illuminate\Support\Facades\Storage;
 
 class GCovTarHandler extends NonSaxHandler
 {
@@ -69,8 +70,7 @@ class GCovTarHandler extends NonSaxHandler
     public function Parse($filename)
     {
         // Create a new directory where we can extract our tarball.
-        $config = CDash\Config::getInstance();
-        $dirName = $config->get('CDASH_BACKUP_DIRECTORY') . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_FILENAME);
+        $dirName = Storage::path('parsed') . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_FILENAME);
         mkdir($dirName);
 
         // Extract the tarball.
@@ -139,8 +139,8 @@ class GCovTarHandler extends NonSaxHandler
         // Search for uncovered files.
         if (file_exists("$dirName/uncovered")) {
             $iterator = new RecursiveIteratorIterator(
-                    new RecursiveDirectoryIterator("$dirName/uncovered"),
-                    RecursiveIteratorIterator::LEAVES_ONLY);
+                new RecursiveDirectoryIterator("$dirName/uncovered"),
+                RecursiveIteratorIterator::LEAVES_ONLY);
             foreach ($iterator as $fileinfo) {
                 if ($fileinfo->isFile()) {
                     // Get the path of this uncovered file relative to its

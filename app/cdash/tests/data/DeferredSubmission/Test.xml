@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="deferred_submission"
+	BuildStamp="20220519-1920-Experimental"
+	Name="hesperides.kitware"
+	Generator="ctest-3.23"
+	>
+	<Testing>
+		<StartDateTime>May 19 15:20 EDT</StartDateTime>
+		<StartTestTime>1652988058</StartTestTime>
+		<TestList>
+			<Test>./test1</Test>
+			<Test>./test2</Test>
+		</TestList>
+		<Test Status="failed">
+			<Name>test1</Name>
+			<Path>.</Path>
+			<FullName>./test1</FullName>
+			<FullCommandLine>/tmp/bin/fails</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="text/string" name="Exit Code">
+					<Value>Failed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Exit Value">
+					<Value>1</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="Execution Time">
+					<Value>0.242799</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="Processors">
+					<Value>1</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/tmp/bin/fails</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Environment">
+					<Value>#CTEST_RESOURCE_GROUP_COUNT=</Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value encoding="base64" compression="gzip">eJztybENACAIBMCeKViOqIkRIk/h9jqH+fJy6CMVllAvREEfYxtwdPpqAj6fz+fz+d+9XJHOAfg=</Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<Test Status="passed">
+			<Name>test2</Name>
+			<Path>.</Path>
+			<FullName>./test2</FullName>
+			<FullCommandLine>/tmp/bin/passes</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="numeric/double" name="Execution Time">
+					<Value>0.0802192</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="Processors">
+					<Value>1</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/tmp/bin/passes</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Environment">
+					<Value>#CTEST_RESOURCE_GROUP_COUNT=</Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value>this is a test
+</Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<EndDateTime>May 19 15:20 EDT</EndDateTime>
+		<EndTestTime>1652988059</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>

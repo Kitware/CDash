@@ -18,7 +18,14 @@ class AppServiceProvider extends ServiceProvider
         Validator::extendImplicit('complexity', 'App\Validators\Password@complexity');
 
         /** For migrations on MySQL older than 5.7.7 **/
-        Schema::defaultStringLength(191);
+        if (config('database.default') !== 'pgsql') {
+            Schema::defaultStringLength(191);
+        }
+
+        // Serve content over https in production mode.
+        if (config('app.env') === 'production') {
+            \URL::forceScheme('https');
+        }
     }
 
     /**

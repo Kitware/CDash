@@ -13,13 +13,15 @@
 =========================================================================*/
 namespace CDash\Test;
 
+use App\Models\Test;
+use App\Models\User;
+
+use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\Model\Site;
-use CDash\Model\Test;
-use CDash\Model\User;
 use CDash\Model\UserProject;
 use CDash\ServiceContainer;
 use DI\Container;
@@ -38,13 +40,16 @@ class CDashTestCase extends TestCase
     /** @var Container $originalServiceContainer */
     private static $originalServiceContainer;
 
-    public static function tearDownAfterClass()
+    /** @var String $endpoint */
+    private $endpoint;
+
+    public static function tearDownAfterClass() : void
     {
         ServiceContainer::setInstance(ServiceContainer::class, self::$originalServiceContainer);
         parent::tearDownAfterClass();
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         global $cdash_database_connection;
         $cdash_database_connection = null;
@@ -73,7 +78,7 @@ class CDashTestCase extends TestCase
         $mock_stmt = $this->getMockBuilder(\PDOStatement::class)
             ->disableOriginalConstructor()
             ->setMethods([
-                'prepare', 'fetch', 'fetchAll', 'fetchColumn'])
+                'prepare', 'fetch', 'fetchAll', 'fetchColumn', 'bindParam', 'bindValue', 'rowCount', 'closeCursor'])
             ->getMock();
 
         $mock_pdo = $this->getMockBuilder(Database::class)
@@ -103,7 +108,7 @@ class CDashTestCase extends TestCase
             ->will($this->returnCallback(function ($arg) {
                 return "'" . $arg . "'";
             })
-        );
+            );
 
         Database::setInstance(Database::class, $mock_pdo);
     }
@@ -213,5 +218,34 @@ class CDashTestCase extends TestCase
             ->disableOriginalConstructor()
             ->setMethods(['getActionableBuilds', 'getType', 'getProjectId', 'getBuildGroupId'])
             ->getMock();
+    }
+
+    protected function setEndpoint($endpoint)
+    {
+        $config = Config::getInstance();
+        $root = $config->get('CDASH_ROOT_DIR');
+        $this->endpoint = realpath("{$root}/public/api/v1/{$endpoint}.php");
+        if (!$this->endpoint) {
+            throw new \Exception('Endpoint does not exist');
+        }
+    }
+    protected function getEndpointResponse()
+    {
+        $response = null;
+
+        ob_start();
+        if ($this->endpoint) {
+            try {
+                require $this->endpoint;
+            } catch (\Exception $exception) {
+                //
+            }
+            $response = ob_get_contents();
+            ob_end_clean();
+        } else {
+            throw new \Exception('Endpoint not set');
+        }
+
+        return json_decode($response);
     }
 }

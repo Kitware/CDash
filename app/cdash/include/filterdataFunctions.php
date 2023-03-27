@@ -48,7 +48,7 @@ class DefaultFilters implements PageSpecificFilters
         // The way we concatenate text into a single value
         // depends on our database backend.
 
-        if (Config::getInstance()->get('CDASH_DB_TYPE') === 'pgsql') {
+        if (config('database.default') === 'pgsql') {
             $this->TextConcat = "array_to_string(array_agg(text), ', ')";
         } else {
             $this->TextConcat = "GROUP_CONCAT(text SEPARATOR ', ')";
@@ -173,7 +173,6 @@ class IndexPhpFilters extends DefaultFilters
             return '';
         }
 
-        $config = \CDash\Config::getInstance();
         $sql_field = '';
         switch (strtolower($field)) {
             case 'buildduration': {
@@ -263,7 +262,6 @@ class IndexPhpFilters extends DefaultFilters
 
             case 'label': {
                 $sql_field = "(SELECT $this->TextConcat FROM label, label2build WHERE label2build.labelid=label.id AND label2build.buildid=b.id)";
-
             }
                 break;
 
@@ -312,7 +310,7 @@ class IndexPhpFilters extends DefaultFilters
                 break;
 
             case 'updateduration': {
-                if ($config->get("CDASH_DB_TYPE") === 'pgsql') {
+                if (config('database.default') === 'pgsql') {
                     $sql_field = 'ROUND(EXTRACT(EPOCH FROM (bu.endtime - bu.starttime))::numeric / 60, 1)';
                 } else {
                     $sql_field = 'ROUND(TIMESTAMPDIFF(SECOND,bu.starttime,bu.endtime)/60.0,1)';
@@ -391,6 +389,7 @@ class QueryTestsPhpFilters extends DefaultFilters
         $xml .= getFilterDefinitionXML('details', 'Details', 'string', '', '');
         $xml .= getFilterDefinitionXML('groupname', 'Group', 'string', '', 'Nightly');
         $xml .= getFilterDefinitionXML('label', 'Label', 'string', '', '');
+        $xml .= getFilterDefinitionXML('revision', 'Revision', 'string', '', '');
         $xml .= getFilterDefinitionXML('site', 'Site', 'string', '', '');
         $xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
         $xml .= getFilterDefinitionXML('testname', 'Test Name', 'string', '', '');
@@ -418,7 +417,7 @@ class QueryTestsPhpFilters extends DefaultFilters
                 break;
 
             case 'details': {
-                $sql_field = 'test.details';
+                $sql_field = 'build2test.details';
             }
                 break;
 
@@ -428,8 +427,12 @@ class QueryTestsPhpFilters extends DefaultFilters
                 break;
 
             case 'label': {
-                $sql_field = "(SELECT $this->TextConcat FROM label, label2test WHERE label2test.testid=test.id AND label2test.labelid = label.id)";
+                $sql_field = "(SELECT $this->TextConcat FROM label, label2test WHERE label2test.outputid = build2test.outputid AND label2test.labelid = label.id AND label2test.buildid = b.id)";
             }
+                break;
+
+            case 'revision':
+                $sql_field = "COALESCE(bu.revision, '')";
                 break;
 
             case 'site': {
@@ -519,22 +522,22 @@ class ViewCoveragePhpFilters extends DefaultFilters
             }
                 break;
 
-            //case 'percentage':
-            //{
-            //  $sql_field = "TODO.percentage";
-            //}
-            //break;
+                //case 'percentage':
+                //{
+                //  $sql_field = "TODO.percentage";
+                //}
+                //break;
 
             case 'priority': {
                 $sql_field = 'cfp.priority';
             }
                 break;
 
-            //case 'status':
-            //{
-            //  $sql_field = "TODO.status";
-            //}
-            //break;
+                //case 'status':
+                //{
+                //  $sql_field = "TODO.status";
+                //}
+                //break;
 
             case 'totallines': {
                 $sql_field = '(c.loctested + c.locuntested)';
@@ -573,6 +576,7 @@ class ViewTestPhpFilters extends DefaultFilters
         $xml .= getFilterDefinitionXML('details', 'Details', 'string', '', '');
         $xml .= getFilterDefinitionXML('label', 'Label', 'string', '', '');
         $xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
+        $xml .= getFilterDefinitionXML('subproject', 'SubProject', 'string', '', '');
         $xml .= getFilterDefinitionXML('testname', 'Test Name', 'string', '', '');
         $xml .= getFilterDefinitionXML('timestatus', 'Time Status', 'string', '', '');
         $xml .= getFilterDefinitionXML('time', 'Time', 'number', '', '');
@@ -584,17 +588,22 @@ class ViewTestPhpFilters extends DefaultFilters
         $sql_field = '';
         switch (strtolower($field)) {
             case 'details': {
-                $sql_field = 't.details';
+                $sql_field = 'bt.details';
             }
                 break;
 
             case 'label': {
-                $sql_field = "(SELECT $this->TextConcat FROM label, label2test WHERE label.id=label2test.labelid AND label2test.testid=t.id)";
+                $sql_field = "(SELECT $this->TextConcat FROM label, label2test WHERE label.id=label2test.labelid AND label2test.outputid=bt.outputid)";
             }
                 break;
 
             case 'status': {
                 $sql_field = 'bt.status';
+            }
+                break;
+
+            case 'subproject': {
+                $sql_field = 'sp.name';
             }
                 break;
 
@@ -705,6 +714,7 @@ function createPageSpecificFilters($page_id)
     switch ($page_id) {
         case 'index.php':
         case 'viewBuildGroup.php':
+        case 'filterdata.php':
             return new IndexPhpFilters();
             break;
 
@@ -995,8 +1005,15 @@ function parse_filter_from_request($field_var, $compare_var, $value_var,
     // The following filter types are considered 'date clauses' so that the
     // default date clause of "builds from today only" is not used...
     //
-    if ($field == 'buildstarttime' || $field == 'buildstamp' ||
-            $field == 'revision') {
+    if ($field == 'buildstarttime' || $field == 'buildstamp') {
+        $filterdata['hasdateclause'] = 1;
+    }
+
+    // Revision filter is trickier. It should be considered a 'date clause' in the
+    // positive case, ie "revision is X", or "revision starts with X", but not in the
+    // negative case (when we're trying to filter OUT builds of specific revisions).
+    if ($field == 'revision' &&
+        ($compare == 61 || $compare == 63 || $compare == 65)) {
         $filterdata['hasdateclause'] = 1;
     }
 
@@ -1023,7 +1040,6 @@ function parse_filter_from_request($field_var, $compare_var, $value_var,
 //
 function get_filterdata_from_request($page_id = '')
 {
-    $config = Config::getInstance();
     $xml = '';
     $filterdata = [];
     $filters = [];
@@ -1035,6 +1051,7 @@ function get_filterdata_from_request($page_id = '')
         $page_id = substr($request_path, $pos + 1);
     }
 
+    $page_id = htmlentities($page_id);
     $filterdata['pageId'] = $page_id;
 
     $pageSpecificFilters = createPageSpecificFilters($page_id);
@@ -1065,13 +1082,13 @@ function get_filterdata_from_request($page_id = '')
             ];
             for ($j = 1; $j <= $subfiltercount; ++$j) {
                 $filter['filters'][] = parse_filter_from_request(
-                        "field{$i}field{$j}", "field{$i}compare${j}",
-                        "field{$i}value{$j}", $filterdata);
+                    "field{$i}field{$j}", "field{$i}compare${j}",
+                    "field{$i}value{$j}", $filterdata);
             }
             $filters[] = $filter;
         } else {
             $filters[] = parse_filter_from_request(
-                    "field{$i}", "compare${i}", "value{$i}", $filterdata);
+                "field{$i}", "compare${i}", "value{$i}", $filterdata);
         }
     }
 
@@ -1107,6 +1124,7 @@ function get_filterdata_from_request($page_id = '')
     if (array_key_exists('colorblind', $_COOKIE)) {
         $filterdata['colorblind'] = intval($_COOKIE['colorblind']);
     } else {
+        $config = Config::getInstance();
         if ($config->get('CDASH_CSS_FILE') === 'css/colorblind.css') {
             $filterdata['colorblind'] = 1;
         } else {
@@ -1194,7 +1212,7 @@ function generate_filterdata_sql($filterdata)
             }
             if (count($subclauses) > 0) {
                 $clauses[] =
-                    '(' . join($subclauses, " $sql_other_combine ") . ')';
+                    '(' . implode(" $sql_other_combine ", $subclauses) . ')';
             }
         } else {
             // Top-level filters.
@@ -1208,7 +1226,7 @@ function generate_filterdata_sql($filterdata)
     if (count($clauses) == 0) {
         $sql = '';
     } else {
-        $sql = 'AND (' . join($clauses, " $sql_combine ") . ')';
+        $sql = 'AND (' . implode(" $sql_combine ", $clauses) . ')';
     }
     return $sql;
 }
@@ -1224,7 +1242,7 @@ function get_label_ids_from_filterdata($filterdata)
     foreach ($filterdata['filters'] as $filter) {
         if ($filter['field'] == 'label') {
             $cv = get_sql_compare_and_value($filter['compare'],
-                    $filter['value']);
+                $filter['value']);
             $sql_compare = $cv[0];
             $sql_value = $cv[1];
             if ($clauses > 0) {
@@ -1357,7 +1375,6 @@ function build_survives_filters($build_response, $filters, $filtercombine)
                 break;
 
             default:
-                continue;
                 break;
         }
 

@@ -14,25 +14,29 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+namespace CDash\Api\v1\ManageBuildGroup;
+
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 
+use App\Services\PageTimer;
 use CDash\Database;
 use CDash\Model\Project;
-use CDash\Model\User;
+use CDash\Model\Site;
 use CDash\Model\UserProject;
+use Illuminate\Support\Facades\Auth;
 
-$start = microtime_float();
-$response = array();
-
-$userid = Auth::id();
+$pageTimer = new PageTimer();
+$response = [];
 
 // Checks
-if (!$userid || !is_numeric($userid)) {
+if (!Auth::check()) {
     $response['requirelogin'] = '1';
     echo json_encode($response);
     return;
 }
+$user = Auth::user();
+$userid = $user->id;
 
 $response = begin_JSON_response();
 $response['backurl'] = 'user.php';
@@ -56,8 +60,6 @@ if (!isset($projectid)) {
 
 @$show = $_GET['show'];
 
-$user = new User();
-$user->Id = $userid;
 if ($projectid && is_numeric($projectid)) {
     $user2project = new UserProject();
     $user2project->UserId = $userid;
@@ -90,8 +92,7 @@ while ($project_array = pdo_fetch_array($projects)) {
 $response['availableprojects'] = $availableprojects;
 
 if ($projectid < 1) {
-    $end = microtime_float();
-    $response['generationtime'] = round($end - $start, 3);
+    $pageTimer->end($response);
     echo json_encode($response);
     return;
 }
@@ -115,9 +116,9 @@ if (!$pdo->execute($stmt)) {
     $response['error'] = 'Database error during site lookup';
 }
 
-$sites = array();
+$sites = [];
 while ($row = $stmt->fetch()) {
-    $site = array();
+    $site = [];
     $site['id'] = $row['siteid'];
     $site['name'] = $row['name'];
     $sites[] = $site;
@@ -172,12 +173,19 @@ foreach ($buildgroups as $buildgroup) {
                 $rule_response['sitename'] = 'Any';
                 $rule_response['siteid'] = 0;
             } else {
+                $rule_response['siteid'] = $siteid;
+                $found = false;
                 foreach ($sites as $site) {
                     if ($site['id'] == $siteid) {
                         $rule_response['sitename'] = $site['name'];
-                        $rule_response['siteid'] = $site['id'];
+                        $found = true;
                         break;
                     }
+                }
+                if (!$found) {
+                    $site = new Site();
+                    $site->Id = $siteid;
+                    $rule_response['sitename'] = $site->GetName();
                 }
             }
 
@@ -238,6 +246,5 @@ while ($wildcard_array = pdo_fetch_array($wildcards)) {
 
 $response['wildcards'] = $wildcards_response;
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

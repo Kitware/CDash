@@ -54,9 +54,9 @@ class UploadHandler extends AbstractHandler
     private $UpdateEndTime;
 
     /** Constructor */
-    public function __construct($projectID, $scheduleID)
+    public function __construct($projectID)
     {
-        parent::__construct($projectID, $scheduleID);
+        parent::__construct($projectID);
         $this->Build = new Build();
         $this->Site = new Site();
         $this->TmpFilename = '';
@@ -166,7 +166,7 @@ class UploadHandler extends AbstractHandler
             if ($this->Build->Id == 0) {
                 $this->Build->Append = false;
                 $this->Build->InsertErrors = false;
-                add_build($this->Build, $this->scheduleid);
+                add_build($this->Build);
 
                 $this->UpdateEndTime = true;
             } else {
@@ -344,7 +344,7 @@ class UploadHandler extends AbstractHandler
                         $level = LOG_ERR;
 
                         // But if testing, log as info only:
-                        if ($config->get('CDASH_TESTING_MODE')) {
+                        if (config('app.debug')) {
                             $level = LOG_INFO;
                         }
 

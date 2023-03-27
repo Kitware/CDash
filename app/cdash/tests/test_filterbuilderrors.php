@@ -11,6 +11,8 @@ use CDash\Model\Project;
 
 class FilterBuildErrorsTestCase extends KWWebTestCase
 {
+    protected $PDO;
+
     public function __construct()
     {
         parent::__construct();
@@ -53,7 +55,7 @@ FILTER
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
                 configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();

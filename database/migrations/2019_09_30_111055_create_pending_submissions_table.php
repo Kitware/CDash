@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreatePendingSubmissionsTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,11 +12,13 @@ class CreatePendingSubmissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pending_submissions', function (Blueprint $table) {
-            $table->integer('buildid')->primary();
-            $table->tinyInteger('numfiles')->default(0);
-            $table->tinyInteger('recheck')->default(0);
-        });
+        if (!Schema::hasTable('pending_submissions')) {
+            Schema::create('pending_submissions', function (Blueprint $table) {
+                $table->integer('buildid')->primary();
+                $table->tinyInteger('numfiles')->default(0);
+                $table->tinyInteger('recheck')->default(0);
+            });
+        }
     }
 
 

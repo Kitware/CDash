@@ -18,8 +18,8 @@ require_once 'include/pdo.php';
 require_once 'include/common.php';
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Models\User;
 use CDash\Config;
-use CDash\Model\User;
 
 $config = Config::getInstance();
 
@@ -31,10 +31,8 @@ if (Auth::check()) {
         return;
     }
 
-    $current_user = new User();
-    $current_user->Id = $userid;
-
-    if (!$current_user->IsAdmin()) {
+    $current_user = Auth::user();
+    if (!$current_user->admin) {
         echo "You don't have the permissions to access this page!";
         return;
     }
@@ -47,9 +45,7 @@ if (Auth::check()) {
 
     @$postuserid = $_POST['userid'];
     if ($postuserid != null && $postuserid > 0) {
-        $post_user = new User();
-        $post_user->Id = $postuserid;
-        $post_user->Fill();
+        $post_user = User::find($postuserid);
     }
 
     if (isset($_POST['adduser'])) {
@@ -64,20 +60,21 @@ if (Auth::check()) {
             $lname = $_POST['lname'];
             $institution = $_POST['institution'];
             if ($email && $passwd && $passwd2 && $fname && $lname && $institution) {
-                $new_user = new User();
-                if ($new_user->GetIdFromEmail($email)) {
+                $new_user = User::where('email', $email)->first();
+                if (!is_null($new_user)) {
                     $xml .= add_XML_value('error', 'Email already registered!');
                 } else {
-                    $passwordHash = User::PasswordHash($passwd);
+                    $new_user = new User();
+                    $passwordHash = password_hash($passwd, PASSWORD_DEFAULT);
                     if ($passwordHash === false) {
                         $xml .= add_XML_value('error', 'Failed to hash password');
                     } else {
-                        $new_user->Email = $email;
-                        $new_user->Password = $passwordHash;
-                        $new_user->FirstName = $fname;
-                        $new_user->LastName = $lname;
-                        $new_user->Institution = $institution;
-                        if ($new_user->Save()) {
+                        $new_user->email = $email;
+                        $new_user->password = $passwordHash;
+                        $new_user->firstname = $fname;
+                        $new_user->lastname = $lname;
+                        $new_user->institution = $institution;
+                        if ($new_user->save()) {
                             $xml .= add_XML_value('warning', 'User ' . $email . ' added successfully with password:' . $passwd);
                         } else {
                             $xml .= add_XML_value('error', 'Cannot add user');
@@ -90,19 +87,19 @@ if (Auth::check()) {
         }
     } elseif (isset($_POST['makenormaluser'])) {
         if ($postuserid > 1) {
-            $post_user->Admin = 0;
-            $post_user->Save();
-            $xml .= "<warning>$post_user->FirstName $post_user->LastName is not administrator anymore.</warning>";
+            $post_user->admin = 0;
+            $post_user->save();
+            $xml .= "<warning>$post_user->full_name is not administrator anymore.</warning>";
         } else {
             $xml .= '<error>Administrator should remain admin.</error>';
         }
     } elseif (isset($_POST['makeadmin'])) {
-        $post_user->Admin = 1;
-        $post_user->Save();
-        $xml .= "<warning>$post_user->FirstName $post_user->LastName is now an administrator.</warning>";
+        $post_user->admin = 1;
+        $post_user->save();
+        $xml .= "<warning>$post_user->full_name is now an administrator.</warning>";
     } elseif (isset($_POST['removeuser'])) {
-        $name = $post_user->GetName();
-        $post_user->Delete();
+        $name = $post_user->full_name;
+        $post_user->delete();
         $xml .= "<warning>$name has been removed.</warning>";
     }
 

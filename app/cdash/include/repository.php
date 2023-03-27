@@ -737,10 +737,9 @@ function post_pull_request_comment($projectid, $pull_request, $comment, $cdash_u
         return;
     }
 
-    $config = Config::getInstance();
-    if (!$config->get('CDASH_NOTIFY_PULL_REQUEST')) {
-        if ($config->get('CDASH_TESTING_MODE')) {
-            throw new Exception('pull request commenting is disabled');
+    if (!config('cdash.notify_pull_request') || !config('cdash.use_vcs_api')) {
+        if (config('app.debug')) {
+            \Log::info('pull request commenting is disabled');
         }
         return;
     }
@@ -826,7 +825,7 @@ function post_github_pull_request_comment(Project $project, $pull_request, $comm
             'cURL error: ' . curl_error($ch),
             'post_github_pull_request_comment',
             LOG_ERR, $project->Id);
-    } elseif (Config::getInstance()->get('CDASH_TESTING_MODE')) {
+    } elseif (config('app.debug')) {
         $matches = array();
         preg_match("#/comments/(\d+)#", $retval, $matches);
         add_log(
@@ -871,6 +870,9 @@ function generate_bugtracker_new_issue_link($build, $project)
         return false;
     }
     $msg_parts = generate_broken_build_message($emailtext, $build, $project);
+    if (!is_array($msg_parts)) {
+        return false;
+    }
     $title = $msg_parts['title'];
     $body = $msg_parts['body'];
 

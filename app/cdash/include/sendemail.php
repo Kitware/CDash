@@ -30,23 +30,18 @@ use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Model\Build;
 use CDash\Model\BuildEmail;
 use CDash\Model\BuildGroup;
-use CDash\Model\BuildTest;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildUpdate;
 use CDash\Model\DynamicAnalysis;
 use CDash\Model\LabelEmail;
 use CDash\Model\Project;
 use CDash\Model\Site;
-use CDash\Model\User;
 use CDash\Model\UserProject;
 
 /** Check for errors for a given build. Return false if no errors */
 function check_email_errors($buildid, $checktesttimeingchanged, $testtimemaxstatus, $checkpreviouserrors)
 {
-    // Includes
-
-
-    $errors = array();
+    $errors = [];
     $errors['errors'] = true;
     $errors['hasfixes'] = false;
 
@@ -63,16 +58,18 @@ function check_email_errors($buildid, $checktesttimeingchanged, $testtimemaxstat
     $errors['build_warnings'] = $Build->GetNumberOfWarnings();
 
     // Test errors
-    $BuildTest = new BuildTest();
-    $BuildTest->BuildId = $buildid;
-    $errors['test_errors'] = $BuildTest->GetNumberOfFailures($checktesttimeingchanged, $testtimemaxstatus);
+    $errors['test_errors'] = $Build->GetNumberOfFailedTests();
+    $errors['test_errors'] += $Build->GetNumberOfNotRunTests();
+    if ($checktesttimeingchanged) {
+        $errors['test_errors'] += count($Build->GetFailedTimeStatusTests(0, $testtimemaxstatus));
+    }
 
     // Dynamic analysis errors
     $DynamicAnalysis = new DynamicAnalysis();
     $DynamicAnalysis->BuildId = $buildid;
     $errors['dynamicanalysis_errors'] = $DynamicAnalysis->GetNumberOfErrors();
 
-    // Green build we return
+    // Check if this is a clean build.
     if ($errors['configure_errors'] == 0
         && $errors['build_errors'] == 0
         && $errors['build_warnings'] == 0
@@ -170,7 +167,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         // If this is false pdo_execute called in BuildConfigure will
         // have already logged the error.
         if (is_object($configure)) {
-            $information .= "Status: {$configure->status} ({$serverURI}/viewConfigure.php?buildid={$buildid})\n";
+            $information .= "Status: {$configure->status} ({$serverURI}/build/{$buildid})\n/configure";
             $information .= 'Output: ';
             $information .= substr($configure->log, 0, $maxchars);
             $information .= "\n";
@@ -275,7 +272,6 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         }
         $information .= "\n";
     } elseif ($errorkey == 'test_errors') {
-
         // Local function to add a set of tests to our email message body.
         // This reduces copied & pasted code below.
         $AddTestsToEmail = function ($tests, $section_title) use ($buildid, $maxchars, $maxitems, $serverURI) {
@@ -291,7 +287,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             $information .= "\n";
 
             foreach ($tests as $test) {
-                $info = "{$test['name']} | {$test['details']} | ({$serverURI}/testDetails.php?test={$test['id']}&build={$buildid})\n";
+                $info = "{$test['name']} | {$test['details']} | ({$serverURI}/test/{$test['buildtestid']})\n";
                 $information .= substr($info, 0, $maxchars);
             }
             $information .= "\n";
@@ -442,7 +438,7 @@ function generate_broken_build_message($emailtext, $Build, $Project)
     $body = 'Details on the submission can be found at ';
 
     $body .= $serverURI;
-    $body .= '/buildSummary.php?buildid=' . $Build->Id;
+    $body .= "/build/{$Build->Id}";
     $body .= "\n\n";
 
     $body .= 'Project: ' . $Project->Name . "\n";
@@ -551,17 +547,14 @@ function send_update_email($handler, $projectid)
         // Find the site maintainer(s)
         $sitename = $handler->getSiteName();
         $siteid = $handler->getSiteId();
-        $to_address = '';
+        $recipients = [];
         $email_addresses =
             pdo_query('SELECT email FROM ' . qid('user') . ',site2user WHERE ' . qid('user') . ".id=site2user.userid AND site2user.siteid='$siteid'");
         while ($email_addresses_array = pdo_fetch_array($email_addresses)) {
-            if ($to_address != '') {
-                $to_address .= ', ';
-            }
-            $to_address .= $email_addresses_array['email'];
+            $recipients[] = $email_addresses_array['email'];
         }
 
-        if ($to_address != '') {
+        if (!empty($recipients)) {
             $serverURI = get_server_URI();
 
             // Generate the email to send
@@ -574,19 +567,10 @@ function send_update_email($handler, $projectid)
             $body = "$sitename has encountered errors during the Update step and you have been identified as the maintainer of this site.\n\n";
             $body .= "*Update Errors*\n";
             $body .= 'Status: ' . $update_array['status'] . ' (' . $serverURI . '/viewUpdate.php?buildid=' . $buildid . ")\n";
-
-            $config = Config::getInstance();
-            if ($config->get('CDASH_TESTING_MODE')) {
-                add_log($to_address, 'TESTING: EMAIL', LOG_DEBUG);
-                add_log($subject, 'TESTING: EMAILTITLE', LOG_DEBUG);
-                add_log($body, 'TESTING: EMAILBODY', LOG_DEBUG);
+            if (cdashmail($recipients, $subject, $body)) {
+                add_log('email sent to: ' . implode(', ', $recipients), 'send_update_email');
             } else {
-                if (cdashmail("$to_address", $subject, $body)) {
-                    add_log('email sent to: ' . $to_address, 'sendEmailExpectedBuilds');
-                    return;
-                } else {
-                    add_log('cannot send email to: ' . $to_address, 'sendEmailExpectedBuilds');
-                }
+                add_log('cannot send email to: ' . implode(', ', $recipients), 'send_update_email');
             }
         }
     }
@@ -598,12 +582,6 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
     $Project = new Project();
     $Project->Id = $projectid;
     $Project->Fill();
-
-    /*
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/sendemail.php')) {
-        // TODO: refactor this, probably into some sort of notification builder interface
-    }
-    */
 
     // If we shouldn't send any emails we stop
     if ($Project->EmailBrokenSubmission == 0) {

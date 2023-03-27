@@ -36,6 +36,10 @@ class Project
     const SITE_MAINTAINER = 1;
     const PROJECT_USER = 0;
 
+    const ACCESS_PRIVATE = 0;
+    const ACCESS_PUBLIC = 1;
+    const ACCESS_PROTECTED = 2;
+
     public $Name;
     public $Id;
     public $Description;
@@ -51,6 +55,8 @@ class Project
     public $CoverageThreshold;
     public $TestingDataUrl;
     public $NightlyTime;
+    public $NightlyDateTime;
+    public $NightlyTimezone;
     public $GoogleTracker;
     public $EmailLowCoverage;
     public $EmailTestTimingChanged;
@@ -67,6 +73,7 @@ class Project
     public $ShowIPAddresses;
     public $DisplayLabels;
     public $ShareLabelFilters;
+    public $ViewSubProjectsLink;
     public $AuthenticateSubmissions;
     public $ShowCoverageCode;
     public $AutoremoveTimeframe;
@@ -74,7 +81,6 @@ class Project
     public $UploadQuota;
     public $RobotName;
     public $RobotRegex;
-    public $CTestTemplateScript;
     public $WebApiKey;
     public $WarningsFilter;
     public $ErrorsFilter;
@@ -85,6 +91,8 @@ class Project
      * @var SubscriberCollection
      */
     private $SubscriberCollection;
+
+    public $Filled;
 
     public function __construct()
     {
@@ -121,6 +129,9 @@ class Project
         if (empty($this->ShareLabelFilters)) {
             $this->ShareLabelFilters = 0;
         }
+        if (empty($this->ViewSubProjectsLink)) {
+            $this->ViewSubProjectsLink = 0;
+        }
         if (empty($this->AuthenticateSubmissions)) {
             $this->AuthenticateSubmissions = 0;
         }
@@ -152,6 +163,8 @@ class Project
             $this->ErrorsFilter = '';
         }
         $this->PDO = Database::getInstance();
+
+        $this->Filled = false;
     }
 
     /** Add a build group */
@@ -191,7 +204,6 @@ class Project
 
         pdo_query("DELETE FROM dailyupdate WHERE projectid=$this->Id");
         pdo_query("DELETE FROM projectrobot WHERE projectid=$this->Id");
-        pdo_query("DELETE FROM projectjobscript WHERE projectid=$this->Id");
         pdo_query("DELETE FROM build_filters WHERE projectid=$this->Id");
 
         // Delete any repositories that aren't shared with other projects.
@@ -284,6 +296,7 @@ class Project
             $query .= ',showipaddresses=' . qnum($this->ShowIPAddresses);
             $query .= ',displaylabels=' . qnum($this->DisplayLabels);
             $query .= ',sharelabelfilters=' . qnum($this->ShareLabelFilters);
+            $query .= ',viewsubprojectslink=' . qnum($this->ViewSubProjectsLink);
             $query .= ',authenticatesubmissions=' . qnum($this->AuthenticateSubmissions);
             $query .= ',showcoveragecode=' . qnum($this->ShowCoverageCode);
             $query .= ',autoremovetimeframe=' . qnum($this->AutoremoveTimeframe);
@@ -326,28 +339,6 @@ class Project
             if (!$this->UpdateBuildFilters()) {
                 return false;
             }
-
-            // Insert the ctest template
-            if ($this->CTestTemplateScript != '') {
-                $CTestTemplateScript = pdo_real_escape_string($this->CTestTemplateScript);
-
-                // Check if it exists
-                $script = pdo_query('SELECT projectid FROM projectjobscript WHERE projectid=' . qnum($this->Id));
-                if (pdo_num_rows($script) > 0) {
-                    $query = "UPDATE projectjobscript SET script='" . $CTestTemplateScript . "' WHERE projectid=" . qnum($this->Id);
-                    if (!pdo_query($query)) {
-                        return false;
-                    }
-                } else {
-                    $query = 'INSERT INTO projectjobscript(projectid,script)
-                   VALUES (' . qnum($this->Id) . ",'" . $CTestTemplateScript . "')";
-                    if (!pdo_query($query)) {
-                        return false;
-                    }
-                }
-            } else {
-                pdo_query("DELETE FROM projectjobscript WHERE projectid=$this->Id");
-            }
         } else {
             // insert the project
 
@@ -369,13 +360,13 @@ class Project
                                     nightlytime,googletracker,emailbrokensubmission,emailredundantfailures,
                                     emaillowcoverage,emailtesttimingchanged,cvsviewertype,
                                     testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime,emailadministrator,showipaddresses
-                                    ,displaylabels,sharelabelfilters,authenticatesubmissions,showcoveragecode,autoremovetimeframe,autoremovemaxbuilds,uploadquota,webapikey)
+                                    ,displaylabels,sharelabelfilters,viewsubprojectslink,authenticatesubmissions,showcoveragecode,autoremovetimeframe,autoremovemaxbuilds,uploadquota,webapikey)
                  VALUES (' . $idvalue . "'$Name','$Description','$HomeUrl','$CvsUrl','$BugTrackerUrl','$BugTrackerFileUrl','$BugTrackerNewIssueUrl','$BugTrackerType','$DocumentationUrl',
                  " . qnum($this->Public) . ',' . qnum($this->ImageId) . ',' . qnum($this->CoverageThreshold) . ",'$TestingDataUrl','$NightlyTime',
                  '$GoogleTracker'," . qnum($this->EmailBrokenSubmission) . ',' . qnum($this->EmailRedundantFailures) . ','
                 . qnum($this->EmailLowCoverage) . ',' . qnum($this->EmailTestTimingChanged) . ",'$CvsViewerType'," . qnum($this->TestTimeStd)
                 . ',' . qnum($this->TestTimeStdThreshold) . ',' . qnum($this->TestTimeMaxStatus) . ',' . qnum($this->EmailMaxItems) . ',' . qnum($this->EmailMaxChars) . ','
-                . qnum($this->ShowTestTime) . ',' . qnum($this->EmailAdministrator) . ',' . qnum($this->ShowIPAddresses) . ',' . qnum($this->DisplayLabels) . ',' . qnum($this->ShareLabelFilters) . ',' . qnum($this->AuthenticateSubmissions) . ',' . qnum($this->ShowCoverageCode)
+                . qnum($this->ShowTestTime) . ',' . qnum($this->EmailAdministrator) . ',' . qnum($this->ShowIPAddresses) . ',' . qnum($this->DisplayLabels) . ',' . qnum($this->ShareLabelFilters) . ',' . qnum($this->ViewSubProjectsLink) . ',' . qnum($this->AuthenticateSubmissions) . ',' . qnum($this->ShowCoverageCode)
                 . ',' . qnum($this->AutoremoveTimeframe) . ',' . qnum($this->AutoremoveMaxBuilds) . ',' . qnum($this->UploadQuota) . ",'" . $this->WebApiKey . "')";
 
             if (!pdo_query($query)) {
@@ -395,38 +386,11 @@ class Project
                 }
             }
 
-            if ($this->CTestTemplateScript != '') {
-                $CTestTemplateScript = pdo_real_escape_string($this->CTestTemplateScript);
-
-                $query = 'INSERT INTO projectjobscript(projectid,script)
-                 VALUES (' . qnum($this->Id) . ",'" . $$CTestTemplateScript . "')";
-                if (!pdo_query($query)) {
-                    return false;
-                }
-            }
-
             if (!$this->UpdateBuildFilters()) {
                 return false;
             }
         }
         return true;
-    }
-
-    /** Get the user's role */
-    public function GetUserRole($userid)
-    {
-        if (!$this->Id || !is_numeric($this->Id)) {
-            return -1;
-        }
-
-        $role = -1;
-
-        $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='" . $this->Id . "'");
-        if (pdo_num_rows($user2project) > 0) {
-            $user2project_array = pdo_fetch_array($user2project);
-            $role = $user2project_array['role'];
-        }
-        return $role;
     }
 
     public function GetIdByName()
@@ -480,6 +444,10 @@ class Project
     /** Fill in all the information from the database */
     public function Fill()
     {
+        if ($this->Filled) {
+            return;
+        }
+
         if (!$this->Id) {
             echo 'Project Fill(): Id not set';
         }
@@ -504,7 +472,7 @@ class Project
             $this->Public = $project_array['public'];
             $this->CoverageThreshold = $project_array['coveragethreshold'];
             $this->TestingDataUrl = $project_array['testingdataurl'];
-            $this->NightlyTime = $project_array['nightlytime'];
+            $this->SetNightlyTime($project_array['nightlytime']);
             $this->GoogleTracker = $project_array['googletracker'];
             $this->EmailLowCoverage = $project_array['emaillowcoverage'];
             $this->EmailTestTimingChanged = $project_array['emailtesttimingchanged'];
@@ -514,6 +482,7 @@ class Project
             $this->ShowIPAddresses = $project_array['showipaddresses'];
             $this->DisplayLabels = $project_array['displaylabels'];
             $this->ShareLabelFilters = $project_array['sharelabelfilters'];
+            $this->ViewSubProjectsLink = $project_array['viewsubprojectslink'];
             $this->AuthenticateSubmissions = $project_array['authenticatesubmissions'];
             $this->ShowCoverageCode = $project_array['showcoveragecode'];
             $this->AutoremoveTimeframe = $project_array['autoremovetimeframe'];
@@ -560,15 +529,39 @@ class Project
             $this->ErrorsFilter = $build_filters_array['errors'];
         }
 
-        // Check if we have a ctest script
-        $script = pdo_query('SELECT script FROM projectjobscript WHERE projectid=' . $this->Id);
-        if (!$script) {
-            add_last_sql_error('Project Fill', $this->Id);
-            return;
+        $this->Filled = true;
+    }
+
+    public function SetNightlyTime($nightly_time)
+    {
+        $this->NightlyTime = $nightly_time;
+
+        // Get the timezone for the project's nightly start time.
+        try {
+            $this->NightlyDateTime = new \DateTime($this->NightlyTime);
+            $this->NightlyTimezone = $this->NightlyDateTime->getTimezone();
+        } catch (\Exception $e) {
+            // Bad timezone (probably) specified, try defaulting to UTC.
+            $this->NightlyTimezone = new \DateTimeZone('UTC');
+            $parts = explode(' ', $nightly_time);
+            $this->NightlyTime = $parts[0];
+            try {
+                $this->NightlyDateTime = new \DateTime($this->NightlyTime, $this->NightlyTimezone);
+            } catch (\Exception $e) {
+                \Log::error("Could not parse $nightly_time");
+                return;
+            }
         }
-        if ($script_array = pdo_fetch_array($script)) {
-            $this->CTestTemplateScript = $script_array['script'];
+
+        // Attempt to deal with the fact that tz->getName() doesn't necessarily return
+        // a "valid timezone ID".
+        $timezone_name = timezone_name_from_abbr($this->NightlyTimezone->getName());
+        if ($timezone_name === false) {
+            $timezone_name = $this->NightlyTimezone->getName();
         }
+
+        // Use the project's timezone by default.
+        date_default_timezone_set($timezone_name);
     }
 
     /** Add a logo */
@@ -820,8 +813,7 @@ class Project
     /** Get the last submission of the subproject*/
     public function GetLastSubmission()
     {
-        $config = Config::getInstance();
-        if (!$config->get('CDASH_SHOW_LAST_SUBMISSION')) {
+        if (!config('cdash.show_last_submission')) {
             return false;
         }
 
@@ -872,7 +864,7 @@ class Project
     {
         if (!$this->Id) {
             add_log('Id not set', 'Project::GetNumberOfBuilds', LOG_ERR,
-                    $this->Id);
+                $this->Id);
             return false;
         }
 
@@ -918,6 +910,9 @@ class Project
             AND parentid IN (-1, 0)
             ORDER BY starttime ASC LIMIT 1");
         $first_build = pdo_fetch_array($project);
+        if (!is_array($first_build)) {
+            return 0;
+        }
         $first_build = $first_build['starttime'];
         $nb_days = strtotime($endUTCdate) - strtotime($first_build);
         $nb_days = intval($nb_days / 86400) + 1;
@@ -1228,8 +1223,7 @@ class Project
         $today = date(FMT_DATETIMESTD, $todaytime);
 
         $straighthjoin = '';
-        $config = Config::getInstance();
-        if ($config->get('CDASH_DB_TYPE') != 'pgsql') {
+        if (config('database.default') != 'pgsql') {
             $straighthjoin = 'STRAIGHT_JOIN';
         }
 
@@ -1255,7 +1249,7 @@ class Project
         }
 
         while ($label_array = pdo_fetch_array($labels)) {
-            $labelids[] = $label_array['labelid'];
+            $labelids[] = $label_array['id'];
         }
         return array_unique($labelids);
     }
@@ -1285,17 +1279,14 @@ class Project
         $UserProject->ProjectId = $this->Id;
 
         $userids = $UserProject->GetUsers(2); // administrators
-        $email = '';
+        $recipients = [];
         foreach ($userids as $userid) {
             $User = new User;
             $User->Id = $userid;
-            if ($email != '') {
-                $email .= ', ';
-            }
-            $email .= $User->GetEmail();
+            $recipients[] = $User->GetEmail();
         }
 
-        if ($email != '') {
+        if (!empty($recipients)) {
             $projectname = $project_array['name'];
             $emailtitle = 'CDash [' . $projectname . '] - Administration ';
             $emailbody = 'Object: ' . $subject . "\n";
@@ -1304,11 +1295,10 @@ class Project
 
             $emailbody .= "\n-CDash on " . $serverName . "\n";
 
-            if (cdashmail("$email", $emailtitle, $emailbody)) {
-                add_log('email sent to: ' . $email, 'Project::SendEmailToAdmin');
-                return;
+            if (cdashmail($recipients, $emailtitle, $emailbody)) {
+                add_log('email sent to: ' . implode(', ', $recipients), 'SendEmailToAdmin');
             } else {
-                add_log('cannot send email to: ' . $email, 'Project::SendEmailToAdmin', LOG_ERR, $this->Id);
+                add_log('cannot send email to: ' . implode(', ', $recipients), 'SendEmailToAdmin', LOG_ERR, $this->Id);
             }
         }
     }
@@ -1338,90 +1328,6 @@ class Project
                 return 'cvs';
                 break;
         }
-    }
-
-    public function getDefaultJobTemplateScript()
-    {
-        $ctest_script = '# From this line down, this script may be customized' . "\n";
-        $ctest_script .= '# on the Clients tab of the CDash createProject page.' . "\n";
-        $ctest_script .= '#' . "\n";
-        $ctest_script .= 'if(JOB_MODULE)' . "\n";
-        $ctest_script .= '  set(SOURCE_NAME ${JOB_MODULE})' . "\n";
-        $ctest_script .= '  if(JOB_TAG)' . "\n";
-        $ctest_script .= '    set(SOURCE_NAME ${SOURCE_NAME}-${JOB_TAG})' . "\n";
-        $ctest_script .= '  endif()' . "\n";
-        $ctest_script .= 'else()' . "\n";
-        $ctest_script .= '  set(SOURCE_NAME ${PROJECT_NAME})' . "\n";
-        $ctest_script .= '  if(JOB_BUILDNAME_SUFFIX)' . "\n";
-        $ctest_script .= '    set(SOURCE_NAME ${SOURCE_NAME}-${JOB_BUILDNAME_SUFFIX})' . "\n";
-        $ctest_script .= '  endif()' . "\n";
-        $ctest_script .= 'endif()' . "\n";
-        $ctest_script .= "\n";
-        $ctest_script .= 'set(CTEST_SOURCE_NAME ${SOURCE_NAME})' . "\n";
-        $ctest_script .= 'set(CTEST_BINARY_NAME ${SOURCE_NAME}-bin)' . "\n";
-        $ctest_script .= 'set(CTEST_DASHBOARD_ROOT "${CLIENT_BASE_DIRECTORY}")' . "\n";
-        $ctest_script .= 'set(CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/${CTEST_SOURCE_NAME}")' . "\n";
-        $ctest_script .= 'set(CTEST_BINARY_DIRECTORY "${CTEST_DASHBOARD_ROOT}/${CTEST_BINARY_NAME}")' . "\n";
-        $ctest_script .= 'set(CTEST_CMAKE_GENERATOR "${JOB_CMAKE_GENERATOR}")' . "\n";
-        $ctest_script .= 'set(CTEST_BUILD_CONFIGURATION "${JOB_BUILD_CONFIGURATION}")' . "\n";
-        $ctest_script .= "\n";
-
-        // Construct the buildname
-        $ctest_script .= 'set(CTEST_SITE "${CLIENT_SITE}")' . "\n";
-        $ctest_script .= 'set(CTEST_BUILD_NAME "${JOB_OS_NAME}-${JOB_OS_VERSION}-${JOB_OS_BITS}-${JOB_COMPILER_NAME}-${JOB_COMPILER_VERSION}")' . "\n";
-        $ctest_script .= 'if(JOB_BUILDNAME_SUFFIX)' . "\n";
-        $ctest_script .= '  set(CTEST_BUILD_NAME ${CTEST_BUILD_NAME}-${JOB_BUILDNAME_SUFFIX})' . "\n";
-        $ctest_script .= 'endif()' . "\n";
-        $ctest_script .= "\n";
-
-        // Set the checkout command
-        $repo_type = $this->getDefaultCTestUpdateType();
-
-        if ($repo_type == 'cvs') {
-            $ctest_script .= 'if(NOT EXISTS "${CTEST_SOURCE_DIRECTORY}")' . "\n";
-            $ctest_script .= '  set(CTEST_CHECKOUT_COMMAND "cvs -d ${JOB_REPOSITORY} checkout ")' . "\n";
-            $ctest_script .= '  if(JOB_TAG)' . "\n";
-            $ctest_script .= '    set(CTEST_CHECKOUT_COMMAND "${CTEST_CHECKOUT_COMMAND} -r ${JOB_TAG}")' . "\n";
-            $ctest_script .= '  endif()' . "\n";
-            $ctest_script .= '  set(CTEST_CHECKOUT_COMMAND "${CTEST_CHECKOUT_COMMAND} -d ${SOURCE_NAME}")' . "\n";
-            $ctest_script .= '  set(CTEST_CHECKOUT_COMMAND "${CTEST_CHECKOUT_COMMAND} ${JOB_MODULE}")' . "\n";
-            $ctest_script .= 'endif()' . "\n";
-            $ctest_script .= 'set(CTEST_UPDATE_COMMAND "cvs")' . "\n";
-        }
-
-        if ($repo_type == 'git') {
-            $ctest_script .= 'if(NOT EXISTS "${CTEST_SOURCE_DIRECTORY}")' . "\n";
-            $ctest_script .= '  set(CTEST_CHECKOUT_COMMAND "git clone ${JOB_REPOSITORY} ${SOURCE_NAME}")' . "\n";
-            $ctest_script .= 'endif()' . "\n";
-            $ctest_script .= 'set(CTEST_UPDATE_COMMAND "git")' . "\n";
-        }
-
-        if ($repo_type == 'svn') {
-            $ctest_script .= 'if(NOT EXISTS "${CTEST_SOURCE_DIRECTORY}")' . "\n";
-            $ctest_script .= '  set(CTEST_CHECKOUT_COMMAND "svn co ${JOB_REPOSITORY} ${SOURCE_NAME}")' . "\n";
-            $ctest_script .= 'endif()' . "\n";
-            $ctest_script .= 'set(CTEST_UPDATE_COMMAND "svn")' . "\n";
-        }
-
-        $ctest_script .= "\n";
-
-        // Write the initial CMakeCache.txt
-        //
-        $ctest_script .= 'file(WRITE "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" "${JOB_INITIAL_CACHE}")' . "\n";
-        $ctest_script .= "\n";
-
-        $ctest_script .= 'ctest_start(${JOB_BUILDTYPE})' . "\n";
-        $ctest_script .= 'ctest_update(SOURCE ${CTEST_SOURCE_DIRECTORY})' . "\n";
-        $ctest_script .= 'ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)' . "\n";
-        $ctest_script .= 'ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)' . "\n";
-        $ctest_script .= 'ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)' . "\n";
-        $ctest_script .= '# The following lines are used to associate a build id with this job.' . "\n";
-        $ctest_script .= 'set(CTEST_DROP_SITE ${JOB_DROP_SITE})' . "\n";
-        $ctest_script .= 'set(CTEST_DROP_LOCATION ${JOB_DROP_LOCATION})' . "\n";
-        $ctest_script .= 'ctest_submit(RETURN_VALUE res)' . "\n";
-        $ctest_script .= "\n";
-        $ctest_script .= 'message("DONE")' . "\n";
-        return $ctest_script;
     }
 
     /** Returns the total size of all uploaded files for this project */
@@ -1569,7 +1475,7 @@ class Project
     /**
      * Return a JSON representation of this object.
      */
-    public function ConvertToJSON(User $user)
+    public function ConvertToJSON(\App\Models\User $user)
     {
         $config = Config::getInstance();
         $response = [];
@@ -1580,11 +1486,7 @@ class Project
             $v = $this->$k;
             $response[$k] = $v;
         }
-        $response['name_encoded'] = urlencode($this->Name);
-
-        if (strlen($this->CTestTemplateScript) === 0) {
-            $response['ctesttemplatescript'] = $this->getDefaultJobTemplateScript();
-        }
+        $response['name_encoded'] = urlencode($this->Name ?? '');
 
         $includeQuota = !$config->get('CDASH_USER_CREATE_PROJECTS') || $user->IsAdmin();
 
@@ -1595,7 +1497,7 @@ class Project
                 $uploadQuotaGB = $this->UploadQuota / (1024 * 1024 * 1024);
             }
 
-            $max = $config->get('CDASH_MAX_UPLOAD_QUOTA');
+            $max = config('cdash.max_upload_quota');
             $response['UploadQuota'] = min($uploadQuotaGB, $max);
             $response['MaxUploadQuota'] = $max;
         } else {
@@ -1659,7 +1561,7 @@ class Project
     public function AddBlockedBuild($buildname, $sitename, $ip)
     {
         $stmt = $this->PDO->prepare(
-                'INSERT INTO blockbuild (projectid,buildname,sitename,ipaddress)
+            'INSERT INTO blockbuild (projectid,buildname,sitename,ipaddress)
                 VALUES (:projectid, :buildname, :sitename, :ip)');
         $stmt->bindParam(':projectid', $this->Id);
         $stmt->bindParam(':buildname', $buildname);
@@ -1676,26 +1578,32 @@ class Project
         pdo_execute($stmt, [$id]);
     }
 
-    // Return true and set error message if this project has too many builds.
-    public function HasTooManyBuilds(&$message)
+    // Delete old builds if this project has too many.
+    public function CheckForTooManyBuilds()
     {
         if (!$this->Id) {
             return false;
         }
-        $config = Config::getInstance();
-        $max_builds = $config->get('CDASH_BUILDS_PER_PROJECT');
+        $max_builds = config('cdash.builds_per_project');
         if ($max_builds == 0 ||
-                in_array($this->GetName(), $config->get('CDASH_UNLIMITED_PROJECTS'))) {
+                in_array($this->GetName(), config('cdash.unlimited_projects'))) {
             return false;
         }
 
-        if ($this->GetNumberOfBuilds() < $max_builds) {
+        $num_builds = $this->GetNumberOfBuilds();
+
+        // The +1 here is to account for the build we're currently inserting.
+        if ($num_builds < ($max_builds + 1)) {
             return false;
         }
 
-        $message = "Maximum number of builds reached for $this->Name.  Contact {$config->get('CDASH_EMAILADMIN')} for support.";
+        // Remove old builds.
+        $num_to_remove = $num_builds - $max_builds;
+        require_once 'include/autoremove.php';
+        removeFirstBuilds($this->Id, -1, $num_to_remove, true, false);
+
         add_log("Too many builds for $this->Name", 'project_has_too_many_builds',
-                LOG_INFO, $this->Id);
+            LOG_INFO, $this->Id);
         return true;
     }
 
@@ -1708,6 +1616,7 @@ class Project
     public function GetSubscriberCollection()
     {
         if (!$this->SubscriberCollection) {
+            $this->Fill();
             $this->SubscriberCollection = $this->GetProjectSubscribers();
         }
 
@@ -1798,7 +1707,7 @@ class Project
         if ($buildErrorFilter->GetErrorsFilter() != $this->ErrorsFilter ||
                 $buildErrorFilter->GetWarningsFilter() != $this->WarningsFilter) {
             return $buildErrorFilter->AddOrUpdateFilters(
-                    $this->WarningsFilter, $this->ErrorsFilter);
+                $this->WarningsFilter, $this->ErrorsFilter);
         }
         return true;
     }
@@ -1820,43 +1729,5 @@ class Project
         $beginningOfDay = gmdate(FMT_DATETIME, $beginning_timestamp);
         $endOfDay = gmdate(FMT_DATETIME, $end_timestamp);
         return [$beginningOfDay, $endOfDay];
-    }
-
-
-    /**
-     * Return the testing day (a string in DATETIME format)
-     * for a given date (a date/time string).
-     */
-    public function GetTestingDay($date)
-    {
-        // If the build was started after the nightly start time
-        // then it should appear on the dashboard results for the
-        // subsequent day.
-        $build_datetime = new \DateTime($date . ' UTC');
-        $build_start_timestamp = $build_datetime->getTimestamp();
-        $nightly_start_timestamp = strtotime($this->NightlyTime);
-
-        if (date(FMT_TIME, $nightly_start_timestamp) < '12:00:00') {
-            // If the "nightly" start time is in the morning then any build
-            // that occurs before it is part of the previous testing day.
-            if (date(FMT_TIME, $build_start_timestamp) <
-                    date(FMT_TIME, $nightly_start_timestamp)
-               ) {
-                $build_datetime->sub(new \DateInterval('P1D'));
-                $build_start_timestamp = $build_datetime->getTimestamp();
-            }
-        } else {
-            // If the nightly start time is NOT in the morning then any build
-            // that occurs after it is part of the next testing day.
-            if (date(FMT_TIME, $build_start_timestamp) >=
-                    date(FMT_TIME, $nightly_start_timestamp)
-               ) {
-                $build_datetime->add(new \DateInterval('P1D'));
-                $build_start_timestamp = $build_datetime->getTimestamp();
-            }
-        }
-
-        $build_date = date(FMT_DATE, $build_start_timestamp);
-        return $build_date;
     }
 }

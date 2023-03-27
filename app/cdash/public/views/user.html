@@ -77,14 +77,9 @@
                    ng-href="editSite.php?projectid={{::project.id}}">
                   <img src="img/systemtray.png" border="0" alt="claimsite" />
                 </a>
-                <a title="Schedule Build"
-                   ng-if="::project.role > 1 && cdash.manageclient == 1"
-                   ng-href="manageClient.php?projectid={{::project.id}}">
-                  <img src="img/manageclient.png" border="0" alt="manageclient" />
-                </a>
                 <a title="Edit project"
                    ng-if="::project.role > 1"
-                   ng-href="createProject.php?projectid={{::project.id}}">
+                   ng-href="project/{{::project.id}}/edit">
                   <img src="img/edit2.png" border="0" alt="editproject" />
                 </a>
                 <a title="Manage subprojects"
@@ -125,43 +120,6 @@
               <td align="center"  bgcolor="#DDDDDD"
                   ng-class="::{'warning': project.warning > 0}">
                 {{::project.warning}}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <br/>
-      </div>
-
-      <!-- Job Submission -->
-      <div ng-if="::cdash.manageclient == 1 && cdash.jobschedule.length > 0">
-        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
-          <tbody>
-            <tr class="table-heading1">
-              <td colspan="7" id="nob"><h3>My Build Schedules</h3></td>
-            </tr>
-            <tr class="table-heading">
-              <td align="center" class="botl">Project</td>
-              <td align="center" class="botl">Status</td>
-              <td align="center" class="botl">Last run</td>
-              <td align="center" class="botl">Description</td>
-              <td align="center" class="botl">Actions</td>
-            </tr>
-            <tr class="table-heading" ng-repeat="job in ::cdash.jobschedule">
-              <td align="center">
-                <a ng-href="index.php?project={{::job.projectname}}">
-                  {{::job.projectname}}
-                </a>
-              </td>
-              <td align="center">{{::job.status}}</td>
-              <td align="center">{{::job.lastrun}}</td>
-              <td align="center">{{::job.description}}</td>
-              <td align="center">
-                <a ng-href="manageClient.php?scheduleid={{::job.id}}">
-                  <img src="img/advanced.png" border="0" alt="edit schedule" />
-                </a>
-                <a ng-click="deleteSchedule(job)">
-                  <img src="img/delete.png" border="0" alt="remove schedule" />
-                </a>
               </td>
             </tr>
           </tbody>
@@ -288,12 +246,13 @@
           <tbody>
             <tr class="table-heading1">
               <td colspan="4" id="nob">
-                <h3>Authentication Tokens</h3>
+                <h3>My Authentication Tokens</h3>
               </td>
             </tr>
             <tr class="table-heading"
                 ng-if-start="cdash.authtokens.length > 0">
               <td align="center" class="botl">Description</td>
+              <td align="center" class="botl">Scope</td>
               <td align="center" class="botl">Expires</td>
               <td align="center" class="botl">Revoke</td>
             </tr>
@@ -301,6 +260,12 @@
                 ng-repeat-start="authtoken in cdash.authtokens"
                 ng-class-odd="'trodd'" ng-class-even="'treven'">
               <td align="center">{{::authtoken.description}}</td>
+              <td align="center" ng-if="::authtoken.scope !== 'submit_only'">
+                Full Access
+              </td>
+              <td align="center" ng-if="authtoken.scope === 'submit_only'">
+                Submit Only{{::authtoken.projectname !== null && authtoken.projectname.length > 0 ? ' (' + authtoken.projectname + ')' : ''}}
+              </td>
               <td align="center">{{::authtoken.expires}}</td>
               <td align="center">
                 <span class="glyphicon glyphicon-trash"
@@ -310,19 +275,19 @@
                       uib-tooltip="Revoke this token" />
               </td>
             </tr>
-            <tr ng-if="authtoken.token !== undefined"
+            <tr ng-if="authtoken.raw_token !== undefined"
                 ng-repeat-end>
               <td align="center">
-                Token for <strong>{{authtoken.description}}</strong>: <code>{{authtoken.token}}</code>
+                Token for <strong>{{authtoken.description}}</strong>: <code>{{authtoken.raw_token}}</code>
               </td>
-              <td align="center">
+              <td align="center" colspan="2">
                 <strong ng-show="!authtoken.copied" class="animate-show">
                   Copy this token. It cannot be retrieved later if you leave this page!
                 </strong>
               </td>
               <td align="center">
                 <button class="btn btn-default"
-                        clipboard text="authtoken.token"
+                        clipboard text="authtoken.raw_token"
                         on-copied="copyTokenSuccess(authtoken)">Copy</button>
                 <span class="glyphicon"
                       ng-class="authtoken.showcheck ? 'glyphicon-ok' : 'glyphicon-none'"></span>
@@ -330,12 +295,21 @@
             </tr>
             <tr ng-if-end></tr>
             <tr class="bordertop">
-              <td align="center"><strong>New Token</strong></td>
-              <td align="center">
-                <input type="text" id="tokenDescription" class="form-control"
+              <td id="tokenDescriptionCell">
+                <label for="tokenDescription" id="tokenDescriptionlabel">New Token:</label>
+                <input type="text" id="tokenDescription" name="tokenDescription" class="form-control"
                        placeholder="Description (site, project, etc)"
                        ng-model="cdash.tokendescription" />
               </td>
+              <td align="center">
+                <select ng-model="cdash.tokenscope" class="form-select"
+                        ng-init="cdash.tokenscope = 'full_access'">
+                  <option selected="selected" value="full_access">Full Access</option>
+                  <option value="submit_only">All Projects (Submit Only)</option>
+                  <option ng-repeat="project in ::cdash.projects" value="{{::project.id}}">{{::project.name}} (Submit Only)</option>
+                </select>
+              </td>
+              <td></td>
               <td align="center">
                 <button class="btn btn-default"
                         ng-click="generateToken()">Generate Token</button>
@@ -357,7 +331,7 @@
             </tr>
             <tr class="trodd">
               <td id="nob">
-                <a href="createProject.php">Start a new project</a>
+                <a href="project/new">Start a new project</a>
               </td>
             </tr>
           </tbody>
@@ -376,7 +350,7 @@
           </tr>
           <tr class="treven">
             <td id="nob">
-              <a href="createProject.php">Create new project</a>
+              <a href="project/new">Create new project</a>
             </td>
           </tr>
           <tr class="trodd">
@@ -411,6 +385,11 @@
           </tr>
           <tr class="trodd">
             <td id="nob">
+              <a href="/authtokens/manage">Manage authentication tokens</a>
+            </td>
+          </tr>
+          <tr class="treven">
+            <td id="nob">
               <a href="upgrade.php">Maintenance</a>
             </td>
           </tr>
@@ -437,6 +416,19 @@
         </tbody>
       </table>
     </div>
+
+<style>
+#tokenDescriptionCell {
+  display: flex;
+  justify-content: space-between;
+  white-space: nowrap;
+  align-items: center;
+}
+
+#tokenDescriptionlabel {
+  margin: 0 0.5em 0 0;
+}
+</style>
 
     <!-- FOOTER -->
     <br/>

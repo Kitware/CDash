@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateBuildfileTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,12 +12,14 @@ class CreateBuildfileTable extends Migration
      */
     public function up()
     {
-        Schema::create('buildfile', function (Blueprint $table) {
-            $table->integer('buildid')->index();
-            $table->string('filename')->index();
-            $table->string('md5', 40)->index();
-            $table->string('type', 32)->default('')->index();
-        });
+        if (!Schema::hasTable('buildfile')) {
+            Schema::create('buildfile', function (Blueprint $table) {
+                $table->integer('buildid')->index();
+                $table->string('filename')->index();
+                $table->string('md5', 40)->index();
+                $table->string('type', 32)->default('')->index();
+            });
+        }
     }
 
 

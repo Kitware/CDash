@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateLabel2buildfailureTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,11 +12,13 @@ class CreateLabel2buildfailureTable extends Migration
      */
     public function up()
     {
-        Schema::create('label2buildfailure', function (Blueprint $table) {
-            $table->bigInteger('labelid');
-            $table->bigInteger('buildfailureid');
-            $table->primary(['labelid','buildfailureid']);
-        });
+        if (!Schema::hasTable('label2buildfailure')) {
+            Schema::create('label2buildfailure', function (Blueprint $table) {
+                $table->bigInteger('labelid');
+                $table->bigInteger('buildfailureid');
+                $table->primary(['labelid','buildfailureid']);
+            });
+        }
     }
 
 

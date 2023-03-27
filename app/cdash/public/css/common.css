@@ -12,6 +12,15 @@ body {
  font-size: 14px;
  font-weight: normal;
  color: #000000;
+ min-height: 100vh;
+ display: flex;
+ flex-direction: column;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .argument {
@@ -70,6 +79,15 @@ a:hover{
 
 .na { background-color : #cccccc; }
 .measurement { background-color : #b0c4de; }
+
+#test_measurement_table th {
+  padding: 4px;
+  margin-right: 4px;
+}
+#test_measurement_table td {
+  padding: 4px;
+  margin-left: 4px;
+}
 
 .table-heading {
  background-color : #c7d7e7; /* #c1c1c1 */
@@ -464,7 +482,7 @@ div#datetime {
 div#topmenu {
   position: relative;
   float: left;
-  width: 500px;
+  width: 100%;
   top: 4px;
   left: 6px;
 }
@@ -509,14 +527,6 @@ div#labelcolorblind {
   top: -18px;
   float: right;
   margin-right: 10px;
-}
-
-div#helpmenu {
-  position: relative;
-  top: -18px;
-  margin-left: 3px;
-  float: right;
-  width: 50px;
 }
 
 div#autorefresh {
@@ -839,7 +849,6 @@ div#headertop {
   float:left;
   height: 60px;
   padding-left:30px;
-  order: 1;
 }
 
 #headerlogo #projectlogo {
@@ -1049,8 +1058,7 @@ div#index_top {
 }
 
 div#main_content {
-  padding-left: 30px;
-  padding-right: 30px;
+  padding: 1em 2em;
 }
 
 #settings {
@@ -1428,6 +1436,27 @@ background-color: #adcae6
 #footerlinks #footertext a {
   font-size: 12px;
   color: #4A4A4A;
+}
+
+
+/* flot legend display */
+.legend { display: block;
+		-webkit-padding-start: 2px;
+		-webkit-padding-end: 2px;
+		border-width: initial;
+		border-style: none;
+		border-color: initial;
+		border-image: initial;
+		padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+}
+
+.legendLayer .background {
+    fill: rgba(255, 255, 255, 0.85);
+    stroke: rgba(0, 0, 0, 0.85);
+    stroke-width: 1;
 }
 
 

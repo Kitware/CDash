@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateCoveragefileTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,12 +12,14 @@ class CreateCoveragefileTable extends Migration
      */
     public function up()
     {
-        Schema::create('coveragefile', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->string('fullpath')->default('')->index();
-            $table->binary('file')->nullable();
-            $table->bigInteger('crc32')->nullable()->index();
-        });
+        if (!Schema::hasTable('coveragefile')) {
+            Schema::create('coveragefile', function (Blueprint $table) {
+                $table->integer('id', true);
+                $table->string('fullpath')->default('')->index();
+                $table->binary('file')->nullable();
+                $table->bigInteger('crc32')->nullable()->index();
+            });
+        }
     }
 
 

@@ -19,9 +19,9 @@ use CDash\System;
 /**
  * @runTestsInSeparateProcesses
  */
-class GitHubWebhookTest extends CDash\Test\CDashApiTestCase
+class GitHubWebhookTest extends CDash\Test\CDashTestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->setEndpoint('GitHub/webhook');

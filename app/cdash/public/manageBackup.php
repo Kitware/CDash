@@ -15,7 +15,7 @@
 =========================================================================*/
 require_once 'include/pdo.php';
 include_once 'include/common.php';
-$policy = checkUserPolicy(Auth::id(), 0);
+$policy = checkUserPolicy(0); // only admin
 if ($policy !== true) {
     return $policy;
 }
@@ -24,7 +24,6 @@ include_once 'include/ctestparser.php';
 
 @set_time_limit(0);
 
-; // only admin
 $xml = begin_XML_for_XSLT();
 $xml .= '<title>CDash - Backup</title>';
 $xml .= '<menutitle>CDash</menutitle>';

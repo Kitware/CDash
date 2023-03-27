@@ -1,9 +1,7 @@
 <?php
 namespace CDash\Controller\Auth;
 
-use CDash\Config;
 use CDash\System;
-use CDash\Model\User;
 use CDash\Test\CDashTestCase;
 
 class SessionTest extends CDashTestCase
@@ -11,7 +9,7 @@ class SessionTest extends CDashTestCase
     /** @var System|\PHPUnit_Framework_MockObject_MockObject */
     private $system;
 
-    public function setUp()
+    public function setUp() : void
     {
         // haha, always.
         parent::setUp();
@@ -22,8 +20,7 @@ class SessionTest extends CDashTestCase
     public function testStart()
     {
         $cache_policy = Session::CACHE_NOCACHE;
-        $config = Config::getInstance();
-        $expires = $config->get('CDASH_COOKIE_EXPIRATION_TIME');
+        $expires = config('session.lifetime');
         $gc_max = $expires + Session::EXTEND_GC_LIFETIME;
 
 
@@ -51,7 +48,7 @@ class SessionTest extends CDashTestCase
             ->method('ini_set')
             ->with('session.gc_maxlifetime', $gc_max);
 
-        $sut = new Session($this->system, Config::getInstance());
+        $sut = new Session($this->system);
         $sut->start($cache_policy);
     }
 
@@ -61,7 +58,7 @@ class SessionTest extends CDashTestCase
             ->expects($this->once())
             ->method('session_regenerate_id');
 
-        $sut = new Session($this->system, Config::getInstance());
+        $sut = new Session($this->system);
         $sut->regenerateId();
     }
 
@@ -75,7 +72,7 @@ class SessionTest extends CDashTestCase
         ];
         session(['cdash' => $cdash]);
 
-        $sut = new Session(new System(), Config::getInstance());
+        $sut = new Session(new System());
 
         $this->assertEquals($login, $sut->getSessionVar('cdash.user'));
         $this->assertEquals($paswd, $sut->getSessionVar('cdash.pass'));
@@ -89,7 +86,7 @@ class SessionTest extends CDashTestCase
             ->method('session_id')
             ->willReturn(1011);
 
-        $sut = new Session($this->system, Config::getInstance());
+        $sut = new Session($this->system);
         $this->assertEquals(1011, $sut->getSessionId());
     }
 
@@ -101,99 +98,9 @@ class SessionTest extends CDashTestCase
             ->willReturnOnConsecutiveCalls('', 101);
 
 
-        $sut = new Session($this->system, Config::getInstance());
+        $sut = new Session($this->system);
         $this->assertFalse($sut->exists());
         $this->assertTrue($sut->exists());
-    }
-
-    public function testSetRememberMeCookieWithHttpsOff()
-    {
-        $key = 'abcde12345fghij';
-        $config = Config::getInstance();
-        $orig_https = $config->get('CDASH_USE_HTTPS');
-        $config->set('CDASH_USE_HTTPS', false);
-
-        $time = time() + Session::REMEMBER_ME_EXPIRATION;
-        $baseUrl = $config->getBaseUrl();
-        $url = parse_url($baseUrl);
-        $name = Session::REMEMBER_ME_PREFIX . $url['host'];
-        $path = isset($url['path']) ? $url['path'] : '/';
-        $cooke_path = "{$path}; samesite=strict";
-
-        /** @var User|\PHPUnit_Framework_MockObject_MockObject $mock_user */
-        $mock_user = $this->getMockBuilder(User::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mock_user->Id = 201;
-        $mock_user
-            ->expects($this->once())
-            ->method('SetCookieKey')
-            ->with($key)
-            ->willReturn(true);
-
-        $this->system
-            ->expects($this->once())
-            ->method('setcookie')
-            ->with(
-                $this->equalTo($name),
-                $this->equalTo("{$mock_user->Id}{$key}"),
-                $this->greaterThanOrEqual($time),
-                $this->equalTo($cooke_path),
-                $this->equalTo($url['host']),
-                $this->equalTo(false),
-                $this->equalTo(true)
-            );
-
-        $sut = new Session($this->system, $config);
-
-        $sut->setRememberMeCookie($mock_user, $key);
-        $config->set('CDASH_USE_HTTPS', $orig_https);
-    }
-
-    public function testSetRememberMeCookieWithHttpsOn()
-    {
-        $key = 'abcde12345fghij';
-        $config = Config::getInstance();
-        $orig_https = $config->get('CDASH_USE_HTTPS');
-        $config->set('CDASH_USE_HTTPS', true);
-
-        $time = time() + Session::REMEMBER_ME_EXPIRATION;
-        $baseUrl = $config->getBaseUrl();
-        $url = parse_url($baseUrl);
-        $name = Session::REMEMBER_ME_PREFIX . $url['host'];
-        $path = isset($url['path']) ? $url['path'] : '/';
-        $cookie_path = "{$path}; samesite=strict";
-
-        /** @var User|\PHPUnit_Framework_MockObject_MockObject $mock_user */
-        $mock_user = $this->getMockBuilder(User::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mock_user->Id = 201;
-        $mock_user
-            ->expects($this->once())
-            ->method('SetCookieKey')
-            ->with($key)
-            ->willReturn(true);
-
-        $this->system
-            ->expects($this->once())
-            ->method('setcookie')
-            ->with(
-                $this->equalTo($name),
-                $this->equalTo("{$mock_user->Id}{$key}"),
-                $this->greaterThanOrEqual($time),
-                $this->equalTo($cookie_path),
-                $this->equalTo($url['host']),
-                $this->equalTo(true),
-                $this->equalTo(true)
-            );
-
-        $sut = new Session($this->system, $config);
-
-        $sut->setRememberMeCookie($mock_user, $key);
-        $config->set('CDASH_USE_HTTPS', $orig_https);
     }
 
     public function testIsActive()
@@ -207,7 +114,7 @@ class SessionTest extends CDashTestCase
                 PHP_SESSION_ACTIVE
             );
 
-        $sut = new Session($this->system, Config::getInstance());
+        $sut = new Session($this->system);
         $this->assertFalse($sut->isActive());
         $this->assertFalse($sut->isActive());
         $this->assertTrue($sut->isActive());
@@ -221,7 +128,7 @@ class SessionTest extends CDashTestCase
 
         $path = "cdash.oauth2.github";
         $expected = ['id' => 1, 'email' => 'ricky.bobby@talladega.tld'];
-        $sut = new Session($this->system, Config::getInstance());
+        $sut = new Session($this->system);
         $sut->setSessionVar($path, $expected);
         $actual = $sut->getSessionVar($path);
         $this->assertEquals($expected, $actual);

@@ -8,13 +8,15 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
+use CDash\Database;
+use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
-use CDash\Model\BuildConfigureError;
-use CDash\Model\BuildConfigureErrorDiff;
 use CDash\Model\Label;
 
 class BuildConfigureTestCase extends KWWebTestCase
 {
+    protected $PDO;
+
     public function __construct()
     {
         parent::__construct();
@@ -51,18 +53,8 @@ class BuildConfigureTestCase extends KWWebTestCase
             $this->fail("configure->Insert returned false");
         }
 
-        $error = new BuildConfigureError();
-        $error->ConfigureId = 1;
-        $error->Type = 1;
-        $configure->AddError($error);
-
-        $diff = new BuildConfigureErrorDiff();
-        $diff->BuildId = 1;
-        $configure->AddErrorDifference($diff);
-
         $label = new Label();
         $configure->AddLabel($label);
-
 
         $configure->BuildId = 2;
         // This is expected to return false because the configure row already exists.
@@ -88,5 +80,50 @@ class BuildConfigureTestCase extends KWWebTestCase
         }
 
         $this->deleteLog($this->logfilename);
+    }
+
+    public function testBuildConfigureDiff()
+    {
+        $this->PDO = Database::getInstance();
+        // Clean up any previous runs of this test.
+        $stmt = $this->PDO->prepare(
+            "SELECT id FROM build WHERE name = 'configure_warning_diff'");
+        $this->PDO->execute($stmt);
+        while ($row = $stmt->fetch()) {
+            remove_build($row['id']);
+        }
+
+        // Make two consecutive builds.
+        $build_rows = [
+            ['2016-10-10', 1476079800],
+            ['2017-10-10', 1507637400],
+        ];
+        $builds = [];
+        foreach ($build_rows as $build_row) {
+            $date = str_replace('-', '', $build_row[0]);
+            $timestamp = $build_row[1];
+            $build = new Build();
+            $build->Name = 'configure_warning_diff';
+            $build->ProjectId = 1;
+            $build->SiteId = 1;
+            $stamp = "$date-1410-Experimental";
+            $build->SetStamp($stamp);
+            $build->StartTime = gmdate(FMT_DATETIME, $timestamp);
+            $builds[] = $build;
+        }
+
+        $builds[0]->SetNumberOfConfigureWarnings(-1);
+        $builds[1]->SetNumberOfConfigureWarnings(0);
+        foreach ($builds as $build) {
+            $this->assertTrue($build->AddBuild());
+            $this->assertTrue($build->Id > 0);
+        }
+        $builds[1]->ComputeConfigureDifferences();
+
+        $stmt = $this->PDO->prepare(
+            'SELECT COUNT(1) from configureerrordiff WHERE buildid = :buildid');
+        $this->PDO->execute($stmt, [$builds[1]->Id]);
+        $num_rows = $stmt->fetchColumn();
+        $this->assertEqual($num_rows, 0);
     }
 }

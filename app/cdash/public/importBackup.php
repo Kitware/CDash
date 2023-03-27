@@ -19,10 +19,11 @@ include_once 'include/common.php';
 
 use App\Http\Controllers\Auth\LoginController;
 use CDash\Config;
+use Illuminate\Support\Facades\Storage;
 
 $config = Config::getInstance();
 
-if (checkUserPolicy(Auth::id(), 0, true)) {
+if (checkUserPolicy(0, true)) {
     include_once 'include/ctestparser.php';
 
     @set_time_limit(0);
@@ -42,7 +43,7 @@ if (checkUserPolicy(Auth::id(), 0, true)) {
     }
 
     if ($Submit && $filemask) {
-        $filelist = glob($config->get('CDASH_BACKUP_DIRECTORY') . "/$filemask");
+        $filelist = glob(Storage::path('inbox') . "/$filemask");
         $i = 0;
         $n = count($filelist);
 

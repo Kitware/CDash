@@ -6,19 +6,19 @@ class ServiceContainerTest extends CDashTestCase
 {
     private static $di;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         parent::setUpBeforeClass();
         self::$di = ServiceContainer::getInstance();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void
     {
         ServiceContainer::setInstance(ServiceContainer::class, self::$di);
         parent::tearDownAfterClass();
     }
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         ServiceContainer::setInstance(ServiceContainer::class, self::$di);

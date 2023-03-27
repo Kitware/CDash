@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="leak_lots"
+	BuildStamp="20210125-1520-Experimental"
+	Name="localhost"
+	Generator="ctest-3.19.0"
+	>
+	<Build>
+		<StartDateTime>Jan 25 10:20 EST</StartDateTime>
+		<StartBuildTime>1611588058</StartBuildTime>
+		<BuildCommand>/usr/local/bin/cmake --build . --config "Debug" -- -i</BuildCommand>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>Jan 25 10:20 EST</EndDateTime>
+		<EndBuildTime>1611588059</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>

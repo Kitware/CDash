@@ -9,6 +9,8 @@ require_once 'include/pdo.php';
 
 class UniqueDiffsTestCase extends KWWebTestCase
 {
+    protected $BuildId;
+
     public function __construct()
     {
         parent::__construct();
@@ -101,7 +103,7 @@ class UniqueDiffsTestCase extends KWWebTestCase
 
         foreach ($tables as $table) {
             // Create testing tables.
-            if ($this->config('CDASH_DB_TYPE') == 'pgsql') {
+            if (config('database.default') == 'pgsql') {
                 $create_query = '
                     CREATE TABLE "' . $table . '" (
                             "buildid" integer NOT NULL,

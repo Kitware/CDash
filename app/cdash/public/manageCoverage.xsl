@@ -5,11 +5,6 @@
    <xsl:include href="headscripts.xsl"/>
    <xsl:include href="headeradminproject.xsl"/>
 
-    <!-- Local includes -->
-   <xsl:include href="local/footer.xsl"/>
-   <xsl:include href="local/headscripts.xsl"/>
-   <xsl:include href="local/headeradminproject.xsl"/>
-
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
@@ -22,9 +17,6 @@
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
 
-        <!-- Include JQuery -->
-        <script src="js/jquery-1.6.2.js" type="text/javascript" charset="utf-8"></script>
-        <script src="js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/cdashManageCoverageSorter.js" type="text/javascript" charset="utf-8"></script>
 

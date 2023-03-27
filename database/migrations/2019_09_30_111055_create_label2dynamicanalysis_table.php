@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateLabel2dynamicanalysisTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,11 +12,13 @@ class CreateLabel2dynamicanalysisTable extends Migration
      */
     public function up()
     {
-        Schema::create('label2dynamicanalysis', function (Blueprint $table) {
-            $table->bigInteger('labelid');
-            $table->bigInteger('dynamicanalysisid');
-            $table->primary(['labelid','dynamicanalysisid']);
-        });
+        if (!Schema::hasTable('label2dynamicanalysis')) {
+            Schema::create('label2dynamicanalysis', function (Blueprint $table) {
+                $table->bigInteger('labelid');
+                $table->bigInteger('dynamicanalysisid');
+                $table->primary(['labelid','dynamicanalysisid']);
+            });
+        }
     }
 
 

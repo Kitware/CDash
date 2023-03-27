@@ -15,51 +15,40 @@
 =========================================================================*/
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-require_once 'include/login_functions.php';
 
-class ViewIssuesTestCase extends KWWebTestCase
+class PasswordComplexityTestCase extends KWWebTestCase
 {
-    public $complexity;
+    protected $validator;
+
     public function __construct()
     {
         parent::__construct();
-        $this->complexity = \CDash\Config::getInstance()->get('CDASH_PASSWORD_COMPLEXITY_COUNT');
+        $this->validator = new \App\Validators\Password;
     }
 
-    public function testViewIssues()
+    public function testPasswordComplexity()
     {
-        $success = true;
+        $this->complexityTest('a', 1, 1);
+        $this->complexityTest('aA', 2, 1);
+        $this->complexityTest('aA1', 3, 1);
+        $this->complexityTest('aA1_', 4, 1);
 
-        $success = $this->complexityTest('a', 1, 1);
-        $success = $this->complexityTest('aA', 2, 1);
-        $success = $this->complexityTest('aA1', 3, 1);
-        $success = $this->complexityTest('aA1_', 4, 1);
+        $this->complexityTest('a', 0, 2);
+        $this->complexityTest('aA', 0, 2);
+        $this->complexityTest('aA1', 0, 2);
+        $this->complexityTest('aA1_', 0, 2);
 
-        $success = $this->complexityTest('a', 0, 2);
-        $success = $this->complexityTest('aA', 0, 2);
-        $success = $this->complexityTest('aA1', 0, 2);
-        $success = $this->complexityTest('aA1_', 0, 2);
-
-        $success = $this->complexityTest('ab', 1, 2);
-        $success = $this->complexityTest('abAB', 2, 2);
-        $success = $this->complexityTest('abAB12', 3, 2);
-        $success = $this->complexityTest('abAB12_%', 4, 2);
-
-        if ($success) {
-            $this->pass('Passed');
-        }
-
-        \CDash\Config::getInstance()->set('CDASH_PASSWORD_COMPLEXITY_COUNT', $this->complexity);
+        $this->complexityTest('ab', 1, 2);
+        $this->complexityTest('abAB', 2, 2);
+        $this->complexityTest('abAB12', 3, 2);
+        $this->complexityTest('abAB12_%', 4, 2);
     }
 
-    public function complexityTest($password, $answer, $count)
+    public function complexityTest($password, $expected, $count)
     {
-        \CDash\Config::getInstance()->set('CDASH_PASSWORD_COMPLEXITY_COUNT', $count);
-        $response = getPasswordComplexity($password);
-        if ($response != $answer) {
-            $this->fail("Expected $answer for '$password' when count is $count, instead got $response");
-            return false;
+        $found = $this->validator->computeComplexity($password, $count);
+        if ($found != $expected) {
+            $this->fail("Expected $expected for '$password' when count is $count, instead got $found");
         }
-        return true;
     }
 }

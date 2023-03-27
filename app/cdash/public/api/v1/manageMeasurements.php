@@ -12,11 +12,15 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\ManageMeasurements;
+
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/api_common.php';
 
-use CDash\Model\Measurement;
+use App\Models\Measurement;
+use App\Services\PageTimer;
 use CDash\Model\Project;
 
 // Require administrative access to view this page.
@@ -42,7 +46,7 @@ switch ($method) {
         break;
 }
 
-/* Handle DELETE requests */
+/** Handle DELETE requests */
 function rest_delete()
 {
     $id = $_REQUEST['id'];
@@ -50,13 +54,11 @@ function rest_delete()
         $response = ['error' => 'Invalid measurement ID provided.'];
         json_error_response($response, 400);
     }
-    $measurement = new Measurement();
-    $measurement->Id = $id;
-    $measurement->Delete();
+    Measurement::destroy($id);
     http_response_code(200);
 }
 
-/* Handle POST requests */
+/** Handle POST requests */
 function rest_post($projectid)
 {
     if (!array_key_exists('measurements', $_REQUEST)) {
@@ -66,40 +68,38 @@ function rest_post($projectid)
     $OK = true;
     $new_ID = null;
     foreach ($_REQUEST['measurements'] as $measurement_data) {
-        $measurement = new Measurement();
-        $measurement->ProjectId = $projectid;
-        $measurement->Name = $measurement_data['name'];
-        $measurement->TestPage = $measurement_data['testpage'];
-        $measurement->SummaryPage = $measurement_data['summarypage'];
         $id = $measurement_data['id'];
         if ($id > 0) {
             // Update an existing measurement rather than creating a new one.
-            $measurement->Id = $id;
+            $measurement = Measurement::find($id);
+        } else {
+            $measurement = new Measurement();
         }
-        if (!$measurement->Save()) {
+        $measurement->projectid = $projectid;
+        $measurement->name = $measurement_data['name'];
+        $measurement->position = $measurement_data['position'];
+        if (!$measurement->save()) {
             $OK = false;
-        }
-        if ($id < 1) {
+        } elseif ($id < 1) {
             // Report the ID of the newly created measurement (if any).
-            $new_ID = $measurement->Id;
+            $new_ID = $measurement->id;
         }
     }
-
-    if (!$OK) {
-        http_response_code(500);
-    } else {
+    if ($OK) {
         http_response_code(200);
-        if (!is_null($new_ID)) {
-            $response = ['id' => $measurement->Id];
+        if ($new_ID) {
+            $response = ['id' => $new_ID];
             echo json_encode($response);
         }
+    } else {
+        http_response_code(500);
     }
 }
 
-/* Handle GET requests */
+/** Handle GET requests */
 function rest_get($projectid)
 {
-    $start = microtime_float();
+    $pageTimer = new PageTimer();
     $response = begin_JSON_response();
 
     $project = new Project();
@@ -107,29 +107,28 @@ function rest_get($projectid)
     $project->Fill();
 
     get_dashboard_JSON($project->GetName(), null, $response);
-    $response['title'] = "CDash - $project->Name Measurements";
+    $response['title'] = "CDash - $project->Name Test Measurements";
 
     // Menu
     $menu_response = [];
     $menu_response['back'] = 'user.php';
-    $menu_response['hidenav'] =  true;
     $response['menu'] = $menu_response;
+    $response['hidenav'] = true;
 
     // Get any measurements associated with this project's tests.
     $measurements_response = [];
-    $measurement = new Measurement();
-    $measurement->ProjectId = $projectid;
-    foreach ($measurement->GetMeasurementsForProject() as $row) {
+    $measurements = Measurement::where('projectid', $projectid)
+        ->orderBy('position', 'asc')
+        ->get();
+
+    foreach ($measurements as $measurement) {
         $measurement_response = [];
-        $measurement_response['id'] = $row['id'];
-        $measurement_response['name'] = $row['name'];
-        $measurement_response['testpage'] = $row['testpage'];
-        $measurement_response['summarypage'] = $row['summarypage'];
+        $measurement_response['id'] = $measurement->id;
+        $measurement_response['name'] = $measurement->name;
+        $measurement_response['position'] = $measurement->position;
         $measurements_response[] = $measurement_response;
     }
     $response['measurements'] = $measurements_response;
-    $end = microtime_float();
-    $response['generationtime'] = round($end - $start, 3);
-
+    $pageTimer->end($response);
     echo json_encode(cast_data_for_JSON($response));
 }

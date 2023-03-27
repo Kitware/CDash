@@ -40,6 +40,9 @@ CDash.controller('ViewTestController',
     $scope.finishSetup = function() {
       // Check for label filters
       $scope.cdash.extrafilterurl = filters.getLabelString($scope.cdash.filterdata);
+      if ($scope.cdash.extrafilterurl) {
+        $scope.cdash.querytestfilters = $scope.cdash.extrafilterurl;
+      }
       $scope.cdash.tests = $filter('orderBy')($scope.cdash.tests, $scope.orderByFields);
       $scope.setPage(1);
     };
@@ -72,6 +75,7 @@ CDash.controller('ViewTestController',
           method: 'GET',
           params: {
             'tests[]': tests_to_load,
+            'buildid': $scope.cdash.build.id,
             'previous_builds': $scope.cdash.previous_builds,
             'time_begin': $scope.cdash.time_begin,
             'time_end': $scope.cdash.time_end,

@@ -43,28 +43,6 @@ class TestManager
         $this->testDir = $dir;
     }
 
-    /** Delete the log file */
-    public function removeLogAndBackupFiles($logfilename)
-    {
-        $config = \CDash\Config::getInstance();
-        if (file_exists($logfilename)) {
-            if ($config->get('CDASH_TESTING_RENAME_LOGS')) {
-                // Rename to a random name to keep for later inspection:
-                //
-                rename($logfilename, $config->get('CDASH_LOG_DIRECTORY') . '/cdash.' . microtime(true) . '.' . bin2hex(random_bytes(2)) . '.log');
-            } else {
-                // Delete file:
-                cdash_testsuite_unlink($logfilename);
-            }
-        }
-
-        $filenames = glob("{$config->get('CDASH_BACKUP_DIRECTORY')}/*");
-        foreach ($filenames as $filename) {
-            if (is_file($filename)) {
-                cdash_testsuite_unlink($filename);
-            }
-        }
-    }
     public function runFileTest(&$reporter, $file)
     {
         $test = new TestSuite('All Tests');
@@ -183,9 +161,7 @@ class TestManager
                 return false;
             }
             if ($dbcreated) {
-                $dirname = str_replace('\\', '/', dirname(__FILE__));
-                $sqlfile = str_replace('/tests/kwtest', '', $dirname) . '/sql/' . $dbtype . '/cdash.sql';
-                $database->fillDb($sqlfile);
+                Artisan::call('migrate');
             }
             return true;
         } else {

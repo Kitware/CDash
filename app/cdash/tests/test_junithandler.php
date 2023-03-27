@@ -7,6 +7,9 @@ use CDash\Model\Project;
 
 class JUnitHandlerTestCase extends KWWebTestCase
 {
+    protected $PDO;
+    protected $Project;
+
     public function __construct()
     {
         parent::__construct();

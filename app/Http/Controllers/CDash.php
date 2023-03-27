@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\ResponseTrait;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use League\Flysystem\Adapter\AbstractAdapter;
 use Storage;
 
 /**
+ * TODO: (williamjallen) should some of this logic be moved to AbstractController.php?
+ *
  * Class CDash
  * @package App\Http\Controllers
  */
-class CDash extends Controller
+class CDash extends AbstractController
 {
     /** @var Request $request */
     private $request;
@@ -41,10 +41,13 @@ class CDash extends Controller
     /**
      * Handle the incoming request.
      *
+     * @param Request $request
      * @return Response $response
      */
-    public function __invoke()
+    public function __invoke(Request $request)
     {
+        $this->request = $request;
+        $this->path = '';
         if ($this->isValidRequest()) {
             if ($this->isRequestForExport()) {
                 $response = $this->handleFileRequest();
@@ -151,11 +154,8 @@ class CDash extends Controller
      */
     public function getRequestContents()
     {
-        /** @var  AbstractAdapter $adapter */
-        $adapter = $this->getDiskAdapter();
         $file = $this->getAbsolutePath();
-
-        chdir($adapter->getPathPrefix());
+        chdir($this->disk->path(''));
 
         ob_start();
         $redirect = require $file;
@@ -284,17 +284,9 @@ class CDash extends Controller
      */
     public function getAbsolutePath()
     {
-        /** @var  AbstractAdapter $adapter */
-        $adapter = $this->getDiskAdapter();
         $path = $this->getPath();
-
-        $file = $adapter->applyPathPrefix($path);
+        $file = $this->disk->path($path);
         return $file;
-    }
-
-    public function getDiskAdapter()
-    {
-        return $this->disk->getDriver()->getAdapter();
     }
 
     /**
@@ -312,27 +304,9 @@ class CDash extends Controller
                 'controller' => $controller,
                 'title' => $this->getTitle(),
                 'xsl' => empty($controller),
-                'js_version' => $this->getJsVersion(),
+                'js_version' => self::getJsVersion(),
             ]
         );
-    }
-
-    /**
-     * Returns the version used to find compiled css and javascript files
-     *
-     * @return string
-     */
-    public function getJsVersion()
-    {
-        $path = config('cdash.file.path.js.version');
-        $version = '';
-        if (is_readable($path)) {
-            $file = file_get_contents($path);
-            if (preg_match("/'VERSION',\s+'(\d+)'/", $file, $match)) {
-                $version = $match[1];
-            }
-        }
-        return $version;
     }
 
     /**

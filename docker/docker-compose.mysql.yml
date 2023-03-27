@@ -1,5 +1,17 @@
 version: '3.3'
 services:
+  common:
+    image: kitware/cdash_common
+    build:
+      context: .
+      dockerfile: ./docker/common.docker
+      args:
+        - CDASH_DB_HOST=mysql
+        - DEVELOPMENT_BUILD=1
+    volumes:
+      - type: volume
+        source: storage
+        target: /home/kitware/cdash/storage
   cdash:
     image: "kitware/cdash:testing"
     container_name: cdash
@@ -8,9 +20,9 @@ services:
       dockerfile: ./docker/cdash.docker
       args:
         - CDASH_DB_HOST=mysql
-        - DEVELOPMENT_BUILD=1
     depends_on:
       - mysql
+      - common
       - selenium-hub
       - chrome
     links:
@@ -21,22 +33,8 @@ services:
       XDEBUG_CONFG: remote_host=172.18.0.1
       CDASH_ROOT_ADMIN_PASS: secret
 
-      CDASH_STATIC_USERS: |
-        USER jdoe@acme.com jdoe_secret
-          John Doe "ACME Inc."
-
-        ADMIN admin@example.org admin_secret
-          Admin User "Example Foundation"
-
-        donotreply@example.org oldsecret newsecret
-
-        strange.name@gmail.com strange_secret
-        INFO Str@nge N@me "Str@nge Rese@rch Gr0up LLC."
-
-        DELETE remove.this.user@example.org delete_secret
-
   mysql:
-    image: "mysql/mysql-server:5.5"
+    image: "mysql/mysql-server:5.7"
     env_file:
       - ./docker/.env.mysql
     environment:
@@ -57,3 +55,6 @@ services:
     environment:
       - HUB_HOST=selenium-hub
       - HUB_PORT=4444
+
+volumes:
+  storage:

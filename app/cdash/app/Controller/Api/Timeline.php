@@ -16,6 +16,7 @@
 
 namespace CDash\Controller\Api;
 
+use App\Services\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
@@ -55,7 +56,7 @@ class Timeline extends Index
     public function getResponse()
     {
         $this->filterdata = json_decode($_REQUEST['filterdata'], true);
-        $page = $this->filterdata['pageId'];
+        $page = htmlentities($this->filterdata['pageId']);
         $this->filterSQL = generate_filterdata_sql($this->filterdata);
         $this->generateColorMap();
 
@@ -78,7 +79,7 @@ class Timeline extends Index
                 return $this->chartForBuildGroup();
                 break;
             default:
-                json_error_response("Unexpected value for page: $page");
+                json_error_response('Unexpected value for page');
                 break;
         }
     }
@@ -260,7 +261,7 @@ class Timeline extends Index
                     Build::ConvertMissingToZero($row['configureerrors']);
                 if (strlen($row['updatestatus']) > 0 &&
                         $row['updatestatus'] != '0'
-                   ) {
+                ) {
                     $build['errors'] += 1;
                 }
                 $build['testfailed'] = $row['testfailed'];
@@ -330,7 +331,7 @@ class Timeline extends Index
         foreach ($builds as $build) {
             // Use this build's starttime to get the beginning of the appropriate
             // testing day.
-            $test_date = $this->project->GetTestingDay($build['starttime']);
+            $test_date = TestingDay::get($this->project, $build['starttime']);
             list($unused, $start_of_day) =
                 get_dates($test_date, $this->project->NightlyTime);
 

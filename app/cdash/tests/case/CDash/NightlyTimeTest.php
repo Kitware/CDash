@@ -14,6 +14,8 @@
  * =========================================================================
  */
 
+use App\Services\TestingDay;
+
 use CDash\Model\Project;
 use Tests\TestCase;
 
@@ -23,14 +25,14 @@ class NightlyTimeTest extends TestCase
     {
         parent::__construct();
         $this->Project = new Project();
+        // Avoid the database for this test.
+        $this->Project->Filled = true;
     }
 
     public function testBuildDateWithConsistentTimeZones()
     {
-        date_default_timezone_set('UTC');
-
         // "Nightly" time in the morning.
-        $this->Project->NightlyTime = '11:59:59 UTC';
+        $this->Project->SetNightlyTime('11:59:59 UTC');
 
         // Build started before the nightly time.
         // It belongs to yesterday.
@@ -41,7 +43,7 @@ class NightlyTimeTest extends TestCase
         $this->validateTestingDay('2019-05-17 11:59:59', '2019-05-17');
 
         // "Nightly" time in the afternoon.
-        $this->Project->NightlyTime = '12:00:01 UTC';
+        $this->Project->SetNightlyTime('12:00:01 UTC');
 
         // Build started before the nightly time.
         // It belongs to today.
@@ -54,36 +56,32 @@ class NightlyTimeTest extends TestCase
 
     public function testBuildDateWithDifferentTimeZones()
     {
-        date_default_timezone_set('UTC');
-
-        // "Nightly" time in the morning (according to server time zone).
-        $this->Project->NightlyTime = '07:59:59 America/New_York';
+        // "Nightly" time in the morning according to the project's time zone.
+        $this->Project->SetNightlyTime('11:59:59 America/New_York');
 
         // Build started before the nightly time.
         // It belongs to yesterday.
-        $this->validateTestingDay('2019-05-17 11:59:58', '2019-05-16');
+        $this->validateTestingDay('2019-05-17 15:59:58', '2019-05-16');
 
         // Build started at or after the nightly time.
         // It belongs to today.
-        $this->validateTestingDay('2019-05-17 12:00:01', '2019-05-17');
+        $this->validateTestingDay('2019-05-17 16:00:01', '2019-05-17');
 
-        // "Nightly" time in the afternoon according to server time zone,
-        // even though it looks like a time in the morning.
-        $this->Project->NightlyTime = '08:00:01 America/New_York';
+        // "Nightly" time in the afternoon according to the project's time zone.
+        $this->Project->SetNightlyTime('12:00:01 America/New_York');
 
         // Build started before the nightly time.
         // It belongs to today.
-        $this->validateTestingDay('2019-05-17 11:59:59', '2019-05-17');
+        $this->validateTestingDay('2019-05-17 15:59:59', '2019-05-17');
 
         // Equal to or after the nightly time:
         // It belongs to tomorrow.
-        $this->validateTestingDay('2019-05-17 12:00:01', '2019-05-18');
+        $this->validateTestingDay('2019-05-17 16:00:02', '2019-05-18');
     }
 
     public function testBuildDateAcrossDST()
     {
-        date_default_timezone_set('America/New_York');
-        $this->Project->NightlyTime = '01:00:00 America/New_York';
+        $this->Project->SetNightlyTime('01:00:00 America/New_York');
         $utc_time = new \DateTimeZone('UTC');
 
         // DST 2019 in New York began at 2:00 AM on Sunday, March 10
@@ -107,14 +105,23 @@ class NightlyTimeTest extends TestCase
 
     public function testUTCInput()
     {
-        date_default_timezone_set('America/Denver');
-        $this->Project->NightlyTime = '04:01:00 UTC';
-        $this->validateTestingDay('2019-09-26 04:00:59 UTC', '2019-09-25');
+        $this->Project->SetNightlyTime('04:01:00 UTC');
+        $this->validateTestingDay('2019-09-26 04:00:59', '2019-09-25');
+
+        $this->validateTestingDay('2020-03-09 04:00:59', '2020-03-08');
+    }
+
+    public function testInvalidTimezone()
+    {
+        $this->Project->SetNightlyTime('04:01:00 XYZ');
+        $this->validateTestingDay('2019-09-26 04:00:59', '2019-09-25');
+
+        $this->validateTestingDay('2020-03-09 04:00:59', '2020-03-08');
     }
 
     private function validateTestingDay($starttime, $expected)
     {
-        $actual = $this->Project->GetTestingDay($starttime);
+        $actual = TestingDay::get($this->Project, $starttime);
         $this->assertEquals($expected, $actual);
     }
 }

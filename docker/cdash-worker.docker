@@ -1,0 +1,4 @@
+FROM kitware/cdash_common
+LABEL MAINTAINER="Kitware, Inc. <cdash@public.kitware.com>"
+
+ENTRYPOINT ["/bin/bash", "/docker-entrypoint.sh", "start-worker"]

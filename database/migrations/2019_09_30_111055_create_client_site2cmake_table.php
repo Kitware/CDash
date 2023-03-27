@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateClientSite2cmakeTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,11 +12,13 @@ class CreateClientSite2cmakeTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_site2cmake', function (Blueprint $table) {
-            $table->integer('siteid')->nullable()->index();
-            $table->integer('cmakeid')->nullable()->index();
-            $table->string('path', 512)->nullable();
-        });
+        if (!Schema::hasTable('client_site2cmake')) {
+            Schema::create('client_site2cmake', function (Blueprint $table) {
+                $table->integer('siteid')->nullable()->index();
+                $table->integer('cmakeid')->nullable()->index();
+                $table->string('path', 512)->nullable();
+            });
+        }
     }
 
 

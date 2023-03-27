@@ -3,9 +3,12 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use App\Services\TestingDay;
+
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\BuildGroup;
+use CDash\Model\Project;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -13,42 +16,23 @@ require_once 'include/common.php';
 
 class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
 {
-    private $original;
     private $config_file;
 
     public function __construct()
     {
         parent::__construct();
-        $this->config_file = dirname(__FILE__) . '/../config/config.local.php';
+        $this->config_file = base_path('.env');
     }
 
     public function __destruct()
     {
-        if ($this->original) {
-            file_put_contents($this->config_file, $this->original);
-        }
+        rename("{$this->config_file}.bak", $this->config_file);
     }
 
     public function enableAutoRemoveConfigSetting()
     {
-        $handle = fopen($this->config_file, 'r');
-        $this->original = fread($handle, filesize($this->config_file));
-        fclose($handle);
-        unset($handle);
-        $handle = fopen($this->config_file, 'w');
-        $lines = explode("\n", $this->original);
-        foreach ($lines as $line) {
-            if (strpos($line, '?>') !== false) {
-                fwrite($handle, '// test config settings injected by file [' . __FILE__ . "]\n");
-                fwrite($handle, '$CDASH_AUTOREMOVE_BUILDS = \'1\';' . "\n");
-                fwrite($handle, '$CDASH_ASYNCHRONOUS_SUBMISSION = false;' . "\n");
-            }
-            if ($line != '') {
-                fwrite($handle, "$line\n");
-            }
-        }
-        fclose($handle);
-        unset($handle);
+        copy($this->config_file, "{$this->config_file}.bak");
+        file_put_contents($this->config_file, "AUTOREMOVE_BUILDS=true", FILE_APPEND);
     }
 
     public function setAutoRemoveTimeFrame()
@@ -65,17 +49,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
 
     public function testBuildsRemovedOnSubmission()
     {
-        // due to the asynchronous nature of do_submit.php line 144, this
-        // is, unfortunately, still necessary
         $this->enableAutoRemoveConfigSetting();
-
-        $config = Config::getInstance();
-
-        // for the time being these don't really do much, but no harm in leaving
-        // them here as the represent the actual state of the app and will be
-        // needed once a different methodology is found for testing this behavior
-        $config->set('CDASH_AUTOREMOVE_BUILDS', 1);
-        $config->set('CDASH_AYNCHONOUS_SUBMISSION', false);
 
         $this->setAutoRemoveTimeFrame();
         $this->deleteLog($this->logfilename);
@@ -92,7 +66,8 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         // Submit the first build
         $rep = dirname(__FILE__) . '/data/EmailProjectExample';
         $testxml1 = "$rep/1_test.xml";
-        if (!$this->putCtestFile($testxml1, ['project' => 'EmailProjectExample'])) {
+
+        if (!$this->submission('EmailProjectExample', $testxml1)) {
             $this->fail('submission 1 failed');
             return;
         }
@@ -110,6 +85,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
             return 1;
         }
         $query_array = pdo_fetch_array($stmt);
+
         if ($query_array[0] != 'Win32-MSVC2009') {
             echo $query_array[0];
             $this->fail('First build not inserted correctly');
@@ -143,7 +119,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         $pdo->exec("DELETE FROM dailyupdate WHERE projectid='{$projectid}'");
 
         $testxml2 = "$rep/2_test.xml";
-        if (!$this->putCtestFile($testxml2, ['project' => 'EmailProjectExample'])) {
+        if (!$this->submission('EmailProjectExample', $testxml2)) {
             $this->fail('submission 2 failed');
             return 1;
         }
@@ -182,9 +158,19 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         }
 
         // Make sure we didn't inadvertently delete the whole upload directory.
-        if (!file_exists("{$config->get('CDASH_ROOT_DIR')}/public/upload")) {
+        if (!file_exists(base_path('app/cdash/public/upload'))) {
             $this->fail('upload directory does not exist');
         }
+
+        // Make sure the dailyupdate was recorded for the correct day.
+        $stmt = $db->prepare('SELECT date FROM dailyupdate WHERE projectid = ?');
+        $db->execute($stmt, [$projectid]);
+        $found = $stmt->fetchColumn();
+        $project = new Project();
+        $project->Id = $projectid;
+        $project->Fill();
+        $expected = TestingDay::get($project, date(FMT_DATETIME));
+        $this->assertEqual($expected, $found);
 
         $this->pass('Passed');
     }

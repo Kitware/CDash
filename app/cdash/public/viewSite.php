@@ -17,9 +17,11 @@
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 
+use App\Models\User;
+use App\Services\ProjectPermissions;
+use App\Services\TestingDay;
 use CDash\Config;
 use CDash\Model\Project;
-use CDash\Model\User;
 
 $config = Config::getInstance();
 
@@ -103,27 +105,19 @@ if ($projectid) {
     $project->Id = $projectid;
     $project->Fill();
     $xml .= '<backurl>index.php?project=' . urlencode($project->Name);
-    $date = $project->GetTestingDay(gmdate(FMT_DATETIME, $currenttime));
+    $date = TestingDay::get($project, gmdate(FMT_DATETIME, $currenttime));
     $xml .= '&#38;date=' . $date;
     $xml .= '</backurl>';
 } else {
     $xml .= '<backurl>index.php</backurl>';
 }
 $xml .= "<title>CDash - $sitename</title>";
-$xml .= '<menutitle>CDash</menutitle>';
 $xml .= "<menusubtitle>$sitename</menusubtitle>";
 
 $xml .= '<dashboard>';
 $xml .= '<title>CDash</title>';
 
-$apikey = '';
-// Find the correct google map key
-foreach ($config->get('CDASH_GOOGLE_MAP_API_KEY') as $key => $value) {
-    if (strstr($_SERVER['HTTP_HOST'], $key) !== false) {
-        $apikey = $value;
-        break;
-    }
-}
+$apikey = config('cdash.google_map_api_key');
 
 const MB = 1048576;
 
@@ -190,12 +184,15 @@ while ($site2project_array = pdo_fetch_array($site2project)) {
     $projectid = $site2project_array['projectid'];
     $project_array = pdo_fetch_array(pdo_query("SELECT name,public FROM project WHERE id=$projectid"));
 
-    if (checkUserPolicy(Auth::id(), $projectid, 1)) {
+    $project = new Project();
+    $project->Id = $projectid;
+    $project->Fill();
+    if (ProjectPermissions::userCanViewProject($project)) {
         $xml .= '<project>';
         $xml .= add_XML_value('id', $projectid);
         $xml .= add_XML_value('submittime', $site2project_array['maxtime']);
-        $xml .= add_XML_value('name', $project_array['name']);
-        $xml .= add_XML_value('name_encoded', urlencode($project_array['name']));
+        $xml .= add_XML_value('name', $project->Name);
+        $xml .= add_XML_value('name_encoded', urlencode($project->Name));
         $xml .= '</project>';
         $displayPage = 1; // if we have at least a valid project we display the page
         $projects[] = $projectid;
@@ -210,7 +207,7 @@ if (!$displayPage) {
 }
 
 // Compute the time for all the projects (faster than individually) average of the week
-if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+if (config('database.default') == 'pgsql') {
     $timediff = 'EXTRACT(EPOCH FROM (build.submittime - buildupdate.starttime))';
     $timestampadd = "NOW()-INTERVAL'167 hours'";
 } else {
@@ -234,11 +231,14 @@ echo pdo_error();
 $totalload = 0;
 while ($testtime_array = pdo_fetch_array($testtime)) {
     $projectid = $testtime_array['projectid'];
-    if (checkUserPolicy(Auth::id(), $projectid, 1)) {
+    $project = new Project();
+    $project->Id = $projectid;
+    $project->Fill();
+    if (ProjectPermissions::userCanViewProject($project)) {
         $timespent = round($testtime_array['elapsed'] / 7.0); // average over 7 days
         $xml .= '<build>';
         $xml .= add_XML_value('name', $testtime_array['buildname']);
-        $xml .= add_XML_value('project', get_project_name($projectid));
+        $xml .= add_XML_value('project', $project->Name);
         $xml .= add_XML_value('type', $testtime_array['buildtype']);
         $xml .= add_XML_value('time', $timespent);
         $totalload += $timespent;
@@ -274,11 +274,9 @@ if (isset($_SESSION['cdash'])) {
         }
     }
 
-    $user = new User();
-    $user->Id = $userid;
-    $user->Fill();
+    $user = User::where('id', '=', $userid)->first();
     $xml .= add_XML_value('id', $userid);
-    $xml .= add_XML_value('admin', $user->Admin);
+    $xml .= add_XML_value('admin', $user->admin);
     $xml .= '</user>';
 }
 

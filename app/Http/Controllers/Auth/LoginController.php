@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AbstractController;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\ValidationException;
 
-class LoginController extends Controller
+class LoginController extends AbstractController
 {
     /*
     |--------------------------------------------------------------------------
@@ -32,8 +32,8 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        $this->maxAttempts = config('login.max_attempts', 5);
-        $this->decayMinutes = config('login.lockout.duration', 1);
+        $this->maxAttempts = config('cdash.login.max_attempts', 5);
+        $this->decayMinutes = config('cdash.login.lockout.duration', 1);
     }
 
     /**
@@ -66,6 +66,7 @@ class LoginController extends Controller
                     [
                         'errors' => $e->validator->getMessageBag(),
                         'title' => 'Login',
+                        'js_version' => self::getJsVersion(),
                     ],
                     401
                 );
@@ -101,6 +102,10 @@ class LoginController extends Controller
      */
     public static function staticShowLoginForm()
     {
-        return view('auth.login', ['title' => 'Login']);
+        return view('auth.login',
+            [
+                'title' => 'Login',
+                'js_version' => self::getJsVersion()
+            ]);
     }
 }

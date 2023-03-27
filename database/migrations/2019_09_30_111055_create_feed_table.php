@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateFeedTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,14 +12,16 @@ class CreateFeedTable extends Migration
      */
     public function up()
     {
-        Schema::create('feed', function (Blueprint $table) {
-            $table->bigInteger('id', true);
-            $table->integer('projectid')->index();
-            $table->timestamp('date')->default(DB::raw('CURRENT_TIMESTAMP'))->index();
-            $table->bigInteger('buildid');
-            $table->integer('type');
-            $table->string('description');
-        });
+        if (!Schema::hasTable('feed')) {
+            Schema::create('feed', function (Blueprint $table) {
+                $table->bigInteger('id', true);
+                $table->integer('projectid')->index();
+                $table->timestamp('date')->default(DB::raw('CURRENT_TIMESTAMP'))->index();
+                $table->bigInteger('buildid');
+                $table->integer('type');
+                $table->string('description');
+            });
+        }
     }
 
 

@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'env' => env('APP_ENV', 'production'),
+    'env' => env('APP_ENV', 'testing'),
 
     /*
     |--------------------------------------------------------------------------
@@ -123,6 +123,10 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    // Log Level: minimum severity for messages to be written to the logs.
+    'log_level' => env('APP_LOG_LEVEL', 'warning'),
+
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -177,6 +181,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\OAuthServiceProvider::class,
+        App\Providers\ViewServiceProvider::class,
 
     ],
 

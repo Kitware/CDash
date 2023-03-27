@@ -88,8 +88,7 @@ class DynamicAnalysis
             echo 'DynamicAnalysis::RemoveAll BuildId not set';
             return false;
         }
-        $config = Config::getInstance();
-        if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+        if (config('database.default') == 'pgsql') {
             // postgresql doesn't support multiple delete
 
             $query = 'BEGIN';
@@ -149,14 +148,28 @@ class DynamicAnalysis
             $idvalue = qnum($this->Id) . ',';
         }
 
+        $max_log_length = 1024 * 1024;
+
         // Handle log decoding/decompression
-        if (strtolower($this->LogEncoding) == 'base64') {
+        if (strtolower($this->LogEncoding ?? '') == 'base64') {
             $this->Log = str_replace(array("\r\n", "\n", "\r"), '', $this->Log);
             $this->Log = base64_decode($this->Log);
         }
-        if (strtolower($this->LogCompression) == 'gzip') {
-            $this->Log = gzuncompress($this->Log);
+        if (strtolower($this->LogCompression ?? '') == 'gzip') {
+            // Avoid memory exhaustion errors by buffering data as we
+            // decompress the gzipped log.
+            $uncompressed_log = '';
+            $inflate_context = inflate_init(ZLIB_ENCODING_DEFLATE);
+            foreach (str_split($this->Log, 1024) as $chunk) {
+                $uncompressed_log .= inflate_add($inflate_context, $chunk, ZLIB_NO_FLUSH);
+                if (strlen($uncompressed_log) >= $max_log_length) {
+                    break;
+                }
+            }
+            $uncompressed_log .= inflate_add($inflate_context, null, ZLIB_FINISH);
+            $this->Log = $uncompressed_log;
         }
+
         if ($this->Log === false) {
             add_log('Unable to decompress dynamic analysis log',
                 'DynamicAnalysis::Insert', LOG_ERR, 0, $this->BuildId, ModelType::DYNAMICANALYSIS, $this->Id);
@@ -164,9 +177,9 @@ class DynamicAnalysis
         }
 
         // Only store 1MB of log.
-        if (strlen($this->Log) > 1024 * 1024) {
+        if (strlen($this->Log) > $max_log_length) {
             $truncated_msg = "\n(truncated)\n";
-            $keep_length = (1024 * 1024) - strlen($truncated_msg);
+            $keep_length = $max_log_length - strlen($truncated_msg);
             $this->Log = substr($this->Log, 0, $keep_length);
             $this->Log .= $truncated_msg;
         }
@@ -198,6 +211,9 @@ class DynamicAnalysis
                 $defect->Insert();
             }
         }
+
+        // Log won't be re-used, clear it here to save memory.
+        $this->Log = '';
 
         // Add the labels
         $this->InsertLabelAssociations();
@@ -240,7 +256,7 @@ class DynamicAnalysis
     private function GetRelatedId($build, $order, $time_clause = null)
     {
         $stmt = $this->PDO->prepare(
-        "SELECT dynamicanalysis.id FROM dynamicanalysis
+            "SELECT dynamicanalysis.id FROM dynamicanalysis
         JOIN build ON (dynamicanalysis.buildid = build.id)
         WHERE build.siteid = :siteid AND
               build.type = :buildtype AND

@@ -13,12 +13,12 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\ComputeClassifier;
+
 require_once 'include/log.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
-
-$start = microtime_float();
-$response = [];
 
 $builds = $_GET['builds'];
 if (count($builds) < 1) {
@@ -26,16 +26,14 @@ if (count($builds) < 1) {
 }
 
 // Decode input data from JSON.
-function decode_build($build)
-{
+$builds = array_map(function ($build) {
     $decoded = json_decode($build, true);
     if ($decoded === null) {
         add_log(json_last_error_msg(), 'compute_classifier');
         return $build;
     }
     return $decoded;
-}
-$builds = array_map('decode_build', $builds);
+}, $builds);
 
 // Make a list of all properties defined and their values across these builds.
 // allProperties = [

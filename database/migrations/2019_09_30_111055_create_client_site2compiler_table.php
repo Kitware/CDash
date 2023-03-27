@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateClientSite2compilerTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,12 +12,14 @@ class CreateClientSite2compilerTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_site2compiler', function (Blueprint $table) {
-            $table->integer('siteid')->nullable()->index();
-            $table->integer('compilerid')->nullable();
-            $table->string('command', 512)->nullable();
-            $table->string('generator');
-        });
+        if (!Schema::hasTable('client_site2compiler')) {
+            Schema::create('client_site2compiler', function (Blueprint $table) {
+                $table->integer('siteid')->nullable()->index();
+                $table->integer('compilerid')->nullable();
+                $table->string('command', 512)->nullable();
+                $table->string('generator');
+            });
+        }
     }
 
 

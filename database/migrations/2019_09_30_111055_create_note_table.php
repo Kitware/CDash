@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateNoteTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,12 +12,14 @@ class CreateNoteTable extends Migration
      */
     public function up()
     {
-        Schema::create('note', function (Blueprint $table) {
-            $table->bigInteger('id', true);
-            $table->text('text', 16777215);
-            $table->string('name');
-            $table->bigInteger('crc32')->index();
-        });
+        if (!Schema::hasTable('note')) {
+            Schema::create('note', function (Blueprint $table) {
+                $table->bigInteger('id', true);
+                $table->text('text', 16777215);
+                $table->string('name');
+                $table->bigInteger('crc32')->index();
+            });
+        }
     }
 
 

@@ -22,7 +22,7 @@ $config = Config::getInstance();
 
 @set_time_limit(0);
 
-$policy = checkUserPolicy(Auth::id(), 0); // only admin
+$policy = checkUserPolicy(0); // only admin
 if ($policy !== true) {
     return $policy;
 }
@@ -108,7 +108,7 @@ if (isset($submit)) {
         $builds[] = $build_array['id'];
     }
 
-    remove_build($builds);
+    remove_build_chunked($builds);
     $xml .= add_XML_value('alert', 'Removed ' . count($builds) . ' builds.');
 }
 

@@ -1,6 +1,7 @@
 @php
 $collection = collect(config('oauth2'));
 $hasEnabled = $collection->firstWhere('enable', true);
+$login_field = config('cdash.login_field');
 @endphp
 
 @extends('layouts.cdash')
@@ -15,7 +16,7 @@ $hasEnabled = $collection->firstWhere('enable', true);
                 <tbody>
                 <tr class="table-heading">
                     <td width="10%" class="nob">
-                        <div align="right"> Email:</div>
+                        <div align="right"> {{ $login_field }}:</div>
                     </td>
                     <td width="70%" class="nob">
                         <input class="textbox" name="email" size="40" value="{{ old('email') }}">
@@ -34,7 +35,7 @@ $hasEnabled = $collection->firstWhere('enable', true);
                         <div align="right">Password:</div>
                     </td>
                     <td width="70%" class="nob">
-                        <input class="textbox" type="password" name="password" size="20">
+                        <input class="textbox" type="password" name="password" size="20" autocomplete="off">
                         <input class="textbox" type="checkbox" name="remember" id="remember" {{old('remember') ? 'checked' : ''}}> Remember Me
                         @if ($errors->has('password'))
                             <div>

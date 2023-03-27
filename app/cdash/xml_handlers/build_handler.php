@@ -30,7 +30,6 @@ use CDash\Model\BuildErrorFilter;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildInformation;
-use CDash\Model\Feed;
 use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\Site;
@@ -47,8 +46,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
     private $EndTimeStamp;
     private $Error;
     private $Label;
-    private $Append;
-    private $Feed;
     private $Builds;
     private $BuildInformation;
     private $BuildCommand;
@@ -64,11 +61,11 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
     private $PullRequest;
     private $BuildErrorFilter;
 
-    public function __construct($projectid, $scheduleid)
+    public function __construct($projectid)
     {
-        parent::__construct($projectid, $scheduleid);
+        parent::__construct($projectid);
         $this->Builds = [];
-        $this->Append = false;
+        $this->BuildCommand = '';
         $this->BuildLog = '';
         $this->Labels = [];
         $this->SubProjects = [];
@@ -94,6 +91,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
             $this->BuildInformation = $factory->create(BuildInformation::class);
             $this->BuildName = "";
             $this->BuildStamp = "";
+            $this->SubProjectName = "";
             $this->Generator = "";
             $this->PullRequest = "";
 
@@ -118,14 +116,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
             }
 
             $this->Site->SetInformation($siteInformation);
-
-            if (array_key_exists('APPEND', $attributes)) {
-                if (strtolower($attributes['APPEND']) == 'true') {
-                    $this->Append = true;
-                }
-            } else {
-                $this->Append = false;
-            }
         } elseif ($name == 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
@@ -210,7 +200,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                 foreach ($this->Labels as $label) {
                     $build->AddLabel($label);
                 }
-                add_build($build, $this->scheduleid);
+                add_build($build);
 
                 $duration = $this->EndTimeStamp - $this->StartTimeStamp;
                 $build->UpdateBuildDuration($duration, !$all_at_once);
@@ -222,12 +212,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                 }
 
                 $build->ComputeDifferences();
-
-                if ($this->config->get('CDASH_ENABLE_FEED')) {
-                    $this->Feed = $factory->create(Feed::class);
-                    // Insert the build into the feed
-                    $this->Feed->InsertBuild($this->projectid, $build->Id);
-                }
             }
         } elseif ($name == 'WARNING' || $name == 'ERROR' || $name == 'FAILURE') {
             $skip_error = false;
@@ -245,29 +229,31 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                 return;
             }
 
-            $threshold = $this->config->get('CDASH_LARGE_TEXT_LIMIT');
-            if ($threshold > 0 && isset($this->Error->StdOutput)) {
+            $threshold = config('cdash.large_text_limit');
+            if ($threshold > 0) {
                 $chunk_size = $threshold / 2;
-                $outlen = strlen($this->Error->StdOutput);
-                if ($outlen > $threshold) {
-                    $beginning = substr($this->Error->StdOutput, 0, $chunk_size);
-                    $end = substr($this->Error->StdOutput, -$chunk_size);
-                    unset($this->Error->StdOutput);
-                    $this->Error->StdOutput =
-                        "$beginning\n...\nCDash truncated output because it exceeded $threshold characters.\n...\n$end\n";
-                    $outlen = strlen($this->Error->StdOutput);
-                }
-
-                $errlen = strlen($this->Error->StdError);
-                if ($errlen > $threshold) {
-                    $beginning = substr($this->Error->StdError, 0, $chunk_size);
-                    $end = substr($this->Error->StdError, -$chunk_size);
-                    unset($this->Error->StdError);
-                    $this->Error->StdError =
-                        "$beginning\n...\nCDash truncated output because it exceeded $threshold characters.\n...\n$end\n";
-                    $errlen = strlen($this->Error->StdError);
+                foreach (['StdOutput', 'StdError'] as $field) {
+                    if (isset($this->Error->$field)) {
+                        $outlen = strlen($this->Error->$field);
+                        if ($outlen > $threshold) {
+                            // First try removing suppressed warnings to see
+                            // if that gets us under the threshold.
+                            $this->Error->$field = $this->removeSuppressedWarnings($this->Error->$field);
+                        }
+                        $outlen = strlen($this->Error->$field);
+                        if ($outlen > $threshold) {
+                            // Truncate the middle of the output if it is
+                            // still too long.
+                            $beginning = substr($this->Error->$field, 0, $chunk_size);
+                            $end = substr($this->Error->$field, -$chunk_size);
+                            unset($this->Error->$field);
+                            $this->Error->$field =
+                                "$beginning\n...\nCDash truncated output because it exceeded $threshold characters.\n...\n$end\n";
+                        }
+                    }
                 }
             }
+
             if (array_key_exists($this->SubProjectName, $this->Builds)) {
                 // TODO: temporary fix for subtle, hard to track down issue
                 // BuildFailures' labels are not getting set in label2buildfailure when using new
@@ -351,32 +337,13 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                     break;
             }
         } elseif ($parent == 'RESULT') {
-            $threshold = $this->config->get('CDASH_LARGE_TEXT_LIMIT');
-            $append = true;
-
             switch ($element) {
                 case 'STDOUT':
-                    if ($threshold > 0) {
-                        if (strlen($this->Error->StdOutput) > $threshold) {
-                            $append = false;
-                        }
-                    }
-
-                    if ($append) {
-                        $this->Error->StdOutput .= $data;
-                    }
+                    $this->Error->StdOutput .= $data;
                     break;
 
                 case 'STDERR':
-                    if ($threshold > 0) {
-                        if (strlen($this->Error->StdError) > $threshold) {
-                            $append = false;
-                        }
-                    }
-
-                    if ($append) {
-                        $this->Error->StdError .= $data;
-                    }
+                    $this->Error->StdError .= $data;
                     break;
 
                 case 'EXITCONDITION':
@@ -419,6 +386,11 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
     public function getBuildName()
     {
         return $this->BuildName;
+    }
+
+    public function getSubProjectName()
+    {
+        return $this->SubProjectName;
     }
 
     /**
@@ -499,5 +471,32 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
             break;
         }
         return $buildGroup;
+    }
+
+    private function removeSuppressedWarnings($input)
+    {
+        if (strpos($input, '[CTest: warning suppressed]') === false) {
+            return $input;
+        }
+        // Iterate over the input string line-by-line,
+        // keeping any content following "warning matched" but removing
+        // any content following "warning suppressed".
+        $output = '';
+        $separator = "\r\n";
+        $line = strtok($input, $separator);
+        $preserve = true;
+        while ($line !== false) {
+            if (strpos($line, '[CTest: warning suppressed') !== false) {
+                $preserve = false;
+            }
+            if (strpos($line, '[CTest: warning matched') !== false) {
+                $preserve = true;
+            }
+            if ($preserve) {
+                $output .= "{$line}\n";
+            }
+            $line = strtok($separator);
+        }
+        return $output;
     }
 }

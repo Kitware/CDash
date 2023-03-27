@@ -1,5 +1,19 @@
 version: '3.3'
 services:
+  common:
+    image: kitware/cdash_common
+    build:
+      context: .
+      dockerfile: ./docker/common.docker
+      args:
+        - CDASH_DB_HOST=mysql
+    volumes:
+      - type: volume
+        source: storage
+        target: /home/kitware/cdash/storage
+    profiles:
+      - donotstart
+
   cdash:
     image: "kitware/cdash"
     container_name: cdash
@@ -15,26 +29,40 @@ services:
     ports:
      - "8080:80"
     environment:
+      QUEUE_CONNECTION: database
       CDASH_ROOT_ADMIN_PASS: secret
+    volumes:
+      - type: volume
+        source: storage
+        target: /home/kitware/cdash/storage
 
-      CDASH_STATIC_USERS: |
-        USER jdoe@acme.com jdoe_secret
-          John Doe "ACME Inc."
-
-        ADMIN admin@example.org admin_secret
-          Admin User "Example Foundation"
-
-        donotreply@example.org oldsecret newsecret
-
-        strange.name@gmail.com strange_secret
-        INFO Str@nge N@me "Str@nge Rese@rch Gr0up LLC."
-
-        DELETE remove.this.user@example.org delete_secret
+  worker:
+    image: "kitware/cdash-worker"
+    environment:
+      CDASH_ROOT_ADMIN_PASS: secret
+      CDASH_REMOTE_PROCESSOR: 1
+      QUEUE_CONNECTION: database
+    build:
+      context: .
+      dockerfile: ./docker/cdash-worker.docker
+      args:
+        - CDASH_DB_HOST=mysql
+    deploy:
+      replicas: 1
+    depends_on:
+      - mysql
+      - cdash
+    volumes:
+      - type: volume
+        source: storage
+        target: /home/kitware/cdash/storage
 
   mysql:
-    image: "mysql/mysql-server:5.5"
+    image: "mysql/mysql-server:5.7"
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
       MYSQL_ROOT_PASSWORD: ''
       MYSQL_DATABASE: 'cdash'
       MYSQL_ROOT_HOST: '%'
+volumes:
+  storage:

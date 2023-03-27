@@ -13,26 +13,26 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\User;
+
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 
 // TODO: dunno what this is or why it seems to exist here and there willy nilly, RWEP.
 redirect_to_https();
 
+use App\Services\AuthTokenService;
+use App\Services\PageTimer;
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\Project;
-use CDash\Model\AuthToken;
-use CDash\Model\ClientJobSchedule;
-use CDash\Model\ClientSite;
-use CDash\Model\ClientJob;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Site;
-use CDash\Model\User;
 use CDash\Model\UserProject;
-use CDash\Model\Job;
+use Illuminate\Support\Facades\Auth;
 
 $config = Config::getInstance();
 $response = [];
@@ -50,23 +50,21 @@ if (!Auth::check()) {
     return;
 }
 
-$script_start_time = microtime_float();
+$pageTimer = new PageTimer();
+
+/** @var \App\Models\User $user */
+$user = Auth::user();
+$userid = $user->id;
+
 $PDO = Database::getInstance()->getPdo();
 
-$userid = Auth::id();
 $xml = begin_XML_for_XSLT();
-$xml .= add_XML_value('manageclient', $config->get('CDASH_MANAGE_CLIENTS'));
 
-$userid = Auth::id();
 $response = begin_JSON_response();
-$response['manageclient'] = $config->get('CDASH_MANAGE_CLIENTS');
 $response['title'] = 'CDash - My Profile';
 
-$user = new User();
-$user->Id = $userid;
-$user->Fill();
-$response['user_name'] = $user->FirstName;
-$response['user_is_admin'] = $user->Admin;
+$response['user_name'] = $user->firstname;
+$response['user_is_admin'] = $user->admin;
 
 if ($config->get('CDASH_USER_CREATE_PROJECTS')) {
     $response['user_can_create_projects'] = 1;
@@ -98,70 +96,7 @@ foreach ($project_rows as $project_row) {
 }
 $response['projects'] = $projects_response;
 
-$authTokens = AuthToken::getTokensForUser($userid);
-$response['authtokens'] = $authTokens;
-
-// Go through the jobs
-if ($config->get('CDASH_MANAGE_CLIENTS')) {
-    $ClientJobSchedule = new ClientJobSchedule();
-    $userJobSchedules = $ClientJobSchedule->getAll($userid, 1000);
-    $schedule_response = [];
-    foreach ($userJobSchedules as $scheduleid) {
-        $ClientJobSchedule = new ClientJobSchedule();
-        $ClientJobSchedule->Id = $scheduleid;
-        $projectid = $ClientJobSchedule->GetProjectId();
-        $Project = new Project();
-        $Project->Id = $projectid;
-
-        $status = 'Scheduled';
-        $lastrun = 'NA';
-
-        $lastjobid = $ClientJobSchedule->GetLastJobId();
-        if ($lastjobid) {
-            $ClientJob = new ClientJob();
-            $ClientJob->Id = $lastjobid;
-            switch ($ClientJob->GetStatus()) {
-                case Job::RUNNING:
-                    $status = 'Running';
-                    $ClientSite = new ClientSite();
-                    $ClientSite->Id = $ClientJob->GetSite();
-                    $status .= ' (' . $ClientSite->GetName() . ')';
-                    $lastrun = $ClientJob->GetStartDate();
-                    break;
-                case Job::FINISHED:
-                    $status = 'Finished';
-                    $ClientSite = new ClientSite();
-                    $ClientSite->Id = $ClientJob->GetSite();
-                    $status .= ' (' . $ClientSite->GetName() . ')';
-                    $lastrun = $ClientJob->GetEndDate();
-                    break;
-                case Job::FAILED:
-                    $status = 'Failed';
-                    $ClientSite = new ClientSite();
-                    $ClientSite->Id = $ClientJob->GetSite();
-                    $status .= ' (' . $ClientSite->GetName() . ')';
-                    $lastrun = $ClientJob->GetEndDate();
-                    break;
-                case Job::ABORTED:
-                    $status = 'Aborted';
-                    $lastrun = $ClientJob->GetEndDate();
-                    break;
-            }
-        }
-        $job_response = [];
-        $job_response['id'] = $scheduleid;
-        $job_response['projectid'] = $Project->Id;
-        $job_response['projectname'] = $Project->GetName();
-        $job_response['status'] = $status;
-        $job_response['lastrun'] = $lastrun;
-        $job_response['description'] = $ClientJobSchedule->GetDescription();
-        if (strlen($job_response['description']) === 0) {
-            $job_response['description'] = 'NA';
-        }
-        $schedule_response[] = $job_response;
-    }
-    $response['jobschedule'] = $schedule_response;
-}
+$response['authtokens'] = AuthTokenService::getTokensForUser($userid);
 
 // Find all the public projects that this user is not subscribed to.
 $stmt = $PDO->prepare(
@@ -171,11 +106,6 @@ $stmt = $PDO->prepare(
     ORDER BY name');
 pdo_execute($stmt, [$userid]);
 
-if ($config->get('CDASH_USE_LOCAL_DIRECTORY') == '1') {
-    if (file_exists('local/user.php')) {
-        include_once 'local/user.php';
-    }
-}
 $publicprojects_response = [];
 while ($row = $stmt->fetch()) {
     $publicproject_response = [];
@@ -396,6 +326,5 @@ if (@$_GET['note'] == 'subscribedtoproject') {
     $response['message'] = 'You have been unsubscribed from a project.';
 }
 
-$script_end_time = microtime_float();
-$response['generationtime'] = round($script_end_time - $script_start_time, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

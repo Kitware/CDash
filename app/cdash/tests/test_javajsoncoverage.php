@@ -3,8 +3,6 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-use CDash\Config;
-
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class JavaJSONCoverageTestCase extends KWWebTestCase
@@ -16,8 +14,6 @@ class JavaJSONCoverageTestCase extends KWWebTestCase
 
     public function testJavaJSONCoverage()
     {
-        Config::getInstance()->set('CDASH_TESTING_RENAME_LOGS', true);
-
         // Do the POST submission to get a pending buildid.
         $post_result = $this->post($this->url . '/submit.php', array(
             'project' => 'SubProjectExample',
@@ -50,12 +46,9 @@ class JavaJSONCoverageTestCase extends KWWebTestCase
         $filename = dirname(__FILE__) . '/data/JavaJSONTar_example.tar';
 
         $put_result = $this->uploadfile($puturl, $filename);
-        $put_json = json_decode($put_result, true);
-
-        if ($put_json['status'] != 0) {
+        if (strpos($put_result, '{"status":0}') === false) {
             $this->fail(
-                'PUT returned ' . $put_json['status'] . ":\n" .
-                $put_json['description'] . "\n");
+                "status:0 not found in PUT results:\n$put_result\n");
             return 1;
         }
 

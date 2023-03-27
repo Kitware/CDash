@@ -7,7 +7,6 @@ use Adldap\Laravel\Validation\Rules\Rule;
 
 class LdapFilterRules extends Rule
 {
-
     /**
      * Checks if the rule passes validation.
      *

@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateBuild2uploadfileTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,13 +12,15 @@ class CreateBuild2uploadfileTable extends Migration
      */
     public function up()
     {
-        Schema::create('build2uploadfile', function (Blueprint $table) {
-            $table->bigInteger('fileid');
-            $table->bigInteger('buildid');
+        if (!Schema::hasTable('build2uploadfile')) {
+            Schema::create('build2uploadfile', function (Blueprint $table) {
+                $table->bigInteger('fileid');
+                $table->bigInteger('buildid');
 
-            $table->index('fileid');
-            $table->index('buildid');
-        });
+                $table->index('fileid');
+                $table->index('buildid');
+            });
+        }
     }
 
 

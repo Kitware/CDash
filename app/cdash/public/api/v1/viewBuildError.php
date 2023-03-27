@@ -27,9 +27,15 @@
  * onlydeltan=[anything] Only show errors that were resolved by this build (not supported for parent builds)
  * onlydeltap=[anything] Only show new errors that arose from this build
  **/
+
+namespace CDash\Api\v1\ViewBuildError;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include_once 'include/repository.php';
+
+use App\Services\PageTimer;
+use App\Services\TestingDay;
 
 use CDash\Model\Build;
 use CDash\Model\BuildError;
@@ -39,6 +45,7 @@ use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\ServiceContainer;
+use PDO;
 
 $build = get_request_build();
 if (is_null($build)) {
@@ -46,9 +53,6 @@ if (is_null($build)) {
 }
 
 $service = ServiceContainer::getInstance();
-$update = $service->get(BuildUpdate::class);
-$update->BuildId = $build->Id;
-$build_update = $update->GetUpdateForBuild();
 
 @$date = $_GET['date'];
 if ($date != null) {
@@ -56,8 +60,7 @@ if ($date != null) {
 }
 
 $response = [];
-
-$start = microtime_float();
+$pageTimer = new PageTimer();
 
 $project = $service->get(Project::class);
 $project->Id = $build->ProjectId;
@@ -67,10 +70,6 @@ $response = begin_JSON_response();
 $response['title'] = "CDash : $project->Name";
 
 $siteid = $build->SiteId;
-$buildtype = $build->Type;
-$buildname = $build->Name;
-$starttime = $build->StartTime;
-$revision = $build_update['revision'];
 
 if (isset($_GET['type'])) {
     $type = pdo_real_escape_numeric($_GET['type']);
@@ -78,7 +77,7 @@ if (isset($_GET['type'])) {
     $type = 0;
 }
 
-$date = $project->GetTestingDay($build->StartTime);
+$date = TestingDay::get($project, $build->StartTime);
 get_dashboard_JSON_by_name($project->Name, $date, $response);
 
 $menu = array();
@@ -108,13 +107,25 @@ if ($next_buildid > 0) {
 
 $response['menu'] = $menu;
 
-// Build
+// Site
 $site = $service->get(Site::class);
 $site->Id = $siteid;
 $extra_build_fields = [
-    'revision' => $build_update['revision'],
     'site' => $site->GetName()
 ];
+
+// Update
+$update = $service->get(BuildUpdate::class);
+$update->BuildId = $build->Id;
+$build_update = $update->GetUpdateForBuild();
+if (is_array($build_update)) {
+    $revision = $build_update['revision'];
+    $extra_build_fields['revision'] = $revision;
+} else {
+    $revision = null;
+}
+
+// Build
 $response['build'] = Build::MarshalResponseArray($build, $extra_build_fields);
 
 $builderror = $service->get(BuildError::class);
@@ -141,8 +152,10 @@ $response['numErrors'] = 0;
  * the numErrors response key.
  * @todo id should probably just be a unique id for the builderror?
  * builderror table currently has no integer that serves as a unique identifier.
+ *
+ * TODO: (williamjallen) determine why this is being included multiple times...
  **/
-if (!function_exists('addErrorResponse')) {
+if (!function_exists('CDash\Api\v1\ViewBuildError\addErrorResponse')) {
     function addErrorResponse($data, &$response)
     {
         $data['id'] = $response['numErrors'];
@@ -168,7 +181,7 @@ if (isset($_GET['onlydeltan'])) {
 
         if ($project->DisplayLabels) {
             get_labels_JSON_from_query_results(
-                    "SELECT text FROM label, label2buildfailure
+                "SELECT text FROM label, label2buildfailure
                     WHERE label.id=label2buildfailure.labelid AND
                     label2buildfailure.buildfailureid='" . $resolvedBuildFailure['id']  . "'
                     ORDER BY text ASC", $marshaledResolvedBuildFailure);
@@ -224,7 +237,5 @@ if ($build->IsParentBuild()) {
     }, $response['errors'])));
 }
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
-
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

@@ -37,7 +37,7 @@ if ($projectid == -1) {
     return;
 }
 
-$policy = checkUserPolicy(Auth::id(), $projectid);
+$policy = checkUserPolicy($projectid);
 if ($policy !== true) {
     return $policy;
 }
@@ -52,15 +52,8 @@ $xml .= '<dashboard>';
 $xml .= '<title>CDash</title>';
 $xml .= '<date>' . $date . '</date>';
 
-$apikey = null;
+$apikey = config('cdash.google_map_api_key');
 
-// Find the correct google map key
-foreach ($config->get('CDASH_GOOGLE_MAP_API_KEY') as $key => $value) {
-    if (strstr($_SERVER['HTTP_HOST'], $key) !== false) {
-        $apikey = $value;
-        break;
-    }
-}
 $xml .= add_XML_value('googlemapkey', $apikey);
 $xml .= add_XML_value('projectname', $projectname);
 $xml .= add_XML_value('projectname_encoded', urlencode($projectname));
@@ -87,7 +80,7 @@ if ($end_timestamp < $beginning_timestamp) {
 $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
-if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+if (config('database.default') == 'pgsql') {
     $site = pdo_query('SELECT s.id,s.name,si.processorclockfrequency,
                      si.description,
                      si.numberphysicalcpus,s.ip,s.latitude,s.longitude,

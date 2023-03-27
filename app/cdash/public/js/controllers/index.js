@@ -56,20 +56,12 @@ CDash.filter("showEmptyBuildsLast", function () {
   $scope.showfilters = false;
   $scope.showsettings = false;
 
-  // Show/hide feed based on cookie settings.
-  var feed_cookie = $.cookie('cdash_hidefeed');
-  if(feed_cookie) {
-    $scope.showFeed = false;
-  } else {
-    $scope.showFeed = true;
-  }
-
   // Check if we have a cookie for auto-refresh.
-  var timer, refresh_cookie = $.cookie('cdash_refresh');
-  if(refresh_cookie) {
+  const refresh_cookie = $.cookie('cdash_refresh') === 'true';
+  if (refresh_cookie) {
     $scope.autoRefresh = true;
-    timer = $timeout(function () {
-      window.location.reload(true);
+    $timeout(function () {
+      window.location.reload();
     }, 5000);
   } else {
     $scope.autoRefresh = false;
@@ -220,6 +212,7 @@ CDash.filter("showEmptyBuildsLast", function () {
     $scope.cdash.extrafilterurl = '';
     if ($scope.cdash.sharelabelfilters) {
       $scope.cdash.extrafilterurl = filters.getLabelString($scope.cdash.filterdata);
+      $scope.cdash.querytestfilters = $scope.cdash.extrafilterurl;
     }
 
     // Read simple/advanced view cookie setting.
@@ -254,19 +247,7 @@ CDash.filter("showEmptyBuildsLast", function () {
 
     $scope.cdash.numcolumns = 14 + $scope.cdash.extratestcolumns + $scope.cdash.displaylabels;
 
-    if (!$scope.cdash.feed_enabled) {
-      $scope.showFeed = false;
-    }
-
     var projectid = $scope.cdash.projectid;
-    if (projectid > 0 && $scope.cdash.feed) {
-      // Setup the feed.  This functionality used to live in cdashFeed.js.
-      setInterval(function() {
-        if($scope.showFeed) {
-          $("#feed").load("ajax/getfeed.php?projectid="+projectid,{},function(){$(this).fadeIn('slow');})
-        }
-      }, 30000); // 30s
-    }
 
     // Expose the jumpToAnchor function to the scope.
     // This allows us to call it from the HTML template.
@@ -277,19 +258,6 @@ CDash.filter("showEmptyBuildsLast", function () {
       anchors.jumpToAnchor($location.hash());
     }
 
-  };
-
-
-  $scope.toggleFeed = function() {
-    if ($scope.loading) { return; }
-    $scope.showFeed = !$scope.showFeed;
-    if($scope.showFeed) {
-      $.cookie('cdash_hidefeed', null);
-      $("#feed").load("ajax/getfeed.php?projectid="+$scope.cdash.projectid,{},function(){$(this).fadeIn('slow');});
-      }
-    else {
-      $.cookie('cdash_hidefeed',1);
-    }
   };
 
 
@@ -493,15 +461,14 @@ CDash.filter("showEmptyBuildsLast", function () {
   };
 
   $scope.toggleAutoRefresh = function() {
-    var refresh_cookie = $.cookie('cdash_refresh');
-    if(refresh_cookie) {
-      // Disable autorefresh and remove the cookie.
-      $timeout.cancel(timer);
-      $scope.autoRefresh = false;
+    const refresh_cookie = $.cookie('cdash_refresh') === 'true';
+    if (refresh_cookie) {
+      // Delete the cookie and reload
       $.cookie('cdash_refresh', null);
+      window.location.reload();
     } else {
-      $.cookie('cdash_refresh', 1);
-      window.location.reload(true);
+      $.cookie('cdash_refresh', 'true');
+      window.location.reload();
     }
   };
 

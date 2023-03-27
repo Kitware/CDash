@@ -15,6 +15,8 @@ use CDash\Model\BuildGroupRule;
 
 class BuildGroupRuleTestCase extends KWWebTestCase
 {
+    protected $PDO;
+
     public function __construct()
     {
         parent::__construct();
@@ -139,8 +141,8 @@ class BuildGroupRuleTestCase extends KWWebTestCase
             ];
             try {
                 $response = $client->request('POST',
-                        $this->url .  '/api/v1/build.php',
-                        ['json' => $payload]);
+                    $this->url .  '/api/v1/build.php',
+                    ['json' => $payload]);
             } catch (GuzzleHttp\Exception\ClientException $e) {
                 $this->fail($e->getMessage());
             }
@@ -157,8 +159,8 @@ class BuildGroupRuleTestCase extends KWWebTestCase
         ];
         try {
             $response = $client->request('POST',
-                    $this->url .  '/api/v1/build.php',
-                    ['json' => $payload]);
+                $this->url .  '/api/v1/build.php',
+                ['json' => $payload]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
         }
@@ -168,7 +170,7 @@ class BuildGroupRuleTestCase extends KWWebTestCase
         $num_active = 0;
         $num_finished = 0;
         $stmt = $this->PDO->prepare(
-                "SELECT * FROM build2grouprule
+            "SELECT * FROM build2grouprule
                 WHERE buildname = 'no-project-leakage' AND
                       siteid = 1 AND
                       buildtype = 'Experimental'");

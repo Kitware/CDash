@@ -1,37 +1,28 @@
 CDash.controller('UserController', function UserController($scope, $http, $timeout, apiLoader) {
   apiLoader.loadPageData($scope, 'api/v1/user.php');
 
-  $scope.deleteSchedule = function(job) {
-    if (window.confirm("Are you sure you want to delete this schedule?")) {
-      var parameters = { removeschedule: job.id };
-      $http({
-        url: 'manageClient.php',
-        method: 'GET',
-        params: parameters
-      }).then(function success() {
-        // Find and remove this job schedule.
-        var index = -1;
-        for(var i = 0, len = $scope.cdash.jobschedule.length; i < len; i++) {
-          if ($scope.cdash.jobschedule[i].id === job.id) {
-            index = i;
-            break;
-          }
-        }
-        if (index > -1) {
-          $scope.cdash.jobschedule.splice(index, 1);
-        }
-      }, function error(e) {
-        $scope.cdash.message = e.data.error;
-      });
-    }
-  };
-
   $scope.generateToken = function() {
-    var parameters = { description: $scope.cdash.tokendescription };
-    $http.post('api/v1/authtoken.php', parameters)
+    const parameters = {
+      description: $scope.cdash.tokendescription,
+      scope: $scope.cdash.tokenscope === 'full_access' ? 'full_access' : 'submit_only',
+      projectid: $scope.cdash.tokenscope === 'full_access'
+                 || $scope.cdash.tokenscope === 'submit_only' ? -1 : $scope.cdash.tokenscope
+    };
+    $http.post('/api/authtokens/create', parameters)
     .then(function success(s) {
-      var authtoken = s.data.token;
+      const authtoken = s.data.token;
       authtoken.copied = false;
+      authtoken.raw_token = s.data.raw_token;
+
+      $scope.cdash.projects.forEach(project => {
+        if (project.id === authtoken.projectid) {
+          authtoken.projectname = project.name;
+        }
+      });
+
+      // A terrible hack to format the date the same way the DB returns them on initial page load
+      authtoken.expires = authtoken.expires.replace('T', ' ');
+
       $scope.cdash.authtokens.push(authtoken);
     }, function error(e) {
       $scope.cdash.message = e.data.error;
@@ -47,15 +38,13 @@ CDash.controller('UserController', function UserController($scope, $http, $timeo
   };
 
   $scope.revokeToken = function(authtoken) {
-    var parameters = { hash: authtoken.hash };
     $http({
-      url: 'api/v1/authtoken.php',
+      url: `/api/authtokens/delete/${authtoken.hash}`,
       method: 'DELETE',
-      params: parameters
     }).then(function success() {
       // Remove this token from our list.
-      var index = -1;
-      for(var i = 0, len = $scope.cdash.authtokens.length; i < len; i++) {
+      let index = -1;
+      for(let i = 0, len = $scope.cdash.authtokens.length; i < len; i++) {
         if ($scope.cdash.authtokens[i].hash === authtoken.hash) {
           index = i;
           break;

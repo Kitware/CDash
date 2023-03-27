@@ -258,7 +258,7 @@ CREATE INDEX "buildid6" on "dynamicanalysis" ("buildid");
 --
 CREATE TABLE "dynamicanalysisdefect" (
   "dynamicanalysisid" bigint DEFAULT '0' NOT NULL,
-  "type" character varying(50) DEFAULT '' NOT NULL,
+  "type" character varying(255) DEFAULT '' NOT NULL,
   "value" bigint DEFAULT '0' NOT NULL
 );
 CREATE INDEX "buildid7" on "dynamicanalysisdefect" ("dynamicanalysisid");
@@ -291,12 +291,12 @@ CREATE INDEX "checksum" on "image" ("checksum");
 CREATE TABLE "test2image" (
   "id" serial NOT NULL,
   "imgid" bigint NOT NULL,
-  "testid" bigint NOT NULL,
+  "outputid" bigint NOT NULL,
   "role" text NOT NULL,
    PRIMARY KEY ("id")
 );
 CREATE INDEX "imgid" on "test2image" ("imgid");
-CREATE INDEX "testid" on "test2image" ("testid");
+CREATE INDEX "outputid" on "test2image" ("outputid");
 
 --
 -- Table: note
@@ -393,8 +393,8 @@ CREATE TABLE "siteinformation" (
   "processorfamilyid" bigint DEFAULT '-1' NOT NULL,
   "processormodelid" bigint DEFAULT '-1' NOT NULL,
   "processorcachesize" bigint DEFAULT '-1' NOT NULL,
-  "numberlogicalcpus" smallint DEFAULT '-1' NOT NULL,
-  "numberphysicalcpus" smallint DEFAULT '-1' NOT NULL,
+  "numberlogicalcpus" smallint DEFAULT '0' NOT NULL,
+  "numberphysicalcpus" smallint DEFAULT '0' NOT NULL,
   "totalvirtualmemory" bigint DEFAULT '-1' NOT NULL,
   "totalphysicalmemory" bigint DEFAULT '-1' NOT NULL,
   "logicalprocessorsperphysical" bigint DEFAULT '-1' NOT NULL,
@@ -433,33 +433,47 @@ CREATE INDEX "userid" on "site2user" ("userid");
 CREATE TABLE "test" (
   "id" serial NOT NULL,
   "projectid" bigint NOT NULL,
-  "crc32" bigint NOT NULL,
   "name" character varying(255) DEFAULT '' NOT NULL,
+  PRIMARY KEY ("id")
+);
+CREATE UNIQUE INDEX "test_name_projectid_unique" ON "test" ("name", "projectid");
+
+--
+-- Table: testoutput
+--
+CREATE TABLE "testoutput" (
+  "id" serial NOT NULL,
+  "testid" bigint NOT NULL,
+  "crc32" bigint NOT NULL,
   "path" character varying(255) DEFAULT '' NOT NULL,
   "command" text NOT NULL,
-  "details" text NOT NULL,
   "output" bytea NOT NULL,
   PRIMARY KEY ("id")
 );
-CREATE INDEX "crc323" on "test" ("crc32");
-CREATE INDEX "testprojectid" on "test" ("projectid");
-CREATE INDEX "name4" on "test" ("name");
+CREATE INDEX "crc323" on "testoutput" ("crc32");
+CREATE INDEX "testoutput_testid_index" on "testoutput" ("testid");
+
 
 --
 -- Table: build2test
 --
 CREATE TABLE "build2test" (
+  "id" serial NOT NULL,
   "buildid" bigint DEFAULT '0' NOT NULL,
+  "outputid" bigint DEFAULT '0' NOT NULL,
   "testid" bigint DEFAULT '0' NOT NULL,
   "status" character varying(10) DEFAULT '' NOT NULL,
+  "details" character varying(255) DEFAULT '' NOT NULL,
   "time" numeric(7,2) DEFAULT '0.00' NOT NULL,
   "timemean" numeric(7,2) DEFAULT '0.00' NOT NULL,
   "timestd" numeric(7,2) DEFAULT '0.00' NOT NULL,
   "timestatus" smallint DEFAULT '0' NOT NULL,
-  "newstatus" smallint DEFAULT '0' NOT NULL
+  "newstatus" smallint DEFAULT '0' NOT NULL,
+  PRIMARY KEY ("id")
 );
-CREATE INDEX "buildid8" on "build2test" ("buildid");
-CREATE INDEX "testid2" on "build2test" ("testid");
+CREATE INDEX "build2test_buildid" on "build2test" ("buildid");
+CREATE INDEX "build2test_outputid" on "build2test" ("outputid");
+CREATE INDEX "build2test_testid" on "build2test" ("testid");
 CREATE INDEX "status" on "build2test" ("status");
 CREATE INDEX "timestatus" on "build2test" ("timestatus");
 CREATE INDEX "newstatus" on "build2test" ("newstatus");
@@ -584,13 +598,13 @@ CREATE TABLE "project2repositories" (
 --
 CREATE TABLE "testmeasurement" (
   "id" serial NOT NULL,
-  "testid" bigint NOT NULL,
+  "outputid" bigint NOT NULL,
   "name" character varying(70) NOT NULL,
   "type" character varying(70) NOT NULL,
   "value" text NOT NULL,
    PRIMARY KEY ("id")
 );
-CREATE INDEX "testid3" on "testmeasurement" ("testid");
+CREATE INDEX "testmeasurement_outputid" on "testmeasurement" ("outputid");
 
 --
 -- Table: dailyupdate
@@ -816,11 +830,11 @@ CREATE TABLE "label2dynamicanalysis" (
 CREATE TABLE "label2test" (
   "labelid" bigint NOT NULL,
   "buildid" bigint NOT NULL,
-  "testid" bigint NOT NULL,
-  PRIMARY KEY ("labelid", "buildid", "testid")
+  "outputid" bigint NOT NULL,
+  PRIMARY KEY ("labelid", "buildid", "outputid")
 );
 CREATE INDEX "label2test_buildid" on "label2test" ("buildid");
-CREATE INDEX "label2test_testid" on "label2test" ("testid");
+CREATE INDEX "label2test_outputid" on "label2test" ("outputid");
 
 --
 -- Table: label2update
@@ -987,28 +1001,6 @@ CREATE INDEX "coveragefilepriority_fullpath" on "coveragefilepriority" ("fullpat
 CREATE INDEX "coveragefilepriority_projectid" on "coveragefilepriority" ("projectid");
 
 
---
--- Table: submission
---
-CREATE TABLE "submission" (
-  "id" serial NOT NULL,
-  "filename" character varying(500) DEFAULT '' NOT NULL,
-  "projectid" bigint  NOT NULL,
-  "status" smallint NOT NULL,
-  "attempts" bigint DEFAULT '0' NOT NULL,
-  "filesize" bigint DEFAULT '0' NOT NULL,
-  "filemd5sum" character varying(32) DEFAULT '' NOT NULL,
-  "lastupdated" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "created" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "started" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "finished" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  PRIMARY KEY ("id")
-);
-CREATE INDEX "submission_projectid" on "submission" ("projectid");
-CREATE INDEX "submission_status" on "submission" ("status");
-CREATE INDEX "submission_finished" on "submission" ("finished");
-
-
 CREATE TABLE "blockbuild" (
   "id" serial NOT NULL,
   "projectid" bigint  NOT NULL,
@@ -1022,240 +1014,6 @@ CREATE INDEX "blockbuild_buildname" on "blockbuild" ("buildname");
 CREATE INDEX "blockbuild_sitename" on "blockbuild" ("sitename");
 CREATE INDEX "blockbuild_ipaddress" on "blockbuild" ("ipaddress");
 
-
---
--- Table: client_cmake
---
-CREATE TABLE "client_cmake" (
-  "id" serial NOT NULL,
-  "version" character varying(255) NOT NULL,
-  PRIMARY KEY ("id")
-);
-
-
---
--- Table: client_compiler
---
-CREATE TABLE "client_compiler" (
-  "id" serial NOT NULL,
-  "name" character varying(255) NOT NULL,
-  "version" character varying(255) NOT NULL,
-  PRIMARY KEY ("id")
-);
-
-
---
--- Table: client_job
---
-CREATE TABLE "client_job" (
-  "id" bigserial NOT NULL,
-  "scheduleid" bigint NOT NULL,
-  "osid" smallint NOT NULL,
-  "siteid" bigint DEFAULT NULL,
-  "startdate" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "enddate" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "status" bigint DEFAULT NULL,
-  "output" text,
-  "cmakeid" bigint NOT NULL,
-  "compilerid" bigint NOT NULL
-);
-CREATE INDEX "client_job_scheduleid" on "client_job" ("scheduleid");
-CREATE INDEX "client_job_startdate" on "client_job" ("startdate");
-CREATE INDEX "client_job_enddate" on "client_job" ("enddate");
-CREATE INDEX "client_job_status" on "client_job" ("status");
-
-
---
--- Table: client_jobschedule
---
-CREATE TABLE "client_jobschedule" (
-  "id" bigserial NOT NULL,
-  "userid" bigint DEFAULT NULL,
-  "projectid" bigint DEFAULT NULL,
-  "cmakecache" text NOT NULL,
-  "clientscript" text default '',
-  "startdate" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "enddate" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "type" smallint NOT NULL,
-  "starttime" time DEFAULT '00:00:00' NOT NULL,
-  "repeattime" numeric(6,2) DEFAULT '0.00' NOT NULL,
-  "enable" smallint NOT NULL,
-  "lastrun" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "repository" character varying(512) default '',
-  "module" character varying(255) default '',
-  "buildnamesuffix" character varying(255) default '',
-  "tag" character varying(255) default '',
-  "buildconfiguration" smallint default '0',
-  "description" text default ''
-);
-CREATE INDEX "client_jobschedule_userid" on "client_jobschedule" ("userid");
-CREATE INDEX "client_jobschedule_projectid" on "client_jobschedule" ("projectid");
-CREATE INDEX "client_jobschedule_enable" on "client_jobschedule" ("enable");
-CREATE INDEX "client_jobschedule_starttime" on "client_jobschedule" ("starttime");
-CREATE INDEX "client_jobschedule_repeattime" on "client_jobschedule" ("repeattime");
-
---
--- Table: client_jobschedule2build
---
-CREATE TABLE "client_jobschedule2build" (
-  "scheduleid" bigint NOT NULL,
-  "buildid" bigint NOT NULL,
-  Constraint "scheduleid1" UNIQUE ("scheduleid", "buildid")
-);
-
---
--- Table: client_jobschedule2cmake
---
-CREATE TABLE "client_jobschedule2cmake" (
-  "scheduleid" bigint NOT NULL,
-  "cmakeid" bigint NOT NULL,
-  Constraint "scheduleid2" UNIQUE ("scheduleid", "cmakeid")
-);
-
---
--- Table: client_jobschedule2compiler
---
-CREATE TABLE "client_jobschedule2compiler" (
-  "scheduleid" bigint NOT NULL,
-  "compilerid" bigint NOT NULL,
-  Constraint "scheduleid3" UNIQUE ("scheduleid", "compilerid")
-);
-
---
--- Table: client_jobschedule2library
---
-CREATE TABLE "client_jobschedule2library" (
-  "scheduleid" bigint NOT NULL,
-  "libraryid" bigint NOT NULL,
-  Constraint "scheduleid4" UNIQUE ("scheduleid", "libraryid")
-);
-
-
---
--- Table: client_jobschedule2os
---
-CREATE TABLE "client_jobschedule2os" (
-  "scheduleid" bigint NOT NULL,
-  "osid" bigint NOT NULL,
-  Constraint "scheduleid5" UNIQUE ("scheduleid", "osid")
-);
-
-
---
--- Table: client_jobschedule2site
---
-CREATE TABLE "client_jobschedule2site" (
-  "scheduleid" bigint NOT NULL,
-  "siteid" bigint NOT NULL,
-  Constraint "scheduleid6" UNIQUE ("scheduleid", "siteid")
-);
-
---
--- Table client_jobschedule2submission
---
-CREATE TABLE "client_jobschedule2submission" (
-  "scheduleid" bigint NOT NULL UNIQUE,
-  "submissionid" bigint NOT NULL UNIQUE
-);
-
-
---
--- Table: client_library
---
-CREATE TABLE "client_library" (
-  "id" serial NOT NULL,
-  "name" character varying(255) NOT NULL,
-  "version" character varying(255) NOT NULL,
-  PRIMARY KEY ("id")
-);
-
-
---
--- Table: client_os
---
-CREATE TABLE "client_os" (
-  "id" serial NOT NULL,
-  "name" character varying(255) NOT NULL,
-  "version" character varying(255) NOT NULL,
-  "bits" smallint DEFAULT '32' NOT NULL,
-  PRIMARY KEY ("id")
-);
-CREATE INDEX "client_os_name" on "client_os" ("name");
-CREATE INDEX "client_os_version" on "client_os" ("version");
-CREATE INDEX "client_os_bits" on "client_os" ("bits");
-
-
---
--- Table: client_site
---
-CREATE TABLE "client_site" (
-  "id" serial NOT NULL,
-  "name" character varying(255) DEFAULT NULL,
-  "osid" bigint DEFAULT NULL,
-  "systemname" character varying(255) DEFAULT NULL,
-  "host" character varying(255) DEFAULT NULL,
-  "basedirectory" character varying(512) NOT NULL,
-  "lastping" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  PRIMARY KEY ("id")
-);
-CREATE INDEX "client_site_name" on "client_site" ("name");
-CREATE INDEX "client_site_system" on "client_site" ("osid");
-CREATE INDEX "client_site_lastping" on "client_site" ("lastping");
-
---
--- Table: client_site2cmake
---
-CREATE TABLE "client_site2cmake" (
-  "siteid" bigint DEFAULT NULL,
-  "cmakeid" bigint DEFAULT NULL,
-  "path" character varying(512) DEFAULT NULL
-);
-CREATE INDEX "client_site2cmake_siteid" on "client_site2cmake" ("siteid");
-CREATE INDEX "client_site2cmake_version" on "client_site2cmake" ("cmakeid");
-
-
---
--- Table: client_site2compiler
---
-CREATE TABLE "client_site2compiler" (
-  "siteid" bigint DEFAULT NULL,
-  "compilerid" bigint DEFAULT NULL,
-  "command" character varying(512) DEFAULT NULL,
-  "generator" character varying(255) NOT NULL
-);
-CREATE INDEX "client_site2compiler_siteid" on "client_site2compiler" ("siteid");
-
-
---
--- Table: client_site2library
---
-CREATE TABLE "client_site2library" (
-  "siteid" bigint DEFAULT NULL,
-  "libraryid" bigint DEFAULT NULL,
-  "path" character varying(512) DEFAULT NULL,
-  "include" character varying(512) NOT NULL
-);
-CREATE INDEX "client_site2library_siteid" on "client_site2library" ("siteid");
-
---
--- Table: client_site2program
---
-CREATE TABLE "client_site2program" (
-  "siteid" bigint  NOT NULL,
-  "name" character varying(30) NOT NULL,
-  "version" character varying(30) NOT NULL,
-  "path" character varying(512) NOT NULL
-);
-CREATE INDEX "client_site2program_siteid" on "client_site2program" ("siteid");
-
---
--- Table: client_site2project
---
-CREATE TABLE "client_site2project" (
-  "projectid" bigint DEFAULT NULL,
-  "siteid" bigint DEFAULT NULL
-);
-CREATE INDEX "client_site2project_siteid" on "client_site2project" ("siteid");
 
 --
 -- Table structure for table projectrobot
@@ -1280,27 +1038,6 @@ CREATE TABLE "filesum" (
 );
 CREATE INDEX "filesum_md5sum" on "filesum" ("md5sum");
 
---
--- Table: projectjobscript
---
-CREATE TABLE "projectjobscript" (
-  "id" serial NOT NULL,
-  "projectid" bigint NOT NULL,
-  "script" text NOT NULL,
-  PRIMARY KEY ("id")
-);
-CREATE INDEX "projectjobscript_projectid" on "projectjobscript" ("projectid");
-
---
--- Table: submissionprocessor
---
-CREATE TABLE "submissionprocessor" (
-  "projectid" bigint NOT NULL,
-  "pid" bigint NOT NULL,
-  "lastupdated" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "locked" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  PRIMARY KEY ("projectid")
-);
 
 --
 -- Table: user2repository
@@ -1344,38 +1081,16 @@ CREATE TABLE "build2uploadfile" (
 CREATE INDEX "build2uploadfile_fileid" on "build2uploadfile" ("fileid");
 CREATE INDEX "build2uploadfile_buildid" on "build2uploadfile" ("buildid");
 
---
--- Table: submission2ip
---
-CREATE TABLE "submission2ip" (
-  "submissionid" bigint NOT NULL UNIQUE,
-  "ip" character varying(255) DEFAULT '' NOT NULL,
-  PRIMARY KEY("submissionid")
-);
-
 CREATE TABLE "measurement" (
   "id" serial NOT NULL,
   "projectid" bigint NOT NULL,
   "name" character varying(40) NOT NULL,
-  "testpage" smallint NOT NULL DEFAULT '0',
-  "summarypage" smallint NOT NULL DEFAULT '0',
+  "position" smallint DEFAULT '0' NOT NULL,
   PRIMARY KEY("id")
 );
 CREATE INDEX "measurement_projectid" on "measurement" ("projectid");
 CREATE INDEX "measurement_name" on "measurement" ("name");
 
-
-CREATE TABLE "feed" (
-  "id" serial NOT NULL,
-  "projectid" bigint NOT NULL,
-  "date" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "buildid" bigint NOT NULL DEFAULT '0',
-  "type" bigint NOT NULL DEFAULT '0',
-  "description" character varying(255) NOT NULL,
-  PRIMARY KEY ("id")
-);
-CREATE INDEX "feed_projectid" on "feed" ("projectid");
-CREATE INDEX "feed_date" on "feed" ("date");
 
 --
 -- Table: overview_components

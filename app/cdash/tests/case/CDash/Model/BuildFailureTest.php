@@ -17,9 +17,9 @@ use CDash\Model\Project;
 use CDash\ServiceContainer;
 use CDash\Test\CDashTestCase;
 
-class BuildFailureModelTest extends CDashTestCase
+class BuildFailureTest extends CDashTestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
         $container = ServiceContainer::container();
         $this->mock_buildfailure = $this->getMockBuilder(BuildFailure::class)

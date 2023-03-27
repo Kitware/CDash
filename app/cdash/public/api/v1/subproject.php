@@ -14,23 +14,26 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+namespace CDash\Api\v1\SubProject;
+
 require_once 'include/pdo.php';
 include_once 'include/common.php';
+
+use App\Services\PageTimer;
+use App\Services\ProjectPermissions;
 
 use CDash\Model\Project;
 use CDash\Model\SubProject;
 use CDash\Model\SubProjectGroup;
-use CDash\Model\User;
+use Illuminate\Support\Facades\Auth;
 
 // Make sure we have a valid login.
 if (!Auth::check()) {
     return;
 }
-$userid = Auth::id();
-if (!$userid || !is_numeric($userid)) {
-    echo_error('Not a valid userid!');
-    return;
-}
+
+/** @var \App\Models\User $user */
+$user = Auth::user();
 
 // Check required parameter.
 @$projectid = $_GET['projectid'];
@@ -46,16 +49,11 @@ if (!isset($projectid)) {
 $projectid = pdo_real_escape_numeric($projectid);
 
 // Make sure the user has access to this page.
-$Project = new Project;
-
-$User = new User;
-$User->Id = $userid;
-$Project->Id = $projectid;
-
-$role = $Project->GetUserRole($userid);
-
-if ($User->IsAdmin() === false && $role <= 1) {
-    echo_error("You ($userid) don't have the permissions to access this page ($projectid)");
+$project = new Project;
+$project->Id = $projectid;
+if (!ProjectPermissions::userCanEditProject($user, $project)) {
+    $userid = $user->Id;
+    echo_error("You ($userid) don't have the permissions to access this page ($projectid)", 403);
     return;
 }
 
@@ -64,7 +62,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'DELETE':
-        rest_delete($projectid);
+        rest_delete();
         break;
     case 'POST':
         rest_post($projectid);
@@ -78,15 +76,15 @@ switch ($method) {
         break;
 }
 
-/* Handle GET requests */
-function rest_get($projectid)
+/** Handle GET requests */
+function rest_get($projectid): bool
 {
     $subprojectid = get_subprojectid();
     if ($subprojectid === false) {
-        return;
+        return true;
     }
 
-    $start = microtime_float();
+    $pageTimer = new PageTimer();
     $response = begin_JSON_response();
     $response['projectid'] = $projectid;
     $response['subprojectid'] = $subprojectid;
@@ -97,8 +95,8 @@ function rest_get($projectid)
     $response['group'] = $SubProject->GetGroupId();
 
     $query = pdo_query('
-    SELECT id, name FROM subproject WHERE projectid=' . qnum($projectid) . "
-    AND endtime='1980-01-01 00:00:00'");
+SELECT id, name FROM subproject WHERE projectid=' . qnum($projectid) . "
+AND endtime='1980-01-01 00:00:00'");
 
     if (!$query) {
         add_last_sql_error('getSubProject Select');
@@ -129,13 +127,14 @@ function rest_get($projectid)
     $response['dependencies'] = $dependencies_response;
     $response['available_dependencies'] = $available_dependencies_response;
 
-    $end = microtime_float();
-    $response['generationtime'] = round($end - $start, 3);
+    $pageTimer->end($response);
     echo json_encode(cast_data_for_JSON($response));
+
+    return true;
 }
 
-/* Handle DELETE requests */
-function rest_delete($projectid)
+/** Handle DELETE requests */
+function rest_delete(): void
 {
     if (isset($_GET['groupid'])) {
         // Delete subproject group.
@@ -165,7 +164,7 @@ function rest_delete($projectid)
     }
 }
 
-/* Handle POST requests */
+/** Handle POST requests */
 function rest_post($projectid)
 {
     if (isset($_POST['newsubproject'])) {
@@ -226,11 +225,10 @@ function rest_post($projectid)
             pdo_query($query);
             add_last_sql_error('API::subproject::newLayout::INSERT', $projectid);
         }
-        return;
     }
 }
 
-/* Handle PUT requests */
+/** Handle PUT requests */
 function rest_put($projectid)
 {
     if (isset($_GET['threshold'])) {
@@ -285,9 +283,9 @@ function get_subprojectid()
     return $subprojectid;
 }
 
-function echo_error($msg)
+function echo_error($msg, $status = 400)
 {
-    $response = array();
+    $response = [];
     $response['error'] = $msg;
-    echo json_encode($response);
+    json_error_response($response, $status);
 }

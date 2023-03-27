@@ -41,7 +41,7 @@ class SubProjectDirectoriesHandler extends NonSaxHandler
         $open_list = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         if ($open_list === false) {
             add_log("Could not open $filename for parsing",
-                    'SubProjectDirectoriesHandler::Parse', LOG_ERR);
+                'SubProjectDirectoriesHandler::Parse', LOG_ERR);
             return false;
         }
 

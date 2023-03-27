@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateSubmission2ipTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,10 +12,12 @@ class CreateSubmission2ipTable extends Migration
      */
     public function up()
     {
-        Schema::create('submission2ip', function (Blueprint $table) {
-            $table->bigInteger('submissionid')->primary();
-            $table->string('ip')->default('');
-        });
+        if (!Schema::hasTable('submission2ip')) {
+            Schema::create('submission2ip', function (Blueprint $table) {
+                $table->bigInteger('submissionid')->primary();
+                $table->string('ip')->default('');
+            });
+        }
     }
 
 

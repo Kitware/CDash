@@ -14,21 +14,6 @@ class AutoRemoveBuildsTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function launchViaCommandLine($arg1)
-    {
-        global $cdashpath;
-        global $PHP_EXE;
-        $cmd = "\"$PHP_EXE\" \"$cdashpath/scripts/autoRemoveBuilds.php\"";
-        if ($arg1) {
-            $cmd = $cmd . " \"$arg1\"";
-        }
-        echo "Running command line:\n";
-        echo "  cmd='${cmd}'\n";
-        passthru($cmd);
-        echo "\n";
-        echo "Done with command line\n";
-    }
-
     public function testAutoRemoveBuilds()
     {
         global $configure;

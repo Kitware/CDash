@@ -14,8 +14,9 @@
  * =========================================================================
  */
 
+use Illuminate\Support\Collection;
+
 use CDash\Collection\ConfigureCollection;
-use CDash\Collection\LabelCollection;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Topic\ConfigureTopic;
 use CDash\Messaging\Topic\Topic;
@@ -29,7 +30,7 @@ class ConfigureTopicTest extends \CDash\Test\CDashTestCase
     /** @var Topic|PHPUnit_Framework_MockObject_MockObject */
     private $parent;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->parent = $this->getMockForAbstractClass(Topic::class);
@@ -168,7 +169,7 @@ class ConfigureTopicTest extends \CDash\Test\CDashTestCase
         $configure = new BuildConfigure();
 
         $build->SetBuildConfigure($configure);
-        $sut->setTopicDataWithLabels($build, new LabelCollection());
+        $sut->setTopicDataWithLabels($build, collect());
 
         $collection = $sut->getTopicCollection();
         $this->assertInstanceOf(ConfigureCollection::class, $collection);

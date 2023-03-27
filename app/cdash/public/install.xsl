@@ -76,14 +76,11 @@ Click here to access the <a href="index.php">main CDash page</a><br/><br/>
 <xsl:if test="cdash/uploadwritable=0">
 <font color="#FF0000">Your upload directory is not writable, make sure that the web process can write into the directory.</font><br/>
 </xsl:if>
-<xsl:if test="cdash/rsswritable=0">
-<font color="#FF0000">Your rss directory is not writable, make sure that the web process can write into the directory.</font><br/>
-</xsl:if>
 <br/>
 <xsl:choose>
 <xsl:when test="cdash/db_created=1">
 <b>The CDash database has been successfully created!</b><br/>
-Click here to  <a href="createProject.php">create a new project.</a>
+Click here to  <a href="project/new">create a new project.</a>
 </xsl:when>
 <xsl:otherwise>
 <xsl:if test="cdash/database=0 and cdash/connectiondb=1">

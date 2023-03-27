@@ -8,14 +8,16 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
-use CDash\Config;
 use CDash\Database;
+use CDash\Model\Build;
 use CDash\Model\Project;
 
 class LimitedBuildsTestCase extends KWWebTestCase
 {
     private $testDataDir;
     private $Projects;
+    private $PDO;
+    private $get_build_stmt;
 
     public function __construct()
     {
@@ -23,64 +25,74 @@ class LimitedBuildsTestCase extends KWWebTestCase
 
         $this->testDataDir = dirname(__FILE__) . '/data/BuildModel';
         $this->PDO = Database::getInstance();
+        $this->get_build_stmt =  $this->PDO->prepare('SELECT id FROM build WHERE projectid = ?');
         $this->Projects = [];
+
+        $this->deleteLog($this->logfilename);
     }
 
     public function testSetup()
     {
         // Create testing projects.
-        $insert_stmt = $this->PDO->prepare('INSERT INTO project (name) VALUES (?)');
-
-        $insert_stmt->execute(['Limited']);
         $limited = new Project();
-        $limited->Id = pdo_insert_id('project');
+        $limited->Id = $this->createProject(['Name' => 'Limited']);
         $this->Projects[] = $limited;
 
-        $insert_stmt->execute(['Unlimited']);
         $unlimited = new Project();
-        $unlimited->Id = pdo_insert_id('project');
+        $unlimited->Id = $this->createProject(['Name' => 'Unlimited']);
         $this->Projects[] = $unlimited;
+    }
+
+    private function submitBuild($num, $project_name)
+    {
+        $proj_param = ['project' => $project_name];
+        $this->putCtestFile("{$this->testDataDir}/build{$num}.xml", $proj_param);
+        $this->putCtestFile("{$this->testDataDir}/configure{$num}.xml", $proj_param);
     }
 
     public function testLimitedBuilds()
     {
-        $config = Config::getInstance();
-        $config->set('CDASH_BUILDS_PER_PROJECT', 1);
-        $config->set('CDASH_UNLIMITED_PROJECTS', ['Unlimited']);
+        config([
+            'cdash.builds_per_project' => 1,
+            'cdash.unlimited_projects' => ['Unlimited'],
+        ]);
 
         // Submit two builds to the 'Limited' project.
-        // The second submission is expected to fail.
-        $build1 = "{$this->testDataDir}/build1.xml";
-        $build2 = "{$this->testDataDir}/build2.xml";
-        $this->putCtestFile($build1, ['project' => 'Limited']);
-        $this->putCtestFile($build2, ['project' => 'Limited']);
-        $this->assertTrue($this->Projects[0]->GetNumberOfBuilds() === 1);
+        // The second submission will cause the first build to get deleted.
+        $this->submitBuild(1, 'Limited');
+        $this->assertEqual($this->Projects[0]->GetNumberOfBuilds(), 1);
 
-        // Verify that index.php warns about the project being full.
-        $response = $this->get($this->url . '/api/v1/index.php?project=Limited');
-        $response = json_decode($response);
-        $this->assertTrue(strpos($response->warning, 'Maximum number of builds reached') === 0);
+        $this->get_build_stmt->execute([$this->Projects[0]->Id]);
+        $buildid1 = $this->get_build_stmt->fetchColumn();
+
+        $this->submitBuild(2, 'Limited');
+        $this->assertEqual($this->Projects[0]->GetNumberOfBuilds(), 1);
+
+        $this->get_build_stmt->execute([$this->Projects[0]->Id]);
+        $buildid2 = $this->get_build_stmt->fetchColumn();
+
+        $this->assertTrue($buildid1 !== $buildid2);
+
+        $build = new Build();
+        $build->Id = $buildid1;
+        $this->assertFalse($build->Exists());
+        $build->Id = $buildid2;
+        $this->assertTrue($build->Exists());
     }
 
     public function testUnlimitedBuilds()
     {
-        $config = Config::getInstance();
-        $config->set('CDASH_BUILDS_PER_PROJECT', 1);
-        $config->set('CDASH_UNLIMITED_PROJECTS', ['Unlimited']);
+        config([
+            'cdash.builds_per_project' => 1,
+            'cdash.unlimited_projects' => ['Unlimited'],
+        ]);
 
         // Submit two builds to the 'Unlimited' project.
-        // Both submissions are expected to pass.
-        $build1 = "{$this->testDataDir}/build1.xml";
-        $build2 = "{$this->testDataDir}/build2.xml";
-        $this->putCtestFile($build1, ['project' => 'Unlimited']);
-        $this->putCtestFile($build2, ['project' => 'Unlimited']);
+        $this->submitBuild(1, 'Unlimited');
+        $this->submitBuild(2, 'Unlimited');
 
-        $this->assertTrue($this->Projects[1]->GetNumberOfBuilds() === 2);
-
-        // Verify that index.php shows no warning.
-        $response = $this->get($this->url . '/api/v1/index.php?project=Unlimited');
-        $response = json_decode($response);
-        $this->assertFalse(property_exists($response, 'warning'));
+        // Verify that they both exist.
+        $this->assertEqual($this->Projects[1]->GetNumberOfBuilds(), 2);
     }
 
     public function __destruct()
@@ -91,5 +103,6 @@ class LimitedBuildsTestCase extends KWWebTestCase
         $delete_stmt = $this->PDO->prepare('DELETE FROM project WHERE name = ?');
         $delete_stmt->execute(['Limited']);
         $delete_stmt->execute(['Unlimited']);
+        $this->deleteLog($this->logfilename);
     }
 }

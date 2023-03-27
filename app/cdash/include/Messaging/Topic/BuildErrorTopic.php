@@ -1,8 +1,9 @@
 <?php
 namespace CDash\Messaging\Topic;
 
+use Illuminate\Support\Collection;
+
 use CDash\Collection\BuildErrorCollection;
-use CDash\Collection\LabelCollection;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
 use CDash\Model\BuildFailure;
@@ -27,6 +28,16 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
      */
     public function subscribesToBuild(Build $build)
     {
+        if ($this->subscriber) {
+            $send_redundant = $this->subscriber->getNotificationPreferences()->get(NotifyOn::REDUNDANT);
+            if ($send_redundant) {
+                $function_name = 'GetNumberOf' . $this->getTopicDescription();
+                if ($build->$function_name() > 0) {
+                    return true;
+                }
+            }
+        }
+
         $subscribe = false;
         $this->diff = $build->GetDiffWithPreviousBuild();
         if ($this->diff) {
@@ -123,18 +134,18 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
 
     /**
      * @param Build $build
-     * @return LabelCollection
+     * @return Collection
      */
     public function getLabelsFromBuild(Build $build)
     {
-        $collection = new LabelCollection();
+        $collection = collect();
         if (isset($build->Errors)) {
             /** @var BuildFailure $error */
             foreach ($build->Errors as $error) {
                 if (is_a($error, BuildFailure::class)
                 && $this->itemHasTopicSubject($build, $error)) {
                     foreach ($error->Labels as $label) {
-                        $collection->add($label);
+                        $collection->put($label->Text, $label);
                     }
                 }
             }
@@ -145,10 +156,10 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
 
     /**
      * @param Build $build
-     * @param LabelCollection $labels
+     * @param Collection $labels
      * @return void
      */
-    public function setTopicDataWithLabels(Build $build, LabelCollection $labels)
+    public function setTopicDataWithLabels(Build $build, Collection $labels)
     {
         // We've already determined that the build has the subscribed labels
         // so here we can just use setTopicData

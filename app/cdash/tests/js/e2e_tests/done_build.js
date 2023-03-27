@@ -1,4 +1,5 @@
 var LoginPage = require('../pages/login.page.js');
+require('../pages/catchConsoleErrors.page.js');
 describe("done_build", function() {
 
   function validate_test(index_url, link, old_text, new_text) {

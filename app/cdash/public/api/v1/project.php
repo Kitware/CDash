@@ -13,14 +13,18 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\Project;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/common.php';
 
+use App\Services\ProjectPermissions;
+
 use CDash\Model\Project;
-use CDash\Model\User;
 use CDash\Model\UserProject;
-use CDash\ServiceContainer;
+use Illuminate\Support\Facades\Auth;
 
 // Read input parameters (if any).
 $rest_input = file_get_contents('php://input');
@@ -36,15 +40,13 @@ if (!Auth::check()) {
 }
 
 // Get the authenticated user.
-$service = ServiceContainer::getInstance();
-$user = $service->create(User::class);
-$user->Id = get_userid_from_session();
+$user = Auth::user();
 
 // Route based on what type of request this is.
 $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case 'DELETE':
-        rest_delete($user);
+        rest_delete();
         break;
     case 'POST':
         rest_post($user);
@@ -55,8 +57,8 @@ switch ($method) {
         break;
 }
 
-/* Handle DELETE requests */
-function rest_delete($user)
+/** Handle DELETE requests */
+function rest_delete()
 {
     $response = [];
     $project = get_project($response);
@@ -72,7 +74,7 @@ function rest_delete($user)
     http_response_code(200);
 }
 
-/* Handle POST requests */
+/** Handle POST requests */
 function rest_post($user)
 {
     $response = [];
@@ -83,12 +85,11 @@ function rest_post($user)
             return;
         }
 
-        $config = \CDash\Config::getInstance();
-        if (!$user->IsAdmin() && $config->get('CDASH_USER_CREATE_PROJECTS') != 1) {
+        if (!ProjectPermissions::userCanCreateProject($user)) {
             // User does not have permission to create a new project.
             $response['error'] = 'You do not have permission to access this page.';
             http_response_code(403);
-            return false;
+            return;
         }
         create_project($response, $user);
         echo json_encode($response);
@@ -121,18 +122,36 @@ function rest_post($user)
 
     // If we should remove a build from the blocked list.
     if (isset($_REQUEST['RemoveBlockedBuild']) && !empty($_REQUEST['RemoveBlockedBuild'])) {
-        return remove_blocked_build($project, $_REQUEST['RemoveBlockedBuild']);
+        remove_blocked_build($project, $_REQUEST['RemoveBlockedBuild']);
+        return;
     }
 
     // If we should set the logo.
     if (isset($_FILES['logo']) && strlen($_FILES['logo']['tmp_name']) > 0) {
-        return set_logo($project);
+        set_logo($project);
     }
 }
 
-/* Handle GET requests */
+function get_repo_url_example()
+{
+    require_once 'include/common.php';
+    require_once 'include/repository.php';
+    $url = get_param('url');
+    $type = get_param('type');
+    $functionname = "get_{$type}_diff_url";
+    $example = $functionname($url, 'DIRECTORYNAME', 'FILENAME', 'REVISION');
+    json_error_response(['example' => $example], 200);
+    return true;
+}
+
+/** Handle GET requests */
 function rest_get($user)
 {
+    // Repository URL examples?
+    if (isset($_REQUEST['vcsexample'])) {
+        return get_repo_url_example();
+    }
+
     $response = [];
     $project = get_project($response);
     if (!$project) {
@@ -201,10 +220,10 @@ function create_project(&$response, $user)
     $Project->InitialSetup();
 
     // Add the current user to this project.
-    if ($user->Id != 1) {
+    if ($user->id != 1) {
         // Global admin is already added, so no need to do it again.
         $UserProject = new UserProject();
-        $UserProject->UserId = $user->Id;
+        $UserProject->UserId = $user->id;
         $UserProject->ProjectId = $Project->Id;
         $UserProject->Role = 2;
         $UserProject->EmailType = 3;// receive all emails
@@ -240,10 +259,9 @@ function populate_project($Project)
     }
 
     // Convert UploadQuota from GB to bytes.
-    $config = \CDash\Config::getInstance();
     if (is_numeric($Project->UploadQuota) && $Project->UploadQuota > 0) {
         $Project->UploadQuota =
-            floor(min($Project->UploadQuota, $config->get('CDASH_MAX_UPLOAD_QUOTA')) * 1024 * 1024 * 1024);
+            floor(min($Project->UploadQuota, config('cdash.max_upload_quota')) * 1024 * 1024 * 1024);
     }
 
     $Project->Save();
@@ -262,7 +280,7 @@ function populate_project($Project)
         }
         if (!empty($repo_urls)) {
             $Project->AddRepositories($repo_urls, $repo_usernames,
-                    $repo_passwords, $repo_branches);
+                $repo_passwords, $repo_branches);
         }
     }
 }
@@ -270,7 +288,7 @@ function populate_project($Project)
 function add_blocked_build($Project, $blocked_build)
 {
     return $Project->AddBlockedBuild($blocked_build['buildname'],
-            $blocked_build['sitename'], $blocked_build['ipaddress']);
+        $blocked_build['sitename'], $blocked_build['ipaddress']);
 }
 
 function remove_blocked_build($Project, $blocked_build)

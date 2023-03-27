@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateClientJobschedule2libraryTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,11 +12,13 @@ class CreateClientJobschedule2libraryTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_jobschedule2library', function (Blueprint $table) {
-            $table->bigInteger('scheduleid');
-            $table->integer('libraryid');
-            $table->unique(['scheduleid','libraryid'], 'client_jobschedule2library_scheduleid');
-        });
+        if (!Schema::hasTable('client_jobschedule2library')) {
+            Schema::create('client_jobschedule2library', function (Blueprint $table) {
+                $table->bigInteger('scheduleid');
+                $table->integer('libraryid');
+                $table->unique(['scheduleid','libraryid'], 'client_jobschedule2library_scheduleid');
+            });
+        }
     }
 
 

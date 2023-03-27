@@ -14,28 +14,35 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+namespace CDash\Api\v1\ViewUpdate;
+
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/api_common.php';
 require_once 'include/repository.php';
-require_once 'include/bugurl.php';
+
+use App\Services\PageTimer;
+use App\Services\TestingDay;
 
 use CDash\Model\BuildUpdate;
+use CDash\Database;
 use CDash\Model\Project;
 use CDash\Model\Site;
+use Illuminate\Support\Facades\Auth;
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 $build = get_request_build();
 if (is_null($build)) {
     return;
 }
 
+$db = Database::getInstance();
 
 $project = new Project();
 $project->Id = $build->ProjectId;
 $project->Fill();
 
-$date = $project->GetTestingDay($build->StartTime);
+$date = TestingDay::get($project, $build->StartTime);
 $response = begin_JSON_response();
 get_dashboard_JSON($project->Name, $date, $response);
 $response['title'] = "$project->Name : Update";
@@ -95,22 +102,7 @@ $update_response['revisionurl'] =
 $update_response['revisiondiff'] =
     get_revision_url($project->Id, $update->PriorRevision, ''); // no prior prior revision...
 $response['update'] = $update_response;
-if (!function_exists('sort_array_by_directory')) {
-    function sort_array_by_directory($a, $b)
-    {
-        return $a > $b ? 1 : 0;
-    }
-}
 
-if (!function_exists('sort_array_by_filename')) {
-    function sort_array_by_filename($a, $b)
-    {
-        // Extract directory
-        $filenamea = $a['filename'];
-        $filenameb = $b['filename'];
-        return $filenamea > $filenameb ? 1 : 0;
-    }
-}
 $directoryarray = [];
 $updatearray1 = [];
 // Create an array so we can sort it
@@ -120,10 +112,22 @@ foreach ($update->GetFiles() as $update_file) {
     $file['author'] = $update_file->Author;
     $file['status'] = $update_file->Status;
 
-    // Only display email if the user is logged in
-    if (isset($_SESSION['cdash'])) {
+    // Only display email if the user is logged in.
+    if (Auth::check()) {
         if ($update_file->Email == '') {
-            $file['email'] = get_author_email($project->Name, $file['author']);
+            // Try to find author email from repository credentials.
+            $stmt = $db->prepare("
+                SELECT email FROM user WHERE id IN (
+                  SELECT up.userid FROM user2project AS up, user2repository AS ur
+                   WHERE ur.userid=up.userid
+                   AND up.projectid=:projectid
+                   AND ur.credential=:author
+                   AND (ur.projectid=0 OR ur.projectid=:projectid) )
+                   LIMIT 1");
+            $stmt->bindParam(':projectid', $project->Id);
+            $stmt->bindParam(':author', $file['author']);
+            $db->execute($stmt);
+            $file['email'] = $stmt ? $stmt->fetchColumn() : '';
         } else {
             $file['email'] = $update_file->Email;
         }
@@ -138,8 +142,16 @@ foreach ($update->GetFiles() as $update_file) {
 }
 
 $directoryarray = array_unique($directoryarray);
-usort($directoryarray, 'sort_array_by_directory');
-usort($updatearray1, 'sort_array_by_filename');
+
+usort($directoryarray, function ($a, $b) {
+    return $a > $b ? 1 : 0;
+});
+usort($updatearray1, function ($a, $b) {
+    // Extract directory
+    $filenamea = $a['filename'];
+    $filenameb = $b['filename'];
+    return $filenamea > $filenameb ? 1 : 0;
+});
 
 $updatearray = [];
 
@@ -164,7 +176,9 @@ $num_conflicting_files = 0;
 // Local function to reduce copy/pasted code in the loop below.
 // It adds a file to one of the above data structures, creating the
 // directory if it does not exist yet.
-if (!function_exists('add_file')) {
+//
+// TODO: (williamjallen) Determine why this gets included twice.
+if (!function_exists('CDash\Api\v1\ViewUpdate\add_file')) {
     function add_file($file, $directory, &$list_of_files)
     {
         $idx = array_search($directory, array_column($list_of_files, 'name'));
@@ -209,18 +223,10 @@ foreach ($updatearray as $file) {
 
     $file['log'] = $log;
     $file['filename'] = $filename;
-    $file['bugurl'] = '';
     $file['bugid'] = '0';
     $file['bugpos'] = '0';
     // This field is redundant because of the way our data is organized.
     unset($file['status']);
-
-    $bug = get_bug_from_log($log, $baseurl);
-    if ($bug !== false) {
-        $file['bugurl'] = $bug[0];
-        $file['bugid'] = $bug[1];
-        $file['bugpos'] = $bug[2];
-    }
 
     if ($status == 'UPDATED') {
         $diff_url = get_diff_url($project->Id, $project->CvsUrl, $directory, $filename, $revision);
@@ -260,6 +266,5 @@ $update_groups = [
 ];
 $response['updategroups'] = $update_groups;
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

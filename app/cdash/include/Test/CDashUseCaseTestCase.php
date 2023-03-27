@@ -10,13 +10,13 @@ class CDashUseCaseTestCase extends CDashTestCase
     private $originalServiceContainer;
     private $model_id_cache;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->model_id_cache = [];
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         if ($this->originalServiceContainer) {
             ServiceContainer::setInstance(

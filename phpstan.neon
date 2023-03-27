@@ -1,0 +1,30 @@
+parameters:
+    paths:
+        - app
+        - routes
+        - tests
+        - database
+        - public
+        - server.php
+        - resources
+        - bootstrap
+        - config
+
+    excludePaths:
+        analyse:
+            # Don't analyze these files because they cause PHPStan to crash
+            - app/cdash/tests/kwtest/simpletest
+            - app/cdash/tests/selenium/cdash_selenium_test_case.php
+            - app/cdash/include/Collection/Collection.php
+
+    treatPhpDocTypesAsCertain: false
+
+    level: 6
+
+includes:
+    - vendor/nunomaduro/larastan/extension.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+    - phpstan-baseline.neon

@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateClientCompilerTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,11 +12,13 @@ class CreateClientCompilerTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_compiler', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->string('name');
-            $table->string('version');
-        });
+        if (!Schema::hasTable('client_compiler')) {
+            Schema::create('client_compiler', function (Blueprint $table) {
+                $table->integer('id', true);
+                $table->string('name');
+                $table->string('version');
+            });
+        }
     }
 
 

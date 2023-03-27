@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateBuildinformationTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,15 +12,17 @@ class CreateBuildinformationTable extends Migration
      */
     public function up()
     {
-        Schema::create('buildinformation', function (Blueprint $table) {
-            $table->integer('buildid')->primary();
-            $table->string('osname');
-            $table->string('osplatform');
-            $table->string('osrelease');
-            $table->string('osversion');
-            $table->string('compilername');
-            $table->string('compilerversion', 20);
-        });
+        if (!Schema::hasTable('buildinformation')) {
+            Schema::create('buildinformation', function (Blueprint $table) {
+                $table->integer('buildid')->primary();
+                $table->string('osname');
+                $table->string('osplatform');
+                $table->string('osrelease');
+                $table->string('osversion');
+                $table->string('compilername');
+                $table->string('compilerversion', 20);
+            });
+        }
     }
 
 

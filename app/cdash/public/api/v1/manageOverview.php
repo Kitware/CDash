@@ -14,19 +14,23 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+namespace CDash\Api\v1\ManageOverview;
+
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 
+use App\Services\PageTimer;
 use CDash\Model\Project;
-use CDash\Model\User;
+use Illuminate\Support\Facades\Auth;
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 $response = begin_JSON_response();
 $response['backurl'] = 'user.php';
 $response['menutitle'] = 'CDash';
 $response['menusubtitle'] = 'Overview';
 $response['hidenav'] = 1;
 
+// Make sure we have an authenticated user.
 if (!Auth::check()) {
     $response['requirelogin'] = 1;
     return json_encode($response);
@@ -51,20 +55,8 @@ if (!$projectid_ok) {
     return json_encode($response);
 }
 
-
-
-// Make sure we have an authenticated user.
-$userid = Auth::id();
-if (!isset($userid) || !is_numeric($userid)) {
-    $response['requirelogin'] = 1;
-    return json_encode($response);
-}
-
 $Project = new Project();
 $Project->Id = $projectid;
-
-$User = new User();
-$User->Id = $userid;
 
 // Make sure the user has admin rights to this project.
 get_dashboard_JSON($Project->GetName(), null, $response);
@@ -79,8 +71,8 @@ if (isset($_POST['saveLayout'])) {
     if (!is_null($inputRows)) {
         // Remove any old overview layout from this project.
         pdo_query(
-                'DELETE FROM overview_components WHERE projectid=' .
-                qnum(pdo_real_escape_numeric($projectid)));
+            'DELETE FROM overview_components WHERE projectid=' .
+            qnum(pdo_real_escape_numeric($projectid)));
         add_last_sql_error('manageOverview::saveLayout::DELETE', $projectid);
 
         // Construct a query to insert the new layout.
@@ -154,6 +146,5 @@ while ($buildgroup_row = pdo_fetch_array($buildgroup_rows)) {
 }
 $response['availablegroups'] = $availablegroups_response;
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

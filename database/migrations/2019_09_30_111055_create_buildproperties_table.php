@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateBuildpropertiesTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,10 +12,12 @@ class CreateBuildpropertiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('buildproperties', function (Blueprint $table) {
-            $table->integer('buildid')->default(0)->primary();
-            $table->text('properties', 16777215);
-        });
+        if (!Schema::hasTable('buildproperties')) {
+            Schema::create('buildproperties', function (Blueprint $table) {
+                $table->integer('buildid')->default(0)->primary();
+                $table->text('properties', 16777215);
+            });
+        }
     }
 
 

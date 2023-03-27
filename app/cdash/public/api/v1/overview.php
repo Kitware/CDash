@@ -7,10 +7,14 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
   =========================================================================*/
+
+namespace CDash\Api\v1\Overview;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/memcache_functions.php';
 
+use App\Services\PageTimer;
 use CDash\Config;
 use CDash\Model\Project;
 
@@ -23,8 +27,7 @@ if (!isset($projectname)) {
     return;
 }
 
-$start = microtime_float();
-$response = array();
+$pageTimer = new PageTimer();
 
 // Connect to memcache
 if ($config->get('CDASH_MEMCACHE_ENABLED')) {
@@ -317,7 +320,7 @@ while ($build_row = pdo_fetch_array($builds_array)) {
         foreach ($build_measurements as $measurement) {
             $clean_measurement = $clean_measurements[$measurement];
             if (!array_key_exists($measurement,
-                    $overview_data[$day][$group_name])) {
+                $overview_data[$day][$group_name])) {
                 $overview_data[$day][$group_name][$measurement] =
                     intval($build_row[$clean_measurement]);
             } else {
@@ -333,7 +336,6 @@ while ($build_row = pdo_fetch_array($builds_array)) {
 
     // Check if coverage was performed for this build.
     if ($build_row['loctested'] + $build_row['locuntested'] > 0) {
-
         // Check for multiple nightly coverage builds in a single day.
         if ($group_name !== 'Aggregate' && $build_row['type'] === 'Nightly') {
             if (array_key_exists($day, $aggregate_tracker)) {
@@ -518,7 +520,7 @@ foreach ($coverage_categories as $coverage_category) {
 
         $chart_data =
             get_coverage_chart_data($build_group_name, $category_name, $date_range, $coverage_data,
-                                    $beginning_timestamp);
+                $beginning_timestamp);
         $coverage_response['chart'] = $chart_data;
         $coverage_category_response['groups'][] = $coverage_response;
     }
@@ -612,8 +614,7 @@ foreach ($static_groups as $static_group) {
 }
 $response['staticanalyses'] = $static_analyses_response;
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 $response = json_encode(cast_data_for_JSON($response));
 
 // Cache the overview page for 6 hours
@@ -784,6 +785,7 @@ function get_DA_chart_data($group_name, $checker, $date_range, $dynamic_analysis
             continue;
         }
 
+        // TODO: (williamjallen) $beginning_timestamp is undefined here. Fix it.
         $chart_date = get_date_from_index($i, $beginning_timestamp);
         $chart_data[] =
             array($chart_date, $dynamic_analysis_data[$i][$group_name][$checker]);

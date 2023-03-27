@@ -13,18 +13,25 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\BuildSummary;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
+
+use App\Services\PageTimer;
+use App\Services\TestingDay;
 
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
 use CDash\Model\BuildRelationship;
 use CDash\Model\BuildUserNote;
+use CDash\Model\BuildUpdate;
 use CDash\Model\Project;
-use CDash\Model\User;
 use CDash\ServiceContainer;
+use Illuminate\Support\Facades\Auth;
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 $response = [];
 
 $build = get_request_build();
@@ -41,7 +48,7 @@ $project = $service->create(Project::class);
 $project->Id = $build->ProjectId;
 $project->Fill();
 
-$date = $project->GetTestingDay($build->StartTime);
+$date = TestingDay::get($project, $build->StartTime);
 
 $response = begin_JSON_response();
 $response['title'] = "CDash : $project->Name";
@@ -58,7 +65,7 @@ if ($build->GetParentId() > 0) {
 }
 
 if ($previous_buildid > 0) {
-    $menu['previous'] = "buildSummary.php?buildid=$previous_buildid";
+    $menu['previous'] = "/build/$previous_buildid";
 
     // Find the last submit date.
     $previous_build = $service->create(Build::class);
@@ -70,10 +77,10 @@ if ($previous_buildid > 0) {
     $lastsubmitdate = 0;
 }
 
-$menu['current'] = "buildSummary.php?buildid=$current_buildid";
+$menu['current'] = "/build/$current_buildid";
 
 if ($next_buildid > 0) {
-    $menu['next'] = "buildSummary.php?buildid=$next_buildid";
+    $menu['next'] = "/build/$next_buildid";
 } else {
     $menu['next'] = false;
 }
@@ -82,16 +89,13 @@ $response['menu'] = $menu;
 
 get_dashboard_JSON($project->Name, $date, $response);
 
-$userid = get_userid_from_session(false);
-if ($userid) {
-    $user = $service->create(User::class);
-    $user->Id = $userid;
-    $user->Fill();
+if (Auth::check()) {
+    $user = Auth::user();
+    $userid = $user->id;
     $user_response['id'] = $userid;
-    $user_response['admin'] = $user->Admin;
+    $user_response['admin'] = $user->admin;
     $response['user'] = $user_response;
 }
-
 
 // Notes added by users.
 $notes_response = [];
@@ -251,25 +255,29 @@ $response['update'] = $update_response;
 // Configure
 $configure_response = [];
 $configure = pdo_query(
-        "SELECT * FROM configure c
+    "SELECT * FROM configure c
         JOIN build2configure b2c ON b2c.configureid=c.id
         WHERE b2c.buildid='$buildid'");
 $configure_array = pdo_fetch_array($configure);
+if (is_array($configure_array)) {
+    $response['hasconfigure'] = true;
+    $nerrors = 0;
+    if ($configure_array['status'] != 0) {
+        $nerrors = 1;
+    }
 
-$nerrors = 0;
-if ($configure_array['status'] != 0) {
-    $nerrors = 1;
+    $configure_response['nerrors'] = $nerrors;
+    $configure_response['nwarnings'] = $configure_array['warnings'];
+
+    $configure_response['status'] = $configure_array['status'];
+    $configure_response['command'] = $configure_array['command'];
+    $configure_response['output'] = $configure_array['log'];
+    $configure_response['starttime'] = date(FMT_DATETIMETZ, strtotime($configure_array['starttime'] . ' UTC'));
+    $configure_response['endtime'] = date(FMT_DATETIMETZ, strtotime($configure_array['endtime'] . ' UTC'));
+    $response['configure'] = $configure_response;
+} else {
+    $response['hasconfigure'] = false;
 }
-
-$configure_response['nerrors'] = $nerrors;
-$configure_response['nwarnings'] = $configure_array['warnings'];
-
-$configure_response['status'] = $configure_array['status'];
-$configure_response['command'] = $configure_array['command'];
-$configure_response['output'] = $configure_array['log'];
-$configure_response['starttime'] = date(FMT_DATETIMETZ, strtotime($configure_array['starttime'] . ' UTC'));
-$configure_response['endtime'] = date(FMT_DATETIMETZ, strtotime($configure_array['endtime'] . ' UTC'));
-$response['configure'] = $configure_response;
 
 // Test
 $test_response = [];
@@ -302,64 +310,28 @@ if ($coverage_array) {
 }
 
 // Previous build
-// Find the previous build
 if ($previous_buildid > 0) {
     $previous_response = [];
     $previous_response['buildid'] = $previous_buildid;
 
-    // Find if the build has any errors
-    $builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$previous_buildid' AND type='0'");
-    $builderror_array = pdo_fetch_array($builderror);
-    $npreviousbuilderrors = $builderror_array[0];
-    $builderror = pdo_query(
-        "SELECT count(*) FROM buildfailure AS bf
-       LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-       WHERE bf.buildid='$previous_buildid' AND bfd.type='0'");
-    $builderror_array = pdo_fetch_array($builderror);
-    $npreviousbuilderrors += $builderror_array[0];
+    // Update
+    $previous_build_update = new BuildUpdate();
+    $previous_build_update->BuildId = $previous_build->Id;
+    $previous_build_update->FillFromBuildId();
+    $previous_response['nupdateerrors'] = $previous_build_update->GetNumberOfErrors();
+    $previous_response['nupdatewarnings'] =  $previous_build_update->GetNumberOfWarnings();
 
-    // Find if the build has any warnings
-    $buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$previous_buildid' AND type='1'");
-    $buildwarning_array = pdo_fetch_array($buildwarning);
-    $npreviousbuildwarnings = $buildwarning_array[0];
-    $buildwarning = pdo_query(
-        "SELECT count(*) FROM buildfailure AS bf
-       LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-       WHERE bf.buildid='$previous_buildid' AND bfd.type='1'");
-    $buildwarning_array = pdo_fetch_array($buildwarning);
-    $npreviousbuildwarnings += $buildwarning_array[0];
+    // Configure
+    $previous_response['nconfigureerrors'] = $previous_build->GetNumberOfConfigureErrors();
+    $previous_response['nconfigurewarnings'] = $previous_build->GetNumberOfConfigureWarnings();
 
-    // Find if the build has any test failings
-    $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$previous_buildid' AND status='failed'"));
-    $npreviousfailingtests = $nfail_array[0];
-    $nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$previous_buildid' AND status='notrun'"));
-    $npreviousnotruntests = $nfail_array[0];
+    // Build
+    $previous_response['nerrors'] = $previous_build->GetNumberOfErrors();
+    $previous_response['nwarnings'] = $previous_build->GetNumberOfWarnings();
 
-    $updatelocal = pdo_query('SELECT updatefile.updateid FROM updatefile,build2update AS b2u WHERE updatefile.updateid=b2u.updateid AND b2u.buildid=' . qnum($previous_buildid) .
-        " AND author='Local User'");
-    $nupdateerrors = pdo_num_rows($updatelocal);
-    $nupdatewarnings = 0;
-    $previous_response['nupdateerrors'] = $nupdateerrors;
-    $previous_response['nupdatewarnings'] = $nupdatewarnings;
-
-    $configure = pdo_query(
-            "SELECT * FROM configure c
-            JOIN build2configure b2c ON b2c.configureid=c.id
-            WHERE b2c.buildid='$previous_buildid'");
-    $configure_array = pdo_fetch_array($configure);
-
-    $nconfigureerrors = 0;
-    if ($configure_array['status'] != 0) {
-        $nconfigureerrors = 1;
-    }
-    $previous_response['nconfigureerrors'] = $nconfigureerrors;
-    $previous_response['nconfigurewarnings'] = $configure_array['warnings'];
-
-    $previous_response['nerrors'] = $npreviousbuilderrors;
-    $previous_response['nwarnings'] = $npreviousbuildwarnings;
-
-    $previous_response['ntestfailed'] = $npreviousfailingtests;
-    $previous_response['ntestnotrun'] = $npreviousnotruntests;
+    // Test
+    $previous_response['ntestfailed'] = $previous_build->GetNumberOfFailedTests();
+    $previous_response['ntestnotrun'] = $previous_build->GetNumberOfNotRunTests();
 
     $response['previousbuild'] = $previous_response;
 }
@@ -389,6 +361,5 @@ $response['relationships_from'] = $relationships['from'];
 $response['hasrelationships'] = !empty($response['relationships_to']) ||
     !empty($response['relationships_from']);
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

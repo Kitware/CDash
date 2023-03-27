@@ -31,10 +31,8 @@ class LabeledTopic extends Topic
         if ($this->decoratedSubscribes) {
             $subscriberLabels = $this->subscriber->getLabels();
             $topicLabels = $this->topic->getLabelsFromBuild($build);
-            // TODO: refactor collection to accept an array as the argument to has
-            // TODO: refactor collection to accept its object type as an argument to has
-            foreach ($subscriberLabels as $label) {
-                if ($topicLabels->has($label->Text)) {
+            foreach ($subscriberLabels as $subscriberLabel) {
+                if ($topicLabels->has($subscriberLabel->Text)) {
                     $subscribe = true;
                     break;
                 }

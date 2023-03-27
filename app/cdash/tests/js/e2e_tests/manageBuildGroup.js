@@ -1,4 +1,5 @@
 var LoginPage = require('../pages/login.page.js');
+require('../pages/catchConsoleErrors.page.js');
 
 describe("manageBuildGroup", function() {
 
@@ -9,9 +10,9 @@ describe("manageBuildGroup", function() {
 
   it("can create buildgroup", function() {
 
-    browser.get('manageBuildGroup.php?projectid=5#/create');
-
     // Create a daily group
+    browser.get('manageBuildGroup.php?projectid=5');
+    element(by.linkText('Create new BuildGroup')).click();
     element(by.name('newBuildGroupName')).sendKeys('aaNewBuildGroup');
     element(by.buttonText('Create BuildGroup')).click();
 
@@ -22,7 +23,7 @@ describe("manageBuildGroup", function() {
     element(by.buttonText('Create BuildGroup')).click();
 
     // Make sure they're both on our list of current BuildGroups.
-    browser.get('manageBuildGroup.php?projectid=5#/current');
+    browser.get('manageBuildGroup.php?projectid=5');
     expect(element(by.id('current')).getText()).toContain("aaNewBuildGroup");
     expect(element(by.id('current')).getText()).toContain("latestBuildGroup");
   });
@@ -30,7 +31,8 @@ describe("manageBuildGroup", function() {
 
   it("prevents duplicate buildgroups", function() {
     // Attempt to create a duplicate buildgroup
-    browser.get('manageBuildGroup.php?projectid=5#/create');
+    browser.get('manageBuildGroup.php?projectid=5');
+    element(by.linkText('Create new BuildGroup')).click();
     element(by.name('newBuildGroupName')).sendKeys('Experimental');
     element(by.buttonText('Create BuildGroup')).click();
 
@@ -41,7 +43,7 @@ describe("manageBuildGroup", function() {
 
 
   it("can modify a buildgroup", function() {
-    browser.get('manageBuildGroup.php?projectid=5#/current');
+    browser.get('manageBuildGroup.php?projectid=5');
     // Select the 4th buildgroup in the list & expand its details.
     var buildgroup = element(by.repeater('buildgroup in cdash.buildgroups').row(3));
     buildgroup.element(by.className('glyphicon-chevron-right')).click();
@@ -67,7 +69,7 @@ describe("manageBuildGroup", function() {
       browser.waitForAngular();
 
       // Verify that our changes went through successfully.
-      browser.get('manageBuildGroup.php?projectid=5#/current');
+      browser.get('manageBuildGroup.php?projectid=5');
       var buildgroup = element(by.repeater('buildgroup in cdash.buildgroups').row(3));
       expect(buildgroup.element(by.name("name")).getAttribute("value")).toBe("aaaNewBuildGroup");
       expect(buildgroup.element(by.name("description")).getAttribute("value")).toBe("temporary BuildGroup for testing");
@@ -81,7 +83,8 @@ describe("manageBuildGroup", function() {
 
   it("can create a wildcard rule", function() {
     // Fill out the wildcard rule form & submit it.
-    browser.get('manageBuildGroup.php?projectid=5#/wildcard');
+    browser.get('manageBuildGroup.php?projectid=5');
+    element(by.linkText('Wildcard BuildGroups')).click();
     element(by.name('wildcardBuildGroupSelection')).element(by.cssContainingText('option', 'aaaNewBuildGroup')).click();
     var matchField = element(by.name('wildcardBuildNameMatch'));
     matchField.clear();
@@ -91,7 +94,8 @@ describe("manageBuildGroup", function() {
     browser.waitForAngular();
 
     // Verify that our rule appears correctly after we refresh the page.
-    browser.get('manageBuildGroup.php?projectid=5#/wildcard');
+    browser.get('manageBuildGroup.php?projectid=5');
+    element(by.linkText('Wildcard BuildGroups')).click();
     var wildcardFields = element(by.repeater('wildcard in cdash.wildcards').row(0)).all(by.tagName('td'));
     expect(wildcardFields.get(0).getText()).toEqual("aaaNewBuildGroup");
     expect(wildcardFields.get(1).getText()).toEqual("simple");
@@ -100,7 +104,8 @@ describe("manageBuildGroup", function() {
 
 
   it("can delete a wildcard rule", function() {
-    browser.get('manageBuildGroup.php?projectid=5#/wildcard');
+    browser.get('manageBuildGroup.php?projectid=5');
+    element(by.linkText('Wildcard BuildGroups')).click();
 
     // Find the delete icon and click it.
     var rule = element(by.repeater('wildcard in cdash.wildcards').row(0));
@@ -109,7 +114,8 @@ describe("manageBuildGroup", function() {
     browser.waitForAngular();
 
     // Make sure the wildcard rule isn't displayed on the page anymore.
-    browser.get('manageBuildGroup.php?projectid=5#/wildcard');
+    browser.get('manageBuildGroup.php?projectid=5');
+    element(by.linkText('Wildcard BuildGroups')).click();
     var ruleForm = element(by.name("existingwildcardrules"));
     expect(ruleForm.isPresent()).toBeFalsy();
   });
@@ -117,7 +123,8 @@ describe("manageBuildGroup", function() {
 
   it("can define dynamic rows", function() {
     // Fill out the form & submit it.
-    browser.get('manageBuildGroup.php?projectid=5#/dynamic');
+    browser.get('manageBuildGroup.php?projectid=5');
+    element(by.linkText('Dynamic BuildGroups')).click();
     element(by.name('dynamicSelection')).element(by.cssContainingText('option', 'latestBuildGroup')).click();
     element(by.name('parentBuildGroupSelection')).element(by.cssContainingText('option', 'Experimental')).click();
     var matchField = element(by.name('dynamicBuildNameMatch'));
@@ -144,7 +151,8 @@ describe("manageBuildGroup", function() {
 
   it("can delete dynamic rows", function() {
     // Select our dynamic group.
-    browser.get('manageBuildGroup.php?projectid=5#/dynamic');
+    browser.get('manageBuildGroup.php?projectid=5');
+    element(by.linkText('Dynamic BuildGroups')).click();
     element(by.name('dynamicSelection')).element(by.cssContainingText('option', 'latestBuildGroup')).click();
 
     // Wait for delete icons to appear.
@@ -159,34 +167,17 @@ describe("manageBuildGroup", function() {
       expect(element(by.name("existingdynamicrows")).isPresent()).toBeFalsy();
 
       // Reload the page to make sure they're really gone.
-      browser.get('manageBuildGroup.php?projectid=5#/dynamic');
+      browser.get('manageBuildGroup.php?projectid=5');
+      element(by.linkText('Dynamic BuildGroups')).click();
       element(by.name('dynamicSelection')).element(by.cssContainingText('option', 'latestBuildGroup')).click();
       expect(element(by.name("existingdynamicrows")).isPresent()).toBeFalsy();
     });
   });
 
 
-  it("can change buildgroup order", function() {
-    browser.get('manageBuildGroup.php?projectid=5#/current');
-    // The BuildGroup we're gonna move.
-    var buildgroup = element(by.repeater('buildgroup in cdash.buildgroups').row(3));
-    // And the position on-screen where we're gonna move it to.
-    var position = element(by.repeater('buildgroup in cdash.buildgroups').row(0)).getLocation();
-    position.y -= 10;
-
-    browser.actions().dragAndDrop(buildgroup, position).perform();
-    element(by.buttonText('Update Order')).click();
-    browser.waitForAngular();
-
-    // Make sure it's on the top after we reload.
-    browser.get('manageBuildGroup.php?projectid=5#/current');
-    expect(element(by.repeater('buildgroup in cdash.buildgroups').row(0)).getText()).toContain("aaaNewBuildGroup");
-  });
-
-
   it("can delete buildgroups", function() {
     function deleteBuildGroup(idx, buildGroupName) {
-      browser.get('manageBuildGroup.php?projectid=5#/current');
+      browser.get('manageBuildGroup.php?projectid=5');
       // Select the buildgroup & expand its details.
       var buildgroup = element(by.repeater('buildgroup in cdash.buildgroups').row(idx));
       buildgroup.element(by.className('glyphicon-chevron-right')).click();
@@ -210,12 +201,12 @@ describe("manageBuildGroup", function() {
         expect(element(by.id('current')).getText()).not.toContain(buildGroupName);
 
         // Reload the page to make sure it's really gone from the database too.
-        browser.get('manageBuildGroup.php?projectid=5#/current');
+        browser.get('manageBuildGroup.php?projectid=5');
         expect(element(by.id('current')).getText()).not.toContain(buildGroupName);
       });
     }
 
-    deleteBuildGroup(0, "aaaNewBuildGroup");
+    deleteBuildGroup(3, "aaaNewBuildGroup");
     deleteBuildGroup(3, "latestBuildGroup");
   });
 

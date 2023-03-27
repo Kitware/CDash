@@ -4,26 +4,26 @@ use CDash\Config;
 use CDash\Log;
 use CDash\Test\CDashTestCase;
 
+use Illuminate\Support\Facades\Log as LogFacade;
+
 class LogTest extends CDashTestCase
 {
-    private static $log;
-
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         parent::setUpBeforeClass();
-        self::$log = Config::getInstance()->get('CDASH_LOG_FILE');
     }
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
-        file_put_contents(self::$log, '');
+        $this->log = LogFacade::getLogger()->getHandlers()[0]->getUrl();
+        file_put_contents($this->log, '');
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         parent::tearDown();
-        file_put_contents(self::$log, '');
+        file_put_contents($this->log, '');
     }
 
     public function testInstance()
@@ -44,9 +44,9 @@ class LogTest extends CDashTestCase
         $log = Log::getInstance();
         $e = new Exception("TESTING Log::info");
         $log->info($e);
-        $output = file_get_contents(self::$log);
-        $this->assertContains("cdash.INFO: TESTING Log::info", $output);
-        $this->assertContains('"function":"testInfo"', $output);
+        $output = file_get_contents($this->log);
+        $this->assertStringContainsString('INFO: TESTING Log::info', $output);
+        $this->assertStringContainsString('"function":"testInfo"', $output);
     }
 
     public function testError()
@@ -54,9 +54,9 @@ class LogTest extends CDashTestCase
         $log = Log::getInstance();
         $e = new Exception("TESTING Log::error");
         $log->error($e);
-        $output = file_get_contents(self::$log);
-        $this->assertContains('cdash.ERROR: TESTING Log::error', $output);
-        $this->assertContains('"function":"testError"', $output);
+        $output = file_get_contents($this->log);
+        $this->assertStringContainsString('ERROR: TESTING Log::error', $output);
+        $this->assertStringContainsString('"function":"testError"', $output);
     }
 
     public function testDebug()
@@ -64,8 +64,8 @@ class LogTest extends CDashTestCase
         $log = Log::getInstance();
         $e = new Exception("TESTING Log::debug");
         $log->debug($e);
-        $output = file_get_contents(self::$log);
-        $this->assertContains('cdash.DEBUG: TESTING Log::debug', $output);
-        $this->assertContains('"function":"testDebug"', $output);
+        $output = file_get_contents($this->log);
+        $this->assertStringContainsString('DEBUG: TESTING Log::debug', $output);
+        $this->assertStringContainsString('"function":"testDebug"', $output);
     }
 }

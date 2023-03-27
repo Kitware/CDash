@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Models\User;
 use CDash\Middleware\OAuth2\OAuth2Interface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,7 +14,7 @@ use RuntimeException;
  * Class OAuthController
  * @package App\Http\Controllers
  */
-class OAuthController extends Controller
+class OAuthController extends AbstractController
 {
     /**
      * @param Request $request

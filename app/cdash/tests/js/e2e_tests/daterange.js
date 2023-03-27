@@ -1,3 +1,4 @@
+require('../pages/catchConsoleErrors.page.js');
 describe("date range selector", function() {
   const EC = protractor.ExpectedConditions;
   it("input boxes are empty by default and do not set date params", function() {

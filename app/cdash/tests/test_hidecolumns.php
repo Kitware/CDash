@@ -9,6 +9,8 @@ require_once 'include/pdo.php';
 
 class HideColumnsTestCase extends KWWebTestCase
 {
+    protected $MethodsToTest;
+
     public function __construct()
     {
         parent::__construct();

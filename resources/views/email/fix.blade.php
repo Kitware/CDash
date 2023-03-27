@@ -37,7 +37,7 @@ Build Name: {{ $summary['build_name'] }}
 Build Time: {{ $summary['build_time'] }}
 Type: {{ $summary['build_type'] }}
 @if(isset($fixes['BuildError']['fixed']) && $fixes['BuildError']['fixed'] > 0)
-Errors fixed: {{ $fixes['BuildErrors']['fixed'] }}
+Errors fixed: {{ $fixes['BuildError']['fixed'] }}
 @endif
 @if(isset($fixes['BuildWarning']['fixed']) && $fixes['BuildWarning']['fixed'] > 0)
 Warnings fixed: {{ $fixes['BuildWarning']['fixed'] }}

@@ -17,34 +17,6 @@
 use CDash\Config;
 use Illuminate\Support\Facades\Mail;
 
-function _cdashsendgrid($to, $subject, $body)
-{
-    $config = Config::getInstance();
-
-    $sg = new \SendGrid($config->get('CDASH_SENDGRID_API_KEY'));
-
-    $mail = new SendGrid\Mail();
-    $mail->setFrom(new SendGrid\Email(null, $config->get('CDASH_EMAIL_FROM')));
-    $mail->setSubject($subject);
-    $mail->setReplyTo(new SendGrid\Email(null, $config->get('CDASH_EMAIL_REPLY')));
-    $mail->addContent(new SendGrid\Content('text/plain', $body));
-
-    foreach (explode(', ', $to) as $recipient) {
-        $personalization = new SendGrid\Personalization();
-        $personalization->addTo(new SendGrid\Email(null, $recipient));
-        $mail->addPersonalization($personalization);
-    }
-
-    $response = $sg->client->mail()->send()->post($mail);
-
-    if ($response->statusCode() === 202) {
-        return true;
-    } else {
-        add_log('Failed to send email via sendgrid status code: ' . $response->statusCode(), '_cdashsendgrid', LOG_ERR);
-        return false;
-    }
-}
-
 function cdashmail($to, $subject, $body, $headers = false)
 {
     $config = Config::getInstance();
@@ -53,17 +25,26 @@ function cdashmail($to, $subject, $body, $headers = false)
         return false;
     }
 
-    if ($config->get('CDASH_USE_SENDGRID')) {
-        return _cdashsendgrid($to, $subject, $body);
+    if (config('app.debug')) {
+        add_log($to, 'TESTING: EMAIL', LOG_DEBUG);
+        add_log($subject, 'TESTING: EMAILTITLE', LOG_DEBUG);
+        add_log($body, 'TESTING: EMAILBODY', LOG_DEBUG);
+        return true;
     }
 
     Mail::raw($body, function ($message) use ($config, $to, $subject, $headers) {
         $to = is_array($to) ? $to : [$to];
-
-        /** @var Illuminate\Mail\Message $message */
-        $message->subject($subject)
-            ->to($to)
-            ->from($config->get('CDASH_EMAIL_FROM'))
-            ->replyTo($config->get('CDASH_EMAIL_REPLY'));
+        try {
+            /** @var Illuminate\Mail\Message $message */
+            $message->subject($subject)
+                ->to($to)
+                ->from(config('mail.from.address'))
+                ->replyTo(config('mail.reply_to.address'));
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            return false;
+        }
     });
+
+    return true;
 }

@@ -1,3 +1,4 @@
+require('../pages/catchConsoleErrors.page.js');
 describe("queryTests", function() {
   function filter_test(field, compare, value, num_builds) {
     // Load the filtered page.
@@ -35,6 +36,14 @@ describe("queryTests", function() {
     // then make sure that all tests on the page have times
     // of 0s.
     // filter_test("time", "41", "0", 5);
+  });
+
+  it("check default filters", function() {
+      browser.get('index.php?project=InsightExample');
+      browser.actions().mouseMove(element(by.linkText('Dashboard'))).perform();
+      var link = element(by.linkText('Tests Query'));
+      expect(link.getAttribute('href')).toContain('queryTests.php?project=InsightExample');
+      expect(link.getAttribute('href')).toContain('&filtercount=1&showfilters=1&field1=status&compare1=62&value1=Passed');
   });
 
 });

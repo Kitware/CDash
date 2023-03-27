@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreatePasswordTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,12 +12,14 @@ class CreatePasswordTable extends Migration
      */
     public function up()
     {
-        Schema::create('password', function (Blueprint $table) {
-            $table->integer('userid')->index();
-            $table->string('password')->default('');
-            $table->timestamp('date')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('password')) {
+            Schema::create('password', function (Blueprint $table) {
+                $table->integer('userid')->index();
+                $table->string('password')->default('');
+                $table->timestamp('date')->default(DB::raw('CURRENT_TIMESTAMP'));
+                $table->timestamps();
+            });
+        }
     }
 
 

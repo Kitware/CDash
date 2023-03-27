@@ -1,4 +1,5 @@
 var LoginPage = require('../pages/login.page.js');
+require('../pages/catchConsoleErrors.page.js');
 const EC = protractor.ExpectedConditions;
 describe("calendar", function() {
   it("toggle calendar", function() {

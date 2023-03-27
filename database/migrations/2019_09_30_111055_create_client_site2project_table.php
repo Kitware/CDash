@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateClientSite2projectTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,10 +12,12 @@ class CreateClientSite2projectTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_site2project', function (Blueprint $table) {
-            $table->integer('projectid')->nullable();
-            $table->integer('siteid')->nullable()->index();
-        });
+        if (!Schema::hasTable('client_site2project')) {
+            Schema::create('client_site2project', function (Blueprint $table) {
+                $table->integer('projectid')->nullable();
+                $table->integer('siteid')->nullable()->index();
+            });
+        }
     }
 
 

@@ -17,9 +17,9 @@ use CDash\Model\PendingSubmissions;
 use CDash\ServiceContainer;
 use CDash\Test\CDashTestCase;
 
-class PendingSubmissionsModelTest extends CDashTestCase
+class PendingSubmissionsTest extends CDashTestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
         // The parent method should always be called on all overridden TestCase methods
         // e.g. setUp, tearDown, setUpBeforeClass(), etc.

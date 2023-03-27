@@ -9,6 +9,8 @@ require_once 'include/pdo.php';
 
 class UppdateAppendTestCase extends KWWebTestCase
 {
+    protected $OriginalConfigSettings;
+
     public function __construct()
     {
         parent::__construct();

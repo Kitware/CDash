@@ -13,6 +13,8 @@ use CDash\Model\BuildConfigure;
 
 class ConfigureWarningTestCase extends KWWebTestCase
 {
+    protected $ProjectId;
+
     public function __construct()
     {
         parent::__construct();

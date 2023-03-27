@@ -15,14 +15,14 @@
 =========================================================================*/
 require_once 'xml_handlers/NonSaxHandler.php';
 
+use App\Services\TestCreator;
+
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
 use CDash\Model\BuildErrorFilter;
-use CDash\Model\BuildTest;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
-use CDash\Model\Test;
 
 class BazelJSONHandler extends NonSaxHandler
 {
@@ -98,7 +98,7 @@ class BazelJSONHandler extends NonSaxHandler
         $handle = fopen($filename, "r");
         if (!$handle) {
             add_log("Could not open $filename for parsing",
-                    'BazelJSONHandler::Parse', LOG_ERR);
+                'BazelJSONHandler::Parse', LOG_ERR);
             return false;
         }
 
@@ -152,35 +152,41 @@ class BazelJSONHandler extends NonSaxHandler
 
                 // Record the number of warnings & errors with the build.
                 $build->SetNumberOfConfigureWarnings(
-                        $configure->NumberOfWarnings);
+                    $configure->NumberOfWarnings);
                 $build->SetNumberOfConfigureErrors(
-                        $configure->NumberOfErrors);
+                    $configure->NumberOfErrors);
                 $build->ComputeConfigureDifferences();
 
                 // Update the tally of warnings & errors in the parent build,
                 // if applicable.
                 if (!empty($subproject_name)) {
                     $build->UpdateParentConfigureNumbers(
-                            $configure->NumberOfWarnings, $configure->NumberOfErrors);
+                        $configure->NumberOfWarnings, $configure->NumberOfErrors);
                 }
             }
         }
 
         // Save testing information.
         foreach ($this->Tests as $testdata) {
-            $test = $testdata[0];
-            $buildtest = $testdata[1];
+            $testCreator = new TestCreator;
 
-            if (array_key_exists($test->Name, $this->TestsOutput)) {
-                $test->Output = $this->TestsOutput[$test->Name];
+            $testCreator->buildTestTime = $testdata->time;
+            $testCreator->projectid = $this->Project->Id;
+            $testCreator->testCommand = $this->CommandLine;
+            $testCreator->testDetails = $testdata->details;
+            $testCreator->testName = $testdata->name;
+            $testCreator->testStatus = $testdata->status;
+
+            if (array_key_exists($testdata->name, $this->TestsOutput)) {
+                $testCreator->testOutput = $this->TestsOutput[$testdata->name];
             }
 
-            $test->Command = $this->CommandLine;
-            $test->Insert();
-            $test->InsertLabelAssociations($buildtest->BuildId);
-
-            $buildtest->TestId = $test->Id;
-            $buildtest->Insert();
+            foreach ($this->Builds as $subproject_name => $build) {
+                if ($build->Id = $testdata->buildid) {
+                    $testCreator->create($build);
+                    break;
+                }
+            }
         }
 
         // Save testdiff information.
@@ -197,7 +203,7 @@ class BazelJSONHandler extends NonSaxHandler
         $json_array = json_decode($line, true);
         if (is_null($json_array)) {
             add_log('json_decode error: ' . json_last_error_msg(),
-                    'BazelJSONHandler::ParseLine', LOG_ERR);
+                'BazelJSONHandler::ParseLine', LOG_ERR);
             return false;
         }
 
@@ -214,7 +220,7 @@ class BazelJSONHandler extends NonSaxHandler
                 if ($this->HasSubProjects) {
                     $target_name = $json_array['id']['pattern']['pattern'][0];
                     $subproject_name = SubProject::GetSubProjectForPath(
-                            $target_name, $this->Project->Id);
+                        $target_name, $this->Project->Id);
                     if (!empty($subproject_name)) {
                         $this->InitializeSubProjectBuild($subproject_name);
                     }
@@ -245,7 +251,7 @@ class BazelJSONHandler extends NonSaxHandler
                                 $this->TestName = "";
                             } else {
                                 if (!array_key_exists(
-                                      $this->TestName, $this->TestsOutput)) {
+                                    $this->TestName, $this->TestsOutput)) {
                                     $this->TestsOutput[$this->TestName] = $line;
                                     $continue_line = false;
                                 } elseif (!empty($line) && $continue_line) {
@@ -269,7 +275,7 @@ class BazelJSONHandler extends NonSaxHandler
                                 // currently processing).
                                 $this->TestName = $begin_line;
                                 if (!array_key_exists(
-                                      $this->TestName, $this->TestsOutput)) {
+                                    $this->TestName, $this->TestsOutput)) {
                                     $this->TestsOutput[$this->TestName] = $line;
                                 } else {
                                     $this->TestsOutput[$this->TestName] .= "\n\n$line";
@@ -292,7 +298,7 @@ class BazelJSONHandler extends NonSaxHandler
                                 $this->RecordingTestSummary = true;
                                 $this->TestName = $test_name;
                                 if (!array_key_exists(
-                                      $this->TestName, $this->TestsOutput)) {
+                                    $this->TestName, $this->TestsOutput)) {
                                     $this->TestsOutput[$this->TestName] = $line;
                                 } else {
                                     $this->TestsOutput[$this->TestName] .= "\n\n$line";
@@ -305,16 +311,21 @@ class BazelJSONHandler extends NonSaxHandler
                 if (array_key_exists('stderr', $json_array[$message_id])) {
                     // Parse through stderr line-by-line,
                     // searching for configure and build warnings and errors.
-                    $stderr = $json_array[$message_id]['stderr'];
-                    $warning_pattern = '/(.*?) warning: (.*?)$/i';
-                    $error_pattern = '/(.*?)error: (.*?)$/i';
 
                     // The first two phases of a Bazel build, Loading and
                     // Analysis, will be treated as the 'Configure' step by
                     // CDash. The final phase, Execution, will be treated as
                     // the 'Build' step by CDash.
+
+                    $stderr = $json_array[$message_id]['stderr'];
+
+                    $info_pattern = '/(.*?)INFO: (.*?)$/';
+                    $linking_pattern = '/(.*?)____From Linking (.*?)$/';
+                    $error_pattern = '/(.*?)ERROR: (.*?)$/';
+                    $warning_pattern = '/(.*?)warning: (.*?)$/';
+
                     $configure_error_pattern = '/\s*ERROR: (.*?)BUILD/';
-                    $analysis_warning_pattern = '/\s*WARNING: errors encountered while analyzing target \'(.*?)\': it will not be built.*?$/';
+                    $analysis_warning_pattern = '/\s*WARNING: (.*?)$/';
                     // Look for the report printed at the end of the analysis phase.
                     $analysis_report_pattern = '/(.*?)Found (.*?)target(.*?)/';
 
@@ -322,7 +333,8 @@ class BazelJSONHandler extends NonSaxHandler
                     $lines = explode("\n", $stderr);
                     $build_error = null;
                     $subproject_name = '';
-
+                    $warning_text = '';
+                    $check_for_warning = false;
 
                     foreach ($lines as $line) {
                         // Remove ANSI color codes.
@@ -352,7 +364,7 @@ class BazelJSONHandler extends NonSaxHandler
                                 $subproject_name = '';
                                 if ($this->HasSubProjects) {
                                     $subproject_name = SubProject::GetSubProjectForPath(
-                                            $source_file, $this->Project->Id);
+                                        $source_file, $this->Project->Id);
                                     // Skip this defect if we cannot deduce what SubProject
                                     // it belongs to.
                                     if (empty($subproject_name)) {
@@ -376,15 +388,41 @@ class BazelJSONHandler extends NonSaxHandler
                         } else {
                             // Done with configure, parsing build errors and warnings
                             $record_error = false;
-                            if (!is_null($build_error) && $type === 0 && empty($build_error->PostContext)) {
-                                // Assume all errors have at list one line of
-                                // context *AND* that the first line of context
-                                // may match the error pattern
-                            } elseif (preg_match($warning_pattern, $line, $matches) === 1
+
+                            if ($check_for_warning) {
+                                if (preg_match($warning_pattern, $line, $matches) === 1
+                                      && count($matches) === 3) {
+                                    // This line is part of a warning message
+                                    $record_error = true;
+                                    $type = 1;
+                                } else {
+                                    $warning_text = '';
+                                }
+                                $check_for_warning = false;
+                            }
+
+                            if (!empty($warning_text)) {
+                                // This line is part of a warning message
+                            } elseif (preg_match($info_pattern, $line, $matches) === 1
                                   && count($matches) === 3) {
-                                // This line contains a warning.
-                                $record_error = true;
-                                $type = 1;
+                                // This line might be the start of a warning message
+                                // Some warnings are structured:
+                                // INFO: ....
+                                // ... warning: ...
+                                // ...
+                                // ... warning: ...
+                                // ...
+                                // <n> warnings generated.
+                                $check_for_warning = true;
+                                $warning_text = $line;
+                            } elseif (preg_match($linking_pattern, $line, $matches) === 1
+                                  && count($matches) === 3) {
+                                // This line might be the start of a warning message
+                                // Some warnings are structed:
+                                // ____From Linking <...>:
+                                // clang: warning: ...
+                                $check_for_warning = true;
+                                $warning_text = $line;
                             } elseif (preg_match($error_pattern, $line, $matches) === 1
                                   && count($matches) === 3) {
                                 // This line contains an error.
@@ -400,6 +438,7 @@ class BazelJSONHandler extends NonSaxHandler
                                     $subproject_name = '';
                                     $build_error = null;
                                 }
+
                                 $build_error = new BuildError();
                                 $build_error->Type = $type;
                                 $build_error->LogLine = $log_line_number;
@@ -431,7 +470,13 @@ class BazelJSONHandler extends NonSaxHandler
                                     $source_line_number = 0;
                                 }
 
-                                $build_error->Text = $line;
+                                if (empty($warning_text)) {
+                                    $build_error->Text = $line;
+                                } else {
+                                    $build_error->Text = $warning_text;
+                                    $warning_text = '';
+                                    $build_error->PostContext .= "$line\n";
+                                }
                                 $build_error->SourceFile = $source_file;
                                 $build_error->SourceLine = $source_line_number;
 
@@ -440,7 +485,7 @@ class BazelJSONHandler extends NonSaxHandler
                                     // Look up the subproject (if any) that contains
                                     // this source file.
                                     $subproject_name = SubProject::GetSubProjectForPath(
-                                    $source_file, $this->Project->Id);
+                                        $source_file, $this->Project->Id);
                                     // Skip this defect if we cannot deduce what SubProject
                                     // it belongs to.
                                     if (empty($subproject_name)) {
@@ -468,9 +513,12 @@ class BazelJSONHandler extends NonSaxHandler
                 // Parse out the command line that created this file.
                 $this->CommandLine = "bazel ";
                 $this->CommandLine .= $json_array['started']['command'];
-                $this->CommandLine .= $json_array['started']['optionsDescription'];
-
-                $this->WorkingDirectory = $json_array['started']['workingDirectory'];
+                if (array_key_exists('optionsDescription', $json_array['started'])) {
+                    $this->CommandLine .= $json_array['started']['optionsDescription'];
+                }
+                if (array_key_exists('workingDirectory', $json_array['started'])) {
+                    $this->WorkingDirectory = $json_array['started']['workingDirectory'];
+                }
                 break;
 
             case 'testResult':
@@ -485,11 +533,11 @@ class BazelJSONHandler extends NonSaxHandler
                         // builds instead.
                         $target_name = $json_array['id']['testResult']['label'];
                         $subproject_name = SubProject::GetSubProjectForPath(
-                                $target_name, $this->Project->Id);
+                            $target_name, $this->Project->Id);
                         // Skip this defect if we cannot deduce what SubProject
                         // it belongs to.
                         if (empty($subproject_name)) {
-                            continue;
+                            break;
                         }
                         $child_build = $this->InitializeSubProjectBuild($subproject_name);
                         if (!is_null($child_build)) {
@@ -500,26 +548,28 @@ class BazelJSONHandler extends NonSaxHandler
                     }
 
                     $test_name = $json_array['id']['testResult']['label'];
-                    $test_time = $json_array['testResult']['testAttemptDurationMillis'] / 1000.0;
+                    $test_time = 0;
+                    if (array_key_exists('testResult', $json_array) && array_key_exists('testAttemptDurationMillis', $json_array['testResult'])) {
+                        $test_time = $json_array['testResult']['testAttemptDurationMillis'] / 1000.0;
+                    } elseif (array_key_exists('testAttemptDurationMillis', $json_array['id']['testResult'])) {
+                        $test_time = $json_array['id']['testResult']['testAttemptDurationMillis'] / 1000.0;
+                    }
 
                     if (array_key_exists('shard', $json_array['id']['testResult'])) {
                         // This test uses shards, so a Test with this name
                         // might already exist
                         $new_test = true;
                         foreach ($this->Tests as $testdata) {
-                            $test = $testdata[0];
-                            $buildtest = $testdata[1];
-                            if ($test->Name === $test_name) {
+                            if ($testdata->name === $test_name) {
                                 // Increment test time
-                                $buildtest->Time += $test_time;
+                                $testdata->time += $test_time;
                                 $new_test = false;
                                 break;
                             }
                         }
                         if ($new_test) {
                             // We'll set the overall test status from 'testSummary'
-                            $test_status = "";
-                            $this->CreateNewTest($buildid, $test_status,
+                            $this->CreateNewTest($buildid, '',
                                 $test_time, $test_name, $subproject_name);
                         }
                     } else {
@@ -538,37 +588,39 @@ class BazelJSONHandler extends NonSaxHandler
                     // builds instead.
                     $target_name = $json_array['id']['testSummary']['label'];
                     $subproject_name = SubProject::GetSubProjectForPath(
-                            $target_name, $this->Project->Id);
+                        $target_name, $this->Project->Id);
                     // Skip this defect if we cannot deduce what SubProject
                     // it belongs to.
                     if (empty($subproject_name)) {
-                        continue;
+                        break;
                     }
                 }
                 $test_name = $json_array['id']['testSummary']['label'];
                 foreach ($this->Tests as $testdata) {
-                    $test = $testdata[0];
-                    $buildtest = $testdata[1];
-                    if ($test->Name === $test_name) {
-                        $buildtest->Status =
+                    if ($testdata->name === $test_name) {
+                        if (!array_key_exists('testSummary', $json_array)) {
+                            continue;
+                        }
+                        $testdata->status =
                             strtolower($json_array['testSummary']['overallStatus']);
-                        if ($buildtest->Status === 'failed') {
+                        if ($testdata->status === 'failed') {
                             $this->NumTestsFailed[$subproject_name]++;
-                            $test->Details = 'Completed (Failed)';
-                        } elseif ($buildtest->Status === 'timeout') {
-                            $buildtest->Status = 'failed';
+                            $testdata->details = 'Completed (Failed)';
+                        } elseif ($testdata->status === 'timeout') {
+                            $testdata->status = 'failed';
                             $this->NumTestsFailed[$subproject_name]++;
-                            $test->Details = 'Completed (Timeout)';
+                            $testdata->details = 'Completed (Timeout)';
                             // "TIMEOUT" message is only in stderr, not stdout
                             // Make sure that it is displayed.
-                            $this->TestsOutput[$test->Name] = "TIMEOUT\n\n";
-                        } elseif (!empty($buildtest->Status)) {
+                            $this->TestsOutput[$testdata->name] = "TIMEOUT\n\n";
+                        } elseif (!empty($testdata->status)) {
                             $this->NumTestsPassed[$subproject_name]++;
-                            $test->Details = 'Completed';
+                            $testdata->details = 'Completed';
                         }
                         break;
                     }
                 }
+                // no break
             default:
                 break;
         }
@@ -647,41 +699,35 @@ class BazelJSONHandler extends NonSaxHandler
 
     private function CreateNewTest($buildid, $test_status, $test_time, $test_name, $subproject_name)
     {
-        $buildtest = new BuildTest();
-        $buildtest->BuildId = $buildid;
-        $buildtest->Status = $test_status;
-        $buildtest->Time = $test_time;
+        $testdata = new stdClass();
+        $testdata->buildid = $buildid;
+        $testdata->name = $test_name;
+        $testdata->status = $test_status;
+        $testdata->time = $test_time;
+        $testdata->details = '';
 
-        $test = new Test();
-        $test->ProjectId = $this->Project->Id;
-        $test->Command = '';
-        $test->Path = '';
-        $test->Name = $test_name;
-        if ($buildtest->Status === 'failed') {
+        if ($testdata->status === 'failed') {
             $this->NumTestsFailed[$subproject_name]++;
-            $test->Details = 'Completed (Failed)';
-        } elseif ($buildtest->Status === 'timeout') {
-            $buildtest->Status = 'failed';
+            $testdata->details = 'Completed (Failed)';
+        } elseif ($testdata->status === 'timeout') {
+            $testdata->status = 'failed';
             $this->NumTestsFailed[$subproject_name]++;
-            $test->Details = 'Completed (Timeout)';
+            $testdata->details = 'Completed (Timeout)';
             // "TIMEOUT" message is only in stderr, not stdout
             // Make sure that it is displayed.
-            $this->TestsOutput[$test->Name] = "TIMEOUT\n\n";
-        } elseif (!empty($buildtest->Status)) {
+            $this->TestsOutput[$testdata->name] = "TIMEOUT\n\n";
+        } elseif (!empty($testdata->status)) {
             $this->NumTestsPassed[$subproject_name]++;
-            $test->Details = 'Completed';
+            $testdata->details = 'Completed';
         }
 
-        // We will set this test's output (if any) before
-        // inserting it into the database.
-        $this->Tests[] = [$test, $buildtest];
+        $this->Tests[] = $testdata;
     }
 
     private function IsTestName($name)
     {
         foreach ($this->Tests as $testdata) {
-            $test = $testdata[0];
-            if ($test->Name === $name) {
+            if ($testdata->name === $name) {
                 return true;
             }
         }

@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateSubproject2buildTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,10 +12,12 @@ class CreateSubproject2buildTable extends Migration
      */
     public function up()
     {
-        Schema::create('subproject2build', function (Blueprint $table) {
-            $table->integer('subprojectid')->index();
-            $table->bigInteger('buildid')->primary();
-        });
+        if (!Schema::hasTable('subproject2build')) {
+            Schema::create('subproject2build', function (Blueprint $table) {
+                $table->integer('subprojectid')->index();
+                $table->bigInteger('buildid')->primary();
+            });
+        }
     }
 
 

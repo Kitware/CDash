@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="leak_lots"
+	BuildStamp="20210125-1520-Experimental"
+	Name="localhost"
+	Generator="ctest-3.19.0"
+	>
+	<Configure>
+		<StartDateTime>Jan 25 10:20 EST</StartDateTime>
+		<StartConfigureTime>1611588058</StartConfigureTime>
+		<ConfigureCommand>"cmake" "-DCMAKE_BUILD_TYPE=Debug" "-DCMAKE_CXX_FLAGS=-g -O0 --coverage" "-DCMAKE_C_FLAGS=-g -O0 --coverage" "-GUnix Makefiles" "/tmp/leak_lots"</ConfigureCommand>
+		<Log>-- Build files have been written to: /tmp/leak_lots_bin
+</Log>
+		<ConfigureStatus>0</ConfigureStatus>
+		<EndDateTime>Jan 25 10:20 EST</EndDateTime>
+		<EndConfigureTime>1611588058</EndConfigureTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Configure>
+</Site>

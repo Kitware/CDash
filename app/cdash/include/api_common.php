@@ -16,11 +16,10 @@
 
 require_once 'include/common.php';
 
-use CDash\Model\AuthToken;
+use App\Services\ProjectPermissions;
+
 use CDash\Model\Build;
 use CDash\Model\Project;
-use CDash\Model\User;
-use CDash\Model\UserProject;
 use CDash\ServiceContainer;
 use CDash\System;
 
@@ -55,54 +54,45 @@ function can_access_project($projectid)
         return true;
     }
 
+    $project = new Project();
+    $project->Id = $projectid;
+    if (ProjectPermissions::userCanViewProject($project)) {
+        return true;
+    }
+
     $userid = get_userid_from_session(false);
     $logged_in = Auth::check();
-
-    if (!checkUserPolicy($userid, $projectid, 1)) {
-        if ($logged_in) {
-            $response = ['error' => 'You do not have permission to access this page.'];
-            json_error_response($response, 403);
-        } else {
-            $response = ['requirelogin' => 1];
-            json_error_response($response, 401);
-        }
-        return false;
+    if ($logged_in) {
+        $response = ['error' => 'You do not have permission to access this page.'];
+        json_error_response($response, 403);
+    } else {
+        $response = ['requirelogin' => 1];
+        json_error_response($response, 401);
     }
-    return true;
+    return false;
 }
 
 // Return true if this user has administrative access to this project.
 // Respond with the correct HTTP status (401 or 403) and exit if not.
 function can_administrate_project($projectid)
 {
-    // Check that we were supplied a reasonable looking projectid.
-    if (!isset($projectid) || !is_numeric($projectid) || $projectid < 1) {
-        json_error_response(['error' => 'Valid project ID required'], 400);
+    // Check that we were supplied a valid projectid.
+    $project = new Project();
+    $project->Id = $projectid;
+    if (!$project->Exists()) {
+        json_error_response(['error' => 'Valid project ID required'], 404);
         return false;
     }
 
     // Make sure the user is logged in.
-    $userid = get_userid_from_session(false);
-    if (is_null($userid)) {
+    if (!\Auth::check()) {
         $response = ['requirelogin' => 1];
         json_error_response($response, 401);
         return false;
     }
 
-    // Check if this user is a global admin.
-    $service = ServiceContainer::getInstance();
-    $user = $service->get(User::class);
-    $user->Id = $userid;
-    if ($user->IsAdmin()) {
-        return true;
-    }
-
-    // Check if this user is a project admin.
-    $user2project = new UserProject();
-    $user2project->UserId = $userid;
-    $user2project->ProjectId = $projectid;
-    $user2project->FillFromUserId();
-    if ($user2project->Role == UserProject::PROJECT_ADMIN) {
+    // Check if the user has the necessary permissions.
+    if (ProjectPermissions::userCanEditProject(\Auth::user(), $project)) {
         return true;
     }
 
@@ -118,13 +108,6 @@ function can_administrate_project($projectid)
 function get_userid_from_session($required = true)
 {
     $userid = Auth::id();
-
-    // Check for the presence of a bearer token if no userid was found
-    // in the session.
-    if (is_null($userid)) {
-        $authtoken = new AuthToken();
-        $userid = $authtoken->getUserIdFromRequest();
-    }
 
     if ($required && is_null($userid)) {
         $response = ['error' => 'Permission denied'];

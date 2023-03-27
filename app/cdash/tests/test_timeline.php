@@ -12,6 +12,8 @@ use CDash\Model\Build;
 
 class TimelineTestCase extends KWWebTestCase
 {
+    protected $PDO;
+
     public function __construct()
     {
         parent::__construct();
@@ -28,8 +30,8 @@ class TimelineTestCase extends KWWebTestCase
         ];
         try {
             $response = $client->request('POST',
-                    $this->url .  '/api/v1/build.php',
-                    ['json' => $payload]);
+                $this->url .  '/api/v1/build.php',
+                ['json' => $payload]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
         }

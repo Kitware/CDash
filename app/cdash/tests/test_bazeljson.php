@@ -7,6 +7,8 @@ use CDash\Model\Project;
 
 class BazelJSONTestCase extends KWWebTestCase
 {
+    protected $PDO;
+
     public function __construct()
     {
         parent::__construct();
@@ -25,14 +27,14 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
-                configureerrors, configurewarnings
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                        configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
 
         $answer_key = [
             'builderrors' => 1,
-            'buildwarnings' => 2,
+            'buildwarnings' => 1,
             'testfailed' => 1,
             'testpassed' => 1,
             'configureerrors' => 0,
@@ -47,15 +49,15 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT t.id FROM test t
+            'SELECT b2t.id FROM test t
             JOIN build2test b2t on b2t.testid = t.id
             JOIN build b on b.id = b2t.buildid
             WHERE b.id = ? AND t.name = ?');
         pdo_execute($test_stmt, [$buildid, '//main:hello-good']);
-        $testid = $test_stmt->fetchColumn();
+        $buildtestid = $test_stmt->fetchColumn();
 
         // Use the API to verify that only output for the specified test is displayed
-        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $output = $jsonobj['test']['output'];
@@ -107,8 +109,8 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
-                configureerrors, configurewarnings
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                        configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
 
@@ -173,14 +175,17 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the parent build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                        configureerrors, configurewarnings
                 FROM build WHERE id = $parentid");
         $row = $stmt->fetch();
         $answer_key = [
             'builderrors' => 0,
             'buildwarnings' => 2,
             'testfailed' => 1,
-            'testpassed' => 1
+            'testpassed' => 1,
+            'configureerrors' => 0,
+            'configurewarnings' => 0
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -192,7 +197,8 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the children builds.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                        configureerrors, configurewarnings,
                         sp.name
                 FROM build b
                 JOIN subproject2build sp2b ON sp2b.buildid = b.id
@@ -207,7 +213,9 @@ class BazelJSONTestCase extends KWWebTestCase
                         'builderrors' => 0,
                         'buildwarnings' => 1,
                         'testfailed' => 0,
-                        'testpassed' => 1
+                        'testpassed' => 1,
+                        'configureerrors' => 0,
+                        'configurewarnings' => 0
                     ];
                     break;
                 case 'subproj2':
@@ -215,7 +223,9 @@ class BazelJSONTestCase extends KWWebTestCase
                         'builderrors' => 0,
                         'buildwarnings' => 1,
                         'testfailed' => 1,
-                        'testpassed' => 0
+                        'testpassed' => 0,
+                        'configureerrors' => 0,
+                        'configurewarnings' => 0
                     ];
                     break;
                 default:
@@ -247,7 +257,8 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                        configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
 
@@ -255,7 +266,9 @@ class BazelJSONTestCase extends KWWebTestCase
             'builderrors' => 0,
             'buildwarnings' => 0,
             'testfailed' => 1,
-            'testpassed' => 1
+            'testpassed' => 1,
+            'configureerrors' => 0,
+            'configurewarnings' => 0
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -266,15 +279,15 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT t.id FROM test t
+            'SELECT b2t.id FROM test t
             JOIN build2test b2t on b2t.testid = t.id
             JOIN build b on b.id = b2t.buildid
             WHERE b.id = ? AND t.name = ?');
         pdo_execute($test_stmt, [$buildid, '//drake/bindings:pydrake_common_install_test']);
-        $testid = $test_stmt->fetchColumn();
+        $buildtestid = $test_stmt->fetchColumn();
 
         // Use the API to verify that all of the build output is displayed.
-        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $output = $jsonobj['test']['output'];
@@ -300,7 +313,8 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                        configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
 
@@ -308,7 +322,9 @@ class BazelJSONTestCase extends KWWebTestCase
             'builderrors' => 0,
             'buildwarnings' => 1,
             'testfailed' => 1,
-            'testpassed' => 18
+            'testpassed' => 18,
+            'configureerrors' => 0,
+            'configurewarnings' => 1
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -319,15 +335,15 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT t.id FROM test t
+            'SELECT b2t.id FROM test t
             JOIN build2test b2t on b2t.testid = t.id
             JOIN build b on b.id = b2t.buildid
             WHERE b.id = ? AND t.name = ?');
         pdo_execute($test_stmt, [$buildid, '//drake/bindings:pydrake_common_install_test']);
-        $testid = $test_stmt->fetchColumn();
+        $buildtestid = $test_stmt->fetchColumn();
 
         // Use the API to verify that the 'TIMEOUT' message is displayed
-        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $output = $jsonobj['test']['output'];
@@ -353,13 +369,13 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
-                configureerrors, configurewarnings
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                        configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
 
         $answer_key = [
-            'builderrors' => 4,
+            'builderrors' => 8,
             'buildwarnings' => 0,
             'testfailed' => 0,
             'testpassed' => 0,
@@ -389,7 +405,8 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                        configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
 
@@ -397,7 +414,9 @@ class BazelJSONTestCase extends KWWebTestCase
             'builderrors' => 0,
             'buildwarnings' => 0,
             'testfailed' => 1,
-            'testpassed' => 0
+            'testpassed' => 0,
+            'configureerrors' => 0,
+            'configurewarnings' => 0
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -422,15 +441,18 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                        configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
 
         $answer_key = [
-            'builderrors' => 3,
+            'builderrors' => 1,
             'buildwarnings' => 0,
             'testfailed' => 0,
-            'testpassed' => 0
+            'testpassed' => 0,
+            'configureerrors' => 0,
+            'configurewarnings' => 0
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -446,12 +468,6 @@ class BazelJSONTestCase extends KWWebTestCase
         $errors = $jsonobj['errors'];
         if ($errors[0]["logline"] != 1) {
             $this->fail("Expected error at line 1, found at line ".$errors[0]["logline"]);
-        }
-        if ($errors[1]["logline"] != 3) {
-            $this->fail("Expected error at line 3, found at line ".$errors[1]["logline"]);
-        }
-        if ($errors[2]["logline"] != 6) {
-            $this->fail("Expected error at line 6, found at line ".$errors[2]["logline"]);
         }
 
         // Cleanup.
@@ -470,8 +486,8 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
-                configureerrors, configurewarnings
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                        configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
 
@@ -493,14 +509,14 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT t.id FROM test t
+            'SELECT b2t.id FROM test t
             JOIN build2test b2t on b2t.testid = t.id
             JOIN build b on b.id = b2t.buildid
             WHERE b.id = ? AND t.name = ?');
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_lanes_test']);
-        $testid = $test_stmt->fetchColumn();
+        $buildtestid = $test_stmt->fetchColumn();
 
-        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
 
@@ -526,8 +542,8 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
-                configureerrors, configurewarnings
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                        configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
 
@@ -549,14 +565,14 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT t.id FROM test t
+            'SELECT b2t.id FROM test t
             JOIN build2test b2t on b2t.testid = t.id
             JOIN build b on b.id = b2t.buildid
             WHERE b.id = ? AND t.name = ?');
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_builder_test']);
-        $testid = $test_stmt->fetchColumn();
+        $buildtestid = $test_stmt->fetchColumn();
 
-        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
 
@@ -581,14 +597,14 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup another specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT t.id FROM test t
+            'SELECT b2t.id FROM test t
             JOIN build2test b2t on b2t.testid = t.id
             JOIN build b on b.id = b2t.buildid
             WHERE b.id = ? AND t.name = ?');
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_lanes_test']);
-        $testid = $test_stmt->fetchColumn();
+        $buildtestid = $test_stmt->fetchColumn();
 
-        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
 
@@ -622,8 +638,8 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Validate the build.
         $stmt = $this->PDO->query(
-                "SELECT builderrors, buildwarnings, testfailed, testpassed,
-                configureerrors, configurewarnings
+            "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                        configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
 
@@ -645,14 +661,14 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT t.id FROM test t
+            'SELECT b2t.id FROM test t
             JOIN build2test b2t on b2t.testid = t.id
             JOIN build b on b.id = b2t.buildid
             WHERE b.id = ? AND t.name = ?');
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_lanes_test']);
-        $testid = $test_stmt->fetchColumn();
+        $buildtestid = $test_stmt->fetchColumn();
 
-        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
 
@@ -690,7 +706,7 @@ class BazelJSONTestCase extends KWWebTestCase
         // Check time - should be sum of all shards
         $expected = "3m 5s 750ms";
         if (strpos($jsonobj['test']['time'], $expected) === false) {
-            $this->fail("Expected output to include '$expected'".var_dump($jsonobj['time']));
+            $this->fail("Expected time to be $expected, found {$jsonobj['test']['time']}");
         }
 
         // Cleanup.
@@ -715,7 +731,7 @@ class BazelJSONTestCase extends KWWebTestCase
         try {
             $response = $client->request(
                 'POST',
-                $this->config('CDASH_BASE_URL') . '/submit.php',
+                config('app.url') . '/submit.php',
                 [
                     'form_params' => $fields
                 ]

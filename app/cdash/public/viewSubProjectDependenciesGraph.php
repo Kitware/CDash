@@ -51,7 +51,7 @@ if (pdo_num_rows($project) > 0) {
     $projectname = 'NA';
 }
 
-$policy = checkUserPolicy(Auth::id(), $project_array['id']);
+$policy = checkUserPolicy($project_array['id']);
 if ($policy !== true) {
     return $policy;
 }
@@ -84,12 +84,6 @@ if (empty($project_array['homeurl'])) {
     $xml .= '<home>index.php?project=' . urlencode($projectname) . '</home>';
 } else {
     $xml .= '<home>' . $homeurl . '</home>';
-}
-if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/models/proProject.php')) {
-    include_once 'local/models/proProject.php';
-    $pro = new proProject;
-    $pro->ProjectId = $projectid;
-    $xml .= '<proedition>' . $pro->GetEdition(1) . '</proedition>';
 }
 
 if ($currentstarttime > time()) {

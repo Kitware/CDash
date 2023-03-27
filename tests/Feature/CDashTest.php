@@ -2,10 +2,11 @@
 namespace Tests\Feature;
 
 use App\Http\Controllers\CDash;
-use Config;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\Request;
-use Storage;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
 /**
@@ -25,13 +26,13 @@ class CDashTest extends TestCase
         ];
 
         $actual = Config::get('filesystems.disks.cdash');
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
     }
 
     public function testFilesystemAdapterConfiguredForCDash()
     {
         $cdashfs = Storage::disk('cdash');
-        $this->assertInstanceOf(FilesystemAdapter::class, $cdashfs);
+        $this::assertInstanceOf(FilesystemAdapter::class, $cdashfs);
     }
 
     // There are some things to note about the approach to setting up this test.
@@ -58,14 +59,27 @@ class CDashTest extends TestCase
 
     public function testCDashBasicRequest()
     {
+        URL::forceRootUrl('http://localhost');
         $this->get('/viewProjects.php')
             ->assertStatus(200);
     }
 
     public function testCDashReturnsNotFoundGivenPathDoesNotExist()
     {
+        URL::forceRootUrl('http://localhost');
         $this->get('/nope-not-a-uri')
             ->assertStatus(404);
+    }
+
+    public function testRedirects()
+    {
+        URL::forceRootUrl('http://localhost');
+
+        $response = $this->call('GET', '/buildSummary.php', ['buildid' => '2']);
+        $response->assertRedirect('/build/2');
+
+        $response = $this->call('GET', '/viewConfigure.php', ['buildid' => '5']);
+        $response->assertRedirect('/build/5/configure');
     }
 
     public function testGetController()
@@ -76,12 +90,20 @@ class CDashTest extends TestCase
 
         $expected = 'BuildPropertiesController';
         $actual = $sut->getController();
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
 
         $uri = '/login.php';
         $request = Request::create($uri);
         $sut = new CDash($request);
 
-        $this->assertEmpty($sut->getController());
+        $this::assertEmpty($sut->getController());
+    }
+
+    public function testOverrideLoginField()
+    {
+        URL::forceRootUrl('http://localhost');
+        Config::set('cdash.login_field', 'User');
+        $this->get('/login')
+            ->assertSeeText('User:');
     }
 }

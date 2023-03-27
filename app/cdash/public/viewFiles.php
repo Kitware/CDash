@@ -40,7 +40,7 @@ if (!isset($build_array['projectid'])) {
 }
 $projectid = $build_array['projectid'];
 
-$policy = checkUserPolicy(Auth::id(), $projectid);
+$policy = checkUserPolicy($projectid);
 if ($policy !== true) {
     return $policy;
 }
@@ -72,7 +72,7 @@ foreach ($uploadFilesOrURLs as $uploadFileOrURL) {
     if (!$uploadFileOrURL->IsUrl) {
         $xml .= '<uploadfile>';
         $xml .= '<id>' . $uploadFileOrURL->Id . '</id>';
-        $xml .= '<href>' . $config->get('CDASH_DOWNLOAD_RELATIVE_URL') . '/' . $uploadFileOrURL->Sha1Sum . '/' . $uploadFileOrURL->Filename . '</href>';
+        $xml .= '<href>upload/' . $uploadFileOrURL->Sha1Sum . '/' . $uploadFileOrURL->Filename . '</href>';
         $xml .= '<sha1sum>' . $uploadFileOrURL->Sha1Sum . '</sha1sum>';
         $xml .= '<filename>' . $uploadFileOrURL->Filename . '</filename>';
         $xml .= '<filesize>' . $uploadFileOrURL->Filesize . '</filesize>';

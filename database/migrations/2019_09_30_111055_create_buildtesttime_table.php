@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateBuildtesttimeTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,10 +12,12 @@ class CreateBuildtesttimeTable extends Migration
      */
     public function up()
     {
-        Schema::create('buildtesttime', function (Blueprint $table) {
-            $table->integer('buildid')->default(0)->primary();
-            $table->float('time', 7)->default(0.00);
-        });
+        if (!Schema::hasTable('buildtesttime')) {
+            Schema::create('buildtesttime', function (Blueprint $table) {
+                $table->integer('buildid')->default(0)->primary();
+                $table->decimal('time', 7, 2)->default(0.00);
+            });
+        }
     }
 
 

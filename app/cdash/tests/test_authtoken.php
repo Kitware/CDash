@@ -3,7 +3,8 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
-use CDash\Model\AuthToken;
+use App\Models\AuthToken;
+use App\Services\AuthTokenService;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 
@@ -20,7 +21,6 @@ class AuthTokenTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->ConfigLine = '$CDASH_DEFAULT_AUTHENTICATE_SUBMISSIONS = 1;';
         $this->Hash = '';
         $this->PDO = get_link_identifier()->getPdo();
         $this->PostBuildId = 0;
@@ -40,20 +40,6 @@ class AuthTokenTestCase extends KWWebTestCase
     {
         // Login as admin.
         $this->login();
-
-        // Verify setting is off by default.
-        $response = $this->get($this->url . '/api/v1/createProject.php');
-        $response = json_decode($response, true);
-        $this->assertEqual($response['project']['AuthenticateSubmissions'], false);
-
-        // Enable config setting.
-        // $this->addLineToConfig($this->ConfigLine);
-        config(['cdash.allow.authenticated_submissions' => true]);
-
-        // Verify setting is now on by default.
-        $response = $this->get($this->url . '/api/v1/createProject.php');
-        $response = json_decode($response, true);
-        $this->assertEqual($response['project']['AuthenticateSubmissions'], true);
 
         // Create project.
         $settings = [
@@ -81,9 +67,6 @@ class AuthTokenTestCase extends KWWebTestCase
         if (!$userproject->Save()) {
             $this->fail('Failed to assign user to project');
         }
-
-        // Disable config setting.
-        // $this->removeLineFromConfig($this->ConfigLine);
     }
 
     public function testGenerateToken()
@@ -92,16 +75,12 @@ class AuthTokenTestCase extends KWWebTestCase
         $this->login('user1@kw', 'user1');
 
         // Use API to generate token.
-        $response =
-            $this->post($this->url . '/api/v1/authtoken.php', ['description' => 'mytoken']);
+        $response = $this->post($this->url . '/api/authtokens/create', ['description' => 'mytoken', 'scope' => AuthToken::SCOPE_FULL_ACCESS]);
         $response = json_decode($response, true);
-        if (!array_key_exists('token', $response)) {
+        if (!array_key_exists('raw_token', $response)) {
             $this->fail('Failed to generate token');
         }
-        if (!array_key_exists('token', $response['token'])) {
-            $this->fail('Failed to generate access token');
-        }
-        $this->Token = $response['token']['token'];
+        $this->Token = $response['raw_token'];
 
         // Test that the model agrees that this token exists.
         $tokenmodel = new AuthToken();
@@ -159,10 +138,9 @@ class AuthTokenTestCase extends KWWebTestCase
 
     public function testSubmissionWorksWithToken()
     {
-        config(['cdash.allow.authenticated_submissions' => true]);
         // Make sure various submission paths are successful when we present
         // our authentication token.
-        $headers = ['Authorization' => "Bearer {$this->Token}"];
+        $headers = ["Authorization: Bearer {$this->Token}"];
         if (!$this->normalSubmit($headers)) {
             $this->fail('Normal submit failed using token');
         }
@@ -172,6 +150,62 @@ class AuthTokenTestCase extends KWWebTestCase
         if (!$this->putSubmit($headers)) {
             $this->fail('PUT submit failed using token');
         }
+    }
+
+    public function normalSubmit($headers)
+    {
+        $file = dirname(__FILE__) . '/data/InsightExperimentalExample/Insight_Experimental_Build.xml';
+        $url = "{$this->url}/submit.php?project=AuthTokenProject";
+        $result = $this->uploadfile($url, $file, $headers);
+        if (!$result || strpos($result, '<status>OK</status>') === false) {
+            return false;
+        }
+        return true;
+    }
+
+    public function postSubmit($token)
+    {
+        $post_params = [
+            'project' => 'AuthTokenProject',
+            'build' => 'token_test',
+            'site' => 'localhost',
+            'stamp' => '20161004-0500-Nightly',
+            'starttime' => '1475599870',
+            'endtime' => '1475599870',
+            'track' => 'Nightly',
+            'type' => 'GcovTar',
+            'datafilesmd5[0]=' => '5454e16948a1d58d897e174b75cc5633'
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "{$this->url}/submit.php");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_params);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if ($token) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer {$token}"]);
+        }
+
+        // Parse buildid for subsequent PUT attempts.
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $response_array = json_decode($response, true);
+        if (!is_array($response_array)) {
+            return false;
+        }
+        $this->PostBuildId = $response_array['buildid'];
+        return true;
+    }
+
+    public function putSubmit($headers)
+    {
+        $file = dirname(__FILE__) . '/data/gcov.tar';
+        $puturl = $this->url . "/submit.php?type=GcovTar&md5=5454e16948a1d58d897e174b75cc5633&filename=gcov.tar&buildid={$this->PostBuildId}";
+        $put_result = $this->uploadfile($puturl, $file, $headers);
+        if (strpos($put_result, '{"status":0}') === false) {
+            return false;
+        }
+        return true;
     }
 
     private function addBuildApiTestCase()
@@ -208,9 +242,7 @@ class AuthTokenTestCase extends KWWebTestCase
         try {
             $response = $client->request('POST',
                 $this->url . '/api/v1/addBuild.php',
-                [
-                    'headers' => ['Authorization' => "Bearer $this->Token"],
-                    'form_params' => $add_build_params
+                [ 'headers' => ['Authorization' => "Bearer $this->Token"], 'form_params' => $add_build_params
                 ]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
@@ -235,8 +267,8 @@ class AuthTokenTestCase extends KWWebTestCase
             $response = $client->request('POST',
                 $this->url . '/api/v1/addBuild.php',
                 [
-                    'headers' => ['Authorization' => "Bearer $this->Token"],
-                    'form_params' => $add_build_params
+                'headers' => ['Authorization' => "Bearer $this->Token"],
+                'form_params' => $add_build_params
                 ]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
@@ -258,7 +290,6 @@ class AuthTokenTestCase extends KWWebTestCase
 
     public function testAddBuild()
     {
-        config(['cdash.allow.authenticated_submissions' => true]);
         $this->addBuildApiTestCase();
 
         // Run this test again as a public project.
@@ -273,12 +304,11 @@ class AuthTokenTestCase extends KWWebTestCase
 
     public function testSubmissionFailsWithInvalidToken()
     {
-        config(['cdash.allow.authenticated_submissions' => true]);
         // Revoke user's access to this project.
         $this->PDO->query("DELETE FROM user2project WHERE projectid = {$this->Project->Id}");
 
         // Make sure the various submission paths fail for our token now.
-        $headers = ['Authorization' => "Bearer {$this->Token}"];
+        $headers = ["Authorization: Bearer {$this->Token}"];
         if ($this->normalSubmit($headers)) {
             $this->fail('Normal submit succeeded for invalid token');
         }
@@ -292,7 +322,6 @@ class AuthTokenTestCase extends KWWebTestCase
 
     public function testSubmissionFailsWithoutToken()
     {
-        config(['cdash.allow.authenticated_submissions' => true]);
         // Make sure submission fails when no token is presented.
         if ($this->normalSubmit([])) {
             $this->fail('Normal submit succeeded without token');
@@ -305,81 +334,16 @@ class AuthTokenTestCase extends KWWebTestCase
         }
     }
 
-    public function normalSubmit($headers)
-    {
-        $file = dirname(__FILE__) . '/data/InsightExperimentalExample/Insight_Experimental_Build.xml';
-        $this->setRequestHeaders($headers);
-        $this->putCtestFile($file, ['project' => $this->project]);
-        $browser = $this->getBrowser();
-        return $browser->getResponseCode() === 200;
-    }
-
-    public function postSubmit($token)
-    {
-        $fields = [
-            'project' => 'AuthTokenProject',
-            'build' => 'token_test',
-            'site' => 'localhost',
-            'stamp' => '20161004-0500-Nightly',
-            'starttime' => '1475599870',
-            'endtime' => '1475599870',
-            'track' => 'Nightly',
-            'type' => 'GcovTar',
-            'datafilesmd5[0]=' => '5454e16948a1d58d897e174b75cc5633'];
-
-        $headers = [];
-        if ($token) {
-            $headers = [ 'Authorization' => "Bearer $token" ];
-        }
-
-        $client = new GuzzleHttp\Client();
-        global $CDASH_BASE_URL;
-        try {
-            $response = $client->request(
-                'POST',
-                $CDASH_BASE_URL . '/submit.php',
-                [
-                    'form_params' => $fields,
-                    'headers' => $headers
-                ]
-            );
-        } catch (GuzzleHttp\Exception\ClientException $e) {
-            return false;
-        }
-
-        // Parse buildid for subsequent PUT attempts.
-        $response_array = json_decode($response->getBody(), true);
-        $this->PostBuildId = $response_array['buildid'];
-        return true;
-    }
-
-    public function putSubmit($headers)
-    {
-        $file = dirname(__FILE__) . '/data/gcov.tar';
-        $query = [
-            'type' => 'GcovTar',
-            'md5' => '5454e16948a1d58d897e174b75cc5633',
-            'filename' => 'gcov.tar',
-            'buildid' => $this->PostBuildId,
-        ];
-        $this->setRequestHeaders($headers);
-        $this->putCtestFile($file, $query);
-        $browser = $this->getBrowser();
-        return $browser->getResponseCode() == 200;
-    }
-
     public function testRevokeToken()
     {
         // Log in as non-admin user.
         $this->login('user1@kw', 'user1');
 
         // Use API to revoke token.
-        $this->delete($this->url . "/api/v1/authtoken.php?hash=$this->Hash");
+        $this->delete($this->url . "/api/authtokens/delete/$this->Hash");
 
         // Make sure the token is really gone.
-        $tokenmodel = new AuthToken();
-        $tokenmodel->Hash = $this->Hash;
-        if ($tokenmodel->Exists()) {
+        if (AuthToken::find($this->Hash)) {
             $this->fail('Token still exists after it was revoked');
         }
     }
@@ -387,21 +351,21 @@ class AuthTokenTestCase extends KWWebTestCase
     public function testRemoveExpiredToken()
     {
         // Put an expired token in the database.
-        $authtoken = new AuthToken();
-        $token = $authtoken->Generate();
-        $authtoken->UserId = 1;
-        $authtoken->Expires = gmdate(FMT_DATETIME, 1);
-        $authtoken->Save();
+        $result = AuthTokenService::generateToken(1, -1, AuthToken::SCOPE_FULL_ACCESS, "Test Token 1");
+        $token = $result['raw_token'];
+        $authtoken = $result['token'];
+        $authtoken['expires'] = gmdate(FMT_DATETIME, 1);
+        $authtoken->save();
 
         // Try to submit using this token.
         // This will cause it to be revoked since it has already expired.
-        $headers = ['Authorization' => "Bearer {$token}"];
+        $headers = ["Authorization: Bearer {$token}"];
         if ($this->normalSubmit($headers)) {
             $this->fail("Normal submit succeeded with an expired token");
         }
 
         // Make sure this token does not exist anymore.
-        if ($authtoken->Exists()) {
+        if (AuthToken::find($this->Hash)) {
             $this->fail("Expired token still exists after submission");
         }
     }

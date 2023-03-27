@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="test_submit"
+	BuildStamp="20200702-1729-Experimental"
+	Name="hesperides"
+	>
+	<Testing>
+		<StartDateTime>Jul 02 13:29 EDT</StartDateTime>
+		<StartTestTime>1593710993</StartTestTime>
+		<TestList>
+			<Test>./image</Test>
+		</TestList>
+		<Test Status="failed">
+			<Name>image</Name>
+			<Path>.</Path>
+			<FullName>./image</FullName>
+			<FullCommandLine>/tmp/bin/image</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="text/string" name="Exit Code">
+					<Value>Failed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Exit Value">
+					<Value>1</Value>
+				</NamedMeasurement>
+				<NamedMeasurement name="TestImage" type="image/gif" encoding="base64">
+					<Value>R0lGODlhFAAUAPcAAICAAP3jSv3oUPrZQQAAAOqzJP3wWffQOf3gRuKxLO24K
+frJNPfINfjXQfC8LOOpNu24J//IKPnCMPjQOv/cP//4SPPPOf/2VfHALv/pS
+fbFMuiuNP3vWPvQNuq2KfK8I///UfznUP/gP9ijMfG9MfzDLOCvLP/3SP/pQ
+f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAACwAAAAAFAAUAAAI3QAJCBxIsKBBgwASKjxYMOGJD
+AEEDOiQkCEBABUuGBDAMUCAARQAHAQAwoDJjQI8DlgpkiDGkyY5CuAQwMKBB
+S0FArjAUaBMAQIPWIiQEyOHngQ4hggQlIEGCS0BZPgp02MABAsWYEgQ1arVl
+F4XSFBQICoCr14RDGhwAIMCrjopnPW6csABBgwUQIB7EcUAtX9XTphg00GBC
+BuKimiwksBatgQMK1CQ8yKFAwcGTCBoGMKIxA07aGBguIBp0x8eVB4IIEIJE
+hDImvag2mJCCSYS6Fa9eqTCihaDHwwIADs=</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="Execution Time">
+					<Value>0</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/tmp/bin/image</Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value>Here is some test output
+
+Here is some more test output
+</Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<EndDateTime>Jul 02 13:29 EDT</EndDateTime>
+		<EndTestTime>1593710994</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>

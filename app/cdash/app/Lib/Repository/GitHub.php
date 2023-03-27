@@ -18,10 +18,12 @@ namespace CDash\Lib\Repository;
 
 use Github\Client as GitHubClient;
 use Github\HttpClient\Builder as GitHubBuilder;
-use Http\Adapter\Guzzle6\Client as GuzzleClient;
-use Lcobucci\JWT\Builder as JwtBuilder;
-use Lcobucci\JWT\Signer\Key;
+
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
+use Lcobucci\JWT\Signer\Key\LocalFileReference;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\Token\Builder as JwtBuilder;
 
 use CDash\Config;
 use CDash\Database;
@@ -60,7 +62,6 @@ class GitHub implements RepositoryInterface
     private $foundConfigureErrors;
     private $foundBuildErrors;
     private $foundTestFailures;
-    private $jwtBuilder;
     private $numPassed;
     private $numFailed;
     private $numPending;
@@ -98,25 +99,19 @@ class GitHub implements RepositoryInterface
         $this->apiClient = $client;
     }
 
-    public function setJwtBuilder(JwtBuilder $builder)
-    {
-        $this->jwtBuilder = $builder;
-    }
-
     protected function initializeApiClient()
     {
-        if (!$this->jwtBuilder) {
-            $this->setJwtBuilder(new JwtBuilder());
-        }
-
-        $builder = new GitHubBuilder(new GuzzleClient());
-        $apiClient = new GitHubClient($builder, 'machine-man-preview');
-        $builder->addHeaderValue('Accept', 'application/vnd.github.antiope-preview+json');
+        $builder = new GitHubBuilder();
+        $apiClient = new GithubClient($builder, 'machine-man-preview');
         $this->setApiClient($apiClient);
     }
 
     public function authenticate($required = true)
     {
+        if (!config('cdash.use_vcs_api')) {
+            return false;
+        }
+
         if (!$this->apiClient) {
             $this->initializeApiClient();
         }
@@ -135,20 +130,40 @@ class GitHub implements RepositoryInterface
             }
             return false;
         }
+        $pem = "file://" . $pem;
 
-        $integrationId = $this->config->get('CDASH_GITHUB_APP_ID');
+        $integrationId = config('cdash.github_app_id');
+        if (is_null($integrationId)) {
+            if ($required) {
+                throw new \Exception('GITHUB_APP_ID is not set');
+            }
+            return false;
+        }
 
-        $jwt = $this->jwtBuilder
-            ->setIssuer($integrationId)
-            ->setIssuedAt(time())
-            ->setExpiration(time() + 60)
-            ->sign(new Sha256(), new Key("file://{$pem}"))
-            ->getToken();
+        $config = Configuration::forSymmetricSigner(
+            new Sha256(),
+            LocalFileReference::file($pem)
+        );
 
-        $this->apiClient->authenticate($jwt, null, GitHubClient::AUTH_JWT);
+        $now = new \DateTimeImmutable();
+        $jwt = $config->builder(ChainedFormatter::withUnixTimestampDates())
+            ->issuedBy($integrationId)
+            ->issuedAt($now)
+            ->expiresAt($now->modify('+1 minute'))
+            ->getToken($config->signer(), $config->signingKey())
+        ;
 
-        $token = $this->apiClient->api('apps')->createInstallationToken($this->installationId);
-        $this->apiClient->authenticate($token['token'], null, GitHubClient::AUTH_HTTP_TOKEN);
+        $this->apiClient->authenticate($jwt->toString(), null, \Github\AuthMethod::JWT);
+
+        try {
+            $token = $this->apiClient->api('apps')->createInstallationToken($this->installationId);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            return false;
+        }
+        if ($token) {
+            $this->apiClient->authenticate($token['token'], null, GitHubClient::AUTH_ACCESS_TOKEN);
+        }
         return true;
     }
 
@@ -199,7 +214,7 @@ class GitHub implements RepositoryInterface
         $payload = $this->generateCheckPayloadFromBuildRows($build_rows, $head_sha);
 
         if (!$this->check) {
-            $this->check = new \Github\Api\Repository\Checks($this->apiClient);
+            $this->check = new \Github\Api\Repository\Checks\CheckRuns($this->apiClient);
         }
         try {
             $this->check->create($this->owner, $this->repo, $payload);
@@ -390,7 +405,7 @@ class GitHub implements RepositoryInterface
         }
 
         $build_name = $row['name'];
-        $build_url = "$this->baseUrl/buildSummary.php?buildid={$row['id']}";
+        $build_url = "$this->baseUrl/build/{$row['id']}";
         $details_url = $build_url;
         if ($row['configureerrors'] > 0) {
             // Build with configure errors.
@@ -399,7 +414,7 @@ class GitHub implements RepositoryInterface
                 // Pluralize.
                 $msg .= 's';
             }
-            $details_url = "$this->baseUrl/viewConfigure.php?buildid={$row['id']}";
+            $details_url = "$this->baseUrl/build/{$row['id']}/configure";
             $icon = ':x:';
             $this->numFailed++;
             $this->foundConfigureErrors = true;
@@ -473,8 +488,13 @@ class GitHub implements RepositoryInterface
 
         // Record the previous revision in the buildupdate table.
         $stmt = $this->db->prepare(
-                'UPDATE buildupdate SET priorrevision = ? WHERE id = ?');
+            'UPDATE buildupdate SET priorrevision = ? WHERE id = ?');
         $this->db->execute($stmt, [$base, $update->UpdateId]);
+
+        // Return early if we are configured to not use the GitHub API.
+        if (!config('cdash.use_vcs_api')) {
+            return;
+        }
 
         // Attempt to authenticate with the GitHub API.
         // We do not check the return value of authenticate() here because
@@ -565,7 +585,7 @@ class GitHub implements RepositoryInterface
                 if (is_null($commit)) {
                     // Next, check the database.
                     $stmt = $this->db->prepare(
-                            'SELECT DISTINCT revision FROM updatefile
+                        'SELECT DISTINCT revision FROM updatefile
                             WHERE filename = ?');
                     $this->db->execute($stmt, [$modified_file['filename']]);
                     while ($row = $stmt->fetch()) {

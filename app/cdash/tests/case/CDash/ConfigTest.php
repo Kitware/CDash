@@ -22,9 +22,7 @@ class ConfigTest extends CDashTestCase
     {
         // check some random values to ensure that they match that of the Config instance
         global $CDASH_CSS_FILE,
-               $CDASH_UPLOAD_DIRECTORY,
-               $CDASH_ACTIVE_PROJECT_DAYS,
-               $CDASH_FORWARDING_IP;
+        $CDASH_UPLOAD_DIRECTORY;
 
         include 'config/config.php';
 
@@ -32,25 +30,13 @@ class ConfigTest extends CDashTestCase
 
         $this->assertEquals($CDASH_CSS_FILE, $config->get('CDASH_CSS_FILE'));
         $this->assertEquals($CDASH_UPLOAD_DIRECTORY, $config->get('CDASH_UPLOAD_DIRECTORY'));
-        $this->assertEquals($CDASH_ACTIVE_PROJECT_DAYS, $config->get('CDASH_ACTIVE_PROJECT_DAYS'));
-        $this->assertEquals($CDASH_FORWARDING_IP, $config->get('CDASH_FORWARDING_IP'));
     }
 
     public function testGetSet()
     {
         $config = Config::getInstance();
-        $testing_mode = $config->get('CDASH_TESTING_MODE');
-        $production_mode = $config->get('CDASH_PRODUCTION_MODE');
-        $config->set('CDASH_TESTING_MODE', '5544332211abc');
-        $config->set('CDASH_PRODUCTION_MODE', 'abcd22334455');
         $config->set('THIS_IS_NOT_A_THING', 'ABCDEFGH');
-
-        $this->assertEquals('5544332211abc', $config->get('CDASH_TESTING_MODE'));
-        $this->assertEquals('abcd22334455', $config->get('CDASH_PRODUCTION_MODE'));
         $this->assertEquals('ABCDEFGH', $config->get('THIS_IS_NOT_A_THING'));
-
-        $config->set('CDASH_TESTING_MODE', $testing_mode);
-        $config->set('CDASH_PRODUCTION_MODE', $production_mode);
         $config->set('THIS_IS_NOT_A_THING', null);
     }
 
@@ -115,12 +101,13 @@ class ConfigTest extends CDashTestCase
 
     public function testGetBaseUrl()
     {
-        global $CDASH_BASE_URL, $CDASH_USE_HTTPS;
+        global $CDASH_USE_HTTPS;
         include 'config/config.php';
 
         $config = Config::getInstance();
+        $base_url = config('app.url');
 
-        $config->set('CDASH_BASE_URL', null);
+        config(['app.url' => null]);
         $config->set('CDASH_USE_HTTPS', true);
         $_SERVER['SERVER_NAME'] = 'www2.tonyrobins.com';
         $_SERVER['SERVER_PORT'] = 8080;
@@ -132,28 +119,22 @@ class ConfigTest extends CDashTestCase
 
         $this->assertEquals($expected, $actual);
 
-        $config->set('CDASH_BASE_URL', 'http://open.cdash.org');
+        config(['app.url' => 'http://open.cdash.org']);
         $expected = 'http://open.cdash.org';
         $this->assertEquals($expected, $config->getBaseUrl());
 
-        $config->set('CDASH_BASE_URL', $CDASH_BASE_URL);
+        config(['app.url' => $base_url]);
         $config->set('CDASH_USE_HTTPS', $CDASH_USE_HTTPS);
     }
 
-
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage pull request commenting is disabled
-     */
     public function testDisablePullRequestComments()
     {
         include 'config/config.php';
         require_once 'include/repository.php';
 
         $config = Config::getInstance();
-        $config->set('CDASH_NOTIFY_PULL_REQUEST', false);
-        $config->set('CDASH_TESTING_MODE', true);
-
-        post_pull_request_comment(1, 1, "this is a comment", $config->get('CDASH_BASE_URL'));
+        \Illuminate\Support\Facades\Log::shouldReceive('info')
+            ->with('pull request commenting is disabled');
+        post_pull_request_comment(1, 1, "this is a comment", config('app.url'));
     }
 }

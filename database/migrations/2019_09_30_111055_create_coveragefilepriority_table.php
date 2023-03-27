@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateCoveragefilepriorityTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,12 +12,14 @@ class CreateCoveragefilepriorityTable extends Migration
      */
     public function up()
     {
-        Schema::create('coveragefilepriority', function (Blueprint $table) {
-            $table->bigInteger('id', true);
-            $table->tinyInteger('priority')->index();
-            $table->string('fullpath')->index();
-            $table->integer('projectid')->index();
-        });
+        if (!Schema::hasTable('coveragefilepriority')) {
+            Schema::create('coveragefilepriority', function (Blueprint $table) {
+                $table->bigInteger('id', true);
+                $table->tinyInteger('priority')->index();
+                $table->string('fullpath')->index();
+                $table->integer('projectid')->index();
+            });
+        }
     }
 
 

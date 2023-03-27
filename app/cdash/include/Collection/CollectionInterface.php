@@ -17,7 +17,6 @@ namespace CDash\Collection;
 
 interface CollectionInterface extends \Iterator, \Countable
 {
-
     /**
      * @param $item
      * @param null $name

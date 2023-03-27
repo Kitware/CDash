@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateVersionTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,11 +12,13 @@ class CreateVersionTable extends Migration
      */
     public function up()
     {
-        Schema::create('version', function (Blueprint $table) {
-            $table->tinyInteger('major');
-            $table->tinyInteger('minor');
-            $table->tinyInteger('patch');
-        });
+        if (!Schema::hasTable('version')) {
+            Schema::create('version', function (Blueprint $table) {
+                $table->tinyInteger('major');
+                $table->tinyInteger('minor');
+                $table->tinyInteger('patch');
+            });
+        }
     }
 
 

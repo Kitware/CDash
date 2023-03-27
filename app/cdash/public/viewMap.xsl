@@ -4,10 +4,6 @@
    <xsl:include href="footer.xsl"/>
    <xsl:include href="headerback.xsl"/>
 
-   <!-- Local includes -->
-   <xsl:include href="local/footer.xsl"/>
-   <xsl:include href="local/headerback.xsl"/>
-
  <!-- HEADER -->
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
@@ -20,7 +16,6 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-       <script language="javascript" type="text/javascript" src="js/jquery-1.6.2.js" charset="utf-8"></script>
        <script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
        <script language="javascript" type="text/javascript" src="js/cdashSiteSorter.js"></script>
 
@@ -37,6 +32,7 @@
 </xsl:choose>
 <br/>
 
+<xsl:if test="string-length(cdash/googlemapkey)>0">
  <script type="text/javascript">
       <xsl:attribute name="src">http://maps.google.com/maps?file=api&amp;v=2&amp;key=<xsl:value-of select="cdash/dashboard/googlemapkey"/></xsl:attribute>
    </script>
@@ -70,6 +66,7 @@
     }
     &lt;/script&gt;
     </xsl:text>
+</xsl:if>
 
 <div style="position:relative;">
 <div style="float:left; padding-right:20px;">
@@ -107,8 +104,10 @@
 </table>
 </div>
 
-<!-- Display the map -->
-<div id="map" style="width: 700px; height: 400px; float:left;"></div>
+<xsl:if test="string-length(cdash/googlemapkey)>0">
+  <!-- Display the map -->
+  <div id="map" style="width: 700px; height: 400px; float:left;"></div>
+</xsl:if>
 </div>
 
 <!-- FOOTER -->

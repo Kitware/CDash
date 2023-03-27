@@ -1,3 +1,4 @@
+require('../pages/catchConsoleErrors.page.js');
 describe("viewTestPagination", function() {
 
   it("display all tests", function() {
@@ -8,6 +9,11 @@ describe("viewTestPagination", function() {
     expect(element(by.id('numbuilds')).getText()).toBe('Number of SubProjects: 36');
     // Note: A maximum of 10 builds are displayed at a time
     expect(element.all(by.repeater('build in buildgroup.pagination.filteredBuilds')).count()).toBe(10);
+
+    // Verify that the 'Notes' link is shown for SubProject builds on this page.
+    var notesLink = element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(0)).element(by.name('notesLink'));
+    expect(notesLink.isPresent()).toBe(true);
+    expect(notesLink.getAttribute('href')).toContain('/notes');
 
     // Next, click on a specific test
     var build_failures = element.all(by.binding('build.test.notrun'));

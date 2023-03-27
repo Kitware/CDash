@@ -31,7 +31,6 @@ class TestOverview extends ResultsApi
 
     public function getResponse()
     {
-        $start = microtime_float();
         $response = [];
 
         $has_subprojects = $this->project->GetNumberOfSubProjects() > 0;
@@ -123,7 +122,7 @@ class TestOverview extends ResultsApi
 
         // Main query: find all the requested tests.
         $stmt = $this->db->prepare(
-                "SELECT t.name, t.details, b2t.status, b2t.time $sp_select FROM build b
+            "SELECT t.name, b2t.details, b2t.status, b2t.time $sp_select FROM build b
                 JOIN build2test b2t ON (b2t.buildid=b.id)
                 JOIN test t ON (t.id=b2t.testid)
                 $group_join
@@ -207,8 +206,7 @@ class TestOverview extends ResultsApi
 
         $response['tests'] = $tests_response;
 
-        $end = microtime_float();
-        $response['generationtime'] = round($end - $start, 3);
+        $this->pageTimer->end($response);
         return $response;
     }
 }

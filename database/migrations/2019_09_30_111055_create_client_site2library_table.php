@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateClientSite2libraryTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,12 +12,14 @@ class CreateClientSite2libraryTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_site2library', function (Blueprint $table) {
-            $table->integer('siteid')->nullable()->index();
-            $table->integer('libraryid')->nullable();
-            $table->string('path', 512)->nullable();
-            $table->string('include', 512);
-        });
+        if (!Schema::hasTable('client_site2library')) {
+            Schema::create('client_site2library', function (Blueprint $table) {
+                $table->integer('siteid')->nullable()->index();
+                $table->integer('libraryid')->nullable();
+                $table->string('path', 512)->nullable();
+                $table->string('include', 512);
+            });
+        }
     }
 
 

@@ -50,24 +50,24 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
     /** @var UseCase $useCase */
     private $useCase;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         parent::setUpBeforeClass();
 
-        // set default configuration settings
+
+        // set $CDASH_SERVER_NAME.
         $config = Config::getInstance();
         $config->set('CDASH_SERVER_NAME', 'open.cdash.org');
-        $config->set('CDASH_BASE_URL', 'http://open.cdash.org');
+
 
         // deal with timezone stuff
-
         self::$tz = date_default_timezone_get();
 
         // so that we can mock the database layer
         self::$database = Database::getInstance();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void
     {
         // restore state
         date_default_timezone_set(self::$tz);
@@ -76,7 +76,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         parent::tearDownAfterClass();
     }
 
-    public function setUp()
+    public function setUp() : void
     {
         $mock_stmt = $this->createMock(PDOStatement::class);
         $mock_stmt
@@ -103,6 +103,9 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
 
         Database::setInstance(Database::class, $this->db);
         parent::setUp();
+
+        $this->createApplication();
+        config(['app.url' => 'http://open.cdash.org']);
     }
 
     /**
@@ -168,7 +171,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
             ->createSubproject('MyProductionCode')
             ->createSubproject('MyThirdPartyDependency')
             ->createSubproject('EmptySubproject')
-            ->createTestNotRun('thirdparty', ['MyThirdPartyDependency'])
+            ->createTestFailed('thirdparty', ['MyThirdPartyDependency'])
             ->createTestFailed('experimentalFail1', ['MyExperimentalFeature'])
             ->createTestFailed('experimentalFail2', ['MyExperimentalFeature'])
             ->createTestFailed('experimentalFail3', ['MyExperimentalFeature'])
@@ -420,7 +423,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
 
         $expected = "A submission to CDash for the project CDashUseCaseProject has dynamic analysis tests failing or not run. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://open.cdash.org/buildSummary.php?buildid=1.
+Details on the submission can be found at http://open.cdash.org/build/1.
 
 Project: CDashUseCaseProject
 SubProject: MyExperimentalFeature

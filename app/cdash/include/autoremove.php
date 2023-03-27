@@ -14,20 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\Config;
-use CDash\Model\ClientJob;
-use CDash\Model\ClientJobSchedule;
-use CDash\Model\Job;
-
 /** Remove builds by their group-specific auto-remove timeframe setting */
 function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
 {
     require_once 'include/pdo.php';
     require_once 'include/common.php';
 
-    $config = Config::getInstance();
-
-    if (!$force && !$config->get('CDASH_AUTOREMOVE_BUILDS')) {
+    if (!$force && !config('cdash.autoremove_builds')) {
         return;
     }
 
@@ -64,27 +57,23 @@ function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
     $s = 'removing old buildids for projectid: ' . $projectid;
     add_log($s, 'removeBuildsGroupwise');
     echo '  -- ' . $s . "\n";
-    remove_build($buildids);
+    remove_build_chunked($buildids);
 }
 
 /** Remove the first builds that are at the beginning of the queue */
-function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false)
+function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false, $echo = true)
 {
     require_once 'include/pdo.php';
     require_once 'include/common.php';
 
     @set_time_limit(0);
-    $config = Config::getInstance();
-    $remove_builds = $config->get('CDASH_AUTOREMOVE_BUILDS');
+    $remove_builds = config('cdash.autoremove_builds');
+
     if (!$force && !$remove_builds) {
         return;
     }
 
-    if (!$force && $remove_builds != '1') {
-        return;
-    }
-
-    if ($days < 2) {
+    if (!$force && $days < 2) {
         return;
     }
 
@@ -108,40 +97,8 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false)
 
     $s = 'removing old buildids for projectid: ' . $projectid;
     add_log($s, 'removeFirstBuilds');
-    echo '  -- ' . $s . "\n"; // for "interactive" command line feedback
-    remove_build($buildids);
-
-    // Remove any job schedules that are older than our cutoff date
-    // and not due to repeat again.
-    $sql =
-        'SELECT scheduleid FROM client_job AS cj
-    LEFT JOIN client_jobschedule AS cjs ON cj.scheduleid = cjs.id
-    WHERE cj.status > ' . Job::RUNNING . "
-    AND cjs.projectid=$projectid AND cj.startdate < '$startdate'
-    AND (cjs.repeattime = 0.00 OR
-      (cjs.enddate < '$startdate' AND cjs.enddate != '1980-01-01 00:00:00'))";
-
-    $job_schedules = pdo_query($sql);
-    while ($job_schedule = pdo_fetch_array($job_schedules)) {
-        $ClientJobSchedule = new ClientJobSchedule();
-        $ClientJobSchedule->Id = $job_schedule['scheduleid'];
-        $ClientJobSchedule->Remove();
+    if ($echo) {
+        echo '  -- ' . $s . "\n"; // for "interactive" command line feedback
     }
-
-    // Remove any jobs that are older than our cutoff date.
-    // This occurs when a job schedule is set to continue repeating, but
-    // some of its past runs are older than our autoremove threshold.
-
-    $sql =
-        'SELECT cj.id FROM client_job AS cj
-    LEFT JOIN client_jobschedule AS cjs ON cj.scheduleid = cjs.id
-    WHERE cj.status > ' . Job::RUNNING . "
-    AND cjs.projectid=$projectid AND cj.startdate < '$startdate'";
-
-    $jobs = pdo_query($sql);
-    while ($job = pdo_fetch_array($jobs)) {
-        $ClientJob = new ClientJob();
-        $ClientJob->Id = $job['id'];
-        $ClientJob->Remove();
-    }
+    remove_build_chunked($buildids);
 }

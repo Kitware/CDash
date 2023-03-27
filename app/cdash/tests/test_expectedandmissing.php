@@ -13,6 +13,8 @@ use CDash\Model\BuildGroupRule;
 
 class ExpectedAndMissingTestCase extends KWWebTestCase
 {
+    protected $PDO;
+
     public function __construct()
     {
         parent::__construct();

@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateLabel2updateTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,11 +12,13 @@ class CreateLabel2updateTable extends Migration
      */
     public function up()
     {
-        Schema::create('label2update', function (Blueprint $table) {
-            $table->bigInteger('labelid');
-            $table->bigInteger('updateid');
-            $table->primary(['labelid','updateid']);
-        });
+        if (!Schema::hasTable('label2update')) {
+            Schema::create('label2update', function (Blueprint $table) {
+                $table->bigInteger('labelid');
+                $table->bigInteger('updateid');
+                $table->primary(['labelid','updateid']);
+            });
+        }
     }
 
 

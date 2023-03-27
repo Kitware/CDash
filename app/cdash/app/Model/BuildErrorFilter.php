@@ -39,7 +39,7 @@ class BuildErrorFilter
     public function Exists()
     {
         $stmt = $this->PDO->prepare(
-                'SELECT projectid FROM build_filters
+            'SELECT projectid FROM build_filters
                  WHERE projectid = :projectid');
         $this->PDO->execute($stmt, [':projectid' => $this->Project->Id]);
         if ($stmt->fetchColumn()) {
@@ -57,7 +57,7 @@ class BuildErrorFilter
                 WHERE projectid = :projectid');
         } else {
             $stmt = $this->PDO->prepare(
-                    'INSERT INTO build_filters(projectid, warnings, errors)
+                'INSERT INTO build_filters(projectid, warnings, errors)
                     VALUES (:projectid, :warnings, :errors)');
         }
 
@@ -109,8 +109,10 @@ class BuildErrorFilter
             'SELECT * FROM build_filters WHERE projectid = :projectid');
         $this->PDO->execute($stmt, [':projectid' => $this->Project->Id]);
         $row = $stmt->fetch();
-        $this->ErrorsFilter = $row['errors'];
-        $this->WarningsFilter = $row['warnings'];
+        if ($row) {
+            $this->ErrorsFilter = $row['errors'];
+            $this->WarningsFilter = $row['warnings'];
+        }
     }
 
     private function FilterText($subject, $filterString)

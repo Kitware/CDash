@@ -1,0 +1,13 @@
+	<Configure>
+		<StartDateTime>Nov 12 18:33 CET</StartDateTime>
+		<StartConfigureTime>1636738415</StartConfigureTime>
+		<ConfigureCommand>/usr/bin/cmake</ConfigureCommand>
+		<Log>-- this is my config output
+-- and here is some more
+</Log>
+		<ConfigureStatus>0</ConfigureStatus>
+		<EndDateTime>Nov 12 18:34 CET</EndDateTime>
+		<EndConfigureTime>1636738454</EndConfigureTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Configure>
+</Site>

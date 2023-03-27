@@ -1,0 +1,140 @@
+FROM php:8.1-apache-buster
+LABEL MAINTAINER="Kitware, Inc. <cdash@public.kitware.com>"
+
+ARG CDASH_DB_HOST=localhost
+
+# Designates as dev build, adds testing infrastructure, et al.
+ARG DEVELOPMENT_BUILD
+
+# make sure it's set in the ENV for reference in docker-entrypoint.sh
+# TODO: rename CDASH_DEVELOPMENT_BUILD ?
+ENV DEVELOPMENT_BUILD=$DEVELOPMENT_BUILD
+
+RUN apt-get update                                                         \
+ && apt-get install -y gnupg                                               \
+ && curl -fsSL https://deb.nodesource.com/setup_19.x | bash                \
+ && apt-get install -y apt-utils git libbz2-dev libfreetype6-dev           \
+    libjpeg62-turbo-dev libldap2-dev libmcrypt-dev libpng-dev libpq-dev    \
+    libxslt-dev libxss1 nodejs unzip wget zip                              \
+ && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql           \
+ && docker-php-ext-configure gd --with-freetype=/usr/include/              \
+                                --with-jpeg=/usr/include/                  \
+ && docker-php-ext-install -j$(nproc) bcmath bz2 gd ldap                   \
+    pdo_mysql pdo_pgsql xsl                                                \
+ && wget -q -O checksum https://composer.github.io/installer.sha384sum     \
+ && wget -q -O composer-setup.php https://getcomposer.org/installer        \
+ && sha384sum -c checksum                                                  \
+ && php composer-setup.php                                                 \
+    --install-dir=/usr/local/bin --filename=composer                       \
+ && php -r "unlink('composer-setup.php');"                                 \
+ && composer self-update --no-interaction
+
+# Install xdebug and newer version of CMake for development builds
+RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
+  wget -q -O cmake-linux.sh https://github.com/Kitware/CMake/releases/download/v3.20.2/cmake-3.20.2-linux-x86_64.sh                                                                       \
+  && sh cmake-linux.sh -- --skip-license --prefix=/usr                     \
+  && rm cmake-linux.sh                                                     \
+  && pecl install xdebug                                                   \
+  && docker-php-ext-enable xdebug;                                         \
+fi
+
+# Create an npm cache directory for www-data
+RUN mkdir -p /var/www/.npm                                                 \
+  && chown -R www-data:www-data /var/www/.npm
+
+# Create /home/kitware/cdash
+RUN mkdir -p /home/kitware/cdash                                           \
+  && chown www-data:www-data /home/kitware/cdash
+
+# Configure Apache
+COPY ./docker/cdash-site.conf                                              \
+     /etc/apache2/sites-available/cdash-site.conf
+
+# Remove default site, add cdash-site, enable mod_rewrite, enable php
+RUN a2dissite 000-default                                                  \
+ && a2ensite cdash-site                                                    \
+ && a2enmod rewrite                                                        \
+ && a2enmod php
+
+# Assign www-data ownership of apache2 configuration files
+RUN chown -R www-data:www-data /etc/apache2
+
+# Run the rest of the commands as www-data
+USER www-data
+
+WORKDIR /home/kitware/cdash
+
+# Copy CDash (current folder) into /home/kitware/cdash
+COPY --chown=www-data:www-data ./app ./app
+COPY --chown=www-data:www-data ./artisan ./artisan
+COPY --chown=www-data:www-data ./babel.config.js ./babel.config.js
+COPY --chown=www-data:www-data ./bootstrap ./bootstrap
+COPY --chown=www-data:www-data ./.circleci ./.circleci
+COPY --chown=www-data:www-data ./CMakeLists.txt ./CMakeLists.txt
+COPY --chown=www-data:www-data ./composer.json ./composer.json
+COPY --chown=www-data:www-data ./composer.lock ./composer.lock
+COPY --chown=www-data:www-data ./config ./config
+COPY --chown=www-data:www-data ./CTestConfig.cmake ./CTestConfig.cmake
+COPY --chown=www-data:www-data ./CTestCustom.cmake.in ./CTestCustom.cmake.in
+COPY --chown=www-data:www-data ./database ./database
+COPY --chown=www-data:www-data ./docs ./docs
+COPY --chown=www-data:www-data ./docker-compose.yml ./docker-compose.yml
+COPY --chown=www-data:www-data ./docker ./docker
+COPY --chown=www-data:www-data ./.dockerignore ./.dockerignore
+COPY --chown=www-data:www-data ./.editorconfig  ./.editorconfig
+COPY --chown=www-data:www-data ./.env.example ./.env
+COPY --chown=www-data:www-data ./.env.example ./.env.example
+COPY --chown=www-data:www-data ./.eslintrc.js ./.eslintrc.js
+COPY --chown=www-data:www-data ./.gitattributes ./.gitattributes
+COPY --chown=www-data:www-data ./.git ./.git
+COPY --chown=www-data:www-data ./.gitignore ./.gitignore
+COPY --chown=www-data:www-data ./jest.config.js ./jest.config.js
+COPY --chown=www-data:www-data ./LICENSE ./LICENSE
+COPY --chown=www-data:www-data ./package.json ./package.json
+COPY --chown=www-data:www-data ./package-lock.json ./package-lock.json
+COPY --chown=www-data:www-data ./.php-cs-fixer.dist.php ./.php-cs-fixer.dist.php
+COPY --chown=www-data:www-data ./phpunit.xml ./phpunit.xml
+COPY --chown=www-data:www-data ./public ./public
+COPY --chown=www-data:www-data ./README.md ./README.md
+COPY --chown=www-data:www-data ./resources ./resources
+COPY --chown=www-data:www-data ./routes ./routes
+COPY --chown=www-data:www-data ./server.php ./server.php
+COPY --chown=www-data:www-data ./storage ./storage
+COPY --chown=www-data:www-data ./tests ./tests
+COPY --chown=www-data:www-data ./webpack.mix.js ./webpack.mix.js
+COPY ./app/cdash/php.ini /usr/local/etc/php/conf.d/cdash.ini
+
+# Install PHP dependencies with composer
+# Set up testing environment if this is a development build
+RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
+ composer install --no-interaction --no-progress --prefer-dist             \
+ && mkdir _build && cd _build                                              \
+ && cmake                                                                  \
+  -DCDASH_DB_HOST=$CDASH_DB_HOST                                           \
+  -DCDASH_DIR_NAME=                                                        \
+  -DCDASH_TESTING_URL=http://cdash/                                        \
+  -DCDASH_SERVER=cdash                                                     \
+  -DCDASH_SELENIUM_HUB=selenium-hub                                        \
+  -DCTEST_UPDATE_VERSION_ONLY=1 ..                                         \
+ && cp /home/kitware/cdash/docker/conf.js                                  \
+       /home/kitware/cdash/_build/app/cdash/tests/js/e2e_tests/conf.js     \
+ && cp /home/kitware/cdash/docker/.env.testing /home/kitware/cdash/.env;   \
+else                                                                       \
+ composer install --no-interaction --no-progress --prefer-dist --no-dev    \
+                  --optimize-autoloader                                    \
+ && echo "LOG_CHANNEL=stderr" >> .env;                                     \
+fi
+
+# Expose CDash config to Laravel
+RUN php artisan config:migrate
+
+RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                            \
+  php artisan dependencies:update -D;                                  \
+else                                                                   \
+  php artisan dependencies:update;                                     \
+fi
+
+COPY --chown=www-data:www-data docker/docker-entrypoint.sh /docker-entrypoint.sh
+COPY --chown=www-data:www-data docker/bash /bash-lib
+
+RUN chmod +x /docker-entrypoint.sh

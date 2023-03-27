@@ -15,8 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use CDash\Collection\LabelCollection;
-use CDash\Config;
 use CDash\Database;
 
 require_once 'include/common.php';
@@ -51,6 +49,7 @@ class User
         $this->TempTableName = qid('usertemp');
         $this->PDO = Database::getInstance();
         $this->Credentials = null;
+        $this->LabelCollection = collect();
     }
 
     /** Return if the user is admin */
@@ -94,18 +93,6 @@ class User
         $stmt->bindParam(':firstname', $this->FirstName);
         $stmt->bindParam(':lastname', $this->LastName);
         pdo_execute($stmt);
-        if ($stmt->fetchColumn() > 0) {
-            return true;
-        }
-        return false;
-    }
-
-    /** Return if a temporary record for this user exists. */
-    public function TempExists()
-    {
-        $stmt = $this->PDO->prepare(
-            "SELECT COUNT(*) FROM $this->TempTableName WHERE email = ?");
-        pdo_execute($stmt, [$this->Email]);
         if ($stmt->fetchColumn() > 0) {
             return true;
         }
@@ -178,53 +165,6 @@ class User
         return true;
     }
 
-    // Save a temporary record for this user in the database.
-    public function SaveTemp($key, $date)
-    {
-        $stmt = $this->PDO->prepare(
-            "INSERT INTO $this->TempTableName
-            (email, password, firstname, lastname, institution,
-             registrationkey, registrationdate)
-            VALUES
-            (:email, :password, :firstname, :lastname, :institution,
-             :registrationkey, :registrationdate)");
-        $stmt->bindParam(':email', $this->Email);
-        $stmt->bindParam(':password', $this->Password);
-        $stmt->bindParam(':firstname', $this->FirstName);
-        $stmt->bindParam(':lastname', $this->LastName);
-        $stmt->bindParam(':institution', $this->Institution);
-        $stmt->bindParam(':registrationkey', $key);
-        $stmt->bindParam(':registrationdate', $date);
-        return pdo_execute($stmt);
-    }
-
-    // Move a row from usertemp to user.
-    public function Register($key)
-    {
-        $stmt = $this->PDO->prepare(
-            "SELECT * FROM $this->TempTableName WHERE registrationkey = ?");
-        if (!pdo_execute($stmt, [$key])) {
-            return false;
-        }
-        $row = $stmt->fetch();
-        if (!$row) {
-            return false;
-        }
-
-        $this->Email = $row['email'];
-        $this->Password = $row['password'];
-        $this->FirstName = $row['firstname'];
-        $this->LastName = $row['lastname'];
-        $this->Institution = $row['institution'];
-        if ($this->Save()) {
-            $stmt = $this->PDO->prepare(
-                "DELETE FROM $this->TempTableName WHERE email = ?");
-            pdo_execute($stmt, [$this->Email]);
-            return true;
-        }
-        return false;
-    }
-
     // Remove this user from the database.
     public function Delete()
     {
@@ -233,21 +173,6 @@ class User
         }
         $stmt = $this->PDO->prepare("DELETE FROM $this->TableName WHERE id = ?");
         pdo_execute($stmt, [$this->Id]);
-    }
-
-    /** Get the name */
-    public function GetName()
-    {
-        // If no id specified return false.
-        if (!$this->Id) {
-            return false;
-        }
-
-        $stmt = $this->PDO->prepare(
-            "SELECT firstname, lastname FROM $this->TableName WHERE id = ?");
-        pdo_execute($stmt, [$this->Id]);
-        $row = $stmt->fetch();
-        return trim($row['firstname'] . ' ' . $row['lastname']);
     }
 
     /** Get the email */
@@ -356,8 +281,6 @@ class User
       */
     public function RecordPassword()
     {
-        $config = Config::getInstance();
-
         if (config('cdash.password.expires') < 1 || !$this->Id || !$this->Password) {
             return false;
         }
@@ -372,7 +295,8 @@ class User
         $stmt->bindParam(':date', $now);
         pdo_execute($stmt);
 
-        if ($config->get('CDASH_UNIQUE_PASSWORD_COUNT') > 0) {
+        $unique_password_limit = config('cdash.password.unique');
+        if ($unique_password_limit > 0) {
             // Delete old records for this user if they have more than
             // our limit.
             // Check if there are too many old passwords for this user.
@@ -380,9 +304,9 @@ class User
                 'SELECT COUNT(*) AS numrows FROM password WHERE userid = ?');
             pdo_execute($stmt, [$this->Id]);
             $num_rows = $stmt->fetchColumn();
-            if ($num_rows > $config->get('CDASH_UNIQUE_PASSWORD_COUNT')) {
+            if ($num_rows > $unique_password_limit) {
                 // If so, get the cut-off date so we can delete the rest.
-                $offset = $config->get('CDASH_UNIQUE_PASSWORD_COUNT') - 1;
+                $offset = $unique_password_limit - 1;
                 $stmt = $this->PDO->prepare(
                     "SELECT date FROM password
                     WHERE userid = ?
@@ -400,51 +324,6 @@ class User
                 pdo_execute($stmt);
             }
         }
-    }
-
-    /** Set the cookie key for the current user.
-      */
-    public function SetCookieKey($key)
-    {
-        if (!$this->Id) {
-            return false;
-        }
-        $stmt = $this->PDO->prepare(
-            "UPDATE $this->TableName SET cookiekey = :key WHERE id = :id");
-        $stmt->bindParam(':key', $key);
-        $stmt->bindParam(':id', $this->Id);
-        return pdo_execute($stmt);
-    }
-
-    /** Populate $this from cookie values.
-      */
-    public function FillFromCookie($cookiekey, $cookieuserid)
-    {
-        $sql = "SELECT * FROM $this->TableName WHERE cookiekey = :cookiekey";
-        if (!empty($cookieuserid)) {
-            $sql .= ' AND id = :id';
-        }
-        $stmt = $this->PDO->prepare($sql);
-        $stmt->bindParam(':cookiekey', $cookiekey);
-        if (!empty($cookieuserid)) {
-            $stmt->bindParam(':id', $cookieuserid);
-        }
-        if (!pdo_execute($stmt)) {
-            return false;
-        }
-        $row = $stmt->fetch();
-        if (!$row) {
-            return false;
-        }
-        $this->Id = $row['id'];
-        $this->Email = $row['email'];
-        $this->Password = $row['password'];
-        $this->FirstName = $row['firstname'];
-        $this->LastName = $row['lastname'];
-        $this->Institution = $row['institution'];
-        $this->Admin = $row['admin'];
-        $this->Filled = true;
-        return true;
     }
 
     public function hasExpiredPassword()
@@ -516,15 +395,14 @@ class User
      * this method checks the database for the labels of which a users has subscribed and
      * return's them wrapped in a LabelCollection.
      *
-     * @return LabelCollection
+     * @return Collection
      */
     public function GetLabelCollection()
     {
-        if (!$this->LabelCollection) {
-            $this->LabelCollection = new LabelCollection();
+        if ($this->LabelCollection->isEmpty()) {
             $sql = '
-              SELECT label.id, label.text 
-              FROM labelemail 
+              SELECT label.id, label.text
+              FROM labelemail
               JOIN label ON label.id = labelemail.labelid
               WHERE userid=:user';
 
@@ -535,7 +413,7 @@ class User
                     $label = new Label();
                     $label->Id = $row->id;
                     $label->Text = $row->text;
-                    $this->LabelCollection->add($label);
+                    $this->AddLabel($label);
                 }
             }
         }
@@ -549,9 +427,6 @@ class User
      */
     public function AddLabel(Label $label)
     {
-        if (!$this->LabelCollection) {
-            $this->LabelCollection = new LabelCollection();
-        }
-        $this->LabelCollection->add($label);
+        $this->LabelCollection->put($label->Text, $label);
     }
 }

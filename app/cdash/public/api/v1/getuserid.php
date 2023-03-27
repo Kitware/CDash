@@ -13,10 +13,15 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+namespace CDash\Api\v1\GetUserID;
+
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
-use CDash\Model\User;
+use App\Models\User;
+use CDash\Model\Project;
+use Illuminate\Support\Facades\Auth;
 
 $userid = Auth::id();
 // Check for authenticated user.
@@ -24,17 +29,17 @@ if (!$userid) {
     return;
 }
 
-echo '<?xml version="1.0" encoding="UTF-8"?>';
-echo '<userid>';
+$xml = '<?xml version="1.0" encoding="UTF-8"?>';
+$xml .= '<userid>';
 
 if (!isset($_GET['author'])) {
-    echo 'error<no-author-param/></userid>';
-    return;
+    $xml .= 'error<no-author-param/></userid>';
+    return response($xml, 400)->header('Content-Type', 'application/xml');
 }
 
 if (strlen($_GET['author']) == 0) {
-    echo 'error<empty-author-param/></userid>';
-    return;
+    $xml .= 'error<empty-author-param/></userid>';
+    return response($xml, 400)->header('Content-Type', 'application/xml');
 }
 
 $author = htmlspecialchars(pdo_real_escape_string($_GET['author']));
@@ -42,44 +47,44 @@ $author = htmlspecialchars(pdo_real_escape_string($_GET['author']));
 // First, try the simplest query, where the author string is simply exactly
 // equal to the user's email:
 //
-$user = new User();
-$userid = $user->GetIdFromEmail($author);
-if ($userid) {
-    echo $userid . '</userid>';
-    return;
+$user = User::where('email', $author)->first();
+if ($user) {
+    $xml .= $user->id . '</userid>';
+    return response($xml, 200)->header('Content-Type', 'application/xml');
 }
 
 // If no exact email match, fall back to the more complicated project-based
 // repository credentials lookup:
 //
 if (!isset($_GET['project'])) {
-    echo 'error<no-project-param/></userid>';
-    return;
+    $xml .= 'error<no-project-param/></userid>';
+    return response($xml, 400)->header('Content-Type', 'application/xml');
 }
 
 if (strlen($_GET['project']) == 0) {
-    echo 'error<empty-project-param/></userid>';
-    return;
+    $xml .= 'error<empty-project-param/></userid>';
+    return response($xml, 400)->header('Content-Type', 'application/xml');
 }
 
-$project = htmlspecialchars(pdo_real_escape_string($_GET['project']));
-$projectid = get_project_id($project);
-if ($projectid === -1) {
-    echo 'error<no-such-project/></userid>';
-    return;
+$project = new Project();
+$projectname = htmlspecialchars(pdo_real_escape_string($_GET['project']));
+if (!$project->FindByName($projectname)) {
+    $xml .= 'error<no-such-project/></userid>';
+    return response($xml, 404)->header('Content-Type', 'application/xml');
 }
 
 $userquery = pdo_query("SELECT up.userid FROM user2project AS up,user2repository AS ur
                         WHERE ur.userid=up.userid
-                          AND up.projectid='$projectid'
+                          AND up.projectid='$project->Id'
                           AND ur.credential='$author'
-                          AND (ur.projectid='$projectid' OR ur.projectid=0)");
+                          AND (ur.projectid='$project->Id' OR ur.projectid=0)");
 
 if (pdo_num_rows($userquery) > 0) {
     $userarray = pdo_fetch_array($userquery);
     $userid = $userarray['userid'];
-    echo $userid . '</userid>';
-    return;
+    $xml .= $userid . '</userid>';
+    return response($xml, 200)->header('Content-Type', 'application/xml');
 }
 
-echo 'not found<no-such-user/></userid>';
+$xml .= 'not found<no-such-user/></userid>';
+return response($xml, 404)->header('Content-Type', 'application/xml');

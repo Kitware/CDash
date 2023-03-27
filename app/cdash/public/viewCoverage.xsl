@@ -4,9 +4,6 @@
    <xsl:include href="filterdataTemplate.xsl"/>
    <xsl:include href="header.xsl"/>
    <xsl:include href="footer.xsl"/>
-   <!-- Local includes -->
-   <xsl:include href="local/footer.xsl"/>
-   <xsl:include href="local/header.xsl"/>
 
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
@@ -296,7 +293,7 @@ Show coverage over time
       <xsl:if test="(cdash/coverage/branchstested + cdash/coverage/branchsuntested) > 0">
         <th width="10%" align="center">Branch percentage</th>
         <th width="10%" align="center">Branches not covered</th>
-      </xsl:if>  
+      </xsl:if>
       <th width="10%" align="center">Priority</th>
       <xsl:if test="/cdash/coverage/userid!=0">
          <th>Author</th>

@@ -1,10 +1,10 @@
 <?php
-//
-// After including cdash_test_case.php, subsequent require_once calls are
-// relative to the top of the CDash source tree
-//
+
+use App\Enums\TestDiffType;
+use App\Models\TestDiff;
+use App\Models\User;
 use CDash\Config;
-use CDash\Model\User;
+use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/pdo.php';
@@ -30,32 +30,7 @@ class EmailTestCase extends KWWebTestCase
 
     public function testRegisterUser()
     {
-        /* Test 'register user' belongs in the register user test and not the email test
-        $url = $this->url . '/register.php';
-        $content = $this->connect($url);
-        if ($content == false) {
-            return;
-        }
-
-        $this->setField('fname', 'Firstname');
-        $this->setField('lname', 'Lastname');
-        $this->setField('email', 'user1@kw');
-        $this->setField('passwd', 'user1');
-        $this->setField('passwd2', 'user1');
-        $this->setField('institution', 'Kitware Inc');
-        $this->clickSubmitByName('sent', array('url' => 'catchbot'));
-
-        // Make sure the user was created successfully.
-        if (!$this->userExists('user1@kw')) {
-            $this->fail("Failed to register new user");
-        }
-
-        // Login as the user.
-        $this->login('user1@kw', 'user1');
-        */
-
-        // If we want to test the app if registration works, that sort of thing belongs in a
-        // registration works test.
+        $this->deleteLog($this->logfilename);
 
         $user = $this->createUser([
             'firstname' => 'Firstname',
@@ -76,27 +51,27 @@ class EmailTestCase extends KWWebTestCase
         $this->setField('emailsuccess', '1');
         $this->clickSubmitByName('subscribe');
         if (!$this->checkLog($this->logfilename)) {
-            return;
+            $this->fail("Errors logged");
         }
     }
 
     public function testRegisterNoEmailUser()
     {
         $user = new User();
-        $user->Email = 'user2@kw';
-        $user->Password = User::PasswordHash('user2');
-        $user->FirstName = 'user2';
-        $user->LastName = 'kw';
-        $user->Institution = 'Kitware';
-        $user->Admin = 0;
-        $user->Save();
-        if (!$user->Id) {
+        $user->email = 'user2@kw';
+        $user->password = password_hash('user2', PASSWORD_DEFAULT);
+        $user->firstname = 'user2';
+        $user->lastname = 'kw';
+        $user->institution = 'Kitware';
+        $user->admin = 0;
+        $user->save();
+        if (!$user->id) {
             $this->fail('Failed to create user2');
         }
         $db = \CDash\Database::getInstance();
 
         $stmt = $db->prepare('INSERT INTO user2project (userid, projectid, role, emailtype) VALUES (?, ?, ?, ?)');
-        $db->insert($stmt, [$user->Id, $this->project, 0, 0]);
+        $db->insert($stmt, [$user->id, $this->project, 0, 0]);
     }
 
     public function testSubmissionFirstBuild()
@@ -137,12 +112,11 @@ class EmailTestCase extends KWWebTestCase
 
         $config = Config::getInstance();
 
-        // illuminate/support/helpers/str_contains
         $expected = [
-            'cdash.DEBUG: user1@kw',
-            'cdash.DEBUG: PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly',
+            'DEBUG: user1@kw',
+            'DEBUG: PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'Congratulations. A submission to CDash for the project EmailProjectExample has fixed warnings',
-            "{$config->getBaseUrl()}/buildSummary.php?buildid=",
+            "{$config->getBaseUrl()}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
@@ -154,6 +128,24 @@ class EmailTestCase extends KWWebTestCase
         if ($this->assertLogContains($expected, 15)) {
             $this->pass('Passed');
         }
+
+        // Also check that viewUpdate shows email address for logged in users.
+        $db = \CDash\Database::getInstance();
+        $stmt = $db->prepare("
+                SELECT build.id FROM build
+                JOIN project ON (build.projectid = project.id)
+                JOIN build2update ON (build.id = build2update.buildid)
+                WHERE build.name = 'Win32-MSVC2009' AND
+                      project.name = 'EmailProjectExample'");
+        $db->execute($stmt);
+        $buildid = $stmt->fetchColumn();
+        $this->login();
+        $this->get($this->url . "/api/v1/viewUpdate.php?buildid=$buildid");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $expected = 'user1@kw';
+        $actual = $jsonobj['updategroups'][0]['directories'][0]['files'][0]['email'];
+        $this->assertEqual($expected, $actual);
     }
 
     public function testSubmissionEmailTest()
@@ -166,12 +158,11 @@ class EmailTestCase extends KWWebTestCase
             return;
         }
         $config = Config::getInstance();
-        // illuminate/support/helpers/str_contains
         $expected = [
-            'cdash.DEBUG: user1@kw',
-            'cdash.DEBUG: PASSED (t=2): EmailProjectExample - Win32-MSVC2009 - Nightly',
+            'DEBUG: user1@kw',
+            'DEBUG: PASSED (t=2): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'Congratulations. A submission to CDash for the project EmailProjectExample has fixed failing tests',
-            "{$config->getBaseUrl()}/buildSummary.php?buildid=",
+            "{$config->getBaseUrl()}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
@@ -201,7 +192,7 @@ class EmailTestCase extends KWWebTestCase
             'simpletest@localhost',
             'FAILED (d=10): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has dynamic analysis tests failing or not run',
-            "{$url}/buildSummary.php?buildid=",
+            "{$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
@@ -218,7 +209,7 @@ class EmailTestCase extends KWWebTestCase
             'user1@kw',
             'FAILED (d=10): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has dynamic analysis tests failing or not run',
-            "{$url}/buildSummary.php?buildid=",
+            "{$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
@@ -259,7 +250,7 @@ class EmailTestCase extends KWWebTestCase
             'simpletest@localhost',
             'FAILED (t=4): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has failing tests.',
-            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
+            "Details on the submission can be found at {$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
@@ -275,7 +266,7 @@ class EmailTestCase extends KWWebTestCase
             'user1@kw',
             'FAILED (t=4): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has failing tests.',
-            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
+            "Details on the submission can be found at {$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
@@ -293,5 +284,51 @@ class EmailTestCase extends KWWebTestCase
         if ($this->assertLogContains($expected, 41)) {
             $this->pass('Passed');
         }
+    }
+
+    public function testVerifyTestDiffValues() : void
+    {
+        // Verify that we have three builds for this project.
+        $project = DB::table('project')->where('name', 'EmailProjectExample')->first();
+        $builds = DB::table('build')->where('projectid', $project->id)->get();
+        $this->assertTrue(count($builds) === 3);
+
+        // Verify that we have four rows in the testdiff table for these builds.
+        $testdiffs = DB::table('testdiff')
+            ->where('buildid', $builds[1]->id)
+            ->orWhere('buildid', $builds[2]->id)
+            ->get();
+        $this->assertTrue(count($testdiffs) === 4);
+
+        $found = [0 => false, 1 => false, 2 => false, 3 => false];
+        $expected = [0 => true, 1 => true, 2 => true, 3 => true];
+        foreach ($testdiffs as $testdiff) {
+            if ($testdiff->buildid === $builds[1]->id &&
+                $testdiff->type === TestDiffType::Failed->value &&
+                $testdiff->difference_positive === 0 &&
+                $testdiff->difference_negative === 2) {
+                $found[0] = true;
+            }
+            if ($testdiff->buildid === $builds[1]->id &&
+                $testdiff->type === TestDiffType::Passed->value &&
+                $testdiff->difference_positive === 2 &&
+                $testdiff->difference_negative === 0) {
+                $found[1] = true;
+            }
+            if ($testdiff->buildid === $builds[2]->id &&
+                $testdiff->type === TestDiffType::Failed->value &&
+                $testdiff->difference_positive === 1 &&
+                $testdiff->difference_negative === 0) {
+                $found[2] = true;
+            }
+            if ($testdiff->buildid === $builds[2]->id &&
+                $testdiff->type === TestDiffType::Passed->value &&
+                $testdiff->difference_positive === 0 &&
+                $testdiff->difference_negative === 1) {
+                $found[3] = true;
+            }
+        }
+
+        $this->assertTrue($found === $expected);
     }
 }

@@ -46,33 +46,45 @@ class OutputColorTestCase extends KWWebTestCase
             return;
         }
 
-        $buildid_results = pdo_single_row_query('SELECT id FROM build WHERE projectid = ' . $projectid);
-        $buildid = $buildid_results['id'];
+        // No errors in the log.
+        $this->assertTrue($this->checkLog($this->logfilename) !== false);
 
-        $testid_results = pdo_single_row_query("SELECT id FROM test WHERE name = 'colortest_long'");
-        $testid = $testid_results['id'];
-
-        // Get the output.
-        $content = $this->connect($this->url . '/api/v1/testDetails.php?build=' . $buildid . '&test=' . $testid);
+        // Get test output.
+        $buildtestid = $this->getIdForTest('colortest_long');
+        $content = $this->connect($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $json_content = json_decode($content, true);
         $output = $json_content['test']['output'];
 
+        // Check for expected escape sequences.
         if (strpos($output, "\x1B[32m") === false) {
             $this->fail('Could not find first escape sequence');
-            return;
         }
 
         if (strpos($output, "\x1B[91m") === false) {
             $this->fail('Could not find second escape sequence');
-            return;
         }
 
         if (strpos($output, "\x1B[0m") === false) {
             $this->fail('Could not find third escape sequence');
-            return;
         }
 
-        $this->assertTrue(true, 'All escape sequences found');
+        // Verify that color output works as expected for preformatted test measurements too.
+        $file = dirname(__FILE__) . '/data/OutputColor/Test_2.xml';
+        if (!$this->submission('OutputColor', $file)) {
+            $this->fail("Failed to submit $file");
+            return;
+        }
+        $this->assertTrue($this->checkLog($this->logfilename) !== false);
+        $buildtestid = $this->getIdForTest('preformatted_color');
+        $content = $this->connect($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
+        $json_content = json_decode($content, true);
+        $this->assertEqual(1, count($json_content['test']['preformatted_measurements']));
+        $measurement = $json_content['test']['preformatted_measurements'][0];
+        $this->assertEqual('Color Output', $measurement['name']);
+        $expected = 'not bold[NON-XML-CHAR-0x1B][1m bold[NON-XML-CHAR-0x1B][0;0m not bold
+[NON-XML-CHAR-0x1B][32mHello world![NON-XML-CHAR-0x1B][0m
+[NON-XML-CHAR-0x1B][31mThis is test output[NON-XML-CHAR-0x1B][0m';
+        $this->assertEqual($expected, $measurement['value']);
 
         // Submit build data for later check in viewBuildErrors.
         $file = dirname(__FILE__) . '/data/OutputColor/Build.xml';
@@ -80,5 +92,17 @@ class OutputColorTestCase extends KWWebTestCase
             $this->fail("Failed to submit $file");
             return;
         }
+    }
+
+    private function getIdForTest($testname)
+    {
+        $buildtestid_results = \DB::select(
+            DB::raw(
+                "SELECT build2test.id FROM build2test
+            JOIN test ON (build2test.testid = test.id)
+            WHERE test.name = '$testname'")
+        );
+        $this->assertEqual(1, count($buildtestid_results));
+        return $buildtestid_results[0]->id;
     }
 }

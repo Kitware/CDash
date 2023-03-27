@@ -18,8 +18,8 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
     private function getLastBuildId()
     {
         $sql = "
-          SELECT id 
-          FROM build 
+          SELECT id
+          FROM build
           WHERE name='{$this->buildName}'
           ORDER BY starttime DESC
           LIMIT 1
@@ -36,32 +36,33 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
         $file = "{$rep}/5_test.xml";
 
         if (!$this->submission('EmailProjectExample', $file)) {
+            $this->fail('submission of test data failed');
             return;
         }
+
+        if (!$this->checkLog($this->logfilename)) {
+            $this->fail('Errors in log after submit');
+        }
+
         $url = Config::getInstance()->getBaseUrl();
         $expected = [
             'simpletest@localhost',
-            'FAILED (t=3, m=3): EmailProjectExample - Win32-MSVC2009 - Nightly',
-            'A submission to CDash for the project EmailProjectExample has failing tests and missing tests.',
-            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
+            'FAILED (m=3): EmailProjectExample - Win32-MSVC2009 - Nightly',
+            'A submission to CDash for the project EmailProjectExample has missing tests.',
+            "Details on the submission can be found at {$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
             'Build Time: 2009-02-26 10:04:00',
             'Type: Nightly',
-            'Total Failing Tests: 3',
             'Total Missing Tests: 3',
-            '*Failing Tests*',
-            "curl | Completed | ({$url}/testDetails.php?test=",
-            "StringActionsTest | Completed (OTHER_FAULT) | ({$url}/testDetails.php?test=",
-            "MathActionsTest | Completed (OTHER_FAULT) | ({$url}/testDetails.php?test=",
             '*Missing Tests*',
             "DashboardSendTest ({$url}/viewTest.php?buildid=",
             "Parser1Test1 ({$url}/viewTest.php?buildid=",
             "SystemInfoTest ({$url}/viewTest.php?buildid=",
             '-CDash on',
         ];
-        if ($this->assertLogContains($expected, 26)) {
+        if ($this->assertLogContains($expected, 20)) {
             $this->pass('Passed');
         }
     }
@@ -100,6 +101,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
         $file = "{$rep}/4_test.xml";
 
         if (!$this->submission('EmailProjectExample', $file)) {
+            $this->fail('failed to submit test data');
             return;
         }
         $url = Config::getInstance()->getBaseUrl();
@@ -107,7 +109,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
             'simpletest@localhost',
             'FAILED (t=2): EmailProjectExample - OSX-SIERRA-10.12.1 - Nightly',
             'A submission to CDash for the project EmailProjectExample has failing tests',
-            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
+            "Details on the submission can be found at {$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: OSX-SIERRA-10.12.1',
@@ -115,8 +117,8 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
             'Type: Nightly',
             'Total Failing Tests: 2',
             '*Failing Tests*',
-            "SleepTimer1 | Completed (Timeout) | ({$url}/testDetails.php?test=",
-            "SleepTimer2 | Completed (Timeout) | ({$url}/testDetails.php?test=",
+            "SleepTimer1 | Completed (Timeout) | ({$url}/test/",
+            "SleepTimer2 | Completed (Timeout) | ({$url}/test/",
             '-CDash on',
         ];
         if ($this->assertLogContains($expected, 19)) {

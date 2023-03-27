@@ -13,6 +13,8 @@ use CDash\Model\Project;
 
 class TimeStatusTestCase extends KWWebTestCase
 {
+    protected $PDO;
+
     public function __construct()
     {
         parent::__construct();
@@ -89,7 +91,9 @@ class TimeStatusTestCase extends KWWebTestCase
 
         // Verify results.
         $stmt = $this->PDO->prepare(
-            'SELECT id, time, timemean, timestd, timestatus
+            'SELECT b.id AS buildid,
+                    b2t.id AS buildtestid,
+                    time, timemean, timestd, timestatus
             FROM build b
             JOIN build2test b2t ON (b.id = b2t.buildid)
             WHERE projectid = ?
@@ -109,6 +113,15 @@ class TimeStatusTestCase extends KWWebTestCase
         $this->verify_row($rows[2], 9.00, 0.60, 1.13, 1);
         $this->verify_row($rows[3], 9.00, 0.60, 1.13, 2);
         $this->verify_row($rows[4], 9.00, 0.60, 1.13, 3);
+
+        // Verify API results.
+        $buildtestid = $rows[4]['buildtestid'];
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid={$buildtestid}&graph=time");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $menu = $jsonobj['menu'];
+        $this->assertTrue(strpos($menu['previous'], '?graph=time') !== false);
+        $this->assertTrue(strpos($menu['current'], '?graph=time') !== false);
     }
 
     private function verify_field($expected, $found, $field, $id)
@@ -120,9 +133,9 @@ class TimeStatusTestCase extends KWWebTestCase
 
     private function verify_row($row, $time, $timemean, $timestd, $timestatus)
     {
-        $this->verify_field($row['time'], $time, 'time', $row['id']);
-        $this->verify_field($row['timemean'], $timemean, 'timemean', $row['id']);
-        $this->verify_field($row['timestd'], $timestd, 'timestd', $row['id']);
-        $this->verify_field($row['timestatus'], $timestatus, 'timestatus', $row['id']);
+        $this->verify_field($row['time'], $time, 'time', $row['buildid']);
+        $this->verify_field($row['timemean'], $timemean, 'timemean', $row['buildid']);
+        $this->verify_field($row['timestd'], $timestd, 'timestd', $row['buildid']);
+        $this->verify_field($row['timestatus'], $timestatus, 'timestatus', $row['buildid']);
     }
 }

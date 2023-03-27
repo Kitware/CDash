@@ -1,22 +1,35 @@
 <div id="footer" class="clearfix">
   <div id="kitwarelogo">
     <a href="http://www.kitware.com">
-      <img src="img/kitware_logo_footer.png" border="0" alt="logo" />
+      <img src="img/kitware_logo_footer.svg" border="0" alt="logo" />
     </a>
   </div>
   <div id="footerlinks" class="clearfix">
-    <a href="http://www.cdash.org" class="footerlogo"><img src="img/cdash.png?rev=2019-05-08" border="0" height="30" alt="CDash logo"/></a>
-    <span id="footertext">
+    <a href="http://www.cdash.org" class="footerlogo"><img src="img/cdash.png?rev=2019-05-08" border="0" height="30" alt="CDash logo" class="pull-left"/></a>
+    <span id="footertext" class="pull-right">
       CDash {{::cdash.version}}
       © <a href="http://www.kitware.com">Kitware</a> |
       <a href="https://github.com/Kitware/CDash/issues" target="blank">Report problems</a> |
       <a ng-href="{{cdash.endpoint}}">View as JSON</a>
-      <span ng-if="::cdash.generationtime">
-        | {{cdash.generationtime}}s
+      <span ng-if="::cdash.generationtime"
+            tooltip-popup-delay="1500"
+            tooltip-append-to-body="true"
+            uib-tooltip="Total (Backend API)"
+      >
+        | {{cdash.generationtime}}
+      </span>
+      <span ng-if="::cdash.currentdate">
+        <br>
+        Current Testing Day {{ ::cdash.currentdate }} | Started at {{ ::cdash.nightlytime }}
       </span>
     </span>
   </div>
 </div>
+<script>
+  // Insert a dummy element before the footer, which will push the footer to the bottom of the page
+  // This has to be the child of the parent "include" element and cannot be done with CSS (at least currently).
+  $( '<div style="flex:1;"></div>' ).insertBefore($("#footer").parent());
+</script>
 
 <!-- Google Analytics -->
 <script type="text/ng-template" id="google-analytics-snippet">

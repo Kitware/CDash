@@ -15,14 +15,15 @@
 =========================================================================*/
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Models\User;
+use App\Services\ProjectPermissions;
+use App\Services\TestingDay;
+
 use CDash\Config;
-use CDash\Controller\Auth\Session;
 use CDash\Database;
-use CDash\Model\AuthToken;
 use CDash\ServiceContainer;
 use CDash\Model\Build;
 use CDash\Model\Project;
-use CDash\Model\User;
 use CDash\Model\UserProject;
 use CDash\Model\Site;
 
@@ -87,32 +88,10 @@ function xslt_free($xsltproc)
 }
 
 
-/** Do the XSLT translation and look in the local directory if the file
- *  doesn't exist */
-function generate_XSLT($xml, $pageName, $only_in_local = false)
+/** Do the XSLT translation **/
+function generate_XSLT($xml, $pageName)
 {
-    // For common xsl pages not referenced directly
-    // i.e. header, headerback, etc...
-    // look if they are in the local directory, and set
-    // an XML value accordingly
     $config = Config::getInstance();
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && !$only_in_local) {
-        $pos = strpos($xml, '</cdash>'); // this should be the last
-        if ($pos !== false) {
-            $xml = substr($xml, 0, $pos);
-            $xml .= '<uselocaldirectory>1</uselocaldirectory>';
-
-            // look at the local directory if we have the same php file
-            // and add the xml if needed
-            $localphpfile = 'local/' . $pageName . '.php';
-            if (file_exists($localphpfile)) {
-                include_once $localphpfile;
-                $xml .= getLocalXML();
-            }
-
-            $xml .= '</cdash>'; // finish the xml
-        }
-    }
 
     $xh = xslt_create();
 
@@ -129,11 +108,6 @@ function generate_XSLT($xml, $pageName, $only_in_local = false)
         unset($inF);
     }
     $xslpage = $pageName . '.xsl';
-
-    // Check if the page exists in the local directory
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/' . $xslpage)) {
-        $xslpage = 'local/' . $xslpage;
-    }
 
     $html = xslt_process($xh, 'arg:/_xml', $xslpage, null, $arguments);
 
@@ -160,14 +134,6 @@ function XMLStrFormat($str)
     $str = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '', $str);
 
     return $str;
-}
-
-/** Redirect to the error page */
-function redirect_error($text = '')
-{
-    $redirectUrl = get_server_URI() . '/error.php';
-    \session(['cdash_error' => $text]);
-    return redirect($redirectUrl);
 }
 
 function time_difference($duration, $compact = false, $suffix = '', $displayms = false)
@@ -321,13 +287,6 @@ function get_seconds_from_interval($input)
     return null;
 }
 
-/** Microtime function */
-function microtime_float()
-{
-    list($usec, $sec) = explode(' ', microtime());
-    return ((float)$usec + (float)$sec);
-}
-
 function xml_replace_callback($matches)
 {
     $decimal_value = hexdec(bin2hex($matches[0]));
@@ -349,48 +308,6 @@ function add_last_sql_error($functionname, $projectid = 0, $buildid = 0, $resour
         add_log('SQL error: ' . $pdo_error, $functionname, LOG_ERR, $projectid, $buildid, $resourcetype, $resourceid);
         $text = "SQL error in $functionname():" . $pdo_error . '<br>';
         echo $text;
-    }
-}
-
-/* Catch any PHP fatal errors */
-//
-// This is a registered shutdown function (see register_shutdown_function help)
-// and gets called at script exit time, regardless of reason for script exit.
-// i.e. -- it gets called when a script exits normally, too.
-//
-global $PHP_ERROR_BUILD_ID;
-global $PHP_ERROR_RESOURCE_TYPE;
-global $PHP_ERROR_RESOURCE_ID;
-
-function PHPErrorHandler($projectid)
-{
-    if (connection_aborted()) {
-        add_log('PHPErrorHandler', "connection_aborted()='" . connection_aborted() . "'", LOG_INFO, $projectid);
-        add_log('PHPErrorHandler', "connection_status()='" . connection_status() . "'", LOG_INFO, $projectid);
-    }
-
-    if ($error = error_get_last()) {
-        switch ($error['type']) {
-            case E_ERROR:
-            case E_CORE_ERROR:
-            case E_COMPILE_ERROR:
-            case E_USER_ERROR:
-                if (strlen($GLOBALS['PHP_ERROR_RESOURCE_TYPE']) == 0) {
-                    $GLOBALS['PHP_ERROR_RESOURCE_TYPE'] = 0;
-                }
-                if (strlen($GLOBALS['PHP_ERROR_BUILD_ID']) == 0) {
-                    $GLOBALS['PHP_ERROR_BUILD_ID'] = 0;
-                }
-                if (strlen($GLOBALS['PHP_ERROR_RESOURCE_ID']) == 0) {
-                    $GLOBALS['PHP_ERROR_RESOURCE_ID'] = 0;
-                }
-
-                add_log('Fatal error:' . $error['message'], $error['file'] . ' (' . $error['line'] . ')',
-                    LOG_ERR, $projectid, $GLOBALS['PHP_ERROR_BUILD_ID'],
-                    $GLOBALS['PHP_ERROR_RESOURCE_TYPE'], $GLOBALS['PHP_ERROR_RESOURCE_ID']);
-                exit();  // stop the script
-                break;
-        }
     }
 }
 
@@ -418,80 +335,39 @@ function setVersion()
 }
 
 /** Return true if the user is allowed to see the page */
-function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
+function checkUserPolicy($projectid, $onlyreturn = 0)
 {
-    if (($userid != '' && !is_numeric($userid)) || !is_numeric($projectid)) {
+    if (!is_numeric($projectid)) {
         return response('Insufficient data to determine access');
     }
 
-    $service = ServiceContainer::getInstance();
-    $user = $service->get(User::class);
-    $user->Id = $userid;
-
-    // If the projectid=0 only admin can access the page
-    if ($projectid == 0 && !$user->IsAdmin()) {
-        if (!$onlyreturn) {
-            return response('You cannot access this project');
-        } else {
-            return false;
+    // If the projectid is 0 only admin can access the page.
+    if ($projectid == 0) {
+        if (Auth::check()) {
+            $user = \Auth::user();
+            if ($user->IsAdmin()) {
+                return true;
+            }
         }
-    } elseif (@$projectid > 0) {
-        // Global admins have access to all projects.
-        if ($user->IsAdmin()) {
-            return true;
-        }
-
-        $project = $service->get(Project::class);
+    } else {
+        $project = new Project();
         $project->Id = $projectid;
         $project->Fill();
 
-        // If the project is public we quit
-        if ($project->Public) {
+        if (ProjectPermissions::userCanViewProject($project)) {
             return true;
         }
-
-        // If the project is private and the user is not logged in we quit
-        if (!$userid && !$project->Public) {
-            if (!$onlyreturn) {
-                return LoginController::staticShowLoginForm();
-            } else {
-                return false;
-            }
-        } elseif ($userid) {
-            $userproject = new UserProject();
-            $userproject->UserId = $userid;
-            $userproject->ProjectId = $projectid;
-            if (!$userproject->Exists()) {
-                if (!$onlyreturn) {
-                    return response('You cannot access this project');
-                } else {
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-}
-
-/** Clean the backup directory */
-function clean_backup_directory()
-{
-    $config = Config::getInstance();
-    $timeframe = (int) $config->get('CDASH_BACKUP_TIMEFRAME');
-    $directory = $config->get('CDASH_BACKUP_DIRECTORY');
-
-    if ($timeframe === 0) {
-        // File are deleted upon submission, no need to do anything here.
-        return;
     }
 
-    foreach (glob("{$directory}/*") as $filename) {
-        if (file_exists($filename) && is_file($filename) &&
-            time() - filemtime($filename) > $timeframe * 3600
-        ) {
-            cdash_unlink($filename);
-        }
+    if ($onlyreturn) {
+        return false;
     }
+
+    if (!Auth::check()) {
+        return LoginController::staticShowLoginForm();
+    }
+
+    return response('You cannot access this project');
 }
 
 /** Get the build id from stamp, name and buildname */
@@ -558,15 +434,13 @@ function stripslashes_if_gpc_magic_quotes($string)
 /** Get the current URI of the dashboard */
 function get_server_URI($localhost = false)
 {
-    /** @var Config $config */
-    $config = Config::getInstance();
-
     // If we should consider the localhost.
     // This is used for submission but not emails, etc...
-    if ($localhost && $config->get('CDASH_CURL_REQUEST_LOCALHOST')) {
+    if ($localhost && config('cdash.curl_request_localhost')) {
         $localhost = true;
     }
 
+    $config = Config::getInstance();
     return $config->getBaseUrl($localhost);
 }
 
@@ -756,7 +630,7 @@ function get_geolocation($ip)
 
     $config = Config::getInstance();
 
-    if ($config->get('CDASH_GEOLOCATE_IP_ADDRESSES')) {
+    if (config('cdash.geolocate_ip_addresses')) {
         // Ask hostip.info for geolocation
         $url = 'http://api.hostip.info/get_html.php?ip=' . $ip . '&position=true';
 
@@ -827,7 +701,7 @@ function remove_project_builds($projectid)
     while ($build_array = pdo_fetch_array($build)) {
         $buildids[] = $build_array['id'];
     }
-    remove_build($buildids);
+    remove_build_chunked($buildids);
 }
 
 /** Remove all related inserts for a given build */
@@ -908,7 +782,7 @@ function remove_build($buildid)
     // Delete the configure if not shared.
     $configureids = '(';
     $build2configure = pdo_query(
-            "SELECT a.configureid, COUNT(b.configureid) AS c
+        "SELECT a.configureid, COUNT(b.configureid) AS c
             FROM build2configure AS a
             LEFT JOIN build2configure AS b
             ON (a.configureid=b.configureid AND b.buildid NOT IN $buildids)
@@ -1012,21 +886,25 @@ function remove_build($buildid)
     }
     pdo_query('DELETE FROM build2update WHERE buildid IN ' . $buildids);
 
-    // Delete any tests that are not shared.
-    // First find all the tests from builds that are about to be deleted.
+    // Delete tests and testoutputs that are not shared.
+    // First find all the tests and testoutputs from builds that are about to be deleted.
     $b2t_result = pdo_query(
-        "SELECT DISTINCT testid from build2test WHERE buildid IN $buildids");
-    $all_testids = array();
+        "SELECT testid, outputid from build2test WHERE buildid IN $buildids");
+    $all_testids = [];
+    $all_outputids = [];
     while ($b2t_row = pdo_fetch_array($b2t_result)) {
         $all_testids[] = $b2t_row['testid'];
+        $all_outputids[] = $b2t_row['outputid'];
     }
+    $all_testids = array_unique($all_testids);
+    $all_outputids = array_unique($all_outputids);
 
     if (!empty($all_testids)) {
         // Next identify tests from this list that should be preserved
         // because they are shared with builds that are not about to be deleted.
         $testids = '(' . implode(',', $all_testids) . ')';
         $save_test_result = pdo_query(
-                "SELECT DISTINCT testid FROM build2test
+            "SELECT DISTINCT testid FROM build2test
                 WHERE testid IN $testids AND buildid NOT IN $buildids");
         $tests_to_save = array();
         while ($save_test_row = pdo_fetch_array($save_test_result)) {
@@ -1037,14 +915,35 @@ function remove_build($buildid)
         $tests_to_delete = array_diff($all_testids, $tests_to_save);
         if (!empty($tests_to_delete)) {
             $testids = '(' . implode(',', $tests_to_delete) . ')';
-            pdo_query("DELETE FROM testmeasurement WHERE testid IN $testids");
             pdo_query("DELETE FROM test WHERE id IN $testids");
+        }
+    }
+
+    // Delete un-shared testoutput rows.
+    if (!empty($all_outputids)) {
+        // Next identify tests from this list that should be preserved
+        // because they are shared with builds that are not about to be deleted.
+        $outputids = '(' . implode(',', $all_outputids) . ')';
+        $save_test_result = pdo_query(
+            "SELECT DISTINCT outputid FROM build2test
+                WHERE outputid IN $outputids AND buildid NOT IN $buildids");
+        $testoutputs_to_save = [];
+        while ($save_test_row = pdo_fetch_array($save_test_result)) {
+            $testoutputs_to_save[] = $save_test_row['outputid'];
+        }
+
+        // Use array_diff to get the list of tests that should be deleted.
+        $testoutputs_to_delete = array_diff($all_outputids, $testoutputs_to_save);
+        if (!empty($testoutputs_to_delete)) {
+            $outputids = '(' . implode(',', $testoutputs_to_delete) . ')';
+            delete_rows_chunked('DELETE FROM testmeasurement WHERE outputid IN ', $testoutputs_to_delete);
+            delete_rows_chunked('DELETE FROM testoutput WHERE id IN ', $testoutputs_to_delete);
 
             $imgids = '(';
             // Check if the images for the test are not shared
             $test2image = pdo_query('SELECT a.imgid,count(b.imgid) AS c
                     FROM test2image AS a LEFT JOIN test2image AS b
-                    ON (a.imgid=b.imgid AND b.testid NOT IN ' . $testids . ') WHERE a.testid IN ' . $testids . '
+                    ON (a.imgid=b.imgid AND b.outputid NOT IN ' . $outputids . ') WHERE a.outputid IN ' . $outputids . '
                     GROUP BY a.imgid HAVING count(b.imgid)=0');
             while ($test2image_array = pdo_fetch_array($test2image)) {
                 $imgid = $test2image_array['imgid'];
@@ -1057,7 +956,7 @@ function remove_build($buildid)
             if (strlen($imgids) > 2) {
                 pdo_query('DELETE FROM image WHERE id IN ' . $imgids);
             }
-            pdo_query('DELETE FROM test2image WHERE testid IN ' . $testids);
+            delete_rows_chunked('DELETE FROM test2image WHERE outputid IN ', $testoutputs_to_delete);
         }
     }
 
@@ -1107,6 +1006,28 @@ function remove_build($buildid)
     pdo_query('DELETE FROM build WHERE id IN ' . $buildids);
 
     add_last_sql_error('remove_build');
+}
+
+/** Call remove_build() in batches of 100. */
+function remove_build_chunked($buildid)
+{
+    if (!is_array($buildid)) {
+        return remove_build($buildid);
+    }
+    foreach (array_chunk($buildid, 100) as $chunk) {
+        remove_build($chunk);
+    }
+}
+
+/** Chunk up DELETE queries into batches of 100. */
+function delete_rows_chunked($query, $ids)
+{
+    foreach (array_chunk($ids, 100) as $chunk) {
+        $chunk_ids = '(' . implode(',', $chunk) . ')';
+        pdo_query("$query $chunk_ids");
+        // Sleep for a microsecond to give other processes a chance.
+        usleep(1);
+    }
 }
 
 /** Remove any children of the given build. */
@@ -1335,33 +1256,6 @@ function make_cdash_url($url)
     return $cdash_url;
 }
 
-// Return the email of a given author within a given project.
-function get_author_email($projectname, $author)
-{
-    /** @var Database $db */
-    $db = Database::getInstance();
-    $projectid = get_project_id($projectname);
-    if ($projectid == -1) {
-        return 'unknownProject';
-    }
-
-    $stmt = $db->prepare("
-        SELECT email FROM user WHERE id IN (
-          SELECT up.userid FROM user2project AS up, user2repository AS ur
-           WHERE ur.userid=up.userid
-           AND up.projectid=:projectid
-           AND ur.credential=:author
-           AND (ur.projectid=0 OR ur.projectid=:projectid)
-           LIMIT 1
-    ");
-
-    $stmt->bindParam(':projectid', $projectid);
-    $stmt->bindParam(':author', $author);
-    $db->execute($stmt);
-
-    return $stmt ? $stmt->fetchColumn() : '';
-}
-
 /** Get the previous build id dynamicanalysis*/
 function get_previous_buildid_dynamicanalysis($projectid, $siteid, $buildtype, $buildname, $starttime)
 {
@@ -1483,31 +1377,20 @@ function get_cdash_dashboard_xml($projectname, $date)
         $xml .= '<home>' . make_cdash_url(htmlentities($project_array['homeurl'])) . '</home>';
     }
 
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') &&
-        file_exists('local/models/proProject.php')) {
-        include_once 'local/models/proProject.php';
-        $pro = new proProject;
-        $pro->ProjectId = $projectid;
-        $xml .= '<proedition>' . $pro->GetEdition(1) . '</proedition>';
-    }
     $xml .= '</dashboard>';
 
-    $userid = Auth::id();
-    if ($userid) {
+    if (Auth::check()) {
+        $user = Auth::user();
         $xml .= '<user>';
-        $xml .= add_XML_value('id', $userid);
+        $xml .= add_XML_value('id', $user->id);
 
-        // Is the user super administrator
-
-        $user = new User();
-        $user->Id = $userid;
-        $user->Fill();
-        $xml .= add_XML_value('admin', $user->Admin);
+        // Is the user super administrator?
+        $xml .= add_XML_value('admin', $user->admin);
 
         // Is the user administrator of the project
 
         $userproject = new UserProject();
-        $userproject->UserId = $userid;
+        $userproject->UserId = $user->id;
         $userproject->ProjectId = $projectid;
         $userproject->FillFromUserId();
         $xml .= add_XML_value('projectrole', $userproject->Role);
@@ -1526,11 +1409,9 @@ function get_cdash_dashboard_xml_by_name($projectname, $date)
 /** Quote SQL identifier */
 function qid($id)
 {
-    $config = Config::getInstance();
-
-    if (!$config->get('CDASH_DB_TYPE') || ($config->get('CDASH_DB_TYPE') == 'mysql')) {
+    if (!config('database.default') || (config('database.default') == 'mysql')) {
         return "`$id`";
-    } elseif ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+    } elseif (config('database.default') == 'pgsql') {
         return "\"$id\"";
     } else {
         return $id;
@@ -1540,9 +1421,7 @@ function qid($id)
 /** Quote SQL interval specifier */
 function qiv($iv)
 {
-    $config = Config::getInstance();
-
-    if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+    if (config('database.default') == 'pgsql') {
         return "'$iv'";
     } else {
         return $iv;
@@ -1552,10 +1431,9 @@ function qiv($iv)
 /** Quote SQL number */
 function qnum($num)
 {
-    $config = Config::getInstance();
-    if (!$config->get('CDASH_DB_TYPE') || ($config->get('CDASH_DB_TYPE') == 'mysql')) {
+    if (!config('database.default') || (config('database.default') == 'mysql')) {
         return "'$num'";
-    } elseif ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+    } elseif (config('database.default') == 'pgsql') {
         return $num != '' ? $num : '0';
     } else {
         return $num;
@@ -1730,22 +1608,40 @@ function web_api_authenticate($projectid, $token)
     return pdo_num_rows($result) != 0;
 }
 
+// Check if user has specified a preference for color scheme.
+function get_css_file()
+{
+    $classic = 'css/cdash.css';
+    $colorblind = 'css/colorblind.css';
+
+    // Return cache-busting filenames if available.
+    $css_files = glob(Config::getInstance()->get('CDASH_ROOT_DIR') . '/public/build/css/*.css');
+    foreach ($css_files as $css_file) {
+        $css_file = basename($css_file);
+        if (strpos($css_file, 'cdash_') !== false) {
+            $classic = "build/css/{$css_file}";
+        } elseif (strpos($css_file, 'colorblind_') !== false) {
+            $colorblind = "build/css/{$css_file}";
+        }
+    }
+
+    if (array_key_exists('colorblind', $_COOKIE) && $_COOKIE['colorblind'] == 1) {
+        return $colorblind;
+    }
+    return $classic;
+}
+
 function begin_XML_for_XSLT()
 {
     $config = CDash\Config::getInstance();
     $css_file = 'css/cdash.css';
 
-    // check if user has specified a preference for color scheme
-    if (array_key_exists('colorblind', $_COOKIE)) {
-        if ($_COOKIE['colorblind'] == 1) {
-            $css_file = 'css/colorblind.css';
-        }
-    }
+    $css_file = get_css_file();
     $config->set('CDASH_CSS_FILE', $css_file);
 
     $xml = '<?xml version="1.0" encoding="UTF-8"?><cdash>';
     $xml .= add_XML_value('cssfile', $css_file);
-    $xml .= add_XML_value('version', $config->get('CDASH_VERSION'));
+    $xml .= add_XML_value('version', CDash\Config::getVersion());
     $xml .= add_XML_value('_token', csrf_token());
 
     return $xml;
@@ -1774,33 +1670,17 @@ function begin_JSON_response()
     $service = ServiceContainer::getInstance();
 
     $response = array();
-    $response['version'] = $config->get('CDASH_VERSION');
-    $response['feed_enabled'] = $config->get('CDASH_ENABLE_FEED') === 1;
+    $response['version'] = CDash\Config::getVersion();
 
     $user_response = array();
     $userid = Auth::id();
     if ($userid) {
-        $user = $service->create(User::class);
-        $user->Id = $userid;
-        $user->Fill();
-        $user_response['admin'] = $user->Admin;
+        $user = Auth::user();
+        $user_response['admin'] = $user->admin;
     }
     $user_response['id'] = $userid;
     $response['user'] = $user_response;
-
-    // Check for local overrides of common view partials.
-    $files_to_check = array('header', 'footer');
-
-    $use_local = config('cdash.allow.local_directory');
-    $root_dir = config('cdash.directory');
-
-    foreach ($files_to_check as $file_to_check) {
-        $local_file = "local/views/{$file_to_check}.html";
-
-        if ($use_local && file_exists("{$root_dir}/public/{$local_file}")) {
-            $response[$file_to_check] = $local_file;
-        }
-    }
+    $response['querytestfilters'] = '&filtercount=1&showfilters=1&field1=status&compare1=62&value1=Passed';
     return $response;
 }
 
@@ -1809,7 +1689,6 @@ function get_dashboard_JSON($projectname, $date, &$response)
 {
     $config = Config::getInstance();
     $service = ServiceContainer::getInstance();
-    $session = $service->get(Session::class);
 
     /** @var Project $project */
     $project = $service->create(Project::class);
@@ -1833,6 +1712,7 @@ function get_dashboard_JSON($projectname, $date, &$response)
     $response['date'] = $date;
     $response['unixtimestamp'] = $currentstarttime;
     $response['startdate'] = date('l, F d Y H:i:s', $currentstarttime);
+    $response['currentdate'] = TestingDay::get($project, gmdate(FMT_DATETIME));
     $response['vcs'] = make_cdash_url(htmlentities($project_array['cvsurl']));
     $response['bugtracker'] = make_cdash_url(htmlentities($project_array['bugtrackerurl']));
     $response['googletracker'] = htmlentities($project_array['googletracker']);
@@ -1844,18 +1724,11 @@ function get_dashboard_JSON($projectname, $date, &$response)
     $response['previousdate'] = $previousdate;
     $response['nextdate'] = $nextdate;
     $response['logoid'] = getLogoID($project->Id);
-
+    $response['nightlytime'] = date('H:i T', strtotime($project_array['nightlytime']));
     if (empty($project_array['homeurl'])) {
         $response['home'] = 'index.php?project=' . urlencode($project_array['name']);
     } else {
         $response['home'] = make_cdash_url(htmlentities($project_array['homeurl']));
-    }
-
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/models/proProject.php')) {
-        include_once 'local/models/proProject.php';
-        $pro = new proProject;
-        $pro->ProjectId = $project->Id;
-        $response['proedition'] = $pro->GetEdition(1);
     }
 
     $userid = Auth::id();
@@ -1928,19 +1801,10 @@ function DeleteDirectory($dirName)
 
 function load_view($viewName, $login=true)
 {
-    $config = Config::getInstance();
-
     if ($login) {
         angular_login();
     }
-
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') &&
-        file_exists("build/local/views/$viewName.html")
-    ) {
-        readfile("build/local/views/$viewName.html");
-    } else {
-        readfile("build/views/$viewName.html");
-    }
+    readfile("build/views/$viewName.html");
 }
 
 function angular_login()
@@ -1951,12 +1815,31 @@ function angular_login()
     }
 }
 
-/* Change data-type from string to integar or float if required.
+/* Change data-type from string to integer or float if required.
  * If a string is detected make sure it is utf8 encoded. */
 function cast_data_for_JSON($value)
 {
     if (is_array($value)) {
+        // Brutal hack to preserve hashes that happen to be all numbers
+        // and start with a leading zero. These are expected to be indexed under
+        // 'revision', 'priorrevision', or 'files'.
+        $values_to_preserve = [];
+        $keys_to_check = ['revision', 'priorrevision'];
+        foreach ($keys_to_check as $key) {
+            if (array_key_exists($key, $value)) {
+                $values_to_preserve[$key] = $value[$key];
+            }
+        }
+        if (array_key_exists('files', $value) && is_string($value['files']) &&  strlen($value['files']) == 6) {
+            $values_to_preserve['files'] = $value['files'];
+        }
+
         $value = array_map('cast_data_for_JSON', $value);
+
+        foreach ($values_to_preserve as $k => $v) {
+            $value[$k] = $v;
+        }
+
         return $value;
     }
     // Do not support E notation for numbers (ie 6.02e23).

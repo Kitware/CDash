@@ -38,7 +38,7 @@ if (pdo_num_rows($project) == 0) {
 }
 
 $project_array = pdo_fetch_array($project);
-$policy = checkUserPolicy(Auth::id(), $project_array['id']);
+$policy = checkUserPolicy($project_array['id']);
 
 if ($policy !== true) {
     return $policy;
@@ -56,7 +56,11 @@ $ctestconfig .= "\n";
 $ctestconfig .= 'set(CTEST_PROJECT_NAME "' . $project_array['name'] . "\")\n";
 $ctestconfig .= 'set(CTEST_NIGHTLY_START_TIME "' . $project_array['nightlytime'] . "\")\n\n";
 
-$ctestconfig .= "set(CTEST_DROP_METHOD \"http\")\n";
+if (config('app.env') === 'production') {
+    $ctestconfig .= "set(CTEST_DROP_METHOD \"https\")\n";
+} else {
+    $ctestconfig .= "set(CTEST_DROP_METHOD \"http\")\n";
+}
 
 $ctestconfig .= 'set(CTEST_DROP_SITE "' . $_SERVER['SERVER_NAME'] . "\")\n";
 

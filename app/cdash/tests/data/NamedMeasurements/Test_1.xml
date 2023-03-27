@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="test_named_measurements"
+	BuildStamp="20210204-1412-Experimental"
+	Name="hesperides"
+	Generator="ctest-3.19.4"
+	>
+	<Testing>
+		<StartDateTime>Feb 04 09:12 EST</StartDateTime>
+		<StartTestTime>1612447952</StartTestTime>
+		<TestList>
+			<Test>./measurements</Test>
+		</TestList>
+		<Test Status="failed">
+			<Name>measurements</Name>
+			<Path>.</Path>
+			<FullName>./measurements</FullName>
+			<FullCommandLine>/tmp/bin/measurements</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="text/string" name="Exit Code">
+					<Value>Failed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Exit Value">
+					<Value>1</Value>
+				</NamedMeasurement>
+				<NamedMeasurement name="archive directory" type="text/link">
+					<Value>https://example.com/link1.txt</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="Execution Time">
+					<Value>0.0583304</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="Processors">
+					<Value>1</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/tmp/bin/measurements</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Environment">
+					<Value>#CTEST_RESOURCE_GROUP_COUNT=</Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value>Here is some test output
+
+Here is some more test output
+</Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<EndDateTime>Feb 04 09:12 EST</EndDateTime>
+		<EndTestTime>1612447953</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>

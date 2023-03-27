@@ -26,12 +26,13 @@ class UploadFileTestCase extends KWWebTestCase
         $rep = dirname(__FILE__) . '/data/EmailProjectExample';
         $file = "$rep/1_upload.xml";
         if (!$this->submission('EmailProjectExample', $file)) {
+            $this->fail('Failed to submit Upload.xml');
             return;
         }
         if (!$this->checkLog($this->logfilename)) {
+            $this->fail('errors in log file');
             return;
         }
-        $this->pass("Submission of $file has succeeded");
     }
 
     // Make sure the uploaded files are present
@@ -67,8 +68,9 @@ class UploadFileTestCase extends KWWebTestCase
             $this->fail("Directory $dirName was not created");
             return;
         }
-        if (!file_exists($dirName . '/' . $this->Sha1Sum)) {
-            $this->fail("File contents were not written to $dirName/$this->Sha1Sum");
+        $uploaded_filepath = "{$dirName}/{$this->Sha1Sum}";
+        if (!file_exists($uploaded_filepath)) {
+            $this->fail("File contents were not written to $uploaded_filepath");
             return;
         }
         if (!file_exists($dirName . '/CMakeCache.txt')) {
@@ -76,21 +78,22 @@ class UploadFileTestCase extends KWWebTestCase
             return;
         }
 
-        // Make sure the file is downloadable.
-        $url = "{$this->url}/{$this->config('CDASH_DOWNLOAD_RELATIVE_URL')}/{$this->Sha1Sum}/CMakeCache.txt";
-        $content = $this->connect($url);
-        if (!$content) {
-            $this->fail('No content returned when trying to download CMakeCache.txt');
-            return;
-        }
+        // Make sure we can download the file and its contents don't change
+        // during the download.
+        $url = "{$this->url}/upload/{$this->Sha1Sum}/CMakeCache.txt";
+        $tmp_file = sys_get_temp_dir() . '/CMakeCache.txt';
 
-        $pos = strpos($content, 'This is the CMakeCache file');
-        if ($pos === false) {
-            $this->fail('Expected content not found in CMakeCache.txt');
-            return;
-        }
+        $client = $this->getGuzzleClient();
+        $response = $client->request('GET', $url);
+        $body = $response->getBody();
+        file_put_contents($tmp_file, $body);
 
-        $this->pass('Uploaded file exists in database, on disk, and is downloadable.');
+        if (filesize($tmp_file) !== filesize($uploaded_filepath)) {
+            $this->fail('filesize mismatch for downloaded file');
+        }
+        if (sha1_file($tmp_file) !== sha1_file($uploaded_filepath)) {
+            $this->fail("hash mismatch for downloaded file ($tmp_file) vs ($uploaded_filepath)");
+        }
     }
 
     // Make sure the build label has been set
@@ -106,7 +109,5 @@ class UploadFileTestCase extends KWWebTestCase
         if ($build['label'] !== 'UploadBuild') {
             $this->fail('Expected UploadBuild, found ' . $build['label']);
         }
-
-        $this->pass("Build label has been set via upload handler");
     }
 }

@@ -18,13 +18,16 @@ require_once dirname(__FILE__) . '/../../../../vendor/autoload.php';
 require_once dirname(__FILE__) . '/kw_unlink.php';
 
 use App\Http\Controllers\CDash;
+use App\Models\User;
 use CDash\Config;
 use CDash\Model\Project;
-use CDash\Model\User;
 use App\Http\Kernel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Tests\CreatesApplication;
 
@@ -46,7 +49,6 @@ class KWWebTestCase extends WebTestCase
     public $db = null;
     public $logfilename = null;
     public $configfilename = null;
-    public $cdashpro = null;
 
     private $config;
     protected $app;
@@ -62,28 +64,22 @@ class KWWebTestCase extends WebTestCase
 
         global $configure;
         $this->url = $configure['urlwebsite'];
-        $this->cdashpro = false;
-        if (isset($configure['cdashpro']) && $configure['cdashpro'] == '1') {
-            $this->cdashpro = true;
-        }
-
-        global $db;
-        $this->db = new database($db['type']);
-        $this->db->setDb($db['name']);
-        $this->db->setHost($db['host']);
-        $this->db->setPort($db['port']);
-        $this->db->setUser($db['login']);
-        $this->db->setPassword($db['pwd']);
-        $this->db->setConnection($db['connection']);
 
         $config = Config::getInstance();
-        $this->logfilename = $config->get('CDASH_LOG_FILE');
-        $this->configfilename = "{$config->get('CDASH_ROOT_DIR')}/config/config.local.php";
-
+        $this->configfilename = "{$config->get('CDASH_ROOT_DIR')}/../../.env";
         $this->config = $config;
 
         // Create the application on construct so that we have access to app() (container)
         $this->app = $this->createApplication();
+        $this->logfilename = Log::getLogger()->getHandlers()[0]->getUrl();
+
+        $db_type = config('database.default');
+        $db_config = config("database.connections.{$db_type}");
+        $this->db = new database($db_type);
+        $this->db->setDb($db_config['database']);
+        $this->db->setHost($db_config['host']);
+        $this->db->setUser($db_config['username']);
+        $this->db->setPassword($db_config['password']);
     }
 
     public function createBrowser()
@@ -99,7 +95,14 @@ class KWWebTestCase extends WebTestCase
 
     public function setUp()
     {
+        $this->removeParsedFiles();
         $this->startCodeCoverage();
+    }
+
+    public function removeParsedFiles()
+    {
+        $files = Storage::allFiles('parsed');
+        Storage::delete($files);
     }
 
     public function tearDown()
@@ -135,8 +138,7 @@ class KWWebTestCase extends WebTestCase
             $data = xdebug_get_code_coverage();
             xdebug_stop_code_coverage();
             //echo "xdebug_stop_code_coverage called...\n";
-
-            $file = $config->get('CDASH_COVERAGE_DIR') . DIRECTORY_SEPARATOR .
+            $file = config('cdash.coverage_dir') . DIRECTORY_SEPARATOR .
                 md5($_SERVER['SCRIPT_FILENAME']);
             file_put_contents(
                 $file . '.' . md5(uniqid(rand(), true)) . '.' . get_class(),
@@ -173,16 +175,8 @@ class KWWebTestCase extends WebTestCase
     public function deleteLog($filename)
     {
         if (file_exists($filename)) {
-            $config = Config::getInstance();
-
-            if ($config->get('CDASH_TESTING_RENAME_LOGS')) {
-                // Rename to a random name to keep for later inspection:
-                //
-                rename($filename, $config->get('CDASH_LOG_DIRECTORY') . '/cdash.' . microtime(true) . '.' . bin2hex(random_bytes(2)) . '.log');
-            } else {
-                // Delete file:
-                cdash_testsuite_unlink($filename);
-            }
+            // Delete file:
+            cdash_testsuite_unlink($filename);
         }
     }
 
@@ -265,7 +259,7 @@ class KWWebTestCase extends WebTestCase
         $passed = true;
         foreach ($lines as $line) {
             $line = trim($line);
-            if (!isset($expected[$count]) || ($line && !str_contains($line, $expected[$count]))) {
+            if (!isset($expected[$count]) || ($line && !Str::contains($line, $expected[$count]))) {
                 $message = "Unexpected output in logfile:\n"
                     . "Expected: {$expected[$count]}\n"
                     . "   Found: {$line}\n";
@@ -372,7 +366,7 @@ class KWWebTestCase extends WebTestCase
         $user = $this->getUser($this->actingAs['email']);
         \Auth::shouldReceive('check')->andReturn(true);
         \Auth::shouldReceive('user')->andReturn($user);
-        \Auth::shouldReceive('id')->andReturn($user->Id);
+        \Auth::shouldReceive('id')->andReturn($user->id);
     }
 
     public function logout()
@@ -403,19 +397,16 @@ class KWWebTestCase extends WebTestCase
 
     public function getUser($email)
     {
-        $user = new User();
-        $user->Id = $user->GetIdFromEmail($email);
-        $user->Fill();
-        return $user;
+        return User::where('email', $email)->first();
     }
 
     public function createUser(array $fields = [])
     {
         if (isset($fields['password'])) {
-            $fields['password'] = User::PasswordHash($fields['password']);
+            $fields['password'] = password_hash($fields['password'], PASSWORD_DEFAULT);
         }
 
-        $user = factory(\App\User::class)->create($fields);
+        $user = factory(\App\Models\User::class)->create($fields);
         return $user;
     }
 
@@ -559,6 +550,7 @@ class KWWebTestCase extends WebTestCase
                     'TestTimeStd' => 4,
                     'TestTimeStdThreshold' => 1,
                     'UploadQuota' => 1,
+                    'ViewSubProjectsLink' => 1,
                     'WarningsFilter' => '',
                     'ErrorsFilter' => '');
             $submit_button = 'Submit';
@@ -579,8 +571,8 @@ class KWWebTestCase extends WebTestCase
         // Create project.
         try {
             $response = $client->request('POST',
-                    $this->url . '/api/v1/project.php',
-                    ['json' => [$submit_button => true, 'project' => $settings]]);
+                $this->url . '/api/v1/project.php',
+                ['json' => [$submit_button => true, 'project' => $settings]]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
             return false;
@@ -637,8 +629,8 @@ class KWWebTestCase extends WebTestCase
         $project_array = array('Id' => $projectid);
         try {
             $response = $client->delete(
-                    $this->url . '/api/v1/project.php',
-                    ['json' => ['project' => $project_array]]);
+                $this->url . '/api/v1/project.php',
+                ['json' => ['project' => $project_array]]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
             return false;
@@ -666,12 +658,12 @@ class KWWebTestCase extends WebTestCase
                 ->getAttribute('value');
 
             $response = $client->request('POST',
-                    $this->url . '/login',
-                    ['form_params' => [
-                        '_token' => "{$token}",
-                    'email' => $username,
-                    'password' => $password,
-                    'sent' => 'Login >>']]);
+                $this->url . '/login',
+                ['form_params' => [
+                    '_token' => "{$token}",
+                'email' => $username,
+                'password' => $password,
+                'sent' => 'Login >>']]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
             return false;

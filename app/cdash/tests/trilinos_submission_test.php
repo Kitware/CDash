@@ -36,6 +36,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 return false;
             }
 
+            echo "Submit $fullname\n";
             if (preg_match('/TrilinosDriver/', $filename)) {
                 $project = 'TrilinosDriver';
             } elseif (preg_match('/Trilinos/', $filename)) {
@@ -45,7 +46,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 return false;
             }
 
-            if (!$this->putCtestFile($fullname, ['project' => $project])) {
+            if (!$this->submission($project, $fullname)) {
                 $this->fail("Submission of file [$fullname] for project [$project] failed");
                 return false;
             }

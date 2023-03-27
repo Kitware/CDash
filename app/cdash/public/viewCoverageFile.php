@@ -50,7 +50,7 @@ if (!isset($projectid) || $projectid == 0) {
     exit();
 }
 
-checkUserPolicy($userid, $projectid);
+checkUserPolicy($projectid);
 
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
 if (pdo_num_rows($project) == 0) {
