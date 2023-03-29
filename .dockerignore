@@ -3,3 +3,34 @@ _build
 node_modules
 vendor
 *.local.*
+
+# List the same things that
+# .gitignore is told to ignore
+
+# storage/logs/.gitignore
+storage/logs/*
+
+# from storage/app/public/.gitignore
+storage/app/public/*
+
+# storage/framework/.gitignore
+storage/framework/config.php
+storage/framework/routes.php
+storage/framework/schedule-*
+storage/framework/compiled.php
+storage/framework/services.json
+storage/framework/events.scanned.php
+storage/framework/routes.scanned.php
+storage/framework/down
+
+# storage/framework/cache/data/.gitignore
+storage/framework/cache/data/*
+# storage/framework/cache/views/.gitignore
+storage/framework/views/*
+
+
+# bootstrap/cache/.gitignore
+bootstrap/cache/*
+
+# database/.gitignore
+database/*.sqlite
