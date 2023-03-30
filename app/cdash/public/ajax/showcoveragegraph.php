@@ -16,25 +16,39 @@
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 
-$buildid = pdo_real_escape_numeric($_GET['buildid']);
+use CDash\Database;
+
+$buildid = $_GET['buildid'];
 if (!isset($buildid) || !is_numeric($buildid)) {
     echo 'Not a valid buildid!';
     return;
 }
+$buildid = intval($buildid);
+
+$db = Database::getInstance();
 
 // Find the project variables
-$build = pdo_query("SELECT name,type,siteid,projectid,starttime FROM build WHERE id='$buildid'");
-$build_array = pdo_fetch_array($build);
+$build = $db->executePreparedSingleRow('SELECT name, type, siteid, projectid, starttime FROM build WHERE id=?', [$buildid]);
 
-$buildtype = $build_array['type'];
-$buildname = $build_array['name'];
-$siteid = $build_array['siteid'];
-$starttime = $build_array['starttime'];
-$projectid = $build_array['projectid'];
+$buildtype = intval($build['type']);
+$buildname = $build['name'];
+$siteid = intval($build['siteid']);
+$starttime = $build['starttime'];
+$projectid = intval($build['projectid']);
 
 // Find the other builds
-$previousbuilds = pdo_query("SELECT id,starttime,endtime,loctested,locuntested FROM build,coveragesummary as cs WHERE cs.buildid=build.id AND siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-                             AND projectid='$projectid' AND starttime<='$starttime' ORDER BY starttime ASC");
+$previousbuilds = $db->executePrepared('
+                      SELECT id, starttime, endtime, loctested, locuntested
+                      FROM build, coveragesummary as cs
+                      WHERE
+                          cs.buildid=build.id
+                          AND siteid=?
+                          AND type=?
+                          AND name=?
+                          AND projectid=?
+                          AND starttime<=?
+                      ORDER BY starttime ASC
+                  ', [$siteid, $buildtype, $buildname, $projectid, $starttime]);
 ?>
 
 
@@ -47,9 +61,9 @@ $previousbuilds = pdo_query("SELECT id,starttime,endtime,loctested,locuntested F
         var buildids = [];
         <?php
         $i = 0;
-while ($build_array = pdo_fetch_array($previousbuilds)) {
+foreach ($previousbuilds as $build_array) {
     $t = strtotime($build_array['starttime']) * 1000; //flot expects milliseconds
-    @$percent = round($build_array['loctested'] / ($build_array['loctested'] + $build_array['locuntested']) * 100, 2); ?>
+    @$percent = round(intval($build_array['loctested']) / (intval($build_array['loctested']) + intval($build_array['locuntested'])) * 100, 2); ?>
         percent_array.push([<?php echo $t; ?>,<?php echo $percent; ?>]);
         loctested_array.push([<?php echo $t; ?>,<?php echo $build_array['loctested']; ?>]);
         locuntested_array.push([<?php echo $t; ?>,<?php echo $build_array['locuntested']; ?>]);

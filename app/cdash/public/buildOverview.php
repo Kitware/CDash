@@ -17,36 +17,34 @@
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 
-@$projectname = $_GET['project'];
-if ($projectname != null) {
-    $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
-}
+use CDash\Database;
 
-if (!isset($projectname) || strlen($projectname) == 0) {
+$projectname = htmlspecialchars($_GET['project'] ?? '');
+
+if (strlen($projectname) === 0) {
     die("Error: project not specified<br>\n");
 }
 
-@$date = $_GET['date'];
-if ($date != null) {
-    $date = htmlspecialchars(pdo_real_escape_string($date));
-}
+$date = htmlspecialchars($_GET['date'] ?? '');
 
 $xml = begin_XML_for_XSLT();
 $xml .= '<title>' . $projectname . ' : Build Overview</title>';
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 
+$db = Database::getInstance();
+
 // Get some information about the specified project
-$project = pdo_query("SELECT id, nightlytime FROM project WHERE name = '$projectname'");
-if (!$project_array = pdo_fetch_array($project)) {
+$project_array = $db->executePreparedSingleRow('SELECT id, nightlytime FROM project WHERE name = ?', [$projectname]);
+if (empty($project_array)) {
     die("Error:  project $projectname not found<br>\n");
 }
 
-$policy = checkUserPolicy($project_array['id']);
+$policy = checkUserPolicy(intval($project_array['id']));
 if ($policy !== true) {
     return $policy;
 }
 
-$projectid = $project_array['id'];
+$projectid = intval($project_array['id']);
 $nightlytime = $project_array['nightlytime'];
 
 // We select the builds
@@ -64,21 +62,15 @@ $xml .= add_XML_value('back', 'index.php?project=' . urlencode($projectname) . '
 $xml .= '</menu>';
 
 // Return the available groups
-@$groupSelection = $_POST['groupSelection'];
-if ($groupSelection != null) {
-    $groupSelection = pdo_real_escape_numeric($groupSelection);
-}
+$groupSelection = $_POST['groupSelection'] ?? 0;
+$groupSelection = intval($groupSelection);
 
-if (!isset($groupSelection)) {
-    $groupSelection = 0;
-}
-
-$buildgroup = pdo_query("SELECT id,name FROM buildgroup WHERE projectid='$projectid'");
-while ($buildgroup_array = pdo_fetch_array($buildgroup)) {
+$buildgroup = $db->executePrepared('SELECT id, name FROM buildgroup WHERE projectid=?', [$projectid]);
+foreach ($buildgroup as $buildgroup_array) {
     $xml .= '<group>';
     $xml .= add_XML_value('id', $buildgroup_array['id']);
     $xml .= add_XML_value('name', $buildgroup_array['name']);
-    if ($groupSelection == $buildgroup_array['id']) {
+    if ($groupSelection === intval($buildgroup_array['id'])) {
         $xml .= add_XML_value('selected', '1');
     }
     $xml .= '</group>';
@@ -92,26 +84,47 @@ $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
 $groupSelectionSQL = '';
+$params = [];
 if ($groupSelection > 0) {
-    $groupSelectionSQL = " AND b2g.groupid='$groupSelection' ";
+    $groupSelectionSQL = " AND b2g.groupid=? ";
+    $params[] = $groupSelection;
 }
 
-$sql = "SELECT s.name,b.name as buildname,be.type,be.sourcefile,be.sourceline,be.text
-                         FROM build AS b,builderror as be,site AS s, build2group as b2g
-                         WHERE b.starttime<'$end_UTCDate' AND b.starttime>'$beginning_UTCDate'
-                         AND b.projectid='$projectid' AND be.buildid=b.id
-                         AND s.id=b.siteid AND b2g.buildid=b.id
-                         " . $groupSelectionSQL . 'ORDER BY be.sourcefile ASC,be.type ASC,be.sourceline ASC';
+$builds = $db->executePrepared("
+              SELECT
+                  s.name,
+                  b.name AS buildname,
+                  be.type,
+                  be.sourcefile,
+                  be.sourceline,
+                  be.text
+              FROM
+                  build AS b,
+                  builderror as be,
+                  site AS s,
+                  build2group AS b2g
+              WHERE
+                  b.starttime<?
+                  AND b.starttime>?
+                  AND b.projectid=?
+                  AND be.buildid=b.id
+                  AND s.id=b.siteid
+                  AND b2g.buildid=b.id
+                  $groupSelectionSQL
+              ORDER BY
+                  be.sourcefile ASC,
+                  be.type ASC,
+                  be.sourceline ASC
+          ", array_merge([$end_UTCDate, $beginning_UTCDate, $projectid], $params));
 
-$builds = pdo_query($sql);
 echo pdo_error();
 
-if (pdo_num_rows($builds) == 0) {
+if (count($builds) === 0) {
     $xml .= '<message>No warnings or errors today!</message>';
 }
 
 $current_file = 'ThisIsMyFirstFile';
-while ($build_array = pdo_fetch_array($builds)) {
+foreach ($builds as $build_array) {
     if ($build_array['sourcefile'] != $current_file) {
         if ($current_file != 'ThisIsMyFirstFile') {
             $xml .= '</sourcefile>';
@@ -121,7 +134,7 @@ while ($build_array = pdo_fetch_array($builds)) {
         $current_file = $build_array['sourcefile'];
     }
 
-    if ($build_array['type'] == 0) {
+    if (intval($build_array['type']) === 0) {
         $xml .= '<error>';
     } else {
         $xml .= '<warning>';
@@ -142,7 +155,7 @@ while ($build_array = pdo_fetch_array($builds)) {
     }
 }
 
-if (pdo_num_rows($builds) > 0) {
+if (count($builds) > 0) {
     $xml .= '</sourcefile>';
 }
 $xml .= '</cdash>';

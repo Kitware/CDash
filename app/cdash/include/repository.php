@@ -21,6 +21,8 @@ use CDash\Model\Build;
 use CDash\Model\BuildUpdateFile;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
+use CDash\Database;
+use Illuminate\Support\Facades\Log;
 
 function get_previous_revision($revision)
 {
@@ -685,11 +687,11 @@ function get_revision_url($projectid, $revision, $priorrevision)
         return;
     }
 
-    $project = pdo_query("SELECT cvsviewertype,cvsurl FROM project WHERE id='$projectid'");
-    $project_array = pdo_fetch_array($project);
-    $projecturl = $project_array['cvsurl'];
+    $db = Database::getInstance();
+    $project = $db->executePreparedSingleRow('SELECT cvsviewertype, cvsurl FROM project WHERE id=?', [intval($projectid)]);
+    $projecturl = $project['cvsurl'];
 
-    $cvsviewertype = strtolower($project_array['cvsviewertype']);
+    $cvsviewertype = strtolower($project['cvsviewertype']);
     $revisionfonction = 'get_' . $cvsviewertype . '_revision_url';
 
     if (function_exists($revisionfonction)) {
@@ -739,7 +741,7 @@ function post_pull_request_comment($projectid, $pull_request, $comment, $cdash_u
 
     if (!config('cdash.notify_pull_request') || !config('cdash.use_vcs_api')) {
         if (config('app.debug')) {
-            \Log::info('pull request commenting is disabled');
+            Log::info('pull request commenting is disabled');
         }
         return;
     }
@@ -855,7 +857,7 @@ function generate_bugtracker_new_issue_link($build, $project)
 
     // Use our email functions to generate a message body and title for this build.
     require_once('include/sendemail.php');
-    $errors = check_email_errors($build->Id, false, 0, true);
+    $errors = check_email_errors(intval($build->Id), false, 0, true);
     $emailtext = [];
     foreach ($errors as $errorkey => $nerrors) {
         if ($nerrors < 1) {
@@ -863,7 +865,7 @@ function generate_bugtracker_new_issue_link($build, $project)
         }
         $emailtext['nerror'] = 1;
         $emailtext['summary'][$errorkey] =
-            get_email_summary($build->Id, $errors, $errorkey, 1, 500, 0, false);
+            get_email_summary(intval($build->Id), $errors, $errorkey, 1, 500, 0, false);
         $emailtext['category'][$errorkey] = $nerrors;
     }
     if (empty($emailtext)) {

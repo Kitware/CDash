@@ -40,7 +40,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
     private $EndTimeStamp;
     private $Checker;
 
-    private $DynamicAnalysis;
+    private DynamicAnalysis $DynamicAnalysis;
     private $DynamicAnalysisDefect;
     private $DynamicAnalysisSummaries;
     private $Label;
@@ -295,6 +295,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
             $build->UpdateBuild($build->Id, -1, -1);
 
             // Remove any previous analysis.
+            /** @var DynamicAnalysis $DA */
             $DA = $factory->create(DynamicAnalysis::class);
             $DA->BuildId = $build->Id;
             $DA->RemoveAll();

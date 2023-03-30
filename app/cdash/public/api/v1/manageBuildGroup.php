@@ -21,6 +21,7 @@ require_once 'include/common.php';
 
 use App\Services\PageTimer;
 use CDash\Database;
+use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Model\UserProject;
@@ -45,16 +46,16 @@ $response['menusubtitle'] = 'Build Groups';
 $response['hidenav'] = 1;
 
 @$projectid = $_GET['projectid'];
-if ($projectid != null) {
-    $projectid = pdo_real_escape_numeric($projectid);
+if (isset($projectid)) {
+    $projectid = intval($projectid);
 }
+$db = Database::getInstance();
 
 // If the projectid is not set and there is only one project we go directly to the page
 if (!isset($projectid)) {
-    $project = pdo_query('SELECT id FROM project');
-    if (pdo_num_rows($project) == 1) {
-        $project_array = pdo_fetch_array($project);
-        $projectid = $project_array['id'];
+    $project_array = $db->executePreparedSingleRow('SELECT id FROM project');
+    if (!empty($project)) {
+        $projectid = intval($project_array['id']);
     }
 }
 
@@ -75,13 +76,15 @@ if (!$user->IsAdmin() && $user2project->Role <= 1) {
 
 // List the available projects that this user has admin rights to.
 $sql = 'SELECT id,name FROM project';
+$params = [];
 if (!$user->IsAdmin()) {
-    $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
+    $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)";
+    $params[] = intval($userid);
 }
-$projects = pdo_query($sql);
-$availableprojects = array();
-while ($project_array = pdo_fetch_array($projects)) {
-    $availableproject = array();
+$projects = $db->executePrepared($sql, $params);
+$availableprojects = [];
+foreach ($projects as $project_array) {
+    $availableproject =[];
     $availableproject['id'] = $project_array['id'];
     $availableproject['name'] = $project_array['name'];
     if ($project_array['id'] == $projectid) {
@@ -91,7 +94,7 @@ while ($project_array = pdo_fetch_array($projects)) {
 }
 $response['availableprojects'] = $availableprojects;
 
-if ($projectid < 1) {
+if (intval($projectid) < 1) {
     $pageTimer->end($response);
     echo json_encode($response);
     return;
@@ -101,8 +104,7 @@ if ($projectid < 1) {
 $currentUTCTime = gmdate(FMT_DATETIME);
 $beginUTCTime = gmdate(FMT_DATETIME, time() - 3600 * 7 * 24); // 7 days
 
-$pdo = Database::getInstance();
-$stmt = $pdo->prepare(
+$stmt = $db->prepare(
     'SELECT DISTINCT b.siteid, s.name
     FROM build b
     JOIN site s ON (b.siteid=s.id)
@@ -112,7 +114,7 @@ $stmt = $pdo->prepare(
 $stmt->bindParam(':projectid', $projectid);
 $stmt->bindParam(':start', $beginUTCTime);
 $stmt->bindParam(':end', $currentUTCTime);
-if (!$pdo->execute($stmt)) {
+if (!$db->execute($stmt)) {
     $response['error'] = 'Database error during site lookup';
 }
 
@@ -132,6 +134,7 @@ $Project->Id = $projectid;
 $buildgroups = $Project->GetBuildGroups();
 $buildgroups_response = array();
 $dynamics_response = array();
+/** @var BuildGroup $buildgroup */
 foreach ($buildgroups as $buildgroup) {
     $buildgroup_response = array();
 
@@ -218,19 +221,29 @@ $response['dynamics'] = $dynamics_response;
 get_dashboard_JSON($Project->GetName(), null, $response);
 
 // Generate response for any wildcard groups.
-$wildcards = pdo_query("
-  SELECT bg.name, bg.id, b2gr.buildtype, b2gr.buildname
-  FROM build2grouprule AS b2gr, buildgroup AS bg
-  WHERE b2gr.buildname LIKE '\%%\%' AND b2gr.groupid = bg.id AND
-        bg.type = 'Daily' AND bg.projectid='$projectid' AND
-        b2gr.endtime = '1980-01-01 00:00:00'");
+$wildcards = $db->executePrepared("
+                 SELECT
+                     bg.name,
+                     bg.id,
+                     b2gr.buildtype,
+                     b2gr.buildname
+                 FROM
+                     build2grouprule AS b2gr,
+                     buildgroup AS bg
+                 WHERE
+                     b2gr.buildname LIKE '\%%\%'
+                     AND b2gr.groupid = bg.id
+                     AND bg.type = 'Daily'
+                     AND bg.projectid=?
+                     AND b2gr.endtime = '1980-01-01 00:00:00'
+             ", [intval($projectid)]);
 $err = pdo_error();
 if (!empty($err)) {
     $response['error'] = $err;
 }
 
 $wildcards_response = array();
-while ($wildcard_array = pdo_fetch_array($wildcards)) {
+foreach ($wildcards as $wildcard_array) {
     $wildcard_response = array();
     $wildcard_response['buildgroupname'] = $wildcard_array['name'];
     $wildcard_response['buildgroupid'] = $wildcard_array['id'];

@@ -19,6 +19,7 @@ include_once 'include/common.php';
 require_once 'include/filterdataFunctions.php';
 
 use App\Models\User;
+use CDash\Database;
 use CDash\Model\CoverageFile2User;
 
 @set_time_limit(0);
@@ -28,18 +29,20 @@ if (!isset($buildid) || !is_numeric($buildid)) {
     echo 'Not a valid buildid!';
     return;
 }
+$buildid = intval($buildid);
 
 $userid = 0;
 if (isset($_GET['userid']) && is_numeric($_GET['userid'])) {
-    $userid = pdo_real_escape_numeric($_GET['userid']);
+    $userid = intval($_GET['userid']);
 }
 
-// Find the project variables
-$build = pdo_query("SELECT name,type,siteid,projectid,starttime FROM build WHERE id='$buildid'");
-$build_array = pdo_fetch_array($build);
-$projectid = $build_array['projectid'];
+$db = Database::getInstance();
 
-if (!isset($projectid) || $projectid == 0 || !is_numeric($projectid)) {
+// Find the project variables
+$build = $db->executePreparedSingleRow('SELECT projectid FROM build WHERE id=?', [$buildid]);
+$projectid = intval($build['projectid']);
+
+if ($projectid === 0) {
     echo "This project doesn't exist. Maybe it has been deleted.";
     exit();
 }
@@ -49,24 +52,26 @@ if ($policy !== true) {
     return $policy;
 }
 
-$project = pdo_query("SELECT name,coveragethreshold,nightlytime,showcoveragecode FROM project WHERE id='$projectid'");
-if (pdo_num_rows($project) == 0) {
+$project = $db->executePreparedSingleRow('SELECT name, showcoveragecode FROM project WHERE id=?', [$projectid]);
+if (empty($project)) {
     echo "This project doesn't exist.";
     exit();
 }
 
 $role = 0;
-$user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-if (pdo_num_rows($user2project) > 0) {
-    $user2project_array = pdo_fetch_array($user2project);
-    $role = $user2project_array['role'];
+$user2project = $db->executePreparedSingleRow('
+                    SELECT role
+                    FROM user2project
+                    WHERE userid=? AND projectid=?
+                ', [$userid, $projectid]);
+if (!empty($user2project)) {
+    $role = $user2project['role'];
 }
 
-$project_array = pdo_fetch_array($project);
-$projectname = $project_array['name'];
+$projectname = $project['name'];
 
 $projectshowcoveragecode = 1;
-if (!$project_array['showcoveragecode'] && $role < 2) {
+if (!$project['showcoveragecode'] && $role < 2) {
     $projectshowcoveragecode = 0;
 }
 
@@ -82,22 +87,24 @@ if (isset($_GET['iDisplayStart']) && $_GET['iDisplayLength'] != '-1') {
 //add columns for branches only if(total_branchsuntested+total_branchstested)>0
 $total_branchsuntested = 0;
 $total_branchstested = 0;
-$sql_branches = "SELECT " .
-    "sum(branchstested) as total_branchstested, sum(branchsuntested) as total_branchsuntested " .
-    "FROM coverage where buildid = '$buildid' " .
-    "group by buildid";
-$coverage_branches = pdo_query($sql_branches);
-if (pdo_num_rows($coverage_branches) > 0) {
-    $coverage_branches_array = pdo_fetch_array($coverage_branches);
-    $total_branchsuntested = $coverage_branches_array['total_branchsuntested'];
-    $total_branchstested = $coverage_branches_array['total_branchstested'];
+$coverage_branches = $db->executePreparedSingleRow('
+                         SELECT
+                             sum(branchstested) AS total_branchstested,
+                             sum(branchsuntested) AS total_branchsuntested
+                         FROM coverage
+                         WHERE buildid = ?
+                         GROUP BY buildid
+                     ', [$buildid]);
+if (!empty($coverage_branches)) {
+    $total_branchsuntested = intval($coverage_branches['total_branchsuntested']);
+    $total_branchstested = intval($coverage_branches['total_branchstested']);
 }
 
 /* Sorting */
 $sortby = 'filename';
 if (isset($_GET['iSortCol_0'])) {
     if (($total_branchsuntested + $total_branchstested) > 0) {
-        switch ($_GET['iSortCol_0']) {
+        switch (intval($_GET['iSortCol_0'])) {
             case 0:
                 $sortby = 'filename';
                 break;
@@ -121,7 +128,7 @@ if (isset($_GET['iSortCol_0'])) {
                 break;
         }
     } else {
-        switch ($_GET['iSortCol_0']) {
+        switch (intval($_GET['iSortCol_0'])) {
             case 0:
                 $sortby = 'filename';
                 break;
@@ -360,7 +367,7 @@ if (isset($_GET['dir']) && $_GET['dir'] != '') {
 }
 
 // Coverage files
-$sql = 'SELECT cf.fullpath,c.fileid,' .
+$coveragefile = $db->executePrepared('SELECT cf.fullpath,c.fileid,' .
     'c.locuntested,c.loctested,' .
     'c.branchstested,c.branchsuntested,' .
     'c.functionstested,c.functionsuntested,' .
@@ -370,8 +377,7 @@ $sql = 'SELECT cf.fullpath,c.fileid,' .
     'LEFT JOIN coveragefilepriority AS cfp ON ' .
     '(cfp.fullpath=cf.fullpath AND projectid=' . qnum($projectid) . ') ' .
     "WHERE c.buildid='$buildid' AND cf.id=c.fileid AND c.covered=1 " .
-    $filter_sql . ' ' . $SQLsearchTerm . $limit_sql;
-$coveragefile = pdo_query($sql);
+    $filter_sql . ' ' . $SQLsearchTerm . $limit_sql, []);
 if (false === $coveragefile) {
     add_log('error: pdo_query failed: ' . pdo_error(),
         __FILE__, LOG_ERR);
@@ -384,7 +390,7 @@ if (isset($_GET['status'])) {
 }
 
 $covfile_array = array();
-while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
+foreach ($coveragefile as $coveragefile_array) {
     $covfile['filename'] = substr($coveragefile_array['fullpath'], strrpos($coveragefile_array['fullpath'], '/') + 1);
     $fullpath = $coveragefile_array['fullpath'];
     // Remove the ./ so that it's cleaner
@@ -521,16 +527,31 @@ if ($status == -1) {
 } elseif ($status == 0) {
     // Add the untested files if the coverage is low
 
-    $sql = 'SELECT cf.fullpath,cfp.priority' . $SQLDisplayAuthor . ' FROM coverage AS c,coveragefile AS cf ' . $SQLDisplayAuthors . '
-              LEFT JOIN coveragefilepriority AS cfp ON (cfp.fullpath=cf.fullpath AND projectid=' . qnum($projectid) . ")
-              WHERE c.buildid='$buildid' AND cf.id=c.fileid AND c.covered=0 " .
-        $SQLsearchTerm;
-    $coveragefile = pdo_query($sql);
+    $coveragefile = $db->executePrepared("
+                        SELECT
+                            cf.fullpath,
+                            cfp.priority
+                            $SQLDisplayAuthor
+                        FROM
+                            coverage AS c,
+                            coveragefile AS cf
+                            $SQLDisplayAuthors
+                        LEFT JOIN coveragefilepriority AS cfp ON (
+                            cfp.fullpath=cf.fullpath
+                            AND projectid=?
+                        )
+                        WHERE
+                            c.buildid=?
+                            AND cf.id=c.fileid
+                            AND c.covered=0
+                            $SQLsearchTerm
+                    ", [$projectid, $buildid]);
+
     if (false === $coveragefile) {
-        add_log('error: pdo_query 2 failed: ' . pdo_error(),
+        add_log(pdo_error(),
             __FILE__, LOG_ERR);
     }
-    while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
+    foreach ($coveragefile as $coveragefile_array) {
         $covfile['filename'] = substr($coveragefile_array['fullpath'], strrpos($coveragefile_array['fullpath'], '/') + 1);
         $covfile['fullpath'] = $coveragefile_array['fullpath'];
         $covfile['fileid'] = 0;
@@ -968,12 +989,18 @@ foreach ($covfile_array as $covfile) {
     if (isset($_GET['displaylabels']) && $_GET['displaylabels'] == 1) {
         $fileid = $covfile['fileid'];
         $labels = '';
-        $coveragelabels = pdo_query('SELECT text FROM label, label2coveragefile WHERE ' .
-            'label.id=label2coveragefile.labelid AND ' .
-            "label2coveragefile.coveragefileid='$fileid' AND " .
-            "label2coveragefile.buildid='$buildid' " .
-            'ORDER BY text ASC');
-        while ($coveragelabels_array = pdo_fetch_array($coveragelabels)) {
+        $coveragelabels = $db->executePrepared('
+                              SELECT text
+                              FROM
+                                  label,
+                                  label2coveragefile
+                              WHERE
+                                  label.id=label2coveragefile.labelid
+                                  AND label2coveragefile.coveragefileid=?
+                                  AND label2coveragefile.buildid=?
+                              ORDER BY text ASC
+                          ', [intval($fileid), $buildid]);
+        foreach ($coveragelabels as $coveragelabels_array) {
             if ($labels != '') {
                 $labels .= ', ';
             }

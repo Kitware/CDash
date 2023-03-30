@@ -50,25 +50,24 @@ class Image
     /** Check if exists */
     public function Exists()
     {
+        $db = Database::getInstance();
         // If no id specify return false
         if ($this->Id) {
-            $query = pdo_query("SELECT count(*) AS c FROM image WHERE id='" . $this->Id . "'");
-            $query_array = pdo_fetch_array($query);
+            ;
+            $query_array = $db->executePreparedSingleRow('SELECT count(*) AS c FROM image WHERE id=?', [$this->Id]);
             if ($query_array['c'] == 0) {
                 return false;
             }
             return true;
         } else {
             // Check if the checksum exists
-            $query = pdo_query("SELECT id FROM image WHERE checksum='" . $this->Checksum . "'");
-            if (pdo_num_rows($query) > 0) {
-                $query_array = pdo_fetch_array($query);
+            $query_array = $db->executePreparedSingleRow('SELECT id FROM image WHERE checksum=?', [$this->Checksum]);
+            if (!empty($query_array)) {
                 $this->Id = $query_array['id'];
                 return true;
             }
             return false;
         }
-        return true;
     }
 
     /** Save the image */

@@ -19,6 +19,7 @@ require_once 'include/common.php';
 
 use CDash\Model\Project;
 use CDash\Model\SubProject;
+use CDash\Database;
 
 @$projectname = $_GET['project'];
 if ($projectname != null) {
@@ -37,16 +38,16 @@ if ($projectid == 0) {
     return;
 }
 
-$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-if (pdo_num_rows($project) > 0) {
-    $project_array = pdo_fetch_array($project);
-    $svnurl = make_cdash_url(htmlentities($project_array['cvsurl']));
-    $homeurl = make_cdash_url(htmlentities($project_array['homeurl']));
-    $bugurl = make_cdash_url(htmlentities($project_array['bugtrackerurl']));
-    $googletracker = htmlentities($project_array['googletracker']);
-    $docurl = make_cdash_url(htmlentities($project_array['documentationurl']));
-    $projectpublic = $project_array['public'];
-    $projectname = $project_array['name'];
+$db = Database::getInstance();
+$project = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [intval($projectid)]);
+if (!empty($project)) {
+    $svnurl = make_cdash_url(htmlentities($project['cvsurl']));
+    $homeurl = make_cdash_url(htmlentities($project['homeurl']));
+    $bugurl = make_cdash_url(htmlentities($project['bugtrackerurl']));
+    $googletracker = htmlentities($project['googletracker']);
+    $docurl = make_cdash_url(htmlentities($project['documentationurl']));
+    $projectpublic = $project['public'];
+    $projectname = $project['name'];
 } else {
     $projectname = 'NA';
 }

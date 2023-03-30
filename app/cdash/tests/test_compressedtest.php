@@ -67,14 +67,14 @@ class CompressedTestCase extends KWWebTestCase
 
         $expected = 'http://public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample/compare/0758f1dbf75d1f0a1759b5f2d0aa00b3aba0d8c4...23a41258921e1cba8581ee2fa5add00f817f39fe';
         $found = $response['update']['revisionurl'];
-        if (strpos($found, $expected) === false) {
+        if (!str_contains($found, $expected)) {
             $this->fail("expected $expected but found $found for revisionurl");
             return;
         }
 
         $expected = 'http://public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample/commit/0758f1dbf75d1f0a1759b5f2d0aa00b3aba0d8c4';
         $found = $response['update']['revisiondiff'];
-        if (strpos($found, $expected) === false) {
+        if (!str_contains($found, $expected)) {
             $this->fail("expected $expected but found $found for revisiondiff");
             return;
         }
@@ -88,7 +88,7 @@ class CompressedTestCase extends KWWebTestCase
             foreach ($directory['files'] as $file) {
                 if ($file['filename'] == 'bar.txt') {
                     if ($file['author'] == 'jjomier') {
-                        if (strpos($file['log'], 'r883 jjomier') !== false) {
+                        if (str_contains($file['log'], 'r883 jjomier')) {
                             $robot_verified = true;
                         } else {
                             $this->fail("Expected r883 jjomier but found " . $file['log']);

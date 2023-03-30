@@ -14,8 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use Illuminate\Support\Facades\Auth;
+
 use App\Http\Controllers\Auth\LoginController;
-use App\Models\User;
 use App\Services\ProjectPermissions;
 use App\Services\TestingDay;
 
@@ -88,7 +89,9 @@ function xslt_free($xsltproc)
 }
 
 
-/** Do the XSLT translation **/
+/**
+ * Do the XSLT translation
+ */
 function generate_XSLT($xml, $pageName)
 {
     $config = Config::getInstance();
@@ -116,8 +119,10 @@ function generate_XSLT($xml, $pageName)
     xslt_free($xh);
 }
 
-/** used to escape special XML characters */
-function XMLStrFormat($str)
+/**
+ * used to escape special XML characters
+ */
+function XMLStrFormat(string $str): string
 {
     if (mb_detect_encoding($str, 'UTF-8', true) === false) {
         $str = utf8_encode($str);
@@ -136,7 +141,7 @@ function XMLStrFormat($str)
     return $str;
 }
 
-function time_difference($duration, $compact = false, $suffix = '', $displayms = false)
+function time_difference($duration, bool $compact = false, string $suffix = '', bool $displayms = false): string
 {
     $duration = is_numeric($duration) ? $duration : 0;
 
@@ -253,7 +258,8 @@ function time_difference($duration, $compact = false, $suffix = '', $displayms =
     return rtrim($diff);
 }
 
-/* Return the number of seconds represented by the specified time interval
+/**
+ * Return the number of seconds represented by the specified time interval
  * This function is the inverse of time_difference().
  */
 function get_seconds_from_interval($input)
@@ -293,14 +299,18 @@ function xml_replace_callback($matches)
     return '&#' . $decimal_value . ';';
 }
 
-/** Add an XML tag to a string */
+/**
+ * Add an XML tag to a string
+ */
 function add_XML_value($tag, $value)
 {
     $value = preg_replace_callback('/[\x1b]/', 'xml_replace_callback', $value);
     return '<' . $tag . '>' . XMLStrFormat($value) . '</' . $tag . '>';
 }
 
-/** Report last my SQL error */
+/**
+ * Report last my SQL error
+ */
 function add_last_sql_error($functionname, $projectid = 0, $buildid = 0, $resourcetype = 0, $resourceid = 0)
 {
     $pdo_error = pdo_error();
@@ -311,7 +321,9 @@ function add_last_sql_error($functionname, $projectid = 0, $buildid = 0, $resour
     }
 }
 
-/** Set the CDash version number in the database */
+/**
+ * Set the CDash version number in the database
+ */
 function setVersion()
 {
     $config = Config::getInstance();
@@ -334,7 +346,9 @@ function setVersion()
     $db->execute($stmt, $version);
 }
 
-/** Return true if the user is allowed to see the page */
+/**
+ * Return true if the user is allowed to see the page
+ */
 function checkUserPolicy($projectid, $onlyreturn = 0)
 {
     if (!is_numeric($projectid)) {
@@ -344,7 +358,7 @@ function checkUserPolicy($projectid, $onlyreturn = 0)
     // If the projectid is 0 only admin can access the page.
     if ($projectid == 0) {
         if (Auth::check()) {
-            $user = \Auth::user();
+            $user = Auth::user();
             if ($user->IsAdmin()) {
                 return true;
             }
@@ -370,69 +384,68 @@ function checkUserPolicy($projectid, $onlyreturn = 0)
     return response('You cannot access this project');
 }
 
-/** Get the build id from stamp, name and buildname */
-function get_build_id($buildname, $stamp, $projectid, $sitename)
+/**
+ * Get the build id from stamp, name and buildname
+ */
+function get_build_id($buildname, $stamp, $projectid, $sitename): int
 {
     if (!is_numeric($projectid)) {
-        return;
+        throw new InvalidArgumentException('Invalid Project ID');
     }
 
-    $buildname = pdo_real_escape_string($buildname);
-    $stamp = pdo_real_escape_string($stamp);
-
-    $sql = "SELECT build.id AS id FROM build,site WHERE build.name='$buildname' AND build.stamp='$stamp'";
-    $sql .= " AND build.projectid='$projectid'";
-    $sql .= " AND build.siteid=site.id AND site.name='$sitename'";
-    $sql .= ' ORDER BY build.id DESC';
-
-    $build = pdo_query($sql);
-    if (pdo_num_rows($build) > 0) {
-        $build_array = pdo_fetch_array($build);
-        return $build_array['id'];
+    $db = Database::getInstance();
+    $build = $db->executePreparedSingleRow('
+                 SELECT build.id AS id
+                 FROM build, site
+                 WHERE
+                     build.name=?
+                     AND build.stamp=?
+                     AND build.projectid=?
+                     AND build.siteid=site.id
+                     AND site.name=?
+                 ORDER BY build.id DESC
+             ', [$buildname, $stamp, intval($projectid), $sitename]);
+    if (!empty($build)) {
+        return intval($build['id']);
     }
     return -1;
 }
 
-/** Get the project id from the project name */
-function get_project_id($projectname)
+/**
+ * Get the project id from the project name
+ */
+function get_project_id($projectname): int
 {
     $service = ServiceContainer::getInstance();
     $project = $service->get(Project::class);
     $project->Name = $projectname;
     if ($project->GetIdByName()) {
-        return $project->Id;
+        return intval($project->Id);
     }
     return -1;
 }
 
-/** Get the project name from the project id */
-function get_project_name($projectid)
+/**
+ * Get the project name from the project id
+ */
+function get_project_name($projectid): string
 {
     if (!isset($projectid) || !is_numeric($projectid)) {
-        echo 'Not a valid projectid!';
-        return;
+        throw new InvalidArgumentException('Invalid Project ID');
     }
 
-    $project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
-    if (pdo_num_rows($project) > 0) {
-        $project_array = pdo_fetch_array($project);
-        return $project_array['name'];
+    $db = Database::getInstance();
+    $project = $db->executePreparedSingleRow('SELECT name FROM project WHERE id=?', [intval($projectid)]);
+    if (!empty($project)) {
+        return $project['name'];
     }
     return 'NA';
 }
 
-/** strip slashes from the post if magic quotes are on */
-function stripslashes_if_gpc_magic_quotes($string)
-{
-    if (get_magic_quotes_gpc()) {
-        return stripslashes($string);
-    } else {
-        return $string;
-    }
-}
-
-/** Get the current URI of the dashboard */
-function get_server_URI($localhost = false)
+/**
+ * Get the current URI of the dashboard
+ */
+function get_server_URI($localhost = false): string
 {
     // If we should consider the localhost.
     // This is used for submission but not emails, etc...
@@ -444,8 +457,10 @@ function get_server_URI($localhost = false)
     return $config->getBaseUrl($localhost);
 }
 
-/** add a user to a site */
-function add_site2user($siteid, $userid)
+/**
+ * add a user to a site
+ */
+function add_site2user($siteid, $userid): void
 {
     if (!is_numeric($siteid)) {
         return;
@@ -454,21 +469,27 @@ function add_site2user($siteid, $userid)
         return;
     }
 
-    $site2user = pdo_query("SELECT * FROM site2user WHERE siteid='$siteid' AND userid='$userid'");
-    if (pdo_num_rows($site2user) == 0) {
-        pdo_query("INSERT INTO site2user (siteid,userid) VALUES ('$siteid','$userid')");
+    $db = Database::getInstance();
+    $site2user = $db->executePrepared('SELECT * FROM site2user WHERE siteid=? AND userid=?', [intval($siteid), intval($userid)]);
+    if (!empty($site2user)) {
+        $db->executePrepared('INSERT INTO site2user (siteid, userid) VALUES (?, ?)', [$siteid, $userid]);
         add_last_sql_error('add_site2user');
     }
 }
 
-/** remove a user to a site */
+/**
+ * remove a user from a site
+ */
 function remove_site2user($siteid, $userid)
 {
-    pdo_query("DELETE FROM site2user WHERE siteid='$siteid' AND userid='$userid'");
+    $db = Database::getInstance();
+    $db->executePrepared('DELETE FROM site2user WHERE siteid=? AND userid=?', [intval($siteid), intval($userid)]);
     add_last_sql_error('remove_site2user');
 }
 
-/** Update a site */
+/**
+ * Update a site
+ */
 function update_site($siteid, $name,
                      $processoris64bits,
                      $processorvendor,
@@ -492,6 +513,9 @@ function update_site($siteid, $name,
         return;
     }
 
+    $db = Database::getInstance();
+
+    // TODO: (williamjallen) Refactor this to eliminate the messy usage of the $$ operator below
     $latitude = pdo_real_escape_string($latitude);
     $longitude = pdo_real_escape_string($longitude);
     $outoforder = pdo_real_escape_string($outoforder);
@@ -512,7 +536,11 @@ function update_site($siteid, $name,
     $description = pdo_real_escape_string($description);
 
     // Update the basic information first
-    pdo_query("UPDATE site SET name='$name',ip='$ip',latitude='$latitude',longitude='$longitude',outoforder='$outoforder' WHERE id='$siteid'");
+    $db->executePrepared('
+        UPDATE site
+        SET name=?, ip=? latitude=?, longitude=?, outoforder=?
+        WHERE id=?
+    ', [$name, $ip, $latitude, $longitude, $outoforder, $siteid]);
 
     add_last_sql_error('update_site');
 
@@ -545,10 +573,15 @@ function update_site($siteid, $name,
     }
 
     // Check if we have valuable information and the siteinformation doesn't exist
-    $hasvalidinfo = false;
     $newrevision2 = false;
-    $query = pdo_query("SELECT * from siteinformation WHERE siteid='$siteid' ORDER BY timestamp DESC LIMIT 1");
-    if (pdo_num_rows($query) == 0) {
+    $query = $db->executePreparedSingleRow('
+                 SELECT *
+                 FROM siteinformation
+                 WHERE siteid=?
+                 ORDER BY timestamp DESC
+                 LIMIT 1
+             ', [$siteid]);
+    if (empty($query)) {
         $noinformation = 1;
         foreach ($names as $name) {
             if ($$name != 'NA' && strlen($$name) > 0) {
@@ -562,14 +595,13 @@ function update_site($siteid, $name,
             return; // we have nothing to add
         }
     } else {
-        $query_array = pdo_fetch_array($query);
         // Check if the information are different from what we have in the database, then that means
         // the system has been upgraded and we need to create a new revision
         foreach ($names as $name) {
-            if ($$name != 'NA' && $query_array[$name] != $$name && strlen($$name) > 0) {
+            if ($$name != 'NA' && $query[$name] != $$name && strlen($$name) > 0) {
                 // Take care of rounding issues
                 if (is_numeric($$name)) {
-                    if (round($$name) != $query_array[$name]) {
+                    if (round($$name) != $query[$name]) {
                         $newrevision2 = true;
                         break;
                     }
@@ -586,41 +618,48 @@ function update_site($siteid, $name,
         $sql = 'INSERT INTO siteinformation(siteid,timestamp';
         foreach ($names as $name) {
             if ($$name != 'NA' && strlen($$name) > 0) {
-                $sql .= " ,$name";
+                $sql .= ", $name";
             }
         }
 
-        $sql .= ") VALUES($siteid,'$now'";
+        $prepared_values = [$siteid, $now];
+        $sql .= ') VALUES(?, ?';
         foreach ($names as $name) {
             if ($$name != 'NA' && strlen($$name) > 0) {
-                $sql .= ",'" . $$name . "'";
+                $sql .= ', ?';
+                $prepared_values[] = $$name;
             }
         }
         $sql .= ')';
-        pdo_query($sql);
+        $db->executePrepared($sql, $prepared_values);
         add_last_sql_error('update_site', $sql);
     } else {
         $sql = 'UPDATE siteinformation SET ';
+        $prepared_values = [];
         $i = 0;
         foreach ($names as $name) {
             if ($$name != 'NA' && strlen($$name) > 0) {
                 if ($i > 0) {
-                    $sql .= ' ,';
+                    $sql .= ',';
                 }
-                $sql .= " $name='" . $$name . "'";
+                $sql .= " $name=?";
+                $prepared_values[] = $$name;
                 $i++;
             }
         }
 
-        $timestamp = $query_array['timestamp'];
-        $sql .= " WHERE siteid='$siteid' AND timestamp='$timestamp'";
+        $sql .= " WHERE siteid=? AND timestamp=?";
+        $prepared_values[] = $siteid;
+        $prepared_values[] = $query['timestamp'];
 
-        pdo_query($sql);
+        $db->executePrepared($sql, $prepared_values);
         add_last_sql_error('update_site', $sql);
     }
 }
 
-/** Get the geolocation from IP address */
+/**
+ * Get the geolocation from IP address
+ */
 function get_geolocation($ip)
 {
     $location = array();
@@ -678,8 +717,6 @@ function get_geolocation($ip)
 
         foreach ($config->get('CDASH_DEFAULT_IP_LOCATIONS') as $defaultlocation) {
             $defaultip = $defaultlocation['IP'];
-            $defaultlatitude = $defaultlocation['latitude'];
-            $defaultlongitude = $defaultlocation['longitude'];
             if (preg_match('#^' . strtr(preg_quote($defaultip, '#'), array('\*' => '.*', '\?' => '.')) . '$#i', $ip)) {
                 $location['latitude'] = $defaultlocation['latitude'];
                 $location['longitude'] = $defaultlocation['longitude'];
@@ -689,212 +726,244 @@ function get_geolocation($ip)
     return $location;
 }
 
-/* remove all builds for a project */
-function remove_project_builds($projectid)
+/**
+ * remove all builds for a project
+ */
+function remove_project_builds($projectid): void
 {
     if (!is_numeric($projectid)) {
         return;
     }
 
-    $build = pdo_query("SELECT id FROM build WHERE projectid='$projectid'");
+    $db = Database::getInstance();
+    $build = $db->executePrepared('SELECT id FROM build WHERE projectid=?', [intval($projectid)]);
+
     $buildids = array();
-    while ($build_array = pdo_fetch_array($build)) {
+    foreach ($build as $build_array) {
         $buildids[] = $build_array['id'];
     }
     remove_build_chunked($buildids);
 }
 
-/** Remove all related inserts for a given build */
+/**
+ * Remove all related inserts for a given build or any build in an array of builds
+ */
 function remove_build($buildid)
 {
-    if (empty($buildid)) {
-        return;
+    // TODO: (williamjallen) much of this work could be done on the DB site automatically by setting up
+    //       proper foreign-key relationships between between entities, and using the DB's cascade functionality.
+    //       For complex cascades, custom SQL functions can be written.
+
+    if (!is_array($buildid)) {
+        $buildid = [$buildid];
     }
 
-    $buildids = '(';
-    if (is_array($buildid)) {
-        $buildids .= implode(',', $buildid);
-    } else {
-        if (!is_numeric($buildid)) {
-            return;
+    $buildids = [];
+    foreach ($buildid as $b) {
+        if (!is_numeric($b)) {
+            throw new InvalidArgumentException('Invalid Build ID');
         }
-        $buildids .= $buildid;
+        $buildids[] = intval($b);
     }
-    $buildids .= ')';
 
-    pdo_query('DELETE FROM build2group WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM builderror WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM buildemail WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM buildfile WHERE buildid IN ' . $buildids);
+    $db = Database::getInstance();
+    $buildid_prepare_array = $db->createPreparedArray(count($buildids));
 
-    pdo_query('DELETE FROM buildinformation WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM builderrordiff WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM buildproperties WHERE buildid IN ' . $buildids);
+    $db->executePrepared("DELETE FROM build2group WHERE buildid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM builderror WHERE buildid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM buildemail WHERE buildid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM buildfile WHERE buildid IN $buildid_prepare_array", $buildids);
 
-    pdo_query('DELETE FROM configureerrordiff WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM coveragesummarydiff WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM testdiff WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM buildtesttime WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM summaryemail WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM related_builds WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM related_builds WHERE relatedid IN ' . $buildids);
-    pdo_query('DELETE FROM pending_submissions WHERE buildid IN ' . $buildids);
+    $db->executePrepared("DELETE FROM buildinformation WHERE buildid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM builderrordiff WHERE buildid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM buildproperties WHERE buildid IN $buildid_prepare_array", $buildids);
+
+    $db->executePrepared("DELETE FROM configureerrordiff WHERE buildid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM coveragesummarydiff WHERE buildid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM testdiff WHERE buildid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM buildtesttime WHERE buildid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM summaryemail WHERE buildid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM related_builds WHERE buildid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM related_builds WHERE relatedid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM pending_submissions WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Remove the buildfailureargument
-    $buildfailureids = '(';
-    $buildfailure = pdo_query('SELECT id FROM buildfailure WHERE buildid IN ' . $buildids);
-    while ($buildfailure_array = pdo_fetch_array($buildfailure)) {
-        if ($buildfailureids != '(') {
-            $buildfailureids .= ',';
-        }
-        $buildfailureids .= $buildfailure_array['id'];
+    $buildfailureids = [];
+    $buildfailure = $db->executePrepared("SELECT id FROM buildfailure WHERE buildid IN $buildid_prepare_array", $buildids);
+    foreach ($buildfailure as $buildfailure_array) {
+        $buildfailureids[] = intval($buildfailure_array['id']);
     }
-    $buildfailureids .= ')';
-    if (strlen($buildfailureids) > 2) {
-        pdo_query('DELETE FROM buildfailure2argument WHERE buildfailureid IN ' . $buildfailureids);
-        pdo_query('DELETE FROM label2buildfailure WHERE buildfailureid IN ' . $buildfailureids);
+    if (count($buildfailureids) > 0) {
+        $buildfailure_prepare_array = $db->createPreparedArray(count($buildfailureids));
+        $db->executePrepared("DELETE FROM buildfailure2argument WHERE buildfailureid IN $buildfailure_prepare_array", $buildfailureids);
+        $db->executePrepared("DELETE FROM label2buildfailure WHERE buildfailureid IN $buildfailure_prepare_array", $buildfailureids);
     }
 
     // Delete buildfailuredetails that are only used by builds that are being
     // deleted.
-    $detailsids = '(';
-    $buildfailuredetails = pdo_query(
-        'SELECT a.detailsid, count(b.detailsid) AS c
-     FROM buildfailure AS a
-     LEFT JOIN buildfailure AS b
-     ON (a.detailsid=b.detailsid AND b.buildid NOT IN ' . $buildids . ')
-     WHERE a.buildid IN ' . $buildids . '
-     GROUP BY a.detailsid HAVING count(b.detailsid)=0');
-    while ($buildfailuredetails_array = pdo_fetch_array($buildfailuredetails)) {
-        if ($detailsids != '(') {
-            $detailsids .= ',';
-        }
-        $detailsids .= $buildfailuredetails_array['detailsid'];
+    $buildfailuredetails = $db->executePrepared("
+                               SELECT a.detailsid
+                               FROM buildfailure AS a
+                               LEFT JOIN buildfailure AS b ON (
+                                   a.detailsid=b.detailsid
+                                   AND b.buildid NOT IN $buildid_prepare_array
+                               )
+                               WHERE a.buildid IN $buildid_prepare_array
+                               GROUP BY a.detailsid
+                               HAVING count(b.detailsid)=0
+                           ", array_merge($buildids, $buildids));
+
+    $detailsids = [];
+    foreach ($buildfailuredetails as $buildfailuredetails_array) {
+        $detailsids[] = intval($buildfailuredetails_array['detailsid']);
     }
-    $detailsids .= ')';
-    if (strlen($detailsids) > 2) {
-        pdo_query('DELETE FROM buildfailuredetails WHERE id IN ' . $detailsids);
+    if (count($detailsids) > 0) {
+        $detailsids_prepare_array = $db->createPreparedArray(count($buildfailureids));
+        $db->executePrepared("DELETE FROM buildfailuredetails WHERE id IN $detailsids_prepare_array", $detailsids);
     }
 
     // Remove the buildfailure.
-    pdo_query('DELETE FROM buildfailure WHERE buildid IN ' . $buildids);
+    $db->executePrepared("DELETE FROM buildfailure WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Delete the configure if not shared.
-    $configureids = '(';
-    $build2configure = pdo_query(
-        "SELECT a.configureid, COUNT(b.configureid) AS c
-            FROM build2configure AS a
-            LEFT JOIN build2configure AS b
-            ON (a.configureid=b.configureid AND b.buildid NOT IN $buildids)
-            WHERE a.buildid IN $buildids
-            GROUP BY a.configureid HAVING count(b.configureid)=0");
-    while ($build2configure_array = pdo_fetch_array($build2configure)) {
+    $build2configure = $db->executePrepared("
+                           SELECT a.configureid
+                           FROM build2configure AS a
+                           LEFT JOIN build2configure AS b ON (
+                               a.configureid=b.configureid
+                               AND b.buildid NOT IN $buildid_prepare_array
+                           )
+                           WHERE a.buildid IN $buildid_prepare_array
+                           GROUP BY a.configureid
+                           HAVING count(b.configureid)=0
+                       ", array_merge($buildids, $buildids));
+
+    $configureids = [];
+    foreach ($build2configure as $build2configure_array) {
         // It is safe to delete this configure because it is only used
         // by builds that are being deleted.
-        if ($configureids != '(') {
-            $configureids .= ',';
-        }
-        $configureids .= $build2configure_array['configureid'];
+        $configureids[] = intval($build2configure_array['configureid']);
     }
-    $configureids .= ')';
-    if (strlen($configureids) > 2) {
-        pdo_query("DELETE FROM configure WHERE id IN $configureids");
-        pdo_query("DELETE FROM configureerror WHERE configureid IN $configureids");
+    if (count($configureids) > 0) {
+        $configureids_prepare_array = $db->createPreparedArray(count($configureids));
+        $db->executePrepared("DELETE FROM configure WHERE id IN $configureids_prepare_array", $configureids);
+        $db->executePrepared("DELETE FROM configureerror WHERE configureid IN $configureids_prepare_array", $configureids);
     }
-    pdo_query("DELETE FROM build2configure WHERE buildid IN $buildids");
+    $db->executePrepared("DELETE FROM build2configure WHERE buildid IN $buildid_prepare_array", $buildids);
 
-    // coverage file are kept unless they are shared
-    $coveragefile = pdo_query('SELECT a.fileid,count(b.fileid) AS c
-                             FROM coverage AS a LEFT JOIN coverage AS b
-                             ON (a.fileid=b.fileid AND b.buildid NOT IN ' . $buildids . ') WHERE a.buildid IN ' . $buildids . '
-                             GROUP BY a.fileid HAVING count(b.fileid)=0');
+    // coverage files are kept unless they are shared
+    $coveragefile = $db->executePrepared("
+                        SELECT a.fileid
+                        FROM coverage AS a
+                        LEFT JOIN coverage AS b ON (
+                            a.fileid=b.fileid
+                            AND b.buildid NOT IN $buildid_prepare_array
+                        )
+                        WHERE a.buildid IN $buildid_prepare_array
+                        GROUP BY a.fileid
+                        HAVING count(b.fileid)=0
+                    ", array_merge($buildids, $buildids));
 
-    $fileids = '(';
-    while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
-        if ($fileids != '(') {
-            $fileids .= ',';
-        }
-        $fileids .= $coveragefile_array['fileid'];
-    }
-    $fileids .= ')';
-
-    if (strlen($fileids) > 2) {
-        pdo_query('DELETE FROM coveragefile WHERE id IN ' . $fileids);
+    $fileids = [];
+    foreach ($coveragefile as $coveragefile_array) {
+        $fileids[] = intval($coveragefile_array['fileid']);
     }
 
-    pdo_query('DELETE FROM label2coveragefile WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM coverage WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM coveragefilelog WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM coveragesummary WHERE buildid IN ' . $buildids);
+    if (count($fileids) > 0) {
+        $fileids_prepare_array = $db->createPreparedArray(count($fileids));
+        $db->executePrepared("DELETE FROM coveragefile WHERE id IN $fileids_prepare_array", $fileids);
+    }
+
+    $db->executePrepared("DELETE FROM label2coveragefile WHERE buildid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM coverage WHERE buildid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM coveragefilelog WHERE buildid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM coveragesummary WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // dynamicanalysisdefect
-    $dynamicanalysis = pdo_query('SELECT id FROM dynamicanalysis WHERE buildid IN ' . $buildids);
-    $dynids = '(';
-    while ($dynamicanalysis_array = pdo_fetch_array($dynamicanalysis)) {
-        if ($dynids != '(') {
-            $dynids .= ',';
-        }
-        $dynids .= $dynamicanalysis_array['id'];
-    }
-    $dynids .= ')';
+    $dynamicanalysis = $db->executePrepared("
+                           SELECT id
+                           FROM dynamicanalysis
+                           WHERE buildid IN $buildid_prepare_array
+                       ", $buildids);
 
-    if (strlen($dynids) > 2) {
-        pdo_query('DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid IN ' . $dynids);
-        pdo_query('DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid IN ' . $dynids);
+    $dynids = [];
+    foreach ($dynamicanalysis as $dynamicanalysis_array) {
+        $dynids[] = intval($dynamicanalysis_array['id']);
     }
-    pdo_query('DELETE FROM dynamicanalysis WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM dynamicanalysissummary WHERE buildid IN ' . $buildids);
+
+    if (count($dynids) > 0) {
+        $dynids_prepare_array = $db->createPreparedArray(count($dynids));
+        $db->executePrepared("DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid IN $dynids_prepare_array", $dynids);
+        $db->executePrepared("DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid IN $dynids_prepare_array", $dynids);
+    }
+    $db->executePrepared("DELETE FROM dynamicanalysis WHERE buildid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM dynamicanalysissummary WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Delete the note if not shared
-    $noteids = '(';
+    $build2note = $db->executePrepared("
+                      SELECT a.noteid
+                      FROM build2note AS a
+                      LEFT JOIN build2note AS b ON (
+                          a.noteid=b.noteid
+                          AND b.buildid NOT IN $buildid_prepare_array
+                      )
+                      WHERE a.buildid IN $buildid_prepare_array
+                      GROUP BY a.noteid
+                      HAVING count(b.noteid)=0
+                  ", array_merge($buildids, $buildids));
 
-    $build2note = pdo_query('SELECT a.noteid,count(b.noteid) AS c
-                           FROM build2note AS a LEFT JOIN build2note AS b
-                           ON (a.noteid=b.noteid AND b.buildid NOT IN ' . $buildids . ') WHERE a.buildid IN ' . $buildids . '
-                           GROUP BY a.noteid HAVING count(b.noteid)=0');
-    while ($build2note_array = pdo_fetch_array($build2note)) {
+    $noteids = [];
+    foreach ($build2note as $build2note_array) {
         // Note is not shared we delete
-        if ($noteids != '(') {
-            $noteids .= ',';
-        }
-        $noteids .= $build2note_array['noteid'];
-    }
-    $noteids .= ')';
-    if (strlen($noteids) > 2) {
-        pdo_query('DELETE FROM note WHERE id IN ' . $noteids);
+        $noteids[] = intval($build2note_array['noteid']);
     }
 
-    pdo_query('DELETE FROM build2note WHERE buildid IN ' . $buildids);
+    if (count($noteids) > 0) {
+        $noteids_prepare_array = $db->createPreparedArray(count($noteids));
+        $db->executePrepared("DELETE FROM note WHERE id IN $noteids_prepare_array", $noteids);
+    }
+
+    $db->executePrepared("DELETE FROM build2note WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Delete the update if not shared
-    $updateids = '(';
-    $build2update = pdo_query('SELECT a.updateid,count(b.updateid) AS c
-                           FROM build2update AS a LEFT JOIN build2update AS b
-                           ON (a.updateid=b.updateid AND b.buildid NOT IN ' . $buildids . ') WHERE a.buildid IN ' . $buildids . '
-                           GROUP BY a.updateid HAVING count(b.updateid)=0');
-    while ($build2update_array = pdo_fetch_array($build2update)) {
+    $build2update = $db->executePrepared("
+                        SELECT a.updateid
+                        FROM build2update AS a
+                        LEFT JOIN build2update AS b ON (
+                            a.updateid=b.updateid
+                            AND b.buildid NOT IN $buildid_prepare_array
+                        )
+                        WHERE a.buildid IN $buildid_prepare_array
+                        GROUP BY a.updateid
+                        HAVING count(b.updateid)=0
+                    ", array_merge($buildids, $buildids));
+
+    $updateids = [];
+    foreach ($build2update as $build2update_array) {
         // Update is not shared we delete
-        if ($updateids != '(') {
-            $updateids .= ',';
-        }
-        $updateids .= $build2update_array['updateid'];
+        $updateids[] = intval($build2update_array['updateid']);
     }
-    $updateids .= ')';
-    if (strlen($updateids) > 2) {
-        pdo_query('DELETE FROM buildupdate WHERE id IN ' . $updateids);
-        pdo_query('DELETE FROM updatefile WHERE updateid IN ' . $updateids);
+
+    if (count($updateids) > 0) {
+        $updateids_prepare_array = $db->createPreparedArray(count($updateids));
+        $db->executePrepared("DELETE FROM buildupdate WHERE id IN $updateids_prepare_array", $updateids);
+        $db->executePrepared("DELETE FROM updatefile WHERE updateid IN $updateids_prepare_array", $updateids);
     }
-    pdo_query('DELETE FROM build2update WHERE buildid IN ' . $buildids);
+    $db->executePrepared("DELETE FROM build2update WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Delete tests and testoutputs that are not shared.
     // First find all the tests and testoutputs from builds that are about to be deleted.
-    $b2t_result = pdo_query(
-        "SELECT testid, outputid from build2test WHERE buildid IN $buildids");
+    $b2t_result = $db->executePrepared("
+                      SELECT testid, outputid
+                      FROM build2test
+                      WHERE buildid IN $buildid_prepare_array
+                  ", $buildids);
+
     $all_testids = [];
     $all_outputids = [];
-    while ($b2t_row = pdo_fetch_array($b2t_result)) {
-        $all_testids[] = $b2t_row['testid'];
-        $all_outputids[] = $b2t_row['outputid'];
+    foreach ($b2t_result as $b2t_row) {
+        $all_testids[] = intval($b2t_row['testid']);
+        $all_outputids[] = intval($b2t_row['outputid']);
     }
     $all_testids = array_unique($all_testids);
     $all_outputids = array_unique($all_outputids);
@@ -902,20 +971,24 @@ function remove_build($buildid)
     if (!empty($all_testids)) {
         // Next identify tests from this list that should be preserved
         // because they are shared with builds that are not about to be deleted.
-        $testids = '(' . implode(',', $all_testids) . ')';
-        $save_test_result = pdo_query(
-            "SELECT DISTINCT testid FROM build2test
-                WHERE testid IN $testids AND buildid NOT IN $buildids");
-        $tests_to_save = array();
-        while ($save_test_row = pdo_fetch_array($save_test_result)) {
-            $tests_to_save[] = $save_test_row['testid'];
+        $testids_prepare_array = $db->createPreparedArray(count($all_testids));
+        $save_test_result = $db->executePrepared("
+                                SELECT DISTINCT testid
+                                FROM build2test
+                                WHERE
+                                    testid IN $testids_prepare_array
+                                    AND buildid NOT IN $buildid_prepare_array
+                            ", array_merge($all_testids, $buildids));
+        $tests_to_save = [];
+        foreach ($save_test_result as $save_test_row) {
+            $tests_to_save[] = intval($save_test_row['testid']);
         }
 
         // Use array_diff to get the list of tests that should be deleted.
         $tests_to_delete = array_diff($all_testids, $tests_to_save);
         if (!empty($tests_to_delete)) {
-            $testids = '(' . implode(',', $tests_to_delete) . ')';
-            pdo_query("DELETE FROM test WHERE id IN $testids");
+            $tests_to_delete_prepare_array = $db->createPreparedArray(count($tests_to_delete));
+            $db->executePrepared("DELETE FROM test WHERE id IN $tests_to_delete_prepare_array", $tests_to_delete);
         }
     }
 
@@ -923,92 +996,104 @@ function remove_build($buildid)
     if (!empty($all_outputids)) {
         // Next identify tests from this list that should be preserved
         // because they are shared with builds that are not about to be deleted.
-        $outputids = '(' . implode(',', $all_outputids) . ')';
-        $save_test_result = pdo_query(
-            "SELECT DISTINCT outputid FROM build2test
-                WHERE outputid IN $outputids AND buildid NOT IN $buildids");
+        $all_outputids_prepare_array = $db->createPreparedArray(count($all_outputids));
+        $save_test_result = $db->executePrepared("
+                                SELECT DISTINCT outputid
+                                FROM build2test
+                                WHERE
+                                    outputid IN $all_outputids_prepare_array
+                                    AND buildid NOT IN $buildid_prepare_array
+                            ", array_merge($all_outputids, $buildids));
         $testoutputs_to_save = [];
-        while ($save_test_row = pdo_fetch_array($save_test_result)) {
-            $testoutputs_to_save[] = $save_test_row['outputid'];
+        foreach ($save_test_result as $save_test_row) {
+            $testoutputs_to_save[] = intval($save_test_row['outputid']);
         }
 
         // Use array_diff to get the list of tests that should be deleted.
         $testoutputs_to_delete = array_diff($all_outputids, $testoutputs_to_save);
         if (!empty($testoutputs_to_delete)) {
-            $outputids = '(' . implode(',', $testoutputs_to_delete) . ')';
             delete_rows_chunked('DELETE FROM testmeasurement WHERE outputid IN ', $testoutputs_to_delete);
             delete_rows_chunked('DELETE FROM testoutput WHERE id IN ', $testoutputs_to_delete);
 
-            $imgids = '(';
+            $testoutputs_to_delete_prepare_array = $db->createPreparedArray(count($testoutputs_to_delete));
             // Check if the images for the test are not shared
-            $test2image = pdo_query('SELECT a.imgid,count(b.imgid) AS c
-                    FROM test2image AS a LEFT JOIN test2image AS b
-                    ON (a.imgid=b.imgid AND b.outputid NOT IN ' . $outputids . ') WHERE a.outputid IN ' . $outputids . '
-                    GROUP BY a.imgid HAVING count(b.imgid)=0');
-            while ($test2image_array = pdo_fetch_array($test2image)) {
-                $imgid = $test2image_array['imgid'];
-                if ($imgids != '(') {
-                    $imgids .= ',';
-                }
-                $imgids .= $imgid;
+            $test2image = $db->executePrepared("
+                              SELECT a.imgid
+                              FROM test2image AS a
+                              LEFT JOIN test2image AS b ON (
+                                  a.imgid=b.imgid
+                                  AND b.outputid NOT IN $testoutputs_to_delete_prepare_array
+                              )
+                              WHERE a.outputid IN $testoutputs_to_delete_prepare_array
+                              GROUP BY a.imgid
+                              HAVING count(b.imgid)=0
+                          ", array_merge($testoutputs_to_delete, $testoutputs_to_delete));
+
+            $imgids = [];
+            foreach ($test2image as $test2image_array) {
+                $imgids[] = intval($test2image_array['imgid']);
             }
-            $imgids .= ')';
-            if (strlen($imgids) > 2) {
-                pdo_query('DELETE FROM image WHERE id IN ' . $imgids);
+
+            if (count($imgids) > 0) {
+                $imgids_prepare_array = $db->createPreparedArray(count($imgids));
+                $db->executePrepared("DELETE FROM image WHERE id IN $imgids_prepare_array", $imgids);
             }
             delete_rows_chunked('DELETE FROM test2image WHERE outputid IN ', $testoutputs_to_delete);
         }
     }
 
-    pdo_query('DELETE FROM label2test WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM build2test WHERE buildid IN ' . $buildids);
+    $db->executePrepared("DELETE FROM label2test WHERE buildid IN $buildid_prepare_array", $buildids);
+    $db->executePrepared("DELETE FROM build2test WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Delete the uploaded files if not shared
-    $fileids = '(';
-    $build2uploadfiles = pdo_query('SELECT a.fileid,count(b.fileid) AS c
-                           FROM build2uploadfile AS a LEFT JOIN build2uploadfile AS b
-                           ON (a.fileid=b.fileid AND b.buildid NOT IN ' . $buildids . ') WHERE a.buildid IN ' . $buildids . '
-                           GROUP BY a.fileid HAVING count(b.fileid)=0');
-    while ($build2uploadfile_array = pdo_fetch_array($build2uploadfiles)) {
-        $fileid = $build2uploadfile_array['fileid'];
-        if ($fileids != '(') {
-            $fileids .= ',';
-        }
-        $fileids .= $fileid;
+    $build2uploadfiles = $db->executePrepared("
+                             SELECT a.fileid
+                             FROM build2uploadfile AS a
+                             LEFT JOIN build2uploadfile AS b ON (
+                                 a.fileid=b.fileid
+                                 AND b.buildid NOT IN $buildid_prepare_array
+                             )
+                             WHERE a.buildid IN $buildid_prepare_array
+                             GROUP BY a.fileid
+                             HAVING count(b.fileid)=0
+                         ", array_merge($buildids, $buildids));
+
+    $fileids = [];
+    foreach ($build2uploadfiles as $build2uploadfile_array) {
+        $fileid = intval($build2uploadfile_array['fileid']);
+        $fileids[] = $fileid;
         unlink_uploaded_file($fileid);
     }
-    $fileids .= ')';
-    if (strlen($fileids) > 2) {
-        pdo_query('DELETE FROM uploadfile WHERE id IN ' . $fileids);
-        pdo_query('DELETE FROM build2uploadfile WHERE fileid IN ' . $fileids);
-    }
 
-    pdo_query('DELETE FROM build2uploadfile WHERE buildid IN ' . $buildids);
+    if (count($fileids) > 0) {
+        $fileids_prepare_array = $db->createPreparedArray(count($fileids));
+        $db->executePrepared("DELETE FROM uploadfile WHERE id IN $fileids_prepare_array", $fileids);
+        $db->executePrepared("DELETE FROM build2uploadfile WHERE fileid IN $fileids_prepare_array", $fileids);
+    }
+    $db->executePrepared("DELETE FROM build2uploadfile WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Delete the subproject
-    pdo_query('DELETE FROM subproject2build WHERE buildid IN ' . $buildids);
+    $db->executePrepared("DELETE FROM subproject2build WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Delete the labels
-    pdo_query('DELETE FROM label2build WHERE buildid IN ' . $buildids);
+    $db->executePrepared("DELETE FROM label2build WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Remove any children of these builds.
-    if (is_array($buildid)) {
-        // In order to avoid making the list of builds to delete too large
-        // we delete them in batches (one batch per parent).
-        foreach ($buildid as $parentid) {
-            remove_children($parentid);
-        }
-    } else {
-        remove_children($buildid);
+    // In order to avoid making the list of builds to delete too large
+    // we delete them in batches (one batch per parent).
+    foreach ($buildids as $parentid) {
+        remove_children($parentid);
     }
 
     // Only delete the buildid at the end so that no other build can get it in the meantime
-    pdo_query('DELETE FROM build WHERE id IN ' . $buildids);
+    $db->executePrepared("DELETE FROM build WHERE id IN $buildid_prepare_array", $buildids);
 
     add_last_sql_error('remove_build');
 }
 
-/** Call remove_build() in batches of 100. */
+/**
+ * Call remove_build() in batches of 100.
+ */
 function remove_build_chunked($buildid)
 {
     if (!is_array($buildid)) {
@@ -1019,24 +1104,31 @@ function remove_build_chunked($buildid)
     }
 }
 
-/** Chunk up DELETE queries into batches of 100. */
-function delete_rows_chunked($query, $ids)
+/**
+ * Chunk up DELETE queries into batches of 100.
+ */
+function delete_rows_chunked(string $query, array $ids): void
 {
     foreach (array_chunk($ids, 100) as $chunk) {
-        $chunk_ids = '(' . implode(',', $chunk) . ')';
-        pdo_query("$query $chunk_ids");
+        $db = Database::getInstance();
+        $chunk_prepared_array = $db->createPreparedArray(count($chunk));
+        $db->executePrepared("$query $chunk_prepared_array", $chunk);
         // Sleep for a microsecond to give other processes a chance.
         usleep(1);
     }
 }
 
-/** Remove any children of the given build. */
-function remove_children($parentid)
+/**
+ * Remove any children of the given build.
+ */
+function remove_children(int $parentid): void
 {
-    $childids = array();
-    $child_result = pdo_query("SELECT id FROM build WHERE parentid=$parentid");
-    while ($child_array = pdo_fetch_array($child_result)) {
-        $childids[] = $child_array['id'];
+    $db = Database::getInstance();
+    $child_result = $db->executePrepared('SELECT id FROM build WHERE parentid=?', [intval($parentid)]);
+
+    $childids = [];
+    foreach ($child_result as $child_array) {
+        $childids[] = intval($child_array['id']);
     }
     if (!empty($childids)) {
         remove_build($childids);
@@ -1112,38 +1204,50 @@ function rmdirr($dir)
     }
 }
 
-/** Get year from formatted date */
-function date2year($date)
+/**
+ * Get year from formatted date
+ */
+function date2year(string $date): string
 {
     return substr($date, 0, 4);
 }
 
-/** Get month from formatted date */
-function date2month($date)
+/**
+ * Get month from formatted date
+ */
+function date2month(string $date): string
 {
     return is_numeric(substr($date, 4, 1)) ? substr($date, 4, 2) : substr($date, 5, 2);
 }
 
-/** Get day from formatted date */
-function date2day($date)
+/**
+ * Get day from formatted date
+ */
+function date2day(string $date): string
 {
     return is_numeric(substr($date, 4, 1)) ? substr($date, 6, 2) : substr($date, 8, 2);
 }
 
-/** Get hour from formatted time */
-function time2hour($time)
+/**
+ * Get hour from formatted time
+ */
+function time2hour(string $time): string
 {
     return substr($time, 0, 2);
 }
 
-/** Get minute from formatted time */
-function time2minute($time)
+/**
+ * Get minute from formatted time
+ */
+function time2minute(string $time): string
 {
     return is_numeric(substr($time, 2, 1)) ? substr($time, 2, 2) : substr($time, 3, 2);
 }
 
-/** Get second from formatted time */
-function time2second($time)
+/**
+ * Get second from formatted time
+ */
+function time2second(string $time): string
 {
     return is_numeric(substr($time, 2, 1)) ? substr($time, 4, 2) : substr($time, 6, 2);
 }
@@ -1159,9 +1263,9 @@ function get_dates($date, $nightlytime)
     $date = date(FMT_DATE, strtotime($date));
 
     $nightlytime = strtotime($nightlytime, strtotime($date));
-    $nightlyhour = date('H', $nightlytime);
-    $nightlyminute = date('i', $nightlytime);
-    $nightlysecond = date('s', $nightlytime);
+    $nightlyhour = intval(date('H', $nightlytime));
+    $nightlyminute = intval(date('i', $nightlytime));
+    $nightlysecond = intval(date('s', $nightlytime));
 
     if (!isset($date) || strlen($date) == 0) {
         $date = date(FMT_DATE); // the date is always the date of the server
@@ -1176,14 +1280,14 @@ function get_dates($date, $nightlytime)
         }
     }
 
-    $today = mktime($nightlyhour, $nightlyminute, $nightlysecond, date2month($date), date2day($date), date2year($date)) - 3600 * 24; // starting time
+    $today = mktime($nightlyhour, $nightlyminute, $nightlysecond, intval(date2month($date)), intval(date2day($date)), intval(date2year($date))) - 3600 * 24; // starting time
 
     // If the $nightlytime is in the morning it's actually the day after
     if (date(FMT_TIME, $nightlytime) < '12:00:00') {
         $date = date(FMT_DATE, strtotime($date) - 3600 * 24); // previous date
     }
 
-    $todaydate = mktime(0, 0, 0, date2month($date), date2day($date), date2year($date));
+    $todaydate = mktime(0, 0, 0, intval(date2month($date)), intval(date2day($date)), intval(date2year($date)));
     $previousdate = date(FMT_DATE, $todaydate - 3600 * 24);
     $nextdate = date(FMT_DATE, $todaydate + 3600 * 24);
     return array($previousdate, $today, $nextdate, $date);
@@ -1197,49 +1301,27 @@ function has_next_date($date, $currentstarttime)
         date(FMT_DATE, $currentstarttime) < date(FMT_DATE));
 }
 
-/** Get the logo id */
-function getLogoID($projectid)
+/**
+ * Get the logo id
+ */
+function getLogoID(int $projectid): int
 {
-    if (!is_numeric($projectid)) {
-        return;
-    }
-
-    //asume the caller already connected to the database
-    $query = "SELECT imageid FROM project WHERE id='$projectid'";
-    $result = pdo_query($query);
-    if (!$result) {
+    // assume the caller already connected to the database
+    $db = Database::getInstance();
+    $result = $db->executePreparedSingleRow('SELECT imageid FROM project WHERE id=?', [$projectid]);
+    if (empty($result)) {
         return 0;
     }
 
-    $row = pdo_fetch_array($result);
-    return $row['imageid'];
+    return intval($result['imageid']);
 }
 
-function get_project_properties($projectname)
-{
-    /** @var Database $db */
-    $db = Database::getInstance();
-    $sql = "SELECT * FROM project WHERE name=:name";
-    /** @var PDOStatement $stmt */
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':name', $projectname);
-    $db->execute($stmt);
-    return $stmt ? $stmt->fetch() : [];
-}
-
-function get_project_property($projectname, $prop)
-{
-    $project_props = get_project_properties($projectname);
-    return $project_props[$prop];
-}
-
-// make_cdash_url ensures that a url begins with a known url protocol
-// identifier
-//
-function make_cdash_url($url)
+/**
+ * make_cdash_url ensures that a url begins with a known url protocol identifier
+ */
+function make_cdash_url(string $url): string
 {
     // By default, same as the input
-    //
     $cdash_url = $url;
 
     // Unless the input does *not* start with a known protocol identifier...
@@ -1256,79 +1338,88 @@ function make_cdash_url($url)
     return $cdash_url;
 }
 
-/** Get the previous build id dynamicanalysis*/
-function get_previous_buildid_dynamicanalysis($projectid, $siteid, $buildtype, $buildname, $starttime)
+/**
+ * Get the previous build id dynamicanalysis
+ */
+function get_previous_buildid_dynamicanalysis(int $projectid, int $siteid, string $buildtype, string $buildname, string $starttime): int
 {
-    $previousbuild = pdo_query("SELECT build.id FROM build,dynamicanalysis
-                              WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
-                              AND build.projectid='$projectid' AND build.starttime<'$starttime'
-                              AND dynamicanalysis.buildid=build.id
-                              ORDER BY build.starttime DESC LIMIT 1");
+    $db = Database::getInstance();
+    $previousbuild = $db->executePreparedSingleRow('
+                         SELECT build.id
+                         FROM build, dynamicanalysis
+                         WHERE
+                             build.siteid=?
+                             AND build.type=?
+                             AND build.name=?
+                             AND build.projectid=?
+                             AND build.starttime<?
+                             AND dynamicanalysis.buildid=build.id
+                         ORDER BY build.starttime DESC
+                         LIMIT 1
+                     ', [$siteid, $buildtype, $buildname, $projectid, $starttime]);
 
-    if (pdo_num_rows($previousbuild) > 0) {
-        $previousbuild_array = pdo_fetch_array($previousbuild);
-        return $previousbuild_array['id'];
+    if (!empty($previousbuild)) {
+        return intval($previousbuild['id']);
     }
     return 0;
 }
 
-/** Get the next build id dynamicanalysis*/
-function get_next_buildid_dynamicanalysis($projectid, $siteid, $buildtype, $buildname, $starttime)
+/**
+ * Get the next build id dynamicanalysis
+ */
+function get_next_buildid_dynamicanalysis(int $projectid, int $siteid, string $buildtype, string $buildname, string $starttime): int
 {
-    $nextbuild = pdo_query("SELECT build.id FROM build,dynamicanalysis
-                          WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
-                          AND build.projectid='$projectid' AND build.starttime>'$starttime'
-                          AND dynamicanalysis.buildid=build.id
-                          ORDER BY build.starttime ASC LIMIT 1");
+    $db = Database::getInstance();
+    $nextbuild = $db->executePreparedSingleRow('
+                     SELECT build.id
+                     FROM build, dynamicanalysis
+                     WHERE
+                         build.siteid=?
+                         AND build.type=?
+                         AND build.name=?
+                         AND build.projectid=?
+                         AND build.starttime>?
+                         AND dynamicanalysis.buildid=build.id
+                     ORDER BY build.starttime ASC
+                     LIMIT 1
+                 ', [$siteid, $buildtype, $buildname, $projectid, $starttime]);
 
-    if (pdo_num_rows($nextbuild) > 0) {
-        $nextbuild_array = pdo_fetch_array($nextbuild);
-        return $nextbuild_array['id'];
+    if (!empty($nextbuild)) {
+        return intval($nextbuild['id']);
     }
     return 0;
 }
 
-/** Get the last build id dynamicanalysis */
-function get_last_buildid_dynamicanalysis($projectid, $siteid, $buildtype, $buildname, $starttime)
+/**
+ * Get the last build id dynamicanalysis
+ */
+function get_last_buildid_dynamicanalysis(int $projectid, int $siteid, string $buildtype, string $buildname): int
 {
-    $nextbuild = pdo_query("SELECT build.id FROM build,dynamicanalysis
-                          WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
-                          AND build.projectid='$projectid'
-                          AND dynamicanalysis.buildid=build.id
-                          ORDER BY build.starttime DESC LIMIT 1");
+    $db = Database::getInstance();
+    $nextbuild = $db->executePreparedSingleRow('
+                     SELECT build.id
+                     FROM build, dynamicanalysis
+                     WHERE
+                         build.siteid=?
+                         AND build.type=?
+                         AND build.name=?
+                         AND build.projectid=?
+                         AND dynamicanalysis.buildid=build.id
+                     ORDER BY build.starttime DESC
+                     LIMIT 1
+                 ', [$siteid, $buildtype, $buildname, $projectid]);
 
-    if (pdo_num_rows($nextbuild) > 0) {
-        $nextbuild_array = pdo_fetch_array($nextbuild);
-        return $nextbuild_array['id'];
+    if (!empty($nextbuild)) {
+        return $nextbuild['id'];
     }
     return 0;
 }
 
-function get_dashboard_date_from_project($projectname, $date)
-{
-    $project = pdo_query("SELECT nightlytime FROM project WHERE name='$projectname'");
-    $project_array = pdo_fetch_array($project);
-
-    $nightlytime = strtotime($project_array['nightlytime']);
-    $nightlyhour = date('H', $nightlytime);
-    $nightlyminute = date('i', $nightlytime);
-    $nightlysecond = date('s', $nightlytime);
-
-    if (!isset($date) || strlen($date) == 0) {
-        $date = date(FMT_DATE); // the date is always the date of the server
-
-        if (date(FMT_TIME) > date(FMT_TIME, $nightlytime)) {
-            $date = date(FMT_DATE, time() + 3600 * 24); //next day
-        }
-    }
-    return $date;
-}
-
-function get_cdash_dashboard_xml($projectname, $date)
+function get_cdash_dashboard_xml_by_name($projectname, $date): string
 {
     $projectid = get_project_id($projectname);
     if ($projectid == -1) {
-        return;
+        return '';
     }
 
     $default = [
@@ -1340,9 +1431,7 @@ function get_cdash_dashboard_xml($projectname, $date)
         'nightlytime' => '00:00:00',
     ];
 
-    /** @var Database $db */
     $db = Database::getInstance();
-    $config = Config::getInstance();
 
     $sql = "SELECT * FROM project WHERE id=:id";
     $stmt = $db->prepare($sql);
@@ -1369,7 +1458,7 @@ function get_cdash_dashboard_xml($projectname, $date)
   <projectpublic>' . $project_array['public'] . '</projectpublic>
   <previousdate>' . $previousdate . '</previousdate>
   <nextdate>' . $nextdate . '</nextdate>
-  <logoid>' . getLogoID($projectid) . '</logoid>';
+  <logoid>' . getLogoID(intval($projectid)) . '</logoid>';
 
     if (empty($project_array['homeurl'])) {
         $xml .= '<home>index.php?project=' . urlencode($project_array['name']) . '</home>';
@@ -1400,13 +1489,9 @@ function get_cdash_dashboard_xml($projectname, $date)
     return $xml;
 }
 
-/** */
-function get_cdash_dashboard_xml_by_name($projectname, $date)
-{
-    return get_cdash_dashboard_xml($projectname, $date);
-}
-
-/** Quote SQL identifier */
+/**
+ * Quote SQL identifier
+ */
 function qid($id)
 {
     if (!config('database.default') || (config('database.default') == 'mysql')) {
@@ -1418,7 +1503,9 @@ function qid($id)
     }
 }
 
-/** Quote SQL interval specifier */
+/**
+ * Quote SQL interval specifier
+ */
 function qiv($iv)
 {
     if (config('database.default') == 'pgsql') {
@@ -1428,7 +1515,9 @@ function qiv($iv)
     }
 }
 
-/** Quote SQL number */
+/**
+ * Quote SQL number
+ */
 function qnum($num)
 {
     if (!config('database.default') || (config('database.default') == 'mysql')) {
@@ -1440,43 +1529,50 @@ function qnum($num)
     }
 }
 
-/** Return the list of site maintainers for a given project */
-function find_site_maintainers($projectid)
+/**
+ * Return the list of site maintainers for a given project
+ */
+function find_site_maintainers(int $projectid): array
 {
-    $userids = array();
+    $db = Database::getInstance();
 
     // Get the registered user first
-    $site2user = pdo_query("SELECT site2user.userid FROM site2user,user2project
-                        WHERE site2user.userid=user2project.userid AND user2project.projectid='$projectid'");
-    while ($site2user_array = pdo_fetch_array($site2user)) {
-        $userids[] = $site2user_array['userid'];
+    $site2user = $db->executePrepared('
+                     SELECT site2user.userid
+                     FROM site2user, user2project
+                     WHERE
+                         site2user.userid=user2project.userid
+                         AND user2project.projectid=?
+                     ', [$projectid]);
+
+    $userids = [];
+    foreach ($site2user as $site2user_array) {
+        $userids[] = intval($site2user_array['userid']);
     }
 
     // Then we list all the users that have been submitting in the past 48 hours
     $submittime_UTCDate = gmdate(FMT_DATETIME, time() - 3600 * 48);
-    $site2project = pdo_query("SELECT DISTINCT  userid FROM site2user WHERE siteid IN
-                            (SELECT siteid FROM build WHERE projectid=$projectid
-                             AND submittime>'$submittime_UTCDate')");
-    while ($site2project_array = pdo_fetch_array($site2project)) {
-        $userids[] = $site2project_array['userid'];
+
+    $site2project = $db->executePrepared('
+                        SELECT DISTINCT userid
+                        FROM site2user
+                        WHERE siteid IN (
+                            SELECT siteid
+                            FROM build
+                            WHERE
+                                projectid=?
+                                 AND submittime>?
+                        )', [$projectid, $submittime_UTCDate]);
+    foreach ($site2project as $site2project_array) {
+        $userids[] = intval($site2project_array['userid']);
     }
     return array_unique($userids);
 }
 
-/** Return formated time given time in minutes (that's how CTest returns the time */
-function get_formated_time($minutes)
-{
-    $time_in_seconds = round($minutes * 60);
-    $hours = floor($time_in_seconds / 3600);
-
-    $remainingseconds = $time_in_seconds - $hours * 3600;
-    $minutes = floor($remainingseconds / 60);
-    $seconds = $remainingseconds - $minutes * 60;
-    return $hours . ':' . str_pad($minutes, 2, '0', STR_PAD_LEFT) . ':' . str_pad($seconds, 2, '0', STR_PAD_LEFT);
-}
-
-/** Check the email category */
-function check_email_category($name, $emailcategory)
+/**
+ * Check the email category
+ */
+function check_email_category(string $name, int $emailcategory): bool
 {
     if ($emailcategory >= 64) {
         if ($name == 'dynamicanalysis') {
@@ -1521,7 +1617,9 @@ function check_email_category($name, $emailcategory)
     return false;
 }
 
-/** Return the byte value with proper extension */
+/**
+ * Return the byte value with proper extension
+ */
 function getByteValueWithExtension($value, $base = 1024)
 {
     $valueext = '';
@@ -1543,28 +1641,7 @@ function getByteValueWithExtension($value, $base = 1024)
     return round($value, 2) . $valueext;
 }
 
-/** Given a query that returns a set of rows,
- * each of which contains a 'text' field,
- * construct a chunk of <labels><label>....
- * style xml
- */
-function get_labels_xml_from_query_results($qry)
-{
-    $xml = '';
-
-    $rows = pdo_all_rows_query($qry);
-
-    if (count($rows) > 0) {
-        $xml .= '<labels>';
-        foreach ($rows as $row) {
-            $xml .= add_XML_value('label', $row['text']);
-        }
-        $xml .= '</labels>';
-    }
-    return $xml;
-}
-
-function generate_password($length)
+function generate_password(int $length)
 {
     $keychars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     $max = strlen($keychars) - 1;
@@ -1577,38 +1654,9 @@ function generate_password($length)
     return $key;
 }
 
-function create_web_api_token($projectid)
-{
-    $token = generate_web_api_key();
-    $expTime = gmdate(FMT_DATETIME, time() + 3600); //hard-coding 1 hour for now
-    pdo_query("INSERT INTO apitoken (projectid,token,expiration_date) VALUES ($projectid,'$token','$expTime')");
-    clean_outdated_api_tokens();
-    return $token;
-}
-
-function clean_outdated_api_tokens()
-{
-    $now = gmdate(FMT_DATETIME);
-    pdo_query("DELETE FROM apitoken WHERE expiration_date < '$now'");
-}
-
 /**
- * Pass this a valid token created by create_web_api_token.
- * Returns true if token is valid, false otherwise.
- * Handles SQL escaping/validation of parameters.
+ * Check if user has specified a preference for color scheme.
  */
-function web_api_authenticate($projectid, $token)
-{
-    if (!is_numeric($projectid)) {
-        return false;
-    }
-    $now = gmdate(FMT_DATETIME);
-    $token = pdo_real_escape_string($token);
-    $result = pdo_query("SELECT * FROM apitoken WHERE projectid=$projectid AND token='$token' AND expiration_date > '$now'");
-    return pdo_num_rows($result) != 0;
-}
-
-// Check if user has specified a preference for color scheme.
 function get_css_file()
 {
     $classic = 'css/cdash.css';
@@ -1634,7 +1682,6 @@ function get_css_file()
 function begin_XML_for_XSLT()
 {
     $config = CDash\Config::getInstance();
-    $css_file = 'css/cdash.css';
 
     $css_file = get_css_file();
     $config->set('CDASH_CSS_FILE', $css_file);
@@ -1666,9 +1713,6 @@ function redirect_to_https()
 
 function begin_JSON_response()
 {
-    $config = Config::getInstance();
-    $service = ServiceContainer::getInstance();
-
     $response = array();
     $response['version'] = CDash\Config::getVersion();
 
@@ -1684,7 +1728,9 @@ function begin_JSON_response()
     return $response;
 }
 
-// TODO: pass in project object, not just name, prevents yet another unecessary query to db.
+/**
+ * TODO: pass in project object, not just name, prevents yet another unnecessary query to db.
+ */
 function get_dashboard_JSON($projectname, $date, &$response)
 {
     $config = Config::getInstance();
@@ -1723,7 +1769,7 @@ function get_dashboard_JSON($projectname, $date, &$response)
     $response['public'] = $project->Public;
     $response['previousdate'] = $previousdate;
     $response['nextdate'] = $nextdate;
-    $response['logoid'] = getLogoID($project->Id);
+    $response['logoid'] = getLogoID(intval($project->Id));
     $response['nightlytime'] = date('H:i T', strtotime($project_array['nightlytime']));
     if (empty($project_array['homeurl'])) {
         $response['home'] = 'index.php?project=' . urlencode($project_array['name']);
@@ -1747,16 +1793,21 @@ function get_dashboard_JSON($projectname, $date, &$response)
     $response['user']['id'] = $userid;
 }
 
+/**
+ * TODO: (williamjallen) Eliminate one of these functions. There is no reason
+ *       to have both get_dashboard_JSON_by_name() and get_dashboard_JSON().
+ */
 function get_dashboard_JSON_by_name($projectname, $date, &$response)
 {
     get_dashboard_JSON($projectname, $date, $response);
 }
 
-function get_labels_JSON_from_query_results($qry, &$response)
+function get_labels_JSON_from_query_results(string $query, ?array $query_params, array &$response): void
 {
-    $rows = pdo_all_rows_query($qry);
-    if (count($rows) > 0) {
-        $labels = array();
+    $db = Database::getInstance();
+    $rows = $db->executePrepared($query, $query_params);
+    if (is_array($rows) && count($rows) > 0) {
+        $labels = [];
         foreach ($rows as $row) {
             $labels[] = $row['text'];
         }
@@ -1780,7 +1831,7 @@ function compute_percentcoverage($loctested, $locuntested)
  * PHP won't let you delete a non-empty directory, so we first have to
  * search through it and delete each file & subdirectory that we find.
  **/
-function DeleteDirectory($dirName)
+function DeleteDirectory(string $dirName): void
 {
     $iterator = new RecursiveIteratorIterator(
         new RecursiveDirectoryIterator($dirName),
@@ -1815,8 +1866,10 @@ function angular_login()
     }
 }
 
-/* Change data-type from string to integer or float if required.
- * If a string is detected make sure it is utf8 encoded. */
+/**
+ * Change data-type from string to integer or float if required.
+ * If a string is detected make sure it is utf8 encoded.
+ */
 function cast_data_for_JSON($value)
 {
     if (is_array($value)) {
@@ -1863,7 +1916,8 @@ function cast_data_for_JSON($value)
     return $value;
 }
 
-/* Get the site ID for 'CDash Server'.
+/**
+ * Get the site ID for 'CDash Server'.
  * This is the site associated with Aggregate Coverage builds.
  */
 function get_server_siteid()
@@ -1880,7 +1934,8 @@ function get_server_siteid()
     return $server->Id;
 }
 
-/* Return the 'Aggregate Coverage' build for the day of the
+/**
+ * Return the 'Aggregate Coverage' build for the day of the
  * specified build.  If it doesn't exist yet, we create it here.
  * If $build is for a subproject then we return the corresponding
  * aggregate build for that same subproject.
@@ -1892,24 +1947,34 @@ function get_aggregate_build($build)
 
     $subproj_table = '';
     $subproj_where = '';
+    $subproj_where_params = [];
     if ($build->SubProjectId) {
-        $subproj_table =
-            "INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)";
-        $subproj_where =
-            "AND sp2b.subprojectid='$build->SubProjectId'";
+        $subproj_table = "INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)";
+        $subproj_where = "AND sp2b.subprojectid=?";
+        $subproj_where_params[] = intval($build->SubProjectId);
     }
 
-    $query =
-        "SELECT id FROM build
-        $subproj_table
-        WHERE name='Aggregate Coverage' AND
-        siteid = '$siteid' AND
-        parentid < '1' AND
-        projectid = '$build->ProjectId' AND
-        starttime < '$build->EndOfDay' AND
-        starttime >= '$build->BeginningOfDay'
-        $subproj_where";
-    $row = pdo_single_row_query($query);
+    $db = Database::getInstance();
+
+    $row = $db->executePreparedSingleRow("
+               SELECT id
+               FROM build
+               $subproj_table
+               WHERE
+                   name='Aggregate Coverage'
+                   AND siteid = ?
+                   AND parentid < '1'
+                   AND projectid = ?
+                   AND starttime < ?
+                   AND starttime >= ?
+               $subproj_where
+           ", array_merge([
+               intval($siteid),
+               intval($build->ProjectId),
+               $build->EndOfDay,
+               $build->BeginningOfDay],
+        $subproj_where_params
+    ));
     if (!$row || !array_key_exists('id', $row)) {
         // The aggregate build does not exist yet.
         // Create it here.
@@ -1977,28 +2042,10 @@ function extract_tar($filename, $dirName)
     }
 }
 
-/** Strip the HTTP */
-function stripHTTP($url)
-{
-    $pos = strpos($url, 'http://');
-    if ($pos !== false) {
-        return substr($url, 7);
-    } else {
-        $pos = strpos($url, 'https://');
-        if ($pos !== false) {
-            return substr($url, 8);
-        }
-    }
-    return $url;
-}
-
 /**
  * Encode structures for safe HTML output
- *
- * @param $structure
- * @return void
  */
-function deepEncodeHTMLEntities(&$structure)
+function deepEncodeHTMLEntities(&$structure): void
 {
     $encode = function ($string) {
         return htmlspecialchars($string, ENT_QUOTES, 'UTF-8', false);

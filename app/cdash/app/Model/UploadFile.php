@@ -15,6 +15,8 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Database;
+
 class UploadFile
 {
     public $Id;
@@ -25,7 +27,8 @@ class UploadFile
     public $BuildId;
 
     // Insert in the database
-    public function Insert()
+    // TODO: (williamjallen) execute all of the queries in this function in one transaction
+    public function Insert(): bool
     {
         if (!$this->BuildId) {
             add_log('BuildId is not set', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
@@ -52,57 +55,79 @@ class UploadFile
         }
 
         if (!$this->IsUrl) {
-            $filename = pdo_real_escape_string(basename($this->Filename));
+            $filename = basename($this->Filename);
         } else {
-            $filename = pdo_real_escape_string($this->Filename);
+            $filename = $this->Filename;
         }
 
+        $db = Database::getInstance();
+
         // Check if the file already exists
-        $filequery = pdo_query("SELECT id FROM uploadfile WHERE sha1sum = '" . $this->Sha1Sum . "' AND filename ='$filename'");
-        if (pdo_num_rows($filequery) == 0) {
+        $filequery = $db->executePreparedSingleRow('
+                         SELECT id
+                         FROM uploadfile
+                         WHERE
+                             sha1sum = ?
+                             AND filename = ?
+                     ', [$this->Sha1Sum, $filename]);
+
+        if (empty($filequery)) {
             // Insert the file into the database
-            $query = "INSERT INTO uploadfile (filename, filesize, sha1sum, isurl) VALUES ('$filename','$this->Filesize','$this->Sha1Sum', '$this->IsUrl')";
-            if (!pdo_query($query)) {
+            $query = $db->executePrepared('
+                         INSERT INTO uploadfile (filename, filesize, sha1sum, isurl)
+                         VALUES (?, ?, ?, ?)
+                     ', [$filename, intval($this->Filesize), $this->Sha1Sum, $this->IsUrl]);
+
+            if ($query === false) {
                 add_last_sql_error('Uploadfile::Insert', 0, $this->BuildId);
                 return false;
             }
             $this->Id = pdo_insert_id('uploadfile');
         } else {
-            $filequery_array = pdo_fetch_array($filequery);
-            $this->Id = $filequery_array['id'];
+            $this->Id = $filequery['id'];
         }
 
         if (!$this->Id) {
             add_log('No Id', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
             return false;
         }
+        $this->Id = intval($this->Id);
 
-        if (!pdo_query("INSERT INTO build2uploadfile (fileid, buildid)
-                   VALUES ('$this->Id','$this->BuildId')")
-        ) {
+        $query = $db->executePrepared('
+                     INSERT INTO build2uploadfile (fileid, buildid)
+                     VALUES (?, ?)
+                 ', [$this->Id, $this->BuildId]);
+
+        if ($query === false) {
             add_last_sql_error('UploadFile::Insert', 0, $this->BuildId);
             return false;
         }
         return true;
     }
 
-    public function Fill()
+    public function Fill(): bool
     {
         if (!$this->Id) {
             add_log('Id not set', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
             return false;
         }
-        $query = pdo_query("SELECT filename, filesize, sha1sum, isurl FROM uploadfile WHERE id='$this->Id'");
-        if (!$query) {
+
+        $db = Database::getInstance();
+        $query = $db->executePreparedSingleRow('
+                     SELECT filename, filesize, sha1sum, isurl
+                     FROM uploadfile
+                     WHERE id=?
+                 ', [intval($this->Id)]);
+
+        if ($query === false) {
             add_last_sql_error('Uploadfile::Fill', 0, $this->Id);
             return false;
         }
-        if (pdo_num_rows($query) > 0) {
-            $fileArray = pdo_fetch_array($query);
-            $this->Sha1Sum = $fileArray['sha1sum'];
-            $this->Filename = $fileArray['filename'];
-            $this->Filesize = $fileArray['filesize'];
-            $this->IsUrl = $fileArray['isurl'];
+        if (!empty($query)) {
+            $this->Sha1Sum = $query['sha1sum'];
+            $this->Filename = $query['filename'];
+            $this->Filesize = $query['filesize'];
+            $this->IsUrl = $query['isurl'];
         } else {
             add_log('Invalid id', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
             return false;

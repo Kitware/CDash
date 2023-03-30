@@ -15,51 +15,54 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Database;
+
 class CoverageSummaryDiff
 {
     public $LocTested;
     public $LocUntested;
     public $BuildId;
 
-    public function Insert()
+    public function Insert(): void
     {
-        $row = pdo_single_row_query(
-            'SELECT COUNT(1) FROM coveragesummarydiff
-                WHERE buildid=' . qnum($this->BuildId));
-        if ($row[0] > 0) {
+        $db = Database::getInstance();
+
+        $row = $db->executePreparedSingleRow('
+                   SELECT COUNT(1) AS c
+                   FROM coveragesummarydiff
+                   WHERE buildid=?
+               ', [intval($this->BuildId)]);
+
+        if (intval($row['c']) > 0) {
             // UPDATE instead of INSERT if a row already exists.
-            pdo_query(
-                'UPDATE coveragesummarydiff SET
-                    loctested=' . qnum($this->LocTested) . ',
-                    locuntested=' . qnum($this->LocUntested) . '
-                    WHERE buildid=' . qnum($this->BuildId));
+            $db->executePrepared('
+                UPDATE coveragesummarydiff
+                SET loctested=?, locuntested=?
+                WHERE buildid=?
+            ', [intval($this->LocTested), intval($this->LocUntested), intval($this->BuildId)]);
         } else {
-            pdo_query(
-                'INSERT INTO coveragesummarydiff
-                    (buildid,loctested,locuntested)
-                    VALUES
-                    (' . qnum($this->BuildId) . ',' . qnum($this->LocTested) . ',' . qnum($this->LocUntested) . ')');
+            $db->executePrepared('
+                INSERT INTO coveragesummarydiff (buildid, loctested, locuntested)
+                VALUES (?, ?, ?)
+            ', [intval($this->BuildId), intval($this->LocTested), intval($this->LocUntested)]);
         }
         add_last_sql_error('CoverageSummary:ComputeDifference');
     }
 
     /** Return whether or not a CoverageSummaryDiff exists for this build. */
-    public function Exists()
+    public function Exists(): bool
     {
         if (!$this->BuildId) {
             return false;
         }
 
-        $exists_result = pdo_single_row_query(
-            'SELECT COUNT(1) AS numrows FROM coveragesummarydiff
-                WHERE buildid=' . qnum($this->BuildId));
+        $db = Database::getInstance();
+        $exists_result = $db->executePreparedSingleRow('
+                             SELECT COUNT(1) AS e
+                             FROM coveragesummarydiff
+                             WHERE buildid=?
+                         ', [intval($this->BuildId)]);
 
-        if ($exists_result && array_key_exists('numrows', $exists_result)) {
-            $numrows = $exists_result['numrows'];
-            if ($numrows > 0) {
-                return true;
-            }
-        }
-        return false;
+        return !empty($exists_result);
     }
 }

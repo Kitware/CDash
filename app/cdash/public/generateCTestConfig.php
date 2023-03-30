@@ -18,6 +18,7 @@ include_once 'include/common.php';
 
 use CDash\Model\Project;
 use CDash\Model\SubProject;
+use CDash\Database;
 
 @set_time_limit(0);
 
@@ -32,12 +33,11 @@ if (!isset($projectid) || !is_numeric($projectid)) {
     return;
 }
 
-$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-if (pdo_num_rows($project) == 0) {
+$db = Database::getInstance();
+$project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [intval($projectid)]);
+if (empty($project_array)) {
     return;
 }
-
-$project_array = pdo_fetch_array($project);
 $policy = checkUserPolicy($project_array['id']);
 
 if ($policy !== true) {
@@ -89,18 +89,14 @@ function get_graph_depth($a, $value)
     return $value;
 }
 
-// Compare two subprojects to check the depth
-function cmp($a, $b)
-{
+usort($subprojectids, function ($a, $b) {
     $va = get_graph_depth($a, 0);
     $vb = get_graph_depth($b, 0);
     if ($va == $vb) {
         return 0;
     }
     return ($va < $vb) ? -1 : 1;
-}
-
-usort($subprojectids, 'cmp');
+});
 
 if (count($subprojectids) > 0) {
     $ctestconfig .= "\nset(CTEST_PROJECT_SUBPROJECTS\n";

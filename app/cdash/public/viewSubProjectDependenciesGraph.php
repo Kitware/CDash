@@ -17,6 +17,7 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 
 use CDash\Config;
+use CDash\Database;
 
 $config = Config::getInstance();
 
@@ -32,14 +33,14 @@ if ($date != null) {
 
 $projectid = get_project_id($projectname);
 
-if ($projectid == 0) {
+if ($projectid === 0) {
     echo 'Invalid project';
     return;
 }
 
-$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-if (pdo_num_rows($project) > 0) {
-    $project_array = pdo_fetch_array($project);
+$db = Database::getInstance();
+$project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid]);
+if (!empty($project_array)) {
     $svnurl = make_cdash_url(htmlentities($project_array['cvsurl']));
     $homeurl = make_cdash_url(htmlentities($project_array['homeurl']));
     $bugurl = make_cdash_url(htmlentities($project_array['bugtrackerurl']));
@@ -60,7 +61,7 @@ $xml = begin_XML_for_XSLT();
 $xml .= '<title>CDash - SubProject dependencies Graph - ' . $projectname . '</title>';
 
 list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
-$logoid = getLogoID($projectid);
+$logoid = getLogoID(intval($projectid));
 
 // Main dashboard section
 $xml .=

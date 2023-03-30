@@ -15,6 +15,8 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Database;
+
 class CoverageFileLog
 {
     public $BuildId;
@@ -217,31 +219,38 @@ class CoverageFileLog
             return;
         }
 
+        $db = Database::getInstance();
+
         // Find the build ID for this day's edition of 'Aggregate Coverage'.
-        $aggregateBuildId = null;
         if ($this->AggregateBuildId) {
             if ($this->Build->SubProjectId) {
                 // For SubProject builds, AggregateBuildId refers to the parent.
                 // Look up the ID of the appropriate child.
-                $query =
-                    "SELECT id FROM build
-                    INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)
-                    WHERE parentid='$this->AggregateBuildId' AND
-                    projectid='" . $this->Build->ProjectId ."' AND
-                    sp2b.subprojectid='" . $this->Build->SubProjectId . "'";
-                $row = pdo_single_row_query($query);
+                $row = $db->executePreparedSingleRow('
+                           SELECT id
+                           FROM build
+                           INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)
+                           WHERE
+                               parentid=?
+                               AND projectid=?
+                               AND sp2b.subprojectid=?
+                       ', [
+                           intval($this->AggregateBuildId),
+                           intval($this->Build->ProjectId),
+                           intval($this->Build->SubProjectId)
+                       ]);
                 if (!$row || !array_key_exists('id', $row)) {
                     // An aggregate build for this SubProject doesn't exist yet.
                     // Create it here.
                     $aggregateBuild = create_aggregate_build($this->Build);
                     $aggregateBuildId = $aggregateBuild->Id;
                 } else {
-                    $aggregateBuildId = $row['id'];
+                    $aggregateBuildId = intval($row['id']);
                 }
             } else {
                 // For standalone builds AggregateBuildId is exactly what we're
                 // looking for.
-                $aggregateBuildId = $this->AggregateBuildId;
+                $aggregateBuildId = intval($this->AggregateBuildId);
             }
             $aggregateBuild = new Build();
             $aggregateBuild->Id = $aggregateBuildId;
@@ -255,16 +264,19 @@ class CoverageFileLog
 
         // Abort if this log refers to a different version of the file
         // than the one already contained in the aggregate.
-        $row = pdo_single_row_query(
-            "SELECT id, fullpath FROM coveragefile WHERE id='$this->FileId'");
+        $row = $db->executePreparedSingleRow('
+                   SELECT id, fullpath FROM coveragefile WHERE id=?
+               ', [intval($this->FileId)]);
         $path = $row['fullpath'];
-        $row = pdo_single_row_query(
-            "SELECT id FROM coveragefile AS cf
-                INNER JOIN coveragefilelog AS cfl ON (cfl.fileid=cf.id)
-                WHERE cfl.buildid='$aggregateBuildId' AND cf.fullpath='$path'");
-        if ($row && array_key_exists('id', $row) &&
-            $row['id'] != $this->FileId
-        ) {
+        $row = $db->executePreparedSingleRow('
+                   SELECT id
+                   FROM coveragefile AS cf
+                   INNER JOIN coveragefilelog AS cfl ON (cfl.fileid=cf.id)
+                   WHERE
+                       cfl.buildid=?
+                       AND cf.fullpath=?
+               ', [$aggregateBuildId, $path]);
+        if ($row && array_key_exists('id', $row) && intval($row['id']) !== intval($this->FileId)) {
             add_log("Not appending coverage of '$path' to aggregate as it " .
                 'already contains a different version of this file.',
                 'CoverageFileLog::UpdateAggregate', LOG_INFO,

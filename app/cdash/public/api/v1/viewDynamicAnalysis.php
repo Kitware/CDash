@@ -69,7 +69,7 @@ if ($previousbuildid > 0) {
     $menu['previous'] = false;
 }
 
-$currentbuildid = get_last_buildid_dynamicanalysis($build->ProjectId, $build->SiteId, $build->Type, $build->Name, $build->StartTime);
+$currentbuildid = get_last_buildid_dynamicanalysis($build->ProjectId, $build->SiteId, $build->Type, $build->Name);
 $menu['current'] = "viewDynamicAnalysis.php?buildid=$currentbuildid";
 
 $nextbuildid = get_next_buildid_dynamicanalysis($build->ProjectId, $build->SiteId, $build->Type, $build->Name, $build->StartTime);
@@ -137,11 +137,15 @@ DB::table('dynamicanalysis')
                 $dynamic_analysis['defects'] = $defects;
 
                 if ($project->DisplayLabels) {
-                    get_labels_JSON_from_query_results(
-                        "SELECT text FROM label, label2dynamicanalysis
-                    WHERE label.id = label2dynamicanalysis.labelid AND
-                    label2dynamicanalysis.dynamicanalysisid = '$dynid'
-                    ORDER BY text ASC", $dynamic_analysis);
+                    get_labels_JSON_from_query_results('
+                        SELECT text
+                        FROM label, label2dynamicanalysis
+                        WHERE
+                            label.id = label2dynamicanalysis.labelid
+                            AND label2dynamicanalysis.dynamicanalysisid = ?
+                        ORDER BY text ASC
+                    ', [intval($dynid)], $dynamic_analysis);
+
                     if (array_key_exists('labels', $dynamic_analysis)) {
                         $dynamic_analysis['labels'] = implode(', ', $dynamic_analysis['labels']);
                     } else {

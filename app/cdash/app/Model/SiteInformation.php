@@ -16,6 +16,8 @@
 namespace CDash\Model;
 
 // It is assumed that appropriate headers should be included before including this file
+use CDash\Database;
+
 class SiteInformation
 {
     public $TimeStamp;
@@ -54,7 +56,7 @@ class SiteInformation
         $this->SiteId = 0;
     }
 
-    public function SetValue($tag, $value)
+    public function SetValue(string $tag, $value): void
     {
         switch ($tag) {
             case 'DESCRIPTION':
@@ -100,16 +102,21 @@ class SiteInformation
     }
 
     /** Check if the site already exists */
-    public function Exists()
+    public function Exists(): bool
     {
         // If no id specify return false
         if (!$this->SiteId) {
             return false;
         }
 
-        $query = pdo_query("SELECT count(*) FROM siteinformation WHERE siteid='" . $this->SiteId . "'");
-        $query_array = pdo_fetch_array($query);
-        if ($query_array[0] == 0) {
+        $db = Database::getInstance();
+
+        $query = $db->executePreparedSingleRow('
+                     SELECT count(*) AS c
+                     FROM siteinformation
+                     WHERE siteid=?
+                 ', [intval($this->SiteId)]);
+        if (intval($query['c']) === 0) {
             return false;
         }
         return true;
@@ -118,49 +125,93 @@ class SiteInformation
     /** Save the site information */
     public function Save()
     {
+        $db = Database::getInstance();
         if ($this->Exists()) {
             // Update the project
-            $query = 'UPDATE siteinformation SET';
-            $query .= " timestamp='" . $this->TimeStamp . "'";
-            $query .= ",processoris64bits='" . $this->ProcessorIs64Bits . "'";
-            $query .= ",processorvendor='" . $this->ProcessorVendor . "'";
-            $query .= ",processorvendorid='" . $this->ProcessorVendorId . "'";
-            $query .= ",processorfamilyid='" . $this->ProcessorFamilyId . "'";
-            $query .= ",processormodelid='" . $this->ProcessorModelId . "'";
-            $query .= ",processorcachesize='" . round($this->ProcessorCacheSize) . "'";
-            $query .= ",numberlogicalcpus='" . round($this->NumberLogicalCpus) . "'";
-            $query .= ",numberphysicalcpus='" . round($this->NumberPhysicalCpus) . "'";
-            $query .= ",totalvirtualmemory='" . round($this->TotalVirtualMemory) . "'";
-            $query .= ",totalphysicalmemory='" . round($this->TotalPhysicalMemory) . "'";
-            $query .= ",logicalprocessorsperphysical='" . round($this->LogicalProcessorsPerPhysical) . "'";
-            $query .= ",processorclockfrequency='" . round($this->ProcessorClockFrequency) . "'";
-            $query .= ",description='" . $this->Description . "'";
-            $query .= " WHERE siteid='" . $this->SiteId . "'";
+            $query = $db->executePrepared('
+                         UPDATE siteinformation
+                         SET
+                             timestamp=?,
+                             processoris64bits=?,
+                             processorvendor=?,
+                             processorvendorid=?,
+                             processorfamilyid=?,
+                             processormodelid=?,
+                             processorcachesize=?,
+                             numberlogicalcpus=?,
+                             numberphysicalcpus=?,
+                             totalvirtualmemory=?,
+                             totalphysicalmemory=?,
+                             logicalprocessorsperphysical=?,
+                             processorclockfrequency=?,
+                             description=?
+                         WHERE siteid=?
+                     ', [
+                         $this->TimeStamp,
+                         $this->ProcessorIs64Bits,
+                         $this->ProcessorVendor,
+                         $this->ProcessorVendorId,
+                         $this->ProcessorFamilyId,
+                         $this->ProcessorModelId,
+                         round($this->ProcessorCacheSize),
+                         round($this->NumberLogicalCpus),
+                         round($this->NumberPhysicalCpus),
+                         $this->TotalVirtualMemory,
+                         round($this->TotalPhysicalMemory),
+                         round($this->LogicalProcessorsPerPhysical),
+                         round($this->ProcessorClockFrequency),
+                         $this->Description,
+                         intval($this->SiteId)
+                     ]);
 
-            if (!pdo_query($query)) {
+            if ($query === false) {
                 add_last_sql_error('SiteInformation Update');
                 return false;
             }
         } else {
-            if (!pdo_query('INSERT INTO siteinformation (siteid,timestamp,
-                     processoris64bits,processorvendor,processorvendorid,
-                     processorfamilyid,processormodelid,processorcachesize,
-                     numberlogicalcpus,numberphysicalcpus,totalvirtualmemory,
-                     totalphysicalmemory,logicalprocessorsperphysical,processorclockfrequency,
-                     description
-                     )
-                     VALUES (' . qnum($this->SiteId) . ",'$this->TimeStamp','$this->ProcessorIs64Bits',
-                     '$this->ProcessorVendor','$this->ProcessorVendorId',
-                     " . qnum($this->ProcessorFamilyId) . ',' . qnum($this->ProcessorModelId) . ',
-                     ' . qnum(round($this->ProcessorCacheSize)) . ',' . qnum(round($this->NumberLogicalCpus)) . ',
-                     ' . qnum(round($this->NumberPhysicalCpus)) . ',' . qnum(round($this->TotalVirtualMemory)) . ',
-                     ' . qnum(round($this->TotalPhysicalMemory)) . ',' . qnum(round($this->LogicalProcessorsPerPhysical)) . ',
-                      ' . qnum(round($this->ProcessorClockFrequency)) . ",'$this->Description'
-                     )")
-            ) {
+            $query = $db->executePrepared('
+                         INSERT INTO siteinformation (
+                             siteid,
+                             timestamp,
+                             processoris64bits,
+                             processorvendor,
+                             processorvendorid,
+                             processorfamilyid,
+                             processormodelid,
+                             processorcachesize,
+                             numberlogicalcpus,
+                             numberphysicalcpus,
+                             totalvirtualmemory,
+                             totalphysicalmemory,
+                             logicalprocessorsperphysical,
+                             processorclockfrequency,
+                             description
+                         )
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     ', [
+                         intval($this->SiteId),
+                         $this->TimeStamp,
+                         $this->ProcessorIs64Bits,
+                         $this->ProcessorVendor,
+                         $this->ProcessorVendorId,
+                         intval($this->ProcessorFamilyId),
+                         intval($this->ProcessorModelId),
+                         round($this->ProcessorCacheSize),
+                         round($this->NumberLogicalCpus),
+                         round($this->NumberPhysicalCpus),
+                         round($this->TotalVirtualMemory),
+                         round($this->TotalPhysicalMemory),
+                         round($this->LogicalProcessorsPerPhysical),
+                         round($this->ProcessorClockFrequency),
+                         $this->Description
+                     ]);
+
+            if ($query === false) {
                 add_last_sql_error('SiteInformation Insert');
                 return false;
             }
         }
+
+        return true;
     }
 }

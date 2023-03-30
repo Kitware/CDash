@@ -9,16 +9,13 @@ require_once 'include/common.php';
 require_once 'include/pdo.php';
 
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 class OutputColorTestCase extends KWWebTestCase
 {
-    private $builds;
-    private $parentBuilds;
-
     public function __construct()
     {
         parent::__construct();
-        $this->PDO = get_link_identifier()->getPdo();
     }
 
     public function testOutputColor()
@@ -90,13 +87,12 @@ class OutputColorTestCase extends KWWebTestCase
         $file = dirname(__FILE__) . '/data/OutputColor/Build.xml';
         if (!$this->submission('OutputColor', $file)) {
             $this->fail("Failed to submit $file");
-            return;
         }
     }
 
     private function getIdForTest($testname)
     {
-        $buildtestid_results = \DB::select(
+        $buildtestid_results = DB::select(
             DB::raw(
                 "SELECT build2test.id FROM build2test
             JOIN test ON (build2test.testid = test.id)

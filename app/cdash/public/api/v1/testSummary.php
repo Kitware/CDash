@@ -23,6 +23,7 @@
 namespace CDash\Api\v1\TestSummary;
 
 use App\Services\PageTimer;
+use CDash\Database;
 
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
@@ -31,8 +32,8 @@ include_once 'include/repository.php';
 $response = [];
 
 // Checks
-$date = htmlspecialchars(pdo_real_escape_string($_GET['date']));
-if (!isset($date) || strlen($date) == 0) {
+$date = htmlspecialchars($_GET['date']);
+if (!isset($date) || strlen($date) === 0) {
     $response['error'] = 'No date specified.';
     echo json_encode($response);
     return;
@@ -43,13 +44,13 @@ if (!isset($projectid)) {
     echo json_encode($response);
     return;
 }
-if (!isset($projectid) || !is_numeric($projectid)) {
+if (!is_numeric($projectid)) {
     $response['error'] = 'Not a valid projectid!';
     echo json_encode($response);
     return;
 }
 
-$testName = htmlspecialchars(pdo_real_escape_string($_GET['name']));
+$testName = htmlspecialchars($_GET['name']);
 if (!isset($testName)) {
     $response['error'] = 'No test name specified.';
     echo json_encode($response);
@@ -58,9 +59,10 @@ if (!isset($testName)) {
 
 $pageTimer = new PageTimer();
 
-$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-if (pdo_num_rows($project) > 0) {
-    $project_array = pdo_fetch_array($project);
+$db = Database::getInstance();
+
+$project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [intval($projectid)]);
+if (!empty($project_array)) {
     $projectname = $project_array['name'];
     $nightlytime = $project_array['nightlytime'];
     $projectshowtesttime = $project_array['showtesttime'];
@@ -101,23 +103,28 @@ $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
 // Count how many extra test measurements we have.
-$getcolumnnumber = pdo_query(
-    "SELECT testmeasurement.name, COUNT(DISTINCT test.name) as xxx FROM test
-        JOIN build2test ON (build2test.testid = test.id)
-        JOIN build ON (build.id = build2test.buildid)
-        JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
-        JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
-        WHERE test.name='$testName'
-        AND build.starttime>='$beginning_UTCDate'
-        AND build.starttime<'$end_UTCDate'
-        AND test.projectid=$projectid
-        GROUP by testmeasurement.name
-        ");
+$getcolumnnumber = $db->executePrepared('
+                       SELECT testmeasurement.name
+                       FROM test
+                       JOIN build2test ON (build2test.testid = test.id)
+                       JOIN build ON (build.id = build2test.buildid)
+                       JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
+                       JOIN measurement ON (
+                           test.projectid=measurement.projectid
+                           AND testmeasurement.name=measurement.name
+                       )
+                       WHERE
+                           test.name=?
+                           AND build.starttime>=?
+                           AND build.starttime<?
+                           AND test.projectid=?
+                       GROUP by testmeasurement.name
+                   ', [$testName, $beginning_UTCDate, $end_UTCDate, intval($projectid)]);
 
 $columns = array();
 $response['hasprocessors'] = false;
 $processors_idx = -1;
-while ($row = pdo_fetch_array($getcolumnnumber)) {
+foreach ($getcolumnnumber as $row) {
     $columns[] = $row['name'];
     if ($row['name'] == 'Processors') {
         $processors_idx = count($columns) - 1;
@@ -125,8 +132,6 @@ while ($row = pdo_fetch_array($getcolumnnumber)) {
     }
 }
 $response['columns'] = $columns;
-
-$columncount = pdo_num_rows($getcolumnnumber);
 
 // Add the date/time
 $response['projectid'] = $projectid;
@@ -137,37 +142,60 @@ $response['testendtime'] = date(FMT_DATETIME, $end_timestamp);
 //Get information about all the builds for the given date and project
 $builds = array();
 
-$columncount = pdo_num_rows($getcolumnnumber);
+$columncount = count($getcolumnnumber);
+
+$etestquery = null;
 // If at least one column is selected
 if ($columncount > 0) {
-    $etestquery = pdo_query(
-        "SELECT test.id, test.projectid, build2test.buildid,
-            build2test.status, build2test.timestatus, test.name,
-            testmeasurement.name, testmeasurement.value, build.starttime,
-            build2test.time FROM test
-            JOIN build2test ON (build2test.testid = test.id)
-            JOIN build ON (build.id = build2test.buildid)
-            JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
-            JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
-            WHERE test.name='$testName'
-            AND build.starttime>='$beginning_UTCDate'
-            AND build.starttime<'$end_UTCDate'
-            AND test.projectid=$projectid
-            ORDER BY build2test.buildid, testmeasurement.name
-            ");
+    $etestquery = $db->executePrepared('
+                      SELECT
+                          test.id,
+                          test.projectid,
+                          build2test.buildid,
+                          build2test.status,
+                          build2test.timestatus,
+                          test.name,
+                          testmeasurement.name,
+                          testmeasurement.value,
+                          build.starttime,
+                          build2test.time
+                      FROM test
+                      JOIN build2test ON (build2test.testid = test.id)
+                      JOIN build ON (build.id = build2test.buildid)
+                      JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
+                      JOIN measurement ON (
+                          test.projectid=measurement.projectid
+                          AND testmeasurement.name=measurement.name
+                      )
+                      WHERE
+                          test.name=?
+                          AND build.starttime>=?
+                          AND build.starttime<?
+                          AND test.projectid=?
+                     ORDER BY
+                         build2test.buildid,
+                         testmeasurement.name
+                 ', [$testName, $beginning_UTCDate, $end_UTCDate, intval($projectid)]);
 }
 
-$query = "
-    SELECT b.id AS buildid, b.name, b.stamp, b2t.id AS buildtestid,
-           b2t.status, b2t.time, s.name AS sitename
-    FROM test AS t
-    LEFT JOIN build2test AS b2t ON (t.id = b2t.testid)
-    LEFT JOIN build AS b ON (b.id = b2t.buildid)
-    LEFT JOIN site AS s ON (s.id = b.siteid)
-    WHERE t.name='$testName' AND
-        b.projectid = '$projectid' AND
-        b.starttime BETWEEN '$beginning_UTCDate' AND '$end_UTCDate'";
-$result = pdo_query($query);
+$result = $db->executePrepared('
+              SELECT
+                  b.id AS buildid,
+                  b.name,
+                  b.stamp,
+                  b2t.id AS buildtestid,
+                  b2t.status,
+                  b2t.time,
+                  s.name AS sitename
+              FROM test AS t
+              LEFT JOIN build2test AS b2t ON (t.id = b2t.testid)
+              LEFT JOIN build AS b ON (b.id = b2t.buildid)
+              LEFT JOIN site AS s ON (s.id = b.siteid)
+              WHERE
+                  t.name=?
+                  AND b.projectid=?
+                  AND b.starttime BETWEEN ? AND ?
+          ', [$testName, intval($projectid), $beginning_UTCDate, $end_UTCDate]);
 
 // If user wants to export as CSV file.
 if (isset($_GET['export']) && $_GET['export'] == 'csv') {
@@ -181,8 +209,10 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
     $filecontent = 'Site,Build Name,Build Stamp,Status,Time(s)';
 
     // Store named measurements in an array.
-    while (isset($etestquery) && $row = pdo_fetch_array($etestquery)) {
-        $etest[$row['buildid']][$row['name']] = $row['value'];
+    if (is_array($etestquery)) {
+        foreach ($etestquery as $row) {
+            $etest[$row['buildid']][$row['name']] = $row['value'];
+        }
     }
 
     for ($c = 0; $c < count($columns); $c++) {
@@ -191,7 +221,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
 
     $filecontent .= "\n";
 
-    while ($row = pdo_fetch_array($result)) {
+    foreach ($result as $row) {
         $currentStatus = $row['status'];
 
         $filecontent .= "{$row['sitename']},{$row['name']},{$row['stamp']},{$row['time']},";
@@ -236,7 +266,7 @@ $numfailed = 0;
 $numtotal = 0;
 $test_measurements = [];
 
-while ($row = pdo_fetch_array($result)) {
+foreach ($result as $row) {
     $buildid = $row['buildid'];
     $build_response = array();
 
@@ -249,11 +279,21 @@ while ($row = pdo_fetch_array($result)) {
         'revisiondiff' => ''
     ];
     // Return the status
-    $status_array = pdo_fetch_array(pdo_query("SELECT status,revision,priorrevision,path
-                FROM buildupdate,build2update AS b2u
-                WHERE b2u.updateid=buildupdate.id
-                AND b2u.buildid='$buildid'"));
-    if (is_array($status_array)) {
+    $status_array = $db->executePreparedSingleRow('
+                        SELECT
+                            status,
+                            revision,
+                            priorrevision,
+                            path
+                        FROM
+                            buildupdate,
+                            build2update AS b2u
+                        WHERE
+                            b2u.updateid=buildupdate.id
+                            AND b2u.buildid=?
+                    ', [intval($buildid)]);
+
+    if (!empty($status_array)) {
         if (strlen($status_array['status']) > 0 && $status_array['status'] != '0') {
             $update_response['status'] = $status_array['status'];
         } else {
@@ -309,27 +349,43 @@ while ($row = pdo_fetch_array($result)) {
 
 // Fill in extra test measurements for each build.
 if ($columncount > 0) {
-    $etestquery = pdo_query(
-        "SELECT test.id, test.projectid, build2test.buildid,
-            build2test.status, build2test.timestatus, test.name,
-            testmeasurement.name, testmeasurement.value, build.starttime,
-            build2test.time FROM test
-            JOIN build2test ON (build2test.testid = test.id)
-            JOIN build ON (build.id = build2test.buildid)
-            JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
-            JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
-            WHERE test.name='$testName'
-            AND build.starttime>='$beginning_UTCDate'
-            AND build.starttime<'$end_UTCDate'
-            AND test.projectid=$projectid
-            ORDER BY build2test.buildid, testmeasurement.name
-            ");
-    while ($etestquery && $row = pdo_fetch_array($etestquery)) {
-        // Get the index of this measurement in the list of columns.
-        $idx = array_search($row['name'], $columns);
+    $etestquery = $db->executePrepared('
+                      SELECT
+                          test.id,
+                          test.projectid,
+                          build2test.buildid,
+                          build2test.status,
+                          build2test.timestatus,
+                          test.name,
+                          testmeasurement.name,
+                          testmeasurement.value,
+                          build.starttime,
+                          build2test.time
+                      FROM test
+                      JOIN build2test ON (build2test.testid = test.id)
+                      JOIN build ON (build.id = build2test.buildid)
+                      JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
+                      JOIN measurement ON (
+                          test.projectid=measurement.projectid
+                          AND testmeasurement.name=measurement.name
+                      )
+                      WHERE
+                          test.name=?
+                          AND build.starttime>=?
+                          AND build.starttime<?
+                          AND test.projectid=?
+                      ORDER BY
+                          build2test.buildid,
+                          testmeasurement.name
+                  ', [$testName, $beginning_UTCDate, $end_UTCDate, intval($projectid)]);
+    if (is_array($etestquery)) {
+        foreach ($etestquery as $row) {
+            // Get the index of this measurement in the list of columns.
+            $idx = array_search($row['name'], $columns);
 
-        // Fill in this measurement value for this build's run of the test.
-        $test_measurements[$row['buildid']][$idx] = $row['value'];
+            // Fill in this measurement value for this build's run of the test.
+            $test_measurements[$row['buildid']][$idx] = $row['value'];
+        }
     }
 }
 

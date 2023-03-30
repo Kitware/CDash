@@ -69,7 +69,7 @@ class NotesAPICase extends KWWebTestCase
     public function testAddNoteRequiresAuth()
     {
         // Change the Trilinos project to a private project
-        $id = pdo_get_field_value("SELECT id FROM project WHERE name='TrilinosDriver'", 'id', null);
+        $id = pdo_single_row_query("SELECT id FROM project WHERE name='TrilinosDriver'")['id'];
         $project = new Project();
         $project->Id = $id;
         $project->Fill();
@@ -103,7 +103,8 @@ class NotesAPICase extends KWWebTestCase
         $project->Save();
 
         $query = "DELETE FROM buildnote WHERE note='{$expected}'";
-        if (!pdo_delete_query($query)) {
+        $result = pdo_query($query);
+        if (false === $result) {
             $this->fail("Test successful but delete of data failed [sql: {$query}");
         }
     }

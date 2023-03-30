@@ -15,6 +15,9 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Database;
+use Illuminate\Support\Facades\DB;
+
 class CoverageSummary
 {
     private $LocTested = 0;
@@ -31,56 +34,52 @@ class CoverageSummary
         $this->Coverages = array();
     }
 
-    public function AddCoverage($coverage)
+    public function AddCoverage($coverage): void
     {
         $this->Coverages[] = $coverage;
     }
 
-    public function GetCoverages()
-    {
-        return $this->Coverages;
-    }
-
     /** Remove all coverage information */
-    public function RemoveAll()
+    public function RemoveAll(): bool
     {
         if (!$this->BuildId) {
             echo 'CoverageSummary::RemoveAll(): BuildId not set';
             return false;
         }
 
-        $query = 'DELETE FROM coveragesummarydiff WHERE buildid=' . qnum($this->BuildId);
-        if (!pdo_query($query)) {
+        $db = Database::getInstance();
+
+        $query = $db->executePrepared('DELETE FROM coveragesummarydiff WHERE buildid=?', [intval($this->BuildId)]);
+        if ($query === false) {
             add_last_sql_error('CoverageSummary RemoveAll');
             return false;
         }
 
         // coverage file are kept unless they are shared
-        $coverage = pdo_query('SELECT fileid FROM coverage WHERE buildid=' . qnum($this->BuildId));
-        while ($coverage_array = pdo_fetch_array($coverage)) {
-            $fileid = $coverage_array['fileid'];
+        $coverage = $db->executePrepared('SELECT fileid FROM coverage WHERE buildid=?', [intval($this->BuildId)]);
+        foreach ($coverage as $coverage_array) {
+            $fileid = intval($coverage_array['fileid']);
             // Make sure the file is not shared
-            $numfiles = pdo_query("SELECT count(*) FROM coveragefile WHERE id='$fileid'");
-            $numfiles_array = pdo_fetch_row($numfiles);
-            if ($numfiles_array[0] == 1) {
-                pdo_query("DELETE FROM coveragefile WHERE id='$fileid'");
+            $numfiles = $db->executePreparedSingleRow('SELECT count(*) AS c FROM coveragefile WHERE id=?', [$fileid]);
+            if (intval($numfiles['c']) === 1) {
+                $db->executePrepared('DELETE FROM coveragefile WHERE id=?', [$fileid]);
             }
         }
 
-        $query = 'DELETE FROM coverage WHERE buildid=' . qnum($this->BuildId);
-        if (!pdo_query($query)) {
+        $query = $db->executePrepared('DELETE FROM coverage WHERE buildid=?', [intval($this->BuildId)]);
+        if ($query === false) {
             add_last_sql_error('CoverageSummary RemoveAll');
             return false;
         }
 
-        $query = 'DELETE FROM coveragefilelog WHERE buildid=' . qnum($this->BuildId);
-        if (!pdo_query($query)) {
+        $query = $db->executePrepared('DELETE FROM coveragefilelog WHERE buildid=?', [intval($this->BuildId)]);
+        if ($query === false) {
             add_last_sql_error('CoverageSummary RemoveAll');
             return false;
         }
 
-        $query = 'DELETE FROM coveragesummary WHERE buildid=' . qnum($this->BuildId);
-        if (!pdo_query($query)) {
+        $query = $db->executePrepared('DELETE FROM coveragesummary WHERE buildid=?', [intval($this->BuildId)]);
+        if ($query === false) {
             add_last_sql_error('CoverageSummary RemoveAll');
             return false;
         }
@@ -88,7 +87,7 @@ class CoverageSummary
     }   // RemoveAll()
 
     /** Insert a new summary */
-    public function Insert($append = false)
+    public function Insert($append = false): bool
     {
         if (!$this->BuildId || !is_numeric($this->BuildId)) {
             echo 'CoverageSummary::Insert(): BuildId not set';
@@ -96,7 +95,9 @@ class CoverageSummary
         }
 
         if (count($this->Coverages) > 0) {
-            foreach ($this->Coverages as &$coverage) {
+            $db = Database::getInstance();
+
+            foreach ($this->Coverages as $coverage) {
                 $fullpath = $coverage->CoverageFile->FullPath;
 
                 // GcovTarHandler creates its own coveragefiles, no need to do
@@ -109,17 +110,18 @@ class CoverageSummary
                 if ($fileid === -1) {
                     // Check if this file already exists in the database.
                     // This could happen if CoverageLog.xml was parsed before Coverage.xml.
-                    $coveragefile = pdo_query(
-                        "SELECT id FROM coveragefile AS cf
-                    INNER JOIN coveragefilelog AS cfl ON (cfl.fileid=cf.id)
-                    WHERE cf.fullpath='$fullpath' AND cfl.buildid='$this->BuildId'");
-                    if (pdo_num_rows($coveragefile) == 0) {
+                    $coveragefile = $db->executePreparedSingleRow('
+                                        SELECT id
+                                        FROM coveragefile AS cf
+                                        INNER JOIN coveragefilelog AS cfl ON (cfl.fileid=cf.id)
+                                        WHERE cf.fullpath=? AND cfl.buildid=?
+                                   ', [$fullpath, intval($this->BuildId)]);
+                    if (empty($coveragefile)) {
                         // Create an empty file if doesn't exist.
-                        pdo_query("INSERT INTO coveragefile (fullpath, crc32) VALUES ('$fullpath', 0)");
-                        $fileid = pdo_insert_id('coveragefile');
+                        $db->executePrepared('INSERT INTO coveragefile (fullpath, crc32) VALUES (?, 0)', [$fullpath]);
+                        $fileid = intval(pdo_insert_id('coveragefile'));
                     } else {
-                        $coveragefile_array = pdo_fetch_array($coveragefile);
-                        $fileid = $coveragefile_array['id'];
+                        $fileid = intval($coveragefile['id']);
                     }
                     $coverage->CoverageFile->Id = $fileid;
                 }
@@ -161,14 +163,14 @@ class CoverageSummary
                 if ($append) {
                     // UPDATE (instead of INSERT) if this coverage already
                     // exists.
-                    $existing_row_updated = \DB::transaction(function () use ($coverage, $covered, $loctested, $locuntested, $branchstested, $branchsuntested, $functionstested, $functionsuntested) {
-                        $existing_coverage_row = \DB::table('coverage')
+                    $existing_row_updated = DB::transaction(function () use ($coverage, $covered, $loctested, $locuntested, $branchstested, $branchsuntested, $functionstested, $functionsuntested) {
+                        $existing_coverage_row = DB::table('coverage')
                             ->where('buildid', $this->BuildId)
                             ->where('fileid', $coverage->CoverageFile->Id)
                             ->lockForUpdate()
                             ->first();
                         if ($existing_coverage_row) {
-                            \DB::table('coverage')
+                            DB::table('coverage')
                                 ->where('buildid', $this->BuildId)
                                 ->where('fileid', $coverage->CoverageFile->Id)
                                 ->update([
@@ -186,7 +188,7 @@ class CoverageSummary
                     });
                 }
                 if (!$existing_row_updated) {
-                    \DB::table('coverage')->insert([
+                    DB::table('coverage')->insert([
                         'buildid' => $this->BuildId,
                         'fileid' => $fileid,
                         'covered' => $covered,
@@ -209,8 +211,8 @@ class CoverageSummary
         $summary_updated = false;
         if ($append) {
             // Check if a coveragesummary already exists for this build.
-            $summary_updated = \DB::transaction(function () use (&$delta_tested, &$delta_untested) {
-                $existing_summary_row = \DB::table('coveragesummary')
+            $summary_updated = DB::transaction(function () use (&$delta_tested, &$delta_untested) {
+                $existing_summary_row = DB::table('coveragesummary')
                     ->where('buildid', $this->BuildId)
                     ->lockForUpdate()
                     ->first();
@@ -224,14 +226,14 @@ class CoverageSummary
                 // based on all files covered by this build.
                 $this->LocTested = 0;
                 $this->LocUntested = 0;
-                $rows = \DB::table('coverage')->where('buildid', $this->BuildId)->get();
+                $rows = DB::table('coverage')->where('buildid', $this->BuildId)->get();
                 foreach ($rows as $row) {
                     $this->LocTested += $row->loctested;
                     $this->LocUntested += $row->locuntested;
                 }
 
                 // Update the existing record with this information.
-                \DB::table('coveragesummary')
+                DB::table('coveragesummary')
                     ->where('buildid', $this->BuildId)
                     ->update([
                         'loctested' => $this->LocTested,
@@ -248,7 +250,7 @@ class CoverageSummary
         }
 
         if (!$summary_updated) {
-            \DB::table('coveragesummary')->insert([
+            DB::table('coveragesummary')->insert([
                 'buildid' => $this->BuildId,
                 'loctested' => $this->LocTested,
                 'locuntested' => $this->LocUntested,
@@ -256,18 +258,18 @@ class CoverageSummary
         }
 
         // If this is a child build then update the parent's summary as well.
-        $build_row = \DB::table('build')->where('id', $this->BuildId)->first();
+        $build_row = DB::table('build')->where('id', $this->BuildId)->first();
         if ($build_row) {
             $parentid = $build_row->parentid;
             if ($parentid > 0) {
-                \DB::transaction(function () use ($parentid, $delta_tested, $delta_untested) {
-                    $parent_summary = \DB::table('coveragesummary')
+                DB::transaction(function () use ($parentid, $delta_tested, $delta_untested) {
+                    $parent_summary = DB::table('coveragesummary')
                         ->where('buildid', $parentid)
                         ->lockForUpdate()
                         ->first();
 
                     if (!$parent_summary) {
-                        \DB::table('coveragesummary')->insert([
+                        DB::table('coveragesummary')->insert([
                             'buildid' => $parentid,
                             'loctested' => $this->LocTested,
                             'locuntested' => $this->LocUntested,
@@ -279,11 +281,11 @@ class CoverageSummary
                         if (!isset($delta_untested)) {
                             $delta_untested = $this->LocUntested;
                         }
-                        \DB::table('coveragesummary')
+                        DB::table('coveragesummary')
                         ->where('buildid', $parentid)
                         ->update([
-                            'loctested' => \DB::raw("loctested + $delta_tested"),
-                            'locuntested' => \DB::raw("locuntested + $delta_untested"),
+                            'loctested' => DB::raw("loctested + $delta_tested"),
+                            'locuntested' => DB::raw("locuntested + $delta_untested"),
                         ]);
                     }
                 });
@@ -293,30 +295,38 @@ class CoverageSummary
     }   // Insert()
 
     /** Compute the coverage summary diff */
-    public function ComputeDifference($previous_parentid=null)
+    public function ComputeDifference($previous_parentid=null): bool
     {
         $build = new Build();
         $build->Id = $this->BuildId;
         $previousBuildId = $build->GetPreviousBuildId($previous_parentid);
         if ($previousBuildId < 1) {
-            return;
+            return true;
         }
 
+        $db = Database::getInstance();
+
         // Look at the number of errors and warnings differences
-        $coverage = pdo_query('SELECT loctested,locuntested FROM coveragesummary WHERE buildid=' . qnum($this->BuildId));
-        if (!$coverage) {
+        $coverage = $db->executePreparedSingleRow('
+                        SELECT loctested, locuntested
+                        FROM coveragesummary
+                        WHERE buildid=?
+                    ', [intval($this->BuildId)]);
+        if (empty($coverage)) {
             add_last_sql_error('CoverageSummary:ComputeDifference');
             return false;
         }
-        $coverage_array = pdo_fetch_array($coverage);
-        $loctested = $coverage_array['loctested'];
-        $locuntested = $coverage_array['locuntested'];
+        $loctested = intval($coverage['loctested']);
+        $locuntested = intval($coverage['locuntested']);
 
-        $previouscoverage = pdo_query('SELECT loctested,locuntested FROM coveragesummary WHERE buildid=' . qnum($previousBuildId));
-        if (pdo_num_rows($previouscoverage) > 0) {
-            $previouscoverage_array = pdo_fetch_array($previouscoverage);
-            $previousloctested = $previouscoverage_array['loctested'];
-            $previouslocuntested = $previouscoverage_array['locuntested'];
+        $previouscoverage = $db->executePreparedSingleRow('
+                                SELECT loctested, locuntested
+                                FROM coveragesummary
+                                WHERE buildid=?
+                            ', [intval($previousBuildId)]);
+        if (!empty($previouscoverage)) {
+            $previousloctested = intval($previouscoverage['loctested']);
+            $previouslocuntested = intval($previouscoverage['locuntested']);
 
             $summaryDiff = new CoverageSummaryDiff();
             $summaryDiff->BuildId = $this->BuildId;
@@ -325,48 +335,54 @@ class CoverageSummary
 
             // Don't log if no diff unless an entry already exists
             // for this build.
-            if ($summaryDiff->Exists() || $loctesteddiff != 0 || $locuntesteddiff != 0) {
+            if ($summaryDiff->Exists() || $loctesteddiff !== 0 || $locuntesteddiff !== 0) {
                 $summaryDiff->LocTested = $loctesteddiff;
                 $summaryDiff->LocUntested = $locuntesteddiff;
                 $summaryDiff->Insert();
             }
         }
+
+        return true;
     }
 
     /** Return the list of buildid which are contributing to the dashboard */
-    public function GetBuilds($projectid, $timestampbegin, $timestampend)
+    public function GetBuilds($projectid, $timestampbegin, $timestampend): array|false
     {
-        $buildids = array();
-        $coverage = pdo_query('SELECT buildid FROM coveragesummary,build WHERE coveragesummary.buildid=build.id
-                AND build.projectid=' . qnum($projectid) . " AND build.starttime>'" . $timestampbegin . "'
-                AND endtime<'" . $timestampend . "'");
-        if (!$coverage) {
+        $db = Database::getInstance();
+        $coverage = $db->executePrepared('
+                        SELECT buildid
+                        FROM coveragesummary, build
+                        WHERE
+                            coveragesummary.buildid=build.id
+                            AND build.projectid=?
+                            AND build.starttime>?
+                            AND endtime<?', [intval($projectid), $timestampbegin, $timestampend]);
+        if ($coverage === false) {
             add_last_sql_error('CoverageSummary:GetBuilds');
             return false;
         }
-        while ($coverage_array = pdo_fetch_array($coverage)) {
-            $buildids[] = $coverage_array['buildid'];
+
+        $buildids = [];
+        foreach ($coverage as $coverage_array) {
+            $buildids[] = intval($coverage_array['buildid']);
         }
         return $buildids;
     }
 
     /** Return whether or not a CoverageSummary exists for this build. */
-    public function Exists()
+    public function Exists(): bool
     {
         if (!$this->BuildId) {
             return false;
         }
 
-        $exists_result = pdo_single_row_query(
-            'SELECT COUNT(1) AS numrows FROM coveragesummary
-                WHERE buildid=' . qnum($this->BuildId));
+        $db = Database::getInstance();
+        $exists_result = $db->executePrepared('
+                             SELECT 1
+                             FROM coveragesummary
+                             WHERE buildid=?
+                         ', [intval($this->BuildId)]);
 
-        if ($exists_result && array_key_exists('numrows', $exists_result)) {
-            $numrows = $exists_result['numrows'];
-            if ($numrows > 0) {
-                return true;
-            }
-        }
-        return false;
+        return !empty($exists_result);
     }
 }

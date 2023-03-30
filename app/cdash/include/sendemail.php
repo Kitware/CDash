@@ -17,29 +17,23 @@
 require_once 'include/cdashmail.php';
 
 use CDash\Config;
-use CDash\Log;
+use CDash\Database;
 use CDash\Messaging\Notification\Email\EmailBuilder;
 use CDash\Messaging\Notification\Email\EmailNotificationFactory;
-use CDash\Messaging\Notification\Email\Mail;
 use CDash\Messaging\Notification\Mailer;
 use CDash\Messaging\Notification\NotificationCollection;
 use CDash\Messaging\Notification\NotificationDirector;
-use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
 use CDash\Messaging\Subscription\SubscriptionCollection;
-use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Model\Build;
-use CDash\Model\BuildEmail;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildUpdate;
 use CDash\Model\DynamicAnalysis;
-use CDash\Model\LabelEmail;
 use CDash\Model\Project;
 use CDash\Model\Site;
-use CDash\Model\UserProject;
 
 /** Check for errors for a given build. Return false if no errors */
-function check_email_errors($buildid, $checktesttimeingchanged, $testtimemaxstatus, $checkpreviouserrors)
+function check_email_errors(int $buildid, bool $checktesttimeingchanged, int $testtimemaxstatus, bool $checkpreviouserrors): array
 {
     $errors = [];
     $errors['errors'] = true;
@@ -115,7 +109,7 @@ function check_email_errors($buildid, $checktesttimeingchanged, $testtimemaxstat
 }
 
 /** Check for update errors for a given build. */
-function check_email_update_errors($buildid)
+function check_email_update_errors(int $buildid): array
 {
     $errors = array();
     $errors['errors'] = true;
@@ -134,9 +128,8 @@ function check_email_update_errors($buildid)
 }
 
 /** Return a summary for a category of error */
-function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $testtimemaxstatus, $emailtesttimingchanged)
+function get_email_summary(int $buildid, array $errors, $errorkey, int $maxitems, int $maxchars, int $testtimemaxstatus, bool $emailtesttimingchanged): string
 {
-    $config = Config::getInstance();
     $build = new Build();
     $build->Id = $buildid;
 
@@ -144,16 +137,19 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
     $information = '';
 
     // Update information
-    if ($errorkey == 'update_errors') {
+    if ($errorkey === 'update_errors') {
         $information = "\n\n*Update*\n";
 
         $buildUpdate = new BuildUpdate();
         $buildUpdate->BuildId = $buildid;
-        $update = $buildUpdate->GetUpdateForBuild(PDO::FETCH_OBJ);
+        $update = $buildUpdate->GetUpdateForBuild();
+        if ($update === false) {
+            throw new RuntimeException('Error querying update status for build ' . $buildid);
+        }
 
-        $information .= "Status: {$update->status} ({$serverURI}/viewUpdate.php?buildid={$buildid})\n";
+        $information .= "Status: {$update['status']} ({$serverURI}/viewUpdate.php?buildid={$buildid})\n";
         $information .= 'Command: ';
-        $information .= substr($update->command, 0, $maxchars);
+        $information .= substr($update['command'], 0, $maxchars);
         $information .= "\n";
     } elseif ($errorkey == 'configure_errors') {
         // Configure information
@@ -172,7 +168,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             $information .= substr($configure->log, 0, $maxchars);
             $information .= "\n";
         }
-    } elseif ($errorkey == 'build_errors') {
+    } elseif ($errorkey === 'build_errors') {
         $information .= "\n\n*Error*";
 
         // type 0 = error
@@ -221,7 +217,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             $information .= mb_substr($info, 0, $maxchars);
         }
         $information .= "\n";
-    } elseif ($errorkey == 'build_warnings') {
+    } elseif ($errorkey === 'build_warnings') {
         $information .= "\n\n*Warnings*";
 
         $warnings = $build->GetErrors(['type' => Build::TYPE_WARN], PDO::FETCH_OBJ);
@@ -271,7 +267,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             $information .= substr($info, 0, $maxchars) . "\n";
         }
         $information .= "\n";
-    } elseif ($errorkey == 'test_errors') {
+    } elseif ($errorkey === 'test_errors') {
         // Local function to add a set of tests to our email message body.
         // This reduces copied & pasted code below.
         $AddTestsToEmail = function ($tests, $section_title) use ($buildid, $maxchars, $maxitems, $serverURI) {
@@ -299,20 +295,28 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             $information .= $AddTestsToEmail($build->GetFailedTimeStatusTests($maxitems, $testtimemaxstatus), 'Tests failing time status');
         }
         $information .= $AddTestsToEmail($build->GetNotRunTests($maxitems), 'Tests not run');
-    } elseif ($errorkey == 'dynamicanalysis_errors') {
-        $da_query = pdo_query("SELECT name,id FROM dynamicanalysis WHERE status IN ('failed','notrun') AND buildid="
-            . qnum($buildid) . " ORDER BY name LIMIT $maxitems");
+    } elseif ($errorkey === 'dynamicanalysis_errors') {
+        $db = Database::getInstance();
+        $da_query = $db->executePrepared("
+                        SELECT name, id
+                        FROM dynamicanalysis
+                        WHERE
+                            status IN ('failed', 'notrun')
+                            AND buildid=?
+                        ORDER BY name
+                        LIMIT $maxitems
+                    ", [$buildid]);
         add_last_sql_error('sendmail');
-        $numrows = pdo_num_rows($da_query);
+        $numrows = count($da_query);
 
         if ($numrows > 0) {
             $information .= "\n\n*Dynamic analysis tests failing or not run*";
-            if ($numrows == $maxitems) {
+            if ($numrows === $maxitems) {
                 $information .= ' (first ' . $maxitems . ')';
             }
             $information .= "\n";
 
-            while ($test_array = pdo_fetch_array($da_query)) {
+            foreach ($da_query as $test_array) {
                 $info = $test_array['name'] . ' (' . $serverURI . '/viewDynamicAnalysisFile.php?id=' . $test_array['id'] . ")\n";
                 $information .= substr($info, 0, $maxchars);
             }
@@ -324,7 +328,6 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
 
         if ($missing) {
             $information .= "\n\n*Missing tests*";
-            $length = $missing;
             if ($errors['missing_tests']['count'] > $maxitems) {
                 $information .= " (first {$maxitems})";
             }
@@ -341,9 +344,8 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
     return $information;
 }
 
-// Generate the title and body for a broken build.
-//
-function generate_broken_build_message($emailtext, $Build, $Project)
+/** Generate the title and body for a broken build. */
+function generate_broken_build_message(array $emailtext, $Build, $Project): array|false
 {
     include_once 'include/common.php';
 
@@ -497,9 +499,8 @@ function generate_broken_build_message($emailtext, $Build, $Project)
             'footer' => $footer];
 }
 
-/** function to send email to site maintainers when the update
- * step fails */
-function send_update_email($handler, $projectid)
+/** function to send email to site maintainers when the update step fails */
+function send_update_email(UpdateHandler $handler, int $projectid): void
 {
     include_once 'include/common.php';
     require_once 'include/pdo.php';
@@ -542,15 +543,22 @@ function send_update_email($handler, $projectid)
     }
 
     // Send out update errors to site maintainers
-    $update_errors = check_email_update_errors($buildid);
+    $update_errors = check_email_update_errors(intval($buildid));
     if ($update_errors['errors']) {
         // Find the site maintainer(s)
         $sitename = $handler->getSiteName();
         $siteid = $handler->getSiteId();
         $recipients = [];
-        $email_addresses =
-            pdo_query('SELECT email FROM ' . qid('user') . ',site2user WHERE ' . qid('user') . ".id=site2user.userid AND site2user.siteid='$siteid'");
-        while ($email_addresses_array = pdo_fetch_array($email_addresses)) {
+
+        $db = Database::getInstance();
+        $email_addresses = $db->executePrepared('
+                               SELECT email
+                               FROM user, site2user
+                               WHERE
+                                   user.id=site2user.userid
+                                   AND site2user.siteid=?
+                           ', [intval($siteid)]);
+        foreach ($email_addresses as $email_addresses_array) {
             $recipients[] = $email_addresses_array['email'];
         }
 
@@ -560,13 +568,17 @@ function send_update_email($handler, $projectid)
             // Generate the email to send
             $subject = 'CDash [' . $Project->Name . '] - Update Errors for ' . $sitename;
 
-            $update_info = pdo_query('SELECT command,status FROM buildupdate AS u,build2update AS b2u
-                              WHERE b2u.updateid=u.id AND b2u.buildid=' . qnum($buildid));
-            $update_array = pdo_fetch_array($update_info);
+            $update_info = $db->executePrepared('
+                               SELECT command, status
+                               FROM buildupdate AS u, build2update AS b2u
+                               WHERE
+                                   b2u.updateid=u.id
+                                   AND b2u.buildid=?
+                           ', [intval($buildid)]);
 
             $body = "$sitename has encountered errors during the Update step and you have been identified as the maintainer of this site.\n\n";
             $body .= "*Update Errors*\n";
-            $body .= 'Status: ' . $update_array['status'] . ' (' . $serverURI . '/viewUpdate.php?buildid=' . $buildid . ")\n";
+            $body .= 'Status: ' . $update_info['status'] . ' (' . $serverURI . '/viewUpdate.php?buildid=' . $buildid . ")\n";
             if (cdashmail($recipients, $subject, $body)) {
                 add_log('email sent to: ' . implode(', ', $recipients), 'send_update_email');
             } else {
@@ -577,7 +589,7 @@ function send_update_email($handler, $projectid)
 }
 
 /** Main function to send email if necessary */
-function sendemail(ActionableBuildInterface $handler, $projectid)
+function sendemail(ActionableBuildInterface $handler, int $projectid): void
 {
     $Project = new Project();
     $Project->Id = $projectid;

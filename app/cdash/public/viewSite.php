@@ -22,8 +22,10 @@ use App\Services\ProjectPermissions;
 use App\Services\TestingDay;
 use CDash\Config;
 use CDash\Model\Project;
+use CDash\Database;
 
 $config = Config::getInstance();
+$db = Database::getInstance();
 
 @$siteid = $_GET['siteid'];
 if ($siteid != null) {
@@ -36,7 +38,7 @@ if (!isset($siteid) || !is_numeric($siteid)) {
     return;
 }
 
-$site_array = pdo_fetch_array(pdo_query("SELECT * FROM site WHERE id='$siteid'"));
+$site_array = $db->executePreparedSingleRow("SELECT * FROM site WHERE id=?", [$siteid]);
 $sitename = $site_array['name'];
 
 @$currenttime = $_GET['currenttime'];
@@ -61,9 +63,17 @@ $siteinformation_array['processorclockfrequency'] = 'NA';
 
 $currenttimestamp = gmdate(FMT_DATETIME, $currenttime + 3600 * 24); // Current timestamp is the beginning of the dashboard and we want the end
 
-$query = pdo_query("SELECT * FROM siteinformation WHERE siteid='$siteid' AND timestamp<='$currenttimestamp' ORDER BY timestamp DESC LIMIT 1");
-if (pdo_num_rows($query) > 0) {
-    $siteinformation_array = pdo_fetch_array($query);
+$query = $db->executePrepared("
+    SELECT *
+    FROM siteinformation
+    WHERE
+        siteid=?
+        AND timestamp<=?
+    ORDER BY timestamp DESC
+    LIMIT 1", [$siteid, $currenttimestamp]);
+
+if (count($query) > 0) {
+    $siteinformation_array = $query[0];
     if ($siteinformation_array['processoris64bits'] == -1) {
         $siteinformation_array['processoris64bits'] = 'NA';
     }
@@ -163,14 +173,19 @@ if ($projectid && $project->ShowIPAddresses) {
 $xml .= '</site>';
 
 // List the claimers of the site
-$siteclaimer = pdo_query('SELECT firstname,lastname,email FROM ' . qid('user') . ',site2user
-                          WHERE ' . qid('user') . ".id=site2user.userid AND site2user.siteid='$siteid' ORDER BY firstname");
-while ($siteclaimer_array = pdo_fetch_array($siteclaimer)) {
+$siteclaimer = $db->executePrepared("
+    SELECT firstname, lastname, email
+    FROM user, site2user
+    WHERE
+        user.id=site2user.userid
+        AND site2user.siteid=?
+    ORDER BY firstname", [$siteid]);
+foreach ($siteclaimer as $sc) {
     $xml .= '<claimer>';
-    $xml .= add_XML_value('firstname', $siteclaimer_array['firstname']);
-    $xml .= add_XML_value('lastname', $siteclaimer_array['lastname']);
+    $xml .= add_XML_value('firstname', $sc['firstname']);
+    $xml .= add_XML_value('lastname', $sc['lastname']);
     if (isset($_SESSION['cdash'])) {
-        $xml .= add_XML_value('email', $siteclaimer_array['email']);
+        $xml .= add_XML_value('email', $sc['email']);
     }
     $xml .= '</claimer>';
 }
@@ -178,11 +193,18 @@ while ($siteclaimer_array = pdo_fetch_array($siteclaimer)) {
 // Select projects that belong to this site
 $displayPage = 0;
 $projects = array();
-$site2project = pdo_query("SELECT projectid,max(submittime) AS maxtime FROM build WHERE siteid='$siteid' AND projectid>0 GROUP BY projectid");
+$site2project = $db->executePrepared('
+    SELECT projectid, max(submittime) AS maxtime
+    FROM build
+    WHERE
+        siteid=?
+        AND projectid>0
+    GROUP BY projectid
+    ', [$siteid]);
 
-while ($site2project_array = pdo_fetch_array($site2project)) {
-    $projectid = $site2project_array['projectid'];
-    $project_array = pdo_fetch_array(pdo_query("SELECT name,public FROM project WHERE id=$projectid"));
+foreach ($site2project as $site) {
+    $projectid = $site['projectid'];
+    $project_array = $db->executePrepared("SELECT name,public FROM project WHERE id=?", [$projectid]);
 
     $project = new Project();
     $project->Id = $projectid;
@@ -190,7 +212,7 @@ while ($site2project_array = pdo_fetch_array($site2project)) {
     if (ProjectPermissions::userCanViewProject($project)) {
         $xml .= '<project>';
         $xml .= add_XML_value('id', $projectid);
-        $xml .= add_XML_value('submittime', $site2project_array['maxtime']);
+        $xml .= add_XML_value('submittime', $site['maxtime']);
         $xml .= add_XML_value('name', $project->Name);
         $xml .= add_XML_value('name_encoded', urlencode($project->Name));
         $xml .= '</project>';
@@ -215,31 +237,33 @@ if (config('database.default') == 'pgsql') {
     $timestampadd = 'TIMESTAMPADD(' . qiv('HOUR') . ', -167, NOW())';
 }
 
-$testtime = pdo_query('SELECT projectid, build.name AS buildname, build.type AS buildtype, SUM(' . $timediff . ') AS elapsed
-              FROM build, buildupdate, build2update
-              WHERE
-                build.submittime > ' . $timestampadd . "
-                AND build2update.buildid = build.id
-                AND buildupdate.id = build2update.updateid
-                AND build.siteid = '$siteid'
-                GROUP BY projectid,buildname,buildtype
-                ORDER BY elapsed
-                ");
+$testtime = $db->executePrepared("
+    SELECT projectid, build.name AS buildname, build.type AS buildtype, SUM({$timediff}) AS elapsed
+    FROM build, buildupdate, build2update
+    WHERE
+        build.submittime > {$timestampadd}
+        AND build2update.buildid = build.id
+        AND buildupdate.id = build2update.updateid
+        AND build.siteid = ?
+        GROUP BY projectid,buildname,buildtype
+        ORDER BY elapsed
+    ", [$siteid]);
+
 $xml .= '<siteload>';
 
 echo pdo_error();
 $totalload = 0;
-while ($testtime_array = pdo_fetch_array($testtime)) {
-    $projectid = $testtime_array['projectid'];
+foreach ($testtime as $tt) {
+    $projectid = $tt['projectid'];
     $project = new Project();
     $project->Id = $projectid;
     $project->Fill();
     if (ProjectPermissions::userCanViewProject($project)) {
-        $timespent = round($testtime_array['elapsed'] / 7.0); // average over 7 days
+        $timespent = round($tt['elapsed'] / 7.0); // average over 7 days
         $xml .= '<build>';
-        $xml .= add_XML_value('name', $testtime_array['buildname']);
+        $xml .= add_XML_value('name', $tt['buildname']);
         $xml .= add_XML_value('project', $project->Name);
-        $xml .= add_XML_value('type', $testtime_array['buildtype']);
+        $xml .= add_XML_value('type', $tt['buildtype']);
         $xml .= add_XML_value('time', $timespent);
         $totalload += $timespent;
         $xml .= '</build>';
@@ -260,12 +284,15 @@ if (isset($_SESSION['cdash'])) {
 
     // Check if the current user as a role in this project
     foreach ($projects as $projectid) {
-        $user2project = pdo_query("SELECT role FROM user2project WHERE projectid='$projectid' and role>0");
-        if (pdo_num_rows($user2project) > 0) {
+        // TODO: (williamjallen) Optimize this loop to execute a constant number of queries
+
+        $user2project = $db->executePrepared("SELECT role FROM user2project WHERE projectid=? and role>0", [$projectid]);
+        if (count($user2project) > 0) {
             $xml .= add_XML_value('sitemanager', '1');
 
-            $user2site = pdo_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
-            if (pdo_num_rows($user2site) == 0) {
+            $user2site = $db->executePrepared("SELECT * FROM site2user WHERE siteid=? and userid=?",
+                [$siteid, $userid]);
+            if (count($user2site) == 0) {
                 $xml .= add_XML_value('siteclaimed', '0');
             } else {
                 $xml .= add_XML_value('siteclaimed', '1');

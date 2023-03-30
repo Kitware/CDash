@@ -21,8 +21,10 @@ require_once 'include/cdashmail.php';
 use App\Http\Controllers\Auth\LoginController;
 use App\Models\User;
 use CDash\Config;
+use \CDash\Database;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
+use Illuminate\Support\Facades\Auth;
 
 $config = Config::getInstance();
 
@@ -37,9 +39,6 @@ if (Auth::check()) {
     $current_user = Auth::user();
 
     @$projectid = $_GET['projectid'];
-    if ($projectid != null) {
-        $projectid = pdo_real_escape_numeric($projectid);
-    }
 
     $project = new Project();
 
@@ -50,6 +49,7 @@ if (Auth::check()) {
             $projectid = $projectids[0];
         }
     }
+    $projectid = intval($projectid);
 
     $role = 0;
     if ($projectid && is_numeric($projectid)) {
@@ -199,7 +199,7 @@ if (Auth::check()) {
         if (strlen($emailMaintainers) < 50) {
             $xml .= '<error>The email should be more than 50 characters.</error>';
         } else {
-            $maintainerids = find_site_maintainers($projectid);
+            $maintainerids = find_site_maintainers(intval($projectid));
             $email = '';
             foreach ($maintainerids as $maintainerid) {
                 if (strlen($email) > 0) {
@@ -283,10 +283,12 @@ if (Auth::check()) {
         }
     }
 
+    $db = Database::getInstance();
+
     // Remove the user
     if ($removeuser) {
-        pdo_query("DELETE FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-        pdo_query("DELETE FROM user2repository WHERE userid='$userid' AND projectid='$projectid'");
+        $db->executePrepared('DELETE FROM user2project WHERE userid=? AND projectid=?', [$userid. $projectid]);
+        $db->executePrepared('DELETE FROM user2repository WHERE userid=? AND projectid=?', [$userid. $projectid]);
         echo pdo_error();
     }
 
@@ -369,13 +371,15 @@ if (Auth::check()) {
         }
     }
 
-    $sql = 'SELECT id,name FROM project';
+    $sql = 'SELECT id, name FROM project';
+    $params = [];
     if (!$current_user->admin) {
-        $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$usersessionid' AND role>0)";
+        $sql .= ' WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)';
+        $params[] = intval($usersessionid);
     }
     $sql .= ' ORDER BY name';
-    $projects = pdo_query($sql);
-    while ($project_array = pdo_fetch_array($projects)) {
+    $projects = $db->executePrepared($sql, $params);
+    foreach ($projects as $project_array) {
         $xml .= '<availableproject>';
         $xml .= add_XML_value('id', $project_array['id']);
         $xml .= add_XML_value('name', $project_array['name']);
@@ -397,18 +401,30 @@ if (Auth::check()) {
         $xml .= '</project>';
 
         // List the users for that project
-        $user = pdo_query('SELECT u.id,u.firstname,u.lastname,u.email,up.role,up.emailtype
-                       FROM user2project AS up, ' . qid('user') . " as u
-                       WHERE u.id=up.userid  AND up.projectid='$projectid'
-                       ORDER BY u.firstname ASC");
+        $user = $db->executePrepared('
+                    SELECT
+                        u.id,
+                        u.firstname,
+                        u.lastname,
+                        u.email,
+                        up.role,
+                        up.emailtype
+                    FROM
+                        user2project AS up,
+                        ' . qid('user') . ' AS u
+                    WHERE
+                        u.id=up.userid
+                        AND up.projectid=?
+                    ORDER BY u.firstname ASC
+                ', [intval($projectid)]);
         add_last_sql_error('ManageProjectRole');
 
         $i = 0;
-        while ($user_array = pdo_fetch_array($user)) {
-            $userid = $user_array['id'];
+        foreach ($user as $user_array) {
+            $userid = intval($user_array['id']);
             $xml .= '<user>';
 
-            if ($i % 2 == 0) {
+            if ($i % 2 === 0) {
                 $xml .= add_XML_value('bgcolor', '#CADBD9');
             } else {
                 $xml .= add_XML_value('bgcolor', '#FFFFFF');
@@ -419,12 +435,19 @@ if (Auth::check()) {
             $xml .= add_XML_value('lastname', $user_array['lastname']);
             $xml .= add_XML_value('email', $user_array['email']);
 
-            $credentials = pdo_query("SELECT credential FROM user2repository as ur
-                              WHERE ur.userid='" . $userid . "'
-                              AND (ur.projectid='$projectid' OR ur.projectid=0)");
+            $credentials = $db->executePrepared('
+                               SELECT credential
+                               FROM user2repository as ur
+                               WHERE
+                                   ur.userid=?
+                                   AND (
+                                       ur.projectid=?
+                                       OR ur.projectid=0
+                                   )
+                           ', [$userid, intval($projectid)]);
             add_last_sql_error('ManageProjectRole');
 
-            while ($credentials_array = pdo_fetch_array($credentials)) {
+            foreach ($credentials as $credentials_array) {
                 $xml .= add_XML_value('repositorycredential', $credentials_array['credential']);
             }
 
@@ -437,21 +460,45 @@ if (Auth::check()) {
         if (is_array($project_array)) {
             // Check if a user is committing without being registered to CDash or with email disabled
             $date = date(FMT_DATETIME, strtotime(date(FMT_DATETIME) . ' -30 days'));
-            $sql = 'SELECT DISTINCT author,emailtype,' . qid('user') . '.email FROM dailyupdate,dailyupdatefile
-                LEFT JOIN user2repository ON (dailyupdatefile.author=user2repository.credential
-                        AND (user2repository.projectid=0 OR user2repository.projectid=' . qnum($project_array['id']) . ')
-                        )
-                LEFT JOIN user2project ON (user2repository.userid= user2project.userid AND
-                        user2project.projectid=' . qnum($project_array['id']) . ')
-                LEFT JOIN ' . qid('user') . ' ON (user2project.userid=' . qid('user') . '.id)
-                WHERE
-                dailyupdatefile.dailyupdateid=dailyupdate.id
-                AND dailyupdate.projectid=' . qnum($project_array['id']) .
-                " AND dailyupdatefile.checkindate>'" . $date . "' AND (emailtype=0 OR emailtype IS NULL)";
+            $query = $db->executePrepared('
+                         SELECT DISTINCT
+                             author,
+                             emailtype,
+                             u.email
+                         FROM
+                             dailyupdate,
+                             dailyupdatefile
+                         LEFT JOIN user2repository ON (
+                             dailyupdatefile.author=user2repository.credential
+                             AND (
+                                 user2repository.projectid=0
+                                 OR user2repository.projectid=?
+                             )
+                         )
+                         LEFT JOIN user2project ON (
+                             user2repository.userid= user2project.userid
+                             AND user2project.projectid?
+                         )
+                         LEFT JOIN ' . qid('user') . ' AS u ON (
+                             user2project.userid=u.id
+                         )
+                         WHERE
+                             dailyupdatefile.dailyupdateid=dailyupdate.id
+                             AND dailyupdate.projectid=?
+                             AND dailyupdatefile.checkindate>?
+                             AND (
+                                 emailtype=0
+                                 OR emailtype IS NULL
+                             )
+                     ', [
+                         intval($project_array['id']),
+                         intval($project_array['id']),
+                         intval($project_array['id']),
+                         $date
+                     ]);
 
-            $query = pdo_query($sql);
             add_last_sql_error('ManageProjectRole');
-            while ($query_array = pdo_fetch_array($query)) {
+            foreach ($query as $query_array) {
                 $xml .= '<baduser>';
                 $xml .= add_XML_value('author', $query_array['author']);
                 $xml .= add_XML_value('emailtype', $query_array['emailtype']);

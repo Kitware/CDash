@@ -17,19 +17,22 @@ require_once 'include/pdo.php';
 require_once 'include/common.php';
 
 use App\Models\User;
+use CDash\Database;
 
-$buildid = pdo_real_escape_numeric($_GET['buildid']);
 if (!isset($buildid) || !is_numeric($buildid)) {
     echo 'Not a valid buildid!';
     return;
 }
+$buildid = intval($buildid);
+
+$db = Database::getInstance();
 
 // Find the notes
-$note = pdo_query("SELECT * FROM buildnote WHERE buildid='$buildid' ORDER BY timestamp ASC");
-while ($note_array = pdo_fetch_array($note)) {
-    $user = User::where('id', $note_array['userid']);
+$note = $db->executePrepared('SELECT * FROM buildnote WHERE buildid=? ORDER BY timestamp ASC', [$buildid]);
+foreach ($note as $note_array) {
+    $user = User::where('id', intval($note_array['userid']));
     $timestamp = strtotime($note_array['timestamp'] . ' UTC');
-    switch ($note_array['status']) {
+    switch (intval($note_array['status'])) {
         case 0:
             echo '<b>[note] </b>';
             break;

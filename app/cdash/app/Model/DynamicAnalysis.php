@@ -48,74 +48,99 @@ class DynamicAnalysis
     }
 
     /** Add a defect */
-    public function AddDefect($defect)
+    public function AddDefect($defect): void
     {
         $defect->DynamicAnalysisId = $this->Id;
         $this->Defects[] = $defect;
     }
 
-    public function GetDefects()
+    public function GetDefects(): array
     {
         return $this->Defects;
     }
 
-    public function AddLabel($label)
+    public function AddLabel($label): void
     {
         $label->DynamicAnalysisId = $this->Id;
         $this->Labels[] = $label;
     }
 
     /** Find how many dynamic analysis tests were failed or notrun status */
-    public function GetNumberOfErrors()
+    public function GetNumberOfErrors(): int|false
     {
         if (strlen($this->BuildId) == 0) {
             echo 'DynamicAnalysis::GetNumberOfErrors BuildId not set';
             return false;
         }
 
-        $query = 'SELECT count(*) FROM dynamicanalysis WHERE buildid=' . qnum($this->BuildId) .
-            " AND status IN ('notrun','failed')";
+        $db = Database::getInstance();
 
-        $errorcount = pdo_query($query);
-        $error_array = pdo_fetch_array($errorcount);
-        return $error_array[0];
+        $query = $db->executePreparedSingleRow("
+                     SELECT count(*) AS c
+                     FROM dynamicanalysis
+                     WHERE buildid=? AND status IN ('notrun', 'failed')
+                 ", [$this->BuildId]);
+
+        return intval($query['c']);
     }
 
     /** Remove all the dynamic analysis associated with a buildid */
-    public function RemoveAll()
+    public function RemoveAll(): bool
     {
         if (strlen($this->BuildId) == 0) {
             echo 'DynamicAnalysis::RemoveAll BuildId not set';
             return false;
         }
+
+        $this->BuildId = intval($this->BuildId);
+
+        $db = Database::getInstance();
+
         if (config('database.default') == 'pgsql') {
             // postgresql doesn't support multiple delete
+            //
+            // TODO: (williamjallen) Figure out what to do with the potential race condition caused here.
+            //       Ideally this should be done via a cascading delete, or at least in a single transaction.
+            $query = $db->executePrepared('
+                         DELETE FROM dynamicanalysisdefect
+                         USING dynamicanalysis
+                         WHERE
+                             dynamicanalysis.buildid=?
+                             AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid
+                     ', [$this->BuildId]);
 
-            $query = 'BEGIN';
-            $query = 'DELETE FROM dynamicanalysisdefect WHERE dynamicanalysis.buildid=' . qnum($this->BuildId) . '
-                AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid';
-            $query = 'DELETE FROM dynamicanalysis WHERE dynamicanalysis.buildid=' . qnum($this->BuildId);
-            $query = 'COMMIT';
+            if ($query === false) {
+                add_last_sql_error('DynamicAnalysis RemoveAll', 0, $this->BuildId);
+                return false;
+            }
+
+            $query = $db->executePrepared('DELETE FROM dynamicanalysis WHERE dynamicanalysis.buildid=?', [$this->BuildId]);
         } else {
-            $query = 'DELETE dynamicanalysisdefect,dynamicanalysis FROM dynamicanalysisdefect, dynamicanalysis
-               WHERE dynamicanalysis.buildid=' . qnum($this->BuildId) . '
-               AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid';
+            $query = $db->executePrepared('
+                         DELETE dynamicanalysisdefect, dynamicanalysis
+                         FROM dynamicanalysisdefect, dynamicanalysis
+                         WHERE
+                             dynamicanalysis.buildid=?
+                             AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid
+                     ', [$this->BuildId]);
         }
 
-        if (!pdo_query($query)) {
+        if ($query === false) {
             add_last_sql_error('DynamicAnalysis RemoveAll', 0, $this->BuildId);
             return false;
         }
 
-        $query = 'DELETE FROM dynamicanalysis WHERE buildid=' . qnum($this->BuildId);
-        if (!pdo_query($query)) {
+        $query = $db->executePrepared('DELETE FROM dynamicanalysis WHERE buildid=?', [$this->BuildId]);
+        if ($query === false) {
             add_last_sql_error('DynamicAnalysis RemoveAll', 0, $this->BuildId);
             return false;
         }
+
+        return true;
     }
 
     /** Insert labels */
-    public function InsertLabelAssociations()
+    public function InsertLabelAssociations(): void
     {
         if (empty($this->Labels)) {
             return;
@@ -133,19 +158,12 @@ class DynamicAnalysis
         }
     }
 
-    // Insert the DynamicAnalysis
+    /** Insert the DynamicAnalysis */
     public function Insert()
     {
         if (strlen($this->BuildId) == 0) {
             echo 'DynamicAnalysis::Insert BuildId not set';
             return false;
-        }
-
-        $id = '';
-        $idvalue = '';
-        if ($this->Id) {
-            $id = 'id,';
-            $idvalue = qnum($this->Id) . ',';
         }
 
         $max_log_length = 1024 * 1024;
@@ -184,24 +202,54 @@ class DynamicAnalysis
             $this->Log .= $truncated_msg;
         }
 
-        $this->Status = pdo_real_escape_string($this->Status);
-        $this->Checker = pdo_real_escape_string($this->Checker);
-        $this->Name = pdo_real_escape_string($this->Name);
-        $path = pdo_real_escape_string(substr($this->Path, 0, 255));
-        $fullCommandLine = pdo_real_escape_string(substr($this->FullCommandLine, 0, 255));
-        $this->Log = pdo_real_escape_string($this->Log);
-        $this->BuildId = pdo_real_escape_string($this->BuildId);
+        $this->Status =  $this->Status ?? '';
+        $this->Checker = $this->Checker ?? '';
+        $this->Name = $this->Name ?? '';
+        $path = substr($this->Path, 0, 255);
+        $fullCommandLine = substr($this->FullCommandLine, 0, 255);
+        $this->Log = $this->Log ?? '';
+        $this->BuildId = intval($this->BuildId);
 
-        $query = 'INSERT INTO dynamicanalysis (' . $id . 'buildid,status,checker,name,path,fullcommandline,log)
-              VALUES (' . $idvalue . qnum($this->BuildId) . ",'$this->Status','$this->Checker','$this->Name','" . $path . "',
-                      '" . $fullCommandLine . "','$this->Log')";
-        if (!pdo_query($query)) {
+        $db = Database::getInstance();
+
+        $id = '';
+        $idvalue = [];
+        $prepared_array = $db->createPreparedArray(7);
+        if ($this->Id) {
+            $id = 'id, ';
+            $idvalue = [$this->Id];
+            $prepared_array = $db->createPreparedArray(8);
+        }
+
+        $query = $db->executePrepared("
+                     INSERT INTO dynamicanalysis (
+                         $id
+                         buildid,
+                         status,
+                         checker,
+                         name,
+                         path,
+                         fullcommandline,
+                         log
+                     )
+                     VALUES $prepared_array
+                 ", array_merge($idvalue, [
+                     $this->BuildId,
+                     $this->Status,
+                     $this->Checker,
+                     $this->Name,
+                     $path,
+                     $fullCommandLine,
+                     $this->Log
+                 ]));
+
+        if ($query === false) {
             add_last_sql_error('DynamicAnalysis Insert', 0, $this->BuildId);
             return false;
         }
 
         if (!$this->Id) {
-            $this->Id = pdo_insert_id('dynamicanalysis');
+            $this->Id = intval(pdo_insert_id('dynamicanalysis'));
         }
 
         // Add the defects
@@ -220,8 +268,8 @@ class DynamicAnalysis
         return true;
     }
 
-    // Populate $this from the database based on $Id.
-    public function Fill()
+    /** Populate $this from the database based on $Id. */
+    public function Fill(): bool
     {
         if (!$this->Id) {
             return false;
@@ -252,8 +300,8 @@ class DynamicAnalysis
         return true;
     }
 
-    /* Encapsulate common bits of functions below. */
-    private function GetRelatedId($build, $order, $time_clause = null)
+    /** Encapsulate common bits of functions below. */
+    private function GetRelatedId($build, $order, $time_clause = null): int
     {
         $stmt = $this->PDO->prepare(
             "SELECT dynamicanalysis.id FROM dynamicanalysis
@@ -281,35 +329,31 @@ class DynamicAnalysis
         if (!$row) {
             return 0;
         }
-        return $row['id'];
+        return intval($row['id']);
     }
 
-    /* Get the previous id for this DA */
-    public function GetPreviousId($build)
+    /** Get the previous id for this DA */
+    public function GetPreviousId($build): int
     {
         $time_clause = 'build.starttime < :starttime AND';
         return $this->GetRelatedId($build, 'DESC', $time_clause);
     }
 
-    /* Get the next id for this DA */
-    public function GetNextId($build)
+    /** Get the next id for this DA */
+    public function GetNextId($build): int
     {
         $time_clause = 'build.starttime > :starttime AND';
         return $this->GetRelatedId($build, 'ASC', $time_clause);
     }
 
-    /* Get the most recent id for this DA */
-    public function GetLastId($build)
+    /** Get the most recent id for this DA */
+    public function GetLastId($build): int
     {
         return $this->GetRelatedId($build, 'DESC');
     }
 
-    /**
-     * Returns a self referencing URI for the current DynamicAnalysis.
-     *
-     * @return string
-     */
-    public function GetUrlForSelf()
+    /** Returns a self referencing URI for the current DynamicAnalysis. */
+    public function GetUrlForSelf(): string
     {
         $config = Config::getInstance();
         $base_url = $config->getBaseUrl();

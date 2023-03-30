@@ -22,6 +22,7 @@ require_once 'include/api_common.php';
 use App\Services\PageTimer;
 use App\Services\TestingDay;
 
+use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
 use CDash\Model\BuildRelationship;
@@ -109,7 +110,9 @@ $response['notes'] = $notes_response;
 // Build
 $build_response = [];
 
-$site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
+$db = Database::getInstance();
+
+$site_array = $db->executePreparedSingleRow('SELECT name FROM site WHERE id=?', [$siteid]);
 $build_response['site'] = $site_array['name'];
 $build_response['sitename_encoded'] = urlencode($site_array['name']);
 $build_response['siteid'] = $siteid;
@@ -120,9 +123,8 @@ $build_response['stamp'] = $build->GetStamp();
 $build_response['time'] = date(FMT_DATETIMETZ, strtotime($build->StartTime . ' UTC'));
 $build_response['type'] = $build->Type;
 
-$note = pdo_query("SELECT count(buildid) AS c FROM build2note WHERE buildid='$buildid'");
-$note_array = pdo_fetch_array($note);
-$build_response['note'] = $note_array['c'];
+$note = $db->executePreparedSingleRow('SELECT count(buildid) AS c FROM build2note WHERE buildid=?', [$buildid]);
+$build_response['note'] = intval($note['c']);
 
 // Find the OS and compiler information
 $buildinfo = $service->create(BuildInformation::class);
@@ -217,16 +219,24 @@ $response['build'] = $build_response;
 
 // Update
 $update_response = [];
-$buildupdate = pdo_query('SELECT * FROM buildupdate AS u ,build2update AS b2u WHERE b2u.updateid=u.id AND b2u.buildid=' . qnum($buildid));
+$update_array = $db->executePreparedSingleRow('
+                   SELECT *
+                   FROM buildupdate AS u, build2update AS b2u
+                   WHERE b2u.updateid=u.id AND b2u.buildid=?', [$buildid]);
 
-if (pdo_num_rows($buildupdate) > 0) {
+if (!empty($buildupdate)) {
     // show the update only if we have one
     $response['hasupdate'] = true;
-    $update_array = pdo_fetch_array($buildupdate);
     // Checking for locally modify files
-    $updatelocal = pdo_query('SELECT updatefile.updateid FROM updatefile,build2update AS b2u WHERE updatefile.updateid=b2u.updateid AND b2u.buildid=' . qnum($buildid)
-        . " AND author='Local User'");
-    $nerrors = pdo_num_rows($updatelocal);
+    $updatelocal = $db->executePreparedSingleRow("
+                       SELECT count(*) AS c
+                       FROM updatefile,build2update AS b2u
+                       WHERE
+                           updatefile.updateid=b2u.updateid
+                           AND b2u.buildid=?
+                           AND author='Local User'
+                   ", [$buildid]);
+    $nerrors = intval($updatelocal['c']);
 
     // Check also if the status is not zero
     if (strlen($update_array['status']) > 0 && $update_array['status'] != '0') {
@@ -237,8 +247,12 @@ if (pdo_num_rows($buildupdate) > 0) {
     $update_response['nerrors'] = $nerrors;
     $update_response['nwarnings'] = $nwarnings;
 
-    $update = pdo_query('SELECT updatefile.updateid FROM updatefile,build2update AS b2u WHERE updatefile.updateid=b2u.updateid AND b2u.buildid=' . qnum($buildid));
-    $nupdates = pdo_num_rows($update);
+    $update = $db->executePreparedSingleRow('
+                  SELECT count(*) AS c
+                  FROM updatefile, build2update AS b2u
+                  WHERE updatefile.updateid=b2u.updateid AND b2u.buildid=?
+              ', [$buildid]);
+    $nupdates = intval($update['c']);
     $update_response['nupdates'] = $nupdates;
 
     $update_response['command'] = $update_array['command'];
@@ -254,12 +268,13 @@ $response['update'] = $update_response;
 
 // Configure
 $configure_response = [];
-$configure = pdo_query(
-    "SELECT * FROM configure c
-        JOIN build2configure b2c ON b2c.configureid=c.id
-        WHERE b2c.buildid='$buildid'");
-$configure_array = pdo_fetch_array($configure);
-if (is_array($configure_array)) {
+$configure_array = $db->executePreparedSingleRow('
+                 SELECT *
+                 FROM configure c
+                 JOIN build2configure b2c ON b2c.configureid=c.id
+                 WHERE b2c.buildid=?
+             ', [$buildid]);
+if (!empty($configure_array)) {
     $response['hasconfigure'] = true;
     $nerrors = 0;
     if ($configure_array['status'] != 0) {
@@ -286,12 +301,26 @@ $nwarnings = 0;
 $test_response['nerrors'] = $nerrors;
 $test_response['nwarnings'] = $nwarnings;
 
-$npass_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='passed'"));
-$npass = $npass_array[0];
-$nnotrun_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
-$nnotrun = $nnotrun_array[0];
-$nfail_array = pdo_fetch_array(pdo_query("SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'"));
-$nfail = $nfail_array[0];
+$npass_array = $db->executePreparedSingleRow("
+                   SELECT count(testid) AS c
+                   FROM build2test
+                   WHERE buildid=? AND status='passed'
+               ", [$buildid]);
+$npass = intval($npass_array['c']);
+
+$nnotrun_array = $db->executePreparedSingleRow("
+                     SELECT count(testid) AS c
+                     FROM build2test
+                     WHERE buildid=? AND status='notrun'
+                 ", [$buildid]);
+$nnotrun = intval($nnotrun_array['c']);
+
+$nfail_array = $db->executePreparedSingleRow("
+                   SELECT count(testid) AS c
+                   FROM build2test
+                   WHERE buildid=? AND status='failed'
+               ", [$buildid]);
+$nfail = intval($nfail_array['c']);
 
 $test_response['npassed'] = $npass;
 $test_response['nnotrun'] = $nnotrun;
@@ -301,7 +330,7 @@ $response['test'] = $test_response;
 
 // Coverage
 $response['hascoverage'] = false;
-$coverage_array = pdo_fetch_array(pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'"));
+$coverage_array = $db->executePreparedSingleRow('SELECT * FROM coveragesummary WHERE buildid=?', [$buildid]);
 if ($coverage_array) {
     $coverage_percent = round($coverage_array['loctested'] /
         ($coverage_array['loctested'] + $coverage_array['locuntested']) * 100, 2);

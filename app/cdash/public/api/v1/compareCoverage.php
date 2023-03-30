@@ -21,6 +21,7 @@ require_once 'include/api_common.php';
 require_once 'include/filterdataFunctions.php';
 
 use App\Services\PageTimer;
+use CDash\Database;
 use CDash\Model\Project;
 
 if (!function_exists('CDash\Api\v1\CompareCoverage\create_subproject')) {
@@ -56,9 +57,7 @@ if (!function_exists('CDash\Api\v1\CompareCoverage\get_build_label')) {
     function get_build_label($buildid, $build_array)
     {
         // Figure out how many labels to report for this build.
-        if (!array_key_exists('numlabels', $build_array) ||
-            $build_array['numlabels'] == 0
-        ) {
+        if (!array_key_exists('numlabels', $build_array) || intval($build_array['numlabels']) === 0) {
             $num_labels = 0;
         } else {
             $num_labels = $build_array['numlabels'];
@@ -69,12 +68,14 @@ if (!function_exists('CDash\Api\v1\CompareCoverage\get_build_label')) {
             $build_label = '(none)';
         } elseif ($num_labels == 1) {
             // If exactly one label for this build, look it up here.
-            $label_query =
-                'SELECT l.text FROM label AS l
-            INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
-            INNER JOIN build AS b ON (l2b.buildid=b.id)
-            WHERE b.id=' . qnum($buildid);
-            $label_result = pdo_single_row_query($label_query);
+            $db = Database::getInstance();
+            $label_result = $db->executePreparedSingleRow('
+                                SELECT l.text
+                                FROM label AS l
+                                INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
+                                INNER JOIN build AS b ON (l2b.buildid=b.id)
+                                WHERE b.id=?
+                            ', [intval($buildid)]);
             $build_label = $label_result['text'];
         } else {
             // More than one label, just report the number.

@@ -17,17 +17,18 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 
 use CDash\Config;
+use CDash\Database;
 
 $config = Config::getInstance();
 
 @$projectname = $_GET['project'];
 if ($projectname != null) {
-    $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
+    $projectname = htmlspecialchars($projectname);
 }
 
 @$date = $_GET['date'];
 if ($date != null) {
-    $date = htmlspecialchars(pdo_real_escape_string($date));
+    $date = htmlspecialchars($date);
 }
 
 $projectid = get_project_id($projectname);
@@ -59,8 +60,9 @@ $xml .= add_XML_value('projectname', $projectname);
 $xml .= add_XML_value('projectname_encoded', urlencode($projectname));
 $xml .= '</dashboard>';
 
-$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-$project_array = pdo_fetch_array($project);
+$db = Database::getInstance();
+
+$project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid]);
 
 list($previousdate, $currenttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
 
@@ -81,36 +83,77 @@ $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
 if (config('database.default') == 'pgsql') {
-    $site = pdo_query('SELECT s.id,s.name,si.processorclockfrequency,
-                     si.description,
-                     si.numberphysicalcpus,s.ip,s.latitude,s.longitude,
-                     ' . qid('user') . '.firstname,' . qid('user') . '.lastname,' . qid('user') . '.id AS userid
-                     FROM build AS b, siteinformation AS si, site as s
-                     LEFT JOIN site2user ON (site2user.siteid=s.id)
-                     LEFT JOIN ' . qid('user') . ' ON (site2user.userid=' . qid('user') . ".id)
-                     WHERE s.id=b.siteid
-                     AND b.starttime<'$end_UTCDate' AND b.starttime>'$beginning_UTCDate'
-                     AND si.siteid=s.id
-                     AND b.projectid='$projectid' GROUP BY s.id,s.name,si.processorclockfrequency,
-                     si.description,
-                     si.numberphysicalcpus,s.ip,s.latitude,s.longitude," . qid('user') . '.firstname,' . qid('user') . '.lastname,' . qid('user') . '.id');
+    $site = $db->executePrepared('
+                SELECT
+                    s.id,
+                    s.name,
+                    si.processorclockfrequency,
+                    si.description,
+                    si.numberphysicalcpus,
+                    s.ip,
+                    s.latitude,
+                    s.longitude,
+                    u.firstname,
+                    u.lastname,
+                    u.id AS userid
+                FROM
+                    build AS b,
+                    siteinformation AS si,
+                    site as s
+                LEFT JOIN site2user ON (site2user.siteid=s.id)
+                LEFT JOIN ' . qid('user') . ' AS u ON (site2user.userid=u.id)
+                WHERE
+                    s.id=b.siteid
+                    AND b.starttime<?
+                    AND b.starttime>?
+                    AND si.siteid=s.id
+                    AND b.projectid=?
+                GROUP BY
+                    s.id,
+                    s.name,
+                    si.processorclockfrequency,
+                    si.description,
+                    si.numberphysicalcpus,
+                    s.ip,
+                    s.latitude,
+                    s.longitude,
+                    u.firstname,
+                    u.lastname,
+                    u.id
+            ', [$end_UTCDate, $beginning_UTCDate, $projectid]);
 } else {
-    $site = pdo_query('SELECT s.id,s.name,si.processorclockfrequency,
-                     si.description,
-                     si.numberphysicalcpus,s.ip,s.latitude,s.longitude,
-                     ' . qid('user') . '.firstname,' . qid('user') . '.lastname,' . qid('user') . '.id AS userid
-                     FROM build AS b, siteinformation AS si, site as s
-                     LEFT JOIN site2user ON (site2user.siteid=s.id)
-                     LEFT JOIN ' . qid('user') . ' ON (site2user.userid=' . qid('user') . ".id)
-                     WHERE s.id=b.siteid
-                     AND b.starttime<'$end_UTCDate' AND b.starttime>'$beginning_UTCDate'
-                     AND si.siteid=s.id
-                     AND b.projectid='$projectid' GROUP BY s.id");
+    $site = $db->executePrepared('
+                SELECT
+                    s.id,
+                    s.name,
+                    si.processorclockfrequency,
+                    si.description,
+                    si.numberphysicalcpus,
+                    s.ip,
+                    s.latitude,
+                    s.longitude,
+                    u.firstname,
+                    u.lastname,
+                    u.id AS userid
+                FROM
+                    build AS b,
+                    siteinformation AS si,
+                    site as s
+                LEFT JOIN site2user ON (site2user.siteid=s.id)
+                LEFT JOIN ' . qid('user') . ' AS u ON (site2user.userid=u.id)
+                WHERE
+                    s.id=b.siteid
+                    AND b.starttime<?
+                    AND b.starttime>?
+                    AND si.siteid=s.id
+                    AND b.projectid=?
+                GROUP BY s.id
+            ', [$end_UTCDate, $beginning_UTCDate, $projectid]);
 }
 
 echo pdo_error();
 
-while ($site_array = pdo_fetch_array($site)) {
+foreach ($site as $site_array) {
     $xml .= '<site>';
     $xml .= add_XML_value('name', $site_array['name']);
     $xml .= add_XML_value('id', $site_array['id']);

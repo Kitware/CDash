@@ -21,17 +21,19 @@ use App\Services\TestingDay;
 
 use CDash\Model\Build;
 use CDash\Model\Project;
+use CDash\Database;
+use Illuminate\Support\Facades\Auth;
 
 @set_time_limit(0);
 
 @$buildid = $_GET['buildid'];
 if ($buildid != null) {
-    $buildid = pdo_real_escape_numeric($buildid);
+    $buildid = intval($buildid);
 }
 
 @$date = $_GET['date'];
 if ($date != null) {
-    $date = htmlspecialchars(pdo_real_escape_string($date));
+    $date = htmlspecialchars($date);
 }
 
 if (isset($_GET['value1']) && strlen($_GET['value1']) > 0) {
@@ -51,13 +53,22 @@ if (!isset($userid)) {
     $userid = 0;
 }
 
-$query = "SELECT b.starttime, b.projectid, b.siteid, b.type, b.name, sp.groupid
-          FROM build AS b
-          LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
-          LEFT JOIN subproject AS sp ON (sp2b.subprojectid = sp.id)
-          WHERE b.id='$buildid'";
+$db = Database::getInstance();
 
-$build_array = pdo_fetch_array(pdo_query($query));
+
+$build_array = $db->executePreparedSingleRow('
+                   SELECT
+                       b.starttime,
+                       b.projectid,
+                       b.siteid,
+                       b.type,
+                       b.name,
+                       sp.groupid
+                   FROM build AS b
+                   LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
+                   LEFT JOIN subproject AS sp ON (sp2b.subprojectid = sp.id)
+                   WHERE b.id=?
+               ', [intval($buildid)]);
 $projectid = $build_array['projectid'];
 
 if (!isset($projectid) || $projectid == 0 || !is_numeric($projectid)) {
@@ -79,10 +90,13 @@ if (!$project->Exists()) {
 }
 
 $role = 0;
-$user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-if (pdo_num_rows($user2project) > 0) {
-    $user2project_array = pdo_fetch_array($user2project);
-    $role = $user2project_array['role'];
+$user2project = $db->executePreparedSingleRow('
+                    SELECT role
+                    FROM user2project
+                    WHERE userid=? AND projectid=?
+                ', [intval($userid), intval($projectid)]);
+if (!empty($user2project)) {
+    $role = $user2project['role'];
 }
 
 $projectshowcoveragecode = 1;
@@ -101,12 +115,13 @@ $buildname = $build_array['name'];
 $starttime = $build_array['starttime'];
 $threshold = $project->CoverageThreshold;
 if ($build_array['groupid'] > 0) {
-    $row = pdo_single_row_query(
-        'SELECT coveragethreshold FROM subprojectgroup
-     WHERE projectid=' . qnum($projectid) . '
-     AND id=' . qnum($build_array['groupid']));
+    $row = $db->executePreparedSingleRow('
+               SELECT coveragethreshold
+               FROM subprojectgroup
+               WHERE projectid=? AND id=?
+           ', [intval($projectid), intval($build_array['groupid'])]);
     if (!empty($row) && isset($row['coveragethreshold'])) {
-        $threshold = $row['coveragethreshold'];
+        $threshold = intval($row['coveragethreshold']);
     }
 }
 
@@ -142,8 +157,17 @@ if ($filtercount > 0) {
 
 // coverage
 $xml .= '<coverage>';
-$coverage = pdo_query("SELECT sum(loctested) as loctested, sum(locuntested) as locuntested, sum(branchstested) as branchstested, sum(branchsuntested) as branchsuntested from coverage WHERE buildid='$buildid' group by buildid");
-$coverage_array = pdo_fetch_array($coverage);
+$coverage_array = $db->executePreparedSingleRow('
+                      SELECT
+                          sum(loctested) as loctested,
+                          sum(locuntested) as locuntested,
+                          sum(branchstested) as branchstested,
+                          sum(branchsuntested) as branchsuntested
+                      FROM coverage
+                      WHERE buildid=?
+                      GROUP BY buildid
+                  ', [intval($buildid)]);
+
 $xml .= add_XML_value('starttime', date('l, F d Y', strtotime($build_array['starttime'])));
 $xml .= add_XML_value('loctested', $coverage_array['loctested']);
 $xml .= add_XML_value('locuntested', $coverage_array['locuntested']);
@@ -171,10 +195,13 @@ if ($project->DisplayLabels) {
     //
     $labels = array();
 
-    $covlabels = pdo_all_rows_query(
-        'SELECT DISTINCT id, text FROM label, label2coveragefile WHERE ' .
-        'label.id=label2coveragefile.labelid AND ' .
-        'label2coveragefile.buildid=' . qnum($buildid));
+    $covlabels = $db->executePrepared('
+                     SELECT DISTINCT id, text
+                     FROM label, label2coveragefile
+                     WHERE
+                         label.id=label2coveragefile.labelid
+                         AND label2coveragefile.buildid=?
+                 ', [intval($buildid)]);
     foreach ($covlabels as $row) {
         $labels[$row['id']] = $row['text'];
     }
@@ -186,16 +213,20 @@ if ($project->DisplayLabels) {
         $xml .= '<labels>';
 
         foreach ($labels as $id => $label) {
-            $row = pdo_single_row_query(
-                'SELECT COUNT(*) AS c, SUM(loctested) AS loctested, SUM(locuntested) AS locuntested ' .
-                'FROM label2coveragefile, coverage WHERE ' .
-                'label2coveragefile.labelid=' . qnum($id) . ' AND ' .
-                'label2coveragefile.buildid=' . qnum($buildid) . ' AND ' .
-                'coverage.buildid=label2coveragefile.buildid AND ' .
-                'coverage.fileid=label2coveragefile.coveragefileid');
+            $row = $db->executePreparedSingleRow('
+                       SELECT
+                           SUM(loctested) AS loctested,
+                           SUM(locuntested) AS locuntested
+                       FROM label2coveragefile, coverage
+                       WHERE
+                           label2coveragefile.labelid=?
+                           AND label2coveragefile.buildid=?
+                           AND coverage.buildid=label2coveragefile.buildid
+                           AND coverage.fileid=label2coveragefile.coveragefileid
+                   ', [intval($id), intval($buildid)]);
 
-            $loctested = $row['loctested'];
-            $locuntested = $row['locuntested'];
+            $loctested = intval($row['loctested']);
+            $locuntested = intval($row['locuntested']);
             $percentcoverage = compute_percentcoverage($loctested, $locuntested);
 
             $xml .= '<label>';
@@ -208,13 +239,19 @@ if ($project->DisplayLabels) {
     }
 }
 
-$coveredfiles = pdo_query("SELECT count(covered) FROM coverage WHERE buildid='$buildid' AND covered='1'");
-$coveredfiles_array = pdo_fetch_array($coveredfiles);
-$ncoveredfiles = $coveredfiles_array[0];
+$coveredfiles = $db->executePreparedSingleRow("
+                    SELECT count(covered) AS c
+                    FROM coverage
+                    WHERE buildid=? AND covered='1'
+                ", [intval($buildid)]);
+$ncoveredfiles = intval($coveredfiles['c']);
 
-$files = pdo_query("SELECT count(covered) FROM coverage WHERE buildid='$buildid'");
-$files_array = pdo_fetch_array($files);
-$nfiles = $files_array[0];
+$files = $db->executePreparedSingleRow('
+             SELECT count(covered) AS c
+             FROM coverage
+             WHERE buildid=?
+         ', [intval($buildid)]);
+$nfiles = intval($files['c']);
 
 $xml .= add_XML_value('totalcovered', $ncoveredfiles);
 $xml .= add_XML_value('totalfiles', $nfiles);
@@ -230,15 +267,27 @@ $coveragetype = 'gcov'; // default coverage to avoid warning
 $t0 = time();
 
 // Coverage files
-$coveragefile = pdo_query("SELECT c.locuntested,c.loctested,
-                                    c.branchstested,c.branchsuntested,c.functionstested,c.functionsuntested,
-                                    cf.fullpath
-                            FROM coverage AS c, coveragefile AS cf
-                            WHERE c.buildid='$buildid' AND c.covered=1 AND c.fileid=cf.id");
+$coveragefile = $db->executePrepared('
+                    SELECT
+                        c.locuntested,
+                        c.loctested,
+                        c.branchstested,
+                        c.branchsuntested,
+                        c.functionstested,
+                        c.functionsuntested,
+                        cf.fullpath
+                    FROM
+                        coverage AS c,
+                        coveragefile AS cf
+                    WHERE
+                        c.buildid=?
+                        AND c.covered=1
+                        AND c.fileid=cf.id
+                ', [intval($buildid)]);
 
 $directories = array();
 $covfile_array = array();
-while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
+foreach ($coveragefile as $coveragefile_array) {
     $covfile['covered'] = 1;
 
     // Compute the coverage metric for bullseye.  (branch coverage without line coverage)
@@ -275,7 +324,7 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
     // Store the directories path only for non-complete (100% coverage) files
     if ($covfile['coveragemetric'] != 1.0) {
         $fullpath = $coveragefile_array['fullpath'];
-        if (substr($fullpath, 0, 2) == './') {
+        if (str_starts_with($fullpath, './')) {
             $fullpath = substr($fullpath, 2);
         }
         $fullpath = dirname($fullpath);
@@ -301,9 +350,14 @@ $xml .= add_XML_value('totalunsatisfactorilycovered', $nfiles - $nsatisfactoryco
 $xml .= '</coverage>';
 
 // Add the untested files
-$coveragefile = pdo_query("SELECT c.buildid FROM coverage AS c
-                             WHERE c.buildid='$buildid' AND c.covered=0");
-while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
+$coveragefile = $db->executePrepared('
+                    SELECT c.buildid
+                    FROM coverage AS c
+                    WHERE
+                        c.buildid=?
+                        AND c.covered=0
+                ', [intval($buildid)]);
+foreach ($coveragefile as $coveragefile_array) {
     $covfile['covered'] = 0;
     $covfile['coveragemetric'] = 0;
     $covfile_array[] = $covfile;

@@ -16,8 +16,10 @@
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 
+use \CDash\Database;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
+use Illuminate\Support\Facades\Auth;
 
 @$buildid = $_GET['buildid'];
 if ($buildid != null) {
@@ -43,29 +45,37 @@ if (!isset($userid)) {
     $userid = 0;
 }
 
-$build_array = pdo_fetch_array(pdo_query("SELECT starttime,projectid FROM build WHERE id='$buildid'"));
-$projectid = $build_array['projectid'];
-if (!isset($projectid) || $projectid == 0) {
+$db = Database::getInstance();
+
+$build_array = $db->executePreparedSingleRow('
+                   SELECT starttime, projectid FROM build WHERE id=?
+               ', [intval($buildid)]);
+$projectid = intval($build_array['projectid']);
+if ($projectid === 0) {
     echo "This build doesn't exist. Maybe it has been deleted.";
     exit();
 }
 
 checkUserPolicy($projectid);
 
-$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-if (pdo_num_rows($project) == 0) {
+$project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid]);
+if (empty($project_array)) {
     echo "This project doesn't exist.";
     exit();
 }
 
-$project_array = pdo_fetch_array($project);
 $projectname = $project_array['name'];
 
 $role = 0;
-$user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-if (pdo_num_rows($user2project) > 0) {
-    $user2project_array = pdo_fetch_array($user2project);
-    $role = $user2project_array['role'];
+$user2project = $db->executePreparedSingleRow('
+                    SELECT role
+                    FROM user2project
+                    WHERE
+                        userid=?
+                        AND projectid=?
+                ', [intval($userid), $projectid]);
+if (!empty($user2project)) {
+    $role = $user2project['role'];
 }
 if (!$project_array['showcoveragecode'] && $role < 2) {
     echo "This project doesn't allow display of coverage code. Contact the administrator of the project.";
@@ -73,7 +83,7 @@ if (!$project_array['showcoveragecode'] && $role < 2) {
 }
 
 list($previousdate, $currenttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
-$logoid = getLogoID($projectid);
+$logoid = getLogoID(intval($projectid));
 
 $xml = begin_XML_for_XSLT();
 $xml .= '<title>CDash : ' . $projectname . '</title>';
@@ -82,10 +92,9 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 
 // Build
 $xml .= '<build>';
-$build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
-$build_array = pdo_fetch_array($build);
+$build_array = $db->executePreparedSingleRow('SELECT * FROM build WHERE id=?', [intval($buildid)]);
 $siteid = $build_array['siteid'];
-$site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
+$site_array = $db->executePreparedSingleRow('SELECT name FROM site WHERE id=?', [intval($siteid)]);
 $xml .= add_XML_value('site', $site_array['name']);
 $xml .= add_XML_value('buildname', $build_array['name']);
 $xml .= add_XML_value('buildid', $build_array['id']);

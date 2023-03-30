@@ -29,9 +29,8 @@ require_once 'xml_handlers/testing_junit_handler.php';
 require_once 'xml_handlers/update_handler.php';
 require_once 'xml_handlers/upload_handler.php';
 
-use App\Jobs\ProcessSubmission;
 use CDash\Config;
-use CDash\Model\Build;
+use CDash\Database;
 use CDash\Model\BuildFile;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Storage;
@@ -137,32 +136,37 @@ function writeBackupFile($filehandler, $content, $projectname, $subprojectname,
 /** Function to handle new style submissions via HTTP PUT */
 function parse_put_submission($filehandler, $projectid, $expected_md5)
 {
+    $db = Database::getInstance();
+
     if (!$expected_md5) {
         return false;
     }
 
-    $buildfile_row = pdo_single_row_query(
-        "SELECT * FROM buildfile WHERE md5='$expected_md5' LIMIT 1");
+    $buildfile_row = $db->executePreparedSingleRow('SELECT * FROM buildfile WHERE md5=? LIMIT 1', [$expected_md5]);
     if (empty($buildfile_row)) {
         return false;
     }
 
     // Save a backup file for this submission.
-    $row = pdo_single_row_query("SELECT name FROM project WHERE id=$projectid");
+    $row = $db->executePreparedSingleRow('SELECT name FROM project WHERE id=? LIMIT 1', [$projectid]);
+    if (empty($row)) {
+        return false;
+    }
     $projectname = $row['name'];
 
     $buildid = $buildfile_row['buildid'];
-    $row = pdo_single_row_query(
-        "SELECT name, stamp FROM build WHERE id=$buildid");
+    $row = $db->executePreparedSingleRow('SELECT name, stamp FROM build WHERE id=? LIMIT 1', [$buildid]);
     if (empty($row)) {
         return false;
     }
     $buildname = $row['name'];
     $stamp = $row['stamp'];
 
-    $row = pdo_single_row_query(
-        "SELECT name FROM site WHERE id=
-            (SELECT siteid FROM build WHERE id=$buildid)");
+    $row = $db->executePreparedSingleRow('SELECT name FROM site WHERE id=
+                                             (SELECT siteid FROM build WHERE id=?) LIMIT 1', [$buildid]);
+    if (empty($row)) {
+        return false;
+    }
     $sitename = $row['name'];
 
     // Work directly off the open file handle.
@@ -330,12 +334,13 @@ function ctest_parse($filehandle, $projectid, $buildid = null,
     }
 
     // Check if the build is in the block list
-    $query = pdo_query('SELECT id FROM blockbuild WHERE projectid=' . qnum($projectid) . "
-            AND (buildname='' OR buildname='" . $buildname . "')
-            AND (sitename='' OR sitename='" . $sitename . "')
-            AND (ipaddress='' OR ipaddress='" . $ip . "')");
-
-    if (pdo_num_rows($query) > 0) {
+    $db = Database::getInstance();
+    $rows = $db->executePrepared("SELECT id FROM blockbuild WHERE projectid=?
+                                      AND (buildname='' OR buildname=?)
+                                      AND (sitename='' OR sitename=?)
+                                      AND (ipaddress='' OR ipaddress=?)",
+        [$projectid, $buildname, $sitename, $ip]);
+    if (!empty($rows)) {
         echo 'The submission is banned from this CDash server.';
         add_log('Submission is banned from this CDash server', 'ctestparser');
         return false;

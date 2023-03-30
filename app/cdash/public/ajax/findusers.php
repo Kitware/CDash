@@ -18,6 +18,8 @@ require_once 'include/pdo.php';
 require_once 'include/common.php';
 
 use CDash\Config;
+use Illuminate\Support\Facades\Auth;
+use CDash\Database;
 
 $config = Config::getInstance();
 
@@ -33,60 +35,58 @@ if (!isset($userid) || !is_numeric($userid)) {
     return;
 }
 
-$user_array = pdo_fetch_array(pdo_query('SELECT admin FROM ' . qid('user') . " WHERE id='$userid'"));
+$db = Database::getInstance();
+$user_array = $db->executePreparedSingleRow('SELECT admin FROM user WHERE id=?', [intval($userid)]);
 
 if ($user_array['admin'] != 1) {
     echo "You don't have permission to access this page";
     return;
 }
 
-$search = pdo_real_escape_string($_GET['search']);
+$search = $_GET['search'];
 if ($config->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER') == 1) {
-    $sql = "email='$search'";
+    $sql = "email=?";
+    $params = [$search];
 } else {
-    $sql = "(email LIKE '%$search%' OR firstname LIKE '%$search%' OR lastname LIKE '%$search%')";
+    $sql = "email LIKE '%' || ? || '%' OR firstname LIKE '%' || ? || '%' OR lastname LIKE '%' || ? || '%'";
+    $params = [$search, $search, $search];
 }
-$user = pdo_query('SELECT id,email,firstname,lastname,admin FROM ' . qid('user') . ' WHERE ' . $sql);
+$user = $db->executePrepared('SELECT id, email, firstname, lastname, admin FROM user WHERE ' . $sql, $params);
 echo pdo_error();
 
 ?>
 
 <table width="100%" border="0">
     <?php
-    if (pdo_num_rows($user) == 0) {
+    if (count($user) === 0) {
         echo '<tr><td>[none]</tr></td>';
     }
-    while ($user_array = pdo_fetch_array($user)) {
-        ?>
+    foreach ($user as $user_array) { ?>
         <tr>
-            <td width="20%" bgcolor="#EEEEEE"><font
-                    size="2"><?php echo $user_array['firstname'] . ' ' . $user_array['lastname'] . ' (' . $user_array['email'] . ')'; ?></font></td>
+            <td width="20%" bgcolor="#EEEEEE">
+                <font size="2"><?php echo $user_array['firstname'] . ' ' . $user_array['lastname'] . ' (' . $user_array['email'] . ')'; ?></font>
+            </td>
             <td bgcolor="#EEEEEE"><font size="2">
-                    <form method="post" action="" name="formuser_<?php echo $user_array['id'] ?>">
-                        <input name="userid" type="hidden" value="<?php echo $user_array['id'] ?>">
-                        <?php
-                        if ($user_array['admin']) {
-                            echo 'Administrator';
-                            if ($user_array['id'] > 1) {
-                                echo ' <input name="makenormaluser" type="submit" value="make normal user">';
-                            }
-                        } else {
-                            echo 'Normal User';
-                            echo ' <input name="makeadmin"  type="submit" value="make admin">';
+                <form method="post" action="" name="formuser_<?php echo $user_array['id'] ?>">
+                    <input name="userid" type="hidden" value="<?php echo $user_array['id'] ?>">
+                    <?php
+                    if ($user_array['admin']) {
+                        echo 'Administrator';
+                        if ($user_array['id'] > 1) {
+                            echo ' <input name="makenormaluser" type="submit" value="make normal user">';
                         }
+                    } else {
+                        echo 'Normal User';
+                        echo ' <input name="makeadmin"  type="submit" value="make admin">';
+                    }
 
-        if ($user_array['id'] > 1) {
-            ?>
-                            <input name="removeuser" type="submit" onclick="return confirmRemove()" value="remove user">
-                            <?php
-        } ?>
-                        <input name="search" type="hidden" value='<?php echo $search ?>'>
-                    </form>
+                    if (intval($user_array['id']) > 1) {
+                        ?>
+                        <input name="removeuser" type="submit" onclick="return confirmRemove()" value="remove user">
+                    <?php } ?>
+                    <input name="search" type="hidden" value='<?php echo $search ?>'>
+                </form>
                 </font></td>
         </tr>
-
-        <?php
-    }
-?>
-
+    <?php } ?>
 </table>

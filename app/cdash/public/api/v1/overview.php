@@ -16,6 +16,7 @@ require_once 'include/memcache_functions.php';
 
 use App\Services\PageTimer;
 use CDash\Config;
+use CDash\Database;
 use CDash\Model\Project;
 
 $config = Config::getInstance();
@@ -112,33 +113,38 @@ $sort = array(
     'build errors'       => '-compilation.error',
     'failing tests'      => '-test.fail');
 
+$db = Database::getInstance();
+
 // get the build groups that are included in this project's overview,
 // split up by type (currently only static analysis and general builds).
-$query =
-    "SELECT bg.id, bg.name, obg.type FROM overview_components AS obg
-    LEFT JOIN buildgroup AS bg ON (obg.buildgroupid = bg.id)
-    WHERE obg.projectid = '$projectid' ORDER BY obg.position";
-$group_rows = pdo_query($query);
+$query = $db->executePrepared('
+             SELECT bg.id, bg.name, obg.type
+             FROM overview_components AS obg
+             LEFT JOIN buildgroup AS bg ON (obg.buildgroupid = bg.id)
+             WHERE obg.projectid = ?
+             ORDER BY obg.position', [$projectid]);
 add_last_sql_error('overview', $projectid);
 
 $build_groups = array();
 $static_groups = array();
 
-while ($group_row = pdo_fetch_array($group_rows)) {
-    if ($group_row['type'] == 'build') {
-        $build_groups[] = array('id' => $group_row['id'],
-            'name' => $group_row['name']);
-    } elseif ($group_row['type'] == 'static') {
-        $static_groups[] = array('id' => $group_row['id'],
-            'name' => $group_row['name']);
+foreach ($query as $group_row) {
+    if ($group_row['type'] === 'build') {
+        $build_groups[] = [
+            'id' => $group_row['id'],
+            'name' => $group_row['name']
+        ];
+    } elseif ($group_row['type'] === 'static') {
+        $static_groups[] = [
+            'id' => $group_row['id'],
+            'name' => $group_row['name']
+        ];
     }
 }
 
 // Get default coverage threshold for this project.
-$query = "SELECT coveragethreshold FROM project WHERE id='$projectid'";
-$project = pdo_query($query);
+$project_array = $db->executePreparedSingleRow('SELECT coveragethreshold FROM project WHERE id=?', [$projectid]);
 add_last_sql_error('overview :: coveragethreshold', $projectid);
-$project_array = pdo_fetch_array($project);
 
 $has_subproject_groups = false;
 $subproject_groups = array();
@@ -169,7 +175,7 @@ if ($has_subprojects) {
         $coverage_category = array();
         $coverage_category['name'] = 'Total';
         $coverage_category['position'] = 0;
-        $threshold = $project_array['coveragethreshold'];
+        $threshold = intval($project_array['coveragethreshold']);
         $coverage_category['low'] = 0.7 * $threshold;
         $coverage_category['medium'] = $threshold;
         $coverage_category['satisfactory'] = 100;
@@ -249,25 +255,32 @@ $end_date = gmdate(FMT_DATETIME, $end_timestamp);
 
 // Perform a query to get info about all of our builds that fall within this
 // time range.
-$builds_query =
-    "SELECT b.id, b.type, b.name,
-    b.builderrors AS build_errors,
-    b.buildwarnings AS build_warnings,
-    b.testfailed AS failing_tests,
-    b.configureerrors AS configure_errors,
-    b.configurewarnings AS configure_warnings, b.starttime,
-    cs.loctested AS loctested, cs.locuntested AS locuntested,
-    das.checker AS checker, das.numdefects AS numdefects,
-    b2g.groupid AS groupid
-    FROM build AS b
-    LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
-    LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
-    LEFT JOIN dynamicanalysissummary AS das ON (das.buildid=b.id)
-    WHERE b.projectid = '$projectid'
-    AND b.starttime BETWEEN '$start_date' AND '$end_date'
-    AND b.parentid IN (-1, 0)";
+$builds_array = $db->executePrepared('
+                    SELECT
+                        b.id,
+                        b.type,
+                        b.name,
+                        b.builderrors AS build_errors,
+                        b.buildwarnings AS build_warnings,
+                        b.testfailed AS failing_tests,
+                        b.configureerrors AS configure_errors,
+                        b.configurewarnings AS configure_warnings,
+                        b.starttime,
+                        cs.loctested AS loctested,
+                        cs.locuntested AS locuntested,
+                        das.checker AS checker,
+                        das.numdefects AS numdefects,
+                        b2g.groupid AS groupid
+                    FROM build AS b
+                    LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
+                    LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
+                    LEFT JOIN dynamicanalysissummary AS das ON (das.buildid=b.id)
+                    WHERE
+                        b.projectid = ?
+                        AND b.starttime BETWEEN ? AND ?
+                        AND b.parentid IN (-1, 0)
+                ', [$projectid, $start_date, $end_date]);
 
-$builds_array = pdo_query($builds_query);
 add_last_sql_error('gather_overview_data');
 
 // If we have multiple coverage builds in a single day we will also
@@ -279,7 +292,7 @@ $show_aggregate = false;
 // performed on our build groups of interest.
 $dynamic_analysis_types = array();
 
-while ($build_row = pdo_fetch_array($builds_array)) {
+foreach ($builds_array as $build_row) {
     // get what day this build is for.
     $day = get_day_index($build_row['starttime'], $beginning_timestamp, $date_range);
 
@@ -354,21 +367,24 @@ while ($build_row = pdo_fetch_array($builds_array)) {
 
             // We need to query the children of this build to split up
             // coverage into subproject groups.
-            $child_builds_query =
-                "SELECT b.id,
-                cs.loctested AS loctested, cs.locuntested AS locuntested,
-                sp.id AS subprojectid, sp.groupid AS subprojectgroupid
-                FROM build AS b
-                LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
-                LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
-                LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
-                WHERE b.parentid=" . qnum($build_row['id']);
-            $child_builds_array = pdo_query($child_builds_query);
+            $child_builds_array = $db->executePrepared('
+                                      SELECT
+                                          b.id,
+                                          cs.loctested AS loctested,
+                                          cs.locuntested AS locuntested,
+                                          sp.id AS subprojectid,
+                                          sp.groupid AS subprojectgroupid
+                                      FROM build AS b
+                                      LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
+                                      LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
+                                      LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
+                                      WHERE b.parentid=?
+                                  ', [intval($build_row['id'])]);
             add_last_sql_error('gather_overview_data');
-            while ($child_build_row = pdo_fetch_array($child_builds_array)) {
-                $loctested = $child_build_row['loctested'];
-                $locuntested = $child_build_row['locuntested'];
-                if ($loctested + $locuntested == 0) {
+            foreach ($child_builds_array as $child_build_row) {
+                $loctested = intval($child_build_row['loctested']);
+                $locuntested = intval($child_build_row['locuntested']);
+                if ($loctested + $locuntested === 0) {
                     continue;
                 }
 
@@ -378,18 +394,13 @@ while ($build_row = pdo_fetch_array($builds_array)) {
                 }
 
                 // Record coverage for this subproject group.
-                $subproject_group_name =
-                    $subproject_groups[$subproject_group_id]->GetName();
-                $coverage_data[$day][$group_name][$subproject_group_name]['loctested'] +=
-                    $loctested;
-                $coverage_data[$day][$group_name][$subproject_group_name]['locuntested'] +=
-                    $locuntested;
+                $subproject_group_name = $subproject_groups[$subproject_group_id]->GetName();
+                $coverage_data[$day][$group_name][$subproject_group_name]['loctested'] += $loctested;
+                $coverage_data[$day][$group_name][$subproject_group_name]['locuntested'] += $locuntested;
             }
         } else {
-            $coverage_data[$day][$group_name]['coverage']['loctested'] +=
-                $build_row['loctested'];
-            $coverage_data[$day][$group_name]['coverage']['locuntested'] +=
-                $build_row['locuntested'];
+            $coverage_data[$day][$group_name]['coverage']['loctested'] += $build_row['loctested'];
+            $coverage_data[$day][$group_name]['coverage']['locuntested'] += $build_row['locuntested'];
         }
     }
 

@@ -22,6 +22,7 @@ include_once 'include/common.php';
 use App\Services\PageTimer;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
+use CDash\Database;
 use Illuminate\Support\Facades\Auth;
 
 $pageTimer = new PageTimer();
@@ -43,32 +44,36 @@ $user = Auth::user();
 $userid = $user->id;
 
 // List the available projects that this user has admin rights to.
-@$projectid = $_GET['projectid'];
+$projectid = intval($_GET['projectid'] ?? 0);
+
 $sql = 'SELECT id,name FROM project';
+$params = [];
 if ($user->IsAdmin() == false) {
-    $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
+    $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)";
+    $params[] = intval($userid);
 }
 
-$projects = pdo_query($sql);
+$db = Database::getInstance();
+
+$projects = $db->executePrepared($sql, $params);
 $availableprojects = array();
-while ($project_array = pdo_fetch_array($projects)) {
+foreach ($projects as $project_array) {
     $availableproject = array();
     $availableproject['id'] = $project_array['id'];
     $availableproject['name'] = $project_array['name'];
-    if ($project_array['id'] == $projectid) {
+    if (intval($project_array['id']) === $projectid) {
         $availableproject['selected'] = '1';
     }
     $availableprojects[] = $availableproject;
 }
 $response['availableprojects'] = $availableprojects;
 
-if (!isset($projectid) || $projectid < 1) {
+if ($projectid < 1) {
     $response['error'] = 'Please select a project to continue.';
     echo json_encode($response);
     return;
 }
 
-$projectid = pdo_real_escape_numeric($projectid);
 $response['projectid'] = $projectid;
 
 $Project = new Project;
@@ -91,7 +96,6 @@ $subprojectids = $Project->GetSubProjects();
 
 $subprojs = array(); // subproject models
 $subprojects_response = array(); // JSON for subprojects
-$subproject_groups = array(); // JSON for subproject groups
 
 // Initialize our list of subprojects so dependencies can be resolved.
 // TODO: probably don't need this anymore?

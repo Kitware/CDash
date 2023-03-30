@@ -22,6 +22,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Models\User;
 use App\Services\ProjectPermissions;
 
+use CDash\Database;
 use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\Coverage;
@@ -31,6 +32,7 @@ use CDash\Model\CoverageSummary;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Model\UserProject;
+use Illuminate\Support\Facades\Auth;
 
 $config = Config::getInstance();
 
@@ -50,14 +52,14 @@ if (Auth::check()) {
 
     @$projectid = $_GET['projectid'];
     if ($projectid != null) {
-        $projectid = pdo_real_escape_numeric($projectid);
+        $projectid = intval($projectid);
     }
 
     $Project = new Project;
 
     $buildid = 0;
     if (isset($_GET['buildid'])) {
-        $buildid = pdo_real_escape_numeric($_GET['buildid']);
+        $buildid = intval($_GET['buildid']);
     }
 
     // If the projectid is not set and there is only one project we go directly to the page
@@ -67,7 +69,9 @@ if (Auth::check()) {
             $projectid = $projectids[0];
         }
     }
+    $projectid = intval($projectid);
 
+    /** @var User $User */
     $User = Auth::user();
     $Project->Id = $projectid;
     if (!ProjectPermissions::userCanEditProject($User, $Project)) {
@@ -76,11 +80,15 @@ if (Auth::check()) {
     }
 
     $sql = 'SELECT id,name FROM project';
+    $params = [];
     if ($User->IsAdmin() == false) {
-        $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
+        $sql .= ' WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)';
+        $params[] = intval($userid);
     }
-    $projects = pdo_query($sql);
-    while ($project_array = pdo_fetch_array($projects)) {
+
+    $db = Database::getInstance();
+    $project = $db->executePrepared($sql, $params);
+    foreach ($project as $project_array) {
         $xml .= '<availableproject>';
         $xml .= add_XML_value('id', $project_array['id']);
         $xml .= add_XML_value('name', $project_array['name']);
@@ -100,15 +108,15 @@ if (Auth::check()) {
     // Change the priority of selected files
     if (isset($_POST['changePrioritySelected'])) {
         foreach ($_POST['selectionFiles'] as $key => $value) {
-            $CoverageFile2User->FullPath = htmlspecialchars(pdo_real_escape_string($value));
-            $CoverageFile2User->SetPriority(pdo_real_escape_numeric($_POST['prioritySelectedSelection']));
+            $CoverageFile2User->FullPath = htmlspecialchars($value);
+            $CoverageFile2User->SetPriority(intval($_POST['prioritySelectedSelection']));
         }
     }
 
     // Remove the selected authors
     if (isset($_POST['removeAuthorsSelected'])) {
         foreach ($_POST['selectionFiles'] as $key => $value) {
-            $CoverageFile2User->FullPath = htmlspecialchars(pdo_real_escape_string($value));
+            $CoverageFile2User->FullPath = htmlspecialchars($value);
             $CoverageFile2User->RemoveAuthors();
         }
     }
@@ -116,34 +124,34 @@ if (Auth::check()) {
     // Add the selected authors
     if (isset($_POST['addAuthorsSelected'])) {
         foreach ($_POST['selectionFiles'] as $key => $value) {
-            $CoverageFile2User->UserId = pdo_real_escape_numeric($_POST['userSelectedSelection']);
-            $CoverageFile2User->FullPath = htmlspecialchars(pdo_real_escape_string($value));
+            $CoverageFile2User->UserId = intval($_POST['userSelectedSelection']);
+            $CoverageFile2User->FullPath = htmlspecialchars($value);
             $CoverageFile2User->Insert();
         }
     }
 
     // Add an author manually
     if (isset($_POST['addAuthor'])) {
-        $CoverageFile2User->UserId = pdo_real_escape_numeric($_POST['userSelection']);
-        $CoverageFile2User->FullPath = htmlspecialchars(pdo_real_escape_string($_POST['fullpath']));
+        $CoverageFile2User->UserId = intval($_POST['userSelection']);
+        $CoverageFile2User->FullPath = htmlspecialchars($_POST['fullpath']);
         $CoverageFile2User->Insert();
     }
 
     // Remove an author manually
     if (isset($_GET['removefileid'])) {
-        $CoverageFile2User->UserId = pdo_real_escape_numeric($_GET['removeuserid']);
-        $CoverageFile2User->FileId = pdo_real_escape_numeric($_GET['removefileid']);
+        $CoverageFile2User->UserId = intval($_GET['removeuserid']);
+        $CoverageFile2User->FileId = intval($_GET['removefileid']);
         $CoverageFile2User->Remove();
     }
 
     // Assign last author
     if (isset($_POST['assignLastAuthor'])) {
-        $CoverageFile2User->AssignLastAuthor($buildid, $beginUTCTime, $currentUTCTime);
+        $CoverageFile2User->AssignLastAuthor(intval($buildid));
     }
 
     // Assign all authors
     if (isset($_POST['assignAllAuthors'])) {
-        $CoverageFile2User->AssignAllAuthors($buildid, $beginUTCTime, $currentUTCTime);
+        $CoverageFile2User->AssignAllAuthors(intval($buildid));
     }
 
     // Upload file
@@ -260,8 +268,8 @@ if (Auth::check()) {
     if (isset($_POST['prioritySelection'])) {
         $CoverageFile2User = new CoverageFile2User();
         $CoverageFile2User->ProjectId = $projectid;
-        $CoverageFile2User->FullPath = htmlspecialchars(pdo_real_escape_string($_POST['fullpath']));
-        $CoverageFile2User->SetPriority(pdo_real_escape_numeric($_POST['prioritySelection']));
+        $CoverageFile2User->FullPath = htmlspecialchars($_POST['fullpath']);
+        $CoverageFile2User->SetPriority(intval($_POST['prioritySelection']));
     }
 
     /* We start generating the XML here */

@@ -25,6 +25,7 @@ use App\Http\Kernel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -196,60 +197,6 @@ class KWWebTestCase extends WebTestCase
         return true;
     }
 
-    /** Compare the current log with a file */
-    public function compareLog($logfilename, $template)
-    {
-        $log = '';
-        if (file_exists($logfilename)) {
-            $log = file_get_contents($logfilename);
-            $log = str_replace("\r", '', $log);
-        } else {
-            $this->fail("Log file ${logfilename} does not exist: cannot continue");
-            return false;
-        }
-
-        $templateLog = file_get_contents($template);
-        $templateLog = str_replace("\r", '', $templateLog);
-
-        // Compare char by char
-        $il = 0;
-        $it = 0;
-        while ($il < strlen($log) && $it < strlen($templateLog)) {
-            if ($templateLog[$it] == '<') {
-                $pos2 = strpos($templateLog, '<NA>', $it);
-                $pos3 = strpos($templateLog, "<NA>\n", $it);
-
-                // We skip the line
-                if ($pos3 == $it) {
-                    while (($it < strlen($templateLog)) && ($templateLog[$it] != "\n")) {
-                        $it++;
-                    }
-                    while (($il < strlen($log)) && ($log[$il] != "\n")) {
-                        $il++;
-                    }
-                    continue;
-                } // if we have the tag we skip the word
-                elseif ($pos2 == $it) {
-                    while (($it < strlen($templateLog)) && ($templateLog[$it] != ' ') && ($templateLog[$it] != '/') && ($templateLog[$it] != ']') && ($templateLog[$it] != '}') && ($templateLog[$it] != '"') && ($templateLog[$it] != '&')) {
-                        $it++;
-                    }
-                    while (($il < strlen($log)) && ($log[$il] != ' ') && ($log[$il] != '/') && ($log[$il] != ']') && ($log[$il] != '}') && ($log[$il] != '"') && ($log[$il] != '&')) {
-                        $il++;
-                    }
-                    continue;
-                }
-            }
-
-            if ($log[$il] != $templateLog[$it]) {
-                $this->fail("Log files are different\n  logfilename='$logfilename'\n  template='$template'\n  at char $it: " . ord($templateLog[$it]) . '=' . ord($log[$il]) . "\n  **" . substr($templateLog, $it, 10) . '** vs. **' . substr($log, $il, 10) . '**');
-                return false;
-            }
-            $it++;
-            $il++;
-        }
-        return true;
-    }
-
     /** a slightly more sane method of testing the log */
     protected function assertLogContains($expected, $lineCount)
     {
@@ -276,6 +223,7 @@ class KWWebTestCase extends WebTestCase
         $count = count($lines);
         if ($count !== $lineCount) {
             $message = "\nExpected {$lineCount} lines of log output, received {$count}";
+            throw new Exception($log);
             $this->fail($message);
             $passed = false;
         }
@@ -283,32 +231,13 @@ class KWWebTestCase extends WebTestCase
         return $passed;
     }
 
-    /** Check the current content for errors */
-    public function checkErrors()
-    {
-        $content = $this->getBrowser()->getContent();
-        if ($this->findString($content, 'error:')) {
-            $this->assertNoText('error');
-            return false;
-        }
-        if ($this->findString($content, 'Warning')) {
-            $this->assertNoText('Warning');
-            return false;
-        }
-        if ($this->findString($content, 'Notice')) {
-            $this->assertNoText('Notice');
-            return false;
-        }
-        return true;
-    }
-
     /**
      * Analyse a website page
-     * @return the content of the page if there is no errors
+     * @return string|false the content of the page if there is no errors
      *         otherwise false
      * @param object $page
      */
-    public function analyse($page)
+    public function analyse($page): string|false
     {
         if (!$page) {
             $this->assertTrue(false, 'The requested URL was not found on this server');
@@ -340,11 +269,6 @@ class KWWebTestCase extends WebTestCase
         return $content;
     }
 
-    public function getApp()
-    {
-        return $this->app;
-    }
-
     public function actingAs(array $credentials)
     {
         $this->actingAs = $credentials;
@@ -364,16 +288,16 @@ class KWWebTestCase extends WebTestCase
     public function loginActingAs()
     {
         $user = $this->getUser($this->actingAs['email']);
-        \Auth::shouldReceive('check')->andReturn(true);
-        \Auth::shouldReceive('user')->andReturn($user);
-        \Auth::shouldReceive('id')->andReturn($user->id);
+        Auth::shouldReceive('check')->andReturn(true);
+        Auth::shouldReceive('user')->andReturn($user);
+        Auth::shouldReceive('id')->andReturn($user->id);
     }
 
     public function logout()
     {
-        \Auth::shouldReceive('check')->andReturn(false);
-        \Auth::shouldReceive('user')->andReturn(new User);
-        \Auth::shouldReceive('id')->andReturn(null);
+        Auth::shouldReceive('check')->andReturn(false);
+        Auth::shouldReceive('user')->andReturn(new User);
+        Auth::shouldReceive('id')->andReturn(null);
     }
 
     public function getCtestSubmission()
@@ -406,7 +330,7 @@ class KWWebTestCase extends WebTestCase
             $fields['password'] = password_hash($fields['password'], PASSWORD_DEFAULT);
         }
 
-        $user = factory(\App\Models\User::class)->create($fields);
+        $user = factory(User::class)->create($fields);
         return $user;
     }
 
@@ -459,15 +383,6 @@ class KWWebTestCase extends WebTestCase
         }
 
         return false;
-    }
-
-    public function setRequestHeaders($headers)
-    {
-        /** @var CDashControllerBrowser $browser */
-        $browser = $this->getBrowser();
-        foreach ($headers as $header => $value) {
-            $browser->addRequestHeader($header, $value);
-        }
     }
 
     public function putCtestFile(
@@ -671,55 +586,6 @@ class KWWebTestCase extends WebTestCase
         return $client;
     }
 
-    /**
-     * @param $line_to_add
-     * @deprecated DO NOT USE
-     */
-    public function addLineToConfig($line_to_add)
-    {
-        $contents = file_get_contents($this->configfilename);
-        $handle = fopen($this->configfilename, 'w');
-
-        $lines = explode("\n", $contents);
-        foreach ($lines as $line) {
-            if (strpos($line, '?>') !== false) {
-                fwrite($handle, "$line_to_add\n");
-            }
-            if ($line != '') {
-                fwrite($handle, "$line\n");
-            }
-        }
-        fclose($handle);
-        unset($handle);
-        $this->pass('Passed');
-    }
-
-    /**
-     * @param $line_to_remove
-     * @drepecated DO NOT USE
-     */
-    public function removeLineFromConfig($line_to_remove)
-    {
-        if (empty($line_to_remove)) {
-            return;
-        }
-
-        $contents = file_get_contents($this->configfilename);
-        $handle = fopen($this->configfilename, 'w');
-        $lines = explode("\n", $contents);
-        foreach ($lines as $line) {
-            if (empty($line)) {
-                continue;
-            }
-            if (strpos($line_to_remove, $line) !== false) {
-                continue;
-            } elseif ($line != '') {
-                fwrite($handle, "$line\n");
-            }
-        }
-        fclose($handle);
-    }
-
     public function expectsPageRequiresLogin($page)
     {
         $this->logout();
@@ -763,11 +629,6 @@ class CDashControllerBrowser extends SimpleBrowser
                 }
             }
         }
-    }
-
-    public function addRequestHeader($name, $value)
-    {
-        $this->headers[$name] = $value;
     }
 
     /**

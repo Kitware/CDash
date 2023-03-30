@@ -19,6 +19,7 @@ include_once 'include/common.php';
 use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\Site;
+use CDash\Database;
 
 if (!isset($_GET['buildid'])) {
     echo 'Build id not set';
@@ -26,14 +27,15 @@ if (!isset($_GET['buildid'])) {
 }
 
 $config = Config::getInstance();
-$buildid = pdo_real_escape_numeric($_GET['buildid']);
+$buildid = intval($_GET['buildid']);
 $Build = new Build();
 $Build->Id = $buildid;
 $Build->FillFromId($buildid);
 $Site = new Site();
 $Site->Id = $Build->SiteId;
 
-$build_array = pdo_fetch_array(pdo_query("SELECT projectid FROM build WHERE id='$buildid'"));
+$db = Database::getInstance();
+$build_array = $db->executePreparedSingleRow('SELECT projectid FROM build WHERE id=?', [$buildid]);
 if (!isset($build_array['projectid'])) {
     echo 'Build does not exist. Maybe it has been deleted.';
     return;
@@ -47,11 +49,11 @@ if ($policy !== true) {
 
 @$date = $_GET['date'];
 if ($date != null) {
-    $date = htmlspecialchars(pdo_real_escape_string($date));
+    $date = htmlspecialchars($date);
 }
 
 $xml = begin_XML_for_XSLT();
-$xml .= get_cdash_dashboard_xml(get_project_name($projectid), $date);
+$xml .= get_cdash_dashboard_xml_by_name(get_project_name($projectid), $date);
 $xml .= add_XML_value('title', 'CDash - Uploaded files');
 $xml .= add_XML_value('menutitle', 'CDash');
 $xml .= add_XML_value('menusubtitle', 'Uploaded files');

@@ -20,6 +20,7 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 
 use App\Services\PageTimer;
+use CDash\Database;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Auth;
 
@@ -65,29 +66,29 @@ if ($response['user']['admin'] != 1) {
     return json_encode($response);
 }
 
+$db = Database::getInstance();
+
 // Check if we are saving an overview layout.
 if (isset($_POST['saveLayout'])) {
     $inputRows = json_decode($_POST['saveLayout'], true);
     if (!is_null($inputRows)) {
         // Remove any old overview layout from this project.
-        pdo_query(
-            'DELETE FROM overview_components WHERE projectid=' .
-            qnum(pdo_real_escape_numeric($projectid)));
+        $db->executePrepared('DELETE FROM overview_components WHERE projectid=?', [intval($projectid)]);
         add_last_sql_error('manageOverview::saveLayout::DELETE', $projectid);
 
         // Construct a query to insert the new layout.
         $query = 'INSERT INTO overview_components (projectid, buildgroupid, position, type) VALUES ';
+        $params = [];
         foreach ($inputRows as $inputRow) {
-            $query .= '(' .
-                qnum(pdo_real_escape_numeric($projectid)) . ', ' .
-                qnum(pdo_real_escape_numeric($inputRow['id'])) . ', ' .
-                qnum(pdo_real_escape_numeric($inputRow['position'])) . ", '" .
-                pdo_real_escape_string($inputRow['type']) . "'), ";
+            $query .= '(?, ?, ?, ?),';
+            $params[] = intval($projectid);
+            $params[] = intval($inputRow['id']);
+            $params[] = intval($inputRow['position']);
+            $params[] = $inputRow['type'];
         }
 
-        // Remove the trailing comma and space, then insert our new values.
-        $query = rtrim($query, ', ');
-        pdo_query($query);
+        $query = rtrim($query, ',');
+        $db->executePrepared($query, $params);
         add_last_sql_error('manageOverview::saveLayout::INSERT', $projectid);
     }
 
@@ -98,19 +99,24 @@ if (isset($_POST['saveLayout'])) {
 
 // Otherwise generate the JSON used to render this page.
 // Get the groups that are already included in the overview.
-$query =
-    'SELECT bg.id, bg.name, obg.type FROM overview_components AS obg
-    LEFT JOIN buildgroup AS bg ON (obg.buildgroupid = bg.id)
-    WHERE obg.projectid = ' . qnum(pdo_real_escape_numeric($projectid)) . '
-    ORDER BY obg.position';
-$overviewgroup_rows = pdo_query($query);
+$query = $db->executePrepared('
+             SELECT
+                 bg.id,
+                 bg.name,
+                 obg.type
+             FROM overview_components AS obg
+             LEFT JOIN buildgroup AS bg ON (obg.buildgroupid = bg.id)
+             WHERE obg.projectid = ?
+             ORDER BY obg.position
+         ', [intval($projectid)]);
+
 add_last_sql_error('manageOverview::overviewgroups', $projectid);
 
 $build_response = array();
 $static_response = array();
-while ($overviewgroup_row = pdo_fetch_array($overviewgroup_rows)) {
+foreach ($query as $overviewgroup_row) {
     $group_response = array();
-    $group_response['id'] = $overviewgroup_row['id'];
+    $group_response['id'] = intval($overviewgroup_row['id']);
     $group_response['name'] = $overviewgroup_row['name'];
     $type = $overviewgroup_row['type'];
     switch ($type) {
@@ -131,16 +137,22 @@ $response['buildcolumns'] = $build_response;
 $response['staticrows'] = $static_response;
 
 // Get the buildgroups that aren't part of the overview yet.
-$query = "SELECT bg.id, bg.name FROM buildgroup AS bg
-    LEFT JOIN overview_components AS oc ON (bg.id = oc.buildgroupid)
-    WHERE bg.projectid='$projectid'
-    AND oc.buildgroupid IS NULL";
-$buildgroup_rows = pdo_query($query);
+$buildgroup_rows = $db->executePrepared('
+                       SELECT
+                           bg.id,
+                           bg.name
+                       FROM buildgroup AS bg
+                       LEFT JOIN overview_components AS oc ON (bg.id = oc.buildgroupid)
+                       WHERE
+                           bg.projectid=?
+                           AND oc.buildgroupid IS NULL
+                   ', [intval($projectid)]);
 add_last_sql_error('manageOverview::buildgroups', $projectid);
+
 $availablegroups_response = array();
-while ($buildgroup_row = pdo_fetch_array($buildgroup_rows)) {
+foreach ($buildgroup_rows as $buildgroup_row) {
     $buildgroup_response = array();
-    $buildgroup_response['id'] = $buildgroup_row['id'];
+    $buildgroup_response['id'] = intval($buildgroup_row['id']);
     $buildgroup_response['name'] = $buildgroup_row['name'];
     $availablegroups_response[] = $buildgroup_response;
 }

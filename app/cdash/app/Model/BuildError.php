@@ -39,34 +39,15 @@ class BuildError
 
     public function __construct()
     {
-        $this->PDO = Database::getInstance()->getPdo();
+        $this->PDO = Database::getInstance();
     }
 
     // Insert in the database (no update possible)
-    public function Insert()
+    public function Insert(): bool
     {
         if (!$this->BuildId) {
             echo 'BuildError::Insert(): BuildId not set<br>';
             return false;
-        }
-
-        $text = pdo_real_escape_string($this->Text);
-
-        if (strlen($this->PreContext ?? '') == 0) {
-            $precontext = 'NULL';
-        } else {
-            $precontext = "'" . pdo_real_escape_string($this->PreContext) . "'";
-        }
-
-        if (strlen($this->PostContext ?? '') == 0) {
-            $postcontext = 'NULL';
-        } else {
-            $postcontext = "'" . pdo_real_escape_string($this->PostContext) . "'";
-        }
-
-        $sourcefile = '';
-        if (strlen($this->SourceFile ?? '') > 0) {
-            $sourcefile = pdo_real_escape_string($this->SourceFile);
         }
 
         if (empty($this->SourceLine)) {
@@ -76,19 +57,41 @@ class BuildError
             $this->RepeatCount = 0;
         }
 
-        $crc32 = 0;
         // Compute the crc32
-        if ($this->SourceLine == 0) {
-            $crc32 = crc32($text); // no need for precontext or postcontext, this doesn't work for parallel build
+        if ($this->SourceLine === 0) {
+            $crc32 = crc32($this->Text); // no need for precontext or postcontext, this doesn't work for parallel build
         } else {
-            $crc32 = crc32($text . $this->SourceFile . $this->SourceLine); // some warning can be on the same line
+            $crc32 = crc32($this->Text . $this->SourceFile . $this->SourceLine); // some warning can be on the same line
         }
 
-        $query = 'INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,
-                                      postcontext,repeatcount,newstatus,crc32)
-              VALUES (' . qnum($this->BuildId) . ',' . qnum($this->Type) . ',' . qnum($this->LogLine) . ",'$text','$sourcefile'," . qnum($this->SourceLine) . ',
-              ' . $precontext . ',' . $postcontext . ',' . qnum($this->RepeatCount) . ',0,' . qnum($crc32) . ')';
-        if (!pdo_query($query)) {
+        $query = $this->PDO->executePrepared('
+                     INSERT INTO builderror (
+                         buildid,
+                         type,
+                         logline,
+                         text,
+                         sourcefile,
+                         sourceline,
+                         precontext,
+                         postcontext,
+                         repeatcount,
+                         newstatus,
+                         crc32
+                     )
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
+                 ', [
+                     intval($this->BuildId),
+                     $this->Type,
+                     $this->LogLine,
+                     $this->Text,
+                     $this->SourceFile ?? '',
+                     intval($this->SourceLine),
+                     $this->PreContext,
+                     $this->PostContext,
+                     intval($this->RepeatCount),
+                     $crc32
+                 ]);
+        if ($query === false) {
             add_last_sql_error('BuildError Insert', 0, $this->BuildId);
             return false;
         }
@@ -97,11 +100,8 @@ class BuildError
 
     /**
      * Returns all errors from builderror for current build
-     *
-     * @param int $fetchStyle
-     * @return array|bool
      */
-    public function GetErrorsForBuild($fetchStyle = PDO::FETCH_ASSOC)
+    public function GetErrorsForBuild(int $fetchStyle = PDO::FETCH_ASSOC): array|bool
     {
         if (!$this->BuildId) {
             add_log('BuildId not set', 'BuildError::GetErrorsForBuild', LOG_WARNING);
@@ -143,7 +143,7 @@ class BuildError
      *
      * Requires the $data of a build error, the $project, and the buildupdate.revision.
      **/
-    public static function marshal($data, Project $project, $revision, $builderror)
+    public static function marshal($data, Project $project, $revision, BuildError $builderror)
     {
         deepEncodeHTMLEntities($data);
 
@@ -159,7 +159,8 @@ class BuildError
         // /.../<project-name>/.  Use this pattern to linkify compiler output.
         $source_dir = "/\.\.\./[^/]+";
         $marshaled = array_merge($marshaled, array(
-            'precontext' => linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['precontext']),            'text' => linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['text']),
+            'precontext' => linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['precontext']),
+            'text' => linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['text']),
             'postcontext' => linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['postcontext']),
             'sourcefile' => $data['sourcefile'],
             'sourceline' => $data['sourceline']));

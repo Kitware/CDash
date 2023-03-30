@@ -20,6 +20,7 @@ require_once 'include/repository.php';
 
 use CDash\Config;
 use CDash\Database;
+use PDO;
 
 /** BuildFailure */
 class BuildFailure
@@ -47,18 +48,18 @@ class BuildFailure
         $this->PDO = Database::getInstance()->getPdo();
     }
 
-    public function AddLabel($label)
+    public function AddLabel($label): void
     {
         $this->Labels[] = $label;
     }
 
     // Add an argument to the buildfailure
-    public function AddArgument($argument)
+    public function AddArgument($argument): void
     {
         $this->Arguments[] = $argument;
     }
 
-    public function InsertLabelAssociations($id)
+    public function InsertLabelAssociations($id): void
     {
         if (empty($this->Labels)) {
             return;
@@ -76,53 +77,77 @@ class BuildFailure
     }
 
     // Insert in the database (no update possible)
-    public function Insert()
+    public function Insert(): bool
     {
         if (!$this->BuildId) {
             echo 'BuildFailure::Insert(): BuildId not set<br>';
             return false;
         }
 
-        $workingDirectory = pdo_real_escape_string($this->WorkingDirectory);
-        $stdOutput = pdo_real_escape_string($this->StdOutput);
-        $stdError = pdo_real_escape_string($this->StdError);
-        $exitCondition = pdo_real_escape_string($this->ExitCondition);
-        $language = pdo_real_escape_string($this->Language);
-        $targetName = pdo_real_escape_string($this->TargetName);
-        $outputFile = pdo_real_escape_string($this->OutputFile);
-        $outputType = pdo_real_escape_string($this->OutputType);
-        $sourceFile = pdo_real_escape_string($this->SourceFile);
+        $workingDirectory = $this->WorkingDirectory ?? '';
+        $stdOutput = $this->StdOutput ?? '';
+        $stdError = $this->StdError ?? '';
+        $exitCondition = $this->ExitCondition ?? '';
+        $language = $this->Language ?? '';
+        $targetName = $this->TargetName ?? '';
+        $outputFile = $this->OutputFile ?? '';
+        $outputType = $this->OutputType ?? '';
+        $sourceFile = $this->SourceFile ?? '';
 
         // Compute the crc32.
         $crc32 = crc32($outputFile . $stdOutput . $stdError . $sourceFile);
 
+        $db = Database::getInstance();
+
         // Get details ID if it already exists, otherwise insert a new row.
-        $detailsResult = pdo_single_row_query(
-            'SELECT id FROM buildfailuredetails WHERE crc32=' . qnum($crc32));
+        $detailsResult = $db->executePreparedSingleRow('
+                             SELECT id FROM buildfailuredetails WHERE crc32=?
+                         ', [$crc32]);
         if ($detailsResult && array_key_exists('id', $detailsResult)) {
-            $detailsId = $detailsResult['id'];
+            $detailsId = intval($detailsResult['id']);
         } else {
-            $query =
-                'INSERT INTO buildfailuredetails
-          (type, stdoutput, stderror, exitcondition, language, targetname,
-           outputfile, outputtype, crc32)
-         VALUES
-          (' . qnum($this->Type) . ", '$stdOutput', '$stdError', '$exitCondition',
-           '$language', '$targetName', '$outputFile', '$outputType'," . qnum($crc32) . ')';
-            if (!pdo_query($query)) {
+            $query = $db->executePrepared('
+                         INSERT INTO buildfailuredetails (
+                             type,
+                             stdoutput,
+                             stderror,
+                             exitcondition,
+                             language,
+                             targetname,
+                             outputfile,
+                             outputtype,
+                             crc32
+                         )
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     ', [
+                         intval($this->Type),
+                         $stdOutput,
+                         $stdError,
+                         $exitCondition,
+                         $language,
+                         $targetName,
+                         $outputFile,
+                         $outputType,
+                         $crc32
+                     ]);
+            if ($query === false) {
                 add_last_sql_error('BuildFailure InsertDetails', 0, $this->BuildId);
             }
-            $detailsId = pdo_insert_id('buildfailuredetails');
+            $detailsId = intval(pdo_insert_id('buildfailuredetails'));
         }
 
         // Insert the buildfailure.
-        $query =
-            'INSERT INTO buildfailure
-         (buildid, detailsid, workingdirectory, sourcefile, newstatus)
-       VALUES
-         (' . qnum($this->BuildId) . ', ' . qnum($detailsId) . ", '$workingDirectory',
-          '$sourceFile', 0)";
-        if (!pdo_query($query)) {
+        $query = $db->executePrepared('
+                     INSERT INTO buildfailure (
+                         buildid,
+                         detailsid,
+                         workingdirectory,
+                         sourcefile,
+                         newstatus
+                     )
+                     VALUES (?, ?, ?, ?, 0)
+                 ', [intval($this->BuildId), $detailsId, $workingDirectory, $sourceFile]);
+        if ($query === false) {
             add_last_sql_error('BuildFailure Insert', 0, $this->BuildId);
             return false;
         }
@@ -134,59 +159,56 @@ class BuildFailure
 
         foreach ($this->Arguments as $argument) {
             // Limit the argument to 255
-            $argumentescaped = pdo_real_escape_string(substr($argument, 0, 255));
+            $argumentescaped = substr($argument, 0, 255);
 
             // Check if the argument exists
-            $query = pdo_query("SELECT id FROM buildfailureargument WHERE argument='" . $argumentescaped . "'");
-            if (!$query) {
+            $query = $db->executePreparedSingleRow('
+                         SELECT id FROM buildfailureargument WHERE argument=?
+                     ', [$argumentescaped]);
+            if ($query === false) {
                 add_last_sql_error('BuildFailure Insert', 0, $this->BuildId);
                 return false;
             }
 
-            if (pdo_num_rows($query) > 0) {
-                $argumentarray = pdo_fetch_array($query);
-                $argumentids[] = $argumentarray['id'];
+            if (!empty($query)) {
+                $argumentids[] = intval($query['id']);
             } else {
                 // insert the argument
-
-                $query = "INSERT INTO buildfailureargument (argument) VALUES ('" . $argumentescaped . "')";
-                if (!pdo_query($query)) {
+                $query = $db->executePrepared('
+                             INSERT INTO buildfailureargument (argument) VALUES (?)
+                         ', [$argumentescaped]);
+                if ($query === false) {
                     add_last_sql_error('BuildFailure Insert', 0, $this->BuildId);
                     return false;
                 }
 
-                $argumentids[] = pdo_insert_id('buildfailureargument');
+                $argumentids[] = intval(pdo_insert_id('buildfailureargument'));
             }
         }
 
         // Insert the argument
-        $query = 'INSERT INTO buildfailure2argument (buildfailureid,argumentid,place) VALUES ';
+        $query = 'INSERT INTO buildfailure2argument (buildfailureid, argumentid, place) VALUES ';
+        $params = [];
         $i = 0;
         foreach ($argumentids as $argumentid) {
-            if ($i > 0) {
-                $query .= ',';
-            }
-            $query .= '(' . qnum($id) . ',' . qnum($argumentid) . ',' . qnum($i) . ')';
+            $query .= '(?, ?, ?),';
+            $params[] = intval($id);
+            $params[] = intval($argumentid);
+            $params[] = $i;
             $i++;
         }
-        if ($i > 0) {
-            if (!pdo_query($query)) {
-                add_last_sql_error('BuildFailure Insert', 0, $this->BuildId);
-                return false;
-            }
+        $query = rtrim($query, ',');
+        if (count($params) > 0 && $db->executePrepared($query, $params) === false) {
+            add_last_sql_error('BuildFailure Insert', 0, $this->BuildId);
+            return false;
         }
 
         $this->InsertLabelAssociations($id);
         return true;
     }
 
-    /**
-     * Returns all failures, including warnings, for current build
-     *
-     * @param int $fetchStyle
-     * @return array|bool
-     */
-    public function GetFailuresForBuild($fetchStyle = PDO::FETCH_ASSOC)
+    /** Returns all failures, including warnings, for current build */
+    public function GetFailuresForBuild(int $fetchStyle = PDO::FETCH_ASSOC): array|false
     {
         if (!$this->BuildId) {
             add_log('BuildId not set', 'BuildFailure::GetFailuresForBuild', LOG_WARNING);
@@ -224,7 +246,7 @@ class BuildFailure
     /**
      * Retrieve the arguments from a build failure given its id.
      **/
-    public function GetBuildFailureArguments($buildFailureId)
+    public function GetBuildFailureArguments($buildFailureId): array
     {
         $response = [
             'argumentfirst' => null,
@@ -260,7 +282,7 @@ class BuildFailure
     /**
      * Marshal a build failure, this includes the build failure arguments.
      **/
-    public static function marshal($data, Project $project, $revision, $linkifyOutput, $buildfailure)
+    public static function marshal($data, Project $project, $revision, $linkifyOutput, $buildfailure): array
     {
         deepEncodeHTMLEntities($data);
 
@@ -308,12 +330,8 @@ class BuildFailure
         return $marshaled;
     }
 
-    /**
-     * Returns a self referencing URI for a the current BuildFailure.
-     *
-     * @return string
-     */
-    public function GetUrlForSelf()
+    /** Returns a self referencing URI for a the current BuildFailure. */
+    public function GetUrlForSelf(): string
     {
         $config = Config::getInstance();
         $url = $config->getBaseUrl();
