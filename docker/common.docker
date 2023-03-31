@@ -1,4 +1,4 @@
-FROM php:8.1-apache-buster
+FROM php:8.1-apache-bullseye
 LABEL MAINTAINER="Kitware, Inc. <cdash@public.kitware.com>"
 
 ARG CDASH_DB_HOST=localhost
