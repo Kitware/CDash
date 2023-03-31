@@ -50,7 +50,8 @@ setup_local_config() {
         echo "DB_PASS="
 
         if [ '!' -z ${CDASH_CONFIG+x} ] ; then
-            echo "$CDASH_CONFIG"
+            # Drop old formatting for PHP values by removing "$" or ";"
+            sed 's/[$;]//g' <<< "$CDASH_CONFIG"
         fi
 
     ) >> "$__local_config_file"
