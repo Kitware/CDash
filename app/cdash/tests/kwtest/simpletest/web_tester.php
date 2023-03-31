@@ -1229,8 +1229,12 @@ class WebTestCase extends SimpleTestCase
     {
         $responses = (is_array($responses) ? $responses : array($responses));
         $code = $this->browser->getResponseCode();
-        $message = sprintf($message, 'Expecting response in [' .
-            implode(', ', $responses) . "] got [$code]");
+        try {
+            $message = sprintf($message, 'Expecting response in [' .
+                implode(', ', $responses) . "] got [$code]");
+        } catch (Throwable $e) {
+            throw new Exception(var_export($message, true));
+        }
         return $this->assertTrue(in_array($code, $responses), $message);
     }
 

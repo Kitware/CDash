@@ -60,8 +60,7 @@ class CDashTest extends TestCase
     public function testCDashBasicRequest()
     {
         URL::forceRootUrl('http://localhost');
-        $this->get('/viewProjects.php')
-            ->assertStatus(200);
+        $this->get('/viewProjects.php')->assertStatus(200);
     }
 
     public function testCDashReturnsNotFoundGivenPathDoesNotExist()

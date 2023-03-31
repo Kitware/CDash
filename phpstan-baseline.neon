@@ -466,6 +466,59 @@ parameters:
 			path: app/Http/Controllers/TestController.php
 
 		-
+			message: "#^Call to function array_search\\(\\) requires parameter \\#3 to be set\\.$#"
+			count: 1
+			path: app/Http/Controllers/UpdateController.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 1
+			path: app/Http/Controllers/UpdateController.php
+
+		-
+			message: "#^Foreach overwrites \\$update with its value variable\\.$#"
+			count: 1
+			path: app/Http/Controllers/UpdateController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\UpdateController\\:\\:add_file\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/UpdateController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\UpdateController\\:\\:add_file\\(\\) has parameter \\$list_of_files with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/Http/Controllers/UpdateController.php
+
+		-
+			message: """
+				#^Call to deprecated function pdo_execute\\(\\)\\:
+				v2\\.5\\.0 01/22/2018$#
+			"""
+			count: 4
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\UserController\\:\\:ReportLastBuild\\(\\) has parameter \\$nightlytime with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\UserController\\:\\:ReportLastBuild\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
+			count: 2
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between mixed and 'subscribedtoproject' will always evaluate to false\\.$#"
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
 			message: "#^PHPDoc type array of property App\\\\Http\\\\Kernel\\:\\:\\$middleware is not the same as PHPDoc type array\\<int, string\\> of overridden property Illuminate\\\\Foundation\\\\Http\\\\Kernel\\:\\:\\$middleware\\.$#"
 			count: 1
 			path: app/Http/Kernel.php
@@ -529,11 +582,6 @@ parameters:
 			message: "#^Property App\\\\Http\\\\Middleware\\\\CheckForMaintenanceMode\\:\\:\\$except type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Http/Middleware/CheckForMaintenanceMode.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:hasExpiredPassword\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Middleware/CheckPassword.php
 
 		-
 			message: "#^PHPDoc type array of property App\\\\Http\\\\Middleware\\\\EncryptCookies\\:\\:\\$except is not the same as PHPDoc type array\\<int, string\\> of overridden property Illuminate\\\\Cookie\\\\Middleware\\\\EncryptCookies\\:\\:\\$except\\.$#"
@@ -11168,11 +11216,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function angular_login\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function begin_JSON_response\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -11484,11 +11527,6 @@ parameters:
 
 		-
 			message: "#^Function load_view\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function load_view\\(\\) has parameter \\$login with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -12789,11 +12827,6 @@ parameters:
 			message: "#^Function to_psr3_level\\(\\) has parameter \\$type with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/log.php
-
-		-
-			message: "#^Function cdash_auth\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/login_functions.php
 
 		-
 			message: "#^Access to undefined constant Memcached\\:\\:DYNAMIC_CLIENT_MODE\\.$#"
@@ -16536,59 +16569,6 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 4
-			path: app/cdash/public/api/v1/user.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\User\\\\ReportLastBuild\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/user.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\User\\\\ReportLastBuild\\(\\) has parameter \\$PDO with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/user.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\User\\\\ReportLastBuild\\(\\) has parameter \\$nightlytime with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/user.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\User\\\\ReportLastBuild\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/user.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\User\\\\ReportLastBuild\\(\\) has parameter \\$projectname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/user.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\User\\\\ReportLastBuild\\(\\) has parameter \\$siteid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/user.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\User\\\\ReportLastBuild\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/user.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetBuildsDailyAverage\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/user.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/user.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
 			count: 1
 			path: app/cdash/public/api/v1/userStatistics.php
 
@@ -16668,41 +16648,6 @@ parameters:
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewSubProjects.php
-
-		-
-			message: "#^Call to function array_search\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewUpdate.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewUpdate.php
-
-		-
-			message: "#^Foreach overwrites \\$update with its value variable\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewUpdate.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\add_file\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewUpdate.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\add_file\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewUpdate.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\add_file\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewUpdate.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ViewUpdate\\\\add_file\\(\\) has parameter \\$list_of_files with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewUpdate.php
 
 		-
 			message: "#^Call to an undefined method CDash\\\\Middleware\\\\OAuth2\\\\GitHub\\:\\:auth\\(\\)\\.$#"

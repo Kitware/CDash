@@ -19,8 +19,12 @@ use CDash\Config;
 use CDash\Database;
 use CDash\Model\Banner;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
+ * TODO: (williamjallen) move all of this logic over to app/Http/Controllers/ViewProjectsController.php
+ *
  * API controller for viewProjects.php.
  **/
 class ViewProjects extends \CDash\Controller\Api
@@ -32,8 +36,8 @@ class ViewProjects extends \CDash\Controller\Api
         $this->showAllProjects = false;
         $this->activeProjectDays = 7;
         $this->user = null;
-        if (\Auth::check()) {
-            $this->user = \Auth::user();
+        if (Auth::check()) {
+            $this->user = Auth::user();
         }
     }
 
@@ -138,14 +142,14 @@ class ViewProjects extends \CDash\Controller\Api
     {
         $this->projectids = [];
         if (is_null($this->user)) {
-            $this->projectids = \DB::table('project')
+            $this->projectids = DB::table('project')
                 ->where('public', Project::ACCESS_PUBLIC)
                 ->pluck('id');
         } elseif ($this->user->admin) {
-            $this->projectids = \DB::table('project')
+            $this->projectids = DB::table('project')
                 ->pluck('id');
         } else {
-            $this->projectids = \DB::table('project')
+            $this->projectids = DB::table('project')
                 ->leftJoin('user2project', 'project.id', '=', 'user2project.projectid')
                 ->where('user2project.userid', $this->user->id)
                 ->orWhere('project.public', Project::ACCESS_PUBLIC)
@@ -159,7 +163,7 @@ class ViewProjects extends \CDash\Controller\Api
     public function getProjects()
     {
         $projects = [];
-        $project_rows = \DB::table('project')
+        $project_rows = DB::table('project')
             ->whereIn('id', $this->projectids)
             ->orderBy('name')
             ->get();
@@ -171,14 +175,14 @@ class ViewProjects extends \CDash\Controller\Api
             $project['viewsubprojectslink'] = $project_row->viewsubprojectslink;
             $projectid = $project['id'];
 
-            $nsubproj = \DB::table('subproject')
+            $nsubproj = DB::table('subproject')
                 ->where('projectid', $projectid)
                 ->where('endtime', '1980-01-01 00:00:00')
                 ->count();
             $project['numsubprojects'] = $nsubproj;
 
             $project['last_build'] = 'NA';
-            $latest_build_row = \DB::table('build')
+            $latest_build_row = DB::table('build')
                 ->where('projectid', $projectid)
                 ->orderBy('submittime', 'desc')
                 ->first();
@@ -196,7 +200,7 @@ class ViewProjects extends \CDash\Controller\Api
             if ($project['last_build'] != 'NA' && $project['dayssincelastsubmission'] <= $this->activeProjectDays) {
                 // Get the number of builds in the past 7 days
                 $submittime_UTCDate = gmdate(FMT_DATETIME, time() - 604800);
-                $project['nbuilds'] = \DB::table('build')
+                $project['nbuilds'] = DB::table('build')
                     ->where('projectid', $projectid)
                     ->where('starttime', '>', $submittime_UTCDate)
                     ->count();

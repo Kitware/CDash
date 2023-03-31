@@ -3,8 +3,10 @@
 namespace App\Http\Middleware;
 
 use App\Services\AuthTokenService;
+use CDash\Model\User;
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class CheckPassword
@@ -21,6 +23,7 @@ class CheckPassword
         $password_expired_path = '/editUser.php';
         if (Auth::check()) {
             if (!Str::contains(url()->current(), $password_expired_path)) {
+                /** @var User $user */
                 $user = Auth::user();
                 if ($user->hasExpiredPassword()) {
                     $password_expired_uri = "{$password_expired_path}?password_expired=1";
@@ -30,8 +33,8 @@ class CheckPassword
         } else {
             // Make sure we have a database before proceeding.
             try {
-                \DB::connection()->getPdo();
-            } catch (\Exception $e) {
+                DB::connection()->getPdo();
+            } catch (\Exception) {
                 return $next($request);
             }
 
