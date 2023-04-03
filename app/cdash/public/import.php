@@ -112,7 +112,7 @@ if (Auth::check()) {
                     continue;
                 }
                 $handle = fopen($file, 'r');
-                ctest_parse($handle, $projectid, false);
+                ctest_parse($handle, $projectid);
                 fclose($handle);
                 unset($handle);
             }

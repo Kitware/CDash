@@ -32,12 +32,12 @@ require_once 'include/log.php';
 
 
 // Emulate the old xslt library functions
-function xslt_create()
+function xslt_create(): XSLTProcessor
 {
-    return new XsltProcessor();
+    return new XSLTProcessor();
 }
 
-function xslt_process($xsltproc,
+function xslt_process(XSLTProcessor $xsltproc,
                       $xml_arg,
                       $xsl_arg,
                       $xslcontainer = null,
@@ -63,7 +63,7 @@ function xslt_process($xsltproc,
     $xsl->loadXML(file_get_contents($xsl_arg), $xmlOptions);
 
     // Load the xsl template
-    $xsltproc->importStyleSheet($xsl);
+    $xsltproc->importStylesheet($xsl);
 
     // Set parameters when defined
     if ($params) {
@@ -73,7 +73,7 @@ function xslt_process($xsltproc,
     }
 
     // Start the transformation
-    $processed = $xsltproc->transformToXML($xml);
+    $processed = $xsltproc->transformToXml($xml);
 
     // Put the result in a file when specified
     if ($xslcontainer) {
@@ -83,16 +83,11 @@ function xslt_process($xsltproc,
     return $processed;
 }
 
-function xslt_free($xsltproc)
-{
-    unset($xsltproc);
-}
-
 
 /**
  * Do the XSLT translation
  */
-function generate_XSLT($xml, $pageName)
+function generate_XSLT($xml, string $pageName): void
 {
     $config = Config::getInstance();
 
@@ -116,7 +111,7 @@ function generate_XSLT($xml, $pageName)
 
     echo $html;
 
-    xslt_free($xh);
+    unset($xh);
 }
 
 /**
@@ -293,7 +288,7 @@ function get_seconds_from_interval($input)
     return null;
 }
 
-function xml_replace_callback($matches)
+function xml_replace_callback($matches): string
 {
     $decimal_value = hexdec(bin2hex($matches[0]));
     return '&#' . $decimal_value . ';';
@@ -302,7 +297,7 @@ function xml_replace_callback($matches)
 /**
  * Add an XML tag to a string
  */
-function add_XML_value($tag, $value)
+function add_XML_value(string $tag, $value): string
 {
     $value = preg_replace_callback('/[\x1b]/', 'xml_replace_callback', $value);
     return '<' . $tag . '>' . XMLStrFormat($value) . '</' . $tag . '>';
@@ -311,7 +306,7 @@ function add_XML_value($tag, $value)
 /**
  * Report last my SQL error
  */
-function add_last_sql_error($functionname, $projectid = 0, $buildid = 0, $resourcetype = 0, $resourceid = 0)
+function add_last_sql_error($functionname, $projectid = 0, $buildid = 0, $resourcetype = 0, $resourceid = 0): void
 {
     $pdo_error = pdo_error();
     if (strlen($pdo_error) > 0) {
@@ -324,7 +319,7 @@ function add_last_sql_error($functionname, $projectid = 0, $buildid = 0, $resour
 /**
  * Set the CDash version number in the database
  */
-function setVersion()
+function setVersion(): void
 {
     $config = Config::getInstance();
     $db = Database::getInstance();
@@ -387,12 +382,8 @@ function checkUserPolicy($projectid, $onlyreturn = 0)
 /**
  * Get the build id from stamp, name and buildname
  */
-function get_build_id($buildname, $stamp, $projectid, $sitename): int
+function get_build_id(string $buildname, string $stamp, int $projectid, string $sitename): int
 {
-    if (!is_numeric($projectid)) {
-        throw new InvalidArgumentException('Invalid Project ID');
-    }
-
     $db = Database::getInstance();
     $build = $db->executePreparedSingleRow('
                  SELECT build.id AS id
@@ -404,7 +395,7 @@ function get_build_id($buildname, $stamp, $projectid, $sitename): int
                      AND build.siteid=site.id
                      AND site.name=?
                  ORDER BY build.id DESC
-             ', [$buildname, $stamp, intval($projectid), $sitename]);
+             ', [$buildname, $stamp, $projectid, $sitename]);
     if (!empty($build)) {
         return intval($build['id']);
     }
@@ -443,32 +434,10 @@ function get_project_name($projectid): string
 }
 
 /**
- * Get the current URI of the dashboard
- */
-function get_server_URI($localhost = false): string
-{
-    // If we should consider the localhost.
-    // This is used for submission but not emails, etc...
-    if ($localhost && config('cdash.curl_request_localhost')) {
-        $localhost = true;
-    }
-
-    $config = Config::getInstance();
-    return $config->getBaseUrl($localhost);
-}
-
-/**
  * add a user to a site
  */
-function add_site2user($siteid, $userid): void
+function add_site2user(int $siteid, int $userid): void
 {
-    if (!is_numeric($siteid)) {
-        return;
-    }
-    if (!is_numeric($userid)) {
-        return;
-    }
-
     $db = Database::getInstance();
     $site2user = $db->executePrepared('SELECT * FROM site2user WHERE siteid=? AND userid=?', [intval($siteid), intval($userid)]);
     if (!empty($site2user)) {
@@ -480,10 +449,10 @@ function add_site2user($siteid, $userid): void
 /**
  * remove a user from a site
  */
-function remove_site2user($siteid, $userid)
+function remove_site2user(int $siteid, int $userid): void
 {
     $db = Database::getInstance();
-    $db->executePrepared('DELETE FROM site2user WHERE siteid=? AND userid=?', [intval($siteid), intval($userid)]);
+    $db->executePrepared('DELETE FROM site2user WHERE siteid=? AND userid=?', [$siteid, $userid]);
     add_last_sql_error('remove_site2user');
 }
 
@@ -1094,10 +1063,10 @@ function remove_build($buildid)
 /**
  * Call remove_build() in batches of 100.
  */
-function remove_build_chunked($buildid)
+function remove_build_chunked($buildid): void
 {
     if (!is_array($buildid)) {
-        return remove_build($buildid);
+        remove_build($buildid);
     }
     foreach (array_chunk($buildid, 100) as $chunk) {
         remove_build($chunk);
@@ -1186,7 +1155,7 @@ function unlink_uploaded_file($fileid)
 /**
  * Recursive version of rmdir()
  */
-function rmdirr($dir)
+function rmdirr($dir): void
 {
     if (is_dir($dir)) {
         $objects = scandir($dir);
@@ -1257,7 +1226,7 @@ function time2second(string $time): string
  * previousdate: the date in Y-m-d format of the previous dashboard
  * nextdate: the date in Y-m-d format of the next dashboard
  */
-function get_dates($date, $nightlytime)
+function get_dates($date, $nightlytime): array
 {
     // Convert $date parameter to expected format.
     $date = date(FMT_DATE, strtotime($date));
@@ -1293,7 +1262,7 @@ function get_dates($date, $nightlytime)
     return array($previousdate, $today, $nextdate, $date);
 }
 
-function has_next_date($date, $currentstarttime)
+function has_next_date($date, $currentstarttime): bool
 {
     return (
         isset($date) &&
@@ -1415,10 +1384,10 @@ function get_last_buildid_dynamicanalysis(int $projectid, int $siteid, string $b
     return 0;
 }
 
-function get_cdash_dashboard_xml_by_name($projectname, $date): string
+function get_cdash_dashboard_xml_by_name(string $projectname, $date): string
 {
     $projectid = get_project_id($projectname);
-    if ($projectid == -1) {
+    if ($projectid === -1) {
         return '';
     }
 
@@ -1620,7 +1589,7 @@ function check_email_category(string $name, int $emailcategory): bool
 /**
  * Return the byte value with proper extension
  */
-function getByteValueWithExtension($value, $base = 1024)
+function getByteValueWithExtension($value, $base = 1024): string
 {
     $valueext = '';
     if ($value > $base) {
@@ -1641,14 +1610,12 @@ function getByteValueWithExtension($value, $base = 1024)
     return round($value, 2) . $valueext;
 }
 
-function generate_password(int $length)
+function generate_password(int $length): string
 {
     $keychars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     $max = strlen($keychars) - 1;
     $key = '';
     for ($i = 0; $i < $length; $i++) {
-        // random_int is available in PHP 7 and the random_compat PHP 5.x
-        // polyfill included in the Composer package.json dependencies.
         $key .= substr($keychars, random_int(0, $max), 1);
     }
     return $key;
@@ -1657,7 +1624,7 @@ function generate_password(int $length)
 /**
  * Check if user has specified a preference for color scheme.
  */
-function get_css_file()
+function get_css_file(): string
 {
     $classic = 'css/cdash.css';
     $colorblind = 'css/colorblind.css';
@@ -1679,7 +1646,7 @@ function get_css_file()
     return $classic;
 }
 
-function begin_XML_for_XSLT()
+function begin_XML_for_XSLT(): string
 {
     $config = CDash\Config::getInstance();
 
@@ -1711,7 +1678,7 @@ function redirect_to_https()
     }
 }
 
-function begin_JSON_response()
+function begin_JSON_response(): array
 {
     $response = array();
     $response['version'] = CDash\Config::getVersion();
@@ -1871,7 +1838,7 @@ function cast_data_for_JSON($value)
                 $values_to_preserve[$key] = $value[$key];
             }
         }
-        if (array_key_exists('files', $value) && is_string($value['files']) &&  strlen($value['files']) == 6) {
+        if (array_key_exists('files', $value) && is_string($value['files']) && strlen($value['files']) === 6) {
             $values_to_preserve['files'] = $value['files'];
         }
 
@@ -1919,7 +1886,7 @@ function get_server_siteid()
         $server->Ip = $server_ip;
         $server->Insert();
     }
-    return $server->Id;
+    return intval($server->Id);
 }
 
 /**
@@ -1928,7 +1895,7 @@ function get_server_siteid()
  * If $build is for a subproject then we return the corresponding
  * aggregate build for that same subproject.
  */
-function get_aggregate_build($build)
+function get_aggregate_build(Build $build): Build
 {
     $siteid = get_server_siteid();
     $build->ComputeTestingDayBounds();
@@ -1975,7 +1942,7 @@ function get_aggregate_build($build)
     return $aggregate_build;
 }
 
-function create_aggregate_build($build, $siteid=null)
+function create_aggregate_build($build, $siteid=null): Build
 {
     require_once 'include/ctestparserutils.php';
 
@@ -1999,7 +1966,7 @@ function create_aggregate_build($build, $siteid=null)
     return $aggregate_build;
 }
 
-function extract_tar_archive_tar($filename, $dirName)
+function extract_tar_archive_tar($filename, $dirName): bool
 {
     try {
         $tar = new Archive_Tar($filename);
@@ -2013,7 +1980,7 @@ function extract_tar_archive_tar($filename, $dirName)
     }
 }
 
-function extract_tar($filename, $dirName)
+function extract_tar(string $filename, string $dirName): bool|null
 {
     if (class_exists('PharData')) {
         try {

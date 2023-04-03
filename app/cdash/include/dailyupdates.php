@@ -740,7 +740,7 @@ function get_repository_commits(int $projectid, $dates): array
 function sendEmailExpectedBuilds($projectid, $currentstarttime): void
 {
     $config = Config::getInstance();
-    $currentURI = get_server_URI();
+    $currentURI = $config->getBaseUrl();
 
     $db = Database::getInstance();
 

@@ -48,33 +48,31 @@ class ProcessSubmission implements ShouldQueue
         $this->expected_md5 = $expected_md5;
     }
 
-    private function renameSubmissionFile($src, $dst)
+    private function renameSubmissionFile($src, $dst): bool
     {
         if (config('cdash.remote_workers')) {
             $url = config('app.url') . '/api/v1/deleteSubmissionFile.php';
             $client = new \GuzzleHttp\Client();
             $response = $client->request('DELETE', $url, ['query' => ['filename' => $src, 'dest' => $dst]]);
-            return $response->getStatusCode() == 200;
+            return $response->getStatusCode() === 200;
         } else {
             return Storage::move($src, $dst);
         }
-        return false;
     }
 
-    private function deleteSubmissionFile($filename)
+    private function deleteSubmissionFile($filename): bool
     {
         if (config('cdash.remote_workers')) {
             $url = config('app.url') . '/api/v1/deleteSubmissionFile.php';
             $client = new \GuzzleHttp\Client();
             $response = $client->request('DELETE', $url, ['query' => ['filename' => $filename]]);
-            return $response->getStatusCode() == 200;
+            return $response->getStatusCode() === 200;
         } else {
             return Storage::delete($filename);
         }
-        return false;
     }
 
-    private function requeueSubmissionFile($buildid)
+    private function requeueSubmissionFile($buildid): bool
     {
         if (config('cdash.remote_workers')) {
             $url = config('app.url') . '/api/v1/requeueSubmissionFile.php';
@@ -124,7 +122,7 @@ class ProcessSubmission implements ShouldQueue
         // Resubmit the file if necessary.
         if (is_a($handler, 'DoneHandler') && $handler->shouldRequeue()) {
             $build = $this->getBuildFromHandler($handler);
-            return $this->requeueSubmissionFile($build->Id);
+            $this->requeueSubmissionFile($build->Id);
         }
 
         if (config('cdash.backup_timeframe') === 0) {
@@ -158,6 +156,8 @@ class ProcessSubmission implements ShouldQueue
     private function doSubmit($filename, $projectid, $buildid = null,
                        $expected_md5 = '')
     {
+        $config = Config::getInstance();
+
         $filehandle = $this->getSubmissionFileHandle($filename);
         if ($filehandle === false) {
             return false;
@@ -176,7 +176,7 @@ class ProcessSubmission implements ShouldQueue
 
         // We find the daily updates
         // If we have php curl we do it asynchronously
-        $baseUrl = get_server_URI(false);
+        $baseUrl = $config->getBaseUrl();
         $request = $baseUrl . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
 
         if (config('cdash.daily_updates') && $this->curlRequest($request) === false) {
@@ -184,7 +184,7 @@ class ProcessSubmission implements ShouldQueue
         }
 
         // Parse the XML file
-        $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5);
+        $handler = ctest_parse($filehandle, $projectid, $expected_md5);
         fclose($filehandle);
         unset($filehandle);
 

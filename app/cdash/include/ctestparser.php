@@ -39,9 +39,7 @@ class CDashParseException extends RuntimeException
 {
 }
 
-/** Determine the descriptive filename for a submission file.
-  * Called by writeBackupFile().
-  **/
+/** Determine the descriptive filename for a submission file. */
 function generateBackupFileName($projectname, $subprojectname, $buildname,
                                 $sitename, $stamp, $fileNameWithExt)
 {
@@ -75,62 +73,6 @@ function generateBackupFileName($projectname, $subprojectname, $buildname,
     }
 
     return $filename;
-}
-
-/** Safely write a backup file, taking care to avoid writing two files
-  * to the same destination. Called by writeBackupFile().
-  **/
-function safelyWriteBackupFile($filehandler, $content, $filename)
-{
-    // If the file exists we append a number until we get a nonexistent file.
-    $filepath = Storage::path($filename);
-    $inboxDir = Storage::path('inbox');
-    $got_lock = false;
-    $i = 1;
-    while (!$got_lock) {
-        $lockfilename = Storage::path("{$filename}.lock");
-        $lockfp = fopen($lockfilename, 'w');
-        flock($lockfp, LOCK_EX | LOCK_NB, $wouldblock);
-        if ($wouldblock) {
-            $path_parts = pathinfo($filepath);
-            $filepath = $path_parts['dirname'] . '/' . $path_parts['filename'] . "_$i." . $path_parts['extension'];
-            $i++;
-        } else {
-            $got_lock = true;
-            // realpath() always returns false for Google Cloud Storage.
-            if (realpath($inboxDir) !== false) {
-                // Make sure the file is in the right directory.
-                $pos = strpos(realpath(dirname($filepath)), realpath($inboxDir));
-                if ($pos === false || $pos != 0) {
-                    \Log::error("File cannot be stored in inbox directory: $filepath (realpath = " . realpath($inboxDir) . ')');
-                    flock($lockfp, LOCK_UN);
-                    unlink($lockfilename);
-                    return false;
-                }
-            }
-        }
-        flock($lockfp, LOCK_UN);
-        if (file_exists($lockfilename)) {
-            unlink($lockfilename);
-        }
-    }
-
-    // Write the file.
-    if (!Storage::put($filename, $filehandler)) {
-        \Log::error("Cannot write to file ($filename)");
-        return false;
-    }
-    return $filename;
-}
-
-/** Function used to write a submitted file to our backup directory with a
- * descriptive name. */
-function writeBackupFile($filehandler, $content, $projectname, $subprojectname,
-                         $buildname, $sitename, $stamp, $fileNameWithExt)
-{
-    $filename = 'inbox/';
-    $filename .= generateBackupFileName($projectname, $subprojectname, $buildname, $sitename, $stamp, $fileNameWithExt);
-    return safelyWriteBackupFile($filehandler, $content, $filename);
 }
 
 /** Function to handle new style submissions via HTTP PUT */
@@ -223,8 +165,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 }
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($filehandle, $projectid, $buildid = null,
-                     $expected_md5 = '')
+function ctest_parse($filehandle, $projectid, $expected_md5 = '')
 {
     require_once 'include/common.php';
     include 'include/version.php';
@@ -254,46 +195,46 @@ function ctest_parse($filehandle, $projectid, $buildid = null,
     $file = '';
     while (is_null($handler) && !feof($filehandle)) {
         $content = fread($filehandle, 8192);
-        if (strpos($content, '<Update') !== false) {
+        if (str_contains($content, '<Update')) {
             // Should be first otherwise confused with Build
             $handler = new UpdateHandler($projectid);
             $file = 'Update';
-        } elseif (strpos($content, '<Build') !== false) {
+        } elseif (str_contains($content, '<Build')) {
             $handler = new BuildHandler($projectid);
             $file = 'Build';
-        } elseif (strpos($content, '<Configure') !== false) {
+        } elseif (str_contains($content, '<Configure')) {
             $handler = new ConfigureHandler($projectid);
             $file = 'Configure';
-        } elseif (strpos($content, '<Testing') !== false) {
+        } elseif (str_contains($content, '<Testing')) {
             $handler = new TestingHandler($projectid);
             $file = 'Test';
-        } elseif (strpos($content, '<CoverageLog') !== false) {
+        } elseif (str_contains($content, '<CoverageLog')) {
             // Should be before coverage
 
             $handler = new CoverageLogHandler($projectid);
             $file = 'CoverageLog';
-        } elseif (strpos($content, '<Coverage') !== false) {
+        } elseif (str_contains($content, '<Coverage')) {
             $handler = new CoverageHandler($projectid);
             $file = 'Coverage';
-        } elseif (strpos($content, '<report') !== false) {
+        } elseif (str_contains($content, '<report')) {
             $handler = new CoverageJUnitHandler($projectid);
             $file = 'Coverage';
-        } elseif (strpos($content, '<Notes') !== false) {
+        } elseif (str_contains($content, '<Notes')) {
             $handler = new NoteHandler($projectid);
             $file = 'Notes';
-        } elseif (strpos($content, '<DynamicAnalysis') !== false) {
+        } elseif (str_contains($content, '<DynamicAnalysis')) {
             $handler = new DynamicAnalysisHandler($projectid);
             $file = 'DynamicAnalysis';
-        } elseif (strpos($content, '<Project') !== false) {
+        } elseif (str_contains($content, '<Project')) {
             $handler = new ProjectHandler($projectid);
             $file = 'Project';
-        } elseif (strpos($content, '<Upload') !== false) {
+        } elseif (str_contains($content, '<Upload')) {
             $handler = new UploadHandler($projectid);
             $file = 'Upload';
-        } elseif (strpos($content, '<testsuite') !== false) {
+        } elseif (str_contains($content, '<testsuite')) {
             $handler = new TestingJUnitHandler($projectid);
             $file = 'Test';
-        } elseif (strpos($content, '<Done') !== false) {
+        } elseif (str_contains($content, '<Done')) {
             $handler = new DoneHandler($projectid);
             $file = 'Done';
         }

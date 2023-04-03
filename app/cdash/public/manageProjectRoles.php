@@ -102,6 +102,8 @@ if (Auth::check()) {
     if (!function_exists('register_user')) {
         function register_user($projectid, $email, $firstName, $lastName, $repositoryCredential)
         {
+            $config = Config::getInstance();
+
             $UserProject = new UserProject();
             $UserProject->ProjectId = $projectid;
 
@@ -166,7 +168,7 @@ if (Auth::check()) {
             $UserProject->ProjectId = 0;
             $UserProject->AddCredential($email); // Add the email by default
 
-            $currentURI = get_server_URI();
+            $currentURI = $config->getBaseUrl();
 
             $prefix = '';
             if (strlen($firstName) > 0) {

@@ -125,14 +125,6 @@ class System
     }
 
     /**
-     * @return void
-     */
-    public function session_destroy()
-    {
-        session_destroy();
-    }
-
-    /**
      * @param $name
      * @param $value
      * @param $expire
@@ -156,14 +148,6 @@ class System
     }
 
     /**
-     * @return void
-     */
-    public function session_write_close()
-    {
-        session_write_close();
-    }
-
-    /**
      * @param $string
      * @param bool $replace
      * @param int|null $http_response_code
@@ -181,13 +165,5 @@ class System
     public function system_exit($exit_message = '')
     {
         exit($exit_message);
-    }
-
-    /**
-     * @param $code
-     */
-    public function http_response_code($code)
-    {
-        http_response_code($code);
     }
 }

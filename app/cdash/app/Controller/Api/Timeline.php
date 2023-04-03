@@ -68,16 +68,12 @@ class Timeline extends Index
         switch ($page) {
             case 'buildProperties.php':
                 return $this->chartForBuildProperties();
-                break;
             case 'index.php':
                 return $this->chartForIndex();
-                break;
             case 'testOverview.php':
                 return $this->chartForTestOverview();
-                break;
             case 'viewBuildGroup.php':
                 return $this->chartForBuildGroup();
-                break;
             default:
                 json_error_response('Unexpected value for page');
                 break;
@@ -230,7 +226,6 @@ class Timeline extends Index
             $this->colors[self::FAILURE],
             $this->colors[self::ERROR]
         ];
-        $build_data = [];
 
         $group_type = $buildgroup->GetType();
         if ($group_type == 'Daily') {

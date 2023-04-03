@@ -82,38 +82,6 @@ class BuildEmail
     }
 
     /**
-     * Returns the record of a previously sent email given a user, a build, and a category.
-     *
-     * @param $userId
-     * @param $buildId
-     * @param $category
-     * @return BuildEmail
-     */
-    public static function GetBuildEmailForUser($userId, $buildId, $category)
-    {
-        $buildEmail = new BuildEmail();
-
-        $sql = 'SELECT time FROM buildemail WHERE userid=:u AND buildid=:b AND category=:c LIMIT 1';
-        $db = Database::getInstance();
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam(':u', $userId);
-        $stmt->bindParam(':b', $buildId);
-        $stmt->bindParam(':c', $category);
-        if ($db->execute($stmt)) {
-            $count = $stmt->rowCount();
-            if ($count) {
-                $time = $stmt->fetchColumn(0);
-                $buildEmail
-                    ->SetSent(true)
-                    ->SetUserId($userId)
-                    ->SetBuildId($buildId)
-                    ->SetTime($time);
-            }
-        }
-        return $buildEmail;
-    }
-
-    /**
      * Returns a collection of emails sent given a build and category.
      *
      * @param $buildId
@@ -202,43 +170,11 @@ class BuildEmail
     }
 
     /**
-     * @return bool
-     */
-    public function WasSent()
-    {
-        return $this->Sent;
-    }
-
-    /**
-     * @return int
-     */
-    public function GetUserId()
-    {
-        return $this->UserId;
-    }
-
-    /**
-     * @return int
-     */
-    public function GetBuildId()
-    {
-        return $this->BuildId;
-    }
-
-    /**
      * @return int
      */
     public function GetCategory()
     {
         return $this->Category;
-    }
-
-    /**
-     * @return string
-     */
-    public function GetTime()
-    {
-        return $this->Time;
     }
 
     /**

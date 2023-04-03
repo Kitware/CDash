@@ -921,7 +921,8 @@ class Build
 
             if ($hasErrors) {
                 $message = "$this->Name experienced errors";
-                $url = get_server_URI(false) .
+                $config = Config::getInstance();
+                $url = $config->getBaseUrl() .
                     "/viewBuildError.php?buildid=$this->Id";
                 $this->NotifyPullRequest($message, $url);
             }
@@ -998,7 +999,8 @@ class Build
         // Should we should post test failures to a pull request?
         if (!empty($this->PullRequest) && $numberTestsFailed > 0) {
             $message = "$this->Name experienced failing tests";
-            $url = get_server_URI(false) .
+            $config = Config::getInstance();
+            $url = $config->getBaseUrl() .
                 "/viewTest.php?onlyfailed&buildid=$this->Id";
             $this->NotifyPullRequest($message, $url);
         }
@@ -2152,7 +2154,8 @@ class Build
         // Should we post configure errors to a pull request?
         if (!empty($this->PullRequest) && $numErrors > 0) {
             $message = "$this->Name failed to configure";
-            $url = get_server_URI(false) .
+            $config = Config::getInstance();
+            $url = $config->getBaseUrl() .
                 "/build/{$this->Id}/configure";
             $this->NotifyPullRequest($message, $url);
         }

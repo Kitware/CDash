@@ -22,14 +22,7 @@
        </head>
        <body bgcolor="#ffffff">
 
-<xsl:choose>
-<xsl:when test="/cdash/uselocaldirectory=1">
-  <xsl:call-template name="headerback_local"/>
-</xsl:when>
-<xsl:otherwise>
-  <xsl:call-template name="headerback"/>
-</xsl:otherwise>
-</xsl:choose>
+<xsl:call-template name="headerback"/>
 
 <!-- Site manager -->
 <div id="main_content">

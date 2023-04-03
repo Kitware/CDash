@@ -111,4 +111,4 @@ foreach ($uploadFilesOrURLs as $uploadFileOrURL) {
 
 $xml .= '</cdash>';
 
-generate_XSLT($xml, 'viewFiles', true);
+generate_XSLT($xml, 'viewFiles');

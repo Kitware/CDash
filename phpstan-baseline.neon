@@ -679,11 +679,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:deleteSubmissionFile\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:deleteSubmissionFile\\(\\) has parameter \\$filename with no type specified\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
@@ -749,27 +744,12 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:handle\\(\\) with return type void returns mixed but should not return anything\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:renameSubmissionFile\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:renameSubmissionFile\\(\\) has parameter \\$dst with no type specified\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
 		-
 			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:renameSubmissionFile\\(\\) has parameter \\$src with no type specified\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:requeueSubmissionFile\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
@@ -811,11 +791,6 @@ parameters:
 		-
 			message: "#^Property App\\\\Jobs\\\\ProcessSubmission\\:\\:\\$projectid has no type specified\\.$#"
 			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 2
 			path: app/Jobs/ProcessSubmission.php
 
 		-
@@ -2405,11 +2380,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 4
-			path: app/cdash/app/Controller/Api/Timeline.php
-
-		-
 			message: "#^Access to an undefined property App\\\\Models\\\\BuildNote\\:\\:\\$note\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewNotes.php
@@ -2426,26 +2396,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewNotes\\:\\:getResponse\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewNotes.php
-
-		-
-			message: "#^Property CDash\\\\Controller\\\\Api\\\\ViewNotes\\:\\:\\$extraMeasurements has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewNotes.php
-
-		-
-			message: "#^Property CDash\\\\Controller\\\\Api\\\\ViewNotes\\:\\:\\$extraMeasurements is unused\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewNotes.php
-
-		-
-			message: "#^Property CDash\\\\Controller\\\\Api\\\\ViewNotes\\:\\:\\$numExtraMeasurements has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewNotes.php
-
-		-
-			message: "#^Property CDash\\\\Controller\\\\Api\\\\ViewNotes\\:\\:\\$numExtraMeasurements is unused\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewNotes.php
 
@@ -2702,11 +2652,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Controller\\\\Auth\\\\Session\\:\\:start\\(\\) has parameter \\$cache_policy with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Auth/Session.php
-
-		-
-			message: "#^Method CDash\\\\Controller\\\\Auth\\\\Session\\:\\:writeClose\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Auth/Session.php
 
@@ -4129,26 +4074,6 @@ parameters:
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:AddError\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:AddError\\(\\) has parameter \\$error with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:AddErrorDifference\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:AddErrorDifference\\(\\) has parameter \\$diff with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:AddLabel\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
@@ -4299,21 +4224,6 @@ parameters:
 			path: app/cdash/app/Model/BuildEmail.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\BuildEmail\\:\\:GetBuildEmailForUser\\(\\) has parameter \\$buildId with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildEmail.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildEmail\\:\\:GetBuildEmailForUser\\(\\) has parameter \\$category with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildEmail.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildEmail\\:\\:GetBuildEmailForUser\\(\\) has parameter \\$userId with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildEmail.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildEmail\\:\\:GetEmailSentForBuild\\(\\) has parameter \\$buildId with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildEmail.php
@@ -4360,11 +4270,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\BuildEmail\\:\\:SetUserId\\(\\) has parameter \\$userId with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildEmail.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, int\\<0, max\\> given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildEmail.php
 
@@ -4826,11 +4731,6 @@ parameters:
 			path: app/cdash/app/Model/BuildFile.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\BuildFile\\:\\:MD5Exists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildFile.php
-
-		-
 			message: "#^Property CDash\\\\Model\\\\BuildFile\\:\\:\\$BuildId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildFile.php
@@ -4894,7 +4794,7 @@ parameters:
 				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/BuildGroup.php
 
 		-
@@ -4929,11 +4829,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:GetEmailCommitters\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:GetEndTime\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroup.php
 
@@ -5009,16 +4904,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:SetProjectId\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:SetStartTime\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:SetStartTime\\(\\) has parameter \\$time with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroup.php
 
@@ -8357,11 +8242,6 @@ parameters:
 			path: app/cdash/include/CDash/Config.php
 
 		-
-			message: "#^Method CDash\\\\Config\\:\\:getPath\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
 			message: "#^Method CDash\\\\Config\\:\\:getServerPort\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Config.php
@@ -8621,16 +8501,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\System\\:\\:header\\(\\) has parameter \\$string with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/System.php
-
-		-
-			message: "#^Method CDash\\\\System\\:\\:http_response_code\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/System.php
-
-		-
-			message: "#^Method CDash\\\\System\\:\\:http_response_code\\(\\) has parameter \\$code with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/System.php
 
@@ -11146,11 +11016,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Class XSLTProcessor referenced with incorrect case\\: XsltProcessor\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Comparison operation \"\\>\" between \\(array\\|float\\|int\\) and 0 results in an error\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -11161,22 +11026,7 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function add_XML_value\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function add_XML_value\\(\\) has parameter \\$tag with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function add_XML_value\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function add_last_sql_error\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -11206,22 +11056,7 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function add_site2user\\(\\) has parameter \\$siteid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function add_site2user\\(\\) has parameter \\$userid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function begin_JSON_response\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function begin_XML_for_XSLT\\(\\) has no return type specified\\.$#"
+			message: "#^Function begin_JSON_response\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -11266,11 +11101,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function create_aggregate_build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function create_aggregate_build\\(\\) has parameter \\$build with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -11291,22 +11121,7 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function extract_tar\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function extract_tar\\(\\) has parameter \\$dirName with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function extract_tar\\(\\) has parameter \\$filename with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function extract_tar_archive_tar\\(\\) has no return type specified\\.$#"
+			message: "#^Function extract_tar\\(\\) never returns null so it can be removed from the return type\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -11326,27 +11141,7 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function generate_XSLT\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function generate_XSLT\\(\\) has parameter \\$pageName with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function generate_XSLT\\(\\) has parameter \\$xml with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function generate_password\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function getByteValueWithExtension\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -11361,47 +11156,7 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function get_aggregate_build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function get_aggregate_build\\(\\) has parameter \\$build with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function get_build_id\\(\\) has parameter \\$buildname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function get_build_id\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function get_build_id\\(\\) has parameter \\$sitename with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function get_build_id\\(\\) has parameter \\$stamp with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function get_cdash_dashboard_xml_by_name\\(\\) has parameter \\$date with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function get_cdash_dashboard_xml_by_name\\(\\) has parameter \\$projectname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function get_css_file\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -11446,17 +11201,17 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function get_dates\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function get_dates\\(\\) has parameter \\$date with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
 		-
 			message: "#^Function get_dates\\(\\) has parameter \\$nightlytime with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: "#^Function get_dates\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -11501,17 +11256,7 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function get_server_URI\\(\\) has parameter \\$localhost with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function get_server_siteid\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function has_next_date\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -11581,11 +11326,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function remove_build_chunked\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function remove_build_chunked\\(\\) has parameter \\$buildid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -11596,32 +11336,7 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function remove_site2user\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function remove_site2user\\(\\) has parameter \\$siteid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function remove_site2user\\(\\) has parameter \\$userid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function rmdirr\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function rmdirr\\(\\) has parameter \\$dir with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function setVersion\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -11746,27 +11461,7 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function xml_replace_callback\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function xml_replace_callback\\(\\) has parameter \\$matches with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function xslt_create\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function xslt_free\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function xslt_free\\(\\) has parameter \\$xsltproc with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -11797,16 +11492,6 @@ parameters:
 
 		-
 			message: "#^Function xslt_process\\(\\) has parameter \\$xslcontainer with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function xslt_process\\(\\) has parameter \\$xsltproc with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Only booleans are allowed in &&, mixed given on the right side\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -11867,11 +11552,6 @@ parameters:
 
 		-
 			message: "#^Function ctest_parse\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function ctest_parse\\(\\) has parameter \\$buildid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparser.php
 
@@ -11942,76 +11622,6 @@ parameters:
 
 		-
 			message: "#^Function parse_put_submission\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function safelyWriteBackupFile\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function safelyWriteBackupFile\\(\\) has parameter \\$content with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function safelyWriteBackupFile\\(\\) has parameter \\$filehandler with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function safelyWriteBackupFile\\(\\) has parameter \\$filename with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function writeBackupFile\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function writeBackupFile\\(\\) has parameter \\$buildname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function writeBackupFile\\(\\) has parameter \\$content with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function writeBackupFile\\(\\) has parameter \\$fileNameWithExt with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function writeBackupFile\\(\\) has parameter \\$filehandler with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function writeBackupFile\\(\\) has parameter \\$projectname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function writeBackupFile\\(\\) has parameter \\$sitename with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function writeBackupFile\\(\\) has parameter \\$stamp with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function writeBackupFile\\(\\) has parameter \\$subprojectname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, int given\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparser.php
 
@@ -17350,11 +16960,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$string of function str_pad expects string, int\\<1, max\\> given\\.$#"
 			count: 1
 			path: app/cdash/public/viewCoverageFile.php
-
-		-
-			message: "#^Function generate_XSLT invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: app/cdash/public/viewFiles.php
 
 		-
 			message: """

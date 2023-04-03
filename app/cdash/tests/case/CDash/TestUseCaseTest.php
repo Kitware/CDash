@@ -2,6 +2,7 @@
 
 use CDash\Model\Build;
 use CDash\Collection\BuildCollection;
+use CDash\Model\Site;
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\TestUseCase;
 use CDash\Test\UseCase\UseCase;
@@ -65,6 +66,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $handler = $sut->build();
         $builds = $handler->GetBuildCollection();
         $build = $builds->current();
+        /** @var Site $site */
         $site = $build->getSite();
         $information = $site->GetInformation();
 

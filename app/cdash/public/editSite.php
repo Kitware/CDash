@@ -37,9 +37,9 @@ if (Auth::check()) {
     if ($claimsites) {
         foreach ($availablesites as $siteid) {
             if (@array_key_exists($siteid, $checkedsites)) {
-                add_site2user($siteid, $userid);
+                add_site2user(intval($siteid), intval($userid));
             } else {
-                remove_site2user($siteid, $userid);
+                remove_site2user(intval($siteid), intval($userid));
             }
         }
         $xml .= add_XML_value('warning', 'Claimed sites updated.');
@@ -48,7 +48,7 @@ if (Auth::check()) {
     @$claimsite = $_POST['claimsite'];
     @$claimsiteid = $_POST['claimsiteid'];
     if ($claimsite) {
-        add_site2user($claimsiteid, $userid);
+        add_site2user(intval($claimsiteid), intval($userid));
     }
 
     @$updatesite = $_POST['updatesite'];

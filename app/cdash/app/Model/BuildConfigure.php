@@ -46,18 +46,6 @@ class BuildConfigure
         $this->PDO = Database::getInstance()->getPdo();
     }
 
-    public function AddError($error)
-    {
-        $error->BuildId = $this->BuildId;
-        $error->Save();
-    }
-
-    public function AddErrorDifference($diff)
-    {
-        $diff->BuildId = $this->BuildId;
-        $diff->Save();
-    }
-
     public function AddLabel($label)
     {
         $label->BuildId = $this->BuildId;
