@@ -12,7 +12,6 @@
             </a>
         </div>
         <div id="headername2">
-            CDash
-            <span id="subheadername">Login</span></div>
+            <span id="subheadername">CDash Login</span></div>
     </div>
 </div>
