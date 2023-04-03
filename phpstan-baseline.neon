@@ -1588,6 +1588,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 2
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
+			message: """
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
 			"""
@@ -2668,6 +2676,14 @@ parameters:
 			path: app/cdash/app/Controller/Auth/Session.php
 
 		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
 			message: "#^Call to function array_search\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
@@ -3020,6 +3036,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/Banner.php
+
+		-
+			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
@@ -3074,6 +3098,14 @@ parameters:
 		-
 			message: "#^Access to an undefined property App\\\\Models\\\\BuildTest\\:\\:\\$test\\.$#"
 			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 24
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -4056,6 +4088,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 8
+			path: app/cdash/app/Model/BuildConfigure.php
+
+		-
+			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
@@ -4246,6 +4286,14 @@ parameters:
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
+			message: """
+				#^Call to deprecated method add_log\\(\\) of class CDash\\\\Log\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 5
+			path: app/cdash/app/Model/BuildEmail.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildEmail.php
@@ -4374,6 +4422,14 @@ parameters:
 			message: "#^Variable property access on \\$this\\(CDash\\\\Model\\\\BuildEmail\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildEmail.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/BuildError.php
 
 		-
 			message: """
@@ -4615,6 +4671,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 2
+			path: app/cdash/app/Model/BuildFailure.php
+
+		-
+			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
@@ -4815,6 +4879,14 @@ parameters:
 		-
 			message: "#^Access to an undefined property CDash\\\\Model\\\\BuildGroup\\:\\:\\$IncludeSubProjectTotal\\.$#"
 			count: 7
+			path: app/cdash/app/Model/BuildGroup.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 11
 			path: app/cdash/app/Model/BuildGroup.php
 
 		-
@@ -5070,6 +5142,14 @@ parameters:
 			path: app/cdash/app/Model/BuildGroupPosition.php
 
 		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/BuildGroupRule.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\BuildGroupRule\\:\\:ChangeGroup\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroupRule.php
@@ -5298,6 +5378,14 @@ parameters:
 			path: app/cdash/app/Model/BuildInformation.php
 
 		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 5
+			path: app/cdash/app/Model/BuildProperties.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\BuildProperties\\:\\:Delete\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildProperties.php
@@ -5346,6 +5434,14 @@ parameters:
 			message: "#^Variable property access on \\$this\\(CDash\\\\Model\\\\BuildProperties\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildProperties.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 7
+			path: app/cdash/app/Model/BuildRelationship.php
 
 		-
 			message: """
@@ -5628,6 +5724,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 5
+			path: app/cdash/app/Model/BuildUserNote.php
+
+		-
+			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
@@ -5683,6 +5787,14 @@ parameters:
 			message: "#^Property CDash\\\\Model\\\\BuildUserNote\\:\\:\\$UserId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildUserNote.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/Coverage.php
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
@@ -5926,6 +6038,14 @@ parameters:
 		-
 			message: "#^Binary operation \"\\-\" between string and string results in an error\\.$#"
 			count: 1
+			path: app/cdash/app/Model/CoverageFileLog.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 3
 			path: app/cdash/app/Model/CoverageFileLog.php
 
 		-
@@ -6215,6 +6335,14 @@ parameters:
 			message: "#^Property CDash\\\\Model\\\\DailyUpdateFile\\:\\:\\$Revision has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/DailyUpdateFile.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 2
+			path: app/cdash/app/Model/DynamicAnalysis.php
 
 		-
 			message: """
@@ -6512,6 +6640,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/Label.php
+
+		-
+			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
@@ -6635,6 +6771,14 @@ parameters:
 			message: "#^Property CDash\\\\Model\\\\LabelEmail\\:\\:\\$UserId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/LabelEmail.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 6
+			path: app/cdash/app/Model/PendingSubmissions.php
 
 		-
 			message: """
@@ -6762,6 +6906,14 @@ parameters:
 		-
 			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
 			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 9
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -7344,6 +7496,14 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/Repository.php
+
+		-
 			message: "#^Call to method compareCommits\\(\\) on an unknown class CDash\\\\Model\\\\RepositoryInterface\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Repository.php
@@ -7417,6 +7577,14 @@ parameters:
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Repository.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 3
+			path: app/cdash/app/Model/Site.php
 
 		-
 			message: """
@@ -7603,6 +7771,14 @@ parameters:
 			message: "#^Property CDash\\\\Model\\\\SiteInformation\\:\\:\\$TotalVirtualMemory has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SiteInformation.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 4
+			path: app/cdash/app/Model/SubProject.php
 
 		-
 			message: """
@@ -7850,6 +8026,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 3
+			path: app/cdash/app/Model/SubProjectGroup.php
+
+		-
+			message: """
 				#^Call to deprecated function pdo_insert_id\\(\\)\\:
 				04/01/2023$#
 			"""
@@ -7928,6 +8112,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 7
+			path: app/cdash/app/Model/UploadFile.php
+
+		-
+			message: """
 				#^Call to deprecated function pdo_insert_id\\(\\)\\:
 				04/01/2023$#
 			"""
@@ -7968,6 +8160,14 @@ parameters:
 			message: "#^Property CDash\\\\Model\\\\UploadFile\\:\\:\\$Sha1Sum has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/UploadFile.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/User.php
 
 		-
 			message: """
@@ -8153,6 +8353,14 @@ parameters:
 		-
 			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
 			count: 1
+			path: app/cdash/app/Model/UserProject.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 6
 			path: app/cdash/app/Model/UserProject.php
 
 		-
@@ -8367,6 +8575,14 @@ parameters:
 			message: """
 				#^Call to deprecated function pdo_num_rows\\(\\)\\:
 				04/01/2023$#
+			"""
+			count: 1
+			path: app/cdash/include/CDash/Database.php
+
+		-
+			message: """
+				#^Call to deprecated method error\\(\\) of class CDash\\\\Log\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
 			"""
 			count: 1
 			path: app/cdash/include/CDash/Database.php
@@ -8840,6 +9056,14 @@ parameters:
 			message: "#^Property CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage\\:\\:\\$body \\(string\\) does not accept CDash\\\\Messaging\\\\Notification\\\\Email\\\\Decorator\\\\DecoratorInterface\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/EmailMessage.php
+
+		-
+			message: """
+				#^Call to deprecated method add_log\\(\\) of class CDash\\\\Log\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 2
+			path: app/cdash/include/Messaging/Notification/Email/Mail.php
 
 		-
 			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:addEmail\\(\\) has no return type specified\\.$#"
@@ -10941,6 +11165,14 @@ parameters:
 			path: app/cdash/include/api_common.php
 
 		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 3
+			path: app/cdash/include/autoremove.php
+
+		-
 			message: "#^Function removeBuildsGroupwise\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/autoremove.php
@@ -11006,6 +11238,14 @@ parameters:
 			path: app/cdash/include/cdashmail.php
 
 		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 4
+			path: app/cdash/include/cdashmail.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/cdash/include/cdashmail.php
@@ -11048,6 +11288,14 @@ parameters:
 		-
 			message: "#^Call to an undefined method Archive_Tar\\:\\:setErrorHandling\\(\\)\\.$#"
 			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 4
 			path: app/cdash/include/common.php
 
 		-
@@ -11823,6 +12071,14 @@ parameters:
 			path: app/cdash/include/ctestparser.php
 
 		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 5
+			path: app/cdash/include/ctestparser.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 5
 			path: app/cdash/include/ctestparser.php
@@ -12077,6 +12333,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 8
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: """
 				#^Call to deprecated function pdo_insert_id\\(\\)\\:
 				04/01/2023$#
 			"""
@@ -12306,6 +12570,14 @@ parameters:
 		-
 			message: "#^Access to an undefined property ViewTestPhpFilters\\:\\:\\$TextConcat\\.$#"
 			count: 1
+			path: app/cdash/include/filterdataFunctions.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 2
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
@@ -12923,6 +13195,14 @@ parameters:
 		-
 			message: "#^Binary operation \"\\-\" between string and 1 results in an error\\.$#"
 			count: 2
+			path: app/cdash/include/repository.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 4
 			path: app/cdash/include/repository.php
 
 		-
@@ -14159,6 +14439,14 @@ parameters:
 			path: app/cdash/include/sendemail.php
 
 		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 2
+			path: app/cdash/include/sendemail.php
+
+		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 1
 			path: app/cdash/include/sendemail.php
@@ -14217,6 +14505,14 @@ parameters:
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetErrorDifferences\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
 			path: app/cdash/include/sendemail.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 23
+			path: app/cdash/include/upgrade_functions.php
 
 		-
 			message: """
@@ -14736,6 +15032,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 2
+			path: app/cdash/public/ajax/getviewcoverage.php
+
+		-
+			message: """
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
 			"""
@@ -15107,6 +15411,14 @@ parameters:
 			path: app/cdash/public/ajax/showtestfailuregraph.php
 
 		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/public/api/v1/GitHub/webhook.php
+
+		-
 			message: "#^Function handle_error\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/GitHub/webhook.php
@@ -15135,6 +15447,14 @@ parameters:
 			message: "#^Function CDash\\\\Api\\\\v1\\\\Authtoken\\\\rest_post\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/authtoken.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/public/api/v1/build.php
 
 		-
 			message: """
@@ -15517,6 +15837,14 @@ parameters:
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/public/api/v1/computeClassifier.php
+
+		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
@@ -15595,6 +15923,14 @@ parameters:
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/deleteSubmissionFile.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
 			message: """
@@ -15795,6 +16131,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/public/api/v1/index.php
+
+		-
+			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
@@ -15932,6 +16276,14 @@ parameters:
 			message: "#^Only booleans are allowed in an if condition, int\\|null given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/manageMeasurements.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/public/api/v1/manageOverview.php
 
 		-
 			message: """
@@ -16945,6 +17297,14 @@ parameters:
 			path: app/cdash/public/import.php
 
 		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 5
+			path: app/cdash/public/importBackup.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/cdash/public/importBuilds.php
@@ -17045,6 +17405,14 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:GetEmail\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/public/manageProjectRoles.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
 			count: 1
 			path: app/cdash/public/manageProjectRoles.php
 
@@ -17207,6 +17575,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 3
+			path: app/cdash/public/submit.php
+
+		-
+			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
@@ -17303,6 +17679,14 @@ parameters:
 			message: "#^Foreach overwrites \\$project_array with its value variable\\.$#"
 			count: 1
 			path: app/cdash/public/subscribeProject.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 5
+			path: app/cdash/public/upgrade.php
 
 		-
 			message: """
@@ -18044,6 +18428,30 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Psr\\\\Log\\\\LoggerInterface\\:\\:getHandlers\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/LogTest.php
+
+		-
+			message: """
+				#^Call to deprecated method debug\\(\\) of class CDash\\\\Log\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/tests/case/CDash/LogTest.php
+
+		-
+			message: """
+				#^Call to deprecated method error\\(\\) of class CDash\\\\Log\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/tests/case/CDash/LogTest.php
+
+		-
+			message: """
+				#^Call to deprecated method info\\(\\) of class CDash\\\\Log\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
 			count: 1
 			path: app/cdash/tests/case/CDash/LogTest.php
 
@@ -20254,6 +20662,14 @@ parameters:
 			message: "#^Property class@anonymous/app/cdash/tests/case/CDash/Submission/CommitAuthorHandlerTraitTest\\.php\\:31\\:\\:\\$Builds has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Submission/CommitAuthorHandlerTraitTest.php
+
+		-
+			message: """
+				#^Call to deprecated method error\\(\\) of class CDash\\\\Log\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 2
+			path: app/cdash/tests/case/CDash/Test/LogTest.php
 
 		-
 			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'CDash\\\\\\\\Log' and CDash\\\\Test\\\\Log will always evaluate to true\\.$#"
@@ -26699,6 +27115,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 2
+			path: app/cdash/xml_handlers/BazelJSON_handler.php
+
+		-
+			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
@@ -26951,6 +27375,14 @@ parameters:
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/xml_handlers/BuildPropertiesJSON_handler.php
+
+		-
 			message: "#^Method BuildPropertiesJSONHandler\\:\\:Parse\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BuildPropertiesJSON_handler.php
@@ -26972,6 +27404,14 @@ parameters:
 
 		-
 			message: "#^Binary operation \"\\-\" between string and 1 results in an error\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/GcovTar_handler.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
@@ -27096,6 +27536,14 @@ parameters:
 			path: app/cdash/xml_handlers/JSCoverTar_handler.php
 
 		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/xml_handlers/JSCoverTar_handler.php
+
+		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/JSCoverTar_handler.php
@@ -27134,6 +27582,14 @@ parameters:
 			message: "#^Property JSCoverTarHandler\\:\\:\\$CoverageSummaries has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/JSCoverTar_handler.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/xml_handlers/JavaJSONTar_handler.php
 
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
@@ -27228,6 +27684,14 @@ parameters:
 		-
 			message: "#^Access to an undefined property OpenCoverTarHandler\\:\\:\\$tarDir\\.$#"
 			count: 3
+			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
 			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
 
 		-
@@ -27369,6 +27833,14 @@ parameters:
 			message: "#^Property OpenCoverTarHandler\\:\\:\\$CoverageSummaries has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/xml_handlers/SubProjectDirectories_handler.php
 
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
@@ -28746,6 +29218,14 @@ parameters:
 			path: app/cdash/xml_handlers/note_handler.php
 
 		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 5
+			path: app/cdash/xml_handlers/project_handler.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
 			path: app/cdash/xml_handlers/project_handler.php
@@ -29519,6 +29999,14 @@ parameters:
 			message: "#^Property UpdateHandler\\:\\:\\$UpdateFile has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 12
+			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
 			message: "#^Call to function base64_decode\\(\\) requires parameter \\#2 to be set\\.$#"

@@ -19,6 +19,7 @@ require_once 'include/pdo.php';
 
 use CDash\Config;
 
+use Illuminate\Support\Facades\Log;
 use \Psr\Log\LogLevel;
 
 if (!function_exists('cdash_unlink')) {
@@ -74,7 +75,11 @@ if (!function_exists('to_psr3_level')) {
 }
 
 if (!function_exists('add_log')) {
-    /** Add information to the log file */
+    /**
+     * Add information to the log file
+     *
+     * @deprecated 04/04/2023  Use \Illuminate\Support\Facades\Log for logging instead
+     */
     function add_log($text, $function, $type = LOG_INFO, $projectid = 0, $buildid = 0,
                      $resourcetype = 0, $resourceid = 0)
     {
