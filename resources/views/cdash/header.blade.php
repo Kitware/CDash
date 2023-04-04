@@ -2,7 +2,7 @@
     <div id="headertop">
         <div id="topmenu">
             <a href="viewProjects.php">All Dashboards</a>
-            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+            <a href="{{ route('register') }}">{{ __('Register') }}</a>
         </div>
     </div>
     <div id="headerbottom">
