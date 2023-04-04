@@ -15,7 +15,6 @@
 =========================================================================*/
 
 require_once 'include/pdo.php';
-require_once 'include/login_functions.php';
 
 use App\Http\Controllers\Auth\LoginController;
 use CDash\Model\User;

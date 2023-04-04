@@ -9,6 +9,8 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 
+include_once 'include/common.php';
+
 abstract class AbstractController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;

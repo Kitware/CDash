@@ -234,11 +234,9 @@ class TestHistoryTestCase extends KWWebTestCase
         // Verify handling of bad 'previous_builds' parameter.
         $url = "{$this->url}/api/v1/viewTest.php?buildid={$buildids[4]}&groupid={$groupid}&previous_builds=exit(1)&projectid={$this->project->Id}&tests%5B%5D=fails&tests%5B%5D=flaky&tests%5B%5D=notrun&tests%5B%5D=passes&tests%5B%5D=sporadic&time_begin=2015-11-16T01:00:00&time_end=2015-11-17T01:00:00";
         $client = $this->getGuzzleClient();
-        $response = $client->request('GET',
-            $url,
-            ['http_errors' => false]);
-        $expected = '     {"tests":[{"name":"fails","summary":"Broken","summaryclass":"error"},{"name":"flaky","summary":"Unstable","summaryclass":"warning"},{"name":"notrun","summary":"Inactive","summaryclass":"warning"},{"name":"passes","summary":"Stable","summaryclass":"normal"},{"name":"sporadic","summary":"Stable","summaryclass":"normal"}]}';
-        $this->assertEqual($expected, $response->getBody());
+        $response = $client->request('GET', $url, ['http_errors' => false]);
+        $expected = '{"tests":[{"name":"fails","summary":"Broken","summaryclass":"error"},{"name":"flaky","summary":"Unstable","summaryclass":"warning"},{"name":"notrun","summary":"Inactive","summaryclass":"warning"},{"name":"passes","summary":"Stable","summaryclass":"normal"},{"name":"sporadic","summary":"Stable","summaryclass":"normal"}]}';
+        $this->assertEqual($expected, strval($response->getBody()));
 
         // Verify that testing history matches what we expect.
         $previous_buildids = "{$buildids[4]},+{$buildids[3]},+{$buildids[2]},+{$buildids[1]}";

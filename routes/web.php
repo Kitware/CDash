@@ -73,6 +73,15 @@ Route::get('/testDetails.php', function (Request $request) {
     abort(404);
 });
 
+Route::get('/viewProjects.php', 'ViewProjectsController@viewAllProjects');
+
+Route::get('/viewUpdate.php', 'UpdateController@viewUpdate');
+
+Route::get('/viewTest.php', 'ViewTestController@viewTest');
+
+Route::get('/user.php', 'UserController@viewTest');
+
+
 // API ROUTES /////////////////////////////////////////////////////////////////
 // TODO: (williamjallen) The routes in this section should be moved to api.php
 //       eventually.  The routing/middleware infrastructure needs to be refactored
@@ -83,6 +92,16 @@ Route::get('/testDetails.php', function (Request $request) {
 Route::get('/api/authtokens/all', 'AuthTokenController@fetchAll');
 Route::post('/api/authtokens/create', 'AuthTokenController@createToken');
 Route::delete('/api/authtokens/delete/{token_hash}', 'AuthTokenController@deleteToken');
+
+// OLD ROUTES (these may not use Laravel fully)
+
+Route::get('/api/v1/viewProjects.php', 'ViewProjectsController@fetchPageContent');
+
+Route::get('/api/v1/viewUpdate.php', 'UpdateController@fetchPageContent');
+
+Route::get('/api/v1/viewTest.php', 'ViewTestController@fetchPageContent');
+
+Route::get('/api/v1/user.php', 'UserController@fetchPageContent');
 
 ///////////////////////////////////////////////////////////////////////////////
 

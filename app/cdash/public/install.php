@@ -23,7 +23,6 @@ if (class_exists('XsltProcessor') === false) {
 }
 
 require_once 'include/common.php';
-require_once 'include/login_functions.php';
 require_once 'include/version.php';
 
 use CDash\Config;

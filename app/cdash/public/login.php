@@ -15,14 +15,14 @@
 =========================================================================*/
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
-include_once 'include/login_functions.php';
 // --------------------------------------------------------------------------------------
 // main
 // --------------------------------------------------------------------------------------
 // $mysession = ['login' => false, 'passwd' => false, 'ID' => false, 'valid' => false, 'langage' => false];
 
-$session_OK = (int)cdash_auth();
+$session_OK = (int)Auth::check();
 
 if (!$session_OK && !@$noforcelogin) {
     $errors = Collection::make([]);

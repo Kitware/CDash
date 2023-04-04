@@ -1733,7 +1733,6 @@ function begin_JSON_response()
  */
 function get_dashboard_JSON($projectname, $date, &$response)
 {
-    $config = Config::getInstance();
     $service = ServiceContainer::getInstance();
 
     /** @var Project $project */
@@ -1850,20 +1849,9 @@ function DeleteDirectory(string $dirName): void
     rmdir($dirName);
 }
 
-function load_view($viewName, $login=true)
+function load_view($viewName)
 {
-    if ($login) {
-        angular_login();
-    }
     readfile("build/views/$viewName.html");
-}
-
-function angular_login()
-{
-    if (array_key_exists('sent', $_POST) && $_POST['sent'] === 'Login >>') {
-        require_once 'include/login_functions.php';
-        cdash_auth();
-    }
 }
 
 /**
