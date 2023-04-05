@@ -243,7 +243,7 @@ if (Auth::check()) {
 
                 $messagePlainText .= 'Details on the submission can be found at ';
 
-                $messagePlainText .= get_server_URI();
+                $messagePlainText .= $config->getBaseUrl();
                 $messagePlainText .= "\n\n";
                 $serverName = $config->get('CDASH_SERVER_NAME');
                 if (strlen($serverName) == 0) {

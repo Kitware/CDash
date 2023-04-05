@@ -24,24 +24,13 @@ class Config extends Singleton
         $this->_config[$name] = $value;
     }
 
-    /**
-     * @return string
-     */
-    public static function getVersion()
+    public static function getVersion(): string
     {
         return file_get_contents(public_path('VERSION'));
     }
 
-    /**
-     * @param bool $use_localhost
-     * @return string
-     */
-    public function getServer($use_localhost = false)
+    public function getServer(): string
     {
-        if ($use_localhost) {
-            return 'localhost';
-        }
-
         $server = $this->get('CDASH_SERVER_NAME');
         if (empty($server)) {
             if (isset($_SERVER['SERVER_NAME'])) {
@@ -53,10 +42,7 @@ class Config extends Singleton
         return $server;
     }
 
-    /**
-     * @return string
-     */
-    public function getProtocol()
+    public function getProtocol(): string
     {
         $protocol = 'http';
         if ($this->get('CDASH_USE_HTTPS') ||
@@ -78,27 +64,22 @@ class Config extends Singleton
         }
     }
 
-    public function getPath()
+    public function getPath(): string
     {
         $path = config('cdash.curl_localhost_prefix') ?: $_SERVER['REQUEST_URI'];
-        if (strpos($path, '/') !== 0) {
+        if (!str_starts_with($path, '/')) {
             $path = "/{$path}";
         }
         return $path;
     }
 
-
-    /**
-     * @param bool $use_localhost
-     * @return string
-     */
-    public function getBaseUrl($use_localhost = false)
+    public function getBaseUrl(): string
     {
         $uri = config('app.url');
 
         if (!$uri) {
             $protocol = $this->getProtocol();
-            $host = $this->getServer($use_localhost);
+            $host = $this->getServer();
             $port = $this->getServerPort() ? ":{$this->getServerPort()}" : '';
             $path = $this->getPath();
 

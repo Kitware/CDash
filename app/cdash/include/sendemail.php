@@ -133,7 +133,8 @@ function get_email_summary(int $buildid, array $errors, $errorkey, int $maxitems
     $build = new Build();
     $build->Id = $buildid;
 
-    $serverURI = get_server_URI();
+    $config = Config::getInstance();
+    $serverURI = $config->getBaseUrl();
     $information = '';
 
     // Update information
@@ -349,7 +350,8 @@ function generate_broken_build_message(array $emailtext, $Build, $Project): arra
 {
     include_once 'include/common.php';
 
-    $serverURI = get_server_URI();
+    $config = Config::getInstance();
+    $serverURI = $config->getBaseUrl();
 
     $preamble = 'A submission to CDash for the project ' . $Project->Name . ' has ';
     $titleerrors = '(';
@@ -563,7 +565,8 @@ function send_update_email(UpdateHandler $handler, int $projectid): void
         }
 
         if (!empty($recipients)) {
-            $serverURI = get_server_URI();
+            $config = Config::getInstance();
+            $serverURI = $config->getBaseUrl();
 
             // Generate the email to send
             $subject = 'CDash [' . $Project->Name . '] - Update Errors for ' . $sitename;

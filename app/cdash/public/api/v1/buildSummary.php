@@ -383,6 +383,7 @@ if ($generate_issue_link) {
 $response['newissueurl'] = $new_issue_url;
 
 // Check if this build is related to any others.
+/** @var BuildRelationship $build_relationship */
 $build_relationship = $service->create(BuildRelationship::class);
 $relationships = $build_relationship->GetRelationships($build);
 $response['relationships_to'] = $relationships['to'];

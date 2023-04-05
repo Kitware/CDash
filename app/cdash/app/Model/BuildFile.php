@@ -69,21 +69,6 @@ class BuildFile
             ]);
     }
 
-    // Returns the buildid associated with this file's MD5 if it has been
-    // uploaded previously, false otherwise.
-    public function MD5Exists()
-    {
-        // Check if we already have a row
-        $existing_row =
-            \DB::table('buildfile')
-            ->where('md5', $this->md5)
-            ->first();
-        if (!$existing_row) {
-            return false;
-        }
-        return $existing_row->buildid;
-    }
-
     /** Delete this BuildFile */
     public function Delete()
     {

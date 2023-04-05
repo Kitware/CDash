@@ -27,9 +27,6 @@ use CDash\Model\Project;
 
 class ViewNotes extends BuildApi
 {
-    private $extraMeasurements;
-    private $numExtraMeasurements;
-
     public function __construct(Database $db, Build $build)
     {
         parent::__construct($db, $build);

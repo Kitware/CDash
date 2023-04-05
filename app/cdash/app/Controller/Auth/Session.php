@@ -25,7 +25,6 @@ class Session
 {
     const EXTEND_GC_LIFETIME = 600;
     const CACHE_NOCACHE = 'nocache';
-    const CACHE_PRIVATE_NO_EXPIRE = 'private_no_expire';
 
     private $system;
 
@@ -83,7 +82,7 @@ class Session
      */
     public function destroy()
     {
-        $this->system->session_destroy();
+        session_destroy();
 
         // TODO: explicit where the class is implicit, pick one
         if (isset($_SESSION['cdash'])) {
@@ -118,10 +117,5 @@ class Session
     public function isActive()
     {
         return $this->getStatus() === PHP_SESSION_ACTIVE;
-    }
-
-    public function writeClose()
-    {
-        $this->system->session_write_close();
     }
 }

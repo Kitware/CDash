@@ -139,21 +139,6 @@ class BuildGroup
         return $this->StartTime;
     }
 
-    public function SetStartTime($time)
-    {
-        $this->StartTime = pdo_real_escape_string($time);
-    }
-
-    /** Get/Set the end time */
-    public function GetEndTime()
-    {
-        if ($this->Id < 1) {
-            add_log('BuildGroup GetEndTime(): Id not set', 'GetEndTime', LOG_ERR);
-            return false;
-        }
-        return $this->EndTime;
-    }
-
     public function SetEndTime($time)
     {
         $this->EndTime = pdo_real_escape_string($time);

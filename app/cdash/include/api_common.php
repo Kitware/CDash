@@ -234,7 +234,7 @@ function json_error_response($response, $code = 400)
 {
     $service = ServiceContainer::getInstance();
     $system = $service->get(System::class);
-    $system->http_response_code($code);
+    http_response_code($code);
     echo json_encode($response);
     $system->system_exit();
 }

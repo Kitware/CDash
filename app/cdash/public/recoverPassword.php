@@ -42,7 +42,7 @@ if ($recover) {
         // Create a new password
         $password = generate_password(10);
 
-        $currentURI = get_server_URI();
+        $currentURI = $config->getBaseUrl();
         $url = $currentURI . '/user.php';
 
         $text = "Hello,\n\n You have asked to recover your password for CDash.\n\n";
