@@ -4834,7 +4834,7 @@ parameters:
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
 			"""
-			count: 11
+			count: 10
 			path: app/cdash/app/Model/BuildGroup.php
 
 		-
