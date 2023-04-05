@@ -182,7 +182,31 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     // Include the handler file for this type of submission.
     $type = $buildfile_row['type'];
     $include_file = 'xml_handlers/' . $type . '_handler.php';
-    if (stream_resolve_include_path($include_file) === false) {
+    $valid_types = [
+        'BazelJSON',
+        'build',
+        'BuildPropertiesJSON',
+        'configure',
+        'coverage',
+        'coverage_junit',
+        'coverage_log',
+        'done',
+        'dynamic_analysis',
+        'GcovTar',
+        'JavaJSONTar',
+        'JSCoverTar',
+        'note',
+        'OpenCoverTar',
+        'project',
+        'retry',
+        'sax',
+        'SubProjectDirectories',
+        'testing',
+        'testing_junit',
+        'update',
+        'upload',
+    ];
+    if (stream_resolve_include_path($include_file) === false || !in_array($type, $valid_types, true)) {
         add_log("No handler include file for $type (tried $include_file)",
             'parse_put_submission',
             LOG_ERR, $projectid);
