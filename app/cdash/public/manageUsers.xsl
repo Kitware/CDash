@@ -1,72 +1,10 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
-   <xsl:include href="footer.xsl"/>
-   <xsl:include href="headscripts.xsl"/>
-   <xsl:include href="headeradminproject.xsl"/>
-
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+  <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
     <xsl:template match="/">
-      <html>
-       <head>
-       <title><xsl:value-of select="cdash/title"/></title>
-        <meta name="robots" content="noindex,nofollow" />
-         <link rel="StyleSheet" type="text/css">
-         <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
-         </link>
-
-        <!-- Include project roles -->
-        <script src="js/cdashManageUsers.js" type="text/javascript"></script>
-        <!-- Functions to confirm the email -->
-        <xsl:text disable-output-escaping="yes">
-              &lt;script language="JavaScript" type="text/javascript"&gt;
-
-              $(document).ready(function() {
-                $(window).keydown(function(event){
-                  if(event.keyCode == 13) {
-                  event.preventDefault();
-                  return false;
-                  }
-                });
-              });
-
-              function confirmRemove() {
-                 if (window.confirm("Are you sure you want to remove this user from the database?")){
-                    return true;
-                 }
-                 return false;
-              }
-
-              function generatePassword()
-                {
-                var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-                var passwd = "";
-                for(x=0;x&lt;12;x++)
-                  {
-                  i = Math.floor(Math.random() * 62);
-                  passwd += chars.charAt(i);
-                  }
-                $("input#passwd").val(passwd);
-                $("input#passwd2").val(passwd);
-                $("#clearpasswd").html("("+passwd+")");
-                }
-
-              &lt;/script&gt;
-        </xsl:text>
-       </head>
-       <body bgcolor="#ffffff">
-<xsl:choose>
-<xsl:when test="/cdash/uselocaldirectory=1">
-  <xsl:call-template name="headeradminproject_local"/>
-</xsl:when>
-<xsl:otherwise>
-  <xsl:call-template name="headeradminproject"/>
-</xsl:otherwise>
-</xsl:choose>
-
-<br/>
 
 <xsl:if test="string-length(cdash/warning)>0">
 <div style="color: green;"><xsl:value-of select="cdash/warning"/></div><br/>
@@ -144,17 +82,44 @@
 </table>
 </form>
 
-<!-- FOOTER -->
-<xsl:choose>
-<xsl:when test="/cdash/uselocaldirectory=1">
-  <xsl:call-template name="footer_local"/>
-</xsl:when>
-<xsl:otherwise>
-  <xsl:call-template name="footer"/>
-</xsl:otherwise>
-</xsl:choose>
+<!-- Include project roles -->
+<script src="js/cdashManageUsers.js" type="text/javascript"></script>
+<!-- Functions to confirm the email -->
+<xsl:text disable-output-escaping="yes">
+        &lt;script language="JavaScript" type="text/javascript"&gt;
 
-        </body>
-      </html>
+        $(document).ready(function() {
+          $(window).keydown(function(event){
+            if(event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+            }
+          });
+        });
+
+        function confirmRemove() {
+           if (window.confirm("Are you sure you want to remove this user from the database?")){
+              return true;
+           }
+           return false;
+        }
+
+        function generatePassword()
+          {
+          var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+          var passwd = "";
+          for(x=0;x&lt;12;x++)
+            {
+            i = Math.floor(Math.random() * 62);
+            passwd += chars.charAt(i);
+            }
+          $("input#passwd").val(passwd);
+          $("input#passwd2").val(passwd);
+          $("#clearpasswd").html("("+passwd+")");
+          }
+
+        &lt;/script&gt;
+  </xsl:text>
+
     </xsl:template>
 </xsl:stylesheet>

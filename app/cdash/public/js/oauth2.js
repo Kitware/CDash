@@ -1,7 +1,7 @@
 function oauth2(type) {
   var requestedURI = document.URL;
-    // Don't send the user back to login.php if that's where they came from.
-    if (requestedURI.indexOf('login.php') !== -1) {
+    // Don't send the user back to the login page if that's where they came from.
+    if (requestedURI.indexOf('login') !== -1) {
       requestedURI = 'user.php';
     }
   requestedURI = encodeURIComponent(requestedURI);

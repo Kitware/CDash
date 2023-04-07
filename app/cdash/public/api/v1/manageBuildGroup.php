@@ -43,6 +43,7 @@ $response = begin_JSON_response();
 $response['backurl'] = 'user.php';
 $response['menutitle'] = 'CDash';
 $response['menusubtitle'] = 'Build Groups';
+$response['title'] = 'Build Groups';
 $response['hidenav'] = 1;
 
 @$projectid = $_GET['projectid'];

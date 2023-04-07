@@ -1,29 +1,10 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
-   <xsl:include href="footer.xsl"/>
-   <xsl:include href="headerback.xsl"/>
-
  <!-- HEADER -->
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
     <xsl:template match="/">
-      <html>
-       <head>
-       <title><xsl:value-of select="cdash/title"/></title>
-        <meta name="robots" content="noindex,nofollow" />
-         <link rel="shortcut icon" href="favicon.ico"/>
-         <link rel="StyleSheet" type="text/css">
-         <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
-         </link>
-       <script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
-       <script language="javascript" type="text/javascript" src="js/cdashSiteSorter.js"></script>
-
-       </head>
-   <body onload="load()" onunload="GUnload()">
-
-<xsl:call-template name="headerback"/>
-<br/>
 
 <xsl:if test="string-length(cdash/googlemapkey)>0">
  <script type="text/javascript">
@@ -103,18 +84,8 @@
 </xsl:if>
 </div>
 
-<!-- FOOTER -->
-<div style="clear:both; padding-top:20px"></div>
-<xsl:choose>
-<xsl:when test="/cdash/uselocaldirectory=1">
-  <xsl:call-template name="footer_local"/>
-</xsl:when>
-<xsl:otherwise>
-  <xsl:call-template name="footer"/>
-</xsl:otherwise>
-</xsl:choose>
+<script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
+<script language="javascript" type="text/javascript" src="js/cdashSiteSorter.js"></script>
 
-        </body>
-      </html>
     </xsl:template>
 </xsl:stylesheet>

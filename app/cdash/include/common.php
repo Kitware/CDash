@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Auth\LoginController;
@@ -81,7 +83,7 @@ function xslt_process(XSLTProcessor $xsltproc,
 /**
  * Do the XSLT translation
  */
-function generate_XSLT($xml, string $pageName): void
+function generate_XSLT($xml, string $pageName, bool $return_html = false): string
 {
     $config = Config::getInstance();
 
@@ -103,9 +105,13 @@ function generate_XSLT($xml, string $pageName): void
 
     $html = xslt_process($xh, 'arg:/_xml', $xslpage, null, $arguments);
 
-    echo $html;
-
     unset($xh);
+    if ($return_html) {
+        return $html;
+    } else {
+        echo $html;
+        return '';
+    }
 }
 
 /**
@@ -338,9 +344,12 @@ function setVersion(): void
 }
 
 /**
+ * TODO: (williamjallen) This function's return type is excessively complex and makes it
+ *       difficult to handle.
+ *
  * Return true if the user is allowed to see the page
  */
-function checkUserPolicy($projectid, $onlyreturn = 0)
+function checkUserPolicy($projectid, $onlyreturn = 0): bool|RedirectResponse|Response
 {
     if (!is_numeric($projectid)) {
         return response('Insufficient data to determine access');
@@ -369,7 +378,8 @@ function checkUserPolicy($projectid, $onlyreturn = 0)
     }
 
     if (!Auth::check()) {
-        return LoginController::staticShowLoginForm();
+        session(['url.intended' => url()->current()]);
+        return redirect()->route('login');
     }
 
     return response('You cannot access this project');

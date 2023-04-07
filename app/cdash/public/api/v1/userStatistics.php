@@ -25,17 +25,23 @@ use App\Services\PageTimer;
 $pageTimer = new PageTimer();
 $response = [];
 
+$projectname = null;
+$projectid = 0;
+
 // Handle required project argument.
 $project_ok = true;
 if (!array_key_exists('project', $_GET)) {
     $project_ok = false;
+} else {
+    $projectname = $_GET['project'];
+    $projectid = get_project_id($projectname);
+    if ($projectid < 1) {
+        $project_ok = false;
+    }
 }
-$projectname = $_GET['project'];
-$projectid = get_project_id($projectname);
-if ($projectid < 1) {
-    $project_ok = false;
-}
+
 if (!$project_ok) {
+    $response['title'] = 'Developer Statistics';
     $response['error'] = 'Project name is not set.';
     echo json_encode($response);
     return 400;
@@ -55,7 +61,7 @@ if (array_key_exists('date', $_GET)) {
 
 $response = begin_JSON_response();
 get_dashboard_JSON($projectname, $date, $response);
-$response['title'] = 'CDash - Developer Statistics';
+$response['title'] = 'Developer Statistics';
 $response['showcalendar'] = 1;
 
 // Get the requested date range.

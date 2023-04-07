@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Services\AuthTokenService;
 use App\Services\PageTimer;
+use App\Validators\Password;
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
@@ -14,16 +16,17 @@ use CDash\Model\UserProject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use PDO;
+
+require_once 'include/cdashmail.php';
 
 class UserController extends AbstractController
 {
-    public function viewTest(): View
+    public function userPage(): View
     {
         return view("admin.user");
     }
 
-    public function fetchPageContent(): JsonResponse
+    public function userPageContent(): JsonResponse
     {
         $config = Config::getInstance();
         $response = [];
@@ -42,16 +45,14 @@ class UserController extends AbstractController
 
         $pageTimer = new PageTimer();
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
         $userid = $user->id;
 
         $PDO = Database::getInstance()->getPdo();
 
-        $xml = begin_XML_for_XSLT();
-
         $response = begin_JSON_response();
-        $response['title'] = 'CDash - My Profile';
+        $response['title'] = 'My Profile';
 
         $response['user_name'] = $user->firstname;
         $response['user_is_admin'] = $user->admin;
@@ -324,5 +325,237 @@ class UserController extends AbstractController
         }
 
         return $response;
+    }
+
+    public function edit(): View
+    {
+        $xml = begin_XML_for_XSLT();
+        $xml .= '<title>CDash - My Profile</title>';
+        $xml .= '<backurl>user.php</backurl>';
+        $xml .= '<menutitle>CDash</menutitle>';
+        $xml .= '<menusubtitle>My Profile</menusubtitle>';
+
+        $userid = Auth::id();
+        $user = new \CDash\Model\User();
+        $user->Id = $userid;
+        $user->Fill();
+
+        $pdo = get_link_identifier()->getPdo();
+
+        @$updateprofile = $_POST['updateprofile'];
+        if ($updateprofile) {
+            $email = $_POST['email'];
+            if (strlen($email) < 3 || strpos($email, '@') === false) {
+                $xml .= '<error>Email should be a valid address.</error>';
+            } else {
+                $user->Email = $email;
+                $user->Institution = $_POST['institution'];
+                $user->LastName = $_POST['lname'];
+                $user->FirstName = $_POST['fname'];
+                if ($user->Save()) {
+                    $xml .= '<error>Your profile has been updated.</error>';
+                } else {
+                    $xml .= '<error>Cannot update profile.</error>';
+                }
+            }
+        }
+
+        // Update the password
+        @$updatepassword = $_POST['updatepassword'];
+        if ($updatepassword) {
+            $oldpasswd = $_POST['oldpasswd'];
+            $passwd = $_POST['passwd'];
+            $passwd2 = $_POST['passwd2'];
+
+            $password_is_good = true;
+            $error_msg = '';
+
+            if (!password_verify($oldpasswd, $user->Password) && md5($oldpasswd) != $user->Password) {
+                $password_is_good = false;
+                $error_msg = 'Your old password is incorrect.';
+            }
+
+            if ($password_is_good && $passwd != $passwd2) {
+                $password_is_good = false;
+                $error_msg = 'Passwords do not match.';
+            }
+
+            $minimum_length = config('cdash.password.min');
+            if ($password_is_good && strlen($passwd) < $minimum_length) {
+                $password_is_good = false;
+                $error_msg = "Password must be at least $minimum_length characters.";
+            }
+
+            $password_hash = User::PasswordHash($passwd);
+            if ($password_hash === false) {
+                $password_is_good = false;
+                $error_msg = 'Failed to hash password.  Contact an admin.';
+            }
+
+            if ($password_is_good && config('cdash.password.expires') > 0) {
+                $query = 'SELECT password FROM password WHERE userid=?';
+                $unique_count = config('cdash.password.unique');
+                if ($unique_count) {
+                    $query .= " ORDER BY date DESC LIMIT $unique_count";
+                }
+                $stmt = $pdo->prepare($query);
+                pdo_execute($stmt, [$userid]);
+                while ($row = $stmt->fetch()) {
+                    if (password_verify($passwd, $row['password'])) {
+                        $password_is_good = false;
+                        $error_msg = 'You have recently used this password.  Please select a new one.';
+                        break;
+                    }
+                }
+            }
+
+            if ($password_is_good) {
+                $password_validator = new Password;
+                $complexity_count = config('cdash.password.count');
+                $complexity = $password_validator->computeComplexity($passwd, $complexity_count);
+                $minimum_complexity = config('cdash.password.complexity');
+                if ($complexity < $minimum_complexity) {
+                    $password_is_good = false;
+                    if ($complexity_count > 1) {
+                        $error_msg = "Your password must contain at least $complexity_count characters from $minimum_complexity of the following types: uppercase, lowercase, numbers, and symbols.";
+                    } else {
+                        $error_msg = "Your password must contain at least $minimum_complexity of the following: uppercase, lowercase, numbers, and symbols.";
+                    }
+                }
+            }
+
+            if (!$password_is_good) {
+                $xml .= "<error>$error_msg</error>";
+            } else {
+                $user->Password = $password_hash;
+                if ($user->Save()) {
+                    $xml .= '<error>Your password has been updated.</error>';
+                    if (isset($_SESSION['cdash']['redirect'])) {
+                        unset($_SESSION['cdash']['redirect']);
+                        request()->session()->remove('cdash.redirect');
+                    }
+                } else {
+                    $xml .= '<error>Cannot update password.</error>';
+                }
+            }
+        }
+
+        if (request('password_expired')) {
+            $xml .= '<error>Password has expired</error>';
+        }
+
+        $xml .= '<user>';
+        $xml .= add_XML_value('id', $userid);
+        $xml .= add_XML_value('firstname', $user->FirstName);
+        $xml .= add_XML_value('lastname', $user->LastName);
+        $xml .= add_XML_value('email', $user->Email);
+        $xml .= add_XML_value('institution', $user->Institution);
+
+        // Update the credentials
+        @$updatecredentials = $_POST['updatecredentials'];
+        if ($updatecredentials) {
+            $credentials = $_POST['credentials'];
+            $UserProject = new UserProject();
+            $UserProject->ProjectId = 0;
+            $UserProject->UserId = $userid;
+            $credentials[] = $user->Email;
+            $UserProject->UpdateCredentials($credentials);
+        }
+
+        // List the credentials
+        // First the email one (which cannot be changed)
+        $stmt = $pdo->prepare(
+            'SELECT credential FROM user2repository
+                WHERE userid = :userid AND projectid = 0 AND credential = :credential');
+        $stmt->bindParam(':userid', $userid);
+        $stmt->bindParam(':credential', $user->Email);
+        pdo_execute($stmt);
+        $row = $stmt->fetch();
+        if (!$row) {
+            $xml .= add_XML_value('credential_0', 'Not found (you should really add it)');
+        } else {
+            $xml .= add_XML_value('credential_0', $user->Email);
+        }
+
+        $stmt = $pdo->prepare(
+            'SELECT credential FROM user2repository
+                WHERE userid = :userid AND projectid = 0 AND credential != :credential');
+        $stmt->bindParam(':userid', $userid);
+        $stmt->bindParam(':credential', $user->Email);
+        pdo_execute($stmt);
+        $credential_num = 1;
+        while ($row = $stmt->fetch()) {
+            $xml .= add_XML_value('credential_' . $credential_num++, stripslashes($row['credential']));
+        }
+
+        $xml .= '</user>';
+
+        if (array_key_exists('reason', $_GET) && $_GET['reason'] == 'expired') {
+            $xml .= '<error>Your password has expired.  Please set a new one.</error>';
+        }
+
+        $xml .= '</cdash>';
+
+        return view('cdash', [
+            'xsl' => true,
+            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/editUser', true),
+            'title' => 'My Profile'
+        ]);
+    }
+
+    public function recoverPassword(): View
+    {
+        $config = Config::getInstance();
+        $xml = begin_XML_for_XSLT();
+        if ($config->get('CDASH_NO_REGISTRATION') == 1) {
+            $xml .= add_XML_value('noregister', '1');
+        }
+
+        @$recover = $_POST['recover'];
+        if ($recover) {
+            $email = $_POST['email'];
+            $user = new \CDash\Model\User();
+            $userid = $user->GetIdFromEmail($email);
+            if (!$userid) {
+                // Don't reveal whether or not this is a valid account.
+                $xml .= '<message>A confirmation message has been sent to your inbox.</message>';
+            } else {
+                // Create a new password
+                $password = generate_password(10);
+
+                $currentURI = $config->getBaseUrl();
+                $url = $currentURI . '/user.php';
+
+                $text = "Hello,\n\n You have asked to recover your password for CDash.\n\n";
+                $text .= 'Your new password is: ' . $password . "\n";
+                $text .= 'Please go to this page to login: ';
+                $text .= "$url\n";
+                $text .= "\n\nGenerated by CDash";
+
+                if (cdashmail("$email", 'CDash password recovery', $text)) {
+                    // If we can send the email we update the database
+                    $passwordHash = User::PasswordHash($password);
+                    if ($passwordHash === false) {
+                        $xml .= '<warning>Failed to hash new password</warning>';
+                    } else {
+                        $user->Id = $userid;
+                        $user->Fill();
+                        $user->Password = $passwordHash;
+                        $user->Save();
+                        $xml .= '<message>A confirmation message has been sent to your inbox.</message>';
+                    }
+                } else {
+                    $xml .= '<warning>Cannot send recovery email</warning>';
+                }
+            }
+        }
+
+        $xml .= '</cdash>';
+
+        return view('cdash', [
+            'xsl' => true,
+            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/recoverPassword', true),
+            'title' => 'Recover Password'
+        ]);
     }
 }

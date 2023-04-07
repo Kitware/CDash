@@ -1,31 +1,11 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
-   <xsl:include href="footer.xsl"/>
-   <xsl:include href="headerback.xsl"/>
-
  <!-- HEADER -->
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
     <xsl:template match="/">
-      <html>
-       <head>
-       <title><xsl:value-of select="cdash/title"/></title>
-        <meta name="robots" content="noindex,nofollow" />
-         <link rel="StyleSheet" type="text/css">
-         <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
-         </link>
-       <xsl:comment><![CDATA[[if IE]>
-       <script language="javascript" type="text/javascript" src="js/excanvas.js">
-       </script>
-       <![endif]]]></xsl:comment>
-       </head>
-       <body bgcolor="#ffffff">
 
-<xsl:call-template name="headerback"/>
-
-<!-- Site manager -->
-<div id="main_content">
   <xsl:if test="cdash/user/sitemanager=1">
   <a><xsl:attribute name="href">editSite.php?siteid=<xsl:value-of select="cdash/site/id"/></xsl:attribute>
   <xsl:if test="cdash/user/siteclaimed=0">Are you maintaining this site? [claim this site]</xsl:if><xsl:if test="cdash/user/siteclaimed=1">[edit site description]</xsl:if></a>
@@ -171,21 +151,5 @@
     })
   });
   </script>
-</div>
-
-<!-- FOOTER -->
-<br/>
-
-<xsl:choose>
-<xsl:when test="/cdash/uselocaldirectory=1">
-  <xsl:call-template name="footer_local"/>
-</xsl:when>
-<xsl:otherwise>
-  <xsl:call-template name="footer"/>
-</xsl:otherwise>
-</xsl:choose>
-
-        </body>
-      </html>
     </xsl:template>
 </xsl:stylesheet>

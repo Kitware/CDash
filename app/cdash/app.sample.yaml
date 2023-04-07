@@ -17,11 +17,6 @@ handlers:
   script: public/api/v1/index.php
   secure: always
 
-- url: /apple-touch-icon\.png
-  static_files: public/apple-touch-icon.png
-  upload: public/apple-touch-icon\.png
-  secure: always
-
 - url: /favicon\.ico
   static_files: public/favicon.ico
   upload: public/favicon\.ico

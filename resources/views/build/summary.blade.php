@@ -1,14 +1,7 @@
-@extends('master')
+@extends('cdash', [
+    'vue' => true
+])
 
-@section('page-header')
-@include('build.page-header')
-@endsection
-
-@section('content')
-<build-summary></build-summary>
-@include('build.page-footer')
-@endsection
-
-@section('post_content_script')
-<script></script>
+@section('main_content')
+    <build-summary></build-summary>
 @endsection

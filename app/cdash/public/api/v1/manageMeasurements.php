@@ -107,7 +107,7 @@ function rest_get($projectid)
     $project->Fill();
 
     get_dashboard_JSON($project->GetName(), null, $response);
-    $response['title'] = "CDash - $project->Name Test Measurements";
+    $response['title'] = "$project->Name Test Measurements";
 
     // Menu
     $menu_response = [];

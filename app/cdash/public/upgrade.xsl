@@ -1,41 +1,27 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
-   <xsl:include href="footer.xsl"/>
-    <xsl:include href="headerback.xsl"/>
-
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
     <xsl:template match="/">
-      <html>
-       <head>
-       <title><xsl:value-of select="cdash/title"/></title>
-        <meta name="robots" content="noindex,nofollow" />
-         <link rel="StyleSheet" type="text/css">
-         <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
-         </link>
 
-        <xsl:if test="cdash/upgrade=1">
-          <xsl:if test="cdash/backupwritable=0">
-            <font color="#FF0000">Your backup directory is not writable, make sure that the web process can write into the directory.</font><br/>
-          </xsl:if>
-          <xsl:if test="cdash/logwritable=0">
-            <font color="#FF0000">Your log directory is not writable, make sure that the web process can write into the directory.</font><br/>
-          </xsl:if>
-          <xsl:if test="cdash/uploadwritable=0">
-            <font color="#FF0000">Your upload directory is not writable, make sure that the web process can write into the directory.</font><br/>
-          </xsl:if>
-          <xsl:if test="cdash/backupwritable=1">
-            <script type="text/javascript">
-              var version='<xsl:value-of select="cdash/minversion"/>';
-            </script>
-            <script src="js/cdashUpgrade.js" type="text/javascript" charset="utf-8"></script>
-          </xsl:if>
-        </xsl:if>
-
-       </head>
-       <body bgcolor="#ffffff">
-   <xsl:call-template name="headerback"/>
+<xsl:if test="cdash/upgrade=1">
+ <xsl:if test="cdash/backupwritable=0">
+   <font color="#FF0000">Your backup directory is not writable, make sure that the web process can write into the directory.</font><br/>
+ </xsl:if>
+ <xsl:if test="cdash/logwritable=0">
+   <font color="#FF0000">Your log directory is not writable, make sure that the web process can write into the directory.</font><br/>
+ </xsl:if>
+ <xsl:if test="cdash/uploadwritable=0">
+   <font color="#FF0000">Your upload directory is not writable, make sure that the web process can write into the directory.</font><br/>
+ </xsl:if>
+ <xsl:if test="cdash/backupwritable=1">
+   <script type="text/javascript">
+     var version='<xsl:value-of select="cdash/minversion"/>';
+   </script>
+   <script src="js/cdashUpgrade.js" type="text/javascript" charset="utf-8"></script>
+ </xsl:if>
+</xsl:if>
 
 <xsl:if test="string-length(cdash/alert)>0">
 <b><xsl:value-of select="cdash/alert"/></b>
@@ -112,11 +98,5 @@
 <div id="DoneStatus"></div>
 <br/>
 
-<br/>
-<!-- FOOTER -->
-<br/>
-<xsl:call-template name="footer"/>
-        </body>
-      </html>
     </xsl:template>
 </xsl:stylesheet>

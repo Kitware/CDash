@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Http\ResponseTrait;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Storage;
+use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * TODO: (williamjallen) should some of this logic be moved to AbstractController.php?
@@ -34,7 +36,7 @@ class CDash extends AbstractController
     public function __construct(Request $request)
     {
         $this->request = $request;
-        $this->disk = \Storage::disk('cdash');
+        $this->disk = Storage::disk('cdash');
         $this->middleware('password')->except([]);
     }
 
@@ -80,10 +82,8 @@ class CDash extends AbstractController
 
     /**
      * Determines if the file being requested is in the CDash filesystem
-     *
-     * @return bool
      */
-    public function isValidRequest()
+    public function isValidRequest(): bool
     {
         $valid = false;
         $path = $this->getPath();
@@ -96,52 +96,39 @@ class CDash extends AbstractController
 
     /**
      * Determines if the request is a request for a CDash api endpoint
-     *
-     * @return bool
      */
-    public function isApiRequest()
+    public function isApiRequest(): bool
     {
         $path = $this->getPath();
-        return strpos($path, 'api/v') === 0;
+        return str_starts_with($path, 'api/');
     }
 
     /**
      * Determines if the request is a CTest submission
-     *
-     * @return false|int
      */
-    public function isSubmission()
+    public function isSubmission(): bool
     {
         $path = $this->getPath();
-        return preg_match('/submit.php/', $path);
+        return boolval(preg_match('/submit\.php/', $path));
     }
 
     /**
      * Determines if the request is made via XHR requesting partial HTML
-     *
-     * @return bool
      */
-    public function isPartialRequest()
+    public function isPartialRequest(): bool
     {
         $path = $this->getPath();
-        return strpos($path, 'ajax/') === 0;
+        return str_starts_with($path, 'ajax/');
     }
 
-    /**
-     * @return bool
-     */
-    public function isFileRequest()
+    public function isFileRequest(): bool
     {
         $path = $this->getPath();
         $endpoints = config('cdash.file.endpoints');
-        $export = $this->isRequestForExport();
         return in_array($path, $endpoints);
     }
 
-    /**
-     * @return bool
-     */
-    public function isRequestForExport()
+    public function isRequestForExport(): bool
     {
         $export = request('export');
         return $export && in_array($export, ['csv']);
@@ -149,8 +136,6 @@ class CDash extends AbstractController
 
     /**
      * Processes the CDash file for a given request
-     *
-     * @return \Illuminate\Http\RedirectResponse|string
      */
     public function getRequestContents()
     {
@@ -198,10 +183,8 @@ class CDash extends AbstractController
 
     /**
      * Returns response containing HTML partial
-     *
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|Response
      */
-    public function handlePartialRequest()
+    public function handlePartialRequest(): Response
     {
         $content = $this->getRequestContents();
         return response($content, 200);
@@ -209,23 +192,19 @@ class CDash extends AbstractController
 
     /**
      * Returns the CTest submission status XML
-     *
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|Response
      */
-    public function handleSubmission()
+    public function handleSubmission(): Response
     {
         $content = $this->getRequestContents();
-        $status = is_a($content, Response::class)? $content->getStatusCode() : 200;
-        return \response($content, $status)
+        $status = is_a($content, Response::class) ? $content->getStatusCode() : 200;
+        return response($content, $status)
             ->header('Content-Type', 'text/xml');
     }
 
     /**
      * Returns the requested file
-     *
-     * @return mixed
      */
-    public function handleFileRequest()
+    public function handleFileRequest(): Response|RedirectResponse|StreamedResponse
     {
         $content = $this->getRequestContents();
 
@@ -238,14 +217,14 @@ class CDash extends AbstractController
             if (isset($content['filename'])) {
                 $headers['Content-Disposition'] = "attachment; filename=\"{$content['filename']}\"";
             }
-            $response = \response()->stream(function () use ($content) {
+            $response = response()->stream(function () use ($content) {
                 echo $content['file'];
             }, 200, $headers);
         } elseif (is_a($content, RedirectResponse::class)) {
             $response = $content;
         } else {
             // return a regular response because the output is not what we expected
-            $response = \response($content, 400);
+            $response = response($content, 400);
         }
 
         return $response;
@@ -253,10 +232,8 @@ class CDash extends AbstractController
 
     /**
      * Returns a Laravel view response
-     *
-     * @return ResponseTrait
      */
-    public function handleRequest()
+    public function handleRequest(): RedirectResponse|View
     {
         $content = $this->getRequestContents() ?: ''; // view does not like null
         return is_a($content, RedirectResponse::class) ?
@@ -265,10 +242,8 @@ class CDash extends AbstractController
 
     /**
      * Returns the path of the request with consideration given to the root path
-     *
-     * @return string
      */
-    public function getPath()
+    public function getPath(): string
     {
         if (!$this->path) {
             $path = $this->request->path();
@@ -278,11 +253,7 @@ class CDash extends AbstractController
         return $this->path;
     }
 
-    /**
-     *
-     * @return string
-     */
-    public function getAbsolutePath()
+    public function getAbsolutePath(): string
     {
         $path = $this->getPath();
         $file = $this->disk->path($path);
@@ -291,19 +262,16 @@ class CDash extends AbstractController
 
     /**
      * Returns the blade view with CDash layout
-     *
-     * @param string $content
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    protected function view(string $content)
+    protected function view(string $content): View
     {
         $controller = $this->getController();
         return view('cdash',
             [
-                'content' => $content,
-                'controller' => $controller,
-                'title' => $this->getTitle(),
-                'xsl' => empty($controller),
+                'xsl_content' => $content,
+                'angular' => $controller !== '',
+                'angular_controller' => $controller,
+                'xsl' => true,
                 'js_version' => self::getJsVersion(),
             ]
         );
@@ -311,10 +279,8 @@ class CDash extends AbstractController
 
     /**
      * Returns the Angular controller name for a given request
-     *
-     * @return string
      */
-    public function getController()
+    public function getController(): string
     {
         $name = '';
         $path = $this->getPath();
@@ -331,18 +297,5 @@ class CDash extends AbstractController
         }
 
         return $name;
-    }
-
-    /**
-     * Returns the HTML title for a given request
-     *
-     * @return string|string[]|null
-     */
-    public function getTitle()
-    {
-        $path = $this->getPath();
-        $file = pathinfo(substr($path, strrpos($path, '/')), PATHINFO_FILENAME);
-        $title = Str::studly($file);
-        return preg_replace('/(?=[A-Z])/', " ", $title);
     }
 }

@@ -68,7 +68,7 @@ if (!can_access_project($project_array['id'])) {
 }
 
 $response = begin_JSON_response();
-$response['title'] = "CDash - $projectname";
+$response['title'] = "$projectname";
 $response['showcalendar'] = 1;
 
 $Banner = new Banner;
