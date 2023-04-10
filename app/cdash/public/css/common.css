@@ -862,7 +862,6 @@ div#headertop {
   font-size:20px;
   font-weight:700;
   height:100%;
-  order: 2;
 }
 
 #headername .projectname {
@@ -874,7 +873,7 @@ div#headertop {
   float:right;
   height:100%;
   padding-right:30px;
-  order: 4;
+  margin-left: auto;
 }
 
 #headermenu #navigation {
@@ -969,7 +968,6 @@ div#headertop {
 #header .projectnav {
   margin:0 auto;
   padding: 19px;
-  order: 3;
 }
 
 #header .projectnav .projectnav_controls {
