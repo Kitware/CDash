@@ -28,7 +28,7 @@ local_service_setup() {
     sed -i 's/^Listen [0-9][0-9]*/Listen '"$PORT"'/g' /etc/apache2/ports.conf
     sed -i 's/^<VirtualHost \*:[0-9][0-9]*>/<VirtualHost \*:'"$PORT"'>/g' \
         /etc/apache2/sites-enabled/cdash-site.conf
-    echo "CDASH_FULL_EMAIL_WHEN_ADDING_USER = '1';" >> "$__local_config_file"
+    echo "CDASH_FULL_EMAIL_WHEN_ADDING_USER=1" >> "$__local_config_file"
 
     /usr/sbin/apache2ctl -D FOREGROUND &
     __apache_pid="$!"
