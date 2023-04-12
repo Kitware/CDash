@@ -29894,6 +29894,11 @@ parameters:
 			path: tests/Feature/LdapAuthWithRulesTest.php
 
 		-
+			message: "#^Missing call to parent\\:\\:tearDown\\(\\) method\\.$#"
+			count: 1
+			path: tests/Feature/LoginAndRegistration.php
+
+		-
 			message: "#^Property Tests\\\\Feature\\\\MigrateConfigCommand\\:\\:\\$config_file has no type specified\\.$#"
 			count: 1
 			path: tests/Feature/MigrateConfigCommand.php

@@ -1,6 +1,8 @@
 <?php
 
 return [
+    // Whether or not "normal" username+password authentication is enabled
+    'username_password_authentication_enabled' => env('USERNAME_PASSWORD_AUTHENTICATION_ENABLED', true),
 
     /*
     |--------------------------------------------------------------------------
