@@ -180,4 +180,5 @@ if [ "$do_serve" '!=' '1' ] ; then
 fi
 
 # serve
+php artisan schedule:work &
 exec /usr/sbin/apache2ctl -D FOREGROUND

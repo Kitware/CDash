@@ -51,6 +51,10 @@ $xml .= '<minversion>' . $version_array['major'] . '.' . $version_array['minor']
 @$Upgrade = $_POST['Upgrade'];
 @$Cleanup = $_POST['Cleanup'];
 @$Dependencies = $_POST['Dependencies'];
+@$Audit = $_POST['Audit'];
+@$ClearAudit = $_POST['Clear'];
+
+$configFile = $config->get('CDASH_ROOT_DIR') . "/AuditReport.log";
 
 if (!config('database.default')) {
     $db_type = 'mysql';
@@ -424,6 +428,19 @@ if ($Dependencies) {
     $returnVal = Artisan::call("dependencies:update");
     $xml .= add_XML_value('alert', "The call to update CDash's dependencies was run. The call exited with value: $returnVal");
 }
+
+if ($Audit) {
+    if (!file_exists($configFile)) {
+        Artisan::call("schedule:test --name='dependencies:audit'");
+    }
+    $fileContents = file_get_contents($configFile);
+    $xml .= add_XML_value('audit', $fileContents);
+}
+
+if ($ClearAudit && file_exists($configFile)) {
+    unlink($configFile);
+}
+
 
 
 /* Cleanup the database */
