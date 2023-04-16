@@ -113,10 +113,10 @@ if (isset($_GET['buildid'])) {
 
 $projectname = $_GET['project'];
 
-if (str_contains($projectname, '..')) {
-    \Log::error("Project name contains invalid pattern '..': $projectname");
+if (!Project::validateProjectName($projectname)) {
+    \Log::error("Invalid project name: $projectname");
     $statusarray['status'] = 'ERROR';
-    $statusarray['message'] = "Project name contains invalid pattern '..'.";
+    $statusarray['message'] = "Invalid project name: $projectname";
     return displayReturnStatus($statusarray, Response::HTTP_BAD_REQUEST);
 }
 
@@ -133,7 +133,7 @@ $authtoken = AuthTokenService::getBearerToken();
 $authtoken_hash = $authtoken === null || $authtoken === '' ? '' : AuthTokenService::hashToken($authtoken);
 
 // Save the incoming file in the inbox directory.
-$filename = "{$projectname}_{$authtoken_hash}_" . \Illuminate\Support\Str::uuid()->toString() . "_{$expected_md5}_.xml";
+$filename = "{$projectname}_-_{$authtoken_hash}_-_" . \Illuminate\Support\Str::uuid()->toString() . "_-_{$expected_md5}.xml";
 $fp = request()->getContent(true);
 if (!Storage::put("inbox/{$filename}", $fp)) {
     \Log::error("Failed to save submission to inbox for $projectname (md5=$expected_md5)");

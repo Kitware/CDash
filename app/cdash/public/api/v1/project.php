@@ -203,8 +203,12 @@ function get_project(&$response)
 function create_project(&$response, $user)
 {
     $Name = $_REQUEST['project']['Name'];
-    // Remove any potentially problematic characters.
-    $Name = preg_replace("/[^a-zA-Z0-9\s+-._]/", '', $Name);
+
+    if (!Project::validateProjectName($Name)) {
+        $response['error'] = 'Project name contains invalid characters or patterns.';
+        http_response_code(400);
+        return;
+    }
 
     // Make sure that a project with this name does not already exist.
     $Project = new Project();
