@@ -480,11 +480,8 @@ div#datetime {
 }
 
 div#topmenu {
-  position: relative;
-  float: left;
   width: 100%;
-  top: 4px;
-  left: 6px;
+  line-height: 25px;
 }
 
 div#topmenu a {
@@ -818,7 +815,7 @@ div#headertop {
   background-image: none;
   color: #CCCCCC !important;
   min-height:25px;
-  padding:0 30px;
+  padding:0 2em;
   width:100%;
 }
 
@@ -848,7 +845,7 @@ div#headertop {
 #headerlogo {
   float:left;
   height: 60px;
-  padding-left:30px;
+  padding-left:2em;
 }
 
 #headerlogo #projectlogo {
