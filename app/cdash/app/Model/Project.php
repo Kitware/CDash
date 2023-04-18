@@ -1987,4 +1987,19 @@ class Project
         $endOfDay = gmdate(FMT_DATETIME, $end_timestamp);
         return [$beginningOfDay, $endOfDay];
     }
+
+    /**
+     * Returns a boolean indicating whether the specified string could be a valid project name
+     */
+    public static function validateProjectName(string $projectname): bool
+    {
+        if (preg_match('/^[a-zA-Z0-9\ +.\-_]+$/', $projectname) !== 1) {
+            return false;
+        }
+        if (str_contains($projectname, '_-_')) {
+            return false;
+        }
+
+        return true;
+    }
 }

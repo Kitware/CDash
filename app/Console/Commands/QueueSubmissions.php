@@ -44,7 +44,7 @@ class QueueSubmissions extends Command
         // Queue the "build metadata" JSON files first, so they have a chance
         // to get parsed before the subsequent payload files.
         foreach (\Storage::files('inbox') as $inboxFile) {
-            if (strpos($inboxFile, '_build-metadata_') === false || strpos($inboxFile, '.json') === false) {
+            if (!str_contains($inboxFile, '_-_build-metadata_-_') || !str_contains($inboxFile, '.json')) {
                 continue;
             }
             $this->queueFile($inboxFile);
@@ -52,7 +52,7 @@ class QueueSubmissions extends Command
 
         // Iterate over our inbox files again, queueing them for parsing.
         foreach (\Storage::files('inbox') as $inboxFile) {
-            if (strpos($inboxFile, '_build-metadata_') !== false && strpos($inboxFile, '.json') !== false) {
+            if (str_contains($inboxFile, '_-_build-metadata_-_') && str_contains($inboxFile, '.json')) {
                 continue;
             }
             $this->queueFile($inboxFile);
@@ -62,7 +62,7 @@ class QueueSubmissions extends Command
     private function queueFile($inboxFile)
     {
         $filename = str_replace('inbox/', '', $inboxFile);
-        $pos = strpos($filename, '_');
+        $pos = strpos($filename, '_-_');
         if ($pos === false) {
             \Storage::move("inbox/{$filename}", "failed/{$filename}");
             echo "Could not extract projectname from $filename\n";
@@ -80,8 +80,8 @@ class QueueSubmissions extends Command
 
         if ($project->AuthenticateSubmissions) {
             // Get authtoken hash from filename.
-            $begin = $pos + 1;
-            $end = strpos($filename, '_', $begin);
+            $begin = $pos + 3;
+            $end = strpos($filename, '_-_', $begin);
             if ($end === false) {
                 \Storage::move("inbox/{$filename}", "failed/{$filename}");
                 echo "Could not extract authtoken from $filename\n";
@@ -97,12 +97,12 @@ class QueueSubmissions extends Command
 
         // Get md5 from filename (if any).
         $md5 = '';
-        $last_underscore_pos = strrpos($filename, '_');
+        $last_underscore_pos = strrpos($filename, '_-_');
         if ($last_underscore_pos !== false) {
-            $offset = $last_underscore_pos - strlen($filename) - 1;
-            $next_to_last_underscore_pos = strrpos($filename, '_', $offset);
+            $offset = $last_underscore_pos - strlen($filename) - 3;
+            $next_to_last_underscore_pos = strrpos($filename, '_-_', $offset);
             if ($next_to_last_underscore_pos !== false) {
-                $next_to_last_underscore_pos += 1;
+                $next_to_last_underscore_pos += 3;
                 $len = $last_underscore_pos - $next_to_last_underscore_pos;
                 $md5 = substr($filename, $next_to_last_underscore_pos, $len);
             }

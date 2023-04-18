@@ -24,7 +24,9 @@ use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use CDash\Model\Site;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Response;
 
 require_once 'include/common.php';
@@ -116,6 +118,10 @@ class UnparsedSubmissionProcessor
                 echo json_encode($response_array);
                 return false;
             }
+        }
+
+        if (!Project::validateProjectName(htmlspecialchars($_POST['project']))) {
+            return false;
         }
 
         $this->projectname = htmlspecialchars($_POST['project']);
@@ -234,18 +240,24 @@ class UnparsedSubmissionProcessor
             }
             $this->project = $this->build->GetProject();
             $this->project->Fill();
+
+            if (!Project::validateProjectName($this->project->Name)) {
+                Log::info("Invalid project name: {$this->project->Name}");
+                return response('Invalid project name.', Response::HTTP_BAD_REQUEST);
+            }
             $this->projectname = $this->project->Name;
-            $this->inboxdatafilename = "inbox/{$this->projectname}_{$this->token}_{$this->type}_{$this->buildid}_{$this->md5}_.$ext";
+
+            $this->inboxdatafilename = "inbox/{$this->projectname}_-_{$this->token}_-_{$this->type}_-_{$this->buildid}_-_{$this->md5}_-_.$ext";
         } else {
             // Get project name from build metadata file on disk.
             $projectname = null;
             foreach (Storage::files('inbox') as $inboxFile) {
                 $filename = str_replace('inbox/', '', $inboxFile);
-                $pos = strpos($filename, "_build-metadata_{$this->buildid}");
+                $pos = strpos($filename, "_-_build-metadata_-_{$this->buildid}");
                 if ($pos === false) {
                     continue;
                 }
-                $pos = strpos($filename, '_');
+                $pos = strpos($filename, '_-_');
                 if ($pos === false) {
                     \Log::info("Could not extract projectname from $filename for {$this->buildid}");
                     continue;
@@ -253,12 +265,12 @@ class UnparsedSubmissionProcessor
                 $projectname = substr($filename, 0, $pos);
                 break;
             }
-            if (is_null($projectname)) {
+            if (is_null($projectname) || !Project::validateProjectName($projectname)) {
                 \Log::info("Could not find build metadata file for {$this->buildid}");
                 return response('Build not found', Response::HTTP_NOT_FOUND);
             }
             $this->projectname = $projectname;
-            $this->inboxdatafilename = "inbox/{$this->projectname}_{$this->token}_{$this->type}_{$this->buildid}_{$this->md5}_.$ext";
+            $this->inboxdatafilename = "inbox/{$this->projectname}_-_{$this->token}_-_{$this->type}_-_{$this->buildid}_-_{$this->md5}_-_.$ext";
             $this->serializeDataFileParameters();
 
             if (!Storage::exists("DB_WAS_DOWN")) {
@@ -396,7 +408,7 @@ class UnparsedSubmissionProcessor
             'token' => $this->token,
         ];
 
-        $build_metadata_filename = "{$this->projectname}_{$this->token}_build-metadata_{$uuid}__.json";
+        $build_metadata_filename = "{$this->projectname}_-_{$this->token}_-_build-metadata_-_{$uuid}_-__-_.json";
         $inbox_build_metadata_filename = "inbox/{$build_metadata_filename}";
         Storage::put($inbox_build_metadata_filename, json_encode($build_metadata));
     }
@@ -404,7 +416,7 @@ class UnparsedSubmissionProcessor
     // Append data file parameters to the build metadata JSON file.
     private function serializeDataFileParameters()
     {
-        $inbox_filename = "inbox/{$this->projectname}_{$this->token}_build-metadata_{$this->buildid}__.json";
+        $inbox_filename = "inbox/{$this->projectname}_-_{$this->token}_-_build-metadata_-_{$this->buildid}_-__-_.json";
         if (!Storage::exists($inbox_filename)) {
             \Log::warn("Could not find build metadata file {$inbox_filename}");
             return false;
@@ -430,6 +442,11 @@ class UnparsedSubmissionProcessor
     public function deserializeBuildMetadata($fp)
     {
         $build_metadata = json_decode(stream_get_contents($fp), true);
+
+        if (!Project::validateProjectName($build_metadata['projectname'])) {
+            throw new RuntimeException("Invalid project name: {$build_metadata['projectname']}");
+        }
+
         $this->projectname = $build_metadata['projectname'];
         $this->buildname = $build_metadata['buildname'];
         $this->buildstamp = $build_metadata['buildstamp'];
