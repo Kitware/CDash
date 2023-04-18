@@ -56,6 +56,11 @@ parameters:
 			path: app/Console/Commands/RemoveUser.php
 
 		-
+			message: "#^Method App\\\\Console\\\\Commands\\\\RemoveUser\\:\\:handle\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/Console/Commands/RemoveUser.php
+
+		-
 			message: "#^Only booleans are allowed in a negated boolean, App\\\\Models\\\\User\\|null given\\.$#"
 			count: 1
 			path: app/Console/Commands/RemoveUser.php
@@ -266,6 +271,11 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:setup\\(\\) throws checked exception Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\HttpException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
+			path: app/Http/Controllers/BuildController.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:summary\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php
@@ -303,6 +313,11 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
+			path: app/Http/Controllers/CDash.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\CDash\\:\\:handleApiRequest\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
 			path: app/Http/Controllers/CDash.php
 
 		-
@@ -351,6 +366,11 @@ parameters:
 			path: app/Http/Controllers/EditProjectController.php
 
 		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:create\\(\\) throws checked exception Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\HttpException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/Http/Controllers/EditProjectController.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:edit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/EditProjectController.php
@@ -358,6 +378,11 @@ parameters:
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:edit\\(\\) has parameter \\$project_id with no type specified\\.$#"
 			count: 1
+			path: app/Http/Controllers/EditProjectController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:edit\\(\\) throws checked exception Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\HttpException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
 			path: app/Http/Controllers/EditProjectController.php
 
 		-
@@ -383,6 +408,11 @@ parameters:
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageMeasurementsController\\:\\:show\\(\\) has parameter \\$project_id with no type specified\\.$#"
 			count: 1
+			path: app/Http/Controllers/ManageMeasurementsController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageMeasurementsController\\:\\:show\\(\\) throws checked exception Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\HttpException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
@@ -426,6 +456,11 @@ parameters:
 			path: app/Http/Controllers/OAuthController.php
 
 		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\ProjectController\\:\\:setup\\(\\) throws checked exception Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\HttpException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProjectController.php
+
+		-
 			message: "#^Property App\\\\Http\\\\Controllers\\\\ProjectController\\:\\:\\$authOk has no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/ProjectController.php
@@ -457,6 +492,11 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\TestController\\:\\:details\\(\\) has parameter \\$buildtest_id with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/TestController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\TestController\\:\\:details\\(\\) throws checked exception Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\HttpException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/Http/Controllers/TestController.php
 
@@ -562,6 +602,11 @@ parameters:
 			message: "#^Method App\\\\Http\\\\Middleware\\\\Authenticate\\:\\:redirectTo\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: app/Http/Middleware/Authenticate.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Middleware\\\\CheckDirectoryPermissions\\:\\:handle\\(\\) throws checked exception UnexpectedValueException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/Http/Middleware/CheckDirectoryPermissions.php
 
 		-
 			message: "#^Property App\\\\Http\\\\Middleware\\\\CheckDirectoryPermissions\\:\\:\\$dirsToCheck has no type specified\\.$#"
@@ -684,6 +729,11 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
+			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:deleteSubmissionFile\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/Jobs/ProcessSubmission.php
+
+		-
 			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:doSubmit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
@@ -754,7 +804,17 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
+			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:renameSubmissionFile\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/Jobs/ProcessSubmission.php
+
+		-
 			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:requeueSubmissionFile\\(\\) has parameter \\$buildid with no type specified\\.$#"
+			count: 1
+			path: app/Jobs/ProcessSubmission.php
+
+		-
+			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:requeueSubmissionFile\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
@@ -1054,6 +1114,16 @@ parameters:
 			path: app/Providers/OAuthServiceProvider.php
 
 		-
+			message: "#^Method App\\\\Providers\\\\RouteServiceProvider\\:\\:mapApiRoutes\\(\\) throws checked exception BadMethodCallException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
+			path: app/Providers/RouteServiceProvider.php
+
+		-
+			message: "#^Method App\\\\Providers\\\\RouteServiceProvider\\:\\:mapWebRoutes\\(\\) throws checked exception BadMethodCallException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/Providers/RouteServiceProvider.php
+
+		-
 			message: "#^PHPDoc type string of property App\\\\Providers\\\\RouteServiceProvider\\:\\:\\$namespace is not the same as PHPDoc type string\\|null of overridden property Illuminate\\\\Foundation\\\\Support\\\\Providers\\\\RouteServiceProvider\\:\\:\\$namespace\\.$#"
 			count: 1
 			path: app/Providers/RouteServiceProvider.php
@@ -1080,6 +1150,16 @@ parameters:
 
 		-
 			message: "#^Implicit array creation is not allowed \\- variable \\$params does not exist\\.$#"
+			count: 1
+			path: app/Services/AuthTokenService.php
+
+		-
+			message: "#^Method App\\\\Services\\\\AuthTokenService\\:\\:deleteToken\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/Services/AuthTokenService.php
+
+		-
+			message: "#^Method App\\\\Services\\\\AuthTokenService\\:\\:isTokenExpired\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/Services/AuthTokenService.php
 
@@ -2443,6 +2523,11 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 
 		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:getProjects\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
+			path: app/cdash/app/Controller/Api/ViewProjects.php
+
+		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:getResponse\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewProjects.php
@@ -2734,6 +2819,31 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:authenticate\\(\\) has parameter \\$required with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:authenticate\\(\\) throws checked exception Lcobucci\\\\JWT\\\\Encoding\\\\CannotEncodeContent but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:authenticate\\(\\) throws checked exception Lcobucci\\\\JWT\\\\Signer\\\\CannotSignPayload but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:authenticate\\(\\) throws checked exception Lcobucci\\\\JWT\\\\Signer\\\\Ecdsa\\\\ConversionFailed but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:authenticate\\(\\) throws checked exception Lcobucci\\\\JWT\\\\Signer\\\\InvalidKeyProvided but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:authenticate\\(\\) throws checked exception Lcobucci\\\\JWT\\\\Signer\\\\Key\\\\FileCouldNotBeRead but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
@@ -3136,6 +3246,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddBuild\\(\\) has parameter \\$nbuildwarnings with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddBuild\\(\\) throws checked exception Error but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -5866,6 +5981,11 @@ parameters:
 			path: app/cdash/app/Model/CoverageFile.php
 
 		-
+			message: "#^Method CDash\\\\Model\\\\CoverageFile\\:\\:GetMetric\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 3
+			path: app/cdash/app/Model/CoverageFile.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\CoverageFile\\:\\:GetPath\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/CoverageFile.php
@@ -6954,6 +7074,11 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
+			message: "#^Method CDash\\\\Model\\\\Project\\:\\:Exists\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\Project\\:\\:ExistsByName\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -6980,6 +7105,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetBuildsDailyAverage\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetBuildsDailyAverage\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -7150,6 +7280,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfWarningConfigures\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetProjectSubscribers\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -7452,12 +7587,22 @@ parameters:
 			path: app/cdash/app/Model/Repository.php
 
 		-
+			message: "#^Method CDash\\\\Model\\\\Repository\\:\\:compareCommits\\(\\) throws checked exception CDash\\\\Model\\\\Exception but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Repository.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\Repository\\:\\:createOrUpdateCheck\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Repository.php
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Repository\\:\\:createOrUpdateCheck\\(\\) has parameter \\$sha with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Repository.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\Repository\\:\\:createOrUpdateCheck\\(\\) throws checked exception CDash\\\\Model\\\\Exception but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Repository.php
 
@@ -7473,6 +7618,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Repository\\:\\:getRepositoryService\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Repository.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\Repository\\:\\:getRepositoryService\\(\\) throws checked exception CDash\\\\Model\\\\Exception but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Repository.php
 
@@ -8325,6 +8475,11 @@ parameters:
 			path: app/cdash/app/Model/UserProject.php
 
 		-
+			message: "#^Method CDash\\\\Model\\\\UserProject\\:\\:GetProjectsForUser\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Model/UserProject.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\UserProject\\:\\:UpdateCredentials\\(\\) has parameter \\$credentials with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/UserProject.php
@@ -8521,6 +8676,11 @@ parameters:
 			path: app/cdash/include/CDash/Database.php
 
 		-
+			message: "#^Method CDash\\\\Database\\:\\:createPreparedArray\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/include/CDash/Database.php
+
+		-
 			message: "#^Method CDash\\\\Database\\:\\:executePrepared\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Database.php
@@ -8537,6 +8697,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Database\\:\\:executePreparedSingleRow\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/include/CDash/Database.php
+
+		-
+			message: "#^Method CDash\\\\Database\\:\\:getPdo\\(\\) throws checked exception Illuminate\\\\Contracts\\\\Container\\\\BindingResolutionException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Database.php
 
@@ -8995,6 +9160,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:send\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/include/Messaging/Notification/Email/Mail.php
+
+		-
+			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:send\\(\\) throws checked exception Symfony\\\\Component\\\\Mailer\\\\Exception\\\\TransportExceptionInterface but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/Mail.php
 
@@ -10185,6 +10355,11 @@ parameters:
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:build\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 6
+			path: app/cdash/include/Test/UseCase/BuildUseCase.php
+
+		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createAction\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
@@ -10196,6 +10371,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createActionElement\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/include/Test/UseCase/BuildUseCase.php
+
+		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createActionElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
@@ -10230,6 +10410,11 @@ parameters:
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createCommandElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/include/Test/UseCase/BuildUseCase.php
+
+		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createFailure\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
@@ -10250,6 +10435,11 @@ parameters:
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createFailureElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/include/Test/UseCase/BuildUseCase.php
+
+		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createFailureLabelsElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
@@ -10257,6 +10447,11 @@ parameters:
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createFailureLabelsElement\\(\\) has parameter \\$attributes with no type specified\\.$#"
 			count: 1
+			path: app/cdash/include/Test/UseCase/BuildUseCase.php
+
+		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createFailureLabelsElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
@@ -10281,6 +10476,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createResultElement\\(\\) has parameter \\$attributes with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/Test/UseCase/BuildUseCase.php
+
+		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createResultElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
@@ -10315,6 +10515,11 @@ parameters:
 			path: app/cdash/include/Test/UseCase/ConfigUseCase.php
 
 		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\ConfigUseCase\\:\\:build\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 9
+			path: app/cdash/include/Test/UseCase/ConfigUseCase.php
+
+		-
 			message: "#^Call to an undefined method DOMNode\\:\\:setAttribute\\(\\)\\.$#"
 			count: 6
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
@@ -10332,6 +10537,11 @@ parameters:
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createDefectList\\(\\) has parameter \\$tests with no value type specified in iterable type array\\.$#"
 			count: 1
+			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
+
+		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createDefectList\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
@@ -10385,6 +10595,11 @@ parameters:
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createResultsElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
+			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
+
+		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTest\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
@@ -10410,6 +10625,11 @@ parameters:
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTestElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 3
+			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
+
+		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTestLabelsElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
@@ -10420,6 +10640,11 @@ parameters:
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTestLabelsElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
+			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
+
+		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTestListElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
@@ -10427,6 +10652,11 @@ parameters:
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTestListElement\\(\\) has parameter \\$tests with no value type specified in iterable type array\\.$#"
 			count: 1
+			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
+
+		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTestListElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
@@ -10510,6 +10740,11 @@ parameters:
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
 		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\TestUseCase\\:\\:createResultsElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 11
+			path: app/cdash/include/Test/UseCase/TestUseCase.php
+
+		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\TestUseCase\\:\\:createTest\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
@@ -10522,6 +10757,11 @@ parameters:
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\TestUseCase\\:\\:createTestElement\\(\\) has parameter \\$attributes with no type specified\\.$#"
 			count: 1
+			path: app/cdash/include/Test/UseCase/TestUseCase.php
+
+		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\TestUseCase\\:\\:createTestElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 6
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
 		-
@@ -10600,6 +10840,11 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
 
 		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:build\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 12
+			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
+
+		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:createDirectoryElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
@@ -10607,6 +10852,11 @@ parameters:
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:createDirectoryElement\\(\\) has parameter \\$directories with no value type specified in iterable type array\\.$#"
 			count: 1
+			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
+
+		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:createDirectoryElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 14
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
 
 		-
@@ -10805,7 +11055,17 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createChildElementsFromKeys\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/include/Test/UseCase/UseCase.php
+
+		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createElapsedMinutesElement\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/include/Test/UseCase/UseCase.php
+
+		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createElapsedMinutesElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
@@ -10816,6 +11076,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createLabelsElement\\(\\) has parameter \\$label_names with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/include/Test/UseCase/UseCase.php
+
+		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createLabelsElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
@@ -11274,6 +11539,11 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			message: "#^Function DeleteDirectory\\(\\) throws checked exception UnexpectedValueException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
 			message: "#^Function add_XML_value\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -11404,6 +11674,11 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			message: "#^Function getByteValueWithExtension\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 3
+			path: app/cdash/include/common.php
+
+		-
 			message: "#^Function get_cdash_dashboard_xml_by_name\\(\\) has parameter \\$date with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -11494,6 +11769,11 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			message: "#^Function get_project_name\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
 			message: "#^Function get_seconds_from_interval\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -11570,6 +11850,11 @@ parameters:
 
 		-
 			message: "#^Function remove_build\\(\\) has parameter \\$buildid with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: "#^Function remove_build\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -11882,6 +12167,11 @@ parameters:
 			path: app/cdash/include/ctestparser.php
 
 		-
+			message: "#^Function parse_put_submission\\(\\) throws checked exception CDashParseException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
+			path: app/cdash/include/ctestparser.php
+
+		-
 			message: "#^Access to an undefined property object\\:\\:\\$Id\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparserutils.php
@@ -11947,6 +12237,11 @@ parameters:
 		-
 			message: "#^Function compute_error_difference\\(\\) has parameter \\$warning with no type specified\\.$#"
 			count: 1
+			path: app/cdash/include/ctestparserutils.php
+
+		-
+			message: "#^Function compute_error_difference\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 4
 			path: app/cdash/include/ctestparserutils.php
 
 		-
@@ -12687,6 +12982,11 @@ parameters:
 
 		-
 			message: "#^Function add_log\\(\\) has parameter \\$type with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/log.php
+
+		-
+			message: "#^Function add_log\\(\\) throws checked exception Psr\\\\Log\\\\InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/log.php
 
@@ -14312,6 +14612,11 @@ parameters:
 			path: app/cdash/include/upgrade_functions.php
 
 		-
+			message: "#^Function CompressCoverage\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
+			path: app/cdash/include/upgrade_functions.php
+
+		-
 			message: "#^Function CompressNotes\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
@@ -14327,12 +14632,22 @@ parameters:
 			path: app/cdash/include/upgrade_functions.php
 
 		-
+			message: "#^Function ComputeTestTiming\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/include/upgrade_functions.php
+
+		-
 			message: "#^Function ComputeUpdateStatistics\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
 
 		-
 			message: "#^Function ComputeUpdateStatistics\\(\\) has parameter \\$days with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/upgrade_functions.php
+
+		-
+			message: "#^Function ComputeUpdateStatistics\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
 
@@ -14388,6 +14703,11 @@ parameters:
 
 		-
 			message: "#^Function PopulateBuild2Configure\\(\\) has parameter \\$configure_table with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/upgrade_functions.php
+
+		-
+			message: "#^Function PopulateBuild2Configure\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
 
@@ -15196,6 +15516,11 @@ parameters:
 			path: app/cdash/public/api/v1/buildProperties.php
 
 		-
+			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildProperties\\\\get_defects_for_builds\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
+			path: app/cdash/public/api/v1/buildProperties.php
+
+		-
 			message: "#^Function gather_defects not found\\.$#"
 			count: 2
 			path: app/cdash/public/api/v1/buildProperties.php
@@ -15455,6 +15780,11 @@ parameters:
 			path: app/cdash/public/api/v1/compareCoverage.php
 
 		-
+			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\get_coverage\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
+			path: app/cdash/public/api/v1/compareCoverage.php
+
+		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\CompareCoverage\\\\populate_subproject\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/compareCoverage.php
@@ -15504,6 +15834,11 @@ parameters:
 
 		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\compute_classifier_score\\(\\) has parameter \\$outGroup with no type specified\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/computeClassifier.php
+
+		-
+			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\compute_classifier_score\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
@@ -17589,6 +17924,16 @@ parameters:
 			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
 
 		-
+			message: "#^Method BuildUseCaseTest\\:\\:testBuildUseCase\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
+
+		-
+			message: "#^Method BuildUseCaseTest\\:\\:testBuildUseCase\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
+
+		-
 			message: "#^Method BuildUseCaseTest\\:\\:testUseCaseCreateBuilderReturnsInstanceOfBuildUseCase\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
@@ -17634,6 +17979,11 @@ parameters:
 			path: app/cdash/tests/case/CDash/ConfigTest.php
 
 		-
+			message: "#^Method ConfigTest\\:\\:testGetInstance\\(\\) throws checked exception ReflectionException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/ConfigTest.php
+
+		-
 			message: "#^Method ConfigTest\\:\\:testGetProtocol\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/ConfigTest.php
@@ -17675,6 +18025,16 @@ parameters:
 
 		-
 			message: "#^Method ConfigUseCaseTest\\:\\:testConfigUseCaseBuild\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
+
+		-
+			message: "#^Method ConfigUseCaseTest\\:\\:testConfigUseCaseBuild\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
+
+		-
+			message: "#^Method ConfigUseCaseTest\\:\\:testConfigUseCaseBuild\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
 
@@ -17829,6 +18189,11 @@ parameters:
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
 
 		-
+			message: "#^Method DatabaseTest\\:\\:testInstance\\(\\) throws checked exception ReflectionException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/DatabaseTest.php
+
+		-
 			message: "#^PHPDoc tag @var for variable \\$stmt contains unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
@@ -17860,6 +18225,16 @@ parameters:
 
 		-
 			message: "#^Method DynamicAnalysisUseCaseTest\\:\\:testDynamicAnalysisUseCase\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
+
+		-
+			message: "#^Method DynamicAnalysisUseCaseTest\\:\\:testDynamicAnalysisUseCase\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
+
+		-
+			message: "#^Method DynamicAnalysisUseCaseTest\\:\\:testDynamicAnalysisUseCase\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
 
@@ -18041,6 +18416,11 @@ parameters:
 			path: app/cdash/tests/case/CDash/LogTest.php
 
 		-
+			message: "#^Method LogTest\\:\\:testInstance\\(\\) throws checked exception ReflectionException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/LogTest.php
+
+		-
 			message: "#^Call to method send\\(\\) on an unknown class CDash\\\\Messaging\\\\Messenger\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
@@ -18189,12 +18569,42 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
+			message: "#^Method CommitAuthorSubscriptionBuilderTest\\:\\:testBuildGivenSubmissionWithBuildErrors\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			message: "#^Method CommitAuthorSubscriptionBuilderTest\\:\\:testBuildGivenSubmissionWithBuildErrors\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
 			message: "#^Method CommitAuthorSubscriptionBuilderTest\\:\\:testBuildGivenSubmissionWithBuildWarnings\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
+			message: "#^Method CommitAuthorSubscriptionBuilderTest\\:\\:testBuildGivenSubmissionWithBuildWarnings\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			message: "#^Method CommitAuthorSubscriptionBuilderTest\\:\\:testBuildGivenSubmissionWithBuildWarnings\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
 			message: "#^Method CommitAuthorSubscriptionBuilderTest\\:\\:testBuildGivenSubmissionWithTestFailures\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			message: "#^Method CommitAuthorSubscriptionBuilderTest\\:\\:testBuildGivenSubmissionWithTestFailures\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			message: "#^Method CommitAuthorSubscriptionBuilderTest\\:\\:testBuildGivenSubmissionWithTestFailures\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
@@ -19450,6 +19860,11 @@ parameters:
 			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
 
 		-
+			message: "#^Method CDash\\\\Middleware\\\\OAuth2\\\\GitHubTest\\:\\:setUp\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
+
+		-
 			message: "#^Method CDash\\\\Middleware\\\\OAuth2\\\\GitHubTest\\:\\:testGetEmail\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
@@ -19530,6 +19945,11 @@ parameters:
 			path: app/cdash/tests/case/CDash/Middleware/OAuth2Test.php
 
 		-
+			message: "#^Method OAuth2Test\\:\\:setUp\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Middleware/OAuth2Test.php
+
+		-
 			message: "#^Method OAuth2Test\\:\\:testAuthorization\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Middleware/OAuth2Test.php
@@ -19541,6 +19961,11 @@ parameters:
 
 		-
 			message: "#^Method OAuth2Test\\:\\:testGetOwnerName\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Middleware/OAuth2Test.php
+
+		-
+			message: "#^Method OAuth2Test\\:\\:testGetOwnerName\\(\\) throws checked exception League\\\\OAuth2\\\\Client\\\\Provider\\\\Exception\\\\IdentityProviderException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Middleware/OAuth2Test.php
 
@@ -19592,6 +20017,21 @@ parameters:
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\)\\.$#"
 			count: 2
+			path: app/cdash/tests/case/CDash/Model/BuildErrorFilterTest.php
+
+		-
+			message: "#^Method BuildErrorFilterTest\\:\\:setUp\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Model/BuildErrorFilterTest.php
+
+		-
+			message: "#^Method BuildErrorFilterTest\\:\\:setUp\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Model/BuildErrorFilterTest.php
+
+		-
+			message: "#^Method BuildErrorFilterTest\\:\\:setUp\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
 			path: app/cdash/tests/case/CDash/Model/BuildErrorFilterTest.php
 
 		-
@@ -19914,6 +20354,11 @@ parameters:
 
 		-
 			message: "#^Method RepositoryTest\\:\\:testGetRepositoryInterfaceReturnsGitHubService\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Model/RepositoryTest.php
+
+		-
+			message: "#^Method RepositoryTest\\:\\:testGetRepositoryInterfaceReturnsGitHubService\\(\\) throws checked exception CDash\\\\Model\\\\Exception but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Model/RepositoryTest.php
 
@@ -20357,7 +20802,27 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
+			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesMultisubprojectTestXMLFile\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
+			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesMultisubprojectTestXMLFile\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
 			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesSubproject\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
+			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesSubproject\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
+			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesSubproject\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
@@ -20367,7 +20832,27 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
+			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestFailed\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
+			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestFailed\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
 			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestNotRun\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
+			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestNotRun\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
+			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestNotRun\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
@@ -20377,7 +20862,27 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
+			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestPassed\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
+			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestPassed\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
 			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestTimeout\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
+			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestTimeout\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
+			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestTimeout\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
@@ -20392,6 +20897,11 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
+			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseSetsSiteProperty\\(\\) throws checked exception ReflectionException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
 			message: "#^Method TestUseCaseTest\\:\\:testUseCaseBuildsTestUseCase\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
@@ -20399,6 +20909,16 @@ parameters:
 		-
 			message: "#^Method TestUseCaseTest\\:\\:testUseCaseSetsPropertiesByTestName\\(\\) has no return type specified\\.$#"
 			count: 1
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
+			message: "#^Method TestUseCaseTest\\:\\:testUseCaseSetsPropertiesByTestName\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
+			message: "#^Method TestUseCaseTest\\:\\:testUseCaseSetsPropertiesByTestName\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
@@ -20921,6 +21441,11 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_db.php
 
 		-
+			message: "#^Method dbo_mysql\\:\\:create\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/kwtest/kw_db.php
+
+		-
 			message: "#^Method dbo_mysql\\:\\:disconnect\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
@@ -20932,6 +21457,11 @@ parameters:
 
 		-
 			message: "#^Method dbo_mysql\\:\\:drop\\(\\) has parameter \\$db with no type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/kwtest/kw_db.php
+
+		-
+			message: "#^Method dbo_mysql\\:\\:drop\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
 
@@ -20961,6 +21491,11 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_db.php
 
 		-
+			message: "#^Method dbo_pgsql\\:\\:create\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/kwtest/kw_db.php
+
+		-
 			message: "#^Method dbo_pgsql\\:\\:disconnect\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
@@ -20972,6 +21507,11 @@ parameters:
 
 		-
 			message: "#^Method dbo_pgsql\\:\\:drop\\(\\) has parameter \\$db with no type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/kwtest/kw_db.php
+
+		-
+			message: "#^Method dbo_pgsql\\:\\:drop\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
 
@@ -21126,6 +21666,11 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
+			message: "#^Method CDashControllerBrowser\\:\\:setFileParameters\\(\\) throws checked exception ReflectionException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
 			message: "#^Method CDashControllerBrowser\\:\\:setQueryParameters\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -21142,6 +21687,11 @@ parameters:
 
 		-
 			message: "#^Method CDashControllerBrowser\\:\\:setServerParameters\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			message: "#^Method CDashControllerUserAgent\\:\\:fetch\\(\\) throws checked exception Illuminate\\\\Contracts\\\\Container\\\\BindingResolutionException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -21313,6 +21863,11 @@ parameters:
 		-
 			message: "#^Method KWWebTestCase\\:\\:getGuzzleClient\\(\\) has parameter \\$username with no type specified\\.$#"
 			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			message: "#^Method KWWebTestCase\\:\\:getGuzzleClient\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
@@ -21497,6 +22052,11 @@ parameters:
 
 		-
 			message: "#^Method KWWebTestCase\\:\\:userExists\\(\\) has parameter \\$email with no type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			message: "#^Method KWWebTestCase\\:\\:userExists\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -22188,6 +22748,11 @@ parameters:
 			path: app/cdash/tests/test_authtoken.php
 
 		-
+			message: "#^Method AuthTokenTestCase\\:\\:addBuildApiTestCase\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 3
+			path: app/cdash/tests/test_authtoken.php
+
+		-
 			message: "#^Method AuthTokenTestCase\\:\\:normalSubmit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
@@ -22228,6 +22793,11 @@ parameters:
 			path: app/cdash/tests/test_authtoken.php
 
 		-
+			message: "#^Method AuthTokenTestCase\\:\\:testApiAccess\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
+			path: app/cdash/tests/test_authtoken.php
+
+		-
 			message: "#^Method AuthTokenTestCase\\:\\:testEnableAuthenticatedSubmissions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
@@ -22239,6 +22809,11 @@ parameters:
 
 		-
 			message: "#^Method AuthTokenTestCase\\:\\:testRemoveExpiredToken\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_authtoken.php
+
+		-
+			message: "#^Method AuthTokenTestCase\\:\\:testRemoveExpiredToken\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
 
@@ -22389,8 +22964,18 @@ parameters:
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
+			message: "#^Method AutoRemoveBuildsOnSubmitTestCase\\:\\:setAutoRemoveTimeFrame\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
+
+		-
 			message: "#^Method AutoRemoveBuildsOnSubmitTestCase\\:\\:testBuildsRemovedOnSubmission\\(\\) has no return type specified\\.$#"
 			count: 1
+			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
+
+		-
+			message: "#^Method AutoRemoveBuildsOnSubmitTestCase\\:\\:testBuildsRemovedOnSubmission\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
@@ -22463,6 +23048,11 @@ parameters:
 
 		-
 			message: "#^Method BazelJSONTestCase\\:\\:submit_data\\(\\) has parameter \\$upload_type with no type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_bazeljson.php
+
+		-
+			message: "#^Method BazelJSONTestCase\\:\\:submit_data\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/test_bazeljson.php
 
@@ -22970,6 +23560,11 @@ parameters:
 			path: app/cdash/tests/test_buildproperties.php
 
 		-
+			message: "#^Method BuildPropertiesTestCase\\:\\:create_build\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/test_buildproperties.php
+
+		-
 			message: "#^Method BuildPropertiesTestCase\\:\\:testComputeClassifiers\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_buildproperties.php
@@ -23233,6 +23828,11 @@ parameters:
 			path: app/cdash/tests/test_createprojectpermissions.php
 
 		-
+			message: "#^Method CreateProjectPermissionsTestCase\\:\\:testCreateProjectPermissions\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/test_createprojectpermissions.php
+
+		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
 			count: 10
 			path: app/cdash/tests/test_createprojectpermissions.php
@@ -23396,6 +23996,11 @@ parameters:
 
 		-
 			message: "#^Method ExportToCSVTestCase\\:\\:testExportToCSV\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_csvexport.php
+
+		-
+			message: "#^Method ExportToCSVTestCase\\:\\:testExportToCSV\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/test_csvexport.php
 
@@ -24672,6 +25277,11 @@ parameters:
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
+			message: "#^Method MultipleSubprojectsTestCase\\:\\:testMultipleSubprojects\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
+			path: app/cdash/tests/test_multiplesubprojects.php
+
+		-
 			message: "#^Method MultipleSubprojectsTestCase\\:\\:verifyBuild\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_multiplesubprojects.php
@@ -24763,6 +25373,11 @@ parameters:
 
 		-
 			message: "#^Method NoBackupTestCase\\:\\:testNoBackup\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_nobackup.php
+
+		-
+			message: "#^Method NoBackupTestCase\\:\\:testNoBackup\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/test_nobackup.php
 
@@ -25218,6 +25833,11 @@ parameters:
 		-
 			message: "#^Method RegisterUserTestCase\\:\\:testRegisterUser\\(\\) has no return type specified\\.$#"
 			count: 1
+			path: app/cdash/tests/test_registeruser.php
+
+		-
+			message: "#^Method RegisterUserTestCase\\:\\:testRegisterUser\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
 			path: app/cdash/tests/test_registeruser.php
 
 		-
@@ -25895,7 +26515,22 @@ parameters:
 			path: app/cdash/tests/test_testenv.php
 
 		-
+			message: "#^Method TestGraphPermissionsTestCase\\:\\:__construct\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/test_testgraphpermissions.php
+
+		-
+			message: "#^Method TestGraphPermissionsTestCase\\:\\:__destruct\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/test_testgraphpermissions.php
+
+		-
 			message: "#^Method TestGraphPermissionsTestCase\\:\\:testTestGraphPermissions\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_testgraphpermissions.php
+
+		-
+			message: "#^Method TestGraphPermissionsTestCase\\:\\:testTestGraphPermissions\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/test_testgraphpermissions.php
 
@@ -26279,8 +26914,18 @@ parameters:
 			path: app/cdash/tests/test_uniquediffs.php
 
 		-
+			message: "#^Method UniqueDiffsTestCase\\:\\:testUniqueDiffs\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 7
+			path: app/cdash/tests/test_uniquediffs.php
+
+		-
 			message: "#^Method UniqueDiffsTestCase\\:\\:testUniqueDiffsUpgrade\\(\\) has no return type specified\\.$#"
 			count: 1
+			path: app/cdash/tests/test_uniquediffs.php
+
+		-
+			message: "#^Method UniqueDiffsTestCase\\:\\:testUniqueDiffsUpgrade\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
 			path: app/cdash/tests/test_uniquediffs.php
 
 		-
@@ -26331,6 +26976,11 @@ parameters:
 
 		-
 			message: "#^Method UpdateOnlyUserStatsTestCase\\:\\:testCleanup\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_updateonlyuserstats.php
+
+		-
+			message: "#^Method UpdateOnlyUserStatsTestCase\\:\\:testCleanup\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/test_updateonlyuserstats.php
 
@@ -26986,12 +27636,22 @@ parameters:
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
+			message: "#^Method GCovTarHandler\\:\\:Parse\\(\\) throws checked exception UnexpectedValueException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
+			path: app/cdash/xml_handlers/GcovTar_handler.php
+
+		-
 			message: "#^Method GCovTarHandler\\:\\:ParseGcovFile\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
 			message: "#^Method GCovTarHandler\\:\\:ParseGcovFile\\(\\) has parameter \\$fileinfo with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/GcovTar_handler.php
+
+		-
+			message: "#^Method GCovTarHandler\\:\\:ParseGcovFile\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
@@ -27114,6 +27774,11 @@ parameters:
 			path: app/cdash/xml_handlers/JSCoverTar_handler.php
 
 		-
+			message: "#^Method JSCoverTarHandler\\:\\:Parse\\(\\) throws checked exception UnexpectedValueException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/JSCoverTar_handler.php
+
+		-
 			message: "#^Method JSCoverTarHandler\\:\\:ParseJSCoverFile\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/JSCoverTar_handler.php
@@ -27153,6 +27818,11 @@ parameters:
 
 		-
 			message: "#^Method JavaJSONTarHandler\\:\\:Parse\\(\\) has parameter \\$filename with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/JavaJSONTar_handler.php
+
+		-
+			message: "#^Method JavaJSONTarHandler\\:\\:Parse\\(\\) throws checked exception UnexpectedValueException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/JavaJSONTar_handler.php
 
@@ -27266,6 +27936,11 @@ parameters:
 
 		-
 			message: "#^Method OpenCoverTarHandler\\:\\:Parse\\(\\) has parameter \\$filename with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
+
+		-
+			message: "#^Method OpenCoverTarHandler\\:\\:Parse\\(\\) throws checked exception UnexpectedValueException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
 
@@ -29819,6 +30494,16 @@ parameters:
 			path: database/migrations/2020_02_17_112005_reformat_test_data.php
 
 		-
+			message: "#^Method ReformatTestData\\:\\:up\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: database/migrations/2020_02_17_112005_reformat_test_data.php
+
+		-
+			message: "#^Method AddMeasurementOrder\\:\\:up\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: database/migrations/2021_09_23_124054_add_measurement_order.php
+
+		-
 			message: "#^Undefined variable\\: \\$this$#"
 			count: 1
 			path: routes/console.php
@@ -29993,6 +30678,11 @@ parameters:
 
 		-
 			message: "#^Method Tests\\\\LdapTest\\:\\:makeLdapUser\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: tests/LdapTest.php
+
+		-
+			message: "#^Method Tests\\\\LdapTest\\:\\:makeLdapUser\\(\\) throws checked exception Adldap\\\\AdldapException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: tests/LdapTest.php
 

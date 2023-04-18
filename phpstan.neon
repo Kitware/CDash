@@ -18,8 +18,12 @@ parameters:
             - app/cdash/include/Collection/Collection.php
 
     exceptions:
-    		check:
-    			  tooWideThrowType: true
+        uncheckedExceptionRegexes:
+            - '#^Exception$#'
+            - '#^RuntimeException$#'  # Ideally we should catch these too, but there are a lot of uncaught usages here
+        check:
+            tooWideThrowType: true
+            missingCheckedExceptionInThrows: true
 
     treatPhpDocTypesAsCertain: false
 
