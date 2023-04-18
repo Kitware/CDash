@@ -154,7 +154,7 @@ class ProcessSubmission implements ShouldQueue
      * a file handle or a filename that it can query the CDash API for.
      **/
     private function doSubmit($filename, $projectid, $buildid = null,
-                       $expected_md5 = '')
+        $expected_md5 = '')
     {
         $config = Config::getInstance();
 

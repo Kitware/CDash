@@ -735,7 +735,7 @@ function get_chart_data($group_name, $measurement, $date_range, $overview_data, 
 
 // Get line chart data for coverage
 function get_coverage_chart_data($build_group_name, $coverage_category, $date_range, $coverage_data,
-                                 $beginning_timestamp)
+    $beginning_timestamp)
 {
     $chart_data = array();
 

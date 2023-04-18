@@ -41,7 +41,7 @@ class CDashParseException extends RuntimeException
 
 /** Determine the descriptive filename for a submission file. */
 function generateBackupFileName($projectname, $subprojectname, $buildname,
-                                $sitename, $stamp, $fileNameWithExt)
+    $sitename, $stamp, $fileNameWithExt)
 {
     // Generate a timestamp to include in the filename.
     $currenttimestamp = microtime(true) * 100;

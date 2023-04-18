@@ -81,7 +81,7 @@ if (!function_exists('add_log')) {
      * @deprecated 04/04/2023  Use \Illuminate\Support\Facades\Log for logging instead
      */
     function add_log($text, $function, $type = LOG_INFO, $projectid = 0, $buildid = 0,
-                     $resourcetype = 0, $resourceid = 0)
+        $resourcetype = 0, $resourceid = 0)
     {
         $level = to_psr3_level($type);
 

@@ -251,7 +251,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
     }
 
     public function checkCoverage($coverage, $expected_loctested,
-                                  $expected_locuntested, $name)
+        $expected_locuntested, $name)
     {
         if ($coverage['loctested'] != $expected_loctested) {
             $this->fail("Expected $name loctested to be $expected_loctested, found " . $coverage['loctested']);

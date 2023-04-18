@@ -367,7 +367,7 @@ class KWWebTestCase extends WebTestCase
     }
 
     public function submission_assign_buildid($file, $project, $build, $site,
-            $stamp, $subproject = null, $header = null)
+        $stamp, $subproject = null, $header = null)
     {
         $url = $this->url . "/submit.php?project=$project&build=$build&site=$site&stamp=$stamp";
         if (!is_null($subproject)) {
@@ -429,7 +429,7 @@ class KWWebTestCase extends WebTestCase
 
     // Create or update a project and verify the changes made.
     public function createProject($input_settings, $update = false,
-            $username = 'simpletest@localhost', $password = 'simpletest')
+        $username = 'simpletest@localhost', $password = 'simpletest')
     {
         if ($update) {
             // Updating an existing project.
@@ -560,7 +560,7 @@ class KWWebTestCase extends WebTestCase
     }
 
     public function getGuzzleClient($username = 'simpletest@localhost',
-                                    $password = 'simpletest')
+        $password = 'simpletest')
     {
         $client = new GuzzleHttp\Client(['cookies' => true]);
         try {

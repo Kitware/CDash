@@ -1089,7 +1089,7 @@ function PopulateBuild2Configure($configure_table, $b2c_table)
  *  This function is parameterized to make it easier to test.
  **/
 function UpgradeConfigureErrorTable($table = 'configureerror',
-        $b2c_table='build2configure')
+    $b2c_table='build2configure')
 {
     // Add the configureid field.
     AddTableField($table, 'configureid', 'bigint(20)', 'BIGINT', '0');
@@ -1127,7 +1127,7 @@ function UpgradeConfigureErrorTable($table = 'configureerror',
  *  This function is parameterized to make it easier to test.
  **/
 function PopulateTestDuration($src_table = 'buildtesttime',
-                              $dst_table = 'build')
+    $dst_table = 'build')
 {
     $pdo = Database::getInstance()->getPdo();
     if (config('database.default') == 'pgsql') {

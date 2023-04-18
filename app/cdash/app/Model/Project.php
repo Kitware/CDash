@@ -1163,7 +1163,7 @@ class Project
 
     /** Get the number of warning builds given a date range */
     public function GetNumberOfWarningBuilds($startUTCdate, $endUTCdate,
-                                             $childrenOnly = false): int|false
+        $childrenOnly = false): int|false
     {
         if (!$this->Id) {
             echo 'Project GetNumberOfWarningBuilds(): Id not set';
@@ -1197,7 +1197,7 @@ class Project
 
     /** Get the number of error builds given a date range */
     public function GetNumberOfErrorBuilds($startUTCdate, $endUTCdate,
-                                           $childrenOnly = false): int|false
+        $childrenOnly = false): int|false
     {
         if (!$this->Id) {
             echo 'Project GetNumberOfErrorBuilds(): Id not set';
@@ -1232,7 +1232,7 @@ class Project
 
     /** Get the number of failing builds given a date range */
     public function GetNumberOfPassingBuilds($startUTCdate, $endUTCdate,
-                                             $childrenOnly = false): int|false
+        $childrenOnly = false): int|false
     {
         if (!$this->Id) {
             echo 'Project GetNumberOfPassingBuilds(): Id not set';
@@ -1267,7 +1267,7 @@ class Project
 
     /** Get the number of failing configure given a date range */
     public function GetNumberOfWarningConfigures($startUTCdate, $endUTCdate,
-                                                 $childrenOnly = false): int|false
+        $childrenOnly = false): int|false
     {
         if (!$this->Id) {
             echo 'Project GetNumberOfWarningConfigures(): Id not set';
@@ -1301,7 +1301,7 @@ class Project
 
     /** Get the number of failing configure given a date range */
     public function GetNumberOfErrorConfigures($startUTCdate, $endUTCdate,
-                                               $childrenOnly = false): int|false
+        $childrenOnly = false): int|false
     {
         if (!$this->Id) {
             echo 'Project GetNumberOfErrorConfigures(): Id not set';
@@ -1335,7 +1335,7 @@ class Project
 
     /** Get the number of failing configure given a date range */
     public function GetNumberOfPassingConfigures($startUTCdate, $endUTCdate,
-                                                 $childrenOnly = false): int|false
+        $childrenOnly = false): int|false
     {
         if (!$this->Id) {
             echo 'Project GetNumberOfPassingConfigures(): Id not set';
@@ -1370,7 +1370,7 @@ class Project
 
     /** Get the number of tests given a date range */
     public function GetNumberOfPassingTests($startUTCdate, $endUTCdate,
-                                            $childrenOnly = false): int|false
+        $childrenOnly = false): int|false
     {
         if (!$this->Id) {
             echo 'Project GetNumberOfPassingTests(): Id not set';
@@ -1404,7 +1404,7 @@ class Project
 
     /** Get the number of tests given a date range */
     public function GetNumberOfFailingTests($startUTCdate, $endUTCdate,
-                                            $childrenOnly = false): int|false
+        $childrenOnly = false): int|false
     {
         if (!$this->Id) {
             echo 'Project GetNumberOfFailingTests(): Id not set';
@@ -1438,7 +1438,7 @@ class Project
 
     /** Get the number of tests given a date range */
     public function GetNumberOfNotRunTests($startUTCdate, $endUTCdate,
-                                           $childrenOnly = false): int|false
+        $childrenOnly = false): int|false
     {
         if (!$this->Id) {
             echo 'Project GetNumberOfNotRunTests(): Id not set';

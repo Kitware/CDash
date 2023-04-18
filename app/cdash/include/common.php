@@ -38,11 +38,11 @@ function xslt_create(): XSLTProcessor
 }
 
 function xslt_process(XSLTProcessor $xsltproc,
-                      $xml_arg,
-                      $xsl_arg,
-                      $xslcontainer = null,
-                      $args = null,
-                      $params = null)
+    $xml_arg,
+    $xsl_arg,
+    $xslcontainer = null,
+    $args = null,
+    $params = null)
 {
     // Start with preparing the arguments
     $xml_arg = str_replace('arg:', '', $xml_arg);
@@ -460,20 +460,20 @@ function remove_site2user(int $siteid, int $userid): void
  * Update a site
  */
 function update_site($siteid, $name,
-                     $processoris64bits,
-                     $processorvendor,
-                     $processorvendorid,
-                     $processorfamilyid,
-                     $processormodelid,
-                     $processorcachesize,
-                     $numberlogicalcpus,
-                     $numberphysicalcpus,
-                     $totalvirtualmemory,
-                     $totalphysicalmemory,
-                     $logicalprocessorsperphysical,
-                     $processorclockfrequency,
-                     $description, $ip, $latitude, $longitude, $nonewrevision = false,
-                     $outoforder = 0)
+    $processoris64bits,
+    $processorvendor,
+    $processorvendorid,
+    $processorfamilyid,
+    $processormodelid,
+    $processorcachesize,
+    $numberlogicalcpus,
+    $numberphysicalcpus,
+    $totalvirtualmemory,
+    $totalphysicalmemory,
+    $logicalprocessorsperphysical,
+    $processorclockfrequency,
+    $description, $ip, $latitude, $longitude, $nonewrevision = false,
+    $outoforder = 0)
 {
     require_once 'include/pdo.php';
 
