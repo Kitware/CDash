@@ -6,6 +6,14 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * All of these methods are accessed through reflection.  Only the ones currently necessary are
+ * listed to encourage future developers to move User logic to this class.
+ *
+ * @method bool IsAdmin()
+ * @method GetEmail()
+ * @method int|false GetIdFromName($name)
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
