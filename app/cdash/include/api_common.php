@@ -22,6 +22,7 @@ use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
 use CDash\System;
+use Illuminate\Support\Facades\Auth;
 
 /**
  *
@@ -60,7 +61,6 @@ function can_access_project($projectid)
         return true;
     }
 
-    $userid = get_userid_from_session(false);
     $logged_in = Auth::check();
     if ($logged_in) {
         $response = ['error' => 'You do not have permission to access this page.'];
@@ -85,37 +85,19 @@ function can_administrate_project($projectid)
     }
 
     // Make sure the user is logged in.
-    if (!\Auth::check()) {
+    if (!Auth::check()) {
         $response = ['requirelogin' => 1];
         json_error_response($response, 401);
         return false;
     }
 
     // Check if the user has the necessary permissions.
-    if (ProjectPermissions::userCanEditProject(\Auth::user(), $project)) {
+    if (ProjectPermissions::userCanEditProject(Auth::user(), $project)) {
         return true;
     }
 
     $response = ['error' => 'You do not have permission to access this page.'];
     json_error_response($response, 403);
-}
-
-/**
- * Checks for the user id in the session, if none, and required, exits program with 401
- *
- * @return int|null
- */
-function get_userid_from_session($required = true)
-{
-    $userid = Auth::id();
-
-    if ($required && is_null($userid)) {
-        $response = ['error' => 'Permission denied'];
-        json_error_response($response, 403);
-        return null;
-    }
-
-    return $userid;
 }
 
 /**
@@ -193,6 +175,7 @@ function just_get_project_from_request()
     }
     return $Project;
 }
+
 /**
  * Returns a build based on the id extracted from the request and returns it if the user has
  * necessary access to the project

@@ -11318,11 +11318,6 @@ parameters:
 			path: app/cdash/include/api_common.php
 
 		-
-			message: "#^Function get_userid_from_session\\(\\) has parameter \\$required with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
 			message: "#^Function json_error_response\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/api_common.php
@@ -11339,11 +11334,6 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, int given\\.$#"
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of static method App\\\\Services\\\\ProjectPermissions\\:\\:userCanEditProject\\(\\) expects App\\\\Models\\\\User, Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null given\\.$#"
 			count: 1
 			path: app/cdash/include/api_common.php
 
