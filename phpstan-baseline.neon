@@ -30579,6 +30579,11 @@ parameters:
 			path: tests/Feature/LdapAuthWithRulesTest.php
 
 		-
+			message: "#^Method Tests\\\\Feature\\\\LoginAndRegistration\\:\\:tearDownAfterClass\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/LoginAndRegistration.php
+
+		-
 			message: "#^Missing call to parent\\:\\:tearDown\\(\\) method\\.$#"
 			count: 1
 			path: tests/Feature/LoginAndRegistration.php
