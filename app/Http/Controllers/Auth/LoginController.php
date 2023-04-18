@@ -22,7 +22,9 @@ class LoginController extends AbstractController
     |
     */
 
-    use AuthenticatesUsers;
+    use AuthenticatesUsers {
+        login as traitLogin;
+    }
 
     /**
      * Create a new controller instance.
@@ -42,6 +44,23 @@ class LoginController extends AbstractController
      * @var string
      */
     protected $redirectTo = '/';
+
+    /**
+     * Handle a login request to the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function login(Request $request)
+    {
+        if (config('auth.username_password_authentication_enabled') === false) {
+            return $this->sendFailedLoginResponse($request);
+        }
+        return $this->traitLogin($request);
+    }
+
 
     /**
      * Get the failed login response instance.
