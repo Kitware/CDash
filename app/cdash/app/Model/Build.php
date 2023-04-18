@@ -501,8 +501,8 @@ class Build
      * @param array<string, string> $extra_values_to_bind
      **/
     private function GetRelatedBuildId(string $which_build_criteria,
-                                       array $extra_values_to_bind = [],
-                                       int|null $related_parentid = null) : int
+        array $extra_values_to_bind = [],
+        int|null $related_parentid = null) : int
     {
         $related_build_criteria =
             'WHERE siteid = :siteid
@@ -1563,7 +1563,7 @@ class Build
 
     /** Helper function for AddUpdateStatistics */
     private function AddUpdateStatistics($author, $email, $checkindate, $firstbuild,
-                                         $warningdiff, $errordiff, $testdiff)
+        $warningdiff, $errordiff, $testdiff)
     {
         // Find user by email address.
         $user = new User();
@@ -2387,7 +2387,7 @@ class Build
 
     /** Generate a UUID from the specified build details. */
     public static function GenerateUuid($stamp, $name, $siteid, $projectid,
-                                        $subprojectname)
+        $subprojectname)
     {
         $input_string =
             $stamp . '_' . $name . '_' . $siteid . '_' . '_' .

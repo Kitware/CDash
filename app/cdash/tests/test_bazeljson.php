@@ -714,8 +714,8 @@ class BazelJSONTestCase extends KWWebTestCase
     }
 
     private function submit_data($project_name, $upload_type, $md5, $file_path,
-                                 $buildstamp = '20170823-1835-Experimental',
-                                 $timestamp = '1503513355')
+        $buildstamp = '20170823-1835-Experimental',
+        $timestamp = '1503513355')
     {
         $fields = [
             'project' => $project_name,

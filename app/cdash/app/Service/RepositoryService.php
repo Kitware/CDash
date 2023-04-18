@@ -38,7 +38,7 @@ class RepositoryService
     }
 
     protected function setStatus($context, $description, $revision, $state,
-            $target_url)
+        $target_url)
     {
         if (strlen($revision) === 0 || strlen($context) === 0) {
             return;

@@ -987,7 +987,7 @@ function get_sql_compare_and_value($compare, $value)
 // This function also sets the 'hasdateclause' field in $filterdata
 // if necessary.
 function parse_filter_from_request($field_var, $compare_var, $value_var,
-                                   &$filterdata)
+    &$filterdata)
 {
     $required_params = [$field_var, $compare_var, $value_var];
     foreach ($required_params as $param) {

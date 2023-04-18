@@ -199,12 +199,12 @@ $result = $db->executePrepared('
 
 // If user wants to export as CSV file.
 if (isset($_GET['export']) && $_GET['export'] == 'csv') {
-//    header('Cache-Control: public');
-//    header('Content-Description: File Transfer');
-//    // Prepare some headers to download.
-//    header('Content-Disposition: attachment; filename=testExport.csv');
-//    header('Content-Type: application/octet-stream;');
-//    header('Content-Transfer-Encoding: binary');
+    //    header('Cache-Control: public');
+    //    header('Content-Description: File Transfer');
+    //    // Prepare some headers to download.
+    //    header('Content-Disposition: attachment; filename=testExport.csv');
+    //    header('Content-Type: application/octet-stream;');
+    //    header('Content-Transfer-Encoding: binary');
     // Standard columns.
     $filecontent = 'Site,Build Name,Build Stamp,Status,Time(s)';
 

@@ -293,8 +293,8 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
     }
 
     public function checkCoverage($coverage, $expected_loctested,
-                                  $expected_locuntested, $expected_percentage,
-                                  $name)
+        $expected_locuntested, $expected_percentage,
+        $name)
     {
         if ($coverage['loctested'] != $expected_loctested) {
             $this->fail("Expected $name loctested to be $expected_loctested, found " . $coverage['loctested'] .  " " . $coverage['locuntested'] .  " " . $coverage['percentage']);
