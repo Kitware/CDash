@@ -25,7 +25,7 @@
     "autoprefixer": "10.4.5",
     "axios": "^0.21",
     "bootstrap": "^4.4.1",
-    "bootstrap-vue": "^2.21.2",
+    "bootstrap-vue": "^2.23.1",
     "cross-env": "^5.1",
     "d3": "^3.5.17",
     "del": "^2.2.0",
