@@ -175,8 +175,6 @@ function get_project_from_request()
  * Get project given request parameter, 'project'
  *
  * @return mixed|null
- * @throws \DI\DependencyException
- * @throws \DI\NotFoundException
  */
 function just_get_project_from_request()
 {

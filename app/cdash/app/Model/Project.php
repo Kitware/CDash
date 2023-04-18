@@ -1894,8 +1894,6 @@ class Project
      * Returns a SubscriberCollection; a collection of all users and their subscription preferences.
      *
      * @return SubscriberCollection
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      */
     public function GetProjectSubscribers()
     {

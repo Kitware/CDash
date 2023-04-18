@@ -26,7 +26,6 @@ trait OAuthTestHelper
 
     /**
      * @return MockObject|OAuth2
-     * @throws ReflectionException
      */
     protected function getSut()
     {
@@ -59,7 +58,6 @@ trait OAuthTestHelper
     /**
      * @param array $methods
      * @return MockObject|AbstractProvider
-     * @throws ReflectionException
      */
     protected function getProvider(array $methods = [])
     {
@@ -92,7 +90,6 @@ trait OAuthTestHelper
 
     /**
      * @return MockObject|ResourceOwnerInterface
-     * @throws ReflectionException
      */
     protected function getResourceOwner()
     {

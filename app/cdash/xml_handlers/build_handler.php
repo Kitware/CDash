@@ -411,8 +411,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
 
     /**
      * @return BuildCollection
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      * TODO: consider refactoring into abstract_handler asap
      */
     public function GetBuildCollection()

@@ -59,7 +59,6 @@ class OAuthServiceProvider extends ServiceProvider
      * This registers the correct oauth2 service provider for a given route.
      *
      * @return void
-     * @throws Exception
      */
     public function register()
     {

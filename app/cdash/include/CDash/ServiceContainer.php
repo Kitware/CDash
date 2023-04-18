@@ -44,8 +44,6 @@ class ServiceContainer extends Singleton
      *
      * @param $class_name
      * @return mixed
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      */
     public function create($class_name)
     {
@@ -57,8 +55,6 @@ class ServiceContainer extends Singleton
      *
      * @param $class_name
      * @return mixed
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      */
     public function get($class_name)
     {

@@ -46,7 +46,6 @@ class Repository
 
     /**
      * @return array
-     * @throws \ReflectionException
      */
     public static function getViewers()
     {
