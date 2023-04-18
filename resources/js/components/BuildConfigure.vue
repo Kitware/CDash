@@ -153,7 +153,7 @@
 <script>
 import ApiLoader from './shared/ApiLoader';
 export default {
-  name: "BuildConfigure",
+  name: 'BuildConfigure',
 
   data () {
     return {
@@ -162,14 +162,14 @@ export default {
       cdash: {},
       loading: true,
       errored: false,
-    }
+    };
   },
 
   mounted () {
-    var path_parts = window.location.pathname.split("/");
+    const path_parts = window.location.pathname.split('/');
     this.buildid = path_parts[path_parts.length - 2];
-    var endpoint_path = '/api/v1/viewConfigure.php?buildid=' + this.buildid;
+    const endpoint_path = `/api/v1/viewConfigure.php?buildid=${this.buildid}`;
     ApiLoader.loadPageData(this, endpoint_path);
   },
-}
+};
 </script>

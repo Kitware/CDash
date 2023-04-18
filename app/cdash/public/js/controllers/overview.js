@@ -1,5 +1,5 @@
 CDash.controller('OverviewController',
-  function OverviewController($scope, $location, anchors, apiLoader) {
+  ($scope, $location, anchors, apiLoader) => {
     apiLoader.loadPageData($scope, 'api/v1/overview.php');
     $scope.finishSetup = function() {
       // Expose the jumpToAnchor function to the scope.
@@ -7,13 +7,14 @@ CDash.controller('OverviewController',
       $scope.jumpToAnchor = anchors.jumpToAnchor;
 
       // Honor any intra-page anchor specified in the URI.
+      // eslint-disable-next-line eqeqeq
       if ($location.hash() != '') {
         anchors.jumpToAnchor($location.hash());
       }
     };
-});
+  });
 
-CDash.directive('linechart', function() {
+CDash.directive('linechart', () => {
   return {
     restrict: 'E',
     replace: true,
@@ -23,22 +24,22 @@ CDash.directive('linechart', function() {
       measurementname: '=measurementname',
       project: '=project',
       anchor: '=anchor',
-      sort: '=sort'
+      sort: '=sort',
     },
     template: '<div class="overview-line-chart"/>',
     link: function(scope, element, attrs) {
       if (scope.groupname) {
-        var data = JSON.parse(scope.data);
+        const data = JSON.parse(scope.data);
         if (data.length > 0) {
-          element[0].id = scope.groupname + "_" + scope.measurementname + "_chart";
+          element[0].id = `${scope.groupname}_${scope.measurementname}_chart`;
           makeLineChart(element[0].id, data, scope.project, scope.anchor, scope.sort);
         }
       }
-    }
+    },
   };
 });
 
-CDash.directive('bulletchart', function() {
+CDash.directive('bulletchart', () => {
   return {
     restrict: 'E',
     replace: true,
@@ -49,10 +50,10 @@ CDash.directive('bulletchart', function() {
     template: '<div class="overview-bullet-chart"><svg></svg></div>',
     link: function(scope, element, attrs) {
       if (scope.data) {
-        element[0].id = scope.data.name_clean + "_" + scope.categoryname + "_bullet";
-        var chart_data = JSON.parse(scope.data.chart),
-            chart_name = scope.group_name + " " + scope.data.name,
-            element_name = "#" + element[0].id + " svg";
+        element[0].id = `${scope.data.name_clean}_${scope.categoryname}_bullet`;
+        const chart_data = JSON.parse(scope.data.chart),
+          chart_name = `${scope.group_name} ${scope.data.name}`,
+          element_name = `#${element[0].id} svg`;
         makeBulletChart(
           chart_name,
           element_name,
@@ -63,6 +64,6 @@ CDash.directive('bulletchart', function() {
           scope.data.previous,
           25);
       }
-    }
+    },
   };
 });

@@ -44,9 +44,16 @@ if (CDASH_CONFIGURE_HTACCESS_FILE)
 endif()
 
 add_test(
+  NAME js_lint
+  COMMAND npm run eslint
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
+add_test(
   NAME php_style_check
   COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/php-cs-fixer fix --dry-run
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
 
 # Run PHPStan static analysis tool
 add_test(

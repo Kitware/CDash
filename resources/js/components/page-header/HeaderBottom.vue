@@ -25,10 +25,10 @@
 </template>
 
 <script>
-import HeaderNav from "./HeaderNav";
-import HeaderMenu from "./HeaderMenu";
+import HeaderNav from './HeaderNav';
+import HeaderMenu from './HeaderMenu';
 export default {
-  name: "HeaderBottom",
+  name: 'HeaderBottom',
   components: {HeaderNav, HeaderMenu},
   props: {
     date: {
@@ -61,7 +61,7 @@ export default {
     return {
       logo: `${this.$baseURL}/img/cdash.png`,
       showNav: false,
-    }
+    };
   },
 
   mounted() {
@@ -74,7 +74,7 @@ export default {
       }
     });
   },
-}
+};
 </script>
 
 <style scoped>

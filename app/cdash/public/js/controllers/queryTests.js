@@ -1,5 +1,5 @@
 CDash.controller('QueryTestsController',
-  function QueryTestsController($scope, $rootScope, $filter, apiLoader, filters, multisort) {
+  ($scope, $rootScope, $filter, apiLoader, filters, multisort) => {
     $scope.loading = true;
 
     // Pagination settings.
@@ -9,10 +9,11 @@ CDash.controller('QueryTestsController',
     $scope.pagination.maxSize = 5;
 
     // Check if we have a cookie for number of tests to display.
-    var num_per_page_cookie = $.cookie('queryTests_num_per_page');
-    if(num_per_page_cookie) {
+    const num_per_page_cookie = $.cookie('queryTests_num_per_page');
+    if (num_per_page_cookie) {
       $scope.pagination.numPerPage = parseInt(num_per_page_cookie);
-    } else {
+    }
+    else {
       $scope.pagination.numPerPage = 25;
     }
 
@@ -23,10 +24,10 @@ CDash.controller('QueryTestsController',
     $rootScope.queryString['filterstring'] = filters.getString();
 
     // Check for sort order cookie.
-    var sort_order = [];
-    var sort_cookie_value = $.cookie('cdash_query_tests_sort');
-    if(sort_cookie_value) {
-      sort_order = sort_cookie_value.split(",");
+    let sort_order = [];
+    const sort_cookie_value = $.cookie('cdash_query_tests_sort');
+    if (sort_cookie_value) {
+      sort_order = sort_cookie_value.split(',');
     }
     $scope.orderByFields = sort_order;
 
@@ -51,11 +52,12 @@ CDash.controller('QueryTestsController',
 
 
     $scope.pageChanged = function() {
-      var begin = (($scope.pagination.currentPage - 1) * $scope.pagination.numPerPage)
-      , end = begin + $scope.pagination.numPerPage;
+      const begin = (($scope.pagination.currentPage - 1) * $scope.pagination.numPerPage)
+        , end = begin + $scope.pagination.numPerPage;
       if (end > 0) {
         $scope.pagination.filteredBuilds = $scope.cdash.builds.slice(begin, end);
-      } else {
+      }
+      else {
         $scope.pagination.filteredBuilds = $scope.cdash.builds;
       }
     };
@@ -68,7 +70,7 @@ CDash.controller('QueryTestsController',
     };
 
     $scope.numTestsPerPageChanged = function() {
-      $.cookie("queryTests_num_per_page", $scope.pagination.numPerPage, { expires: 365 });
+      $.cookie('queryTests_num_per_page', $scope.pagination.numPerPage, { expires: 365 });
       $scope.pageChanged();
     };
 
@@ -77,7 +79,7 @@ CDash.controller('QueryTestsController',
     };
 
     $scope.sortByExtraMeasurement = function(idx, $event) {
-      var field = 'measurements[' + idx + ']';
+      const field = `measurements[${idx}]`;
       $scope.updateOrderByFields(field, $event);
-    }
-});
+    };
+  });

@@ -12,7 +12,9 @@
     "watch-poll": "mix watch -- --watch-options-poll=1000",
     "hot": "mix watch --hot",
     "prod": "npm run production",
-    "production": "mix --production"
+    "production": "mix --production",
+    "eslint": "eslint \"resources/js/**/*.js\" \"resources/js/**/*.vue\" \"app/cdash/public/js/**/*.js\"",
+    "eslint:fix": "eslint --fix \"resources/js/**/*.js\" \"resources/js/**/*.vue\" \"app/cdash/public/js/**/*.js\""
   },
   "dependencies": {
     "angular": "^1.8.0",

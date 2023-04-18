@@ -5,15 +5,15 @@
  */
 
 import './bootstrap';
-import BuildConfigure from "./components/BuildConfigure";
-import BuildNotes from "./components/BuildNotes";
-import BuildSummary from "./components/BuildSummary";
-import EditProject from "./components/EditProject";
-import ManageAuthTokens from "./components/ManageAuthTokens.vue";
-import ManageMeasurements from "./components/ManageMeasurements";
-import PageHeader from "./components/PageHeader";
-import PageFooter from "./components/PageFooter";
-import TestDetails from "./components/TestDetails";
+import BuildConfigure from './components/BuildConfigure';
+import BuildNotes from './components/BuildNotes';
+import BuildSummary from './components/BuildSummary';
+import EditProject from './components/EditProject';
+import ManageAuthTokens from './components/ManageAuthTokens.vue';
+import ManageMeasurements from './components/ManageMeasurements';
+import PageHeader from './components/PageHeader';
+import PageFooter from './components/PageFooter';
+import TestDetails from './components/TestDetails';
 
 const cdash_components = {
   BuildConfigure,
@@ -24,7 +24,7 @@ const cdash_components = {
   ManageMeasurements,
   PageHeader,
   PageFooter,
-  TestDetails
+  TestDetails,
 };
 
 /**

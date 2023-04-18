@@ -1,9 +1,9 @@
 import Vue from 'vue';
-import BootstrapVue from 'bootstrap-vue'
-import VTooltip from 'v-tooltip'
+import BootstrapVue from 'bootstrap-vue';
+import VTooltip from 'v-tooltip';
 import axios from 'axios';
-Vue.use(BootstrapVue)
-Vue.use(VTooltip)
+Vue.use(BootstrapVue);
+Vue.use(VTooltip);
 
 Vue.prototype.$baseURL = process.env.MIX_APP_URL;
 axios.defaults.baseURL = Vue.prototype.$baseURL;
@@ -39,12 +39,13 @@ Vue.prototype.$axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpReque
  * a simple convenience so we don't have to attach every token manually.
  */
 
-let token = document.head.querySelector('meta[name="csrf-token"]');
+const token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
-    Vue.prototype.$axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-} else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+  Vue.prototype.$axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+}
+else {
+  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
 /**

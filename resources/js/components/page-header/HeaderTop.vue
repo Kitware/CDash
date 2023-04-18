@@ -35,13 +35,13 @@
 
 <script>
 export default {
-  name: "HeaderTop",
+  name: 'HeaderTop',
 
   props: {
     user: {
       type: Object,
       default() {
-        return {}
+        return {};
       },
     },
   },
@@ -55,7 +55,7 @@ export default {
       return false;
     },
   },
-}
+};
 </script>
 
 <style scoped>

@@ -240,7 +240,7 @@ import ApiLoader from './shared/ApiLoader';
 import QueryParams from './shared/QueryParams';
 import TextMutator from './shared/TextMutator';
 export default {
-  name: "TestDetails",
+  name: 'TestDetails',
 
   data () {
     return {
@@ -254,49 +254,49 @@ export default {
       showenvironment: false,
       hasenvironment: false,
       showgraph: false,
-      graphSelection: "",
-      rawdatalink: "",
-    }
+      graphSelection: '',
+      rawdatalink: '',
+    };
   },
 
   computed: {
     files: function () {
-      return this.cdash.test.measurements.filter(function (measurement) {
-        return measurement.type == 'file';
-      })
+      return this.cdash.test.measurements.filter((measurement) => {
+        return measurement.type === 'file';
+      });
     },
     links: function () {
-      return this.cdash.test.measurements.filter(function (measurement) {
-        return measurement.type == 'text/link';
-      })
+      return this.cdash.test.measurements.filter((measurement) => {
+        return measurement.type === 'text/link';
+      });
     },
     measurements: function () {
-      return this.cdash.test.measurements.filter(function (measurement) {
-        return measurement.type != 'file' && measurement.type != 'text/link';
-      })
+      return this.cdash.test.measurements.filter((measurement) => {
+        return measurement.type !== 'file' && measurement.type !== 'text/link';
+      });
     },
     numericMeasurements: function () {
-      return this.cdash.test.measurements.filter(function (measurement) {
+      return this.cdash.test.measurements.filter((measurement) => {
         return measurement.type.lastIndexOf('numeric/', 0) === 0;
-      })
+      });
     },
   },
 
   mounted () {
-    this.buildtestid = window.location.pathname.split("/").pop();
-    var endpoint_path = '/api/v1/testDetails.php?buildtestid=' + this.buildtestid;
+    this.buildtestid = window.location.pathname.split('/').pop();
+    let endpoint_path = `/api/v1/testDetails.php?buildtestid=${this.buildtestid}`;
     this.queryParams = QueryParams.get();
     if ('graph' in this.queryParams) {
       this.graphSelection = this.queryParams.graph;
-      endpoint_path += "&graph=" + this.graphSelection;
+      endpoint_path += `&graph=${this.graphSelection}`;
     }
     ApiLoader.loadPageData(this, endpoint_path);
   },
 
   updated: function () {
-    this.$nextTick(function () {
+    this.$nextTick(() => {
       $('.je_compare').je_compare({caption: true});
-    })
+    });
   },
 
   methods: {
@@ -304,7 +304,7 @@ export default {
       this.cdash.test.output = TextMutator.ctestNonXmlCharEscape(this.cdash.test.output);
       this.cdash.test.output = TextMutator.terminalColors(this.cdash.test.output, true);
 
-      for (var i = 0; i < this.cdash.test.preformatted_measurements.length; i++) {
+      for (let i = 0; i < this.cdash.test.preformatted_measurements.length; i++) {
         this.cdash.test.preformatted_measurements[i].value = TextMutator.ctestNonXmlCharEscape(this.cdash.test.preformatted_measurements[i].value);
         this.cdash.test.preformatted_measurements[i].value = TextMutator.terminalColors(this.cdash.test.preformatted_measurements[i].value, true);
       }
@@ -314,6 +314,7 @@ export default {
         this.displayGraph();
       }
 
+      // eslint-disable-next-line eqeqeq
       if (this.cdash.test.environment != '') {
         this.hasenvironment = true;
       }
@@ -321,50 +322,50 @@ export default {
 
     displayGraph: function() {
       if (history.pushState) {
-        var graph_query = "?graph=" + this.graphSelection;
+        const graph_query = `?graph=${this.graphSelection}`;
         if (window.location.href.indexOf(graph_query) === -1) {
           // Update query string.
-          var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + graph_query;
+          const newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}${graph_query}`;
           window.history.pushState({path:newurl},'',newurl);
 
           // Update menu links.
-          this.cdash.menu.current = this.cdash.menu.current.split("?")[0] + graph_query;
+          this.cdash.menu.current = this.cdash.menu.current.split('?')[0] + graph_query;
           if (this.cdash.menu.previous) {
-            this.cdash.menu.previous = this.cdash.menu.previous.split("?")[0] + graph_query;
+            this.cdash.menu.previous = this.cdash.menu.previous.split('?')[0] + graph_query;
           }
           if (this.cdash.menu.next) {
-            this.cdash.menu.next = this.cdash.menu.next.split("?")[0] + graph_query;
+            this.cdash.menu.next = this.cdash.menu.next.split('?')[0] + graph_query;
           }
           this.$root.$emit('api-loaded', this.cdash);
         }
       }
 
-      var testid = this.cdash.test.id;
-      var buildid = this.cdash.test.buildid;
-      var measurementname = this.graphSelection;
-      if (this.graphSelection === "") {
+      const testid = this.cdash.test.id;
+      const buildid = this.cdash.test.buildid;
+      const measurementname = this.graphSelection;
+      if (this.graphSelection === '') {
         this.showgraph = false;
-        $("#graph_options").html("");
+        $('#graph_options').html('');
         return;
       }
 
       this.showgraph = true;
 
-      var graph_type = '';
-      var endpoint_path = '/api/v1/testGraph.php?testid=' + testid + '&buildid=' + buildid;
+      let graph_type = '';
+      let endpoint_path = `/api/v1/testGraph.php?testid=${testid}&buildid=${buildid}`;
       switch (this.graphSelection) {
-      case "status":
+      case 'status':
         graph_type = 'status';
         break;
-      case "time":
+      case 'time':
         graph_type = 'time';
         break;
       default:
         graph_type = 'measurement';
-        endpoint_path += '&measurementname=' + measurementname;
+        endpoint_path += `&measurementname=${measurementname}`;
         break;
       }
-      endpoint_path += '&type=' + graph_type;
+      endpoint_path += `&type=${graph_type}`;
       this.rawdatalink = this.$baseURL + endpoint_path;
 
       this.$axios
@@ -376,13 +377,13 @@ export default {
 
     testGraph: function(response, graph_type) {
       // Isolate buildtestids from the actual data points.
-      var buildtestids = {};
-      var chart_data = [];
-      for (var i = 0; i < response.length; i++) {
-        var series = {};
+      const buildtestids = {};
+      const chart_data = [];
+      for (let i = 0; i < response.length; i++) {
+        const series = {};
         series.label = response[i].label;
         series.data = [];
-        for (var j = 0; j < response[i].data.length; j++) {
+        for (let j = 0; j < response[i].data.length; j++) {
           series.data.push([response[i].data[j]['x'], response[i].data[j]['y']]);
           if ('buildtestid' in response[i].data[j]) {
             buildtestids[response[i].data[j]['x']] = response[i].data[j]['buildtestid'];
@@ -392,82 +393,84 @@ export default {
       }
 
       // Options that are shared by all of our different types of charts.
-      var options = {
+      const options = {
         grid: {
-          backgroundColor: "#fffaff",
+          backgroundColor: '#fffaff',
           clickable: true,
           hoverable: true,
           hoverFill: '#444',
-          hoverRadius: 4
+          hoverRadius: 4,
         },
         pan: { interactive: true },
         zoom: { interactive: true, amount: 1.1 },
-        xaxis: { mode: "time" },
+        xaxis: { mode: 'time' },
         yaxis: {
           zoomRange: false,
-          panRange: false
-        }
+          panRange: false,
+        },
       };
 
       switch (graph_type) {
-      case "status":
+      case 'status':
         // Circles for passed tests, crosses for failed tests.
         chart_data[0].points = { symbol: 'circle'};
         chart_data[1].points = { symbol: 'cross'};
         options.series = {
           points: {
             show: true,
-            radius: 5
-          }
+            radius: 5,
+          },
         };
-        options.yaxis.ticks = [[-1, "Failed"], [1, "Passed"]];
+        options.yaxis.ticks = [[-1, 'Failed'], [1, 'Passed']];
         options.yaxis.min = -1.2;
         options.yaxis.max = 1.2;
-        options.colors = ["#8aba5a", "#de6868"];
+        options.colors = ['#8aba5a', '#de6868'];
         break;
 
-      case "time":
+      case 'time':
         // Show threshold series as a filled area.
         chart_data[1].lines = { fill: true };
         // The lack of a 'break' here is intentional.
         // time & measurement charts share common options.
-      case "measurement":
+      case 'measurement':
         options.lines = { show: true };
         options.points = { show: true };
-        options.colors = ["#0000FF", "#dba255", "#919733"];
+        options.colors = ['#0000FF', '#dba255', '#919733'];
         break;
       }
 
       // Navigate to other tests on click.
-      var vm = this;
-      $("#graph_holder").bind("plotclick", function (e, pos, item) {
+      const vm = this;
+      $('#graph_holder').bind('plotclick', (e, pos, item) => {
         if (item) {
           plot.highlight(item.series, item.datapoint);
-          var buildtestid = buildtestids[item.datapoint[0]];
-          window.location = vm.$baseURL + "/test/" + buildtestid + "?graph=" + vm.graphSelection;
+          const buildtestid = buildtestids[item.datapoint[0]];
+          window.location = `${vm.$baseURL}/test/${buildtestid}?graph=${vm.graphSelection}`;
         }
       });
 
+      // eslint-disable-next-line no-var
       var plot = $.plot(
-        $("#graph_holder"), chart_data, options);
-      var date_formatter = d3.time.format("%b %d, %I:%M:%S %p");
+        $('#graph_holder'), chart_data, options);
+      const date_formatter = d3.time.format('%b %d, %I:%M:%S %p');
 
       // Show tooltip on hover.
-      $("#graph_holder").bind("plothover", function (event, pos, item) {
+      $('#graph_holder').bind('plothover', (event, pos, item) => {
         if (item) {
-          var x = date_formatter(new Date(item.datapoint[0])),
+          const x = date_formatter(new Date(item.datapoint[0])),
             y = item.datapoint[1].toFixed(2);
 
-          $("#tooltip").html(
-            "<b>" + x + "</b><br/>" +
-              item.series.label + ": <b>" + y + "</b>")
+          $('#tooltip').html(
+            `<b>${x}</b><br/>${
+              item.series.label}: <b>${y}</b>`)
             .css({top: item.pageY+5, left: item.pageX+5})
             .fadeIn(200);
-        } else {
-          $("#tooltip").hide();
+        }
+        else {
+          $('#tooltip').hide();
         }
       });
     },
   },
-}
+};
 </script>

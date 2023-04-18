@@ -10,10 +10,10 @@
 </template>
 
 <script>
-import HeaderTop from "./page-header/HeaderTop";
-import HeaderBottom from "./page-header/HeaderBottom";
+import HeaderTop from './page-header/HeaderTop';
+import HeaderBottom from './page-header/HeaderBottom';
 export default {
-  name: "Header",
+  name: 'Header',
   components: {HeaderBottom, HeaderTop},
   props: {
     date: {
@@ -31,11 +31,11 @@ export default {
     user: {
       type: Object,
       default() {
-        return {}
+        return {};
       },
     },
   },
-}
+};
 </script>
 
 <style scoped>

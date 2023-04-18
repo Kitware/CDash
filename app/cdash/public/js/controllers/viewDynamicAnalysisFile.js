@@ -1,4 +1,4 @@
 CDash.controller('ViewDynamicAnalysisFileController',
-  function ViewDynamicAnalysisFileController($scope, apiLoader) {
+  ($scope, apiLoader) => {
     apiLoader.loadPageData($scope, 'api/v1/viewDynamicAnalysisFile.php');
-});
+  });

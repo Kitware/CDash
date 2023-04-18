@@ -1,16 +1,17 @@
 // Encapsulate common code involved in loading our page data from the API.
-CDash.factory('apiLoader', function ($http, $rootScope, $window, renderTimer) {
+CDash.factory('apiLoader', ($http, $rootScope, $window, renderTimer) => {
   const loadPageData = function(controllerScope, endpoint) {
     controllerScope.loading = true;
 
     $http({
       url: endpoint,
       method: 'GET',
-      params: $rootScope.queryString
-    }).then(function success(s) {
+      params: $rootScope.queryString,
+    }).then((s) => {
       const cdash = s.data;
 
       // Check if we should display filters.
+      // eslint-disable-next-line eqeqeq
       if (cdash.filterdata && cdash.filterdata.showfilters == 1) {
         controllerScope.showfilters = true;
       }
@@ -26,16 +27,16 @@ CDash.factory('apiLoader', function ($http, $rootScope, $window, renderTimer) {
       controllerScope.cdash.endpoint = endpoint + $window.location.search;
 
       // Do any subsequent setup required for this particular controller.
-      if (typeof controllerScope.finishSetup === "function") {
+      if (typeof controllerScope.finishSetup === 'function') {
         controllerScope.finishSetup();
       }
-    }, function error(e) {
+    }, (e) => {
       controllerScope.cdash = e.data;
-    }).finally(function() {
+    }).finally(() => {
       controllerScope.loading = false;
     });
   };
   return {
-    loadPageData: loadPageData
+    loadPageData: loadPageData,
   };
 });

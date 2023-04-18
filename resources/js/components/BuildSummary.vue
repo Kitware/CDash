@@ -799,7 +799,7 @@
 <script>
 import ApiLoader from './shared/ApiLoader';
 export default {
-  name: "BuildSummary",
+  name: 'BuildSummary',
 
   data () {
     return {
@@ -825,20 +825,20 @@ export default {
         'time': false,
         'errors': false,
         'warnings': false,
-        'tests': false
+        'tests': false,
       },
-    }
+    };
   },
 
   mounted () {
-    this.buildid = window.location.pathname.split("/").pop();
-    var endpoint_path = '/api/v1/buildSummary.php?buildid=' + this.buildid;
+    this.buildid = window.location.pathname.split('/').pop();
+    const endpoint_path = `/api/v1/buildSummary.php?buildid=${this.buildid}`;
     ApiLoader.loadPageData(this, endpoint_path);
   },
 
   methods: {
     postSetup: function (response) {
-      this.cdash.noteStatus = "0";
+      this.cdash.noteStatus = '0';
     },
 
     toggleHistoryGraph: function () {
@@ -849,7 +849,7 @@ export default {
     loadGraphData: function(graphType) {
       this.graphLoading = true;
       this.$axios
-        .get('/api/v1/getPreviousBuilds.php?buildid=' + this.buildid)
+        .get(`/api/v1/getPreviousBuilds.php?buildid=${this.buildid}`)
         .then(response => {
           this.cdash.buildtimes = [];
           this.cdash.builderrors = [];
@@ -859,10 +859,10 @@ export default {
           this.cdash.buildhistory = [];
 
           // Isolate data for each graph.
-          var builds = response.data['builds'];
-          for (var i = 0, len = builds.length; i < len; i++) {
-            var build = builds[i];
-            var t = build['timestamp'];
+          const builds = response.data['builds'];
+          for (let i = 0, len = builds.length; i < len; i++) {
+            const build = builds[i];
+            const t = build['timestamp'];
 
             this.cdash.buildtimes.push([t, build['time'] / 60]);
             this.cdash.builderrors.push([t, build['builderrors']]);
@@ -870,7 +870,7 @@ export default {
             this.cdash.testfailed.push([t, build['testfailed']]);
             this.cdash.buildids[t] = build['id'];
 
-            var history_build = [];
+            const history_build = [];
             history_build['id'] = build['id'];
             history_build['nfiles'] = build['nfiles'];
             history_build['configureerrors'] = build['configureerrors'];
@@ -887,7 +887,7 @@ export default {
             this.renderGraph(graphType);
           }
         })
-        .finally(() => this.graphLoading = false)
+        .finally(() => this.graphLoading = false);
     },
 
     renderGraph: function (graphType) {
@@ -897,64 +897,65 @@ export default {
       }
 
       // Options shared by all four graphs.
-      var data, element, label;
-      var options = {
+      let data, element, label;
+      const options = {
         lines: {show: true},
         points: {show: true},
-        xaxis: {mode: "time"},
+        xaxis: {mode: 'time'},
         grid: {
-          backgroundColor: "#fffaff",
+          backgroundColor: '#fffaff',
           clickable: true,
           hoverable: true,
           hoverFill: '#444',
-          hoverRadius: 4
+          hoverRadius: 4,
         },
-        selection: {mode: "x"},
+        selection: {mode: 'x'},
       };
 
       switch (graphType) {
       case 'time':
-        options['colors'] = ["#41A317"];
+        options['colors'] = ['#41A317'];
         options['yaxis'] = {
           tickFormatter: function (v, axis) {
-            return v.toFixed(axis.tickDecimals) + " mins"}
+            return `${v.toFixed(axis.tickDecimals)} mins`;
+          },
         };
         data = this.cdash.buildtimes;
-        element = "#buildtimegrapholder";
-        label = "Build Time";
+        element = '#buildtimegrapholder';
+        label = 'Build Time';
         break;
       case 'errors':
-        options['colors'] = ["#FF0000"];
+        options['colors'] = ['#FF0000'];
         options['yaxis'] = {minTickSize: 1};
         data = this.cdash.builderrors;
-        element = "#builderrorsgrapholder";
-        label = "# errors";
+        element = '#builderrorsgrapholder';
+        label = '# errors';
         break;
       case 'warnings':
-        options['colors'] = ["#FDD017"];
+        options['colors'] = ['#FDD017'];
         options['yaxis'] = {minTickSize: 1};
         data = this.cdash.buildwarnings;
-        element = "#buildwarningsgrapholder";
-        label = "# warnings";
+        element = '#buildwarningsgrapholder';
+        label = '# warnings';
         break;
       case 'tests':
-        options['colors'] = ["#0000FF"];
+        options['colors'] = ['#0000FF'];
         options['yaxis'] = {minTickSize: 1};
         data = this.cdash.testfailed;
-        element = "#buildtestsfailedgrapholder";
-        label = "# tests failed";
+        element = '#buildtestsfailedgrapholder';
+        label = '# tests failed';
         break;
       default:
         return;
       }
 
       // Render the graph.
-      var plot = $.plot($(element), [{label: label, data: data}],
+      const plot = $.plot($(element), [{label: label, data: data}],
         options);
 
-      $(element).bind("selected", function (event, area) {
+      $(element).bind('selected', (event, area) => {
         // Set axis range to highlighted section and redraw plot.
-        var axes = plot.getAxes(),
+        const axes = plot.getAxes(),
           xaxis = axes.xaxis.options;
         xaxis.min = area.x1;
         xaxis.max = area.x2;
@@ -963,18 +964,18 @@ export default {
         plot.draw();
       });
 
-      var vm = this;
-      $(element).bind("plotclick", function (e, pos, item) {
+      const vm = this;
+      $(element).bind('plotclick', (e, pos, item) => {
         if (item) {
           plot.highlight(item.series, item.datapoint);
-          var buildid = vm.cdash.buildids[item.datapoint[0]];
-          window.location = vm.$baseURL + "/build/" + buildid;
+          const buildid = vm.cdash.buildids[item.datapoint[0]];
+          window.location = `${vm.$baseURL}/build/${buildid}`;
         }
       });
 
-      $(element).bind('dblclick', function(event) {
+      $(element).bind('dblclick', (event) => {
         // Set axis range to null.  This makes all data points visible.
-        var axes = plot.getAxes(),
+        const axes = plot.getAxes(),
           xaxis = axes.xaxis.options,
           yaxis = axes.yaxis.options;
         xaxis.min = null;
@@ -997,46 +998,50 @@ export default {
       // This gives the holder div a chance to become visible before the graph
       // is drawn.  Otherwise flot has trouble drawing the graph with the
       // correct dimensions.
-      setTimeout(function () {
+      setTimeout(() => {
         if (!this.graphLoaded) {
           this.loadGraphData('time');
-        } else {
+        }
+        else {
           this.renderGraph('time');
         }
-      }.bind(this), 1);
+      }, 1);
     },
 
     toggleErrorGraph: function() {
       this.showErrorGraph = !this.showErrorGraph;
-      setTimeout(function () {
+      setTimeout(() => {
         if (!this.graphLoaded) {
           this.loadGraphData('errors');
-        } else {
+        }
+        else {
           this.renderGraph('errors');
         }
-      }.bind(this), 1);
+      }, 1);
     },
 
     toggleWarningGraph: function() {
       this.showWarningGraph = !this.showWarningGraph;
-      setTimeout(function () {
+      setTimeout(() => {
         if (!this.graphLoaded) {
           this.loadGraphData('warnings');
-        } else {
+        }
+        else {
           this.renderGraph('warnings');
         }
-      }.bind(this), 1);
+      }, 1);
     },
 
     toggleTestGraph: function() {
       this.showTestGraph = !this.showTestGraph;
-      setTimeout(function () {
+      setTimeout(() => {
         if (!this.graphLoaded) {
           this.loadGraphData('tests');
-        } else {
+        }
+        else {
           this.renderGraph('tests');
         }
-      }.bind(this), 1);
+      }, 1);
     },
 
     toggleNote: function() {
@@ -1048,7 +1053,7 @@ export default {
         .post('api/v1/addUserNote.php', {
           buildid: this.cdash.build.id,
           Status: this.cdash.noteStatus,
-          AddNote: this.cdash.noteText
+          AddNote: this.cdash.noteText,
         })
         .then(response => {
         // Add the newly created note to our list.
@@ -1057,12 +1062,12 @@ export default {
         .catch(error => {
         // Display the error.
           this.cdash.error = error;
-          console.log(error)
+          console.log(error);
         });
     },
 
   },
-}
+};
 </script>
 
 <style scoped>

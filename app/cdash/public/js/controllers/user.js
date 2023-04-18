@@ -1,4 +1,4 @@
-CDash.controller('UserController', function UserController($scope, $http, $timeout, apiLoader) {
+CDash.controller('UserController', ($scope, $http, $timeout, apiLoader) => {
   apiLoader.loadPageData($scope, 'api/v1/user.php');
 
   $scope.generateToken = function() {
@@ -6,10 +6,10 @@ CDash.controller('UserController', function UserController($scope, $http, $timeo
       description: $scope.cdash.tokendescription,
       scope: $scope.cdash.tokenscope === 'full_access' ? 'full_access' : 'submit_only',
       projectid: $scope.cdash.tokenscope === 'full_access'
-                 || $scope.cdash.tokenscope === 'submit_only' ? -1 : $scope.cdash.tokenscope
+                 || $scope.cdash.tokenscope === 'submit_only' ? -1 : $scope.cdash.tokenscope,
     };
     $http.post('/api/authtokens/create', parameters)
-      .then(function success(s) {
+      .then((s) => {
         const authtoken = s.data.token;
         authtoken.copied = false;
         authtoken.raw_token = s.data.raw_token;
@@ -24,7 +24,7 @@ CDash.controller('UserController', function UserController($scope, $http, $timeo
         authtoken.expires = authtoken.expires.replace('T', ' ');
 
         $scope.cdash.authtokens.push(authtoken);
-      }, function error(e) {
+      }, (e) => {
         $scope.cdash.message = e.data.error;
       });
   };
@@ -32,7 +32,7 @@ CDash.controller('UserController', function UserController($scope, $http, $timeo
   $scope.copyTokenSuccess = function(token) {
     token.copied = true;
     token.showcheck = true;
-    $timeout(function() {
+    $timeout(() => {
       token.showcheck = false;
     }, 2000);
   };
@@ -41,10 +41,10 @@ CDash.controller('UserController', function UserController($scope, $http, $timeo
     $http({
       url: `/api/authtokens/delete/${authtoken.hash}`,
       method: 'DELETE',
-    }).then(function success() {
+    }).then(() => {
       // Remove this token from our list.
       let index = -1;
-      for(let i = 0, len = $scope.cdash.authtokens.length; i < len; i++) {
+      for (let i = 0, len = $scope.cdash.authtokens.length; i < len; i++) {
         if ($scope.cdash.authtokens[i].hash === authtoken.hash) {
           index = i;
           break;
@@ -53,7 +53,7 @@ CDash.controller('UserController', function UserController($scope, $http, $timeo
       if (index > -1) {
         $scope.cdash.authtokens.splice(index, 1);
       }
-    }, function error(e) {
+    }, (e) => {
       $scope.cdash.message = e.data.error;
     });
   };
@@ -71,5 +71,5 @@ CDash.controller('UserController', function UserController($scope, $http, $timeo
     else {
       $scope.cdash.tokenscope = '';
     }
-  }
+  };
 });

@@ -57,14 +57,14 @@
 
 <script>
 export default {
-  name: "HeaderNav",
+  name: 'HeaderNav',
 
   data() {
     return {
       previous: null,
       current: null,
       next: null,
-    }
+    };
   },
 
   computed: {
@@ -78,7 +78,7 @@ export default {
 
     nextClass () {
       return this.next === null ? 'btn-disabled' : 'btn-enabled';
-    }
+    },
   },
 
   mounted() {
@@ -99,7 +99,7 @@ export default {
     });
   },
 
-}
+};
 </script>
 
 <style scoped>

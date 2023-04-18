@@ -113,7 +113,7 @@
 
 <script>
 export default {
-  name: "HeaderMenu",
+  name: 'HeaderMenu',
   props: {
     date: {
       type: String,
@@ -152,7 +152,7 @@ export default {
       testsUrl: '',
       userSettingsUrl: '',
       vcsUrl: '',
-    }
+    };
   },
 
   mounted() {
@@ -163,11 +163,11 @@ export default {
 
   methods: {
     handleApiResponse: function (cdash) {
-      var extraurl = '';
+      let extraurl = '';
       if (cdash.extraurl) {
         extraurl = cdash.extraurl;
       }
-      var extrafilterurl = '';
+      let extrafilterurl = '';
       if (cdash.extrafilterurl) {
         extrafilterurl = cdash.extrafilterurl;
         cdash.querytestfilters = extrafilterurl;
@@ -187,6 +187,7 @@ export default {
       this.hasProject = true;
 
       this.indexUrl = `${this.$baseURL}/index.php?project=${cdash.projectname_encoded}&date=${cdash.date}`;
+      // eslint-disable-next-line eqeqeq
       if (cdash.menu.subprojects == 1) {
         this.showSubProjects = true;
         this.subProjectsUrl = `${this.$baseURL}/viewSubProjects.php?project=${cdash.projectname_encoded}&date=${cdash.date}`;
@@ -198,7 +199,8 @@ export default {
 
       if (cdash.parentid > 0) {
         this.testQueryUrl = `${this.$baseURL}/queryTests.php?project=${cdash.projectname_encoded}&parentid=${cdash.parentid}${extraurl}${cdash.querytestfilters}`;
-      } else {
+      }
+      else {
         this.testQueryUrl = `${this.$baseURL}/queryTests.php?project=${cdash.projectname_encoded}&date=${cdash.date}${extraurl}${cdash.querytestfilters}`;
       }
 
@@ -207,7 +209,8 @@ export default {
 
       if (cdash.home.startsWith('index.php?project=')) {
         this.homeUrl = `${this.$baseURL}/${cdash.home}`;
-      } else {
+      }
+      else {
         this.homeUrl = cdash.home;
       }
       this.docUrl = cdash.documentation;
@@ -218,6 +221,7 @@ export default {
         this.subscribeUrl = `${this.$baseURL}/subscribeProject.php?projectid=${cdash.projectid}`;
       }
 
+      // eslint-disable-next-line eqeqeq
       if (cdash.user.admin == 1) {
         this.showAdmin = true;
         this.projectSettingsUrl = `${this.$baseURL}/project/${cdash.projectid}/edit`;
@@ -231,7 +235,7 @@ export default {
       }
     },
   },
-}
+};
 </script>
 
 <style scoped>

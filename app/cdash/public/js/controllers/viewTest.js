@@ -1,5 +1,5 @@
 CDash.controller('ViewTestController',
-  function ViewTestController($scope, $rootScope, $http, $filter, $q, apiLoader, multisort, filters) {
+  ($scope, $rootScope, $http, $filter, $q, apiLoader, multisort, filters) => {
     $scope.loading = true;
 
     // Pagination settings.
@@ -9,12 +9,13 @@ CDash.controller('ViewTestController',
     $scope.pagination.maxSize = 5;
 
     // Check if we have a cookie for number of tests to display.
-    var num_per_page_cookie = $.cookie('viewTest_num_per_page');
-      if(num_per_page_cookie) {
-        $scope.pagination.numPerPage = parseInt(num_per_page_cookie);
-      } else {
-        $scope.pagination.numPerPage = 25;
-      }
+    const num_per_page_cookie = $.cookie('viewTest_num_per_page');
+    if (num_per_page_cookie) {
+      $scope.pagination.numPerPage = parseInt(num_per_page_cookie);
+    }
+    else {
+      $scope.pagination.numPerPage = 25;
+    }
 
     // Hide filters by default.
     $scope.showfilters = false;
@@ -23,11 +24,12 @@ CDash.controller('ViewTestController',
     $rootScope.queryString['filterstring'] = filters.getString();
 
     // Check for sort order cookie.
-    var sort_order = [];
-    var sort_cookie_value = $.cookie('cdash_view_test_sort');
-    if(sort_cookie_value) {
-      sort_order = sort_cookie_value.split(",");
-    } else {
+    let sort_order = [];
+    const sort_cookie_value = $.cookie('cdash_view_test_sort');
+    if (sort_cookie_value) {
+      sort_order = sort_cookie_value.split(',');
+    }
+    else {
       // Default sorting : failed tests in alphabetical order.
       sort_order = ['subprojectname', 'status', 'name'];
     }
@@ -53,17 +55,18 @@ CDash.controller('ViewTestController',
     };
 
     $scope.setPage = function (pageNo) {
-      var begin = ((pageNo - 1) * $scope.pagination.numPerPage)
-      , end = begin + $scope.pagination.numPerPage;
+      const begin = ((pageNo - 1) * $scope.pagination.numPerPage)
+        , end = begin + $scope.pagination.numPerPage;
       if (end > 0) {
         $scope.pagination.filteredTests = $scope.cdash.tests.slice(begin, end);
-      } else {
+      }
+      else {
         $scope.pagination.filteredTests = $scope.cdash.tests;
       }
 
       // Load history & summary data for these newly revealed tests (if necessary).
-      var tests_to_load = [];
-      for (var i = 0, len = $scope.pagination.filteredTests.length; i < len; i++) {
+      const tests_to_load = [];
+      for (let i = 0, len = $scope.pagination.filteredTests.length; i < len; i++) {
         if ( !('detailsloaded' in $scope.pagination.filteredTests[i]) ) {
           tests_to_load.push($scope.pagination.filteredTests[i]['name']);
         }
@@ -80,11 +83,11 @@ CDash.controller('ViewTestController',
             'time_begin': $scope.cdash.time_begin,
             'time_end': $scope.cdash.time_end,
             'projectid': $scope.cdash.projectid,
-            'groupid': $scope.cdash.groupid
+            'groupid': $scope.cdash.groupid,
           },
-          timeout: $scope.canceler.promise
-        }).then(function success(s) {
-          var response = s.data;
+          timeout: $scope.canceler.promise,
+        }).then((s) => {
+          const response = s.data;
           $scope.cdash.displayhistory = $scope.cdash.displayhistory || response.displayhistory;
           $scope.cdash.displaysummary = $scope.cdash.displaysummary || response.displaysummary;
 
@@ -92,7 +95,7 @@ CDash.controller('ViewTestController',
 
             // Don't display extra data for missing tests
             if (test['status'] === 'Missing') {
-                return;
+              return;
             }
 
             if ('history' in response) {
@@ -107,8 +110,8 @@ CDash.controller('ViewTestController',
           }
 
           // Update our currently displayed filtered results with this new data.
-          for (var i = 0, len1 = response.tests.length; i < len1; i++) {
-            for (var j = 0, len2 = $scope.pagination.filteredTests.length; j < len2; j++) {
+          for (let i = 0, len1 = response.tests.length; i < len1; i++) {
+            for (let j = 0, len2 = $scope.pagination.filteredTests.length; j < len2; j++) {
               if (response.tests[i].name === $scope.pagination.filteredTests[j].name) {
                 copy_test_details($scope.pagination.filteredTests[j], response.tests[i]);
               }
@@ -116,8 +119,8 @@ CDash.controller('ViewTestController',
           }
 
           // Also copy this newfound data into the 'master list' of tests.
-          for (var i = 0, len1 = response.tests.length; i < len1; i++) {
-            for (var j = 0, len2 = $scope.cdash.tests.length; j < len2; j++) {
+          for (let i = 0, len1 = response.tests.length; i < len1; i++) {
+            for (let j = 0, len2 = $scope.cdash.tests.length; j < len2; j++) {
               if (response.tests[i].name === $scope.cdash.tests[j].name) {
                 copy_test_details($scope.cdash.tests[j], response.tests[i]);
               }
@@ -139,16 +142,16 @@ CDash.controller('ViewTestController',
     };
 
     $scope.sortByExtraMeasurement = function(idx, $event) {
-      var field = 'measurements[' + idx + ']';
+      const field = `measurements[${idx}]`;
       $scope.updateOrderByFields(field, $event);
-    }
+    };
 
     $scope.numTestsPerPageChanged = function() {
-      $.cookie("viewTest_num_per_page", $scope.pagination.numPerPage, { expires: 365 });
+      $.cookie('viewTest_num_per_page', $scope.pagination.numPerPage, { expires: 365 });
       $scope.pageChanged();
     };
 
     $scope.cancelAjax = function() {
       $scope.canceler.resolve();
-    }
-});
+    };
+  });

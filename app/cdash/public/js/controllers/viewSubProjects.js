@@ -1,13 +1,13 @@
 CDash.controller('ViewSubProjectsController',
-  function ViewSubProjectsController($scope, multisort, apiLoader) {
+  ($scope, multisort, apiLoader) => {
     // Hide filters by default.
     $scope.showfilters = false;
 
     // Check for sort order cookie.
-    var sort_order = [];
-    var sort_cookie_value = $.cookie('cdash_subproject_sort');
-    if(sort_cookie_value) {
-      sort_order = sort_cookie_value.split(",");
+    let sort_order = [];
+    const sort_cookie_value = $.cookie('cdash_subproject_sort');
+    if (sort_cookie_value) {
+      sort_order = sort_cookie_value.split(',');
     }
     $scope.sortSubProjects = { orderByFields: sort_order };
 
@@ -17,4 +17,4 @@ CDash.controller('ViewSubProjectsController',
       multisort.updateOrderByFields(obj, field, $event);
       $.cookie('cdash_subproject_sort', obj.orderByFields);
     };
-});
+  });

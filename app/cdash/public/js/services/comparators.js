@@ -11,47 +11,47 @@ function comparators() {
           [
             {
               pos: 1,
-              symbol: "in",
-              text: "contains"
+              symbol: 'in',
+              text: 'contains',
             },
             {
               pos: 2,
-              symbol: "not in",
-              text: "does not contain"
-            }
+              symbol: 'not in',
+              text: 'does not contain',
+            },
           ],
         bool:
           [
             {
               pos: 1,
-              symbol: "==",
-              text: "is"
+              symbol: '==',
+              text: 'is',
             },
             {
               pos: 2,
-              symbol: "!=",
-              text: "is not"
-            }
+              symbol: '!=',
+              text: 'is not',
+            },
           ],
         number:
           [
             {
               pos: 1,
-              symbol: "<",
-              text: "is less than"
+              symbol: '<',
+              text: 'is less than',
             },
             {
               pos: 2,
-              symbol: ">",
-              text: "is greater than"
+              symbol: '>',
+              text: 'is greater than',
             },
             {
               pos: 3,
-              symbol: "==",
-              text: "equals"
-            }
-          ]
+              symbol: '==',
+              text: 'equals',
+            },
+          ],
       };
-    }
-  }
+    },
+  };
 }

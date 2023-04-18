@@ -59,7 +59,7 @@
 
 <script>
 export default {
-  name: "PageFooter",
+  name: 'PageFooter',
 
   props: {
     cdashLogo: {
@@ -82,7 +82,7 @@ export default {
       endpoint: null,
       generationtime: null,
       nightlytime: null,
-    }
+    };
   },
 
   mounted() {
@@ -101,5 +101,5 @@ export default {
       }
     });
   },
-}
+};
 </script>

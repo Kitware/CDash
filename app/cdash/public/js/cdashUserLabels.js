@@ -1,22 +1,19 @@
-var opt = new OptionTransfer("movelabels[]","emaillabels[]");
+const opt = new OptionTransfer('movelabels[]','emaillabels[]');
 opt.setAutoSort(true);
-opt.setDelimiter(",");
+opt.setDelimiter(',');
 
-function rightTransfer()
-{
+function rightTransfer() {
   opt.transferRight();
   saveChanges();
 }
 
-function leftTransfer()
-{
+function leftTransfer() {
   opt.transferLeft();
   saveChanges();
 }
 
-function SubmitForm()
-{
+function SubmitForm() {
   $('#emaillabels option').each(function(i) {
-   $(this).attr("selected", "selected");
-   });
+    $(this).attr('selected', 'selected');
+  });
 }

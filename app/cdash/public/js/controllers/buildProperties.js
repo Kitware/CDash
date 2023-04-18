@@ -1,5 +1,5 @@
 CDash.controller('BuildPropertiesController',
-  function BuildPropertiesController($filter, $http, $scope, apiLoader, comparators, modalSvc, multisort) {
+  ($filter, $http, $scope, apiLoader, comparators, modalSvc, multisort) => {
     apiLoader.loadPageData($scope, 'api/v1/buildProperties.php');
     $scope.finishSetup = function() {
       if ($scope.cdash.builds.length < 1) {
@@ -23,18 +23,20 @@ CDash.controller('BuildPropertiesController',
       $scope.pagination.filteredTests = [];
       $scope.pagination.currentPage = 1;
       $scope.pagination.maxSize = 5;
-      var num_per_page_cookie = $.cookie('buildProperties_num_per_page');
-      if(num_per_page_cookie) {
+      const num_per_page_cookie = $.cookie('buildProperties_num_per_page');
+      if (num_per_page_cookie) {
         $scope.pagination.numPerPage = parseInt(num_per_page_cookie);
-      } else {
+      }
+      else {
         $scope.pagination.numPerPage = 10;
       }
 
       // Sorting for defects table.
-      var sort_cookie_value = $.cookie('cdash_buildProperties_sort');
-      if(sort_cookie_value) {
-        $scope.orderByFields = sort_cookie_value.split(",");
-      } else {
+      const sort_cookie_value = $.cookie('cdash_buildProperties_sort');
+      if (sort_cookie_value) {
+        $scope.orderByFields = sort_cookie_value.split(',');
+      }
+      else {
         $scope.orderByFields = ['-builds.length'];
       }
 
@@ -44,23 +46,23 @@ CDash.controller('BuildPropertiesController',
       $scope.computeChartData();
 
       // Initial render of chart.
-      nv.addGraph(function() {
+      nv.addGraph(() => {
         $scope.chart = nv.models.multiBarChart()
           .duration(350)
           .rotateLabels(0)      //Angle to rotate x-axis labels.
           .showControls(true)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
-          .groupSpacing(0.1)    //Distance between each group of bars.
-        ;
+          .groupSpacing(0.1);   //Distance between each group of bars.
 
-        $scope.chart.xAxis.tickFormat(function(d) {
+        $scope.chart.xAxis.tickFormat((d) => {
           if ($scope.groups[d] !== undefined) {
             return $scope.groups[d].keyword;
-          } else {
+          }
+          else {
             return '';
           }
         });
         $scope.chart.yAxis.tickFormat(d3.format(',f'));
-        $scope.chart.yAxis.axisLabel("Number of Builds");
+        $scope.chart.yAxis.axisLabel('Number of Builds');
 
 
         $scope.chart_selection = d3.select('#chart svg') .datum($scope.chart_data);
@@ -73,11 +75,11 @@ CDash.controller('BuildPropertiesController',
     };
 
     $scope.addGroup = function(groupname, builds) {
-      var pos = $scope.groups.length;
-      var group = {
+      const pos = $scope.groups.length;
+      const group = {
         keyword: groupname,
         position: pos,
-        builds: builds
+        builds: builds,
       };
       $scope.groups.push(group);
     };
@@ -86,63 +88,66 @@ CDash.controller('BuildPropertiesController',
       $scope.chart_data = [];
 
       // Count how many builds are in each group.
-      var group_totals = [];
-      for (var i = 0; i < $scope.groups.length; ++i) {
+      const group_totals = [];
+      for (let i = 0; i < $scope.groups.length; ++i) {
         group_totals.push({
           x: $scope.groups[i].position,
-          y: $scope.groups[i].builds.length
+          y: $scope.groups[i].builds.length,
         });
       }
 
       // Count how many builds have each type of defect for each group.
-      for (var i = 0; i < $scope.cdash.defecttypes.length; ++i) {
-        var defect_type = $scope.cdash.defecttypes[i];
+      for (let i = 0; i < $scope.cdash.defecttypes.length; ++i) {
+        const defect_type = $scope.cdash.defecttypes[i];
         if (!defect_type.selected) {
           continue;
         }
-        var defect_values = [];
-        for (var j = 0; j < $scope.groups.length; ++j) {
-          var group = $scope.groups[j], defective_builds = 0;
-          for (var k = 0; k < group.builds.length; ++k) {
-            var build = group.builds[k];
+        const defect_values = [];
+        for (let j = 0; j < $scope.groups.length; ++j) {
+          const group = $scope.groups[j];
+          let defective_builds = 0;
+          for (let k = 0; k < group.builds.length; ++k) {
+            const build = group.builds[k];
             defective_builds += build[defect_type.name] > 0 ? 1 : 0;
           }
           defect_values.push({
             x: group.position,
-            y: defective_builds
+            y: defective_builds,
           });
         }
         $scope.chart_data.push({
           key: defect_type.prettyname,
-          values: defect_values
+          values: defect_values,
         });
       }
 
       $scope.chart_data.push({
-        key: "Total",
-        values: group_totals
+        key: 'Total',
+        values: group_totals,
       });
     };
 
     $scope.updateSelection = function() {
-      var uri = '//' + location.host + location.pathname + '?project=' + $scope.cdash.projectname_encoded;
+      let uri = `//${location.host}${location.pathname}?project=${$scope.cdash.projectname_encoded}`;
       // Include date range from time chart.
+      // eslint-disable-next-line eqeqeq
       if ($scope.cdash.begin_date == $scope.cdash.end_date) {
-        uri += '&date=' + $scope.cdash.begin_date;
-      } else {
-        uri += '&begin=' + $scope.cdash.begin_date + '&end=' + $scope.cdash.end_date;
+        uri += `&date=${$scope.cdash.begin_date}`;
+      }
+      else {
+        uri += `&begin=${$scope.cdash.begin_date}&end=${$scope.cdash.end_date}`;
       }
 
       // Get selected defects.
-      var defect_types = [];
-      for (var i = 0; i < $scope.cdash.defecttypes.length; ++i) {
-        var defect_type = $scope.cdash.defecttypes[i];
+      const defect_types = [];
+      for (let i = 0; i < $scope.cdash.defecttypes.length; ++i) {
+        const defect_type = $scope.cdash.defecttypes[i];
         if (defect_type.selected) {
           defect_types.push(defect_type.name);
         }
       }
       if (defect_types.length > 0) {
-        uri += '&defects=' + defect_types.join();
+        uri += `&defects=${defect_types.join()}`;
       }
 
       window.location = uri;
@@ -150,13 +155,15 @@ CDash.controller('BuildPropertiesController',
 
     // Split the "All" / "Remainder" group when adding a new selection.
     $scope.split = function(groupName, filterExpression) {
+      // eslint-disable-next-line eqeqeq
       if ($scope.groups.length == 1) {
         // First split.  Remove the default 'All' group.
         $scope.groups = [];
-      } else {
+      }
+      else {
         // Remove the 'Remainder' group.
-        var index = -1;
-        for (var i = 0, len = $scope.groups.length; i < len; i++) {
+        let index = -1;
+        for (let i = 0, len = $scope.groups.length; i < len; i++) {
           if ($scope.groups[i].keyword === 'Remainder') {
             index = i;
             break;
@@ -168,16 +175,17 @@ CDash.controller('BuildPropertiesController',
       }
 
       // Find the builds that match our expression.
-      var matchingBuilds = $filter('filter')($scope.cdash.builds, filterExpression);
+      const matchingBuilds = $filter('filter')($scope.cdash.builds, filterExpression);
       $scope.addGroup(groupName, matchingBuilds);
 
       // (Re-)create the 'Remainder' group.
-      var remainingBuilds = $filter('filter')($scope.cdash.builds, function(value, index, array) {
-        var keep_this_build = true;
-        for (var i = 0; i < $scope.groups.length; ++i) {
-          var group = $scope.groups[i];
-          for (var j = 0; j < group.builds.length; ++j) {
-            var build = group.builds[j];
+      const remainingBuilds = $filter('filter')($scope.cdash.builds, (value, index, array) => {
+        let keep_this_build = true;
+        for (let i = 0; i < $scope.groups.length; ++i) {
+          const group = $scope.groups[i];
+          for (let j = 0; j < group.builds.length; ++j) {
+            const build = group.builds[j];
+            // eslint-disable-next-line eqeqeq
             if (value.id == build.id) {
               keep_this_build = false;
               break;
@@ -198,8 +206,8 @@ CDash.controller('BuildPropertiesController',
     // Remove a group and put its builds back in the "All" / "Remainder" group.
     $scope.unsplit = function(groupName) {
       // Find the group to remove.
-      var idx_to_remove = -1;
-      for (var i = 0, len = $scope.groups.length; i < len; i++) {
+      let idx_to_remove = -1;
+      for (let i = 0, len = $scope.groups.length; i < len; i++) {
         if ($scope.groups[i].keyword === groupName) {
           idx_to_remove = i;
           break;
@@ -208,12 +216,12 @@ CDash.controller('BuildPropertiesController',
       if (idx_to_remove === -1) {
         return;
       }
-      var groupToRemove = $scope.groups[idx_to_remove];
+      const groupToRemove = $scope.groups[idx_to_remove];
 
       // Find the group named "Remainder".
-      var idx_remain = -1;
-      for (var i = 0, len = $scope.groups.length; i < len; i++) {
-        if ($scope.groups[i].keyword === "Remainder") {
+      let idx_remain = -1;
+      for (let i = 0, len = $scope.groups.length; i < len; i++) {
+        if ($scope.groups[i].keyword === 'Remainder') {
           idx_remain = i;
           break;
         }
@@ -224,15 +232,16 @@ CDash.controller('BuildPropertiesController',
 
       // Find any builds in the group to be removed that do not belong
       // anywhere else.  Add those back into the "Remainder" group.
-      var buildids_to_move = [];
-      for (var i = 0, len1 = groupToRemove.builds.length; i < len1; i++) {
-        var build = groupToRemove.builds[i], move_this_build = true;
-        for (var j = 0, len2 = $scope.groups.length; j < len2; j++) {
-          var group = $scope.groups[j];
-          if (j === idx_to_remove || group.keyword === "Remainder") {
+      const buildids_to_move = [];
+      for (let i = 0, len1 = groupToRemove.builds.length; i < len1; i++) {
+        const build = groupToRemove.builds[i];
+        let move_this_build = true;
+        for (let j = 0, len2 = $scope.groups.length; j < len2; j++) {
+          const group = $scope.groups[j];
+          if (j === idx_to_remove || group.keyword === 'Remainder') {
             continue;
           }
-          for (var k = 0, len3 = group.builds.length; k < len3; k++) {
+          for (let k = 0, len3 = group.builds.length; k < len3; k++) {
             if (group.builds[k].id === build.id) {
               move_this_build = false;
               break;
@@ -248,26 +257,24 @@ CDash.controller('BuildPropertiesController',
       }
 
       // Move the appropriate builds back to the "Remainder" group.
-      var filterExpression = function(value, index, array) {
-        if (buildids_to_move.indexOf(value.id) === -1) {
-          return false;
-        }
-        return true;
+      const filterExpression = function(value, index, array) {
+        return buildids_to_move.indexOf(value.id) !== -1;
       };
-      var matchingBuilds = $filter('filter')($scope.cdash.builds, filterExpression);
+      const matchingBuilds = $filter('filter')($scope.cdash.builds, filterExpression);
       $scope.groups[idx_remain].builds = $scope.groups[idx_remain].builds.concat(matchingBuilds);
 
       // Now we can remove the group.
       $scope.groups.splice(idx_to_remove, 1);
 
       // Update positions of surviving groups.
-      for (var i = 0, len = $scope.groups.length; i < len; i++) {
+      for (let i = 0, len = $scope.groups.length; i < len; i++) {
         $scope.groups[i].position = i;
       }
 
+      // eslint-disable-next-line eqeqeq
       if ($scope.groups.length == 1) {
         // If we're back down to one group, rename it from "Remainder" to "All".
-        $scope.groups[0].keyword = "All";
+        $scope.groups[0].keyword = 'All';
       }
 
       // Redraw the chart.
@@ -282,20 +289,20 @@ CDash.controller('BuildPropertiesController',
 
 
     $scope.addSelection = function() {
-      var selection = [
+      const selection = [
         {
           'name': '',
           'comparator': '',
           'comparators': [],
           'property': '',
-          'applied': false
-        }
+          'applied': false,
+        },
       ];
       $scope.cdash.selections.push(selection);
     };
 
     $scope.removeSelection = function(selection) {
-      var index = $scope.cdash.selections.indexOf(selection);
+      const index = $scope.cdash.selections.indexOf(selection);
       if (index > -1) {
         $scope.cdash.selections.splice(index, 1);
         $scope.unsplit(selection.name);
@@ -303,19 +310,18 @@ CDash.controller('BuildPropertiesController',
     };
 
     $scope.applySelection = function(selection) {
-      var user_clause = selection.property + " " + selection.comparator.symbol + " " + selection.value;
-      var actual_code = 'value.properties.' + user_clause;
+      const user_clause = `${selection.property} ${selection.comparator.symbol} ${selection.value}`;
+      const actual_code = `value.properties.${user_clause}`;
 
-      var filterExpression = function(value, index, array) {
+      const filterExpression = function(value, index, array) {
+        let b = false;
         try {
-          var b = eval(actual_code);
-        } catch (err) {
+          b = eval(actual_code);
+        }
+        catch (err) {
           selection.error = err.message;
         }
-        if (b) {
-          return true;
-        }
-        return false;
+        return b;
       };
 
       selection.applied = true;
@@ -324,22 +330,24 @@ CDash.controller('BuildPropertiesController',
     };
 
     $scope.updateComparators = function(selection) {
-      var idx = $scope.cdash.propertykeys.indexOf(selection.property);
+      const idx = $scope.cdash.propertykeys.indexOf(selection.property);
+      // eslint-disable-next-line eqeqeq
       if (idx != -1) {
-        var type = $scope.cdash.properties[selection.property].type;
+        const type = $scope.cdash.properties[selection.property].type;
         selection.comparators = $scope.comparators[type];
       }
     };
 
     $scope.showModal = function(defect) {
       $scope.cdash.currentDefect = defect;
-      modalSvc.showModal(null, function(){}, 'modal-template', $scope, 'lg');
+      modalSvc.showModal(null, () => {}, 'modal-template', $scope, 'lg');
     };
 
     $scope.toggleDefects = function() {
       if (!$scope.cdash.defectsLoaded) {
         $scope.loadDefects();
-      } else {
+      }
+      else {
         $scope.cdash.showDefects = !$scope.cdash.showDefects;
       }
     };
@@ -347,32 +355,32 @@ CDash.controller('BuildPropertiesController',
     $scope.loadDefects = function() {
       $scope.cdash.loadingDefects = true;
 
-      var buildids = [];
-      for (var i = 0; i < $scope.cdash.builds.length ; ++i) {
+      const buildids = [];
+      for (let i = 0; i < $scope.cdash.builds.length ; ++i) {
         buildids.push($scope.cdash.builds[i].id);
       }
 
-      var defect_types = [];
-      for (var i = 0; i < $scope.cdash.defecttypes.length; ++i) {
-        var defect_type = $scope.cdash.defecttypes[i];
+      const defect_types = [];
+      for (let i = 0; i < $scope.cdash.defecttypes.length; ++i) {
+        const defect_type = $scope.cdash.defecttypes[i];
         if (defect_type.selected) {
           defect_types.push(defect_type.name);
         }
       }
 
       // Query the API to get the types of defects suffered by these builds.
-      var parameters = {
-        "buildid[]": buildids,
-        "defect[]": defect_types
+      const parameters = {
+        'buildid[]': buildids,
+        'defect[]': defect_types,
       };
       $scope.cdash.defectsError = '';
       $http({
         url: 'api/v1/buildProperties.php',
         method: 'GET',
-        params: parameters
-      }).then(function success(s) {
+        params: parameters,
+      }).then((s) => {
         $scope.cdash.defects = s.data.defects;
-        for (var i = 0; i < $scope.cdash.defects.length; ++i) {
+        for (let i = 0; i < $scope.cdash.defects.length; ++i) {
           $scope.cdash.defects[i].classifiersLoaded = false;
           $scope.cdash.defects[i].loadingClassifiers = false;
           $scope.cdash.defects[i].showClassifiers = false;
@@ -381,9 +389,9 @@ CDash.controller('BuildPropertiesController',
         $scope.cdash.defectsLoaded = true;
         $scope.cdash.showDefects = true;
         $scope.pageChanged();
-      }, function error(e) {
+      }, (e) => {
         $scope.cdash.defectsError = e.data;
-      }).finally(function() {
+      }).finally(() => {
         $scope.cdash.loadingDefects = false;
       });
     };
@@ -398,44 +406,46 @@ CDash.controller('BuildPropertiesController',
     $scope.computeClassifiers = function(defect) {
       defect.loadingClassifiers = true;
       // Mark each build as passing or failing.
-      for (var i = 0; i < $scope.cdash.builds.length; ++i) {
+      for (let i = 0; i < $scope.cdash.builds.length; ++i) {
         if (defect.builds.indexOf($scope.cdash.builds[i].id) === -1) {
           $scope.cdash.builds[i].success = true;
-        } else {
+        }
+        else {
           $scope.cdash.builds[i].success = false;
         }
       }
       // Send the builds back to our API, which will figure out what properties are
       // most informative in distinguishing between passing & failing.
-      var parameters = {
-        "builds[]": $scope.cdash.builds
+      const parameters = {
+        'builds[]': $scope.cdash.builds,
       };
       $http({
         url: 'api/v1/computeClassifier.php',
         method: 'GET',
-        params: parameters
-      }).then(function success(s) {
+        params: parameters,
+      }).then((s) => {
         defect.classifiers = s.data;
         defect.classifiersLoaded = true;
-      }, function error(e) {
+      }, (e) => {
         $scope.cdash.warning = e.data;
-      }).finally(function() {
+      }).finally(() => {
         defect.loadingClassifiers = false;
       });
     };
 
     $scope.pageChanged = function() {
-      var begin = (($scope.pagination.currentPage - 1) * $scope.pagination.numPerPage)
-      , end = begin + $scope.pagination.numPerPage;
+      const begin = (($scope.pagination.currentPage - 1) * $scope.pagination.numPerPage)
+        , end = begin + $scope.pagination.numPerPage;
       if (end > 0) {
         $scope.pagination.filteredDefects = $scope.cdash.defects.slice(begin, end);
-      } else {
+      }
+      else {
         $scope.pagination.filteredDefects = $scope.cdash.defects;
       }
     };
 
     $scope.numDefectsPerPageChanged = function() {
-      $.cookie("buildProperties_num_per_page", $scope.pagination.numPerPage, { expires: 365 });
+      $.cookie('buildProperties_num_per_page', $scope.pagination.numPerPage, { expires: 365 });
       $scope.pageChanged();
     };
 
@@ -445,4 +455,4 @@ CDash.controller('BuildPropertiesController',
       $scope.pageChanged();
       $.cookie('cdash_buildProperties_sort', $scope.orderByFields);
     };
-});
+  });

@@ -1,5 +1,5 @@
 CDash.controller('ViewUpdateController',
-  function ViewUpdateController($scope, $rootScope, $http, apiLoader) {
+  ($scope, $rootScope, $http, apiLoader) => {
     $scope.graphLoaded = false;
     $scope.graphLoading = false;
     $scope.showGraph = false;
@@ -18,9 +18,9 @@ CDash.controller('ViewUpdateController',
         url: 'api/v1/buildUpdateGraph.php',
         method: 'GET',
         params: {
-          buildid: $scope.cdash.build.buildid
-        }
-      }).then(function success(s) {
+          buildid: $scope.cdash.build.buildid,
+        },
+      }).then((s) => {
         $scope.initializeGraph(s.data);
         $scope.graphLoaded = true;
         $scope.graphLoading = false;
@@ -28,42 +28,42 @@ CDash.controller('ViewUpdateController',
     };
 
     $scope.initializeGraph = function(input) {
-      var options = {
+      const options = {
         lines: {show: true},
         points: {show: true},
-        xaxis: {mode: "time"},
+        xaxis: {mode: 'time'},
         grid: {
-          backgroundColor: "#fffaff",
+          backgroundColor: '#fffaff',
           clickable: true,
           hoverable: true,
           hoverFill: '#444',
-          hoverRadius: 4
+          hoverRadius: 4,
         },
-        selection: {mode: "x"},
-        colors: ["#0000FF", "#dba255", "#919733"]
+        selection: {mode: 'x'},
+        colors: ['#0000FF', '#dba255', '#919733'],
       };
 
-      $("#graph_holder").bind("selected", function (event, area) {
-        plot = $.plot($("#graph_holder"), [{
-          label: "Number of changed files",
-          data: input.data
+      $('#graph_holder').bind('selected', (event, area) => {
+        plot = $.plot($('#graph_holder'), [{
+          label: 'Number of changed files',
+          data: input.data,
         }], $.extend(true, {}, options, {xaxis: {min: area.x1, max: area.x2}}));
       });
 
-      $("#graph_holder").bind("plotclick", function (e, pos, item) {
+      $('#graph_holder').bind('plotclick', (e, pos, item) => {
         if (item) {
           plot.highlight(item.series, item.datapoint);
           buildid = input.buildids[item.datapoint[0]];
-          window.location = "build/" + buildid;
+          window.location = `build/${buildid}`;
         }
       });
 
-      plot = $.plot($("#graph_holder"), [{label: "Number of changed files", data: input.data}], options);
+      plot = $.plot($('#graph_holder'), [{label: 'Number of changed files', data: input.data}], options);
     };
-})
+  })
 
-.directive('updatedFiles', function(VERSION) {
-  return {
-    templateUrl: 'build/views/partials/updatedfiles_' + VERSION + '.html'
-  }
-});
+  .directive('updatedFiles', (VERSION) => {
+    return {
+      templateUrl: `build/views/partials/updatedfiles_${VERSION}.html`,
+    };
+  });
