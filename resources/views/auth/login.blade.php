@@ -9,6 +9,7 @@ $show_login_form = config('auth.username_password_authentication_enabled');
 
 @section('content')
 @include('cdash.header')
+@includeIf('local.login')
     <div id="message" style="color: green;"></div>
     <div style="margin-top:20px">
         <form method="post" action="login" name="loginform" id="loginform">
