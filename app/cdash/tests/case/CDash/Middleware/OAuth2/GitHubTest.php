@@ -33,7 +33,6 @@ class GitHubTest extends TestCase
     }
 
     /**
-     * @throws \ReflectionException
      * @throws IdentityProviderException
      */
     public function testGetEmail()

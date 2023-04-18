@@ -17,6 +17,10 @@ parameters:
             - app/cdash/tests/selenium/cdash_selenium_test_case.php
             - app/cdash/include/Collection/Collection.php
 
+    exceptions:
+    		check:
+    			  tooWideThrowType: true
+
     treatPhpDocTypesAsCertain: false
 
     level: 6

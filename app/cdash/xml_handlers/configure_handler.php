@@ -336,8 +336,6 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
 
     /**
      * @return BuildCollection
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      * TODO: consider refactoring into abstract_handler asap
      */
     public function GetBuildCollection()

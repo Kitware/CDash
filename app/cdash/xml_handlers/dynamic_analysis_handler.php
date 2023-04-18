@@ -329,8 +329,6 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
 
     /**
      * @return BuildCollection
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      * TODO: consider refactoring into abstract_handler asap
      */
     public function GetBuildCollection()

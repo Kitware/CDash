@@ -2234,7 +2234,6 @@ class Build
     /**
      * @param $message
      * @param $url
-     * @throws \Exception
      */
     private function NotifyPullRequest($message, $url)
     {

@@ -235,8 +235,6 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface,
 
     /**
      * @return BuildCollection
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      */
     public function GetBuildCollection()
     {

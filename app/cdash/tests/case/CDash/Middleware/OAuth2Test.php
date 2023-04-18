@@ -12,7 +12,6 @@ class OAuth2Test extends TestCase
 
 
     /**
-     * @throws ReflectionException
      * @throws IdentityProviderException
      */
     public function testSetEmail()
@@ -28,7 +27,6 @@ class OAuth2Test extends TestCase
 
 
     /**
-     * @throws ReflectionException
      * @throws IdentityProviderException
      */
     public function testGetPrimaryEmail()
