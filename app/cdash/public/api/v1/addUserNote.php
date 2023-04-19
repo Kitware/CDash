@@ -20,12 +20,12 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
 use CDash\Model\BuildUserNote;
+use Illuminate\Support\Facades\Auth;
 
 init_api_request();
 $response = array();
 
-$userid = get_userid_from_session();
-if (is_null($userid)) {
+if (!Auth::check()) {
     return;
 }
 
@@ -45,7 +45,7 @@ if (!isset($_REQUEST['AddNote']) || !isset($_REQUEST['Status']) ||
 // Add the note.
 $userNote = new BuildUserNote();
 $userNote->BuildId = $build->Id;
-$userNote->UserId = $userid;
+$userNote->UserId = Auth::id();
 $userNote->Note = $_REQUEST['AddNote'];
 $userNote->Status = $_REQUEST['Status'];
 $userNote->TimeStamp = gmdate(FMT_DATETIME);

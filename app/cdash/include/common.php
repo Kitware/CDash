@@ -31,12 +31,6 @@ use CDash\Model\Site;
 require_once 'include/log.php';
 
 
-// Emulate the old xslt library functions
-function xslt_create(): XSLTProcessor
-{
-    return new XSLTProcessor();
-}
-
 function xslt_process(XSLTProcessor $xsltproc,
     $xml_arg,
     $xsl_arg,
@@ -91,7 +85,7 @@ function generate_XSLT($xml, string $pageName): void
 {
     $config = Config::getInstance();
 
-    $xh = xslt_create();
+    $xh = new XSLTProcessor();
 
     $arguments = array(
         '/_xml' => $xml
@@ -1051,7 +1045,16 @@ function remove_build($buildid)
     // In order to avoid making the list of builds to delete too large
     // we delete them in batches (one batch per parent).
     foreach ($buildids as $parentid) {
-        remove_children($parentid);
+        $db = Database::getInstance();
+        $child_result = $db->executePrepared('SELECT id FROM build WHERE parentid=?', [intval($parentid)]);
+
+        $childids = [];
+        foreach ($child_result as $child_array) {
+            $childids[] = intval($child_array['id']);
+        }
+        if (!empty($childids)) {
+            remove_build($childids);
+        }
     }
 
     // Only delete the buildid at the end so that no other build can get it in the meantime
@@ -1084,23 +1087,6 @@ function delete_rows_chunked(string $query, array $ids): void
         $db->executePrepared("$query $chunk_prepared_array", $chunk);
         // Sleep for a microsecond to give other processes a chance.
         usleep(1);
-    }
-}
-
-/**
- * Remove any children of the given build.
- */
-function remove_children(int $parentid): void
-{
-    $db = Database::getInstance();
-    $child_result = $db->executePrepared('SELECT id FROM build WHERE parentid=?', [intval($parentid)]);
-
-    $childids = [];
-    foreach ($child_result as $child_array) {
-        $childids[] = intval($child_array['id']);
-    }
-    if (!empty($childids)) {
-        remove_build($childids);
     }
 }
 
