@@ -5706,11 +5706,6 @@ parameters:
 			path: app/cdash/app/Model/BuildUpdate.php
 
 		-
-			message: "#^Variable \\$child_buildids in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildUpdateFile.php
