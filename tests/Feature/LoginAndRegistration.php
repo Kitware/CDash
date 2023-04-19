@@ -41,7 +41,7 @@ class LoginAndRegistration extends TestCase
     {
         // Verify that the normal login form is shown by default.
         $response = $this->get('/login');
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertSeeText('Email:');
     }
 
@@ -93,7 +93,7 @@ class LoginAndRegistration extends TestCase
         // form is no longer displayed.
         config(['auth.username_password_authentication_enabled' => false]);
         $response = $this->get('/login');
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertDontSeeText('Email:');
     }
 
@@ -107,5 +107,23 @@ class LoginAndRegistration extends TestCase
             'password' => LoginAndRegistration::$password,
         ]);
         $this->assertGuest();
+    }
+
+    public function testLocalView() : void
+    {
+        // Verify that custom text does not appear when the local view is not in place.
+        $response = $this->get('/login');
+        $response->assertOk();
+        $response->assertDontSeeText('My custom text');
+
+        // Verify that the local/login.blade.php template is rendered if it exists.
+        $tmp_view_path = resource_path('views/local/login.blade.php');
+        file_put_contents($tmp_view_path, '<p>My custom text</p>');
+
+        $response = $this->get('/login');
+        $response->assertOk();
+        $response->assertSeeText('My custom text');
+
+        unlink($tmp_view_path);
     }
 }

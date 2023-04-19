@@ -1,0 +1,2 @@
+CDash will render the following custom blade templates if they are placed in this directory:
+* login.blade.php
