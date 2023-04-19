@@ -8,6 +8,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
@@ -90,5 +92,28 @@ class LoginController extends AbstractController
     public function redirectTo(): string
     {
         return  session('url.intended') ?? '/';
+    }
+
+    public static function saml2Login() : Response|RedirectResponse
+    {
+        if (config('saml2.enabled') === false) {
+            return response('SAML2 login is not enabled.', 500);
+        }
+
+        // Check if the saml2 table exists.
+        if (!Schema::hasTable('saml2_tenants')) {
+            return response('saml2_tenants table not found.', 500);
+        }
+
+        // Check if there is a row in the saml2_tenants table.
+        $saml2_tenants_row = DB::table('saml2_tenants')->first();
+        if ($saml2_tenants_row === null) {
+            return response('SAML2 tenant not found.', 500);
+        }
+
+        // Redirect to SAML2 login URL.
+        // Note that we currently one support one SAML2 IdP
+        // per CDash instance.
+        return redirect(saml_url('/viewProjects.php', $saml2_tenants_row->uuid));
     }
 }

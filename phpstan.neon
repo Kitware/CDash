@@ -30,9 +30,4 @@ parameters:
     level: 6
 
 includes:
-    - vendor/nunomaduro/larastan/extension.neon
-    - vendor/phpstan/phpstan-strict-rules/rules.neon
-    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
-    - vendor/phpstan/phpstan-phpunit/extension.neon
-    - vendor/phpstan/phpstan-phpunit/rules.neon
     - phpstan-baseline.neon

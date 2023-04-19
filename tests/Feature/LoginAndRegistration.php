@@ -2,9 +2,17 @@
 
 namespace Tests\Feature;
 
+use App\Listeners\Saml2Login as Saml2LoginListener;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
+use Mockery;
+use Slides\Saml2\Events\SignedIn as Saml2SignedInEvent;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
 
 class LoginAndRegistration extends TestCase
@@ -125,5 +133,119 @@ class LoginAndRegistration extends TestCase
         $response->assertSeeText('My custom text');
 
         unlink($tmp_view_path);
+    }
+
+    public function testSaml2() : void
+    {
+        // Verify that SAML2 login fails when disabled.
+        $response = $this->post('/saml2/login');
+        $response->assertStatus(500);
+        $response->assertSeeText('SAML2 login is not enabled');
+
+        // Verify that the SAML2 button doesn't appear by default.
+        $response = $this->get('/login');
+        $response->assertDontSeeText('SAML2');
+
+        // Enable SAML2, verify the button appears.
+        config(['saml2.enabled' => true]);
+        $response = $this->get('/login');
+        $response->assertSeeText('SAML2');
+
+        // Verify that changing button text works.
+        config(['saml2.login_text' => 'my custom login']);
+        $response = $this->get('/login');
+        $response->assertSeeText('my custom login');
+
+        // Verify that login fails without a saml2_tenant.
+        $response = $this->post('/saml2/login');
+        $response->assertStatus(500);
+        $response->assertSeeText('SAML2 tenant not found');
+
+        // Create a SAML2 tenant.
+        $saml_uuid = (string) Str::uuid();
+        $saml2_tenant_name = 'saml2_client_for_testing';
+        $saml2_tenant_uri = 'https://cdash.org/fake-saml2-idp/asdf';
+        $params = [
+            'uuid' => $saml_uuid,
+            'key' => $saml2_tenant_name,
+            'idp_entity_id' => $saml2_tenant_uri,
+            'idp_login_url' => "$saml2_tenant_uri/login",
+            'idp_logout_url' => "$saml2_tenant_uri/logout",
+            'idp_x509_cert' => base64_encode('asdf'),
+            'metadata' => '{}',
+            'name_id_format' => 'persistent'
+        ];
+        $saml2_tenant_id = DB::table('saml2_tenants')->insertGetId($params);
+
+        // Verify that SAML2 login redirects as expected.
+        $response = $this->post('/saml2/login');
+        $response->assertRedirectContains("/saml2/{$saml_uuid}/login?returnTo=");
+
+        // Delete SAML2 tenant.
+        DB::table('saml2_tenants')->delete($saml2_tenant_id);
+    }
+
+    /**
+     * Test SAML2 authentication
+     * @throws \LogicException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws HttpException
+     */
+    public function testSaml2LoginListener() : void
+    {
+        // Setup mock objects.
+        $mock_base_auth = Mockery::mock('OneLogin\Saml2\Auth');
+        $mock_base_auth->shouldReceive('getLastAssertionNotOnOrAfter')->andReturn(5);
+
+        $mock_saml2_auth = Mockery::mock('Slides\Saml2\Auth');
+        $mock_saml2_auth->shouldReceive('getLastMessageId')->andReturn('12345');
+        $mock_saml2_auth->shouldReceive('getBase')->andReturn($mock_base_auth);
+
+        $mock_saml2_user = Mockery::mock('Slides\Saml2\Saml2User');
+        $mock_saml2_user->shouldReceive('getUserId')->andReturn('logintestsaml@user.com');
+
+        // Create event and listener.
+        $event = new Saml2SignedInEvent($mock_saml2_user, $mock_saml2_auth);
+        $sut = new Saml2LoginListener();
+
+        // Verify replay attack protection.
+        $e = null;
+        Cache::put('saml-message-id-12345', true, 5);
+        try {
+            $sut->handle($event);
+        } catch (\Throwable $e) {
+        }
+        self::assertEquals(new HttpException(400, 'Invalid SAML2 message ID'), $e);
+        Cache::delete('saml-message-id-12345');
+
+        // Verify unknown user case.
+        config(['saml2.autoregister_new_users' => false]);
+        try {
+            $sut->handle($event);
+        } catch (\Throwable $e) {
+        }
+        self::assertEquals(new HttpException(401), $e);
+        Cache::delete('saml-message-id-12345');
+
+        // Verify automatic registration.
+        config(['saml2.autoregister_new_users' => true]);
+        $sut->handle($event);
+        $user = User::where('email', 'logintestsaml@user.com')->first();
+        $this->assertModelExists($user);
+        $this->assertAuthenticatedAs($user);
+        Cache::delete('saml-message-id-12345');
+
+        // Verify regular SAML2 login.
+        Auth::logout();
+        $this->assertGuest();
+        config(['saml2.autoregister_new_users' => false]);
+        $sut->handle($event);
+        $this->assertAuthenticatedAs($user);
+        Cache::delete('saml-message-id-12345');
+
+        // Delete user created by this test.
+        $user->delete();
+
+        Mockery::close();
     }
 }
