@@ -30,7 +30,7 @@
     "d3": "^3.5.17",
     "del": "^2.2.0",
     "eslint": "^7.25.0",
-    "eslint-plugin-vue": "^7.9.0",
+    "eslint-plugin-vue": "^9.11.0",
     "eslint-webpack-plugin": "^2.5.4",
     "flot": "^4.2.3",
     "git-revision-webpack-plugin": "^3.0.6",
