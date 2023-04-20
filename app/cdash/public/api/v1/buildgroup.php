@@ -31,12 +31,13 @@ init_api_request();
 
 if (array_key_exists('projectid', $_REQUEST)) {
     $projectid = pdo_real_escape_numeric($_REQUEST['projectid']);
-    if (!can_administrate_project($projectid)) {
-        return;
-    }
 } else {
     $project = get_project_from_request();
     $projectid = $project->Id;
+}
+
+if (!can_administrate_project($projectid)) {
+    return;
 }
 
 $pdo = get_link_identifier()->getPdo();
