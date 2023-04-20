@@ -15,6 +15,7 @@
 =========================================================================*/
 require_once 'include/pdo.php';
 require_once 'include/common.php';
+require_once 'include/api_common.php';
 
 use CDash\Database;
 
@@ -35,6 +36,10 @@ $buildname = $build['name'];
 $siteid = intval($build['siteid']);
 $starttime = $build['starttime'];
 $projectid = intval($build['projectid']);
+
+if (!can_access_project($projectid)) {
+    return 'You do not have permission to view this project.';
+}
 
 $project = $db->executePreparedSingleRow('SELECT name FROM project WHERE id=?', [$projectid]);
 

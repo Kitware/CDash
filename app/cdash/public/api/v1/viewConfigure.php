@@ -38,8 +38,14 @@ $project = new Project();
 $project->Id = $build->ProjectId;
 $project->Fill();
 
-$date = TestingDay::get($project, $build->StartTime);
 $response = begin_JSON_response();
+if (!can_access_project($project->Id)) {
+    $response['error'] = 'You do not have permission to view this project.';
+    echo json_encode($response);
+    return;
+}
+
+$date = TestingDay::get($project, $build->StartTime);
 get_dashboard_JSON($project->Name, $date, $response);
 $response['title'] = "$project->Name : Configure";
 

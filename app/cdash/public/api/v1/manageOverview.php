@@ -18,6 +18,7 @@ namespace CDash\Api\v1\ManageOverview;
 
 require_once 'include/pdo.php';
 include_once 'include/common.php';
+include_once 'include/api_common.php';
 
 use App\Services\PageTimer;
 use CDash\Database;
@@ -59,12 +60,12 @@ if (!$projectid_ok) {
 $Project = new Project();
 $Project->Id = $projectid;
 
-// Make sure the user has admin rights to this project.
-get_dashboard_JSON($Project->GetName(), null, $response);
-if ($response['user']['admin'] != 1) {
+if (!can_administrate_project($Project->Id)) {
     $response['error'] = "You don't have the permissions to access this page";
     return json_encode($response);
 }
+// Make sure the user has admin rights to this project.
+get_dashboard_JSON($Project->GetName(), null, $response);
 
 $db = Database::getInstance();
 

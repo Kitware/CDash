@@ -58,6 +58,11 @@ if (!can_access_project($build->ProjectId)) {
 $project = new Project();
 $project->Id = $build->ProjectId;
 $project->Fill();
+if (!can_access_project($project->Id)) {
+    $response['error'] = 'You do not have permission to view this project.';
+    echo json_encode($response);
+    return;
+}
 
 $date = TestingDay::get($project, $build->StartTime);
 $response = begin_JSON_response();

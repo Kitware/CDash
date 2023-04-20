@@ -18,6 +18,7 @@ namespace CDash\Api\v1\ManageSubProject;
 
 require_once 'include/pdo.php';
 include_once 'include/common.php';
+include_once 'include/api_common.php';
 
 use App\Services\PageTimer;
 use CDash\Model\Project;
@@ -45,6 +46,12 @@ $userid = $user->id;
 
 // List the available projects that this user has admin rights to.
 $projectid = intval($_GET['projectid'] ?? 0);
+
+if (!can_access_project($projectid)) {
+    $response['error'] = 'You do not have permission to view this project.';
+    echo json_encode($response);
+    return;
+}
 
 $sql = 'SELECT id,name FROM project';
 $params = [];

@@ -20,6 +20,7 @@ use CDash\Database;
 
 require_once 'include/pdo.php';
 require_once 'include/common.php';
+require_once 'include/api_common.php';
 
 $projectid = $_GET['projectid'];
 $project = new Project();
@@ -33,7 +34,7 @@ $testname = htmlspecialchars($_GET['testname']);
 $starttime = $_GET['starttime'];
 @$zoomout = $_GET['zoomout'];
 
-if (!isset($projectid) || !is_numeric($projectid)) {
+if (!isset($projectid) || !is_numeric($projectid) || !can_access_project($projectid)) {
     echo 'Not a valid projectid!';
     return;
 }

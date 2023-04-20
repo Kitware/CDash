@@ -53,7 +53,7 @@ if ($policy !== true) {
 }
 
 $project = $db->executePreparedSingleRow('SELECT name, showcoveragecode FROM project WHERE id=?', [$projectid]);
-if (empty($project)) {
+if (empty($project) || !can_access_project($projectid)) {
     echo "This project doesn't exist.";
     exit();
 }

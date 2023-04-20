@@ -17,6 +17,7 @@
 namespace CDash\Api\v1\CreateProject;
 
 require_once 'include/common.php';
+require_once 'include/api_common.php';
 require_once 'include/pdo.php';
 
 use App\Services\PageTimer;
@@ -53,7 +54,7 @@ $projectid = null;
 if (isset($_GET['projectid'])) {
     // Make sure projectid is valid if one was specified.
     $Project->Id = $projectid = $_GET['projectid'];
-    if (!$Project->Exists()) {
+    if (!$Project->Exists() || !can_access_project($Project->Id)) {
         $response['error'] = 'This project does not exist.';
         echo json_encode($response);
         return;
