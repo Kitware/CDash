@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash;
 
+use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 use PDO;
 use PDOException;
@@ -36,12 +37,13 @@ class Database extends Singleton
     /**
      * Get the underlying PDO object or false if it cannot be created.
      * @return PDO
+     *
+     * @deprecated 04/22/2023  Use Laravel query builder or Eloquent instead
      */
     public function getPdo()
     {
         if (!$this->pdo) {
-            $db = app()->make('db');
-            $pdo = $db->getPdo();
+            $pdo = DB::connection()->getPdo();
 
             // The best of a number of bad  solutions. Essentially if a SQL statement
             // contains the same token more than once, e.g.:
@@ -62,6 +64,8 @@ class Database extends Singleton
      * @param \PDOStatement $stmt
      * @param null $input_parameters
      * @return bool
+     *
+     * @deprecated 04/22/2023  Use Laravel query builder or Eloquent instead
      */
     public function execute(\PDOStatement $stmt, $input_parameters = null)
     {
@@ -78,6 +82,8 @@ class Database extends Singleton
      * @param \PDOStatement $stmt
      * @param null $input_parameters
      * @return string
+     *
+     * @deprecated 04/22/2023  Use Laravel query builder or Eloquent instead
      */
     public function insert(\PDOStatement $stmt, $input_parameters = null)
     {
@@ -90,6 +96,8 @@ class Database extends Singleton
      * @param $sql
      * @param array $options
      * @return bool|\PDOStatement
+     *
+     * @deprecated 04/22/2023  Use Laravel query builder or Eloquent instead
      */
     public function prepare($sql, array $options = [])
     {
@@ -103,6 +111,8 @@ class Database extends Singleton
     /**
      * @param $sql
      * @return bool|\PDOStatement
+     *
+     * @deprecated 04/22/2023  Use Laravel query builder or Eloquent instead
      */
     public function query($sql)
     {
@@ -129,6 +139,8 @@ class Database extends Singleton
      * Takes a SQL string and parameters, and returns the result of the query.
      * This function effectively combines prepare(), execute(), and fetch() in one function.
      * Returns an empty array if no rows were returned, and false on failure.
+     *
+     * @deprecated 04/22/2023  Use Laravel query builder or Eloquent instead
      */
     public function executePrepared(string $sql, ?array $params = null): array|false
     {
@@ -140,6 +152,8 @@ class Database extends Singleton
     /**
      * Similar to executePrepared(), except that only one row is returned (if applicable).
      * Returns false on failure.
+     *
+     * @deprecated 04/22/2023  Use Laravel query builder or Eloquent instead
      */
     public function executePreparedSingleRow(string $sql, ?array $params = null): array|null|false
     {
