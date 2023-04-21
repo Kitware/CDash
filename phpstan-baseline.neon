@@ -9144,21 +9144,6 @@ parameters:
 			path: app/cdash/include/Messaging/Notification/Email/Mail.php
 
 		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:addEmail\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/Mail.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:getEmails\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/Mail.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:send\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/Mail.php
-
-		-
 			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:send\\(\\) throws checked exception Symfony\\\\Component\\\\Mailer\\\\Exception\\\\TransportExceptionInterface but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/Mail.php
@@ -9170,11 +9155,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:setRecipient\\(\\) has parameter \\$recipient with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/Mail.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:to\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/Mail.php
 
@@ -9195,11 +9175,6 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/Mail.php
-
-		-
-			message: "#^Property CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:\\$defaultReplyTo has no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/Mail.php
 
@@ -9229,11 +9204,6 @@ parameters:
 			path: app/cdash/include/Messaging/Notification/Email/Mail.php
 
 		-
-			message: "#^Undefined variable\\: \\$dsn$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/Mail.php
-
-		-
 			message: "#^Variable \\$email might not be defined\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/Mail.php
@@ -9249,7 +9219,7 @@ parameters:
 			path: app/cdash/include/Messaging/Notification/Mailer.php
 
 		-
-			message: "#^Only booleans are allowed in a ternary operator condition, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$message of method CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:send\\(\\) expects CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage, CDash\\\\Messaging\\\\Notification\\\\NotificationInterface given\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Mailer.php
 
