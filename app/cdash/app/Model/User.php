@@ -53,7 +53,7 @@ class User
     }
 
     /** Return if the user is admin */
-    public function IsAdmin()
+    public function IsAdmin(): bool
     {
         if (!$this->Id || !is_numeric($this->Id)) {
             return false;
@@ -205,7 +205,7 @@ class User
     }
 
     /** Get the user id from the name */
-    public function GetIdFromName($name)
+    public function GetIdFromName($name): int|false
     {
         $stmt = $this->PDO->prepare(
             "SELECT id FROM $this->TableName
@@ -219,7 +219,7 @@ class User
         if (!$row) {
             return false;
         }
-        return $row['id'];
+        return intval($row['id']);
     }
 
     /** Get the user id from the email */

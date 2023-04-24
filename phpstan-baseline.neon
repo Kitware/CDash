@@ -211,11 +211,6 @@ parameters:
 			path: app/Http/Controllers/Auth/VerificationController.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/AuthTokenController.php
-
-		-
 			message: "#^Call to function is_numeric\\(\\) with int will always evaluate to true\\.$#"
 			count: 1
 			path: app/Http/Controllers/AuthTokenController.php
@@ -1235,11 +1230,6 @@ parameters:
 			message: "#^Property App\\\\Services\\\\PageTimer\\:\\:\\$start has no type specified\\.$#"
 			count: 1
 			path: app/Services/PageTimer.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
-			count: 2
-			path: app/Services/ProjectPermissions.php
 
 		-
 			message: "#^Access to an undefined property App\\\\Models\\\\BuildTest\\:\\:\\$measurements\\.$#"
@@ -6952,11 +6942,6 @@ parameters:
 			path: app/cdash/app/Model/PendingSubmissions.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
@@ -8304,11 +8289,6 @@ parameters:
 			path: app/cdash/app/Model/User.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\User\\:\\:GetIdFromName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\User\\:\\:GetIdFromName\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/User.php
@@ -8325,11 +8305,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\User\\:\\:GetRepositoryCredentials\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\User\\:\\:IsAdmin\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/User.php
 
@@ -8427,11 +8402,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between string and false will always evaluate to false\\.$#"
 			count: 1
 			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/UserProject.php
 
 		-
 			message: """
@@ -11447,11 +11417,6 @@ parameters:
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 1
 			path: app/cdash/include/cdashmail.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
 
 		-
 			message: "#^Call to an undefined method Archive_Tar\\:\\:setErrorHandling\\(\\)\\.$#"
@@ -15868,11 +15833,6 @@ parameters:
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/createProject.php
-
-		-
 			message: "#^Call to static method App\\\\Services\\\\ProjectPermissions\\:\\:userCanEditProject\\(\\) with incorrect case\\: UserCanEditProject$#"
 			count: 1
 			path: app/cdash/public/api/v1/createProject.php
@@ -16165,11 +16125,6 @@ parameters:
 			path: app/cdash/public/api/v1/index.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
 			message: """
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
@@ -16255,11 +16210,6 @@ parameters:
 			"""
 			count: 1
 			path: app/cdash/public/api/v1/manageOverview.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageSubProject.php
 
 		-
 			message: """
@@ -17239,11 +17189,6 @@ parameters:
 			path: app/cdash/public/login.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/public/manageBanner.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/cdash/public/manageBanner.php
@@ -17259,27 +17204,12 @@ parameters:
 			path: app/cdash/public/manageBanner.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:GetIdFromName\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/public/manageCoverage.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/public/manageCoverage.php
-
-		-
 			message: "#^Foreach overwrites \\$userid with its value variable\\.$#"
 			count: 2
 			path: app/cdash/public/manageCoverage.php
 
 		-
 			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$Id\\.$#"
-			count: 1
-			path: app/cdash/public/manageProjectRoles.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:GetEmail\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/public/manageProjectRoles.php
 
@@ -17531,11 +17461,6 @@ parameters:
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: app/cdash/public/submit.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Models\\\\User\\:\\:IsAdmin\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/public/subscribeProject.php
 
 		-
 			message: """
