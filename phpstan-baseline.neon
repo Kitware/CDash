@@ -4453,14 +4453,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method add_log\\(\\) of class CDash\\\\Log\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 5
-			path: app/cdash/app/Model/BuildEmail.php
-
-		-
-			message: """
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -9460,14 +9452,6 @@ parameters:
 			path: app/cdash/include/CDash/Config.php
 
 		-
-			message: """
-				#^Call to deprecated method error\\(\\) of class CDash\\\\Log\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 1
-			path: app/cdash/include/CDash/Database.php
-
-		-
 			message: "#^Method CDash\\\\Database\\:\\:createPreparedArray\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Database.php
@@ -9521,71 +9505,6 @@ parameters:
 			message: "#^Only booleans are allowed in a negated boolean, PDO given\\.$#"
 			count: 2
 			path: app/cdash/include/CDash/Database.php
-
-		-
-			message: "#^Method CDash\\\\Log\\:\\:add_log\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Log.php
-
-		-
-			message: "#^Method CDash\\\\Log\\:\\:add_log\\(\\) has parameter \\$buildId with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Log.php
-
-		-
-			message: "#^Method CDash\\\\Log\\:\\:add_log\\(\\) has parameter \\$function with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Log.php
-
-		-
-			message: "#^Method CDash\\\\Log\\:\\:add_log\\(\\) has parameter \\$level with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Log.php
-
-		-
-			message: "#^Method CDash\\\\Log\\:\\:add_log\\(\\) has parameter \\$message with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Log.php
-
-		-
-			message: "#^Method CDash\\\\Log\\:\\:add_log\\(\\) has parameter \\$projectId with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Log.php
-
-		-
-			message: "#^Method CDash\\\\Log\\:\\:add_log\\(\\) has parameter \\$resourceId with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Log.php
-
-		-
-			message: "#^Method CDash\\\\Log\\:\\:add_log\\(\\) has parameter \\$resourceType with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Log.php
-
-		-
-			message: "#^Method CDash\\\\Log\\:\\:debug\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Log.php
-
-		-
-			message: "#^Method CDash\\\\Log\\:\\:error\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Log.php
-
-		-
-			message: "#^Method CDash\\\\Log\\:\\:info\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Log.php
-
-		-
-			message: "#^Method CDash\\\\Log\\:\\:write\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Log.php
-
-		-
-			message: "#^Method CDash\\\\Log\\:\\:write\\(\\) has parameter \\$level with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Log.php
 
 		-
 			message: "#^Method CDash\\\\ServiceContainer\\:\\:create\\(\\) has parameter \\$class_name with no type specified\\.$#"
@@ -9748,26 +9667,6 @@ parameters:
 			path: app/cdash/include/CDash/System.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\Log\\:\\:getLogEntries\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Test/Log.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\Log\\:\\:write\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Test/Log.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\Log\\:\\:write\\(\\) has parameter \\$level with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Test/Log.php
-
-		-
-			message: "#^Property CDash\\\\Test\\\\Log\\:\\:\\$log type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Test/Log.php
-
-		-
 			message: "#^Method CDash\\\\Collection\\\\BuildCollection\\:\\:add\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Collection/BuildCollection.php
@@ -9926,14 +9825,6 @@ parameters:
 			message: "#^Property CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage\\:\\:\\$body \\(string\\) does not accept CDash\\\\Messaging\\\\Notification\\\\Email\\\\Decorator\\\\DecoratorInterface\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/EmailMessage.php
-
-		-
-			message: """
-				#^Call to deprecated method add_log\\(\\) of class CDash\\\\Log\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 2
-			path: app/cdash/include/Messaging/Notification/Email/Mail.php
 
 		-
 			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:send\\(\\) throws checked exception Symfony\\\\Component\\\\Mailer\\\\Exception\\\\TransportExceptionInterface but it's missing from the PHPDoc @throws tag\\.$#"
@@ -19913,80 +19804,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/LinkifyCompilerOutputTest.php
 
 		-
-			message: "#^Access to an undefined property LogTest\\:\\:\\$log\\.$#"
-			count: 5
-			path: app/cdash/tests/case/CDash/LogTest.php
-
-		-
-			message: "#^Call to an undefined method Psr\\\\Log\\\\LoggerInterface\\:\\:getHandlers\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/LogTest.php
-
-		-
-			message: """
-				#^Call to deprecated method debug\\(\\) of class CDash\\\\Log\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 1
-			path: app/cdash/tests/case/CDash/LogTest.php
-
-		-
-			message: """
-				#^Call to deprecated method error\\(\\) of class CDash\\\\Log\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 1
-			path: app/cdash/tests/case/CDash/LogTest.php
-
-		-
-			message: """
-				#^Call to deprecated method info\\(\\) of class CDash\\\\Log\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 1
-			path: app/cdash/tests/case/CDash/LogTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/LogTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/LogTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertStringContainsString\\(\\)\\.$#"
-			count: 6
-			path: app/cdash/tests/case/CDash/LogTest.php
-
-		-
-			message: "#^Method LogTest\\:\\:testDebug\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/LogTest.php
-
-		-
-			message: "#^Method LogTest\\:\\:testError\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/LogTest.php
-
-		-
-			message: "#^Method LogTest\\:\\:testInfo\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/LogTest.php
-
-		-
-			message: "#^Method LogTest\\:\\:testInstance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/LogTest.php
-
-		-
-			message: "#^Method LogTest\\:\\:testInstance\\(\\) throws checked exception ReflectionException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/LogTest.php
-
-		-
 			message: "#^Call to method send\\(\\) on an unknown class CDash\\\\Messaging\\\\Messenger\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
@@ -22223,59 +22040,6 @@ parameters:
 			message: "#^Property class@anonymous/app/cdash/tests/case/CDash/Submission/CommitAuthorHandlerTraitTest\\.php\\:31\\:\\:\\$Builds has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Submission/CommitAuthorHandlerTraitTest.php
-
-		-
-			message: """
-				#^Call to deprecated method error\\(\\) of class CDash\\\\Log\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 2
-			path: app/cdash/tests/case/CDash/Test/LogTest.php
-
-		-
-			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'CDash\\\\\\\\Log' and CDash\\\\Test\\\\Log will always evaluate to true\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Test/LogTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Test/LogTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEmpty\\(\\)\\.$#"
-			count: 3
-			path: app/cdash/tests/case/CDash/Test/LogTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/Test/LogTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Test/LogTest.php
-
-		-
-			message: "#^Method LogTest\\:\\:testClear\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Test/LogTest.php
-
-		-
-			message: "#^Method LogTest\\:\\:testInstance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Test/LogTest.php
-
-		-
-			message: "#^Method LogTest\\:\\:testWrite\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Test/LogTest.php
-
-		-
-			message: "#^Offset 0 does not exist on array\\{\\}\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/Test/LogTest.php
 
 		-
 			message: "#^Access to property \\$details on an unknown class Test\\.$#"

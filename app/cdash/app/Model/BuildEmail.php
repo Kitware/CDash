@@ -18,9 +18,9 @@ namespace CDash\Model;
 
 use CDash\Collection\BuildEmailCollection;
 use CDash\Database;
-use CDash\Log;
 use CDash\Messaging\Notification\Email\EmailMessage;
 use CDash\Messaging\Notification\NotificationInterface;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BuildEmail
@@ -63,11 +63,10 @@ class BuildEmail
      */
     public static function Log(NotificationInterface $notification, $sent)
     {
-        $log = Log::getInstance();
         if (config('app.debug')) {
-            $log->add_log($notification->getRecipient(), 'TESTING: EMAIL', LOG_DEBUG);
-            $log->add_log($notification->getSubject(), 'TESTING: EMAILTITLE', LOG_DEBUG);
-            $log->add_log($notification->getBody(), 'TESTING: EMAILBODY', LOG_DEBUG);
+            Log::debug($notification->getRecipient());
+            Log::debug($notification->getSubject());
+            Log::debug($notification->getBody());
         } else {
             $status = $sent ? 'SENT' : 'NOT SENT';
             $class_name = get_class($notification);
@@ -77,7 +76,7 @@ class BuildEmail
             $title = $notification->getSubject();
             $recipient = $notification->getRecipient();
             $message = "[{$status}] {$notification_type} titled, '{$title}' to {$recipient}";
-            $log->add_log($message, 'BuildEmail::SaveNotification');
+            Log::info($message);
         }
     }
 
@@ -145,7 +144,7 @@ class BuildEmail
         if (!empty($missing)) {
             $missing_str = implode(', ', $missing);
             $msg = "Missing: {$missing_str}; cannot save BuildEmail for {$this->Email}.";
-            Log::getInstance()->add_log($msg, __FUNCTION__);
+            Log::info($msg);
             return false;
         }
 

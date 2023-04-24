@@ -16,7 +16,6 @@
 
 namespace CDash\Messaging\Notification;
 
-use CDash\Log;
 use CDash\Messaging\Notification\Email\EmailMessage;
 use CDash\Messaging\Notification\Email\Mail;
 use CDash\Model\BuildEmail;

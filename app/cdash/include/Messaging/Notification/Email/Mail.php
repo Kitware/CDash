@@ -16,12 +16,12 @@
 
 namespace CDash\Messaging\Notification\Email;
 
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Transport\SendmailTransport;
 use Symfony\Component\Mime\Email;
 
-use CDash\Log;
 use CDash\Singleton;
 
 class Mail extends Singleton
@@ -87,15 +87,13 @@ class Mail extends Singleton
                 ->subject($message->getSubject())
                 ->text($message->getBody());
         } catch (\Exception $e) {
-            $log = Log::getInstance();
-            $log->add_log($e->getMessage(), __METHOD__);
+            Log::info($e->getMessage());
         }
 
         try {
             $mailer->send($email);
         } catch (\Exception $e) {
-            $log = Log::getInstance();
-            $log->add_log($e->getMessage(), __METHOD__);
+            Log::info($e->getMessage());
         }
     }
 
