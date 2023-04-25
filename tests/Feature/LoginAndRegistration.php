@@ -20,6 +20,8 @@ class LoginAndRegistration extends TestCase
     protected static string $email = 'logintest@user.com';
     protected static string $password = '54321';
 
+    protected static string $blockedEmail = 'disabledRegistration@user.com';
+
     protected function setUp() : void
     {
         parent::setUp();
@@ -247,5 +249,35 @@ class LoginAndRegistration extends TestCase
         $user->delete();
 
         Mockery::close();
+    }
+
+    public function testRegisterUserWhenDisabled() : void
+    {
+        // Create a user by sending proper data
+
+        config(['auth.user_registration_form_enabled' => false]);
+        $post_data = [
+            'fname' => 'Test',
+            'lname' => 'User',
+            'email' => LoginAndRegistration::$blockedEmail,
+            'password' => LoginAndRegistration::$password,
+            'password_confirmation' => LoginAndRegistration::$password,
+            'institution' => 'home',
+            'sent' => 'Register',
+            'url' => 'catchbot',
+        ];
+        $this->post(route('register'), $post_data);
+
+        // Verify that nothing was added to the database
+        $this->assertDatabaseMissing('user', ['email' => LoginAndRegistration::$blockedEmail]);
+    }
+
+    public function testDisabledRegistrationForm() : void
+    {
+        // Disable username+password authentication and verify that the
+        // form is no longer displayed.
+        config(['auth.user_registration_form_enabled' => false]);
+        $response = $this->get('/register');
+        $response->assertStatus(404);
     }
 }
