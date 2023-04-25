@@ -24,6 +24,7 @@ https://my.cdash.org.
 If you'd prefer to install your own CDash server, please follow one of these guides:
 * [Installation guide](docs/install.md)
 * [Docker instructions](docs/docker.md)
+* [More documentation](docs/README.md)
 
 ## Development
 
