@@ -15,7 +15,7 @@ RUN apt-get update                                                         \
  && curl -fsSL https://deb.nodesource.com/setup_19.x | bash                \
  && apt-get install -y apt-utils git libbz2-dev libfreetype6-dev           \
     libjpeg62-turbo-dev libldap2-dev libmcrypt-dev libpng-dev libpq-dev    \
-    libxslt-dev libxss1 nodejs unzip wget zip                              \
+    libxslt-dev libxss1 nodejs unzip vim wget zip                          \
  && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql           \
  && docker-php-ext-configure gd --with-freetype=/usr/include/              \
                                 --with-jpeg=/usr/include/                  \
