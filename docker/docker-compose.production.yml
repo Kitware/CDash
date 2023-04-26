@@ -27,7 +27,7 @@ services:
     links:
       - mysql
     ports:
-     - "8080:80"
+     - "8443:443"
     environment:
       QUEUE_CONNECTION: database
       CDASH_ROOT_ADMIN_PASS: secret
@@ -35,6 +35,12 @@ services:
       - type: volume
         source: storage
         target: /home/kitware/cdash/storage
+      - type: volume
+        source: ${SSL_CERTIFICATE_FILE}
+        target: /etc/ssl/certs/mycert.crt
+      - type: volume
+        source: ${SSL_CERTIFICATE_KEY_FILE}
+        target: /etc/ssl/private/mycert.key
 
   worker:
     image: "kitware/cdash-worker"
