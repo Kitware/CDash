@@ -1,25 +1,8 @@
 #!/usr/bin/env bash
 
-cdash_environment() {
-  local environment
-
-  environment="$1"; shift
-
-  echo "Linking compose file docker/docker-compose.${environment}.yml ..."
-  ln -fs "./docker/docker-compose.${environment}.yml" ./docker-compose.local.yml
-}
-
 cdash_build_image() {
   docker-compose -f ./docker-compose.local.yml build --force-rm --no-cache common
   docker-compose -f ./docker-compose.local.yml build --force-rm --no-cache cdash
-}
-
-cdash_start_docker_services() {
-  docker-compose -f ./docker-compose.local.yml up -d
-}
-
-cdash_stop_docker_services() {
-  docker-compose -f ./docker-compose.local.yml down
 }
 
 cdash_wait_for_ready() {

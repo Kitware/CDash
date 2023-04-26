@@ -43,12 +43,6 @@ local_service_setup() {
 
 setup_local_config() {
     (
-        echo "DB_HOST=mysql"
-        echo "DB_NAME=cdash"
-        echo "DB_TYPE=mysql"
-        echo "DB_LOGIN=root"
-        echo "DB_PASS="
-
         if [ '!' -z ${CDASH_CONFIG+x} ] ; then
             # Drop old formatting for PHP values by removing "$" or ";"
             sed 's/[$;]//g' <<< "$CDASH_CONFIG"

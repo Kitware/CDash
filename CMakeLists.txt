@@ -40,21 +40,6 @@ endif()
 # turn the CDash into one that can be tested
 set(testing_dir "${CDash_SOURCE_DIR}/app/cdash/tests")
 set(laravel_testing_dir "${CDash_SOURCE_DIR}/tests")
-file(WRITE "${testing_dir}/config.test.local.php"
-"<?php
-$configure = array(
-  'urlwebsite'       => '${CDASH_TESTING_URL}',
-  'webserver'        => 'http://${CDASH_SERVER}/',
-  'webpath'          => '/${CDASH_DIR_NAME}',
-  'outputdirectory'  => '${CDash_BINARY_DIR}/tmp',
-  'type'             => 'Nightly',
-  'site'             => '${CDASH_SITE}',
-  'buildname'        => '${CDASH_BUILD_NAME}',
-  'cdash'            => 'http://www.cdash.org/CDash',
-  'svnroot'          => '${CDash_SOURCE_DIR}',
-  );
-?>
-")
 
 if(NOT CDASH_DB_TYPE)
   set(CDASH_DB_TYPE "mysql")
@@ -64,6 +49,10 @@ set(CDASH_COVERAGE_DIR "${CDash_BINARY_DIR}/xdebugCoverage")
 make_directory("${CDASH_COVERAGE_DIR}")
 configure_file(${testing_dir}/prepend_coverage.php.in
                ${CDash_BINARY_DIR}/prepend_coverage.php)
+
+
+# Any tests which need to perform file I/O write files here
+make_directory("/tmp/CDashTesting")
 
 # For coverage builds on apache web servers, provide a default
 # .htaccess file, but only if explicitly asked to:
@@ -81,43 +70,6 @@ find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php)
 if(CDASH_USE_SELENIUM)
   find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php vendor/bin)
 endif(CDASH_USE_SELENIUM)
-
-# Generate .env
-# Start with values from our CMake cache variables.
-file(WRITE ${CMAKE_SOURCE_DIR}/.env
-"
-APP_DEBUG=true
-APP_LOG_LEVEL=debug
-APP_TIMEZONE=America/New_York
-APP_URL=${CDASH_TESTING_URL}
-DB_CONNECTION=${CDASH_DB_TYPE}
-DB_DATABASE=cdash4simpletest
-DB_HOST=${CDASH_DB_HOST}
-DB_PASSWORD=${CDASH_DB_PASS}
-DB_USERNAME=${CDASH_DB_LOGIN}
-REGISTRATION_EMAIL_VERIFY=false
-
-CDASH_COVERAGE_DIR = '${CDASH_COVERAGE_DIR}'
-PHP_EXE = '${PHP_EXE}'
-PHPUNIT_EXE = '${PHPUNIT_EXE}'
-CDASH_DEFAULT_GIT_DIRECTORY = '${CDash_BINARY_DIR}'
-")
-
-# Next copy in the contents from our example file.
-file(READ ${CMAKE_SOURCE_DIR}/.env.example _example_contents)
-file(APPEND ${CMAKE_SOURCE_DIR}/.env "${_example_contents}")
-
-# Generate an application key.
-execute_process(
-  COMMAND ${PHP_EXE} artisan key:generate
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-
-# Migrate any lingering settings
-execute_process(
-  COMMAND ${PHP_EXE} artisan config:migrate
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
 
 # add the new tests directory
 add_subdirectory(tests)

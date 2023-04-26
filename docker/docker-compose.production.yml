@@ -1,68 +1,11 @@
-version: '3.3'
 services:
-  common:
-    image: kitware/cdash_common
-    build:
-      context: .
-      dockerfile: ./docker/common.docker
-      args:
-        - CDASH_DB_HOST=mysql
-    volumes:
-      - type: volume
-        source: storage
-        target: /home/kitware/cdash/storage
-    profiles:
-      - donotstart
-
   cdash:
-    image: "kitware/cdash"
-    container_name: cdash
-    build:
-      context: .
-      dockerfile: ./docker/cdash.docker
-      args:
-        - CDASH_DB_HOST=mysql
-    depends_on:
-      - mysql
-    links:
-      - mysql
     ports:
-     - "8080:80"
-    environment:
-      QUEUE_CONNECTION: database
-      CDASH_ROOT_ADMIN_PASS: secret
+      - 443:443
     volumes:
       - type: volume
-        source: storage
-        target: /home/kitware/cdash/storage
-
-  worker:
-    image: "kitware/cdash-worker"
-    environment:
-      CDASH_ROOT_ADMIN_PASS: secret
-      CDASH_REMOTE_PROCESSOR: 1
-      QUEUE_CONNECTION: database
-    build:
-      context: .
-      dockerfile: ./docker/cdash-worker.docker
-      args:
-        - CDASH_DB_HOST=mysql
-    deploy:
-      replicas: 1
-    depends_on:
-      - mysql
-      - cdash
-    volumes:
+        source: ${SSL_CERTIFICATE_FILE}
+        target: /etc/ssl/certs/mycert.crt
       - type: volume
-        source: storage
-        target: /home/kitware/cdash/storage
-
-  mysql:
-    image: "mysql/mysql-server:5.7"
-    environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-      MYSQL_ROOT_PASSWORD: ''
-      MYSQL_DATABASE: 'cdash'
-      MYSQL_ROOT_HOST: '%'
-volumes:
-  storage:
+        source: ${SSL_CERTIFICATE_KEY_FILE}
+        target: /etc/ssl/private/mycert.key

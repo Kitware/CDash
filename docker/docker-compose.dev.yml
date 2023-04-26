@@ -1,0 +1,26 @@
+services:
+  cdash:
+    ports:
+      - 8080:80
+    depends_on:
+      - selenium-hub
+      - chrome
+    build:
+      args:
+        DEVELOPMENT_BUILD: 1
+
+  selenium-hub:
+    image: selenium/hub:3.141.59-mercury
+    container_name: selenium-hub
+    ports:
+      - 4444:4444
+
+  chrome:
+    image: selenium/node-chrome:3.141.59-mercury
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      HUB_HOST: selenium-hub
+      HUB_PORT: 4444

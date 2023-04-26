@@ -1,60 +1,14 @@
-version: '3.3'
 services:
-  common:
-    image: kitware/cdash_common
-    build:
-      context: .
-      dockerfile: ./docker/common.docker
-      args:
-        - CDASH_DB_HOST=mysql
-        - DEVELOPMENT_BUILD=1
-    volumes:
-      - type: volume
-        source: storage
-        target: /home/kitware/cdash/storage
   cdash:
-    image: "kitware/cdash:testing"
-    container_name: cdash
-    build:
-      context: .
-      dockerfile: ./docker/cdash.docker
-      args:
-        - CDASH_DB_HOST=mysql
-    depends_on:
-      - mysql
-      - common
-      - selenium-hub
-      - chrome
-    links:
-      - mysql
-    ports:
-     - "8080:80"
     environment:
-      XDEBUG_CONFG: remote_host=172.18.0.1
-      CDASH_ROOT_ADMIN_PASS: secret
+      DB_CONNECTION: mysql
+      DB_LOGIN: root
+      DB_PORT: 3306
 
-  mysql:
-    image: "mysql/mysql-server:5.7"
-    env_file:
-      - ./docker/.env.mysql
+  database:
+    image: mysql/mysql-server:5.7
+    container_name: cdash_mysql
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-      MYSQL_ROOT_PASSWORD: ''
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_ROOT_HOST: '%'
-  selenium-hub:
-    image: selenium/hub:3.141.59-mercury
-    container_name: selenium-hub
-    ports:
-      - "4444:4444"
-  chrome:
-    image: selenium/node-chrome:3.141.59-mercury
-    volumes:
-      - /dev/shm:/dev/shm
-    depends_on:
-      - selenium-hub
-    environment:
-      - HUB_HOST=selenium-hub
-      - HUB_PORT=4444
-
-volumes:
-  storage:

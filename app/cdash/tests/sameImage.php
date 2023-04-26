@@ -11,8 +11,7 @@ class EmailTestCase extends KWWebTestCase
     {
         parent::__construct();
 
-        global $configure;
-        $this->url = $configure['urlwebsite'];
+        $this->url = 'http://localhost';
     }
 
     public function testSimple()

@@ -17,9 +17,7 @@ class ImportBuildsTestCase extends KWWebTestCase
 
     public function testImportBuilds()
     {
-        global $configure;
-        $dir = $configure['svnroot'];
-        chdir($dir);
+        chdir('/tmp/CDashTesting');
         $argv[0] = 'importBuilds.php';
         $xmlDirectory = dirname(__FILE__) . '/data/SubProjectExample';
         $argv[1] = $xmlDirectory;

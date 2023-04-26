@@ -11,17 +11,19 @@ jobs:
           command: |
             set -x
             source ~/project/docker/commands.bash
-            cdash_environment mysql
-            cdash_build_image
-      - run:
-          name: Spin Up MySQL Build
-          command: |
-            set -x
-            source ~/project/docker/commands.bash
-            cdash_start_docker_services
+            docker compose -f docker/docker-compose.yml \
+                           -f docker/docker-compose.dev.yml \
+                           -f docker/docker-compose.mysql.yml \
+                           --env-file .env.dev up -d \
+                           --build
+            docker compose -f docker/docker-compose.yml \
+                           -f docker/docker-compose.dev.yml \
+                           -f docker/docker-compose.mysql.yml \
+                           --env-file .env.dev \
+                           run --rm cdash install configure
             cdash_wait_for_ready http://localhost/ping 12
       - run:
-          name: Test MySQL Build
+          name: Test MySQL
           command: |
             set -x
             source ~/project/docker/commands.bash
@@ -30,32 +32,38 @@ jobs:
           name: Tear Down MySQL Build
           command: |
             set -x
-            source ~/project/docker/commands.bash
-            cdash_stop_docker_services
+            docker compose -f docker/docker-compose.yml \
+                           -f docker/docker-compose.dev.yml \
+                           -f docker/docker-compose.mysql.yml \
+                           --env-file .env.dev down
       - run:
-          name: Spin Up Postgres Build
+          name: Postgres Build
           command: |
             set -x
             source ~/project/docker/commands.bash
-            cdash_environment postgres
-            cdash_start_docker_services
+            docker compose -f docker/docker-compose.yml \
+                           -f docker/docker-compose.dev.yml \
+                           -f docker/docker-compose.postgres.yml \
+                           --env-file .env.dev up -d \
+                           --build
+            docker compose -f docker/docker-compose.yml \
+                           -f docker/docker-compose.dev.yml \
+                           -f docker/docker-compose.postgres.yml \
+                           --env-file .env.dev \
+                           run --rm cdash install configure
+            cdash_wait_for_ready http://localhost/ping 12
       - run:
-          name: Test Postgres Build
+          name: Test Postgres
           command: |
             set -x
             source ~/project/docker/commands.bash
-            docker exec cdash bash -c "cp /home/kitware/cdash/.circleci/postgres/env /home/kitware/cdash/.env"
             cdash_run_and_submit_pgsql_ctest
       - run:
           name: Build Docker Image
           command: |
-
-              cp docker/common.docker Dockerfile
-              docker build -t kitware/cdash-common:latest .
               cp docker/cdash.docker Dockerfile
-              docker build -t kitware/cdash:latest .
-              cp docker/cdash-worker.docker Dockerfile
-              docker build -t kitware/cdash-worker:latest .
+              docker build -t kitware/cdash:latest --target cdash .
+              docker build -t kitware/cdash-worker:latest --target cdash-worker .
       - run:
           name: Publish Docker Image
           command: |

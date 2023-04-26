@@ -67,9 +67,6 @@ class KWWebTestCase extends WebTestCase
     {
         parent::__construct();
 
-        global $configure;
-        $this->url = $configure['urlwebsite'];
-
         $config = Config::getInstance();
         $this->configfilename = "{$config->get('CDASH_ROOT_DIR')}/../../.env";
         $this->config = $config;
@@ -77,6 +74,8 @@ class KWWebTestCase extends WebTestCase
         // Create the application on construct so that we have access to app() (container)
         $this->app = $this->createApplication();
         $this->logfilename = Log::getLogger()->getHandlers()[0]->getUrl();
+
+        $this->url = config('app.url');
 
         $db_type = config('database.default');
         $db_config = config("database.connections.{$db_type}");
@@ -799,18 +798,13 @@ class CDashControllerUserAgent extends SimpleUserAgent
      */
     protected function fetch($url, $encoding)
     {
-        $url_string = $url->asString();
-        // Strip $CDASH_DIR_NAME (if set) from the URL string.
-        global $configure;
-        if (strlen($configure['webpath']) > 1) {
-            $url_string = str_replace($configure['webpath'], '', $url_string);
-        }
-
-        $request = $this->getIlluminateHttpRequest($url_string, $encoding);
         $config_cache = config('cdash');
 
         // The application *MUST* be recreated for every request
         $app = $this->createApplication();
+
+        $url_string = str_replace(config('app.url'), '', $url->asString());
+        $request = $this->getIlluminateHttpRequest($url_string, $encoding);
 
         // Config settings are loaded from file upon app bootstrap which occurs in
         // createApplication(). Because we recreate the application with each request

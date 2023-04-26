@@ -1,0 +1,41 @@
+name: cdash
+services:
+  cdash:
+    image: kitware/cdash
+    container_name: cdash
+    build:
+      context: ..
+      dockerfile: ./docker/cdash.docker
+      target: cdash
+    environment:
+      CDASH_ROOT_ADMIN_PASS: secret
+      DB_HOST: database
+    depends_on:
+      - database
+    links:
+      - database
+    volumes:
+      - type: volume
+        source: storage
+        target: /home/kitware/cdash/storage
+
+  worker:
+    image: kitware/cdash-worker
+    container_name: cdash_worker
+    build:
+      context: ..
+      dockerfile: ./docker/cdash.docker
+      target: cdash-worker
+    environment:
+      CDASH_ROOT_ADMIN_PASS: secret
+    deploy:
+      replicas: 1
+    depends_on:
+      - cdash
+    volumes:
+      - type: volume
+        source: storage
+        target: /home/kitware/cdash/storage
+
+volumes:
+  storage:

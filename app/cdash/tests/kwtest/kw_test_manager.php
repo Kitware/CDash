@@ -16,7 +16,6 @@
 
 use Illuminate\Support\Facades\Artisan;
 
-require_once dirname(dirname(__FILE__)) . '/config.test.php';
 require_once dirname(__FILE__) . '/simpletest/unit_tester.php';
 require_once dirname(__FILE__) . '/simpletest/mock_objects.php';
 require_once dirname(__FILE__) . '/simpletest/web_tester.php';
