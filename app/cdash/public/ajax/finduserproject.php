@@ -15,6 +15,7 @@
 =========================================================================*/
 require_once 'include/pdo.php';
 require_once 'include/common.php';
+require_once 'include/api_common.php';
 
 use CDash\Config;
 use CDash\Database;
@@ -22,7 +23,7 @@ use CDash\Database;
 $config = Config::getInstance();
 
 $projectid = $_GET['projectid'];
-if (!isset($projectid) || !is_numeric($projectid)) {
+if (!isset($projectid) || !is_numeric($projectid) || !can_access_project($projectid)) {
     echo 'Not a valid projectid!';
     return;
 }

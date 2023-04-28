@@ -17,6 +17,7 @@
 namespace CDash\Api\v1\GetBuildID;
 
 require_once 'include/common.php';
+require_once 'include/api_common.php';
 require_once 'include/pdo.php';
 
 use CDash\Database;
@@ -32,7 +33,7 @@ $projectid = get_project_id($project);
 $xml = '<?xml version="1.0" encoding="UTF-8"?>';
 $xml .= '<buildid>';
 
-if (!is_numeric($projectid)) {
+if (!is_numeric($projectid) || !can_access_project($projectid)) {
     $xml .= 'not found</buildid>';
     return response($xml, 404)->header('Content-Type', 'application/xml');
 }

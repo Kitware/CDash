@@ -16,6 +16,7 @@
 
 require_once 'include/pdo.php';
 require_once 'include/common.php';
+require_once 'include/api_common.php';
 
 use CDash\Model\Project;
 use CDash\Model\SubProject;
@@ -33,7 +34,7 @@ if ($date != null) {
 
 $projectid = get_project_id($projectname);
 
-if ($projectid == 0) {
+if ($projectid == 0 || !can_access_project($projectid)) {
     echo 'Invalid project';
     return;
 }

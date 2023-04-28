@@ -47,6 +47,12 @@ $defect_nice_names = array(
 $project = new Project();
 $project->Id = $build->ProjectId;
 $project->Fill();
+if (!can_access_project($project->Id)) {
+    $response['error'] = 'You do not have permission to view this project.';
+    echo json_encode($response);
+    return;
+}
+
 $response['displaylabels'] = $project->DisplayLabels;
 
 $date = TestingDay::get($project, $build->StartTime);

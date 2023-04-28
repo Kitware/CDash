@@ -66,6 +66,12 @@ $project = $service->get(Project::class);
 $project->Id = $build->ProjectId;
 $project->Fill();
 
+if (!can_access_project($project->Id)) {
+    $response['error'] = 'You do not have permission to view this project.';
+    echo json_encode($response);
+    return;
+}
+
 $response = begin_JSON_response();
 $response['title'] = "CDash : $project->Name";
 

@@ -17,6 +17,7 @@
 namespace CDash\Api\v1\GetUserID;
 
 require_once 'include/common.php';
+require_once 'include/api_common.php';
 require_once 'include/pdo.php';
 
 use App\Models\User;
@@ -69,7 +70,7 @@ if (strlen($_GET['project']) == 0) {
 
 $project = new Project();
 $projectname = htmlspecialchars(pdo_real_escape_string($_GET['project']));
-if (!$project->FindByName($projectname)) {
+if (!$project->FindByName($projectname) || !can_access_project(get_project_id($projectname))) {
     $xml .= 'error<no-such-project/></userid>';
     return response($xml, 404)->header('Content-Type', 'application/xml');
 }

@@ -18,6 +18,7 @@ use CDash\Database;
 
 require_once 'include/pdo.php';
 require_once 'include/common.php';
+require_once 'include/api_common.php';
 
 $siteid = $_GET['siteid'];
 $buildname = htmlspecialchars($_GET['buildname']);
@@ -30,7 +31,7 @@ if (!isset($siteid) || !is_numeric($siteid)) {
     echo 'Not a valid siteid!';
     return;
 }
-if (!isset($projectid) || !is_numeric($projectid)) {
+if (!isset($projectid) || !is_numeric($projectid) || !can_access_project($projectid)) {
     echo 'Not a valid projectid!';
     return;
 }
