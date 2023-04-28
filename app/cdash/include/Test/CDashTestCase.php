@@ -66,7 +66,7 @@ class CDashTestCase extends TestCase
 
         $builder = new ContainerBuilder();
         $builder->useAutowiring(false);
-        $builder->useAnnotations(false);
+        $builder->useAttributes(false);
         $container = $builder->build();
         $service->setContainer($container);
     }
