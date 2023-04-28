@@ -13,7 +13,7 @@
 import HeaderTop from "./page-header/HeaderTop";
 import HeaderBottom from "./page-header/HeaderBottom";
 export default {
-  name: "Header",
+  name: "pageHeader",
   components: {HeaderBottom, HeaderTop},
   props: {
     date: {
