@@ -21,6 +21,7 @@ use CDash\Messaging\Notification\Email\EmailMessage;
 use CDash\Messaging\Notification\Email\Mail;
 use CDash\Model\BuildEmail;
 use CDash\Singleton;
+use Exception;
 
 /**
  * Class Mailer
@@ -29,8 +30,7 @@ use CDash\Singleton;
 class Mailer extends Singleton
 {
     /**
-     * @param NotificationCollection $notifications
-     * @throws \Exception
+     * @throws Exception
      */
     public static function send(NotificationCollection $notifications)
     {
@@ -41,28 +41,21 @@ class Mailer extends Singleton
     }
 
     /**
-     * @param NotificationInterface|EmailMessage $notification
-     * @throws \Exception
+     * @throws Exception
      */
     public function sendNotification(NotificationInterface $notification)
     {
         $type = get_class($notification);
         switch ($type) {
             case EmailMessage::class:
-                $status = Mail::to($notification->getRecipient())
-                    ->send($notification);
+                Mail::to($notification->getRecipient())->send($notification);
                 break;
             default:
                 $message = "Unrecognized message type [{$type}]";
                 throw new \Exception($message);
         }
 
-        // TODO: Yikes! Remove with extreme prejudice after integration test refactor
-        $status = config('app.debug') ? 1 : $status;
-
-        BuildEmail::Log($notification, $status);
-        if ($status) {
-            BuildEmail::SaveNotification($notification);
-        }
+        BuildEmail::Log($notification, true);
+        BuildEmail::SaveNotification($notification);
     }
 }

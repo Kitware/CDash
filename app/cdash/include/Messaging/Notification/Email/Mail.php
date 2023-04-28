@@ -22,7 +22,6 @@ use Symfony\Component\Mailer\Transport\SendmailTransport;
 use Symfony\Component\Mime\Email;
 
 use CDash\Log;
-use CDash\Messaging\Notification\NotificationInterface;
 use CDash\Singleton;
 
 class Mail extends Singleton
@@ -30,29 +29,19 @@ class Mail extends Singleton
     protected $mailer;
     protected $recipient;
     protected $defaultSender;
-    protected $defaultReplyTo;
     protected $emails;
 
-    /**
-     * Mail constructor.
-     */
     public function __construct()
     {
         $this->emails = [];
     }
 
-    /**
-     * @param $recipient
-     */
     public function setRecipient($recipient)
     {
         $this->recipient = $recipient;
     }
 
-    /**
-     * @return string
-     */
-    public function getDefaultSender()
+    public function getDefaultSender(): string
     {
         if (!$this->defaultSender) {
             $this->defaultSender = config('mail.from.address');
@@ -60,26 +49,10 @@ class Mail extends Singleton
         return $this->defaultSender;
     }
 
-    /**
-     * @return string
-     */
-    public function getDefaultReplyTo()
-    {
-        if (!$this->defaultReplyTo) {
-            $address = config('mail.reply_to.address');
-            $name = config('mail.reply_to.name');
-            $this->defaultReplyTo = "{$name} <{$address}>";
-        }
-        return $this->defaultReplyTo;
-    }
-
-    /**
-     * @return null|Mailer
-     */
-    public function getMailer()
+    public function getMailer(): Mailer
     {
         if (!$this->mailer) {
-            if (config('mail.driver') == 'stmp') {
+            if (config('mail.driver') === 'smtp') {
                 $smtp_host = config('mail.host');
                 $smtp_port = config('mail.port');
                 $smtp_user = config('mail.username');
@@ -89,7 +62,7 @@ class Mail extends Singleton
                 } else {
                     $smtp_dsn = "smtp://{$smtp_host}:{$smtp_port}";
                 }
-                $transport = Transport::fromDsn($dsn);
+                $transport = Transport::fromDsn($smtp_dsn);
             } else {
                 $transport = new SendmailTransport();
             }
@@ -99,7 +72,7 @@ class Mail extends Singleton
         return $this->mailer;
     }
 
-    public function send(EmailMessage $message)
+    public function send(EmailMessage $message): void
     {
         if (config('app.debug')) {
             return;
@@ -126,20 +99,10 @@ class Mail extends Singleton
         }
     }
 
-    public static function to($address)
+    public static function to($address): Mail
     {
         $mail = self::getInstance();
         $mail->setRecipient($address);
         return $mail;
-    }
-
-    public function addEmail(Email $email)
-    {
-        $this->emails[] = $email;
-    }
-
-    public function getEmails()
-    {
-        return $this->emails;
     }
 }
