@@ -42,12 +42,7 @@
     <form name="form1" method="post">
     <xsl:attribute name="action">manageBanner.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
     <select onchange="location = 'manageBanner.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
-        <option>
-        <xsl:attribute name="value">-1</xsl:attribute>
-        Choose...
-        </option>
-
-        <xsl:for-each select="cdash/availableproject">
+      <xsl:for-each select="cdash/availableproject">
         <option>
         <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
         <xsl:if test="selected=1">
