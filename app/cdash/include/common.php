@@ -299,6 +299,8 @@ function add_XML_value(string $tag, $value): string
 
 /**
  * Report last my SQL error
+ *
+ * @deprecated 04/22/2023
  */
 function add_last_sql_error($functionname, $projectid = 0, $buildid = 0, $resourcetype = 0, $resourceid = 0): void
 {

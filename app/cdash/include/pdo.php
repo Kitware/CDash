@@ -51,6 +51,9 @@ function pdo_single_row_query($qry): array|null|false
     return $row;
 }
 
+/**
+ * @deprecated 04/22/2023
+ */
 function get_link_identifier(): Database
 {
     return Database::getInstance();
