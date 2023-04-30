@@ -1066,4 +1066,7 @@ export default {
 </script>
 
 <style scoped>
+.dart th, .dart td {
+  padding: 3px 7px;
+}
 </style>
