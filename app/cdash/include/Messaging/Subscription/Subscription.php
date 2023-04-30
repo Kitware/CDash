@@ -17,12 +17,6 @@ class Subscription implements SubscriptionInterface
     /** @var  SubscriberInterface $subscriber */
     private $subscriber;
 
-    /** @var  TopicCollection $topicCollection */
-    private $topicCollection;
-
-    /** @var  NotificationInterface $notification */
-    private $notification;
-
     /** @var  Project $project */
     private $project;
 
@@ -57,16 +51,6 @@ class Subscription implements SubscriptionInterface
     }
 
     /**
-     * @param TopicCollection $topicCollection
-     * @return Subscription
-     */
-    public function setTopicCollection(TopicCollection $topicCollection)
-    {
-        $this->topicCollection = $topicCollection;
-        return $this;
-    }
-
-    /**
      * @return SubscriberInterface
      */
     public function getSubscriber()
@@ -80,40 +64,6 @@ class Subscription implements SubscriptionInterface
     public function getTopicCollection()
     {
         return $this->subscriber->getTopics();
-    }
-
-    /**
-     * @return TopicCollection
-     */
-    public function getTopics()
-    {
-        return $this->getTopicCollection();
-    }
-
-    /**
-     * @param NotificationInterface $notification
-     * @return Subscription
-     */
-    public function setNotification(NotificationInterface $notification)
-    {
-        $this->notification = $notification;
-        return $this;
-    }
-
-    /**
-     * @return NotificationInterface;
-     */
-    public function getNotification()
-    {
-        return $this->notification;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSender()
-    {
-        return Config::getInstance()->get('CDASH_NOTIFICATION_SENDER');
     }
 
     /**
@@ -153,14 +103,6 @@ class Subscription implements SubscriptionInterface
     }
 
     /**
-     * @return Site
-     */
-    public function getSite()
-    {
-        return $this->site;
-    }
-
-    /**
      * @return int
      */
     public static function getMaxDisplayItems()
@@ -182,16 +124,6 @@ class Subscription implements SubscriptionInterface
     public function getProjectName()
     {
         return $this->project->GetName();
-    }
-
-    public function getProjectUrl()
-    {
-        return $this->project->GetUrlForSelf();
-    }
-
-    public function getSiteName()
-    {
-        return $this->site->GetName();
     }
 
     public function getTopicDescriptions($case = null)

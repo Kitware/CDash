@@ -4,6 +4,7 @@ use CDash\Messaging\Subscription\Subscription;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Config;
 
+/* @var \CDash\Messaging\Subscription\Subscription $subscription */
 $descriptions = $subscription->getTopicDescriptions(CASE_LOWER);
 $summary = $subscription->getBuildSummary();
 $config = Config::getInstance();
