@@ -102,9 +102,4 @@ class Config extends Singleton
 
         return rtrim($uri, '/');
     }
-
-    public function load($config)
-    {
-        return include "config/{$config}.php";
-    }
 }

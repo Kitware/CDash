@@ -9407,16 +9407,6 @@ parameters:
 			path: app/cdash/include/CDash/Config.php
 
 		-
-			message: "#^Method CDash\\\\Config\\:\\:load\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
-			message: "#^Method CDash\\\\Config\\:\\:load\\(\\) has parameter \\$config with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
 			message: "#^Method CDash\\\\Config\\:\\:set\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Config.php
