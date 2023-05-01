@@ -47,7 +47,6 @@
     <form name="form1" method="post">
     <xsl:attribute name="action">subscribeProject.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>
     <select onchange="location='subscribeProject.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
-        <option value="0">Choose project</option>
         <xsl:for-each select="cdash/availableproject">
         <option>
         <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>

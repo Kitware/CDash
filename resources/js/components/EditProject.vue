@@ -38,9 +38,6 @@
               name="projectSelection"
               @change="switchProject()"
             >
-              <option value="-1">
-                Choose...
-              </option>
               <option
                 v-for="proj in cdash.availableprojects"
                 :value="proj.id"
