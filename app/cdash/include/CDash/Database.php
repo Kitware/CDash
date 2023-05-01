@@ -16,6 +16,7 @@
 namespace CDash;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use PDO;
 use PDOException;
@@ -131,7 +132,7 @@ class Database extends Singleton
     {
         if (isset($error_info[2]) && $error_info[0] !== '00000') {
             $e = new \RuntimeException($error_info[2]);
-            Log::getInstance()->error($e);
+            Log::error($e);
         }
     }
 

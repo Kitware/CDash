@@ -2,23 +2,17 @@
 
 use CDash\Database;
 use CDash\Config;
-use CDash\Log;
 use CDash\Test\CDashTestCase;
-use CDash\Test\Log as TestLog;
 
 class DatabaseTest extends CDashTestCase
 {
     public static function setUpBeforeClass() : void
     {
-        parent::setUpBeforeClass();
-        $log = new TestLog();
-        Log::setInstance(Log::class, $log);
     }
 
     public static function tearDownAfterClass() : void
     {
         Config::setInstance(Config::class, null);
-        Log::setInstance(Log::class, null);
         Database::setInstance(Database::class, null);
         parent::tearDownAfterClass();
     }

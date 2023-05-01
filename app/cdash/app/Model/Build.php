@@ -25,15 +25,9 @@ use App\Services\TestingDay;
 use App\Services\TestDiffService;
 
 use CDash\Collection\BuildEmailCollection;
-use CDash\Collection\CollectionCollection;
 use CDash\Collection\DynamicAnalysisCollection;
 use CDash\Config;
-use CDash\Log;
 use CDash\Database;
-use CDash\Messaging\Topic\Topic;
-use CDash\Model\ActionableTypes;
-use CDash\Model\BuildGroup;
-use CDash\ServiceContainer;
 use PDO;
 
 class Build
