@@ -11911,11 +11911,6 @@ parameters:
 			path: app/cdash/include/api_common.php
 
 		-
-			message: "#^Function can_access_project\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
 			message: "#^Function can_access_project\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/api_common.php
