@@ -571,7 +571,7 @@ foreach ($dynamic_analysis_types as $checker) {
         $group_response['name_clean'] =
             sanitize_string($build_group['name']);
 
-        $chart_data = get_DA_chart_data($build_group['name'], $checker, $date_range, $dynamic_analysis_data);
+        $chart_data = get_DA_chart_data($build_group['name'], $checker, $date_range, $dynamic_analysis_data, $beginning_timestamp);
         $group_response['chart'] = $chart_data;
 
         $value = get_current_DA_value($build_group['name'], $checker, $date_range, $dynamic_analysis_data);
@@ -786,7 +786,7 @@ function get_recent_coverage_values($build_group_name, $coverage_category, $date
 }
 
 // Get line chart data for dynamic analysis
-function get_DA_chart_data($group_name, $checker, $date_range, $dynamic_analysis_data)
+function get_DA_chart_data($group_name, $checker, $date_range, $dynamic_analysis_data, $beginning_timestamp)
 {
     $chart_data = array();
 
@@ -796,7 +796,6 @@ function get_DA_chart_data($group_name, $checker, $date_range, $dynamic_analysis
             continue;
         }
 
-        // TODO: (williamjallen) $beginning_timestamp is undefined here. Fix it.
         $chart_date = get_date_from_index($i, $beginning_timestamp);
         $chart_data[] =
             array($chart_date, $dynamic_analysis_data[$i][$group_name][$checker]);

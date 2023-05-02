@@ -4,6 +4,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 use CDash\Database;
 use CDash\Model\BuildConfigure;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 class LongBuildNameTestCase extends KWWebTestCase
 {
@@ -38,15 +39,16 @@ class LongBuildNameTestCase extends KWWebTestCase
 
         // Submit our testing data.
         $test_dir = dirname(__FILE__) . '/data/LongBuildName/';
-        if (!$this->submission('LongBuildName', "{$test_dir}/Configure.xml")) {
-            $this->fail("Failed to submit {$file}");
+        $filename = "{$test_dir}/Configure.xml";
+        if (!$this->submission('LongBuildName', $filename)) {
+            $this->fail("Failed to submit {$filename}");
         }
 
         // No errors in the log.
         $this->assertTrue($this->checkLog($this->logfilename) !== false);
 
         // The build exists.
-        $results = \DB::select(
+        $results = DB::select(
             DB::raw("SELECT id FROM build WHERE projectid = :projectid"),
             [':projectid' => $this->project->Id]
         );
@@ -56,6 +58,6 @@ class LongBuildNameTestCase extends KWWebTestCase
         $configure = new BuildConfigure();
         $configure->BuildId = $results[0]->id;
         $log = $configure->GetConfigureForBuild()['log'];
-        $this->assertTrue(strpos($log, 'This is my config output') !== false);
+        $this->assertTrue(str_contains($log, 'This is my config output'));
     }
 }
