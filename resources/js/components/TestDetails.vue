@@ -6,10 +6,7 @@
     <div v-if="loading">
       <img :src="$baseURL + '/img/loading.gif'">
     </div>
-    <div
-      v-else
-      id="main_content"
-    >
+    <div v-else>
       <div id="executiontime">
         <img
           :src="$baseURL + '/img/clock.png'"

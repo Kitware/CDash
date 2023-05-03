@@ -1,5 +1,5 @@
 <template>
-  <nav class="projectnav clearfix">
+  <nav v-if="showNav" class="projectnav clearfix">
     <ul class="projectnav_controls clearfix">
       <li
         id="header-nav-previous-btn"
@@ -64,6 +64,7 @@ export default {
       previous: null,
       current: null,
       next: null,
+      showNav: false,
     }
   },
 
@@ -89,12 +90,15 @@ export default {
 
       if (cdash.menu.previous) {
         this.previous = this.$baseURL + cdash.menu.previous;
+        this.showNav = true;
       }
       if (cdash.menu.current) {
         this.current = this.$baseURL + cdash.menu.current;
+        this.showNav = true;
       }
       if (cdash.menu.next) {
         this.next = this.$baseURL + cdash.menu.next;
+        this.showNav = true;
       }
     });
   },
@@ -107,7 +111,6 @@ export default {
         display: block;
         margin: 0 auto;
         padding: 19px;
-        order: 3;
     }
 
     .projectnav_controls {
@@ -131,7 +134,7 @@ export default {
     }
 
     .btn-disabled {
-        background: #444;
+        background: #444 !important; /* TODO: (williamjallen) find a cleaner way to set the background */
         border: 1px solid #212121;
         font-size: 11px;
         margin-right: -1px;
@@ -141,7 +144,7 @@ export default {
     }
 
     .btn-disabled a {
-        color: rgba(255, 255, 255, 0.5);
+        color: rgba(255, 255, 255, 0.5) !important;
     }
 
     #header-nav-previous-btn {

@@ -1,9 +1,3 @@
-    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
-    <br/>
-
-    <div id="main_content" class="container" ng-if="cdash.requirelogin != 1 && !loading">
-
       <!-- project selection form -->
       <div class="row">
         <div class="col-md-3">
@@ -151,7 +145,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-default" ng-click="saveBuildGroup(buildgroup)">Save</button>
-                        <img id="buildgroup_updated_{{buildgroup.id}}" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+                        <img id="buildgroup_updated_{{buildgroup.id}}" src="img/check.gif" style="display: none; height:16px; width:16px; margin-top:9px;" />
 
                       </form>
 
@@ -164,7 +158,7 @@
             <div class="row">
               <div class="col-md-12">
                 <button class="btn btn-default" ng-click="updateBuildGroupOrder()">Update Order</button>
-                <img id="order_updated" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+                <img id="order_updated" src="img/check.gif" style="display: none; height:16px; width:16px; margin-top:9px;" />
               </div>
             </div>
           </div> <!-- current BuildGroups -->
@@ -182,8 +176,7 @@
               </div>
               <div class="form-group">
                 <label for="newBuildGroupType">Build Type:</label>
-                <select name="newBuildGroupType" ng-model="buildType" ng-options="type.name for type in cdash.buildgrouptypes" class="form-control">
-                </select>
+                <select name="newBuildGroupType" ng-model="buildType" ng-options="type.name for type in cdash.buildgrouptypes" class="form-control"></select>
                 <p class="help-block">
                   <dl class="dl-horizontal">
                     <dt>Daily</dt>
@@ -192,11 +185,10 @@
                     <dd>The most recent content is displayed for this BuildGroup, no matter when it was submitted.  Contents are defined under the <em>Dynamic</em> tab.</dd>
                   </dl>
                 </p>
-
               </div>
               <div class="form-group">
                 <button class="btn btn-default" ng-click="createBuildGroup(newBuildGroupName, buildType.value)">Create BuildGroup</button>
-                <img id="buildgroup_created" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+                <img id="buildgroup_created" src="img/check.gif" style="display: none; height:16px; width:16px; margin-top:9px;" />
                 <div id="create_group_error" class="text-danger"
                      ng-show="cdash.buildgroup_error">
                   <b>{{cdash.buildgroup_error}}</b>
@@ -228,7 +220,7 @@
 
               <div class="form-group">
                 <button type="submit" class="btn btn-default" ng-click="addWildcardRule(wildcardBuildGroupSelection, buildType, wildcardBuildNameMatch)">Define BuildGroup</button>
-                <img id="wildcard_defined" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+                <img id="wildcard_defined" src="img/check.gif" style="display: none; height:16px; width:16px; margin-top:9px;" />
               </div>
             </div>
 
@@ -294,7 +286,7 @@
 
               <div class="form-group">
                 <button type="submit" class="btn btn-default" ng-click="addDynamicRow(dynamicSelection, parentBuildGroupSelection, siteSelection, dynamicBuildNameMatch)">Add content to BuildGroup</button>
-                <img id="dynamic_defined" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+                <img id="dynamic_defined" src="img/check.gif" style="display: none; height:16px; width:16px; margin-top:9px;" />
               </div>
             </div>
 
@@ -338,11 +330,3 @@
         <button class="btn btn-danger" id="modal-delete-group-button" ng-click="$ctrl.ok()">Delete</button>
       </div>
     </script>
-
-    <!-- FOOTER -->
-    <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_@@version.html'"></ng-include>
-      <!--
-  </body>
-</html>
--->

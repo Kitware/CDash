@@ -1,53 +1,10 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
-   <xsl:include href="footer.xsl"/>
-   <xsl:include href="headscripts.xsl"/>
-   <xsl:include href="headeradminproject.xsl"/>
-
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
     <xsl:template match="/">
-      <html>
-       <head>
-       <title><xsl:value-of select="cdash/title"/></title>
-        <meta name="robots" content="noindex,nofollow" />
-         <link rel="StyleSheet" type="text/css">
-         <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
-         </link>
-         <xsl:comment><![CDATA[[if IE]>
-          <link rel="stylesheet" href="css/tabs_ie.css" type="text/css" media="projection, screen" />
-          <![endif]]]></xsl:comment>
-          <!-- Include project roles -->
-          <script src="js/cdashProjectRole.js" type="text/javascript"></script>
-          <script src="js/ui.tabs.js" type="text/javascript"></script>
-
-
-        <!-- Functions to confirm the email -->
-        <xsl:text disable-output-escaping="yes">
-              &lt;script type="text/javascript"&gt;
-              function confirmEmail() {
-                 if (window.confirm("Are you sure you want to send this email to all site maintainers?")){
-                    return true;
-                 }
-                 return false;
-              }
-              &lt;/script&gt;
-        </xsl:text>
-       </head>
-       <body bgcolor="#ffffff">
-
-<xsl:choose>
-<xsl:when test="/cdash/uselocaldirectory=1">
-  <xsl:call-template name="headeradminproject_local"/>
-</xsl:when>
-<xsl:otherwise>
-  <xsl:call-template name="headeradminproject"/>
-</xsl:otherwise>
-</xsl:choose>
-
-<br/>
 
 <xsl:if test="string-length(cdash/warning)>0">
 <xsl:value-of select="cdash/warning"/>
@@ -330,19 +287,21 @@
 </xsl:otherwise>
 </xsl:choose>
 
-<!-- FOOTER -->
-<br/>
+<script src="js/cdashProjectRole.js" type="text/javascript"></script>
+<script src="js/ui.tabs.js" type="text/javascript"></script>
 
-<xsl:choose>
-<xsl:when test="/cdash/uselocaldirectory=1">
-  <xsl:call-template name="footer_local"/>
-</xsl:when>
-<xsl:otherwise>
-  <xsl:call-template name="footer"/>
-</xsl:otherwise>
-</xsl:choose>
 
-        </body>
-      </html>
+<!-- Functions to confirm the email -->
+<xsl:text disable-output-escaping="yes">
+  &lt;script type="text/javascript"&gt;
+  function confirmEmail() {
+     if (window.confirm("Are you sure you want to send this email to all site maintainers?")){
+        return true;
+     }
+     return false;
+  }
+  &lt;/script&gt;
+</xsl:text>
+
     </xsl:template>
 </xsl:stylesheet>

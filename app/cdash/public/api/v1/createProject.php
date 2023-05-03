@@ -92,10 +92,10 @@ $nRepositories = 0;
 $repositories_response = [];
 
 if (!is_null($projectid)) {
-    $response['title'] = 'CDash - Edit Project';
+    $response['title'] = 'Edit Project';
     $response['edit'] = 1;
 } else {
-    $response['title'] = 'CDash - New Project';
+    $response['title'] = 'New Project';
     $response['edit'] = 0;
     $response['noproject'] = 1;
 }

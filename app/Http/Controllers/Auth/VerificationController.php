@@ -25,7 +25,7 @@ class VerificationController extends AbstractController
      *
      * @var string
      */
-    protected $redirectTo = '/login.php';
+    protected $redirectTo = '/login';
 
     /**
      * Create a new controller instance.

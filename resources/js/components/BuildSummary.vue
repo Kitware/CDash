@@ -6,10 +6,7 @@
     <div v-if="loading">
       <img :src="$baseURL + '/img/loading.gif'">
     </div>
-    <div
-      v-else
-      id="main_content"
-    >
+    <div v-else>
       <!-- Display link to create bug tracker issue if supported. -->
       <div v-if="cdash.newissueurl">
         <a :href="cdash.newissueurl">

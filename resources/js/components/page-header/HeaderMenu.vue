@@ -239,6 +239,5 @@ export default {
         display: block;
         float: right;
         height: 100%;
-        order: 4;
     }
 </style>

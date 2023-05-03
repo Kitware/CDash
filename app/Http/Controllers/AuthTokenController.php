@@ -22,9 +22,7 @@ class AuthTokenController extends AbstractController
             return $this->redirectToLogin();
         }
 
-        return response()->view('admin.manage-authtokens', [
-            'title' => 'CDash - Manage Authentication Tokens'
-        ]);
+        return response()->view('admin.manage-authtokens');
     }
 
     /**

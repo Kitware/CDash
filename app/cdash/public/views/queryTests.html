@@ -1,10 +1,4 @@
-    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
-    <br/>
-
-    <div  id="main_content" ng-if="cdash.requirelogin != 1 && !loading">
-      <h3 id="numtests">Query {{cdash.dashboard.projectname}} Tests: {{cdash.builds.length}} matches</h3>
+<h3 id="numtests">Query {{cdash.dashboard.projectname}} Tests: {{cdash.builds.length}} matches</h3>
 
 <!-- Filters -->
 <div id="labelshowfilters">
@@ -162,32 +156,23 @@
   </tr>
 
 </table>
-  <div ng-if="cdash.builds.length > 25">
-    <uib-pagination
-      ng-model="pagination.currentPage"
-      total-items="cdash.builds.length"
-      max-size="pagination.maxSize"
-      items-per-page="pagination.numPerPage"
-      ng-change="pageChanged()"
-      boundary-links="true">
-    </uib-pagination>
+<div ng-if="cdash.builds.length > 25">
+  <uib-pagination
+    ng-model="pagination.currentPage"
+    total-items="cdash.builds.length"
+    max-size="pagination.maxSize"
+    items-per-page="pagination.numPerPage"
+    ng-change="pageChanged()"
+    boundary-links="true">
+  </uib-pagination>
 
-    <div>
-      <label>Items per page</label>
-      <select ng-model="pagination.numPerPage" convert-to-number ng-change="numTestsPerPageChanged()">
-        <option value="25">25</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-        <option value="-1">All</option>
-      </select>
-    </div>
+  <div>
+    <label>Items per page</label>
+    <select ng-model="pagination.numPerPage" convert-to-number ng-change="numTestsPerPageChanged()">
+      <option value="25">25</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+      <option value="-1">All</option>
+    </select>
   </div>
-
-<br/>
-
-    <!-- FOOTER -->
-    <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_@@version.html'"></ng-include>
-      <!--
-  </body>
-</html> -->
+</div>

@@ -133,7 +133,7 @@ class AuthTokenTestCase extends KWWebTestCase
         $this->assertEqual(200, $status_code);
 
         $response_array = json_decode($response->getBody(), true);
-        $this->assertEqual('CDash - AuthTokenProject', $response_array['title']);
+        $this->assertEqual('AuthTokenProject', $response_array['title']);
     }
 
     public function testSubmissionWorksWithToken()

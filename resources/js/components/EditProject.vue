@@ -20,10 +20,7 @@
       <a :href="$baseURL + '/generateCTestConfig.php?projectid=' + cdash.project.Id">download the CTest configuration file</a>
       <br>
     </div>
-    <div
-      v-else
-      id="main_content"
-    >
+    <div v-else>
       <table v-if="cdash.edit == 1">
         <tr>
           <td width="99" />

@@ -26,6 +26,19 @@ export default {
         generationTimeStr += `s (${vm.cdash.generationtime}s)`;
         vm.cdash.generationtime = generationTimeStr;
 
+
+        // A brutal hack to populate the footer with content
+        // TODO: (williamjallen) Clean this up
+        if (document.getElementById("api-endpoint")) {
+          document.getElementById("api-endpoint")?.setAttribute('href', vm.cdash.endpoint);
+        }
+        if (document.getElementById("generation-time")) {
+          document.getElementById("generation-time").textContent = vm.cdash.generationtime;
+        }
+        if (document.getElementById("testing-day")) {
+          document.getElementById("testing-day").textContent = `Current Testing Day ${vm.cdash.currentdate} | Started at ${vm.cdash.nightlytime}`;
+        }
+
         // Let other components know that data has been loaded from the API.
         vm.$root.$emit('api-loaded', vm.cdash);
       })

@@ -22,6 +22,7 @@ use App\Models\User;
 use CDash\Config;
 use CDash\Model\Project;
 use App\Http\Kernel;
+use Illuminate\Auth\AuthManager;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
@@ -189,6 +190,7 @@ class KWWebTestCase extends WebTestCase
             if ($this->findString($content, 'ERROR') ||
                 $this->findString($content, 'WARNING')
             ) {
+                throw new Exception(var_export($content, true));
                 $this->fail('Log file has errors or warnings');
                 return false;
             }
@@ -291,6 +293,8 @@ class KWWebTestCase extends WebTestCase
         Auth::shouldReceive('check')->andReturn(true);
         Auth::shouldReceive('user')->andReturn($user);
         Auth::shouldReceive('id')->andReturn($user->id);
+        Auth::shouldReceive('guard')->andReturnSelf();
+        Auth::shouldReceive('shouldUse')->andReturn('web');
     }
 
     public function logout()

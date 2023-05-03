@@ -1,23 +1,3 @@
-<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html lang="en" ng-app="CDash">
-  <head ng-controller="HeadController">
-    <meta charset="UTF-8">
-    <meta name="robots" content="noindex,nofollow" />
-    <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_@@version.css" />
-    <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_@@version.min.js"></script>
-    <title>CDash - Manage SubProjects</title>
-  </head>
-
-  <body bgcolor="#ffffff" ng-controller="ManageSubProjectController">
-  -->
-    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
-    <br/>
-
-    <div id="main_content" class="container" ng-if="!loading && cdash.requirelogin != 1">
       <div class="row">
         <!-- project selection form -->
         <div class="col-md-3">
@@ -76,7 +56,7 @@
                   <span ng-click="loadData(subproject.id); showDetails = !showDetails" ng-class="showDetails ? 'glyphicon glyphicon-chevron-down' : 'glyphicon glyphicon-chevron-right'"></span> {{subproject.name}}
 
                   <!-- Link to delete this subproject -->
-                  <span ng-show="showDetails" ng-click="deleteSubProject(subproject.id)" class="glyphicon glyphicon-trash"</span>
+                  <span ng-show="showDetails" ng-click="deleteSubProject(subproject.id)" class="glyphicon glyphicon-trash"></span>
                 </div>
               </div>
 
@@ -89,7 +69,7 @@
                       <label for="groupid">Change group: </label>
                       <select class="subproject_group form-control" name="groupid" ng-model="details.group" ng-options="group as group.name for group in cdash.groups | orderBy:'name'" ng-change="changeGroup()">
                       </select>
-                      <img id="group_changed_{{details.subprojectid}}" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+                      <img id="group_changed_{{details.subprojectid}}" src="img/check.gif" style="display: none; height:16px; width:16px; margin-top:9px;" />
                     </div>
                   </div>
 
@@ -115,7 +95,7 @@
                   <div class="col-md-5">
                     <!-- Remove a dependency from a subproject -->
                     - {{dep.name}}
-                    <span ng-click="removeDependency(dep.id, details.subprojectid)" class="glyphicon glyphicon-trash"</span>
+                    <span ng-click="removeDependency(dep.id, details.subprojectid)" class="glyphicon glyphicon-trash"></span>
                   </div>
                 </div>
 
@@ -133,7 +113,7 @@
             </div>
             <div class="col-md-9 form-horizontal">
               <label for="newsubproject">New SubProject</label>
-              <input name="newsubproject" type="text" class="form-control" ng-model="newsubproject"></input>
+              <input name="newsubproject" type="text" class="form-control" ng-model="newsubproject">
               <div ng-if="cdash.groups.length > 0">
                 <label for="newGroupSelection">Group</label>
                 <select name="newGroupSelection" ng-model="dd" ng-options="group as group.name for group in cdash.groups | orderBy:'name'" class="form-control">
@@ -141,7 +121,7 @@
               </div>
 
               <button class="btn btn-default" ng-click="createSubProject(newsubproject, dd.name)">Add SubProject</button>
-              <img id="subproject_created" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+              <img id="subproject_created" src="img/check.gif" style="display: none; height:16px; width:16px; margin-top:9px;" />
             </div>
           </div> <!-- "add" pane -->
 
@@ -156,12 +136,12 @@
             <div class="row">
               <div class="col-md-9 form-horizontal">
                 <label for="newgroup">Group Name</label>
-                <input name="newgroup" type="text" class="form-control" ng-model="newgroup"></input>
+                <input name="newgroup" type="text" class="form-control" ng-model="newgroup">
                 <label for="threshold">Coverage Threshold</label>
-                <input name="threshold" type="text" class="form-control" ng-model="cdash.threshold"></input>
+                <input name="threshold" type="text" class="form-control" ng-model="cdash.threshold">
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" name="isdefault" ng-model="isdefault" ng-checked="cdash.groups.length == 0" ng-disabled="cdash.groups.length == 0" > Default
+                    <input type="checkbox" name="isdefault" ng-model="isdefault" ng-checked="cdash.groups.length == 0" ng-disabled="cdash.groups.length == 0"> Default
                   </label>
                 </div>
 
@@ -198,7 +178,7 @@
                         ng-repeat="group in cdash.groups | orderBy:'position'"
                         id={{group.id}}>
                       <td class="col-md-3">
-                        <input name="group_name" type="text" class="form-control" ng-model="group.name"></input>
+                        <input name="group_name" type="text" class="form-control" ng-model="group.name">
                       </td>
 
                       <td class="col-md-1">
@@ -208,33 +188,26 @@
                       </td>
 
                       <td class="col-md-2">
-                        <input name="coverage_threshold" type="text" class="form-control" ng-model="group.coverage_threshold"></input>
+                        <input name="coverage_threshold" type="text" class="form-control" ng-model="group.coverage_threshold">
                       </td>
 
                       <td class="col-md-1">
                         <button class="btn btn-sm btn-default" ng-click="updateGroup(group, cdash.default_group_id == group.id)">Update</button>
                       </td>
                       <td class="col-md-1" name="img_cell">
-                        <img id="group_updated_{{group.id}}" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+                        <img id="group_updated_{{group.id}}" src="img/check.gif" style="display: none; height:16px; width:16px; margin-top:9px;" />
                       </td>
                       <td class="col-md-1">
-                        <span ng-if="group.id != cdash.default_group_id || cdash.groups.length < 2" ng-click="deleteGroup(group.id)" class="glyphicon glyphicon-trash"</span>
+                        <span ng-if="group.id != cdash.default_group_id || cdash.groups.length < 2" ng-click="deleteGroup(group.id)" class="glyphicon glyphicon-trash"></span>
                       </td>
                     </tr>
                   </tbody>
                 </table>
                 <button class="btn btn-default" ng-click="updateGroupOrder()">Save Order</button>
-                <img id="order_updated" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+                <img id="order_updated" src="img/check.gif" style="display: none; height:16px; width:16px; margin-top:9px;" />
               </div>
             </div>
           </div> <!-- "groups" pane -->
         </div> <!-- tab-content -->
       </div> <!-- tab panel -->
     </div> <!-- container -->
-
-    <!-- FOOTER -->
-    <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_@@version.html'"></ng-include>
-      <!--
-  </body>
-</html> -->

@@ -1,40 +1,10 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
-   <xsl:include href="footer.xsl"/>
-
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
     <xsl:template match="/">
-      <html>
-       <head>
-       <title><xsl:value-of select="cdash/title"/></title>
-        <meta name="robots" content="noindex,nofollow" />
-         <link rel="StyleSheet" type="text/css">
-         <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
-         </link>
-       </head>
-       <body bgcolor="#ffffff">
-
-<div id="header">
- <div id="headertop"></div>
-
- <div id="headerbottom">
-    <div id="headerlogo">
-      <a>
-        <xsl:attribute name="href">
-        <xsl:value-of select="cdash/dashboard/home"/></xsl:attribute>
-        <img id="projectlogo" border="0" height="50px" src="img/cdash.png?rev=2019-05-08"></img>
-      </a>
-    </div>
-    <div id="headername2">
-      <span id="subheadername">
-        CDash Installation
-      </span>
-    </div>
- </div>
-</div>
 
 <font color="red"><xsl:value-of select="cdash/alert"/></font><br/>
 
@@ -104,11 +74,5 @@ Please review the settings of your config.php file below and click install to in
 </xsl:otherwise>
 </xsl:choose>
 
-<br/>
-<!-- FOOTER -->
-<br/>
-<xsl:call-template name="footer"/>
-        </body>
-      </html>
     </xsl:template>
 </xsl:stylesheet>

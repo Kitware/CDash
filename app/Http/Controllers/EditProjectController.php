@@ -22,6 +22,7 @@ class EditProjectController extends ProjectController
         if (!is_null($project_id)) {
             $this->project = new Project();
             $this->project->Id = $project_id;
+            $this->project->Fill();
         }
     }
 
@@ -63,7 +64,7 @@ class EditProjectController extends ProjectController
                 ->with('logo', json_encode($this->logo))
                 ->with('projectid', $project_id)
                 ->with('projectname', json_encode($this->project->Name))
-                ->with('title', "{$this->project->Name} : Edit Project");
+                ->with('title', "Edit Project");
         } else {
             abort(403, 'You do not have permission to access this page.');
         }

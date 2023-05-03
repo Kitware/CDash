@@ -91,7 +91,7 @@ class CDashTest extends TestCase
         $actual = $sut->getController();
         $this::assertEquals($expected, $actual);
 
-        $uri = '/login.php';
+        $uri = '/login';
         $request = Request::create($uri);
         $sut = new CDash($request);
 

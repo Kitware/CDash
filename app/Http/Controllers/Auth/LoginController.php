@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\AbstractController;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\Response;
 
 class LoginController extends AbstractController
 {
@@ -27,6 +30,11 @@ class LoginController extends AbstractController
     }
 
     /**
+     * Where to redirect users after login.
+     */
+    protected string $redirectTo = '/';
+
+    /**
      * Create a new controller instance.
      *
      * @return void
@@ -37,13 +45,6 @@ class LoginController extends AbstractController
         $this->maxAttempts = config('cdash.login.max_attempts', 5);
         $this->decayMinutes = config('cdash.login.lockout.duration', 1);
     }
-
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/';
 
     /**
      * Handle a login request to the application.
@@ -65,12 +66,9 @@ class LoginController extends AbstractController
     /**
      * Get the failed login response instance.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
-    protected function sendFailedLoginResponse(Request $request)
+    protected function sendFailedLoginResponse(Request $request): Response
     {
         $e = ValidationException::withMessages([
             $this->username() => [trans('auth.failed')],
@@ -80,51 +78,17 @@ class LoginController extends AbstractController
         // Laravel's redirect with a status of 302 :(
         $e->status(401)
             ->response = response()
-                ->view(
-                    'auth.login',
-                    [
+                ->view('auth.login', [
                         'errors' => $e->validator->getMessageBag(),
-                        'title' => 'Login',
-                        'js_version' => self::getJsVersion(),
+                        'title' => 'Login'
                     ],
                     401
                 );
         throw $e;
     }
 
-    /**
-     * Show the application's login form.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function showLoginForm()
+    public function redirectTo(): string
     {
-        return self::staticShowLoginForm();
-    }
-
-    /**
-     * @return string
-     */
-    public function redirectTo()
-    {
-        $previous = App::make('url')->previous();
-        // prevent multiple redirects if $previous was /login
-        if ($previous === route('login')) {
-            // TODO: this should be configurable
-            $previous = '/viewProjects.php';
-        }
-        return $previous ?: '/';
-    }
-
-    /**
-     * @return \Illuminate\Http\Response
-     */
-    public static function staticShowLoginForm()
-    {
-        return view('auth.login',
-            [
-                'title' => 'Login',
-                'js_version' => self::getJsVersion()
-            ]);
+        return  session('url.intended') ?? '/';
     }
 }
