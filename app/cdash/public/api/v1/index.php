@@ -220,7 +220,7 @@ if (isset($_GET['buildgroup'])) {
 if (isset($_GET['parentid'])) {
     // We are viewing the children of a single build.
     $page_id = 'indexchildren.php';
-    $controller->childView = 1;
+    $controller->childView = true;
 
     // When a parentid is specified, we should link to the next build,
     // not the next day.
@@ -257,7 +257,7 @@ if (isset($_GET['parentid'])) {
     $response['menu']['current'] = "$base_url";
     $controller->determineNextPrevious($response, $base_url);
 }
-$response['childview'] = $controller->childView;
+$response['childview'] = $controller->childView ? 1 : 0;
 
 if (isset($testingdataurl)) {
     $response['testingdataurl'] = $testingdataurl;
