@@ -1,5 +1,6 @@
 ---
 name: Bug report
+description: Report an issue that you've experienced with CDash.
 labels: 'bug report'
 ---
 
