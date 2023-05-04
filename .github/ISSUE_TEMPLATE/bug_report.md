@@ -1,7 +1,10 @@
 ---
 name: Bug report
-description: Report an issue that you've experienced with CDash.
-labels: 'bug report'
+about: Report an issue that you've experienced with CDash.
+title: ''
+labels: bug report
+assignees: ''
+
 ---
 
 # Bug report
