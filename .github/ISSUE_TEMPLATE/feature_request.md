@@ -1,7 +1,10 @@
 ---
 name: Feature Request
-description: Propose an update that would enhance your CDash experience.
-labels: 'feature request'
+about: Propose an update that would enhance your CDash experience.
+title: ''
+labels: feature request
+assignees: ''
+
 ---
 
 # Feature Request
