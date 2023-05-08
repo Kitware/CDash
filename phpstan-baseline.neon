@@ -13170,11 +13170,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function redirect_to_https\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function remove_build\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
