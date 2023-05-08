@@ -72,7 +72,6 @@ if (!function_exists('PHPErrorHandler')) {
                         LOG_ERR, $projectid, $GLOBALS['PHP_ERROR_BUILD_ID'],
                         $GLOBALS['PHP_ERROR_RESOURCE_TYPE'], $GLOBALS['PHP_ERROR_RESOURCE_ID']);
                     exit();  // stop the script
-                    break;
             }
         }
     }

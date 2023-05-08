@@ -69,7 +69,6 @@ function can_access_project($projectid)
         $response = ['requirelogin' => 1];
         json_error_response($response, 401);
     }
-    return false;
 }
 
 // Return true if this user has administrative access to this project.
@@ -81,14 +80,12 @@ function can_administrate_project($projectid)
     $project->Id = $projectid;
     if (!$project->Exists()) {
         json_error_response(['error' => 'Valid project ID required'], 404);
-        return false;
     }
 
     // Make sure the user is logged in.
     if (!Auth::check()) {
         $response = ['requirelogin' => 1];
         json_error_response($response, 401);
-        return false;
     }
 
     // Check if the user has the necessary permissions.
@@ -111,7 +108,6 @@ function get_param($name, $required = true)
     $value = isset($_REQUEST[$name]) ? $_REQUEST[$name] : null;
     if ($required && !$value) {
         json_error_response(['error' => "Valid $name required"]);
-        return null;
     }
     return pdo_real_escape_string($value);
 }
@@ -125,7 +121,6 @@ function get_int_param($name, $required = true)
 
     if ($required && !is_numeric($value)) {
         json_error_response(['error' => "Valid $name required"]);
-        return null;
     }
     return (int)$value;
 }
@@ -162,7 +157,6 @@ function just_get_project_from_request()
 {
     if (!isset($_REQUEST['project'])) {
         json_error_response(['error' => 'Valid project required']);
-        return null;
     }
     $projectname = $_REQUEST['project'];
     $projectid = get_project_id($projectname);
@@ -171,7 +165,6 @@ function just_get_project_from_request()
     $Project->Id = $projectid;
     if (!$Project->Exists()) {
         json_error_response(['error' => 'Project does not exist']);
-        return null;
     }
     return $Project;
 }
@@ -195,7 +188,6 @@ function get_request_build($required = true)
     if ($required && !$build->Exists()) {
         $response = ['error' => 'This build does not exist. Maybe it has been deleted.'];
         json_error_response($response, 400);
-        return null;
     }
 
     if ($id) {
@@ -211,9 +203,10 @@ function get_request_build($required = true)
  * @param $response
  * @param int $code
  */
-function json_error_response($response, $code = 400)
+function json_error_response($response, $code = 400): never
 {
     $service = ServiceContainer::getInstance();
+    /** @var System $system */
     $system = $service->get(System::class);
     http_response_code($code);
     echo json_encode($response);

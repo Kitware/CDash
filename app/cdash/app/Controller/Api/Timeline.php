@@ -76,7 +76,6 @@ class Timeline extends Index
                 return $this->chartForBuildGroup();
             default:
                 json_error_response('Unexpected value for page');
-                break;
         }
     }
 
@@ -149,7 +148,6 @@ class Timeline extends Index
                 ORDER BY starttime");
         if (!pdo_execute($stmt, [':projectid' => $this->project->Id])) {
             json_error_response('Failed to load results');
-            return [];
         }
         $response = $this->getTimelineChartData($stmt);
         $response['colors'] = [
@@ -185,7 +183,6 @@ class Timeline extends Index
                 ORDER BY starttime");
         if (!pdo_execute($stmt, [':projectid' => $this->project->Id])) {
             json_error_response('Failed to load results');
-            return [];
         }
         $this->includeCleanBuilds = false;
         $response = $this->getTimelineChartData($stmt);
@@ -208,7 +205,6 @@ class Timeline extends Index
             $error_msg =
                 "BuildGroup '$groupname' does not exist for project '$project->Name'";
             json_error_response(['error' => $error_msg], 404);
-            return[];
         }
 
         $this->defectTypes = [
@@ -247,7 +243,6 @@ class Timeline extends Index
             ];
             if (!pdo_execute($stmt, $query_params)) {
                 json_error_response('Failed to load results');
-                return [];
             }
             $builds = [];
             while ($row = $stmt->fetch()) {

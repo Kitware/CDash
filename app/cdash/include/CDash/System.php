@@ -158,11 +158,7 @@ class System
         header($string, $replace, $http_response_code);
     }
 
-    /**
-     * @param $exit_message
-     * @return void
-     */
-    public function system_exit($exit_message = '')
+    public function system_exit($exit_message = ''): never
     {
         exit($exit_message);
     }

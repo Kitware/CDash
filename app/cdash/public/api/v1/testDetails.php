@@ -39,7 +39,6 @@ if (!isset($buildtestid) || !is_numeric($buildtestid)) {
 $buildtest = BuildTest::where('id', '=', $buildtestid)->first();
 if ($buildtest === null) {
     json_error_response(['error' => 'test not found'], 404);
-    return;
 }
 
 

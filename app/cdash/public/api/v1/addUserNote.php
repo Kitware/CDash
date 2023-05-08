@@ -39,7 +39,6 @@ if (!isset($_REQUEST['AddNote']) || !isset($_REQUEST['Status']) ||
         strlen($_REQUEST['AddNote']) < 1 ||  strlen($_REQUEST['Status']) < 1) {
     $response['error'] = 'No note specified';
     json_error_response($response, 400);
-    return;
 }
 
 // Add the note.

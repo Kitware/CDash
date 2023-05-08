@@ -58,7 +58,6 @@ if (!function_exists('CDash\Api\v1\ExpectedBuild\rest_get')) {
         if (!array_key_exists('currenttime', $_REQUEST)) {
             $response['error'] = "currenttime not specified.";
             json_error_response($response);
-            return;
         }
         $currenttime = pdo_real_escape_numeric($_REQUEST['currenttime']);
         $currentUTCtime = gmdate(FMT_DATETIME, $currenttime);
@@ -110,7 +109,6 @@ if (!function_exists('CDash\Api\v1\ExpectedBuild\rest_post')) {
             $response = array();
             $response['error'] = 'newgroupid not specified.';
             json_error_response($response);
-            return;
         }
 
         $newgroupid =
@@ -135,7 +133,6 @@ foreach ($required_params as $param) {
     if (!array_key_exists($param, $_REQUEST)) {
         $response['error'] = "$param not specified.";
         json_error_response($response);
-        return;
     }
 }
 $siteid = pdo_real_escape_numeric($_REQUEST['siteid']);
@@ -161,7 +158,6 @@ if ($method != 'GET') {
     if (!Auth::check()) {
         $response['error'] = 'No session found.';
         json_error_response($response, 401);
-        return;
     }
 
     $project = new Project();
@@ -171,7 +167,6 @@ if ($method != 'GET') {
     if (!ProjectPermissions::userCanEditProject($user, $project)) {
         $response['error'] = 'You do not have permission to access this page';
         json_error_response($response, 403);
-        return;
     }
 }
 

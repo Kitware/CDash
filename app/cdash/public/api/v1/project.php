@@ -141,7 +141,6 @@ function get_repo_url_example()
     $functionname = "get_{$type}_diff_url";
     $example = $functionname($url, 'DIRECTORYNAME', 'FILENAME', 'REVISION');
     json_error_response(['example' => $example], 200);
-    return true;
 }
 
 /** Handle GET requests */

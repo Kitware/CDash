@@ -60,11 +60,7 @@ if ($request_method == 'DELETE') {
     if (can_administrate_project($project->Id)) {
         if ($buildRelationship->Exists()) {
             if (!$buildRelationship->Delete($error_msg)) {
-                if ($error_msg) {
-                    json_error_response($error_msg, 400);
-                } else {
-                    json_error_response('Error deleting relationship', 500);
-                }
+                json_error_response('Error deleting relationship', 500);
             }
         }
         json_error_response('', 204);
@@ -89,11 +85,7 @@ if ($request_method == 'POST') {
         $exit_status = 201;
     }
     if (!$buildRelationship->Save($error_msg)) {
-        if ($error_msg) {
-            json_error_response(['error' => $error_msg], 400);
-        } else {
-            json_error_response(['error' => 'Error saving relationship'], 500);
-        }
+        json_error_response(['error' => 'Error saving relationship'], 500);
     }
     json_error_response($buildRelationship->marshal(), $exit_status);
 }

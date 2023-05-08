@@ -12592,16 +12592,6 @@ parameters:
 			path: app/cdash/include/api_common.php
 
 		-
-			message: "#^Function get_param\\(\\) should return string but returns null\\.$#"
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: "#^Function json_error_response\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
 			message: "#^Function json_error_response\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/api_common.php
@@ -18496,11 +18486,6 @@ parameters:
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Only booleans are allowed in an if condition, string given\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/relateBuilds.php
-
-		-
 			message: "#^Call to method RetryHandler\\:\\:increment\\(\\) with incorrect case\\: Increment$#"
 			count: 1
 			path: app/cdash/public/api/v1/requeueSubmissionFile.php
@@ -18968,11 +18953,6 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, string given\\.$#"
-			count: 1
-			path: app/cdash/public/submit.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: app/cdash/public/submit.php
 

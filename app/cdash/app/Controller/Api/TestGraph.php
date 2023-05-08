@@ -45,7 +45,6 @@ class TestGraph extends BuildTestApi
         $type = $_GET['type'];
         if (!in_array($type, $this->validTypes)) {
             json_error_response(['error' => 'Invalid type of graph requested.']);
-            return [];
         }
 
         $chart_data = [];
