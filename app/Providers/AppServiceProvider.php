@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,8 +26,10 @@ class AppServiceProvider extends ServiceProvider
 
         // Serve content over https in production mode.
         if (config('app.env') === 'production') {
-            \URL::forceScheme('https');
+            URL::forceScheme('https');
         }
+
+        URL::forceRootUrl(Config::get('app.url'));
     }
 
     /**
