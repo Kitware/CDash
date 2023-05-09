@@ -377,7 +377,7 @@ class ManageProjectRolesController extends AbstractController
                              )
                              LEFT JOIN user2project ON (
                                  user2repository.userid= user2project.userid
-                                 AND user2project.projectid?
+                                 AND user2project.projectid=?
                              )
                              LEFT JOIN ' . qid('user') . ' AS u ON (
                                  user2project.userid=u.id
