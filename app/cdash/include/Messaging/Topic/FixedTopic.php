@@ -42,7 +42,7 @@ class FixedTopic extends Topic
         }
     }
 
-    public function getTemplate()
+    public function getTemplate(): array
     {
         $templates = [];
         if ($this->topic->hasFixes()) {

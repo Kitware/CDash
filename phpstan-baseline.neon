@@ -9682,16 +9682,6 @@ parameters:
 			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php
 
 		-
-			message: "#^Property CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailBuilder\\:\\:\\$cacheDirectory is never read, only written\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php
-
-		-
-			message: "#^Property CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailBuilder\\:\\:\\$templateDirectory is never read, only written\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php
-
-		-
 			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage\\:\\:setRecipient\\(\\) has parameter \\$recipient with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/EmailMessage.php
