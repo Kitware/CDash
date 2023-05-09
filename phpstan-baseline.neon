@@ -27782,6 +27782,11 @@ parameters:
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
+			message: "#^Class DynamicAnalysisHandler has an uninitialized property \\$DynamicAnalysis\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 7
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php

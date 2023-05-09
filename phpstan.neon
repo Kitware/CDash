@@ -30,6 +30,7 @@ parameters:
             missingCheckedExceptionInThrows: true
 
     treatPhpDocTypesAsCertain: false
+    checkUninitializedProperties: true
 
     level: 6
 
