@@ -1,19 +1,14 @@
-      <div class="row">
-        <!-- project selection form -->
-        <div class="col-md-3">
-          <form class="form-inline" name="form1" method="post" action="{{'manageSubProject.php?projectid=' + cdash.projectid}}">
-            <div class="form-group">
-              <label for="projectSelection">Project: </label>
-              <select name="projectSelection" onchange="location = 'manageSubProject.php?projectid='+this.options[this.selectedIndex].value;" class="form-control">
-                <option value=-1>Choose...</option>
-                <option ng-repeat="proj in cdash.availableprojects" value="{{proj.id}}" ng-selected="proj.id==cdash.projectid">
-                  {{proj.name}}
-                </option>
-              </select>
-            </div>
-          </form>
+      <!-- project selection form -->
+      <form class="form-inline pb-3" name="form1" method="post" action="{{'manageSubProject.php?projectid=' + cdash.projectid}}">
+        <div class="form-group">
+          <select name="projectSelection" onchange="location = 'manageSubProject.php?projectid='+this.options[this.selectedIndex].value;" class="form-control">
+            <option value=-1>Choose Project...</option>
+            <option ng-repeat="proj in cdash.availableprojects" value="{{proj.id}}" ng-selected="proj.id==cdash.projectid">
+              {{proj.name}}
+            </option>
+          </select>
         </div>
-      </div>
+      </form>
 
       <!-- If a project has been selected -->
       <div role="tabpanel" ng-if="cdash.projectid > -1">

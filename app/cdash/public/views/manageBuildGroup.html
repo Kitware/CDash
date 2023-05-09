@@ -1,19 +1,12 @@
       <!-- project selection form -->
-      <div class="row">
-        <div class="col-md-3">
-          <form class="form-inline" name="form1" method="post" action="{{'manageBuildGroup.php?projectid=' + cdash.projectid}}">
-            <div class="form-group">
-              <label for="projectSelection">Project: </label>
-              <select name="projectSelection" onchange="location = 'manageBuildGroup.php?projectid='+this.options[this.selectedIndex].value;" class="form-control">
-                <option value=-1>Choose...</option>
-                <option ng-repeat="proj in cdash.availableprojects" value="{{proj.id}}" ng-selected="proj.id==cdash.projectid">
-                  {{proj.name}}
-                </option>
-              </select>
-            </div>
-          </form>
-        </div>
-      </div>
+      <form class="form-inline pb-3" name="form1" method="post" action="{{'manageBuildGroup.php?projectid=' + cdash.projectid}}">
+        <select name="projectSelection" onchange="location = 'manageBuildGroup.php?projectid='+this.options[this.selectedIndex].value;" class="form-control">
+          <option value=-1>Choose Project...</option>
+          <option ng-repeat="proj in cdash.availableprojects" value="{{proj.id}}" ng-selected="proj.id==cdash.projectid">
+            {{proj.name}}
+          </option>
+        </select>
+      </form>
 
       <!-- If a project has been selected -->
       <div role="tabpanel" ng-if="cdash.projectid > -1">
@@ -40,11 +33,11 @@
           </li>
         </ul>
 
-        <div class="tab-content container">
+        <div class="tab-content">
 
           <div role="tabpanel" class="tab-pane active" id="current">
             <!-- List the current BuildGroups -->
-            <div class="row">
+            <div class="row container form-group">
               <div class="col-md-12">
                 <div id="sortable" ui-sortable="sortable" ng-model="cdash.buildgroups">
                   <div class="row" ng-repeat="buildgroup in cdash.buildgroups" id="{{buildgroup.id}}" style="cursor: move;" ng-class-even="'even'" ng-class-odd="'odd'">
@@ -169,7 +162,7 @@
                 <strong>Create a new BuildGroup</strong>
               </div>
             </div>
-            <div class="form-horizontal">
+            <div class="">
               <div class="form-group">
                 <label for="newBuildGroupName">Name:</label>
                 <input name="newBuildGroupName" class="form-control" type="text" size="40" ng-model="newBuildGroupName" />
@@ -198,7 +191,7 @@
           </div> <!-- create new BuildGroup -->
 
           <div role="tabpanel" class="tab-pane" id="wildcard">
-            <div class="form-horizontal">
+            <div class="">
               <div class="form-group">
                 <label for="wildcardBuildGroupSelection">Define Wildcard rule for:</label>
                 <select name="wildcardBuildGroupSelection" ng-model="wildcardBuildGroupSelection" ng-options="buildgroup as buildgroup.name for buildgroup in cdash.buildgroups | orderBy:'name'" class="form-control">
@@ -250,7 +243,7 @@
           </div> <!-- wildcard -->
 
           <div role="tabpanel" class="tab-pane" id="dynamic">
-            <div class="form-horizontal">
+            <div class="">
               <div class="form-group">
                 <label for="dynamicSelection">Add a build row to the following dynamic group:</label>
                 <select name="dynamicSelection" ng-model="dynamicSelection" ng-options="dynamic as dynamic.name for dynamic in cdash.dynamics | orderBy:'name'" class="form-control">
@@ -261,7 +254,7 @@
 
             <hr/>
 
-            <div class="form-horizontal">
+            <div class="">
               <div class="form-group">
                 <label for="parentBuildGroupSelection">Show the most recent build from the following group:</label>
                 <select name="parentBuildGroupSelection" ng-model="parentBuildGroupSelection" ng-options="buildgroup as buildgroup.name for buildgroup in cdash.buildgroups | orderBy:'name' | filter_buildgroups:'Daily'" class="form-control">
@@ -310,11 +303,10 @@
                   </tr>
                 </tbody>
               </table>
-            </form>
+            </div>
           </div> <!-- dynamic -->
         </div> <!-- tab-content -->
       </div> <!-- tabpanel -->
-    </div> <!-- container -->
 
     <!-- confirm delete build modal template -->
     <script type="text/ng-template" id="modal-template">
