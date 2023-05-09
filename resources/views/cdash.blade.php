@@ -15,7 +15,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="robots" content="noindex,nofollow"/>
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
-    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ asset(mix('build/css/3rdparty.css')) }}"/>
 
     {{-- Framework-specific details --}}

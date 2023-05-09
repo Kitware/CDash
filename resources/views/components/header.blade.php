@@ -40,11 +40,11 @@
                     <img id="projectlogo" height="50px" alt="" src="/displayImage.php?imgid={{ $logoid }}" />
                 @elseif(isset($angular) && $angular === true)
                     <img ng-if="cdash.logoid != 0" id="projectlogo" border="0" height="50px" ng-src="/displayImage.php?imgid=@{{::cdash.logoid}}"/>
-                    <img ng-if="!cdash.logoid || cdash.logoid==0" id="projectlogo" border="0" height="50px" src="/img/cdash.png?rev=2019-05-08"/>
+                    <img ng-if="!cdash.logoid || cdash.logoid==0" id="projectlogo" border="0" height="50px" src="{{ asset('/img/cdash.svg?rev=2023-05-09') }}"/>
                 @elseif(isset($vue) && $vue === true)
                     <header-logo></header-logo>
                 @else
-                    <img id="projectlogo" height="50px" alt="" src="{{ asset('img/cdash.png') }}" />
+                    <img id="projectlogo" height="50px" alt="" src="{{ asset('img/cdash.svg') }}" />
                 @endif
             </a>
         </div>

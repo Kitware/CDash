@@ -8,7 +8,7 @@ export default {
 
   data () {
     return {
-      logoUrl: `${this.$baseURL}/img/cdash.png`,
+      logoUrl: `${this.$baseURL}/img/cdash.svg`,
       showNav: false,
     }
   },
