@@ -29,6 +29,7 @@ use CDash\Model\Repository;
 use CDash\Model\UserProject;
 use CDash\ServiceContainer;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 $pageTimer = new PageTimer();
 $service = ServiceContainer::getInstance();
@@ -68,10 +69,10 @@ $User = Auth::user();
 $userHasAccess = false;
 if (!is_null($projectid)) {
     // Can they edit this project?
-    $userHasAccess = ProjectPermissions::UserCanEditProject($User, $Project);
+    $userHasAccess = Gate::allows('edit-project', $Project);
 } else {
     // Can they create a new project?
-    $userHasAccess = ProjectPermissions::userCanCreateProject($User);
+    $userHasAccess = Gate::allows('create-project');
 }
 if (!$userHasAccess) {
     $response['error'] = 'You do not have permission to access this page.';

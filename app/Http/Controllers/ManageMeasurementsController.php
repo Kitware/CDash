@@ -8,6 +8,7 @@ require_once 'include/defines.php';
 use App\Services\ProjectPermissions;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ManageMeasurementsController extends ProjectController
 {
@@ -37,7 +38,7 @@ class ManageMeasurementsController extends ProjectController
         if (!$this->project->Exists()) {
             abort(404);
         }
-        if (ProjectPermissions::userCanEditProject(Auth::user(), $this->project)) {
+        if (Gate::allows('edit-project', $this->project)) {
             return view('admin.measurements')
                 ->with('cdashCss', $this->cdashCss)
                 ->with('date', json_encode($this->date))

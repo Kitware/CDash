@@ -17,6 +17,7 @@
 use App\Services\ProjectPermissions;
 use CDash\Model\Project;
 use CDash\Database;
+use Illuminate\Support\Facades\Gate;
 
 require_once 'include/pdo.php';
 require_once 'include/common.php';
@@ -25,7 +26,7 @@ require_once 'include/api_common.php';
 $projectid = $_GET['projectid'];
 $project = new Project();
 $project->Id = intval($projectid);
-if (!ProjectPermissions::userCanViewProject($project)) {
+if (!Gate::allows('view-project', $project)) {
     echo 'You are not authorized to view this page.';
     return;
 }

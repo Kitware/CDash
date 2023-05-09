@@ -27,6 +27,7 @@ use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 if (!function_exists('CDash\Api\v1\ExpectedBuild\rest_delete')) {
     /**
@@ -166,9 +167,7 @@ if ($method != 'GET') {
 
     $project = new Project();
     $project->Id = $projectid;
-    /** @var User $user */
-    $user = Auth::user();
-    if (!ProjectPermissions::userCanEditProject($user, $project)) {
+    if (!Gate::allows('edit-project', $project)) {
         $response['error'] = 'You do not have permission to access this page';
         json_error_response($response, 403);
         return;

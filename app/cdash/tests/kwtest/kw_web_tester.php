@@ -292,6 +292,9 @@ class KWWebTestCase extends WebTestCase
         $user = $this->getUser($this->actingAs['email']);
         Auth::shouldReceive('check')->andReturn(true);
         Auth::shouldReceive('user')->andReturn($user);
+        Auth::shouldReceive('userResolver')->andReturn(function () use ($user) {
+            return $user;
+        });
         Auth::shouldReceive('id')->andReturn($user->id);
         Auth::shouldReceive('guard')->andReturnSelf();
         Auth::shouldReceive('shouldUse')->andReturn('web');

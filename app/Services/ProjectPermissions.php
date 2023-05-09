@@ -28,8 +28,7 @@ use App\Models\User;
  **/
 class ProjectPermissions
 {
-    // TODO: (William Allen) swap the order of these parameters to match canViewProject()
-    public static function userCanEditProject(User $user, Project $project): bool
+    public static function canEditProject(Project $project, User $user): bool
     {
         // Check if this user is a global admin.
         if ($user->IsAdmin()) {
@@ -46,19 +45,6 @@ class ProjectPermissions
         }
 
         return false;
-    }
-
-    public static function userCanCreateProject(User $user): bool
-    {
-        $config = \CDash\Config::getInstance();
-        return $user->IsAdmin() || $config->get('CDASH_USER_CREATE_PROJECTS');
-    }
-
-    public static function userCanViewProject(Project $project):  bool
-    {
-        /** @var \App\Models\User $user */
-        $user = \Auth::user();
-        return self::canViewProject($project, $user);
     }
 
     public static function canViewProject(Project $project, ?User $user): bool
@@ -79,7 +65,7 @@ class ProjectPermissions
         }
 
         // Global admins have access to all projects.
-        if ($user->admin == 1) {
+        if ($user->IsAdmin()) {
             return true;
         }
 
@@ -99,10 +85,5 @@ class ProjectPermissions
             return false;
         }
         return false;
-    }
-
-    public static function userCanCreateProjectAuthToken(Project $project): bool
-    {
-        return self::userCanViewProject($project);
     }
 }
