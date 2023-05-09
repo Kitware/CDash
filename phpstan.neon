@@ -36,4 +36,5 @@ parameters:
     level: 6
 
 includes:
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
     - phpstan-baseline.neon
