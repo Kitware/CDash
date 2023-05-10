@@ -1,5 +1,8 @@
 <template>
-  <nav v-if="showNav" class="projectnav clearfix">
+  <nav
+    v-if="showNav"
+    class="projectnav clearfix"
+  >
     <ul class="projectnav_controls clearfix">
       <li
         id="header-nav-previous-btn"

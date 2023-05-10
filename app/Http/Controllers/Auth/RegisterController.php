@@ -86,25 +86,20 @@ class RegisterController extends AbstractController
 
     /**
      * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\Models\User
+     * Assumes that caller has already validated $data.
      */
-    protected function create(array $data)
+    public function create(array $data) : User|null
     {
         if (is_null($data['institution'])) {
             $data['institution'] = '';
         }
-        $user = User::create([
+        return User::create([
             'firstname' => $data['fname'],
             'lastname' => $data['lname'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'institution' => $data['institution']
         ]);
-
-        $user->passwords()->save(new Password(['password' => $user->password]));
-        return $user;
     }
 
     /**
@@ -150,8 +145,10 @@ class RegisterController extends AbstractController
             throw $e;
         }
 
-        event(new Registered($user = $this->create($request->all())));
+        $user = $this->create($request->all());
 
+        $user->passwords()->save(new Password(['password' => $user->password]));
+        event(new Registered($user));
         $this->guard()->login($user);
 
         return $this->registered($request, $user)

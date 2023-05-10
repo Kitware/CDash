@@ -1,5 +1,9 @@
 <template>
-  <img id="projectlogo" alt="Logo" :src="logoUrl">
+  <img
+    id="projectlogo"
+    alt="Logo"
+    :src="logoUrl"
+  >
 </template>
 
 <script>

@@ -25,6 +25,7 @@ Route::post('/install.php', 'AdminController@install');
 Route::get('/oauth/{service}', 'OAuthController@authenticate');
 Route::get('/oauth/callback/{service}', 'OAuthController@login')
     ->name('oauth.callback');
+Route::post('/saml2/login', 'Auth\LoginController@saml2Login');
 
 Route::get('/logout', 'Auth\LoginController@logout');
 
