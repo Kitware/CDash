@@ -44,7 +44,7 @@
     "sass": "^1.32.11",
     "sass-loader": "^11.0.1",
     "v-tooltip": "^2.0.3",
-    "vue": "^2.6.11",
+    "vue": "^3.2.47",
     "vue-loader": "^15.9.8",
     "vue-template-compiler": "^2.6.10",
     "vuedraggable": "^2.24.3",
