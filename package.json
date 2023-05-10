@@ -23,7 +23,7 @@
     "ansi_up": "^3.0.0",
     "as-jqplot": "^1.0.8",
     "autoprefixer": "10.4.5",
-    "axios": "^0.21",
+    "axios": "^1.4",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.23.1",
     "cross-env": "^5.1",
