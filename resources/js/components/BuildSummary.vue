@@ -645,17 +645,15 @@
         <b>End Time: </b>{{ cdash.configure.endtime }}
         <br>
 
-        <b>Configure Command: </b> {{ cdash.configure.command }}
-        <br>
+        <b>Configure Command:</b>
+        <pre class="pre-wrap">{{ cdash.configure.command }}</pre>
 
-        <b>Configure Return Value: </b> {{ cdash.configure.status }}
-        <br>
+        <b>Configure Return Value:</b>
+        <pre class="pre-wrap">{{ cdash.configure.status }}</pre>
 
-        <b>Configure Output: </b>
-        <br>
+        <b>Configure Output:</b>
 
         <pre>{{ cdash.configure.output }}</pre>
-        <br>
 
         <a
           id="configure_link"
@@ -676,8 +674,7 @@
       </div>
       <br>
 
-      <b>Build command: </b><tt>{{ cdash.build.command }}</tt>
-      <br>
+      <b>Build command: </b><pre class="pre-wrap">{{ cdash.build.command }}</pre>
 
       <b>Start Time: </b>{{ cdash.build.starttime }}
       <br>
@@ -1063,7 +1060,12 @@ export default {
 </script>
 
 <style scoped>
+
 .dart th, .dart td {
   padding: 3px 7px;
+}
+
+.pre-wrap {
+  white-space: pre-wrap;
 }
 </style>

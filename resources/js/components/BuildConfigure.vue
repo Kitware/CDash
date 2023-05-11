@@ -30,21 +30,19 @@
         </tr>
         <tr>
           <td align="left">
-            <b>Configure Command: </b>{{ cdash.configures[0].command }}
+            <b>Configure Command: </b>
+            <pre class="pre-wrap">{{ cdash.configures[0].command }}</pre>
           </td>
         </tr>
         <tr>
           <td align="left">
-            <b>Configure Return Value: </b>{{ cdash.configures[0].status }}
+            <b>Configure Return Value: </b>
+            <pre class="pre-wrap">{{ cdash.configures[0].status }}</pre>
           </td>
         </tr>
         <tr>
           <td align="left">
             <b>Configure Output:</b>
-          </td>
-        </tr>
-        <tr>
-          <td align="left">
             <pre>{{ cdash.configures[0].output }}</pre>
           </td>
         </tr>
@@ -119,21 +117,19 @@
                 </tr>
                 <tr>
                   <td align="left">
-                    <b>Configure Command: </b>{{ configure.command }}
+                    <b>Configure Command:</b>
+                    <pre class="pre-wrap">{{ configure.command }}</pre>
                   </td>
                 </tr>
                 <tr>
                   <td align="left">
-                    <b>Configure Return Value: </b>{{ configure.status }}
+                    <b>Configure Return Value:</b>
+                    <pre class="pre-wrap">{{ configure.status }}</pre>
                   </td>
                 </tr>
                 <tr>
                   <td align="left">
                     <b>Configure Output:</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td align="left">
                     <pre>{{ configure.output }}</pre>
                   </td>
                 </tr>
@@ -170,3 +166,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.pre-wrap {
+  white-space: pre-wrap;
+}
+</style>
