@@ -47,6 +47,9 @@ class RegisterController extends AbstractController
 
     public function showRegistrationForm(Request $request)
     {
+        if (config('auth.user_registration_form_enabled') === false) {
+            return response("Registration via form is disabled", 404);
+        }
         // We can route a user here with our form pre-populated
         $params = [
             'title' => 'Register',
@@ -125,6 +128,9 @@ class RegisterController extends AbstractController
      */
     public function register(Request $request)
     {
+        if (config('auth.user_registration_form_enabled') === false) {
+            return response("Registration via form is disabled", 404);
+        }
         try {
             $this->validator($request->all())->validate();
         } catch (ValidationException $e) {

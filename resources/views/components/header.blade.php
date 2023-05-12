@@ -2,6 +2,7 @@
     if (isset($project)) {
         $logoid = getLogoID(intval($project->Id));
     }
+$hideRegistration = config('auth.user_registration_form_enabled') === false;
 @endphp
 
 <div id="header">
@@ -17,7 +18,9 @@
                     <a href="/logout">Logout</a>
                 @else
                     <a href="/login">Login</a>
-                    <a href="{{ route('register') }}">{{ __('Register') }}</a>
+                    @if(!$hideRegistration)
+                      <a href="{{ route('register') }}">{{ __('Register') }}</a>
+                    @endif
                 @endif
             </span>
         </div>

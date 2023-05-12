@@ -130,6 +130,7 @@ class ViewProjects extends \CDash\Controller\Api
         }
         $response['projects'] = $projects_response;
 
+        $response['enable_registration'] = config("auth.user_registration_form_enabled");
         $this->pageTimer->end($response);
         return $response;
     }

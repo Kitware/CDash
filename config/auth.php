@@ -3,6 +3,8 @@
 return [
     // Whether or not "normal" username+password authentication is enabled
     'username_password_authentication_enabled' => env('USERNAME_PASSWORD_AUTHENTICATION_ENABLED', true),
+    // Whether or not "normal" username+password authentication is enabled
+    'user_registration_form_enabled' => env('USER_REGISTRATION_FORM_ENABLED', true),
 
     /*
     |--------------------------------------------------------------------------
