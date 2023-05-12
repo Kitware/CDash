@@ -22,7 +22,7 @@ abstract class ProjectController extends AbstractController
         $this->project = null;
         $this->authOk = false;
         $this->date = date(FMT_DATETIME);
-        $this->logo = env('APP_URL') . '/img/cdash.png';
+        $this->logo = env('APP_URL') . '/img/cdash.svg';
     }
 
     /** Retrieve common data used by all project-specific pages in CDash. */
