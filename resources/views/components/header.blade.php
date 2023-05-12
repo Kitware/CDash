@@ -2,6 +2,7 @@
     if (isset($project)) {
         $logoid = getLogoID(intval($project->Id));
     }
+$hideRegistration = config('auth.user_registration_form_enabled') === false;
 @endphp
 
 <div id="header">
@@ -17,7 +18,9 @@
                     <a href="{{ url('/logout') }}">Logout</a>
                 @else
                     <a href="{{ url('/login') }}">Login</a>
-                    <a href="{{ route('register') }}">{{ __('Register') }}</a>
+                    @if(!$hideRegistration)
+                      <a href="{{ route('register') }}">{{ __('Register') }}</a>
+                    @endif
                 @endif
             </span>
         </div>
@@ -40,11 +43,11 @@
                     <img id="projectlogo" height="50px" alt="" src="{{ url('/displayImage.php') }}?imgid={{ $logoid }}" />
                 @elseif(isset($angular) && $angular === true)
                     <img ng-if="cdash.logoid != 0" id="projectlogo" border="0" height="50px" ng-src="{{ url('/displayImage.php') }}?imgid=@{{::cdash.logoid}}"/>
-                    <img ng-if="!cdash.logoid || cdash.logoid==0" id="projectlogo" border="0" height="50px" src="{{ url('img/cdash.png?rev=2019-05-08') }}"/>
+                    <img ng-if="!cdash.logoid || cdash.logoid==0" id="projectlogo" border="0" height="50px" src="{{ asset('/img/cdash.svg?rev=2023-05-09') }}"/>
                 @elseif(isset($vue) && $vue === true)
                     <header-logo></header-logo>
                 @else
-                    <img id="projectlogo" height="50px" alt="" src="{{ asset('img/cdash.png') }}" />
+                    <img id="projectlogo" height="50px" alt="" src="{{ asset('img/cdash.svg') }}" />
                 @endif
             </a>
         </div>
@@ -52,7 +55,7 @@
         <div id="headername2">
             <span id="subheadername">
                 @if(isset($title))
-                    @if(isset($project))
+                    @if(isset($project) && $project->Exists())
                         {{ $project->Name }} -
                     @endif
                     {{ $title }}

@@ -11,13 +11,20 @@
 |
 */
 
+use App\Http\Controllers\Auth\RegisterController;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
-Auth::routes(['verify' => true]);
+$routeList = array('verify' => true);
+
+if(config('auth.user_registration_form_enabled') === false) {
+    $routeList['register'] =  false;
+}
+Auth::routes($routeList);
 
 Route::get('/install.php', 'AdminController@install');
 Route::post('/install.php', 'AdminController@install');

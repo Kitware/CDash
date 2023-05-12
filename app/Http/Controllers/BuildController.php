@@ -75,6 +75,7 @@ class BuildController extends ProjectController
             ->with('cdashCss', $this->cdashCss)
             ->with('date', json_encode($this->date))
             ->with('logo', json_encode($this->logo))
+            ->with('project', $this->project)
             ->with('projectname', json_encode($this->project->Name))
             ->with('title', $page_title);
     }
