@@ -3175,33 +3175,8 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewNotes.php
 
 		-
-			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:\\$activeProjectDays\\.$#"
-			count: 5
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:\\$config\\.$#"
-			count: 2
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
 			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:\\$pageTimer\\.$#"
 			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:\\$projectids\\.$#"
-			count: 3
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:\\$showAllProjects\\.$#"
-			count: 6
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:\\$user\\.$#"
-			count: 2
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 
 		-
@@ -3211,7 +3186,7 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:getProjects\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 
 		-
@@ -3221,6 +3196,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:getVisibleProjects\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewProjects.php
+
+		-
+			message: "#^Property CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:\\$projectids has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 
