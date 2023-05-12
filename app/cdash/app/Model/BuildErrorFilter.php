@@ -105,10 +105,9 @@ class BuildErrorFilter
 
     private function Fill()
     {
-        $stmt = $this->PDO->prepare(
-            'SELECT * FROM build_filters WHERE projectid = :projectid');
-        $this->PDO->execute($stmt, [':projectid' => $this->Project->Id]);
-        $row = $stmt->fetch();
+        $row = $this->PDO->executePreparedSingleRow('
+                   SELECT * FROM build_filters WHERE projectid = ?
+               ', [(int) $this->Project->Id], true);
         if ($row) {
             $this->ErrorsFilter = $row['errors'];
             $this->WarningsFilter = $row['warnings'];

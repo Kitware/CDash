@@ -40,7 +40,7 @@ if ($projectid == 0 || !can_access_project($projectid)) {
 }
 
 $db = Database::getInstance();
-$project = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [intval($projectid)]);
+$project = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid], true);
 if (!empty($project)) {
     $svnurl = make_cdash_url(htmlentities($project['cvsurl']));
     $homeurl = make_cdash_url(htmlentities($project['homeurl']));

@@ -31,6 +31,12 @@ class Database extends Singleton
     /** @var PDO $pdo */
     private $pdo;
 
+    /**
+     * An array of the form [query_text: [query_values: query_result]]
+     * @var array<string, array<string, mixed>>
+     */
+    private static array $queryCache = [];
+
     public function __construct()
     {
     }
@@ -61,11 +67,29 @@ class Database extends Singleton
         return $this->pdo;
     }
 
+    private function cacheQuery(string $query_string, array $query_params, mixed $query_result): void
+    {
+        $query_string = preg_replace('/\s+/', '', $query_string);
+        self::$queryCache[$query_string][serialize($query_params)] = $query_result;
+    }
+
     /**
-     * @param \PDOStatement $stmt
-     * @param null $input_parameters
-     * @return bool
-     *
+     * Return the result associated with the specified query string and query params,
+     * or null if the specified query does not exist in the cache.
+     */
+    private function getCachedQuery(string $query_string, ?array $query_params): mixed
+    {
+        $query_string = preg_replace('/\s+/', '', $query_string);
+        if (array_key_exists($query_string, self::$queryCache)
+            && array_key_exists(serialize($query_params), self::$queryCache[$query_string])
+        ) {
+            return self::$queryCache[$query_string][serialize($query_params)];
+        }
+
+        return null;
+    }
+
+    /**
      * @deprecated 04/22/2023  Use Laravel query builder or Eloquent instead
      */
     public function execute(\PDOStatement $stmt, $input_parameters = null)
@@ -143,11 +167,24 @@ class Database extends Singleton
      *
      * @deprecated 04/22/2023  Use Laravel query builder or Eloquent instead
      */
-    public function executePrepared(string $sql, ?array $params = null): array|false
+    public function executePrepared(string $sql, ?array $params = null, bool $cache = false): array|false
     {
+        if ($cache) {
+            $cache_result = $this->getCachedQuery($sql, $params);
+            if ($cache_result !== null) {
+                return $cache_result;
+            }
+        }
+
         $stmt = $this->prepare($sql);
         $this->execute($stmt, $params);
-        return $stmt->fetchAll();
+        $result = $stmt->fetchAll();
+
+        if ($cache) {
+            $this->cacheQuery($sql, $params, $result);
+        }
+
+        return $result;
     }
 
     /**
@@ -156,19 +193,32 @@ class Database extends Singleton
      *
      * @deprecated 04/22/2023  Use Laravel query builder or Eloquent instead
      */
-    public function executePreparedSingleRow(string $sql, ?array $params = null): array|null|false
+    public function executePreparedSingleRow(string $sql, ?array $params = null, bool $cache = false): array|null|false
     {
+        if ($cache) {
+            $cache_result = $this->getCachedQuery($sql, $params);
+            if ($cache_result !== null) {
+                return $cache_result;
+            }
+        }
+
         $stmt = $this->prepare($sql);
         $this->execute($stmt, $params);
 
         $num_rows = pdo_num_rows($stmt);
         if ($num_rows === false) {
-            return false;
+            $result = false;
+        } elseif ($num_rows === 0) {
+            $result = [];
+        } else {
+            $result = $stmt->fetch();
         }
-        if ($num_rows === 0) {
-            return [];
+
+        if ($cache) {
+            $this->cacheQuery($sql, $params, $result);
         }
-        return $stmt->fetch();
+
+        return $result;
     }
 
     /**

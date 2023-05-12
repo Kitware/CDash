@@ -450,7 +450,7 @@ class SubProject
         }
 
         $db = Database::getInstance();
-        $project = $db->executePrepared($query, $params);
+        $project = $db->executePrepared($query, $params, true);
 
         if ($project === false) {
             add_last_sql_error("SubProject CommonBuildQuery($extraCriteria)");
@@ -592,7 +592,7 @@ class SubProject
         }
 
         $db = Database::getInstance();
-        $project = $db->executePrepared($queryStr, $params);
+        $project = $db->executePrepared($queryStr, $params, true);
 
         if ($project === false) {
             add_last_sql_error('SubProject GetNumberOfFailingTests');

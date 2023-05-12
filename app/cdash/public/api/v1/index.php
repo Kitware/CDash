@@ -49,7 +49,7 @@ $projectid = $Project->Id;
 $db = Database::getInstance();
 $controller = new IndexController($db, $Project);
 
-$project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid]);
+$project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid], true);
 if (!empty($project_array)) {
     $projectname = $project_array['name'];
 

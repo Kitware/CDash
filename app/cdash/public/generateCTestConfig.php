@@ -34,7 +34,7 @@ if (!isset($projectid) || !is_numeric($projectid)) {
 }
 
 $db = Database::getInstance();
-$project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [intval($projectid)]);
+$project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [intval($projectid)], true);
 if (empty($project_array)) {
     return;
 }

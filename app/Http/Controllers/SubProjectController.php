@@ -32,7 +32,7 @@ class SubProjectController extends AbstractController
         }
 
         $db = Database::getInstance();
-        $project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid]);
+        $project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid], true);
         if (!empty($project_array)) {
             $svnurl = make_cdash_url(htmlentities($project_array['cvsurl']));
             $homeurl = make_cdash_url(htmlentities($project_array['homeurl']));
@@ -156,7 +156,7 @@ class SubProjectController extends AbstractController
         }
 
         $db = Database::getInstance();
-        $project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid]);
+        $project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid], true);
         if (!empty($project_array)) {
             $svnurl = make_cdash_url(htmlentities($project_array['cvsurl']));
             $homeurl = make_cdash_url(htmlentities($project_array['homeurl']));

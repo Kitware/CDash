@@ -61,7 +61,7 @@ $pageTimer = new PageTimer();
 
 $db = Database::getInstance();
 
-$project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [intval($projectid)]);
+$project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [intval($projectid)], true);
 if (!empty($project_array)) {
     $projectname = $project_array['name'];
     $nightlytime = $project_array['nightlytime'];

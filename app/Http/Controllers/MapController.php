@@ -59,7 +59,7 @@ class MapController extends AbstractController
 
         $db = Database::getInstance();
 
-        $project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid]);
+        $project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid], true);
 
         list($previousdate, $currenttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
 

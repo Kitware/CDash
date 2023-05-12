@@ -534,12 +534,9 @@ class Project
 
     public function GetIdByName()
     {
-        $pdo = Database::getInstance()->getPdo();
-        $stmt = $pdo->prepare('SELECT id FROM project WHERE name = :name');
-        $stmt->bindParam(':name', $this->Name);
-        pdo_execute($stmt);
-        $stmt->bindColumn('id', $this->Id);
-        $stmt->fetch(\PDO::FETCH_BOUND);
+        $this->Id = (int) $this->PDO->executePreparedSingleRow('
+                              SELECT id FROM project WHERE name = ?
+                          ', [$this->Name], true)['id'];
         return $this->Id;
     }
 
@@ -596,7 +593,7 @@ class Project
 
         $project_array = $this->PDO->executePreparedSingleRow('
                              SELECT * FROM project WHERE id=?
-                         ', [intval($this->Id)]);
+                         ', [intval($this->Id)], true);
         if ($project_array === false) {
             add_last_sql_error('Project Fill', $this->Id);
             return;
@@ -653,7 +650,7 @@ class Project
         // Check if we have a robot
         $robot = $this->PDO->executePreparedSingleRow('
                      SELECT * FROM projectrobot WHERE projectid=?
-                 ', [intval($this->Id)]);
+                 ', [intval($this->Id)], true);
         if ($robot === false) {
             add_last_sql_error('Project Fill', $this->Id);
             return;
@@ -667,7 +664,7 @@ class Project
         // Check if we have filters
         $build_filters = $this->PDO->executePreparedSingleRow('
                              SELECT * FROM build_filters WHERE projectid=?
-                         ', [intval($this->Id)]);
+                         ', [intval($this->Id)], true);
         if ($build_filters === false) {
             add_last_sql_error('Project Fill', $this->Id);
             throw new Exception(var_export($this->Id, true));
@@ -1428,7 +1425,7 @@ class Project
             $query .= ' AND build.parentid IN (-1, 0)';
         }
 
-        $project = $this->PDO->executePreparedSingleRow($query, $params);
+        $project = $this->PDO->executePreparedSingleRow($query, $params, true);
         if ($project === false) {
             add_last_sql_error('Project GetNumberOfFailingTests', $this->Id);
             return false;
@@ -1462,7 +1459,7 @@ class Project
             $query .= ' AND build.parentid IN (-1, 0)';
         }
 
-        $project = $this->PDO->executePreparedSingleRow($query, $params);
+        $project = $this->PDO->executePreparedSingleRow($query, $params, true);
         if ($project === false) {
             add_last_sql_error('Project GetNumberOfNotRunTests', $this->Id);
             return false;
