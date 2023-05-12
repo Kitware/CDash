@@ -49,10 +49,10 @@ function init_api_request()
 // Return true if the current user has access to view this project, or if
 // the project is public (allows anonymous read access).
 // Return false and respond with the correct HTTP status (401 or 403) if not.
-function can_access_project($projectid)
+function can_access_project($projectid): bool
 {
     if (!$projectid) {
-        return true;
+        return false;
     }
 
     $project = new Project();
