@@ -55,7 +55,7 @@ $hideRegistration = config('auth.user_registration_form_enabled') === false;
         <div id="headername2">
             <span id="subheadername">
                 @if(isset($title))
-                    @if(isset($project))
+                    @if(isset($project) && $project->Exists())
                         {{ $project->Name }} -
                     @endif
                     {{ $title }}
