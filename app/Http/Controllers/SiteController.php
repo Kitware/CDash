@@ -272,7 +272,7 @@ class SiteController extends AbstractController
                                  FROM site2user
                                  WHERE siteid=? AND userid=?
                              ', [$siteid, intval($userid)]);
-                if (count($user2site['c']) === 0) {
+                if (intval($user2site['c']) === 0) {
                     $xml .= add_XML_value('claimed', '0');
                 } else {
                     $xml .= add_XML_value('claimed', '1');
