@@ -3150,11 +3150,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
-			message: "#^Undefined variable\\: \\$project$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/Timeline.php
-
-		-
 			message: "#^Access to an undefined property App\\\\Models\\\\BuildNote\\:\\:\\$note\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewNotes.php
@@ -4887,11 +4882,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Uuid has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Undefined variable\\: \\$warniningdiff$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -13859,16 +13849,6 @@ parameters:
 			path: app/cdash/include/dailyupdates.php
 
 		-
-			message: "#^Undefined variable\\: \\$directory$#"
-			count: 1
-			path: app/cdash/include/dailyupdates.php
-
-		-
-			message: "#^Undefined variable\\: \\$filename$#"
-			count: 1
-			path: app/cdash/include/dailyupdates.php
-
-		-
 			message: "#^Variable \\$commit might not be defined\\.$#"
 			count: 1
 			path: app/cdash/include/dailyupdates.php
@@ -18096,6 +18076,11 @@ parameters:
 			path: app/cdash/public/api/v1/overview.php
 
 		-
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_DA_chart_data\\(\\) has parameter \\$beginning_timestamp with no type specified\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/overview.php
+
+		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\Overview\\\\get_DA_chart_data\\(\\) has parameter \\$checker with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
@@ -18337,11 +18322,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, float given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/overview.php
-
-		-
-			message: "#^Undefined variable\\: \\$beginning_timestamp$#"
 			count: 1
 			path: app/cdash/public/api/v1/overview.php
 
@@ -21254,11 +21234,6 @@ parameters:
 		-
 			message: "#^Method BuildRelationshipTest\\:\\:testSaveSuccess\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
-
-		-
-			message: "#^Undefined variable\\: \\$error_msg$#"
-			count: 2
 			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
 
 		-
@@ -24465,11 +24440,6 @@ parameters:
 			path: app/cdash/tests/test_builddetails.php
 
 		-
-			message: "#^Undefined variable\\: \\$testDataFile$#"
-			count: 2
-			path: app/cdash/tests/test_builddetails.php
-
-		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 1
 			path: app/cdash/tests/test_builderrordiff.php
@@ -26334,11 +26304,6 @@ parameters:
 			path: app/cdash/tests/test_longbuildname.php
 
 		-
-			message: "#^Undefined variable\\: \\$file$#"
-			count: 1
-			path: app/cdash/tests/test_longbuildname.php
-
-		-
 			message: "#^Method LotsOfSubProjectsTestCase\\:\\:testLotsOfSubProjects\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_lotsofsubprojects.php
@@ -26614,11 +26579,6 @@ parameters:
 
 		-
 			message: "#^Property MultipleLabelsForTestsTestCase\\:\\:\\$project has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_multiplelabelsfortests.php
-
-		-
-			message: "#^Undefined variable\\: \\$file$#"
 			count: 1
 			path: app/cdash/tests/test_multiplelabelsfortests.php
 

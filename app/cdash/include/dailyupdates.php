@@ -294,7 +294,6 @@ function get_p4_repository_commits($root, $branch, $dates): array
             $describe_lines = explode("\n", $raw_output);
 
             $commit = array();
-            $comment = '';
 
             // Parse the changelist description and add each file modified to the
             // commits list
@@ -328,7 +327,7 @@ function get_p4_repository_commits($root, $branch, $dates): array
                 elseif (preg_match('/^\\.\\.\\. (.*)#[0-9]+ ([^ ]+)$/', $dline, $matches)) {
                     $commit['filename'] = $matches[1];
                     $commit['directory'] = remove_directory_from_filename($commit['filename']);
-                    $commits[$directory . '/' . $filename . ';' . $commit['revision']] = $commit;
+                    $commits[$commit['directory'] . '/' . $commit['filename'] . ';' . $commit['revision']] = $commit;
                 } // Anything else that begins with a tab is a comment line
                 elseif (strlen($dline) > 0 && $dline[0] == "\t") {
                     $commit['comment'] = $commit['comment'] . trim(substr($dline, 1)) . "\n";

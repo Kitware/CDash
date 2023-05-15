@@ -206,7 +206,7 @@ class Timeline extends Index
         $buildgroup->SetName($groupname);
         if (!$buildgroup->Exists()) {
             $error_msg =
-                "BuildGroup '$groupname' does not exist for project '$project->Name'";
+                "BuildGroup '$groupname' does not exist for project '" . $this->project->Name . "'";
             json_error_response(['error' => $error_msg], 404);
             return[];
         }

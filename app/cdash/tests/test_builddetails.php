@@ -104,7 +104,8 @@ class BuildDetailsTestCase extends KWWebTestCase
     // This will be specific to a test xml
     public function testViewTestReturnsProperFormat()
     {
-        if (!$this->submission('BuildDetails', $this->testDataDir . '/' . 'Insight_Experimental_Test.xml')) {
+        $testDataFile = $this->testDataDir . '/' . 'Insight_Experimental_Test.xml';
+        if (!$this->submission('BuildDetails', $testDataFile)) {
             $this->fail('Failed to submit ' . $testDataFile);
             return 1;
         }
@@ -127,7 +128,8 @@ class BuildDetailsTestCase extends KWWebTestCase
 
     public function testViewTestReturnsProperFormatForParentBuilds()
     {
-        if (!$this->submission('BuildDetails', $this->testDataDir . '/' . 'Insight_Experimental_Test_Subbuild.xml')) {
+        $testDataFile = $this->testDataDir . '/' . 'Insight_Experimental_Test_Subbuild.xml';
+        if (!$this->submission('BuildDetails', $testDataFile)) {
             $this->fail('Failed to submit ' . $testDataFile);
             return 1;
         }

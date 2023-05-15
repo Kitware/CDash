@@ -1276,7 +1276,7 @@ class Build
             if ($existing_diff_row) {
                 \DB::table('configureerrordiff')
                     ->where('buildid', $this->Id)
-                    ->update(['difference' => $warniningdiff]);
+                    ->update(['difference' => $warningdiff]);
             } else {
                 \DB::table('configureerrordiff')->insertOrIgnore([
                     ['buildid' => $this->Id, 'difference' => $warningdiff],

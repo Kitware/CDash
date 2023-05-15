@@ -121,6 +121,7 @@ class BuildRelationshipTest extends CDashTestCase
 
         $this->mock_build1->method('Exists')->willReturn(true);
         $this->mock_build2->method('Exists')->willReturn(true);
+        $error_msg = null;
         $this->relationship->Save($error_msg);
         $this->assertEquals('', $error_msg);
     }

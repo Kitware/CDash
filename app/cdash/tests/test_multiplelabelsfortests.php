@@ -39,8 +39,9 @@ class MultipleLabelsForTestsTestCase extends KWWebTestCase
 
         // Submit our testing data.
         $test_dir = dirname(__FILE__) . '/data/MultipleLabelsForTests/';
-        if (!$this->submission('MultipleLabelsForTests', "{$test_dir}/Test.xml")) {
-            $this->fail("Failed to submit {$file}");
+        $filename = "{$test_dir}/Test.xml";
+        if (!$this->submission('MultipleLabelsForTests', $filename)) {
+            $this->fail("Failed to submit {$filename}");
         }
 
         // No errors in the log.
