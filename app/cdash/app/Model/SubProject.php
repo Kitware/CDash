@@ -463,7 +463,7 @@ class SubProject
             }
             return $project_array;
         } else {
-            return intval($project['c']);
+            return intval($project[0]['c']);
         }
     }
 
@@ -555,7 +555,7 @@ class SubProject
             }
             return $project_array;
         } else {
-            return intval($project['s']);
+            return intval($project[0]['s']);
         }
     }
 
@@ -605,7 +605,7 @@ class SubProject
             }
             return $project_array;
         } else {
-            return intval($project['s']);
+            return intval($project[0]['s']);
         }
     }
 
@@ -655,7 +655,7 @@ class SubProject
             }
             return $project_array;
         } else {
-            return intval($project['s']);
+            return intval($project[0]['s']);
         }
     }
 
