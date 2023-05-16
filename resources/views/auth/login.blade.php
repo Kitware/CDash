@@ -16,7 +16,6 @@
 @section('main_content')
     @includeIf('local.login')
     <div id="message" style="color: green;"></div>
-    <div class="container-fluid">
     @if ($show_login_form)
         <form method="POST" action="login" name="loginform" id="loginform">
             <input type="hidden" name="_token" id="csrf-token" value="{{ csrf_token() }}" />
