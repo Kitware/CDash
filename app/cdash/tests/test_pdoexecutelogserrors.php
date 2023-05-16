@@ -20,8 +20,8 @@ class PdoExecuteLogsErrorsTestCase extends KWWebTestCase
         pdo_execute($stmt);
 
         $log_contents = file_get_contents($this->logfilename);
-        if (strpos($log_contents, 'pdo_execute') === false) {
-            $this->fail("'pdo_execute' not found in log");
+        if (!str_contains($log_contents, 'notarealcolumn') || !str_contains($log_contents, 'ERROR')) {
+            $this->fail("Invalid query failed to produce log output!");
             return 1;
         }
     }

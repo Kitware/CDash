@@ -27,11 +27,6 @@ parameters:
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<int, array\\|bool\\|string\\|null\\> given\\.$#"
-			count: 2
-			path: app/Console/Commands/AutoRemoveBuilds.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Console/Commands/MigrateConfig.php
@@ -5918,11 +5913,6 @@ parameters:
 			path: app/cdash/app/Model/BuildGroup.php
 
 		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, mixed\\> given\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
 			message: "#^Property CDash\\\\Model\\\\BuildGroup\\:\\:\\$Description has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroup.php
@@ -6137,11 +6127,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\BuildGroupRule\\:\\:SoftDeleteExpiredRules\\(\\) has parameter \\$now with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, mixed\\> given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroupRule.php
 
@@ -7762,7 +7747,7 @@ parameters:
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 3
+			count: 4
 			path: app/cdash/app/Model/Image.php
 
 		-
@@ -7775,7 +7760,7 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method insert\\(\\) of class CDash\\\\Database\\:
+				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
@@ -7821,11 +7806,6 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Image.php
-
-		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<int, mixed\\> given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Image.php
 
@@ -8939,11 +8919,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$repository of class CDash\\\\Service\\\\RepositoryService constructor expects CDash\\\\Lib\\\\Repository\\\\RepositoryInterface, CDash\\\\Model\\\\RepositoryInterface given\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Repository.php
-
-		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, mixed\\> given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Repository.php
 
@@ -10078,6 +10053,11 @@ parameters:
 			path: app/cdash/include/CDash/Database.php
 
 		-
+			message: "#^Method CDash\\\\Database\\:\\:execute\\(\\) has parameter \\$input_parameters with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/include/CDash/Database.php
+
+		-
 			message: "#^Method CDash\\\\Database\\:\\:executePrepared\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Database.php
@@ -10098,33 +10078,8 @@ parameters:
 			path: app/cdash/include/CDash/Database.php
 
 		-
-			message: "#^Method CDash\\\\Database\\:\\:logPdoError\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Database.php
-
-		-
-			message: "#^Method CDash\\\\Database\\:\\:logPdoError\\(\\) has parameter \\$error_info with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Database.php
-
-		-
 			message: "#^Method CDash\\\\Database\\:\\:prepare\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: app/cdash/include/CDash/Database.php
-
-		-
-			message: "#^Method CDash\\\\Database\\:\\:prepare\\(\\) has parameter \\$sql with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Database.php
-
-		-
-			message: "#^Method CDash\\\\Database\\:\\:query\\(\\) has parameter \\$sql with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Database.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, PDO given\\.$#"
-			count: 2
 			path: app/cdash/include/CDash/Database.php
 
 		-
@@ -13360,11 +13315,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<int, mixed\\> given\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Parameter \\#4 \\$resultcontainer of function xslt_process expects string, null given\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -13840,11 +13790,6 @@ parameters:
 
 		-
 			message: "#^Offset 'filename' on array\\{author\\?\\: string, comment\\?\\: string, directory\\: string, email\\?\\: string, filename\\: string, priorrevision\\?\\: '', revision\\?\\: string, time\\?\\: string\\} in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: app/cdash/include/dailyupdates.php
-
-		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, mixed\\> given\\.$#"
 			count: 1
 			path: app/cdash/include/dailyupdates.php
 
@@ -17026,11 +16971,6 @@ parameters:
 			path: app/cdash/public/api/v1/build.php
 
 		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, mixed\\> given\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/build.php
-
-		-
 			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
@@ -17631,11 +17571,6 @@ parameters:
 		-
 			message: "#^Implicit array creation is not allowed \\- variable \\$response might not exist\\.$#"
 			count: 3
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, mixed\\> given\\.$#"
-			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
@@ -19302,11 +19237,6 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @var for variable \\$stmt contains unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<int, string\\> given\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
 
@@ -23249,11 +23179,6 @@ parameters:
 			path: app/cdash/tests/manageCoverageTest.php
 
 		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, mixed\\> given\\.$#"
-			count: 2
-			path: app/cdash/tests/manageCoverageTest.php
-
-		-
 			message: "#^Parameter \\#2 \\$value of method WebTestCase\\:\\:setFieldByName\\(\\) expects string, int given\\.$#"
 			count: 2
 			path: app/cdash/tests/manageCoverageTest.php
@@ -23568,11 +23493,6 @@ parameters:
 			path: app/cdash/tests/test_actualtrilinossubmission.php
 
 		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, mixed\\> given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_actualtrilinossubmission.php
-
-		-
 			message: "#^Method AddBuildAPITestCase\\:\\:testBuildRelationships\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_addbuildapi.php
@@ -23774,11 +23694,6 @@ parameters:
 
 		-
 			message: "#^Method AttachedFilesTestCase\\:\\:testAttachedFiles\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_attachedfiles.php
-
-		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, mixed\\> given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_attachedfiles.php
 
@@ -24090,21 +24005,6 @@ parameters:
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<int, int\\> given\\.$#"
-			count: 2
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<int, int\\|string\\> given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, int\\|string\\> given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
 			message: "#^Property AutoRemoveBuildsOnSubmitTestCase\\:\\:\\$config_file has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
@@ -24342,11 +24242,6 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_buildconfigure.php
-
-		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<int, mixed\\> given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_buildconfigure.php
 
@@ -24861,11 +24756,6 @@ parameters:
 			path: app/cdash/tests/test_changeid.php
 
 		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, mixed\\> given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_changeid.php
-
-		-
 			message: "#^Property ChangeIdTestCase\\:\\:\\$ProjectId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_changeid.php
@@ -24982,16 +24872,6 @@ parameters:
 			path: app/cdash/tests/test_configurewarnings.php
 
 		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, int\\|string\\|false\\|null\\> given\\.$#"
-			count: 2
-			path: app/cdash/tests/test_configurewarnings.php
-
-		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, mixed\\> given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_configurewarnings.php
-
-		-
 			message: "#^Property ConfigureWarningTestCase\\:\\:\\$ProjectId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_configurewarnings.php
@@ -25014,11 +24894,6 @@ parameters:
 
 		-
 			message: "#^Method ConsistentTestingDayTestCase\\:\\:testConsistentTestingDay\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_consistenttestingday.php
-
-		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, mixed\\> given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_consistenttestingday.php
 
@@ -25579,15 +25454,7 @@ parameters:
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: """
-				#^Call to deprecated method insert\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
+			count: 2
 			path: app/cdash/tests/test_email.php
 
 		-
@@ -25645,11 +25512,6 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, int given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:insert\\(\\) expects null, array\\<int, mixed\\> given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_email.php
 
@@ -25787,11 +25649,6 @@ parameters:
 
 		-
 			message: "#^Method ExpiredBuildRulesTestCase\\:\\:testExpiredBuildRules\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_expiredbuildrules.php
-
-		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, int\\|string\\> given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_expiredbuildrules.php
 
@@ -27889,11 +27746,6 @@ parameters:
 			path: app/cdash/tests/test_subprojectorder.php
 
 		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, mixed\\> given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectorder.php
-
-		-
 			message: "#^Property SubProjectOrderTestCase\\:\\:\\$project has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_subprojectorder.php
@@ -28694,11 +28546,6 @@ parameters:
 
 		-
 			message: "#^Method UpgradeTestCase\\:\\:testUpgradeDurations\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<string, int\\> given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_upgrade.php
 
@@ -32183,11 +32030,6 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
-			path: tests/Feature/AutoRemoveBuildsCommand.php
-
-		-
-			message: "#^Parameter \\#2 \\$input_parameters of method CDash\\\\Database\\:\\:execute\\(\\) expects null, array\\<int, mixed\\> given\\.$#"
-			count: 3
 			path: tests/Feature/AutoRemoveBuildsCommand.php
 
 		-
