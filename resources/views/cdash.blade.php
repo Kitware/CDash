@@ -20,9 +20,9 @@
 
     {{-- Framework-specific details --}}
     @if(isset($angular) && $angular === true)
-        <link rel="stylesheet" type="text/css" ng-href="build/css/@{{cssfile}}_{{ $js_version }}.css"/>
-        <link rel="stylesheet" href="css/bootstrap.min.css"/>
-        <script src="js/CDash_{{ $js_version  }}.min.js"></script>
+        <link rel="stylesheet" type="text/css" ng-href="{{ asset("build/css") }}/@{{cssfile}}_{{  $js_version }}.css"/>
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}"/>
+        <script src="{{ asset("js/CDash_$js_version.min.js") }}"></script>
     @elseif(isset($vue) && $vue === true)
         <link type="text/css" rel="stylesheet" href="{{ asset('css/jquery.dataTables.css') }}"/>
         <link rel="stylesheet" type="text/css" href="{{ asset(get_css_file()) }}"/>
@@ -31,13 +31,13 @@
         <script src="{{ asset('js/3rdparty.min.js') }}" type="text/javascript" defer></script>
         <script src="{{ asset(mix('laravel/js/app.js')) }}" type="text/javascript" defer></script>
     @else
-        <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css"/>
-        <link rel="stylesheet" type="text/css" href="css/cdash.css"/>
-        <script src="js/CDash_{{ $js_version  }}.min.js"></script>
-        <script src="js/tooltip.js" type="text/javascript" charset="utf-8"></script>
-        <script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
-        <script src="js/jquery.dataTables.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="js/jquery.metadata.js" type="text/javascript" charset="utf-8"></script>
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.dataTables.css') }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/cdash.css') }}"/>
+        <script src="{{ asset("js/CDash_${js_version}.min.js") }}"></script>
+        <script src="{{ asset('js/tooltip.js') }}" type="text/javascript" charset="utf-8"></script>
+        <script src="{{ asset('js/jquery.tablesorter.js') }}" type="text/javascript" charset="utf-8"></script>
+        <script src="{{ asset('js/jquery.dataTables.min.js') }}" type="text/javascript" charset="utf-8"></script>
+        <script src="{{ asset('js/jquery.metadata.js') }}" type="text/javascript" charset="utf-8"></script>
     @endif
 
     @yield('header_script')
