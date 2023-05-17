@@ -28,50 +28,31 @@ use CDash\Model\BuildInformation;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 @set_time_limit(0);
 
 @$projectname = $_GET['project'];
 $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
-$projectid = get_project_id($projectname);
 $Project = new Project();
-$Project->Id = $projectid;
+$Project->Id = get_project_id($projectname);
 $Project->Fill();
 
 // Generate the main dashboard JSON response.
-require_once 'include/pdo.php';
 
-$PDO = get_link_identifier()->getPdo();
-$response = array();
+$controller = new IndexController(Database::getInstance(), $Project);
 
-$projectid = $Project->Id;
-
-$db = Database::getInstance();
-$controller = new IndexController($db, $Project);
-
-$project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid]);
-if (!empty($project_array)) {
-    $projectname = $project_array['name'];
-
-    if (isset($project_array['testingdataurl']) && $project_array['testingdataurl'] != '') {
-        $testingdataurl = make_cdash_url(htmlentities($project_array['testingdataurl']));
-    }
-} else {
-    $response['error'] =
-        "This project doesn't exist. Maybe the URL you are trying to access is wrong.";
-    echo json_encode($response);
-    return;
-}
-
-if (!can_access_project($project_array['id'])) {
+if (!can_access_project($Project->Id)) {
     return;
 }
 
 $response = begin_JSON_response();
-$response['title'] = "$projectname";
+$response['title'] = $Project->Name;
 $response['showcalendar'] = 1;
 
 $Banner = new Banner;
+// Get the global banner first, if applicable
 $Banner->SetProjectId(0);
 $text = $Banner->GetText();
 $banners = array();
@@ -79,7 +60,7 @@ if ($text !== false) {
     $banners[] = $text;
 }
 
-$Banner->SetProjectId($projectid);
+$Banner->SetProjectId($Project->Id);
 $text = $Banner->GetText();
 if ($text !== false) {
     $banners[] = $text;
@@ -88,12 +69,14 @@ $response['banners'] = $banners;
 
 // If parentid is set we need to lookup the date for this build
 // because it is not specified as a query string parameter.
+$parent_build = null;
+$parentid = -1;
 if (isset($_GET['parentid'])) {
-    $parentid = pdo_real_escape_numeric($_GET['parentid']);
+    $parentid = (int) $_GET['parentid'];
     $parent_build = new Build();
     $parent_build->Id = $parentid;
     $parent_build->FillFromId($parent_build->Id);
-    $controller->SetDate($parent_build->GetDate());
+    $controller->setDate($parent_build->GetDate());
 
     $response['parentid'] = $parentid;
     $controller->setParentId($parentid);
@@ -115,20 +98,12 @@ if (isset($_GET['parentid'])) {
     $response['compilerversion'] = $buildinfo->CompilerVersion;
 
     // Check if the parent build has any notes.
-    $stmt = $PDO->prepare(
-        'SELECT COUNT(buildid) FROM build2note WHERE buildid = ?');
-    pdo_execute($stmt, [$parentid]);
-    if ($stmt->fetchColumn() > 0) {
-        $response['parenthasnotes'] = true;
-    } else {
-        $response['parenthasnotes'] = false;
-    }
+    $stmt = DB::select('SELECT COUNT(buildid) AS c FROM build2note WHERE buildid = ?', [$parentid])[0];
+    $response['parenthasnotes'] = $stmt->c > 0;
 
     // Check if the parent build has any uploaded files.
-    $stmt = $PDO->prepare(
-        'SELECT COUNT(buildid) FROM build2uploadfile WHERE buildid = ?');
-    pdo_execute($stmt, [$parentid]);
-    $response['uploadfilecount'] = $stmt->fetchColumn();
+    $stmt = DB::select('SELECT COUNT(buildid) AS c FROM build2uploadfile WHERE buildid = ?', [$parentid])[0];
+    $response['uploadfilecount'] = $stmt->c;
 } else {
     $controller->determineDateRange($response);
     $response['parentid'] = -1;
@@ -143,8 +118,8 @@ if (isset($_GET['date']) && !isset($_GET['parentid']) && $controller->getCurrent
 // Main dashboard section
 $currentstarttime = $controller->getCurrentStartTime();
 $date = $controller->getDate();
-get_dashboard_JSON($projectname, $date, $response);
-$response['displaylabels'] = $project_array['displaylabels'];
+get_dashboard_JSON($Project->Name, $date, $response);
+$response['displaylabels'] = $Project->DisplayLabels;
 $response['showtesttime'] = $Project->ShowTestTime;
 
 $page_id = 'index.php';
@@ -157,18 +132,15 @@ if ($Project->GetNumberOfSubProjects($end_UTCDate) > 0) {
     $response['menu']['subprojects'] = 1;
 }
 
-$projectname_encoded = urlencode($projectname);
-
 // Check if a SubProject parameter was specified.
-$subproject_name = @$_GET['subproject'];
-if ($subproject_name) {
+if (isset($_GET['subproject'])) {
     $SubProject = new SubProject();
-    $subproject_name = htmlspecialchars(pdo_real_escape_string($subproject_name));
+    $subproject_name = htmlspecialchars(pdo_real_escape_string($_GET['subproject']));
     $SubProject->SetName($subproject_name);
-    $SubProject->SetProjectId($projectid);
+    $SubProject->SetProjectId($Project->Id);
     $subprojectid = $SubProject->GetId();
 
-    if ($subprojectid) {
+    if ($subprojectid !== 0) {
         $controller->setSubProjectId($subprojectid);
         $response['subprojectname'] = $subproject_name;
 
@@ -193,7 +165,7 @@ if ($subproject_name) {
                 $dependency_response['ntestpass'] = $DependProject->GetNumberOfPassingTests($beginning_UTCDate, $end_UTCDate);
                 $dependency_response['ntestfail'] = $DependProject->GetNumberOfFailingTests($beginning_UTCDate, $end_UTCDate);
                 $dependency_response['ntestnotrun'] = $DependProject->GetNumberOfNotRunTests($beginning_UTCDate, $end_UTCDate);
-                if (strlen($DependProject->GetLastSubmission()) == 0) {
+                if (strlen($DependProject->GetLastSubmission()) === 0) {
                     $dependency_response['lastsubmission'] = 'NA';
                 } else {
                     $dependency_response['lastsubmission'] = $DependProject->GetLastSubmission();
@@ -204,9 +176,7 @@ if ($subproject_name) {
         }
         $response['subproject'] = $subproject_response;
     } else {
-        add_log("SubProject '$subproject_name' does not exist",
-            __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
-            LOG_WARNING);
+        Log::warning("SubProject '$subproject_name' does not exist");
     }
 }
 
@@ -215,6 +185,8 @@ if (isset($_GET['buildgroup'])) {
     $buildgroup_name = pdo_real_escape_string($_GET['buildgroup']);
     $controller->filterOnBuildGroup($buildgroup_name);
 }
+
+$projectname_encoded = urlencode($Project->Name);
 
 // Setup previous/current/next links.
 if (isset($_GET['parentid'])) {
@@ -259,21 +231,20 @@ if (isset($_GET['parentid'])) {
 }
 $response['childview'] = $controller->childView;
 
-if (isset($testingdataurl)) {
-    $response['testingdataurl'] = $testingdataurl;
+if (isset($Project->TestingDataUrl) && $Project->TestingDataUrl !== '') {
+    $response['testingdataurl'] = make_cdash_url(htmlentities($Project->TestingDataUrl));
 }
 
 // Get info about our buildgroups.
-$buildgroups = BuildGroup::GetBuildGroups($projectid, $beginning_UTCDate);
+$buildgroups = BuildGroup::GetBuildGroups($Project->Id, $beginning_UTCDate);
 foreach ($buildgroups as $buildgroup) {
-    $controller->beginResponseForBuildgroup($buildgroup);
+    $controller->beginResponseForBuildGroup($buildgroup);
 }
-if (empty($buildgroups)) {
+if (count($buildgroups) === 0) {
     $response['banners'][] = 'No builds found';
 }
 
 // Filters:
-//
 $filterdata = get_filterdata_from_request($page_id);
 unset($filterdata['xml']);
 $controller->setFilterData($filterdata);
@@ -292,9 +263,8 @@ $build_data = array_merge($build_data, $controller->getDynamicBuilds());
 // This happens when we have subprojects and we're looking at the children
 // of a specific build.
 $coverage_groups = array();
-if (isset($_GET['parentid']) && $_GET['parentid'] > 0 &&
-    $Project->GetNumberOfSubProjects($end_UTCDate) > 0
-) {
+$groupId = -1;
+if (isset($_GET['parentid']) && (int) $_GET['parentid'] > 0 && $Project->GetNumberOfSubProjects($end_UTCDate) > 0) {
     $groups = $Project->GetSubProjectGroups();
     foreach ($groups as $group) {
         // Keep track of coverage info on a per-group basis.
@@ -313,7 +283,7 @@ if (isset($_GET['parentid']) && $_GET['parentid'] > 0 &&
     if (count($groups) > 1) {
         // Add a Total group too.
         $coverage_groups[0] = array();
-        $coverageThreshold = $project_array['coveragethreshold'];
+        $coverageThreshold = (int) $Project->CoverageThreshold;
         $coverage_groups[0]['thresholdgreen'] = $coverageThreshold;
         $coverage_groups[0]['thresholdyellow'] = $coverageThreshold * 0.7;
         $coverage_groups[0]['label'] = 'Total';
@@ -338,34 +308,76 @@ $num_nightly_coverages_builds = 0;
 $show_aggregate = false;
 $response['comparecoverage'] = 0;
 
+$build_responses = [];
+$builds_with_child_coverage = [];
+$builds_with_child_DA = [];
 foreach ($build_rows as $build_array) {
     $build_response = $controller->generateBuildResponseFromRow($build_array);
     if ($build_response === false) {
         continue;
     }
+    $build_responses[(int) $build_response['id']] = $build_response;
+    if ((int) $build_response['numchildren'] > 0) {
+        $builds_with_child_coverage[] = (int) $build_response['id'];
+    }
+    if (!empty($build_array['checker']) && (int) $build_response['numchildren'] > 0) {
+        $builds_with_child_DA[] = (int) $build_response['id'];
+    }
+}
+
+// COVERAGE
+// A list of buildids which should link to a child coverage
+$child_coverage_result = [];
+if (count($builds_with_child_coverage) > 0) {
+    $builds_with_child_coverage_prepared_array = Database::getInstance()->createPreparedArray(count($builds_with_child_coverage));
+    $child_coverage_result = DB::select("
+                                 SELECT DISTINCT buildid
+                                 FROM coverage
+                                 WHERE buildid IN $builds_with_child_coverage_prepared_array
+                                 GROUP BY buildid
+                                 HAVING COUNT(fileid) = 0
+                             ", $builds_with_child_coverage);
+}
+$linkToChildCoverageArray = [];
+foreach ($child_coverage_result as $row) {
+    $linkToChildCoverageArray[] = $row->buildid;
+}
+
+// DYNAMIC ANALYSIS
+$child_DA_result = [];
+if (count($builds_with_child_DA) > 0) {
+    $builds_with_child_DA_prepared_array = Database::getInstance()->createPreparedArray(count($builds_with_child_DA));
+    $child_DA_result = DB::select("
+                           SELECT buildid
+                           FROM dynamicanalysis
+                           WHERE buildid in $builds_with_child_DA_prepared_array
+                           GROUP BY buildid
+                           HAVING COUNT(id) = 0
+                       ", $builds_with_child_DA);
+}
+$linkToChildrenDAArray = [];
+foreach ($child_DA_result as $row) {
+    $linkToChildrenDAArray[] = $row->buildid;
+}
+
+foreach ($build_rows as $build_array) {
+    if (!array_key_exists((int) $build_array['id'], $build_responses)) {
+        continue;
+    }
+    $build_response = $build_responses[(int) $build_array['id']];
 
     // Coverage
     //
     // Determine if this is a parent build with no actual coverage of its own.
-    $linkToChildCoverage = false;
-    if ($build_response['numchildren'] > 0) {
-        $countChildrenResult = $db->executePreparedSingleRow('
-                                   SELECT count(fileid) AS nfiles
-                                   FROM coverage
-                                   WHERE buildid=?
-                               ', [intval($build_response['id'])]);
-        if (intval($countChildrenResult['nfiles']) === 0) {
-            $linkToChildCoverage = true;
-        }
-    }
+    $linkToChildCoverage = in_array((int) $build_array['id'], $linkToChildCoverageArray, true);
 
     $coverageIsGrouped = false;
 
-    $loctested = intval($build_array['loctested']);
-    $locuntested = intval($build_array['locuntested']);
+    $loctested = (int) $build_array['loctested'];
+    $locuntested = (int) $build_array['locuntested'];
     if ($loctested + $locuntested > 0) {
         $coverage_response = array();
-        $coverage_response['buildid'] = $build_array['id'];
+        $coverage_response['buildid'] = (int) $build_array['id'];
         if ($linkToChildCoverage) {
             $coverage_response['childlink'] = $build_response['multiplebuildshyperlink'] . '##Coverage';
         }
@@ -399,13 +411,13 @@ foreach ($build_rows as $build_array) {
         }
 
         $coverage_response['percentage'] = $percent;
-        $coverage_response['locuntested'] = intval($locuntested);
-        $coverage_response['loctested'] = intval($loctested);
+        $coverage_response['locuntested'] = $locuntested;
+        $coverage_response['loctested'] = $loctested;
 
         // Compute the diff
-        if (!empty($build_array['loctesteddiff'])) {
-            $loctesteddiff = $build_array['loctesteddiff'];
-            $locuntesteddiff = $build_array['locuntesteddiff'];
+        if ((int) $build_array['loctesteddiff'] > 0) {
+            $loctesteddiff = (int) $build_array['loctesteddiff'];
+            $locuntesteddiff = (int) $build_array['locuntesteddiff'];
             @$previouspercent =
                 round(($loctested - $loctesteddiff) /
                     ($loctested - $loctesteddiff +
@@ -430,7 +442,6 @@ foreach ($build_rows as $build_array) {
         }
 
         // Are there labels for this build?
-        //
         $coverage_response['label'] = $build_response['label'];
 
         if ($coverageIsGrouped) {
@@ -442,37 +453,26 @@ foreach ($build_rows as $build_array) {
         }
     }
     if (!$coverageIsGrouped) {
-        $coverageThreshold = $project_array['coveragethreshold'];
+        $coverageThreshold = $Project->CoverageThreshold;
         $response['thresholdgreen'] = $coverageThreshold;
         $response['thresholdyellow'] = $coverageThreshold * 0.7;
     }
 
     // Dynamic Analysis
-    //
     if (!empty($build_array['checker'])) {
         // Determine if this is a parent build with no dynamic analysis
         // of its own.
-        $linkToChildren = false;
-        if ($build_response['numchildren'] > 0) {
-            $countChildrenResult = $db->executePreparedSingleRow('
-                                       SELECT count(id) AS num
-                                       FROM dynamicanalysis
-                                       WHERE buildid=?
-                                   ', [intval($build_array['id'])]);
-            if (intval($countChildrenResult['num']) === 0) {
-                $linkToChildren = true;
-            }
-        }
+        $linkToChildrenDA = in_array((int) $build_array['id'], $linkToChildrenDAArray, true);
 
         $DA_response = array();
         $DA_response['site'] = $build_array['sitename'];
         $DA_response['buildname'] = $build_array['name'];
-        $DA_response['buildid'] = $build_array['id'];
+        $DA_response['buildid'] = (int) $build_array['id'];
         $DA_response['checker'] = $build_array['checker'];
-        $DA_response['defectcount'] = $build_array['numdefects'];
+        $DA_response['defectcount'] = (int) $build_array['numdefects'];
         $starttimestamp = strtotime($build_array['starttime'] . ' UTC');
         $DA_response['datefull'] = $starttimestamp;
-        if ($linkToChildren) {
+        if ($linkToChildrenDA) {
             $DA_response['childlink'] = $build_response['multiplebuildshyperlink'] . '##DynamicAnalysis';
         }
 
@@ -503,13 +503,13 @@ for ($i = 0; $i < count($controller->buildgroupsResponse); $i++) {
 
     $num_expected_builds = 0;
     if (!$filter_sql) {
-        $expected_builds =
-            $controller->addExpectedBuilds($i, $currentstarttime);
-        if (is_array($expected_builds)) {
-            $num_expected_builds = count($expected_builds);
-            $controller->buildgroupsResponse[$i]['builds'] = array_merge(
-                $controller->buildgroupsResponse[$i]['builds'], $expected_builds);
-        }
+        $expected_builds = $controller->addExpectedBuilds($i, $currentstarttime);
+
+        $num_expected_builds = count($expected_builds);
+        $controller->buildgroupsResponse[$i]['builds'] = array_merge(
+            $controller->buildgroupsResponse[$i]['builds'],
+            $expected_builds
+        );
     }
     // Show how many builds this group has.
     $num_builds = count($controller->buildgroupsResponse[$i]['builds']);
@@ -530,8 +530,10 @@ for ($i = 0; $i < count($controller->buildgroupsResponse); $i++) {
 // This is used to allow project admins to move builds between groups.
 $response['all_buildgroups'] = array();
 foreach ($controller->buildgroupsResponse as $group) {
-    $response['all_buildgroups'][] =
-        array('id' => $group['id'], 'name' => $group['name']);
+    $response['all_buildgroups'][] = [
+        'id' => $group['id'],
+        'name' => $group['name']
+    ];
 }
 
 $controller->buildgroupsResponse =
@@ -556,17 +558,17 @@ if (!$show_aggregate) {
 
 $response['showorder'] = false;
 $response['showstarttime'] = true;
-if ($response['childview'] == 1) {
+if ($response['childview'] === 1) {
     // Report number of children.
-    if (!empty($controller->buildgroupsResponse)) {
+    if (count($controller->buildgroupsResponse) > 0) {
         $numchildren = count($controller->buildgroupsResponse[0]['builds']);
     } else {
-        $row = $db->executePreparedSingleRow('
+        $row = DB::select('
                    SELECT count(id) AS numchildren
                    FROM build
                    WHERE parentid=?
-               ', [intval($parentid)]);
-        $numchildren = intval($row['numchildren']);
+               ', [$parentid])[0];
+        $numchildren = (int) $row->numchildren;
     }
     $response['numchildren'] = $numchildren;
 
@@ -624,17 +626,16 @@ if ($response['childview'] == 1) {
 }
 
 // Generate coverage by group here.
-if (!empty($coverage_groups)) {
+if (count($coverage_groups) > 0) {
     $response['coveragegroups'] = array();
     foreach ($coverage_groups as $groupid => $group) {
         $loctested = $group['loctested'];
         $locuntested = $group['locuntested'];
-        if ($loctested == 0 && $locuntested == 0) {
+        if ($loctested === 0 && $locuntested === 0) {
             continue;
         }
-        $percentage = round($loctested / ($loctested + $locuntested) * 100, 2);
-        $group['percentage'] = $percentage;
-        $group['id'] = $groupid;
+        $group['percentage'] = round($loctested / ($loctested + $locuntested) * 100, 2);
+        $group['id'] = (int) $groupid;
 
         $response['coveragegroups'][] = $group;
     }
@@ -643,21 +644,20 @@ if (!empty($coverage_groups)) {
 // We support an additional advanced column called 'Proc Time'.
 // This is only shown if this project is setup to display
 // an extra test measurement called 'Processors'.
-$stmt = $PDO->prepare(
-    "SELECT id FROM measurement
-        WHERE projectid = ? and name = 'Processors'");
-pdo_execute($stmt, [$projectid]);
-if ($stmt->fetchColumn() !== false) {
-    $response['showProcTime'] = true;
-} else {
-    $response['showProcTime'] = false;
-}
+$stmt = DB::select("
+            SELECT count(*) AS c
+            FROM measurement
+            WHERE
+                projectid = ?
+                AND name = 'Processors'
+        ", [$Project->Id])[0];
+$response['showProcTime'] = $stmt->c > 0;
 
 $response['buildgroups'] = $controller->buildgroupsResponse;
 $response['updatetype'] = $controller->updateType;
-$response['enableTestTiming'] = $project_array['showtesttime'];
+$response['enableTestTiming'] = $Project->ShowTestTime;
 
-if (!empty($controller->siteResponse)) {
+if (count($controller->siteResponse) > 0) {
     $response = array_merge($response, $controller->siteResponse);
 }
 
