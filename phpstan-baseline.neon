@@ -8986,7 +8986,7 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 11
+			count: 8
 			path: app/cdash/app/Model/SubProject.php
 
 		-
@@ -9034,7 +9034,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 12
+			count: 9
 			path: app/cdash/app/Model/SubProject.php
 
 		-
@@ -9080,141 +9080,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetDependencies\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfErrorBuilds\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfErrorBuilds\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfErrorBuilds\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfErrorConfigures\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfErrorConfigures\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfErrorConfigures\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfFailingTests\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfFailingTests\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfFailingTests\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfNotRunTests\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfNotRunTests\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfNotRunTests\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfPassingBuilds\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfPassingBuilds\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfPassingBuilds\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfPassingConfigures\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfPassingConfigures\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfPassingConfigures\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfPassingTests\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfPassingTests\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfPassingTests\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfWarningBuilds\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfWarningBuilds\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfWarningBuilds\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfWarningConfigures\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfWarningConfigures\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetNumberOfWarningConfigures\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
@@ -13149,11 +13014,6 @@ parameters:
 
 		-
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Variable \\$date in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -18434,11 +18294,6 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
-			path: app/cdash/public/api/v1/viewSubProjects.php
-
-		-
-			message: "#^Foreach overwrites \\$row with its value variable\\.$#"
-			count: 9
 			path: app/cdash/public/api/v1/viewSubProjects.php
 
 		-
@@ -28420,16 +28275,6 @@ parameters:
 
 		-
 			message: "#^Method ViewSubProjectsTestCase\\:\\:testViewSubProjects\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_viewsubprojects.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_viewsubprojects.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between bool and 0\\|1\\|2\\|30\\|90\\|'2016\\-07\\-11 11\\:57\\:31' will always evaluate to false\\.$#"
 			count: 1
 			path: app/cdash/tests/test_viewsubprojects.php
 

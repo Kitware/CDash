@@ -34,20 +34,20 @@ class ViewSubProjectsTestCase extends KWWebTestCase
                         'nbuildpass' => 1,
                         'nconfigureerror' => 0,
                         'nconfigurewarning' => 2,
-                        'nconfigurepass' => 2,
+                        'nconfigurepass' => 0,
                         'ntestpass' => 90,
                         'ntestfail' => 30,
                         'ntestnotrun' => 0,
-                        'lastsubmission' => '2016-07-11 11:57:31');
+                        'starttime' => '2011-07-22 11:15:59');
                 foreach ($expected_values as $k => $v) {
-                    if (!$subproject[$k] === $v) {
+                    if ($subproject[$k] !== $v) {
                         $this->fail("Expected $v for TrilinosFramework $k, found " . $subproject[$k]);
                     }
                 }
             } elseif ($subproject['name'] === 'Zoltan') {
                 $found_zoltan = true;
-                if ($subproject['lastsubmission'] !== 'NA') {
-                    $this->fail("Expected NA for Zoltan lastsubmission, found " . $subproject['lastsubmission']);
+                if ($subproject['starttime'] !== 'NA') {
+                    $this->fail("Expected NA for Zoltan starttime, found " . $subproject['starttime']);
                 }
             }
         }

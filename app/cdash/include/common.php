@@ -1205,7 +1205,7 @@ function get_dates($date, $nightlytime): array
     $nightlyminute = intval(date('i', $nightlytime));
     $nightlysecond = intval(date('s', $nightlytime));
 
-    if (!isset($date) || strlen($date) == 0) {
+    if (strlen($date) === 0) {
         $date = date(FMT_DATE); // the date is always the date of the server
 
         if (date(FMT_TIME) > date(FMT_TIME, $nightlytime)) {

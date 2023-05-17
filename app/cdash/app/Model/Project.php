@@ -1056,10 +1056,10 @@ class Project
         }
 
         $build = $this->PDO->executePreparedSingleRow('
-                     SELECT submittime
+                     SELECT starttime
                      FROM build
                      WHERE projectid=?
-                     ORDER BY submittime DESC
+                     ORDER BY starttime DESC
                      LIMIT 1
                  ', [intval($this->Id)]);
 
@@ -1068,11 +1068,11 @@ class Project
             return false;
         }
 
-        if (!is_array($build) || !array_key_exists('submittime', $build)) {
+        if (!is_array($build) || !array_key_exists('starttime', $build)) {
             return false;
         }
 
-        return date(FMT_DATETIMESTD, strtotime($build['submittime'] . 'UTC'));
+        return date(FMT_DATETIMESTD, strtotime($build['starttime'] . 'UTC'));
     }
 
     /** Get the total number of builds for a project*/

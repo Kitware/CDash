@@ -16,7 +16,6 @@
 
 namespace CDash\Api\v1\ViewSubProjects;
 
-require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/common.php';
 
@@ -35,14 +34,16 @@ $Project = new Project();
 $Project->Id = $projectid;
 $Project->Fill();
 
-@$date = $_GET['date'];
-if ($date != null) {
-    $date = htmlspecialchars(pdo_real_escape_string($date));
+if (isset($_GET['date'])) {
+    $date = htmlspecialchars(pdo_real_escape_string($_GET['date']));
+    $date_specified = true;
+} else {
+    $last_start_timestamp = $Project->GetLastSubmission();
+    $date = strlen($last_start_timestamp) > 0 ? $last_start_timestamp : null;
+    $date_specified = false;
 }
 
 // Gather up the data for a SubProjects dashboard.
-
-require_once 'include/pdo.php';
 
 $pageTimer = new PageTimer();
 
@@ -105,41 +106,29 @@ if (!has_next_date($date, $currentstarttime)) {
 }
 $response['menu'] = $menu_response;
 
-$beginning_timestamp = $currentstarttime;
-$end_timestamp = $currentstarttime + 3600 * 24;
-
-$beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
-$end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
+$beginning_UTCDate = gmdate(FMT_DATETIME, $currentstarttime);
+$end_UTCDate = gmdate(FMT_DATETIME, $currentstarttime + 3600 * 24);
 
 // Get some information about the project
 $project_response = array();
-$project_response['nbuilderror'] =
-    $Project->GetNumberOfErrorBuilds($beginning_UTCDate, $end_UTCDate);
-$project_response['nbuildwarning'] =
-    $Project->GetNumberOfWarningBuilds($beginning_UTCDate, $end_UTCDate);
-$project_response['nbuildpass'] =
-    $Project->GetNumberOfPassingBuilds($beginning_UTCDate, $end_UTCDate);
-$project_response['nconfigureerror'] =
-    $Project->GetNumberOfErrorConfigures($beginning_UTCDate, $end_UTCDate);
-$project_response['nconfigurewarning'] =
-    $Project->GetNumberOfWarningConfigures($beginning_UTCDate, $end_UTCDate);
-$project_response['nconfigurepass'] =
-    $Project->GetNumberOfPassingConfigures($beginning_UTCDate, $end_UTCDate);
-$project_response['ntestpass'] =
-    $Project->GetNumberOfPassingTests($beginning_UTCDate, $end_UTCDate);
-$project_response['ntestfail'] =
-    $Project->GetNumberOfFailingTests($beginning_UTCDate, $end_UTCDate);
-$project_response['ntestnotrun'] =
-    $Project->GetNumberOfNotRunTests($beginning_UTCDate, $end_UTCDate);
-if (strlen($Project->GetLastSubmission()) == 0) {
-    $project_response['lastsubmission'] = 'NA';
+$project_response['nbuilderror'] = $Project->GetNumberOfErrorBuilds($beginning_UTCDate, $end_UTCDate);
+$project_response['nbuildwarning'] = $Project->GetNumberOfWarningBuilds($beginning_UTCDate, $end_UTCDate);
+$project_response['nbuildpass'] = $Project->GetNumberOfPassingBuilds($beginning_UTCDate, $end_UTCDate);
+$project_response['nconfigureerror'] = $Project->GetNumberOfErrorConfigures($beginning_UTCDate, $end_UTCDate);
+$project_response['nconfigurewarning'] = $Project->GetNumberOfWarningConfigures($beginning_UTCDate, $end_UTCDate);
+$project_response['nconfigurepass'] = $Project->GetNumberOfPassingConfigures($beginning_UTCDate, $end_UTCDate);
+$project_response['ntestpass'] = $Project->GetNumberOfPassingTests($beginning_UTCDate, $end_UTCDate);
+$project_response['ntestfail'] = $Project->GetNumberOfFailingTests($beginning_UTCDate, $end_UTCDate);
+$project_response['ntestnotrun'] = $Project->GetNumberOfNotRunTests($beginning_UTCDate, $end_UTCDate);
+$project_last_submission = $Project->GetLastSubmission();
+if (strlen($project_last_submission) == 0) {
+    $project_response['starttime'] = 'NA';
 } else {
-    $project_response['lastsubmission'] = $Project->GetLastSubmission();
+    $project_response['starttime'] = $project_last_submission;
 }
 $response['project'] = $project_response;
 
 // Look for the subproject
-$row = 0;
 $subprojectids = $Project->GetSubProjects();
 $subprojProp = array();
 foreach ($subprojectids as $subprojectid) {
@@ -147,66 +136,33 @@ foreach ($subprojectids as $subprojectid) {
     $SubProject->SetId($subprojectid);
     $subprojProp[$subprojectid] = array('name' => $SubProject->GetName());
 }
-$testSubProj = new SubProject();
-$testSubProj->SetProjectId($projectid);
-$result = $testSubProj->GetNumberOfErrorBuilds($beginning_UTCDate, $end_UTCDate, true);
-if ($result) {
-    foreach ($result as $row) {
-        $subprojProp[$row['subprojectid']]['nbuilderror'] = intval($row[1]);
+
+// If all of the dates are the same, we can get the results in bulk.  Otherwise, we must query every
+// subproject separately.
+if ($date_specified) {
+    $testSubProj = new SubProject();
+    $testSubProj->SetProjectId($projectid);
+    $result = $testSubProj->CommonBuildQuery($beginning_UTCDate, $end_UTCDate, true);
+    if ($result !== false) {
+        foreach ($result as $row) {
+            $subprojProp[$row['subprojectid']]['nbuilderror'] = (int) $row['nbuilderrors'];
+            $subprojProp[$row['subprojectid']]['nbuildwarning'] = (int) $row['nbuildwarnings'];
+            $subprojProp[$row['subprojectid']]['nbuildpass'] = (int) $row['npassingbuilds'];
+            $subprojProp[$row['subprojectid']]['nconfigureerror'] = (int) $row['nconfigureerrors'];
+            $subprojProp[$row['subprojectid']]['nconfigurewarning'] = (int) $row['nconfigurewarnings'];
+            $subprojProp[$row['subprojectid']]['nconfigurepass'] = (int) $row['npassingconfigures'];
+            $subprojProp[$row['subprojectid']]['ntestpass'] = (int) $row['ntestspassed'];
+            $subprojProp[$row['subprojectid']]['ntestfail'] = (int) $row['ntestsfailed'];
+            $subprojProp[$row['subprojectid']]['ntestnotrun'] = (int) $row['ntestsnotrun'];
+        }
     }
 }
-$result = $testSubProj->GetNumberOfWarningBuilds($beginning_UTCDate, $end_UTCDate, true);
-if ($result) {
-    foreach ($result as $row) {
-        $subprojProp[$row['subprojectid']]['nbuildwarning'] = intval($row[1]);
-    }
-}
-$result = $testSubProj->GetNumberOfPassingBuilds($beginning_UTCDate, $end_UTCDate, true);
-if ($result) {
-    foreach ($result as $row) {
-        $subprojProp[$row['subprojectid']]['nbuildpass'] = intval($row[1]);
-    }
-}
-$result = $testSubProj->GetNumberOfErrorConfigures($beginning_UTCDate, $end_UTCDate, true);
-if ($result) {
-    foreach ($result as $row) {
-        $subprojProp[$row['subprojectid']]['nconfigureerror'] = intval($row[1]);
-    }
-}
-$result = $testSubProj->GetNumberOfWarningConfigures($beginning_UTCDate, $end_UTCDate, true);
-if ($result) {
-    foreach ($result as $row) {
-        $subprojProp[$row['subprojectid']]['nconfigurewarning'] = intval($row[1]);
-    }
-}
-$result = $testSubProj->GetNumberOfPassingConfigures($beginning_UTCDate, $end_UTCDate, true);
-if ($result) {
-    foreach ($result as $row) {
-        $subprojProp[$row['subprojectid']]['nconfigurepass'] = intval($row[1]);
-    }
-}
-$result = $testSubProj->GetNumberOfPassingTests($beginning_UTCDate, $end_UTCDate, true);
-if ($result) {
-    foreach ($result as $row) {
-        $subprojProp[$row['subprojectid']]['ntestpass'] = intval($row[1]);
-    }
-}
-$result = $testSubProj->GetNumberOfFailingTests($beginning_UTCDate, $end_UTCDate, true);
-if ($result) {
-    foreach ($result as $row) {
-        $subprojProp[$row['subprojectid']]['ntestfail'] = intval($row[1]);
-    }
-}
-$result = $testSubProj->GetNumberOfNotRunTests($beginning_UTCDate, $end_UTCDate, true);
-if ($result) {
-    foreach ($result as $row) {
-        $subprojProp[$row['subprojectid']]['ntestnotrun'] = intval($row[1]);
-    }
-}
+
 $reportArray = array('nbuilderror', 'nbuildwarning', 'nbuildpass',
     'nconfigureerror', 'nconfigurewarning', 'nconfigurepass',
     'ntestpass', 'ntestfail', 'ntestnotrun');
 $subprojects_response = array();
+
 foreach ($subprojectids as $subprojectid) {
     $SubProject = new SubProject();
     $SubProject->SetId($subprojectid);
@@ -214,15 +170,35 @@ foreach ($subprojectids as $subprojectid) {
     $subproject_response['name'] = $SubProject->GetName();
     $subproject_response['name_encoded'] = urlencode($SubProject->GetName());
 
+    $last_submission_start_timestamp = $SubProject->GetLastSubmission();
+    if (!$date_specified) {
+        $currentstarttime = get_dates($last_submission_start_timestamp, $Project->NightlyTime)[1];
+        $beginning_UTCDate = gmdate(FMT_DATETIME, $currentstarttime);
+        $end_UTCDate = gmdate(FMT_DATETIME, $currentstarttime + 3600 * 24);
+
+        $result = $SubProject->CommonBuildQuery($beginning_UTCDate, $end_UTCDate, false);
+
+        $subprojProp[$subprojectid]['nconfigureerror'] = (int) $result['nconfigureerrors'];
+        $subprojProp[$subprojectid]['nconfigurewarning'] = (int) $result['nconfigurewarnings'];
+        $subprojProp[$subprojectid]['nconfigurepass'] = (int) $result['npassingconfigures'];
+        $subprojProp[$subprojectid]['nbuilderror'] = (int) $result['nbuilderrors'];
+        $subprojProp[$subprojectid]['nbuildwarning'] = (int) $result['nbuildwarnings'];
+        $subprojProp[$subprojectid]['nbuildpass'] = (int) $result['npassingbuilds'];
+        $subprojProp[$subprojectid]['ntestnotrun'] = (int) $result['ntestsnotrun'];
+        $subprojProp[$subprojectid]['ntestfail'] = (int) $result['ntestsfailed'];
+        $subprojProp[$subprojectid]['ntestpass'] = (int) $result['ntestspassed'];
+    }
+
     foreach ($reportArray as $reportnum) {
         $reportval = array_key_exists($reportnum, $subprojProp[$subprojectid]) ?
             $subprojProp[$subprojectid][$reportnum] : 0;
         $subproject_response[$reportnum] = $reportval;
     }
-    if (strlen($SubProject->GetLastSubmission()) == 0) {
-        $subproject_response['lastsubmission'] = 'NA';
+
+    if ($last_submission_start_timestamp === '' || $last_submission_start_timestamp === false) {
+        $subproject_response['starttime'] = 'NA';
     } else {
-        $subproject_response['lastsubmission'] = $SubProject->GetLastSubmission();
+        $subproject_response['starttime'] = $last_submission_start_timestamp;
     }
     $subprojects_response[] = $subproject_response;
 }
