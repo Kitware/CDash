@@ -354,7 +354,7 @@
             </tr>
             <tr class="trodd">
                 <td id="nob">
-                    <a href="/authtokens/manage">Manage authentication tokens</a>
+                    <a href="authtokens/manage">Manage authentication tokens</a>
                 </td>
             </tr>
             <tr class="treven">
