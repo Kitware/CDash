@@ -421,6 +421,10 @@
 
       <div v-if="cdash.user.id > 0">
         <!-- Add Notes -->
+        <img
+          :src="$baseURL + '/img/document.png'"
+          title="graph"
+        >
         <a
           id="toggle_note"
           @click="toggleNote()"
@@ -1039,7 +1043,7 @@ export default {
 
     addNote: function() {
       this.$axios
-        .post('api/v1/addUserNote.php', {
+        .post('/api/v1/addUserNote.php', {
           buildid: this.cdash.build.id,
           Status: this.cdash.noteStatus,
           AddNote: this.cdash.noteText
