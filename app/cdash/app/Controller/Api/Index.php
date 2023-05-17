@@ -21,29 +21,70 @@ use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Index extends ResultsApi
 {
-    protected $buildGroupName;
-    protected $includeSubProjects;
-    protected $includedSubProjects;
-    protected $excludeSubProjects;
-    protected $excludedSubProjects;
-    protected $labelIds;
-    protected $numSelectedSubProjects;
+    protected string $buildGroupName;
+    protected bool $includeSubProjects;
+    protected array $includedSubProjects;
+    protected bool $excludeSubProjects;
+    protected array $excludedSubProjects;
+    protected array $labelIds;
+    protected array $selectedSubProjects;
+    protected int $numSelectedSubProjects;
     protected $parentId;
     // This array is used to track if expected builds are found or not.
-    protected $receivedBuilds;
+    protected array $receivedBuilds;
     protected $subProjectId;
-    protected $subProjectPositions;
+    protected array $subProjectPositions;
 
-    public $buildgroupsResponse;
-    public $buildStartTimes;
-    public $childView;
-    public $shareLabelFilters;
-    public $siteResponse;
-    public $subProjectTestFilters;
-    public $updateType;
+    public array $buildgroupsResponse;
+    public array $buildStartTimes;
+    public bool $childView;
+    public bool $shareLabelFilters;
+    public array $siteResponse;
+    public string $subProjectTestFilters;
+    public string $updateType;
+
+    /**
+     * @var array<int>
+     */
+    private array $buildids = [];
+
+    /**
+     * A cache used by numChildrenForBuild().  If null, cache has not been populated.
+     * Otherwise, contains a mapping of [buildid => num_children]
+     *
+     * @var array<int, int>|null
+     */
+    private ?array $numChildrenForBuildCache = null;
+
+    /**
+     * A cache used by oneAtATimeForBuild().  If null, cache has not been populated.
+     * Otherwise, contains a mapping of [buildid => one_at_a_time]
+     *
+     * @var array<int, bool>|null
+     */
+    private ?array $oneAtATimeCache = null;
+
+    /**
+     * A cache used by getLabelsForBuild().  If null, cache has not been populated.
+     * Otherwise, contains a mapping of [buildid => [array of labels]]
+     *
+     * @var array<int, array<string>>|null
+     */
+    private ?array $labelsForBuildCache = null;
+
+    /**
+     * A cache used by addExpectedBuilds().  If null, cache has not been populated.
+     * Otherwise, contains a mapping of [groupid => [array of rules]]
+     *
+     * @var array<int, array<array<mixed>>>|null
+     */
+    private ?array $build2groupruleCache = null;
 
     public function __construct(Database $db, Project $project)
     {
@@ -52,7 +93,7 @@ class Index extends ResultsApi
         $this->buildGroupName = '';
         $this->buildgroupsResponse = [];
         $this->buildStartTimes = [];
-        $this->childView = 0;
+        $this->childView = false;
         $this->shareLabelFilters = false;
         $this->siteResponse = [];
         $this->updateType = '';
@@ -63,158 +104,169 @@ class Index extends ResultsApi
         $this->excludeSubProjects = false;
         $this->excludedSubProjects = [];
         $this->numSelectedSubProjects = 0;
-        $this->selectedSubProjects = '';
+        $this->selectedSubProjects = [];
         $this->subProjectTestFilters = '';
 
-        $this->labelIds = '';
+        $this->labelIds = [];
         $this->parentId = false;
         $this->receivedBuilds = [];
         $this->subProjectId = false;
         $this->subProjectPositions = [];
     }
 
-    public function setParentId($parentid)
+    public function setParentId(int $parentid): void
     {
         $this->parentId = $parentid;
     }
 
-    public function setSubProjectId($subprojectid)
+    public function setSubProjectId(int $subprojectid): void
     {
         $this->subProjectId = $subprojectid;
     }
 
-    public function filterOnBuildGroup($buildgroup_name)
+    public function filterOnBuildGroup(string $buildgroup_name): void
     {
         $this->buildGroupName = $buildgroup_name;
     }
 
-    public function getDailyBuilds()
+    public function getDailyBuilds(): array
     {
-        // Should we query by subproject?
-        $subprojectsql = '';
-        if (is_numeric($this->subProjectId)) {
-            $subprojectsql = ' AND sp2b.subprojectid=' . $this->subProjectId;
-        }
-
-        // Default date clause.
-        $date_clause = "AND b.starttime < '{$this->endDate}' AND b.starttime >= '{$this->beginDate}' ";
-        if ($this->filterdata['hasdateclause']) {
-            // If filterdata has a date clause, then cancel this one out.
-            $date_clause = '';
-        }
-
-        $parent_clause = '';
-        if ($this->parentId) {
-            // If we have a parentid, then we should only show children of that build.
-            // Date becomes irrelevant in this case.
-            $parent_clause = 'AND (b.parentid = ' . qnum($this->parentId) . ') ';
-            $date_clause = '';
-        } elseif (empty($subprojectsql)) {
-            // Only show builds that are not children.
-            $parent_clause = 'AND (b.parentid = -1 OR b.parentid = 0) ';
-        }
+        $query_params = [];
 
         // If the user is logged in we display if the build has some changes for them.
         $userupdatesql = '';
-        if (isset($_SESSION['cdash']) && array_key_exists('loginid', $_SESSION['cdash'])) {
-            $userupdatesql = "(SELECT count(updatefile.updateid) FROM updatefile,build2update,user2project,
-                user2repository
+        if (Auth::check()) {
+            $userupdatesql = "(SELECT count(updatefile.updateid) FROM updatefile,build2update,user2project,user2repository
                     WHERE build2update.buildid=b.id
                     AND build2update.updateid=updatefile.updateid
                     AND user2project.projectid=b.projectid
-                    AND user2project.userid='" . $_SESSION['cdash']['loginid'] . "'
+                    AND user2project.userid=?
                     AND user2repository.userid=user2project.userid
                     AND (user2repository.projectid=0 OR user2repository.projectid=b.projectid)
                     AND user2repository.credential=updatefile.author) AS userupdates,";
-        }
 
-        $buildgroup_clause = '';
-        if ($this->buildGroupName) {
-            $buildgroup_clause = " AND g.name = '{$this->buildGroupName}' ";
+            $query_params[] = Auth::id();
         }
 
         $sql = $this->getIndexQuery($userupdatesql);
-        $sql .= "WHERE b.projectid='{$this->project->Id}' AND g.type='Daily'
-            $parent_clause $date_clause $subprojectsql $this->filterSQL
-            $buildgroup_clause $this->limitSQL";
+        $sql .= " WHERE b.projectid=? AND g.type='Daily' ";
+        $query_params[] = (int) $this->project->Id;
 
-        // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)
-        $builds = pdo_query($sql);
+        if ($this->parentId) {
+            // If we have a parentid, then we should only show children of that build.
+            // Date becomes irrelevant in this case.
+            $sql .= ' AND b.parentid = ? ';
+            $query_params[] = (int) $this->parentId;
+        } elseif (!is_numeric($this->subProjectId)) {
+            // Only show builds that are not children.
+            $sql .= ' AND (b.parentid = -1 OR b.parentid = 0) ';
 
-        // Log any errors.
-        $pdo_error = pdo_error();
-        if (strlen($pdo_error) > 0) {
-            add_log('SQL error: ' . $pdo_error, 'Index.php', LOG_ERR);
+            // If the filter data doesn't have a date clause, use this as a default
+            if (!$this->filterdata['hasdateclause']) {
+                $sql .= " AND b.starttime < ? AND b.starttime >= ? ";
+                $query_params[] = $this->endDate;
+                $query_params[] = $this->beginDate;
+            }
         }
 
-        // Gather up results from this query.
-        $build_data = [];
-        while ($build_row = pdo_fetch_array($builds)) {
-            $build_data[] = $build_row;
+        // Should we query by subproject?
+        if (is_numeric($this->subProjectId)) {
+            $sql .= ' AND sp2b.subprojectid=? ';
+            $query_params[] = (int) $this->subProjectId;
         }
-        return $build_data;
+
+        // Unfortunately this has to be sanitized manually on the filters side...
+        // TODO: (williamjallen) Export prepared SQL and parameters from filters
+        //       separately so we can use a proper prepared statement.
+        $sql .= $this->filterSQL;
+
+        if (strlen($this->buildGroupName) > 0) {
+            $sql .= ' AND g.name = ? ';
+            $query_params[] = $this->buildGroupName;
+        }
+
+        $sql .= $this->limitSQL;
+
+        $builds = DB::select($sql, $query_params);
+        return array_map(function ($item) {
+            return (array) $item;
+        }, $builds);
     }
 
-    public function getDynamicBuilds()
+    public function getDynamicBuilds(): array
     {
         $builds = [];
 
         // Get the build rules for each dynamic group belonging to this project.
-        $stmt = $this->db->prepare("
-            SELECT b2gr.buildname, b2gr.siteid, b2gr.parentgroupid, bg.id,
-                   bg.name, bg.type, gp.position
-            FROM build2grouprule AS b2gr
-            LEFT JOIN buildgroup AS bg ON (bg.id = b2gr.groupid)
-            LEFT JOIN buildgroupposition AS gp ON (gp.buildgroupid = bg.id)
-            WHERE bg.projectid = :projectid AND
-                  bg.endtime = :begin_epoch AND
-                  bg.type != 'Daily' AND
-                  b2gr.starttime < :end_date AND
-                  (b2gr.endtime = :begin_epoch OR b2gr.endtime > :end_date)");
-        $query_params = [
-            ':projectid' => $this->project->Id,
-            ':begin_epoch' => self::BEGIN_EPOCH,
-            ':end_date' => $this->endDate
-        ];
-        $this->db->execute($stmt, $query_params);
+        $stmt = DB::select("
+                    SELECT
+                        b2gr.buildname,
+                        b2gr.siteid,
+                        b2gr.parentgroupid,
+                        bg.id,
+                        bg.name,
+                        bg.type,
+                        gp.position
+                    FROM build2grouprule AS b2gr
+                    LEFT JOIN buildgroup AS bg ON (bg.id = b2gr.groupid)
+                    LEFT JOIN buildgroupposition AS gp ON (gp.buildgroupid = bg.id)
+                    WHERE
+                        bg.projectid = ?
+                        AND bg.endtime = ?
+                        AND bg.type != 'Daily'
+                        AND b2gr.starttime < ?
+                        AND (
+                            b2gr.endtime = ?
+                            OR b2gr.endtime > ?
+                        )
+                ", [
+                    (int) $this->project->Id,
+                    self::BEGIN_EPOCH,
+                    $this->endDate,
+                    self::BEGIN_EPOCH,
+                    $this->endDate
+                ]);
 
-        while ($rule = $stmt->fetch()) {
-            $buildgroup_name = $rule['name'];
-            if ($this->buildGroupName && $this->buildGroupName != $buildgroup_name) {
+        foreach ($stmt as $rule) {
+            $buildgroup_name = $rule->name;
+            if (strlen($this->buildGroupName) > 0 && $this->buildGroupName != $buildgroup_name) {
                 continue;
             }
-            $buildgroup_id = $rule['id'];
-            $buildgroup_position = $rule['position'];
-            if ($rule['type'] == 'Latest') {
+            $buildgroup_id = $rule->id;
+            $buildgroup_position = $rule->position;
+            if ($rule->type === 'Latest') {
+                $sql = $this->getIndexQuery();
+
+                $whereClauses = [];
+                $query_params = [];
                 // optional fields: parentgroupid, site, and build name match.
                 // Use these to construct a WHERE clause for our query.
-                $where = '';
-                $whereClauses = [];
-                if (!empty($rule['parentgroupid'])) {
-                    $whereClauses[] = "b2g.groupid='" . $rule['parentgroupid'] . "'";
+                if (!empty($rule->parentgroupid)) {
+                    $whereClauses[] = "b2g.groupid=?";
+                    $query_params[] = (int) $rule->parentgroupid;
                 }
-                if (!empty($rule['siteid'])) {
-                    $whereClauses[] = "s.id='" . $rule['siteid'] . "'";
+                if (!empty($rule->siteid)) {
+                    $whereClauses[] = "s.id=?";
+                    $query_params[] = (int) $rule->siteid;
                 }
-                if (!empty($rule['buildname'])) {
-                    $whereClauses[] = "b.name LIKE '" . $rule['buildname'] . "'";
+                if (!empty($rule->buildname)) {
+                    $whereClauses[] = "b.name LIKE ?";
+                    $query_params[] = $rule->buildname;
                 }
-                if (!empty($whereClauses)) {
-                    $where = 'WHERE ' . implode(' AND ', $whereClauses);
-                    $where .= " AND b.starttime<'{$this->endDate}'";
+                if (count($whereClauses) > 0) {
+                    $sql .= ' WHERE ' . implode(' AND ', $whereClauses);
+                    $sql .= " AND b.starttime < ? ";
+                    $query_params[] = $this->endDate;
                 }
+
+                $sql .= $this->filterSQL;
 
                 // We only want the most recent build.
-                $order = 'ORDER BY b.submittime DESC LIMIT 1';
+                $sql .= ' ORDER BY b.submittime DESC LIMIT 1 ';
 
-                $sql = $this->getIndexQuery();
-                $sql .= "$where $this->filterSQL $order";
-
-                $results = pdo_query($sql);
-                while ($build = pdo_fetch_array($results)) {
-                    if (empty($build)) {
-                        continue;
-                    }
+                $results = DB::select($sql, $query_params);
+                foreach ($results as $build) {
+                    $build = (array) $build;
                     $build['groupname'] = $buildgroup_name;
                     $build['groupid'] = $buildgroup_id;
                     $build['position'] = $buildgroup_position;
@@ -227,7 +279,7 @@ class Index extends ResultsApi
 
     // Encapsulate this monster query so that it is not duplicated between
     // index.php and get_dynamic_builds.
-    public function getIndexQuery($userupdatesql='')
+    public function getIndexQuery(string $userupdatesql=''): string
     {
         return
             "SELECT b.id,b.siteid,b.parentid,b.done,b.changeid,b.testduration,
@@ -300,7 +352,7 @@ class Index extends ResultsApi
                 LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)";
     }
 
-    public function populateBuildRow($build_row)
+    public function populateBuildRow(array $build_row): array
     {
         // Fields that come from the initial query:
         //  id
@@ -348,12 +400,12 @@ class Index extends ResultsApi
         //  test
         //
 
-        $buildid = $build_row['id'];
-        $groupid = $build_row['groupid'];
-        $siteid = $build_row['siteid'];
-        $parentid = $build_row['parentid'];
+        // This hack allows us to access a list of all of the buildids.  In the future,
+        // the placement of this logic should be reconsidered since this function is an
+        // otherwise read-only function.
+        $this->buildids[] = (int) $build_row['id'];
 
-        $build_row['buildids'][] = $buildid;
+        $build_row['buildids'][] = (int) $build_row['id'];
         $build_row['maxstarttime'] = $build_row['starttime'];
 
         // Updates
@@ -363,9 +415,7 @@ class Index extends ResultsApi
             $build_row['updateduration'] = 0;
         }
 
-        if (strlen($build_row['updatestatus']) > 0 &&
-                $build_row['updatestatus'] != '0'
-        ) {
+        if (strlen($build_row['updatestatus']) > 0 && $build_row['updatestatus'] != '0') {
             $build_row['countupdateerrors'] = 1;
         } else {
             $build_row['countupdateerrors'] = 0;
@@ -387,8 +437,7 @@ class Index extends ResultsApi
         }
 
         $build_row['hasconfigure'] = 0;
-        if ($build_row['countconfigureerrors'] != -1 ||
-                $build_row['countconfigurewarnings'] != -1) {
+        if ($build_row['countconfigureerrors'] != -1 || $build_row['countconfigurewarnings'] != -1) {
             $build_row['hasconfigure'] = 1;
         }
 
@@ -417,7 +466,7 @@ class Index extends ResultsApi
         return $build_row;
     }
 
-    public function beginResponseForBuildGroup(BuildGroup $buildgroup)
+    public function beginResponseForBuildGroup(BuildGroup $buildgroup): void
     {
         $buildgroup_response = [];
         $groupname = $buildgroup->GetName();
@@ -452,9 +501,85 @@ class Index extends ResultsApi
         $this->buildgroupsResponse[] = $buildgroup_response;
     }
 
-    public function generateBuildResponseFromRow($build_array)
+    /**
+     * Returns the number of children for the specified buildid using cached data.
+     * If the cache hasn't been populated yet, it executes a query.  This prevents
+     * unnecessary repetitive querying of the database on a per-buildid basis.
+     */
+    private function numChildrenForBuild(int $buildid): int
     {
-        $groupid = $build_array['groupid'];
+        // Populate the cache if this is the first time we've called this function
+        if ($this->numChildrenForBuildCache === null) {
+            $this->numChildrenForBuildCache = [];
+            $buildids_prepared_array = Database::getInstance()->createPreparedArray(count($this->buildids));
+            $query_result = DB::select("
+                                SELECT parentid, count(id) AS numchildren
+                                FROM build
+                                WHERE parentid IN $buildids_prepared_array
+                                GROUP BY parentid
+                            ", $this->buildids);
+
+            foreach ($query_result as $row) {
+                $this->numChildrenForBuildCache[$row->parentid] = $row->numchildren;
+            }
+        }
+
+        return $this->numChildrenForBuildCache[$buildid] ?? 0;
+    }
+
+    private function oneAtATimeForBuild(int $buildid): bool
+    {
+        if ($this->oneAtATimeCache === null) {
+            $this->oneAtATimeCache = [];
+            $buildids_prepared_array = Database::getInstance()->createPreparedArray(count($this->buildids));
+            $query_result = DB::select("
+                                SELECT parentid, COUNT(DISTINCT starttime) AS c
+                                FROM build
+                                WHERE parentid IN $buildids_prepared_array
+                                GROUP BY parentid
+                                LIMIT 2
+                            ", $this->buildids);
+
+            foreach ($query_result as $row) {
+                $this->oneAtATimeCache[(int) $row->parentid] = ((int) $row->c) > 1;
+            }
+        }
+
+        return $this->oneAtATimeCache[$buildid] ?? false;
+    }
+
+    /**
+     * @return array<string>
+     */
+    private function getLabelsForBuild(int $buildid): array
+    {
+        if ($this->labelsForBuildCache === null) {
+            $buildids_prepared_array = Database::getInstance()->createPreparedArray(count($this->buildids));
+            $query_result = DB::select("
+                                SELECT
+                                    l.text as label,
+                                    b.id as buildid
+                                FROM label AS l
+                                INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
+                                INNER JOIN build AS b ON (l2b.buildid=b.id)
+                                WHERE b.id IN $buildids_prepared_array
+                            ", $this->buildids);
+
+            $this->labelsForBuildCache = [];
+            foreach ($query_result as $row) {
+                if (!array_key_exists((int) $row->buildid, $this->labelsForBuildCache)) {
+                    $this->labelsForBuildCache[(int) $row->buildid] = [];
+                }
+                $this->labelsForBuildCache[(int) $row->buildid][] = $row->label;
+            }
+        }
+
+        return $this->labelsForBuildCache[$buildid] ?? [];
+    }
+
+    public function generateBuildResponseFromRow(array $build_array): array|false
+    {
+        $groupid = (int) $build_array['groupid'];
 
         // Find the buildgroup array for this build.
         $i = -1;
@@ -464,10 +589,8 @@ class Index extends ResultsApi
                 break;
             }
         }
-        if ($i == -1) {
-            add_log("BuildGroup '$groupid' not found for build #" . $build_array['id'],
-                __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
-                LOG_WARNING);
+        if ($i === -1) {
+            Log::warning("BuildGroup '$groupid' not found for build #" . $build_array['id']);
             return false;
         }
 
@@ -475,19 +598,12 @@ class Index extends ResultsApi
 
         $build_response = [];
 
-        $this->receivedBuilds[$groupname][] =
-            $build_array['sitename'] . '_' . $build_array['name'];
+        $this->receivedBuilds[$groupname][] = $build_array['sitename'] . '_' . $build_array['name'];
 
-        $buildid = $build_array['id'];
-        $siteid = $build_array['siteid'];
+        $buildid = (int) $build_array['id'];
+        $siteid = (int) $build_array['siteid'];
 
-        $db = Database::getInstance();
-        $countChildrenResult = $db->executePreparedSingleRow('
-                                   SELECT count(id) AS numchildren
-                                   FROM build
-                                   WHERE parentid=?
-                               ', [intval($buildid)]);
-        $numchildren = $countChildrenResult['numchildren'];
+        $numchildren = $this->numChildrenForBuild($buildid);
         $build_response['numchildren'] = $numchildren;
 
         $selected_configure_errors = 0;
@@ -503,79 +619,78 @@ class Index extends ResultsApi
         $one_at_a_time = false;
 
         if ($numchildren > 0) {
-            $child_builds_hyperlink =
-                $this->getChildBuildsHyperlink($build_array['id']);
+            $child_builds_hyperlink = $this->getChildBuildsHyperlink($buildid);
             $build_response['multiplebuildshyperlink'] = $child_builds_hyperlink;
             $this->buildgroupsResponse[$i]['hasparentbuilds'] = true;
 
             // Determine if this was an "all at once" or a "one at a time"
             // SubProject build.
-            $stmt = $this->db->prepare(
-                'SELECT COUNT(DISTINCT starttime) FROM build
-                 WHERE parentid = :parentid');
-            $this->db->execute($stmt, [':parentid' => $buildid]);
-            $one_at_a_time = $stmt->fetchColumn() > 1;
+            $one_at_a_time = $this->oneAtATimeForBuild($buildid);
 
             // Compute selected (excluded or included) SubProject results.
-            if ($this->selectedSubProjects) {
-                $select_query = "
-                    SELECT configureerrors, configurewarnings, configureduration,
-                           builderrors, buildwarnings, buildduration,
-                           b.starttime, b.endtime, testnotrun, testfailed, testpassed,
-                           testduration, sb.name, btt.time AS testtime
-                               FROM build AS b
-                               INNER JOIN subproject2build AS sb2b ON (b.id = sb2b.buildid)
-                               INNER JOIN subproject AS sb ON (sb2b.subprojectid = sb.id)
-                               LEFT JOIN buildtesttime AS btt ON (btt.buildid = b.id)
-                               WHERE b.parentid=$buildid
-                               AND sb.name IN $this->selectedSubProjects";
-                $select_results = pdo_query($select_query);
-                while ($select_array = pdo_fetch_array($select_results)) {
-                    $selected_configure_errors +=
-                        max(0, $select_array['configureerrors']);
-                    $selected_configure_warnings +=
-                        max(0, $select_array['configurewarnings']);
-                    $selected_configure_duration +=
-                        max(0, $select_array['configureduration']);
-                    $selected_build_errors +=
-                        max(0, $select_array['builderrors']);
-                    $selected_build_warnings +=
-                        max(0, $select_array['buildwarnings']);
-                    $selected_build_duration +=
-                        max(0, $select_array['buildduration']);
-                    $selected_tests_not_run +=
-                        max(0, $select_array['testnotrun']);
-                    $selected_tests_failed +=
-                        max(0, $select_array['testfailed']);
-                    $selected_tests_passed +=
-                        max(0, $select_array['testpassed']);
-                    $selected_proc_time +=
-                        max(0, $select_array['testtime']);
+            if (count($this->selectedSubProjects) > 0) {
+                $db = Database::getInstance();
+                $prepared_array = $db->createPreparedArray(count($this->selectedSubProjects));
+                $select_results = DB::select("
+                                      SELECT
+                                          configureerrors,
+                                          configurewarnings,
+                                          configureduration,
+                                          builderrors,
+                                          buildwarnings,
+                                          buildduration,
+                                          b.starttime,
+                                          b.endtime,
+                                          testnotrun,
+                                          testfailed,
+                                          testpassed,
+                                          testduration,
+                                          sb.name,
+                                          btt.time AS testtime
+                                      FROM build AS b
+                                      INNER JOIN subproject2build AS sb2b ON (b.id = sb2b.buildid)
+                                      INNER JOIN subproject AS sb ON (sb2b.subprojectid = sb.id)
+                                      LEFT JOIN buildtesttime AS btt ON (btt.buildid = b.id)
+                                      WHERE
+                                          b.parentid=?
+                                          AND sb.name IN $prepared_array
+                                  ", array_merge([$buildid], $this->selectedSubProjects));
+                foreach ($select_results as $select_array) {
+                    $selected_configure_errors += max(0, $select_array->configureerrors);
+                    $selected_configure_warnings += max(0, $select_array->configurewarnings);
+                    $selected_configure_duration += max(0, $select_array->configureduration);
+                    $selected_build_errors += max(0, $select_array->builderrors);
+                    $selected_build_warnings += max(0, $select_array->buildwarnings);
+                    $selected_build_duration += max(0, $select_array->buildduration);
+                    $selected_tests_not_run += max(0, $select_array->testnotrun);
+                    $selected_tests_failed +=  max(0, $select_array->testfailed);
+                    $selected_tests_passed += max(0, $select_array->testpassed);
+                    $selected_proc_time += max(0, $select_array->testtime);
                 }
             }
         } else {
             $this->buildgroupsResponse[$i]['hasnormalbuilds'] = true;
         }
 
-        if (strtolower($build_array['type']) == 'continuous') {
+        if (strtolower($build_array['type']) === 'continuous') {
             $this->buildgroupsResponse[$i]['sorttype'] = 'time';
         }
 
         // Attempt to determine the platform based on the OSName and the buildname
         $buildplatform = '';
-        if (strtolower(substr($build_array['osname'], 0, 7)) == 'windows') {
+        if (strtolower(substr($build_array['osname'], 0, 7)) === 'windows') {
             $buildplatform = 'windows';
-        } elseif (strtolower(substr($build_array['osname'], 0, 8)) == 'mac os x'
-                || strtolower(substr($build_array['osname'], 0, 5)) == 'macos'
+        } elseif (strtolower(substr($build_array['osname'], 0, 8)) === 'mac os x'
+                || strtolower(substr($build_array['osname'], 0, 5)) === 'macos'
         ) {
             $buildplatform = 'mac';
-        } elseif (strtolower(substr($build_array['osname'], 0, 5)) == 'linux'
-                || strtolower(substr($build_array['osname'], 0, 3)) == 'aix'
+        } elseif (strtolower(substr($build_array['osname'], 0, 5)) === 'linux'
+                || strtolower(substr($build_array['osname'], 0, 3)) === 'aix'
         ) {
             $buildplatform = 'linux';
-        } elseif (strtolower(substr($build_array['osname'], 0, 7)) == 'freebsd') {
+        } elseif (strtolower(substr($build_array['osname'], 0, 7)) === 'freebsd') {
             $buildplatform = 'freebsd';
-        } elseif (strtolower(substr($build_array['osname'], 0, 3)) == 'gnu') {
+        } elseif (strtolower(substr($build_array['osname'], 0, 3)) === 'gnu') {
             $buildplatform = 'gnu';
         }
 
@@ -590,7 +705,7 @@ class Index extends ResultsApi
         }
 
         if (isset($_GET['parentid'])) {
-            if (empty($this->siteResponse)) {
+            if (count($this->siteResponse) === 0) {
                 $this->siteResponse['site'] = $build_array['sitename'];
                 $this->siteResponse['siteoutoforder'] = $build_array['siteoutoforder'];
                 $this->siteResponse['siteid'] = $siteid;
@@ -618,27 +733,14 @@ class Index extends ResultsApi
         if (isset($build_array['userupdates'])) {
             $build_response['userupdates'] = $build_array['userupdates'];
         }
-        $build_response['id'] = $build_array['id'];
+        $build_response['id'] = (int) $build_array['id'];
         $build_response['done'] = $build_array['done'];
 
         $build_response['buildnotes'] = $build_array['countbuildnotes'];
         $build_response['notes'] = $build_array['countnotes'];
 
         // Figure out how many labels to report for this build.
-        if (!array_key_exists('numlabels', $build_array) ||
-                $build_array['numlabels'] == 0
-        ) {
-            $num_labels = 0;
-        } else {
-            $num_labels = $build_array['numlabels'];
-        }
-
-        $label_query = 'SELECT l.text
-                        FROM label AS l
-                        INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
-                        INNER JOIN build AS b ON (l2b.buildid=b.id)
-                        WHERE b.id=?';
-        $label_query_params = [intval($buildid)];
+        $num_labels = (int) ($build_array['numlabels'] ?? 0);
 
         $build_labels = [];
         if ($this->numSelectedSubProjects > 0) {
@@ -646,21 +748,21 @@ class Index extends ResultsApi
             if ($this->includeSubProjects) {
                 $num_labels = 0;
             }
-            $labels_result = $db->executePrepared($label_query, $label_query_params);
+            $labels_result = $this->getLabelsForBuild($buildid);
             foreach ($labels_result as $label_row) {
                 // Whitelist case
                 if ($this->includeSubProjects &&
-                        in_array($label_row['text'], $this->includedSubProjects)
+                        in_array($label_row, $this->includedSubProjects)
                 ) {
                     $num_labels++;
-                    $build_labels[] = $label_row['text'];
+                    $build_labels[] = $label_row;
                 }
                 // Blacklist case
                 if ($this->excludeSubProjects) {
-                    if (in_array($label_row['text'], $this->excludedSubProjects)) {
+                    if (in_array($label_row, $this->excludedSubProjects)) {
                         $num_labels--;
                     } else {
-                        $build_labels[] = $label_row['text'];
+                        $build_labels[] = $label_row;
                     }
                 }
             }
@@ -673,18 +775,17 @@ class Index extends ResultsApi
         }
 
         // Assign a label to this build based on how many labels it has.
-        if ($num_labels == 0) {
+        if ($num_labels === 0) {
             $build_label = '(none)';
-        } elseif ($num_labels == 1) {
+        } elseif ($num_labels === 1) {
             // Exactly one label for this build
-            if (!empty($build_labels)) {
+            if (count($build_labels) > 0) {
                 // If we're whitelisting or blacklisting we've already figured
                 // out what this label is.
                 $build_label = $build_labels[0];
             } else {
                 // Otherwise we look it up here.
-                $label_result = $db->executePreparedSingleRow($label_query, $label_query_params);
-                $build_label = $label_result['text'];
+                $build_label = $this->getLabelsForBuild($buildid)[0];
             }
         } else {
             // More than one label, just report the number.
@@ -707,14 +808,12 @@ class Index extends ResultsApi
         // the children of a specified parent build.
         // We do this because our view differs slightly if the subprojects
         // were built one at a time vs. all at once.
-        if ($this->childView == 1 &&
-                !in_array($build_array['starttime'], $this->buildStartTimes)) {
+        if ($this->childView && !in_array($build_array['starttime'], $this->buildStartTimes)) {
             $this->buildStartTimes[] = $build_array['starttime'];
         }
 
         // Calculate this build's total duration.
-        $duration = strtotime($build_array['endtime']) -
-            strtotime($build_array['starttime']);
+        $duration = strtotime($build_array['endtime']) - strtotime($build_array['starttime']);
         $build_response['time'] = time_difference($duration, true);
         $build_response['timefull'] = $duration;
 
@@ -728,7 +827,7 @@ class Index extends ResultsApi
             $build_response['hasupdate'] = true;
 
             // Record what type of update to report for this project.
-            if (!$this->updateType) {
+            if ($this->updateType === '') {
                 if (!empty($build_array['revision'])) {
                     $this->updateType = 'Revision';
                 } else {
@@ -775,7 +874,7 @@ class Index extends ResultsApi
 
             // The SubProjects filters only modify values for parent builds
             // (not children).
-            if ($this->childView == 0) {
+            if (!$this->childView) {
                 if ($this->includeSubProjects) {
                     $nerrors = $selected_build_errors;
                     $nwarnings = $selected_build_warnings;
@@ -804,7 +903,7 @@ class Index extends ResultsApi
             $compilation_response['time'] = time_difference($buildduration, true);
             $compilation_response['timefull'] = $buildduration;
 
-            if ($this->childView == 1 || (!$this->includeSubProjects && !$this->excludeSubProjects)) {
+            if ($this->childView || (!$this->includeSubProjects && !$this->excludeSubProjects)) {
                 // Don't show diff when filtering by SubProject.
                 $compilation_response['nerrordiffp'] =
                     $build_array['countbuilderrordiffp'];
@@ -835,7 +934,7 @@ class Index extends ResultsApi
             // The SubProjects filters only modify configure values when we're
             // viewing parent builds that performed their SubProjects one at a time
             // (not all at once).
-            if ($this->childView == 0 && $one_at_a_time) {
+            if (!$this->childView && $one_at_a_time) {
                 if ($this->includeSubProjects) {
                     $nconfigureerrors = $selected_configure_errors;
                     $nconfigurewarnings = $selected_configure_warnings;
@@ -854,12 +953,10 @@ class Index extends ResultsApi
             $this->buildgroupsResponse[$i]['numconfigurewarning'] += $nconfigurewarnings;
 
             if (!$this->includeSubProjects && !$this->excludeSubProjects) {
-                $configure_response['warningdiff'] =
-                    $build_array['countconfigurewarningdiff'];
+                $configure_response['warningdiff'] = $build_array['countconfigurewarningdiff'];
             }
 
-            $configure_response['time'] =
-                time_difference($configureduration, true);
+            $configure_response['time'] = time_difference($configureduration, true);
             $configure_response['timefull'] = $configureduration;
 
             $build_response['configure'] = $configure_response;
@@ -880,7 +977,7 @@ class Index extends ResultsApi
 
             // The SubProjects filters only modify values for parent builds
             // (not children).
-            if ($this->childView == 0) {
+            if (!$this->childView) {
                 if ($this->includeSubProjects) {
                     $nnotrun = $selected_tests_not_run;
                     $nfail = $selected_tests_failed;
@@ -894,41 +991,39 @@ class Index extends ResultsApi
                 }
             }
 
-            if ($this->childView == 1 || (!$this->includeSubProjects && !$this->excludeSubProjects)) {
-                $test_response['nnotrundiffp'] =
-                    $build_array['counttestsnotrundiffp'];
-                $test_response['nnotrundiffn'] =
-                    $build_array['counttestsnotrundiffn'];
+            if ($this->childView || (!$this->includeSubProjects && !$this->excludeSubProjects)) {
+                $test_response['nnotrundiffp'] = $build_array['counttestsnotrundiffp'];
+                $test_response['nnotrundiffn'] = $build_array['counttestsnotrundiffn'];
 
-                $test_response['nfaildiffp'] =
-                    $build_array['counttestsfaileddiffp'];
-                $test_response['nfaildiffn'] =
-                    $build_array['counttestsfaileddiffn'];
+                $test_response['nfaildiffp'] = $build_array['counttestsfaileddiffp'];
+                $test_response['nfaildiffn'] = $build_array['counttestsfaileddiffn'];
 
-                $test_response['npassdiffp'] =
-                    $build_array['counttestspasseddiffp'];
-                $test_response['npassdiffn'] =
-                    $build_array['counttestspasseddiffn'];
+                $test_response['npassdiffp'] = $build_array['counttestspasseddiffp'];
+                $test_response['npassdiffn'] = $build_array['counttestspasseddiffn'];
             }
 
-            if ($this->project->ShowTestTime == 1) {
+            if ((int) $this->project->ShowTestTime === 1) {
                 $test_response['timestatus'] = $build_array['countteststimestatusfailed'];
-                $test_response['ntimediffp'] =
-                    $build_array['countteststimestatusfaileddiffp'];
-                $test_response['ntimediffn'] =
-                    $build_array['countteststimestatusfaileddiffn'];
+                $test_response['ntimediffp'] = $build_array['countteststimestatusfaileddiffp'];
+                $test_response['ntimediffn'] = $build_array['countteststimestatusfaileddiffn'];
             }
 
             if ($this->shareLabelFilters) {
-                $label_query_base =
-                    "SELECT b2t.status, b2t.newstatus
-                    FROM build2test AS b2t
-                    INNER JOIN label2test AS l2t ON
-                    (l2t.outputid=b2t.outputid AND l2t.buildid=b2t.buildid)
-                    WHERE b2t.buildid = '$buildid' AND
-                    l2t.labelid IN $this->labelIds";
-                $label_filter_query = $label_query_base . $this->limitSQL;
-                $labels_result = pdo_query($label_filter_query);
+                $placeholders = Database::getInstance()->createPreparedArray(count($this->labelIds));
+                $labels_result = DB::select("
+                                     SELECT
+                                         b2t.status,
+                                         b2t.newstatus
+                                     FROM build2test AS b2t
+                                     INNER JOIN label2test AS l2t ON (
+                                         l2t.outputid=b2t.outputid
+                                         AND l2t.buildid=b2t.buildid
+                                     )
+                                     WHERE
+                                         b2t.buildid = ?
+                                         AND l2t.labelid IN $placeholders
+                                     $this->limitSQL
+                                 ", array_merge([$buildid], $this->labelIds));
 
                 $nnotrun = 0;
                 $nfail = 0;
@@ -939,23 +1034,23 @@ class Index extends ResultsApi
                 $test_response['npassdiffn'] = 0;
                 $test_response['nnotrundiffp'] = 0;
                 $test_response['nnotrundiffn'] = 0;
-                while ($label_row = pdo_fetch_array($labels_result)) {
-                    switch ($label_row['status']) {
+                foreach ($labels_result as $label_row) {
+                    switch ($label_row->status) {
                         case 'passed':
                             $npass++;
-                            if ($label_row['newstatus'] == 1) {
+                            if ((int) $label_row->newstatus === 1) {
                                 $test_response['npassdiffp']++;
                             }
                             break;
                         case 'failed':
                             $nfail++;
-                            if ($label_row['newstatus'] == 1) {
+                            if ((int) $label_row->newstatus === 1) {
                                 $test_response['nfaildiffp']++;
                             }
                             break;
                         case 'notrun':
                             $nnotrun++;
-                            if ($label_row['newstatus'] == 1) {
+                            if ((int) $label_row->newstatus === 1) {
                                 $test_response['nnotrundiffp']++;
                             }
                             break;
@@ -999,25 +1094,17 @@ class Index extends ResultsApi
 
         // Generate a string summarizing this build's timing.
         $timesummary = $build_response['builddate'];
-        if ($build_response['hasupdate'] &&
-                array_key_exists('time', $build_response['update'])) {
-            $timesummary .= ', Update time: ' .
-                $build_response['update']['time'];
+        if ($build_response['hasupdate'] && array_key_exists('time', $build_response['update'])) {
+            $timesummary .= ', Update time: ' . $build_response['update']['time'];
         }
-        if ($build_response['hasconfigure'] &&
-                array_key_exists('time', $build_response['configure'])) {
-            $timesummary .= ', Configure time: ' .
-                $build_response['configure']['time'];
+        if ($build_response['hasconfigure'] &&  array_key_exists('time', $build_response['configure'])) {
+            $timesummary .= ', Configure time: ' . $build_response['configure']['time'];
         }
-        if ($build_response['hascompilation'] &&
-                array_key_exists('time', $build_response['compilation'])) {
-            $timesummary .= ', Build time: ' .
-                $build_response['compilation']['time'];
+        if ($build_response['hascompilation'] && array_key_exists('time', $build_response['compilation'])) {
+            $timesummary .= ', Build time: ' . $build_response['compilation']['time'];
         }
-        if ($build_response['hastest'] &&
-                array_key_exists('time', $build_response['test'])) {
-            $timesummary .= ', Test time: ' .
-                $build_response['test']['time'];
+        if ($build_response['hastest'] && array_key_exists('time', $build_response['test'])) {
+            $timesummary .= ', Test time: ' . $build_response['test']['time'];
         }
 
         $timesummary .= ', Total time: ' . $build_response['time'];
@@ -1033,7 +1120,7 @@ class Index extends ResultsApi
             }
         }
 
-        if ($build_array['name'] != 'Aggregate Coverage') {
+        if ($build_array['name'] !== 'Aggregate Coverage') {
             $this->buildgroupsResponse[$i]['builds'][] = $build_response;
         }
 
@@ -1041,7 +1128,7 @@ class Index extends ResultsApi
     }
 
     // Get a link to a page showing the children of a given parent build.
-    private function getChildBuildsHyperlink($parentid)
+    private function getChildBuildsHyperlink(int $parentid): string
     {
         $baseurl = $_SERVER['REQUEST_URI'];
 
@@ -1122,23 +1209,65 @@ class Index extends ResultsApi
 
     // Return true if a filter should be passed from parent to child view,
     // false otherwise.
-    private function preserveFilterForChildBuild($filter)
+    private function preserveFilterForChildBuild(array $filter): bool
     {
-        if ($filter['field'] != 'buildname' &&
-                $filter['field'] != 'site' &&
-                $filter['field'] != 'stamp' &&
+        return $filter['field'] !== 'buildname' &&
+                $filter['field'] !== 'site' &&
+                $filter['field'] !== 'stamp' &&
                 $filter['compare'] != 0 &&
                 $filter['compare'] != 20 &&
                 $filter['compare'] != 40 &&
                 $filter['compare'] != 60 &&
-                $filter['compare'] != 80) {
-            return true;
+                $filter['compare'] != 80;
+    }
+
+    private function getbuild2rouprule(int $groupid, $currentstarttime): array
+    {
+        if ($this->build2groupruleCache === null) {
+            $this->build2groupruleCache = [];
+
+            $currentUTCTime = gmdate(FMT_DATETIME, $currentstarttime + 3600 * 24);
+
+            $all_groupids = [];
+            foreach ($this->buildgroupsResponse as $bgr) {
+                $all_groupids[] = (int) $bgr['id'];
+            }
+            $all_groupids_prepared_array = Database::getInstance()->createPreparedArray(count($all_groupids));
+            $query_result = DB::select("
+                                SELECT
+                                    g.groupid,
+                                    g.siteid,
+                                    g.buildname,
+                                    g.buildtype,
+                                    s.name,
+                                    s.outoforder
+                                FROM
+                                    build2grouprule AS g,
+                                    site AS s
+                                WHERE
+                                    g.expected=1
+                                    AND g.groupid IN $all_groupids_prepared_array
+                                    AND s.id=g.siteid
+                                    AND g.starttime<?
+                                    AND (
+                                        g.endtime>?
+                                        OR g.endtime='1980-01-01 00:00:00'
+                                    )
+                            ", array_merge($all_groupids, [$currentUTCTime, $currentUTCTime]));
+
+            foreach ($query_result as $row) {
+                if (!array_key_exists((int) $row->groupid, $this->build2groupruleCache)) {
+                    $this->build2groupruleCache[(int) $row->groupid] = [];
+                }
+
+                $this->build2groupruleCache[(int) $row->groupid][] = (array) $row;
+            }
         }
-        return false;
+        return $this->build2groupruleCache[$groupid] ?? [];
     }
 
     /** Find expected builds that haven't submitted yet. */
-    public function addExpectedBuilds($i, $currentstarttime): array
+    public function addExpectedBuilds(int $i, $currentstarttime): array
     {
         if (isset($_GET['parentid'])) {
             // Don't add expected builds when viewing a single subproject result.
@@ -1147,7 +1276,7 @@ class Index extends ResultsApi
 
         $groupid = $this->buildgroupsResponse[$i]['id'];
         $groupname = $this->buildgroupsResponse[$i]['name'];
-        if ($this->buildGroupName && $this->buildGroupName != $groupname) {
+        if (strlen($this->buildGroupName) > 0 && $this->buildGroupName != $groupname) {
             // When viewing results from a single build group don't check for
             // expected builds from other groups.
             return [];
@@ -1155,28 +1284,8 @@ class Index extends ResultsApi
 
         $db = Database::getInstance();
 
-        $currentUTCTime = gmdate(FMT_DATETIME, $currentstarttime + 3600 * 24);
         $response = [];
-        $build2grouprule = $db->executePrepared("
-                               SELECT
-                                   g.siteid,
-                                   g.buildname,
-                                   g.buildtype,
-                                   s.name,
-                                   s.outoforder
-                               FROM
-                                   build2grouprule AS g,
-                                   site AS s
-                               WHERE
-                                   g.expected=1
-                                   AND g.groupid=?
-                                   AND s.id=g.siteid
-                                   AND g.starttime<?
-                                   AND (
-                                       g.endtime>?
-                                       OR g.endtime='1980-01-01 00:00:00'
-                                   )
-                           ", [intval($groupid), $currentUTCTime, $currentUTCTime]);
+        $build2grouprule = $this->getbuild2rouprule($groupid, $currentstarttime);
 
         foreach ($build2grouprule as $build2grouprule_array) {
             $key = $build2grouprule_array['name'] . '_' . $build2grouprule_array['buildname'];
@@ -1204,7 +1313,7 @@ class Index extends ResultsApi
 
                 // Compute historical average to get approximate expected time.
                 // PostgreSQL doesn't have the necessary functions for this.
-                if (config('database.default') == 'pgsql') {
+                if (config('database.default') === 'pgsql') {
                     $query = $db->executePrepared("
                                  SELECT submittime
                                  FROM
@@ -1224,7 +1333,7 @@ class Index extends ResultsApi
                     foreach ($query as $query_array) {
                         $time += strtotime(date('H:i:s', strtotime($query_array['submittime'])));
                     }
-                    if (!empty($query)) {
+                    if (count($query) > 0) {
                         $time /= count($query);
                     }
                     $nextExpected = strtotime(date('H:i:s', $time) . ' UTC');
@@ -1271,45 +1380,42 @@ class Index extends ResultsApi
 
     // Check if we should be excluding some SubProjects from our
     // build results.
-    public function checkForSubProjectFilters()
+    public function checkForSubProjectFilters(): void
     {
         $filter_on_labels = false;
         $filters = $this->flattenFilters();
         foreach ($filters as $filter) {
-            if ($filter['field'] == 'subprojects') {
+            if ($filter['field'] === 'subprojects') {
                 if ($filter['compare'] == 92) {
                     $this->excludedSubProjects[] = $filter['value'];
                 } elseif ($filter['compare'] == 93) {
                     $this->includedSubProjects[] = $filter['value'];
                 }
-            } elseif ($filter['field'] == 'label') {
+            } elseif ($filter['field'] === 'label') {
                 $filter_on_labels = true;
             }
         }
         unset($filters);
         if ($filter_on_labels && $this->project->ShareLabelFilters) {
             $this->shareLabelFilters = true;
-            $label_ids_array = get_label_ids_from_filterdata($this->filterdata);
-            $this->labelIds = '(' . implode(', ', $label_ids_array) . ')';
+            $this->labelIds = get_label_ids_from_filterdata($this->filterdata);
         }
 
         // Include takes precedence over exclude.
         if (!empty($this->includedSubProjects)) {
             $this->numSelectedSubProjects = count($this->includedSubProjects);
-            $this->selectedSubProjects = implode("','", $this->includedSubProjects);
-            $this->selectedSubProjects = "('" . $this->selectedSubProjects . "')";
+            $this->selectedSubProjects = $this->includedSubProjects;
             $this->includeSubProjects = true;
         } elseif (!empty($this->excludedSubProjects)) {
             $this->numSelectedSubProjects = count($this->excludedSubProjects);
-            $this->selectedSubProjects = implode("','", $this->excludedSubProjects);
-            $this->selectedSubProjects = "('" . $this->selectedSubProjects . "')";
+            $this->selectedSubProjects = $this->excludedSubProjects;
             $this->excludeSubProjects = true;
         }
 
         if (!$this->childView) {
             // Determine subproject filters to pass to viewTest.php.
             $subproject_test_filters = [];
-            $selected_subprojects = null;
+            $selected_subprojects = [];
             $compare = '';
             if ($this->includeSubProjects) {
                 $selected_subprojects = $this->includedSubProjects;
@@ -1320,7 +1426,7 @@ class Index extends ResultsApi
                 $compare = '62'; // string is not equal
                 $combine = 'and';
             }
-            if ($selected_subprojects) {
+            if (count($selected_subprojects) > 0) {
                 foreach ($selected_subprojects as $i => $subproject) {
                     $idx = $i + 1;
                     $subproject_test_filters[] = "field{$idx}=subproject";
@@ -1337,7 +1443,7 @@ class Index extends ResultsApi
     }
 
     // Normalize subproject order so it's always 1 to N with no gaps and no duplicates.
-    public function normalizeSubProjectOrder()
+    public function normalizeSubProjectOrder(): void
     {
         sort($this->subProjectPositions);
         for ($i = 0; $i < count($this->buildgroupsResponse); $i++) {
@@ -1356,7 +1462,7 @@ class Index extends ResultsApi
     }
 
     // Record next & previous dates (if any).
-    public function determineNextPrevious(&$response, $base_url)
+    public function determineNextPrevious(array &$response, string $base_url): void
     {
         // Next & previous are handled separately when we're viewing the
         // results of a single parent build.
@@ -1378,7 +1484,7 @@ class Index extends ResultsApi
         // Only search for builds from a certain group when buildGroupName is set.
         $extra_join = '';
         $extra_where = '';
-        if ($this->buildGroupName) {
+        if ($this->buildGroupName !== '') {
             $query_params[':groupname'] = $this->buildGroupName;
             $extra_join = '
                 JOIN build2group b2g ON b2g.buildid = b.id
@@ -1432,7 +1538,7 @@ class Index extends ResultsApi
         }
     }
 
-    public function recordGenerationTime(&$response)
+    public function recordGenerationTime(array &$response): void
     {
         $this->pageTimer->end($response);
     }
