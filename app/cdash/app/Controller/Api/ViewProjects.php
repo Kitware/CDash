@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Controller\Api;
 
+use App\Models\User;
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\Banner;
@@ -29,13 +30,14 @@ use Illuminate\Support\Facades\DB;
  **/
 class ViewProjects extends \CDash\Controller\Api
 {
+    private $projectids = [];
+    private int $activeProjectDays = 7;
+    private bool $showAllProjects = false;
+    private ?User $user = null;
+
     public function __construct(Database $db)
     {
         parent::__construct($db);
-        $this->config = Config::getInstance();
-        $this->showAllProjects = false;
-        $this->activeProjectDays = 7;
-        $this->user = null;
         if (Auth::check()) {
             $this->user = Auth::user();
         }
@@ -63,13 +65,13 @@ class ViewProjects extends \CDash\Controller\Api
         $response['title'] = 'Projects';
         $response['subtitle'] = 'Projects';
         $response['googletracker'] = config('cdash.default_google_analytics');
-        if ($this->config->get('CDASH_NO_REGISTRATION') == 1) {
+        if (Config::getInstance()->get('CDASH_NO_REGISTRATION') == 1) {
             $response['noregister'] = 1;
         }
 
         $response['showoldtoggle'] = true;
-        $this->activeProjectDays = config('cdash.active_project_days');
-        if ($this->activeProjectDays == 0) {
+        $this->activeProjectDays = (int) config('cdash.active_project_days');
+        if ($this->activeProjectDays === 0) {
             $this->showAllProjects = true;
             $response['showoldtoggle'] = false;
         } elseif (isset($_GET['allprojects']) && $_GET['allprojects'] == 1) {
@@ -141,12 +143,11 @@ class ViewProjects extends \CDash\Controller\Api
      **/
     public function getVisibleProjects()
     {
-        $this->projectids = [];
         if (is_null($this->user)) {
             $this->projectids = DB::table('project')
                 ->where('public', Project::ACCESS_PUBLIC)
                 ->pluck('id');
-        } elseif ($this->user->admin) {
+        } elseif ($this->user->IsAdmin()) {
             $this->projectids = DB::table('project')
                 ->pluck('id');
         } else {
@@ -168,27 +169,56 @@ class ViewProjects extends \CDash\Controller\Api
             ->whereIn('id', $this->projectids)
             ->orderBy('name')
             ->get();
+
+        $query_result = DB::table('build')
+            ->select('projectid', DB::raw('MAX(submittime) as submittime'))
+            ->whereIn('projectid', $this->projectids)
+            ->groupBy('projectid')
+            ->get();
+        // Transform the result into something we can use more effectively
+        $latest_build_rows = [];
+        foreach ($query_result as $row) {
+            $latest_build_rows[(int)$row->projectid] = $row->submittime;
+        }
+
+        $query_result = DB::table('subproject')
+            ->select('projectid', DB::raw('COUNT(*) as c'))
+            ->whereIn('projectid', $this->projectids)
+            ->where('endtime', '1980-01-01 00:00:00')
+            ->groupBy('projectid')
+            ->get();
+        // Transform the result into something we can use more effectively
+        $nsubproj = [];
+        foreach ($query_result as $row) {
+            $nsubproj[(int)$row->projectid] = $row->c;
+        }
+
+        // Get the number of builds in the past 7 days by project
+        $submittime_UTCDate = gmdate(FMT_DATETIME, time() - 604800);
+        $query_result = DB::table('build')
+            ->select('projectid', DB::raw('COUNT(*) as c'))
+            ->whereIn('projectid', $this->projectids)
+            ->where('starttime', '>', $submittime_UTCDate)
+            ->groupBy('projectid')
+            ->get();
+        $nbuilds = [];
+        foreach ($query_result as $row) {
+            $nbuilds[(int)$row->projectid] = $row->c;
+        }
+
         foreach ($project_rows as $project_row) {
             $project = [];
-            $project['id'] = $project_row->id;
+            $project['id'] = (int) $project_row->id;
             $project['name'] = $project_row->name;
             $project['description'] = $project_row->description;
             $project['viewsubprojectslink'] = $project_row->viewsubprojectslink;
             $projectid = $project['id'];
 
-            $nsubproj = DB::table('subproject')
-                ->where('projectid', $projectid)
-                ->where('endtime', '1980-01-01 00:00:00')
-                ->count();
-            $project['numsubprojects'] = $nsubproj;
+            $project['numsubprojects'] = $nsubproj[$projectid] ?? 0;
 
             $project['last_build'] = 'NA';
-            $latest_build_row = DB::table('build')
-                ->where('projectid', $projectid)
-                ->orderBy('submittime', 'desc')
-                ->first();
-            if ($latest_build_row) {
-                $project['last_build'] = $latest_build_row->submittime;
+            if (array_key_exists($projectid, $latest_build_rows)) {
+                $project['last_build'] = $latest_build_rows[$projectid];
             }
 
             // Display if the project is considered active or not
@@ -199,12 +229,7 @@ class ViewProjects extends \CDash\Controller\Api
             $project['dayssincelastsubmission'] = $dayssincelastsubmission;
 
             if ($project['last_build'] != 'NA' && $project['dayssincelastsubmission'] <= $this->activeProjectDays) {
-                // Get the number of builds in the past 7 days
-                $submittime_UTCDate = gmdate(FMT_DATETIME, time() - 604800);
-                $project['nbuilds'] = DB::table('build')
-                    ->where('projectid', $projectid)
-                    ->where('starttime', '>', $submittime_UTCDate)
-                    ->count();
+                $project['nbuilds'] = $nbuilds[$projectid] ?? 0;
             }
 
             if ($this->showAllProjects || $project['dayssincelastsubmission'] <= $this->activeProjectDays) {
