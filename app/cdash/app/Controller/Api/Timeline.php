@@ -16,6 +16,8 @@
 
 namespace CDash\Controller\Api;
 
+use App\Enums\ClassicPalette;
+use App\Enums\HighContrastPalette;
 use App\Services\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
@@ -84,13 +86,13 @@ class Timeline extends Index
     {
         if (array_key_exists('colorblind', $this->filterdata) &&
                 $this->filterdata['colorblind']) {
-            $this->colors[self::ERROR] = '#fc8d59';
-            $this->colors[self::FAILURE] = '#ffffbf';
-            $this->colors[self::CLEAN] = '#91bfdb';
+            $this->colors[self::ERROR] = HighContrastPalette::Failure;
+            $this->colors[self::FAILURE] = HighContrastPalette::Warning;
+            $this->colors[self::CLEAN] = HighContrastPalette::Success;
         } else {
-            $this->colors[self::ERROR] = '#de6868';
-            $this->colors[self::FAILURE] = '#fd9e40';
-            $this->colors[self::CLEAN] = '#bfefbf';
+            $this->colors[self::ERROR] = ClassicPalette::Failure;
+            $this->colors[self::FAILURE] = ClassicPalette::Warning;
+            $this->colors[self::CLEAN] = ClassicPalette::Success;
         }
     }
 
