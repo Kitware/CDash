@@ -29,6 +29,7 @@ use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 use CDash\Model\Site;
+use Illuminate\Support\Facades\DB;
 
 require_once 'include/log.php';
 
@@ -710,12 +711,11 @@ function remove_project_builds($projectid): void
         return;
     }
 
-    $db = Database::getInstance();
-    $build = $db->executePrepared('SELECT id FROM build WHERE projectid=?', [intval($projectid)]);
+    $build = DB::select('SELECT id FROM build WHERE projectid=?', [intval($projectid)]);
 
     $buildids = array();
     foreach ($build as $build_array) {
-        $buildids[] = $build_array['id'];
+        $buildids[] = (int) $build_array->id;
     }
     remove_build_chunked($buildids);
 }
@@ -725,7 +725,7 @@ function remove_project_builds($projectid): void
  */
 function remove_build($buildid)
 {
-    // TODO: (williamjallen) much of this work could be done on the DB site automatically by setting up
+    // TODO: (williamjallen) much of this work could be done on the DB side automatically by setting up
     //       proper foreign-key relationships between between entities, and using the DB's cascade functionality.
     //       For complex cascades, custom SQL functions can be written.
 
@@ -744,64 +744,57 @@ function remove_build($buildid)
     $db = Database::getInstance();
     $buildid_prepare_array = $db->createPreparedArray(count($buildids));
 
-    $db->executePrepared("DELETE FROM build2group WHERE buildid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM builderror WHERE buildid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM buildemail WHERE buildid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM buildfile WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM build2group WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM builderror WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM buildemail WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM buildfile WHERE buildid IN $buildid_prepare_array", $buildids);
 
-    $db->executePrepared("DELETE FROM buildinformation WHERE buildid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM builderrordiff WHERE buildid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM buildproperties WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM buildinformation WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM builderrordiff WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM buildproperties WHERE buildid IN $buildid_prepare_array", $buildids);
 
-    $db->executePrepared("DELETE FROM configureerrordiff WHERE buildid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM coveragesummarydiff WHERE buildid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM testdiff WHERE buildid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM buildtesttime WHERE buildid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM summaryemail WHERE buildid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM related_builds WHERE buildid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM related_builds WHERE relatedid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM pending_submissions WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM configureerrordiff WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM coveragesummarydiff WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM testdiff WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM buildtesttime WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM summaryemail WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM related_builds WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM related_builds WHERE relatedid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM pending_submissions WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Remove the buildfailureargument
     $buildfailureids = [];
-    $buildfailure = $db->executePrepared("SELECT id FROM buildfailure WHERE buildid IN $buildid_prepare_array", $buildids);
+    $buildfailure = DB::select("SELECT id FROM buildfailure WHERE buildid IN $buildid_prepare_array", $buildids);
     foreach ($buildfailure as $buildfailure_array) {
-        $buildfailureids[] = intval($buildfailure_array['id']);
+        $buildfailureids[] = intval($buildfailure_array->id);
     }
     if (count($buildfailureids) > 0) {
         $buildfailure_prepare_array = $db->createPreparedArray(count($buildfailureids));
-        $db->executePrepared("DELETE FROM buildfailure2argument WHERE buildfailureid IN $buildfailure_prepare_array", $buildfailureids);
-        $db->executePrepared("DELETE FROM label2buildfailure WHERE buildfailureid IN $buildfailure_prepare_array", $buildfailureids);
+        DB::delete("DELETE FROM buildfailure2argument WHERE buildfailureid IN $buildfailure_prepare_array", $buildfailureids);
+        DB::delete("DELETE FROM label2buildfailure WHERE buildfailureid IN $buildfailure_prepare_array", $buildfailureids);
     }
 
     // Delete buildfailuredetails that are only used by builds that are being
     // deleted.
-    $buildfailuredetails = $db->executePrepared("
-                               SELECT a.detailsid
-                               FROM buildfailure AS a
-                               LEFT JOIN buildfailure AS b ON (
-                                   a.detailsid=b.detailsid
-                                   AND b.buildid NOT IN $buildid_prepare_array
-                               )
-                               WHERE a.buildid IN $buildid_prepare_array
-                               GROUP BY a.detailsid
-                               HAVING count(b.detailsid)=0
-                           ", array_merge($buildids, $buildids));
-
-    $detailsids = [];
-    foreach ($buildfailuredetails as $buildfailuredetails_array) {
-        $detailsids[] = intval($buildfailuredetails_array['detailsid']);
-    }
-    if (count($detailsids) > 0) {
-        $detailsids_prepare_array = $db->createPreparedArray(count($buildfailureids));
-        $db->executePrepared("DELETE FROM buildfailuredetails WHERE id IN $detailsids_prepare_array", $detailsids);
-    }
+    DB::delete("
+        DELETE FROM buildfailuredetails WHERE id IN (
+            SELECT a.detailsid
+            FROM buildfailure AS a
+            LEFT JOIN buildfailure AS b ON (
+                a.detailsid=b.detailsid
+                AND b.buildid NOT IN $buildid_prepare_array
+            )
+            WHERE a.buildid IN $buildid_prepare_array
+            GROUP BY a.detailsid
+            HAVING count(b.detailsid)=0
+        )
+    ", array_merge($buildids, $buildids));
 
     // Remove the buildfailure.
-    $db->executePrepared("DELETE FROM buildfailure WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM buildfailure WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Delete the configure if not shared.
-    $build2configure = $db->executePrepared("
+    $build2configure = DB::select("
                            SELECT a.configureid
                            FROM build2configure AS a
                            LEFT JOIN build2configure AS b ON (
@@ -817,45 +810,38 @@ function remove_build($buildid)
     foreach ($build2configure as $build2configure_array) {
         // It is safe to delete this configure because it is only used
         // by builds that are being deleted.
-        $configureids[] = intval($build2configure_array['configureid']);
+        $configureids[] = intval($build2configure_array->configureid);
     }
     if (count($configureids) > 0) {
         $configureids_prepare_array = $db->createPreparedArray(count($configureids));
-        $db->executePrepared("DELETE FROM configure WHERE id IN $configureids_prepare_array", $configureids);
-        $db->executePrepared("DELETE FROM configureerror WHERE configureid IN $configureids_prepare_array", $configureids);
+        DB::delete("DELETE FROM configure WHERE id IN $configureids_prepare_array", $configureids);
+        DB::delete("DELETE FROM configureerror WHERE configureid IN $configureids_prepare_array", $configureids);
     }
-    $db->executePrepared("DELETE FROM build2configure WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM build2configure WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // coverage files are kept unless they are shared
-    $coveragefile = $db->executePrepared("
-                        SELECT a.fileid
-                        FROM coverage AS a
-                        LEFT JOIN coverage AS b ON (
-                            a.fileid=b.fileid
-                            AND b.buildid NOT IN $buildid_prepare_array
-                        )
-                        WHERE a.buildid IN $buildid_prepare_array
-                        GROUP BY a.fileid
-                        HAVING count(b.fileid)=0
-                    ", array_merge($buildids, $buildids));
+    DB::delete("
+        DELETE FROM coveragefile
+        WHERE id IN (
+            SELECT a.fileid
+            FROM coverage AS a
+            LEFT JOIN coverage AS b ON (
+                a.fileid=b.fileid
+                AND b.buildid NOT IN $buildid_prepare_array
+            )
+            WHERE a.buildid IN $buildid_prepare_array
+            GROUP BY a.fileid
+            HAVING count(b.fileid)=0
+        )
+    ", array_merge($buildids, $buildids));
 
-    $fileids = [];
-    foreach ($coveragefile as $coveragefile_array) {
-        $fileids[] = intval($coveragefile_array['fileid']);
-    }
-
-    if (count($fileids) > 0) {
-        $fileids_prepare_array = $db->createPreparedArray(count($fileids));
-        $db->executePrepared("DELETE FROM coveragefile WHERE id IN $fileids_prepare_array", $fileids);
-    }
-
-    $db->executePrepared("DELETE FROM label2coveragefile WHERE buildid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM coverage WHERE buildid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM coveragefilelog WHERE buildid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM coveragesummary WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM label2coveragefile WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM coverage WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM coveragefilelog WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM coveragesummary WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // dynamicanalysisdefect
-    $dynamicanalysis = $db->executePrepared("
+    $dynamicanalysis = DB::select("
                            SELECT id
                            FROM dynamicanalysis
                            WHERE buildid IN $buildid_prepare_array
@@ -863,45 +849,36 @@ function remove_build($buildid)
 
     $dynids = [];
     foreach ($dynamicanalysis as $dynamicanalysis_array) {
-        $dynids[] = intval($dynamicanalysis_array['id']);
+        $dynids[] = intval($dynamicanalysis_array->id);
     }
 
     if (count($dynids) > 0) {
         $dynids_prepare_array = $db->createPreparedArray(count($dynids));
-        $db->executePrepared("DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid IN $dynids_prepare_array", $dynids);
-        $db->executePrepared("DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid IN $dynids_prepare_array", $dynids);
+        DB::delete("DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid IN $dynids_prepare_array", $dynids);
+        DB::delete("DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid IN $dynids_prepare_array", $dynids);
     }
-    $db->executePrepared("DELETE FROM dynamicanalysis WHERE buildid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM dynamicanalysissummary WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM dynamicanalysis WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM dynamicanalysissummary WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Delete the note if not shared
-    $build2note = $db->executePrepared("
-                      SELECT a.noteid
-                      FROM build2note AS a
-                      LEFT JOIN build2note AS b ON (
-                          a.noteid=b.noteid
-                          AND b.buildid NOT IN $buildid_prepare_array
-                      )
-                      WHERE a.buildid IN $buildid_prepare_array
-                      GROUP BY a.noteid
-                      HAVING count(b.noteid)=0
-                  ", array_merge($buildids, $buildids));
+    DB::delete("
+        DELETE FROM note WHERE id IN (
+            SELECT a.noteid
+            FROM build2note AS a
+            LEFT JOIN build2note AS b ON (
+                a.noteid=b.noteid
+                AND b.buildid NOT IN $buildid_prepare_array
+            )
+            WHERE a.buildid IN $buildid_prepare_array
+            GROUP BY a.noteid
+            HAVING count(b.noteid)=0
+        )
+    ", array_merge($buildids, $buildids));
 
-    $noteids = [];
-    foreach ($build2note as $build2note_array) {
-        // Note is not shared we delete
-        $noteids[] = intval($build2note_array['noteid']);
-    }
-
-    if (count($noteids) > 0) {
-        $noteids_prepare_array = $db->createPreparedArray(count($noteids));
-        $db->executePrepared("DELETE FROM note WHERE id IN $noteids_prepare_array", $noteids);
-    }
-
-    $db->executePrepared("DELETE FROM build2note WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM build2note WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Delete the update if not shared
-    $build2update = $db->executePrepared("
+    $build2update = DB::select("
                         SELECT a.updateid
                         FROM build2update AS a
                         LEFT JOIN build2update AS b ON (
@@ -916,19 +893,19 @@ function remove_build($buildid)
     $updateids = [];
     foreach ($build2update as $build2update_array) {
         // Update is not shared we delete
-        $updateids[] = intval($build2update_array['updateid']);
+        $updateids[] = intval($build2update_array->updateid);
     }
 
     if (count($updateids) > 0) {
         $updateids_prepare_array = $db->createPreparedArray(count($updateids));
-        $db->executePrepared("DELETE FROM buildupdate WHERE id IN $updateids_prepare_array", $updateids);
-        $db->executePrepared("DELETE FROM updatefile WHERE updateid IN $updateids_prepare_array", $updateids);
+        DB::delete("DELETE FROM buildupdate WHERE id IN $updateids_prepare_array", $updateids);
+        DB::delete("DELETE FROM updatefile WHERE updateid IN $updateids_prepare_array", $updateids);
     }
-    $db->executePrepared("DELETE FROM build2update WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM build2update WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Delete tests and testoutputs that are not shared.
     // First find all the tests and testoutputs from builds that are about to be deleted.
-    $b2t_result = $db->executePrepared("
+    $b2t_result = DB::select("
                       SELECT testid, outputid
                       FROM build2test
                       WHERE buildid IN $buildid_prepare_array
@@ -937,8 +914,8 @@ function remove_build($buildid)
     $all_testids = [];
     $all_outputids = [];
     foreach ($b2t_result as $b2t_row) {
-        $all_testids[] = intval($b2t_row['testid']);
-        $all_outputids[] = intval($b2t_row['outputid']);
+        $all_testids[] = intval($b2t_row->testid);
+        $all_outputids[] = intval($b2t_row->outputid);
     }
     $all_testids = array_unique($all_testids);
     $all_outputids = array_unique($all_outputids);
@@ -946,25 +923,21 @@ function remove_build($buildid)
     if (!empty($all_testids)) {
         // Next identify tests from this list that should be preserved
         // because they are shared with builds that are not about to be deleted.
-        $testids_prepare_array = $db->createPreparedArray(count($all_testids));
-        $save_test_result = $db->executePrepared("
-                                SELECT DISTINCT testid
-                                FROM build2test
-                                WHERE
-                                    testid IN $testids_prepare_array
-                                    AND buildid NOT IN $buildid_prepare_array
-                            ", array_merge($all_testids, $buildids));
-        $tests_to_save = [];
-        foreach ($save_test_result as $save_test_row) {
-            $tests_to_save[] = intval($save_test_row['testid']);
-        }
-
-        // Use array_diff to get the list of tests that should be deleted.
-        $tests_to_delete = array_diff($all_testids, $tests_to_save);
-        if (!empty($tests_to_delete)) {
-            $tests_to_delete_prepare_array = $db->createPreparedArray(count($tests_to_delete));
-            $db->executePrepared("DELETE FROM test WHERE id IN $tests_to_delete_prepare_array", $tests_to_delete);
-        }
+        DB::delete("
+            DELETE FROM test
+            WHERE
+                id IN (
+                    SELECT testid
+                    FROM build2test
+                    WHERE buildid IN $buildid_prepare_array
+                )
+                AND id NOT IN (
+                    SELECT testid
+                    FROM build2test
+                    WHERE
+                        buildid NOT IN $buildid_prepare_array
+                )
+        ", array_merge($buildids, $buildids));
     }
 
     // Delete un-shared testoutput rows.
@@ -972,7 +945,7 @@ function remove_build($buildid)
         // Next identify tests from this list that should be preserved
         // because they are shared with builds that are not about to be deleted.
         $all_outputids_prepare_array = $db->createPreparedArray(count($all_outputids));
-        $save_test_result = $db->executePrepared("
+        $save_test_result = DB::select("
                                 SELECT DISTINCT outputid
                                 FROM build2test
                                 WHERE
@@ -981,7 +954,7 @@ function remove_build($buildid)
                             ", array_merge($all_outputids, $buildids));
         $testoutputs_to_save = [];
         foreach ($save_test_result as $save_test_row) {
-            $testoutputs_to_save[] = intval($save_test_row['outputid']);
+            $testoutputs_to_save[] = intval($save_test_row->outputid);
         }
 
         // Use array_diff to get the list of tests that should be deleted.
@@ -992,7 +965,7 @@ function remove_build($buildid)
 
             $testoutputs_to_delete_prepare_array = $db->createPreparedArray(count($testoutputs_to_delete));
             // Check if the images for the test are not shared
-            $test2image = $db->executePrepared("
+            $test2image = DB::select("
                               SELECT a.imgid
                               FROM test2image AS a
                               LEFT JOIN test2image AS b ON (
@@ -1006,22 +979,22 @@ function remove_build($buildid)
 
             $imgids = [];
             foreach ($test2image as $test2image_array) {
-                $imgids[] = intval($test2image_array['imgid']);
+                $imgids[] = intval($test2image_array->imgid);
             }
 
             if (count($imgids) > 0) {
                 $imgids_prepare_array = $db->createPreparedArray(count($imgids));
-                $db->executePrepared("DELETE FROM image WHERE id IN $imgids_prepare_array", $imgids);
+                DB::delete("DELETE FROM image WHERE id IN $imgids_prepare_array", $imgids);
             }
             delete_rows_chunked('DELETE FROM test2image WHERE outputid IN ', $testoutputs_to_delete);
         }
     }
 
-    $db->executePrepared("DELETE FROM label2test WHERE buildid IN $buildid_prepare_array", $buildids);
-    $db->executePrepared("DELETE FROM build2test WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM label2test WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM build2test WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Delete the uploaded files if not shared
-    $build2uploadfiles = $db->executePrepared("
+    $build2uploadfiles = DB::select("
                              SELECT a.fileid
                              FROM build2uploadfile AS a
                              LEFT JOIN build2uploadfile AS b ON (
@@ -1035,34 +1008,33 @@ function remove_build($buildid)
 
     $fileids = [];
     foreach ($build2uploadfiles as $build2uploadfile_array) {
-        $fileid = intval($build2uploadfile_array['fileid']);
+        $fileid = intval($build2uploadfile_array->fileid);
         $fileids[] = $fileid;
         unlink_uploaded_file($fileid);
     }
 
     if (count($fileids) > 0) {
         $fileids_prepare_array = $db->createPreparedArray(count($fileids));
-        $db->executePrepared("DELETE FROM uploadfile WHERE id IN $fileids_prepare_array", $fileids);
-        $db->executePrepared("DELETE FROM build2uploadfile WHERE fileid IN $fileids_prepare_array", $fileids);
+        DB::delete("DELETE FROM uploadfile WHERE id IN $fileids_prepare_array", $fileids);
+        DB::delete("DELETE FROM build2uploadfile WHERE fileid IN $fileids_prepare_array", $fileids);
     }
-    $db->executePrepared("DELETE FROM build2uploadfile WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM build2uploadfile WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Delete the subproject
-    $db->executePrepared("DELETE FROM subproject2build WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM subproject2build WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Delete the labels
-    $db->executePrepared("DELETE FROM label2build WHERE buildid IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM label2build WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Remove any children of these builds.
     // In order to avoid making the list of builds to delete too large
     // we delete them in batches (one batch per parent).
     foreach ($buildids as $parentid) {
-        $db = Database::getInstance();
-        $child_result = $db->executePrepared('SELECT id FROM build WHERE parentid=?', [intval($parentid)]);
+        $child_result = DB::select('SELECT id FROM build WHERE parentid=?', [intval($parentid)]);
 
         $childids = [];
         foreach ($child_result as $child_array) {
-            $childids[] = intval($child_array['id']);
+            $childids[] = intval($child_array->id);
         }
         if (!empty($childids)) {
             remove_build($childids);
@@ -1070,7 +1042,7 @@ function remove_build($buildid)
     }
 
     // Only delete the buildid at the end so that no other build can get it in the meantime
-    $db->executePrepared("DELETE FROM build WHERE id IN $buildid_prepare_array", $buildids);
+    DB::delete("DELETE FROM build WHERE id IN $buildid_prepare_array", $buildids);
 
     add_last_sql_error('remove_build');
 }
@@ -1094,9 +1066,8 @@ function remove_build_chunked($buildid): void
 function delete_rows_chunked(string $query, array $ids): void
 {
     foreach (array_chunk($ids, 100) as $chunk) {
-        $db = Database::getInstance();
-        $chunk_prepared_array = $db->createPreparedArray(count($chunk));
-        $db->executePrepared("$query $chunk_prepared_array", $chunk);
+        $chunk_prepared_array = Database::getInstance()->createPreparedArray(count($chunk));
+        DB::delete("$query $chunk_prepared_array", $chunk);
         // Sleep for a microsecond to give other processes a chance.
         usleep(1);
     }

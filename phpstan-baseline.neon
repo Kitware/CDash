@@ -12627,7 +12627,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 67
+			count: 6
 			path: app/cdash/include/common.php
 
 		-
@@ -12684,7 +12684,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 15
+			count: 14
 			path: app/cdash/include/common.php
 
 		-
