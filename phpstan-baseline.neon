@@ -32044,16 +32044,6 @@ parameters:
 			path: tests/Feature/ProjectPermissions.php
 
 		-
-			message: "#^Property App\\\\Models\\\\User\\:\\:\\$admin \\(int\\) does not accept false\\.$#"
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
-			message: "#^Property App\\\\Models\\\\User\\:\\:\\$admin \\(int\\) does not accept true\\.$#"
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
 			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$admin_user has no type specified\\.$#"
 			count: 1
 			path: tests/Feature/ProjectPermissions.php
