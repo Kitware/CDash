@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Services\UnparsedSubmissionProcessor;
+use App\Models\SuccessfulJob;
 
 use BuildPropertiesJSONHandler;
 use CDash\Config;
@@ -135,15 +136,19 @@ class ProcessSubmission implements ShouldQueue
 
         unset($handler);
         $handler = null;
+
+        // Store record for successful job if asynchronously parsing.
+        if (config('queue.default') !== 'sync') {
+            SuccessfulJob::create([
+                'filename' => $this->filename
+            ]);
+        }
     }
 
     /**
      * The job failed to process.
-     *
-     * @param  Exception  $exception
-     * @return void
      */
-    public function failed(\Throwable $exception)
+    public function failed(\Throwable $exception) : void
     {
         \Log::warning("Failed to process {$this->filename}");
         $this->renameSubmissionFile("inprogress/{$this->filename}", "failed/{$this->filename}");
