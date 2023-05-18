@@ -364,22 +364,22 @@
             </tr>
             <tr class="trodd">
                 <td id="nob">
-                    <a href="monitor.php">Monitor / Processing Statistics</a>
-                </td>
-            </tr>
-            <tr class="treven">
-                <td id="nob">
                     <a href="siteStatistics.php">Site Statistics</a>
                 </td>
             </tr>
-            <tr class="trodd">
+            <tr class="treven">
                 <td id="nob">
                     <a href="userStatistics.php">User Statistics</a>
                 </td>
             </tr>
-            <tr class="treven">
+            <tr class="trodd">
                 <td id="nob">
                     <a href="manageBackup.php">Manage Backup</a>
+                </td>
+            </tr>
+            <tr class="treven" ng-if="::cdash.show_monitor">
+                <td id="nob">
+                    <a href="monitor">Monitor / Processing Statistics</a>
                 </td>
             </tr>
             </tbody>
