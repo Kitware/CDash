@@ -10,6 +10,7 @@ use DatePeriod;
 use App\Enums\ClassicPalette;
 use App\Enums\HighContrastPalette;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,10 +66,10 @@ class MonitorController extends AbstractController
             new DateTime('24 hours ago'),
             new DateInterval('PT1H'),
             24);
-
         $i = 0;
         foreach ($period as $datetime) {
-            $timestamp = $this->truncateTimestampToHour($datetime);
+            // Truncate this timestamp to the beginning of the hour.
+            $timestamp = $datetime->setTime(intval($datetime->format('H')), 0, 0)->getTimestamp();
             $success_values[$timestamp] = 0;
             $fail_values[$timestamp] = 0;
             $i++;
@@ -78,20 +79,21 @@ class MonitorController extends AbstractController
         }
 
         // Populate pass/fail trendline data.
-        foreach (DB::table('failed_jobs')->pluck('failed_at') as $failed_at) {
-            $key = $this->truncateTimestampToHour(new DateTime($failed_at));
+        foreach ($this->resultsPerHour('failed_jobs', 'failed_at') as $row) {
+            $key = $row->truncated_time;
             if (array_key_exists($key, $fail_values)) {
-                $fail_values[$key] += 1;
+                $fail_values[$key] += $row->n_jobs;
             } else {
-                $fail_values[$key] = 1;
+                $fail_values[$key] = $row->n_jobs;
             }
         }
-        foreach (DB::table('successful_jobs')->pluck('finished_at') as $finished_at) {
-            $key = $this->truncateTimestampToHour(new DateTime($finished_at));
+
+        foreach ($this->resultsPerHour('successful_jobs', 'finished_at') as $row) {
+            $key = $row->truncated_time;
             if (array_key_exists($key, $success_values)) {
-                $success_values[$key] += 1;
+                $success_values[$key] += $row->n_jobs;
             } else {
-                $success_values[$key] = 1;
+                $success_values[$key] = $row->n_jobs;
             }
         }
 
@@ -125,10 +127,62 @@ class MonitorController extends AbstractController
     }
 
     /**
-     * Return the timestamp of the beginning of the hour for a given timestamp.
+     * Group timestamp values by hour.
+     * @return Collection<int,\stdClass>
      */
-    private function truncateTimestampToHour(DateTime $datetime) : int
+    private function resultsPerHour(string $table, string $field) : Collection
     {
-        return $datetime->setTime(intval($datetime->format('H')), 0, 0)->getTimestamp();
+        if (config('database.default') === 'mysql') {
+            return $this->mySQLResultsPerHour($table, $field);
+        } else {
+            return $this->postgreSQLResultsPerHour($table, $field);
+        }
+    }
+
+    /**
+     * MySQL implementation of resultsPerHour
+     * @return Collection<int,\stdClass>
+     */
+    private function mySQLResultsPerHour(string $table, string $field) : Collection
+    {
+        // Group jobs by hour.
+        // We achieve this by:
+        // 1) subtracting the seconds
+        // 2) subracting the minutes
+        // 3) casting the result to a UNIX timestamp
+        return DB::table($table)
+            ->select(DB::raw("
+              UNIX_TIMESTAMP(
+                DATE_SUB(
+                  DATE_SUB({$field}, INTERVAL MINUTE({$field}) MINUTE),
+                  INTERVAL SECOND({$field}) SECOND
+                )
+              ) AS truncated_time,
+              COUNT(1) AS n_jobs
+            "))
+            ->groupBy('truncated_time')
+            ->get();
+    }
+
+    /**
+     * Postgres implementation of resultsPerHour
+     * @return Collection<int,\stdClass>
+     */
+    private function postgreSQLResultsPerHour(string $table, string $field) : Collection
+    {
+        // Group jobs by hour.
+        // We achieve this by:
+        // 1) using DATE_TRUNC() to truncate timestamps to the hour
+        // 2) using EXTRACT(EPOCH ...) to convert this value to a UNIX timestamp
+        $timezone = date_default_timezone_get();
+        return DB::table($table)
+            ->select(DB::raw("
+              EXTRACT(EPOCH FROM
+                  DATE_TRUNC('hour', {$field}) AT TIME ZONE '{$timezone}'
+              )::INTEGER AS truncated_time,
+              COUNT(1) AS n_jobs
+            "))
+            ->groupBy('truncated_time')
+            ->get();
     }
 }
