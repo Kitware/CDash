@@ -439,7 +439,7 @@ class Build
             'starttime' => $build->StartTime,
             'endtime' => $build->EndTime,
             'groupid' => $build->GroupId,
-
+            'type' => $build->Type,
         ];
 
         if ($build->GetSubProjectName()) {

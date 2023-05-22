@@ -341,7 +341,7 @@ class QueryTests extends ResultsApi
             $output_select = ', testoutput.output';
         }
 
-        $sql = "SELECT b.id AS buildid, b.name AS buildname, b.starttime, b.siteid, b.parentid,
+        $sql = "SELECT b.id AS buildid, b.name AS buildname, b.starttime, b.siteid, b.parentid, b.type,
             build2test.id AS buildtestid, build2test.details, build2test.outputid,
             build2test.status, build2test.time, build2test.timestatus,
             site.name AS sitename, test.name AS testname $output_select
@@ -374,6 +374,7 @@ class QueryTests extends ResultsApi
 
             $test['testname'] = $row['testname'];
             $test['site'] = $row['sitename'];
+            $test['type'] = $row['type'];
             $test['buildName'] = $row['buildname'];
 
             $test['buildstarttime'] =
