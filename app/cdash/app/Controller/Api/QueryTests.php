@@ -374,7 +374,7 @@ class QueryTests extends ResultsApi
 
             $test['testname'] = $row['testname'];
             $test['site'] = $row['sitename'];
-            $test['type'] = $row['type'];
+            $test['group'] = $row['type'];
             $test['buildName'] = $row['buildname'];
 
             $test['buildstarttime'] =
