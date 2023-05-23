@@ -94,7 +94,8 @@ class Image
                 $stmt->bindParam(':img', $this->Data, PDO::PARAM_LOB);
                 $stmt->bindParam(':extension', $this->Extension);
                 $stmt->bindParam(':checksum', $this->Checksum);
-                $success = (bool) $this->Id = $this->PDO->insert($stmt);
+                $this->PDO->execute($stmt);
+                $success = (bool) $this->Id = $this->PDO->getPdo()->lastInsertId();
             }
             if (!$success) {
                 return false;

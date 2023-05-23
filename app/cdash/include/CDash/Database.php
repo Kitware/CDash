@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use PDO;
 use PDOException;
+use PDOStatement;
 
 /**
  * Class Database
@@ -28,8 +29,7 @@ use PDOException;
  */
 class Database extends Singleton
 {
-    /** @var PDO $pdo */
-    private $pdo;
+    private ?PDO $pdo = null;
 
     public function __construct()
     {
@@ -43,7 +43,7 @@ class Database extends Singleton
      */
     public function getPdo()
     {
-        if (!$this->pdo) {
+        if ($this->pdo === null) {
             $pdo = DB::connection()->getPdo();
 
             // The best of a number of bad  solutions. Essentially if a SQL statement
@@ -62,47 +62,25 @@ class Database extends Singleton
     }
 
     /**
-     * @param \PDOStatement $stmt
-     * @param null $input_parameters
-     * @return bool
-     *
      * @deprecated 04/22/2023  Use Laravel query builder or Eloquent instead
      */
-    public function execute(\PDOStatement $stmt, $input_parameters = null)
+    public function execute(PDOStatement $stmt, ?array $input_parameters = null): bool
     {
         try {
             $stmt->execute($input_parameters);
         } catch (PDOException) {
-            $this->logPdoError($stmt->errorInfo());
+            Log::error($stmt->errorInfo()[2]);
             return false;
         }
         return true;
     }
 
     /**
-     * @param \PDOStatement $stmt
-     * @param null $input_parameters
-     * @return string
-     *
      * @deprecated 04/22/2023  Use Laravel query builder or Eloquent instead
      */
-    public function insert(\PDOStatement $stmt, $input_parameters = null)
+    public function prepare(string $sql, array $options = []): PDOStatement|false
     {
-        $this->execute($stmt, $input_parameters);
-        $pdo = $this->getPdo();
-        return $pdo->lastInsertId();
-    }
-
-    /**
-     * @param $sql
-     * @param array $options
-     * @return bool|\PDOStatement
-     *
-     * @deprecated 04/22/2023  Use Laravel query builder or Eloquent instead
-     */
-    public function prepare($sql, array $options = [])
-    {
-        if (!$this->pdo) {
+        if ($this->pdo === null) {
             $this->getPdo();
         }
 
@@ -110,30 +88,18 @@ class Database extends Singleton
     }
 
     /**
-     * @param $sql
-     * @return bool|\PDOStatement
-     *
      * @deprecated 04/22/2023  Use Laravel query builder or Eloquent instead
      */
-    public function query($sql)
+    public function query(string $sql): PDOStatement|false
     {
         $pdo = $this->getPdo();
         try {
             $stmt = $pdo->query($sql);
-        } catch (\PDOException) {
-            $this->logPdoError($pdo->errorInfo());
+        } catch (PDOException) {
+            Log::error($pdo->errorInfo()[2]);
             $stmt = false;
         }
         return $stmt;
-    }
-
-
-    public function logPdoError($error_info)
-    {
-        if (isset($error_info[2]) && $error_info[0] !== '00000') {
-            $e = new \RuntimeException($error_info[2]);
-            Log::error($e);
-        }
     }
 
     /**

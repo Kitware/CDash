@@ -71,7 +71,7 @@ class EmailTestCase extends KWWebTestCase
         $db = \CDash\Database::getInstance();
 
         $stmt = $db->prepare('INSERT INTO user2project (userid, projectid, role, emailtype) VALUES (?, ?, ?, ?)');
-        $db->insert($stmt, [$user->id, $this->project, 0, 0]);
+        $db->execute($stmt, [$user->id, $this->project, 0, 0]);
     }
 
     public function testSubmissionFirstBuild()
