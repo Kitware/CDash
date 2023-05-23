@@ -92,6 +92,8 @@ $hideRegistration = config('auth.user_registration_form_enabled') === false;
             @endverbatim
         @elseif(isset($vue) && $vue === true)
             <header-nav></header-nav>
+        @else {{-- Put a dummy element here to fill the space --}}
+            <div class="projectnav"></div>
         @endif
 
 
