@@ -170,7 +170,10 @@ Route::group(['middleware' => 'auth' ], function () {
     Route::get('/manageBackup.php', 'AdminController@manageBackup');
     Route::post('/manageBackup.php', 'AdminController@manageBackup');
 
-    Route::get('/monitor.php', 'AdminController@monitor');
+    Route::get('/monitor', 'MonitorController@monitor');
+    Route::get('/monitor.php', function () {
+        return redirect('/monitor');
+    });
 
     Route::get('/gitinfo.php', 'AdminController@gitinfo');
 
@@ -190,6 +193,8 @@ Route::group(['middleware' => 'auth' ], function () {
 Route::get('/api/authtokens/all', 'AuthTokenController@fetchAll');
 Route::post('/api/authtokens/create', 'AuthTokenController@createToken');
 Route::delete('/api/authtokens/delete/{token_hash}', 'AuthTokenController@deleteToken');
+
+Route::get('/api/monitor', 'MonitorController@get');
 
 // OLD ROUTES (these may not use Laravel fully)
 

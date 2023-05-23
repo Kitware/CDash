@@ -35,7 +35,7 @@ export default {
         if (document.getElementById("generation-time")) {
           document.getElementById("generation-time").textContent = vm.cdash.generationtime;
         }
-        if (document.getElementById("testing-day")) {
+        if (document.getElementById("testing-day") && vm.cdash.nightlytime !== undefined) {
           document.getElementById("testing-day").textContent = `Current Testing Day ${vm.cdash.currentdate} | Started at ${vm.cdash.nightlytime}`;
         }
 

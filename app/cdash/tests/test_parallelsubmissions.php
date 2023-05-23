@@ -31,6 +31,8 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
     public function testParallelSubmissions()
     {
         $this->deleteLog($this->logfilename);
+        \DB::table('successful_jobs')->delete();
+
         // Load Trilinos project.
         $project = new Project();
         if (!$project->FindByName('Trilinos')) {
@@ -77,6 +79,10 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
             }
         }
         echo 'Processing took ' . (time() - $begin) . " seconds.\n";
+
+        // Verify number of successful jobs.
+        $num_jobs = \DB::table('successful_jobs')->count();
+        $this->assertEqual(147, $num_jobs);
 
         // Verify the results.
         $this->verifyResults();

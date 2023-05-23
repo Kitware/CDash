@@ -7,10 +7,13 @@ use App\Models\User;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
 use CDash\System;
+use Tests\Traits\CreatesUsers;
 use Tests\TestCase;
 
 class ProjectPermissions extends TestCase
 {
+    use CreatesUsers;
+
     protected $public_project;
     protected $protected_project;
     protected $private_project1;
@@ -126,14 +129,7 @@ class ProjectPermissions extends TestCase
         $response->assertJson(['requirelogin' => 1]);
 
         // Create a non-administrator user.
-        $this->normal_user = new User();
-        $this->normal_user->firstname = 'Jane';
-        $this->normal_user->lastname = 'Smith';
-        $this->normal_user->email = 'jane@smith';
-        $this->normal_user->password = '12345';
-        $this->normal_user->institution = 'me';
-        $this->normal_user->admin = false;
-        $this->normal_user->save();
+        $this->normal_user = $this->makeNormalUser();
         $this->assertDatabaseHas('user', ['email' => 'jane@smith']);
 
         // Verify that we can still access the public project when logged in
@@ -194,14 +190,7 @@ class ProjectPermissions extends TestCase
         ]);
 
         // Make an admin user.
-        $this->admin_user = new User();
-        $this->admin_user->firstname = 'Admin';
-        $this->admin_user->lastname = 'User';
-        $this->admin_user->email = 'admin@user';
-        $this->admin_user->password = '45678';
-        $this->admin_user->institution = 'me';
-        $this->admin_user->admin = true;
-        $this->admin_user->save();
+        $this->admin_user = $this->makeAdminUser();
         $this->assertDatabaseHas('user', ['email' => 'admin@user', 'admin' => '1']);
 
         // Verify that they can access all 4 projects.

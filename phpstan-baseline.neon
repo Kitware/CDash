@@ -243,7 +243,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 9
+			count: 3
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -251,7 +251,7 @@ parameters:
 				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 2
+			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -299,7 +299,7 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, int given\\.$#"
-			count: 2
+			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -31882,16 +31882,6 @@ parameters:
 				#^Call to deprecated method setMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
 				https\\://github\\.com/sebastianbergmann/phpunit/pull/3687$#
 			"""
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
-			message: "#^Property App\\\\Models\\\\User\\:\\:\\$admin \\(int\\) does not accept false\\.$#"
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
-			message: "#^Property App\\\\Models\\\\User\\:\\:\\$admin \\(int\\) does not accept true\\.$#"
 			count: 1
 			path: tests/Feature/ProjectPermissions.php
 

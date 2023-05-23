@@ -1075,11 +1075,14 @@ function addDailyChanges(int $projectid): void
         cleanBuildEmail();
         cleanUserTemp();
 
-        // Delete old records from the failed jobs database table.
+        // Delete old records from the successful & failed jobs database table.
         $dt = new DateTime();
         $dt->setTimestamp(time() - (config('cdash.backup_timeframe') * 3600));
         DB::table('failed_jobs')
             ->where('failed_at', '<', $dt)
+            ->delete();
+        DB::table('successful_jobs')
+            ->where('finished_at', '<', $dt)
             ->delete();
 
         // If the status of daily update is set to 2 that means we should send an email

@@ -11,6 +11,7 @@ import BuildSummary from "./components/BuildSummary";
 import EditProject from "./components/EditProject";
 import ManageAuthTokens from "./components/ManageAuthTokens.vue";
 import ManageMeasurements from "./components/ManageMeasurements";
+import Monitor from "./components/Monitor";
 import TestDetails from "./components/TestDetails";
 import HeaderNav from "./components/page-header/HeaderNav.vue";
 import HeaderMenu from "./components/page-header/HeaderMenu.vue";
@@ -23,6 +24,7 @@ const cdash_components = {
   EditProject,
   ManageAuthTokens,
   ManageMeasurements,
+  Monitor,
   TestDetails,
   HeaderNav,
   HeaderMenu,
