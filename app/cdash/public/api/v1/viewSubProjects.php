@@ -22,7 +22,7 @@ require_once 'include/common.php';
 
 use App\Services\PageTimer;
 
-use CDash\Model\Banner;
+use App\Models\Banner;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
 
@@ -58,17 +58,13 @@ $response['title'] = $Project->Name;
 $response['showcalendar'] = 1;
 
 $banners = array();
-$Banner = new Banner;
-$Banner->SetProjectId(0);
-$text = $Banner->GetText();
-if ($text !== false) {
-    $banners[] = $text;
+$global_banner = Banner::find(0);
+if ($global_banner !== null && strlen($global_banner->text) > 0) {
+    $banners[] = $global_banner->text;
 }
-
-$Banner->SetProjectId($projectid);
-$text = $Banner->GetText();
-if ($text !== false) {
-    $banners[] = $text;
+$project_banner = Banner::find($projectid);
+if ($project_banner !== null && strlen($project_banner->text) > 0) {
+    $banners[] = $project_banner->text;
 }
 $response['banners'] = $banners;
 
