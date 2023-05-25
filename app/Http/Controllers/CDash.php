@@ -59,8 +59,6 @@ class CDash extends AbstractController
                 $response = $this->handlePartialRequest();
             } elseif ($this->isSubmission()) {
                 $response = $this->handleSubmission();
-            } elseif ($this->isFileRequest()) {
-                $response = $this->handleFileRequest();
             } else {
                 $response = $this->handleRequest();
             }
@@ -119,13 +117,6 @@ class CDash extends AbstractController
     {
         $path = $this->getPath();
         return str_starts_with($path, 'ajax/');
-    }
-
-    public function isFileRequest(): bool
-    {
-        $path = $this->getPath();
-        $endpoints = config('cdash.file.endpoints');
-        return in_array($path, $endpoints);
     }
 
     public function isRequestForExport(): bool

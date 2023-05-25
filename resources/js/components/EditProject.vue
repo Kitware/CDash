@@ -539,7 +539,7 @@
                       id="projectlogo"
                       border="0"
                       :alt="cdash.project_name"
-                      :src="$baseURL + '/displayImage.php?imgid=' + cdash.project.ImageId"
+                      :src="$baseURL + '/image/' + cdash.project.ImageId"
                     >
                   </td>
                 </tr>

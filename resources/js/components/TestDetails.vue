@@ -92,7 +92,7 @@
             <div class="je_compare">
               <img
                 v-for="image in cdash.test.compareimages"
-                :src="$baseURL + '/displayImage.php?imgid=' + image.imgid"
+                :src="$baseURL + '/image/' + image.imgid"
                 :alt="image.role"
               >
             </div>
@@ -105,7 +105,7 @@
           </th>
           <td>
             <img
-              :src="$baseURL + '/displayImage.php?imgid=' + image.imgid"
+              :src="$baseURL + '/image/' + image.imgid"
               :alt="image.role"
             >
           </td>

@@ -14,11 +14,10 @@ class DisplayImageTestCase extends KWWebTestCase
 
     public function testDisplayImage()
     {
-        $content = $this->get($this->url . '/displayImage.php');
-        if (strpos($content, 'Not a valid imgid!') === false) {
-            $this->fail("'Not a valid imgid!' not found on displayImage.php");
+        if ($this->get($this->url . '/image')) {
+            $this->fail("Did not fail when accessing /image");
         }
-        if (!$this->get($this->url . '/displayImage.php?imgid=1')) {
+        if (!$this->get($this->url . '/image/1')) {
             $this->fail('display image failed');
             return 1;
         }

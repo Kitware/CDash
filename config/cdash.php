@@ -39,11 +39,6 @@ return [
             ],
             'public' => "{$cdash}/public",
         ],
-        // File endpoints are URIs that respond with actual files, and not html
-        'endpoints' => [
-            'displayImage.php',
-            'generateCTestConfig.php',
-        ]
     ],
     'login' => [
         'max_attempts' => env('LOCKOUT_ATTEMPTS', 5),

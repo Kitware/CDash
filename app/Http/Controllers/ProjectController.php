@@ -47,7 +47,7 @@ abstract class ProjectController extends AbstractController
         $this->project = $project;
         $this->project->Fill();
         if ($project->ImageId) {
-            $this->logo = env('APP_URL') . "/displayImage.php?imgid={$this->project->ImageId}";
+            $this->logo = env('APP_URL') . "/image/{$this->project->ImageId}";
         }
         $this->date = TestingDay::get($this->project, date(FMT_DATETIME));
     }
