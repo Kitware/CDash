@@ -16,23 +16,6 @@ class ManageUsersController extends AbstractController
      */
     public function showPage(): View|RedirectResponse
     {
-        $userid = Auth::id();
-        // Checks
-        if (!isset($userid) || !is_numeric($userid) || $userid < 1) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Not a valid usersessionid!'
-            ]);
-        }
-
-        $current_user = Auth::user();
-        if (!$current_user->admin) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => "You don't have the permissions to access this page!"
-            ]);
-        }
-
         $xml = begin_XML_for_XSLT();
         $xml .= '<backurl>user.php</backurl>';
 

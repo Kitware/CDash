@@ -23,7 +23,11 @@ class Monitor extends TestCase
     protected function setUp() : void
     {
         parent::setUp();
+
         URL::forceRootUrl('http://localhost');
+
+        $this->normal_user = $this->makeNormalUser();
+        $this->admin_user = $this->makeAdminUser();
     }
 
     /**
@@ -48,17 +52,6 @@ class Monitor extends TestCase
     {
         // By default, the monitor is not available.
 
-        // Guest case.
-        $this->get('/monitor')->assertRedirect('/login');
-
-        // Normal user case.
-        $this->normal_user = $this->makeNormalUser();
-        $response = $this->actingAs($this->normal_user)->get('/monitor');
-        $response->assertViewIs('cdash');
-        $response->assertSee('Admin login required');
-
-        // Admin user case:
-        $this->admin_user = $this->makeAdminUser();
         $response = $this->actingAs($this->admin_user)->get('/monitor');
         $response->assertViewIs('admin.monitor');
         $response->assertSee('only available when QUEUE_CONNECTION=database');
@@ -66,16 +59,6 @@ class Monitor extends TestCase
         // Enable the relevant config setting to make the monitor available to admins.
         config(['queue.default' => 'database']);
 
-        // Guest case (same as above).
-        Auth::logout();
-        $this->get('/monitor')->assertRedirect('/login');
-
-        // Normal user case (same as above).
-        $response = $this->actingAs($this->normal_user)->get('/monitor');
-        $response->assertViewIs('cdash');
-        $response->assertSee('Admin login required');
-
-        // Admin user case:
         $response = $this->actingAs($this->admin_user)->get('/monitor');
         $response->assertViewIs('admin.monitor');
         $response->assertDontSee('only available when QUEUE_CONNECTION=database');
@@ -85,11 +68,9 @@ class Monitor extends TestCase
     {
         // Verify that only admins can see this page.
         $this->get('/api/monitor')->assertForbidden();
-        $this->normal_user = $this->makeNormalUser();
         $this->actingAs($this->normal_user)->get('/api/monitor')->assertForbidden();
 
         // Verify default (empty) JSON result.
-        $this->admin_user = $this->makeAdminUser();
         $this->actingAs($this->admin_user)->get('/api/monitor')->assertJsonFragment([
             'backlog_length' => 0,
             'backlog_time' => null

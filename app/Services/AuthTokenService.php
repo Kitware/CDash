@@ -173,7 +173,7 @@ class AuthTokenService
                     if (
                         $expected_user_id !== $auth_token['userid']
                         && $user2project->Role !== UserProject::PROJECT_ADMIN
-                        && $user->admin != 1
+                        && !$user->IsAdmin()
                     ) {
                         return false;
                     }
@@ -186,7 +186,7 @@ class AuthTokenService
                 // Full-access tokens can be deleted by:
                 // 1. The user who created them
                 // 2. A system administrator
-                if ($expected_user_id !== $auth_token['userid'] && $user->admin != 1) {
+                if ($expected_user_id !== $auth_token['userid'] && !$user->IsAdmin()) {
                     return false;
                 }
                 break;

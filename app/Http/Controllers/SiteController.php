@@ -15,13 +15,6 @@ class SiteController extends AbstractController
 {
     public function siteStatistics(): View|RedirectResponse
     {
-        // TODO: (williamjallen) why is this here?  This file was copied from siteStatistics.php
-        //       and this block of code may now be unnecessary
-        $policy = checkUserPolicy(0);
-        if ($policy !== true) {
-            return $policy;
-        }
-
         $xml = begin_XML_for_XSLT();
         $xml .= '<backurl>user.php</backurl>';
         $xml .= '<menutitle>CDash</menutitle>';
