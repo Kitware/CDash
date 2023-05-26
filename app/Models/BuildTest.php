@@ -5,6 +5,8 @@ namespace App\Models;
 use CDash\Model\Label;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Config;
 
 class BuildTest extends Model
 {
@@ -20,8 +22,10 @@ class BuildTest extends Model
 
     /**
      * Get the test record for this buildtest.
+     *
+     * @return BelongsTo<Test, self>
      */
-    public function test()
+    public function test(): BelongsTo
     {
         return $this->belongsTo('App\Models\Test', 'testid');
     }
@@ -29,7 +33,7 @@ class BuildTest extends Model
     /**
      * Add a label to this buildtest.
      **/
-    public function addLabel(Label $label)
+    public function addLabel(Label $label): void
     {
         if (is_null($this->labels)) {
             $this->labels = collect();
@@ -60,18 +64,18 @@ class BuildTest extends Model
 
     /**
      * Returns a self referencing URI for the current BuildTest.
-     *
-     * @return string
      */
-    public function GetUrlForSelf()
+    public function GetUrlForSelf(): string
     {
-        $host_base = \Config::get('app.url');
+        $host_base = Config::get('app.url');
         return "{$host_base}/test/{$this->id}";
     }
 
 
-    // Marshal functions moved here from the old BuildTest model class.
-    public static function marshalMissing($name, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate)
+    /**
+     * Marshal functions moved here from the old BuildTest model class.
+     */
+    public static function marshalMissing($name, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate): array
     {
         $data = array();
         $data['name'] = $name;
@@ -94,7 +98,7 @@ class BuildTest extends Model
         return $test;
     }
 
-    public static function marshalStatus($status)
+    public static function marshalStatus($status): array
     {
         $statuses = array('passed' => array('Passed', 'normal'),
                           'failed' => array('Failed', 'error'),
@@ -105,7 +109,7 @@ class BuildTest extends Model
     }
 
     // Only used in api/v1/viewTest.php
-    public static function marshal($data, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate)
+    public static function marshal($data, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate): array
     {
         require_once 'include/common.php';
         $marshaledStatus = self::marshalStatus($data['status']);

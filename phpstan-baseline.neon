@@ -1151,11 +1151,6 @@ parameters:
 			path: app/Http/Controllers/SubscribeProjectController.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\:\\:\\$test\\.$#"
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\TestController\\:\\:details\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/TestController.php
@@ -1545,17 +1540,7 @@ parameters:
 			path: app/Models/BuildTest.php
 
 		-
-			message: "#^Method App\\\\Models\\\\BuildTest\\:\\:addLabel\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Models/BuildTest.php
-
-		-
 			message: "#^Method App\\\\Models\\\\BuildTest\\:\\:getLabels\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Models/BuildTest.php
-
-		-
-			message: "#^Method App\\\\Models\\\\BuildTest\\:\\:marshal\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Models/BuildTest.php
 
@@ -1590,7 +1575,7 @@ parameters:
 			path: app/Models/BuildTest.php
 
 		-
-			message: "#^Method App\\\\Models\\\\BuildTest\\:\\:marshalMissing\\(\\) has no return type specified\\.$#"
+			message: "#^Method App\\\\Models\\\\BuildTest\\:\\:marshal\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Models/BuildTest.php
 
@@ -1625,7 +1610,7 @@ parameters:
 			path: app/Models/BuildTest.php
 
 		-
-			message: "#^Method App\\\\Models\\\\BuildTest\\:\\:marshalStatus\\(\\) has no return type specified\\.$#"
+			message: "#^Method App\\\\Models\\\\BuildTest\\:\\:marshalMissing\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Models/BuildTest.php
 
@@ -1635,7 +1620,7 @@ parameters:
 			path: app/Models/BuildTest.php
 
 		-
-			message: "#^Method App\\\\Models\\\\BuildTest\\:\\:test\\(\\) has no return type specified\\.$#"
+			message: "#^Method App\\\\Models\\\\BuildTest\\:\\:marshalStatus\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Models/BuildTest.php
 
@@ -1657,6 +1642,11 @@ parameters:
 		-
 			message: "#^Call to function base64_decode\\(\\) requires parameter \\#2 to be set\\.$#"
 			count: 2
+			path: app/Models/TestOutput.php
+
+		-
+			message: "#^Method App\\\\Models\\\\TestOutput\\:\\:DecompressOutput\\(\\) has no return type specified\\.$#"
+			count: 1
 			path: app/Models/TestOutput.php
 
 		-
@@ -1913,41 +1903,8 @@ parameters:
 			path: app/Services/TestCreator.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 8
-			path: app/Services/TestCreator.php
-
-		-
 			message: "#^Call to function base64_decode\\(\\) requires parameter \\#2 to be set\\.$#"
 			count: 2
-			path: app/Services/TestCreator.php
-
-		-
-			message: "#^Method App\\\\Services\\\\TestCreator\\:\\:compressOutput\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Services/TestCreator.php
-
-		-
-			message: "#^Method App\\\\Services\\\\TestCreator\\:\\:computeCrc32\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Services/TestCreator.php
-
-		-
-			message: "#^Method App\\\\Services\\\\TestCreator\\:\\:create\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Services/TestCreator.php
-
-		-
-			message: "#^Method App\\\\Services\\\\TestCreator\\:\\:loadImage\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Services/TestCreator.php
-
-		-
-			message: "#^Method App\\\\Services\\\\TestCreator\\:\\:saveImage\\(\\) has no return type specified\\.$#"
-			count: 1
 			path: app/Services/TestCreator.php
 
 		-
@@ -3641,11 +3598,6 @@ parameters:
 			message: "#^Property CDash\\\\Model\\\\ActionableTypes\\:\\:\\$categories has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/ActionableTypes.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\BuildTest\\:\\:\\$test\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
 
 		-
 			message: """
@@ -7539,26 +7491,6 @@ parameters:
 			path: app/cdash/app/Model/Image.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Image\\:\\:Exists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Image.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Image\\:\\:GetData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Image.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Image\\:\\:Load\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Image.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Image\\:\\:Save\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Image.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Image\\:\\:Save\\(\\) has parameter \\$update with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Image.php
@@ -10697,11 +10629,6 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/LabeledTopic.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\BuildTest\\:\\:\\$test\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
-
-		-
 			message: "#^Call to method count\\(\\) on an unknown class CDash\\\\Messaging\\\\Topic\\\\Illuminate\\\\Support\\\\Collection\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
@@ -10713,6 +10640,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Messaging\\\\Topic\\\\MissingTestTopic\\:\\:getTopicCollection\\(\\) has invalid return type CDash\\\\Messaging\\\\Topic\\\\Illuminate\\\\Support\\\\Collection\\.$#"
+			count: 1
+			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
+
+		-
+			message: "#^Property App\\\\Models\\\\BuildTest\\:\\:\\$test is not writable\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
 
@@ -19837,11 +19769,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\BuildTest\\:\\:\\$test\\.$#"
-			count: 11
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
 			message: "#^Access to property \\$Id on an unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
 			count: 2
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
@@ -20012,6 +19939,11 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$item of method CDash\\\\Messaging\\\\Topic\\\\TestFailureTopic\\:\\:itemHasTopicSubject\\(\\) expects App\\\\Models\\\\Test, App\\\\Models\\\\BuildTest given\\.$#"
 			count: 5
+			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			message: "#^Property App\\\\Models\\\\BuildTest\\:\\:\\$test is not writable\\.$#"
+			count: 11
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
 		-
