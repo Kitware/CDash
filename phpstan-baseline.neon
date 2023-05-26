@@ -147,16 +147,6 @@ parameters:
 			path: app/Exceptions/Handler.php
 
 		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\AbstractController\\:\\:\\$cdashCss has no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/AbstractController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\AbstractController\\:\\:\\$user has no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/AbstractController.php
-
-		-
 			message: "#^Backtick operator is not allowed\\. Use shell_exec\\(\\) instead\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
@@ -313,11 +303,6 @@ parameters:
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^App\\\\Http\\\\Controllers\\\\Auth\\\\ForgotPasswordController\\:\\:__construct\\(\\) does not call parent constructor from App\\\\Http\\\\Controllers\\\\AbstractController\\.$#"
-			count: 1
-			path: app/Http/Controllers/Auth/ForgotPasswordController.php
-
-		-
 			message: "#^Access to an undefined property App\\\\Http\\\\Controllers\\\\Auth\\\\LoginController\\:\\:\\$decayMinutes\\.$#"
 			count: 1
 			path: app/Http/Controllers/Auth/LoginController.php
@@ -326,16 +311,6 @@ parameters:
 			message: "#^Access to an undefined property App\\\\Http\\\\Controllers\\\\Auth\\\\LoginController\\:\\:\\$maxAttempts\\.$#"
 			count: 1
 			path: app/Http/Controllers/Auth/LoginController.php
-
-		-
-			message: "#^App\\\\Http\\\\Controllers\\\\Auth\\\\LoginController\\:\\:__construct\\(\\) does not call parent constructor from App\\\\Http\\\\Controllers\\\\AbstractController\\.$#"
-			count: 1
-			path: app/Http/Controllers/Auth/LoginController.php
-
-		-
-			message: "#^App\\\\Http\\\\Controllers\\\\Auth\\\\RegisterController\\:\\:__construct\\(\\) does not call parent constructor from App\\\\Http\\\\Controllers\\\\AbstractController\\.$#"
-			count: 1
-			path: app/Http/Controllers/Auth/RegisterController.php
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\RegisterController\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
@@ -356,16 +331,6 @@ parameters:
 			message: "#^Short ternary operator is not allowed\\. Use null coalesce operator if applicable or consider using long ternary\\.$#"
 			count: 1
 			path: app/Http/Controllers/Auth/RegisterController.php
-
-		-
-			message: "#^App\\\\Http\\\\Controllers\\\\Auth\\\\ResetPasswordController\\:\\:__construct\\(\\) does not call parent constructor from App\\\\Http\\\\Controllers\\\\AbstractController\\.$#"
-			count: 1
-			path: app/Http/Controllers/Auth/ResetPasswordController.php
-
-		-
-			message: "#^App\\\\Http\\\\Controllers\\\\Auth\\\\VerificationController\\:\\:__construct\\(\\) does not call parent constructor from App\\\\Http\\\\Controllers\\\\AbstractController\\.$#"
-			count: 1
-			path: app/Http/Controllers/Auth/VerificationController.php
 
 		-
 			message: "#^Call to function is_numeric\\(\\) with int will always evaluate to true\\.$#"
@@ -470,11 +435,6 @@ parameters:
 			message: "#^Property App\\\\Http\\\\Controllers\\\\BuildController\\:\\:\\$build has no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: "#^App\\\\Http\\\\Controllers\\\\CDash\\:\\:__construct\\(\\) does not call parent constructor from App\\\\Http\\\\Controllers\\\\AbstractController\\.$#"
-			count: 1
-			path: app/Http/Controllers/CDash.php
 
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"

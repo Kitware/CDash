@@ -36,7 +36,6 @@ class EditProjectController extends ProjectController
         if (ProjectPermissions::userCanCreateProject(Auth::user())) {
             $project_name = 'CDash';
             return view('admin.project')
-                ->with('cdashCss', $this->cdashCss)
                 ->with('date', json_encode($this->date))
                 ->with('logo', json_encode($this->logo))
                 ->with('projectid', 0)
@@ -59,7 +58,6 @@ class EditProjectController extends ProjectController
         }
         if (ProjectPermissions::userCanEditProject(Auth::user(), $this->project)) {
             return view('admin.project')
-                ->with('cdashCss', $this->cdashCss)
                 ->with('date', json_encode($this->date))
                 ->with('logo', json_encode($this->logo))
                 ->with('projectid', $project_id)

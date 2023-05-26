@@ -39,7 +39,6 @@ class ManageMeasurementsController extends ProjectController
         }
         if (ProjectPermissions::userCanEditProject(Auth::user(), $this->project)) {
             return view('admin.measurements')
-                ->with('cdashCss', $this->cdashCss)
                 ->with('date', json_encode($this->date))
                 ->with('logo', json_encode($this->logo))
                 ->with('projectid', $project_id)
