@@ -77,12 +77,6 @@ class SubProject
         return true;
     }
 
-    /** Function to get the project id */
-    public function GetProjectId(): int
-    {
-        return $this->ProjectId;
-    }
-
     /** Function to set the project id */
     public function SetProjectId($projectid): bool
     {
@@ -385,7 +379,7 @@ class SubProject
 
         $db = Database::getInstance();
         $project = $db->executePreparedSingleRow('
-                       SELECT submittime
+                       SELECT build.starttime
                        FROM build, subproject2build, build2group, buildgroup
                        WHERE
                            subprojectid=?
@@ -393,7 +387,7 @@ class SubProject
                            AND build2group.groupid=buildgroup.id
                            AND buildgroup.includesubprojectotal=1
                            AND subproject2build.buildid=build.id
-                       ORDER BY submittime DESC
+                       ORDER BY build.starttime DESC
                        LIMIT 1
                    ', [intval($this->Id)]);
         if ($project === false) {
@@ -401,11 +395,11 @@ class SubProject
             return false;
         }
 
-        if (!is_array($project) || !array_key_exists('submittime', $project)) {
+        if (!is_array($project) || !array_key_exists('starttime', $project)) {
             return false;
         }
 
-        return date(FMT_DATETIMESTD, strtotime($project['submittime'] . 'UTC'));
+        return date(FMT_DATETIMESTD, strtotime($project['starttime'] . 'UTC'));
     }
 
     /**
@@ -415,7 +409,7 @@ class SubProject
      * directly into the SQL, which potentially leaves us open to SQL injection if user-controllable
      * variables are inserted into the query string.
      */
-    private function CommonBuildQuery($startUTCdate, $endUTCdate, bool $allSubProjects, string $extraCriteria): int|array|false
+    public function CommonBuildQuery($startUTCdate, $endUTCdate, bool $allSubProjects): array|false
     {
         if (!$allSubProjects && $this->Id < 1) {
             return false;
@@ -431,8 +425,18 @@ class SubProject
             $params[] = intval($this->Id);
         }
 
-        $query =
-            "SELECT $extraSelect COUNT(*) AS c
+        $query = "
+            SELECT
+                $extraSelect
+                SUM(CASE WHEN b.configurewarnings > 0 THEN 1 END) AS nconfigurewarnings,
+                SUM(CASE WHEN b.configureerrors > 0 THEN 1 END) AS nconfigureerrors,
+                SUM(CASE WHEN b.configureerrors = 0 AND b.configurewarnings = 0 THEN 1 END) AS npassingconfigures,
+                SUM(CASE WHEN b.buildwarnings > 0 THEN 1 END) AS nbuildwarnings,
+                SUM(CASE WHEN b.builderrors > 0 THEN 1 END) AS nbuilderrors,
+                SUM(CASE WHEN b.builderrors = 0 AND b.buildwarnings = 0 THEN 1 END) AS npassingbuilds,
+                SUM(CASE WHEN b.testpassed > 0 THEN b.testpassed END) AS ntestspassed,
+                SUM(CASE WHEN b.testfailed > 0 THEN b.testfailed END) AS ntestsfailed,
+                SUM(CASE WHEN b.testnotrun > 0 THEN b.testnotrun END) AS ntestsnotrun
             FROM build b
             JOIN build2group b2g ON (b2g.buildid = b.id)
             JOIN buildgroup bg ON (bg.id = b2g.groupid)
@@ -442,7 +446,6 @@ class SubProject
                 b.projectid = ? AND
                 b.starttime > ? AND
                 b.starttime <= ? AND
-                $extraCriteria AND
                 bg.includesubprojectotal = 1";
         $params = array_merge($params, [intval($this->ProjectId), $startUTCdate, $endUTCdate]);
         if ($allSubProjects) {
@@ -453,7 +456,7 @@ class SubProject
         $project = $db->executePrepared($query, $params);
 
         if ($project === false) {
-            add_last_sql_error("SubProject CommonBuildQuery($extraCriteria)");
+            add_last_sql_error("SubProject CommonBuildQuery");
             return false;
         }
         if ($allSubProjects) {
@@ -463,199 +466,7 @@ class SubProject
             }
             return $project_array;
         } else {
-            return intval($project[0]['c']);
-        }
-    }
-
-    /** Get the number of warning builds given a date range */
-    public function GetNumberOfWarningBuilds($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
-    {
-        $criteria = 'b.buildwarnings > 0';
-        return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
-    }
-
-    /** Get the number of error builds given a date range */
-    public function GetNumberOfErrorBuilds($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
-    {
-        $criteria = 'b.builderrors > 0';
-        return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
-    }
-
-    /** Get the number of failing builds given a date range */
-    public function GetNumberOfPassingBuilds($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
-    {
-        $criteria = 'b.builderrors = 0 AND b.buildwarnings = 0';
-        return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
-    }
-
-    /** Get the number of failing configure given a date range */
-    public function GetNumberOfWarningConfigures($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
-    {
-        $criteria = 'b.configurewarnings > 0';
-        return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
-    }
-
-    /** Get the number of failing configure given a date range */
-    public function GetNumberOfErrorConfigures($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
-    {
-        $criteria = 'b.configureerrors > 0';
-        return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
-    }
-
-    /** Get the number of failing configure given a date range */
-    public function GetNumberOfPassingConfigures($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
-    {
-        $criteria = 'b.configureerrors = 0 AND b.configurewarnings = 0';
-        return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
-    }
-
-    /** Get the number of tests given a date range */
-    public function GetNumberOfPassingTests($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
-    {
-        if (!$allSubProjects && $this->Id < 1) {
-            return false;
-        }
-
-        $params = [];
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'SUM(build.testpassed) AS s FROM build, subproject2build ,build2group, buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=? AND ';
-            $params[] = intval($this->Id);
-        }
-
-        $queryStr .= "build2group.buildid=build.id
-                  AND build2group.groupid=buildgroup.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id
-                  AND build.starttime>?
-                  AND build.starttime<=?
-                  AND build.testpassed>=0 ";
-        $params[] = $startUTCdate;
-        $params[] = $endUTCdate;
-
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
-
-        $db = Database::getInstance();
-        $project = $db->executePrepared($queryStr, $params);
-
-        if ($project === false) {
-            add_last_sql_error('SubProject GetNumberOfPassingTests');
-            return false;
-        }
-        if ($allSubProjects) {
-            $project_array = [];
-            foreach ($project as $row) {
-                $project_array[intval($row['subprojectid'])] = $row;
-            }
-            return $project_array;
-        } else {
-            return intval($project[0]['s']);
-        }
-    }
-
-    /** Get the number of tests given a date range */
-    public function GetNumberOfFailingTests($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
-    {
-        if (!$allSubProjects && $this->Id < 1) {
-            return false;
-        }
-
-        $params = [];
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'SUM(build.testfailed) AS s FROM build, subproject2build, build2group, buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=? AND ';
-            $params[] = intval($this->Id);
-        }
-
-        $queryStr .= "build2group.buildid=build.id
-                  AND build2group.groupid=buildgroup.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id
-                  AND build.starttime>?
-                  AND build.starttime<=?
-                  AND build.testfailed>=0 ";
-        $params[] = $startUTCdate;
-        $params[] = $endUTCdate;
-
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
-
-        $db = Database::getInstance();
-        $project = $db->executePrepared($queryStr, $params);
-
-        if ($project === false) {
-            add_last_sql_error('SubProject GetNumberOfFailingTests');
-            return false;
-        }
-        if ($allSubProjects) {
-            $project_array = [];
-            foreach ($project as $row) {
-                $project_array[intval($row['subprojectid'])] = $row;
-            }
-            return $project_array;
-        } else {
-            return intval($project[0]['s']);
-        }
-    }
-
-    /** Get the number of tests given a date range */
-    public function GetNumberOfNotRunTests($startUTCdate, $endUTCdate, bool $allSubProjects = false): int|array|false
-    {
-        if (!$allSubProjects && $this->Id < 1) {
-            return false;
-        }
-
-        $params = [];
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'SUM(build.testnotrun) AS s FROM build, subproject2build, build2group, buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=? AND ';
-            $params[] = $this->Id;
-        }
-
-        $queryStr .= "build2group.buildid=build.id
-                  AND build2group.groupid=buildgroup.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id
-                  AND build.starttime>?
-                  AND build.starttime<=?
-                  AND build.testnotrun>=0 ";
-        $params[] = $startUTCdate;
-        $params[] = $endUTCdate;
-
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
-
-        $db = Database::getInstance();
-        $project = $db->executePrepared($queryStr, $params);
-
-        if ($project === false) {
-            add_last_sql_error('SubProject GetNumberOfNotRunTests');
-            return false;
-        }
-        if ($allSubProjects) {
-            $project_array = [];
-            foreach ($project as $row) {
-                $project_array[intval($row['subprojectid'])] = $row;
-            }
-            return $project_array;
-        } else {
-            return intval($project[0]['s']);
+            return $project[0];
         }
     }
 

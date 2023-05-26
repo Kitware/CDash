@@ -23,7 +23,7 @@
           <td align="center" colspan="3" width="20%"><b>Build</b></td>
           <td align="center" colspan="3" width="20%"><b>Test</b></td>
           <td ng-show="cdash.showlastsubmission == 1" align="center" rowspan="2" width="20%" class="nob">
-            <b>Last submission</b>
+            <b>Start Time</b>
           </td>
         </tr>
 
@@ -105,7 +105,7 @@
           </td>
 
           <td ng-if="cdash.showlastsubmission" align="center" class="nob">
-            {{cdash.project.lastsubmission}}
+            {{cdash.project.starttime}}
           </td>
         </tr>
       </table>

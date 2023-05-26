@@ -154,17 +154,18 @@ if (isset($_GET['subproject'])) {
                 $dependency_response = array();
                 $DependProject = new SubProject();
                 $DependProject->SetId($dependency);
+                $result = $DependProject->CommonBuildQuery($beginning_UTCDate, $end_UTCDate, false);
                 $dependency_response['name'] = $DependProject->GetName();
                 $dependency_response['name_encoded'] = urlencode($DependProject->GetName());
-                $dependency_response['nbuilderror'] = $DependProject->GetNumberOfErrorBuilds($beginning_UTCDate, $end_UTCDate);
-                $dependency_response['nbuildwarning'] = $DependProject->GetNumberOfWarningBuilds($beginning_UTCDate, $end_UTCDate);
-                $dependency_response['nbuildpass'] = $DependProject->GetNumberOfPassingBuilds($beginning_UTCDate, $end_UTCDate);
-                $dependency_response['nconfigureerror'] = $DependProject->GetNumberOfErrorConfigures($beginning_UTCDate, $end_UTCDate);
-                $dependency_response['nconfigurewarning'] = $DependProject->GetNumberOfWarningConfigures($beginning_UTCDate, $end_UTCDate);
-                $dependency_response['nconfigurepass'] = $DependProject->GetNumberOfPassingConfigures($beginning_UTCDate, $end_UTCDate);
-                $dependency_response['ntestpass'] = $DependProject->GetNumberOfPassingTests($beginning_UTCDate, $end_UTCDate);
-                $dependency_response['ntestfail'] = $DependProject->GetNumberOfFailingTests($beginning_UTCDate, $end_UTCDate);
-                $dependency_response['ntestnotrun'] = $DependProject->GetNumberOfNotRunTests($beginning_UTCDate, $end_UTCDate);
+                $dependency_response['nbuilderror'] = (int) $result['nbuilderrors'];
+                $dependency_response['nbuildwarning'] = (int) $result['nbuildwarnings'];
+                $dependency_response['nbuildpass'] = (int) $result['npassingbuilds'];
+                $dependency_response['nconfigureerror'] = (int) $result['nconfigureerrors'];
+                $dependency_response['nconfigurewarning'] = (int) $result['nconfigurewarnings'];
+                $dependency_response['nconfigurepass'] = (int) $result['npassingconfigures'];
+                $dependency_response['ntestpass'] = (int) $result['ntestspassed'];
+                $dependency_response['ntestfail'] = (int) $result['ntestsfailed'];
+                $dependency_response['ntestnotrun'] = (int) $result['ntestsnotrun'];
                 if (strlen($DependProject->GetLastSubmission()) === 0) {
                     $dependency_response['lastsubmission'] = 'NA';
                 } else {
