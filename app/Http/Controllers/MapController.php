@@ -8,41 +8,19 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 // TODO: (williamjallen) Refactor this to extend ProjectController instead of setting up everything manually.
-class MapController extends AbstractController
+class MapController extends ProjectController
 {
     public function viewMap(): View|RedirectResponse
     {
-        @$projectname = $_GET['project'];
-        if ($projectname != null) {
-            $projectname = htmlspecialchars($projectname);
-        }
+        $this->setProjectByName(htmlspecialchars($_GET['project'] ?? ''));
 
         @$date = $_GET['date'];
         if ($date != null) {
             $date = htmlspecialchars($date);
         }
 
-        $projectid = get_project_id($projectname);
-
-        if ($projectid == -1) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Wrong project name',
-                'title' => 'Sites Map'
-            ]);
-        }
-
-        $policy = checkUserPolicy($projectid);
-        if ($policy !== true) {
-            return $policy;
-        }
-
-        $project = new Project();
-        $project->Id = $projectid;
-        $project->Fill();
-
         $xml = begin_XML_for_XSLT();
-        $xml .= '<backurl>index.php?project=' . urlencode($projectname) . "&#38;date=$date</backurl>";
+        $xml .= '<backurl>index.php?project=' . urlencode($this->project->Name) . "&#38;date=$date</backurl>";
         $xml .= '<menutitle>CDash</menutitle>';
         $xml .= '<menusubtitle>Build location</menusubtitle>';
 
@@ -53,13 +31,13 @@ class MapController extends AbstractController
         $apikey = config('cdash.google_map_api_key');
 
         $xml .= add_XML_value('googlemapkey', $apikey);
-        $xml .= add_XML_value('projectname', $projectname);
-        $xml .= add_XML_value('projectname_encoded', urlencode($projectname));
+        $xml .= add_XML_value('projectname', $this->project->Name);
+        $xml .= add_XML_value('projectname_encoded', urlencode($this->project->Name));
         $xml .= '</dashboard>';
 
         $db = Database::getInstance();
 
-        $project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid]);
+        $project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$this->project->Id]);
 
         list($previousdate, $currenttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
 
@@ -117,7 +95,7 @@ class MapController extends AbstractController
                             u.firstname,
                             u.lastname,
                             u.id
-                    ', [$end_UTCDate, $beginning_UTCDate, $projectid]);
+                    ', [$end_UTCDate, $beginning_UTCDate, $this->project->Id]);
         } else {
             $site = $db->executePrepared('
                         SELECT
@@ -145,7 +123,7 @@ class MapController extends AbstractController
                             AND si.siteid=s.id
                             AND b.projectid=?
                         GROUP BY s.id
-                    ', [$end_UTCDate, $beginning_UTCDate, $projectid]);
+                    ', [$end_UTCDate, $beginning_UTCDate, $this->project->Id]);
         }
 
         echo pdo_error();
@@ -170,7 +148,7 @@ class MapController extends AbstractController
         return view('cdash', [
             'xsl' => true,
             'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/viewMap', true),
-            'project' => $project,
+            'project' => $this->project,
             'title' => 'Sites Map'
         ]);
     }

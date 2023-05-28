@@ -20,15 +20,6 @@ class ManageBannerController extends AbstractController
      */
     public function manageBanner(): View|RedirectResponse
     {
-        $userid = Auth::id();
-        // Checks
-        if (!isset($userid) || !is_numeric($userid)) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Not a valid userid!'
-            ]);
-        }
-
         /** @var User $user */
         $user = Auth::user();
 
@@ -37,40 +28,27 @@ class ManageBannerController extends AbstractController
         $xml .= '<menutitle>CDash</menutitle>';
         $xml .= '<menusubtitle>Banner</menusubtitle>';
 
-        @$projectid = $_GET['projectid'];
-        if ($projectid != null) {
-            $projectid = intval($projectid);
-        }
-
-        if (empty($projectid)) {
-            $projectid = 0;
-        }
-
         $project = new Project;
-
-        // If the projectid is not set and there is only one project we go directly to the page
-        if (isset($edit) && !isset($projectid)) {
-            $projectids = $project->GetIds();
-            if (count($projectids) == 1) {
-                $projectid = $projectids[0];
-            }
-        }
-
-        $project->Id = $projectid;
-
-        if (!Gate::allows('edit-project', $project)) {
+        if (isset($_GET['projectid']) && (int) $_GET['projectid'] > 0) {
+            $project->Id = (int) $_GET['projectid'];
+            Gate::authorize('edit-project', $project);
+        } elseif ($user->IsAdmin()) {
+            // We are able to set the global banner
+            $project->Id = 0;
+        } else {
+            // Deny access
             return view('cdash', [
                 'xsl' => true,
-                'xsl_content' => "You don't have the permissions to access this page"
+                'xsl_content' => "You do not have permission to access this page"
             ]);
         }
 
         // If user is admin then we can add a banner for all projects
-        if ($user->IsAdmin() == true) {
+        if ($user->IsAdmin()) {
             $xml .= '<availableproject>';
             $xml .= add_XML_value('id', '0');
             $xml .= add_XML_value('name', 'All');
-            if ($projectid == 0) {
+            if ($project->Id === 0) {
                 $xml .= add_XML_value('selected', '1');
             }
             $xml .= '</availableproject>';
@@ -80,7 +58,7 @@ class ManageBannerController extends AbstractController
         $params = [];
         if (!$user->IsAdmin()) {
             $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)";
-            $params[] = intval($userid);
+            $params[] = intval(Auth::id());
         }
 
         $db = Database::getInstance();
@@ -89,34 +67,35 @@ class ManageBannerController extends AbstractController
             $xml .= '<availableproject>';
             $xml .= add_XML_value('id', $project_array['id']);
             $xml .= add_XML_value('name', $project_array['name']);
-            if ($project_array['id'] == $projectid) {
+            if ($project_array['id'] == $project->Id) {
                 $xml .= add_XML_value('selected', '1');
             }
             $xml .= '</availableproject>';
         }
 
+        $Banner = new Banner();
+        $Banner->projectid = $project->Id;
+
         // If submit has been pressed
         @$updateMessage = $_POST['updateMessage'];
         if (isset($updateMessage)) {
-            $Banner = Banner::updateOrCreate(['projectid' => $projectid], ['text' => $_POST['message']]);
+            $Banner = Banner::updateOrCreate(['projectid' => $project->Id], ['text' => $_POST['message']]);
         } else {
-            $Banner = Banner::find($projectid);
+            $Banner = Banner::findOrNew($project->Id);
         }
 
         /* We start generating the XML here */
-        // List the available project
-        if ($projectid >= 0) {
-            $xml .= '<project>';
-            $xml .= add_XML_value('id', $project->Id);
-            $xml .= add_XML_value('text', $Banner !== null ? $Banner->text : '');
+        // List the available projects
+        $xml .= '<project>';
+        $xml .= add_XML_value('id', $project->Id);
+        $xml .= add_XML_value('text', $Banner->text);
 
-            if ($projectid > 0) {
-                $xml .= add_XML_value('name', $project->GetName());
-                $xml .= add_XML_value('name_encoded', urlencode($project->GetName()));
-            }
-            $xml .= add_XML_value('id', $project->Id);
-            $xml .= '</project>';
+        if ($project->Id > 0) {
+            $xml .= add_XML_value('name', $project->GetName());
+            $xml .= add_XML_value('name_encoded', urlencode($project->GetName()));
         }
+        $xml .= add_XML_value('id', $project->Id);
+        $xml .= '</project>';
 
         $xml .= '</cdash>';
 

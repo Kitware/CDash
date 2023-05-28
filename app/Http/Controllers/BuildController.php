@@ -1,46 +1,35 @@
 <?php
 namespace App\Http\Controllers;
 
-require_once 'include/common.php';
-require_once 'include/defines.php';
-
 use App\Services\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
-use CDash\Model\Project;
 use CDash\Model\Site;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class BuildController extends ProjectController
 {
-    protected $build;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->build = null;
-        $this->date = date(FMT_DATETIME);
-    }
+    protected Build $build;
 
     // Fetch data used by all build-specific pages in CDash.
-    protected function setup($build_id = null): void
+    protected function setBuild(Build $build): void
     {
-        if (!$build_id) {
-            abort(404);
+        if (!$build->Exists()) {
+            abort(404, 'Build does not exist. Maybe it has been deleted.');
         }
 
-        $this->build = new Build();
-        $this->build->Id = $build_id;
-        $this->build->FillFromId($build_id);
-        if (!$this->build->Exists()) {
-            abort(404);
-        }
+        $this->setProject($build->GetProject());
+        $this->build = $build;
+        $this->date = TestingDay::get($this->project, $this->build->StartTime);
+    }
 
-        parent::setup($this->build->GetProject());
-        if (!is_null($this->project)) {
-            $this->date = TestingDay::get($this->project, $this->build->StartTime);
-        }
+    protected function setBuildById(int $buildid): void
+    {
+        $build = new Build();
+        $build->Id = $buildid;
+        $build->FillFromId($buildid);
+        $this->setBuild($build);
     }
 
     // Render the build configure page.
@@ -61,21 +50,15 @@ class BuildController extends ProjectController
         return $this->renderBuildPage($build_id, 'summary', 'Build Summary');
     }
 
-    protected function renderBuildPage($build_id = null, $page_name, $page_title = '')
+    protected function renderBuildPage(int $build_id, string $page_name, string $page_title = '')
     {
-        $this->setup($build_id);
-        if (!$this->authOk) {
-            return $this->redirectToLogin();
-        }
-        if (!$page_title) {
+        $this->setBuildById($build_id);
+        if ($page_title === '') {
             $page_title = ucfirst($page_name);
         }
         return view("build.{$page_name}")
             ->with('build', json_encode($this->build))
-            ->with('date', json_encode($this->date))
-            ->with('logo', json_encode($this->logo))
             ->with('project', $this->project)
-            ->with('projectname', json_encode($this->project->Name))
             ->with('title', $page_title);
     }
 
@@ -95,6 +78,8 @@ class BuildController extends ProjectController
             ]);
         }
 
+        $this->setProjectByName($projectname);
+
         $date = htmlspecialchars($_GET['date'] ?? '');
 
         $xml = begin_XML_for_XSLT();
@@ -102,29 +87,8 @@ class BuildController extends ProjectController
 
         $db = Database::getInstance();
 
-        // Get some information about the specified project
-        $project_array = $db->executePreparedSingleRow('SELECT id, nightlytime FROM project WHERE name = ?', [$projectname]);
-        if (empty($project_array)) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => "project $projectname not found"
-            ]);
-        }
-
-        $project = new Project();
-        $project->Id = intval($project_array['id']);
-        $project->Fill();
-
-        $policy = checkUserPolicy(intval($project_array['id']));
-        if ($policy !== true) {
-            return $policy;
-        }
-
-        $projectid = intval($project_array['id']);
-        $nightlytime = $project_array['nightlytime'];
-
         // We select the builds
-        list($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date, $nightlytime);
+        list($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date, $this->project->NightlyTime);
         $xml .= '<menu>';
         $xml .= add_XML_value('previous', 'buildOverview.php?project=' . urlencode($projectname) . '&date=' . $previousdate);
         if (has_next_date($date, $currentstarttime)) {
@@ -141,7 +105,7 @@ class BuildController extends ProjectController
         $groupSelection = $_POST['groupSelection'] ?? 0;
         $groupSelection = intval($groupSelection);
 
-        $buildgroup = $db->executePrepared('SELECT id, name FROM buildgroup WHERE projectid=?', [$projectid]);
+        $buildgroup = $db->executePrepared('SELECT id, name FROM buildgroup WHERE projectid=?', [$this->project->Id]);
         foreach ($buildgroup as $buildgroup_array) {
             $xml .= '<group>';
             $xml .= add_XML_value('id', $buildgroup_array['id']);
@@ -191,7 +155,7 @@ class BuildController extends ProjectController
                   be.sourcefile ASC,
                   be.type ASC,
                   be.sourceline ASC
-          ", array_merge([$end_UTCDate, $beginning_UTCDate, $projectid], $params));
+          ", array_merge([$end_UTCDate, $beginning_UTCDate, $this->project->Id], $params));
 
         echo pdo_error();
 
@@ -239,7 +203,7 @@ class BuildController extends ProjectController
         return view('cdash', [
             'xsl' => true,
             'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/buildOverview', true),
-            'project' => $project,
+            'project' => $this->project,
             'title' => 'Build Overview'
         ]);
     }
@@ -259,28 +223,10 @@ class BuildController extends ProjectController
             ]);
         }
 
-        $buildid = intval($_GET['buildid']);
-        $Build = new Build();
-        $Build->Id = $buildid;
-        $Build->FillFromId($buildid);
+        $this->setBuildById((int) $_GET['buildid']);
+
         $Site = new Site();
-        $Site->Id = $Build->SiteId;
-
-        $db = Database::getInstance();
-        $build_array = $db->executePreparedSingleRow('SELECT projectid FROM build WHERE id=?', [$buildid]);
-        if (!isset($build_array['projectid'])) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Build does not exist. Maybe it has been deleted.',
-                'title' => 'View Files'
-            ]);
-        }
-        $projectid = $build_array['projectid'];
-
-        $policy = checkUserPolicy($projectid);
-        if ($policy !== true) {
-            return $policy;
-        }
+        $Site->Id = $this->build->SiteId;
 
         @$date = $_GET['date'];
         if ($date != null) {
@@ -288,7 +234,7 @@ class BuildController extends ProjectController
         }
 
         $xml = begin_XML_for_XSLT();
-        $xml .= get_cdash_dashboard_xml_by_name(get_project_name($projectid), $date);
+        $xml .= get_cdash_dashboard_xml_by_name($this->project->Name, $date);
         $xml .= add_XML_value('title', 'CDash - Uploaded files');
         $xml .= add_XML_value('menutitle', 'CDash');
         $xml .= add_XML_value('menusubtitle', 'Uploaded files');
@@ -297,13 +243,13 @@ class BuildController extends ProjectController
         $xml .= '<date>' . date('r') . '</date>';
         $xml .= '<backurl>index.php</backurl>';
 
-        $xml .= "<buildid>$buildid</buildid>";
-        $xml .= '<buildname>' . $Build->Name . '</buildname>';
-        $xml .= '<buildstarttime>' . $Build->StartTime . '</buildstarttime>';
+        $xml .= '<buildid>' . $this->build->Id . '</buildid>';
+        $xml .= '<buildname>' . $this->build->Name . '</buildname>';
+        $xml .= '<buildstarttime>' . $this->build->StartTime . '</buildstarttime>';
         $xml .= '<siteid>' . $Site->Id . '</siteid>';
         $xml .= '<sitename>' . $Site->GetName() . '</sitename>';
 
-        $uploadFilesOrURLs = $Build->GetUploadedFilesOrUrls();
+        $uploadFilesOrURLs = $this->build->GetUploadedFilesOrUrls();
 
         foreach ($uploadFilesOrURLs as $uploadFileOrURL) {
             if (!$uploadFileOrURL->IsUrl) {

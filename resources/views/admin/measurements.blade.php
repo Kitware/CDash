@@ -3,5 +3,5 @@
 ])
 
 @section('main_content')
-    <manage-measurements v-bind:projectid="{{ $projectid }}"></manage-measurements>
+    <manage-measurements v-bind:projectid="{{ $project->Id ?? 0 }}"></manage-measurements>
 @endsection
