@@ -51,6 +51,6 @@ class UpdateDependencies extends Command
         exec("npm install");
 
         // Run laravel-mix to builds assets
-        exec("npm run dev");
+        exec("npm run production");
     }
 }

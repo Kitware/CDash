@@ -256,11 +256,12 @@ var timelineController =
       window.location = uri;
     };
 };
+timelineController.$inject = ["$http", "$scope"];
 
-CDash.directive('timeline', function (VERSION) {
+CDash.directive('timeline', ["VERSION", function (VERSION) {
   return {
     restrict: 'A',
     templateUrl: 'build/views/partials/timeline_' + VERSION + '.html',
     controller: timelineController
   };
-});
+}]);

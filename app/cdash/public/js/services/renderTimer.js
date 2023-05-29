@@ -1,6 +1,6 @@
 // Time how long the initial render takes and add this to the value
 // shown at the bottom of the page.
-CDash.factory('renderTimer', function ($timeout) {
+CDash.factory('renderTimer', ["$timeout", function ($timeout) {
   var initialRender = function(controllerScope, cdash) {
     // Redirect if the API told us to.
     if ('redirect' in cdash) {
@@ -26,4 +26,4 @@ CDash.factory('renderTimer', function ($timeout) {
   return {
     initialRender: initialRender
   };
-});
+}]);

@@ -17,7 +17,7 @@ CDash.filter('filter_subproject_groups', function() {
     return output;
   };
 })
-.controller('ManageSubProjectController', function ManageSubProjectController($scope, $http, apiLoader) {
+.controller('ManageSubProjectController', ["$scope", "$http", "apiLoader", function ManageSubProjectController($scope, $http, apiLoader) {
   apiLoader.loadPageData($scope, 'api/v1/manageSubProject.php');
   $scope.finishSetup = function() {
     // Sort groups by position.
@@ -147,4 +147,4 @@ CDash.filter('filter_subproject_groups', function() {
     });
   };
 
-});
+}]);

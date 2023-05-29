@@ -9,6 +9,8 @@
     lang="{{ str_replace('_', '-', app()->getLocale()) }}"
     @if(isset($angular) && $angular === true)
         ng-app="CDash"
+        ng-strict-di
+        ng-cloak
     @endif
 >
 <head @if(isset($angular) && $angular === true) ng-controller="HeadController" @endif>

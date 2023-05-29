@@ -1,4 +1,4 @@
-CDash.factory('modalSvc', function modalSvc ($uibModal) {
+CDash.factory('modalSvc', ["$uibModal", function modalSvc ($uibModal) {
   const showModal = function(modelId, okFn, template, parent_scope, size, success, error) {
     parent_scope = typeof parent_scope !== 'undefined' ? parent_scope : null;
     size = typeof size !== 'undefined' ? size : 'sm';
@@ -39,4 +39,4 @@ CDash.factory('modalSvc', function modalSvc ($uibModal) {
   return {
     showModal: showModal,
   };
-});
+}]);

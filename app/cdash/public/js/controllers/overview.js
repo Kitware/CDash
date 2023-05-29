@@ -1,5 +1,5 @@
 CDash.controller('OverviewController',
-  function OverviewController($scope, $location, anchors, apiLoader) {
+  ["$scope", "$location", "anchors", "apiLoader", function OverviewController($scope, $location, anchors, apiLoader) {
     apiLoader.loadPageData($scope, 'api/v1/overview.php');
     $scope.finishSetup = function() {
       // Expose the jumpToAnchor function to the scope.
@@ -11,7 +11,7 @@ CDash.controller('OverviewController',
         anchors.jumpToAnchor($location.hash());
       }
     };
-});
+}]);
 
 CDash.directive('linechart', function() {
   return {

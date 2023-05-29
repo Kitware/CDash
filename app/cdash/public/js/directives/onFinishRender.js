@@ -1,4 +1,4 @@
-CDash.directive('onFinishRender', function ($timeout) {
+CDash.directive('onFinishRender', ["$timeout", function ($timeout) {
   return {
     restrict: 'A',
     link: function (scope, element, attr) {
@@ -7,4 +7,4 @@ CDash.directive('onFinishRender', function ($timeout) {
       }
     }
   }
-});
+}]);

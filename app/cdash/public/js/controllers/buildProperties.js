@@ -1,5 +1,5 @@
 CDash.controller('BuildPropertiesController',
-  function BuildPropertiesController($filter, $http, $scope, apiLoader, comparators, modalSvc, multisort) {
+  ["$filter", "$http", "$scope", "apiLoader", "comparators", "modalSvc", "multisort", function BuildPropertiesController($filter, $http, $scope, apiLoader, comparators, modalSvc, multisort) {
     apiLoader.loadPageData($scope, 'api/v1/buildProperties.php');
     $scope.finishSetup = function() {
       if ($scope.cdash.builds.length < 1) {
@@ -445,4 +445,4 @@ CDash.controller('BuildPropertiesController',
       $scope.pageChanged();
       $.cookie('cdash_buildProperties_sort', $scope.orderByFields);
     };
-});
+}]);

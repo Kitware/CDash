@@ -55,7 +55,7 @@ setup_local_config() {
         fi
 
     ) >> "$__local_config_file"
-    cd /home/kitware/cdash && php artisan config:migrate && php artisan key:generate && npm run dev
+    cd /home/kitware/cdash && php artisan config:migrate && php artisan key:generate && npm run production
 }
 
 local_service_teardown() {

@@ -1,5 +1,5 @@
 CDash.controller('TestSummaryController',
-  function TestSummaryController($scope, $timeout, apiLoader, multisort) {
+  ["$scope", "$timeout", "apiLoader", "multisort", function TestSummaryController($scope, $timeout, apiLoader, multisort) {
     // Hide filters and graph by default.
     $scope.showfilters = false;
     $scope.showgraph = false;
@@ -47,4 +47,4 @@ CDash.controller('TestSummaryController',
       }
     };
 
-});
+}]);
