@@ -15524,7 +15524,7 @@ parameters:
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
 			"""
-			count: 23
+			count: 21
 			path: app/cdash/include/upgrade_functions.php
 
 		-
@@ -15540,7 +15540,7 @@ parameters:
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 11
+			count: 6
 			path: app/cdash/include/upgrade_functions.php
 
 		-
@@ -15556,7 +15556,7 @@ parameters:
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 25
+			count: 19
 			path: app/cdash/include/upgrade_functions.php
 
 		-
@@ -15564,7 +15564,7 @@ parameters:
 				#^Call to deprecated function pdo_insert_id\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 2
+			count: 1
 			path: app/cdash/include/upgrade_functions.php
 
 		-
@@ -15572,7 +15572,7 @@ parameters:
 				#^Call to deprecated function pdo_num_rows\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 7
+			count: 4
 			path: app/cdash/include/upgrade_functions.php
 
 		-
@@ -15580,7 +15580,7 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 90
+			count: 70
 			path: app/cdash/include/upgrade_functions.php
 
 		-
@@ -15689,21 +15689,6 @@ parameters:
 
 		-
 			message: "#^Function AddUniqueConstraintToSiteTable\\(\\) has parameter \\$site_table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function CompressCoverage\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function CompressCoverage\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function CompressNotes\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
 
@@ -15844,16 +15829,6 @@ parameters:
 
 		-
 			message: "#^Function RemoveTableIndex\\(\\) has parameter \\$table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function RemoveTablePrimaryKey\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function RemoveTablePrimaryKey\\(\\) has parameter \\$table with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
 
@@ -16000,11 +15975,6 @@ parameters:
 		-
 			message: "#^Only booleans are allowed in an if condition, int given\\.$#"
 			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Variable \\$currentid might not be defined\\.$#"
-			count: 2
 			path: app/cdash/include/upgrade_functions.php
 
 		-
