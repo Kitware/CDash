@@ -374,11 +374,6 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:setBuild\\(\\) throws checked exception Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\HttpException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:summary\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php

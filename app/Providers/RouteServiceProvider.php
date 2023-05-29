@@ -33,7 +33,7 @@ class RouteServiceProvider extends ServiceProvider
             if ($image->Load()) {
                 return $image;
             }
-            return abort(404);
+            abort(404);
         });
     }
 

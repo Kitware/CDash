@@ -21,6 +21,10 @@ parameters:
         uncheckedExceptionRegexes:
             - '#^Exception$#'
             - '#^RuntimeException$#'  # Ideally we should catch these too, but there are a lot of uncaught usages here
+
+        uncheckedExceptionClasses:
+            - 'Symfony\Component\HttpKernel\Exception\HttpException'
+
         check:
             tooWideThrowType: true
             missingCheckedExceptionInThrows: true
