@@ -388,11 +388,6 @@ class AdminController extends AbstractController
     {
         @set_time_limit(0);
 
-        $xml = begin_XML_for_XSLT();
-        $xml .= '<menutitle>CDash</menutitle>';
-        $xml .= '<menusubtitle>Backups</menusubtitle>';
-        $xml .= '<backurl>manageBackup.php</backurl>';
-
         @$Submit = $_POST['Submit'];
 
         @$filemask = $_POST['filemask'];
@@ -400,6 +395,7 @@ class AdminController extends AbstractController
             $filemask = '*.xml';
         }
 
+        $alert = '';
         if ($Submit && $filemask) {
             $filelist = glob(Storage::path('inbox') . "/$filemask");
             $i = 0;
@@ -439,33 +435,16 @@ class AdminController extends AbstractController
             add_log('after loop n=' . $n, 'importBackup.php');
 
             $alert = 'Import backup complete. ' . $i . ' files processed.';
-            $xml .= add_XML_value('alert', $alert);
         }
-        $xml .= '</cdash>';
 
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/importBackup', true),
-            'title' => 'Import Backups'
+        return view('admin.import-backup', [
+            'alert' => $alert
         ]);
     }
 
     public function manageBackup(): View|RedirectResponse
     {
-        @set_time_limit(0);
-
-        $xml = begin_XML_for_XSLT();
-        $xml .= '<title>CDash - Backup</title>';
-        $xml .= '<menutitle>CDash</menutitle>';
-        $xml .= '<menusubtitle>Backup</menusubtitle>';
-        $xml .= '<backurl>user.php</backurl>';
-        $xml .= '</cdash>';
-
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/manageBackup', true),
-            'title' => 'Manage Backup'
-        ]);
+        return view('admin.manage-backup');
     }
 
     public function removeBuilds(): View|RedirectResponse

@@ -507,19 +507,16 @@ class UserController extends AbstractController
     public function recoverPassword(): View
     {
         $config = Config::getInstance();
-        $xml = begin_XML_for_XSLT();
-        if ($config->get('CDASH_NO_REGISTRATION') == 1) {
-            $xml .= add_XML_value('noregister', '1');
-        }
 
-        @$recover = $_POST['recover'];
-        if ($recover) {
+        $message = '';
+        $warning = '';
+        if (isset($_POST['recover'])) {
             $email = $_POST['email'];
             $user = new \CDash\Model\User();
             $userid = $user->GetIdFromEmail($email);
             if (!$userid) {
                 // Don't reveal whether or not this is a valid account.
-                $xml .= '<message>A confirmation message has been sent to your inbox.</message>';
+                $message = 'A confirmation message has been sent to your inbox.';
             } else {
                 // Create a new password
                 $password = generate_password(10);
@@ -536,27 +533,20 @@ class UserController extends AbstractController
                 if (cdashmail("$email", 'CDash password recovery', $text)) {
                     // If we can send the email we update the database
                     $passwordHash = User::PasswordHash($password);
-                    if ($passwordHash === false) {
-                        $xml .= '<warning>Failed to hash new password</warning>';
-                    } else {
-                        $user->Id = $userid;
-                        $user->Fill();
-                        $user->Password = $passwordHash;
-                        $user->Save();
-                        $xml .= '<message>A confirmation message has been sent to your inbox.</message>';
-                    }
+                    $user->Id = $userid;
+                    $user->Fill();
+                    $user->Password = $passwordHash;
+                    $user->Save();
+                    $message = 'A confirmation message has been sent to your inbox.';
                 } else {
-                    $xml .= '<warning>Cannot send recovery email</warning>';
+                    $warning = 'Cannot send recovery email';
                 }
             }
         }
 
-        $xml .= '</cdash>';
-
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/recoverPassword', true),
-            'title' => 'Recover Password'
+        return view('user.recover-password', [
+            'message' => $message,
+            'warning' => $warning,
         ]);
     }
 }
