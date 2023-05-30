@@ -30,6 +30,7 @@ use CDash\Model\Project;
 use CDash\Model\UserProject;
 use CDash\Model\Site;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 require_once 'include/log.php';
 
@@ -369,7 +370,7 @@ function checkUserPolicy($projectid, $onlyreturn = 0): bool|RedirectResponse|Res
         $project->Id = $projectid;
         $project->Fill();
 
-        if (ProjectPermissions::userCanViewProject($project)) {
+        if (Gate::allows('view-project', $project)) {
             return true;
         }
     }

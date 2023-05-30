@@ -9,6 +9,7 @@ use CDash\Database;
 use CDash\Model\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class SiteController extends AbstractController
@@ -588,7 +589,7 @@ class SiteController extends AbstractController
             $project = new Project();
             $project->Id = $projectid;
             $project->Fill();
-            if (ProjectPermissions::userCanViewProject($project)) {
+            if (Gate::allows('view-project', $project)) {
                 $xml .= '<project>';
                 $xml .= add_XML_value('id', $projectid);
                 $xml .= add_XML_value('submittime', $site['maxtime']);
@@ -639,7 +640,7 @@ class SiteController extends AbstractController
             $project = new Project();
             $project->Id = $projectid;
             $project->Fill();
-            if (ProjectPermissions::userCanViewProject($project)) {
+            if (Gate::allows('view-project', $project)) {
                 $timespent = round($tt['elapsed'] / 7.0); // average over 7 days
                 $xml .= '<build>';
                 $xml .= add_XML_value('name', $tt['buildname']);

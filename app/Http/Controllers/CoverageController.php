@@ -17,6 +17,7 @@ use CDash\Model\Site;
 use CDash\Model\UserProject;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 require_once 'include/filterdataFunctions.php';
@@ -68,7 +69,7 @@ class CoverageController extends AbstractController
         /** @var User $User */
         $User = Auth::user();
         $Project->Id = $projectid;
-        if (!ProjectPermissions::userCanEditProject($User, $Project)) {
+        if (!Gate::allows('edit-project', $Project)) {
             return view('cdash', [
                 'xsl' => true,
                 'xsl_content' => "You don't have the permissions to access this page"

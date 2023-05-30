@@ -8,6 +8,7 @@ use App\Models\Banner;
 use CDash\Model\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class ManageBannerController extends AbstractController
@@ -57,7 +58,7 @@ class ManageBannerController extends AbstractController
 
         $project->Id = $projectid;
 
-        if (!ProjectPermissions::userCanEditProject($user, $project)) {
+        if (!Gate::allows('edit-project', $project)) {
             return view('cdash', [
                 'xsl' => true,
                 'xsl_content' => "You don't have the permissions to access this page"

@@ -23,6 +23,7 @@ use CDash\Model\Project;
 use CDash\ServiceContainer;
 use CDash\System;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 /**
  *
@@ -57,7 +58,7 @@ function can_access_project($projectid): bool
 
     $project = new Project();
     $project->Id = $projectid;
-    if (ProjectPermissions::userCanViewProject($project)) {
+    if (Gate::allows('view-project', $project)) {
         return true;
     }
 
@@ -92,7 +93,7 @@ function can_administrate_project($projectid)
     }
 
     // Check if the user has the necessary permissions.
-    if (ProjectPermissions::userCanEditProject(Auth::user(), $project)) {
+    if (Gate::allows('edit-project', $project)) {
         return true;
     }
 

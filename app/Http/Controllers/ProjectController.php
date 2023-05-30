@@ -8,6 +8,7 @@ use App\Services\TestingDay;
 use App\Services\ProjectPermissions;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 abstract class ProjectController extends AbstractController
 {
@@ -33,7 +34,7 @@ abstract class ProjectController extends AbstractController
         }
 
         // Check if user is authorized to view this project.
-        if (ProjectPermissions::userCanViewProject($project)) {
+        if (Gate::allows('view-project', $project)) {
             $this->authOk = true;
         } else {
             $this->authOk = false;

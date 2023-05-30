@@ -27,14 +27,12 @@ use CDash\Model\Project;
 use CDash\Model\SubProject;
 use CDash\Model\SubProjectGroup;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 // Make sure we have a valid login.
 if (!Auth::check()) {
     return;
 }
-
-/** @var \App\Models\User $user */
-$user = Auth::user();
 
 // Check required parameter.
 @$projectid = $_GET['projectid'];
@@ -52,9 +50,8 @@ $projectid = pdo_real_escape_numeric($projectid);
 // Make sure the user has access to this page.
 $project = new Project;
 $project->Id = $projectid;
-if (!ProjectPermissions::userCanEditProject($user, $project)) {
-    $userid = $user->Id;
-    echo_error("You ($userid) don't have the permissions to access this page ($projectid)", 403);
+if (!Gate::allows('edit-project', $project)) {
+    echo_error("You don't have the permissions to access this page ($projectid)", 403);
     return;
 }
 

@@ -25,6 +25,7 @@ use App\Services\ProjectPermissions;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 // Read input parameters (if any).
 $rest_input = file_get_contents('php://input');
@@ -85,7 +86,7 @@ function rest_post($user)
             return;
         }
 
-        if (!ProjectPermissions::userCanCreateProject($user)) {
+        if (!Gate::allows('create-project')) {
             // User does not have permission to create a new project.
             $response['error'] = 'You do not have permission to access this page.';
             http_response_code(403);

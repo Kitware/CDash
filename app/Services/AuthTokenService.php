@@ -10,6 +10,7 @@ use CDash\Model\Project;
 use CDash\Model\UserProject;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
 use InvalidArgumentException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -70,7 +71,7 @@ class AuthTokenService
         $project = new Project();
         $project->Id = $project_id;
         $project->Fill();
-        if ($project_id >= 0 && !ProjectPermissions::userCanCreateProjectAuthToken($project)) {
+        if ($project_id >= 0 && !Gate::allows('view-project', $project)) {
             Log::error('Permissions error');
             throw new InvalidArgumentException('Permissions error');
         }
@@ -109,7 +110,7 @@ class AuthTokenService
         $project = new Project();
         $project->Id = $project_id;
         $project->Fill();
-        if (!ProjectPermissions::canViewProject($project, $user)) {
+        if (!Gate::forUser($user)->allows('view-project', $project)) {
             Log::error('Invalid Project');
             return false;
         }
