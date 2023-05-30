@@ -23,7 +23,6 @@
     <div v-else>
       <table v-if="cdash.edit == 1">
         <tr>
-          <td width="99" />
           <td>
             <div align="right">
               <strong>Project:</strong>
