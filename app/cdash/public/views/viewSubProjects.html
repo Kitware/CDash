@@ -1,10 +1,9 @@
-      <table ng-show="cdash.banners.length > 0" border="0" width="100%">
-        <tr ng-repeat="banner in cdash.banners" bgcolor="#DDDDDD">
-          <td align="center" width="100%" colspan="2">
-            <b>{{banner.text}}</b>
-          </td>
-        </tr>
-      </table>
+      <div name="banner"
+           class="h3 text-center bg-info"
+           ng-repeat="banner in ::cdash.banners"
+           ng-if="cdash.banners.length > 0">
+        {{::banner}}
+      </div>
 
       <br/>
 

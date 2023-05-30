@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Services\ProjectPermissions;
 use CDash\Database;
-use CDash\Model\Banner;
+use App\Models\Banner;
 use CDash\Model\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -94,13 +94,12 @@ class ManageBannerController extends AbstractController
             $xml .= '</availableproject>';
         }
 
-        $Banner = new Banner();
-        $Banner->SetProjectId($projectid);
-
         // If submit has been pressed
         @$updateMessage = $_POST['updateMessage'];
         if (isset($updateMessage)) {
-            $Banner->SetText(htmlspecialchars($_POST['message']));
+            $Banner = Banner::updateOrCreate(['projectid' => $projectid], ['text' => $_POST['message']]);
+        } else {
+            $Banner = Banner::find($projectid);
         }
 
         /* We start generating the XML here */
@@ -108,7 +107,7 @@ class ManageBannerController extends AbstractController
         if ($projectid >= 0) {
             $xml .= '<project>';
             $xml .= add_XML_value('id', $project->Id);
-            $xml .= add_XML_value('text', $Banner->GetText());
+            $xml .= add_XML_value('text', $Banner !== null ? $Banner->text : '');
 
             if ($projectid > 0) {
                 $xml .= add_XML_value('name', $project->GetName());

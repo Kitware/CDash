@@ -18,7 +18,7 @@ namespace CDash\Controller\Api;
 use App\Models\User;
 use CDash\Config;
 use CDash\Database;
-use CDash\Model\Banner;
+use App\Models\Banner;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -47,11 +47,9 @@ class ViewProjects extends \CDash\Controller\Api
     {
         $response = begin_JSON_response();
 
-        $Banner = new Banner;
-        $Banner->SetProjectId(0);
-        $text = $Banner->GetText();
-        if ($text !== false) {
-            $response['banner'] = $text;
+        $global_banner = Banner::find(0);
+        if ($global_banner !== null && strlen($global_banner->text) > 0) {
+            $response['banner'] = $global_banner->text;
         }
 
         $response['hostname'] = $_SERVER['SERVER_NAME'];
