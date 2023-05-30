@@ -22,6 +22,7 @@ use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 require_once 'include/filterdataFunctions.php';
 
@@ -341,51 +342,81 @@ class QueryTests extends ResultsApi
             $output_select = ', testoutput.output';
         }
 
-        $sql = "SELECT b.id AS buildid, b.name AS buildname, b.starttime, b.siteid, b.parentid, b.type,
-            build2test.id AS buildtestid, build2test.details, build2test.outputid,
-            build2test.status, build2test.time, build2test.timestatus,
-            site.name AS sitename, test.name AS testname $output_select
-                FROM build AS b
-                JOIN build2test ON (b.id = build2test.buildid)
-                JOIN site ON (b.siteid = site.id)
-                JOIN test ON (test.id = build2test.testid)
-                $filter_joins
-                $output_joins
-                WHERE b.projectid = :projectid
-                $parent_clause $date_clause $this->filterSQL
-                ORDER BY build2test.status, test.name
-                $this->limitSQL";
+        if (config('database.default') === 'pgsql') {
+            $text_concat = "array_to_string(array_agg(DISTINCT text), ', ')";
+        } else {
+            $text_concat  = "GROUP_CONCAT(DISTINCT text SEPARATOR ', ')";
+        }
+
         $query_params[':projectid'] = $this->project->Id;
-        $stmt = $this->db->prepare($sql);
-        $this->db->execute($stmt, $query_params);
+        $rows = DB::select("
+                    SELECT
+                        b.id AS buildid,
+                        b.name AS buildname,
+                        b.starttime,
+                        b.siteid,
+                        b.parentid,
+                        b.type,
+                        build2test.id AS buildtestid,
+                        build2test.details,
+                        build2test.outputid,
+                        build2test.status,
+                        build2test.time,
+                        build2test.timestatus,
+                        site.name AS sitename,
+                        test.name AS testname,
+                        (
+                            SELECT $text_concat
+                            FROM
+                                label,
+                                label2test
+                            WHERE
+                                label.id=label2test.labelid
+                                AND label2test.outputid=test.id
+                        ) AS labelstring
+                        $output_select
+                    FROM build AS b
+                    JOIN build2test ON (b.id = build2test.buildid)
+                    JOIN site ON (b.siteid = site.id)
+                    JOIN test ON (test.id = build2test.testid)
+                    $filter_joins
+                    $output_joins
+                    WHERE
+                        b.projectid = :projectid
+                        $parent_clause
+                        $date_clause
+                        $this->filterSQL
+                    ORDER BY build2test.status, test.name
+                    $this->limitSQL", $query_params);
 
         // Rows of test data to be displayed to the user.
-        $config = Config::getInstance();
         $tests = [];
-        while ($row = $stmt->fetch()) {
+        foreach ($rows as $row) {
             $test = [];
 
-            if (!$this->rowSurvivesTestOutputFilter($row, $test)) {
+            if (!$this->rowSurvivesTestOutputFilter((array) $row, $test)) {
                 continue;
             }
 
-            $buildid = $row['buildid'];
-            $buildtestid = $row['buildtestid'];
+            $buildid = $row->buildid;
+            $buildtestid = $row->buildtestid;
 
-            $test['testname'] = $row['testname'];
-            $test['site'] = $row['sitename'];
-            $test['group'] = $row['type'];
-            $test['buildName'] = $row['buildname'];
+            $test['testname'] = $row->testname;
+            $test['site'] = $row->sitename;
+            $test['group'] = $row->type;
+            $test['buildName'] = $row->buildname;
 
             $test['buildstarttime'] =
-                date(FMT_DATETIMETZ, strtotime($row['starttime'] . ' UTC'));
+                date(FMT_DATETIMETZ, strtotime($row->starttime . ' UTC'));
 
-            $test['time'] = $row['time'];
+            $test['time'] = $row->time;
             $test['prettyTime'] = time_difference($test['time'], true, '', true);
 
-            $test['details'] = $row['details'] . "\n";
+            $test['details'] = $row->details . "\n";
 
-            $siteLink = 'viewSite.php?siteid=' . $row['siteid'];
+            $test['labels'] = $row->labelstring;
+
+            $siteLink = 'viewSite.php?siteid=' . $row->siteid;
             $test['siteLink'] = $siteLink;
 
             $buildSummaryLink = "build/$buildid";
@@ -394,7 +425,7 @@ class QueryTests extends ResultsApi
             $testDetailsLink = "test/$buildtestid";
             $test['testDetailsLink'] = $testDetailsLink;
 
-            switch ($row['status']) {
+            switch ($row->status) {
                 case 'passed':
                     $test['status'] = 'Passed';
                     $test['statusclass'] = 'normal';
@@ -412,7 +443,7 @@ class QueryTests extends ResultsApi
             }
 
             if ($this->project->ShowTestTime) {
-                if ($row['timestatus'] < $this->project->TestTimeMaxStatus) {
+                if ($row->timestatus < $this->project->TestTimeMaxStatus) {
                     $test['timestatus'] = 'Passed';
                     $test['timestatusclass'] = 'normal';
                 } else {
@@ -422,7 +453,7 @@ class QueryTests extends ResultsApi
             }
 
             if ($this->hasProcessors || $this->numExtraMeasurements > 0) {
-                $this->addExtraMeasurements($test, $row['outputid']);
+                $this->addExtraMeasurements($test, $row->outputid);
             }
 
             $tests[] = $test;

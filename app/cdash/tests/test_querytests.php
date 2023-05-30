@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class QueryTestsTestCase extends KWWebTestCase
@@ -44,8 +46,35 @@ class QueryTestsTestCase extends KWWebTestCase
         $jsonobj = json_decode($content, true);
         $this->assertEqual(count($jsonobj['builds']), 6);
         $this->assertTrue($jsonobj['filterontestoutput']);
+        $this->assertEqual($jsonobj['builds'][0]['labels'], 'Sacado');
         $idx = strpos($jsonobj['builds'][0]['matchingoutput'], 'analytic');
         $this->assertEqual($idx, 96);
+
+        // Make sure cases with more than one label are handled appropriately.
+        $query_result = DB::select("
+                            SELECT
+                                t.id AS testid,
+                                l2t.buildid AS buildid
+                            FROM
+                                label l,
+                                label2test l2t,
+                                test t
+                            WHERE
+                                l.id = l2t.labelid
+                                AND l2t.outputid = t.id
+                                AND l.text = 'Claps'
+                            LIMIT 1
+                        ")[0];
+        DB::insert("INSERT INTO label (text) VALUES ('TestLabel')");
+        $labelid = (int) DB::select("SELECT id FROM label WHERE text = 'TestLabel'")[0]->id;
+        DB::insert('INSERT INTO label2test (labelid, buildid, outputid) VALUES (?, ?, ?)', [$labelid, $query_result->buildid, $query_result->testid]);
+        $this->get($this->url . '/api/v1/queryTests.php?project=Trilinos&filtercount=1&showfilters=1&field1=label&compare1=63&value1=Claps');
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $this->assertEqual($jsonobj['builds'][0]['labels'], 'Claps, TestLabel');
+        DB::insert('DELETE FROM label2test WHERE labelid = ? AND buildid = ? AND outputid = ?', [$labelid, $query_result->buildid, $query_result->testid]);
+        DB::delete("DELETE FROM label WHERE text = 'TestLabel'");
+
 
         $this->get($this->url . '/api/v1/queryTests.php?project=Trilinos&date=2011-07-22&filtercount=2&showfilters=1&filtercombine=and&field1=testoutput&compare1=97&value1=der%5Biva%5D%2Btive&field2=testoutput&compare2=96&value2=Tay.*%3F%20series');
         $content = $this->getBrowser()->getContent();
