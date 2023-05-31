@@ -15,19 +15,6 @@ abstract class AbstractController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected $cdashCss;
-    protected $user;
-
-    public function __construct()
-    {
-        $this->cdashCss = asset(get_css_file());
-
-        // Get the current user, if applicable.
-        $this->user = [
-            'id' => Auth::id()
-        ];
-    }
-
     /** Returns the version used to find compiled css and javascript files */
     public static function getJsVersion(): string
     {

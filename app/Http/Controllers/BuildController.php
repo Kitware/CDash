@@ -72,7 +72,6 @@ class BuildController extends ProjectController
         }
         return view("build.{$page_name}")
             ->with('build', json_encode($this->build))
-            ->with('cdashCss', $this->cdashCss)
             ->with('date', json_encode($this->date))
             ->with('logo', json_encode($this->logo))
             ->with('project', $this->project)

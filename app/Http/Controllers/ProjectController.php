@@ -19,7 +19,6 @@ abstract class ProjectController extends AbstractController
 
     public function __construct()
     {
-        parent::__construct();
         $this->project = null;
         $this->authOk = false;
         $this->date = date(FMT_DATETIME);
