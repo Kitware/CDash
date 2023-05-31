@@ -16,28 +16,30 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
+
 /**
  * This class handles page load time calculations, reporting, and logging.
  **/
 class PageTimer
 {
-    protected $start;
-    protected $end;
-    protected $duration;
+    protected float $start;
+    protected float $end;
+    protected float $duration;
 
     public function __construct()
     {
         $this->end = 0.0;
-        $this->start = microtime(true);
+        $this->start = LARAVEL_START;
     }
 
     public function end(&$response)
     {
         $this->end = microtime(true);
-        $this->duration = round($this->end - $this->start, 2);
+        $this->duration = round($this->end - LARAVEL_START, 2);
         if ($this->duration > config('cdash.slow_page_time')) {
             $url = $_SERVER['REQUEST_URI'];
-            \Log::warning("Slow page: $url took $this->duration to load");
+            Log::warning("Slow page: $url took $this->duration seconds to load");
         }
         $response['generationtime'] = $this->duration;
     }

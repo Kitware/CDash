@@ -38,7 +38,7 @@ $version = Config::getVersion();
                 </span>
             @elseif(isset($vue) && $vue === true)
                 | <span id="generation-time"></span> {{-- Will be filled by Vue --}}
-            @elseif(defined('LARAVEL_START')) {{-- LARAVEL_START might not be defined in the testing environment --}}
+            @else
                 <span>
                     | {{ round(microtime(true) - LARAVEL_START, 2) }}s
                 </span>
