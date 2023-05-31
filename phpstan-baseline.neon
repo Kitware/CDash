@@ -10342,16 +10342,6 @@ parameters:
 			path: app/cdash/include/Messaging/Subscription/Subscription.php
 
 		-
-			message: "#^Method CDash\\\\Messaging\\\\Subscription\\\\Subscription\\:\\:getProjectUrl\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Subscription/Subscription.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Subscription\\\\Subscription\\:\\:getSiteName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Subscription/Subscription.php
-
-		-
 			message: "#^Method CDash\\\\Messaging\\\\Subscription\\\\Subscription\\:\\:getTopicDescriptions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Subscription/Subscription.php
@@ -10393,11 +10383,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Messaging\\\\Subscription\\\\Subscription\\:\\:\\$summary type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Subscription/Subscription.php
-
-		-
-			message: "#^Property CDash\\\\Messaging\\\\Subscription\\\\Subscription\\:\\:\\$topicCollection is never read, only written\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Subscription/Subscription.php
 

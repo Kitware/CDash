@@ -89,29 +89,6 @@ Each class implementing the SubscriptionBuilderInterface has its own criteria fo
 * Determine if the submission matches any of the criteria gathered from project, build group, and user settings.
 * Add the subscriptions with matching criteria to the SubscriptionCollection.
 
-### SubscriptionBuilder
-```php
-/**
- * @return SubscriptionCollection
- */
-public function build()
-{
-    ...
-    foreach ($subscribers as $subscriber) {
-        /** @var SubscriberInterface $subscriber */
-        if ($subscriber->hasBuildTopics($this->build)) {
-            $subscription = $factory->create();
-            $subscription
-                ->setSubscriber($subscriber)
-                ->setTopicCollection($subscriber->getTopics())
-                ->setProject($this->project);
-
-            $subscriptions->add($subscription);
-        }
-    }
-    return $subscriptions;
-}
-```
 ### Subscriber
 
 A subscriber is some entity that is able to subscribe to a submission via topics. Currently CDash has two implementations of a Subscriber; 1) a user; 2) a commit author. Users' topics are set by evaluating the preferences they've set through the CDash UI. Commit authors have a set of topics with which they are provided. Subscribers' topics are evaluated against an actionable submission to determine if the Subscriber is subscribed to any given submission. Example:

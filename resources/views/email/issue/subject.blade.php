@@ -1,4 +1,5 @@
 <?php
+/* @var \CDash\Messaging\Subscription\Subscription $subscription */
 $summary = $subscription->getBuildSummary();
 $project = $subscription->getProjectName();
 $labels = $subscription->getSubscriber()->getLabels();

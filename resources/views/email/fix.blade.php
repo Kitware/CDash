@@ -1,5 +1,6 @@
 <?php
 $config = \CDash\Config::getInstance();
+/* @var \CDash\Messaging\Subscription\Subscription $subscription */
 $summary = $subscription->getBuildSummary();
 $collection = $subscription->getTopicCollection();
 $fixed = $collection->get('FixedTopic');

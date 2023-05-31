@@ -1944,15 +1944,6 @@ class Project
         return $collection;
     }
 
-    /**
-     * Returns a self referencing URI of the current Project.
-     */
-    public function GetUrlForSelf(): string
-    {
-        $config = Config::getInstance();
-        return "{$config->getBaseUrl()}/viewProject?projectid={$this->Id}";
-    }
-
     // Modify the build error/warning filters for this project if necessary.
     public function UpdateBuildFilters(): bool
     {
