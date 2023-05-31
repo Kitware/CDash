@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use CDash\Models\Build;
-
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TestOutput extends Model
 {
@@ -14,16 +13,24 @@ class TestOutput extends Model
     public $timestamps = false;
 
     /**
-     * Returns uncompressed test output.
+     * Get the test record for this output.
      *
-     * @return string
+     * @return BelongsTo<Test, self>
+     */
+    public function test(): BelongsTo
+    {
+        return $this->belongsTo('App\Models\Test', 'testid');
+    }
+
+    /**
+     * Returns uncompressed test output.
      */
     public static function DecompressOutput($output)
     {
         if (!config('cdash.use_compression')) {
             return $output;
         }
-        if (config('database.default') == 'pgsql') {
+        if (config('database.default') === 'pgsql') {
             if (is_resource($output)) {
                 $output = base64_decode(stream_get_contents($output));
             } else {

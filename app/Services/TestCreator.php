@@ -17,13 +17,11 @@
 namespace App\Services;
 
 use App\Models\BuildTest;
-use App\Models\Test;
 use App\Models\TestImage;
-use App\Models\TestMeasurement;
-use App\Models\TestOutput;
 
 use CDash\Model\Build;
 use CDash\Model\Image;
+use Illuminate\Support\Facades\DB;
 
 /**
  * This class is responsible for creating the various models associated
@@ -64,7 +62,7 @@ class TestCreator
         $this->testStatus = '';
     }
 
-    public function loadImage(Image $image)
+    public function loadImage(Image $image): void
     {
         if ($image->Checksum) {
             return;
@@ -75,10 +73,8 @@ class TestCreator
         $img = imagecreatefromstring($imgStr);
         ob_start();
         switch ($image->Extension) {
-            case 'image/jpg':
-                imagejpeg($img);
-                break;
             case 'image/jpeg':
+            case 'image/jpg':
                 imagejpeg($img);
                 break;
             case 'image/gif':
@@ -98,7 +94,7 @@ class TestCreator
         $image->Checksum = crc32($imageVariable);
     }
 
-    public function saveImage(Image $image, $outputid)
+    public function saveImage(Image $image, $outputid): void
     {
         $image->Save();
         $testImage = new TestImage;
@@ -108,17 +104,17 @@ class TestCreator
         $testImage->save();
     }
 
-    public function computeCrc32()
+    public function computeCrc32(): int
     {
-        $crc32_input = pdo_real_escape_string($this->testName);
-        $crc32_input .= pdo_real_escape_string($this->testPath);
-        $crc32_input .= pdo_real_escape_string($this->testCommand);
-        $crc32_input .= pdo_real_escape_string($this->testOutput);
-        $crc32_input .= pdo_real_escape_string($this->testDetails);
+        $crc32_input = $this->testName;
+        $crc32_input .= $this->testPath;
+        $crc32_input .= $this->testCommand;
+        $crc32_input .= $this->testOutput;
+        $crc32_input .= $this->testDetails;
         foreach ($this->measurements as $measurement) {
-            $crc32_input .= "_" . pdo_real_escape_string($measurement->type);
-            $crc32_input .= "_" . pdo_real_escape_string($measurement->name);
-            $crc32_input .= "_" . pdo_real_escape_string($measurement->value);
+            $crc32_input .= "_" . $measurement->type;
+            $crc32_input .= "_" . $measurement->name;
+            $crc32_input .= "_" . $measurement->value;
         }
 
         foreach ($this->images as $image) {
@@ -132,10 +128,10 @@ class TestCreator
     /**
      * Compress test output before storing it in the database.
      */
-    public function compressOutput()
+    public function compressOutput(): void
     {
         if ($this->alreadyCompressed) {
-            if (config('database.default') == 'pgsql') {
+            if (config('database.default') === 'pgsql') {
                 $compressed_output = $this->testOutput;
             } else {
                 $compressed_output = base64_decode($this->testOutput);
@@ -162,32 +158,33 @@ class TestCreator
     /**
      * Record this test in the database.
      **/
-    public function create(Build $build)
+    public function create(Build $build): void
     {
         // Raw SQL makes this a bit faster than TestOutput:firstOrCreate.
-        $test_exists_results = \DB::select(
+        $test_exists_results = DB::select(
             'SELECT id FROM test WHERE projectid=? AND name=?',
             [$this->projectid, $this->testName]);
         if ($test_exists_results) {
             $testid = $test_exists_results[0]->id;
         } else {
-            \DB::insert('INSERT INTO test (projectid, name) VALUES (:projectid, :name)',
-                [':projectid' => $this->projectid,
-                 ':name'      => $this->testName]);
-            $testid = \DB::getPdo()->lastInsertId();
+            DB::insert('INSERT INTO test (projectid, name) VALUES (:projectid, :name)', [
+                ':projectid' => $this->projectid,
+                ':name'      => $this->testName
+            ]);
+            $testid = DB::getPdo()->lastInsertId();
         }
 
         // testoutput
         $crc32 = $this->computeCrc32();
         // As above, raw SQL for performance improvement.
-        $output_exists_results = \DB::select(
+        $output_exists_results = DB::select(
             'SELECT id FROM testoutput WHERE crc32=? AND testid=?',
             [$crc32, $testid]);
         if ($output_exists_results) {
             $outputid = $output_exists_results[0]->id;
         } else {
             $this->compressOutput();
-            \DB::insert(
+            DB::insert(
                 'INSERT INTO testoutput (testid, path, command, output, crc32)
                 VALUES (:testid, :path, :command, :output, :crc32)',
                 [':testid'  => $testid,
@@ -195,7 +192,7 @@ class TestCreator
                  ':command' => $this->testCommand,
                  ':output'  => $this->testOutput,
                  ':crc32'   => $crc32]);
-            $outputid = \DB::getPdo()->lastInsertId();
+            $outputid = DB::getPdo()->lastInsertId();
 
             // testmeasurement
             foreach ($this->measurements as $measurement) {

@@ -37,7 +37,7 @@ class Image
         $this->PDO = Database::getInstance();
     }
 
-    private function GetData()
+    private function GetData(): void
     {
         if (strlen($this->Filename) > 0) {
             $h = fopen($this->Filename, 'rb');
@@ -48,7 +48,7 @@ class Image
     }
 
     /** Check if exists */
-    public function Exists()
+    public function Exists(): bool
     {
         $db = Database::getInstance();
         // If no id specify return false
@@ -71,7 +71,7 @@ class Image
     }
 
     /** Save the image */
-    public function Save($update=false)
+    public function Save($update=false): bool
     {
         // Get the data from the file if necessary
         $this->GetData();
@@ -115,7 +115,7 @@ class Image
     }
 
     /** Load the image from the database. */
-    public function Load()
+    public function Load(): bool
     {
         $stmt = $this->PDO->prepare('SELECT * FROM image WHERE id=?');
         $this->PDO->execute($stmt, [$this->Id]);
