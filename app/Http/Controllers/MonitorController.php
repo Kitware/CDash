@@ -122,7 +122,8 @@ class MonitorController extends AbstractController
             'backlog_length' => $backlog_length,
             'backlog_time' => $backlog_time,
             'time_chart_data' => $time_chart_data,
-            'ticks' => $ticks
+            'ticks' => $ticks,
+            'log_directory' => config('logging.default') === 'stack' ? storage_path('logs') : '',
         ]);
     }
 
