@@ -251,7 +251,7 @@ parameters:
 				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 1
+			count: 2
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -269,7 +269,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 3
+			count: 4
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -478,7 +478,7 @@ parameters:
 
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 2
+			count: 1
 			path: app/Http/Controllers/CDash.php
 
 		-
@@ -18238,42 +18238,6 @@ parameters:
 			path: app/cdash/public/auth/Google.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_real_escape_numeric\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/public/generateCTestConfig.php
-
-		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/public/generateCTestConfig.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/cdash/public/generateCTestConfig.php
-
-		-
-			message: "#^Function get_graph_depth\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/generateCTestConfig.php
-
-		-
-			message: "#^Function get_graph_depth\\(\\) has parameter \\$a with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/generateCTestConfig.php
-
-		-
-			message: "#^Function get_graph_depth\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/generateCTestConfig.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/cdash/public/importBuilds.php
@@ -24762,11 +24726,6 @@ parameters:
 
 		-
 			message: "#^Method DisplayImageTestCase\\:\\:testDisplayImage\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_displayimage.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, bool given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_displayimage.php
 

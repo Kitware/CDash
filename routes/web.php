@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 $routeList = array('verify' => true);
 
 if(config('auth.user_registration_form_enabled') === false) {
-    $routeList['register'] =  false;
+    $routeList['register'] = false;
 }
 Auth::routes($routeList);
 
@@ -56,6 +56,10 @@ Route::get('ping', function (Response $response) {
 Route::get('/authtokens/manage', 'AuthTokenController@manage');
 
 Route::get('/image/{image}', 'ImageController@image');
+Route::get('/displayImage.php', function (Request $request) {
+    $imgid = $request->query('imgid');
+    return redirect("/image/{$imgid}", 301);
+});
 
 Route::get('/build/{id}', 'BuildController@summary');
 Route::get('/buildSummary.php', function (Request $request) {
@@ -90,6 +94,8 @@ Route::get('/testDetails.php', function (Request $request) {
     }
     abort(404);
 });
+
+Route::get('/generateCTestConfig.php', 'AdminController@generateCTestConfig');
 
 Route::get('/viewProjects.php', 'ViewProjectsController@viewAllProjects');
 
