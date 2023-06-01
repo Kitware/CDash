@@ -272,8 +272,6 @@ class AdminController extends AbstractController
     {
         @set_time_limit(0);
 
-        checkUserPolicy(0); // only admin
-
         //get date info here
         @$dayFrom = $_POST['dayFrom'];
         if (!isset($dayFrom)) {
@@ -388,11 +386,6 @@ class AdminController extends AbstractController
 
     public function importBackup(): View|RedirectResponse
     {
-        $policy = checkUserPolicy(0); // only admin
-        if ($policy !== true) {
-            return $policy;
-        }
-
         @set_time_limit(0);
 
         $xml = begin_XML_for_XSLT();
@@ -459,11 +452,6 @@ class AdminController extends AbstractController
 
     public function manageBackup(): View|RedirectResponse
     {
-        $policy = checkUserPolicy(0); // only admin
-        if ($policy !== true) {
-            return $policy;
-        }
-
         @set_time_limit(0);
 
         $xml = begin_XML_for_XSLT();
@@ -485,11 +473,6 @@ class AdminController extends AbstractController
         $config = Config::getInstance();
 
         @set_time_limit(0);
-
-        $policy = checkUserPolicy(0); // only admin
-        if ($policy !== true) {
-            return $policy;
-        }
 
         @$projectid = $_GET['projectid'];
         if ($projectid != null) {
@@ -602,11 +585,6 @@ class AdminController extends AbstractController
         $config = Config::getInstance();
 
         @set_time_limit(0);
-
-        $policy = checkUserPolicy(0); // only admin
-        if ($policy !== true) {
-            return $policy;
-        }
 
         $xml = begin_XML_for_XSLT();
         $xml .= '<backurl>user.php</backurl>';
@@ -1425,30 +1403,21 @@ class AdminController extends AbstractController
 
     public function gitinfo(): View
     {
-        $user = Auth::user();
-        if ($user->admin) {
-            $content = $this->gitinfo_git_output('--version');
-            $content .= $this->gitinfo_git_output('remote -v');
-            $content .= $this->gitinfo_git_output('status');
-            $content .= $this->gitinfo_git_output('diff');
+        $content = $this->gitinfo_git_output('--version');
+        $content .= $this->gitinfo_git_output('remote -v');
+        $content .= $this->gitinfo_git_output('status');
+        $content .= $this->gitinfo_git_output('diff');
 
-            $config = Config::getInstance();
-            $content .= $this->gitinfo_file_contents($config->get('CDASH_ROOT_DIR') . '../../.env');
-            $content .= $this->gitinfo_file_contents($config->get('CDASH_ROOT_DIR') . '/tests/config.test.local.php');
-            $content .= '<br/>';
+        $config = Config::getInstance();
+        $content .= $this->gitinfo_file_contents($config->get('CDASH_ROOT_DIR') . '../../.env');
+        $content .= $this->gitinfo_file_contents($config->get('CDASH_ROOT_DIR') . '/tests/config.test.local.php');
+        $content .= '<br/>';
 
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => $content,
-                'title' => 'Git Information'
-            ]);
-        } else {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Admin login required to display git info.',
-                'title' => 'Git Information'
-            ]);
-        }
+        return view('cdash', [
+            'xsl' => true,
+            'xsl_content' => $content,
+            'title' => 'Git Information'
+        ]);
     }
 
     private function gitinfo_git_output(string $cmd): string

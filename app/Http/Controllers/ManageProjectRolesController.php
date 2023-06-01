@@ -47,7 +47,7 @@ class ManageProjectRolesController extends AbstractController
         $projectid = intval($projectid);
 
         $role = 0;
-        if ($projectid && is_numeric($projectid)) {
+        if ($projectid > 0) {
             $current_user_project = new UserProject();
             $current_user_project->ProjectId = $projectid;
             $current_user_project->UserId = $usersessionid;
@@ -55,7 +55,7 @@ class ManageProjectRolesController extends AbstractController
             $role = $current_user_project->Role;
         }
 
-        if (!$current_user->admin && $role <= 1) {
+        if (!$current_user->IsAdmin() && $role <= 1) {
             return view('cdash', [
                 'xsl' => true,
                 'xsl_content' => "You don't have the permissions to access this page!"
@@ -273,7 +273,7 @@ class ManageProjectRolesController extends AbstractController
 
         $sql = 'SELECT id, name FROM project';
         $params = [];
-        if (!$current_user->admin) {
+        if (!$current_user->IsAdmin()) {
             $sql .= ' WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)';
             $params[] = intval($usersessionid);
         }

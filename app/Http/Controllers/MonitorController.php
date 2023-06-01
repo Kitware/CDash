@@ -21,16 +21,7 @@ class MonitorController extends AbstractController
 {
     public function monitor(): View
     {
-        $user = Auth::user();
-        if ($user->admin === 1) {
-            return view('admin.monitor');
-        } else {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Admin login required to display monitoring info.',
-                'title' => 'System Monitor'
-            ]);
-        }
+        return view('admin.monitor');
     }
 
     /**

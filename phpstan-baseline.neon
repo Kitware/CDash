@@ -288,11 +288,6 @@ parameters:
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^Only booleans are allowed in an if condition, int given\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
 			message: "#^Variable \\$directory in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
@@ -685,11 +680,6 @@ parameters:
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
-			message: "#^Call to function is_numeric\\(\\) with int\\<min, \\-1\\>\\|int\\<1, max\\> will always evaluate to true\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageProjectRolesController\\:\\:register_user\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageProjectRolesController.php
@@ -720,16 +710,6 @@ parameters:
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
-			message: "#^Only booleans are allowed in &&, int given on the left side\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, int given\\.$#"
-			count: 2
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
 			message: "#^Only booleans are allowed in an if condition, App\\\\Models\\\\User\\|null given\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageProjectRolesController.php
@@ -741,11 +721,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageUsersController\\:\\:showPage\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, int given\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageUsersController.php
 
@@ -1223,6 +1198,11 @@ parameters:
 			message: "#^Property App\\\\Http\\\\Kernel\\:\\:\\$routeMiddleware type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Http/Kernel.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Middleware\\\\Admin\\:\\:handle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Http/Middleware/Admin.php
 
 		-
 			message: "#^Method App\\\\Http\\\\Middleware\\\\Authenticate\\:\\:redirectTo\\(\\) should return string but return statement is missing\\.$#"

@@ -11,8 +11,6 @@
 |
 */
 
-use App\Http\Controllers\Auth\RegisterController;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -123,11 +121,7 @@ Route::get('/viewFiles.php', 'BuildController@viewFiles');
 
 // The user must be logged in to access routes in this section.
 // Requests from users who are not logged in will be redirected to /login.
-//
-// TODO: (williamjallen) Many of these routes are admin-only pages.  Create an automated
-//       means of verifying that the user is an administrator rather than relying upon
-//       each individual file to perform the check.
-Route::group(['middleware' => 'auth' ], function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/user.php', 'UserController@userPage');
 
     // TODO: (williamjallen) send the POST route to a different function
@@ -143,10 +137,6 @@ Route::group(['middleware' => 'auth' ], function () {
     Route::post('/manageProjectRoles.php', 'ManageProjectRolesController@viewPage');
 
     // TODO: (williamjallen) send the POST route to a different function
-    Route::get('/manageUsers.php', 'ManageUsersController@showPage');
-    Route::post('/manageUsers.php', 'ManageUsersController@showPage');
-
-    // TODO: (williamjallen) send the POST route to a different function
     Route::get('/manageBanner.php', 'ManageBannerController@manageBanner');
     Route::post('/manageBanner.php', 'ManageBannerController@manageBanner');
 
@@ -154,38 +144,39 @@ Route::group(['middleware' => 'auth' ], function () {
     Route::get('/manageCoverage.php', 'CoverageController@manageCoverage');
     Route::post('/manageCoverage.php', 'CoverageController@manageCoverage');
 
-    Route::get('/siteStatistics.php', 'SiteController@siteStatistics');
-
     // TODO: (williamjallen) send the POST route to a different function
     Route::get('/editSite.php', 'SiteController@editSite');
     Route::post('/editSite.php', 'SiteController@editSite');
+});
 
-    // TODO: (williamjallen) send the POST route to a different function
+// Admin-only pages. Requests from users who are not logged in will be redirected to /login.
+Route::middleware(['admin'])->group(function () {
     Route::get('/upgrade.php', 'AdminController@upgrade');
     Route::post('/upgrade.php', 'AdminController@upgrade');
 
-    // TODO: (williamjallen) send the POST route to a different function
     Route::get('/import.php', 'AdminController@import');
     Route::post('/import.php', 'AdminController@import');
 
-    // TODO: (williamjallen) send the POST route to a different function
     Route::get('/importBackup.php', 'AdminController@importBackup');
     Route::post('/importBackup.php', 'AdminController@importBackup');
 
-    // TODO: (williamjallen) send the POST route to a different function
     Route::get('/manageBackup.php', 'AdminController@manageBackup');
     Route::post('/manageBackup.php', 'AdminController@manageBackup');
+
+    Route::get('/gitinfo.php', 'AdminController@gitinfo');
+
+    Route::get('/removeBuilds.php', 'AdminController@removeBuilds');
+    Route::post('/removeBuilds.php', 'AdminController@removeBuilds');
+
+    Route::get('/siteStatistics.php', 'SiteController@siteStatistics');
+
+    Route::get('/manageUsers.php', 'ManageUsersController@showPage');
+    Route::post('/manageUsers.php', 'ManageUsersController@showPage');
 
     Route::get('/monitor', 'MonitorController@monitor');
     Route::get('/monitor.php', function () {
         return redirect('/monitor');
     });
-
-    Route::get('/gitinfo.php', 'AdminController@gitinfo');
-
-    // TODO: (williamjallen) send the POST route to a different function
-    Route::get('/removeBuilds.php', 'AdminController@removeBuilds');
-    Route::post('/removeBuilds.php', 'AdminController@removeBuilds');
 });
 
 
