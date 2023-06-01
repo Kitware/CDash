@@ -23,7 +23,7 @@ use CDash\Model\CoverageFile;
 use CDash\Model\CoverageSummary;
 use CDash\Model\Label;
 use CDash\Model\Site;
-use CDash\Model\SiteInformation;
+use App\Models\SiteInformation;
 
 class CoverageJUnitHandler extends AbstractHandler
 {

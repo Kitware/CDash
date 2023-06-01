@@ -23,7 +23,7 @@ use CDash\Model\BuildConfigure;
 use CDash\Model\BuildInformation;
 use CDash\Model\BuildNote;
 use CDash\Model\Site;
-use CDash\Model\SiteInformation;
+use App\Models\SiteInformation;
 
 class NoteHandler extends AbstractHandler
 {

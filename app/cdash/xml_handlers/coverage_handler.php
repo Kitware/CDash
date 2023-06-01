@@ -24,7 +24,7 @@ use CDash\Model\CoverageSummary;
 use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\Site;
-use CDash\Model\SiteInformation;
+use App\Models\SiteInformation;
 use CDash\Model\SubProject;
 
 class CoverageHandler extends AbstractHandler

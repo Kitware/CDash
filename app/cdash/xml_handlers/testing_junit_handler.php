@@ -21,7 +21,7 @@ use App\Services\TestCreator;
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
 use CDash\Model\Site;
-use CDash\Model\SiteInformation;
+use App\Models\SiteInformation;
 
 class TestingJUnitHandler extends AbstractHandler
 {

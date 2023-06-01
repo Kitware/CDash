@@ -31,7 +31,7 @@ use CDash\Model\BuildGroup;
 use CDash\Model\BuildInformation;
 use CDash\Model\Label;
 use CDash\Model\Site;
-use CDash\Model\SiteInformation;
+use App\Models\SiteInformation;
 
 use CDash\Collection\BuildCollection;
 use CDash\Model\SubscriberInterface;
@@ -77,7 +77,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
             }
             $this->Site->Insert();
 
-            $siteInformation = $this->ModelFactory->create(SiteInformation::class);
+            $siteInformation = new SiteInformation;
             $this->BuildInformation = $this->ModelFactory->create(BuildInformation::class);
             $this->BuildName = "";
             $this->BuildStamp = "";

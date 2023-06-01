@@ -15,6 +15,8 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use App\Models\SiteInformation;
+
 use CDash\Config;
 use CDash\Database;
 
@@ -40,13 +42,10 @@ class Site
         $this->PDO = Database::getInstance()->getPdo();
     }
 
-    /**
-     * @param SiteInformation $information
-     */
     public function SetInformation(SiteInformation $information)
     {
-        $information->SiteId = $this->Id;
-        $information->Save();
+        $information->siteid = $this->Id;
+        $information->save();
         $this->Information = $information;
     }
 

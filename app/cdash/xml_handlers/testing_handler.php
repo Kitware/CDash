@@ -22,7 +22,7 @@ use CDash\Model\Image;
 use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\Site;
-use CDash\Model\SiteInformation;
+use App\Models\SiteInformation;
 use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
 use CDash\Submission\CommitAuthorHandlerTrait;
@@ -88,7 +88,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             }
             $this->Site->Insert();
 
-            $siteInformation = $factory->create(SiteInformation::class);
+            $siteInformation = new SiteInformation;
             $this->BuildInformation = $factory->create(BuildInformation::class);
             $this->BuildName = "";
             $this->BuildStamp = "";

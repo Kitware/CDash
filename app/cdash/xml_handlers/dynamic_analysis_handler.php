@@ -30,7 +30,7 @@ use CDash\Model\Site;
 use CDash\Model\DynamicAnalysis;
 use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\DynamicAnalysisDefect;
-use CDash\Model\SiteInformation;
+use App\Models\SiteInformation;
 use CDash\Model\BuildInformation;
 use CDash\Model\SubscriberInterface;
 
@@ -75,7 +75,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
             }
             $this->Site->Insert();
 
-            $siteInformation = $factory->create(SiteInformation::class);
+            $siteInformation = new SiteInformation();
             $this->BuildInformation = $factory->create(BuildInformation::class);
 
             // Fill in the attribute
