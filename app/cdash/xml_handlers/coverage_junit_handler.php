@@ -22,7 +22,7 @@ use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageSummary;
 use CDash\Model\Label;
-use CDash\Model\Site;
+use App\Models\Site;
 use App\Models\SiteInformation;
 
 class CoverageJUnitHandler extends AbstractHandler
@@ -50,11 +50,8 @@ class CoverageJUnitHandler extends AbstractHandler
         parent::startElement($parser, $name, $attributes);
         $parent = $this->getParent();
         if ($name == 'SITE') {
-            $this->Site->Name = $attributes['NAME'];
-            if (empty($this->Site->Name)) {
-                $this->Site->Name = '(empty)';
-            }
-            $this->Site->Insert();
+            $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
+            $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
             $siteInformation = new SiteInformation();
             $buildInformation = new BuildInformation();
@@ -65,9 +62,9 @@ class CoverageJUnitHandler extends AbstractHandler
                 $buildInformation->SetValue($key, $value);
             }
 
-            $this->Site->SetInformation($siteInformation);
+            $this->Site->mostRecentInformation()->save($siteInformation);
 
-            $this->Build->SiteId = $this->Site->Id;
+            $this->Build->SiteId = $this->Site->id;
             $this->Build->Name = $attributes['BUILDNAME'];
             if (empty($this->Build->Name)) {
                 $this->Build->Name = '(empty)';

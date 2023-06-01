@@ -25,11 +25,9 @@ use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
-use CDash\Model\Site;
+use App\Models\Site;
 use CDash\ServiceContainer;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Process\InputStream;
 
 $config = Config::getInstance();
 $service = ServiceContainer::getInstance();
@@ -220,10 +218,7 @@ if (isset($_GET['build']) && isset($_GET['site']) && isset($_GET['stamp'])) {
         $build->SetSubProject(pdo_real_escape_string($_GET['subproject']));
     }
 
-    $site = $service->create(Site::class);
-    $site->Name = pdo_real_escape_string($_GET['site']);
-    $site->Insert();
-    $build->SiteId = $site->Id;
+    $build->SiteId = Site::firstOrCreate(['name' => $_GET['site']], ['name' => $_GET['site']])->id;
     $pendingSubmissions->Build = $build;
 
     if ($build->AddBuild()) {

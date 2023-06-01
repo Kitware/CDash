@@ -6,7 +6,8 @@ require_once 'include/pdo.php';
 
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
-use CDash\Model\Site;
+use App\Models\Site;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 
 class DoneHandlerTestCase extends KWWebTestCase
@@ -49,9 +50,8 @@ class DoneHandlerTestCase extends KWWebTestCase
         $build->Name = $buildname;
         $projectid = get_project_id('InsightExample');
         $build->ProjectId = $projectid;
-        $site = new Site();
-        $site->Id = 1;
-        $build->SiteId = $site->Id;
+        $site = Site::find(1);
+        $build->SiteId = $site->id;
         $stamp = '20181010-1410-Experimental';
         $build->SetStamp($stamp);
         $timestamp = 1539195000;
@@ -65,7 +65,7 @@ class DoneHandlerTestCase extends KWWebTestCase
         fwrite($handle, "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Done><buildId>$build->Id</buildId><time>$timestamp</time></Done>");
         fclose($handle);
         $received_buildid = $this->submission_assign_buildid(
-            $tmpfname, 'InsightExample', $buildname, $site->GetName(), $stamp);
+            $tmpfname, 'InsightExample', $buildname, $site->name, $stamp);
         if ($remote) {
             Artisan::call('queue:work --once');
         }
@@ -89,7 +89,7 @@ class DoneHandlerTestCase extends KWWebTestCase
         $pending->Recheck = 1;
         $pending->Save();
 
-        $this->submission_assign_buildid($tmpfname, 'InsightExample', $buildname, $site->GetName(), $stamp);
+        $this->submission_assign_buildid($tmpfname, 'InsightExample', $buildname, $site->name, $stamp);
 
         if ($remote) {
             foreach (range(0, 5) as $i) {

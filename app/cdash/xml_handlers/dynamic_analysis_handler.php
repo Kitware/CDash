@@ -26,7 +26,7 @@ use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Label;
-use CDash\Model\Site;
+use App\Models\Site;
 use CDash\Model\DynamicAnalysis;
 use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\DynamicAnalysisDefect;
@@ -68,12 +68,8 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
         $factory = $this->getModelFactory();
 
         if ($name == 'SITE') {
-            $this->Site = $factory->create(Site::class);
-            $this->Site->Name = $attributes['NAME'];
-            if (empty($this->Site->Name)) {
-                $this->Site->Name = '(empty)';
-            }
-            $this->Site->Insert();
+            $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
+            $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
             $siteInformation = new SiteInformation();
             $this->BuildInformation = $factory->create(BuildInformation::class);
@@ -97,7 +93,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
             if (empty($this->BuildName)) {
                 $this->BuildName = '(empty)';
             }
-            $this->Site->SetInformation($siteInformation);
+            $this->Site->mostRecentInformation()->save($siteInformation);
         } elseif ($name == 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
@@ -267,7 +263,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
         $factory = $this->getModelFactory();
         $build = $factory->create(Build::class);
 
-        $build->SiteId = $this->Site->Id;
+        $build->SiteId = $this->Site->id;
         $build->Name = $this->BuildName;
 
         $build->SetStamp($this->BuildStamp);

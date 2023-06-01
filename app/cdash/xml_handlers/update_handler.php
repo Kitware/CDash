@@ -31,7 +31,7 @@ use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUpdateFile;
 use CDash\Model\Project;
 use CDash\Model\Repository;
-use CDash\Model\Site;
+use App\Models\Site;
 use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
 
@@ -50,7 +50,6 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface,
         parent::__construct($projectID);
         $factory = $this->getModelFactory();
         $this->Build = $factory->create(Build::class);
-        $this->Site = $factory->create(Site::class);
     }
 
     /** Start element */
@@ -79,9 +78,9 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface,
     {
         parent::endElement($parser, $name);
         if ($name == 'SITE') {
-            $this->Site->Insert();
+            $this->Site->save();
         } elseif ($name == 'UPDATE') {
-            $this->Build->SiteId = $this->Site->Id;
+            $this->Build->SiteId = $this->Site->id;
 
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
@@ -179,10 +178,8 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface,
                     $this->Update->Revision = $data;
                     break;
                 case 'SITE':
-                    $this->Site->Name = $data;
-                    if (empty($this->Site->Name)) {
-                        $this->Site->Name = '(empty)';
-                    }
+                    $sitename = !empty($data) ? $data : '(empty)';
+                    $this->Site = Site::firstOrCreate(['name' => $sitename], ['name' => $sitename]);
                     break;
                 case 'STARTTIME':
                     $this->StartTimeStamp = $data;

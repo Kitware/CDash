@@ -20,7 +20,7 @@ require_once 'include/api_common.php';
 
 use App\Services\AuthTokenService;
 use CDash\Model\Build;
-use CDash\Model\Site;
+use App\Models\Site;
 use CDash\ServiceContainer;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -39,17 +39,15 @@ if ($project->AuthenticateSubmissions && !AuthTokenService::checkToken($token_ha
 
 // Get the id of the specified site.
 $service = ServiceContainer::getInstance();
-$site = $service->create(Site::class);
 $sitename = get_param('site');
-$site->Name = $sitename;
-$site->Insert();
+$site = Site::firstOrCreate(['name' => $sitename], ['name' => $sitename]);
 
 // Populate a Build object with the properties needed to generate a UUID.
 $build = $service->create(Build::class);
 $build->Name = get_param('name');
 $build->SetStamp(get_param('stamp'));
 $build->ProjectId = $project->Id;
-$build->SiteId = $site->Id;
+$build->SiteId = $site->id;
 $build->StartTime = gmdate(FMT_DATETIME);
 $build->SubmitTime = $build->StartTime;
 $subProjectName = get_param('subProjectName', false);

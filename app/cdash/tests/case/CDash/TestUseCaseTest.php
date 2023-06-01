@@ -2,7 +2,6 @@
 
 use CDash\Model\Build;
 use CDash\Collection\BuildCollection;
-use CDash\Model\Site;
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\TestUseCase;
 use CDash\Test\UseCase\UseCase;
@@ -65,10 +64,9 @@ class TestUseCaseTest extends CDashUseCaseTestCase
             ->createSite($siteInformation);
         $handler = $sut->build();
         $builds = $handler->GetBuildCollection();
+        /** @var Build $build */
         $build = $builds->current();
-        /** @var Site $site */
-        $site = $build->getSite();
-        $information = $site->GetInformation();
+        $information = $build->GetSite()->mostRecentInformation;
 
         $this->assertEquals($information->description, $siteInformation['Description']);
         $this->assertEquals($information->processoris64bits, $siteInformation['Is64Bits']);

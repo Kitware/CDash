@@ -17,13 +17,10 @@
 namespace CDash\Controller\Api;
 
 use App\Models\BuildNote;
-use App\Models\Note;
 use App\Services\TestingDay;
 
 use CDash\Database;
 use CDash\Model\Build;
-use CDash\Model\Site;
-use CDash\Model\Project;
 
 class ViewNotes extends BuildApi
 {
@@ -70,7 +67,7 @@ class ViewNotes extends BuildApi
         $response['menu'] = $menu;
 
         // Build/site info.
-        $site_name = $this->build->GetSite()->GetName();
+        $site_name = $this->build->GetSite()->name;
         $response['build'] = Build::MarshalResponseArray($this->build, ['site' => $site_name]);
 
         // Notes for this build.

@@ -9,7 +9,6 @@ use CDash\Config;
 use CDash\Database;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Project;
-use CDash\Model\Site;
 use CDash\Model\SubProject;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -76,13 +75,11 @@ class AdminController extends AbstractController
         $response['menu'] = $menu_response;
 
         // Build
-        $site = new Site();
-        $site->Id = $build->SiteId;
-        $site_name = $site->GetName();
+        $site = $build->GetSite();
 
         $build_response = [];
-        $build_response['site'] = $site_name;
-        $build_response['siteid'] = $site->Id;
+        $build_response['site'] = $site->name;
+        $build_response['siteid'] = $site->id;
         $build_response['buildname'] = $build->Name;
         $build_response['buildid'] = $build->Id;
         $build_response['buildtime'] = date('D, d M Y H:i:s T', strtotime($build->StartTime . ' UTC'));

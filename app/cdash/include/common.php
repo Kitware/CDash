@@ -18,8 +18,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Services\ProjectPermissions;
 use App\Services\TestingDay;
 
 use CDash\Config;
@@ -28,7 +26,7 @@ use CDash\ServiceContainer;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
-use CDash\Model\Site;
+use App\Models\Site;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
@@ -483,12 +481,11 @@ function update_site($siteid, $name,
     $description, $ip, $latitude, $longitude, $nonewrevision = false,
     $outoforder = 0)
 {
-    require_once 'include/pdo.php';
-
     // Security checks
     if (!is_numeric($siteid)) {
         return;
     }
+    $siteid = (int) $siteid;
 
     $db = Database::getInstance();
 
@@ -513,11 +510,13 @@ function update_site($siteid, $name,
     $description = pdo_real_escape_string($description);
 
     // Update the basic information first
-    $db->executePrepared('
-        UPDATE site
-        SET name=?, ip=? latitude=?, longitude=?, outoforder=?
-        WHERE id=?
-    ', [$name, $ip, $latitude, $longitude, $outoforder, $siteid]);
+    Site::findOrFail($siteid)->where([
+        'name' => $name,
+        'ip' => $ip,
+        'latitude' => $latitude,
+        'longitude' => $longitude,
+        'outoforder' => $outoforder
+    ]);
 
     add_last_sql_error('update_site');
 
@@ -1828,18 +1827,13 @@ function cast_data_for_JSON($value)
  * Get the site ID for 'CDash Server'.
  * This is the site associated with Aggregate Coverage builds.
  */
-function get_server_siteid()
+function get_server_siteid(): int
 {
-    $server = new Site();
-    $server->Name = 'CDash Server';
-    if (!$server->Exists()) {
-        // Create it if it doesn't exist.
-        // SERVER_ADDR is not guaranteed to exist on every web server
-        $server_ip = @$_SERVER['SERVER_ADDR'];
-        $server->Ip = $server_ip;
-        $server->Insert();
-    }
-    return intval($server->Id);
+    $server = Site::firstOrCreate(['name' => 'CDash Server'], [
+        'name' => 'CDash Server',
+        'ip' => $_SERVER['SERVER_ADDR'] ?? '',
+    ]);
+    return $server->id;
 }
 
 /**

@@ -43,7 +43,6 @@ use CDash\Model\BuildFailure;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Label;
 use CDash\Model\Project;
-use CDash\Model\Site;
 use CDash\ServiceContainer;
 use PDO;
 
@@ -74,8 +73,6 @@ if (!can_access_project($project->Id)) {
 
 $response = begin_JSON_response();
 $response['title'] = "CDash : $project->Name";
-
-$siteid = $build->SiteId;
 
 if (isset($_GET['type'])) {
     $type = pdo_real_escape_numeric($_GET['type']);
@@ -114,10 +111,8 @@ if ($next_buildid > 0) {
 $response['menu'] = $menu;
 
 // Site
-$site = $service->get(Site::class);
-$site->Id = $siteid;
 $extra_build_fields = [
-    'site' => $site->GetName()
+    'site' => $build->GetSite()->name
 ];
 
 // Update

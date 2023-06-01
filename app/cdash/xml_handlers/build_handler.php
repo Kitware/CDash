@@ -32,7 +32,7 @@ use CDash\Model\BuildGroup;
 use CDash\Model\BuildInformation;
 use CDash\Model\Label;
 use CDash\Model\Project;
-use CDash\Model\Site;
+use App\Models\Site;
 use App\Models\SiteInformation;
 use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
@@ -80,12 +80,8 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
         $factory = $this->getModelFactory();
 
         if ($name == 'SITE') {
-            $this->Site = $factory->create(Site::class);
-            $this->Site->Name = $attributes['NAME'];
-            if (empty($this->Site->Name)) {
-                $this->Site->Name = '(empty)';
-            }
-            $this->Site->Insert();
+            $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
+            $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
             $siteInformation = new SiteInformation();
             $this->BuildInformation = $factory->create(BuildInformation::class);
@@ -115,7 +111,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                 $this->BuildName = '(empty)';
             }
 
-            $this->Site->SetInformation($siteInformation);
+            $this->Site->mostRecentInformation()->save($siteInformation);
         } elseif ($name == 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
@@ -126,7 +122,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                 if (!empty($this->PullRequest)) {
                     $build->SetPullRequest($this->PullRequest);
                 }
-                $build->SiteId = $this->Site->Id;
+                $build->SiteId = $this->Site->id;
                 $build->Name = $this->BuildName;
                 $build->SetStamp($this->BuildStamp);
                 $build->Generator = $this->Generator;
@@ -140,7 +136,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                 if (!empty($this->PullRequest)) {
                     $build->SetPullRequest($this->PullRequest);
                 }
-                $build->SiteId = $this->Site->Id;
+                $build->SiteId = $this->Site->id;
                 $build->Name = $this->BuildName;
                 $build->SetStamp($this->BuildStamp);
                 $build->Generator = $this->Generator;

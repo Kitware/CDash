@@ -21,7 +21,7 @@ use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
-use CDash\Model\Site;
+use App\Models\Site;
 use CDash\Model\UserProject;
 use CDash\ServiceContainer;
 use DI\Container;

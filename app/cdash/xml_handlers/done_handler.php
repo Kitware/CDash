@@ -102,7 +102,7 @@ class DoneHandler extends AbstractHandler
 
     public function getSiteName()
     {
-        return $this->Build->GetSite()->GetName();
+        return $this->Build->GetSite()->name;
     }
 
     public function shouldRequeue()

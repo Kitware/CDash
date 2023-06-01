@@ -11,8 +11,9 @@ use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Project;
-use CDash\Model\Site;
+use App\Models\Site;
 use CDash\Model\UserProject;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -117,22 +118,23 @@ class UserController extends AbstractController
         pdo_execute($stmt, [$userid]);
         $query_params = [];
         while ($row = $stmt->fetch()) {
-            $siteid = intval($row['siteid']);
-            $Site = new Site();
-            $Site->Id = $siteid;
-            $Site->Fill();
+            try {
+                $Site = Site::findOrFail($row['siteid']);
+            } catch (ModelNotFoundException $e) {
+                abort(500, 'Invalid relation between site2user and site tables.');
+            }
 
             $site_response = [];
-            $site_response['id'] = $Site->Id;
-            $site_response['name'] = $Site->Name;
-            $site_response['outoforder'] = $Site->OutOfOrder;
+            $site_response['id'] = $Site->id;
+            $site_response['name'] = $Site->name;
+            $site_response['outoforder'] = $Site->outoforder;
             $claimedsites[] = $site_response;
 
             if (strlen($siteidwheresql) > 0) {
                 $siteidwheresql .= ' OR ';
             }
             $siteidwheresql .= " siteid=? ";
-            $query_params[] = $siteid;
+            $query_params[] = $Site->id;
         }
 
         // Look for all the projects

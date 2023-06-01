@@ -2,44 +2,59 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property string $timestamp
+ * @property int $processoris64bits
+ * @property string $processorvendor
+ * @property string $processorvendorid
+ * @property int $processorfamilyid
+ * @property int $processormodelid
+ * @property int $processorcachesize
+ * @property int $numberlogicalcpus
+ * @property int $numberphysicalcpus
+ * @property int $totalvirtualmemory
+ * @property int $totalphysicalmemory
+ * @property int $logicalprocessorsperphysical
+ * @property int $processorclockfrequency
+ * @property string $description
+ * @property int $siteid
+ *
+ * @mixin Builder<SiteInformation>
+ */
 class SiteInformation extends Model
 {
     protected $table = 'siteinformation';
 
-//    const CREATED_AT = 'timestamp';
-    const CREATED_AT = null;
-    const UPDATED_AT = null;
+    public $timestamps = false;
 
     protected $fillable = [
-        'timestamp' => '1980-01-01 00:00:00',
-        'processoris64bits' => -1,
-        'processorvendor' => -1,
-        'processorvendorid' => -1,
-        'processorfamilyid' => -1,
-        'processormodelid' => -1,
-        'processorcachesize' => -1,
-        'numberlogicalcpus' => -1,
-        'numberphysicalcpus' => -1,
-        'totalvirtualmemory' => -1,
-        'totalphysicalmemory' => -1,
-        'logicalprocessorsperphysical' => -1,
-        'processorclockfrequency' => -1,
-        'description' => '',
-        'siteid' => 0,
+        'timestamp',
+        'processoris64bits',
+        'processorvendor',
+        'processorvendorid',
+        'processorfamilyid',
+        'processormodelid',
+        'processorcachesize',
+        'numberlogicalcpus',
+        'numberphysicalcpus',
+        'totalvirtualmemory',
+        'totalphysicalmemory',
+        'logicalprocessorsperphysical',
+        'processorclockfrequency',
+        'description',
+        'siteid',
     ];
 
-    public function save(array $options = [])
+    /**
+     * @return BelongsTo<Site, self>
+     */
+    public function site(): BelongsTo
     {
-        $this->processorcachesize = round($this->processorcachesize);
-        $this->numberlogicalcpus = round($this->numberlogicalcpus);
-        $this->numberphysicalcpus = round($this->numberphysicalcpus);
-        $this->totalphysicalmemory = round($this->totalphysicalmemory);
-        $this->logicalprocessorsperphysical = round($this->logicalprocessorsperphysical);
-        $this->processorclockfrequency = round($this->processorclockfrequency);
-
-        parent::save($options);
+        return $this->belongsTo('App\Models\Site', 'id');
     }
 
     public function SetValue(string $tag, string|int $value): void
@@ -49,7 +64,7 @@ class SiteInformation extends Model
                 $this->description = $value;
                 break;
             case 'IS64BITS':
-                $this->processoris64bits = $value;
+                $this->processoris64bits = (int) $value;
                 break;
             case 'VENDORSTRING':
                 $this->processorvendor = $value;
@@ -58,31 +73,31 @@ class SiteInformation extends Model
                 $this->processorvendorid = $value;
                 break;
             case 'FAMILYID':
-                $this->processorfamilyid = $value;
+                $this->processorfamilyid = (int) $value;
                 break;
             case 'MODELID':
-                $this->processormodelid = $value;
+                $this->processormodelid = (int) $value;
                 break;
             case 'PROCESSORCACHESIZE':
-                $this->processorcachesize = $value;
+                $this->processorcachesize = (int) $value;
                 break;
             case 'NUMBEROFLOGICALCPU':
-                $this->numberlogicalcpus = $value;
+                $this->numberlogicalcpus = (int) $value;
                 break;
             case 'NUMBEROFPHYSICALCPU':
-                $this->numberphysicalcpus = $value;
+                $this->numberphysicalcpus = (int) $value;
                 break;
             case 'TOTALVIRTUALMEMORY':
-                $this->totalvirtualmemory = $value;
+                $this->totalvirtualmemory = (int) $value;
                 break;
             case 'TOTALPHYSICALMEMORY':
-                $this->totalphysicalmemory = $value;
+                $this->totalphysicalmemory = (int) $value;
                 break;
             case 'LOGICALPROCESSORSPERPHYSICAL':
-                $this->logicalprocessorsperphysical = $value;
+                $this->logicalprocessorsperphysical = (int) $value;
                 break;
             case 'PROCESSORCLOCKFREQUENCY':
-                $this->processorclockfrequency = $value;
+                $this->processorclockfrequency = (int) $value;
                 break;
         }
     }

@@ -20,7 +20,7 @@ use CDash\Model\Build;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\Project;
-use CDash\Model\Site;
+use App\Models\Site;
 use CDash\Model\SubProject;
 
 class CoverageLogHandler extends AbstractHandler
@@ -51,12 +51,10 @@ class CoverageLogHandler extends AbstractHandler
     {
         parent::startElement($parser, $name, $attributes);
         if ($name == 'SITE') {
-            $this->Site->Name = $attributes['NAME'];
-            if (empty($this->Site->Name)) {
-                $this->Site->Name = '(empty)';
-            }
-            $this->Site->Insert();
-            $this->Build->SiteId = $this->Site->Id;
+            $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
+            $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
+
+            $this->Build->SiteId = $this->Site->id;
             $this->Build->Name = $attributes['BUILDNAME'];
             if (empty($this->Build->Name)) {
                 $this->Build->Name = '(empty)';

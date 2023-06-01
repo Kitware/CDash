@@ -17,13 +17,10 @@
 namespace CDash\Controller\Api;
 
 use App\Models\BuildTest;
-use App\Models\Test;
 use App\Models\TestOutput;
 
 use CDash\Database;
-use CDash\Model\Build;
-use CDash\Model\Project;
-use CDash\Model\Site;
+use App\Models\Site;
 
 require_once 'include/repository.php';
 
@@ -59,9 +56,7 @@ class TestDetails extends BuildTestApi
 
         $response = begin_JSON_response();
 
-        $site = new Site();
-        $site->Id = $this->build->SiteId;
-        $site->Fill();
+        $site = $this->build->GetSite();
 
         $this->setDate($this->build->GetDate());
 
@@ -127,8 +122,8 @@ class TestDetails extends BuildTestApi
         $test_response['buildid'] = $this->build->Id;
         $test_response['build'] = $this->build->Name;
         $test_response['buildstarttime'] = date(FMT_DATETIMESTD, strtotime($this->build->StartTime . ' UTC'));
-        $test_response['site'] = $site->Name;
-        $test_response['siteid'] = $site->Id;
+        $test_response['site'] = $site->name;
+        $test_response['siteid'] = $site->id;
         $test_response['test'] = $testName;
         $test_response['time'] = time_difference($testRow['time'], true, '', true);
         $test_response['command'] = $testRow['command'];
