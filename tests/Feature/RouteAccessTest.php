@@ -84,7 +84,7 @@ class RouteAccessTest extends TestCase
     public function testAdminRoutes(string $route): void
     {
         $this->get($route)->assertRedirect('login');
-        $this->actingAs($this->normal_user)->get($route)->assertSeeText('You must be an administrator to access this page.');
+        $this->actingAs($this->normal_user)->get($route)->assertForbidden()->assertSeeText('You must be an administrator to access this page.');
         $this->actingAs($this->admin_user)->get($route)->assertDontSeeText('You must be an administrator to access this page.');
     }
 

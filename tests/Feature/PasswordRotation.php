@@ -66,7 +66,7 @@ class PasswordRotation extends TestCase
             ->update(['date' => '2011-07-22 15:37:57']);
 
         // Make sure we get redirected.
-        $response = $this->actingAs($this->user)->get('/api/v1/viewProjects.php');
+        $response = $this->actingAs($this->user)->get('/viewProjects.php');
         $response->assertRedirect('editUser.php?password_expired=1');
 
         // Fail to change due to re-using the same password.

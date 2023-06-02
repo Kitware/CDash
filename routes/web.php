@@ -147,63 +147,36 @@ Route::middleware(['auth'])->group(function () {
     // TODO: (williamjallen) send the POST route to a different function
     Route::get('/editSite.php', 'SiteController@editSite');
     Route::post('/editSite.php', 'SiteController@editSite');
-});
 
-// Admin-only pages. Requests from users who are not logged in will be redirected to /login.
-Route::middleware(['admin'])->group(function () {
-    Route::get('/upgrade.php', 'AdminController@upgrade');
-    Route::post('/upgrade.php', 'AdminController@upgrade');
+    Route::middleware(['admin'])->group(function () {
+        Route::get('/upgrade.php', 'AdminController@upgrade');
+        Route::post('/upgrade.php', 'AdminController@upgrade');
 
-    Route::get('/import.php', 'AdminController@import');
-    Route::post('/import.php', 'AdminController@import');
+        Route::get('/import.php', 'AdminController@import');
+        Route::post('/import.php', 'AdminController@import');
 
-    Route::get('/importBackup.php', 'AdminController@importBackup');
-    Route::post('/importBackup.php', 'AdminController@importBackup');
+        Route::get('/importBackup.php', 'AdminController@importBackup');
+        Route::post('/importBackup.php', 'AdminController@importBackup');
 
-    Route::get('/manageBackup.php', 'AdminController@manageBackup');
-    Route::post('/manageBackup.php', 'AdminController@manageBackup');
+        Route::get('/manageBackup.php', 'AdminController@manageBackup');
+        Route::post('/manageBackup.php', 'AdminController@manageBackup');
 
-    Route::get('/gitinfo.php', 'AdminController@gitinfo');
+        Route::get('/gitinfo.php', 'AdminController@gitinfo');
 
-    Route::get('/removeBuilds.php', 'AdminController@removeBuilds');
-    Route::post('/removeBuilds.php', 'AdminController@removeBuilds');
+        Route::get('/removeBuilds.php', 'AdminController@removeBuilds');
+        Route::post('/removeBuilds.php', 'AdminController@removeBuilds');
 
-    Route::get('/siteStatistics.php', 'SiteController@siteStatistics');
+        Route::get('/siteStatistics.php', 'SiteController@siteStatistics');
 
-    Route::get('/manageUsers.php', 'ManageUsersController@showPage');
-    Route::post('/manageUsers.php', 'ManageUsersController@showPage');
+        Route::get('/manageUsers.php', 'ManageUsersController@showPage');
+        Route::post('/manageUsers.php', 'ManageUsersController@showPage');
 
-    Route::get('/monitor', 'MonitorController@monitor');
-    Route::get('/monitor.php', function () {
-        return redirect('/monitor');
+        Route::get('/monitor', 'MonitorController@monitor');
+        Route::get('/monitor.php', function () {
+            return redirect('/monitor');
+        });
     });
 });
-
-
-// API ROUTES /////////////////////////////////////////////////////////////////
-// TODO: (williamjallen) The routes in this section should be moved to api.php
-//       eventually.  The routing/middleware infrastructure needs to be refactored
-//       and this should be moved to api.php as part of that process.  The current
-//       blocker is the API middleware which requires bearer tokens instead of
-//       standard Laravel web sessions.
-
-Route::get('/api/authtokens/all', 'AuthTokenController@fetchAll');
-Route::post('/api/authtokens/create', 'AuthTokenController@createToken');
-Route::delete('/api/authtokens/delete/{token_hash}', 'AuthTokenController@deleteToken');
-
-Route::get('/api/monitor', 'MonitorController@get');
-
-// OLD ROUTES (these may not use Laravel fully)
-
-Route::get('/api/v1/viewProjects.php', 'ViewProjectsController@fetchPageContent');
-
-Route::get('/api/v1/viewUpdate.php', 'AdminController@viewUpdatePageContent');
-
-Route::get('/api/v1/viewTest.php', 'ViewTestController@fetchPageContent');
-
-Route::get('/api/v1/user.php', 'UserController@userPageContent');
-
-///////////////////////////////////////////////////////////////////////////////
 
 // this *MUST* be the last route in the file
 Route::any('{url}', 'CDash')->where('url', '.*');

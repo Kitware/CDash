@@ -29,11 +29,6 @@ class MonitorController extends AbstractController
      */
     public function get(): JsonResponse
     {
-        $user = Auth::user();
-        if ($user === null || !$user->IsAdmin()) {
-            return response()->json(['error' => 'Permissions error'], status: Response::HTTP_FORBIDDEN);
-        }
-
         // Get the length of the current backlog and how long the oldest submission
         // has been waiting.
         $backlog_length = DB::table('jobs')->count();
