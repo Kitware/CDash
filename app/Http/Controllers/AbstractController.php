@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 
 include_once 'include/common.php';
+require_once 'include/defines.php';
 
 abstract class AbstractController extends BaseController
 {

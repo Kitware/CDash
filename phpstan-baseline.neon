@@ -349,24 +349,6 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 2
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$page_name follows optional parameter \\$build_id\\.$#"
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:configure\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php
@@ -392,28 +374,8 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:renderBuildPage\\(\\) has parameter \\$build_id with no type specified\\.$#"
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:setBuild\\(\\) throws checked exception Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\HttpException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:renderBuildPage\\(\\) has parameter \\$page_name with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:renderBuildPage\\(\\) has parameter \\$page_title with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:setup\\(\\) has parameter \\$build_id with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:setup\\(\\) throws checked exception Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\HttpException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -423,11 +385,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:summary\\(\\) has parameter \\$build_id with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\BuildController\\:\\:\\$build has no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php
 
@@ -544,32 +501,12 @@ parameters:
 			path: app/Http/Controllers/EditProjectController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:create\\(\\) throws checked exception Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\HttpException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Http/Controllers/EditProjectController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:edit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/EditProjectController.php
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:edit\\(\\) has parameter \\$project_id with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/EditProjectController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:edit\\(\\) throws checked exception Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\HttpException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
-			path: app/Http/Controllers/EditProjectController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:setup\\(\\) has parameter \\$project_id with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/EditProjectController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:\\$build has no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/EditProjectController.php
 
@@ -582,47 +519,12 @@ parameters:
 			path: app/Http/Controllers/ManageBannerController.php
 
 		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageBannerController.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageBannerController.php
-
-		-
-			message: "#^Variable \\$edit in isset\\(\\) is never defined\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageBannerController.php
-
-		-
-			message: "#^Variable \\$projectid in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageBannerController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageMeasurementsController\\:\\:setup\\(\\) has parameter \\$project_id with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageMeasurementsController\\:\\:show\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageMeasurementsController\\:\\:show\\(\\) has parameter \\$project_id with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageMeasurementsController\\:\\:show\\(\\) throws checked exception Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\HttpException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\ManageMeasurementsController\\:\\:\\$project has no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
@@ -817,31 +719,6 @@ parameters:
 			message: "#^Short ternary operator is not allowed\\. Use null coalesce operator if applicable or consider using long ternary\\.$#"
 			count: 1
 			path: app/Http/Controllers/OAuthController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\ProjectController\\:\\:setup\\(\\) throws checked exception Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\HttpException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Http/Controllers/ProjectController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\ProjectController\\:\\:\\$authOk has no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/ProjectController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\ProjectController\\:\\:\\$date has no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/ProjectController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\ProjectController\\:\\:\\$logo has no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/ProjectController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\ProjectController\\:\\:\\$project has no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/ProjectController.php
 
 		-
 			message: """
@@ -1092,16 +969,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\TestController\\:\\:details\\(\\) has parameter \\$buildtest_id with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\TestController\\:\\:details\\(\\) throws checked exception Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\HttpException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Controllers\\\\TestController\\:\\:\\$project has no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/TestController.php
 
