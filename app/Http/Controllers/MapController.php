@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use CDash\Database;
-use CDash\Model\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -37,11 +36,9 @@ class MapController extends ProjectController
 
         $db = Database::getInstance();
 
-        $project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$this->project->Id]);
+        list($previousdate, $currenttime, $nextdate) = get_dates($date, $this->project->NightlyTime);
 
-        list($previousdate, $currenttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
-
-        $nightlytime = strtotime($project_array['nightlytime']);
+        $nightlytime = strtotime($this->project->NightlyTime);
 
         $nightlyhour = gmdate('H', $nightlytime);
         $nightlyminute = gmdate('i', $nightlytime);
