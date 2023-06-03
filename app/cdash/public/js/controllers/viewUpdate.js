@@ -1,5 +1,5 @@
 CDash.controller('ViewUpdateController',
-  function ViewUpdateController($scope, $rootScope, $http, apiLoader) {
+  ["$scope", "$rootScope", "$http", "apiLoader", function ViewUpdateController($scope, $rootScope, $http, apiLoader) {
     $scope.graphLoaded = false;
     $scope.graphLoading = false;
     $scope.showGraph = false;
@@ -60,10 +60,10 @@ CDash.controller('ViewUpdateController',
 
       plot = $.plot($("#graph_holder"), [{label: "Number of changed files", data: input.data}], options);
     };
-})
+}])
 
-.directive('updatedFiles', function(VERSION) {
+.directive('updatedFiles', ["VERSION", function(VERSION) {
   return {
     templateUrl: 'build/views/partials/updatedfiles_' + VERSION + '.html'
   }
-});
+}]);

@@ -1,5 +1,5 @@
 CDash.controller('UserStatisticsController',
-  function UserStatisticsController($scope, $filter, apiLoader, multisort) {
+  ["$scope", "$filter", "apiLoader", "multisort", function UserStatisticsController($scope, $filter, apiLoader, multisort) {
     // Check for sort order cookie.
     var sort_order = [];
     var sort_cookie_value = $.cookie('cdash_user_stats_sort');
@@ -33,4 +33,4 @@ CDash.controller('UserStatisticsController',
       $scope.cdash.users = $filter('orderBy')($scope.cdash.users, $scope.orderByFields);
       $.cookie('cdash_user_stats_sort', $scope.orderByFields);
     };
-});
+}]);

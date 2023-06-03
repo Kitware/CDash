@@ -1,5 +1,5 @@
 CDash.controller('ViewSubProjectsController',
-  function ViewSubProjectsController($scope, multisort, apiLoader) {
+  ["$scope", "multisort", "apiLoader", function ViewSubProjectsController($scope, multisort, apiLoader) {
     // Hide filters by default.
     $scope.showfilters = false;
 
@@ -17,4 +17,4 @@ CDash.controller('ViewSubProjectsController',
       multisort.updateOrderByFields(obj, field, $event);
       $.cookie('cdash_subproject_sort', obj.orderByFields);
     };
-});
+}]);

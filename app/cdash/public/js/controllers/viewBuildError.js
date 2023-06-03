@@ -1,5 +1,5 @@
 CDash.controller('ViewBuildErrorController',
-  function BuildErrorController($scope, $sce, apiLoader) {
+  ["$scope", "$sce", "apiLoader", function BuildErrorController($scope, $sce, apiLoader) {
     $scope.loading = true;
     $scope.pagination = [];
     $scope.pagination.buildErrors = [];
@@ -26,8 +26,8 @@ CDash.controller('ViewBuildErrorController',
     $scope.pageChanged = function() {
       $scope.setPage($scope.pagination.currentPage);
     };
-  }).directive('buildError', function (VERSION) {
+  }]).directive('buildError', ["VERSION", function (VERSION) {
       return {
           templateUrl: 'build/views/partials/buildError_' + VERSION + '.html'
       };
-  });
+  }]);

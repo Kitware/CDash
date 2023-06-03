@@ -1,4 +1,5 @@
-angular
+
+FiltersController.$inject = ["$scope", "$rootScope", "$http", "$timeout"];angular
     .module('CDash')
     .controller('FiltersController', FiltersController);
 
@@ -458,15 +459,15 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
 }
 
 angular.module('CDash')
-       .directive('filterRow', function (VERSION) {
+       .directive('filterRow', ["VERSION", function (VERSION) {
   return {
     templateUrl: 'build/views/partials/filterRow_' + VERSION + '.html'
   };
-});
+}]);
 
 angular.module('CDash')
-       .directive('filterButtons', function (VERSION) {
+       .directive('filterButtons', ["VERSION", function (VERSION) {
   return {
     templateUrl: 'build/views/partials/filterButtons_' + VERSION + '.html'
   };
-});
+}]);

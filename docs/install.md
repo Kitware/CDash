@@ -113,7 +113,7 @@ Once you're happy with your config settings, run `npm` to generate CDash's front
 
 ```bash
 # Generate build files
-npm run dev
+npm run production
 ```
 
 ##### Migrating settings from `config.local.php`

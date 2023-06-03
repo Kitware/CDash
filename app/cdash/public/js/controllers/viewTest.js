@@ -1,5 +1,5 @@
 CDash.controller('ViewTestController',
-  function ViewTestController($scope, $rootScope, $http, $filter, $q, apiLoader, multisort, filters) {
+  ["$scope", "$rootScope", "$http", "$filter", "$q", "apiLoader", "multisort", "filters", function ViewTestController($scope, $rootScope, $http, $filter, $q, apiLoader, multisort, filters) {
     $scope.loading = true;
 
     // Pagination settings.
@@ -151,4 +151,4 @@ CDash.controller('ViewTestController',
     $scope.cancelAjax = function() {
       $scope.canceler.resolve();
     }
-});
+}]);

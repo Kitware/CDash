@@ -34,7 +34,7 @@ CDash.filter('filter_builds', function() {
   };
 })
 
-.controller('ManageBuildGroupController', function ManageBuildGroupController($scope, $http, apiLoader, modalSvc) {
+.controller('ManageBuildGroupController', ["$scope", "$http", "apiLoader", "modalSvc", function ManageBuildGroupController($scope, $http, apiLoader, modalSvc) {
   apiLoader.loadPageData($scope, 'api/v1/manageBuildGroup.php');
   $scope.finishSetup = function() {
     // Sort BuildGroups by position.
@@ -281,4 +281,4 @@ CDash.filter('filter_builds', function() {
   };
 
 
-});
+}]);

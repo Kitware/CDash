@@ -48,7 +48,7 @@ CDash.filter("showEmptyBuildsLast", function () {
 })
 
 
-.controller('IndexController', function IndexController($scope, $rootScope, $location, $http, $filter, $timeout, anchors, apiLoader, filters, multisort, modalSvc) {
+.controller('IndexController', ["$scope", "$rootScope", "$location", "$http", "$filter", "$timeout", "anchors", "apiLoader", "filters", "multisort", "modalSvc", function IndexController($scope, $rootScope, $location, $http, $filter, $timeout, anchors, apiLoader, filters, multisort, modalSvc) {
   // Show spinner while page is loading.
   $scope.loading = true;
 
@@ -574,4 +574,4 @@ CDash.filter("showEmptyBuildsLast", function () {
     cookie_name += '_sort';
     return cookie_name;
   };
-});
+}]);

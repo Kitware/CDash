@@ -1,4 +1,4 @@
-CDash.controller('SubProjectController', function SubProjectController($scope, $rootScope, $http) {
+CDash.controller('SubProjectController', ["$scope", "$rootScope", "$http", function SubProjectController($scope, $rootScope, $http) {
   $scope.dataLoaded = false;
 
   $scope.loadData = function(id) {
@@ -129,4 +129,4 @@ CDash.controller('SubProjectController', function SubProjectController($scope, $
     });
   };
 
-});
+}]);

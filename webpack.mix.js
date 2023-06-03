@@ -76,8 +76,8 @@ mix.copy('public/views/*.html', 'public/build/views/');
 // Cache busting for angularjs partials.
 var glob = require("glob");
 glob.sync('public/views/partials/*.html').forEach(function(src) {
-  var dest = src.replace('.html', '_' + version + '.html');
-  var dest = dest.replace('views', 'build/views');
+  let dest = src.replace('.html', '_' + version + '.html');
+  dest = dest.replace('views', 'build/views');
   mix.copy(src, dest);
 });
 
@@ -104,8 +104,8 @@ mix.scripts([
   'public/js/bootstrap.min.js',
   'public/js/tooltip.js',
   'public/js/je_compare.js',
-  'node_modules/angular/angular.js',
-  'node_modules/angular-animate/angular-animate.js',
+  'node_modules/angular/angular.min.js',
+  'node_modules/angular-animate/angular-animate.min.js',
   'node_modules/angular-clipboard/angular-clipboard.js',
   'node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
   'node_modules/angular-ui-sortable/dist/sortable.js',

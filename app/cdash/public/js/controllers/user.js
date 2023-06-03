@@ -1,4 +1,4 @@
-CDash.controller('UserController', function UserController($scope, $http, $timeout, apiLoader) {
+CDash.controller('UserController', ["$scope", "$http", "$timeout", "apiLoader", function UserController($scope, $http, $timeout, apiLoader) {
   apiLoader.loadPageData($scope, 'api/v1/user.php');
 
   $scope.generateToken = function() {
@@ -72,4 +72,4 @@ CDash.controller('UserController', function UserController($scope, $http, $timeo
       $scope.cdash.tokenscope = '';
     }
   }
-});
+}]);

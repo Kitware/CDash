@@ -1,4 +1,4 @@
-CDash.controller('ManageOverviewController', function ManageOverviewController($scope, $http, apiLoader) {
+CDash.controller('ManageOverviewController', ["$scope", "$http", "apiLoader", function ManageOverviewController($scope, $http, apiLoader) {
   apiLoader.loadPageData($scope, 'api/v1/manageOverview.php');
   $scope.finishSetup = function() {
     // Setup sortable elements.
@@ -67,4 +67,4 @@ CDash.controller('ManageOverviewController', function ManageOverviewController($
       $("#loading").attr("src", "img/check.gif");
     });
   };
-});
+}]);
