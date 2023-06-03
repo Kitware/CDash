@@ -93,7 +93,7 @@ Route::get('/testDetails.php', function (Request $request) {
     abort(404);
 });
 
-Route::get('/generateCTestConfig.php', 'AdminController@generateCTestConfig');
+Route::get('/generateCTestConfig.php', 'CTestConfigurationController@get');
 
 Route::get('/viewProjects.php', 'ViewProjectsController@viewAllProjects');
 
