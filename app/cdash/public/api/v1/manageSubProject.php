@@ -48,12 +48,6 @@ $userid = $user->id;
 // List the available projects that this user has admin rights to.
 $projectid = intval($_GET['projectid'] ?? 0);
 
-if (!can_access_project($projectid)) {
-    $response['error'] = 'You do not have permission to view this project.';
-    echo json_encode($response);
-    return;
-}
-
 $sql = 'SELECT id,name FROM project';
 $params = [];
 if ($user->IsAdmin() == false) {
