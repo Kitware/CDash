@@ -1685,21 +1685,6 @@ parameters:
 			path: app/Services/PageTimer.php
 
 		-
-			message: "#^Property App\\\\Services\\\\PageTimer\\:\\:\\$duration has no type specified\\.$#"
-			count: 1
-			path: app/Services/PageTimer.php
-
-		-
-			message: "#^Property App\\\\Services\\\\PageTimer\\:\\:\\$end has no type specified\\.$#"
-			count: 1
-			path: app/Services/PageTimer.php
-
-		-
-			message: "#^Property App\\\\Services\\\\PageTimer\\:\\:\\$start has no type specified\\.$#"
-			count: 1
-			path: app/Services/PageTimer.php
-
-		-
 			message: "#^Access to an undefined property App\\\\Models\\\\BuildTest\\:\\:\\$measurements\\.$#"
 			count: 1
 			path: app/Services/TestCreator.php
@@ -22164,22 +22149,22 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:878\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:881\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:878\\:\\:getSent\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:881\\:\\:getSent\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:878\\:\\:isError\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:881\\:\\:isError\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:878\\:\\:read\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:881\\:\\:read\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -22279,12 +22264,12 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:878\\:\\:\\$read has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:881\\:\\:\\$read has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:878\\:\\:\\$response has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:881\\:\\:\\$response has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 

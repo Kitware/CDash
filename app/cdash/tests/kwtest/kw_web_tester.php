@@ -17,15 +17,18 @@
 require_once dirname(__FILE__) . '/../../../../vendor/autoload.php';
 require_once dirname(__FILE__) . '/kw_unlink.php';
 
-use App\Http\Controllers\CDash;
+// This is used by several of the tests, but the Laravel entrypoint is not used for
+// such tests, meaning that this could be undefined.
+if (!defined('LARAVEL_START')) {
+    define('LARAVEL_START', microtime(true));
+}
+
 use App\Models\User;
 use CDash\Config;
 use CDash\Model\Project;
 use App\Http\Kernel;
-use Illuminate\Auth\AuthManager;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
