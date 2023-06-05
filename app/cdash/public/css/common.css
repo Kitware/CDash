@@ -577,7 +577,7 @@ textarea {
 
 /* used for angular table sorting */
 .glyphicon-none {
-  display: none;
+  display: none !important;
 }
 
 /* add border to bottom of table */
