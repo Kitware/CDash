@@ -23,6 +23,17 @@
         />
       </div>
     </div>
+    <br>
+    <p>
+      Note: Detailed information about submission failures can be found in the CDash logs.<br>
+      <span v-if="cdash.log_directory.length > 0">
+        Log files can be found in: <tt>{{ cdash.log_directory }}</tt>
+      </span>
+      <span v-else>
+        This CDash instance uses a non-standard logging configuration.  Check your <tt>LOG_CHANNEL</tt>
+        environment setting for more information.
+      </span>
+    </p>
   </section>
 </template>
 <script>
