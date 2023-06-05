@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
+use Tests\Traits\CreatesUsers;
 
 /**
  * A general place to test the CDash installation on-top of Laravel
@@ -17,6 +18,8 @@ use Tests\TestCase;
  */
 class CDashTest extends TestCase
 {
+    use CreatesUsers;
+
     public function testCDashFilesystemConfigExists()
     {
         $expected = [
@@ -60,7 +63,7 @@ class CDashTest extends TestCase
     public function testCDashBasicRequest()
     {
         URL::forceRootUrl('http://localhost');
-        $this->get('/viewProjects.php')->assertStatus(200);
+        $this->get('/login')->assertStatus(200);
     }
 
     public function testCDashReturnsNotFoundGivenPathDoesNotExist()
@@ -104,5 +107,15 @@ class CDashTest extends TestCase
         Config::set('cdash.login_field', 'User');
         $this->get('/login')
             ->assertSeeText('User:');
+    }
+
+    public function testViewProjectsRedirectNoPublicProjects(): void
+    {
+        // If there are no public projects to be shown on the view projects page, we should redirect to the login page.
+        $this->get('/viewProjects.php')->assertRedirect('/login');
+
+        $normal_user = $this->makeNormalUser();
+        $this->actingAs($normal_user)->get('/viewProjects.php')->assertOk()->assertSeeText('No Projects Found');
+        $normal_user->delete();
     }
 }
