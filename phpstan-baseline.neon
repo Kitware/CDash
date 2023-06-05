@@ -31207,6 +31207,11 @@ parameters:
 			path: tests/Feature/CDashTest.php
 
 		-
+			message: "#^Method Tests\\\\Feature\\\\CDashTest\\:\\:testViewProjectsRedirectNoPublicProjects\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/CDashTest.php
+
+		-
 			message: "#^Call to an undefined method Mockery\\\\Expectation\\:\\:shouldReceive\\(\\)\\.$#"
 			count: 3
 			path: tests/Feature/LdapAuthWithRulesTest.php
