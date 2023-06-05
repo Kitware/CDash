@@ -16,7 +16,7 @@ $version = Config::getVersion();
 
     <div id="footerlinks" class="clearfix">
         <a href="https://www.cdash.org" class="footerlogo">
-            <img src="{{ asset('img/cdash_logo_full.svg?rev=2023-05-09') }}" height="30" alt="CDash logo">
+            <img src="{{ asset('img/cdash_logo_full.svg?rev=2023-05-31') }}" height="30" alt="CDash logo">
         </a>
         <span id="footertext" class="pull-right">
             CDash {{ $version }} ©&nbsp; <a href="https://www.kitware.com">Kitware</a>

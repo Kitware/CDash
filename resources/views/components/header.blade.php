@@ -43,7 +43,7 @@ $hideRegistration = config('auth.user_registration_form_enabled') === false;
                     <img id="projectlogo" height="50px" alt="" src="{{ url('/image/' . $logoid) }}" />
                 @elseif(isset($angular) && $angular === true)
                     <img ng-if="cdash.logoid && cdash.logoid != 0" id="projectlogo" border="0" height="50px" ng-src="{{ url('/image') }}/@{{::cdash.logoid}}"/>
-                    <img ng-if="!cdash.logoid || cdash.logoid==0" id="projectlogo" border="0" height="50px" src="{{ asset('/img/cdash.svg?rev=2023-05-09') }}"/>
+                    <img ng-if="!cdash.logoid || cdash.logoid==0" id="projectlogo" border="0" height="50px" src="{{ asset('/img/cdash.svg?rev=2023-05-31') }}"/>
                 @elseif(isset($vue) && $vue === true)
                     <header-logo></header-logo>
                 @else
