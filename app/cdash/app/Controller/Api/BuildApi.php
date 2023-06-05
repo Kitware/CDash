@@ -23,7 +23,7 @@ use CDash\Model\Project;
  * Parent class for all API controllers responsible for displaying
  * information about a particular build.
  **/
-class BuildApi extends ResultsApi
+abstract class BuildApi extends ResultsApi
 {
     protected $project;
 

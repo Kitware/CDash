@@ -26,7 +26,7 @@ use CDash\Model\Build;
  * Parent class for all API controllers responsible for displaying
  * information about a particular test run.
  **/
-class BuildTestApi extends BuildApi
+abstract class BuildTestApi extends BuildApi
 {
     public $buildtest;
     public $test;

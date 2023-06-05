@@ -21,7 +21,7 @@ use CDash\Model\Project;
 /**
  * Parent class for all API controllers that deal with a particular project.
  **/
-class ProjectApi extends \CDash\Controller\Api
+abstract class ProjectApi extends \CDash\Controller\Api
 {
     protected $project;
 

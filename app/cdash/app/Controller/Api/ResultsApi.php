@@ -25,7 +25,7 @@ use CDash\Model\Project;
  * Parent class for all API controllers responsible for displaying
  * build/test results.
  **/
-class ResultsApi extends ProjectApi
+abstract class ResultsApi extends ProjectApi
 {
     public $filterdata;
 

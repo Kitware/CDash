@@ -21,7 +21,7 @@ use CDash\Database;
 /**
  * Parent class for all API controllers.
  **/
-class Api
+abstract class Api
 {
     const BEGIN_EPOCH = '1980-01-01 00:00:00';
 
