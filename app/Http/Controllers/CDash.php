@@ -63,7 +63,7 @@ class CDash extends AbstractController
                 $response = $this->handleRequest();
             }
         } else {
-            $response = response('Not found', 404);
+            abort(404);
         }
 
         $status = http_response_code();
