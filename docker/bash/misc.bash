@@ -25,12 +25,20 @@ setup_local_config() {
         fi
     ) >> "$__local_config_file"
 
+    cd /home/kitware/cdash
+
     # Update the value of APP_URL in the container if necessary.
     if [ -n "$APP_URL" ]; then
-        cd /home/kitware/cdash && sed -i "s^APP_URL=https://localhost^APP_URL=${APP_URL}^g" .env
+        sed -i "s^APP_URL=https://localhost^APP_URL=${APP_URL}^g" .env
     fi
 
-    cd /home/kitware/cdash && php artisan config:migrate && php artisan key:generate && npm run production
+    # Set APP_KEY if one does not already exist.
+    if [ -f .env ] && grep -xq 'APP_KEY=' .env
+    then
+        php artisan key:generate
+    fi
+
+    npm run production
 }
 
 __user_prefix="__user"

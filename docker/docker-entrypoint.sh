@@ -6,7 +6,6 @@ source "$BASH_LIB/debug.bash"
 source "$BASH_LIB/misc.bash"
 source "$BASH_LIB/on_exit.bash"
 source "$BASH_LIB/tmp_dir.bash"
-source "$BASH_LIB/web.bash"
 
 do_install() {
     # ENSURE ROOT ADMIN USER
@@ -106,8 +105,6 @@ if missing_root_admin_pass ; then
     exit 1
 fi
 
-setup_local_config
-
 if [ -z "$CDASH_ROOT_ADMIN_EMAIL" ] ; then
     CDASH_ROOT_ADMIN_EMAIL="root@docker.container"
 fi
@@ -119,6 +116,8 @@ fi
 if [ "$do_upgrade" '=' '1' ] ; then
     cdash_upgrade
 fi
+
+setup_local_config
 
 if [ "$start_worker" '=' '1' ] ; then
    exec php artisan queue:work
