@@ -49,7 +49,7 @@ cdash_run_and_submit_ctest() {
   local site
   local branch
 
-  ctest_driver="/home/kitware/cdash/.circleci/ctest_driver_script.cmake"
+  ctest_driver="/cdash/.circleci/ctest_driver_script.cmake"
 
   database="$1" ; shift
   postgres="$1" ; shift
@@ -57,7 +57,7 @@ cdash_run_and_submit_ctest() {
   site=$(cdash_site)
   branch=$(cdash_branch)
 
-  docker exec --user www-data cdash bash -c "cd /home/kitware/cdash && /usr/bin/git checkout ."
+  docker exec --user www-data cdash bash -c "cd /cdash && /usr/bin/git checkout ."
 
   echo "site=$site"
   echo "branch=$branch"

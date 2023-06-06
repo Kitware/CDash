@@ -42,9 +42,9 @@ fi
 RUN mkdir -p /var/www/.npm                                                 \
   && chown -R www-data:www-data /var/www/.npm
 
-# Create /home/kitware/cdash
-RUN mkdir -p /home/kitware/cdash                                           \
-  && chown www-data:www-data /home/kitware/cdash
+# Create /cdash
+RUN mkdir -p /cdash                                                        \
+  && chown www-data:www-data /cdash
 
 # Copy Apache site-available config files into the image.
 COPY ./docker/cdash-site.conf                                              \
@@ -76,12 +76,12 @@ RUN chown -R www-data:www-data /etc/apache2
 # Run the rest of the commands as www-data
 USER www-data
 
-WORKDIR /home/kitware
+WORKDIR /
 
-# Copy CDash (current folder) into /home/kitware/cdash
+# Copy CDash (current folder) into /cdash
 COPY --chown=www-data:www-data . ./cdash
 
-WORKDIR /home/kitware/cdash
+WORKDIR /cdash
 
 COPY --chown=www-data:www-data ./.env.example ./.env
 
@@ -98,7 +98,7 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
   -DCDASH_SERVER=localhost:8080                                            \
   -DCDASH_SELENIUM_HUB=selenium-hub                                        \
   -DCTEST_UPDATE_VERSION_ONLY=1 ..                                         \
- && cp /home/kitware/cdash/.env.dev /home/kitware/cdash/.env;   \
+ && cp /cdash/.env.dev /cdash/.env;   \
 else                                                                       \
  composer install --no-interaction --no-progress --prefer-dist --no-dev    \
                   --optimize-autoloader                                    \
@@ -124,7 +124,7 @@ RUN chmod +x /docker-entrypoint.sh
 FROM cdash-common AS cdash
 LABEL MAINTAINER="Kitware, Inc. <cdash@public.kitware.com>"
 
-WORKDIR /home/kitware/cdash/_build
+WORKDIR /cdash
 
 ENTRYPOINT ["/bin/bash", "/docker-entrypoint.sh"]
 CMD ["serve"]
@@ -134,7 +134,7 @@ CMD ["serve"]
 FROM cdash-common AS cdash-worker
 LABEL MAINTAINER="Kitware, Inc. <cdash@public.kitware.com>"
 
-WORKDIR /home/kitware/cdash/_build
+WORKDIR /cdash
 
 ENTRYPOINT ["/bin/bash", "/docker-entrypoint.sh"]
 CMD ["start-worker"]

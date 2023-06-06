@@ -5,11 +5,11 @@ source "$BASH_LIB/debug.bash"
 source "$BASH_LIB/on_exit.bash"
 
 cdash_upgrade() {
-    cd /home/kitware/cdash && php artisan migrate --force
+    cd /cdash && php artisan migrate --force
 }
 
 cdash_install() {
-    cd /home/kitware/cdash && php artisan config:migrate
+    cd /cdash && php artisan config:migrate
 
     cdash_upgrade
 

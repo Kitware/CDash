@@ -17,7 +17,7 @@ services:
     volumes:
       - type: volume
         source: storage
-        target: /home/kitware/cdash/storage
+        target: /cdash/storage
 
   worker:
     image: kitware/cdash-worker
@@ -36,7 +36,7 @@ services:
     volumes:
       - type: volume
         source: storage
-        target: /home/kitware/cdash/storage
+        target: /cdash/storage
 
 volumes:
   storage:

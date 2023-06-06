@@ -6,7 +6,7 @@ source "$BASH_LIB/cdash.bash"
 source "$BASH_LIB/on_exit.bash"
 
 
-__local_config_file="/home/kitware/cdash/.env"
+__local_config_file="/cdash/.env"
 
 missing_root_admin_pass() {
     if [ -z "$CDASH_ROOT_ADMIN_PASS" ] && [ -z "$DEVELOPMENT_BUILD" ]; then
@@ -25,7 +25,7 @@ setup_local_config() {
         fi
     ) >> "$__local_config_file"
 
-    cd /home/kitware/cdash
+    cd /cdash
 
     # Update the value of APP_URL in the container if necessary.
     if [ -n "$APP_URL" ]; then
