@@ -10,9 +10,6 @@ source "$BASH_LIB/tmp_dir.bash"
 do_install() {
     # ENSURE ROOT ADMIN USER
     root_pass="$CDASH_ROOT_ADMIN_PASS"
-    if [ -n "$CDASH_ROOT_ADMIN_NEW_PASS" ] ; then
-        root_pass="$CDASH_ROOT_ADMIN_NEW_PASS"
-    fi
     cdash_install "$CDASH_ROOT_ADMIN_EMAIL" "$root_pass"
 }
 
