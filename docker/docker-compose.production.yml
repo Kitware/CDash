@@ -3,7 +3,7 @@ services:
     env_file:
       - ../.env
     ports:
-      - 8443:8443
+      - 443:443
     volumes:
       - "${SSL_CERTIFICATE_FILE}:/var/www/my-cert.pem"
       - "${SSL_CERTIFICATE_KEY_FILE}:/var/www/my-cert.key"

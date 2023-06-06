@@ -53,9 +53,7 @@ COPY ./docker/cdash-site-ssl.conf                                          \
      /etc/apache2/sites-available/cdash-site-ssl.conf
 
 # Change apache config to listen on port 8080 instead of port 80
-# and 8443 instead of 443.
 RUN sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
-RUN sed -i 's/Listen 443/Listen 8443/g' /etc/apache2/ports.conf
 
 # Remove default site, add cdash-site, enable mod_rewrite, enable php
 RUN a2dissite 000-default                                                  \
