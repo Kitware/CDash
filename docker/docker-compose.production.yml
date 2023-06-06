@@ -1,11 +1,11 @@
 services:
   cdash:
+    env_file:
+      - ../.env
     ports:
-      - 443:443
+      - 8443:8443
     volumes:
-      - type: volume
-        source: ${SSL_CERTIFICATE_FILE}
-        target: /etc/ssl/certs/mycert.crt
-      - type: volume
-        source: ${SSL_CERTIFICATE_KEY_FILE}
-        target: /etc/ssl/private/mycert.key
+      - "${SSL_CERTIFICATE_FILE}:/var/www/my-cert.pem"
+      - "${SSL_CERTIFICATE_KEY_FILE}:/var/www/my-cert.key"
+volumes:
+  storage:

@@ -46,15 +46,29 @@ RUN mkdir -p /var/www/.npm                                                 \
 RUN mkdir -p /home/kitware/cdash                                           \
   && chown www-data:www-data /home/kitware/cdash
 
-# Configure Apache
+# Copy Apache site-available config files into the image.
 COPY ./docker/cdash-site.conf                                              \
      /etc/apache2/sites-available/cdash-site.conf
+COPY ./docker/cdash-site-ssl.conf                                          \
+     /etc/apache2/sites-available/cdash-site-ssl.conf
+
+# Change apache config to listen on port 8080 instead of port 80
+# and 8443 instead of 443.
+RUN sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
+RUN sed -i 's/Listen 443/Listen 8443/g' /etc/apache2/ports.conf
 
 # Remove default site, add cdash-site, enable mod_rewrite, enable php
 RUN a2dissite 000-default                                                  \
  && a2ensite cdash-site                                                    \
  && a2enmod rewrite                                                        \
  && a2enmod php
+
+# Enable https site if we're not doing a development build.
+RUN if [ "$DEVELOPMENT_BUILD" != '1' ]; then                               \
+  a2enmod ssl                                                              \
+  && a2enmod socache_shmcb                                                 \
+  && a2ensite cdash-site-ssl;                                              \
+fi
 
 # Assign www-data ownership of apache2 configuration files
 RUN chown -R www-data:www-data /etc/apache2
@@ -81,12 +95,9 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
  && cmake                                                                  \
   -DCDASH_DB_HOST=$CDASH_DB_HOST                                           \
   -DCDASH_DIR_NAME=                                                        \
-  -DCDASH_TESTING_URL=http://cdash/                                        \
-  -DCDASH_SERVER=cdash                                                     \
+  -DCDASH_SERVER=localhost:8080                                            \
   -DCDASH_SELENIUM_HUB=selenium-hub                                        \
   -DCTEST_UPDATE_VERSION_ONLY=1 ..                                         \
- && cp /home/kitware/cdash/docker/conf.js                                  \
-       /home/kitware/cdash/_build/app/cdash/tests/js/e2e_tests/conf.js     \
  && cp /home/kitware/cdash/.env.dev /home/kitware/cdash/.env;   \
 else                                                                       \
  composer install --no-interaction --no-progress --prefer-dist --no-dev    \

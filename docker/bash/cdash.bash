@@ -64,28 +64,21 @@ __cdash_logout() {
     return $?
 }
 
+cdash_upgrade() {
+    cd /home/kitware/cdash && php artisan migrate --force
+}
+
 cdash_install() {
-    local session
+    cdash_upgrade
+
     local admin_email
     local admin_pass
 
-    session="$1" ; shift
     admin_email="$1" ; shift
     admin_pass="$1" ; shift
 
-    web_post    "${session}"                          \
-                "${__cdash_session_host}/install.php" \
-        admin_email="$admin_email"                    \
-        admin_password="$admin_pass"                  \
-        Submit=Install &> /dev/null
-
-    return $?
-}
-
-cdash_upgrade() {
-    web_post    "${__cdash_session}"                  \
-                "${__cdash_session_host}/upgrade.php" \
-        Upgrade="Upgrade CDash" &> /dev/null
+    cd /home/kitware/cdash && php artisan migrate --force
+    php artisan user:save --email=$admin_email --password=$admin_pass --firstname=admin --lastname=user --institution=CDash --admin=1
 
     return $?
 }
