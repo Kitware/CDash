@@ -10,3 +10,7 @@ services:
     container_name: cdash_postgres
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgresqldata:/var/lib/postgresql
+volumes:
+  postgresqldata:

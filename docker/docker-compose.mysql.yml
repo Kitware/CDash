@@ -12,3 +12,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_ROOT_HOST: '%'
+    volumes:
+      - mysqldata:/var/lib/mysql
+volumes:
+  mysqldata:
