@@ -125,7 +125,7 @@ LABEL MAINTAINER="Kitware, Inc. <cdash@public.kitware.com>"
 WORKDIR /cdash
 
 ENTRYPOINT ["/bin/bash", "/docker-entrypoint.sh"]
-CMD ["serve"]
+CMD ["install", "serve"]
 
 ###############################################################################
 

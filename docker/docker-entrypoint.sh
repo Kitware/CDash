@@ -95,6 +95,7 @@ while [ -n "$*" ] ; do
 done
 
 if [ "$args_provided" '=' '0' ] ; then
+    do_install=1
     do_serve=1
 fi
 

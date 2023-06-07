@@ -11,7 +11,7 @@ git clone https://github.com/Kitware/CDash
 cd CDash
 ```
 
-2. Next, use the `docker compose up` command to spin up a new CDash instance:
+2. Next, use the `docker compose up` command to spin up your new CDash instance:
 
 ```bash
 docker compose -f docker/docker-compose.yml \
@@ -20,26 +20,14 @@ docker compose -f docker/docker-compose.yml \
                --env-file .env.dev up -d
 ```
 
-3. The above command started CDash and MySQL containers for you, but it did not create CDash's database tables. To achieve that, run:
-
-```bash
-docker compose -f docker/docker-compose.yml \
-               -f docker/docker-compose.dev.yml \
-               -f docker/docker-compose.mysql.yml \
-               --env-file .env.dev \
-               run --rm cdash install
-```
-
-This executes a one-shot container that runs the install procedure.
-
-4. Browse to http://localhost:8080.  You should see a freshly installed copy of CDash with the latest database schema.
+3. Browse to http://localhost:8080.  You should see a freshly installed copy of CDash with the latest database schema.
 
 ## Configuration
 
 ### Why so many YAML files?
 You may have noticed that CDash's `docker compose` configuration is [split across multiple files](https://docs.docker.com/compose/extends/). The allows us to support various workflows (MySQL vs. Postgres, production vs. development) while minimizing code duplication.
 
-For example, to use Postgres instead of MySQL, pass `-f docker/docker-compose.postgres.yml` instead of `-f docker/docker-compose.mysql.yml` to the above `docker compose` commands.
+For example, to use Postgres instead of MySQL, pass `-f docker/docker-compose.postgres.yml` instead of `-f docker/docker-compose.mysql.yml` to the `docker compose` commands mentioned in this document.
 
 ### Changing the default configuration
 You can change the following environment variables in `docker/docker-compose.yml`:
@@ -68,19 +56,13 @@ To set up a CDash production instance using docker compose, follow these steps:
   - `APP_URL=https://<my-cdash-url>`
   - `SSL_CERTIFICATE_FILE=</path/to/certs/my-cert.pem>`
   - `SSL_CERTIFICATE_KEY_FILE=</path/to/certs/my-cert.key>`
-* Run these commands to start the CDash containers and run the installation step:
+* Run this command to start your CDash containers:
 ```bash
 docker compose --env-file .env \
 	   -f docker/docker-compose.yml \
 	   -f docker/docker-compose.production.yml \
 	   -f docker/docker-compose.mysql.yml \
 	    up -d
-
-docker compose -f docker/docker-compose.yml \
-	   -f docker/docker-compose.production.yml \
-	   -f docker/docker-compose.mysql.yml \
-	   --env-file .env \
-	   run --rm cdash install
 ```
 
 
