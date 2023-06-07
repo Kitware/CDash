@@ -8,51 +8,28 @@ use CDash\Model\SubProject;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
-class SubProjectController extends AbstractController
+class SubProjectController extends ProjectController
 {
     public function dependencies(): View|RedirectResponse
     {
-        @$projectname = $_GET['project'];
-        if ($projectname != null) {
-            $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
+        if (!isset($_GET['project'])) {
+            abort(400, 'You must specify a project to access this resource.');
         }
+        $this->setProjectByName($_GET['project']);
 
         @$date = $_GET['date'];
         if ($date != null) {
             $date = htmlspecialchars(pdo_real_escape_string($date));
         }
 
-        $projectid = get_project_id($projectname);
-
-        if ($projectid == 0) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Not a valid projectid!'
-            ]);
-        }
-
-        $db = Database::getInstance();
-        $project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid]);
-        if (!empty($project_array)) {
-            $svnurl = make_cdash_url(htmlentities($project_array['cvsurl']));
-            $homeurl = make_cdash_url(htmlentities($project_array['homeurl']));
-            $bugurl = make_cdash_url(htmlentities($project_array['bugtrackerurl']));
-            $googletracker = htmlentities($project_array['googletracker']);
-            $docurl = make_cdash_url(htmlentities($project_array['documentationurl']));
-            $projectpublic = $project_array['public'];
-            $projectname = $project_array['name'];
-        } else {
-            $projectname = 'NA';
-        }
-
-        $policy = checkUserPolicy($project_array['id']);
-        if ($policy !== true) {
-            return $policy;
-        }
-
+        $svnurl = make_cdash_url(htmlentities($this->project->CvsUrl));
+        $homeurl = make_cdash_url(htmlentities($this->project->HomeUrl));
+        $bugurl = make_cdash_url(htmlentities($this->project->BugTrackerUrl));
+        $googletracker = htmlentities($this->project->GoogleTracker);
+        $docurl = make_cdash_url(htmlentities($this->project->DocumentationUrl));
         $xml = begin_XML_for_XSLT();
 
-        list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
+        list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $this->project->NightlyTime);
 
         // Main dashboard section
         $xml .=
@@ -64,15 +41,15 @@ class SubProjectController extends AbstractController
               <bugtracker>' . $bugurl . '</bugtracker>
               <googletracker>' . $googletracker . '</googletracker>
               <documentation>' . $docurl . '</documentation>
-              <projectid>' . $projectid . '</projectid>
-              <projectname>' . $projectname . '</projectname>
-              <projectname_encoded>' . urlencode($projectname) . '</projectname_encoded>
+              <projectid>' . $this->project->Id . '</projectid>
+              <projectname>' . $this->project->Name . '</projectname>
+              <projectname_encoded>' . urlencode($this->project->Name) . '</projectname_encoded>
               <previousdate>' . $previousdate . '</previousdate>
-              <projectpublic>' . $projectpublic . '</projectpublic>
+              <projectpublic>' . $this->project->Public . '</projectpublic>
               <nextdate>' . $nextdate . '</nextdate>';
 
-        if (empty($project_array['homeurl'])) {
-            $xml .= '<home>index.php?project=' . urlencode($projectname) . '</home>';
+        if (empty($this->project->HomeUrl)) {
+            $xml .= '<home>index.php?project=' . urlencode($this->project->Name) . '</home>';
         } else {
             $xml .= '<home>' . $homeurl . '</home>';
         }
@@ -90,10 +67,7 @@ class SubProjectController extends AbstractController
         }
         $xml .= '</menu>';
 
-        $Project = new Project();
-        $Project->Id = $projectid;
-        $Project->Fill();
-        $subprojectids = $Project->GetSubProjects();
+        $subprojectids = $this->project->GetSubProjects();
 
         sort($subprojectids);
 
@@ -129,58 +103,32 @@ class SubProjectController extends AbstractController
         return view('cdash', [
             'xsl' => true,
             'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/viewSubProjectDependencies', true),
-            'project' => $Project,
+            'project' => $this->project,
             'title' => 'SubProject Dependencies'
         ]);
     }
 
     public function dependenciesGraph(): View|RedirectResponse
     {
-        @$projectname = $_GET['project'];
-        if ($projectname != null) {
-            $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
+        if (!isset($_GET['project'])) {
+            abort(400, 'You must specify a project to access this resource.');
         }
+        $this->setProjectByName($_GET['project']);
 
         @$date = $_GET['date'];
         if ($date != null) {
             $date = htmlspecialchars(pdo_real_escape_string($date));
         }
 
-        $projectid = get_project_id($projectname);
-
-        if ($projectid === 0) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Not a valid projectid!'
-            ]);
-        }
-
-        $db = Database::getInstance();
-        $project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid]);
-        if (!empty($project_array)) {
-            $svnurl = make_cdash_url(htmlentities($project_array['cvsurl']));
-            $homeurl = make_cdash_url(htmlentities($project_array['homeurl']));
-            $bugurl = make_cdash_url(htmlentities($project_array['bugtrackerurl']));
-            $googletracker = htmlentities($project_array['googletracker']);
-            $docurl = make_cdash_url(htmlentities($project_array['documentationurl']));
-            $projectpublic = $project_array['public'];
-            $projectname = $project_array['name'];
-        } else {
-            $projectname = 'NA';
-        }
-
-        $policy = checkUserPolicy($project_array['id']);
-        if ($policy !== true) {
-            return $policy;
-        }
-
-        $project = new Project();
-        $project->Id = $projectid;
-        $project->Fill();
+        $svnurl = make_cdash_url(htmlentities($this->project->CvsUrl));
+        $homeurl = make_cdash_url(htmlentities($this->project->HomeUrl));
+        $bugurl = make_cdash_url(htmlentities($this->project->BugTrackerUrl));
+        $googletracker = htmlentities($this->project->GoogleTracker);
+        $docurl = make_cdash_url(htmlentities($this->project->DocumentationUrl));
 
         $xml = begin_XML_for_XSLT();
 
-        list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
+        list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $this->project->NightlyTime);
 
         // Main dashboard section
         $xml .=
@@ -192,15 +140,15 @@ class SubProjectController extends AbstractController
               <bugtracker>' . $bugurl . '</bugtracker>
               <googletracker>' . $googletracker . '</googletracker>
               <documentation>' . $docurl . '</documentation>
-              <projectid>' . $projectid . '</projectid>
-              <projectname>' . $projectname . '</projectname>
-              <projectname_encoded>' . urlencode($projectname) . '</projectname_encoded>
+              <projectid>' . $this->project->Id . '</projectid>
+              <projectname>' . $this->project->Name . '</projectname>
+              <projectname_encoded>' . urlencode($this->project->Name) . '</projectname_encoded>
               <previousdate>' . $previousdate . '</previousdate>
-              <projectpublic>' . $projectpublic . '</projectpublic>
+              <projectpublic>' . $this->project->Public . '</projectpublic>
               <nextdate>' . $nextdate . '</nextdate>';
 
-        if (empty($project_array['homeurl'])) {
-            $xml .= '<home>index.php?project=' . urlencode($projectname) . '</home>';
+        if (empty($this->project->HomeUrl)) {
+            $xml .= '<home>index.php?project=' . urlencode($this->project->Name) . '</home>';
         } else {
             $xml .= '<home>' . $homeurl . '</home>';
         }
@@ -224,7 +172,7 @@ class SubProjectController extends AbstractController
         return view('cdash', [
             'xsl' => true,
             'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/viewSubProjectDependenciesGraph', true),
-            'project' => $project,
+            'project' => $this->project,
             'title' => 'SubProject Dependencies Graph'
         ]);
     }

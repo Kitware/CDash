@@ -2,46 +2,25 @@
 
 namespace Tests\Feature;
 
+use CDash\Model\Project;
 use Illuminate\Support\Facades\URL;
 use App\Models\User;
 use LogicException;
 use Mockery\Exception\InvalidCountException;
+use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
 use Tests\TestCase;
 
 class RouteAccessTest extends TestCase
 {
     use CreatesUsers;
+    use CreatesProjects;
 
-    protected User $normal_user;
+    private User $normal_user;
+    private User $admin_user;
+    private Project $public_project;
 
-    protected User $admin_user;
-
-    // A list of all routes which require the user to be logged in
-    private const PROTECTED_ROUTES = [
-        '/user.php',
-        '/editUser.php',
-        '/subscribeProject.php',
-        '/manageProjectRoles.php',
-        '/manageBanner.php',
-        '/manageCoverage.php',
-        '/manageCoverage.php',
-    ];
-
-    // A list of admin-only routes
-    private const ADMIN_ROUTES = [
-        '/upgrade.php',
-        '/import.php',
-        '/importBackup.php',
-        '/manageBackup.php',
-        '/gitinfo.php',
-        '/removeBuilds.php',
-        '/siteStatistics.php',
-        '/manageUsers.php',
-        '/monitor',
-    ];
-
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -52,47 +31,71 @@ class RouteAccessTest extends TestCase
 
         $this->admin_user = $this->makeAdminUser();
         $this->assertDatabaseHas('user', ['email' => 'admin@user', 'admin' => '1']);
+
+        $this->public_project = $this->makePublicProject();
     }
 
     /**
      * @throws LogicException
      * @throws InvalidCountException
      */
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $this->normal_user->delete();
         $this->admin_user->delete();
+        $this->public_project->Delete();
 
         parent::tearDown();
     }
 
-    public function testAdminRoutes(): void
+    // A list of all routes which require the user to be logged in
+    private function protectedRoutes(): array
     {
-        foreach (self::ADMIN_ROUTES as $route) {
-            $this->get($route)->assertRedirect('/login');
-        }
-
-        foreach (self::ADMIN_ROUTES as $route) {
-            $this->actingAs($this->normal_user)->get($route)->assertRedirect('/login');
-        }
-
-        foreach (self::ADMIN_ROUTES as $route) {
-            $this->actingAs($this->admin_user)->get($route)->assertOk();
-        }
+        return [
+            ['/user.php'],
+            ['/editUser.php'],
+            ['/subscribeProject.php'],
+            ['/manageProjectRoles.php'],
+            ['/manageCoverage.php'],
+            ['/manageCoverage.php'],
+            ['/manageBanner.php'],
+        ];
     }
 
-    public function testProtectedRoutes(): void
+    // A list of admin-only routes
+    private function adminRoutes(): array
     {
-        foreach (self::PROTECTED_ROUTES as $route) {
-            $this->get($route)->assertRedirect('/login');
-        }
+        return [
+            ['/upgrade.php'],
+            ['/import.php'],
+            ['/importBackup.php'],
+            ['/manageBackup.php'],
+            ['/gitinfo.php'],
+            ['/removeBuilds.php'],
+            ['/siteStatistics.php'],
+            ['/manageUsers.php'],
+            ['/monitor'],
+        ];
+    }
 
-        foreach (self::PROTECTED_ROUTES as $route) {
-            $this->actingAs($this->normal_user)->get($route)->assertOk();
-        }
+    /**
+     * @dataProvider adminRoutes
+     */
+    public function testAdminRoutes(string $route): void
+    {
+        $this->get($route)->assertRedirect('login');
+        $this->actingAs($this->normal_user)->get($route)->assertSeeText('You must be an administrator to access this page.');
+        $this->actingAs($this->admin_user)->get($route)->assertDontSeeText('You must be an administrator to access this page.');
+    }
 
-        foreach (self::PROTECTED_ROUTES as $route) {
-            $this->actingAs($this->admin_user)->get($route)->assertOk();
-        }
+    /**
+     * @dataProvider protectedRoutes
+     */
+    public function testProtectedRoutes(string $route): void
+    {
+        $this->get($route)->assertRedirect('login');
+        // A hack to make sure we weren't redirected to the login page.
+        $this->actingAs($this->normal_user)->get($route)->assertDontSeeText('Forgot your password?');
+        $this->actingAs($this->admin_user)->get($route)->assertDontSeeText('Forgot your password?');
     }
 }

@@ -11,7 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
-class SubscribeProjectController extends AbstractController
+class SubscribeProjectController extends ProjectController
 {
     /**
      * TODO: (williamjallen) this function contains legacy XSL templating and should be converted
@@ -22,49 +22,18 @@ class SubscribeProjectController extends AbstractController
     {
         /** @var User $user */
         $user = Auth::user();
-        $userid = $user->id;
 
         $xml = begin_XML_for_XSLT();
         $xml .= '<backurl>user.php</backurl>';
         $xml .= '<menutitle>CDash</menutitle>';
         $xml .= '<menusubtitle>Subscription</menusubtitle>';
 
-        @$projectid = $_GET['projectid'];
-        if ($projectid != null) {
-            $projectid = pdo_real_escape_numeric($projectid);
+        if (!isset($_GET['projectid']) || !is_numeric($_GET['projectid'])) {
+            abort(400, 'Not a valid projectid!');
         }
+        $this->setProjectById((int) $_GET['projectid']);
 
-        @$edit = $_GET['edit'];
-        if ($edit != null) {
-            $edit = pdo_real_escape_numeric($edit);
-        }
-
-        // Checks
-        if (!isset($projectid) || !is_numeric($projectid)) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Not a valid projectid!'
-            ]);
-        }
-
-        $Project = new Project;
-        $Project->Id = $projectid;
-        if (!$Project->Exists()) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Not a valid projectid!'
-            ]);
-        }
-
-        $projectid = intval($projectid);
-        if (isset($edit) && intval($edit) !== 1) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Not a valid edit!'
-            ]);
-        }
-
-        if ($edit) {
+        if (isset($_GET['edit']) && intval($_GET['edit']) > 0) {
             $xml .= '<edit>1</edit>';
         } else {
             $xml .= '<edit>0</edit>';
@@ -72,32 +41,11 @@ class SubscribeProjectController extends AbstractController
 
         $db = Database::getInstance();
 
-        $project_array = $db->executePreparedSingleRow('
-                         SELECT id, name, public, emailbrokensubmission
-                         FROM project
-                         WHERE id=?
-                     ', [$projectid]);
-
-        // Check if the project is public
-        if (!$project_array['public'] && !$user->IsAdmin()) {
-            $user2project = new UserProject();
-            $user2project->UserId = $user->id;
-            $user2project->ProjectId = $Project->Id;
-            $user2project->FillFromUserId();
-            if ($user2project->Role == UserProject::NORMAL_USER) {
-                return view('cdash', [
-                    'xsl' => true,
-                    'xsl_content' => 'Not a valid projectid!'
-                ]);
-            }
-        }
-
-        // Check if the user is not already in the database
         $user2project = $db->executePreparedSingleRow('
                         SELECT role, emailtype, emailcategory, emailmissingsites, emailsuccess
                         FROM user2project
                         WHERE userid=? AND projectid=?
-                    ', [$userid, $projectid]);
+                    ', [$user->id, $this->project->Id]);
         if (!empty($user2project)) {
             $xml .= add_XML_value('role', $user2project['role']);
             $xml .= add_XML_value('emailtype', $user2project['emailtype']);
@@ -112,7 +60,6 @@ class SubscribeProjectController extends AbstractController
             $xml .= add_XML_value('emailcategory_dynamicanalysis', check_email_category('dynamicanalysis', $emailcategory));
         } else {
             // we set the default categories
-
             $xml .= add_XML_value('emailcategory_update', 1);
             $xml .= add_XML_value('emailcategory_configure', 1);
             $xml .= add_XML_value('emailcategory_warning', 1);
@@ -142,28 +89,28 @@ class SubscribeProjectController extends AbstractController
         // Deals with label email
         $LabelEmail = new LabelEmail();
         $Label = new Label();
-        $LabelEmail->ProjectId = $projectid;
-        $LabelEmail->UserId = $userid;
+        $LabelEmail->ProjectId = $this->project->Id;
+        $LabelEmail->UserId = $user->id;
 
         if ($Unsubscribe) {
-            $db->executePrepared('DELETE FROM user2project WHERE userid=? AND projectid=?', [$userid, $projectid]);
-            $db->executePrepared('DELETE FROM user2repository WHERE userid=? AND projectid=?', [$userid, $projectid]);
+            $db->executePrepared('DELETE FROM user2project WHERE userid=? AND projectid=?', [$user->id, $this->project->Id]);
+            $db->executePrepared('DELETE FROM user2repository WHERE userid=? AND projectid=?', [$user->id, $this->project->Id]);
 
             // Remove the claim sites for this project if they are only part of this project
             $db->executePrepared('
-            DELETE FROM site2user
-            WHERE
-                userid=?
-                AND siteid NOT IN (
-                    SELECT build.siteid
-                    FROM build, user2project AS up
-                    WHERE
-                        up.projectid = build.projectid
-                        AND up.userid=?
-                        AND up.role>0
-                    GROUP BY build.siteid
-                )
-        ', [$userid, $userid]);
+                DELETE FROM site2user
+                WHERE
+                    userid=?
+                    AND siteid NOT IN (
+                        SELECT build.siteid
+                        FROM build, user2project AS up
+                        WHERE
+                            up.projectid = build.projectid
+                            AND up.userid=?
+                            AND up.role>0
+                        GROUP BY build.siteid
+                    )
+            ', [$user->id, $user->id]);
             return redirect('user.php?note=unsubscribedtoproject');
         } elseif ($UpdateSubscription) {
             $emailcategory_update = intval($_POST['emailcategory_update'] ?? 0);
@@ -192,14 +139,14 @@ class SubscribeProjectController extends AbstractController
                     $EmailCategory,
                     $EmailMissingSites,
                     $EmailSuccess,
-                    $userid,
-                    $projectid
+                    $user->id,
+                    $this->project->Id
                 ]);
 
                 // Update the repository credential
                 $UserProject = new UserProject();
-                $UserProject->ProjectId = $projectid;
-                $UserProject->UserId = $userid;
+                $UserProject->ProjectId = $this->project->Id;
+                $UserProject->UserId = $user->id;
                 $UserProject->UpdateCredentials($Credentials);
 
                 if ($Role == 0) {
@@ -217,7 +164,7 @@ class SubscribeProjectController extends AbstractController
                                 AND up.role>0
                             GROUP BY build.siteid
                         )
-                ', [$userid, $userid]);
+                ', [$user->id, $user->id]);
                 }
             }
 
@@ -255,14 +202,14 @@ class SubscribeProjectController extends AbstractController
                     $EmailCategory,
                     $EmailMissingSites,
                     $EmailSuccess,
-                    $userid,
-                    $projectid
+                    $user->id,
+                    $this->project->Id
                 ]);
 
                 // Update the repository credential
                 $UserProject = new UserProject();
-                $UserProject->ProjectId = $projectid;
-                $UserProject->UserId = $userid;
+                $UserProject->ProjectId = $this->project->Id;
+                $UserProject->UserId = $user->id;
                 $UserProject->UpdateCredentials($Credentials);
 
                 if ($Role == 0) {
@@ -280,7 +227,7 @@ class SubscribeProjectController extends AbstractController
                                 AND up.role>0
                             GROUP BY build.siteid
                         )
-                ', [$userid, $userid]);
+                ', [$user->id, $user->id]);
                 }
             } else {
                 $db->executePrepared('
@@ -296,8 +243,8 @@ class SubscribeProjectController extends AbstractController
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             ', [
                     $Role,
-                    $userid,
-                    $projectid,
+                    $user->id,
+                    $this->project->Id,
                     $EmailType,
                     $EmailCategory,
                     $EmailSuccess,
@@ -305,8 +252,8 @@ class SubscribeProjectController extends AbstractController
                 ]);
 
                 $UserProject = new UserProject();
-                $UserProject->ProjectId = $projectid;
-                $UserProject->UserId = $userid;
+                $UserProject->ProjectId = $this->project->Id;
+                $UserProject->UserId = $user->id;
                 foreach ($Credentials as $credential) {
                     $UserProject->AddCredential($credential);
                 }
@@ -325,7 +272,7 @@ class SubscribeProjectController extends AbstractController
                           projectid=?
                           OR projectid=0
                       )
-             ', [$userid, $projectid]);
+             ', [$user->id, $this->project->Id]);
 
         $credential_num = 0;
         foreach ($query as $credential_array) {
@@ -337,11 +284,11 @@ class SubscribeProjectController extends AbstractController
         }
 
         $xml .= '<project>';
-        $xml .= add_XML_value('id', $project_array['id']);
-        $xml .= add_XML_value('name', $project_array['name']);
-        $xml .= add_XML_value('emailbrokensubmission', $project_array['emailbrokensubmission']);
+        $xml .= add_XML_value('id', $this->project->Id);
+        $xml .= add_XML_value('name', $this->project->Name);
+        $xml .= add_XML_value('emailbrokensubmission', $this->project->EmailBrokenSubmission);
 
-        $labelavailableids = $Project->GetLabels(7); // Get the labels for the last 7 days
+        $labelavailableids = $this->project->GetLabels(7); // Get the labels for the last 7 days
         $labelids = $LabelEmail->GetLabels();
 
         $labelavailableids = array_diff($labelavailableids, $labelids);
@@ -368,14 +315,14 @@ class SubscribeProjectController extends AbstractController
         $params = [];
         if ($user->IsAdmin() === false) {
             $sql .= " WHERE public=1 OR id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)";
-            $params[] = $userid;
+            $params[] = $user->id;
         }
         $projects = $db->executePrepared($sql, $params);
         foreach ($projects as $project_array) {
             $xml .= '<availableproject>';
             $xml .= add_XML_value('id', $project_array['id']);
             $xml .= add_XML_value('name', $project_array['name']);
-            if (intval($project_array['id']) === $projectid) {
+            if (intval($project_array['id']) === $this->project->Id) {
                 $xml .= add_XML_value('selected', '1');
             }
             $xml .= '</availableproject>';

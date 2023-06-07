@@ -643,14 +643,6 @@ parameters:
 			path: app/Http/Controllers/MapController.php
 
 		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/Http/Controllers/MapController.php
-
-		-
 			message: "#^Parameter \\#1 \\$hour of function gmmktime expects int, string given\\.$#"
 			count: 2
 			path: app/Http/Controllers/MapController.php
@@ -872,14 +864,6 @@ parameters:
 				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 4
-			path: app/Http/Controllers/SubProjectController.php
-
-		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
 			count: 2
 			path: app/Http/Controllers/SubProjectController.php
 
@@ -890,46 +874,8 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 4
-			path: app/Http/Controllers/SubProjectController.php
-
-		-
-			message: "#^Variable \\$bugurl might not be defined\\.$#"
 			count: 2
 			path: app/Http/Controllers/SubProjectController.php
-
-		-
-			message: "#^Variable \\$docurl might not be defined\\.$#"
-			count: 2
-			path: app/Http/Controllers/SubProjectController.php
-
-		-
-			message: "#^Variable \\$googletracker might not be defined\\.$#"
-			count: 2
-			path: app/Http/Controllers/SubProjectController.php
-
-		-
-			message: "#^Variable \\$homeurl might not be defined\\.$#"
-			count: 2
-			path: app/Http/Controllers/SubProjectController.php
-
-		-
-			message: "#^Variable \\$projectpublic might not be defined\\.$#"
-			count: 2
-			path: app/Http/Controllers/SubProjectController.php
-
-		-
-			message: "#^Variable \\$svnurl might not be defined\\.$#"
-			count: 2
-			path: app/Http/Controllers/SubProjectController.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_real_escape_numeric\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 2
-			path: app/Http/Controllers/SubscribeProjectController.php
 
 		-
 			message: """
@@ -944,17 +890,12 @@ parameters:
 				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 2
+			count: 1
 			path: app/Http/Controllers/SubscribeProjectController.php
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 3
-			path: app/Http/Controllers/SubscribeProjectController.php
-
-		-
-			message: "#^Foreach overwrites \\$project_array with its value variable\\.$#"
-			count: 1
 			path: app/Http/Controllers/SubscribeProjectController.php
 
 		-
@@ -31313,6 +31254,26 @@ parameters:
 			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$public_project has no type specified\\.$#"
 			count: 1
 			path: tests/Feature/ProjectPermissions.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\RouteAccessTest\\:\\:adminRoutes\\(\\) is unused\\.$#"
+			count: 1
+			path: tests/Feature/RouteAccessTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\RouteAccessTest\\:\\:adminRoutes\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: tests/Feature/RouteAccessTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\RouteAccessTest\\:\\:protectedRoutes\\(\\) is unused\\.$#"
+			count: 1
+			path: tests/Feature/RouteAccessTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\RouteAccessTest\\:\\:protectedRoutes\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: tests/Feature/RouteAccessTest.php
 
 		-
 			message: "#^Property Tests\\\\Feature\\\\UserCommand\\:\\:\\$user has no type specified\\.$#"
