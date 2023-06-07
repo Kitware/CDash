@@ -7,5 +7,24 @@ services:
     volumes:
       - "${SSL_CERTIFICATE_FILE}:/var/www/my-cert.pem"
       - "${SSL_CERTIFICATE_KEY_FILE}:/var/www/my-cert.key"
+  worker:
+    image: kitware/cdash-worker
+    container_name: cdash_worker
+    build:
+      context: ..
+      dockerfile: ./docker/cdash.docker
+      target: cdash-worker
+    environment:
+      CDASH_ROOT_ADMIN_PASS: secret
+      DB_HOST: database
+    deploy:
+      replicas: 1
+    depends_on:
+      - cdash
+    volumes:
+      - type: volume
+        source: storage
+        target: /cdash/storage
+
 volumes:
   storage:
