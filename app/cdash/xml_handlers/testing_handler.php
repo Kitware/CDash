@@ -21,8 +21,8 @@ use CDash\Model\BuildInformation;
 use CDash\Model\Image;
 use CDash\Model\Label;
 use CDash\Model\Project;
-use CDash\Model\Site;
-use CDash\Model\SiteInformation;
+use App\Models\Site;
+use App\Models\SiteInformation;
 use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
 use CDash\Submission\CommitAuthorHandlerTrait;
@@ -78,17 +78,13 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         $factory = $this->getModelFactory();
 
         if ($name == 'SITE') {
-            $this->Site = $factory->create(Site::class);
             $this->Project = $factory->create(Project::class);
             $this->Project->Id = $this->projectid;
 
-            $this->Site->Name = $attributes['NAME'];
-            if (empty($this->Site->Name)) {
-                $this->Site->Name = '(empty)';
-            }
-            $this->Site->Insert();
+            $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
+            $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
-            $siteInformation = $factory->create(SiteInformation::class);
+            $siteInformation = new SiteInformation;
             $this->BuildInformation = $factory->create(BuildInformation::class);
             $this->BuildName = "";
             $this->BuildStamp = "";
@@ -115,7 +111,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             if (empty($this->BuildName)) {
                 $this->BuildName = '(empty)';
             }
-            $this->Site->SetInformation($siteInformation);
+            $this->Site->mostRecentInformation()->save($siteInformation);
         } elseif ($name == 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
@@ -338,7 +334,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             $build->SetPullRequest($this->PullRequest);
         }
 
-        $build->SiteId = $this->Site->Id;
+        $build->SiteId = $this->Site->id;
         $build->Name = $this->BuildName;
         $build->SubProjectName = $this->SubProjectName;
         $build->SetStamp($this->BuildStamp);

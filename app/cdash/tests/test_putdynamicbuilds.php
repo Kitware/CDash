@@ -10,7 +10,7 @@ require_once 'include/pdo.php';
 
 use CDash\Database;
 use CDash\Model\BuildGroup;
-use CDash\Model\Site;
+use App\Models\Site;
 
 class PutDynamicBuildsTestCase extends KWWebTestCase
 {
@@ -89,17 +89,15 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
 
         // Verify that we can associate a dynamic build group with a rule that
         // hasn't submitted any builds to this project yet.
-        $site = new Site();
-        $site->Id = 1;
-        $site_name = $site->GetName();
+        $site = Site::find(1);
         $build_rules = [
-            [ 'match' => 'foo', 'parentgroupid' => $this->ParentGroupId, 'site' => $site_name ],
+            [ 'match' => 'foo', 'parentgroupid' => $this->ParentGroupId, 'site' => $site->name],
         ];
         $starttime_stmt = $this->PDO->prepare("
             SELECT starttime FROM build2grouprule
             WHERE buildname     = :buildname AND
                   parentgroupid = :parentgroupid AND
-                  siteid        = $site->Id");
+                  siteid        = $site->id");
         $this->verifyListGetsCreated($client, $starttime_stmt, $build_rules);
         $this->login();
         $this->get($this->url . "/api/v1/manageBuildGroup.php?projectid={$this->ProjectId}");

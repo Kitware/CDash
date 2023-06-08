@@ -24,7 +24,7 @@ use App\Services\PageTimer;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
-use CDash\Model\Site;
+use App\Models\Site;
 
 // Require administrative access to view this page.
 init_api_request();
@@ -412,12 +412,11 @@ function rest_put($projectid)
                 $new_rule->ParentGroupId = $parentgroupid;
             }
             $sitename = $new_rule_request['site'];
-            if ($sitename == 'Any') {
+            if ($sitename === 'Any') {
                 $siteid = 0;
             } else {
-                $site = new Site();
-                $site->Name = $sitename;
-                $siteid = $site->Exists() ? $site->Id : 0;
+                $site = Site::where(['name' => $sitename])->first();
+                $siteid = $site->id ?? 0;
             }
             if ($siteid > 0) {
                 $new_rule->SiteId = $siteid;

@@ -13,7 +13,6 @@ use CDash\Model\CoverageFile2User;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 use CDash\Model\Project;
-use CDash\Model\Site;
 use CDash\Model\UserProject;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -293,9 +292,7 @@ class CoverageController extends AbstractController
                 $Build->FillFromId($Build->Id);
                 $xml .= '<build>';
                 $xml .= add_XML_value('id', $buildId);
-                $Site = new Site();
-                $Site->Id = $Build->SiteId;
-                $xml .= add_XML_value('name', $Site->GetName() . '-' . $Build->GetName() . ' [' . gmdate(FMT_DATETIME, strtotime($Build->StartTime)) . ']');
+                $xml .= add_XML_value('name', $Build->GetSite()->name . '-' . $Build->GetName() . ' [' . gmdate(FMT_DATETIME, strtotime($Build->StartTime)) . ']');
                 if ($buildid > 0 && $buildId == $buildid) {
                     $xml .= add_XML_value('selected', 1);
                 }

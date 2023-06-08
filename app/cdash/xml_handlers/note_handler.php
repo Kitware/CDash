@@ -22,8 +22,8 @@ use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildInformation;
 use CDash\Model\BuildNote;
-use CDash\Model\Site;
-use CDash\Model\SiteInformation;
+use App\Models\Site;
+use App\Models\SiteInformation;
 
 class NoteHandler extends AbstractHandler
 {
@@ -50,11 +50,8 @@ class NoteHandler extends AbstractHandler
     {
         parent::startElement($parser, $name, $attributes);
         if ($name == 'SITE') {
-            $this->Site->Name = $attributes['NAME'];
-            if (empty($this->Site->Name)) {
-                $this->Site->Name = '(empty)';
-            }
-            $this->Site->Insert();
+            $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
+            $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
             $siteInformation = new SiteInformation();
             $buildInformation = new BuildInformation();
@@ -65,9 +62,9 @@ class NoteHandler extends AbstractHandler
                 $buildInformation->SetValue($key, $value);
             }
 
-            $this->Site->SetInformation($siteInformation);
+            $this->Site->mostRecentInformation()->save($siteInformation);
 
-            $this->Build->SiteId = $this->Site->Id;
+            $this->Build->SiteId = $this->Site->id;
             $this->Build->Name = $attributes['BUILDNAME'];
             if (empty($this->Build->Name)) {
                 $this->Build->Name = '(empty)';

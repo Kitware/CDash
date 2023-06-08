@@ -20,8 +20,8 @@ use App\Services\TestCreator;
 
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
-use CDash\Model\Site;
-use CDash\Model\SiteInformation;
+use App\Models\Site;
+use App\Models\SiteInformation;
 
 class TestingJUnitHandler extends AbstractHandler
 {
@@ -47,7 +47,6 @@ class TestingJUnitHandler extends AbstractHandler
     {
         parent::__construct($projectID);
         $this->Build = new Build();
-        $this->Site = new Site();
 
         $this->UpdateEndTime = false;
         $this->Group = 'Nightly';
@@ -73,11 +72,8 @@ class TestingJUnitHandler extends AbstractHandler
 
         if ($name == 'SITE') {
             $this->HasSiteTag = true;
-            $this->Site->Name = $attributes['NAME'];
-            if (empty($this->Site->Name)) {
-                $this->Site->Name = '(empty)';
-            }
-            $this->Site->Insert();
+            $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
+            $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
             $siteInformation = new SiteInformation();
             $buildInformation = new BuildInformation();
@@ -88,9 +84,9 @@ class TestingJUnitHandler extends AbstractHandler
                 $buildInformation->SetValue($key, $value);
             }
 
-            $this->Site->SetInformation($siteInformation);
+            $this->Site->mostRecentInformation()->save($siteInformation);
 
-            $this->Build->SiteId = $this->Site->Id;
+            $this->Build->SiteId = $this->Site->id;
             $this->Build->Name = $attributes['BUILDNAME'];
             if (empty($this->Build->Name)) {
                 $this->Build->Name = '(empty)';
@@ -118,10 +114,9 @@ class TestingJUnitHandler extends AbstractHandler
                         $this->Build->Information->CompilerVersion = $attributes['VALUE'];
                         break;
                     case 'hostname':
-                        if (empty($this->Site->Name)) {
-                            $this->Site->Name = $attributes['VALUE'];
-                            $this->Site->Insert();
-                            $this->Build->SiteId = $this->Site->Id;
+                        if (empty($this->Site->name)) {
+                            $this->Site = Site::firstOrCreate(['name' => $attributes['VALUE']], ['name' => $attributes['VALUE']]);
+                            $this->Build->SiteId = $this->Site->id;
                         }
                         break;
                     case 'track':
@@ -162,9 +157,8 @@ class TestingJUnitHandler extends AbstractHandler
             if ($this->HasSiteTag == false) {
                 // Hostname is not necessarily defined
                 if (!empty($attributes['HOSTNAME'])) {
-                    $this->Site->Name = $attributes['HOSTNAME'];
-                    $this->Site->Insert();
-                    $this->Build->SiteId = $this->Site->Id;
+                    $this->Site = Site::firstOrCreate(['name' => $attributes['HOSTNAME']], ['name' => $attributes['HOSTNAME']]);
+                    $this->Build->SiteId = $this->Site->id;
                 }
 
                 $this->Build->Information = new BuildInformation();

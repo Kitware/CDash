@@ -22,8 +22,6 @@ use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
-use CDash\Model\Site;
-use CDash\Model\Project;
 
 require_once 'include/filterdataFunctions.php';
 
@@ -160,7 +158,7 @@ class ViewTest extends BuildApi
 
         $build_response = Build::MarshalResponseArray($this->build, [
                 'displaylabels' => $this->project->DisplayLabels,
-                'site' =>  $this->build->GetSite()->GetName(),
+                'site' =>  $this->build->GetSite()->name,
                 'testtime' => $this->build->EndTime,
         ]);
 

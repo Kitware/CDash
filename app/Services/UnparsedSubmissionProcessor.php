@@ -17,12 +17,11 @@
 namespace App\Services;
 
 use App\Jobs\ProcessSubmission;
-use App\Services\AuthTokenService;
 use CDash\Model\Build;
 use CDash\Model\BuildFile;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
-use CDash\Model\Site;
+use App\Models\Site;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -185,10 +184,7 @@ class UnparsedSubmissionProcessor
         $this->build->SetStamp($this->buildstamp);
 
         // Get the site id
-        $site = new Site();
-        $site->Name = $this->sitename;
-        $site->Insert();
-        $this->build->SiteId = $site->Id;
+        $this->build->SiteId = Site::firstOrCreate(['name' => $this->sitename])->id;
 
         // Make this an "append" build, so that it doesn't result in a separate row
         // from the rest of the "normal" submission.

@@ -163,7 +163,6 @@ add_php_test(viewmap)
 
 add_php_test(viewsubprojectdependencies)
 add_php_test(buildmodel)
-add_php_test(sitemodel)
 add_unit_test(/CDash/Model/PendingSubmissions)
 add_php_test(projectxmlsequence)
 add_php_test(uploadfile)

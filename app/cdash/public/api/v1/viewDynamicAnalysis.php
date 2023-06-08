@@ -23,7 +23,7 @@ use App\Services\PageTimer;
 use App\Services\TestingDay;
 
 use CDash\Model\Project;
-use CDash\Model\Site;
+use App\Models\Site;
 use Illuminate\Support\Facades\DB;
 
 $pageTimer = new PageTimer();
@@ -87,12 +87,8 @@ if ($nextbuildid > 0) {
 $response['menu'] = $menu;
 
 // Build
-$site = new Site();
-$site->Id = $build->SiteId;
-$site_name = $site->GetName();
-
 $build_response = [];
-$build_response['site'] = $site_name;
+$build_response['site'] = $build->GetSite()->name;
 $build_response['buildname'] = $build->Name;
 $build_response['buildid'] = $build->Id;
 $build_response['buildtime'] = $build->StartTime;

@@ -4,7 +4,7 @@ require_once 'include/common.php';
 
 use CDash\Model\Build;
 use CDash\Model\Project;
-use CDash\Model\Site;
+use App\Models\Site;
 
 class IndexNextPreviousTestCase extends KWWebTestCase
 {
@@ -49,9 +49,8 @@ class IndexNextPreviousTestCase extends KWWebTestCase
             $build = new Build();
             $build->Name = 'next-previous-build';
             $build->ProjectId = $project->Id;
-            $site = new Site();
-            $site->Id = 1;
-            $build->SiteId = $site->Id;
+            $site = Site::find(1);
+            $build->SiteId = $site->id;
             $stamp = "$date-1410-$group";
             $build->SetStamp($stamp);
             $build->StartTime = gmdate(FMT_DATETIME, $timestamp);

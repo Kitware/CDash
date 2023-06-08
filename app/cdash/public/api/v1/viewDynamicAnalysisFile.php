@@ -26,7 +26,6 @@ use App\Services\TestingDay;
 use CDash\Model\Build;
 use CDash\Model\DynamicAnalysis;
 use CDash\Model\Project;
-use CDash\Model\Site;
 
 $pageTimer = new PageTimer();
 $response = [];
@@ -70,12 +69,8 @@ get_dashboard_JSON($project->Name, $date, $response);
 $response['title'] = "$project->Name : Dynamic Analysis";
 
 // Build
-$site = new Site();
-$site->Id = $build->SiteId;
-$site_name = $site->GetName();
-
 $build_response = [];
-$build_response['site'] = $site_name;
+$build_response['site'] = $build->GetSite()->name;
 $build_response['buildname'] = $build->Name;
 $build_response['buildid'] = $build->Id;
 $build_response['buildtime'] = $build->StartTime;

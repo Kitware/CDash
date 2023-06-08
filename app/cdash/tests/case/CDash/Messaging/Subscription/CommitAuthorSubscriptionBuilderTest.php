@@ -20,7 +20,7 @@ use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
-use CDash\Model\Site;
+use App\Models\Site;
 use CDash\Test\BuildDiffForTesting;
 use Tests\TestCase;
 

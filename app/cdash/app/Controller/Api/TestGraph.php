@@ -17,13 +17,7 @@
 namespace CDash\Controller\Api;
 
 use App\Models\BuildTest;
-use App\Models\Test;
-use App\Models\TestOutput;
-
 use CDash\Database;
-use CDash\Model\Build;
-use CDash\Model\Project;
-use CDash\Model\Site;
 
 require_once 'include/api_common.php';
 

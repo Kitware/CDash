@@ -22,7 +22,7 @@ require_once 'xml_handlers/stack.php';
 use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\Project;
-use CDash\Model\Site;
+use App\Models\Site;
 
 abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInterface
 {
@@ -97,12 +97,12 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
 
     public function getSiteName()
     {
-        return $this->Site->Name;
+        return $this->Site->name;
     }
 
     public function getSiteId()
     {
-        return $this->Site->Id;
+        return $this->Site->id;
     }
 
     public function getBuildStamp()

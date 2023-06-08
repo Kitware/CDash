@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 use App\Services\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
-use CDash\Model\Site;
+use App\Models\Site;
+use CDash\Model\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -225,8 +226,7 @@ class BuildController extends ProjectController
 
         $this->setBuildById((int) $_GET['buildid']);
 
-        $Site = new Site();
-        $Site->Id = $this->build->SiteId;
+        $Site = $this->build->GetSite();
 
         @$date = $_GET['date'];
         if ($date != null) {
@@ -246,8 +246,8 @@ class BuildController extends ProjectController
         $xml .= '<buildid>' . $this->build->Id . '</buildid>';
         $xml .= '<buildname>' . $this->build->Name . '</buildname>';
         $xml .= '<buildstarttime>' . $this->build->StartTime . '</buildstarttime>';
-        $xml .= '<siteid>' . $Site->Id . '</siteid>';
-        $xml .= '<sitename>' . $Site->GetName() . '</sitename>';
+        $xml .= '<siteid>' . $Site->id . '</siteid>';
+        $xml .= '<sitename>' . $Site->name . '</sitename>';
 
         $uploadFilesOrURLs = $this->build->GetUploadedFilesOrUrls();
 

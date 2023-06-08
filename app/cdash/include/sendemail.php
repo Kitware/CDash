@@ -30,7 +30,6 @@ use CDash\Model\BuildConfigure;
 use CDash\Model\BuildUpdate;
 use CDash\Model\DynamicAnalysis;
 use CDash\Model\Project;
-use CDash\Model\Site;
 
 /** Check for errors for a given build. Return false if no errors */
 function check_email_errors(int $buildid, bool $checktesttimeingchanged, int $testtimemaxstatus, bool $checkpreviouserrors): array
@@ -453,10 +452,9 @@ function generate_broken_build_message(array $emailtext, $Build, $Project): arra
         $body .= 'SubProject: ' . $Build->GetSubProjectName() . "\n";
     }
 
-    $Site = new Site();
-    $Site->Id = $Build->SiteId;
+    $Site = $Build->GetSite();
 
-    $body .= 'Site: ' . $Site->GetName() . "\n";
+    $body .= 'Site: ' . $Site->name . "\n";
     $body .= 'Build Name: ' . $Build->Name . "\n";
     $body .= 'Build Time: ' . date(FMT_DATETIMETZ, strtotime($Build->StartTime . ' UTC')) . "\n";
     $body .= 'Type: ' . $Build->Type . "\n";

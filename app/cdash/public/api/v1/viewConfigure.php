@@ -25,7 +25,6 @@ use App\Services\TestingDay;
 
 use CDash\Model\BuildConfigure;
 use CDash\Model\Project;
-use CDash\Model\Site;
 
 $pageTimer = new PageTimer();
 
@@ -89,11 +88,10 @@ while ($configure = $configures->fetch()) {
 $response['configures'] = $configures_response;
 
 // Build
-$site = new Site();
-$site->Id = $build->SiteId;
+$site = $build->GetSite();
 $build_response = [];
-$build_response['site'] = $site->GetName();
-$build_response['siteid'] = $site->Id;
+$build_response['site'] = $site->name;
+$build_response['siteid'] = $site->id;
 $build_response['buildname'] = $build->Name;
 $build_response['buildid'] = $build->Id;
 $build_response['hassubprojects'] = $has_subprojects;

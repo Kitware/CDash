@@ -23,7 +23,7 @@ use App\Services\PageTimer;
 use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
-use CDash\Model\Site;
+use App\Models\Site;
 use CDash\Model\UserProject;
 use Illuminate\Support\Facades\Auth;
 
@@ -187,9 +187,8 @@ foreach ($buildgroups as $buildgroup) {
                     }
                 }
                 if (!$found) {
-                    $site = new Site();
-                    $site->Id = $siteid;
-                    $rule_response['sitename'] = $site->GetName();
+                    $site = Site::find($siteid);
+                    $rule_response['sitename'] = $site->name;
                 }
             }
 

@@ -23,15 +23,13 @@ use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\ConfigureTopic;
 use CDash\Messaging\Topic\TopicCollection;
-use CDash\Messaging\Topic\TopicInterface;
-use CDash\Model\ActionableTypes;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildInformation;
 use CDash\Model\Label;
-use CDash\Model\Site;
-use CDash\Model\SiteInformation;
+use App\Models\Site;
+use App\Models\SiteInformation;
 
 use CDash\Collection\BuildCollection;
 use CDash\Model\SubscriberInterface;
@@ -70,14 +68,10 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
         parent::startElement($parser, $name, $attributes);
 
         if ($name == 'SITE') {
-            $this->Site = $this->ModelFactory->create(Site::class);
-            $this->Site->Name = $attributes['NAME'];
-            if (empty($this->Site->Name)) {
-                $this->Site->Name = '(empty)';
-            }
-            $this->Site->Insert();
+            $sitename = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
+            $this->Site = Site::firstOrCreate(['name' => $sitename], ['name' => $sitename]);
 
-            $siteInformation = $this->ModelFactory->create(SiteInformation::class);
+            $siteInformation = new SiteInformation;
             $this->BuildInformation = $this->ModelFactory->create(BuildInformation::class);
             $this->BuildName = "";
             $this->BuildStamp = "";
@@ -105,7 +99,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                 $this->BuildName = '(empty)';
             }
 
-            $this->Site->SetInformation($siteInformation);
+            $this->Site->mostRecentInformation()->save($siteInformation);
         } elseif ($name == 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
@@ -386,7 +380,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
     protected function CreateBuild()
     {
         $build = $this->ModelFactory->create(Build::class);
-        $build->SiteId = $this->Site->Id;
+        $build->SiteId = $this->Site->id;
         $build->Name = $this->BuildName;
         $build->SetStamp($this->BuildStamp);
         $build->Generator = $this->Generator;

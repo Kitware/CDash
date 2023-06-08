@@ -2532,24 +2532,19 @@ class Build
     /**
      * Returns the current Build's Site property. This method lazily loads the Site if no such
      * object exists.
-     *
-     * @return Site
      */
-    public function GetSite()
+    public function GetSite(): \App\Models\Site
     {
         if (!$this->Site) {
-            $this->Site = new Site();
-            $this->Site->Id = $this->SiteId;
+            $this->Site = \App\Models\Site::find($this->SiteId);
         }
         return $this->Site;
     }
 
     /**
      * Sets the current Build's Site property.
-     *
-     * @param Site $site
      */
-    public function SetSite(Site $site)
+    public function SetSite(\App\Models\Site $site)
     {
         $this->Site = $site;
     }

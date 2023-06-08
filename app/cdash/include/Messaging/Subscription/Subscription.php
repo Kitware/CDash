@@ -2,12 +2,11 @@
 namespace CDash\Messaging\Subscription;
 
 use CDash\Config;
-use CDash\Messaging\Notification\NotificationInterface;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
-use CDash\Model\Site;
+use App\Models\Site;
 use CDash\Model\SubscriberInterface;
 
 class Subscription implements SubscriptionInterface
@@ -92,11 +91,7 @@ class Subscription implements SubscriptionInterface
         return $this->project;
     }
 
-    /**
-     * @param Site $site
-     * @return $this
-     */
-    public function setSite(Site $site)
+    public function setSite(Site $site): self
     {
         $this->site = $site;
         return $this;
@@ -155,7 +150,7 @@ class Subscription implements SubscriptionInterface
             $summary['build_group'] = $this->buildGroup->GetName();
             $summary['project_name'] = $project->GetName();
             $summary['project_url'] = "{$baseUrl}/index.php?project={$project->Name}";
-            $summary['site_name'] = $this->site->Name;
+            $summary['site_name'] = $this->site->name;
             $summary['build_name'] = '';
             $summary['build_subproject_names'] = [];
             $summary['labels'] = [];
