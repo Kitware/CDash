@@ -10,7 +10,12 @@ services:
     container_name: cdash_postgres
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
     volumes:
       - postgresqldata:/var/lib/postgresql
+    healthcheck:
+      test: "pg_isready -U postgres"
+      interval: 1s
+      retries: 120
 volumes:
   postgresqldata:

@@ -11,7 +11,8 @@ services:
       CDASH_ROOT_ADMIN_PASS: secret
       DB_HOST: database
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     links:
       - database
     volumes:
