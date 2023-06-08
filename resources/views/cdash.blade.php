@@ -55,14 +55,16 @@
         ng-controller="{{ $angular_controller }}"
     @endif
 >
+{{-- This is a horrible hack which allows AngularJS to show the login page when prompted by the API --}}
+@if(isset($angular) && $angular === true)
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login'"></div>
+    <div ng-if="cdash.requirelogin != 1" id="app">
+@else
     <div id="app">
+@endif
         @section('header')
             @include('components.header')
         @show
-
-        @if(isset($angular) && $angular === true)
-            <div ng-if="cdash.requirelogin == 1" ng-include="'login'"></div>
-        @endif
 
         <div id="main_content"
             @if(isset($angular) && $angular === true)
