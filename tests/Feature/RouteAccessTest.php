@@ -53,7 +53,7 @@ class RouteAccessTest extends TestCase
     {
         return [
             ['/user.php'],
-            ['/editUser.php'],
+            ['/profile'],
             ['/subscribeProject.php'],
             ['/manageProjectRoles.php'],
             ['/manageCoverage.php'],
