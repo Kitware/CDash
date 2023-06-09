@@ -22,6 +22,13 @@ docker compose -f docker/docker-compose.yml \
 
 3. Browse to http://localhost:8080.  You should see a freshly installed copy of CDash with the latest database schema.
 
+#### Running the test suite
+```bash
+docker exec -it cdash /bin/bash
+cd _build
+ctest
+```
+
 ## Configuration
 
 ### Why so many YAML files?
