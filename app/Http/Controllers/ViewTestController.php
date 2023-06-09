@@ -12,7 +12,7 @@ final class ViewTestController extends AbstractController
 {
     public function viewTest(): View
     {
-        return view("test.view-test");
+        return $this->view("test.view-test");
     }
 
     /**

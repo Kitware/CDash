@@ -3,10 +3,21 @@ namespace App\Http\Controllers;
 
 use App\Services\TestingDay;
 use CDash\Model\Build;
+use Illuminate\View\View;
 
 abstract class AbstractBuildController extends AbstractProjectController
 {
     protected Build $build;
+
+    protected function view(string $view, string $title = ''): View
+    {
+        if (!isset($this->build)) {
+            return parent::view($view, $title);
+        }
+
+        return parent::view($view, $title)
+            ->with('build', $this->build);
+    }
 
     // Fetch data used by all build-specific pages in CDash.
     protected function setBuild(Build $build): void
