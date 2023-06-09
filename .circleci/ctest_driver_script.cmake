@@ -33,7 +33,7 @@ configure_file("${CTEST_SOURCE_DIRECTORY}/.env" "${CTEST_BINARY_DIRECTORY}/env_b
 file(READ "${CTEST_SOURCE_DIRECTORY}/.env" _env_contents)
 string(REPLACE "localhost:8080" "cdash:8080" _env_contents "${_env_contents}")
 file(WRITE "${CTEST_SOURCE_DIRECTORY}/.env" ${_env_contents})
-execute_process(COMMAND npm run dev WORKING_DIRECTORY "${CTEST_SOURCE_DIRECTORY}")
+execute_process(COMMAND npm run prod WORKING_DIRECTORY "${CTEST_SOURCE_DIRECTORY}")
 
 ctest_start(Continuous)
 ctest_update()
@@ -50,4 +50,4 @@ ctest_submit(PARTS Test Done)
 file(RENAME
   "${CTEST_BINARY_DIRECTORY}/env_backup/.env"
   "${CTEST_SOURCE_DIRECTORY}/.env")
-execute_process(COMMAND npm run dev WORKING_DIRECTORY "${CTEST_SOURCE_DIRECTORY}")
+execute_process(COMMAND npm run prod WORKING_DIRECTORY "${CTEST_SOURCE_DIRECTORY}")
