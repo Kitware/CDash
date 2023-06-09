@@ -17,7 +17,7 @@
       <a :href="$baseURL + '/project/' + cdash.project.Id + '/edit'">edit the project</a>
       <br>
       Click here to
-      <a :href="$baseURL + '/generateCTestConfig.php?projectid=' + cdash.project.Id">download the CTest configuration file</a>
+      <a :href="$baseURL + '/project/' + cdash.project.Id + '/ctest_configuration'">download the CTest configuration file</a>
       <br>
     </div>
     <div v-else>
@@ -1653,7 +1653,7 @@
                     </div>
                   </td>
                   <td>
-                    <a :href="$baseURL + '/generateCTestConfig.php?projectid=' + cdash.project.Id">
+                    <a :href="$baseURL + '/project/' + cdash.project.Id + '/ctest_configuration'">
                       CTestConfig.cmake
                     </a>
                     <a
