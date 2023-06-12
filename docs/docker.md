@@ -11,7 +11,7 @@ git clone https://github.com/Kitware/CDash
 cd CDash
 ```
 
-2. Next, use the `docker compose up` command to spin up your new CDash instance:
+2. Next, use docker compose to spin up your new CDash instance:
 
 ```bash
 docker compose -f docker/docker-compose.yml \
