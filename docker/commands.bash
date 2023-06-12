@@ -5,32 +5,6 @@ cdash_build_image() {
   docker-compose -f ./docker-compose.local.yml build --force-rm --no-cache cdash
 }
 
-cdash_wait_for_ready() {
-  local url
-  local allowed
-  local attempts
-  local wait_seconds
-  local ok
-
-  url="$1" ; shift
-  allowed="$1"  ; shift
-  attempts=0
-  wait_seconds=5
-
-  if [[ ${attempts} -ge ${allowed} ]]; then
-    >&2 echo "Aborting: maximum attempts to connect reached"
-    return 1
-  fi
-
-  until ok=$(docker exec cdash curl -f --silent --show-error  "$url") || [[ ${attempts} -ge ${allowed} ]]; do
-    >&2 echo "CDash not ready, waiting ${wait_seconds}s..."
-    attempts=$((attempts+1))
-    sleep ${wait_seconds}
-  done
-
-  >&2 echo "CDash is ready!"
-}
-
 cdash_site() {
   local host=$(hostname)
   local site="${SITENAME:-$host}"

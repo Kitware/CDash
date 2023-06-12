@@ -11,6 +11,11 @@ services:
       CDASH_ROOT_ADMIN_EMAIL: root@docker.container
       CDASH_ROOT_ADMIN_PASS: secret
       DB_HOST: database
+    healthcheck:
+      test: ps aux | grep apache2 | grep -v grep > /dev/null
+      interval: 5s
+      timeout: 10s
+      retries: 20
     depends_on:
       database:
         condition: service_healthy

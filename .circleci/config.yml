@@ -16,7 +16,6 @@ jobs:
                            -f docker/docker-compose.mysql.yml \
                            --env-file .env.dev up -d \
                            --build
-            cdash_wait_for_ready http://localhost:8080/ping 12
       - run:
           name: Test MySQL
           command: |
@@ -41,7 +40,6 @@ jobs:
                            -f docker/docker-compose.postgres.yml \
                            --env-file .env.dev up -d \
                            --build
-            cdash_wait_for_ready http://localhost:8080/ping 12
       - run:
           name: Test Postgres
           command: |

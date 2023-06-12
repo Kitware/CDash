@@ -21,7 +21,8 @@ services:
     deploy:
       replicas: 1
     depends_on:
-      - cdash
+      cdash:
+        condition: service_healthy
     volumes:
       - type: volume
         source: storage
