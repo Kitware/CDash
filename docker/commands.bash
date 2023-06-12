@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-cdash_build_image() {
-  docker-compose -f ./docker-compose.local.yml build --force-rm --no-cache common
-  docker-compose -f ./docker-compose.local.yml build --force-rm --no-cache cdash
-}
-
 cdash_site() {
   local host=$(hostname)
   local site="${SITENAME:-$host}"
