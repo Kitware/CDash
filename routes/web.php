@@ -170,6 +170,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/manageUsers.php', 'ManageUsersController@showPage');
         Route::post('/manageUsers.php', 'ManageUsersController@showPage');
+        Route::any('/ajax/findusers.php', 'ManageUsersController@ajaxFindUsers');
 
         Route::get('/monitor', 'MonitorController@monitor');
         Route::get('/monitor.php', function () {

@@ -5,6 +5,7 @@ use App\Models\User;
 use CDash\Config;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ManageUsersController extends AbstractController
@@ -92,5 +93,24 @@ class ManageUsersController extends AbstractController
             'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/manageUsers', true),
             'title' => 'Manage Users'
         ]);
+    }
+
+    public function ajaxFindUsers(): View
+    {
+        $config = Config::getInstance();
+
+        $search = $_GET['search'];
+        if ($config->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER') == 1) {
+            $sql = "email=?";
+            $params = [$search];
+        } else {
+            $sql = "email LIKE CONCAT('%', ?, '%') OR firstname LIKE CONCAT('%', ?, '%') OR lastname LIKE CONCAT('%', ?, '%')";
+            $params = [$search, $search, $search];
+        }
+        $users = DB::select('SELECT * FROM ' . qid('user') . ' WHERE ' . $sql, $params);
+
+        return view('admin.find-users')
+            ->with('users', $users)
+            ->with('search', $search);
     }
 }
