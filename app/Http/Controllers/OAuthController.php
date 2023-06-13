@@ -71,7 +71,7 @@ class OAuthController extends AbstractController
         Auth::login($user, true);
 
         // TODO: create a default route, i.e. route('default') or route('index')
-        $to = $session->remove('auth.oauth.destination') ?: '/viewProjects.php';
+        $to = $session->remove('auth.oauth.destination') ?: '/projects';
 
         return redirect($to);
     }

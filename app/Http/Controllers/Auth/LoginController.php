@@ -114,6 +114,6 @@ class LoginController extends AbstractController
         // Redirect to SAML2 login URL.
         // Note that we currently one support one SAML2 IdP
         // per CDash instance.
-        return redirect(saml_url('/viewProjects.php', $saml2_tenants_row->uuid));
+        return redirect(saml_url('/projects', $saml2_tenants_row->uuid));
     }
 }
