@@ -729,9 +729,8 @@ class BazelJSONTestCase extends KWWebTestCase
             'datafilesmd5[0]=' => $md5];
         $client = new GuzzleHttp\Client();
         try {
-            $response = $client->request(
-                'POST',
-                config('app.url') . '/submit.php',
+            $response = $client->request('POST',
+                $this->url . '/submit.php',
                 [
                     'form_params' => $fields
                 ]

@@ -6,7 +6,7 @@ source "$BASH_LIB/cdash.bash"
 source "$BASH_LIB/on_exit.bash"
 
 
-__local_config_file="/home/kitware/cdash/.env"
+__local_config_file="/cdash/.env"
 
 missing_root_admin_pass() {
     if [ -z "$CDASH_ROOT_ADMIN_PASS" ] && [ -z "$DEVELOPMENT_BUILD" ]; then
@@ -17,70 +17,28 @@ missing_root_admin_pass() {
     return 1
 }
 
-__local_service_setup=0
-__apache_pid=
-local_service_setup() {
-    if [ "$__local_service_setup" '=' '1' ] ; then
-        return
-    fi
-
-    PORT="$(( (RANDOM % 20000) + 10000 ))"
-    sed -i 's/^Listen [0-9][0-9]*/Listen '"$PORT"'/g' /etc/apache2/ports.conf
-    sed -i 's/^<VirtualHost \*:[0-9][0-9]*>/<VirtualHost \*:'"$PORT"'>/g' \
-        /etc/apache2/sites-enabled/cdash-site.conf
-    echo "CDASH_FULL_EMAIL_WHEN_ADDING_USER=1" >> "$__local_config_file"
-
-    /usr/sbin/apache2ctl -D FOREGROUND &
-    __apache_pid="$!"
-
-    on_exit local_service_teardown
-    __local_service_setup=1
-
-    cdash_set_host "http://localhost:$PORT"
-
-    sleep 2
-}
-
 setup_local_config() {
     (
-        echo "DB_HOST=mysql"
-        echo "DB_NAME=cdash"
-        echo "DB_TYPE=mysql"
-        echo "DB_LOGIN=root"
-        echo "DB_PASS="
-
         if [ '!' -z ${CDASH_CONFIG+x} ] ; then
             # Drop old formatting for PHP values by removing "$" or ";"
             sed 's/[$;]//g' <<< "$CDASH_CONFIG"
         fi
-
     ) >> "$__local_config_file"
-    cd /home/kitware/cdash && php artisan config:migrate && php artisan key:generate && npm run production
-}
 
-local_service_teardown() {
-    if [ "$__local_service_setup" '=' '0' ] ; then
-        return
+    cd /cdash
+
+    # Update the value of APP_URL in the container if necessary.
+    if [ -n "$APP_URL" ]; then
+        sed -i "s^APP_URL=https://localhost^APP_URL=${APP_URL}^g" .env
     fi
 
-    if [ -n "$__apache_pid" ] ; then
-        /usr/sbin/apache2ctl graceful-stop
-        wait $__apache_pid
-        __apache_pid=
-        sleep 2
+    # Set APP_KEY if one does not already exist.
+    if [ -f .env ] && grep -xq 'APP_KEY=' .env
+    then
+        php artisan key:generate
     fi
 
-    sed -i 's/^Listen [0-9][0-9]*/Listen 80/g' /etc/apache2/ports.conf
-    sed -i 's/^<VirtualHost \*:[0-9][0-9]*>/<VirtualHost \*:80>/g' \
-        /etc/apache2/sites-enabled/cdash-site.conf
-    tmp="$( mktemp )"
-    head -n -1 "$__local_config_file" > "$tmp"
-    cat "$tmp" > "$__local_config_file"
-    rm "$tmp"
-
-    cdash_set_host ""
-
-    __local_service_setup=0
+    npm run production
 }
 
 __user_prefix="__user"

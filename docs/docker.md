@@ -1,156 +1,101 @@
 Unfamiliar with Docker?  [Start here](https://docs.docker.com/get-started/).
 
-## How-to Guide ##
+## Quick Start (testing installation) ##
 
-### Install CDash
+The following instructions spin up CDash & MySQL for local experimentation.
 
-#### Quick Start
-If you haven't done so already, begin by cloning the CDash repository. Then start the 
-`docker-compose` process to accept default values and start using the website
+1. If you haven't done so already, begin by cloning the CDash repository:
 
 ```bash
 git clone https://github.com/Kitware/CDash
 cd CDash
-docker-compose pull
-docker-compose up -d cdash
 ```
 
-#### Customizing the CDash instance
-In the root of your CDash clone, edit `docker-compose.yml`.
-
-The `CDASH_CONFIG` section is where you specify settings that will be stored in your `config.local.php`
-file.
-
-Once you're happy with your changes to this file, run:
-
-```
-docker-compose up -d cdash
-```
-
-This tells [Docker Compose](https://docs.docker.com/compose/) to build and run services for the CDash web server and its MySQL database. This command downloads [a prebuilt image from DockerHub](https://hub.docker.com/r/kitware/cdash/).  If you prefer to build your own Docker image for CDash, pass the `--build` option to `docker-compose`.
-
-This initial `docker-compose` command does not run the CDash's install script by default.  To achieve that, run:
-
-```
-docker-compose run --rm cdash install configure
-```
-
-This executes a one-shot container that runs the install procedure and sets up the predefined users from your `docker-compose.yml` file.
-
-Once this command complete, browse to localhost:8080.  You should see a freshly installed copy of CDash with the latest database schema.
-
-#### Change the config and redeploy
-
-Edit `docker-compose.yml` and run
-
-```
-docker-compose run --rm cdash configure
-```
-
-### Using asynchronous submission parsing
-
-The docker-compose created system is now configured to utilize CDash's
-asynchronous parsing of submissions.  This introduces a new
-service to start **after** the `install` process for CDash has been executed.
-Without the tables in the database, the `worker` service will print several error
-messages and may exit before the system is set up properly.
-
-This requires an additional run of docker-compose specifically for the
-`worker` service:
+2. Next, use docker compose to spin up your new CDash instance:
 
 ```bash
-docker-compose up -d worker
+docker compose -f docker/docker-compose.yml \
+               -f docker/docker-compose.dev.yml \
+               -f docker/docker-compose.mysql.yml \
+               --env-file .env.dev up -d
 ```
 
-# Synchronous parsing
+3. Browse to http://localhost:8080.  You should see a freshly installed copy of CDash with the latest database schema.
 
-To revert back to the traditional submission parsing, update the two
-instances of `QUEUE_CONNECTION` in the `docker-compose.production.yaml`
-file to be `sync` instead of `database`.  Then, run the
-
+#### Running the test suite
 ```bash
-docker-compose up -d cdash
+docker exec -it cdash /bin/bash
+cd _build
+ctest
 ```
 
-command again to make CDash reload it's environment.
+## Configuration
 
-### Pull in changes from upstream CDash (upgrade)
+### Why so many YAML files?
+You may have noticed that CDash's `docker compose` configuration is [split across multiple files](https://docs.docker.com/compose/extends/). The allows us to support various workflows (MySQL vs. Postgres, production vs. development) while minimizing code duplication.
 
-If you're using prebuilt images from DockerHub, run the following commands:
+For example, to use Postgres instead of MySQL, pass `-f docker/docker-compose.postgres.yml` instead of `-f docker/docker-compose.mysql.yml` to the `docker compose` commands mentioned in this document.
 
-```
-docker-compose pull cdash
-docker-compose up -d
-```
+### Changing the default configuration
+You can change the following environment variables in `docker/docker-compose.yml`:
+* `CDASH_ROOT_ADMIN_EMAIL`: the email address (username) for the CDash admin user. The default email address is `root@docker.container`.
+* `CDASH_ROOT_ADMIN_PASS`: the password for the CDash admin user. The default password is `secret`.
 
-If you prefer to build your own images locally, run:
-```
-docker-compose up -d --no-deps --build common cdash
-````
+To change the default database password, modify `DB_PASSWORD` in `docker/docker-compose.mysql.yml` or `docker/docker-compose.postgres.yml`.
 
-## Container Variables
+Once you're happy with your changes, re-run `docker compose up` (with the appropriate`-f` flags) to build and run services for CDash and its database.
 
-### `CDASH_CONFIG`
+### Building from source
+If you would prefer to build your own Docker images for CDash, pass the `--build` option to your `docker compose up` command.
 
-The contents, verbatim, to be included in the local CDash configuration file
-(`/var/www/cdash/.env`)
 
-When running the container on the command line, consider writing the contents to
-a local file:
+## Production Installation
 
+A production installation differs from a testing installation in the following ways:
+* Traffic is served over https. For this reason, these instructions assume you don't already have a web server on your host system that's serving traffic on port 443.
+* CDash will be serving traffic over an externally-visible URL (not `localhost`).
+* CDash's submissions will be parsed _asychronously_. Note that the `cdash_worker` service will emit errors until the database tables are created.
+
+To set up a CDash production instance using docker compose, follow these steps:
+* Generate or obtain SSL certificate files. Some possibilities here are [Let's Encrypt](https://letsencrypt.org/) or [self-signed certificates](https://wiki.debian.org/Self-Signed_Certificate). Make sure the resulting files will be readable to the `www-data` user (UID 33) in the CDash container.
+* `cp .env.example .env`
+* Edit `.env` and modify the following lines:
+  - `APP_URL=https://<my-cdash-url>`
+  - `SSL_CERTIFICATE_FILE=</path/to/certs/my-cert.pem>`
+  - `SSL_CERTIFICATE_KEY_FILE=</path/to/certs/my-cert.key>`
+* For postgres only, edit `docker/docker-compose.postgres.yml` and uncomment the `worker` section.
+* Run this command to start your CDash containers:
 ```bash
-$EDITOR local-configuration.php
-...
-docker run \
-    -e CDASH_CONFIG="$( cat local-configuration.php )" \
-    ... \
-    kitware/cdash
+docker compose --env-file .env \
+	   -f docker/docker-compose.yml \
+	   -f docker/docker-compose.production.yml \
+	   -f docker/docker-compose.mysql.yml \
+	    up -d
 ```
 
-Note: When setting this variable in a docker-compose file, take care to ensure
-that dollar signs (`$`) are properly escaped.  Otherwise, the resulting contents
-of the file may be subject to variable interpolation.
 
-Example:
+## Pull in changes from upstream CDash (upgrade)
 
-```YAML
+If you're using prebuilt images from DockerHub, run the following command to download the latest image:
 
-...
-
-  # wrong: this string syntax is subject to interpolation
-  # The contents will depend on the CDASH_DB_... variables as they are set at
-  # container creation time
-  CDASH_CONFIG: |
-    $CDASH_DB_HOST = 'mysql';
-    $CDASH_DB_NAME = 'cdash';
-    $CDASH_DB_TYPE = 'mysql';
-    ...
-
-  # correct: use $$ to represent a literal `$`
-  CDASH_CONFIG: |
-    $$CDASH_DB_HOST = 'mysql';
-    $$CDASH_DB_NAME = 'cdash';
-    $$CDASH_DB_TYPE = 'mysql';
-    ...
-
-...
+```
+docker compose -f docker/docker-compose.yml \
+               -f docker/docker-compose.production.yml \
+               -f docker/docker-compose.mysql.yml \
+               pull cdash
 ```
 
-### `CDASH_ROOT_ADMIN_EMAIL` and `CDASH_ROOT_ADMIN_PASS`
+and then repeat your `docker compose up` command to start your CDash containers.
 
-The email and password, respectively, for the "root" administrator user, or the
-initial administrator user that is created during the CDash `install.php`
-procedure.  The `CDASH_ROOT_ADMIN_PASS` variable is the only one that is
-strictly required.  The default root admin email is `root@docker.container`.
+If you prefer to build your own images locally, you can pass the `--build` option to your `docker compose up` command as shown previously in this document.
 
-The initial "root" administrator user is managed by the container.  The
-container uses this user account to log in and provision the service.
+## Cleaning up
+CDash's docker compose system creates volumes for persistent data. A primary benefit of this setup is that you won't lose the contents of your database if that container stops running.
 
-### `CDASH_ROOT_ADMIN_NEW_PASS`
-
-Set this variable to change the password for the root administrator account.  If
-set, the container will attempt to use this password when logging in as the root
-account.  If the login is unsuccessful, it will try logging in using the
-(presumably former) password set in `CDASH_ROOT_ADMIN_PASS`.  If this second
-attempt is successful, it will update the root account so that its password is
-reset to the value of `CDASH_ROOT_ADMIN_NEW_PASS`.
+If you're done experimenting with CDash locally and you would like to remove these volumes, perform the following commands:
+```bash
+docker volume ls                      # shows what volumes are defined on your system
+docker volume rm cdash_storage        # CDash's local storage for submission files
+docker volume rm cdash_mysqldata      # for mysql
+docker volume rm cdash_postgresqldata # for postgres
+```

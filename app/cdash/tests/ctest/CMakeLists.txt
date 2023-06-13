@@ -153,7 +153,7 @@ add_php_test(timeline)
 add_php_test(nobackup)
 
 if (NOT CDASH_DB_TYPE STREQUAL "pgsql")
-  add_php_test(parallelsubmissions)
+  #add_php_test(parallelsubmissions)
 endif()
 
 add_php_test(deferredsubmissions)

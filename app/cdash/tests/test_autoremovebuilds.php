@@ -16,9 +16,7 @@ class AutoRemoveBuildsTestCase extends KWWebTestCase
 
     public function testAutoRemoveBuilds()
     {
-        global $configure;
-        $dir = $configure['svnroot'];
-
+        $dir = '/tmp/CDashTesting';
         chdir($dir);
         $argv[0] = 'autoRemoveBuilds.php';
         $argc = 1;

@@ -1,59 +1,27 @@
-version: '3.3'
 services:
-  common:
-    image: kitware/cdash_common
-    build:
-      context: .
-      dockerfile: ./docker/common.docker
-      args:
-        - CDASH_DB_HOST=postgres
-        - DEVELOPMENT_BUILD=1
-    volumes:
-      - type: volume
-        source: storage
-        target: /home/kitware/cdash/storage
-    profiles:
-      - donotstart
   cdash:
-    image: "kitware/cdash:testing"
-    container_name: cdash
-    build:
-      context: .
-      dockerfile: ./docker/cdash.docker
-      args:
-        - CDASH_DB_HOST=postgres
-    depends_on:
-      - postgres
-      - common
-      - selenium-hub
-      - chrome
-    links:
-      - postgres
-    ports:
-     - "8080:80"
     environment:
-      XDEBUG_CONFG: remote_host=172.18.0.1
-      CDASH_ROOT_ADMIN_PASS: secret
+      DB_CONNECTION: pgsql
+      DB_LOGIN: postgres
+      DB_PORT: 5432
+  # Uncomment this section for production postgres insallations.
+  #worker:
+  #  environment:
+  #    DB_CONNECTION: pgsql
+  #    DB_LOGIN: postgres
+  #    DB_PORT: 5432
 
-  postgres:
+  database:
     image: postgres
-    container_name: postgres_cdash
+    container_name: cdash_postgres
     environment:
-      POSTGRES_PASSWORD: cdash4simpletest
-  selenium-hub:
-    image: selenium/hub:3.141.59-mercury
-    container_name: selenium-hub
-    ports:
-      - "4444:4444"
-  chrome:
-    image: selenium/node-chrome:3.141.59-mercury
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
     volumes:
-      - /dev/shm:/dev/shm
-    depends_on:
-      - selenium-hub
-    environment:
-      - HUB_HOST=selenium-hub
-      - HUB_PORT=4444
-
+      - postgresqldata:/var/lib/postgresql
+    healthcheck:
+      test: "pg_isready -U postgres"
+      interval: 1s
+      retries: 120
 volumes:
-  storage:
+  postgresqldata:

@@ -6,35 +6,11 @@ source "$BASH_LIB/debug.bash"
 source "$BASH_LIB/misc.bash"
 source "$BASH_LIB/on_exit.bash"
 source "$BASH_LIB/tmp_dir.bash"
-source "$BASH_LIB/web.bash"
-
-do_configure() {
-    local_service_setup
-    (
-        cdash_session "$CDASH_ROOT_ADMIN_EMAIL" \
-                "$CDASH_ROOT_ADMIN_PASS"        \
-                "$CDASH_ROOT_ADMIN_NEW_PASS"
-
-        if [ "$?" '!=' '0' ] ; then
-            echo "Warning: could not log in as the root admin user:" \
-                 "Wrong email or password" >&2
-            return 1
-        fi
-    )
-}
 
 do_install() {
-    local_service_setup
-
     # ENSURE ROOT ADMIN USER
     root_pass="$CDASH_ROOT_ADMIN_PASS"
-    if [ -n "$CDASH_ROOT_ADMIN_NEW_PASS" ] ; then
-        root_pass="$CDASH_ROOT_ADMIN_NEW_PASS"
-    fi
-
-    session="$( web_make_session )"
-    cdash_install "$session" "$CDASH_ROOT_ADMIN_EMAIL" \
-        "$root_pass"
+    cdash_install "$CDASH_ROOT_ADMIN_EMAIL" "$root_pass"
 }
 
 usage() {
@@ -59,10 +35,6 @@ usage() {
     echo "      upgrade database schema"
     echo ""
 
-    echo "  configure"
-    echo "      update local configuration"
-    echo ""
-
 
     echo "  start-worker"
     echo "      Start the Laravel asynchronus submission parsing"
@@ -80,10 +52,7 @@ usage() {
 
 do_install=0
 do_upgrade=0
-do_configure=0
 do_serve=0
-
-local_service_needed=0
 
 args_provided=0
 
@@ -93,15 +62,9 @@ while [ -n "$*" ] ; do
     case "$1" in
         install)
             do_install=1
-            local_service_needed=1
             ;;
         upgrade)
             do_upgrade=1
-            local_service_needed=1
-            ;;
-        configure)
-            do_configure=1
-            local_service_needed=1
             ;;
         start-worker)
             start_worker=1
@@ -132,6 +95,7 @@ while [ -n "$*" ] ; do
 done
 
 if [ "$args_provided" '=' '0' ] ; then
+    do_install=1
     do_serve=1
 fi
 
@@ -139,37 +103,19 @@ if missing_root_admin_pass ; then
     exit 1
 fi
 
-setup_local_config
-
 if [ -z "$CDASH_ROOT_ADMIN_EMAIL" ] ; then
     CDASH_ROOT_ADMIN_EMAIL="root@docker.container"
-fi
-
-if [ "$local_service_needed" '=' '1' ] ; then
-    local_service_setup
 fi
 
 if [ "$do_install" '=' '1' ] ; then
     do_install
 fi
 
-if [ "$local_service_needed" '=' '1' ] ; then
-    cdash_session "$CDASH_ROOT_ADMIN_EMAIL" \
-            "$CDASH_ROOT_ADMIN_PASS"        \
-            "$CDASH_ROOT_ADMIN_NEW_PASS"
-fi
-
 if [ "$do_upgrade" '=' '1' ] ; then
     cdash_upgrade
 fi
 
-if [ "$do_configure" '=' '1' ] ; then
-    do_configure
-fi
-
-if [ "$local_service_needed" '=' '1' ] ; then
-    local_service_teardown
-fi
+setup_local_config
 
 if [ "$start_worker" '=' '1' ] ; then
    exec php artisan queue:work

@@ -1,32 +1,29 @@
+name: cdash
 services:
   cdash:
-    env_file:
-      - ../.env
-    ports:
-      - 443:443
-    volumes:
-      - "${SSL_CERTIFICATE_FILE}:/var/www/my-cert.pem"
-      - "${SSL_CERTIFICATE_KEY_FILE}:/var/www/my-cert.key"
-  worker:
-    image: kitware/cdash-worker
-    container_name: cdash_worker
+    image: kitware/cdash
+    container_name: cdash
     build:
       context: ..
       dockerfile: ./docker/cdash.docker
-      target: cdash-worker
+      target: cdash
     environment:
       CDASH_ROOT_ADMIN_EMAIL: root@docker.container
       CDASH_ROOT_ADMIN_PASS: secret
       DB_HOST: database
-    deploy:
-      replicas: 1
+    healthcheck:
+      test: ps aux | grep apache2 | grep -v grep > /dev/null
+      interval: 5s
+      timeout: 10s
+      retries: 20
     depends_on:
-      cdash:
+      database:
         condition: service_healthy
+    links:
+      - database
     volumes:
       - type: volume
         source: storage
         target: /cdash/storage
-
 volumes:
   storage:
