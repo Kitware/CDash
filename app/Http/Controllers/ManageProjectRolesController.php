@@ -8,10 +8,11 @@ use CDash\Model\Project;
 use CDash\Model\UserProject;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use RuntimeException;
 
-class ManageProjectRolesController extends AbstractController
+class ManageProjectRolesController extends ProjectController
 {
     /**
      * TODO: (williamjallen) this function contains legacy XSL templating and should be converted
@@ -513,5 +514,37 @@ class ManageProjectRolesController extends AbstractController
             add_log("cannot send email to: $email", 'register_user', LOG_ERR);
             throw new RuntimeException("cannot send email to: $email");
         }
+    }
+
+    public function ajaxFindUserProject(): View
+    {
+        $this->setProjectById(intval($_GET['projectid'] ?? -1));
+
+        $search = $_GET['search'] ?? '';
+        $params = [];
+        if (intval(Config::getInstance()->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER')) === 1) {
+            $sql = 'email=?';
+            $params[] = $search;
+        } else {
+            $sql = "(email LIKE CONCAT('%', ?, '%') OR firstname LIKE CONCAT('%', ?, '%') OR lastname LIKE CONCAT('%', ?, '%'))";
+            $params[] = $search;
+            $params[] = $search;
+            $params[] = $search;
+        }
+
+        $params[] = $this->project->Id;
+        $users = DB::select('
+                      SELECT id, email, firstname, lastname
+                      FROM ' . qid('user') . '
+                      WHERE
+                          ' . $sql . '
+                          AND id NOT IN (
+                              SELECT userid as id
+                              FROM user2project
+                              WHERE projectid=?
+                          )
+                 ', $params);
+        return view('admin.ajax-find-user-project')
+            ->with('users', $users);
     }
 }
