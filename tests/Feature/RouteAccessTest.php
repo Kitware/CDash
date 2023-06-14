@@ -75,6 +75,7 @@ class RouteAccessTest extends TestCase
             ['/siteStatistics.php'],
             ['/manageUsers.php'],
             ['/monitor'],
+            ['/ajax/findusers.php'],
         ];
     }
 
