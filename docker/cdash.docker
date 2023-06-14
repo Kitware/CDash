@@ -33,7 +33,7 @@ RUN apt-get update                                                         \
 # Install xdebug and newer version of CMake for development builds
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
   apt-get update                                                           \
-  && apt-get install -y cmake                                              \
+  && apt-get install -y cmake rsync                                        \
   && pecl install xdebug                                                   \
   && docker-php-ext-enable xdebug;                                         \
 fi
@@ -73,6 +73,10 @@ RUN chown -R www-data:www-data /etc/apache2
 
 # Disable git repo ownership check system wide
 RUN git config --system --add safe.directory '*'
+
+RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                               \
+  echo "alias cdash_install='rsync -r -l --exclude-from /cdash_src/.rsyncignore /cdash_src/ /cdash'" >> /etc/bash.bashrc; \
+fi
 
 # Run the rest of the commands as www-data
 USER www-data

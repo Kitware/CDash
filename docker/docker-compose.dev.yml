@@ -9,6 +9,8 @@ services:
     build:
       args:
         DEVELOPMENT_BUILD: 1
+    volumes:
+      - ..:/cdash_src:ro
 
   selenium-hub:
     image: selenium/hub:3.141.59-mercury
