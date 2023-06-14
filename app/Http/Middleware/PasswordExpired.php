@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class CheckPassword
+class PasswordExpired
 {
     /**
      * Handle an incoming request.
@@ -20,8 +20,8 @@ class CheckPassword
      */
     public function handle($request, Closure $next)
     {
-        $password_expired_path = '/editUser.php';
         if (Auth::check()) {
+            $password_expired_path = '/editUser.php';
             if (!Str::contains(url()->current(), $password_expired_path)) {
                 /** @var User $user */
                 $user = Auth::user();
@@ -29,18 +29,6 @@ class CheckPassword
                     $password_expired_uri = "{$password_expired_path}?password_expired=1";
                     return redirect($password_expired_uri);
                 }
-            }
-        } else {
-            // Make sure we have a database before proceeding.
-            try {
-                DB::connection()->getPdo();
-            } catch (\Exception) {
-                return $next($request);
-            }
-
-            $user_id = AuthTokenService::getUserIdFromRequest();
-            if ($user_id !== null) {
-                Auth::loginUsingId($user_id);
             }
         }
 

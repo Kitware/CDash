@@ -67,7 +67,7 @@ class Monitor extends TestCase
     public function testMonitorAPI() : void
     {
         // Verify that only admins can see this page.
-        $this->get('/api/monitor')->assertForbidden();
+        $this->get('/api/monitor')->assertUnauthorized();
         $this->actingAs($this->normal_user)->get('/api/monitor')->assertForbidden();
 
         // Verify default (empty) JSON result.

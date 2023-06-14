@@ -37,7 +37,6 @@ class CDash extends AbstractController
     {
         $this->request = $request;
         $this->disk = Storage::disk('cdash');
-        $this->middleware('password')->except([]);
     }
 
     /**
@@ -50,26 +49,26 @@ class CDash extends AbstractController
     {
         $this->request = $request;
         $this->path = '';
-        if ($this->isValidRequest()) {
-            if ($this->isRequestForExport()) {
-                $response = $this->handleFileRequest();
-            } elseif ($this->isApiRequest()) {
-                $response = $this->handleApiRequest();
-            } elseif ($this->isPartialRequest()) {
-                $response = $this->handlePartialRequest();
-            } elseif ($this->isSubmission()) {
-                $response = $this->handleSubmission();
-            } else {
-                $response = $this->handleRequest();
-            }
-        } else {
+        if (!$this->isValidRequest()) {
             abort(404);
+        }
+
+        if ($this->isRequestForExport()) {
+            $response = $this->handleFileRequest();
+        } elseif ($this->isApiRequest()) {
+            $response = $this->handleApiRequest();
+        } elseif ($this->isPartialRequest()) {
+            $response = $this->handlePartialRequest();
+        } elseif ($this->isSubmission()) {
+            $response = $this->handleSubmission();
+        } else {
+            $response = $this->handleRequest();
         }
 
         $status = http_response_code();
         if ($status > Response::HTTP_OK) {
             $msg = "CDash: Path: {$this->getPath()}:[HTTP Status] {$status}";
-            if ($status < response::HTTP_BAD_REQUEST) {
+            if ($status < Response::HTTP_BAD_REQUEST) {
                 Log::info($msg);
             } else {
                 Log::error($msg);

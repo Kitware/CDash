@@ -14,6 +14,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// NOTE: All routes listed in this file will be prefixed with /api
+
+Route::get('/v1/viewProjects.php', 'ViewProjectsController@fetchPageContent');
+
+Route::get('/v1/viewUpdate.php', 'AdminController@viewUpdatePageContent');
+
+Route::get('/v1/viewTest.php', 'ViewTestController@fetchPageContent');
+
+Route::get('/v1/user.php', 'UserController@userPageContent');
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/authtokens/create', 'AuthTokenController@createToken');
+    Route::delete('/authtokens/delete/{token_hash}', 'AuthTokenController@deleteToken');
+
+    Route::middleware(['admin'])->group(function () {
+        Route::get('/authtokens/all', 'AuthTokenController@fetchAll');
+
+        Route::get('/monitor', 'MonitorController@get');
+    });
 });
+
+// this *MUST* be the last route in the file
+Route::any('{url}', 'CDash')->where('url', '.*');
