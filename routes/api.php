@@ -24,6 +24,8 @@ Route::get('/v1/viewTest.php', 'ViewTestController@fetchPageContent');
 
 Route::get('/v1/user.php', 'UserController@userPageContent');
 
+Route::get('/v1/userStatistics.php', 'UserStatisticsController@api');
+
 Route::middleware(['auth'])->group(function () {
     Route::post('/authtokens/create', 'AuthTokenController@createToken');
     Route::delete('/authtokens/delete/{token_hash}', 'AuthTokenController@deleteToken');
