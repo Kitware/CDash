@@ -889,6 +889,14 @@ parameters:
 			path: app/Http/Controllers/SubscribeProjectController.php
 
 		-
+			message: """
+				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
+				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/Http/Controllers/TestController.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\TestController\\:\\:details\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/TestController.php
@@ -15765,37 +15773,6 @@ parameters:
 			"""
 			count: 1
 			path: app/cdash/public/ajax/showcoveragegraph.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_error\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/public/ajax/showtestfailuregraph.php
-
-		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/public/ajax/showtestfailuregraph.php
-
-		-
-			message: "#^Implicit array creation is not allowed \\- variable \\$t might not exist\\.$#"
-			count: 1
-			path: app/cdash/public/ajax/showtestfailuregraph.php
-
-		-
-			message: "#^Variable \\$t might not be defined\\.$#"
-			count: 2
-			path: app/cdash/public/ajax/showtestfailuregraph.php
-
-		-
-			message: "#^Variable \\$testname in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: app/cdash/public/ajax/showtestfailuregraph.php
 
 		-
 			message: """
