@@ -70,7 +70,6 @@ class RouteAccessTest extends TestCase
             ['/import.php'],
             ['/importBackup.php'],
             ['/manageBackup.php'],
-            ['/gitinfo.php'],
             ['/removeBuilds.php'],
             ['/siteStatistics.php'],
             ['/manageUsers.php'],
