@@ -51,8 +51,6 @@ Route::get('ping', function (Response $response) {
     return $response;
 });
 
-Route::get('/authtokens/manage', 'AuthTokenController@manage');
-
 Route::get('/image/{image}', 'ImageController@image');
 Route::get('/displayImage.php', function (Request $request) {
     $imgid = $request->query('imgid');
@@ -149,6 +147,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/editSite.php', 'SiteController@editSite');
 
     Route::middleware(['admin'])->group(function () {
+        Route::get('/authtokens/manage', 'AuthTokenController@manage');
+
         Route::get('/upgrade.php', 'AdminController@upgrade');
         Route::post('/upgrade.php', 'AdminController@upgrade');
 
