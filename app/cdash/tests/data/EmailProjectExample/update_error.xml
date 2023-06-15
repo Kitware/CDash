@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-2.6-patch 0">
+  <Site>Dash20.kitware</Site>
+  <BuildName>update_error</BuildName>
+  <BuildStamp>20090225-0100-Nightly</BuildStamp>
+  <StartDateTime>Feb 24 05:01 Eastern Standard Time</StartDateTime>
+  <StartTime>1235383325</StartTime>
+  <UpdateCommand>"/usr/bin/false" "fetch"</UpdateCommand>
+  <UpdateType>GIT</UpdateType>
+  <EndDateTime>Feb 24 05:02 Eastern Standard Time</EndDateTime>
+  <EndTime>1235383333</EndTime>
+  <ElapsedMinutes>0</ElapsedMinutes>
+  <UpdateReturnStatus>Update command failed:
+"/usr/bin/false" "fetch"</UpdateReturnStatus>
+</Update>

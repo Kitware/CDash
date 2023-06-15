@@ -49,6 +49,9 @@ Total {{ $topic->getTopicDescription() }}: {{ $topic->getTopicCount() }}
 @foreach($subscription->getTopicCollection() as $type => $topic)
 <?php
 $collection = $topic->getTopicCollection();
+if ($collection === null) {
+    continue;
+}
 $size = Subscription::getMaxDisplayItems();
 if ($collection instanceof \Illuminate\Support\Collection) {
     $items = $collection->take($size);

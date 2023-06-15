@@ -192,8 +192,7 @@ class KWWebTestCase extends WebTestCase
             if ($this->findString($content, 'ERROR') ||
                 $this->findString($content, 'WARNING')
             ) {
-                throw new Exception(var_export($content, true));
-                $this->fail('Log file has errors or warnings');
+                $this->fail('Log file has errors or warnings... ' . var_export($content, true));
                 return false;
             }
             return $content;

@@ -9396,22 +9396,7 @@ parameters:
 			path: app/cdash/include/Messaging/FactoryInterface.php
 
 		-
-			message: "#^Call to an undefined method CDash\\\\Messaging\\\\Topic\\\\LabeledTopic\\:\\:mergeTopics\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php
-
-		-
 			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailBuilder\\:\\:setBuildEmailCollection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, int given\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, CDash\\\\Messaging\\\\Topic\\\\LabeledTopic given\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php
 
@@ -14798,7 +14783,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 3
+			count: 2
 			path: app/cdash/include/sendemail.php
 
 		-
@@ -21835,22 +21820,22 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:875\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:874\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:875\\:\\:getSent\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:874\\:\\:getSent\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:875\\:\\:isError\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:874\\:\\:isError\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:875\\:\\:read\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:874\\:\\:read\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -21950,12 +21935,12 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:875\\:\\:\\$read has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:874\\:\\:\\$read has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:875\\:\\:\\$response has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:874\\:\\:\\$response has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -21976,7 +21961,7 @@ parameters:
 
 		-
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
