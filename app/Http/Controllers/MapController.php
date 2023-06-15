@@ -6,8 +6,7 @@ use CDash\Database;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
-// TODO: (williamjallen) Refactor this to extend ProjectController instead of setting up everything manually.
-class MapController extends ProjectController
+class MapController extends AbstractProjectController
 {
     public function viewMap(): View|RedirectResponse
     {

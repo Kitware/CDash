@@ -6,7 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 
-class CTestConfigurationController extends ProjectController
+class CTestConfigurationController extends AbstractProjectController
 {
     public function get(int $id): Response
     {

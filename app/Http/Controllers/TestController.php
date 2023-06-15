@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BuildTest;
 
-class TestController extends ProjectController
+class TestController extends AbstractProjectController
 {
     // Render the test details page.
     public function details($buildtest_id = null)

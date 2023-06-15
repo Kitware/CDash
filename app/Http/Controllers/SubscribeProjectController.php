@@ -11,7 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
-class SubscribeProjectController extends ProjectController
+class SubscribeProjectController extends AbstractProjectController
 {
     /**
      * TODO: (williamjallen) this function contains legacy XSL templating and should be converted
