@@ -161,8 +161,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/manageBackup.php', 'AdminController@manageBackup');
         Route::post('/manageBackup.php', 'AdminController@manageBackup');
 
-        Route::get('/gitinfo.php', 'AdminController@gitinfo');
-
         Route::get('/removeBuilds.php', 'AdminController@removeBuilds');
         Route::post('/removeBuilds.php', 'AdminController@removeBuilds');
 
