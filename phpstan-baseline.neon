@@ -15352,24 +15352,6 @@ parameters:
 			path: app/cdash/public/ajax/buildnote.php
 
 		-
-			message: "#^Binary operation \"\\-\" between string and \\(int\\|false\\) results in an error\\.$#"
-			count: 1
-			path: app/cdash/public/ajax/expectedinfo.php
-
-		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 2
-			path: app/cdash/public/ajax/expectedinfo.php
-
-		-
-			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, string given\\.$#"
-			count: 1
-			path: app/cdash/public/ajax/expectedinfo.php
-
-		-
 			message: """
 				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
 				04/01/2023$#
