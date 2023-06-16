@@ -67,7 +67,7 @@ class PasswordRotation extends TestCase
 
         // Make sure we get redirected.
         $response = $this->actingAs($this->user)->get('/viewProjects.php');
-        $response->assertRedirect('editUser.php?password_expired=1');
+        $response->assertRedirect('/profile?password_expired=1');
 
         // Fail to change due to re-using the same password.
         $_POST = [
@@ -76,7 +76,7 @@ class PasswordRotation extends TestCase
             'passwd2' => '12345',
             'updatepassword' => 'Update Password',
         ];
-        $response = $this->actingAs($this->user)->post('/editUser.php');
+        $response = $this->actingAs($this->user)->post('/profile');
         $response->assertSee('You have recently used this password');
 
         // Get the current password hash to compare against later.
@@ -95,7 +95,7 @@ class PasswordRotation extends TestCase
             'passwd2' => 'qwert',
             'updatepassword' => 'Update Password',
         ];
-        $response = $this->actingAs($this->user)->post('/editUser.php');
+        $response = $this->actingAs($this->user)->post('/profile');
         $response->assertSee('Your password has been updated');
 
         $_POST = [
@@ -104,7 +104,7 @@ class PasswordRotation extends TestCase
             'passwd2' => 'asdfg',
             'updatepassword' => 'Update Password',
         ];
-        $response = $this->actingAs($this->user)->post('/editUser.php');
+        $response = $this->actingAs($this->user)->post('/profile');
         $response->assertSee('Your password has been updated');
 
         // Make sure the oldest password was deleted since we're only keeping
@@ -123,7 +123,7 @@ class PasswordRotation extends TestCase
             'passwd2' => '12345',
             'updatepassword' => 'Update Password',
         ];
-        $response = $this->actingAs($this->user)->post('/editUser.php');
+        $response = $this->actingAs($this->user)->post('/profile');
         $response->assertSee('Your password has been updated');
     }
 }

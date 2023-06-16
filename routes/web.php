@@ -132,8 +132,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user.php', 'UserController@userPage');
 
     // TODO: (williamjallen) send the POST route to a different function
-    Route::get('/editUser.php', 'UserController@edit');
-    Route::post('/editUser.php', 'UserController@edit');
+    Route::match(['get', 'post'], '/profile', 'UserController@edit');
+    Route::permanentRedirect('/editUser.php', '/profile');
 
     // TODO: (williamjallen) send the POST route to a different function
     Route::get('/subscribeProject.php', 'SubscribeProjectController@subscribeProject');

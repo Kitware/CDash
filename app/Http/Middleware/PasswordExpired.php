@@ -21,7 +21,7 @@ class PasswordExpired
     public function handle($request, Closure $next)
     {
         if (Auth::check()) {
-            $password_expired_path = '/editUser.php';
+            $password_expired_path = '/profile';
             if (!Str::contains(url()->current(), $password_expired_path)) {
                 /** @var User $user */
                 $user = Auth::user();

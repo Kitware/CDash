@@ -16,13 +16,13 @@ class EditUserTestCase extends KWWebTestCase
     {
         //make sure we can't visit the editUser page while logged out
 
-        if (!$this->expectsPageRequiresLogin('/editUser.php')) {
+        if (!$this->expectsPageRequiresLogin('/profile')) {
             return 1;
         }
 
         //make sure we can visit the page while logged in
         $this->login();
-        $content = $this->get($this->url . '/editUser.php');
+        $content = $this->get($this->url . '/profile');
         if (strpos($content, 'My Profile') === false) {
             $this->fail("'My Profile' not found when expected");
             return 1;
@@ -54,7 +54,7 @@ class EditUserTestCase extends KWWebTestCase
         //log in with new email address
         $this->logout();
         $this->login('simpletest2@localhost', 'simpletest');
-        $content = $this->get($this->url . '/editUser.php');
+        $content = $this->get($this->url . '/profile');
 
         // test incorrect old password
         if (!$this->SetFieldByName('oldpasswd', 'incorrect')) {
@@ -118,7 +118,7 @@ class EditUserTestCase extends KWWebTestCase
         $this->login('simpletest2@localhost', '12345');
 
         //change details back so following tests aren't messed up
-        $content = $this->get($this->url . '/editUser.php');
+        $content = $this->get($this->url . '/profile');
         if (!$this->SetFieldByName('fname', 'administrator')) {
             $this->fail('SetFieldByName on first name returned false');
             return 1;
@@ -144,7 +144,7 @@ class EditUserTestCase extends KWWebTestCase
         //log back in with old email address to fix password
         $this->logout();
         $this->login('simpletest@localhost', '12345');
-        $content = $this->get($this->url . '/editUser.php');
+        $content = $this->get($this->url . '/profile');
         if (!$this->SetFieldByName('oldpasswd', '12345')) {
             $this->fail('SetFieldByName on password returned false');
             return 1;
