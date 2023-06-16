@@ -135,6 +135,7 @@ Route::middleware(['auth'])->group(function () {
     // TODO: (williamjallen) send the POST route to a different function
     Route::get('/manageProjectRoles.php', 'ManageProjectRolesController@viewPage');
     Route::post('/manageProjectRoles.php', 'ManageProjectRolesController@viewPage');
+    Route::any('/ajax/finduserproject.php', 'ManageProjectRolesController@ajaxFindUserProject');
 
     // TODO: (williamjallen) send the POST route to a different function
     Route::get('/manageBanner.php', 'ManageBannerController@manageBanner');
