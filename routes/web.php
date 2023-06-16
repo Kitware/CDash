@@ -82,6 +82,15 @@ Route::get('/project/new', 'EditProjectController@create');
 
 Route::get('/project/{id}/testmeasurements', 'ManageMeasurementsController@show');
 
+Route::get('/project/{id}/ctest_configuration', 'CTestConfigurationController@get')->whereNumber('id');
+Route::get('/generateCTestConfig.php', function (Request $request) {
+    $projectid = $request->query('projectid');
+    if (!is_numeric($projectid)) {
+        abort(400, 'Not a valid projectid!');
+    }
+    return redirect("/project/{$projectid}/ctest_configuration", 301);
+});
+
 Route::get('/test/{id}', 'TestController@details');
 Route::get('/testDetails.php', function (Request $request) {
     $buildid = $request->query('build');
@@ -92,8 +101,6 @@ Route::get('/testDetails.php', function (Request $request) {
     }
     abort(404);
 });
-
-Route::get('/generateCTestConfig.php', 'CTestConfigurationController@get');
 
 Route::get('/viewProjects.php', 'ViewProjectsController@viewAllProjects');
 

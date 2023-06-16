@@ -49,7 +49,7 @@ class PubProjectTestCase extends KWWebTestCase
 
     public function testEditProject()
     {
-        $content = $this->get($this->url . "/generateCTestConfig.php?projectid=$this->ProjectId");
+        $content = $this->get($this->url . "/project/$this->ProjectId/ctest_configuration");
         $expected = '## This file should be placed in the root directory of your project.';
         if (!$this->findString($content, $expected)) {
             $this->assertText($content, $expected);

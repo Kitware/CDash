@@ -8,21 +8,15 @@ use Illuminate\View\View;
 
 class CTestConfigurationController extends ProjectController
 {
-    public function get(): View|RedirectResponse|Response
+    public function get(int $id): Response
     {
-        // Checks
-        if (!isset($_GET['projectid']) || !is_numeric($_GET['projectid'])) {
-            abort(400, 'Not a valid projectid!');
-        }
-
-        $this->setProjectById((int) $_GET['projectid']);
-
+        $this->setProjectById($id);
 
         // TODO: (williamjallen) replace this loop with a single query via a new method in the SubProject class.
         $subprojects = [];
-        foreach ($this->project->GetSubProjects() as $id) {
+        foreach ($this->project->GetSubProjects() as $subproject_id) {
             $subproject = new SubProject();
-            $subproject->SetId($id);
+            $subproject->SetId($subproject_id);
             $subproject->Fill();
             $subprojects[] = $subproject;
         }
