@@ -287,7 +287,5 @@ function get_subprojectid()
 
 function echo_error($msg, $status = 400)
 {
-    $response = [];
-    $response['error'] = $msg;
-    json_error_response($response, $status);
+    abort($status, $msg);
 }

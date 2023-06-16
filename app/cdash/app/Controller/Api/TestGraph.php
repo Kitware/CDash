@@ -38,8 +38,7 @@ class TestGraph extends BuildTestApi
     {
         $type = $_GET['type'];
         if (!in_array($type, $this->validTypes)) {
-            json_error_response(['error' => 'Invalid type of graph requested.']);
-            return [];
+            abort(400, 'Invalid type of graph requested.');
         }
 
         $chart_data = [];
@@ -70,7 +69,7 @@ class TestGraph extends BuildTestApi
             case 'measurement':
                 $measurement_name = $_GET['measurementname'];
                 if (!isset($measurement_name) || !is_string($measurement_name)) {
-                    json_error_response(['error' => 'No measurement requested.']);
+                    abort(400, 'No measurement requested.');
                 }
                 $chart_data[] = [
                     'label' => $measurement_name,

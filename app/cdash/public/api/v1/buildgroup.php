@@ -65,7 +65,7 @@ switch ($method) {
 function rest_get($pdo, $projectid)
 {
     if (!isset($_GET['buildgroupid'])) {
-        json_error_response(['error' => 'buildgroupid not specified'], 400);
+        abort(400, 'buildgroupid not specified');
     }
     $buildgroupid = pdo_real_escape_numeric($_GET['buildgroupid']);
 
@@ -134,7 +134,7 @@ function rest_delete()
             isset($wildcard['match']) ? convert_wildcards($wildcard['match']) : '';
         $buildgrouprule->GroupId = $wildcard['buildgroupid'];
         if (!$buildgrouprule->Delete(true)) {
-            json_error_response(['error' => pdo_error()], 500);
+            abort(500, 'Something went wrong...');
         }
     }
 
@@ -160,7 +160,7 @@ function rest_delete()
         }
 
         if (!$buildgrouprule->Delete(true)) {
-            json_error_response(['error' => pdo_error()], 500);
+            abort(500, 'Something went wrong...');
         }
     }
 }
@@ -193,7 +193,7 @@ function rest_post($pdo, $projectid)
         $response['id'] = $BuildGroup->GetId();
         $response['name'] = $BuildGroup->GetName();
         $response['autoremovetimeframe'] = $BuildGroup->GetAutoRemoveTimeFrame();
-        json_error_response($response, $status_code);
+        return response()->json($response, $status_code);
     }
 
     if (isset($_POST['newLayout'])) {
@@ -240,7 +240,7 @@ function rest_post($pdo, $projectid)
         $group = $_POST['group'];
         if ($group['id'] < 1) {
             $error_msg = 'Please select a group for these builds';
-            json_error_response(['error' => $error_msg], 400);
+            abort(400, $error_msg);
         }
 
         $builds = $_POST['builds'];
@@ -277,7 +277,7 @@ function rest_post($pdo, $projectid)
             $buildgrouprule->StartTime = $now;
             $buildgrouprule->EndTime = '1980-01-01 00:00:00';
             if (!$buildgrouprule->Save()) {
-                json_error_response(['error' => 'Error saving rule'], 500);
+                abort(500, 'Error saving rule');
             }
         }
     }
@@ -288,7 +288,7 @@ function rest_post($pdo, $projectid)
         $groupid = $group['id'];
         if ($groupid < 1) {
             $error_msg = 'Please select a BuildGroup to define.';
-            json_error_response(['error' => $error_msg], 400);
+            abort(400, $error_msg);
         }
 
         $nameMatch = convert_wildcards($_POST['nameMatch']);
@@ -301,7 +301,7 @@ function rest_post($pdo, $projectid)
         $buildgrouprule->SiteId = -1;
         $buildgrouprule->StartTime = $now;
         if (!$buildgrouprule->Save()) {
-            json_error_response(['error' => 'Error saving rule'], 500);
+            abort(500, 'Error saving rule');
         }
     }
 
@@ -333,7 +333,7 @@ function rest_post($pdo, $projectid)
         $buildgrouprule->ParentGroupId = $parentgroupid;
         $buildgrouprule->StartTime = $now;
         if (!$buildgrouprule->Save()) {
-            json_error_response(['error' => 'Error saving rule'], 500);
+            abort(500, 'Error saving rule');
         }
 
         // Respond with a JSON representation of this new rule.
@@ -386,7 +386,7 @@ function rest_put($projectid)
             pdo_real_escape_numeric($buildgroup['autoremovetimeframe']));
 
         if (!$BuildGroup->Save()) {
-            json_error_response(['error' => 'Failed to save BuildGroup'], 500);
+            abort(500, 'Failed to save BuildGroup');
         }
     }
 

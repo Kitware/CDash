@@ -30,17 +30,17 @@ if (!function_exists('CDash\Api\v1\BuildProperties\get_defects_for_builds')) {
     function get_defects_for_builds()
     {
         if (!array_key_exists('buildid', $_GET)) {
-            json_error_response('Missing parameter: buildid');
+            abort(400, 'Missing parameter: buildid');
         }
         if (!array_key_exists('defect', $_GET)) {
-            json_error_response('Missing parameter: defect');
+            abort(400, 'Missing parameter: defect');
         }
 
         if (!is_array($_GET['buildid']) || count($_GET['buildid']) < 1) {
-            json_error_response("No builds specified");
+            abort(400, "No builds specified");
         }
         if (!is_array($_GET['defect']) || count($_GET['defect']) < 1) {
-            json_error_response("No defects specified");
+            abort(400, "No defects specified");
         }
 
         $pdo = Database::getInstance()->getPdo();

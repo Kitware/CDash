@@ -211,6 +211,7 @@ function get_request_build($required = true)
  *
  * @param $response
  * @param int $code
+ * @deprecated 15/06/2023 Use abort() to exit cleanly instead.
  */
 function json_error_response($response, $code = 400)
 {

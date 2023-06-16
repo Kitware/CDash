@@ -161,6 +161,7 @@ class System
     /**
      * @param $exit_message
      * @return void
+     * @deprecated 06/15/2023 Use abort() to exit cleanly instead.
      */
     public function system_exit($exit_message = '')
     {

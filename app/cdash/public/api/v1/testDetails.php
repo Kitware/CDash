@@ -33,13 +33,12 @@ $db = Database::getInstance();
 
 $buildtestid = $_GET['buildtestid'];
 if (!isset($buildtestid) || !is_numeric($buildtestid)) {
-    json_error_response(['error' => 'A valid test was not specified.']);
+    abort(400, 'A valid test was not specified.');
 }
 
 $buildtest = BuildTest::where('id', '=', $buildtestid)->first();
 if ($buildtest === null) {
-    json_error_response(['error' => 'test not found'], 404);
-    return;
+    abort(404, 'test not found');
 }
 
 
