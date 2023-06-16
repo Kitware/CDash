@@ -854,7 +854,7 @@ parameters:
 				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 2
+			count: 3
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
@@ -864,7 +864,12 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 2
+			count: 3
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
+			count: 1
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
@@ -17524,24 +17529,6 @@ parameters:
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/viewDynamicAnalysis.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 2
-			path: app/cdash/public/api/v1/viewSubProjects.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewSubProjects.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/viewSubProjects.php
 
 		-
 			message: "#^Call to an undefined method CDash\\\\Middleware\\\\OAuth2\\\\GitHub\\:\\:auth\\(\\)\\.$#"
