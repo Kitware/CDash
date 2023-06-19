@@ -640,7 +640,7 @@ class AdminController extends AbstractController
             AddTableField('site', 'outoforder', 'tinyint(1)', 'smallint', '0');
 
             // Set the database version
-            setVersion();
+            $this->setVersion();
 
             // Put that the upgrade is done in the log
             add_log('Upgrade done.', 'upgrade-2-2');
@@ -750,7 +750,7 @@ class AdminController extends AbstractController
             AddUniqueConstraintToDiffTables();
 
             // Set the database version
-            setVersion();
+            $this->setVersion();
 
             // Put that the upgrade is done in the log
             add_log('Upgrade done.', 'upgrade-2-4');
@@ -829,7 +829,7 @@ class AdminController extends AbstractController
             AddUniqueConstraintToSiteTable('site');
 
             // Set the database version
-            setVersion();
+            $this->setVersion();
 
             // Put that the upgrade is done in the log
             add_log('Upgrade done.', 'upgrade-2-6');
@@ -854,7 +854,7 @@ class AdminController extends AbstractController
             }
 
             // Set the database version
-            setVersion();
+            $this->setVersion();
 
             // Put that the upgrade is done in the log
             add_log('Upgrade done.', 'upgrade-2-8');
@@ -874,7 +874,7 @@ class AdminController extends AbstractController
             Artisan::call('migrate --force');
 
             // Set the database version
-            setVersion();
+            $this->setVersion();
 
             // Put that the upgrade is done in the log
             add_log('Upgrade done.', 'upgrade-3-0');
@@ -1362,7 +1362,7 @@ class AdminController extends AbstractController
                         $xml .= '<db_created>1</db_created>';
 
                         // Set the database version
-                        setVersion();
+                        $this->setVersion();
                     }
                 }
             }
@@ -1375,5 +1375,30 @@ class AdminController extends AbstractController
             'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/install', true),
             'title' => 'Installation'
         ]);
+    }
+
+    /**
+     * Set the CDash version number in the database
+     */
+    private function setVersion(): void
+    {
+        $config = Config::getInstance();
+        $db = Database::getInstance();
+
+        $major = $config->get('CDASH_VERSION_MAJOR');
+        $minor = $config->get('CDASH_VERSION_MINOR');
+        $patch = $config->get('CDASH_VERSION_PATCH');
+
+        $stmt = $db->query('SELECT major FROM version');
+        $version = [$major, $minor, $patch];
+
+        if (pdo_num_rows($stmt) == 0) {
+            $sql = 'INSERT INTO version (major, minor, patch) VALUES (?, ?, ?)';
+        } else {
+            $sql = 'UPDATE version SET major=?, minor=?, patch=?';
+        }
+
+        $stmt = $db->prepare($sql);
+        $db->execute($stmt, $version);
     }
 }

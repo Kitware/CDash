@@ -183,7 +183,7 @@ parameters:
 				#^Call to deprecated function pdo_num_rows\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 2
+			count: 3
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -215,7 +215,7 @@ parameters:
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 1
+			count: 2
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -237,6 +237,14 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
+				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 2
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: """
+				#^Call to deprecated method query\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
@@ -11770,14 +11778,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function pdo_num_rows\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
 				04/01/2023$#
 			"""
@@ -11789,7 +11789,7 @@ parameters:
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 2
+			count: 1
 			path: app/cdash/include/common.php
 
 		-
@@ -11819,14 +11819,6 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 2
-			path: app/cdash/include/common.php
-
-		-
-			message: """
-				#^Call to deprecated method query\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1

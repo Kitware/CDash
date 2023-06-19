@@ -319,31 +319,6 @@ function add_last_sql_error($functionname, $projectid = 0, $buildid = 0, $resour
 }
 
 /**
- * Set the CDash version number in the database
- */
-function setVersion(): void
-{
-    $config = Config::getInstance();
-    $db = Database::getInstance();
-
-    $major = $config->get('CDASH_VERSION_MAJOR');
-    $minor = $config->get('CDASH_VERSION_MINOR');
-    $patch = $config->get('CDASH_VERSION_PATCH');
-
-    $stmt = $db->query('SELECT major FROM version');
-    $version = [$major, $minor, $patch];
-
-    if (pdo_num_rows($stmt) == 0) {
-        $sql = 'INSERT INTO version (major, minor, patch) VALUES (?, ?, ?)';
-    } else {
-        $sql = 'UPDATE version SET major=?, minor=?, patch=?';
-    }
-
-    $stmt = $db->prepare($sql);
-    $db->execute($stmt, $version);
-}
-
-/**
  * TODO: (williamjallen) This function's return type is excessively complex and makes it
  *       difficult to handle.
  *
