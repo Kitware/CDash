@@ -13,6 +13,7 @@ use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -885,7 +886,7 @@ class CoverageController extends BuildController
         ]);
     }
 
-    public function ajaxGetViewCoverage()
+    public function ajaxGetViewCoverage(): JsonResponse
     {
         @set_time_limit(0);
 
@@ -1039,16 +1040,13 @@ class CoverageController extends BuildController
                                 $SQLsearchTerm
                             $limit_sql
                         ", array_merge([$this->project->Id, $this->build->Id], $SQLsearchTermParams, $limit_sql_params));
-        if (false === $coveragefile) {
-            add_log('error: pdo_query failed: ' . pdo_error(),
-                __FILE__, LOG_ERR);
-        }
 
         // Add the coverage type
         $status = (int)($_GET['status'] ?? -1);
 
-        $covfile_array = array();
+        $covfile_array = [];
         foreach ($coveragefile as $coveragefile_array) {
+            $covfile = [];
             $covfile['filename'] = substr($coveragefile_array['fullpath'], strrpos($coveragefile_array['fullpath'], '/') + 1);
             $fullpath = $coveragefile_array['fullpath'];
             // Remove the ./ so that it's cleaner
@@ -1200,11 +1198,8 @@ class CoverageController extends BuildController
                             $SQLsearchTerm
                     ", [$this->project->Id, $this->build->Id]);
 
-            if (false === $coveragefile) {
-                add_log(pdo_error(),
-                    __FILE__, LOG_ERR);
-            }
             foreach ($coveragefile as $coveragefile_array) {
+                $covfile = [];
                 $covfile['filename'] = substr($coveragefile_array['fullpath'], strrpos($coveragefile_array['fullpath'], '/') + 1);
                 $covfile['fullpath'] = $coveragefile_array['fullpath'];
                 $covfile['fileid'] = 0;
@@ -1637,8 +1632,9 @@ class CoverageController extends BuildController
             if ($userid > 0) {
                 $author = '';
                 if (isset($covfile['user'])) {
+                    /** @var User $user */
                     $user = User::where('id', $covfile['user']);
-                    $author = $user->full_name;
+                    $author = $user->getFullNameAttribute();
                 }
                 $row[] = $author;
             }
@@ -1701,7 +1697,7 @@ class CoverageController extends BuildController
         return response()->json(cast_data_for_JSON($output));
     }
 
-    private function sort_filename($a, $b)
+    private function sort_filename($a, $b): int
     {
         if ($a['fullpath'] == $b['fullpath']) {
             return 0;
@@ -1709,7 +1705,7 @@ class CoverageController extends BuildController
         return $a['fullpath'] > $b['fullpath'] ? 1 : -1;
     }
 
-    private function sort_status($a, $b)
+    private function sort_status($a, $b): int
     {
         if ($a['coveragemetric'] == $b['coveragemetric']) {
             return 0;
@@ -1717,7 +1713,7 @@ class CoverageController extends BuildController
         return $a['coveragemetric'] > $b['coveragemetric'] ? 1 : -1;
     }
 
-    private function sort_percentage($a, $b)
+    private function sort_percentage($a, $b): int
     {
         if ($a['percentcoverage'] == $b['percentcoverage']) {
             return 0;
@@ -1725,7 +1721,7 @@ class CoverageController extends BuildController
         return $a['percentcoverage'] > $b['percentcoverage'] ? 1 : -1;
     }
 
-    private function sort_branchpercentage($a, $b)
+    private function sort_branchpercentage($a, $b): int
     {
         if ($a['branchpercentcoverage'] == $b['branchpercentcoverage']) {
             return 0;
@@ -1733,7 +1729,7 @@ class CoverageController extends BuildController
         return $a['branchpercentcoverage'] > $b['branchpercentcoverage'] ? 1 : -1;
     }
 
-    private function sort_lines($a, $b)
+    private function sort_lines($a, $b): int
     {
         if ($a['locuntested'] == $b['locuntested']) {
             return 0;
@@ -1741,7 +1737,7 @@ class CoverageController extends BuildController
         return $a['locuntested'] > $b['locuntested'] ? 1 : -1;
     }
 
-    private function sort_branches($a, $b)
+    private function sort_branches($a, $b): int
     {
         if ($a['branchesuntested'] == $b['branchesuntested']) {
             return 0;
@@ -1749,33 +1745,11 @@ class CoverageController extends BuildController
         return $a['branchesuntested'] > $b['branchesuntested'] ? 1 : -1;
     }
 
-    private function sort_functions($a, $b)
-    {
-        if ($a['functionsuntested'] == $b['functionsuntested']) {
-            return 0;
-        }
-        return $a['functionsuntested'] > $b['functionsuntested'] ? 1 : -1;
-    }
-
-    private function sort_priority($a, $b)
+    private function sort_priority($a, $b): int
     {
         if ($a['priority'] == $b['priority']) {
             return 0;
         }
         return $a['priority'] > $b['priority'] ? 1 : -1;
-    }
-
-    private function sort_user($a, $b)
-    {
-        if (isset($a['user'][0]) && !isset($b['user'][0])) {
-            return 0;
-        }
-        if (!isset($a['user'][0]) && isset($b['user'][0])) {
-            return 1;
-        }
-        if (!isset($a['user'][0]) && !isset($b['user'][0])) {
-            return 0;
-        }
-        return $a['user'][0] < $b['user'][0] ? 1 : 0;
     }
 }
