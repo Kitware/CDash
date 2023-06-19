@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Services\ProjectPermissions;
 use App\Services\TestingDay;
 use CDash\Config;
 use CDash\Database;
@@ -21,7 +20,7 @@ use Illuminate\View\View;
 
 require_once 'include/filterdataFunctions.php';
 
-class CoverageController extends AbstractController
+class CoverageController extends BuildController
 {
     /**
      * TODO: (williamjallen) this function contains legacy XSL templating and should be converted
@@ -936,59 +935,22 @@ class CoverageController extends AbstractController
 
     public function ajaxGetViewCoverage()
     {
-        include_once 'include/api_common.php';
-
         @set_time_limit(0);
 
-        $buildid = pdo_real_escape_numeric($_GET['buildid']);
-        if (!isset($buildid) || !is_numeric($buildid)) {
-            echo 'Not a valid buildid!';
-            return;
-        }
-        $buildid = intval($buildid);
+        $this->setBuildById(intval($_GET['buildid'] ?? -1));
 
-        $userid = 0;
-        if (isset($_GET['userid']) && is_numeric($_GET['userid'])) {
-            $userid = intval($_GET['userid']);
-        }
+        $userid = intval($_GET['userid'] ?? 0);
 
         $db = Database::getInstance();
 
-        // Find the project variables
-        $build = $db->executePreparedSingleRow('SELECT projectid FROM build WHERE id=?', [$buildid]);
-        $projectid = intval($build['projectid']);
-
-        if ($projectid === 0) {
-            echo "This project doesn't exist. Maybe it has been deleted.";
-            exit();
-        }
-
-        $policy = checkUserPolicy($projectid);
-        if ($policy !== true) {
-            return $policy;
-        }
-
-        $project = $db->executePreparedSingleRow('SELECT name, showcoveragecode FROM project WHERE id=?', [$projectid]);
-        if (empty($project) || !can_access_project($projectid)) {
-            echo "This project doesn't exist.";
-            exit();
-        }
-
         $role = 0;
         $user2project = $db->executePreparedSingleRow('
-                    SELECT role
-                    FROM user2project
-                    WHERE userid=? AND projectid=?
-                ', [$userid, $projectid]);
+                            SELECT role
+                            FROM user2project
+                            WHERE userid=? AND projectid=?
+                        ', [Auth::id() ?? 0, $this->project->Id]);
         if (!empty($user2project)) {
             $role = $user2project['role'];
-        }
-
-        $projectname = $project['name'];
-
-        $projectshowcoveragecode = 1;
-        if (!$project['showcoveragecode'] && $role < 2) {
-            $projectshowcoveragecode = 0;
         }
 
         $start = 0;
@@ -996,21 +958,21 @@ class CoverageController extends AbstractController
 
         /* Paging */
         if (isset($_GET['iDisplayStart']) && $_GET['iDisplayLength'] != '-1') {
-            $start = pdo_real_escape_numeric($_GET['iDisplayStart']);
-            $end = pdo_real_escape_numeric($_GET['iDisplayStart']) + pdo_real_escape_numeric($_GET['iDisplayLength']);
+            $start = (int)($_GET['iDisplayStart'] ?? 0);
+            $end = $start + (int)($_GET['iDisplayLength'] ?? 0);
         }
 
         //add columns for branches only if(total_branchsuntested+total_branchstested)>0
         $total_branchsuntested = 0;
         $total_branchstested = 0;
         $coverage_branches = $db->executePreparedSingleRow('
-                         SELECT
-                             sum(branchstested) AS total_branchstested,
-                             sum(branchsuntested) AS total_branchsuntested
-                         FROM coverage
-                         WHERE buildid = ?
-                         GROUP BY buildid
-                     ', [$buildid]);
+                                 SELECT
+                                     sum(branchstested) AS total_branchstested,
+                                     sum(branchsuntested) AS total_branchsuntested
+                                 FROM coverage
+                                 WHERE buildid = ?
+                                 GROUP BY buildid
+                             ', [$this->build->Id]);
         if (!empty($coverage_branches)) {
             $total_branchsuntested = intval($coverage_branches['total_branchsuntested']);
             $total_branchstested = intval($coverage_branches['total_branchstested']);
@@ -1070,14 +1032,16 @@ class CoverageController extends AbstractController
         }
 
         $SQLsearchTerm = '';
+        $SQLsearchTermParams = [];
         if (isset($_GET['sSearch']) && $_GET['sSearch'] != '') {
-            $SQLsearchTerm = " AND cf.fullpath LIKE '%" . htmlspecialchars(pdo_real_escape_string($_GET['sSearch'])) . "%'";
+            $SQLsearchTerm = " AND cf.fullpath LIKE CONCAT('%', ?, '%')";
+            $SQLsearchTermParams[] = htmlspecialchars($_GET['sSearch']);
         }
 
         $SQLDisplayAuthors = '';
         $SQLDisplayAuthor = '';
-        if ($userid) {
-            $SQLDisplayAuthor = ',cfu.userid ';
+        if ($userid > 0) {
+            $SQLDisplayAuthor = ', cfu.userid ';
             $SQLDisplayAuthors = ' LEFT JOIN coveragefile2user AS cfu ON (cfu.fileid=cf.id) ';
         }
 
@@ -1086,47 +1050,65 @@ class CoverageController extends AbstractController
         $filterdata = get_filterdata_from_request();
         $filter_sql = $filterdata['sql'];
         $limit_sql = '';
+        $limit_sql_params = [];
         if ($filterdata['limit'] > 0) {
-            $limit_sql = ' LIMIT ' . $filterdata['limit'];
+            $limit_sql = ' LIMIT ?';
+            $limit_sql_params = [(int) $filterdata['limit']];
         }
 
         if (isset($_GET['dir']) && $_GET['dir'] != '') {
-            $escaped_dir = htmlspecialchars(pdo_real_escape_string($_GET['dir']));
-            $SQLsearchTerm .= " AND (cf.fullpath LIKE '$escaped_dir/%' OR cf.fullpath LIKE './$escaped_dir/%')";
+            $escaped_dir = htmlspecialchars($_GET['dir']);
+            $SQLsearchTerm .= " AND (cf.fullpath LIKE CONCAT(?, '%') OR cf.fullpath LIKE CONCAT('./', ?, '%'))";
+            $SQLsearchTermParams[] = $escaped_dir;
+            $SQLsearchTermParams[] = $escaped_dir;
         }
 
         // Coverage files
-        $coveragefile = $db->executePrepared('SELECT cf.fullpath,c.fileid,' .
-            'c.locuntested,c.loctested,' .
-            'c.branchstested,c.branchsuntested,' .
-            'c.functionstested,c.functionsuntested,' .
-            'cfp.priority ' . $SQLDisplayAuthor . ' ' .
-            'FROM coverage AS c,coveragefile AS cf ' .
-            $SQLDisplayAuthors . ' ' .
-            'LEFT JOIN coveragefilepriority AS cfp ON ' .
-            '(cfp.fullpath=cf.fullpath AND projectid=' . qnum($projectid) . ') ' .
-            "WHERE c.buildid='$buildid' AND cf.id=c.fileid AND c.covered=1 " .
-            $filter_sql . ' ' . $SQLsearchTerm . $limit_sql, []);
+        $coveragefile = $db->executePrepared("
+                            SELECT
+                                cf.fullpath,
+                                c.fileid,
+                                c.locuntested,
+                                c.loctested,
+                                c.branchstested,
+                                c.branchsuntested,
+                                c.functionstested,
+                                c.functionsuntested,
+                                cfp.priority
+                                $SQLDisplayAuthor
+                            FROM
+                                coverage AS c,
+                                coveragefile AS cf
+                            $SQLDisplayAuthors
+                            LEFT JOIN coveragefilepriority AS cfp ON (
+                                cfp.fullpath=cf.fullpath
+                                AND projectid=?
+                            )
+                            WHERE
+                                c.buildid=?
+                                AND cf.id=c.fileid
+                                AND c.covered=1
+                                $filter_sql
+                                $SQLsearchTerm
+                            $limit_sql
+                        ", array_merge([$this->project->Id, $this->build->Id], $SQLsearchTermParams, $limit_sql_params));
         if (false === $coveragefile) {
             add_log('error: pdo_query failed: ' . pdo_error(),
                 __FILE__, LOG_ERR);
         }
 
         // Add the coverage type
-        $status = -1;
-        if (isset($_GET['status'])) {
-            $status = pdo_real_escape_numeric($_GET['status']);
-        }
+        $status = (int)($_GET['status'] ?? -1);
 
         $covfile_array = array();
         foreach ($coveragefile as $coveragefile_array) {
             $covfile['filename'] = substr($coveragefile_array['fullpath'], strrpos($coveragefile_array['fullpath'], '/') + 1);
             $fullpath = $coveragefile_array['fullpath'];
             // Remove the ./ so that it's cleaner
-            if (substr($fullpath, 0, 2) == './') {
+            if (str_starts_with($fullpath, './')) {
                 $fullpath = substr($fullpath, 2);
             }
-            if (isset($_GET['dir']) && $_GET['dir'] != '' && $_GET['dir'] != '.') {
+            if (isset($_GET['dir']) && $_GET['dir'] != '' && $_GET['dir'] !== '.') {
                 $fullpath = substr($fullpath, strlen($_GET['dir']) + 1);
             }
 
@@ -1176,24 +1158,20 @@ class CoverageController extends AbstractController
             }
 
             // Add the priority
-            $CoverageFile2User = new CoverageFile2User();
-            $CoverageFile2User->ProjectId = $projectid;
-            $CoverageFile2User->FullPath = $covfile['fullpath'];
-
             $covfile['priority'] = $coveragefile_array['priority'];
 
             // If the user is logged in we set the users
             if (isset($coveragefile_array['userid'])) {
                 $covfile['user'] = $coveragefile_array['userid'];
             }
-            if ($covfile['coveragemetric'] != 1.0 || $status != -1) {
+            if ($covfile['coveragemetric'] != 1.0 || $status !== -1) {
                 $covfile_array[] = $covfile;
             }
         }
 
 
         // Contruct the directory view
-        if ($status == -1) {
+        if ($status === -1) {
             $directory_array = array();
             foreach ($covfile_array as $covfile) {
                 $fullpath = $covfile['fullpath'];
@@ -1241,7 +1219,7 @@ class CoverageController extends AbstractController
                 $directory_array[$fullpath]['coveragemetric'] = sprintf('%3.2f', $covdir['coveragemetric'] / $covdir['nfiles']);
 
                 // Compute the branch average
-                if ($coveragetype == 'gcov') {
+                if ($coveragetype === 'gcov') {
                     $directory_array[$fullpath]['branchpercentcoverage'] = sprintf('%3.2f', 0);
                     if (($covdir['branchestested'] + $covdir['branchesuntested']) > 0) {
                         $directory_array[$fullpath]['branchpercentcoverage'] = sprintf('%3.2f',
@@ -1273,7 +1251,7 @@ class CoverageController extends AbstractController
                             AND cf.id=c.fileid
                             AND c.covered=0
                             $SQLsearchTerm
-                    ", [$projectid, $buildid]);
+                    ", [$this->project->Id, $this->build->Id]);
 
             if (false === $coveragefile) {
                 add_log(pdo_error(),
@@ -1302,15 +1280,14 @@ class CoverageController extends AbstractController
         }
 
         // Array to return to the datatable
-        $output = array(
+        $output = [
             'sEcho' => intval($_GET['sEcho']),
-            'aaData' => array()
-        );
+            'aaData' => [],
+        ];
 
         usort($covfile_array, [$this, "sort_{$sortby}_{$sortdir}"]);
 
         $ncoveragefiles = 0;
-        $filestatus = -1;
 
         foreach ($covfile_array as $covfile) {
             // Show only the low coverage
@@ -1329,7 +1306,7 @@ class CoverageController extends AbstractController
             } else {
                 $filestatus = 3; // medium
             }
-            if ($covfile['covered'] == 1 && $status == 6) {
+            if ($covfile['covered'] == 1 && $status === 6) {
                 $filestatus = 6; // All
             }
 
@@ -1357,17 +1334,17 @@ class CoverageController extends AbstractController
                 };
             }
 
-            $row = array();
+            $row = [];
 
             // First column (Filename)
             if ($status == -1) {
                 //directory view
 
-                $row[] = '<a href="viewCoverage.php?buildid=' . $buildid . '&#38;status=6&#38;dir=' . $covfile['fullpath'] . '">' . $covfile['fullpath'] . '</a>';
-            } elseif (!$covfile['covered'] || !$projectshowcoveragecode) {
+                $row[] = '<a href="viewCoverage.php?buildid=' . $this->build->Id . '&#38;status=6&#38;dir=' . $covfile['fullpath'] . '">' . $covfile['fullpath'] . '</a>';
+            } elseif (!$covfile['covered'] || !($this->project->ShowCoverageCode || $role >= Project::PROJECT_ADMIN)) {
                 $row[] = $covfile['fullpath'];
             } else {
-                $row[] = '<a href="viewCoverageFile.php?buildid=' . $buildid . '&#38;fileid=' . $covfile['fileid'] . '">' . $covfile['fullpath'] . '</a>';
+                $row[] = '<a href="viewCoverageFile.php?buildid=' . $this->build->Id . '&#38;fileid=' . $covfile['fileid'] . '">' . $covfile['fullpath'] . '</a>';
             }
 
             // Second column (Status)
@@ -1445,7 +1422,7 @@ class CoverageController extends AbstractController
                     }
                     break;
             }
-            $thirdcolumn .= 'style="height: 10px;margin-left:1px; ';
+            $thirdcolumn .= ' style="height: 10px;margin-left:1px; ';
             $thirdcolumn .= 'border-top:1px solid grey; border-top:1px solid grey; ';
             $thirdcolumn .= 'width:' . $roundedpercentage . '%;">';
             $thirdcolumn .= '</div></div><div class="percentvalue" style="position:relative; float:left; margin-left:10px">' . $covfile['percentcoverage'] . '%</div></div>';
@@ -1496,7 +1473,7 @@ class CoverageController extends AbstractController
                     $fourthcolumn .= $covfile['locuntested'] . '/' . $totalloc . '</span>';
                 }
                 $row[] = $fourthcolumn;
-            } elseif ($coveragetype == 'bullseye') {
+            } elseif ($coveragetype === 'bullseye') {
                 $fourthcolumn = '<span';
                 // branches
                 if ($covfile['covered'] == 0) {
@@ -1591,7 +1568,7 @@ class CoverageController extends AbstractController
             }
 
             //Next column (Branch Percentage)
-            if ($coveragetype == 'gcov' && ($total_branchstested + $total_branchsuntested) > 0) {
+            if ($coveragetype === 'gcov' && ($total_branchstested + $total_branchsuntested) > 0) {
                 $nextcolumn = '<div style="position:relative; width: 190px;">
                    <div style="position:relative; float:left;
                    width: 123px; height: 12px; background: #bdbdbd url(\'img/progressbar.gif\') top left no-repeat;">
@@ -1717,16 +1694,16 @@ class CoverageController extends AbstractController
                 $fileid = $covfile['fileid'];
                 $labels = '';
                 $coveragelabels = $db->executePrepared('
-                              SELECT text
-                              FROM
-                                  label,
-                                  label2coveragefile
-                              WHERE
-                                  label.id=label2coveragefile.labelid
-                                  AND label2coveragefile.coveragefileid=?
-                                  AND label2coveragefile.buildid=?
-                              ORDER BY text ASC
-                          ', [intval($fileid), $buildid]);
+                                      SELECT text
+                                      FROM
+                                          label,
+                                          label2coveragefile
+                                      WHERE
+                                          label.id=label2coveragefile.labelid
+                                          AND label2coveragefile.coveragefileid=?
+                                          AND label2coveragefile.buildid=?
+                                      ORDER BY text ASC
+                                  ', [intval($fileid), $this->build->Id]);
                 foreach ($coveragelabels as $coveragelabels_array) {
                     if ($labels != '') {
                         $labels .= ', ';
@@ -1914,11 +1891,11 @@ class CoverageController extends AbstractController
 
     private function sort_user_asc($a, $b)
     {
-        sort_user($a, $b);
+        $this->sort_user($a, $b);
     }
 
     private function sort_user_desc($a, $b)
     {
-        sort_user($a, $b);
+        $this->sort_user($a, $b);
     }
 }
