@@ -420,14 +420,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function pdo_real_escape_numeric\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
 				04/01/2023$#
 			"""
@@ -447,7 +439,7 @@ parameters:
 				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 13
+			count: 9
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -457,7 +449,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 7
+			count: 6
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -553,6 +545,11 @@ parameters:
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:viewCoverage\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 2
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:viewCoverageFile\\(\\) throws checked exception Illuminate\\\\Database\\\\Eloquent\\\\ModelNotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-

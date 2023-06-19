@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Site;
 use App\Models\User;
 use App\Services\TestingDay;
 use CDash\Config;
@@ -21,7 +22,7 @@ use Illuminate\View\View;
 
 require_once 'include/filterdataFunctions.php';
 
-class CoverageController extends BuildController
+class CoverageController extends AbstractBuildController
 {
     /**
      * TODO: (williamjallen) this function contains legacy XSL templating and should be converted
@@ -723,60 +724,16 @@ class CoverageController extends BuildController
 
     public function viewCoverageFile(): View
     {
-        @$buildid = $_GET['buildid'];
-        if ($buildid != null) {
-            $buildid = pdo_real_escape_numeric($buildid);
-        }
-        @$fileid = $_GET['fileid'];
-        if ($fileid != null) {
-            $fileid = pdo_real_escape_numeric($fileid);
-        }
+        $this->setBuildById(intval($_GET['buildid'] ?? 0));
+
+        @$fileid = intval($_GET['fileid'] ?? 0);
+
         @$date = $_GET['date'];
         if ($date != null) {
             $date = htmlspecialchars(pdo_real_escape_string($date));
         }
 
-        // Checks
-        if (!isset($buildid) || !is_numeric($buildid)) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => "Not a valid buildid!"
-            ]);
-        }
-
-        @$userid = Auth::id();
-        if (!isset($userid)) {
-            $userid = 0;
-        }
-
         $db = Database::getInstance();
-
-        $build_array = $db->executePreparedSingleRow('
-                   SELECT starttime, projectid FROM build WHERE id=?
-               ', [intval($buildid)]);
-        $projectid = intval($build_array['projectid']);
-        if ($projectid === 0) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => "This build doesn't exist. Maybe it has been deleted."
-            ]);
-        }
-
-        checkUserPolicy($projectid);
-
-        $project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid]);
-        if (empty($project_array)) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => "This project doesn't exist."
-            ]);
-        }
-
-        $projectname = $project_array['name'];
-
-        $project = new Project();
-        $project->Id = $projectid;
-        $project->Fill();
 
         $role = 0;
         $user2project = $db->executePreparedSingleRow('
@@ -785,29 +742,23 @@ class CoverageController extends BuildController
                     WHERE
                         userid=?
                         AND projectid=?
-                ', [intval($userid), $projectid]);
+                ', [intval(Auth::id() ?? 0), $this->project->Id]);
         if (!empty($user2project)) {
             $role = $user2project['role'];
         }
-        if (!$project_array['showcoveragecode'] && $role < 2) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => "This project doesn't allow display of coverage code. Contact the administrator of the project."
-            ]);
+        if (!$this->project->ShowCoverageCode && $role < 2) {
+            abort(403, "This project doesn't allow display of coverage code. Contact the administrator of the project.");
         }
 
         $xml = begin_XML_for_XSLT();
-        $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
+        $xml .= get_cdash_dashboard_xml_by_name($this->project->Name, $date);
 
         // Build
         $xml .= '<build>';
-        $build_array = $db->executePreparedSingleRow('SELECT * FROM build WHERE id=?', [intval($buildid)]);
-        $siteid = $build_array['siteid'];
-        $site_array = $db->executePreparedSingleRow('SELECT name FROM site WHERE id=?', [intval($siteid)]);
-        $xml .= add_XML_value('site', $site_array['name']);
-        $xml .= add_XML_value('buildname', $build_array['name']);
-        $xml .= add_XML_value('buildid', $build_array['id']);
-        $xml .= add_XML_value('buildtime', $build_array['starttime']);
+        $xml .= add_XML_value('site', Site::findOrFail($this->build->SiteId)->name);
+        $xml .= add_XML_value('buildname', $this->build->Name);
+        $xml .= add_XML_value('buildid', $this->build->Id);
+        $xml .= add_XML_value('buildtime', $this->build->StartTime);
         $xml .= '</build>';
 
         // Load coverage file.
@@ -824,7 +775,7 @@ class CoverageController extends BuildController
 
         // Load the coverage info.
         $log = new CoverageFileLog();
-        $log->BuildId = $buildid;
+        $log->BuildId = $this->build->Id;
         $log->FileId = $fileid;
         $log->Load();
 
@@ -881,7 +832,7 @@ class CoverageController extends BuildController
         return view('cdash', [
             'xsl' => true,
             'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/viewCoverageFile', true),
-            'project' => $project,
+            'project' => $this->project,
             'title' => 'Coverage for ' . $coverageFile->FullPath,
         ]);
     }
