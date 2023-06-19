@@ -373,10 +373,7 @@ class CoverageController extends BuildController
     {
         @set_time_limit(0);
 
-        @$buildid = $_GET['buildid'];
-        if ($buildid != null) {
-            $buildid = intval($buildid);
-        }
+        $this->setBuildById(intval($_GET['buildid'] ?? -1));
 
         @$date = $_GET['date'];
         if ($date != null) {
@@ -389,14 +386,6 @@ class CoverageController extends BuildController
             $filtercount = 0;
         }
 
-        // Checks
-        if (!isset($buildid) || !is_numeric($buildid)) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Not a valid buildid!'
-            ]);
-        }
-
         @$userid = Auth::id();
         if (!isset($userid)) {
             $userid = 0;
@@ -404,81 +393,43 @@ class CoverageController extends BuildController
 
         $db = Database::getInstance();
 
-
-        $build_array = $db->executePreparedSingleRow('
-                   SELECT
-                       b.starttime,
-                       b.projectid,
-                       b.siteid,
-                       b.type,
-                       b.name,
-                       sp.groupid
-                   FROM build AS b
-                   LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
-                   LEFT JOIN subproject AS sp ON (sp2b.subprojectid = sp.id)
-                   WHERE b.id=?
-               ', [intval($buildid)]);
-        $projectid = $build_array['projectid'];
-
-        if (!isset($projectid) || $projectid == 0 || !is_numeric($projectid)) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => "This project doesn't exist. Maybe it has been deleted."
-            ]);
-        }
-
-        $policy = checkUserPolicy($projectid);
-        if ($policy !== true) {
-            return $policy;
-        }
-
-        $project = new Project();
-        $project->Id = $projectid;
-        $project->Fill();
-        if (!$project->Exists()) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => "This project doesn't exist."
-            ]);
-        }
-
         $role = 0;
         $user2project = $db->executePreparedSingleRow('
-                    SELECT role
-                    FROM user2project
-                    WHERE userid=? AND projectid=?
-                ', [intval($userid), intval($projectid)]);
+                            SELECT role
+                            FROM user2project
+                            WHERE userid=? AND projectid=?
+                        ', [intval($userid), intval($this->project->Id)]);
         if (!empty($user2project)) {
             $role = $user2project['role'];
         }
 
         $projectshowcoveragecode = 1;
-        if (!$project->ShowCoverageCode && $role < 2) {
+        if (!$this->project->ShowCoverageCode && $role < 2) {
             $projectshowcoveragecode = 0;
         }
 
         $xml = begin_XML_for_XSLT();
-        $xml .= get_cdash_dashboard_xml_by_name($project->Name, $date);
-        $xml .= '<buildid>' . $buildid . '</buildid>';
+        $xml .= get_cdash_dashboard_xml_by_name($this->project->Name, $date);
+        $xml .= '<buildid>' . $this->build->Id . '</buildid>';
 
-        $threshold = $project->CoverageThreshold;
-        if ($build_array['groupid'] > 0) {
+        $threshold = $this->project->CoverageThreshold;
+        if ($this->build->GroupId > 0) {
             $row = $db->executePreparedSingleRow('
-               SELECT coveragethreshold
-               FROM subprojectgroup
-               WHERE projectid=? AND id=?
-           ', [intval($projectid), intval($build_array['groupid'])]);
+                       SELECT coveragethreshold
+                       FROM subprojectgroup
+                       WHERE projectid=? AND id=?
+                   ', [intval($this->project->Id), intval($this->build->GroupId)]);
             if (!empty($row) && isset($row['coveragethreshold'])) {
                 $threshold = intval($row['coveragethreshold']);
             }
         }
 
-        $date = TestingDay::get($project, $build_array['starttime']);
+        $date = TestingDay::get($this->project, $this->build->StartTime);
         $xml .= '<menu>';
-        $xml .= add_XML_value('back', 'index.php?project=' . urlencode($project->Name) . "&date=$date");
+        $xml .= add_XML_value('back', 'index.php?project=' . urlencode($this->project->Name) . "&date=$date");
 
         $build = new Build();
-        $build->Id = $buildid;
+        $build->Id = $this->build->Id;
         $previous_buildid = $build->GetPreviousBuildId();
         $current_buildid = $build->GetCurrentBuildId();
         $next_buildid = $build->GetNextBuildId();
@@ -506,17 +457,17 @@ class CoverageController extends BuildController
         // coverage
         $xml .= '<coverage>';
         $coverage_array = $db->executePreparedSingleRow('
-                      SELECT
-                          sum(loctested) as loctested,
-                          sum(locuntested) as locuntested,
-                          sum(branchstested) as branchstested,
-                          sum(branchsuntested) as branchsuntested
-                      FROM coverage
-                      WHERE buildid=?
-                      GROUP BY buildid
-                  ', [intval($buildid)]);
+                              SELECT
+                                  sum(loctested) as loctested,
+                                  sum(locuntested) as locuntested,
+                                  sum(branchstested) as branchstested,
+                                  sum(branchsuntested) as branchsuntested
+                              FROM coverage
+                              WHERE buildid=?
+                              GROUP BY buildid
+                          ', [intval($this->build->Id)]);
 
-        $xml .= add_XML_value('starttime', date('l, F d Y', strtotime($build_array['starttime'])));
+        $xml .= add_XML_value('starttime', date('l, F d Y', strtotime($this->build->StartTime)));
         $xml .= add_XML_value('loctested', $coverage_array['loctested']);
         $xml .= add_XML_value('locuntested', $coverage_array['locuntested']);
 
@@ -538,18 +489,18 @@ class CoverageController extends BuildController
         // Only execute the label-related queries if labels are being
         // displayed:
         //
-        if ($project->DisplayLabels) {
+        if ($this->project->DisplayLabels) {
             // Get the set of labels involved:
             //
             $labels = array();
 
             $covlabels = $db->executePrepared('
-                     SELECT DISTINCT id, text
-                     FROM label, label2coveragefile
-                     WHERE
-                         label.id=label2coveragefile.labelid
-                         AND label2coveragefile.buildid=?
-                 ', [intval($buildid)]);
+                             SELECT DISTINCT id, text
+                             FROM label, label2coveragefile
+                             WHERE
+                                 label.id=label2coveragefile.labelid
+                                 AND label2coveragefile.buildid=?
+                         ', [intval($this->build->Id)]);
             foreach ($covlabels as $row) {
                 $labels[$row['id']] = $row['text'];
             }
@@ -562,16 +513,16 @@ class CoverageController extends BuildController
 
                 foreach ($labels as $id => $label) {
                     $row = $db->executePreparedSingleRow('
-                       SELECT
-                           SUM(loctested) AS loctested,
-                           SUM(locuntested) AS locuntested
-                       FROM label2coveragefile, coverage
-                       WHERE
-                           label2coveragefile.labelid=?
-                           AND label2coveragefile.buildid=?
-                           AND coverage.buildid=label2coveragefile.buildid
-                           AND coverage.fileid=label2coveragefile.coveragefileid
-                   ', [intval($id), intval($buildid)]);
+                               SELECT
+                                   SUM(loctested) AS loctested,
+                                   SUM(locuntested) AS locuntested
+                               FROM label2coveragefile, coverage
+                               WHERE
+                                   label2coveragefile.labelid=?
+                                   AND label2coveragefile.buildid=?
+                                   AND coverage.buildid=label2coveragefile.buildid
+                                   AND coverage.fileid=label2coveragefile.coveragefileid
+                           ', [intval($id), intval($this->build->Id)]);
 
                     $loctested = intval($row['loctested']);
                     $locuntested = intval($row['locuntested']);
@@ -588,48 +539,48 @@ class CoverageController extends BuildController
         }
 
         $coveredfiles = $db->executePreparedSingleRow("
-                    SELECT count(covered) AS c
-                    FROM coverage
-                    WHERE buildid=? AND covered='1'
-                ", [intval($buildid)]);
+                            SELECT count(covered) AS c
+                            FROM coverage
+                            WHERE buildid=? AND covered='1'
+                        ", [intval($this->build->Id)]);
         $ncoveredfiles = intval($coveredfiles['c']);
 
         $files = $db->executePreparedSingleRow('
-             SELECT count(covered) AS c
-             FROM coverage
-             WHERE buildid=?
-         ', [intval($buildid)]);
+                     SELECT count(covered) AS c
+                     FROM coverage
+                     WHERE buildid=?
+                 ', [intval($this->build->Id)]);
         $nfiles = intval($files['c']);
 
         $xml .= add_XML_value('totalcovered', $ncoveredfiles);
         $xml .= add_XML_value('totalfiles', $nfiles);
-        $xml .= add_XML_value('buildid', $buildid);
+        $xml .= add_XML_value('buildid', $this->build->Id);
         $xml .= add_XML_value('userid', $userid);
 
         $xml .= add_XML_value('showcoveragecode', $projectshowcoveragecode);
-        $xml .= add_XML_value('displaylabels', $project->DisplayLabels);
+        $xml .= add_XML_value('displaylabels', $this->project->DisplayLabels);
 
         $nsatisfactorycoveredfiles = 0;
         $coveragetype = 'gcov'; // default coverage to avoid warning
 
         // Coverage files
         $coveragefile = $db->executePrepared('
-                    SELECT
-                        c.locuntested,
-                        c.loctested,
-                        c.branchstested,
-                        c.branchsuntested,
-                        c.functionstested,
-                        c.functionsuntested,
-                        cf.fullpath
-                    FROM
-                        coverage AS c,
-                        coveragefile AS cf
-                    WHERE
-                        c.buildid=?
-                        AND c.covered=1
-                        AND c.fileid=cf.id
-                ', [intval($buildid)]);
+                            SELECT
+                                c.locuntested,
+                                c.loctested,
+                                c.branchstested,
+                                c.branchsuntested,
+                                c.functionstested,
+                                c.functionsuntested,
+                                cf.fullpath
+                            FROM
+                                coverage AS c,
+                                coveragefile AS cf
+                            WHERE
+                                c.buildid=?
+                                AND c.covered=1
+                                AND c.fileid=cf.id
+                        ', [intval($this->build->Id)]);
 
         $directories = array();
         $covfile_array = array();
@@ -702,8 +653,9 @@ class CoverageController extends BuildController
                     WHERE
                         c.buildid=?
                         AND c.covered=0
-                ', [intval($buildid)]);
+                ', [intval($this->build->Id)]);
         foreach ($coveragefile as $coveragefile_array) {
+            // TODO: (williamjallen) This loop doesn't really make sense...
             $covfile['covered'] = 0;
             $covfile['coveragemetric'] = 0;
             $covfile_array[] = $covfile;
@@ -763,7 +715,7 @@ class CoverageController extends BuildController
         return view('cdash', [
             'xsl' => true,
             'xsl_content' => generate_XSLT($xml, 'viewCoverage', true),
-            'project' => $project,
+            'project' => $this->project,
             'title' => 'Coverage'
         ]);
     }
