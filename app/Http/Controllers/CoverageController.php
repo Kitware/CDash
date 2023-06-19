@@ -1026,11 +1026,6 @@ class CoverageController extends BuildController
             }
         }
 
-        $sortdir = 'asc';
-        if (isset($_GET['sSortDir_0'])) {
-            $sortdir = $_GET['sSortDir_0'];
-        }
-
         $SQLsearchTerm = '';
         $SQLsearchTermParams = [];
         if (isset($_GET['sSearch']) && $_GET['sSearch'] != '') {
@@ -1285,7 +1280,14 @@ class CoverageController extends BuildController
             'aaData' => [],
         ];
 
-        usort($covfile_array, [$this, "sort_{$sortby}_{$sortdir}"]);
+        $sortdir = 'asc';
+        if (isset($_GET['sSortDir_0'])) {
+            $sortdir = $_GET['sSortDir_0'];
+        }
+        usort($covfile_array, [$this, "sort_{$sortby}"]);
+        if ($sortdir === 'desc') {
+            $covfile_array = array_reverse($covfile_array);
+        }
 
         $ncoveragefiles = 0;
 
@@ -1747,7 +1749,7 @@ class CoverageController extends BuildController
         return response()->json(cast_data_for_JSON($output));
     }
 
-    private function sort_filename_asc($a, $b)
+    private function sort_filename($a, $b)
     {
         if ($a['fullpath'] == $b['fullpath']) {
             return 0;
@@ -1755,15 +1757,7 @@ class CoverageController extends BuildController
         return $a['fullpath'] > $b['fullpath'] ? 1 : -1;
     }
 
-    private function sort_filename_desc($a, $b)
-    {
-        if ($a['fullpath'] == $b['fullpath']) {
-            return 0;
-        }
-        return $a['fullpath'] > $b['fullpath'] ? -1 : 1;
-    }
-
-    private function sort_status_asc($a, $b)
+    private function sort_status($a, $b)
     {
         if ($a['coveragemetric'] == $b['coveragemetric']) {
             return 0;
@@ -1771,15 +1765,7 @@ class CoverageController extends BuildController
         return $a['coveragemetric'] > $b['coveragemetric'] ? 1 : -1;
     }
 
-    private function sort_status_desc($a, $b)
-    {
-        if ($a['coveragemetric'] == $b['coveragemetric']) {
-            return 0;
-        }
-        return $a['coveragemetric'] > $b['coveragemetric'] ? -1 : 1;
-    }
-
-    private function sort_percentage_asc($a, $b)
+    private function sort_percentage($a, $b)
     {
         if ($a['percentcoverage'] == $b['percentcoverage']) {
             return 0;
@@ -1787,15 +1773,7 @@ class CoverageController extends BuildController
         return $a['percentcoverage'] > $b['percentcoverage'] ? 1 : -1;
     }
 
-    private function sort_percentage_desc($a, $b)
-    {
-        if ($a['percentcoverage'] == $b['percentcoverage']) {
-            return 0;
-        }
-        return $a['percentcoverage'] > $b['percentcoverage'] ? -1 : 1;
-    }
-
-    private function sort_branchpercentage_asc($a, $b)
+    private function sort_branchpercentage($a, $b)
     {
         if ($a['branchpercentcoverage'] == $b['branchpercentcoverage']) {
             return 0;
@@ -1803,15 +1781,7 @@ class CoverageController extends BuildController
         return $a['branchpercentcoverage'] > $b['branchpercentcoverage'] ? 1 : -1;
     }
 
-    private function sort_branchpercentage_desc($a, $b)
-    {
-        if ($a['branchpercentcoverage'] == $b['branchpercentcoverage']) {
-            return 0;
-        }
-        return $a['branchpercentcoverage'] > $b['branchpercentcoverage'] ? -1 : 1;
-    }
-
-    private function sort_lines_asc($a, $b)
+    private function sort_lines($a, $b)
     {
         if ($a['locuntested'] == $b['locuntested']) {
             return 0;
@@ -1819,15 +1789,7 @@ class CoverageController extends BuildController
         return $a['locuntested'] > $b['locuntested'] ? 1 : -1;
     }
 
-    private function sort_lines_desc($a, $b)
-    {
-        if ($a['locuntested'] == $b['locuntested']) {
-            return 0;
-        }
-        return $a['locuntested'] > $b['locuntested'] ? -1 : 1;
-    }
-
-    private function sort_branches_asc($a, $b)
+    private function sort_branches($a, $b)
     {
         if ($a['branchesuntested'] == $b['branchesuntested']) {
             return 0;
@@ -1835,15 +1797,7 @@ class CoverageController extends BuildController
         return $a['branchesuntested'] > $b['branchesuntested'] ? 1 : -1;
     }
 
-    private function sort_branches_desc($a, $b)
-    {
-        if ($a['branchesuntested'] == $b['branchesuntested']) {
-            return 0;
-        }
-        return $a['branchesuntested'] > $b['branchesuntested'] ? -1 : 1;
-    }
-
-    private function sort_functions_asc($a, $b)
+    private function sort_functions($a, $b)
     {
         if ($a['functionsuntested'] == $b['functionsuntested']) {
             return 0;
@@ -1851,28 +1805,12 @@ class CoverageController extends BuildController
         return $a['functionsuntested'] > $b['functionsuntested'] ? 1 : -1;
     }
 
-    private function sort_functions_desc($a, $b)
-    {
-        if ($a['functionsuntested'] == $b['functionsuntested']) {
-            return 0;
-        }
-        return $a['functionsuntested'] > $b['functionsuntested'] ? -1 : 1;
-    }
-
-    private function sort_priority_asc($a, $b)
+    private function sort_priority($a, $b)
     {
         if ($a['priority'] == $b['priority']) {
             return 0;
         }
         return $a['priority'] > $b['priority'] ? 1 : -1;
-    }
-
-    private function sort_priority_desc($a, $b)
-    {
-        if ($a['priority'] == $b['priority']) {
-            return 0;
-        }
-        return $a['priority'] > $b['priority'] ? -1 : 1;
     }
 
     private function sort_user($a, $b)
@@ -1887,15 +1825,5 @@ class CoverageController extends BuildController
             return 0;
         }
         return $a['user'][0] < $b['user'][0] ? 1 : 0;
-    }
-
-    private function sort_user_asc($a, $b)
-    {
-        $this->sort_user($a, $b);
-    }
-
-    private function sort_user_desc($a, $b)
-    {
-        $this->sort_user($a, $b);
     }
 }
