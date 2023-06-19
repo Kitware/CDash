@@ -157,6 +157,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/editSite.php', 'SiteController@editSite');
     Route::post('/editSite.php', 'SiteController@editSite');
 
+    Route::get('/ajax/buildnote.php', 'BuildController@ajaxBuildNote');
+
     Route::middleware(['admin'])->group(function () {
         Route::get('/authtokens/manage', 'AuthTokenController@manage');
 
