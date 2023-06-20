@@ -1,61 +1,59 @@
 <template>
-  <nav
+  <ul
     v-if="showNav"
-    class="projectnav clearfix"
+    class="projectnav_controls clearfix"
   >
-    <ul class="projectnav_controls clearfix">
-      <li
-        id="header-nav-previous-btn"
-        :class="previousClass"
-      >
-        <a :href="previous">
-          <svg
-            id="i-chevron-left"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 32 32"
-            width="8"
-            height="8"
-            fill="none"
-            stroke="currentcolor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="4"
-          >
-            <path d="M20 30 L8 16 20 2" />
-          </svg>
-          PREV
-        </a>
-      </li>
-      <li
-        id="header-nav-current-btn"
-        :class="currentClass"
-      >
-        <a :href="current">CURRENT</a>
-      </li>
-      <li
-        id="header-nav-next-btn"
-        :class="nextClass"
-      >
-        <a :href="next">
-          NEXT
-          <svg
-            id="i-chevron-right"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 32 32"
-            width="8"
-            height="8"
-            fill="none"
-            stroke="currentcolor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="4"
-          >
-            <path d="M12 30 L24 16 12 2" />
-          </svg>
-        </a>
-      </li>
-    </ul>
-  </nav>
+    <li
+      id="header-nav-previous-btn"
+      :class="previousClass"
+    >
+      <a :href="previous">
+        <svg
+          id="i-chevron-left"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 32 32"
+          width="8"
+          height="8"
+          fill="none"
+          stroke="currentcolor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="4"
+        >
+          <path d="M20 30 L8 16 20 2" />
+        </svg>
+        PREV
+      </a>
+    </li>
+    <li
+      id="header-nav-current-btn"
+      :class="currentClass"
+    >
+      <a :href="current">CURRENT</a>
+    </li>
+    <li
+      id="header-nav-next-btn"
+      :class="nextClass"
+    >
+      <a :href="next">
+        NEXT
+        <svg
+          id="i-chevron-right"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 32 32"
+          width="8"
+          height="8"
+          fill="none"
+          stroke="currentcolor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="4"
+        >
+          <path d="M12 30 L24 16 12 2" />
+        </svg>
+      </a>
+    </li>
+  </ul>
 </template>
 
 <script>

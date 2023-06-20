@@ -65,11 +65,10 @@ $hideRegistration = config('auth.user_registration_form_enabled') === false;
             </span>
         </div>
 
-
-        @if(isset($angular) && $angular === true)
-            @verbatim
-                <div ng-if="cdash.menu.previous || cdash.menu.current || cdash.menu.next" class="projectnav clearfix">
-                    <ul class="projectnav_controls clearfix">
+        <nav class="projectnav clearfix">
+            @if(isset($angular) && $angular === true)
+                @verbatim
+                    <ul ng-if="cdash.menu.previous || cdash.menu.current || cdash.menu.next" class="projectnav_controls clearfix">
                         <li class="btnprev">
                             <a ng-if="cdash.menu.previous"
                                ng-href="{{::cdash.menu.previous}}{{::cdash.filterurl}}">Prev</a>
@@ -87,14 +86,11 @@ $hideRegistration = config('auth.user_registration_form_enabled') === false;
                             </a>
                         </li>
                     </ul>
-                </div>
-
-            @endverbatim
-        @elseif(isset($vue) && $vue === true)
-            <header-nav></header-nav>
-        @else {{-- Put a dummy element here to fill the space --}}
-            <div class="projectnav"></div>
-        @endif
+                @endverbatim
+            @elseif(isset($vue) && $vue === true)
+                <header-nav></header-nav>
+            @endif
+        </nav>
 
 
         @if(isset($angular) && $angular === true)

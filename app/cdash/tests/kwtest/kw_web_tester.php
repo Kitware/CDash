@@ -577,7 +577,7 @@ class KWWebTestCase extends WebTestCase
             $response = $client->request('GET', "{$this->url}/login");
             $html = "{$response->getBody()}";
             $dom = new \DOMDocument();
-            $dom->loadHTML($html);
+            @$dom->loadHTML($html);
             $token = $dom->getElementById('csrf-token')
                 ->getAttribute('value');
 
