@@ -120,6 +120,8 @@ Route::get('/buildOverview.php', 'BuildController@buildOverview');
 Route::get('/buildProperties.php', 'BuildController@buildProperties');
 
 Route::get('/viewSubProjectDependenciesGraph.php', 'SubProjectController@dependenciesGraph');
+// TODO: (williamjallen) Replace this /ajax route with an equivalent /api route
+Route::get('/ajax/getsubprojectdependencies.php', 'SubProjectController@ajaxDependenciesGraph');
 
 Route::get('/viewSubProjectDependencies.php', 'SubProjectController@dependencies');
 
