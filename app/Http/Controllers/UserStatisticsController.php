@@ -5,7 +5,7 @@ use App\Models\User;
 use App\Services\PageTimer;
 use Illuminate\Http\JsonResponse;
 
-class UserStatisticsController extends ProjectController
+class UserStatisticsController extends AbstractProjectController
 {
     public function api(): JsonResponse
     {

@@ -5,7 +5,7 @@ use App\Services\TestingDay;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Gate;
 
-abstract class ProjectController extends AbstractController
+abstract class AbstractProjectController extends AbstractController
 {
     protected string $date;
     protected Project $project;

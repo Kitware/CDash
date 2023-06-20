@@ -8,7 +8,7 @@ use CDash\Model\SubProject;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
-class SubProjectController extends ProjectController
+class SubProjectController extends AbstractProjectController
 {
     public function dependencies(): View|RedirectResponse
     {
