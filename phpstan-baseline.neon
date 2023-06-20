@@ -953,6 +953,30 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
+			message: """
+				#^Call to deprecated function get_link_identifier\\(\\)\\:
+				04/22/2023$#
+			"""
+			count: 1
+			path: app/Http/Controllers/UserStatisticsController.php
+
+		-
+			message: """
+				#^Call to deprecated function pdo_execute\\(\\)\\:
+				v2\\.5\\.0 01/22/2018$#
+			"""
+			count: 1
+			path: app/Http/Controllers/UserStatisticsController.php
+
+		-
+			message: """
+				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
+				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/Http/Controllers/UserStatisticsController.php
+
+		-
 			message: "#^PHPDoc type array of property App\\\\Http\\\\Kernel\\:\\:\\$middleware is not the same as PHPDoc type array\\<int, string\\> of overridden property Illuminate\\\\Foundation\\\\Http\\\\Kernel\\:\\:\\$middleware\\.$#"
 			count: 1
 			path: app/Http/Kernel.php
@@ -17430,30 +17454,6 @@ parameters:
 			message: "#^Variable \\$testtimemaxstatus might not be defined\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/testSummary.php
-
-		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/userStatistics.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/userStatistics.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/userStatistics.php
 
 		-
 			message: """
