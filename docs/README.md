@@ -1,4 +1,5 @@
 * [Installation guide](install.md)
 * [Docker instructions](docker.md)
 * [Authentication options](authentication.md)
+* [Submission parsing](submissions.md)
 * [Test measurements](test_measurements.md)
