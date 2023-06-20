@@ -15,7 +15,7 @@
               <span class="glyphicon"
                    ng-click="directory.hidden = !directory.hidden"
                    ng-class="{'glyphicon-chevron-down': !directory.hidden, 'glyphicon-chevron-right': directory.hidden}"></span>
-              {{::directory.name}}
+              <tt>{{::directory.name}}</tt>
             </div>
           </div>
           <div ng-show="!directory.hidden"
@@ -25,11 +25,11 @@
               <div class="col-md-12 col-md-offset-2">
                 <span ng-if="::file.diffurl">
                   <a ng-href="{{::file.diffurl}}">
-                    <span>{{::file.filename}} Revision: {{::file.revision}}</span>
+                    <tt>{{::file.filename}}</tt> Revision: <tt>{{::file.revision}}</tt>
                   </a>
                 </span>
                 <span ng-if="::!file.diffurl">
-                  <span>{{::file.filename}} Revision: {{::file.revision}}</span>
+                  <tt>{{::file.filename}}</tt> Revision: <tt>{{::file.revision}}</tt>
                 </span>
                 <span ng-if="::file.author">
                   by
@@ -43,9 +43,7 @@
               </div>
             </div>
             <div class="row spacer-bottom">
-              <div class="col-md-12 col-md-offset-2">
-                {{::file.log}}
-              </div>
+              <pre class="col-md-10 col-md-offset-2" style="white-space: pre-wrap;">{{::file.log}}</pre>
             </div>
           </div>
         </div>
