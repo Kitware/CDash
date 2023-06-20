@@ -24,6 +24,7 @@ use PDO;
 require_once 'include/api_common.php';
 require_once 'include/ctestparser.php';
 require_once 'include/version.php';
+require_once 'include/upgrade_functions.php';
 
 class AdminController extends AbstractController
 {
