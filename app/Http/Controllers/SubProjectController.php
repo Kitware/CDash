@@ -347,57 +347,22 @@ class SubProjectController extends AbstractProjectController
         return response()->json(cast_data_for_JSON($response));
     }
 
-    public function ajaxDependenciesGraph()
+    public function ajaxDependenciesGraph(): JsonResponse
     {
-        @$projectname = $_GET['project'];
-        if ($projectname != null) {
-            $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
-        }
+        $this->setProjectByName(htmlspecialchars($_GET['project'] ?? ''));
 
-        @$date = $_GET['date'];
-        if ($date != null) {
-            $date = htmlspecialchars(pdo_real_escape_string($date));
-        }
+        $date = isset($_GET['date']) ? htmlspecialchars($_GET['date']) : null;
 
-        $projectid = get_project_id($projectname);
+        $subprojectids = $this->project->GetSubProjects();
 
-        if ($projectid == 0 || !can_access_project($projectid)) {
-            echo 'Invalid project';
-            return;
-        }
-
-        $db = Database::getInstance();
-        $project = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [intval($projectid)]);
-        if (!empty($project)) {
-            $svnurl = make_cdash_url(htmlentities($project['cvsurl']));
-            $homeurl = make_cdash_url(htmlentities($project['homeurl']));
-            $bugurl = make_cdash_url(htmlentities($project['bugtrackerurl']));
-            $googletracker = htmlentities($project['googletracker']);
-            $docurl = make_cdash_url(htmlentities($project['documentationurl']));
-            $projectpublic = $project['public'];
-            $projectname = $project['name'];
-        } else {
-            $projectname = 'NA';
-        }
-
-        $policy = checkUserPolicy($projectid);
-        if ($policy !== true) {
-            return $policy;
-        }
-
-        $Project = new Project();
-        $Project->Id = $projectid;
-        $subprojectids = $Project->GetSubProjects();
-        sort($subprojectids);
-
-        $subproject_groups = array();
-        $groups = $Project->GetSubProjectGroups();
+        $subproject_groups = [];
+        $groups = $this->project->GetSubProjectGroups();
         foreach ($groups as $group) {
             $subproject_groups[$group->GetId()] = $group;
         }
 
-        $result = array(); # array to store the all the result
-        $subprojs = array();
+        $result = []; # array to store the all the result
+        $subprojs = [];
         foreach ($subprojectids as $subprojectid) {
             $SubProject = new SubProject();
             $SubProject->SetId($subprojectid);
@@ -406,19 +371,22 @@ class SubProjectController extends AbstractProjectController
 
         foreach ($subprojectids as $subprojectid) {
             $SubProject = $subprojs[$subprojectid];
-            $subarray = array('name' => $SubProject->GetName(), 'id' => $subprojectid);
+            $subarray = [
+                'name' => $SubProject->GetName(),
+                'id' => $subprojectid,
+            ];
             $groupid = $SubProject->GetGroupId();
             if ($groupid > 0) {
                 $subarray['group'] = $subproject_groups[$groupid]->GetName();
             }
             $dependencies = $SubProject->GetDependencies($date);
-            $deparray = array();
+            $deparray = [];
             foreach ($dependencies as $depprojid) {
                 if (array_key_exists($depprojid, $subprojs)) {
                     $deparray[] = $subprojs[$depprojid]->GetName();
                 }
             }
-            if (!empty($deparray)) {
+            if (count($deparray) > 0) {
                 $subarray['depends'] = $deparray;
             }
             $result[] = $subarray;
