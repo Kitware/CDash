@@ -100,6 +100,8 @@ Route::get('/testDetails.php', function (Request $request) {
     abort(404);
 });
 
+Route::get('/ajax/showtestfailuregraph.php', 'TestController@ajaxTestFailureGraph');
+
 Route::get('/viewProjects.php', 'ViewProjectsController@viewAllProjects');
 
 Route::get('/viewUpdate.php', 'AdminController@viewUpdate');
