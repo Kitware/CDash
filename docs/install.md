@@ -9,9 +9,9 @@ Before installing CDash, you will need:
 
 - A web server: [Apache](https://httpd.apache.org) or [NGINX](https://www.nginx.com)
 - A database: [MySQL v5.x+](https://www.mysql.com) or [PostgreSQL v9.2+](https://www.postgresql.org)
-- [PHP 7.3+](https://www.php.net)
+- [PHP 8.x](https://www.php.net)
 - [Composer v2.x](https://getcomposer.org) (to install PHP dependencies)
-- [npm v6](https://www.npmjs.com/) (to install Javascript dependencies)
+- [npm v8](https://www.npmjs.com/) (to install Javascript dependencies)
 
 ## PHP modules
 
