@@ -4,25 +4,19 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-require_once 'include/common.php';
-require_once 'include/defines.php';
-
 use App\Models\AuthToken;
 use App\Services\AuthTokenService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 
 class AuthTokenController extends AbstractController
 {
-    public function manage(): Response
+    public function manage(): View
     {
-        if (!Auth::check()) {
-            return $this->redirectToLogin();
-        }
-
-        return response()->view('admin.manage-authtokens');
+        return view('admin.manage-authtokens');
     }
 
     /**
@@ -31,11 +25,6 @@ class AuthTokenController extends AbstractController
      */
     public function fetchAll(): JsonResponse
     {
-        $user = Auth::user();
-        if ($user === null || !$user->IsAdmin()) {
-            return response()->json(['error' => 'Permissions error'], status: Response::HTTP_FORBIDDEN);
-        }
-
         $token_array = AuthTokenService::getAllTokens();
         $token_map = [];
         foreach ($token_array as $token) {
