@@ -5488,60 +5488,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function add_last_sql_error\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildGroupPosition.php
-
-		-
-			message: """
-				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildGroupPosition.php
-
-		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildGroupPosition.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroupPosition\\:\\:Add\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroupPosition.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroupPosition\\:\\:Exists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroupPosition.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildGroupPosition\\:\\:\\$EndTime has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroupPosition.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildGroupPosition\\:\\:\\$GroupId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroupPosition.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildGroupPosition\\:\\:\\$Position has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroupPosition.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildGroupPosition\\:\\:\\$StartTime has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroupPosition.php
-
-		-
-			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
 			"""
@@ -22757,21 +22703,6 @@ parameters:
 			message: "#^Method BuildGetDateTestCase\\:\\:testBuildGetDate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_buildgetdate.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: app/cdash/tests/test_buildgroupposition.php
-
-		-
-			message: "#^Method BuildGroupPositionTestCase\\:\\:testBuildGroupPosition\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_buildgroupposition.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: app/cdash/tests/test_buildgroupposition.php
 
 		-
 			message: """
