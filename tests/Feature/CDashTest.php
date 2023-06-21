@@ -112,10 +112,10 @@ class CDashTest extends TestCase
     public function testViewProjectsRedirectNoPublicProjects(): void
     {
         // If there are no public projects to be shown on the view projects page, we should redirect to the login page.
-        $this->get('/viewProjects.php')->assertRedirect('/login');
+        $this->get('/projects')->assertRedirect('/login');
 
         $normal_user = $this->makeNormalUser();
-        $this->actingAs($normal_user)->get('/viewProjects.php')->assertOk()->assertSeeText('No Projects Found');
+        $this->actingAs($normal_user)->get('/projects')->assertOk()->assertSeeText('No Projects Found');
         $normal_user->delete();
     }
 }

@@ -17,7 +17,7 @@
 // No project name set.
 if (!isset($_GET['project'])) {
     $default_project = config('cdash.default_project');
-    $url = $default_project ? "index.php?project={$default_project}" : 'viewProjects.php';
+    $url = $default_project ? "index.php?project={$default_project}" : 'projects';
     return \redirect()->away($url);
 }
 

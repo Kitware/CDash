@@ -72,7 +72,7 @@ return [
     |
     */
 
-    'loginRoute' => env('SAML2_LOGIN_URL', '/viewProjects.php'),
+    'loginRoute' => env('SAML2_LOGIN_URL', '/projects'),
 
     /*
     |--------------------------------------------------------------------------
@@ -83,7 +83,7 @@ return [
     |
     */
 
-    'logoutRoute' => env('SAML2_LOGOUT_URL', '/viewProjects.php'),
+    'logoutRoute' => env('SAML2_LOGOUT_URL', '/projects'),
 
 
     /*

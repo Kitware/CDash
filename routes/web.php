@@ -102,7 +102,8 @@ Route::get('/testDetails.php', function (Request $request) {
 
 Route::get('/ajax/showtestfailuregraph.php', 'TestController@ajaxTestFailureGraph');
 
-Route::get('/viewProjects.php', 'ViewProjectsController@viewAllProjects');
+Route::match(['get', 'post'], '/projects', 'ViewProjectsController@viewAllProjects');
+Route::permanentRedirect('/viewProjects.php', '/projects');
 
 Route::get('/viewUpdate.php', 'AdminController@viewUpdate');
 
