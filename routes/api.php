@@ -37,6 +37,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/authtokens/create', 'AuthTokenController@createToken');
     Route::delete('/authtokens/delete/{token_hash}', 'AuthTokenController@deleteToken');
 
+    Route::get('/v1/createProject.php', 'ProjectController@apiCreateProject');
+
     Route::middleware(['admin'])->group(function () {
         Route::get('/authtokens/all', 'AuthTokenController@fetchAll');
 
