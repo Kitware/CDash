@@ -56,8 +56,6 @@ class CDash extends AbstractController
             $response = $this->handleFileRequest();
         } elseif ($this->isApiRequest()) {
             $response = $this->handleApiRequest();
-        } elseif ($this->isSubmission()) {
-            $response = $this->handleSubmission();
         } else {
             $response = $this->handleRequest();
         }
@@ -95,15 +93,6 @@ class CDash extends AbstractController
     {
         $path = $this->getPath();
         return str_starts_with($path, 'api/');
-    }
-
-    /**
-     * Determines if the request is a CTest submission
-     */
-    public function isSubmission(): bool
-    {
-        $path = $this->getPath();
-        return boolval(preg_match('/submit\.php/', $path));
     }
 
     public function isRequestForExport(): bool
@@ -157,17 +146,6 @@ class CDash extends AbstractController
             $response = response($msg, 500);
         }
         return $response;
-    }
-
-    /**
-     * Returns the CTest submission status XML
-     */
-    public function handleSubmission(): Response
-    {
-        $content = $this->getRequestContents();
-        $status = is_a($content, Response::class) ? $content->getStatusCode() : 200;
-        return response($content, $status)
-            ->header('Content-Type', 'text/xml');
     }
 
     /**

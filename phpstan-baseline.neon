@@ -1183,6 +1183,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
+				04/01/2023$#
+			"""
+			count: 3
+			path: app/Http/Controllers/SubmissionController.php
+
+		-
+			message: """
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -2067,33 +2075,8 @@ parameters:
 			path: app/Services/TestingDay.php
 
 		-
-			message: "#^Call to an undefined static method Illuminate\\\\Support\\\\Facades\\\\Log\\:\\:warn\\(\\)\\.$#"
-			count: 2
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
-			message: "#^Call to static method call\\(\\) on an unknown class App\\\\Services\\\\Artisan\\.$#"
-			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
-			message: "#^Implicit array creation is not allowed \\- variable \\$response_array does not exist\\.$#"
-			count: 5
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
-			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:checkDatabaseConnection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
-			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:deserializeBuildMetadata\\(\\) has no return type specified\\.$#"
-			count: 1
 			path: app/Services/UnparsedSubmissionProcessor.php
 
 		-
@@ -2102,57 +2085,7 @@ parameters:
 			path: app/Services/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:getAuthTokenHash\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
-			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:initializeBuild\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
-			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:parseBuildMetadata\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
-			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:parseDataFileParameters\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
-			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:populateBuildFileRow\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
 			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:populateBuildFileRow\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
-			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:postSubmit\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
-			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:putSubmitFile\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
-			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:serializeBuildMetadata\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
-			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:serializeBuildMetadata\\(\\) has parameter \\$uuid with no type specified\\.$#"
-			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
-			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:serializeDataFileParameters\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Services/UnparsedSubmissionProcessor.php
 
@@ -16718,88 +16651,19 @@ parameters:
 			path: app/cdash/public/auth/Google.php
 
 		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 3
-			path: app/cdash/public/submit.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
-			path: app/cdash/public/submit.php
+			path: app/cdash/public/importBuilds.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 3
-			path: app/cdash/public/submit.php
-
-		-
-			message: "#^Function PHPErrorHandler\\(\\) has no return type specified\\.$#"
+			message: "#^Parameter \\#2 \\$data of function fwrite expects string, int\\<1, max\\> given\\.$#"
 			count: 1
-			path: app/cdash/public/submit.php
+			path: app/cdash/public/importBuilds.php
 
 		-
-			message: "#^Function PHPErrorHandler\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, string given\\.$#"
 			count: 1
-			path: app/cdash/public/submit.php
-
-		-
-			message: "#^Function displayReturnStatus\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/submit.php
-
-		-
-			message: "#^Function displayReturnStatus\\(\\) has parameter \\$response_code with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/submit.php
-
-		-
-			message: "#^Function displayReturnStatus\\(\\) has parameter \\$statusarray with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/submit.php
-
-		-
-			message: "#^Only booleans are allowed in &&, mixed given on the left side\\.$#"
-			count: 1
-			path: app/cdash/public/submit.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/submit.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, array\\<string, int\\|string\\>\\|null given\\.$#"
-			count: 1
-			path: app/cdash/public/submit.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, int given\\.$#"
-			count: 1
-			path: app/cdash/public/submit.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/submit.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, string given\\.$#"
-			count: 1
-			path: app/cdash/public/submit.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: app/cdash/public/submit.php
+			path: app/cdash/public/importBuilds.php
 
 		-
 			message: "#^Access to an undefined property GitHubWebhookTest\\:\\:\\$config\\.$#"

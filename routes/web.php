@@ -54,6 +54,8 @@ Route::get('ping', function (Response $response) {
 Route::get('/index.php', 'IndexController@showIndexPage');
 Route::get('/', 'IndexController@showIndexPage');
 
+Route::any('/submit.php', 'SubmissionController@submit');
+
 Route::get('/image/{image}', 'ImageController@image');
 Route::get('/displayImage.php', function (Request $request) {
     $imgid = $request->query('imgid');

@@ -257,14 +257,14 @@ function ctest_parse($filehandle, $projectid, $expected_md5 = '')
     $content = fread($filehandle, 8192);
 
     if ($handler == null) {
-        echo 'no handler found';
         add_log('error: could not create handler based on xml content', 'ctest_parse', LOG_ERR);
         $Project = new Project();
         $Project->Id = $projectid;
 
         $Project->SendEmailToAdmin('Cannot create handler based on XML content',
             'An XML submission from ' . $ip . ' to the project ' . get_project_name($projectid) . ' cannot be parsed. The content of the file is as follow: ' . $content);
-        return false;
+
+        abort(400, 'Could not create handler based on xml content');
     }
 
     $parser = xml_parser_create();
