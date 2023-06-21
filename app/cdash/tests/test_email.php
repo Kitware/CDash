@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\TestDiffType;
+use App\Models\Site;
 use App\Models\TestDiff;
 use App\Models\User;
 use CDash\Config;
@@ -330,5 +331,31 @@ class EmailTestCase extends KWWebTestCase
         }
 
         $this->assertTrue($found === $expected);
+    }
+
+    public function testUpdateErrorEmailSentToSiteMaintainer(): void
+    {
+        $this->deleteLog($this->logfilename);
+
+        // Make simpletest@localhost a maintainer of Dash20.kitware
+        $site = Site::where('name', 'Dash20.kitware')->first();
+        DB::insert('INSERT INTO site2user (siteid, userid) VALUES (?, ?)', [$site->id, 1]);
+
+        // Submit our testing data.
+        $rep = dirname(__FILE__) . '/data/EmailProjectExample';
+        $file = "$rep/update_error.xml";
+        if (!$this->submission('EmailProjectExample', $file)) {
+            $this->fail('Failed to submit update_error.xml');
+        }
+
+        // Verify no errors logged.
+        if (!$this->checkLog($this->logfilename)) {
+            $this->fail("Errors logged");
+        }
+
+        // TODO: verify log contents.
+
+        // Cleanup.
+        DB::table('site2user')->where('siteid', $site->id)->delete();
     }
 }

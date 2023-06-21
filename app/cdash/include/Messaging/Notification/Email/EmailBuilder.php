@@ -51,12 +51,9 @@ class EmailBuilder extends SubscriptionNotificationBuilder
      */
     public function createNotification(SubscriptionInterface $subscription, $templateName)
     {
-        $message = null;
         $subject_template = "email.{$templateName}.subject";
         $template = "email.{$templateName}";
 
-
-        // $blade = new Blade((array)$this->templateDirectory, $this->cacheDirectory);
         $data = ['subscription' => $subscription];
         $subject = view($subject_template)->with($data);
         $body = view($template)->with($data);
@@ -69,28 +66,6 @@ class EmailBuilder extends SubscriptionNotificationBuilder
         // todo: this doesn't really belong here, refactor asap
         $this->setBuildEmailCollection($message, $subscription);
         return $message;
-    }
-
-    /**
-     * The purpose of this method is to remove duplicate topics from the topic collection. It is
-     * possible to have duplicate topics under the conditions where, say, a build was included
-     * because the build was authored by the user then included again because it matched a label
-     * to which the user is subscribed. Duplicates must be removed so that they are not output
-     * multiple times by the notification decorators.
-     *
-     * @param SubscriptionInterface $subscription
-     * @return bool
-     */
-    protected function uniquifyTopics(SubscriptionInterface $subscription)
-    {
-        $topics = $subscription->getTopicCollection();
-
-        /** @var LabeledTopic $labeled */
-        $labeled = $topics->remove('Labeled');
-        if ($labeled) {
-            $labeled->mergeTopics($topics);
-        }
-        return !!$topics->count();
     }
 
     /**

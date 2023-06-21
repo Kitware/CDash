@@ -247,7 +247,7 @@ class BuildUpdate
 
         $query = $this->PDO->prepare($sql);
         $query->bindParam(':buildid', $this->BuildId);
-
+        $query->execute();
         return $query->fetch(PDO::FETCH_ASSOC);
     }
 

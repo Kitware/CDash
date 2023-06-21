@@ -553,9 +553,9 @@ function send_update_email(UpdateHandler $handler, int $projectid): void
         $db = Database::getInstance();
         $email_addresses = $db->executePrepared('
                                SELECT email
-                               FROM user, site2user
+                               FROM ' . qid('user') . ', site2user
                                WHERE
-                                   user.id=site2user.userid
+                                   ' . qid('user') . '.id=site2user.userid
                                    AND site2user.siteid=?
                            ', [intval($siteid)]);
         foreach ($email_addresses as $email_addresses_array) {
@@ -569,17 +569,16 @@ function send_update_email(UpdateHandler $handler, int $projectid): void
             // Generate the email to send
             $subject = 'CDash [' . $Project->Name . '] - Update Errors for ' . $sitename;
 
-            $update_info = $db->executePrepared('
-                               SELECT command, status
-                               FROM buildupdate AS u, build2update AS b2u
-                               WHERE
-                                   b2u.updateid=u.id
-                                   AND b2u.buildid=?
-                           ', [intval($buildid)]);
+            $buildUpdate = new BuildUpdate();
+            $buildUpdate->BuildId = $buildid;
+            $update = $buildUpdate->GetUpdateForBuild();
+            if ($update === false) {
+                throw new RuntimeException('Error querying update status for build ' . $buildid);
+            }
 
             $body = "$sitename has encountered errors during the Update step and you have been identified as the maintainer of this site.\n\n";
             $body .= "*Update Errors*\n";
-            $body .= 'Status: ' . $update_info['status'] . ' (' . $serverURI . '/viewUpdate.php?buildid=' . $buildid . ")\n";
+            $body .= 'Status: ' . $update['status'] . ' (' . $serverURI . '/viewUpdate.php?buildid=' . $buildid . ")\n";
             if (cdashmail($recipients, $subject, $body)) {
                 add_log('email sent to: ' . implode(', ', $recipients), 'send_update_email');
             } else {
