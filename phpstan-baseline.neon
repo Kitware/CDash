@@ -11560,6 +11560,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function json_error_response\\(\\)\\:
+				15/06/2023 Use abort\\(\\) to exit cleanly instead\\.$#
+			"""
+			count: 10
+			path: app/cdash/include/api_common.php
+
+		-
+			message: """
 				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
 				04/01/2023$#
 			"""
@@ -15807,6 +15815,14 @@ parameters:
 			path: app/cdash/public/api/v1/GitHub/webhook.php
 
 		-
+			message: """
+				#^Call to deprecated function json_error_response\\(\\)\\:
+				15/06/2023 Use abort\\(\\) to exit cleanly instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/public/api/v1/GitHub/webhook.php
+
+		-
 			message: "#^Function handle_error\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/GitHub/webhook.php
@@ -15820,6 +15836,14 @@ parameters:
 			message: "#^Only booleans are allowed in an if condition, string given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/addBuild.php
+
+		-
+			message: """
+				#^Call to deprecated function json_error_response\\(\\)\\:
+				15/06/2023 Use abort\\(\\) to exit cleanly instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/public/api/v1/addUserNote.php
 
 		-
 			message: "#^Call to function is_array\\(\\) with string\\|false will always evaluate to false\\.$#"
@@ -16047,14 +16071,6 @@ parameters:
 				04/22/2023$#
 			"""
 			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_error\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 2
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
@@ -16502,11 +16518,6 @@ parameters:
 		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has parameter \\$siteid with no type specified\\.$#"
 			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Implicit array creation is not allowed \\- variable \\$response might not exist\\.$#"
-			count: 3
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
@@ -17114,6 +17125,14 @@ parameters:
 			path: app/cdash/public/api/v1/overview.php
 
 		-
+			message: """
+				#^Call to deprecated function json_error_response\\(\\)\\:
+				15/06/2023 Use abort\\(\\) to exit cleanly instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/public/api/v1/project.php
+
+		-
 			message: "#^Call to function is_array\\(\\) with string\\|false will always evaluate to false\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
@@ -17242,11 +17261,6 @@ parameters:
 			message: "#^Variable property access on mixed\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, string given\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/relateBuilds.php
 
 		-
 			message: "#^Call to method RetryHandler\\:\\:increment\\(\\) with incorrect case\\: Increment$#"

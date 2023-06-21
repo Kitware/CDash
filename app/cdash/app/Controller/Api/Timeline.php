@@ -77,8 +77,7 @@ class Timeline extends Index
             case 'viewBuildGroup.php':
                 return $this->chartForBuildGroup();
             default:
-                json_error_response('Unexpected value for page');
-                break;
+                abort(404, 'Unexpected value for page');
         }
     }
 
@@ -102,7 +101,7 @@ class Timeline extends Index
         $defect_types = $request->session()->get('defecttypes');
 
         if (!$defect_types) {
-            json_error_response('No defecttypes defined in your session');
+            abort(400, 'No defecttypes defined in your session');
         }
         $this->defectTypes = $defect_types;
 
@@ -118,7 +117,7 @@ class Timeline extends Index
             ORDER BY starttime";
         $stmt = $this->db->prepare($query);
         if (!pdo_execute($stmt, [$this->project->Id])) {
-            json_error_response('Failed to load results');
+            abort(500, 'Failed to load results');
         }
 
         return $this->getTimelineChartData($stmt);
@@ -150,8 +149,7 @@ class Timeline extends Index
                 $this->filterSQL
                 ORDER BY starttime");
         if (!pdo_execute($stmt, [':projectid' => $this->project->Id])) {
-            json_error_response('Failed to load results');
-            return [];
+            abort(500, 'Failed to load results');
         }
         $response = $this->getTimelineChartData($stmt);
         $response['colors'] = [
@@ -186,8 +184,7 @@ class Timeline extends Index
                 $this->filterSQL
                 ORDER BY starttime");
         if (!pdo_execute($stmt, [':projectid' => $this->project->Id])) {
-            json_error_response('Failed to load results');
-            return [];
+            abort(500, 'Failed to load results');
         }
         $this->includeCleanBuilds = false;
         $response = $this->getTimelineChartData($stmt);
@@ -207,10 +204,7 @@ class Timeline extends Index
         $buildgroup->SetProjectId($this->project->Id);
         $buildgroup->SetName($groupname);
         if (!$buildgroup->Exists()) {
-            $error_msg =
-                "BuildGroup '$groupname' does not exist for project '" . $this->project->Name . "'";
-            json_error_response(['error' => $error_msg], 404);
-            return[];
+            abort(404, "BuildGroup '$groupname' does not exist for project '" . $this->project->Name . "'");
         }
 
         $this->defectTypes = [
@@ -248,8 +242,7 @@ class Timeline extends Index
                 ':buildgroupname' => $groupname
             ];
             if (!pdo_execute($stmt, $query_params)) {
-                json_error_response('Failed to load results');
-                return [];
+                abort(500, 'Failed to load results');
             }
             $builds = [];
             while ($row = $stmt->fetch()) {

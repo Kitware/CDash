@@ -58,12 +58,12 @@ if ($subProjectName) {
 // Call AddBuild() to create the build or get the ID of an existing build.
 $build_created = $build->AddBuild();
 if (!$build->Id) {
-    json_error_response(['error' => 'Error creating build'], 500);
+    abort(500, 'Error creating build');
 }
 
 $response = ['buildid' => $build->Id];
 if ($build_created) {
-    json_error_response($response, 201);
+    return response()->json($response, 201);
 } else {
-    json_error_response($response, 200);
+    return response()->json($response, 200);
 }

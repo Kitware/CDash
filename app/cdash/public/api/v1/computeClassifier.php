@@ -22,7 +22,7 @@ require_once 'include/api_common.php';
 
 $builds = $_GET['builds'];
 if (count($builds) < 1) {
-    json_error_response('No builds found, cannot compute classifier');
+    abort(400, 'No builds found, cannot compute classifier');
 }
 
 // Decode input data from JSON.

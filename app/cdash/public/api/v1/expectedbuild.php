@@ -57,9 +57,7 @@ if (!function_exists('CDash\Api\v1\ExpectedBuild\rest_get')) {
         $response = array();
 
         if (!array_key_exists('currenttime', $_REQUEST)) {
-            $response['error'] = "currenttime not specified.";
-            json_error_response($response);
-            return;
+            abort(400, '"currenttime" not specified in request.');
         }
         $currenttime = pdo_real_escape_numeric($_REQUEST['currenttime']);
         $currentUTCtime = gmdate(FMT_DATETIME, $currenttime);
@@ -108,10 +106,7 @@ if (!function_exists('CDash\Api\v1\ExpectedBuild\rest_post')) {
     function rest_post($siteid, $buildgroupid, $buildname, $buildtype)
     {
         if (!array_key_exists('newgroupid', $_REQUEST)) {
-            $response = array();
-            $response['error'] = 'newgroupid not specified.';
-            json_error_response($response);
-            return;
+            abort(400, 'newgroupid not specified.');
         }
 
         $newgroupid =
@@ -134,9 +129,7 @@ if (!is_null($rest_json)) {
 $required_params = array('siteid', 'groupid', 'name', 'type');
 foreach ($required_params as $param) {
     if (!array_key_exists($param, $_REQUEST)) {
-        $response['error'] = "$param not specified.";
-        json_error_response($response);
-        return;
+        abort(400, "$param not specified.");
     }
 }
 $siteid = pdo_real_escape_numeric($_REQUEST['siteid']);
@@ -147,8 +140,7 @@ $buildtype = htmlspecialchars(pdo_real_escape_string($_REQUEST['type']));
 // Make sure the user has access to this project.
 $buildgroup = new BuildGroup();
 if (!$buildgroup->SetId($buildgroupid)) {
-    json_error_response(
-        ['error' => "Could not find project for buildgroup #$buildgroupid"]);
+    abort(404, "Could not find project for buildgroup #$buildgroupid");
 }
 $projectid = $buildgroup->GetProjectId();
 if (!can_access_project($projectid)) {
@@ -160,17 +152,13 @@ $method = $_SERVER['REQUEST_METHOD'];
 // Make sure the user is an admin before proceeding with non-read-only methods.
 if ($method != 'GET') {
     if (!Auth::check()) {
-        $response['error'] = 'No session found.';
-        json_error_response($response, 401);
-        return;
+        abort(401, 'No session found.');
     }
 
     $project = new Project();
     $project->Id = $projectid;
     if (!Gate::allows('edit-project', $project)) {
-        $response['error'] = 'You do not have permission to access this page';
-        json_error_response($response, 403);
-        return;
+        abort(403, 'You do not have permission to access this page');
     }
 }
 

@@ -51,8 +51,7 @@ function rest_delete()
 {
     $id = $_REQUEST['id'];
     if (!$id) {
-        $response = ['error' => 'Invalid measurement ID provided.'];
-        json_error_response($response, 400);
+        abort(400, 'Invalid measurement ID provided.');
     }
     Measurement::destroy($id);
     http_response_code(200);

@@ -36,10 +36,13 @@ $relatedid = get_param('relatedid');
 
 // Create objects from these parameters.
 $service = ServiceContainer::getInstance();
+/** @var Build $build */
 $build = $service->create(Build::class);
 $build->Id = $buildid;
+/** @var Build $relatedbuild */
 $relatedbuild = $service->create(Build::class);
 $relatedbuild->Id = $relatedid;
+/** @var BuildRelationship $buildRelationship */
 $buildRelationship = $service->create(BuildRelationship::class);
 $buildRelationship->Build = $build;
 $buildRelationship->RelatedBuild = $relatedbuild;
@@ -50,10 +53,9 @@ $error_msg = '';
 if ($request_method == 'GET') {
     if ($buildRelationship->Exists()) {
         $buildRelationship->Fill();
-        json_error_response($buildRelationship->marshal(), 200);
+        return response()->json($buildRelationship->marshal());
     }
-    $error_msg = "No relationship exists between Builds $buildid and $relatedid";
-    json_error_response(['error' => $error_msg], 404);
+    abort(404, "No relationship exists between Builds $buildid and $relatedid");
 }
 
 if ($request_method == 'DELETE') {
@@ -61,13 +63,13 @@ if ($request_method == 'DELETE') {
         if ($buildRelationship->Exists()) {
             if (!$buildRelationship->Delete($error_msg)) {
                 if ($error_msg) {
-                    json_error_response($error_msg, 400);
+                    abort(400, $error_msg);
                 } else {
-                    json_error_response('Error deleting relationship', 500);
+                    abort(500, 'Error deleting relationship');
                 }
             }
         }
-        json_error_response('', 204);
+        abort(204);
     }
     return;
 }
@@ -90,10 +92,10 @@ if ($request_method == 'POST') {
     }
     if (!$buildRelationship->Save($error_msg)) {
         if ($error_msg) {
-            json_error_response(['error' => $error_msg], 400);
+            abort(400, $error_msg);
         } else {
-            json_error_response(['error' => 'Error saving relationship'], 500);
+            abort(500, 'Error saving relationship');
         }
     }
-    json_error_response($buildRelationship->marshal(), $exit_status);
+    return response()->json($buildRelationship->marshal(), $exit_status);
 }

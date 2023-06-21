@@ -32,20 +32,20 @@ $response = [];
 
 // Make sure a valid id was specified.
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    json_error_response('Not a valid id!');
+    abort(400, 'Not a valid id!');
 }
 $id = $_GET['id'];
 $DA = new DynamicAnalysis();
 $DA->Id = $id;
 if (!$DA->Fill()) {
-    json_error_response('Not a valid id!');
+    abort(400, 'Not a valid id!');
 }
 
 // Get the build associated with this analysis.
 $build = new Build();
 $build->Id = $DA->BuildId;
 if (!$build->Exists()) {
-    json_error_response('This build does not exist. Maybe it has been deleted.');
+    abort(404, 'This build does not exist. Maybe it has been deleted.');
 }
 $build->FillFromId($build->Id);
 

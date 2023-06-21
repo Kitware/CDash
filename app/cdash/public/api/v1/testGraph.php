@@ -33,16 +33,14 @@ if (is_null($build)) {
 
 $testid = pdo_real_escape_numeric($_GET['testid']);
 if (!isset($testid) || !is_numeric($testid)) {
-    json_error_response(['error' => 'A valid test was not specified.']);
-    return;
+    abort(400, 'A valid test was not specified.');
 }
 
 $buildtest = BuildTest::where('buildid', '=', $build->Id)
     ->where('testid', '=', $testid)
     ->first();
 if ($buildtest === null) {
-    json_error_response(['error' => 'test not found'], 404);
-    return;
+    abort(404, 'test not found');
 }
 
 $controller = new Controller($db, $buildtest);
