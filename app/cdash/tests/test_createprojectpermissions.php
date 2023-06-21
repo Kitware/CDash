@@ -52,7 +52,7 @@ class CreateProjectPermissionsTestCase extends KWWebTestCase
         $response = $this->get($this->url . '/api/v1/createProject.php?projectid=0');
         $response = json_decode($response);
         $this->assertTrue(property_exists($response, 'error'));
-        $this->assertEqual($response->error, 'This project does not exist.');
+        $this->assertEqual($response->error, 'You do not have access to the requested project or the requested project does not exist.');
 
         // Tests for normal user.
         $this->logout();
@@ -62,13 +62,13 @@ class CreateProjectPermissionsTestCase extends KWWebTestCase
         $response = $this->get($this->url . '/api/v1/createProject.php');
         $response = json_decode($response);
         $this->assertTrue(property_exists($response, 'error'));
-        $this->assertEqual($response->error, 'You do not have permission to access this page.');
+        $this->assertEqual($response->error, 'You do not have permission to create new projects.');
 
         // Cannot edit project.
         $response = $this->get($this->url . '/api/v1/createProject.php?projectid=5');
         $response = json_decode($response);
         $this->assertTrue(property_exists($response, 'error'));
-        $this->assertEqual($response->error, 'You do not have permission to access this page.');
+        $this->assertEqual($response->error, 'You do not have permission to edit this project.');
 
         // Test for project administrator.
         $pdo = \CDash\Database::getInstance();
@@ -84,7 +84,7 @@ class CreateProjectPermissionsTestCase extends KWWebTestCase
         $response = $this->get($this->url . '/api/v1/createProject.php');
         $response = json_decode($response);
         $this->assertTrue(property_exists($response, 'error'));
-        $this->assertEqual($response->error, 'You do not have permission to access this page.');
+        $this->assertEqual($response->error, 'You do not have permission to create new projects.');
 
         // Can edit your own project.
         $response = $this->get($this->url . '/api/v1/createProject.php?projectid=5');
@@ -109,10 +109,7 @@ class CreateProjectPermissionsTestCase extends KWWebTestCase
         $config = Config::getInstance();
         $config->set('CDASH_USER_CREATE_PROJECTS', true);
         unset($_GET['projectid']);
-        ob_start();
-        require realpath($config->get('CDASH_ROOT_DIR') . '/public/api/v1/createProject.php');
-        $response = ob_get_contents();
-        ob_end_clean();
+        $response = $this->get($this->url . '/api/v1/createProject.php');
         $response = json_decode($response);
         $this->assertFalse(property_exists($response, 'error'));
         $this->assertTrue(property_exists($response, 'project'));

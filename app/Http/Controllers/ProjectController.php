@@ -9,67 +9,40 @@ use CDash\Config;
 use CDash\Model\Project;
 use CDash\Model\Repository;
 use CDash\Model\UserProject;
-use CDash\ServiceContainer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class ProjectController extends AbstractProjectController
 {
-    public function apiCreateProject()
+    public function apiCreateProject(): JsonResponse
     {
         $pageTimer = new PageTimer();
-        $service = ServiceContainer::getInstance();
         $config = Config::getInstance();
 
-        $response = [];
-        if (!Auth::check()) {
-            $response['requirelogin'] = 1;
-            echo json_encode($response);
-            return;
-        }
-
-        $userid = Auth::id();
-        if (!$userid) {
-            $response['requirelogin'] = 1;
-            echo json_encode($response);
-            return;
-        }
-
-        /** @var Project $Project */
-        $Project = $service->create(Project::class);
-        $projectid = null;
         if (isset($_GET['projectid'])) {
-            // Make sure projectid is valid if one was specified.
-            $Project->Id = $projectid = $_GET['projectid'];
-            if (!$Project->Exists() || !can_access_project($Project->Id)) {
-                $response['error'] = 'This project does not exist.';
-                echo json_encode($response);
-                return;
-            }
+            // We're editing a project if a projectid was specified
+            $this->setProjectById(intval($_GET['projectid']));
+        } else {
+            // We're going to create a new project
+            $this->project = new Project();
         }
 
         /** @var \App\Models\User $User */
         $User = Auth::user();
 
         // Check if the user has the necessary permissions.
-        $userHasAccess = false;
-        if (!is_null($projectid)) {
+        if ($this->project->Exists()) {
             // Can they edit this project?
-            $userHasAccess = Gate::allows('edit-project', $Project);
+            Gate::authorize('edit-project', $this->project);
         } else {
             // Can they create a new project?
-            $userHasAccess = Gate::allows('create-project');
-        }
-        if (!$userHasAccess) {
-            $response['error'] = 'You do not have permission to access this page.';
-            echo json_encode($response);
-            return;
+            Gate::authorize('create-project');
         }
 
         $response = begin_JSON_response();
-        if ($projectid > 0) {
-            get_dashboard_JSON($Project->GetName(), null, $response);
+        if ($this->project->Exists()) {
+            get_dashboard_JSON($this->project->GetName(), null, $response);
         }
         $response['hidenav'] = 1;
         $menu =[];
@@ -79,7 +52,7 @@ class ProjectController extends AbstractProjectController
         $nRepositories = 0;
         $repositories_response = [];
 
-        if (!is_null($projectid)) {
+        if ($this->project->Exists()) {
             $response['title'] = 'Edit Project';
             $response['edit'] = 1;
         } else {
@@ -89,8 +62,8 @@ class ProjectController extends AbstractProjectController
         }
 
         // List the available projects
-        $callback = function ($project) use ($Project) {
-            if ($project['id'] === $Project->Id) {
+        $callback = function ($project) {
+            if ($project['id'] === $this->project->Id) {
                 $project['selected'] = 1;
             }
             return $project;
@@ -99,19 +72,18 @@ class ProjectController extends AbstractProjectController
         $response['availableprojects'] = array_map($callback, UserProject::GetProjectsForUser($User));
 
         $project_response = [];
-        if ($projectid > 0) {
-            $Project->Fill();
-            $project_response = $Project->ConvertToJSON($User);
+        if ($this->project->Exists()) {
+            $project_response = $this->project->ConvertToJSON($User);
 
             // Get the spam list
-            $spambuilds = $Project->GetBlockedBuilds();
+            $spambuilds = $this->project->GetBlockedBuilds();
             $blocked_builds = [];
             foreach ($spambuilds as $spambuild) {
                 $blocked_builds[] = $spambuild;
             }
             $project_response['blockedbuilds'] = $blocked_builds;
 
-            $repositories = $Project->GetRepositories();
+            $repositories = $this->project->GetRepositories();
             foreach ($repositories as $repository) {
                 $repository_response = array();
                 $repository_response['url'] = $repository['url'];
@@ -158,14 +130,14 @@ class ProjectController extends AbstractProjectController
         $response['project'] = $project_response;
 
         // Add the different types of Version Control System (VCS) viewers.
-        if (strlen($Project->CvsViewerType) == 0) {
-            $Project->CvsViewerType = 'github';
+        if (strlen($this->project->CvsViewerType ?? '') === 0) {
+            $this->project->CvsViewerType = 'github';
         }
 
         $viewers = Repository::getViewers();
-        $callback = function ($key) use ($Project, $viewers, &$response) {
+        $callback = function ($key) use ($viewers, &$response) {
             $v = ['description' => $key, 'value' => $viewers[$key]];
-            if ($Project->CvsViewerType === $v['value']) {
+            if ($this->project->CvsViewerType === $v['value']) {
                 $response['selectedViewer'] = $v;
             }
             return $v;
@@ -174,6 +146,6 @@ class ProjectController extends AbstractProjectController
         $response['vcsviewers'] = array_map($callback, array_keys($viewers));
 
         $pageTimer->end($response);
-        echo json_encode(cast_data_for_JSON($response));
+        return response()->json(cast_data_for_JSON($response));
     }
 }
