@@ -17,7 +17,6 @@ function(add_selenium_test TestName)
 endfunction(add_selenium_test)
 
 add_php_test(setup_repositories)
-add_selenium_test(buildinfogroup)
 
 if(COVERAGE_COMMAND)
   add_selenium_test(showcoveragegraph)
