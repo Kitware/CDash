@@ -1,8 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Site;
 use App\Models\User;
-use App\Services\ProjectPermissions;
 use App\Services\TestingDay;
 use CDash\Config;
 use CDash\Database;
@@ -14,6 +14,7 @@ use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -21,7 +22,7 @@ use Illuminate\View\View;
 
 require_once 'include/filterdataFunctions.php';
 
-class CoverageController extends AbstractController
+class CoverageController extends AbstractBuildController
 {
     /**
      * TODO: (williamjallen) this function contains legacy XSL templating and should be converted
@@ -374,10 +375,7 @@ class CoverageController extends AbstractController
     {
         @set_time_limit(0);
 
-        @$buildid = $_GET['buildid'];
-        if ($buildid != null) {
-            $buildid = intval($buildid);
-        }
+        $this->setBuildById(intval($_GET['buildid'] ?? -1));
 
         @$date = $_GET['date'];
         if ($date != null) {
@@ -390,14 +388,6 @@ class CoverageController extends AbstractController
             $filtercount = 0;
         }
 
-        // Checks
-        if (!isset($buildid) || !is_numeric($buildid)) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Not a valid buildid!'
-            ]);
-        }
-
         @$userid = Auth::id();
         if (!isset($userid)) {
             $userid = 0;
@@ -405,81 +395,43 @@ class CoverageController extends AbstractController
 
         $db = Database::getInstance();
 
-
-        $build_array = $db->executePreparedSingleRow('
-                   SELECT
-                       b.starttime,
-                       b.projectid,
-                       b.siteid,
-                       b.type,
-                       b.name,
-                       sp.groupid
-                   FROM build AS b
-                   LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
-                   LEFT JOIN subproject AS sp ON (sp2b.subprojectid = sp.id)
-                   WHERE b.id=?
-               ', [intval($buildid)]);
-        $projectid = $build_array['projectid'];
-
-        if (!isset($projectid) || $projectid == 0 || !is_numeric($projectid)) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => "This project doesn't exist. Maybe it has been deleted."
-            ]);
-        }
-
-        $policy = checkUserPolicy($projectid);
-        if ($policy !== true) {
-            return $policy;
-        }
-
-        $project = new Project();
-        $project->Id = $projectid;
-        $project->Fill();
-        if (!$project->Exists()) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => "This project doesn't exist."
-            ]);
-        }
-
         $role = 0;
         $user2project = $db->executePreparedSingleRow('
-                    SELECT role
-                    FROM user2project
-                    WHERE userid=? AND projectid=?
-                ', [intval($userid), intval($projectid)]);
+                            SELECT role
+                            FROM user2project
+                            WHERE userid=? AND projectid=?
+                        ', [intval($userid), intval($this->project->Id)]);
         if (!empty($user2project)) {
             $role = $user2project['role'];
         }
 
         $projectshowcoveragecode = 1;
-        if (!$project->ShowCoverageCode && $role < 2) {
+        if (!$this->project->ShowCoverageCode && $role < 2) {
             $projectshowcoveragecode = 0;
         }
 
         $xml = begin_XML_for_XSLT();
-        $xml .= get_cdash_dashboard_xml_by_name($project->Name, $date);
-        $xml .= '<buildid>' . $buildid . '</buildid>';
+        $xml .= get_cdash_dashboard_xml_by_name($this->project->Name, $date);
+        $xml .= '<buildid>' . $this->build->Id . '</buildid>';
 
-        $threshold = $project->CoverageThreshold;
-        if ($build_array['groupid'] > 0) {
+        $threshold = $this->project->CoverageThreshold;
+        if ($this->build->GroupId > 0) {
             $row = $db->executePreparedSingleRow('
-               SELECT coveragethreshold
-               FROM subprojectgroup
-               WHERE projectid=? AND id=?
-           ', [intval($projectid), intval($build_array['groupid'])]);
+                       SELECT coveragethreshold
+                       FROM subprojectgroup
+                       WHERE projectid=? AND id=?
+                   ', [intval($this->project->Id), intval($this->build->GroupId)]);
             if (!empty($row) && isset($row['coveragethreshold'])) {
                 $threshold = intval($row['coveragethreshold']);
             }
         }
 
-        $date = TestingDay::get($project, $build_array['starttime']);
+        $date = TestingDay::get($this->project, $this->build->StartTime);
         $xml .= '<menu>';
-        $xml .= add_XML_value('back', 'index.php?project=' . urlencode($project->Name) . "&date=$date");
+        $xml .= add_XML_value('back', 'index.php?project=' . urlencode($this->project->Name) . "&date=$date");
 
         $build = new Build();
-        $build->Id = $buildid;
+        $build->Id = $this->build->Id;
         $previous_buildid = $build->GetPreviousBuildId();
         $current_buildid = $build->GetCurrentBuildId();
         $next_buildid = $build->GetNextBuildId();
@@ -507,17 +459,17 @@ class CoverageController extends AbstractController
         // coverage
         $xml .= '<coverage>';
         $coverage_array = $db->executePreparedSingleRow('
-                      SELECT
-                          sum(loctested) as loctested,
-                          sum(locuntested) as locuntested,
-                          sum(branchstested) as branchstested,
-                          sum(branchsuntested) as branchsuntested
-                      FROM coverage
-                      WHERE buildid=?
-                      GROUP BY buildid
-                  ', [intval($buildid)]);
+                              SELECT
+                                  sum(loctested) as loctested,
+                                  sum(locuntested) as locuntested,
+                                  sum(branchstested) as branchstested,
+                                  sum(branchsuntested) as branchsuntested
+                              FROM coverage
+                              WHERE buildid=?
+                              GROUP BY buildid
+                          ', [intval($this->build->Id)]);
 
-        $xml .= add_XML_value('starttime', date('l, F d Y', strtotime($build_array['starttime'])));
+        $xml .= add_XML_value('starttime', date('l, F d Y', strtotime($this->build->StartTime)));
         $xml .= add_XML_value('loctested', $coverage_array['loctested']);
         $xml .= add_XML_value('locuntested', $coverage_array['locuntested']);
 
@@ -539,18 +491,18 @@ class CoverageController extends AbstractController
         // Only execute the label-related queries if labels are being
         // displayed:
         //
-        if ($project->DisplayLabels) {
+        if ($this->project->DisplayLabels) {
             // Get the set of labels involved:
             //
             $labels = array();
 
             $covlabels = $db->executePrepared('
-                     SELECT DISTINCT id, text
-                     FROM label, label2coveragefile
-                     WHERE
-                         label.id=label2coveragefile.labelid
-                         AND label2coveragefile.buildid=?
-                 ', [intval($buildid)]);
+                             SELECT DISTINCT id, text
+                             FROM label, label2coveragefile
+                             WHERE
+                                 label.id=label2coveragefile.labelid
+                                 AND label2coveragefile.buildid=?
+                         ', [intval($this->build->Id)]);
             foreach ($covlabels as $row) {
                 $labels[$row['id']] = $row['text'];
             }
@@ -563,16 +515,16 @@ class CoverageController extends AbstractController
 
                 foreach ($labels as $id => $label) {
                     $row = $db->executePreparedSingleRow('
-                       SELECT
-                           SUM(loctested) AS loctested,
-                           SUM(locuntested) AS locuntested
-                       FROM label2coveragefile, coverage
-                       WHERE
-                           label2coveragefile.labelid=?
-                           AND label2coveragefile.buildid=?
-                           AND coverage.buildid=label2coveragefile.buildid
-                           AND coverage.fileid=label2coveragefile.coveragefileid
-                   ', [intval($id), intval($buildid)]);
+                               SELECT
+                                   SUM(loctested) AS loctested,
+                                   SUM(locuntested) AS locuntested
+                               FROM label2coveragefile, coverage
+                               WHERE
+                                   label2coveragefile.labelid=?
+                                   AND label2coveragefile.buildid=?
+                                   AND coverage.buildid=label2coveragefile.buildid
+                                   AND coverage.fileid=label2coveragefile.coveragefileid
+                           ', [intval($id), intval($this->build->Id)]);
 
                     $loctested = intval($row['loctested']);
                     $locuntested = intval($row['locuntested']);
@@ -589,48 +541,48 @@ class CoverageController extends AbstractController
         }
 
         $coveredfiles = $db->executePreparedSingleRow("
-                    SELECT count(covered) AS c
-                    FROM coverage
-                    WHERE buildid=? AND covered='1'
-                ", [intval($buildid)]);
+                            SELECT count(covered) AS c
+                            FROM coverage
+                            WHERE buildid=? AND covered='1'
+                        ", [intval($this->build->Id)]);
         $ncoveredfiles = intval($coveredfiles['c']);
 
         $files = $db->executePreparedSingleRow('
-             SELECT count(covered) AS c
-             FROM coverage
-             WHERE buildid=?
-         ', [intval($buildid)]);
+                     SELECT count(covered) AS c
+                     FROM coverage
+                     WHERE buildid=?
+                 ', [intval($this->build->Id)]);
         $nfiles = intval($files['c']);
 
         $xml .= add_XML_value('totalcovered', $ncoveredfiles);
         $xml .= add_XML_value('totalfiles', $nfiles);
-        $xml .= add_XML_value('buildid', $buildid);
+        $xml .= add_XML_value('buildid', $this->build->Id);
         $xml .= add_XML_value('userid', $userid);
 
         $xml .= add_XML_value('showcoveragecode', $projectshowcoveragecode);
-        $xml .= add_XML_value('displaylabels', $project->DisplayLabels);
+        $xml .= add_XML_value('displaylabels', $this->project->DisplayLabels);
 
         $nsatisfactorycoveredfiles = 0;
         $coveragetype = 'gcov'; // default coverage to avoid warning
 
         // Coverage files
         $coveragefile = $db->executePrepared('
-                    SELECT
-                        c.locuntested,
-                        c.loctested,
-                        c.branchstested,
-                        c.branchsuntested,
-                        c.functionstested,
-                        c.functionsuntested,
-                        cf.fullpath
-                    FROM
-                        coverage AS c,
-                        coveragefile AS cf
-                    WHERE
-                        c.buildid=?
-                        AND c.covered=1
-                        AND c.fileid=cf.id
-                ', [intval($buildid)]);
+                            SELECT
+                                c.locuntested,
+                                c.loctested,
+                                c.branchstested,
+                                c.branchsuntested,
+                                c.functionstested,
+                                c.functionsuntested,
+                                cf.fullpath
+                            FROM
+                                coverage AS c,
+                                coveragefile AS cf
+                            WHERE
+                                c.buildid=?
+                                AND c.covered=1
+                                AND c.fileid=cf.id
+                        ', [intval($this->build->Id)]);
 
         $directories = array();
         $covfile_array = array();
@@ -703,8 +655,9 @@ class CoverageController extends AbstractController
                     WHERE
                         c.buildid=?
                         AND c.covered=0
-                ', [intval($buildid)]);
+                ', [intval($this->build->Id)]);
         foreach ($coveragefile as $coveragefile_array) {
+            // TODO: (williamjallen) This loop doesn't really make sense...
             $covfile['covered'] = 0;
             $covfile['coveragemetric'] = 0;
             $covfile_array[] = $covfile;
@@ -764,67 +717,23 @@ class CoverageController extends AbstractController
         return view('cdash', [
             'xsl' => true,
             'xsl_content' => generate_XSLT($xml, 'viewCoverage', true),
-            'project' => $project,
+            'project' => $this->project,
             'title' => 'Coverage'
         ]);
     }
 
     public function viewCoverageFile(): View
     {
-        @$buildid = $_GET['buildid'];
-        if ($buildid != null) {
-            $buildid = pdo_real_escape_numeric($buildid);
-        }
-        @$fileid = $_GET['fileid'];
-        if ($fileid != null) {
-            $fileid = pdo_real_escape_numeric($fileid);
-        }
+        $this->setBuildById(intval($_GET['buildid'] ?? 0));
+
+        @$fileid = intval($_GET['fileid'] ?? 0);
+
         @$date = $_GET['date'];
         if ($date != null) {
             $date = htmlspecialchars(pdo_real_escape_string($date));
         }
 
-        // Checks
-        if (!isset($buildid) || !is_numeric($buildid)) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => "Not a valid buildid!"
-            ]);
-        }
-
-        @$userid = Auth::id();
-        if (!isset($userid)) {
-            $userid = 0;
-        }
-
         $db = Database::getInstance();
-
-        $build_array = $db->executePreparedSingleRow('
-                   SELECT starttime, projectid FROM build WHERE id=?
-               ', [intval($buildid)]);
-        $projectid = intval($build_array['projectid']);
-        if ($projectid === 0) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => "This build doesn't exist. Maybe it has been deleted."
-            ]);
-        }
-
-        checkUserPolicy($projectid);
-
-        $project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [$projectid]);
-        if (empty($project_array)) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => "This project doesn't exist."
-            ]);
-        }
-
-        $projectname = $project_array['name'];
-
-        $project = new Project();
-        $project->Id = $projectid;
-        $project->Fill();
 
         $role = 0;
         $user2project = $db->executePreparedSingleRow('
@@ -833,29 +742,23 @@ class CoverageController extends AbstractController
                     WHERE
                         userid=?
                         AND projectid=?
-                ', [intval($userid), $projectid]);
+                ', [intval(Auth::id() ?? 0), $this->project->Id]);
         if (!empty($user2project)) {
             $role = $user2project['role'];
         }
-        if (!$project_array['showcoveragecode'] && $role < 2) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => "This project doesn't allow display of coverage code. Contact the administrator of the project."
-            ]);
+        if (!$this->project->ShowCoverageCode && $role < 2) {
+            abort(403, "This project doesn't allow display of coverage code. Contact the administrator of the project.");
         }
 
         $xml = begin_XML_for_XSLT();
-        $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
+        $xml .= get_cdash_dashboard_xml_by_name($this->project->Name, $date);
 
         // Build
         $xml .= '<build>';
-        $build_array = $db->executePreparedSingleRow('SELECT * FROM build WHERE id=?', [intval($buildid)]);
-        $siteid = $build_array['siteid'];
-        $site_array = $db->executePreparedSingleRow('SELECT name FROM site WHERE id=?', [intval($siteid)]);
-        $xml .= add_XML_value('site', $site_array['name']);
-        $xml .= add_XML_value('buildname', $build_array['name']);
-        $xml .= add_XML_value('buildid', $build_array['id']);
-        $xml .= add_XML_value('buildtime', $build_array['starttime']);
+        $xml .= add_XML_value('site', Site::findOrFail($this->build->SiteId)->name);
+        $xml .= add_XML_value('buildname', $this->build->Name);
+        $xml .= add_XML_value('buildid', $this->build->Id);
+        $xml .= add_XML_value('buildtime', $this->build->StartTime);
         $xml .= '</build>';
 
         // Load coverage file.
@@ -872,7 +775,7 @@ class CoverageController extends AbstractController
 
         // Load the coverage info.
         $log = new CoverageFileLog();
-        $log->BuildId = $buildid;
+        $log->BuildId = $this->build->Id;
         $log->FileId = $fileid;
         $log->Load();
 
@@ -929,8 +832,875 @@ class CoverageController extends AbstractController
         return view('cdash', [
             'xsl' => true,
             'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/viewCoverageFile', true),
-            'project' => $project,
+            'project' => $this->project,
             'title' => 'Coverage for ' . $coverageFile->FullPath,
         ]);
+    }
+
+    public function ajaxGetViewCoverage(): JsonResponse
+    {
+        @set_time_limit(0);
+
+        $this->setBuildById(intval($_GET['buildid'] ?? -1));
+
+        $userid = intval($_GET['userid'] ?? 0);
+
+        $db = Database::getInstance();
+
+        $role = 0;
+        $user2project = $db->executePreparedSingleRow('
+                            SELECT role
+                            FROM user2project
+                            WHERE userid=? AND projectid=?
+                        ', [Auth::id() ?? 0, $this->project->Id]);
+        if (!empty($user2project)) {
+            $role = $user2project['role'];
+        }
+
+        $start = 0;
+        $end = 10000000;
+
+        /* Paging */
+        if (isset($_GET['iDisplayStart']) && $_GET['iDisplayLength'] != '-1') {
+            $start = (int)($_GET['iDisplayStart'] ?? 0);
+            $end = $start + (int)($_GET['iDisplayLength'] ?? 0);
+        }
+
+        //add columns for branches only if(total_branchsuntested+total_branchstested)>0
+        $total_branchsuntested = 0;
+        $total_branchstested = 0;
+        $coverage_branches = $db->executePreparedSingleRow('
+                                 SELECT
+                                     sum(branchstested) AS total_branchstested,
+                                     sum(branchsuntested) AS total_branchsuntested
+                                 FROM coverage
+                                 WHERE buildid = ?
+                                 GROUP BY buildid
+                             ', [$this->build->Id]);
+        if (!empty($coverage_branches)) {
+            $total_branchsuntested = intval($coverage_branches['total_branchsuntested']);
+            $total_branchstested = intval($coverage_branches['total_branchstested']);
+        }
+
+        /* Sorting */
+        $sortby = 'filename';
+        if (isset($_GET['iSortCol_0'])) {
+            if (($total_branchsuntested + $total_branchstested) > 0) {
+                switch (intval($_GET['iSortCol_0'])) {
+                    case 0:
+                        $sortby = 'filename';
+                        break;
+                    case 1:
+                        $sortby = 'status';
+                        break;
+                    case 2:
+                        $sortby = 'percentage';
+                        break;
+                    case 3:
+                        $sortby = 'lines';
+                        break;
+                    case 4:
+                        $sortby = 'branchpercentage';
+                        break;
+                    case 5:
+                        $sortby = 'branches';
+                        break;
+                    case 6:
+                        $sortby = 'priority';
+                        break;
+                }
+            } else {
+                switch (intval($_GET['iSortCol_0'])) {
+                    case 0:
+                        $sortby = 'filename';
+                        break;
+                    case 1:
+                        $sortby = 'status';
+                        break;
+                    case 2:
+                        $sortby = 'percentage';
+                        break;
+                    case 3:
+                        $sortby = 'lines';
+                        break;
+                    case 5:
+                        $sortby = 'priority';
+                        break;
+                }
+            }
+        }
+
+        $SQLsearchTerm = '';
+        $SQLsearchTermParams = [];
+        if (isset($_GET['sSearch']) && $_GET['sSearch'] != '') {
+            $SQLsearchTerm = " AND cf.fullpath LIKE CONCAT('%', ?, '%')";
+            $SQLsearchTermParams[] = htmlspecialchars($_GET['sSearch']);
+        }
+
+        $SQLDisplayAuthors = '';
+        $SQLDisplayAuthor = '';
+        if ($userid > 0) {
+            $SQLDisplayAuthor = ', cfu.userid ';
+            $SQLDisplayAuthors = ' LEFT JOIN coveragefile2user AS cfu ON (cfu.fileid=cf.id) ';
+        }
+
+        // Filters:
+        //
+        $filterdata = get_filterdata_from_request();
+        $filter_sql = $filterdata['sql'];
+        $limit_sql = '';
+        $limit_sql_params = [];
+        if ($filterdata['limit'] > 0) {
+            $limit_sql = ' LIMIT ?';
+            $limit_sql_params = [(int) $filterdata['limit']];
+        }
+
+        if (isset($_GET['dir']) && $_GET['dir'] != '') {
+            $escaped_dir = htmlspecialchars($_GET['dir']);
+            $SQLsearchTerm .= " AND (cf.fullpath LIKE CONCAT(?, '%') OR cf.fullpath LIKE CONCAT('./', ?, '%'))";
+            $SQLsearchTermParams[] = $escaped_dir;
+            $SQLsearchTermParams[] = $escaped_dir;
+        }
+
+        // Coverage files
+        $coveragefile = $db->executePrepared("
+                            SELECT
+                                cf.fullpath,
+                                c.fileid,
+                                c.locuntested,
+                                c.loctested,
+                                c.branchstested,
+                                c.branchsuntested,
+                                c.functionstested,
+                                c.functionsuntested,
+                                cfp.priority
+                                $SQLDisplayAuthor
+                            FROM
+                                coverage AS c,
+                                coveragefile AS cf
+                            $SQLDisplayAuthors
+                            LEFT JOIN coveragefilepriority AS cfp ON (
+                                cfp.fullpath=cf.fullpath
+                                AND projectid=?
+                            )
+                            WHERE
+                                c.buildid=?
+                                AND cf.id=c.fileid
+                                AND c.covered=1
+                                $filter_sql
+                                $SQLsearchTerm
+                            $limit_sql
+                        ", array_merge([$this->project->Id, $this->build->Id], $SQLsearchTermParams, $limit_sql_params));
+
+        // Add the coverage type
+        $status = (int)($_GET['status'] ?? -1);
+
+        $covfile_array = [];
+        foreach ($coveragefile as $coveragefile_array) {
+            $covfile = [];
+            $covfile['filename'] = substr($coveragefile_array['fullpath'], strrpos($coveragefile_array['fullpath'], '/') + 1);
+            $fullpath = $coveragefile_array['fullpath'];
+            // Remove the ./ so that it's cleaner
+            if (str_starts_with($fullpath, './')) {
+                $fullpath = substr($fullpath, 2);
+            }
+            if (isset($_GET['dir']) && $_GET['dir'] != '' && $_GET['dir'] !== '.') {
+                $fullpath = substr($fullpath, strlen($_GET['dir']) + 1);
+            }
+
+            $covfile['fullpath'] = $fullpath;
+            $covfile['fileid'] = $coveragefile_array['fileid'];
+            $covfile['locuntested'] = $coveragefile_array['locuntested'];
+            $covfile['loctested'] = $coveragefile_array['loctested'];
+            $covfile['covered'] = 1;
+            // Compute the coverage metric for bullseye (branch coverage without line coverage)
+            if (($coveragefile_array['loctested'] == 0 &&
+                    $coveragefile_array['locuntested'] == 0) &&
+                ($coveragefile_array['branchstested'] > 0 ||
+                    $coveragefile_array['branchsuntested'] > 0 ||
+                    $coveragefile_array['functionstested'] > 0 ||
+                    $coveragefile_array['functionsuntested'] > 0)) {
+                // Metric coverage
+                $metric = 0;
+                if ($coveragefile_array['functionstested'] + $coveragefile_array['functionsuntested'] > 0) {
+                    $metric += $coveragefile_array['functionstested'] / ($coveragefile_array['functionstested'] + $coveragefile_array['functionsuntested']);
+                }
+                if ($coveragefile_array['branchstested'] + $coveragefile_array['branchsuntested'] > 0) {
+                    $metric += $coveragefile_array['branchstested'] / ($coveragefile_array['branchstested'] + $coveragefile_array['branchsuntested']);
+                    $metric /= 2.0;
+                }
+                $covfile['branchesuntested'] = $coveragefile_array['branchsuntested'];
+                $covfile['branchestested'] = $coveragefile_array['branchstested'];
+                $covfile['functionsuntested'] = $coveragefile_array['functionsuntested'];
+                $covfile['functionstested'] = $coveragefile_array['functionstested'];
+
+                $covfile['percentcoverage'] = sprintf('%3.2f', $metric * 100);
+                $covfile['coveragemetric'] = $metric;
+                $coveragetype = 'bullseye';
+            } else {
+                // coverage metric for gcov
+                $metric = 0;
+                $covfile['branchesuntested'] = $coveragefile_array['branchsuntested'];
+                $covfile['branchestested'] = $coveragefile_array['branchstested'];
+                if (($covfile['branchestested'] + $covfile['branchesuntested']) > 0) {
+                    $metric += $covfile['branchestested'] / ($covfile['branchestested'] + $covfile['branchesuntested']);
+                }
+                $covfile['branchpercentcoverage'] = sprintf('%3.2f', $metric * 100);
+                $covfile['branchcoveragemetric'] = $metric;
+
+                $covfile['percentcoverage'] = sprintf('%3.2f', $covfile['loctested'] / ($covfile['loctested'] + $covfile['locuntested']) * 100);
+                $covfile['coveragemetric'] = ($covfile['loctested'] + 10) / ($covfile['loctested'] + $covfile['locuntested'] + 10);
+                $coveragetype = 'gcov';
+            }
+
+            // Add the priority
+            $covfile['priority'] = $coveragefile_array['priority'];
+
+            // If the user is logged in we set the users
+            if (isset($coveragefile_array['userid'])) {
+                $covfile['user'] = $coveragefile_array['userid'];
+            }
+            if ($covfile['coveragemetric'] != 1.0 || $status !== -1) {
+                $covfile_array[] = $covfile;
+            }
+        }
+
+
+        // Contruct the directory view
+        if ($status === -1) {
+            $directory_array = array();
+            foreach ($covfile_array as $covfile) {
+                $fullpath = $covfile['fullpath'];
+                $fullpath = dirname($fullpath);
+                if (!isset($directory_array[$fullpath])) {
+                    $directory_array[$fullpath] = array();
+                    $directory_array[$fullpath]['priority'] = 0;
+                    $directory_array[$fullpath]['directory'] = 1;
+                    $directory_array[$fullpath]['covered'] = 1;
+                    $directory_array[$fullpath]['fileid'] = 0;
+                    $directory_array[$fullpath]['locuntested'] = 0;
+                    $directory_array[$fullpath]['loctested'] = 0;
+                    $directory_array[$fullpath]['branchesuntested'] = 0;
+                    $directory_array[$fullpath]['branchestested'] = 0;
+                    $directory_array[$fullpath]['functionsuntested'] = 0;
+                    $directory_array[$fullpath]['functionstested'] = 0;
+                    $directory_array[$fullpath]['percentcoverage'] = 0;
+                    $directory_array[$fullpath]['coveragemetric'] = 0;
+                    $directory_array[$fullpath]['nfiles'] = 0;
+                    $directory_array[$fullpath]['branchpercentcoverage'] = 0;
+                    $directory_array[$fullpath]['branchcoveragemetric'] = 0;
+                }
+
+                $directory_array[$fullpath]['fullpath'] = $fullpath;
+                $directory_array[$fullpath]['locuntested'] += $covfile['locuntested'];
+                $directory_array[$fullpath]['loctested'] += $covfile['loctested'];
+                if (isset($covfile['branchesuntested'])) {
+                    $directory_array[$fullpath]['branchesuntested'] += $covfile['branchesuntested'];
+                    $directory_array[$fullpath]['branchestested'] += $covfile['branchestested'];
+
+                    $directory_array[$fullpath]['branchcoveragemetric'] += $covfile['branchcoveragemetric'];
+                }
+                if (isset($covfile['functionsuntested'])) {
+                    $directory_array[$fullpath]['functionsuntested'] += $covfile['functionsuntested'];
+                    $directory_array[$fullpath]['functionstested'] += $covfile['functionstested'];
+                }
+                $directory_array[$fullpath]['coveragemetric'] += $covfile['coveragemetric'];
+                $directory_array[$fullpath]['nfiles']++;
+            }
+
+            // Compute the average
+            foreach ($directory_array as $fullpath => $covdir) {
+                $directory_array[$fullpath]['percentcoverage'] = sprintf('%3.2f',
+                    100.0 * ($covdir['loctested'] / ($covdir['loctested'] + $covdir['locuntested'])));
+                $directory_array[$fullpath]['coveragemetric'] = sprintf('%3.2f', $covdir['coveragemetric'] / $covdir['nfiles']);
+
+                // Compute the branch average
+                if ($coveragetype === 'gcov') {
+                    $directory_array[$fullpath]['branchpercentcoverage'] = sprintf('%3.2f', 0);
+                    if (($covdir['branchestested'] + $covdir['branchesuntested']) > 0) {
+                        $directory_array[$fullpath]['branchpercentcoverage'] = sprintf('%3.2f',
+                            100.0 * ($covdir['branchestested'] / ($covdir['branchestested'] + $covdir['branchesuntested'])));
+                    }
+                    $directory_array[$fullpath]['branchcoveragemetric'] = sprintf('%3.2f', $covdir['branchcoveragemetric']);
+                }
+            }
+
+            $covfile_array = array_merge($covfile_array, $directory_array);
+        } elseif ($status == 0) {
+            // Add the untested files if the coverage is low
+
+            $coveragefile = $db->executePrepared("
+                        SELECT
+                            cf.fullpath,
+                            cfp.priority
+                            $SQLDisplayAuthor
+                        FROM
+                            coverage AS c,
+                            coveragefile AS cf
+                            $SQLDisplayAuthors
+                        LEFT JOIN coveragefilepriority AS cfp ON (
+                            cfp.fullpath=cf.fullpath
+                            AND projectid=?
+                        )
+                        WHERE
+                            c.buildid=?
+                            AND cf.id=c.fileid
+                            AND c.covered=0
+                            $SQLsearchTerm
+                    ", [$this->project->Id, $this->build->Id]);
+
+            foreach ($coveragefile as $coveragefile_array) {
+                $covfile = [];
+                $covfile['filename'] = substr($coveragefile_array['fullpath'], strrpos($coveragefile_array['fullpath'], '/') + 1);
+                $covfile['fullpath'] = $coveragefile_array['fullpath'];
+                $covfile['fileid'] = 0;
+                $covfile['covered'] = 0;
+                $covfile['locuntested'] = 0;
+                $covfile['loctested'] = 0;
+                $covfile['branchesuntested'] = 0;
+                $covfile['branchestested'] = 0;
+                $covfile['functionsuntested'] = 0;
+                $covfile['functionstested'] = 0;
+                $covfile['percentcoverage'] = 0;
+                $covfile['coveragemetric'] = 0;
+
+                $covfile['priority'] = $coveragefile_array['priority'];
+                if (isset($coveragefile_array['userid'])) {
+                    $covfile['user'] = $coveragefile_array['userid'];
+                }
+                $covfile_array[] = $covfile;
+            }
+        }
+
+        // Array to return to the datatable
+        $output = [
+            'sEcho' => intval($_GET['sEcho']),
+            'aaData' => [],
+        ];
+
+        $sortdir = 'asc';
+        if (isset($_GET['sSortDir_0'])) {
+            $sortdir = $_GET['sSortDir_0'];
+        }
+        usort($covfile_array, [$this, "sort_{$sortby}"]);
+        if ($sortdir === 'desc') {
+            $covfile_array = array_reverse($covfile_array);
+        }
+
+        $ncoveragefiles = 0;
+
+        foreach ($covfile_array as $covfile) {
+            // Show only the low coverage
+            if (isset($covfile['directory'])) {
+                $filestatus = -1; //no
+            } elseif ($covfile['covered'] == 0) {
+                $filestatus = 0; //no
+            } elseif ($covfile['covered'] == 1 && $covfile['percentcoverage'] == 0.0) {
+                $filestatus = 1; //zero
+            } elseif (($covfile['covered'] == 1 && $covfile['coveragemetric'] < $_GET['metricerror'])) {
+                $filestatus = 2; //low
+            } elseif ($covfile['covered'] == 1 && $covfile['coveragemetric'] == 1.0) {
+                $filestatus = 5; //complete
+            } elseif ($covfile['covered'] == 1 && $covfile['coveragemetric'] >= $_GET['metricpass']) {
+                $filestatus = 4; // satisfactory
+            } else {
+                $filestatus = 3; // medium
+            }
+            if ($covfile['covered'] == 1 && $status === 6) {
+                $filestatus = 6; // All
+            }
+
+            if ($status != $filestatus) {
+                continue;
+            }
+            $ncoveragefiles++;
+            if ($ncoveragefiles < $start) {
+                continue;
+            } elseif ($ncoveragefiles > $end) {
+                break;
+            }
+
+            // For display purposes
+            $roundedpercentage = round($covfile['percentcoverage']);
+            if ($roundedpercentage > 98) {
+                $roundedpercentage = 98;
+            };
+
+            // For display branch purposes
+            if ($coveragetype == 'gcov') {
+                $roundedpercentage2 = round($covfile['branchpercentcoverage']);
+                if ($roundedpercentage2 > 98) {
+                    $roundedpercentage2 = 98;
+                };
+            }
+
+            $row = [];
+
+            // First column (Filename)
+            if ($status == -1) {
+                //directory view
+
+                $row[] = '<a href="viewCoverage.php?buildid=' . $this->build->Id . '&#38;status=6&#38;dir=' . $covfile['fullpath'] . '">' . $covfile['fullpath'] . '</a>';
+            } elseif (!$covfile['covered'] || !($this->project->ShowCoverageCode || $role >= Project::PROJECT_ADMIN)) {
+                $row[] = $covfile['fullpath'];
+            } else {
+                $row[] = '<a href="viewCoverageFile.php?buildid=' . $this->build->Id . '&#38;fileid=' . $covfile['fileid'] . '">' . $covfile['fullpath'] . '</a>';
+            }
+
+            // Second column (Status)
+            switch ($status) {
+                case 0:
+                    $row[] = 'No';
+                    break;
+                case 1:
+                    $row[] = 'Zero';
+                    break;
+                case 2:
+                    $row[] = 'Low';
+                    break;
+                case 3:
+                    $row[] = 'Medium';
+                    break;
+                case 4:
+                    $row[] = 'Satisfactory';
+                    break;
+                case 5:
+                    $row[] = 'Complete';
+                    break;
+                case 6:
+                case -1:
+                    if ($covfile['covered'] == 0) {
+                        $row[] = 'N/A'; // No coverage
+                    } elseif ($covfile['covered'] == 1 && $covfile['percentcoverage'] == 0.0) {
+                        $row[] = 'Zero'; // zero
+                    } elseif (($covfile['covered'] == 1 && $covfile['coveragemetric'] < $_GET['metricerror'])) {
+                        $row[] = 'Low'; // low
+                    } elseif ($covfile['covered'] == 1 && $covfile['coveragemetric'] == 1.0) {
+                        $row[] = 'Complete'; //complete
+                    } elseif ($covfile['covered'] == 1 && $covfile['coveragemetric'] >= $_GET['metricpass']) {
+                        $row[] = 'Satisfactory'; // satisfactory
+                    } else {
+                        $row[] = 'Medium'; // medium
+                    }
+                    break;
+            }
+
+            // Third column (Percentage)
+            $thirdcolumn = '<div style="position:relative; width: 190px;">
+               <div style="position:relative; float:left;
+               width: 123px; height: 12px; background: #bdbdbd url(\'img/progressbar.gif\') top left no-repeat;">
+               <div class=';
+            switch ($status) {
+                case 0:
+                    $thirdcolumn .= '"error" ';
+                    break;
+                case 1:
+                    $thirdcolumn .= '"error" ';
+                    break;
+                case 2:
+                    $thirdcolumn .= '"error" ';
+                    break;
+                case 3:
+                    $thirdcolumn .= '"warning" ';
+                    break;
+                case 4:
+                    $thirdcolumn .= '"normal" ';
+                    break;
+                case 5:
+                    $thirdcolumn .= '"normal" ';
+                    break;
+                case 6:
+                case -1:
+                    if (($covfile['coveragemetric'] < $_GET['metricerror'])) {
+                        $thirdcolumn .= '"error"'; //low
+                    } elseif ($covfile['coveragemetric'] == 1.0) {
+                        $thirdcolumn .= '"normal"'; //complete
+                    } elseif ($covfile['coveragemetric'] >= $_GET['metricpass']) {
+                        $thirdcolumn .= '"normal"'; // satisfactory
+                    } else {
+                        $thirdcolumn .= '"warning"'; // medium
+                    }
+                    break;
+            }
+            $thirdcolumn .= ' style="height: 10px;margin-left:1px; ';
+            $thirdcolumn .= 'border-top:1px solid grey; border-top:1px solid grey; ';
+            $thirdcolumn .= 'width:' . $roundedpercentage . '%;">';
+            $thirdcolumn .= '</div></div><div class="percentvalue" style="position:relative; float:left; margin-left:10px">' . $covfile['percentcoverage'] . '%</div></div>';
+            $row[] = $thirdcolumn;
+
+            // Fourth column (Line not covered)
+            $fourthcolumn = '';
+            if ($coveragetype == 'gcov') {
+                $fourthcolumn = '<span';
+                if ($covfile['covered'] == 0) {
+                    $fourthcolumn .= ' class="error">' . $covfile['locuntested'] . '</span>';
+                } else {
+                    // covered > 0
+
+                    switch ($status) {
+                        case 0:
+                            $fourthcolumn .= ' class="error">';
+                            break;
+                        case 1:
+                            $fourthcolumn .= ' class="error">';
+                            break;
+                        case 2:
+                            $fourthcolumn .= ' class="error">';
+                            break;
+                        case 3:
+                            $fourthcolumn .= ' class="warning">';
+                            break;
+                        case 4:
+                            $fourthcolumn .= ' class="normal">';
+                            break;
+                        case 5:
+                            $fourthcolumn .= ' class="normal">';
+                            break;
+                        case 6:
+                        case -1:
+                            if (($covfile['coveragemetric'] < $_GET['metricerror'])) {
+                                $fourthcolumn .= ' class="error">'; //low
+                            } elseif ($covfile['coveragemetric'] == 1.0) {
+                                $fourthcolumn .= ' class="normal">'; //complete
+                            } elseif ($covfile['coveragemetric'] >= $_GET['metricpass']) {
+                                $fourthcolumn .= ' class="normal">'; // satisfactory
+                            } else {
+                                $fourthcolumn .= ' class="warning">'; // medium
+                            }
+                            break;
+                    }
+                    $totalloc = $covfile['loctested'] + $covfile['locuntested'];
+                    $fourthcolumn .= $covfile['locuntested'] . '/' . $totalloc . '</span>';
+                }
+                $row[] = $fourthcolumn;
+            } elseif ($coveragetype === 'bullseye') {
+                $fourthcolumn = '<span';
+                // branches
+                if ($covfile['covered'] == 0) {
+                    $fourthcolumn .= ' class="error">' . $covfile['branchesuntested'] . '</span>';
+                } else {
+                    // covered > 0
+
+                    switch ($status) {
+                        case 0:
+                            $fourthcolumn .= ' class="error">';
+                            break;
+                        case 1:
+                            $fourthcolumn .= ' class="error">';
+                            break;
+                        case 2:
+                            $fourthcolumn .= ' class="error">';
+                            break;
+                        case 3:
+                            $fourthcolumn .= ' class="warning">';
+                            break;
+                        case 4:
+                            $fourthcolumn .= ' class="normal">';
+                            break;
+                        case 5:
+                            $fourthcolumn .= ' class="normal">';
+                            break;
+                        case 6:
+                        case -1:
+                            if (($covfile['coveragemetric'] < $_GET['metricerror'])) {
+                                $fourthcolumn .= ' class="error">'; //low
+                            } elseif ($covfile['coveragemetric'] == 1.0) {
+                                $fourthcolumn .= ' class="normal">'; //complete
+                            } elseif ($covfile['coveragemetric'] >= $_GET['metricpass']) {
+                                $fourthcolumn .= ' class="normal">'; // satisfactory
+                            } else {
+                                $fourthcolumn .= ' class="warning">'; // medium
+                            }
+                            break;
+                    }
+                    $totalloc = @$covfile['branchestested'] + @$covfile['branchesuntested'];
+                    $fourthcolumn .= $covfile['branchesuntested'] . '/' . $totalloc . '</span>';
+                }
+                $row[] = $fourthcolumn;
+
+                $fourthcolumn2 = '<span';
+                //functions
+                if ($covfile['covered'] == 0) {
+                    $fourthcolumn2 .= ' class="error">0</span>';
+                } else {
+                    // covered > 0
+
+                    switch ($status) {
+                        case 0:
+                            $fourthcolumn2 .= ' class="error">';
+                            break;
+                        case 1:
+                            $fourthcolumn2 .= ' class="error">';
+                            break;
+                        case 2:
+                            $fourthcolumn2 .= ' class="error">';
+                            break;
+                        case 3:
+                            $fourthcolumn2 .= ' class="warning">';
+                            break;
+                        case 4:
+                            $fourthcolumn2 .= ' class="normal">';
+                            break;
+                        case 5:
+                            $fourthcolumn2 .= ' class="normal">';
+                            break;
+                        case 6:
+                        case -1:
+                            if (($covfile['coveragemetric'] < $_GET['metricerror'])) {
+                                $fourthcolumn2 .= ' class="error">'; //low
+                            } elseif ($covfile['coveragemetric'] == 1.0) {
+                                $fourthcolumn2 .= ' class="normal">'; //complete
+                            } elseif ($covfile['coveragemetric'] >= $_GET['metricpass']) {
+                                $fourthcolumn2 .= ' class="normal">'; // satisfactory
+                            } else {
+                                $fourthcolumn2 .= ' class="warning">'; // medium
+                            }
+                            break;
+                    }
+                    $totalfunctions = @$covfile['functionstested'] + @$covfile['functionsuntested'];
+                    $fourthcolumn2 .= $covfile['functionsuntested'] . '/' . $totalfunctions . '</span>';
+                }
+                $row[] = $fourthcolumn2;
+            } else {
+                // avoid displaying a DataTables warning to our user if coveragetype is
+                // blank or unrecognized.
+                $row[] = $fourthcolumn;
+            }
+
+            //Next column (Branch Percentage)
+            if ($coveragetype === 'gcov' && ($total_branchstested + $total_branchsuntested) > 0) {
+                $nextcolumn = '<div style="position:relative; width: 190px;">
+                   <div style="position:relative; float:left;
+                   width: 123px; height: 12px; background: #bdbdbd url(\'img/progressbar.gif\') top left no-repeat;">
+                   <div class=';
+                switch ($status) {
+                    case 0:
+                        $nextcolumn .= '"error" ';
+                        break;
+                    case 1:
+                        $nextcolumn .= '"error" ';
+                        break;
+                    case 2:
+                        $nextcolumn .= '"error" ';
+                        break;
+                    case 3:
+                        $nextcolumn .= '"warning" ';
+                        break;
+                    case 4:
+                        $nextcolumn .= '"normal" ';
+                        break;
+                    case 5:
+                        $nextcolumn .= '"normal" ';
+                        break;
+                    case 6:
+                    case -1:
+                        if (($covfile['branchcoveragemetric'] < $_GET['metricerror'])) {
+                            $nextcolumn .= '"error"'; //low
+                        } elseif ($covfile['branchcoveragemetric'] == 1.0) {
+                            $nextcolumn .= '"normal"'; //complete
+                        } elseif ($covfile['branchcoveragemetric'] >= $_GET['metricpass']) {
+                            $nextcolumn .= '"normal"'; // satisfactory
+                        } else {
+                            $nextcolumn .= '"warning"'; // medium
+                        }
+                        break;
+                }
+                $nextcolumn .= 'style="height: 10px;margin-left:1px; ';
+                $nextcolumn .= 'border-top:1px solid grey; border-top:1px solid grey; ';
+                $nextcolumn .= 'width:' . $roundedpercentage2 . '%;">';
+                $nextcolumn .= '</div></div><div class="percentvalue" style="position:relative; float:left; margin-left:10px">' . $covfile['branchpercentcoverage'] . '%</div></div>';
+                $row[] = $nextcolumn;
+
+                // Next column (branch not covered)
+                $nextcolumn2 = '';
+                $nextcolumn2 = '<span';
+                if ($covfile['covered'] == 0) {
+                    $nextcolumn2 .= ' class="error">' . $covfile['branchestested'] . '</span>';
+                } else {
+                    // covered > 0
+
+                    switch ($status) {
+                        case 0:
+                            $nextcolumn2 .= ' class="error">';
+                            break;
+                        case 1:
+                            $nextcolumn2 .= ' class="error">';
+                            break;
+                        case 2:
+                            $nextcolumn2 .= ' class="error">';
+                            break;
+                        case 3:
+                            $nextcolumn2 .= ' class="warning">';
+                            break;
+                        case 4:
+                            $nextcolumn2 .= ' class="normal">';
+                            break;
+                        case 5:
+                            $nextcolumn2 .= ' class="normal">';
+                            break;
+                        case 6:
+                        case -1:
+                            if (($covfile['branchcoveragemetric'] < $_GET['metricerror'])) {
+                                $nextcolumn2 .= ' class="error">'; //low
+                            } elseif ($covfile['branchcoveragemetric'] == 1.0) {
+                                $nextcolumn2 .= ' class="normal">'; //complete
+                            } elseif ($covfile['branchcoveragemetric'] >= $_GET['metricpass']) {
+                                $nextcolumn2 .= ' class="normal">'; // satisfactory
+                            } else {
+                                $nextcolumn2 .= ' class="warning">'; // medium
+                            }
+                            break;
+                    }
+                    $totalloc = @$covfile['branchestested'] + @$covfile['branchesuntested'];
+                    $nextcolumn2 .= $covfile['branchesuntested'] . '/' . $totalloc . '</span>';
+                }
+                $row[] = $nextcolumn2;
+            }
+
+            // Fifth column (Priority)
+            // Get the priority
+            $priority = 'NA';
+            switch ($covfile['priority']) {
+                case 0:
+                    $priority = '<div>None</div>';
+                    break;
+                case 1:
+                    $priority = '<div>Low</div>';
+                    break;
+                case 2:
+                    $priority = '<div class="warning">Medium</div>';
+                    break;
+                case 3:
+                    $priority = '<div class="error">High</div>';
+                    break;
+                case 4:
+                    $priority = '<div class="error">Urgent</div>';
+                    break;
+            }
+            $row[] = $priority;
+
+            // Sixth colum (Authors)
+            if ($userid > 0) {
+                $author = '';
+                if (isset($covfile['user'])) {
+                    /** @var User $user */
+                    $user = User::where('id', $covfile['user']);
+                    $author = $user->getFullNameAttribute();
+                }
+                $row[] = $author;
+            }
+
+            // Seventh colum (Label)
+            if (isset($_GET['displaylabels']) && $_GET['displaylabels'] == 1) {
+                $fileid = $covfile['fileid'];
+                $labels = '';
+                $coveragelabels = $db->executePrepared('
+                                      SELECT text
+                                      FROM
+                                          label,
+                                          label2coveragefile
+                                      WHERE
+                                          label.id=label2coveragefile.labelid
+                                          AND label2coveragefile.coveragefileid=?
+                                          AND label2coveragefile.buildid=?
+                                      ORDER BY text ASC
+                                  ', [intval($fileid), $this->build->Id]);
+                foreach ($coveragelabels as $coveragelabels_array) {
+                    if ($labels != '') {
+                        $labels .= ', ';
+                    }
+                    $labels .= $coveragelabels_array['text'];
+                }
+
+                $row[] = $labels;
+            }
+
+            $output['aaData'][] = $row;
+        }
+
+        switch ($status) {
+            case -1:
+                $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET['ndirectories'];
+                break;
+            case 0:
+                $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET['nno'];
+                break;
+            case 1:
+                $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET['nzero'];
+                break;
+            case 2:
+                $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET['nlow'];
+                break;
+            case 3:
+                $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET['nmedium'];
+                break;
+            case 4:
+                $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET['nsatisfactory'];
+                break;
+            case 5:
+                $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET['ncomplete'];
+                break;
+            case 6:
+                $output['iTotalRecords'] = $output['iTotalDisplayRecords'] = $_GET['nall'];
+                break;
+        }
+
+        return response()->json(cast_data_for_JSON($output));
+    }
+
+    private function sort_filename($a, $b): int
+    {
+        if ($a['fullpath'] == $b['fullpath']) {
+            return 0;
+        }
+        return $a['fullpath'] > $b['fullpath'] ? 1 : -1;
+    }
+
+    private function sort_status($a, $b): int
+    {
+        if ($a['coveragemetric'] == $b['coveragemetric']) {
+            return 0;
+        }
+        return $a['coveragemetric'] > $b['coveragemetric'] ? 1 : -1;
+    }
+
+    private function sort_percentage($a, $b): int
+    {
+        if ($a['percentcoverage'] == $b['percentcoverage']) {
+            return 0;
+        }
+        return $a['percentcoverage'] > $b['percentcoverage'] ? 1 : -1;
+    }
+
+    private function sort_branchpercentage($a, $b): int
+    {
+        if ($a['branchpercentcoverage'] == $b['branchpercentcoverage']) {
+            return 0;
+        }
+        return $a['branchpercentcoverage'] > $b['branchpercentcoverage'] ? 1 : -1;
+    }
+
+    private function sort_lines($a, $b): int
+    {
+        if ($a['locuntested'] == $b['locuntested']) {
+            return 0;
+        }
+        return $a['locuntested'] > $b['locuntested'] ? 1 : -1;
+    }
+
+    private function sort_branches($a, $b): int
+    {
+        if ($a['branchesuntested'] == $b['branchesuntested']) {
+            return 0;
+        }
+        return $a['branchesuntested'] > $b['branchesuntested'] ? 1 : -1;
+    }
+
+    private function sort_priority($a, $b): int
+    {
+        if ($a['priority'] == $b['priority']) {
+            return 0;
+        }
+        return $a['priority'] > $b['priority'] ? 1 : -1;
     }
 }

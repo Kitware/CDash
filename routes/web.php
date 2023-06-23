@@ -113,6 +113,8 @@ Route::get('/viewCoverage.php', 'CoverageController@viewCoverage');
 
 Route::get('/viewCoverageFile.php', 'CoverageController@viewCoverageFile');
 
+Route::any('/ajax/getviewcoverage.php', 'CoverageController@ajaxGetViewCoverage');
+
 Route::get('/buildOverview.php', 'BuildController@buildOverview');
 
 Route::get('/buildProperties.php', 'BuildController@buildProperties');
