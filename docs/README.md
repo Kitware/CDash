@@ -1,5 +1,6 @@
 * [Installation guide](install.md)
 * [Docker instructions](docker.md)
+* [Configuring CDash](config.md)
 * [Authentication options](authentication.md)
 * [Submission parsing](submissions.md)
 * [Test measurements](test_measurements.md)

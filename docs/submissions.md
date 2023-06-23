@@ -47,7 +47,7 @@ WantedBy=multi-user.target
 ```
 
 Notice that this example assumes that CDash's source code is located at `/var/www/CDash`,
-and that the web server user is `www-data`. Modify these details as necesssary.
+and that the appropriate user is `www-data`. Modify these details as necesssary.
 
 Once you've created this file, use `systemctl` to enable and start as many copies
 of this service as you'd like.
@@ -69,10 +69,10 @@ contain lots of data that can take a long time to parse.
 
 ### Remote workers
 
-CDash support queue workers that run on separate system from the main CDash
+CDash supports queue workers that run on a separate system from the main CDash
 web service. To use this feature, set `REMOTE_WORKERS=true` in the .env file
-for both the CDash web service and the remote worker(s).`
+for both the CDash web service and the remote worker(s).
 
 ## Deferred submissions
 
-CDash automatically detects when its database is unavailable and stores submissions received during this outage. When database access is restored, CDash will attempt to parse the submissions that were received during the outage. This behavior is controlled by the presence of the file named `DB_WAS_DOWN` was in the storage directory.
+CDash automatically detects when its database is unavailable and stores submissions received during this outage. When database access is restored, CDash will attempt to parse the submissions that were received during the outage. This behavior is controlled by the presence of the file named `DB_WAS_DOWN` in the storage directory.
