@@ -1,8 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use CDash\Database;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class BuildController extends AbstractBuildController
@@ -271,5 +274,21 @@ class BuildController extends AbstractBuildController
             'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/viewFiles', true),
             'title' => 'View Files'
         ]);
+    }
+
+    public function ajaxBuildNote(): View
+    {
+        $this->setBuildById(intval($_GET['buildid'] ?? -1));
+        Gate::authorize('edit-project', $this->project);
+
+        $notes = DB::select('SELECT * FROM buildnote WHERE buildid=? ORDER BY timestamp ASC', [$this->build->Id]);
+        foreach ($notes as $note) {
+            /** @var User $user */
+            $user = User::where('id', intval($note->userid))->first();
+            $note->user = $user;
+        }
+
+        return view('build.note')
+            ->with('notes', $notes);
     }
 }
