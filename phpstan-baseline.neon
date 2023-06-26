@@ -15402,21 +15402,6 @@ parameters:
 			path: app/cdash/public/api/v1/addUserNote.php
 
 		-
-			message: "#^Call to function is_array\\(\\) with string\\|false will always evaluate to false\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/authtoken.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Authtoken\\\\rest_delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/authtoken.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Authtoken\\\\rest_post\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/authtoken.php
-
-		-
 			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
