@@ -12,11 +12,13 @@
 
         <div ng-if="::cdash.update.revision">
             <b>Revision: </b>
-            <a ng-href="{{::cdash.update.revisionurl}}">{{::cdash.update.revision}}</a>
+            <tt><a ng-if="::cdash.update.revisionurl.length > 0" ng-href="{{::cdash.update.revisionurl}}">{{::cdash.update.revision}}</a></tt>
+            <tt ng-if="::cdash.update.revisionurl.length === 0" >{{::cdash.update.revision}}</tt>
         </div>
         <div ng-if="::cdash.update.priorrevision">
             <b>Prior Revision: </b>
-            <a ng-href="{{::cdash.update.revisiondiff}}">{{::cdash.update.priorrevision}}</a>
+            <tt><a ng-if="::cdash.update.revisiondiff.length > 0" ng-href="{{::cdash.update.revisiondiff}}">{{::cdash.update.priorrevision}}</a></tt>
+            <tt ng-if="::cdash.update.revisiondiff.length === 0" ng-href="{{::cdash.update.revisiondiff}}">{{::cdash.update.priorrevision}}</tt>
         </div>
 
         <br/>

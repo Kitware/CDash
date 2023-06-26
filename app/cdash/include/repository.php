@@ -691,6 +691,10 @@ function get_revision_url($projectid, $revision, $priorrevision)
     $project = $db->executePreparedSingleRow('SELECT cvsviewertype, cvsurl FROM project WHERE id=?', [intval($projectid)]);
     $projecturl = $project['cvsurl'];
 
+    if (strlen($projecturl) === 0) {
+        return '';
+    }
+
     $cvsviewertype = strtolower($project['cvsviewertype']);
     $revisionfonction = 'get_' . $cvsviewertype . '_revision_url';
 
