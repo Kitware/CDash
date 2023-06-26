@@ -109,7 +109,7 @@ Route::get('/viewUpdate.php', 'AdminController@viewUpdate');
 
 Route::get('/viewTest.php', 'ViewTestController@viewTest');
 
-Route::get('/viewCoverage.php', 'CoverageController@viewCoverage');
+Route::match(['get', 'post'], '/viewCoverage.php', 'CoverageController@viewCoverage');
 
 Route::get('/viewCoverageFile.php', 'CoverageController@viewCoverageFile');
 
