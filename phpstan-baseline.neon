@@ -16022,11 +16022,6 @@ parameters:
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Only booleans are allowed in a negated boolean, int\\|string\\|null given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/createProject.php
-
-		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/deleteSubmissionFile.php
@@ -23300,7 +23295,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
-			count: 10
+			count: 11
 			path: app/cdash/tests/test_createprojectpermissions.php
 
 		-
