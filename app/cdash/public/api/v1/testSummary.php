@@ -266,6 +266,7 @@ $numfailed = 0;
 $numtotal = 0;
 $test_measurements = [];
 
+$builds_response = [];
 foreach ($result as $row) {
     $buildid = $row['buildid'];
     $build_response = array();
@@ -410,7 +411,7 @@ $response['csvlink'] = $_SERVER['REQUEST_URI'] . '&export=csv';
 $response['columncount'] = count($columns);
 $response['numfailed'] = $numfailed;
 $response['numtotal'] = $numtotal;
-$response['percentagepassed'] = round($numpassed / $numtotal, 2) * 100;
+$response['percentagepassed'] = $numtotal > 0 ? round($numpassed / $numtotal, 2) * 100 : 0;
 
 $pageTimer->end($response);
 echo json_encode($response);
