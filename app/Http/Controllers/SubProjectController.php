@@ -346,4 +346,51 @@ class SubProjectController extends AbstractProjectController
         $pageTimer->end($response);
         return response()->json(cast_data_for_JSON($response));
     }
+
+    public function ajaxDependenciesGraph(): JsonResponse
+    {
+        $this->setProjectByName(htmlspecialchars($_GET['project'] ?? ''));
+
+        $date = isset($_GET['date']) ? htmlspecialchars($_GET['date']) : null;
+
+        $subprojectids = $this->project->GetSubProjects();
+
+        $subproject_groups = [];
+        $groups = $this->project->GetSubProjectGroups();
+        foreach ($groups as $group) {
+            $subproject_groups[$group->GetId()] = $group;
+        }
+
+        $result = []; # array to store the all the result
+        $subprojs = [];
+        foreach ($subprojectids as $subprojectid) {
+            $SubProject = new SubProject();
+            $SubProject->SetId($subprojectid);
+            $subprojs[$subprojectid] = $SubProject;
+        }
+
+        foreach ($subprojectids as $subprojectid) {
+            $SubProject = $subprojs[$subprojectid];
+            $subarray = [
+                'name' => $SubProject->GetName(),
+                'id' => $subprojectid,
+            ];
+            $groupid = $SubProject->GetGroupId();
+            if ($groupid > 0) {
+                $subarray['group'] = $subproject_groups[$groupid]->GetName();
+            }
+            $dependencies = $SubProject->GetDependencies($date);
+            $deparray = [];
+            foreach ($dependencies as $depprojid) {
+                if (array_key_exists($depprojid, $subprojs)) {
+                    $deparray[] = $subprojs[$depprojid]->GetName();
+                }
+            }
+            if (count($deparray) > 0) {
+                $subarray['depends'] = $deparray;
+            }
+            $result[] = $subarray;
+        }
+        return response()->json(cast_data_for_JSON($result));
+    }
 }
