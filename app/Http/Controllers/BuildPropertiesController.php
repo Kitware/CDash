@@ -9,6 +9,7 @@ use DateTime;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
+use PDOStatement;
 
 require_once 'include/filterdataFunctions.php';
 
@@ -23,25 +24,20 @@ class BuildPropertiesController extends AbstractBuildController
     {
         $pageTimer = new PageTimer();
 
-        if (array_key_exists('buildid', $_GET)) {
-            $this->get_defects_for_builds();
-            return;
+        if (isset($_GET['buildid'])) {
+            return response()->json($this->get_defects_for_builds());
         }
 
-        // Make sure the user has access to this project.
-        $Project = get_project_from_request();
-        if (is_null($Project)) {
-            return;
+        if (!isset($_GET['project'])) {
+            abort(400, 'Valid project required');
         }
-
-        // Load project data.
-        $Project->Fill();
+        $this->setProjectByName($_GET['project']);
 
         // Begin our JSON response.
         $response = begin_JSON_response();
-        $response['title'] = "$Project->Name : Build Properties";
+        $response['title'] = "{$this->project->Name} - Build Properties";
         $response['showcalendar'] = 0;
-        $response['nightlytime'] = $Project->NightlyTime;
+        $response['nightlytime'] = $this->project->NightlyTime;
 
         // Figure out our time range.
         $date = null;
@@ -50,12 +46,10 @@ class BuildPropertiesController extends AbstractBuildController
         if (isset($_GET['begin']) && isset($_GET['end'])) {
             $beginning_date = $_GET['begin'];
             $end_date = $_GET['end'];
-            list($unused, $beginning_timestamp) =
-                get_dates($beginning_date, $Project->NightlyTime);
-            list($unused, $end_timestamp) =
-                get_dates($end_date, $Project->NightlyTime);
+            list($unused, $beginning_timestamp) = get_dates($beginning_date, $this->project->NightlyTime);
+            list($unused, $end_timestamp) = get_dates($end_date, $this->project->NightlyTime);
             $datetime = new DateTime();
-            $datetime->setTimeStamp($end_timestamp);
+            $datetime->setTimestamp($end_timestamp);
             $datetime->add(new DateInterval('P1D'));
             $end_timestamp = $datetime->getTimestamp();
             $response['begin'] = $beginning_date;
@@ -68,17 +62,16 @@ class BuildPropertiesController extends AbstractBuildController
             $date = date(FMT_DATE);
         }
         if (is_null($beginning_timestamp)) {
-            list($unused, $beginning_timestamp) =
-                get_dates($date, $Project->NightlyTime);
+            list($unused, $beginning_timestamp) = get_dates($date, $this->project->NightlyTime);
             $datetime = new DateTime();
-            $datetime->setTimeStamp($beginning_timestamp);
+            $datetime->setTimestamp($beginning_timestamp);
             $datetime->add(new DateInterval('P1D'));
             $end_timestamp = $datetime->getTimestamp();
         }
         $begin_date = date(FMT_DATETIME, $beginning_timestamp);
         $end_date = date(FMT_DATETIME, $end_timestamp);
 
-        get_dashboard_JSON($Project->Name, date(FMT_DATE, $end_timestamp), $response);
+        get_dashboard_JSON($this->project->Name, date(FMT_DATE, $end_timestamp), $response);
 
         // Hide traditional Previous/Current/Next links.
         $response['hidenav'] = true;
@@ -142,7 +135,7 @@ class BuildPropertiesController extends AbstractBuildController
             JOIN buildproperties bp ON (bp.buildid = b.id)
             WHERE b.projectid = :projectid AND b.parentid IN (0, -1)
             AND b.starttime < :end AND b.starttime >= :begin");
-        $stmt->bindParam(':projectid', $Project->Id);
+        $stmt->bindParam(':projectid', $this->project->Id);
         $stmt->bindParam(':begin', $begin_date);
         $stmt->bindParam(':end', $end_date);
         pdo_execute($stmt);
@@ -170,7 +163,7 @@ class BuildPropertiesController extends AbstractBuildController
                     $type = 'array';
                 } elseif (is_bool($value)) {
                     $type = 'bool';
-                } elseif (is_numeric($value) && strpos($value, 'e') === false) {
+                } elseif (is_numeric($value) && !str_contains($value, 'e')) {
                     $type = 'number';
                 } else {
                     $type = 'string';
@@ -190,7 +183,7 @@ class BuildPropertiesController extends AbstractBuildController
         $response['filterdata']['pageId'] = 'buildProperties.php';
 
         $pageTimer->end($response);
-        echo json_encode(cast_data_for_JSON($response));
+        return response()->json(cast_data_for_JSON($response));
     }
 
     private function get_defects_for_builds()
@@ -209,8 +202,16 @@ class BuildPropertiesController extends AbstractBuildController
             abort(400, "No defects specified");
         }
 
+        // A bit of a hack to ensure that we are able to access each specified buildid.
+        // This loop will generate many queries and is generally quite inefficient, but should only
+        // be operating on small numbers of buildids, so we shouldn't see much of a performance impact.
+        // Future optimizations can be made at the cost of lower code cleanliness in the future if necessary.
+        foreach ($_GET['buildid'] as $buildid) {
+            $this->setBuildById((int) $buildid);
+        }
+
         $pdo = Database::getInstance()->getPdo();
-        $placeholder_str = str_repeat('?,', count($_GET['buildid']) - 1). '?';
+        $placeholder_str = Database::getInstance()->createPreparedArray(count($_GET['buildid']));
 
         $defects_response = [];
         foreach ($_GET['defect'] as $defect) {
@@ -219,11 +220,13 @@ class BuildPropertiesController extends AbstractBuildController
             $sql2 = null;
 
             $error_defect = false;
-            if ($defect == 'builderrors') {
+            $type = '';
+            $prettyname = '';
+            if ($defect === 'builderrors') {
                 $error_defect = true;
                 $prettyname = 'Error';
                 $type = 0;
-            } elseif ($defect == 'buildwarnings') {
+            } elseif ($defect === 'buildwarnings') {
                 $error_defect = true;
                 $prettyname = 'Warning';
                 $type = 1;
@@ -236,15 +239,15 @@ class BuildPropertiesController extends AbstractBuildController
                     "SELECT buildid, text AS descr
                     FROM builderror
                     WHERE type = $type AND
-                    buildid IN ($placeholder_str)";
+                    buildid IN $placeholder_str";
                 // Query buildfailure table.
                 $sql2 =
                     "SELECT bf.buildid, bfd.stderror AS descr
                     FROM buildfailure bf
                     JOIN buildfailuredetails bfd ON bf.detailsid = bfd.id
                     WHERE bfd.type = $type AND
-                    bf.buildid IN ($placeholder_str)";
-            } elseif ($defect == 'testfailed') {
+                    bf.buildid IN $placeholder_str";
+            } elseif ($defect === 'testfailed') {
                 $valid_defect = true;
                 $prettyname = 'Test Failure';
                 $sql =
@@ -253,7 +256,7 @@ class BuildPropertiesController extends AbstractBuildController
                     JOIN build2test b2t ON b2t.testid = t.id
                     JOIN build b ON b.id = b2t.buildid
                     WHERE b2t.status = 'failed' AND
-                    b.id IN ($placeholder_str)";
+                    b.id IN $placeholder_str";
             }
 
             if (!$valid_defect) {
@@ -263,8 +266,7 @@ class BuildPropertiesController extends AbstractBuildController
             $stmt = $pdo->prepare($sql);
             $stmt->execute($_GET['buildid']);
 
-            if (!$this->gather_defects($stmt, $prettyname, $defects_response) &&
-                !is_null($sql2)) {
+            if (!$this->gather_defects($stmt, $prettyname, $defects_response) && !is_null($sql2)) {
                 $stmt = $pdo->prepare($sql2);
                 $stmt->execute($_GET['buildid']);
                 $this->gather_defects($stmt, $prettyname, $defects_response);
@@ -273,16 +275,16 @@ class BuildPropertiesController extends AbstractBuildController
 
         $response = [];
         $response['defects'] = $defects_response;
-        echo json_encode(cast_data_for_JSON($response));
+        return cast_data_for_JSON($response);
     }
 
-    private function gather_defects($stmt, $prettyname, &$defects_response)
+    private function gather_defects(PDOStatement $stmt, string $prettyname, array &$defects_response): bool
     {
         $results_found = false;
         while ($row = $stmt->fetch()) {
             $results_found = true;
             $descr = $row['descr'];
-            $idx = array_search($descr, array_column($defects_response, 'descr'));
+            $idx = array_search($descr, array_column($defects_response, 'descr'), true);
             if ($idx === false) {
                 $defects_response[] = [
                     'descr' => $descr,
