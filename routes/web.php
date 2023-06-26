@@ -117,7 +117,7 @@ Route::any('/ajax/getviewcoverage.php', 'CoverageController@ajaxGetViewCoverage'
 
 Route::get('/buildOverview.php', 'BuildController@buildOverview');
 
-Route::get('/buildProperties.php', 'BuildController@buildProperties');
+Route::get('/buildProperties.php', 'BuildPropertiesController@buildProperties');
 
 Route::get('/viewSubProjectDependenciesGraph.php', 'SubProjectController@dependenciesGraph');
 // TODO: (williamjallen) Replace this /ajax route with an equivalent /api route
