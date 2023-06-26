@@ -11932,16 +11932,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function checkUserPolicy\\(\\) has parameter \\$onlyreturn with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function checkUserPolicy\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function compute_percentcoverage\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
