@@ -115,6 +115,8 @@ Route::get('/viewCoverageFile.php', 'CoverageController@viewCoverageFile');
 
 Route::any('/ajax/getviewcoverage.php', 'CoverageController@ajaxGetViewCoverage');
 
+Route::any('/ajax/showcoveragegraph.php', 'CoverageController@ajaxShowCoverageGraph');
+
 Route::get('/buildOverview.php', 'BuildController@buildOverview');
 
 Route::get('/buildProperties.php', 'BuildController@buildProperties');
