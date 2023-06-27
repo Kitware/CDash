@@ -77,7 +77,7 @@ class NotesAPICase extends KWWebTestCase
         $project->Save();
 
         $endpoint = "{$this->url}/api/v1/addUserNote.php?buildid={$id}";
-        $response = $this->get($endpoint);
+        $response = $this->post($endpoint);
         $actual = json_decode($response);
         $expected = 'Permission denied';
 
@@ -114,7 +114,7 @@ class NotesAPICase extends KWWebTestCase
         $this->login();
         $endpoint = "{$this->url}/api/v1/addUserNote.php?";
 
-        $response = $this->get($endpoint);
+        $response = $this->post($endpoint);
         $actual = json_decode($response);
         $expected = 'Valid buildid required';
         $this->assertTrue(isset($actual->error));

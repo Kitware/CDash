@@ -37,9 +37,7 @@ if (is_null($build)) {
 
 if (!isset($_REQUEST['AddNote']) || !isset($_REQUEST['Status']) ||
         strlen($_REQUEST['AddNote']) < 1 ||  strlen($_REQUEST['Status']) < 1) {
-    $response['error'] = 'No note specified';
-    json_error_response($response, 400);
-    return;
+    abort(400, 'No note specified');
 }
 
 // Add the note.
@@ -51,9 +49,7 @@ $userNote->Status = $_REQUEST['Status'];
 $userNote->TimeStamp = gmdate(FMT_DATETIME);
 
 if (!$userNote->Insert()) {
-    $response['error'] = 'Error adding note';
-    echo json_encode($response);
-    http_response_code(400);
+    abort(400, 'Error adding note');
 }
 
 $response['note'] = $userNote->marshal();
