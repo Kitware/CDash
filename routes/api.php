@@ -35,6 +35,8 @@ Route::get('/v1/userStatistics.php', 'UserStatisticsController@api');
 
 Route::get('/v1/viewSubProjects.php', 'SubProjectController@apiViewSubProjects');
 
+Route::get('/v1/viewDynamicAnalysis.php', 'DynamicAnalysisController@apiViewDynamicAnalysis');
+
 Route::middleware(['auth'])->group(function () {
     Route::post('/authtokens/create', 'AuthTokenController@createToken');
     Route::delete('/authtokens/delete/{token_hash}', 'AuthTokenController@deleteToken');

@@ -3,7 +3,6 @@ namespace App\Http\Controllers;
 
 use App\Services\PageTimer;
 use App\Services\TestingDay;
-use CDash\Model\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
@@ -14,13 +13,10 @@ final class DynamicAnalysisController extends AbstractBuildController
         $pageTimer = new PageTimer();
         $response = [];
 
-        $build = get_request_build();
-        if (is_null($build)) {
-            return;
+        if (!isset($_GET['buildid']) || !is_numeric($_GET['buildid'])) {
+            abort(400, 'Invalid buildid!');
         }
-
-
-        $pdo = get_link_identifier()->getPdo();
+        $this->setBuildById((int) $_GET['buildid']);
 
         // lookup table to make the reported defect types more understandable.
         // feel free to expand as necessary.
@@ -29,41 +25,32 @@ final class DynamicAnalysisController extends AbstractBuildController
             'IPR' => 'Invalid Pointer Read',
             'IPW' => 'Invalid Pointer Write');
 
-        $project = new Project();
-        $project->Id = $build->ProjectId;
-        $project->Fill();
-        if (!can_access_project($project->Id)) {
-            $response['error'] = 'You do not have permission to view this project.';
-            echo json_encode($response);
-            return;
-        }
+        $response['displaylabels'] = $this->project->DisplayLabels;
 
-        $response['displaylabels'] = $project->DisplayLabels;
-
-        $date = TestingDay::get($project, $build->StartTime);
+        $date = TestingDay::get($this->project, $this->build->StartTime);
 
         $response = begin_JSON_response();
-        get_dashboard_JSON($project->Name, $date, $response);
-        $response['title'] = "$project->Name : Dynamic Analysis";
+        get_dashboard_JSON($this->project->Name, $date, $response);
+        $response['title'] = "{$this->project->Name} - Dynamic Analysis";
 
         $menu = [];
-        if ($build->GetParentId() > 0) {
-            $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
+        if ($this->build->GetParentId() > 0) {
+            $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . "&parentid={$this->build->GetParentId()}";
         } else {
-            $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&date=$date";
+            $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . "&date=$date";
         }
 
-        $previousbuildid = get_previous_buildid_dynamicanalysis($build->ProjectId, $build->SiteId, $build->Type, $build->Name, $build->StartTime);
+        $previousbuildid = get_previous_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name, $this->build->StartTime);
         if ($previousbuildid > 0) {
             $menu['previous'] = "viewDynamicAnalysis.php?buildid=$previousbuildid";
         } else {
             $menu['previous'] = false;
         }
 
-        $currentbuildid = get_last_buildid_dynamicanalysis($build->ProjectId, $build->SiteId, $build->Type, $build->Name);
+        $currentbuildid = get_last_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name);
         $menu['current'] = "viewDynamicAnalysis.php?buildid=$currentbuildid";
 
-        $nextbuildid = get_next_buildid_dynamicanalysis($build->ProjectId, $build->SiteId, $build->Type, $build->Name, $build->StartTime);
+        $nextbuildid = get_next_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name, $this->build->StartTime);
         if ($nextbuildid > 0) {
             $menu['next'] = "viewDynamicAnalysis.php?buildid=$nextbuildid";
         } else {
@@ -73,10 +60,10 @@ final class DynamicAnalysisController extends AbstractBuildController
 
         // Build
         $build_response = [];
-        $build_response['site'] = $build->GetSite()->name;
-        $build_response['buildname'] = $build->Name;
-        $build_response['buildid'] = $build->Id;
-        $build_response['buildtime'] = $build->StartTime;
+        $build_response['site'] = $this->build->GetSite()->name;
+        $build_response['buildname'] = $this->build->Name;
+        $build_response['buildid'] = $this->build->Id;
+        $build_response['buildtime'] = $this->build->StartTime;
         $response['build'] = $build_response;
 
         // Dynamic Analysis
@@ -85,9 +72,9 @@ final class DynamicAnalysisController extends AbstractBuildController
 
         // Process 50 rows at a time so we don't run out of memory.
         DB::table('dynamicanalysis')
-            ->where('buildid', '=', $build->Id)
+            ->where('buildid', '=', $this->build->Id)
             ->orderBy('status', 'desc')
-            ->chunk(50, function ($rows) use ($pdo, &$dynamic_analyses, &$defect_types, $defect_nice_names, $project) {
+            ->chunk(50, function ($rows) use (&$dynamic_analyses, &$defect_types, $defect_nice_names) {
                 foreach ($rows as $DA_row) {
                     $dynamic_analysis = [];
                     $dynamic_analysis['status'] = ucfirst($DA_row->status);
@@ -95,9 +82,7 @@ final class DynamicAnalysisController extends AbstractBuildController
                     $dynamic_analysis['id'] = $DA_row->id;
 
                     $dynid = $DA_row->id;
-                    $defects_stmt = $pdo->prepare(
-                        'SELECT * FROM dynamicanalysisdefect WHERE dynamicanalysisid = ?');
-                    pdo_execute($defects_stmt, [$dynid]);
+                    $defects_result = DB::select('SELECT * FROM dynamicanalysisdefect WHERE dynamicanalysisid = ?', [$dynid]);
                     // Initialize defects array as zero for each type.
                     $num_types = count($defect_types);
                     if ($num_types > 0) {
@@ -107,31 +92,31 @@ final class DynamicAnalysisController extends AbstractBuildController
                     } else {
                         $defects = [];
                     }
-                    while ($defects_row = $defects_stmt->fetch()) {
+                    foreach ($defects_result as $defects_row) {
                         // Figure out how many defects of each type were found for this test.
-                        $defect_type = $defects_row['type'];
+                        $defect_type = $defects_row->type;
                         if (array_key_exists($defect_type, $defect_nice_names)) {
                             $defect_type = $defect_nice_names[$defect_type];
                         }
-                        if (!in_array($defect_type, $defect_types)) {
+                        if (!in_array($defect_type, $defect_types, true)) {
                             $defect_types[] = $defect_type;
                             $defects[] = 0;
                         }
 
-                        $column = array_search($defect_type, $defect_types);
-                        $defects[$column] = $defects_row['value'];
+                        $column = array_search($defect_type, $defect_types, true);
+                        $defects[$column] = $defects_row->value;
                     }
                     $dynamic_analysis['defects'] = $defects;
 
-                    if ($project->DisplayLabels) {
+                    if ($this->project->DisplayLabels) {
                         get_labels_JSON_from_query_results('
-                        SELECT text
-                        FROM label, label2dynamicanalysis
-                        WHERE
-                            label.id = label2dynamicanalysis.labelid
-                            AND label2dynamicanalysis.dynamicanalysisid = ?
-                        ORDER BY text ASC
-                    ', [intval($dynid)], $dynamic_analysis);
+                            SELECT text
+                            FROM label, label2dynamicanalysis
+                            WHERE
+                                label.id = label2dynamicanalysis.labelid
+                                AND label2dynamicanalysis.dynamicanalysisid = ?
+                            ORDER BY text ASC
+                        ', [intval($dynid)], $dynamic_analysis);
 
                         if (array_key_exists('labels', $dynamic_analysis)) {
                             $dynamic_analysis['labels'] = implode(', ', $dynamic_analysis['labels']);
