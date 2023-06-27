@@ -300,78 +300,48 @@ class BuildController extends AbstractBuildController
 
     public function apiViewBuildError(): JsonResponse
     {
-        $build = get_request_build();
-        if (is_null($build)) {
-            return;
+        $pageTimer = new PageTimer();
+
+        if (!isset($_GET['buildid']) || !is_numeric($_GET['buildid'])) {
+            abort(400, 'Invalid buildid!');
         }
+        $this->setBuildById((int) $_GET['buildid']);
 
         $service = ServiceContainer::getInstance();
 
-        @$date = $_GET['date'];
-        if ($date != null) {
-            $date = htmlspecialchars(pdo_real_escape_string($date));
-        }
-
-        $response = [];
-        $pageTimer = new PageTimer();
-
-        $project = $service->get(Project::class);
-        $project->Id = $build->ProjectId;
-        $project->Fill();
-
-        if (!can_access_project($project->Id)) {
-            $response['error'] = 'You do not have permission to view this project.';
-            echo json_encode($response);
-            return;
-        }
-
         $response = begin_JSON_response();
-        $response['title'] = "CDash : $project->Name";
+        $response['title'] = $this->project->Name;
 
-        if (isset($_GET['type'])) {
-            $type = pdo_real_escape_numeric($_GET['type']);
+        $type = intval($_GET['type'] ?? 0);
+
+        $date = TestingDay::get($this->project, $this->build->StartTime);
+        get_dashboard_JSON_by_name($this->project->Name, $date, $response);
+
+        $menu = [];
+        if ($this->build->GetParentId() > 0) {
+            $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . "&parentid={$this->build->GetParentId()}";
         } else {
-            $type = 0;
+            $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . '&date=' . $date;
         }
 
-        $date = TestingDay::get($project, $build->StartTime);
-        get_dashboard_JSON_by_name($project->Name, $date, $response);
+        $previous_buildid = $this->build->GetPreviousBuildId();
+        $current_buildid = $this->build->GetCurrentBuildId();
+        $next_buildid = $this->build->GetNextBuildId();
 
-        $menu = array();
-        if ($build->GetParentId() > 0) {
-            $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
-        } else {
-            $menu['back'] = 'index.php?project=' . urlencode($project->Name) . '&date=' . $date;
-        }
-
-        $previous_buildid = $build->GetPreviousBuildId();
-        $current_buildid = $build->GetCurrentBuildId();
-        $next_buildid = $build->GetNextBuildId();
-
-        if ($previous_buildid > 0) {
-            $menu['previous'] = "viewBuildError.php?type=$type&buildid=$previous_buildid";
-        } else {
-            $menu['previous'] = false;
-        }
-
+        $menu['previous'] = $previous_buildid > 0 ? "viewBuildError.php?type=$type&buildid=$previous_buildid" : false;
         $menu['current'] = "viewBuildError.php?type=$type&buildid=$current_buildid";
-
-        if ($next_buildid > 0) {
-            $menu['next'] = "viewBuildError.php?type=$type&buildid=$next_buildid";
-        } else {
-            $menu['next'] = false;
-        }
+        $menu['next'] = $next_buildid > 0 ? "viewBuildError.php?type=$type&buildid=$next_buildid" : false;
 
         $response['menu'] = $menu;
 
         // Site
         $extra_build_fields = [
-            'site' => $build->GetSite()->name
+            'site' => $this->build->GetSite()->name
         ];
 
         // Update
         $update = $service->get(BuildUpdate::class);
-        $update->BuildId = $build->Id;
+        $update->BuildId = $this->build->Id;
         $build_update = $update->GetUpdateForBuild();
         if (is_array($build_update)) {
             $revision = $build_update['revision'];
@@ -381,13 +351,13 @@ class BuildController extends AbstractBuildController
         }
 
         // Build
-        $response['build'] = Build::MarshalResponseArray($build, $extra_build_fields);
+        $response['build'] = Build::MarshalResponseArray($this->build, $extra_build_fields);
 
         $builderror = $service->get(BuildError::class);
         $buildfailure = $service->get(BuildFailure::class);
 
         // Set the error
-        if ($type == 0) {
+        if ($type === 0) {
             $response['errortypename'] = 'Error';
             $response['nonerrortypename'] = 'Warning';
             $response['nonerrortype'] = 1;
@@ -397,52 +367,33 @@ class BuildController extends AbstractBuildController
             $response['nonerrortype'] = 0;
         }
 
-        $response['parentBuild'] = $build->IsParentBuild();
-        $response['errors'] = array();
+        $response['parentBuild'] = $this->build->IsParentBuild();
+        $response['errors'] = [];
         $response['numErrors'] = 0;
-
-        /**
-         * Add a new (marshaled) error to the response.
-         * Keeps track of the id necessary for frontend JS, and updates
-         * the numErrors response key.
-         * @todo id should probably just be a unique id for the builderror?
-         * builderror table currently has no integer that serves as a unique identifier.
-         *
-         * TODO: (williamjallen) determine why this is being included multiple times...
-         **/
-        if (!function_exists('CDash\Api\v1\ViewBuildError\addErrorResponse')) {
-            function addErrorResponse($data, &$response)
-            {
-                $data['id'] = $response['numErrors'];
-                $response['numErrors']++;
-
-                $response['errors'][] = $data;
-            }
-        }
 
         if (isset($_GET['onlydeltan'])) {
             // Build error table
-            $resolvedBuildErrors = $build->GetResolvedBuildErrors($type);
+            $resolvedBuildErrors = $this->build->GetResolvedBuildErrors($type);
             if ($resolvedBuildErrors !== false) {
                 while ($resolvedBuildError = $resolvedBuildErrors->fetch()) {
-                    addErrorResponse(BuildError::marshal($resolvedBuildError, $project, $revision, $builderror), $response);
+                    $this->addErrorResponse(BuildError::marshal($resolvedBuildError, $this->project, $revision, $builderror), $response);
                 }
             }
 
             // Build failure table
-            $resolvedBuildFailures = $build->GetResolvedBuildFailures($type);
+            $resolvedBuildFailures = $this->build->GetResolvedBuildFailures($type);
             while ($resolvedBuildFailure = $resolvedBuildFailures->fetch()) {
-                $marshaledResolvedBuildFailure = BuildFailure::marshal($resolvedBuildFailure, $project, $revision, false, $buildfailure);
+                $marshaledResolvedBuildFailure = BuildFailure::marshal($resolvedBuildFailure, $this->project, $revision, false, $buildfailure);
 
-                if ($project->DisplayLabels) {
+                if ($this->project->DisplayLabels) {
                     get_labels_JSON_from_query_results('
-                SELECT text
-                FROM label, label2buildfailure
-                WHERE
-                    label.id=label2buildfailure.labelid
-                    AND label2buildfailure.buildfailureid=?
-                ORDER BY text ASC
-            ', [intval($resolvedBuildFailure['id'])], $marshaledResolvedBuildFailure);
+                        SELECT text
+                        FROM label, label2buildfailure
+                        WHERE
+                            label.id=label2buildfailure.labelid
+                            AND label2buildfailure.buildfailureid=?
+                        ORDER BY text ASC
+                    ', [intval($resolvedBuildFailure['id'])], $marshaledResolvedBuildFailure);
                 }
 
                 $marshaledResolvedBuildFailure = array_merge($marshaledResolvedBuildFailure, array(
@@ -452,7 +403,7 @@ class BuildController extends AbstractBuildController
                     'stdoutputrows' => min(10, substr_count($resolvedBuildFailure['stdoutputrows'], "\n") + 1),
                 ));
 
-                addErrorResponse($marshaledResolvedBuildFailure, $response);
+                $this->addErrorResponse($marshaledResolvedBuildFailure, $response);
             }
         } else {
             $filter_error_properties = ['type' => $type];
@@ -462,19 +413,19 @@ class BuildController extends AbstractBuildController
             }
 
             // Build error table
-            $buildErrors = $build->GetErrors($filter_error_properties);
+            $buildErrors = $this->build->GetErrors($filter_error_properties);
 
             foreach ($buildErrors as $error) {
-                addErrorResponse(BuildError::marshal($error, $project, $revision, $builderror), $response);
+                $this->addErrorResponse(BuildError::marshal($error, $this->project, $revision, $builderror), $response);
             }
 
             // Build failure table
-            $buildFailures = $build->GetFailures(['type' => $type]);
+            $buildFailures = $this->build->GetFailures(['type' => $type]);
 
             foreach ($buildFailures as $fail) {
-                $failure = BuildFailure::marshal($fail, $project, $revision, true, $buildfailure);
+                $failure = BuildFailure::marshal($fail, $this->project, $revision, true, $buildfailure);
 
-                if ($project->DisplayLabels) {
+                if ($this->project->DisplayLabels) {
                     /** @var Label $label */
                     $label = $service->get(Label::class);
                     $label->BuildFailureId = $fail['id'];
@@ -486,17 +437,32 @@ class BuildController extends AbstractBuildController
                         }
                     }
                 }
-                addErrorResponse($failure, $response);
+                $this->addErrorResponse($failure, $response);
             }
         }
 
-        if ($build->IsParentBuild()) {
+        if ($this->build->IsParentBuild()) {
             $response['numSubprojects'] = count(array_unique(array_map(function ($buildError) {
                 return $buildError['subprojectid'];
             }, $response['errors'])));
         }
 
         $pageTimer->end($response);
-        echo json_encode(cast_data_for_JSON($response));
+        return response()->json(cast_data_for_JSON($response));
+    }
+
+    /**
+     * Add a new (marshaled) error to the response.
+     * Keeps track of the id necessary for frontend JS, and updates
+     * the numErrors response key.
+     * @todo id should probably just be a unique id for the builderror?
+     * builderror table currently has no integer that serves as a unique identifier.
+     **/
+    private function addErrorResponse($data, &$response)
+    {
+        $data['id'] = $response['numErrors'];
+        $response['numErrors']++;
+
+        $response['errors'][] = $data;
     }
 }
