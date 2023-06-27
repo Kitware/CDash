@@ -24895,18 +24895,10 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function pdo_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_notesapi.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_notesapi.php
 
 		-
@@ -24920,23 +24912,8 @@ parameters:
 			path: app/cdash/tests/test_notesapi.php
 
 		-
-			message: "#^Method NotesAPICase\\:\\:testAddNoteRequiresAuth\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_notesapi.php
-
-		-
-			message: "#^Method NotesAPICase\\:\\:testAddNoteRequiresBuildId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_notesapi.php
-
-		-
 			message: "#^Method NotesAPICase\\:\\:testNotesAPI\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/tests/test_notesapi.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
-			count: 3
 			path: app/cdash/tests/test_notesapi.php
 
 		-
@@ -26776,6 +26753,27 @@ parameters:
 			message: "#^Method UserTestCase\\:\\:testUser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_user.php
+
+		-
+			message: """
+				#^Call to deprecated function pdo_query\\(\\)\\:
+				04/01/2023$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_usernotes.php
+
+		-
+			message: """
+				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
+				04/01/2023$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_usernotes.php
+
+		-
+			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
+			count: 3
+			path: app/cdash/tests/test_usernotes.php
 
 		-
 			message: "#^Method UserStatisticsTestCase\\:\\:testUserStatistics\\(\\) has no return type specified\\.$#"
