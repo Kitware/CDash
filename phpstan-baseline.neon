@@ -15395,14 +15395,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function json_error_response\\(\\)\\:
-				15/06/2023 Use abort\\(\\) to exit cleanly instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/addUserNote.php
-
-		-
-			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
 			"""

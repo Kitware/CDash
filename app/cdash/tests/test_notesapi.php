@@ -76,17 +76,17 @@ class NotesAPICase extends KWWebTestCase
         $project->Public = 0;
         $project->Save();
 
-        $endpoint = "{$this->url}/api/v1/addUserNote.php?buildid={$id}";
-        $response = $this->post($endpoint);
+        $endpoint = "{$this->url}/api/v1/addUserNote.php";
+        $response = $this->post($endpoint, ['buildid' => $id]);
         $actual = json_decode($response);
-        $expected = 'Permission denied';
 
-        $this->assertTrue(isset($actual->error));
-        $this->assertEqual($actual->error, $expected);
+        $this->assertTrue(isset($actual->requirelogin));
+        $this->assertEqual($actual->requirelogin, 1);
 
         $this->login();
 
         $buildUserNote = [
+            'buildid' => $id,
             'AddNote' => 'testAddNoteRequiresAuth',
             'Status' => 1
         ];
@@ -112,12 +112,11 @@ class NotesAPICase extends KWWebTestCase
     public function testAddNoteRequiresBuildId()
     {
         $this->login();
-        $endpoint = "{$this->url}/api/v1/addUserNote.php?";
+        $endpoint = "{$this->url}/api/v1/addUserNote.php";
 
         $response = $this->post($endpoint);
         $actual = json_decode($response);
-        $expected = 'Valid buildid required';
         $this->assertTrue(isset($actual->error));
-        $this->assertEqual($actual->error, $expected);
+        $this->assertEqual($actual->error, 'Invalid buildid!');
     }
 }
