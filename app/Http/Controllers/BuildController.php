@@ -431,7 +431,7 @@ class BuildController extends AbstractBuildController
                     $label = $service->get(Label::class);
                     $label->BuildFailureId = $fail['id'];
                     $rows = $label->GetTextFromBuildFailure(PDO::FETCH_OBJ);
-                    if ($rows && count($rows)) {
+                    if ($rows && count($rows) > 0) {
                         $failure['labels'] = [];
                         foreach ($rows as $row) {
                             $failure['labels'][] = $row->text;
@@ -458,8 +458,10 @@ class BuildController extends AbstractBuildController
      * the numErrors response key.
      * @todo id should probably just be a unique id for the builderror?
      * builderror table currently has no integer that serves as a unique identifier.
+     *
+     * @param array<string,mixed> $response
      **/
-    private function addErrorResponse($data, &$response)
+    private function addErrorResponse(mixed $data, array &$response): void
     {
         $data['id'] = $response['numErrors'];
         $response['numErrors']++;
@@ -471,56 +473,38 @@ class BuildController extends AbstractBuildController
     {
         $pageTimer = new PageTimer();
 
-        $build = get_request_build();
-        if (is_null($build)) {
-            return;
+        if (!isset($_GET['buildid']) || !is_numeric($_GET['buildid'])) {
+            abort(400, 'Invalid buildid!');
         }
-
-        $project = new Project();
-        $project->Id = $build->ProjectId;
-        $project->Fill();
+        $this->setBuildById((int) $_GET['buildid']);
 
         $response = begin_JSON_response();
-        if (!can_access_project($project->Id)) {
-            $response['error'] = 'You do not have permission to view this project.';
-            echo json_encode($response);
-            return;
-        }
 
-        $date = TestingDay::get($project, $build->StartTime);
-        get_dashboard_JSON($project->Name, $date, $response);
-        $response['title'] = "$project->Name : Configure";
+        $date = TestingDay::get($this->project, $this->build->StartTime);
+        get_dashboard_JSON($this->project->Name, $date, $response);
+        $response['title'] = "{$this->project->Name} - Configure";
 
         // Menu
         $menu_response = [];
-        if ($build->GetParentId() > 0) {
-            $menu_response['back'] = 'index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
+        if ($this->build->GetParentId() > 0) {
+            $menu_response['back'] = 'index.php?project=' . urlencode($this->project->Name) . "&parentid={$this->build->GetParentId()}";
         } else {
-            $menu_response['back'] = 'index.php?project=' . urlencode($project->Name) . '&date=' . $date;
+            $menu_response['back'] = 'index.php?project=' . urlencode($this->project->Name) . '&date=' . $date;
         }
 
-        $previous_buildid = $build->GetPreviousBuildId();
-        $next_buildid = $build->GetNextBuildId();
-        $current_buildid = $build->GetCurrentBuildId();
+        $previous_buildid = $this->build->GetPreviousBuildId();
+        $next_buildid = $this->build->GetNextBuildId();
+        $current_buildid = $this->build->GetCurrentBuildId();
 
-        if ($previous_buildid > 0) {
-            $menu_response['previous'] = "/build/$previous_buildid/configure";
-        } else {
-            $menu_response['previous'] = false;
-        }
-
+        $menu_response['previous'] = $previous_buildid > 0 ? "/build/$previous_buildid/configure" : false;
         $menu_response['current'] = "/build/$current_buildid/configure";
+        $menu_response['next'] = $next_buildid > 0 ? "/build/$next_buildid/configure" : false;
 
-        if ($next_buildid > 0) {
-            $menu_response['next'] = "/build/$next_buildid/configure";
-        } else {
-            $menu_response['next'] = false;
-        }
         $response['menu'] = $menu_response;
 
         // Configure
         $configures_response = [];
-        $configures = $build->GetConfigures();
+        $configures = $this->build->GetConfigures();
         $has_subprojects = 0;
         while ($configure = $configures->fetch()) {
             if (isset($configure['subprojectid'])) {
@@ -531,16 +515,16 @@ class BuildController extends AbstractBuildController
         $response['configures'] = $configures_response;
 
         // Build
-        $site = $build->GetSite();
+        $site = $this->build->GetSite();
         $build_response = [];
         $build_response['site'] = $site->name;
         $build_response['siteid'] = $site->id;
-        $build_response['buildname'] = $build->Name;
-        $build_response['buildid'] = $build->Id;
+        $build_response['buildname'] = $this->build->Name;
+        $build_response['buildid'] = $this->build->Id;
         $build_response['hassubprojects'] = $has_subprojects;
         $response['build'] = $build_response;
 
         $pageTimer->end($response);
-        echo json_encode(cast_data_for_JSON($response));
+        return response()->json(cast_data_for_JSON($response));
     }
 }
