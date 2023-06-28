@@ -112,6 +112,7 @@ class CDashTest extends TestCase
     public function testViewProjectsRedirectNoPublicProjects(): void
     {
         // If there are no public projects to be shown on the view projects page, we should redirect to the login page.
+        URL::forceRootUrl('http://localhost');
         $this->get('/projects')->assertRedirect('/login');
 
         $normal_user = $this->makeNormalUser();
