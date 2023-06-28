@@ -44,6 +44,9 @@ class SummaryEmailTestCase extends KWWebTestCase
         }
 
         $expected = [
+            'about to query for builds to remove',
+            'removing old buildids for projectid:',
+            'removing old buildids for projectid:',
             'simpletest@localhost',
             'FAILED (w=3): SummaryEmailProject - Win32-MSVC2009 - Nightly',
             'The "Nightly" group has errors, warnings, or test failures.',
@@ -63,7 +66,7 @@ class SummaryEmailTestCase extends KWWebTestCase
             '3>f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma',
             '-CDash on',
         ];
-        if (!$this->assertLogContains($expected, 25)) {
+        if (!$this->assertLogContains($expected, 28)) {
             $this->fail('Log did not contain expected contents');
         }
     }

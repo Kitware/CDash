@@ -9,9 +9,9 @@ Before installing CDash, you will need:
 
 - A web server: [Apache](https://httpd.apache.org) or [NGINX](https://www.nginx.com)
 - A database: [MySQL v5.x+](https://www.mysql.com) or [PostgreSQL v9.2+](https://www.postgresql.org)
-- [PHP 7.3+](https://www.php.net)
+- [PHP 8.x](https://www.php.net)
 - [Composer v2.x](https://getcomposer.org) (to install PHP dependencies)
-- [npm v6](https://www.npmjs.com/) (to install Javascript dependencies)
+- [npm v8](https://www.npmjs.com/) (to install Javascript dependencies)
 
 ## PHP modules
 
@@ -84,30 +84,7 @@ npm install
 
 ## Configure CDash and generate build files
 
-If you don't already have a `.env` file in the root of your CDash tree, start with
-one based on the default configuration, and set your application key.
-
-```bash
-cd /path/to/CDash
-cp .env.example .env
-php artisan key:generate
-```
-
-Next, open `.env` in an editor and configure your instance of CDash.
-Important values to specify here are:
-
-* `APP_URL` should be set to the root URL of CDash (ie `https://localhost/CDash`)
-* The `DB_*` variables instruct CDash how to connect to its database.
-* The `MAIL_*` variables dictate how email should be sent by CDash.
-
-In most other cases, reasonable default values apply if the variables are not explicitly set.
-For a full list of config options, see `.env.example`.
-
-At this point, make sure your `.env` file has a `APP_URL` entry, and that the following line
-appears somewhere further down in the file:
-```
-MIX_APP_URL="${APP_URL}"
-```
+The next step is to configure your CDash installation. See [the configuration guide](config.md) for more details.
 
 Once you're happy with your config settings, run `npm` to generate CDash's frontend.
 

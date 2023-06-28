@@ -161,8 +161,6 @@ class ProcessSubmission implements ShouldQueue
     private function doSubmit($filename, $projectid, $buildid = null,
         $expected_md5 = '')
     {
-        $config = Config::getInstance();
-
         $filehandle = $this->getSubmissionFileHandle($filename);
         if ($filehandle === false) {
             return false;
@@ -177,15 +175,6 @@ class ProcessSubmission implements ShouldQueue
             $handler->initializeBuild();
             $handler->populateBuildFileRow();
             return $handler;
-        }
-
-        // We find the daily updates
-        // If we have php curl we do it asynchronously
-        $baseUrl = $config->getBaseUrl();
-        $request = $baseUrl . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
-
-        if (config('cdash.daily_updates') && $this->curlRequest($request) === false) {
-            return false;
         }
 
         // Parse the XML file
@@ -289,22 +278,5 @@ class ProcessSubmission implements ShouldQueue
             $build = $builds[0];
         }
         return $build;
-    }
-
-    private function curlRequest($request)
-    {
-        $use_https = Config::getInstance()->get('CDASH_USE_HTTPS');
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $request);
-        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-        if ($use_https) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        }
-        curl_exec($ch);
-        curl_close($ch);
-        return true;
     }
 }
