@@ -1237,16 +1237,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:curlRequest\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:curlRequest\\(\\) has parameter \\$request with no type specified\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:deleteSubmissionFile\\(\\) has parameter \\$filename with no type specified\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
@@ -1338,11 +1328,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:requeueSubmissionFile\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			message: "#^Only booleans are allowed in &&, mixed given on the left side\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
