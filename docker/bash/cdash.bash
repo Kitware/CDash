@@ -13,6 +13,8 @@ cdash_install() {
 
     cdash_upgrade
 
+    php artisan version:set
+
     local admin_email
     local admin_pass
 

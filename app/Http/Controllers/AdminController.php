@@ -13,6 +13,7 @@ use CDash\Model\SubProject;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -641,7 +642,7 @@ class AdminController extends AbstractController
             AddTableField('site', 'outoforder', 'tinyint(1)', 'smallint', '0');
 
             // Set the database version
-            setVersion();
+            $this::setVersion();
 
             // Put that the upgrade is done in the log
             add_log('Upgrade done.', 'upgrade-2-2');
@@ -751,7 +752,7 @@ class AdminController extends AbstractController
             AddUniqueConstraintToDiffTables();
 
             // Set the database version
-            setVersion();
+            $this::setVersion();
 
             // Put that the upgrade is done in the log
             add_log('Upgrade done.', 'upgrade-2-4');
@@ -830,7 +831,7 @@ class AdminController extends AbstractController
             AddUniqueConstraintToSiteTable('site');
 
             // Set the database version
-            setVersion();
+            $this::setVersion();
 
             // Put that the upgrade is done in the log
             add_log('Upgrade done.', 'upgrade-2-6');
@@ -855,7 +856,7 @@ class AdminController extends AbstractController
             }
 
             // Set the database version
-            setVersion();
+            $this::setVersion();
 
             // Put that the upgrade is done in the log
             add_log('Upgrade done.', 'upgrade-2-8');
@@ -875,7 +876,7 @@ class AdminController extends AbstractController
             Artisan::call('migrate --force');
 
             // Set the database version
-            setVersion();
+            $this::setVersion();
 
             // Put that the upgrade is done in the log
             add_log('Upgrade done.', 'upgrade-3-0');
@@ -1139,6 +1140,29 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Set the CDash version number in the database
+     */
+    public static function setVersion(): string
+    {
+        $config = Config::getInstance();
+
+        $major = $config->get('CDASH_VERSION_MAJOR');
+        $minor = $config->get('CDASH_VERSION_MINOR');
+        $patch = $config->get('CDASH_VERSION_PATCH');
+
+        $stmt = DB::select('SELECT major FROM version');
+        $version = [$major, $minor, $patch];
+
+        if (count($stmt) === 0) {
+            DB::insert('INSERT INTO version (major, minor, patch) VALUES (?, ?, ?)', $version);
+        } else {
+            DB::update('UPDATE version SET major=?, minor=?, patch=?', $version);
+        }
+
+        return "$major.$minor.$patch";
+    }
+
     public function install(): View
     {
         @set_time_limit(0);
@@ -1363,7 +1387,7 @@ class AdminController extends AbstractController
                         $xml .= '<db_created>1</db_created>';
 
                         // Set the database version
-                        setVersion();
+                        $this::setVersion();
                     }
                 }
             }
