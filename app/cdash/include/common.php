@@ -344,48 +344,6 @@ function setVersion(): void
 }
 
 /**
- * TODO: (williamjallen) This function's return type is excessively complex and makes it
- *       difficult to handle.
- *
- * Return true if the user is allowed to see the page
- */
-function checkUserPolicy($projectid, $onlyreturn = 0): bool|RedirectResponse|Response
-{
-    if (!is_numeric($projectid)) {
-        return response('Insufficient data to determine access');
-    }
-
-    // If the projectid is 0 only admin can access the page.
-    if ($projectid == 0) {
-        if (Auth::check()) {
-            $user = Auth::user();
-            if ($user->IsAdmin()) {
-                return true;
-            }
-        }
-    } else {
-        $project = new Project();
-        $project->Id = $projectid;
-        $project->Fill();
-
-        if (Gate::allows('view-project', $project)) {
-            return true;
-        }
-    }
-
-    if ($onlyreturn) {
-        return false;
-    }
-
-    if (!Auth::check()) {
-        session(['url.intended' => url()->current()]);
-        return redirect()->route('login');
-    }
-
-    return response('You cannot access this project');
-}
-
-/**
  * Get the build id from stamp, name and buildname
  */
 function get_build_id(string $buildname, string $stamp, int $projectid, string $sitename): int
