@@ -38,7 +38,13 @@ class NotesParserErrorMessagesTestCase extends KWWebTestCase
         $test_dir = dirname(__FILE__) . '/data/NotesParserErrorMessages/';
 
         $this->submission('NotesParserErrorMessages', "{$test_dir}/NoName.xml");
-        $this->assertLogContains(['Note missing name for build'], 2);
+        $expected = [
+            'about to query for builds to remove',
+            'removing old buildids for projectid:',
+            'removing old buildids for projectid:',
+            'Note missing name for build'
+        ];
+        $this->assertLogContains($expected, 5);
         $this->deleteLog($this->logfilename);
 
         $this->submission('NotesParserErrorMessages', "{$test_dir}/NoText.xml");
