@@ -186,11 +186,6 @@ class BuildController extends AbstractBuildController
         ]);
     }
 
-    public function buildProperties(): View
-    {
-        return view('build.properties');
-    }
-
     public function viewFiles(): View|RedirectResponse
     {
         if (!isset($_GET['buildid'])) {

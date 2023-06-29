@@ -374,6 +374,42 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
+			message: """
+				#^Call to deprecated function pdo_execute\\(\\)\\:
+				v2\\.5\\.0 01/22/2018$#
+			"""
+			count: 1
+			path: app/Http/Controllers/BuildPropertiesController.php
+
+		-
+			message: """
+				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
+				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 2
+			path: app/Http/Controllers/BuildPropertiesController.php
+
+		-
+			message: "#^Empty array passed to foreach\\.$#"
+			count: 2
+			path: app/Http/Controllers/BuildPropertiesController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildPropertiesController\\:\\:gather_defects\\(\\) has parameter \\$defects_response with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildPropertiesController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildPropertiesController\\:\\:get_defects_for_builds\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildPropertiesController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildPropertiesController\\:\\:get_defects_for_builds\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
+			path: app/Http/Controllers/BuildPropertiesController.php
+
+		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 1
 			path: app/Http/Controllers/CDash.php
@@ -15434,87 +15470,6 @@ parameters:
 			message: "#^Function rest_put not found\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 2
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Call to function array_search\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Call to method DateTime\\:\\:setTimestamp\\(\\) with incorrect case\\: setTimeStamp$#"
-			count: 2
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Empty array passed to foreach\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildProperties\\\\gather_defects\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildProperties\\\\gather_defects\\(\\) has parameter \\$defects_response with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildProperties\\\\gather_defects\\(\\) has parameter \\$prettyname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildProperties\\\\gather_defects\\(\\) has parameter \\$stmt with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildProperties\\\\get_defects_for_builds\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildProperties\\\\get_defects_for_builds\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Function gather_defects not found\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Inner named functions are not supported by PHPStan\\. Consider refactoring to an anonymous function, class method, or a top\\-level\\-defined function\\. See issue \\#165 \\(https\\://github\\.com/phpstan/phpstan/issues/165\\) for more details\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Variable \\$prettyname might not be defined\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/buildProperties.php
-
-		-
-			message: "#^Variable \\$type might not be defined\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/buildProperties.php
 
 		-
 			message: """
