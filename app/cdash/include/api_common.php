@@ -16,7 +16,6 @@
 
 require_once 'include/common.php';
 
-use App\Services\ProjectPermissions;
 
 use CDash\Model\Build;
 use CDash\Model\Project;

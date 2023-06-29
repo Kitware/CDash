@@ -20,7 +20,6 @@ use App\Models\BuildTest;
 use App\Models\TestOutput;
 
 use CDash\Database;
-use App\Models\Site;
 
 require_once 'include/repository.php';
 

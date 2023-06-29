@@ -15,7 +15,6 @@
 =========================================================================*/
 
 require_once 'xml_handlers/CDashSubmissionHandlerInterface.php';
-use CDash\Model\Build;
 
 abstract class NonSaxHandler implements CDashSubmissionHandlerInterface
 {

@@ -23,11 +23,9 @@ use CDash\Messaging\Notification\NotificationCollection;
 use CDash\Messaging\Notification\NotificationInterface;
 use CDash\Messaging\Subscription\SubscriptionInterface;
 use CDash\Messaging\Subscription\SubscriptionNotificationBuilder;
-use CDash\Messaging\Topic\LabeledTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\ActionableTypes;
 use CDash\Model\BuildEmail;
-use Jenssegers\Blade\Blade;
 
 class EmailBuilder extends SubscriptionNotificationBuilder
 {

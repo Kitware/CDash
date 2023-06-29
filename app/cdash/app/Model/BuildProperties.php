@@ -16,7 +16,6 @@
 namespace CDash\Model;
 
 use CDash\Database;
-use CDash\Model\Build;
 
 /** BuildProperties class */
 class BuildProperties

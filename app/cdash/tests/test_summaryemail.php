@@ -1,6 +1,5 @@
 <?php
 
-use CDash\Config;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 

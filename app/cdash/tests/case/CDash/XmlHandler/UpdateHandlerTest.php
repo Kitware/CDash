@@ -22,7 +22,6 @@ use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\Subscriber;
-use Tests\TestCase;
 use CDash\ServiceContainer;
 use CDash\Submission\CommitAuthorHandlerInterface;
 use CDash\Test\CDashTestCase;

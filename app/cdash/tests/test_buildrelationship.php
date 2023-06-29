@@ -10,7 +10,6 @@ require_once 'include/pdo.php';
 
 use CDash\Database;
 use CDash\Model\Build;
-use CDash\Model\BuildRelationship;
 
 class BuildRelationshipTestCase extends KWWebTestCase
 {

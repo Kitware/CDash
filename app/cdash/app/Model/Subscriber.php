@@ -22,7 +22,6 @@ use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Messaging\Topic\TopicDecorator;
 use ActionableBuildInterface;
-use CDash\Messaging\Topic\TopicInterface;
 
 /**
  * Class Subscriber

@@ -20,7 +20,6 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 
 use App\Services\PageTimer;
-use App\Services\ProjectPermissions;
 
 use CDash\Database;
 use CDash\Model\Project;

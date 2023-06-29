@@ -2,11 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\AuthTokenService;
 use CDash\Model\User;
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PasswordExpired

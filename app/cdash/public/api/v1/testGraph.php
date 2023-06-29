@@ -20,7 +20,6 @@ require_once 'include/api_common.php';
 
 use App\Models\BuildTest;
 
-use CDash\Model\Build;
 use CDash\Controller\Api\TestGraph as Controller;
 use CDash\Database;
 

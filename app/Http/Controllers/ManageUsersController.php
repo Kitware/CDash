@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use CDash\Config;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 

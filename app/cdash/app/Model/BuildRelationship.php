@@ -16,8 +16,6 @@
 namespace CDash\Model;
 
 use CDash\Database;
-use CDash\Model\Build;
-use CDash\Model\Project;
 use CDash\ServiceContainer;
 
 /** BuildRelationship class */

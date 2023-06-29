@@ -20,7 +20,6 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/common.php';
 
-use App\Services\ProjectPermissions;
 
 use CDash\Model\Project;
 use CDash\Model\UserProject;

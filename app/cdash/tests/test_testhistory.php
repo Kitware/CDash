@@ -7,7 +7,6 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
-use CDash\Database;
 use CDash\Model\Project;
 
 class TestHistoryTestCase extends KWWebTestCase

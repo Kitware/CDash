@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Services\ProjectPermissions;
 use CDash\Database;
 use App\Models\Banner;
 use CDash\Model\Project;

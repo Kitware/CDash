@@ -17,7 +17,6 @@ namespace CDash\Controller\Api;
 
 use CDash\Database;
 use CDash\Model\Build;
-use CDash\Model\Project;
 
 /**
  * Parent class for all API controllers responsible for displaying

@@ -17,7 +17,6 @@
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;
-use CDash\Messaging\Topic\ConfigureTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Subscriber;

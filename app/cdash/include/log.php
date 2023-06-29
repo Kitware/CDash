@@ -17,7 +17,6 @@
 require_once 'include/defines.php';
 require_once 'include/pdo.php';
 
-use CDash\Config;
 
 use Illuminate\Support\Facades\Log;
 use \Psr\Log\LogLevel;

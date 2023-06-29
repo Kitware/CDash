@@ -17,7 +17,6 @@
 use CDash\Config;
 use CDash\Lib\Repository\GitHub;
 use CDash\Model\Project;
-use GuzzleHttp\ClientInterface;
 use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 

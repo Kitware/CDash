@@ -8,8 +8,6 @@ require_once 'tests/test_branchcoverage.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
-use CDash\Model\Build;
-use CDash\Model\PendingSubmissions;
 
 class ActualBranchCoverageTestCase extends BranchCoverageTestCase
 {

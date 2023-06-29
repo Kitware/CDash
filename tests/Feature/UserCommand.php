@@ -3,11 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use CDash\Database;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
 
 class UserCommand extends TestCase
