@@ -16897,11 +16897,6 @@ parameters:
 			path: app/cdash/public/api/v1/testSummary.php
 
 		-
-			message: "#^Implicit array creation is not allowed \\- variable \\$builds_response might not exist\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/testSummary.php
-
-		-
 			message: "#^Implicit array creation is not allowed \\- variable \\$etest might not exist\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/testSummary.php
@@ -16909,11 +16904,6 @@ parameters:
 		-
 			message: "#^Left side of && is always true\\.$#"
 			count: 1
-			path: app/cdash/public/api/v1/testSummary.php
-
-		-
-			message: "#^Variable \\$builds_response might not be defined\\.$#"
-			count: 3
 			path: app/cdash/public/api/v1/testSummary.php
 
 		-
