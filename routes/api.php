@@ -38,6 +38,8 @@ Route::get('/v1/viewSubProjects.php', 'SubProjectController@apiViewSubProjects')
 Route::get('/v1/viewDynamicAnalysis.php', 'DynamicAnalysisController@apiViewDynamicAnalysis');
 Route::get('/v1/viewDynamicAnalysisFile.php', 'DynamicAnalysisController@apiViewDynamicAnalysisFile');
 
+Route::get('/v1/buildProperties.php', 'BuildPropertiesController@apiBuildProperties');
+
 Route::middleware(['auth'])->group(function () {
     Route::post('/authtokens/create', 'AuthTokenController@createToken');
     Route::delete('/authtokens/delete/{token_hash}', 'AuthTokenController@deleteToken');

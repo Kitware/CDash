@@ -24,6 +24,10 @@ use App\Models\Site;
 use CDash\ServiceContainer;
 use Symfony\Component\HttpFoundation\Response;
 
+/**********************************************************************************
+ * NOTE: THIS API ENDPOINT IS DEPRECATED AND WILL BE REMOVED IN A FUTURE RELEASE. *
+ **********************************************************************************/
+
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     return response('Not Implemented', Response::HTTP_NOT_IMPLEMENTED);
 }
@@ -61,7 +65,10 @@ if (!$build->Id) {
     abort(500, 'Error creating build');
 }
 
-$response = ['buildid' => $build->Id];
+$response = [
+    'buildid' => $build->Id,
+    'deprecated' => true,
+];
 if ($build_created) {
     return response()->json($response, 201);
 } else {

@@ -92,12 +92,12 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'admin@cdash.org'),
+        'address' => env('MAIL_FROM_ADDRESS', 'cdash@localhost'),
         'name' => env('MAIL_FROM_NAME', 'CDash'),
     ],
 
     'reply_to' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'noreply@cdash.org'),
+        'address' => env('MAIL_REPLY_ADDRESS', 'cdash-noreply@localhost'),
         'name' => env('MAIL_FROM_NAME', 'CDash'),
     ],
 

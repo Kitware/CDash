@@ -17,6 +17,7 @@ use CDash\Model\UserProject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -1702,5 +1703,37 @@ class CoverageController extends AbstractBuildController
             return 0;
         }
         return $a['priority'] > $b['priority'] ? 1 : -1;
+    }
+
+    public function ajaxShowCoverageGraph(): View
+    {
+        $buildid = $_GET['buildid'];
+        if (!isset($buildid) || !is_numeric($buildid)) {
+            abort(400, 'Not a valid buildid!');
+        }
+        $this->setBuildById((int) $buildid);
+
+        $buildtype = $this->build->Type;
+        $buildname = $this->build->Name;
+        $siteid = $this->build->SiteId;
+        $starttime = $this->build->StartTime;
+        $projectid = $this->build->ProjectId;
+
+        // Find the other builds
+        $previousbuilds = DB::select('
+                      SELECT id, starttime, endtime, loctested, locuntested
+                      FROM build, coveragesummary as cs
+                      WHERE
+                          cs.buildid=build.id
+                          AND siteid=?
+                          AND type=?
+                          AND name=?
+                          AND projectid=?
+                          AND starttime<=?
+                      ORDER BY starttime ASC
+                  ', [$siteid, $buildtype, $buildname, $projectid, $starttime]);
+
+        return view('coverage.ajax-coverage-graph')
+            ->with('previousbuilds', $previousbuilds);
     }
 }
