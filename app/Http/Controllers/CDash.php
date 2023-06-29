@@ -57,8 +57,6 @@ class CDash extends AbstractController
             $response = $this->handleFileRequest();
         } elseif ($this->isApiRequest()) {
             $response = $this->handleApiRequest();
-        } elseif ($this->isPartialRequest()) {
-            $response = $this->handlePartialRequest();
         } elseif ($this->isSubmission()) {
             $response = $this->handleSubmission();
         } else {
@@ -107,15 +105,6 @@ class CDash extends AbstractController
     {
         $path = $this->getPath();
         return boolval(preg_match('/submit\.php/', $path));
-    }
-
-    /**
-     * Determines if the request is made via XHR requesting partial HTML
-     */
-    public function isPartialRequest(): bool
-    {
-        $path = $this->getPath();
-        return str_starts_with($path, 'ajax/');
     }
 
     public function isRequestForExport(): bool
@@ -169,15 +158,6 @@ class CDash extends AbstractController
             $response = response($msg, 500);
         }
         return $response;
-    }
-
-    /**
-     * Returns response containing HTML partial
-     */
-    public function handlePartialRequest(): Response
-    {
-        $content = $this->getRequestContents();
-        return response($content, 200);
     }
 
     /**

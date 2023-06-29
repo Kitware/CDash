@@ -133,6 +133,9 @@ Route::get('/viewMap.php', 'MapController@viewMap');
 
 Route::get('/viewFiles.php', 'BuildController@viewFiles');
 
+// TODO: (williamjallen) This route is probably not necessary anymore, and should be removed.
+Route::get('/ajax/dailyupdatescurl.php', 'ProjectController@ajaxDailyUpdatesCurl');
+
 // The user must be logged in to access routes in this section.
 // Requests from users who are not logged in will be redirected to /login.
 Route::middleware(['auth'])->group(function () {
