@@ -821,15 +821,24 @@ function remove_build($buildid)
     // Delete the note if not shared
     DB::delete("
         DELETE FROM note WHERE id IN (
-            SELECT a.noteid
-            FROM build2note AS a
-            LEFT JOIN build2note AS b ON (
-                a.noteid=b.noteid
-                AND b.buildid NOT IN $buildid_prepare_array
-            )
-            WHERE a.buildid IN $buildid_prepare_array
-            GROUP BY a.noteid
-            HAVING count(b.noteid)=0
+            SELECT f1.id
+            FROM (
+                SELECT a.noteid AS id, COUNT(DISTINCT a.buildid) AS c
+                FROM build2note a
+                WHERE a.buildid IN $buildid_prepare_array
+                GROUP BY a.noteid
+             ) AS f1
+            INNER JOIN (
+                SELECT b.noteid AS id, COUNT(DISTINCT b.buildid) AS c
+                FROM build2note b
+                INNER JOIN (
+                    SELECT noteid
+                    FROM build2note
+                    WHERE buildid IN $buildid_prepare_array
+                ) AS d ON b.noteid = d.noteid
+                GROUP BY b.noteid
+            ) AS f2 ON (f1.id = f2.id)
+            WHERE f1.c = f2.c
         )
     ", array_merge($buildids, $buildids));
 
