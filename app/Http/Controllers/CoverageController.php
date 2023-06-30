@@ -464,8 +464,8 @@ class CoverageController extends AbstractBuildController
                               SELECT
                                   sum(loctested) as loctested,
                                   sum(locuntested) as locuntested,
-                                  sum(branchstested) as branchstested,
-                                  sum(branchsuntested) as branchsuntested
+                                  sum(branchestested) as branchestested,
+                                  sum(branchesuntested) as branchesuntested
                               FROM coverage
                               WHERE buildid=?
                               GROUP BY buildid
@@ -475,8 +475,8 @@ class CoverageController extends AbstractBuildController
         $xml .= add_XML_value('loctested', $coverage_array['loctested']);
         $xml .= add_XML_value('locuntested', $coverage_array['locuntested']);
 
-        $xml .= add_XML_value('branchstested', $coverage_array['branchstested']);
-        $xml .= add_XML_value('branchsuntested', $coverage_array['branchsuntested']);
+        $xml .= add_XML_value('branchestested', $coverage_array['branchestested']);
+        $xml .= add_XML_value('branchesuntested', $coverage_array['branchesuntested']);
         $percentcoverage = compute_percentcoverage(
             $coverage_array['loctested'], $coverage_array['locuntested']);
 
@@ -572,8 +572,8 @@ class CoverageController extends AbstractBuildController
                             SELECT
                                 c.locuntested,
                                 c.loctested,
-                                c.branchstested,
-                                c.branchsuntested,
+                                c.branchestested,
+                                c.branchesuntested,
                                 c.functionstested,
                                 c.functionsuntested,
                                 cf.fullpath
@@ -594,15 +594,15 @@ class CoverageController extends AbstractBuildController
             // Compute the coverage metric for bullseye.  (branch coverage without line coverage)
             if (
                 ($coveragefile_array['loctested'] == 0 && $coveragefile_array['locuntested'] == 0) &&
-                ($coveragefile_array['branchstested'] > 0 || $coveragefile_array['branchsuntested'] > 0 ||
+                ($coveragefile_array['branchestested'] > 0 || $coveragefile_array['branchesuntested'] > 0 ||
                     $coveragefile_array['functionstested'] > 0 || $coveragefile_array['functionsuntested'] > 0)) {
                 // Metric coverage
                 $metric = 0;
                 if ($coveragefile_array['functionstested'] + $coveragefile_array['functionsuntested'] > 0) {
                     $metric += $coveragefile_array['functionstested'] / ($coveragefile_array['functionstested'] + $coveragefile_array['functionsuntested']);
                 }
-                if ($coveragefile_array['branchstested'] + $coveragefile_array['branchsuntested'] > 0) {
-                    $metric += $coveragefile_array['branchstested'] / ($coveragefile_array['branchstested'] + $coveragefile_array['branchsuntested']);
+                if ($coveragefile_array['branchestested'] + $coveragefile_array['branchesuntested'] > 0) {
+                    $metric += $coveragefile_array['branchestested'] / ($coveragefile_array['branchestested'] + $coveragefile_array['branchesuntested']);
                     $metric /= 2.0;
                 }
 
@@ -868,26 +868,26 @@ class CoverageController extends AbstractBuildController
             $end = $start + (int)($_GET['iDisplayLength'] ?? 0);
         }
 
-        //add columns for branches only if(total_branchsuntested+total_branchstested)>0
-        $total_branchsuntested = 0;
-        $total_branchstested = 0;
+        //add columns for branches only if(total_branchesuntested+total_branchestested)>0
+        $total_branchesuntested = 0;
+        $total_branchestested = 0;
         $coverage_branches = $db->executePreparedSingleRow('
                                  SELECT
-                                     sum(branchstested) AS total_branchstested,
-                                     sum(branchsuntested) AS total_branchsuntested
+                                     sum(branchestested) AS total_branchestested,
+                                     sum(branchesuntested) AS total_branchesuntested
                                  FROM coverage
                                  WHERE buildid = ?
                                  GROUP BY buildid
                              ', [$this->build->Id]);
         if (!empty($coverage_branches)) {
-            $total_branchsuntested = intval($coverage_branches['total_branchsuntested']);
-            $total_branchstested = intval($coverage_branches['total_branchstested']);
+            $total_branchesuntested = intval($coverage_branches['total_branchesuntested']);
+            $total_branchestested = intval($coverage_branches['total_branchestested']);
         }
 
         /* Sorting */
         $sortby = 'filename';
         if (isset($_GET['iSortCol_0'])) {
-            if (($total_branchsuntested + $total_branchstested) > 0) {
+            if (($total_branchesuntested + $total_branchestested) > 0) {
                 switch (intval($_GET['iSortCol_0'])) {
                     case 0:
                         $sortby = 'filename';
@@ -971,8 +971,8 @@ class CoverageController extends AbstractBuildController
                                 c.fileid,
                                 c.locuntested,
                                 c.loctested,
-                                c.branchstested,
-                                c.branchsuntested,
+                                c.branchestested,
+                                c.branchesuntested,
                                 c.functionstested,
                                 c.functionsuntested,
                                 cfp.priority
@@ -1018,8 +1018,8 @@ class CoverageController extends AbstractBuildController
             // Compute the coverage metric for bullseye (branch coverage without line coverage)
             if (($coveragefile_array['loctested'] == 0 &&
                     $coveragefile_array['locuntested'] == 0) &&
-                ($coveragefile_array['branchstested'] > 0 ||
-                    $coveragefile_array['branchsuntested'] > 0 ||
+                ($coveragefile_array['branchestested'] > 0 ||
+                    $coveragefile_array['branchesuntested'] > 0 ||
                     $coveragefile_array['functionstested'] > 0 ||
                     $coveragefile_array['functionsuntested'] > 0)) {
                 // Metric coverage
@@ -1027,12 +1027,12 @@ class CoverageController extends AbstractBuildController
                 if ($coveragefile_array['functionstested'] + $coveragefile_array['functionsuntested'] > 0) {
                     $metric += $coveragefile_array['functionstested'] / ($coveragefile_array['functionstested'] + $coveragefile_array['functionsuntested']);
                 }
-                if ($coveragefile_array['branchstested'] + $coveragefile_array['branchsuntested'] > 0) {
-                    $metric += $coveragefile_array['branchstested'] / ($coveragefile_array['branchstested'] + $coveragefile_array['branchsuntested']);
+                if ($coveragefile_array['branchestested'] + $coveragefile_array['branchesuntested'] > 0) {
+                    $metric += $coveragefile_array['branchestested'] / ($coveragefile_array['branchestested'] + $coveragefile_array['branchesuntested']);
                     $metric /= 2.0;
                 }
-                $covfile['branchesuntested'] = $coveragefile_array['branchsuntested'];
-                $covfile['branchestested'] = $coveragefile_array['branchstested'];
+                $covfile['branchesuntested'] = $coveragefile_array['branchesuntested'];
+                $covfile['branchestested'] = $coveragefile_array['branchestested'];
                 $covfile['functionsuntested'] = $coveragefile_array['functionsuntested'];
                 $covfile['functionstested'] = $coveragefile_array['functionstested'];
 
@@ -1042,8 +1042,8 @@ class CoverageController extends AbstractBuildController
             } else {
                 // coverage metric for gcov
                 $metric = 0;
-                $covfile['branchesuntested'] = $coveragefile_array['branchsuntested'];
-                $covfile['branchestested'] = $coveragefile_array['branchstested'];
+                $covfile['branchesuntested'] = $coveragefile_array['branchesuntested'];
+                $covfile['branchestested'] = $coveragefile_array['branchestested'];
                 if (($covfile['branchestested'] + $covfile['branchesuntested']) > 0) {
                     $metric += $covfile['branchestested'] / ($covfile['branchestested'] + $covfile['branchesuntested']);
                 }
@@ -1470,7 +1470,7 @@ class CoverageController extends AbstractBuildController
             }
 
             //Next column (Branch Percentage)
-            if ($coveragetype === 'gcov' && ($total_branchstested + $total_branchsuntested) > 0) {
+            if ($coveragetype === 'gcov' && ($total_branchestested + $total_branchesuntested) > 0) {
                 $nextcolumn = '<div style="position:relative; width: 190px;">
                    <div style="position:relative; float:left;
                    width: 123px; height: 12px; background: #bdbdbd url(\'img/progressbar.gif\') top left no-repeat;">
