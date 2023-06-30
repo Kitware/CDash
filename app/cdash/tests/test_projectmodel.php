@@ -8,7 +8,6 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
 
-use App\Models\User;
 use CDash\Model\Project;
 
 class ProjectModelTestCase extends KWWebTestCase
@@ -21,14 +20,6 @@ class ProjectModelTestCase extends KWWebTestCase
     public function testProjectModel()
     {
         $project = new Project();
-
-        $this->assertTrue($project->GetNumberOfErrorConfigures(0, 0) === false, 'GetNumberOfErrorConfigures!=false');
-        $this->assertTrue($project->GetNumberOfWarningConfigures(0, 0) === false, 'GetNumberOfWarningConfigures!=false');
-        $this->assertTrue($project->GetNumberOfPassingConfigures(0, 0) === false, 'GetNumberOfPassingConfigures!=false');
-        $this->assertTrue($project->GetNumberOfPassingTests(0, 0) === false, 'GetNumberOfPassingTests!=false');
-        $this->assertTrue($project->GetNumberOfFailingTests(0, 0) === false, 'GetNumberOfFailingTests!=false');
-        $this->assertTrue($project->GetNumberOfNotRunTests(0, 0) === false, 'GetNumberOfNotRunTests!=false');
-        $this->assertTrue($project->SendEmailToAdmin('', '') === false, 'SendEmailToAdmin!=false');
 
         if (!($project->Delete() === false)) {
             $this->fail("Project::Delete didn't return false for no id");
@@ -59,9 +50,7 @@ class ProjectModelTestCase extends KWWebTestCase
     {
         $project = new Project();
         $project->Id = 0;
-        $User = new user();
-        $User->id = 1;
-        $output = $project->ConvertToJSON($User);
+        $output = $project->ConvertToJSON();
 
         $this->assertFalse(in_array('PDO', array_keys($output)));
     }

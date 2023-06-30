@@ -114,14 +114,15 @@ function rest_post($user)
     // If we should block a spammer's build.
     if (isset($_REQUEST['AddBlockedBuild']) && !empty($_REQUEST['AddBlockedBuild'])) {
         $response['blockedid'] =
-            add_blocked_build($project, $_REQUEST['AddBlockedBuild']);
+            $project->AddBlockedBuild($_REQUEST['AddBlockedBuild']['buildname'],
+                $_REQUEST['AddBlockedBuild']['sitename'], $_REQUEST['AddBlockedBuild']['ipaddress']);
         echo json_encode($response);
         return;
     }
 
     // If we should remove a build from the blocked list.
     if (isset($_REQUEST['RemoveBlockedBuild']) && !empty($_REQUEST['RemoveBlockedBuild'])) {
-        remove_blocked_build($project, $_REQUEST['RemoveBlockedBuild']);
+        $project->RemoveBlockedBuild((int) $_REQUEST['RemoveBlockedBuild']['id']);
         return;
     }
 
@@ -160,7 +161,7 @@ function rest_get($user)
     if (!can_administrate_project($project->Id)) {
         return;
     }
-    $response['project'] = $project->ConvertToJSON($user);
+    $response['project'] = $project->ConvertToJSON();
     echo json_encode($response);
     http_response_code(200);
 }
@@ -234,7 +235,7 @@ function create_project(&$response, $user)
     }
 
     $response['projectcreated'] = 1;
-    $response['project'] = $Project->ConvertToJSON($user);
+    $response['project'] = $Project->ConvertToJSON();
     http_response_code(200);
 }
 
@@ -286,17 +287,6 @@ function populate_project($Project)
                 $repo_passwords, $repo_branches);
         }
     }
-}
-
-function add_blocked_build(Project $Project, $blocked_build)
-{
-    return $Project->AddBlockedBuild($blocked_build['buildname'],
-        $blocked_build['sitename'], $blocked_build['ipaddress']);
-}
-
-function remove_blocked_build(Project $Project, $blocked_build): void
-{
-    $Project->RemoveBlockedBuild($blocked_build['id']);
 }
 
 function set_logo($Project): void

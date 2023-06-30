@@ -17,14 +17,13 @@ class CompressedTestCase extends KWWebTestCase
         echo "1. testSubmissionCompressedTest\n";
 
         // Create project.
-        $settings = array(
-                'Name' => 'TestCompressionExample',
-                'Description' => 'Project compression example',
-                'CvsUrl' => 'public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample',
-                'CvsViewerType' => 'github',
-                'BugTrackerFileUrl' =>  'http://public.kitware.com/Bug/view.php?id=',
-                'RobotName' => 'itkrobot',
-                'RobotRegex' => '^(?:(?:\w|\.)+)\s+((?:\w|\.|\@)+)^');
+        $settings = [
+            'Name' => 'TestCompressionExample',
+            'Description' => 'Project compression example',
+            'CvsUrl' => 'public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample',
+            'CvsViewerType' => 'github',
+            'BugTrackerFileUrl' =>  'http://public.kitware.com/Bug/view.php?id=',
+        ];
         $this->createProject($settings);
 
         // Make sure we can submit to it.
@@ -32,7 +31,6 @@ class CompressedTestCase extends KWWebTestCase
         $this->submission('TestCompressionExample', $file);
     }
 
-    /** */
     public function testGITUpdate()
     {
         echo "4. testGITUpdate\n";
@@ -77,30 +75,6 @@ class CompressedTestCase extends KWWebTestCase
         if (!str_contains($found, $expected)) {
             $this->fail("expected $expected but found $found for revisiondiff");
             return;
-        }
-
-        // Test if the robot worked
-        $robot_verified = false;
-        foreach ($response['updategroups'][0]['directories'] as $directory) {
-            if ($directory['name'] != 'subdir') {
-                continue;
-            }
-            foreach ($directory['files'] as $file) {
-                if ($file['filename'] == 'bar.txt') {
-                    if ($file['author'] == 'jjomier') {
-                        if (str_contains($file['log'], 'r883 jjomier')) {
-                            $robot_verified = true;
-                        } else {
-                            $this->fail("Expected r883 jjomier but found " . $file['log']);
-                        }
-                    } else {
-                        $this->fail("Expected jjomier, found " . $file['filename']);
-                    }
-                }
-            }
-        }
-        if (!$robot_verified) {
-            $this->fail("Failed to verify robot");
         }
 
         $this->pass('Test passed');

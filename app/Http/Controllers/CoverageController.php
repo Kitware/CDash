@@ -13,6 +13,7 @@ use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFile2User;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
+use App\Models\Project as EloquentProject;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 use Illuminate\Http\JsonResponse;
@@ -71,11 +72,9 @@ final class CoverageController extends AbstractBuildController
         }
 
         // If the projectid is not set and there is only one project we go directly to the page
-        if (!isset($projectid)) {
-            $projectids = $Project->GetIds();
-            if (count($projectids) == 1) {
-                $projectid = $projectids[0];
-            }
+        // TODO: (williamjallen) Should this be one project in all of CDash, or one project we can see?
+        if (!isset($projectid) && EloquentProject::count() === 1) {
+            $projectid = EloquentProject::all()->firstOrFail()->id;
         }
         $projectid = intval($projectid);
 

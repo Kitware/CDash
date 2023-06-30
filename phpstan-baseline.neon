@@ -573,7 +573,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 62
+			count: 61
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -588,6 +588,11 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:manageCoverage\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:manageCoverage\\(\\) throws checked exception Illuminate\\\\Support\\\\ItemNotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
@@ -821,7 +826,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 3
+			count: 2
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
@@ -856,6 +861,11 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageProjectRolesController\\:\\:viewPage\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageProjectRolesController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageProjectRolesController\\:\\:viewPage\\(\\) throws checked exception Illuminate\\\\Support\\\\ItemNotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
@@ -1022,7 +1032,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 3
+			count: 2
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
@@ -6784,19 +6794,6 @@ parameters:
 			path: app/cdash/app/Model/BuildUpdateFile.php
 
 		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildUpdateFile.php
@@ -8355,63 +8352,15 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function add_last_sql_error\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 43
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
 			"""
-			count: 9
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 4
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 3
+			count: 2
 			path: app/cdash/app/Model/Project.php
 
 		-
 			message: """
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 47
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 24
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
@@ -8422,7 +8371,7 @@ parameters:
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 5
+			count: 1
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -8436,8 +8385,18 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
+			message: "#^Casting to int something that's already int\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 27
+			count: 21
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -8447,22 +8406,12 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 5
+			count: 3
 			path: app/cdash/app/Model/Project.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 4
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:AddBlockedBuild\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:AddBuildGroup\\(\\) has parameter \\$buildgroup with no type specified\\.$#"
-			count: 1
+			count: 2
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -8476,7 +8425,7 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:AddLogo\\(\\) has parameter \\$filetype with no type specified\\.$#"
+			message: "#^Method CDash\\\\Model\\\\Project\\:\\:AddLogo\\(\\) throws checked exception Illuminate\\\\Database\\\\Eloquent\\\\ModelNotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -8511,17 +8460,12 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:ConvertToJSON\\(\\) return type has no value type specified in iterable type array\\.$#"
+			message: "#^Method CDash\\\\Model\\\\Project\\:\\:Delete\\(\\) throws checked exception Illuminate\\\\Database\\\\Eloquent\\\\ModelNotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:Exists\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:ExistsByName\\(\\) has parameter \\$name with no type specified\\.$#"
+			message: "#^Method CDash\\\\Model\\\\Project\\:\\:Delete\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -8541,22 +8485,7 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetBuildsDailyAverage\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetBuildsDailyAverage\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetBuildsDailyAverage\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetCoverageThreshold\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -8571,157 +8500,7 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfBuilds\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfBuilds\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfErrorBuilds\\(\\) has parameter \\$childrenOnly with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfErrorBuilds\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfErrorBuilds\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfErrorConfigures\\(\\) has parameter \\$childrenOnly with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfErrorConfigures\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfErrorConfigures\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfFailingTests\\(\\) has parameter \\$childrenOnly with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfFailingTests\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfFailingTests\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfNotRunTests\\(\\) has parameter \\$childrenOnly with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfNotRunTests\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfNotRunTests\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfPassingBuilds\\(\\) has parameter \\$childrenOnly with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfPassingBuilds\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfPassingBuilds\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfPassingConfigures\\(\\) has parameter \\$childrenOnly with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfPassingConfigures\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfPassingConfigures\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfPassingTests\\(\\) has parameter \\$childrenOnly with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfPassingTests\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfPassingTests\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfSubProjects\\(\\) has parameter \\$date with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfWarningBuilds\\(\\) has parameter \\$childrenOnly with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfWarningBuilds\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfWarningBuilds\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfWarningConfigures\\(\\) has parameter \\$childrenOnly with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfWarningConfigures\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfWarningConfigures\\(\\) has parameter \\$startUTCdate with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -8736,17 +8515,7 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetSubscriberCollection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:RemoveBlockedBuild\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:SetNightlyTime\\(\\) has parameter \\$nightly_time with no type specified\\.$#"
+			message: "#^Method CDash\\\\Model\\\\Project\\:\\:Save\\(\\) throws checked exception Illuminate\\\\Database\\\\Eloquent\\\\MassAssignmentException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -8762,11 +8531,6 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, array\\|null given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -8926,16 +8690,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Property CDash\\\\Model\\\\Project\\:\\:\\$RobotName has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Project\\:\\:\\$RobotRegex has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: "#^Property CDash\\\\Model\\\\Project\\:\\:\\$ShareLabelFilters has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -8992,11 +8746,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Model\\\\Project\\:\\:\\$WebApiKey has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -13320,7 +13069,7 @@ parameters:
 				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 9
+			count: 8
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -13343,7 +13092,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 6
+			count: 5
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -16693,16 +16442,6 @@ parameters:
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\add_blocked_build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\add_blocked_build\\(\\) has parameter \\$blocked_build with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\create_project\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
@@ -16739,11 +16478,6 @@ parameters:
 
 		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\populate_project\\(\\) has parameter \\$Project with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\remove_blocked_build\\(\\) has parameter \\$blocked_build with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
@@ -22969,18 +22703,13 @@ parameters:
 			path: app/cdash/tests/test_compressedtest.php
 
 		-
-			message: "#^Foreach overwrites \\$file with its value variable\\.$#"
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_compressedtest.php
 
 		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 2
-			path: app/cdash/tests/test_compressedtest.php
-
-		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 3
+			count: 1
 			path: app/cdash/tests/test_compressedtest.php
 
 		-

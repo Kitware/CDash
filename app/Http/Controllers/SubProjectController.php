@@ -102,7 +102,7 @@ final class SubProjectController extends AbstractProjectController
                 'coverage_threshold' => $subProjectGroup->GetCoverageThreshold(),
             ];
             $groups[] = $group;
-            if ($subProjectGroup->GetIsDefault()) {
+            if ($subProjectGroup->GetIsDefault() > 0) {
                 $response['default_group_id'] = $group['id'];
             }
         }

@@ -1012,23 +1012,6 @@ function addDailyChanges(int $projectid): void
             $revision = $commit['revision'];
             $priorrevision = $commit['priorrevision'];
 
-            // Check if we have a robot file for this build
-            $robot = $db->executePreparedSingleRow('
-                         SELECT authorregex
-                         FROM projectrobot
-                         WHERE
-                             projectid=?
-                             AND robotname=?
-                     ', [$projectid, $author]);
-
-            if (!empty($robot)) {
-                $regex = $robot['authorregex'];
-                preg_match($regex, $commit['comment'], $matches);
-                if (isset($matches[1])) {
-                    $author = addslashes($matches[1]);
-                }
-            }
-
             if (!in_array(stripslashes($author), $cvsauthors)) {
                 $cvsauthors[] = stripslashes($author);
             }

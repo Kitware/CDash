@@ -73,7 +73,7 @@ final class ProjectController extends AbstractProjectController
 
         $project_response = [];
         if ($this->project->Exists()) {
-            $project_response = $this->project->ConvertToJSON($User);
+            $project_response = $this->project->ConvertToJSON();
 
             // Get the spam list
             $spambuilds = $this->project->GetBlockedBuilds();

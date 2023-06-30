@@ -53,25 +53,6 @@ class BuildUpdateFile
 
         $db = Database::getInstance();
 
-        // Check if we have a robot file for this build
-        $robot = $db->executePreparedSingleRow('
-                     SELECT authorregex
-                     FROM projectrobot, build, build2update
-                     WHERE
-                         projectrobot.projectid=build.projectid
-                         AND build2update.buildid=build.id
-                         AND build2update.updateid=?
-                         AND robotname=?
-                 ', [intval($this->UpdateId), $this->Author]);
-
-        if (!empty($robot)) {
-            $regex = $robot['authorregex'];
-            preg_match($regex, $this->Log, $matches);
-            if (isset($matches[1])) {
-                $this->Author = $matches[1];
-            }
-        }
-
         $query = $db->executePrepared('
                      INSERT INTO updatefile (
                          updateid,

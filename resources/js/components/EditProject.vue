@@ -714,55 +714,6 @@
                     </font>
                   </td>
                 </tr>
-                <tr>
-                  <td />
-                  <td>
-                    <div align="right">
-                      <strong>Repository Robot:</strong>
-                    </div>
-                  </td>
-                  <td>
-                    <input
-                      id="robotname"
-                      v-model="cdash.project.RobotName"
-                      name="robotname"
-                      type="text"
-                      size="15"
-                      @change="cdash.changesmade = true"
-                      @focus="showHelp('cvsrobot_help')"
-                    > regex:
-                    <input
-                      id="robotregex"
-                      v-model="cdash.project.RobotRegex"
-                      name="robotregex"
-                      type="text"
-                      size="22"
-                      @change="cdash.changesmade = true"
-                      @focus="showHelp('cvsrobot_help')"
-                    >
-                    <a
-                      href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                      target="blank"
-                    >
-                      <img
-                        :src="$baseURL + '/img/help.gif'"
-                        border="0"
-                        @mouseover="showHelp('cvsrobot_help')"
-                      >
-                    </a>
-                    <span
-                      id="cvsrobot_help"
-                      class="help_content"
-                    >
-                      <b>Repository Robot</b>
-                      <br>
-                      Some repositories have a robot in charge of checking in files
-                      from another repository. For CDash to be able to assign an author to the checkin
-                      files a regular expression must be defined to allow extraction of the author name
-                      from the robot checkin.
-                    </span>
-                  </td>
-                </tr>
                 <template v-for="repo in cdash.project.repositories">
                   <tr>
                     <td />
