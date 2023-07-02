@@ -29,6 +29,10 @@ Route::get('/v1/viewUpdate.php', 'AdminController@viewUpdatePageContent');
 
 Route::get('/v1/viewTest.php', 'ViewTestController@fetchPageContent');
 
+Route::get('/v1/viewBuildError.php', 'BuildController@apiViewBuildError');
+
+Route::get('/v1/viewConfigure.php', 'BuildController@apiViewConfigure');
+
 Route::get('/v1/user.php', 'UserController@userPageContent');
 
 Route::get('/v1/userStatistics.php', 'UserStatisticsController@api');

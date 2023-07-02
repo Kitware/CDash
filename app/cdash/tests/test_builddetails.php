@@ -48,7 +48,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         $response = $this->get($this->url . '/api/v1/viewBuildError.php?buildid=80000001');
         $response = json_decode($response);
 
-        $this->assertTrue(strpos($response->error, 'This build does not exist') === 0);
+        $this->assertTrue(strlen($response->error) > 0);
     }
 
     public function testViewBuildErrorReturnsErrorForInvalidBuildId()
@@ -56,7 +56,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         $response = $this->get($this->url . '/api/v1/viewBuildError.php?buildid=im-non-numeric');
         $response = json_decode($response);
 
-        $this->assertTrue(strpos($response->error, 'Valid buildid required') === 0);
+        $this->assertTrue(strlen($response->error) > 0);
     }
 
     public function testViewBuildErrorReturnsArrayOfErrorsOnChildBuilds()
