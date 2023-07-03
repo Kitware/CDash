@@ -781,15 +781,24 @@ function remove_build($buildid)
     DB::delete("
         DELETE FROM coveragefile
         WHERE id IN (
-            SELECT a.fileid
-            FROM coverage AS a
-            LEFT JOIN coverage AS b ON (
-                a.fileid=b.fileid
-                AND b.buildid NOT IN $buildid_prepare_array
-            )
-            WHERE a.buildid IN $buildid_prepare_array
-            GROUP BY a.fileid
-            HAVING count(b.fileid)=0
+            SELECT f1.id
+            FROM (
+                SELECT a.fileid AS id, COUNT(DISTINCT a.buildid) AS c
+                FROM coverage a
+                WHERE a.buildid IN $buildid_prepare_array
+                GROUP BY a.fileid
+             ) AS f1
+            INNER JOIN (
+                SELECT b.fileid AS id, COUNT(DISTINCT b.buildid) AS c
+                FROM coverage b
+                INNER JOIN (
+                    SELECT fileid
+                    FROM coverage
+                    WHERE buildid IN $buildid_prepare_array
+                ) AS d ON b.fileid = d.fileid
+                GROUP BY b.fileid
+            ) AS f2 ON (f1.id = f2.id)
+            WHERE f1.c = f2.c
         )
     ", array_merge($buildids, $buildids));
 
