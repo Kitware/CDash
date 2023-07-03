@@ -1946,6 +1946,11 @@ parameters:
 			path: app/Services/UnparsedSubmissionProcessor.php
 
 		-
+			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:populateBuildFileRow\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/Services/UnparsedSubmissionProcessor.php
+
+		-
 			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:postSubmit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Services/UnparsedSubmissionProcessor.php
@@ -5216,44 +5221,6 @@ parameters:
 			message: "#^Property CDash\\\\Model\\\\BuildFailure\\:\\:\\$WorkingDirectory has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 3
-			path: app/cdash/app/Model/BuildFile.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildFile\\:\\:Delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildFile.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildFile\\:\\:Insert\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildFile\\:\\:\\$BuildId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildFile\\:\\:\\$Filename has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildFile\\:\\:\\$Type has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildFile\\:\\:\\$md5 has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildFile.php
 
 		-
 			message: "#^Access to an undefined property CDash\\\\Model\\\\BuildGroup\\:\\:\\$AutoRemoveTimeFrame\\.$#"
@@ -12417,7 +12384,7 @@ parameters:
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
 			"""
-			count: 5
+			count: 3
 			path: app/cdash/include/ctestparser.php
 
 		-
@@ -12433,12 +12400,12 @@ parameters:
 				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 4
+			count: 3
 			path: app/cdash/include/ctestparser.php
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 5
+			count: 4
 			path: app/cdash/include/ctestparser.php
 
 		-
@@ -12519,6 +12486,11 @@ parameters:
 		-
 			message: "#^Function parse_put_submission\\(\\) throws checked exception CDashParseException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 2
+			path: app/cdash/include/ctestparser.php
+
+		-
+			message: "#^Function parse_put_submission\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 3
 			path: app/cdash/include/ctestparser.php
 
 		-

@@ -18,7 +18,7 @@ namespace App\Services;
 
 use App\Jobs\ProcessSubmission;
 use CDash\Model\Build;
-use CDash\Model\BuildFile;
+use App\Models\BuildFile;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use App\Models\Site;
@@ -305,11 +305,12 @@ class UnparsedSubmissionProcessor
     public function populateBuildFileRow()
     {
         // Populate a BuildFile object.
-        $buildfile = new BuildFile();
-        $buildfile->BuildId = $this->build->Id;
-        $buildfile->Type = $this->type;
-        $buildfile->md5 = $this->md5;
-        $buildfile->Filename = $this->backupfilename;
+        $buildfile = BuildFile::firstOrNew([
+            'buildid' => $this->build->Id,
+            'type' => $this->type,
+            'md5' => $this->md5,
+            'filename' => $this->backupfilename,
+        ]);
 
         $response_array = ['status' => 0];
         if (!$this->project->Exists()) {
@@ -334,14 +335,14 @@ class UnparsedSubmissionProcessor
             $response_array['description'] =
                 "md5 mismatch. expected: {$this->md5}, received: $md5sum";
             Storage::delete($this->inboxdatafilename);
-            $buildfile->Delete();
+            $buildfile->delete();
             echo json_encode($response_array);
             return false;
         }
         // endthink
 
         // Insert the buildfile row.
-        $buildfile->Insert();
+        $buildfile->save();
 
         // Increment the count of pending submission files for this build.
         $pendingSubmissions = new PendingSubmissions();

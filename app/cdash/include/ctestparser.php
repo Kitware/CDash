@@ -31,8 +31,9 @@ require_once 'xml_handlers/upload_handler.php';
 
 use CDash\Config;
 use CDash\Database;
-use CDash\Model\BuildFile;
+use App\Models\BuildFile;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class CDashParseException extends RuntimeException
@@ -84,8 +85,8 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
         return false;
     }
 
-    $buildfile_row = $db->executePreparedSingleRow('SELECT * FROM buildfile WHERE md5=? LIMIT 1', [$expected_md5]);
-    if (empty($buildfile_row)) {
+    $buildfile = BuildFile::where(['md5' => $expected_md5])->first();
+    if ($buildfile === null) {
         return false;
     }
 
@@ -96,8 +97,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     }
     $projectname = $row['name'];
 
-    $buildid = $buildfile_row['buildid'];
-    $row = $db->executePreparedSingleRow('SELECT name, stamp FROM build WHERE id=? LIMIT 1', [$buildid]);
+    $row = $db->executePreparedSingleRow('SELECT name, stamp FROM build WHERE id=? LIMIT 1', [$buildfile->buildid]);
     if (empty($row)) {
         return false;
     }
@@ -105,7 +105,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     $stamp = $row['stamp'];
 
     $row = $db->executePreparedSingleRow('SELECT name FROM site WHERE id=
-                                             (SELECT siteid FROM build WHERE id=?) LIMIT 1', [$buildid]);
+                                             (SELECT siteid FROM build WHERE id=?) LIMIT 1', [$buildfile->buildid]);
     if (empty($row)) {
         return false;
     }
@@ -115,15 +115,8 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     $meta_data = stream_get_meta_data($filehandler);
     $filename = $meta_data['uri'];
 
-    // Instantiate a buildfile object so we can delete it from the database
-    // once we're done parsing it.
-    $buildfile = new BuildFile();
-    $buildfile->BuildId = $buildid;
-    $buildfile->md5 = $expected_md5;
-
     // Include the handler file for this type of submission.
-    $type = $buildfile_row['type'];
-    $include_file = 'xml_handlers/' . $type . '_handler.php';
+    $include_file = 'xml_handlers/' . $buildfile->type . '_handler.php';
     $valid_types = [
         'BazelJSON',
         'build',
@@ -148,24 +141,21 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
         'update',
         'upload',
     ];
-    if (stream_resolve_include_path($include_file) === false || !in_array($type, $valid_types, true)) {
-        add_log("No handler include file for $type (tried $include_file)",
-            'parse_put_submission',
-            LOG_ERR, $projectid);
-        $buildfile->Delete();
+    if (stream_resolve_include_path($include_file) === false || !in_array($buildfile->type, $valid_types, true)) {
+        Log::error("Project: $projectid.  No handler include file for {$buildfile->type} (tried $include_file)");
+        $buildfile->delete();
         return true;
     }
     require_once $include_file;
 
     // Instantiate the handler.
-    $className = $type . 'Handler';
+    $className = $buildfile->type . 'Handler';
     if (!class_exists($className)) {
-        add_log("No handler class for $type", 'parse_put_submission',
-            LOG_ERR, $projectid);
-        $buildfile->Delete();
+        Log::error("Project: $projectid.  No handler class for {$buildfile->type}");
+        $buildfile->delete();
         return true;
     }
-    $handler = new $className($buildid);
+    $handler = new $className($buildfile->buildid);
 
     // Parse the file.
     if (file_exists($filename)) {
@@ -180,10 +170,9 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
         throw new CDashParseException('Failed to parse file ' . $filename);
     }
 
-    $buildfile->Delete();
+    $buildfile->delete();
 
-    $handler->backupFileName = generateBackupFileName(
-        $projectname, '', $buildname, $sitename, $stamp, $buildfile_row['filename']);
+    $handler->backupFileName = generateBackupFileName($projectname, '', $buildname, $sitename, $stamp, $buildfile->filename);
 
     return $handler;
 }
