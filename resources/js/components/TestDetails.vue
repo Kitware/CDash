@@ -148,12 +148,11 @@
         <span v-show="showcommandline">Hide Command Line</span>
       </a>
       <transition name="fade">
-        <div
+        <pre
           v-show="showcommandline"
           id="commandline"
-        >
-          {{ cdash.test.command }}
-        </div>
+          style="white-space: pre-wrap;"
+        >{{ cdash.test.command }}</pre>
       </transition>
       <br>
 
