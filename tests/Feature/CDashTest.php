@@ -84,23 +84,6 @@ class CDashTest extends TestCase
         $response->assertRedirect('/build/5/configure');
     }
 
-    public function testGetController()
-    {
-        $uri = '/buildProperties.php?buildid=14';
-        $request = Request::create($uri);
-        $sut = new CDash($request);
-
-        $expected = 'BuildPropertiesController';
-        $actual = $sut->getController();
-        $this::assertEquals($expected, $actual);
-
-        $uri = '/login';
-        $request = Request::create($uri);
-        $sut = new CDash($request);
-
-        $this::assertEmpty($sut->getController());
-    }
-
     public function testOverrideLoginField()
     {
         URL::forceRootUrl('http://localhost');
