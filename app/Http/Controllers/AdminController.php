@@ -1400,4 +1400,9 @@ class AdminController extends AbstractController
             'title' => 'Installation'
         ]);
     }
+
+    public function userStatistics(): \Illuminate\Http\Response
+    {
+        return response()->angular_view('userStatistics');
+    }
 }

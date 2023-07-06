@@ -1373,11 +1373,6 @@ function DeleteDirectory(string $dirName): void
     rmdir($dirName);
 }
 
-function load_view($viewName)
-{
-    readfile("build/views/$viewName.html");
-}
-
 /**
  * Change data-type from string to integer or float if required.
  * If a string is detected make sure it is utf8 encoded.

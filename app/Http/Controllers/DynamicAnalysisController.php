@@ -5,10 +5,21 @@ use App\Services\PageTimer;
 use App\Services\TestingDay;
 use CDash\Model\DynamicAnalysis;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 final class DynamicAnalysisController extends AbstractBuildController
 {
+    public function viewDynamicAnalysis(): Response
+    {
+        return response()->angular_view('viewDynamicAnalysis');
+    }
+
+    public function viewDynamicAnalysisFile(): Response
+    {
+        return response()->angular_view('viewDynamicAnalysisFile');
+    }
+
     public function apiViewDynamicAnalysis(): JsonResponse
     {
         $pageTimer = new PageTimer();

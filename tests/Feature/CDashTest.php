@@ -4,7 +4,6 @@ namespace Tests\Feature;
 use App\Http\Controllers\CDash;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Filesystem\FilesystemAdapter;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;

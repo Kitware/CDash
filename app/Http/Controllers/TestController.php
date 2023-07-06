@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BuildTest;
 use CDash\Database;
+use Illuminate\Http\Response;
 use Illuminate\View\View;
 
 class TestController extends AbstractProjectController
@@ -74,5 +75,20 @@ class TestController extends AbstractProjectController
 
         return view('test.ajax-test-failure-graph')
             ->with('tarray', $tarray);
+    }
+
+    public function queryTests(): Response
+    {
+        return response()->angular_view('queryTests');
+    }
+
+    public function testOverview(): Response
+    {
+        return response()->angular_view('testOverview');
+    }
+
+    public function testSummary(): Response
+    {
+        return response()->angular_view('testSummary');
     }
 }

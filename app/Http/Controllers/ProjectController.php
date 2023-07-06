@@ -10,6 +10,7 @@ use CDash\Model\Project;
 use CDash\Model\Repository;
 use CDash\Model\UserProject;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
@@ -147,6 +148,16 @@ class ProjectController extends AbstractProjectController
 
         $pageTimer->end($response);
         return response()->json(cast_data_for_JSON($response));
+    }
+
+    public function overview(): Response
+    {
+        return response()->angular_view('overview');
+    }
+
+    public function manageOverview(): Response
+    {
+        return response()->angular_view('manageOverview');
     }
 
     public function ajaxDailyUpdatesCurl(): void

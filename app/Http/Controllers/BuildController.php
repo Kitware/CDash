@@ -14,6 +14,7 @@ use CDash\Model\Label;
 use CDash\ServiceContainer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
@@ -449,6 +450,21 @@ class BuildController extends AbstractBuildController
 
         $pageTimer->end($response);
         return response()->json(cast_data_for_JSON($response));
+    }
+
+    public function manageBuildGroup(): Response
+    {
+        return response()->angular_view('manageBuildGroup');
+    }
+
+    public function viewBuildError(): Response
+    {
+        return response()->angular_view('viewBuildError');
+    }
+
+    public function viewBuildGroup(): Response
+    {
+        return response()->angular_view('index');
     }
 
     /**
