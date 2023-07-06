@@ -12,7 +12,9 @@ class TestController extends AbstractProjectController
     {
         $buildtest = BuildTest::findOrFail($buildtest_id);
         $this->setProjectById($buildtest->test->projectid);
-        return view('test.details');
+        return view('test.details')
+            ->with('title', 'Test Results')
+            ->with('project', $this->project);
     }
 
     public function ajaxTestFailureGraph(): View
