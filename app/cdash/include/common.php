@@ -1382,54 +1382,6 @@ function find_site_maintainers(int $projectid): array
 }
 
 /**
- * Check the email category
- */
-function check_email_category(string $name, int $emailcategory): bool
-{
-    if ($emailcategory >= 64) {
-        if ($name == 'dynamicanalysis') {
-            return true;
-        }
-        $emailcategory -= 64;
-    }
-
-    if ($emailcategory >= 32) {
-        if ($name == 'test') {
-            return true;
-        }
-        $emailcategory -= 32;
-    }
-
-    if ($emailcategory >= 16) {
-        if ($name == 'error') {
-            return true;
-        }
-        $emailcategory -= 16;
-    }
-
-    if ($emailcategory >= 8) {
-        if ($name == 'warning') {
-            return true;
-        }
-        $emailcategory -= 8;
-    }
-
-    if ($emailcategory >= 4) {
-        if ($name == 'configure') {
-            return true;
-        }
-        $emailcategory -= 4;
-    }
-
-    if ($emailcategory >= 2) {
-        if ($name == 'update') {
-            return true;
-        }
-    }
-    return false;
-}
-
-/**
  * Return the byte value with proper extension
  */
 function getByteValueWithExtension($value, $base = 1024): string
