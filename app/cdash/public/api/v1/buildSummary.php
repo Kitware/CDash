@@ -57,7 +57,7 @@ if (!can_access_project($project->Id)) {
 $date = TestingDay::get($project, $build->StartTime);
 
 $response = begin_JSON_response();
-$response['title'] = "CDash : $project->Name";
+$response['title'] = "$project->Name - Build Summary";
 
 $previous_buildid = $build->GetPreviousBuildId();
 $current_buildid = $build->GetCurrentBuildId();

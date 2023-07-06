@@ -54,7 +54,7 @@ class ViewTest extends BuildApi
         $this->setDate($this->build->GetDate());
 
         $response = begin_JSON_response();
-        $response['title'] = "CDash : {$this->project->Name}";
+        $response['title'] = "{$this->project->Name} - Tests";
         $response['groupid'] = $this->build->GroupId;
         get_dashboard_JSON_by_name($this->project->Name, $this->date, $response);
 
