@@ -832,6 +832,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function add_last_sql_error\\(\\)\\:
+				04/22/2023$#
+			"""
+			count: 2
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: """
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
 			"""
@@ -848,10 +856,18 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
+				04/01/2023$#
+			"""
+			count: 14
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: """
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 10
+			count: 13
 			path: app/Http/Controllers/SiteController.php
 
 		-
@@ -864,11 +880,111 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 2
+			count: 3
 			path: app/Http/Controllers/SiteController.php
 
 		-
 			message: "#^Foreach overwrites \\$projectid with its value variable\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$description with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$ip with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$latitude with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$logicalprocessorsperphysical with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$longitude with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$nonewrevision with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$numberlogicalcpus with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$numberphysicalcpus with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$outoforder with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$processorcachesize with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$processorclockfrequency with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$processorfamilyid with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$processoris64bits with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$processormodelid with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$processorvendor with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$processorvendorid with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$siteid with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$totalphysicalmemory with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$totalvirtualmemory with no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/SiteController.php
 
@@ -884,6 +1000,16 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, float\\|int\\|string given\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Parameter \\#1 \\$num of function round expects float\\|int, string\\|false given\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: app/Http/Controllers/SiteController.php
 
@@ -11758,7 +11884,7 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 3
+			count: 1
 			path: app/cdash/include/common.php
 
 		-
@@ -11787,14 +11913,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 14
-			path: app/cdash/include/common.php
-
-		-
-			message: """
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -11806,7 +11924,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 6
+			count: 3
 			path: app/cdash/include/common.php
 
 		-
@@ -11814,7 +11932,7 @@ parameters:
 				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 4
+			count: 3
 			path: app/cdash/include/common.php
 
 		-
@@ -11855,7 +11973,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 11
+			count: 9
 			path: app/cdash/include/common.php
 
 		-
@@ -12184,111 +12302,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function update_site\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$description with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$ip with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$latitude with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$logicalprocessorsperphysical with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$longitude with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$nonewrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$numberlogicalcpus with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$numberphysicalcpus with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$outoforder with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$processorcachesize with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$processorclockfrequency with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$processorfamilyid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$processoris64bits with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$processormodelid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$processorvendor with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$processorvendorid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$siteid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$totalphysicalmemory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function update_site\\(\\) has parameter \\$totalvirtualmemory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function xml_replace_callback\\(\\) has parameter \\$matches with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -12339,17 +12352,7 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Parameter \\#1 \\$num of function round expects float\\|int, string\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Parameter \\#4 \\$resultcontainer of function xslt_process expects string, null given\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
