@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Services\PageTimer;
 use App\Services\TestingDay;
+use CDash\Database;
 use CDash\Model\DynamicAnalysis;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -39,17 +40,17 @@ final class DynamicAnalysisController extends AbstractBuildController
             $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . "&date=$date";
         }
 
-        $previousbuildid = get_previous_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name, $this->build->StartTime);
+        $previousbuildid = $this->get_previous_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name, $this->build->StartTime);
         if ($previousbuildid > 0) {
             $menu['previous'] = "viewDynamicAnalysis.php?buildid=$previousbuildid";
         } else {
             $menu['previous'] = false;
         }
 
-        $currentbuildid = get_last_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name);
+        $currentbuildid = $this->get_last_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name);
         $menu['current'] = "viewDynamicAnalysis.php?buildid=$currentbuildid";
 
-        $nextbuildid = get_next_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name, $this->build->StartTime);
+        $nextbuildid = $this->get_next_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name, $this->build->StartTime);
         if ($nextbuildid > 0) {
             $menu['next'] = "viewDynamicAnalysis.php?buildid=$nextbuildid";
         } else {
@@ -216,5 +217,82 @@ final class DynamicAnalysisController extends AbstractBuildController
 
         $pageTimer->end($response);
         return response()->json(cast_data_for_JSON($response));
+    }
+
+    /**
+     * Get the previous build id dynamicanalysis
+     */
+    private function get_previous_buildid_dynamicanalysis(int $projectid, int $siteid, string $buildtype, string $buildname, string $starttime): int
+    {
+        $db = Database::getInstance();
+        $previousbuild = $db->executePreparedSingleRow('
+                         SELECT build.id
+                         FROM build, dynamicanalysis
+                         WHERE
+                             build.siteid=?
+                             AND build.type=?
+                             AND build.name=?
+                             AND build.projectid=?
+                             AND build.starttime<?
+                             AND dynamicanalysis.buildid=build.id
+                         ORDER BY build.starttime DESC
+                         LIMIT 1
+                     ', [$siteid, $buildtype, $buildname, $projectid, $starttime]);
+
+        if (!empty($previousbuild)) {
+            return intval($previousbuild['id']);
+        }
+        return 0;
+    }
+
+    /**
+     * Get the next build id dynamicanalysis
+     */
+    private function get_next_buildid_dynamicanalysis(int $projectid, int $siteid, string $buildtype, string $buildname, string $starttime): int
+    {
+        $db = Database::getInstance();
+        $nextbuild = $db->executePreparedSingleRow('
+                     SELECT build.id
+                     FROM build, dynamicanalysis
+                     WHERE
+                         build.siteid=?
+                         AND build.type=?
+                         AND build.name=?
+                         AND build.projectid=?
+                         AND build.starttime>?
+                         AND dynamicanalysis.buildid=build.id
+                     ORDER BY build.starttime ASC
+                     LIMIT 1
+                 ', [$siteid, $buildtype, $buildname, $projectid, $starttime]);
+
+        if (!empty($nextbuild)) {
+            return intval($nextbuild['id']);
+        }
+        return 0;
+    }
+
+    /**
+     * Get the last build id dynamicanalysis
+     */
+    private function get_last_buildid_dynamicanalysis(int $projectid, int $siteid, string $buildtype, string $buildname): int
+    {
+        $db = Database::getInstance();
+        $nextbuild = $db->executePreparedSingleRow('
+                     SELECT build.id
+                     FROM build, dynamicanalysis
+                     WHERE
+                         build.siteid=?
+                         AND build.type=?
+                         AND build.name=?
+                         AND build.projectid=?
+                         AND dynamicanalysis.buildid=build.id
+                     ORDER BY build.starttime DESC
+                     LIMIT 1
+                 ', [$siteid, $buildtype, $buildname, $projectid]);
+
+        if (!empty($nextbuild)) {
+            return $nextbuild['id'];
+        }
+        return 0;
     }
 }
