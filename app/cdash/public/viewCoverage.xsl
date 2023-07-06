@@ -43,15 +43,15 @@
                  <td align="right"><xsl:value-of select="cdash/coverage/locuntested"/></td>
 
               </tr>
-              <xsl:if test="(cdash/coverage/branchstested + cdash/coverage/branchsuntested) > 0">
+              <xsl:if test="(cdash/coverage/branchestested + cdash/coverage/branchesuntested) > 0">
                 <tr class="trodd">
 
                    <td align="left">Tested branches</td>
-                   <td align="right"><xsl:value-of select="cdash/coverage/branchstested"/></td>
+                   <td align="right"><xsl:value-of select="cdash/coverage/branchestested"/></td>
                 </tr>
                 <tr class="treven">
                    <td align="left">Untested branches</td>
-                   <td align="right"><xsl:value-of select="cdash/coverage/branchsuntested"/></td>
+                   <td align="right"><xsl:value-of select="cdash/coverage/branchesuntested"/></td>
 
                 </tr>
               </xsl:if>
@@ -268,7 +268,7 @@
       <!-- gcov -->
       <xsl:if test="cdash/coverage/coveragetype='gcov'">
         <th width="10%" align="center">Lines not covered</th>
-        <xsl:if test="(cdash/coverage/branchstested + cdash/coverage/branchsuntested) > 0">
+        <xsl:if test="(cdash/coverage/branchestested + cdash/coverage/branchesuntested) > 0">
           <th width="10%" align="center">Branch percentage</th>
           <th width="10%" align="center">Branches not covered</th>
         </xsl:if>

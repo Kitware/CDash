@@ -129,8 +129,8 @@ class CoverageSummary
                 $covered = $coverage->Covered;
                 $loctested = $coverage->LocTested;
                 $locuntested = $coverage->LocUntested;
-                $branchstested = $coverage->BranchesTested;
-                $branchsuntested = $coverage->BranchesUntested;
+                $branchestested = $coverage->BranchesTested;
+                $branchesuntested = $coverage->BranchesUntested;
                 $functionstested = $coverage->FunctionsTested;
                 $functionsuntested = $coverage->FunctionsUntested;
 
@@ -143,11 +143,11 @@ class CoverageSummary
                 if (empty($locuntested)) {
                     $locuntested = 0;
                 }
-                if (empty($branchstested)) {
-                    $branchstested = 0;
+                if (empty($branchestested)) {
+                    $branchestested = 0;
                 }
-                if (empty($branchsuntested)) {
-                    $branchsuntested = 0;
+                if (empty($branchesuntested)) {
+                    $branchesuntested = 0;
                 }
                 if (empty($functionstested)) {
                     $functionstested = 0;
@@ -163,7 +163,7 @@ class CoverageSummary
                 if ($append) {
                     // UPDATE (instead of INSERT) if this coverage already
                     // exists.
-                    $existing_row_updated = DB::transaction(function () use ($coverage, $covered, $loctested, $locuntested, $branchstested, $branchsuntested, $functionstested, $functionsuntested) {
+                    $existing_row_updated = DB::transaction(function () use ($coverage, $covered, $loctested, $locuntested, $branchestested, $branchesuntested, $functionstested, $functionsuntested) {
                         $existing_coverage_row = DB::table('coverage')
                             ->where('buildid', $this->BuildId)
                             ->where('fileid', $coverage->CoverageFile->Id)
@@ -177,8 +177,8 @@ class CoverageSummary
                                     'covered' => $covered,
                                     'loctested' => $loctested,
                                     'locuntested' => $locuntested,
-                                    'branchstested' => $branchstested,
-                                    'branchsuntested' => $branchsuntested,
+                                    'branchestested' => $branchestested,
+                                    'branchesuntested' => $branchesuntested,
                                     'functionstested' => $functionstested,
                                     'functionsuntested' => $functionsuntested,
                                 ]);
@@ -194,8 +194,8 @@ class CoverageSummary
                         'covered' => $covered,
                         'loctested' => $loctested,
                         'locuntested' => $locuntested,
-                        'branchstested' => $branchstested,
-                        'branchsuntested' => $branchsuntested,
+                        'branchestested' => $branchestested,
+                        'branchesuntested' => $branchesuntested,
                         'functionstested' => $functionstested,
                         'functionsuntested' => $functionsuntested,
                     ]);

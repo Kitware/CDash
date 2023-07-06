@@ -15,9 +15,14 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use CDash\Database;
+use App\Models\Coverage as EloquentCoverage;
 
-/** Coverage class. Used by CoverageSummary */
+/**
+ * Coverage class. Used by CoverageSummary
+ *
+ * This class is deprecated and serves as an adapter for the replacement App\Models\Coverage
+ * model to support legacy code and should ultimately be removed.
+ */
 class Coverage
 {
     public $BuildId;
@@ -68,48 +73,28 @@ class Coverage
     }
 
     /** Return the name of a build */
-    public function GetFiles()
+    public function GetFiles(): array|false
     {
         if (!$this->BuildId) {
             echo 'Coverage GetFiles(): BuildId not set';
             return false;
         }
 
-        $fileids = array();
-
-        $db = Database::getInstance();
-        $coverage = $db->executePrepared('SELECT fileid FROM coverage WHERE buildid=?', [$this->BuildId]);
-        if (!$coverage) {
-            add_last_sql_error('Coverage GetFiles');
-            return false;
-        }
-
-        foreach ($coverage as $coverage_array) {
-            $fileids[] = $coverage_array['fileid'];
-        }
-        return $fileids;
+        return EloquentCoverage::where('buildid', $this->BuildId)->pluck('fileid')->toArray();
     }
 
     /** Return true if this build already has coverage for this file,
       * false otherwise.
       **/
-    public function Exists()
+    public function Exists(): bool
     {
         if (!$this->BuildId || !$this->CoverageFile || !$this->CoverageFile->Id) {
             return false;
         }
 
-        $db = Database::getInstance();
-        $result = $db->executePreparedSingleRow('
-                      SELECT COUNT(*) AS c
-                      FROM coverage
-                      WHERE
-                          buildid=?
-                          AND fileid=?
-                  ', [$this->BuildId, $this->CoverageFile->Id]);
-        if ($result['c'] > 0) {
-            return true;
-        }
-        return false;
+        return EloquentCoverage::where([
+            ['buildid', $this->BuildId],
+            ['fileid', $this->CoverageFile->Id],
+        ])->exists();
     }
 }
