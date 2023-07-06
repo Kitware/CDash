@@ -1191,21 +1191,6 @@ function has_next_date($date, $currentstarttime): bool
 }
 
 /**
- * Get the logo id
- */
-function getLogoID(int $projectid): int
-{
-    // assume the caller already connected to the database
-    $db = Database::getInstance();
-    $result = $db->executePreparedSingleRow('SELECT imageid FROM project WHERE id=?', [$projectid]);
-    if (empty($result)) {
-        return 0;
-    }
-
-    return intval($result['imageid']);
-}
-
-/**
  * make_cdash_url ensures that a url begins with a known url protocol identifier
  */
 function make_cdash_url(string $url): string
@@ -1261,8 +1246,7 @@ function get_cdash_dashboard_xml_by_name(string $projectname, $date): string
   <projectname_encoded>' . urlencode($project_array['name']) . '</projectname_encoded>
   <projectpublic>' . $project_array['public'] . '</projectpublic>
   <previousdate>' . $previousdate . '</previousdate>
-  <nextdate>' . $nextdate . '</nextdate>
-  <logoid>' . getLogoID(intval($projectid)) . '</logoid>';
+  <nextdate>' . $nextdate . '</nextdate>';
 
     if (empty($project_array['homeurl'])) {
         $xml .= '<home>index.php?project=' . urlencode($project_array['name']) . '</home>';
@@ -1505,7 +1489,7 @@ function get_dashboard_JSON($projectname, $date, &$response)
     $response['public'] = $project->Public;
     $response['previousdate'] = $previousdate;
     $response['nextdate'] = $nextdate;
-    $response['logoid'] = getLogoID(intval($project->Id));
+    $response['logoid'] = $project->ImageId ?? 0;
     $response['nightlytime'] = date('H:i T', strtotime($project_array['nightlytime']));
     if (empty($project_array['homeurl'])) {
         $response['home'] = 'index.php?project=' . urlencode($project_array['name']);
