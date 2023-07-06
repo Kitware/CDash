@@ -16,9 +16,7 @@
 
 require_once 'include/log.php';
 
-use CDash\Config;
 use CDash\Model\Build;
-use CDash\Model\BuildUpdateFile;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
 use CDash\Database;

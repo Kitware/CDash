@@ -6,12 +6,10 @@ use App\Services\UnparsedSubmissionProcessor;
 use App\Models\SuccessfulJob;
 
 use BuildPropertiesJSONHandler;
-use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Repository;
 
-use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -19,8 +17,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpFoundation\Response;
 use UpdateHandler;
 
 include_once 'include/common.php';

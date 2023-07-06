@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Enums\ClassicPalette;
 use App\Enums\HighContrastPalette;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use LogicException;

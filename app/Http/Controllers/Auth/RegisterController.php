@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class RegisterController extends AbstractController

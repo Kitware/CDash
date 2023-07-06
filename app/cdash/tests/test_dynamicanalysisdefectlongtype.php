@@ -1,9 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-use CDash\Database;
 use CDash\Model\Project;
-use CDash\Model\DynamicAnalysis;
 
 class DynamicAnalysisDefectLongTypeTestCase extends KWWebTestCase
 {

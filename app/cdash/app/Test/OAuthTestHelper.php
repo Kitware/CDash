@@ -7,7 +7,6 @@ use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 
 trait OAuthTestHelper
 {

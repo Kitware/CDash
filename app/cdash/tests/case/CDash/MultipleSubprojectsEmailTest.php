@@ -21,7 +21,6 @@ use CDash\Messaging\Notification\Email\EmailBuilder;
 use CDash\Messaging\Notification\Email\EmailNotificationFactory;
 use CDash\Messaging\Notification\NotificationCollection;
 use CDash\Messaging\Notification\NotificationDirector;
-use CDash\Messaging\Notification\NotificationInterface;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;

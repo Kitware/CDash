@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Services\ProjectPermissions;
 use App\Services\TestingDay;
 use CDash\Database;
 use CDash\Model\Project;

@@ -1,7 +1,6 @@
 <?php
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-use CDash\Database;
 use App\Models\BuildTest;
 use CDash\Model\Project;
 

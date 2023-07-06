@@ -17,7 +17,6 @@ namespace CDash\Model;
 
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
-use CDash\Model\BuildGroupRule;
 use Illuminate\Support\Facades\Log;
 
 class BuildGroup

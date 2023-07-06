@@ -6,7 +6,6 @@ use Adldap\Connections\Ldap;
 use Adldap\Laravel\Facades\Adldap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 
 /**
  * Parent class for LDAP tests.

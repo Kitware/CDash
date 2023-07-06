@@ -18,7 +18,6 @@ namespace CDash\Controller\Api;
 
 use App\Models\TestOutput;
 
-use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;

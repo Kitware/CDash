@@ -23,7 +23,6 @@ use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
 use Lcobucci\JWT\Signer\Key\LocalFileReference;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\Token\Builder as JwtBuilder;
 
 use CDash\Config;
 use CDash\Database;

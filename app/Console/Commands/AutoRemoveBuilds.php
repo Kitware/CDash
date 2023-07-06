@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use CDash\Database;
-use CDash\Model\Project;
 use Illuminate\Console\Command;
 
 require_once 'include/common.php';

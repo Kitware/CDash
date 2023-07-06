@@ -14,8 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 use App\Services\TestingDay;
@@ -28,7 +26,6 @@ use CDash\Model\Project;
 use CDash\Model\UserProject;
 use App\Models\Site;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 
 require_once 'include/log.php';
 

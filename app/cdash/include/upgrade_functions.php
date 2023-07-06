@@ -14,7 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\DynamicAnalysisSummary;

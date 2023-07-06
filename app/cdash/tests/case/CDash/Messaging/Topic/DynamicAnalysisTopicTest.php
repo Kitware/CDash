@@ -21,7 +21,6 @@ use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
 use CDash\Model\DynamicAnalysis;
 use CDash\Model\Subscriber;
-use CDash\Model\SubscriberInterface;
 use Tests\TestCase;
 
 class DynamicAnalysisTopicTest extends TestCase

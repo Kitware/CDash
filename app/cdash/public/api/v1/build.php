@@ -21,7 +21,6 @@ require_once 'include/api_common.php';
 
 use CDash\Database;
 use CDash\Model\BuildGroupRule;
-use CDash\Model\Project;
 
 init_api_request();
 $build = get_request_build();

@@ -14,7 +14,6 @@
  * =========================================================================
  */
 
-use Illuminate\Support\Collection;
 
 use CDash\Collection\ConfigureCollection;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;

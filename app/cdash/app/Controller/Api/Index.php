@@ -16,7 +16,6 @@
 namespace CDash\Controller\Api;
 
 use App\Services\TestingDay;
-use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;

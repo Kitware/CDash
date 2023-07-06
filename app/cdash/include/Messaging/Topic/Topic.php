@@ -1,7 +1,6 @@
 <?php
 namespace CDash\Messaging\Topic;
 
-use CDash\Model\ActionableTypes;
 use CDash\Model\Build;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\CollectionInterface;

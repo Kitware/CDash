@@ -5,7 +5,6 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-use App\Models\BuildTest;
 use App\Models\BuildNote;
 use App\Models\Test;
 use App\Models\TestMeasurement;

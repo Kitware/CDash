@@ -18,7 +18,6 @@ use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Topic\AuthoredTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
-use CDash\Model\BuildError;
 use CDash\Model\Subscriber;
 
 class AuthoredTopicTest extends \CDash\Test\CDashTestCase

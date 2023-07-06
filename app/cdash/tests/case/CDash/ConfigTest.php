@@ -1,6 +1,5 @@
 <?php
 use CDash\Config;
-use CDash\Singleton;
 use CDash\Test\CDashTestCase;
 
 class ConfigTest extends CDashTestCase

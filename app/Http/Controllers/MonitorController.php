@@ -6,15 +6,11 @@ namespace App\Http\Controllers;
 
 use DateTime;
 use DateInterval;
-use DatePeriod;
 use App\Enums\ClassicPalette;
 use App\Enums\HighContrastPalette;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class MonitorController extends AbstractController

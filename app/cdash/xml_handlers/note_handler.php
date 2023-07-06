@@ -21,7 +21,6 @@ use App\Services\NoteCreator;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildInformation;
-use CDash\Model\BuildNote;
 use App\Models\Site;
 use App\Models\SiteInformation;
 

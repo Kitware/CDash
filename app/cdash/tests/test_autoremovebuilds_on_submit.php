@@ -5,7 +5,6 @@
 //
 use App\Services\TestingDay;
 
-use CDash\Config;
 use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;

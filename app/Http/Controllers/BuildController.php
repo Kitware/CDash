@@ -11,7 +11,6 @@ use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Label;
-use CDash\Model\Project;
 use CDash\ServiceContainer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
