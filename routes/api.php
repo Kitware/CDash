@@ -44,6 +44,8 @@ Route::get('/v1/viewDynamicAnalysisFile.php', 'DynamicAnalysisController@apiView
 
 Route::get('/v1/buildProperties.php', 'BuildPropertiesController@apiBuildProperties');
 
+Route::get('/v1/compareCoverage.php', 'CoverageController@apiCompareCoverage');
+
 Route::middleware(['auth'])->group(function () {
     Route::post('/authtokens/create', 'AuthTokenController@createToken');
     Route::delete('/authtokens/delete/{token_hash}', 'AuthTokenController@deleteToken');
