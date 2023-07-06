@@ -194,7 +194,7 @@ class CoverageFile
         }
 
         $stmt = $this->PDO->prepare(
-            'SELECT loctested, locuntested, branchstested, branchsuntested,
+            'SELECT loctested, locuntested, branchestested, branchesuntested,
                 functionstested, functionsuntested
                 FROM coverage WHERE fileid=:id');
         $stmt->bindParam(':id', $this->Id);
@@ -210,20 +210,20 @@ class CoverageFile
         $coveragemetric = 1;
         $loctested = $row['loctested'];
         $locuntested = $row['locuntested'];
-        $branchstested = $row['branchstested'];
-        $branchsuntested = $row['branchsuntested'];
+        $branchestested = $row['branchestested'];
+        $branchesuntested = $row['branchesuntested'];
         $functionstested = $row['functionstested'];
         $functionsuntested = $row['functionsuntested'];
 
         // Compute the coverage metric for bullseye
-        if ($branchstested > 0 || $branchsuntested > 0 || $functionstested > 0 || $functionsuntested > 0) {
+        if ($branchestested > 0 || $branchesuntested > 0 || $functionstested > 0 || $functionsuntested > 0) {
             // Metric coverage
             $metric = 0;
             if ($functionstested + $functionsuntested > 0) {
                 $metric += $functionstested / ($functionstested + $functionsuntested);
             }
-            if ($branchsuntested + $branchsuntested > 0) {
-                $metric += $branchsuntested / ($branchstested + $branchsuntested);
+            if ($branchesuntested + $branchesuntested > 0) {
+                $metric += $branchesuntested / ($branchestested + $branchesuntested);
                 $metric /= 2.0;
             }
             $coveragemetric = $metric;
@@ -247,7 +247,7 @@ class CoverageFile
     public function GetIdFromName($file, $buildid)
     {
         $stmt = $this->PDO->prepare(
-            'SELECT id FROM coveragefile
+            'SELECT coveragefile.id FROM coveragefile
                 INNER JOIN coverage ON (coveragefile.id=coverage.fileid)
                 WHERE fullpath LIKE :fullpath AND coverage.buildid=:buildid');
         $file_with_wildcard = "%$file%";
