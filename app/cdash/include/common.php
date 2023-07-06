@@ -1210,21 +1210,13 @@ function getLogoID(int $projectid): int
  */
 function make_cdash_url(string $url): string
 {
-    // By default, same as the input
-    $cdash_url = $url;
-
     // Unless the input does *not* start with a known protocol identifier...
     // If it does not start with http or https already, then prepend "http://"
     // to the input.
-    //
-    $npos = strpos($url, 'http://');
-    if ($npos === false) {
-        $npos2 = strpos($url, 'https://');
-        if ($npos2 === false) {
-            $cdash_url = 'http://' . $url;
-        }
+    if (!str_contains($url, 'http://') && !str_contains($url, 'https://')) {
+        return 'http://' . $url;
     }
-    return $cdash_url;
+    return $url;
 }
 
 function get_cdash_dashboard_xml_by_name(string $projectname, $date): string
