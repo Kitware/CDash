@@ -59,7 +59,7 @@ class TestDetails extends BuildTestApi
 
         $this->setDate($this->build->GetDate());
 
-        $response['title'] = "CDash : {$this->project->Name}";
+        $response['title'] = "{$this->project->Name} - Tests";
         get_dashboard_JSON_by_name($this->project->Name, $this->date, $response);
 
         $project_response = [];

@@ -33,7 +33,7 @@ class ViewNotes extends BuildApi
     public function getResponse()
     {
         $response = begin_JSON_response();
-        $response['title'] = "CDash : {$this->project->Name}";
+        $response['title'] = "{$this->project->Name} - Build Notes";
 
         $this->setDate(TestingDay::get($this->project, $this->build->StartTime));
         get_dashboard_JSON_by_name($this->project->Name, $this->date, $response);

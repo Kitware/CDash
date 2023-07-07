@@ -78,7 +78,7 @@ if (!can_access_project($projectid)) {
 
 $response = begin_JSON_response();
 $response['showcalendar'] = 1;
-$response['title'] = "CDash : $projectname";
+$response['title'] = "$projectname - Test Summary";
 get_dashboard_JSON_by_name($projectname, $date, $response);
 $response['testName'] = $testName;
 

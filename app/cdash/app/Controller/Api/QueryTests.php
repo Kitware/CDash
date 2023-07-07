@@ -193,7 +193,7 @@ class QueryTests extends ResultsApi
     public function getResponse()
     {
         $response = begin_JSON_response();
-        $response['title'] = "CDash : {$this->project->Name}";
+        $response['title'] = "{$this->project->Name} - Query Tests";
         $response['showcalendar'] = 1;
 
         // If parentid is set we need to lookup the date for this build
