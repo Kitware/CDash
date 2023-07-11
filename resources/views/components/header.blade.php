@@ -1,6 +1,6 @@
 @php
     if (isset($project)) {
-        $logoid = getLogoID(intval($project->Id));
+        $logoid = $project->ImageId;
     }
 $hideRegistration = config('auth.user_registration_form_enabled') === false;
 @endphp

@@ -52,12 +52,12 @@ class SubscribeProjectController extends AbstractProjectController
             $xml .= add_XML_value('emailmissingsites', $user2project['emailmissingsites']);
             $xml .= add_XML_value('emailsuccess', $user2project['emailsuccess']);
             $emailcategory = $user2project['emailcategory'];
-            $xml .= add_XML_value('emailcategory_update', check_email_category('update', $emailcategory));
-            $xml .= add_XML_value('emailcategory_configure', check_email_category('configure', $emailcategory));
-            $xml .= add_XML_value('emailcategory_warning', check_email_category('warning', $emailcategory));
-            $xml .= add_XML_value('emailcategory_error', check_email_category('error', $emailcategory));
-            $xml .= add_XML_value('emailcategory_test', check_email_category('test', $emailcategory));
-            $xml .= add_XML_value('emailcategory_dynamicanalysis', check_email_category('dynamicanalysis', $emailcategory));
+            $xml .= add_XML_value('emailcategory_update', self::check_email_category('update', $emailcategory));
+            $xml .= add_XML_value('emailcategory_configure', self::check_email_category('configure', $emailcategory));
+            $xml .= add_XML_value('emailcategory_warning', self::check_email_category('warning', $emailcategory));
+            $xml .= add_XML_value('emailcategory_error', self::check_email_category('error', $emailcategory));
+            $xml .= add_XML_value('emailcategory_test', self::check_email_category('test', $emailcategory));
+            $xml .= add_XML_value('emailcategory_dynamicanalysis', self::check_email_category('dynamicanalysis', $emailcategory));
         } else {
             // we set the default categories
             $xml .= add_XML_value('emailcategory_update', 1);
@@ -335,5 +335,53 @@ class SubscribeProjectController extends AbstractProjectController
             'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/subscribeProject', true),
             'title' => 'Subscription Settings'
         ]);
+    }
+
+    /**
+     * Check the email category
+     */
+    private static function check_email_category(string $name, int $emailcategory): bool
+    {
+        if ($emailcategory >= 64) {
+            if ($name == 'dynamicanalysis') {
+                return true;
+            }
+            $emailcategory -= 64;
+        }
+
+        if ($emailcategory >= 32) {
+            if ($name == 'test') {
+                return true;
+            }
+            $emailcategory -= 32;
+        }
+
+        if ($emailcategory >= 16) {
+            if ($name == 'error') {
+                return true;
+            }
+            $emailcategory -= 16;
+        }
+
+        if ($emailcategory >= 8) {
+            if ($name == 'warning') {
+                return true;
+            }
+            $emailcategory -= 8;
+        }
+
+        if ($emailcategory >= 4) {
+            if ($name == 'configure') {
+                return true;
+            }
+            $emailcategory -= 4;
+        }
+
+        if ($emailcategory >= 2) {
+            if ($name == 'update') {
+                return true;
+            }
+        }
+        return false;
     }
 }

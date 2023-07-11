@@ -370,200 +370,6 @@ function get_project_name($projectid): string
 }
 
 /**
- * add a user to a site
- */
-function add_site2user(int $siteid, int $userid): void
-{
-    $db = Database::getInstance();
-    $site2user = $db->executePrepared('SELECT * FROM site2user WHERE siteid=? AND userid=?', [intval($siteid), intval($userid)]);
-    if (!empty($site2user)) {
-        $db->executePrepared('INSERT INTO site2user (siteid, userid) VALUES (?, ?)', [$siteid, $userid]);
-        add_last_sql_error('add_site2user');
-    }
-}
-
-/**
- * remove a user from a site
- */
-function remove_site2user(int $siteid, int $userid): void
-{
-    $db = Database::getInstance();
-    $db->executePrepared('DELETE FROM site2user WHERE siteid=? AND userid=?', [$siteid, $userid]);
-    add_last_sql_error('remove_site2user');
-}
-
-/**
- * Update a site
- */
-function update_site($siteid, $name,
-    $processoris64bits,
-    $processorvendor,
-    $processorvendorid,
-    $processorfamilyid,
-    $processormodelid,
-    $processorcachesize,
-    $numberlogicalcpus,
-    $numberphysicalcpus,
-    $totalvirtualmemory,
-    $totalphysicalmemory,
-    $logicalprocessorsperphysical,
-    $processorclockfrequency,
-    $description, $ip, $latitude, $longitude, $nonewrevision = false,
-    $outoforder = 0)
-{
-    // Security checks
-    if (!is_numeric($siteid)) {
-        return;
-    }
-    $siteid = (int) $siteid;
-
-    $db = Database::getInstance();
-
-    // TODO: (williamjallen) Refactor this to eliminate the messy usage of the $$ operator below
-    $latitude = pdo_real_escape_string($latitude);
-    $longitude = pdo_real_escape_string($longitude);
-    $outoforder = pdo_real_escape_string($outoforder);
-    $ip = pdo_real_escape_string($ip);
-    $name = pdo_real_escape_string($name);
-    $processoris64bits = pdo_real_escape_string($processoris64bits);
-    $processorvendor = pdo_real_escape_string($processorvendor);
-    $processorvendorid = pdo_real_escape_string($processorvendorid);
-    $processorfamilyid = pdo_real_escape_string($processorfamilyid);
-    $processormodelid = pdo_real_escape_string($processormodelid);
-    $processorcachesize = pdo_real_escape_string($processorcachesize);
-    $numberlogicalcpus = pdo_real_escape_string($numberlogicalcpus);
-    $numberphysicalcpus = pdo_real_escape_string($numberphysicalcpus);
-    $totalvirtualmemory = round(pdo_real_escape_string($totalvirtualmemory));
-    $totalphysicalmemory = round(pdo_real_escape_string($totalphysicalmemory));
-    $logicalprocessorsperphysical = round(pdo_real_escape_string($logicalprocessorsperphysical));
-    $processorclockfrequency = round(pdo_real_escape_string($processorclockfrequency));
-    $description = pdo_real_escape_string($description);
-
-    // Update the basic information first
-    Site::findOrFail($siteid)->where([
-        'name' => $name,
-        'ip' => $ip,
-        'latitude' => $latitude,
-        'longitude' => $longitude,
-        'outoforder' => $outoforder
-    ]);
-
-    add_last_sql_error('update_site');
-
-    $names = array();
-    $names[] = 'processoris64bits';
-    $names[] = 'processorvendor';
-    $names[] = 'processorvendorid';
-    $names[] = 'processorfamilyid';
-    $names[] = 'processormodelid';
-    $names[] = 'processorcachesize';
-    $names[] = 'numberlogicalcpus';
-    $names[] = 'numberphysicalcpus';
-    $names[] = 'totalvirtualmemory';
-    $names[] = 'totalphysicalmemory';
-    $names[] = 'logicalprocessorsperphysical';
-    $names[] = 'processorclockfrequency';
-    $names[] = 'description';
-
-    // Check that we have a valid input
-    $isinputvalid = 0;
-    foreach ($names as $name) {
-        if ($$name != 'NA' && strlen($$name) > 0) {
-            $isinputvalid = 1;
-            break;
-        }
-    }
-
-    if (!$isinputvalid) {
-        return;
-    }
-
-    // Check if we have valuable information and the siteinformation doesn't exist
-    $newrevision2 = false;
-    $query = $db->executePreparedSingleRow('
-                 SELECT *
-                 FROM siteinformation
-                 WHERE siteid=?
-                 ORDER BY timestamp DESC
-                 LIMIT 1
-             ', [$siteid]);
-    if (empty($query)) {
-        $noinformation = 1;
-        foreach ($names as $name) {
-            if ($$name != 'NA' && strlen($$name) > 0) {
-                $nonewrevision = false;
-                $newrevision2 = true;
-                $noinformation = 0;
-                break;
-            }
-        }
-        if ($noinformation) {
-            return; // we have nothing to add
-        }
-    } else {
-        // Check if the information are different from what we have in the database, then that means
-        // the system has been upgraded and we need to create a new revision
-        foreach ($names as $name) {
-            if ($$name != 'NA' && $query[$name] != $$name && strlen($$name) > 0) {
-                // Take care of rounding issues
-                if (is_numeric($$name)) {
-                    if (round($$name) != $query[$name]) {
-                        $newrevision2 = true;
-                        break;
-                    }
-                } else {
-                    $newrevision2 = true;
-                    break;
-                }
-            }
-        }
-    }
-
-    if ($newrevision2 && !$nonewrevision) {
-        $now = gmdate(FMT_DATETIME);
-        $sql = 'INSERT INTO siteinformation(siteid,timestamp';
-        foreach ($names as $name) {
-            if ($$name != 'NA' && strlen($$name) > 0) {
-                $sql .= ", $name";
-            }
-        }
-
-        $prepared_values = [$siteid, $now];
-        $sql .= ') VALUES(?, ?';
-        foreach ($names as $name) {
-            if ($$name != 'NA' && strlen($$name) > 0) {
-                $sql .= ', ?';
-                $prepared_values[] = $$name;
-            }
-        }
-        $sql .= ')';
-        $db->executePrepared($sql, $prepared_values);
-        add_last_sql_error('update_site', $sql);
-    } else {
-        $sql = 'UPDATE siteinformation SET ';
-        $prepared_values = [];
-        $i = 0;
-        foreach ($names as $name) {
-            if ($$name != 'NA' && strlen($$name) > 0) {
-                if ($i > 0) {
-                    $sql .= ',';
-                }
-                $sql .= " $name=?";
-                $prepared_values[] = $$name;
-                $i++;
-            }
-        }
-
-        $sql .= " WHERE siteid=? AND timestamp=?";
-        $prepared_values[] = $siteid;
-        $prepared_values[] = $query['timestamp'];
-
-        $db->executePrepared($sql, $prepared_values);
-        add_last_sql_error('update_site', $sql);
-    }
-}
-
-/**
  * Get the geolocation from IP address
  */
 function get_geolocation($ip)
@@ -1188,117 +994,17 @@ function has_next_date($date, $currentstarttime): bool
 }
 
 /**
- * Get the logo id
- */
-function getLogoID(int $projectid): int
-{
-    // assume the caller already connected to the database
-    $db = Database::getInstance();
-    $result = $db->executePreparedSingleRow('SELECT imageid FROM project WHERE id=?', [$projectid]);
-    if (empty($result)) {
-        return 0;
-    }
-
-    return intval($result['imageid']);
-}
-
-/**
  * make_cdash_url ensures that a url begins with a known url protocol identifier
  */
 function make_cdash_url(string $url): string
 {
-    // By default, same as the input
-    $cdash_url = $url;
-
     // Unless the input does *not* start with a known protocol identifier...
     // If it does not start with http or https already, then prepend "http://"
     // to the input.
-    //
-    $npos = strpos($url, 'http://');
-    if ($npos === false) {
-        $npos2 = strpos($url, 'https://');
-        if ($npos2 === false) {
-            $cdash_url = 'http://' . $url;
-        }
+    if (!str_contains($url, 'http://') && !str_contains($url, 'https://')) {
+        return 'http://' . $url;
     }
-    return $cdash_url;
-}
-
-/**
- * Get the previous build id dynamicanalysis
- */
-function get_previous_buildid_dynamicanalysis(int $projectid, int $siteid, string $buildtype, string $buildname, string $starttime): int
-{
-    $db = Database::getInstance();
-    $previousbuild = $db->executePreparedSingleRow('
-                         SELECT build.id
-                         FROM build, dynamicanalysis
-                         WHERE
-                             build.siteid=?
-                             AND build.type=?
-                             AND build.name=?
-                             AND build.projectid=?
-                             AND build.starttime<?
-                             AND dynamicanalysis.buildid=build.id
-                         ORDER BY build.starttime DESC
-                         LIMIT 1
-                     ', [$siteid, $buildtype, $buildname, $projectid, $starttime]);
-
-    if (!empty($previousbuild)) {
-        return intval($previousbuild['id']);
-    }
-    return 0;
-}
-
-/**
- * Get the next build id dynamicanalysis
- */
-function get_next_buildid_dynamicanalysis(int $projectid, int $siteid, string $buildtype, string $buildname, string $starttime): int
-{
-    $db = Database::getInstance();
-    $nextbuild = $db->executePreparedSingleRow('
-                     SELECT build.id
-                     FROM build, dynamicanalysis
-                     WHERE
-                         build.siteid=?
-                         AND build.type=?
-                         AND build.name=?
-                         AND build.projectid=?
-                         AND build.starttime>?
-                         AND dynamicanalysis.buildid=build.id
-                     ORDER BY build.starttime ASC
-                     LIMIT 1
-                 ', [$siteid, $buildtype, $buildname, $projectid, $starttime]);
-
-    if (!empty($nextbuild)) {
-        return intval($nextbuild['id']);
-    }
-    return 0;
-}
-
-/**
- * Get the last build id dynamicanalysis
- */
-function get_last_buildid_dynamicanalysis(int $projectid, int $siteid, string $buildtype, string $buildname): int
-{
-    $db = Database::getInstance();
-    $nextbuild = $db->executePreparedSingleRow('
-                     SELECT build.id
-                     FROM build, dynamicanalysis
-                     WHERE
-                         build.siteid=?
-                         AND build.type=?
-                         AND build.name=?
-                         AND build.projectid=?
-                         AND dynamicanalysis.buildid=build.id
-                     ORDER BY build.starttime DESC
-                     LIMIT 1
-                 ', [$siteid, $buildtype, $buildname, $projectid]);
-
-    if (!empty($nextbuild)) {
-        return $nextbuild['id'];
-    }
-    return 0;
+    return $url;
 }
 
 function get_cdash_dashboard_xml_by_name(string $projectname, $date): string
@@ -1343,8 +1049,7 @@ function get_cdash_dashboard_xml_by_name(string $projectname, $date): string
   <projectname_encoded>' . urlencode($project_array['name']) . '</projectname_encoded>
   <projectpublic>' . $project_array['public'] . '</projectpublic>
   <previousdate>' . $previousdate . '</previousdate>
-  <nextdate>' . $nextdate . '</nextdate>
-  <logoid>' . getLogoID(intval($projectid)) . '</logoid>';
+  <nextdate>' . $nextdate . '</nextdate>';
 
     if (empty($project_array['homeurl'])) {
         $xml .= '<home>index.php?project=' . urlencode($project_array['name']) . '</home>';
@@ -1453,54 +1158,6 @@ function find_site_maintainers(int $projectid): array
         $userids[] = intval($site2project_array['userid']);
     }
     return array_unique($userids);
-}
-
-/**
- * Check the email category
- */
-function check_email_category(string $name, int $emailcategory): bool
-{
-    if ($emailcategory >= 64) {
-        if ($name == 'dynamicanalysis') {
-            return true;
-        }
-        $emailcategory -= 64;
-    }
-
-    if ($emailcategory >= 32) {
-        if ($name == 'test') {
-            return true;
-        }
-        $emailcategory -= 32;
-    }
-
-    if ($emailcategory >= 16) {
-        if ($name == 'error') {
-            return true;
-        }
-        $emailcategory -= 16;
-    }
-
-    if ($emailcategory >= 8) {
-        if ($name == 'warning') {
-            return true;
-        }
-        $emailcategory -= 8;
-    }
-
-    if ($emailcategory >= 4) {
-        if ($name == 'configure') {
-            return true;
-        }
-        $emailcategory -= 4;
-    }
-
-    if ($emailcategory >= 2) {
-        if ($name == 'update') {
-            return true;
-        }
-    }
-    return false;
 }
 
 /**
@@ -1635,7 +1292,7 @@ function get_dashboard_JSON($projectname, $date, &$response)
     $response['public'] = $project->Public;
     $response['previousdate'] = $previousdate;
     $response['nextdate'] = $nextdate;
-    $response['logoid'] = getLogoID(intval($project->Id));
+    $response['logoid'] = $project->ImageId ?? 0;
     $response['nightlytime'] = date('H:i T', strtotime($project_array['nightlytime']));
     if (empty($project_array['homeurl'])) {
         $response['home'] = 'index.php?project=' . urlencode($project_array['name']);

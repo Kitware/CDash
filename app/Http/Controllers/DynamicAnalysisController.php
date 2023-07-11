@@ -39,17 +39,17 @@ final class DynamicAnalysisController extends AbstractBuildController
             $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . "&date=$date";
         }
 
-        $previousbuildid = get_previous_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name, $this->build->StartTime);
+        $previousbuildid = self::get_previous_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name, $this->build->StartTime);
         if ($previousbuildid > 0) {
             $menu['previous'] = "viewDynamicAnalysis.php?buildid=$previousbuildid";
         } else {
             $menu['previous'] = false;
         }
 
-        $currentbuildid = get_last_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name);
+        $currentbuildid = self::get_last_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name);
         $menu['current'] = "viewDynamicAnalysis.php?buildid=$currentbuildid";
 
-        $nextbuildid = get_next_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name, $this->build->StartTime);
+        $nextbuildid = self::get_next_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name, $this->build->StartTime);
         if ($nextbuildid > 0) {
             $menu['next'] = "viewDynamicAnalysis.php?buildid=$nextbuildid";
         } else {
@@ -216,5 +216,70 @@ final class DynamicAnalysisController extends AbstractBuildController
 
         $pageTimer->end($response);
         return response()->json(cast_data_for_JSON($response));
+    }
+
+    /**
+     * Get the previous build id dynamicanalysis
+     */
+    private static function get_previous_buildid_dynamicanalysis(int $projectid, int $siteid, string $buildtype, string $buildname, string $starttime): int
+    {
+        $previousbuild = DB::select('
+                             SELECT build.id
+                             FROM build, dynamicanalysis
+                             WHERE
+                                 build.siteid=?
+                                 AND build.type=?
+                                 AND build.name=?
+                                 AND build.projectid=?
+                                 AND build.starttime<?
+                                 AND dynamicanalysis.buildid=build.id
+                             ORDER BY build.starttime DESC
+                             LIMIT 1
+                         ', [$siteid, $buildtype, $buildname, $projectid, $starttime])[0] ?? [];
+
+        return $previousbuild->id ?? 0;
+    }
+
+    /**
+     * Get the next build id dynamicanalysis
+     */
+    private static function get_next_buildid_dynamicanalysis(int $projectid, int $siteid, string $buildtype, string $buildname, string $starttime): int
+    {
+        $nextbuild = DB::select('
+                         SELECT build.id
+                         FROM build, dynamicanalysis
+                         WHERE
+                             build.siteid=?
+                             AND build.type=?
+                             AND build.name=?
+                             AND build.projectid=?
+                             AND build.starttime>?
+                             AND dynamicanalysis.buildid=build.id
+                         ORDER BY build.starttime ASC
+                         LIMIT 1
+                     ', [$siteid, $buildtype, $buildname, $projectid, $starttime])[0] ?? [];
+
+        return $nextbuild->id ?? 0;
+    }
+
+    /**
+     * Get the last build id dynamicanalysis
+     */
+    private static function get_last_buildid_dynamicanalysis(int $projectid, int $siteid, string $buildtype, string $buildname): int
+    {
+        $nextbuild = DB::select('
+                         SELECT build.id
+                         FROM build, dynamicanalysis
+                         WHERE
+                             build.siteid=?
+                             AND build.type=?
+                             AND build.name=?
+                             AND build.projectid=?
+                             AND dynamicanalysis.buildid=build.id
+                         ORDER BY build.starttime DESC
+                         LIMIT 1
+                     ', [$siteid, $buildtype, $buildname, $projectid])[0] ?? [];
+
+        return $nextbuild->id ?? 0;
     }
 }
