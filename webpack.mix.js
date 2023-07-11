@@ -68,7 +68,7 @@ var webpack_plugins = [
 ];
 
 if (git_clone) {
-  const GitRevisionPlugin = require('git-revision-webpack-plugin')
+  const { GitRevisionPlugin } = require('git-revision-webpack-plugin')
   webpack_plugins.push(new GitRevisionPlugin());
 }
 
