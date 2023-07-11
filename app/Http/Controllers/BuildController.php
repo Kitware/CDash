@@ -526,4 +526,75 @@ class BuildController extends AbstractBuildController
         $pageTimer->end($response);
         return response()->json(cast_data_for_JSON($response));
     }
+
+    public function apiGetPreviousBuilds(): JsonResponse
+    {
+        $this->setBuildById(intval($_GET['buildid'] ?? -1));
+
+        // Take subproject into account, such that if there is one, then the
+        // previous builds must be associated with the same subproject.
+        $subproj_table = '';
+        $subproj_criteria = '';
+        $query_params = [];
+        if ($this->build->SubProjectId > 0) {
+            $subproj_table = 'INNER JOIN subproject2build AS sp2b ON (b.id=sp2b.buildid)';
+            $subproj_criteria = 'AND sp2b.subprojectid=:subprojectid';
+            $query_params = $this->build->SubProjectId;
+        }
+
+        // Get details about previous builds.
+        // Currently just grabbing the info used for the graphs and charts
+        // on /build/.
+        $query_result = DB::select("
+                            SELECT
+                                b.id,
+                                nfiles,
+                                configureerrors,
+                                configurewarnings,
+                                buildwarnings,
+                                builderrors,
+                                testfailed,
+                                b.starttime,
+                                b.endtime
+                            FROM build AS b
+                            LEFT JOIN build2update AS b2u ON (b2u.buildid=b.id)
+                            LEFT JOIN buildupdate AS bu ON (b2u.updateid=bu.id)
+                            $subproj_table
+                            WHERE
+                                siteid = ?
+                                AND b.type = ?
+                                AND name = ?
+                                AND projectid = ?
+                                AND b.starttime <= ?
+                                $subproj_criteria
+                            ORDER BY starttime DESC
+                            LIMIT 50
+                        ", array_merge([
+                            $this->build->SiteId,
+                            $this->build->Type,
+                            $this->build->Name,
+                            $this->build->ProjectId,
+                            $this->build->StartTime,
+                        ], $query_params));
+
+        $builds_response = [];
+        foreach ($query_result as $previous_build_row) {
+            $builds_response[] = [
+                'id' => $previous_build_row->id,
+                'nfiles' => $previous_build_row->nfiles ?? 0,
+                'configurewarnings' => $previous_build_row->configurewarnings,
+                'configureerrors' => $previous_build_row->configureerrors,
+                'buildwarnings' => $previous_build_row->buildwarnings,
+                'builderrors' => $previous_build_row->builderrors,
+                'starttime' => $previous_build_row->starttime,
+                'timestamp' => strtotime($previous_build_row->starttime) * 1000, // Milliseconds since epoch.
+                'testfailed' => $previous_build_row->testfailed,
+                'time' => strtotime($previous_build_row->endtime) - strtotime($previous_build_row->starttime),
+            ];
+        }
+
+        return response()->json(cast_data_for_JSON([
+            'builds' => $builds_response,
+        ]));
+    }
 }

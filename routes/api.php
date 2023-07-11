@@ -46,6 +46,8 @@ Route::get('/v1/buildProperties.php', 'BuildPropertiesController@apiBuildPropert
 
 Route::get('/v1/compareCoverage.php', 'CoverageController@apiCompareCoverage');
 
+Route::get('/v1/getPreviousBuilds.php', 'BuildController@apiGetPreviousBuilds');
+
 Route::middleware(['auth'])->group(function () {
     Route::post('/authtokens/create', 'AuthTokenController@createToken');
     Route::delete('/authtokens/delete/{token_hash}', 'AuthTokenController@deleteToken');

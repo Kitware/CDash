@@ -15806,30 +15806,6 @@ parameters:
 			path: app/cdash/public/api/v1/filterdata.php
 
 		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/getPreviousBuilds.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/getPreviousBuilds.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/getPreviousBuilds.php
-
-		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/getSubmissionFile.php
