@@ -128,11 +128,11 @@ class SiteController extends AbstractController
 
         // Post
         @$claimsites = $_POST['claimsites'];
-        @$availablesites = $_POST['availablesites'];
-        @$checkedsites = $_POST['checkedsites'];
+        $availablesites = $_POST['availablesites'] ?? [];
+        $checkedsites = $_POST['checkedsites'] ?? [];
         if ($claimsites) {
             foreach ($availablesites as $siteid) {
-                if (@array_key_exists($siteid, $checkedsites)) {
+                if (array_key_exists($siteid, $checkedsites)) {
                     self::add_site2user(intval($siteid), intval($userid));
                 } else {
                     self::remove_site2user(intval($siteid), intval($userid));
