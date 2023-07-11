@@ -8,6 +8,7 @@ import './bootstrap';
 import BuildConfigure from "./components/BuildConfigure";
 import BuildNotes from "./components/BuildNotes";
 import BuildSummary from "./components/BuildSummary";
+import BuildUpdate from "./components/BuildUpdate";
 import EditProject from "./components/EditProject";
 import ManageAuthTokens from "./components/ManageAuthTokens.vue";
 import ManageMeasurements from "./components/ManageMeasurements";
@@ -21,6 +22,7 @@ const cdash_components = {
   BuildConfigure,
   BuildNotes,
   BuildSummary,
+  BuildUpdate,
   EditProject,
   ManageAuthTokens,
   ManageMeasurements,
