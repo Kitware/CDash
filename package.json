@@ -33,7 +33,7 @@
     "eslint-plugin-vue": "^9.11.0",
     "eslint-webpack-plugin": "^2.5.4",
     "flot": "^4.2.3",
-    "git-revision-webpack-plugin": "^3.0.6",
+    "git-revision-webpack-plugin": "^5.0.0",
     "jquery": "^3.5",
     "jquery-ui-dist": "^1.13.1",
     "jquery.cookie": "^1.4.1",
