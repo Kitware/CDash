@@ -8,10 +8,21 @@ use CDash\Model\Project;
 use CDash\Model\SubProject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Illuminate\View\View;
 
 class SubProjectController extends AbstractProjectController
 {
+    public function viewSubProjects(): Response
+    {
+        return response()->angular_view('viewSubProjects');
+    }
+
+    public function manageSubProject(): Response
+    {
+        return response()->angular_view('manageSubProject');
+    }
+
     public function dependencies(): View|RedirectResponse
     {
         if (!isset($_GET['project'])) {

@@ -253,6 +253,11 @@ parameters:
 			path: app/Http/Controllers/AdminController.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
 			message: "#^Foreach overwrites \\$update with its value variable\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
@@ -336,6 +341,11 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 2
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
+			count: 3
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -489,6 +499,11 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
 			message: "#^Foreach overwrites \\$userid with its value variable\\.$#"
 			count: 2
 			path: app/Http/Controllers/CoverageController.php
@@ -619,6 +634,11 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
+			count: 2
+			path: app/Http/Controllers/DynamicAnalysisController.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\DynamicAnalysisController\\:\\:apiViewDynamicAnalysis\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/Http/Controllers/DynamicAnalysisController.php
@@ -637,6 +657,16 @@ parameters:
 			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:edit\\(\\) has parameter \\$project_id with no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/EditProjectController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			message: "#^Only booleans are allowed in a ternary operator condition, mixed given\\.$#"
+			count: 1
+			path: app/Http/Controllers/IndexController.php
 
 		-
 			message: """
@@ -839,6 +869,11 @@ parameters:
 			message: "#^Short ternary operator is not allowed\\. Use null coalesce operator if applicable or consider using long ternary\\.$#"
 			count: 1
 			path: app/Http/Controllers/OAuthController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
+			count: 2
+			path: app/Http/Controllers/ProjectController.php
 
 		-
 			message: """
@@ -1137,6 +1172,11 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
+			count: 2
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 1
 			path: app/Http/Controllers/SubProjectController.php
@@ -1168,6 +1208,11 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
+			path: app/Http/Controllers/TestController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
+			count: 3
 			path: app/Http/Controllers/TestController.php
 
 		-
@@ -12203,16 +12248,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function load_view\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function load_view\\(\\) has parameter \\$viewName with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function qid\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -16701,11 +16736,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, string given\\.$#"
 			count: 1
 			path: app/cdash/public/importBuilds.php
-
-		-
-			message: "#^Only booleans are allowed in a ternary operator condition, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/index.php
 
 		-
 			message: """
@@ -29843,11 +29873,6 @@ parameters:
 
 		-
 			message: "#^Method Tests\\\\Feature\\\\CDashTest\\:\\:testFilesystemAdapterConfiguredForCDash\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: tests/Feature/CDashTest.php
-
-		-
-			message: "#^Method Tests\\\\Feature\\\\CDashTest\\:\\:testGetController\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: tests/Feature/CDashTest.php
 

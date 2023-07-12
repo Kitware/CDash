@@ -17,6 +17,7 @@ use CDash\Model\Project;
 use CDash\Model\UserProject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -26,6 +27,16 @@ require_once 'include/filterdataFunctions.php';
 
 class CoverageController extends AbstractBuildController
 {
+    public function compareCoverage(): Response|RedirectResponse
+    {
+        // If the project name is not set we display the table of projects.
+        if (!isset($_GET['project'])) {
+            return redirect('projects');
+        }
+
+        return response()->angular_view('compareCoverage');
+    }
+
     /**
      * TODO: (williamjallen) this function contains legacy XSL templating and should be converted
      *       to a proper Blade template with Laravel-based DB queries eventually.  This contents

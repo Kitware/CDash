@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -235,37 +234,12 @@ class CDash extends AbstractController
      */
     protected function view(string $content): View
     {
-        $controller = $this->getController();
         return view('cdash',
             [
                 'xsl_content' => $content,
-                'angular' => $controller !== '',
-                'angular_controller' => $controller,
                 'xsl' => true,
                 'js_version' => self::getJsVersion(),
             ]
         );
-    }
-
-    /**
-     * Returns the Angular controller name for a given request
-     */
-    public function getController(): string
-    {
-        $name = '';
-        $path = $this->getPath();
-        $file = pathinfo(substr($path, strrpos($path, '/')), PATHINFO_FILENAME);
-
-        // Special case: viewBuildGroup.php shares a controller with index.php.
-        if ($file === 'viewBuildGroup') {
-            $file = 'index';
-        }
-        $controller_path = config('cdash.file.path.js.controllers');
-        $controller = "{$controller_path}/{$file}.js";
-        if (is_readable($controller)) {
-            $name = Str::studly($file) . 'Controller';
-        }
-
-        return $name;
     }
 }

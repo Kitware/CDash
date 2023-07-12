@@ -51,6 +51,9 @@ Route::get('ping', function (Response $response) {
     return $response;
 });
 
+Route::get('/index.php', 'IndexController@showIndexPage');
+Route::get('/', 'IndexController@showIndexPage');
+
 Route::get('/image/{image}', 'ImageController@image');
 Route::get('/displayImage.php', function (Request $request) {
     $imgid = $request->query('imgid');
@@ -100,6 +103,9 @@ Route::get('/testDetails.php', function (Request $request) {
     abort(404);
 });
 
+Route::get('/overview.php', 'ProjectController@overview');
+Route::get('/manageOverview.php', 'ProjectController@manageOverview');
+
 Route::get('/ajax/showtestfailuregraph.php', 'TestController@ajaxTestFailureGraph');
 
 Route::match(['get', 'post'], '/projects', 'ViewProjectsController@viewAllProjects');
@@ -109,7 +115,15 @@ Route::get('/viewUpdate.php', 'AdminController@viewUpdate');
 
 Route::get('/viewTest.php', 'ViewTestController@viewTest');
 
+Route::get('/queryTests.php', 'TestController@queryTests');
+
+Route::get('/testOverview.php', 'TestController@testOverview');
+
+Route::get('/testSummary.php', 'TestController@testSummary');
+
 Route::match(['get', 'post'], '/viewCoverage.php', 'CoverageController@viewCoverage');
+
+Route::get('/compareCoverage.php', 'CoverageController@compareCoverage');
 
 Route::get('/viewCoverageFile.php', 'CoverageController@viewCoverageFile');
 
@@ -119,7 +133,15 @@ Route::any('/ajax/showcoveragegraph.php', 'CoverageController@ajaxShowCoverageGr
 
 Route::match(['get', 'post'], '/buildOverview.php', 'BuildController@buildOverview');
 
+Route::get('/viewBuildError.php', 'BuildController@viewBuildError');
+
+Route::get('/viewBuildGroup.php', 'BuildController@viewBuildGroup');
+
 Route::get('/buildProperties.php', 'BuildPropertiesController@buildProperties');
+
+Route::get('/viewSubProjects.php', 'SubProjectController@viewSubProjects');
+
+Route::get('/manageSubProject.php', 'SubProjectController@manageSubProject');
 
 Route::get('/viewSubProjectDependenciesGraph.php', 'SubProjectController@dependenciesGraph');
 // TODO: (williamjallen) Replace this /ajax route with an equivalent /api route
@@ -133,8 +155,13 @@ Route::get('/viewMap.php', 'MapController@viewMap');
 
 Route::get('/viewFiles.php', 'BuildController@viewFiles');
 
+Route::get('/viewDynamicAnalysis.php', 'DynamicAnalysisController@viewDynamicAnalysis');
+Route::get('/viewDynamicAnalysisFile.php', 'DynamicAnalysisController@viewDynamicAnalysisFile');
+
 // TODO: (williamjallen) This route is probably not necessary anymore, and should be removed.
 Route::get('/ajax/dailyupdatescurl.php', 'ProjectController@ajaxDailyUpdatesCurl');
+
+Route::get('/manageBuildGroup.php', 'BuildController@manageBuildGroup');
 
 // The user must be logged in to access routes in this section.
 // Requests from users who are not logged in will be redirected to /login.
@@ -167,6 +194,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/editSite.php', 'SiteController@editSite');
 
     Route::get('/ajax/buildnote.php', 'BuildController@ajaxBuildNote');
+
+    // TODO: Determine if this route should go in the admin section
+    Route::get('/userStatistics.php', 'AdminController@userStatistics');
 
     Route::middleware(['admin'])->group(function () {
         Route::get('/authtokens/manage', 'AuthTokenController@manage');
