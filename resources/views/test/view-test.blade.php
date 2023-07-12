@@ -13,91 +13,98 @@
     @verbatim
         <h3>Testing started on {{::cdash.build.testtime}}</h3>
 
-        <table ng-if="::!cdash.parentBuild" border="0">
-            <tr>
-                <td align="right">
-                    <b>Site Name:</b>
-                </td>
-                <td>
-                    <a ng-href="viewSite.php?siteid={{::cdash.build.siteid}}"
-                       ng-click="cancelAjax()">{{::cdash.build.site}}</a>
-                </td>
-            </tr>
+        <table ng-if="::!cdash.parentBuild" class="tabb striped">
+            <thead>
+                <tr class="table-heading1">
+                    <th colspan="2" class="header">System Information</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <b>Site Name:</b>
+                    </td>
+                    <td>
+                        <a ng-href="viewSite.php?siteid={{::cdash.build.siteid}}"
+                           ng-click="cancelAjax()">{{::cdash.build.site}}</a>
+                    </td>
+                </tr>
 
-            <tr>
-                <td align="right">
-                    <b>Build Name:</b>
-                </td>
-                <td>
-                    <a ng-href="build/{{::cdash.build.buildid}}"
-                       ng-click="cancelAjax()">{{::cdash.build.buildname}}</a>
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        <b>Build Name:</b>
+                    </td>
+                    <td>
+                        <a ng-href="build/{{::cdash.build.buildid}}"
+                           ng-click="cancelAjax()">{{::cdash.build.buildname}}</a>
+                    </td>
+                </tr>
 
-            <tr>
-                <td align="right">
-                    <b>Total time:</b>
-                </td>
-                <td>
-                    {{::cdash.totaltime}}
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        <b>Total time:</b>
+                    </td>
+                    <td>
+                        {{::cdash.totaltime}}
+                    </td>
+                </tr>
 
-            <!-- Display Operating System information  -->
-            <tr ng-if="::cdash.build.osname">
-                <td align="right">
-                    <b>OS Name:</b>
-                </td>
-                <td>
-                    {{::cdash.build.osname}}
-                </td>
-            </tr>
+                <!-- Display Operating System information  -->
+                <tr ng-if="::cdash.build.osname">
+                    <td>
+                        <b>OS Name:</b>
+                    </td>
+                    <td>
+                        {{::cdash.build.osname}}
+                    </td>
+                </tr>
 
-            <tr ng-if="::cdash.build.osplatform">
-                <td align="right">
-                    <b>OS Platform:</b>
-                </td>
-                <td>
-                    {{::cdash.build.osplatform}}
-                </td>
-            </tr>
+                <tr ng-if="::cdash.build.osplatform">
+                    <td>
+                        <b>OS Platform:</b>
+                    </td>
+                    <td>
+                        {{::cdash.build.osplatform}}
+                    </td>
+                </tr>
 
-            <tr ng-if="::cdash.build.osrelease">
-                <td align="right">
-                    <b>OS Release:</b>
-                </td>
-                <td>
-                    {{::cdash.build.osrelease}}
-                </td>
-            </tr>
+                <tr ng-if="::cdash.build.osrelease">
+                    <td>
+                        <b>OS Release:</b>
+                    </td>
+                    <td>
+                        {{::cdash.build.osrelease}}
+                    </td>
+                </tr>
 
-            <tr ng-if="::cdash.build.osversion">
-                <td align="right">
-                    <b>OS Version:</b>
-                </td>
-                <td>
-                    {{::cdash.build.osversion}}
-                </td>
-            </tr>
+                <tr ng-if="::cdash.build.osversion">
+                    <td>
+                        <b>OS Version:</b>
+                    </td>
+                    <td>
+                        {{::cdash.build.osversion}}
+                    </td>
+                </tr>
 
-            <!-- Display Compiler information  -->
-            <tr ng-if="::cdash.build.compilername">
-                <td align="right">
-                    <b>Compiler Name:</b>
-                </td>
-                <td>
-                    {{::cdash.build.compilername}}
-                </td>
-            </tr>
+                <!-- Display Compiler information  -->
+                <tr ng-if="::cdash.build.compilername">
+                    <td>
+                        <b>Compiler Name:</b>
+                    </td>
+                    <td>
+                        {{::cdash.build.compilername}}
+                    </td>
+                </tr>
 
-            <tr ng-if="::cdash.build.compilerversion">
-                <td align="right">
-                    <b>Compiler Version:</b>
-                </td>
-                <td>
-                    {{::cdash.build.compilerversion}}
-                </td>
-            </tr>
+                <tr ng-if="::cdash.build.compilerversion">
+                    <td>
+                        <b>Compiler Version:</b>
+                    </td>
+                    <td>
+                        {{::cdash.build.compilerversion}}
+                    </td>
+                </tr>
+            </tbody>
         </table>
 
         <!-- Filters -->
@@ -120,8 +127,8 @@
                 {{::cdash.numPassed}} passed,
                 {{::cdash.numFailed}} failed,
                 <span ng-if="::cdash.project.showtesttime">
-            {{::cdash.numTimeFailed}} failed the time status check,
-            </span>
+                    {{::cdash.numTimeFailed}} failed the time status check,
+                </span>
                 {{::cdash.numNotRun}} not run,
                 {{::cdash.numMissing}} missing.
             </h3>

@@ -1051,20 +1051,24 @@ div#main_content {
 }
 
 .odd,
-.tabb tbody tr.odd {
+.tabb tbody tr.odd,
+.striped.tabb tbody tr:nth-child(odd) {
   background-color: #e0e0e0;
 }
 .odd td:nth-child(even),
-.tabb tbody tr.odd td:nth-child(even) {
+.tabb tbody tr.odd td:nth-child(even),
+.striped.tabb tbody tr:nth-child(odd) td:nth-child(even) {
   background-color: #ececec;
 }
 .even,
-.tabb tbody tr.even {
+.tabb tbody tr.even,
+.striped.tabb tbody tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
 .even td:nth-child(even),
-.tabb tbody tr.even td:nth-child(even) {
+.tabb tbody tr.even td:nth-child(even),
+.striped.tabb tbody tr:nth-child(even) td:nth-child(even) {
   background-color: #f7f7f7;
 }
 
