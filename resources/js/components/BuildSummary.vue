@@ -356,45 +356,64 @@
           id="historyGraph"
           width="100%"
           border="0"
+          class="dart"
         >
-          <tr>
-            <th>Start Time</th>
-            <th>Updated Files</th>
-            <th>Configure Errors</th>
-            <th>Configure Warnings</th>
-            <th>Build Errors</th>
-            <th>Build Warnings</th>
-            <th>Failed Tests</th>
-          </tr>
-          <tr
-            v-for="(build, index) in cdash.buildhistory"
-            :key="build.id"
-            :class="{'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
-          >
-            <td>
-              <a :href="$baseURL + '/build/' + build.id">
-                {{ build.starttime }}
-              </a>
-            </td>
-            <td>
-              {{ build.nfiles }}
-            </td>
-            <td :class="build.configureerrors > 0 ? 'error' : 'normal'">
-              {{ build.configureerrors }}
-            </td>
-            <td :class="build.configurewarnings > 0 ? 'warning' : 'normal'">
-              {{ build.configurewarnings }}
-            </td>
-            <td :class="build.builderrors > 0 ? 'error' : 'normal'">
-              {{ build.builderrors }}
-            </td>
-            <td :class="build.buildwarnings > 0 ? 'warning' : 'normal'">
-              {{ build.buildwarnings }}
-            </td>
-            <td :class="build.testfailed > 0 ? 'error' : 'normal'">
-              {{ build.testfailed }}
-            </td>
-          </tr>
+          <thead>
+            <tr class="table-heading">
+              <th class="nob">
+                Start Time
+              </th>
+              <th class="nob">
+                Updated Files
+              </th>
+              <th class="nob">
+                Configure Errors
+              </th>
+              <th class="nob">
+                Configure Warnings
+              </th>
+              <th class="nob">
+                Build Errors
+              </th>
+              <th class="nob">
+                Build Warnings
+              </th>
+              <th class="nob">
+                Failed Tests
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(build, index) in cdash.buildhistory"
+              :key="build.id"
+              :class="{'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
+            >
+              <td>
+                <a :href="$baseURL + '/build/' + build.id">
+                  {{ build.starttime }}
+                </a>
+              </td>
+              <td>
+                {{ build.nfiles }}
+              </td>
+              <td :class="build.configureerrors > 0 ? 'error' : 'normal'">
+                {{ build.configureerrors }}
+              </td>
+              <td :class="build.configurewarnings > 0 ? 'warning' : 'normal'">
+                {{ build.configurewarnings }}
+              </td>
+              <td :class="build.builderrors > 0 ? 'error' : 'normal'">
+                {{ build.builderrors }}
+              </td>
+              <td :class="build.buildwarnings > 0 ? 'warning' : 'normal'">
+                {{ build.buildwarnings }}
+              </td>
+              <td :class="build.testfailed > 0 ? 'error' : 'normal'">
+                {{ build.testfailed }}
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
       <br>
