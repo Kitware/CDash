@@ -771,6 +771,47 @@ class BuildController extends AbstractBuildController
         return response()->json(cast_data_for_JSON($response));
     }
 
+    public function apiBuildUpdateGraph(): JsonResponse
+    {
+        $this->setBuildById(intval($_GET['buildid'] ?? -1));
+
+        // Find previous submissions from this build.
+        $query_result = DB::select('
+            SELECT
+                b.id,
+                b.starttime,
+                bu.nfiles
+            FROM build as b
+            JOIN build2update AS b2u ON b2u.buildid = b.id
+            JOIN buildupdate AS bu ON bu.id = b2u.updateid
+            WHERE
+                b.siteid = ?
+                AND b.type = ?
+                AND b.name = ?
+                AND b.projectid = ?
+                AND b.starttime <= ?
+            ORDER BY b.starttime ASC
+        ', [
+            $this->build->SiteId,
+            $this->build->Type,
+            $this->build->Name,
+            $this->build->ProjectId,
+            $this->build->StartTime,
+        ]);
+
+        $response = [];
+        $response['data'] = [];
+        $response['buildids'] = [];
+
+        foreach ($query_result as $row) {
+            $t = strtotime($row->starttime) * 1000; //flot expects milliseconds
+            $response['data'][] = [$t, $row->nfiles];
+            $response['buildids'][$t] = $row->id;
+        }
+
+        return response()->json(cast_data_for_JSON($response));
+    }
+
     public function apiGetPreviousBuilds(): JsonResponse
     {
         $this->setBuildById(intval($_GET['buildid'] ?? -1));
