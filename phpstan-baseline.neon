@@ -16723,21 +16723,6 @@ parameters:
 			path: app/cdash/public/auth/Google.php
 
 		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/cdash/public/importBuilds.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of function fwrite expects string, int\\<1, max\\> given\\.$#"
-			count: 1
-			path: app/cdash/public/importBuilds.php
-
-		-
-			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, string given\\.$#"
-			count: 1
-			path: app/cdash/public/importBuilds.php
-
-		-
 			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
@@ -23781,21 +23766,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, bool given\\.$#"
 			count: 2
 			path: app/cdash/tests/test_importbackup.php
-
-		-
-			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 1
-			path: app/cdash/tests/test_importbuilds.php
-
-		-
-			message: "#^Implicit array creation is not allowed \\- variable \\$argv does not exist\\.$#"
-			count: 1
-			path: app/cdash/tests/test_importbuilds.php
-
-		-
-			message: "#^Method ImportBuildsTestCase\\:\\:testImportBuilds\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_importbuilds.php
 
 		-
 			message: "#^Method IndexFiltersTestCase\\:\\:filter\\(\\) has no return type specified\\.$#"
