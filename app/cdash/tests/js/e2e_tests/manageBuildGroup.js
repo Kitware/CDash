@@ -129,7 +129,7 @@ describe("manageBuildGroup", function() {
     element(by.name('parentBuildGroupSelection')).element(by.cssContainingText('option', 'Experimental')).click();
     var matchField = element(by.name('dynamicBuildNameMatch'));
     matchField.clear();
-    matchField.sendKeys('same*mage');
+    matchField.sendKeys('CDash-CTest-sameImage');
     element(by.buttonText('Add content to BuildGroup')).click();
     browser.waitForAngular();
 

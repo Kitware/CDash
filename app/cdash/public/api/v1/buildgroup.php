@@ -146,8 +146,7 @@ function rest_delete()
         $buildgrouprule->GroupId = $dynamic['id'];
 
         $rule = json_decode($_GET['rule'], true);
-        $buildgrouprule->BuildName =
-            isset($rule['match']) ? convert_wildcards($rule['match']) : '';
+        $buildgrouprule->BuildName = $rule['match'] ?? '';
 
         $siteid = $rule['siteid'];
         if ($siteid > 0) {
@@ -323,7 +322,7 @@ function rest_post($pdo, $projectid)
 
         $sql_match = $match = isset($_POST['match']) ? $_POST['match'] : '';
         if (!empty($match)) {
-            $sql_match = convert_wildcards($_POST['match']);
+            $sql_match = $_POST['match'];
         }
 
         $buildgrouprule = new BuildGroupRule();
