@@ -50,6 +50,8 @@ Route::get('/v1/getPreviousBuilds.php', 'BuildController@apiGetPreviousBuilds');
 
 Route::get('/v1/testSummary.php', 'TestController@apiTestSummary');
 
+Route::get('/v1/is_build_expected.php', 'BuildController@apiBuildExpected');
+
 Route::middleware(['auth'])->group(function () {
     Route::post('/authtokens/create', 'AuthTokenController@createToken');
     Route::delete('/authtokens/delete/{token_hash}', 'AuthTokenController@deleteToken');
