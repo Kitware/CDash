@@ -1291,3 +1291,10 @@ background-color: #adcae6
   clear:both;
   display:table;
 }
+
+/* https://github.com/flot/flot/issues/1708. Needed to stop entirely black background on legend */
+.legendLayer .background {
+  fill: rgba(255, 255, 255, 0.85);
+  stroke: rgba(0, 0, 0, 0.85);
+  stroke-width: 1;
+  }
