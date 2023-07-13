@@ -227,8 +227,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
         $filecontent .= "{$row['sitename']},{$row['name']},{$row['stamp']},{$row['time']},";
 
         if ($projectshowtesttime) {
-            // TODO: (williamjallen) $testtimemaxstatus is undefined here.  Fix it.
-            if ($row['timestatus'] < $testtimemaxstatus) {
+            if ($row['timestatus'] < $project_array['testtimemaxstatus']) {
                 $filecontent .= 'Passed,';
             } else {
                 $filecontent .= 'Failed,';
