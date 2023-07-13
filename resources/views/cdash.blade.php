@@ -35,6 +35,7 @@
     @else
         <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.dataTables.css') }}"/>
         <link rel="stylesheet" type="text/css" href="{{ asset('css/cdash.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}"/>
         <script src="{{ asset("js/CDash_${js_version}.min.js") }}"></script>
         <script src="{{ asset('js/tooltip.js') }}" type="text/javascript" charset="utf-8"></script>
         <script src="{{ asset('js/jquery.tablesorter.js') }}" type="text/javascript" charset="utf-8"></script>
