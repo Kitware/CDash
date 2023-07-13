@@ -16688,11 +16688,6 @@ parameters:
 			path: app/cdash/public/api/v1/testSummary.php
 
 		-
-			message: "#^Variable \\$testtimemaxstatus might not be defined\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/testSummary.php
-
-		-
 			message: "#^Call to an undefined method CDash\\\\Middleware\\\\OAuth2\\\\GitHub\\:\\:auth\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/public/auth/GitHub.php
