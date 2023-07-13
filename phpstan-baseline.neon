@@ -420,11 +420,6 @@ parameters:
 			path: app/Http/Controllers/BuildPropertiesController.php
 
 		-
-			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/Http/Controllers/CDash.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Http/Controllers/CDash.php
@@ -441,11 +436,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\CDash\\:\\:handleApiRequest\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Http/Controllers/CDash.php
-
-		-
-			message: "#^Only booleans are allowed in &&, mixed given on the left side\\.$#"
 			count: 1
 			path: app/Http/Controllers/CDash.php
 

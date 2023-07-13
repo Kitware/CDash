@@ -9,7 +9,6 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * TODO: (williamjallen) should some of this logic be moved to AbstractController.php?
@@ -52,9 +51,7 @@ class CDash extends AbstractController
             abort(404);
         }
 
-        if ($this->isRequestForExport()) {
-            $response = $this->handleFileRequest();
-        } elseif ($this->isApiRequest()) {
+        if ($this->isApiRequest()) {
             $response = $this->handleApiRequest();
         } elseif ($this->isSubmission()) {
             $response = $this->handleSubmission();
@@ -104,12 +101,6 @@ class CDash extends AbstractController
     {
         $path = $this->getPath();
         return boolval(preg_match('/submit\.php/', $path));
-    }
-
-    public function isRequestForExport(): bool
-    {
-        $export = request('export');
-        return $export && in_array($export, ['csv']);
     }
 
     /**
@@ -168,35 +159,6 @@ class CDash extends AbstractController
         $status = is_a($content, Response::class) ? $content->getStatusCode() : 200;
         return response($content, $status)
             ->header('Content-Type', 'text/xml');
-    }
-
-    /**
-     * Returns the requested file
-     */
-    public function handleFileRequest(): Response|RedirectResponse|StreamedResponse
-    {
-        $content = $this->getRequestContents();
-
-        if (is_array($content)
-            && array_key_exists('file', $content)
-            && array_key_exists('type', $content)
-        ) {
-            $headers = [];
-            $headers['Content-Type'] = $content['type'];
-            if (isset($content['filename'])) {
-                $headers['Content-Disposition'] = "attachment; filename=\"{$content['filename']}\"";
-            }
-            $response = response()->stream(function () use ($content) {
-                echo $content['file'];
-            }, 200, $headers);
-        } elseif (is_a($content, RedirectResponse::class)) {
-            $response = $content;
-        } else {
-            // return a regular response because the output is not what we expected
-            $response = response($content, 400);
-        }
-
-        return $response;
     }
 
     /**
