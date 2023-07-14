@@ -438,6 +438,6 @@ class BuildUpdate
     public function GetUrlForSelf(): string
     {
         $config = Config::getInstance();
-        return "{$config->getBaseUrl()}/viewUpdate.php?buildid={$this->BuildId}";
+        return "{$config->getBaseUrl()}/build/{$this->BuildId}/update";
     }
 }
