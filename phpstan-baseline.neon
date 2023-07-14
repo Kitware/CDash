@@ -16651,21 +16651,6 @@ parameters:
 			path: app/cdash/public/auth/Google.php
 
 		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/cdash/public/importBuilds.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of function fwrite expects string, int\\<1, max\\> given\\.$#"
-			count: 1
-			path: app/cdash/public/importBuilds.php
-
-		-
-			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, string given\\.$#"
-			count: 1
-			path: app/cdash/public/importBuilds.php
-
-		-
 			message: "#^Access to an undefined property GitHubWebhookTest\\:\\:\\$config\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Api/GitHubWebhookTest.php
