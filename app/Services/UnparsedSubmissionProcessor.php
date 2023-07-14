@@ -23,9 +23,12 @@ use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use App\Models\Site;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use RuntimeException;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 require_once 'include/common.php';
@@ -76,51 +79,48 @@ class UnparsedSubmissionProcessor
         $this->project = null;
     }
 
-    // Handle the initial (POST) request for an unparsed submission.
-    public function postSubmit()
+    /** Handle the initial (POST) request for an unparsed submission. */
+    public function postSubmit(): JsonResponse
     {
-        if (!$this->parseBuildMetadata()) {
-            return false;
-        }
+        // Thus function will throw an exception if invalid data provided
+        $this->parseBuildMetadata();
 
-        if (!$this->checkDatabaseConnection()) {
-            // Write input parameters to disk (to be parsed later) if the database
-            // is unavailable.
-            $uuid = \Illuminate\Support\Str::uuid()->toString();
-            $this->serializeBuildMetadata($uuid);
-
-            // Write a marker file so we know to process these files when the DB comes back up.
-            if (!Storage::exists("DB_WAS_DOWN")) {
-                Storage::put("DB_WAS_DOWN", "");
-            }
-
-            // Respond with success even though the database is down so that CTest will
-            // proceed to upload the data file.
-            $response_array['status'] = 0;
-            $response_array['buildid'] = $uuid;
-            $response_array['datafilesmd5'][] = 0;
-            echo json_encode(cast_data_for_JSON($response_array));
-        } else {
+        if ($this->checkDatabaseConnection()) {
             return $this->initializeBuild();
         }
+
+        // Write input parameters to disk (to be parsed later) if the database
+        // is unavailable.
+        $uuid = Str::uuid()->toString();
+        $this->serializeBuildMetadata($uuid);
+
+        // Write a marker file so we know to process these files when the DB comes back up.
+        if (!Storage::exists("DB_WAS_DOWN")) {
+            Storage::put("DB_WAS_DOWN", "");
+        }
+
+        // Respond with success even though the database is down so that CTest will
+        // proceed to upload the data file.
+        $response_array = [];
+        $response_array['status'] = 0;
+        $response_array['buildid'] = $uuid;
+        $response_array['datafilesmd5'][] = 0;
+        return response()->json(cast_data_for_JSON($response_array));
     }
 
-    // Parse build metadata from POST request.
-    public function parseBuildMetadata()
+    /** Parse build metadata from POST request. */
+    public function parseBuildMetadata(): void
     {
         // We require POST to contain the following values.
         $vars = ['project', 'build', 'stamp', 'site', 'starttime', 'endtime', 'datafilesmd5'];
         foreach ($vars as $var) {
-            if (!isset($_POST[$var]) || empty($_POST[$var])) {
-                $response_array['status'] = 1;
-                $response_array['description'] = 'Variable \'' . $var . '\' not set but required.';
-                echo json_encode($response_array);
-                return false;
+            if (empty($_POST[$var])) {
+                abort(Response::HTTP_BAD_REQUEST, 'Variable \'' . $var . '\' not set but required.');
             }
         }
 
         if (!Project::validateProjectName(htmlspecialchars($_POST['project']))) {
-            return false;
+            abort(Response::HTTP_BAD_REQUEST, 'Invalid project specified');
         }
 
         $this->projectname = htmlspecialchars($_POST['project']);
@@ -140,30 +140,24 @@ class UnparsedSubmissionProcessor
         }
 
         $this->getAuthTokenHash();
-
-        return true;
     }
 
-    // Initialize a build from previously parsed metadata.
-    public function initializeBuild()
+    /** Initialize a build from previously parsed metadata. */
+    public function initializeBuild(): JsonResponse
     {
         // Retrieve this project from the database.
-        $project_row = \DB::table('project')
+        $project_row = DB::table('project')
             ->where('name', $this->projectname)
             ->first();
 
         if (!$project_row) {
-            $response_array['status'] = 1;
-            $response_array['description'] = 'Project does not exist';
-            http_response_code(400);
-            echo json_encode($response_array);
-            return;
+            abort(Response::HTTP_NOT_FOUND, 'Project does not exist');
         }
         $projectid = $project_row->id;
 
         // Check if this submission requires a valid authentication token.
         if (($this->token || $project_row->authenticatesubmissions) && !AuthTokenService::checkToken($this->token, $projectid)) {
-            return response('Forbidden', Response::HTTP_FORBIDDEN);
+            abort(Response::HTTP_FORBIDDEN, 'Forbidden');
         }
 
         // Remove some old builds if the project has too many.
@@ -208,15 +202,16 @@ class UnparsedSubmissionProcessor
         }
 
         // Returns the OK submission
+        $response_array = [];
         $response_array['status'] = 0;
         $response_array['buildid'] = $buildid;
         $response_array['datafilesmd5'][] = 0;
 
-        echo json_encode(cast_data_for_JSON($response_array));
+        return response()->json(cast_data_for_JSON($response_array));
     }
 
-    // Handle the subsequent (PUT) where the data file is actually uploaded.
-    public function putSubmitFile()
+    /** Handle the subsequent (PUT) where the data file is actually uploaded. */
+    public function putSubmitFile(): JsonResponse
     {
         $response_array = ['status' => 0];
         $this->parseDataFileParameters();
@@ -225,21 +220,21 @@ class UnparsedSubmissionProcessor
         $db_up = $this->checkDatabaseConnection();
         if ($db_up) {
             if (!is_numeric($this->buildid) || $this->buildid < 1) {
-                return response('Build not found', Response::HTTP_NOT_FOUND);
+                abort(Response::HTTP_NOT_FOUND, 'Build not found');
             }
             // Get the relevant build and project.
             $this->build = new Build();
             $this->build->Id = $this->buildid;
             $this->build->FillFromId($this->build->Id);
             if (!$this->build->Exists()) {
-                return response('Build not found', Response::HTTP_NOT_FOUND);
+                abort(Response::HTTP_NOT_FOUND, 'Build not found');
             }
             $this->project = $this->build->GetProject();
             $this->project->Fill();
 
             if (!Project::validateProjectName($this->project->Name)) {
                 Log::info("Invalid project name: {$this->project->Name}");
-                return response('Invalid project name.', Response::HTTP_BAD_REQUEST);
+                abort(Response::HTTP_BAD_REQUEST, 'Invalid project name.');
             }
             $this->projectname = $this->project->Name;
 
@@ -255,15 +250,15 @@ class UnparsedSubmissionProcessor
                 }
                 $pos = strpos($filename, '_-_');
                 if ($pos === false) {
-                    \Log::info("Could not extract projectname from $filename for {$this->buildid}");
+                    Log::info("Could not extract projectname from $filename for {$this->buildid}");
                     continue;
                 }
                 $projectname = substr($filename, 0, $pos);
                 break;
             }
             if (is_null($projectname) || !Project::validateProjectName($projectname)) {
-                \Log::info("Could not find build metadata file for {$this->buildid}");
-                return response('Build not found', Response::HTTP_NOT_FOUND);
+                Log::info("Could not find build metadata file for {$this->buildid}");
+                abort(Response::HTTP_NOT_FOUND, 'Build not found');
             }
             $this->projectname = $projectname;
             $this->inboxdatafilename = "inbox/{$this->projectname}_-_{$this->token}_-_{$this->type}_-_{$this->buildid}_-_{$this->md5}_-_.$ext";
@@ -277,32 +272,31 @@ class UnparsedSubmissionProcessor
         // Write this file to the inbox directory.
         $handle = request()->getContent(true);
         if (!Storage::put($this->inboxdatafilename, $handle)) {
-            $response_array['status'] = 1;
-            $response_array['description'] = "Cannot open file ($this->inboxdatafilename)";
-            echo json_encode($response_array);
-            return;
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, "Cannot open file ($this->inboxdatafilename)");
         }
 
         if (!$db_up) {
             // At this point we've stored the data file in the inbox directory.
             // We can't do much else if we don't have a database connection.
-            echo json_encode($response_array);
-            return;
+            return response()->json($response_array);
         }
 
-        if ($this->populateBuildFileRow() === true) {
-            $filename = str_replace('inbox/', '', $this->inboxdatafilename);
-            ProcessSubmission::dispatch($filename, $this->project->Id, $this->build->Id, $this->md5);
-        }
+        // THis function will throw an exception if invalid data provided
+        $this->populateBuildFileRow();
+
+        $filename = str_replace('inbox/', '', $this->inboxdatafilename);
+        ProcessSubmission::dispatch($filename, $this->project->Id, $this->build->Id, $this->md5);
 
         // Check for marker file to see if we need to queue deferred submissions.
         if (Storage::exists("DB_WAS_DOWN")) {
             Storage::delete("DB_WAS_DOWN");
             Artisan::call('submission:queue');
         }
+
+        return response()->json($response_array);
     }
 
-    public function populateBuildFileRow()
+    public function populateBuildFileRow(): void
     {
         // Populate a BuildFile object.
         $buildfile = BuildFile::firstOrNew([
@@ -312,10 +306,9 @@ class UnparsedSubmissionProcessor
             'filename' => $this->backupfilename,
         ]);
 
-        $response_array = ['status' => 0];
         if (!$this->project->Exists()) {
             Storage::delete($this->inboxdatafilename);
-            return response('Project not found', Response::HTTP_NOT_FOUND);
+            abort(Response::HTTP_NOT_FOUND, 'Project not found');
         }
 
         // Check if this submission requires a valid authentication token.
@@ -324,22 +317,17 @@ class UnparsedSubmissionProcessor
             $authtoken_hash = AuthTokenService::hashToken($token);
             if (!AuthTokenService::checkToken($authtoken_hash, $this->project->Id)) {
                 Storage::delete($this->inboxdatafilename);
-                return response('Forbidden', Response::HTTP_FORBIDDEN);
+                abort(Response::HTTP_FORBIDDEN, 'Forbidden');
             }
         }
 
         // Check that the md5sum of the file matches what we were expecting.
         $md5sum = md5_file(Storage::path($this->inboxdatafilename));
         if ($md5sum != $this->md5) {
-            $response_array['status'] = 1;
-            $response_array['description'] =
-                "md5 mismatch. expected: {$this->md5}, received: $md5sum";
             Storage::delete($this->inboxdatafilename);
             $buildfile->delete();
-            echo json_encode($response_array);
-            return false;
+            abort(Response::HTTP_BAD_REQUEST, "md5 mismatch. expected: {$this->md5}, received: $md5sum");
         }
-        // endthink
 
         // Insert the buildfile row.
         $buildfile->save();
@@ -352,22 +340,15 @@ class UnparsedSubmissionProcessor
             $pendingSubmissions->Save();
         }
         $pendingSubmissions->Increment();
-
-        // Returns the OK submission
-        echo json_encode($response_array);
-        return true;
     }
 
-    public function parseDataFileParameters()
+    public function parseDataFileParameters(): void
     {
         // We expect GET to contain the following values:
         $vars = ['buildid', 'type', 'md5', 'filename'];
         foreach ($vars as $var) {
-            if (!isset($_GET[$var]) || empty($_GET[$var])) {
-                $response_array['status'] = 1;
-                $response_array['description'] = 'Variable \'' . $var . '\' not set but required.';
-                echo json_encode($response_array);
-                return;
+            if (empty($_GET[$var])) {
+                abort(Response::HTTP_BAD_REQUEST, "Variable '$var' not set but required.");
             }
         }
 
@@ -379,19 +360,19 @@ class UnparsedSubmissionProcessor
         $this->getAuthTokenHash();
     }
 
-    // Check if CDash's database is down.
-    private function checkDatabaseConnection()
+    /** Check if CDash's database is down. */
+    private function checkDatabaseConnection(): bool
     {
         try {
-            $pdo = \DB::connection()->getPdo();
+            DB::connection()->getPdo();
             return true;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    // Write build metadata to disk in JSON format.
-    private function serializeBuildMetadata($uuid)
+    /** Write build metadata to disk in JSON format. */
+    private function serializeBuildMetadata(string $uuid): void
     {
         $build_metadata = [
             'projectname' => $this->projectname,
@@ -410,20 +391,20 @@ class UnparsedSubmissionProcessor
         Storage::put($inbox_build_metadata_filename, json_encode($build_metadata));
     }
 
-    // Append data file parameters to the build metadata JSON file.
-    private function serializeDataFileParameters()
+    /** Append data file parameters to the build metadata JSON file. */
+    private function serializeDataFileParameters(): void
     {
         $inbox_filename = "inbox/{$this->projectname}_-_{$this->token}_-_build-metadata_-_{$this->buildid}_-__-_.json";
         if (!Storage::exists($inbox_filename)) {
-            \Log::warn("Could not find build metadata file {$inbox_filename}");
-            return false;
+            Log::warning("Could not find build metadata file {$inbox_filename}");
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Could not find build metadata file');
         }
 
         $contents = Storage::get($inbox_filename);
         $build_metadata = json_decode($contents, true);
         if (!$build_metadata) {
-            \Log::warn("Failed to parse build metadata JSON {$inbox_filename}");
-            return false;
+            Log::warning("Failed to parse build metadata JSON {$inbox_filename}");
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Failed to parse build metadata');
         }
 
         $build_metadata['buildid'] = $this->buildid;
@@ -435,13 +416,13 @@ class UnparsedSubmissionProcessor
         Storage::put($inbox_filename, json_encode($build_metadata));
     }
 
-    // Deserialize a build metadata JSON file.
-    public function deserializeBuildMetadata($fp)
+    /** Deserialize a build metadata JSON file. */
+    public function deserializeBuildMetadata($fp): void
     {
         $build_metadata = json_decode(stream_get_contents($fp), true);
 
         if (!Project::validateProjectName($build_metadata['projectname'])) {
-            throw new RuntimeException("Invalid project name: {$build_metadata['projectname']}");
+            abort(Response::HTTP_BAD_REQUEST, "Invalid project name: {$build_metadata['projectname']}");
         }
 
         $this->projectname = $build_metadata['projectname'];
@@ -460,7 +441,7 @@ class UnparsedSubmissionProcessor
         $this->inboxdatafilename = $build_metadata['inboxdatafilename'];
     }
 
-    private function getAuthTokenHash()
+    private function getAuthTokenHash(): void
     {
         if ($this->token) {
             return;
