@@ -64,8 +64,8 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         $success = true;
         $error_msg = '';
 
-        $pages = ['viewBuildError', 'viewUpdate'];
-        $vue_pages = ['buildSummary', 'viewConfigure', 'viewNotes'];
+        $pages = ['viewBuildError'];
+        $vue_pages = ['buildSummary', 'viewConfigure', 'viewNotes', 'viewUpdate'];
         foreach ($pages as $page) {
             if (in_array($page, $vue_pages)) {
                 $path_to_first = "build/{$first_buildid}";

@@ -25,7 +25,7 @@ Route::get('/version', function () {
 
 Route::get('/v1/viewProjects.php', 'ViewProjectsController@fetchPageContent');
 
-Route::get('/v1/viewUpdate.php', 'AdminController@viewUpdatePageContent');
+Route::get('/v1/viewUpdate.php', 'BuildController@viewUpdatePageContent');
 
 Route::get('/v1/viewTest.php', 'ViewTestController@fetchPageContent');
 

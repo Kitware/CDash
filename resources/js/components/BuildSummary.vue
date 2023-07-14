@@ -106,7 +106,7 @@
                   :class="cdash.update.nerrors > 0 ? 'error' : 'normal'"
                 >
                   <b>
-                    <a :href="$baseURL + '/viewUpdate.php?buildid=' + cdash.build.id">
+                    <a :href="$baseURL + '/build/' + cdash.build.id + '/update'">
                       {{ cdash.update.nerrors }}
                     </a>
                   </b>
@@ -116,7 +116,7 @@
                   :class="cdash.update.nwarnings > 0 ? 'warning' : 'normal'"
                 >
                   <b>
-                    <a :href="$baseURL + '/viewUpdate.php?buildid=' + cdash.build.id">
+                    <a :href="$baseURL + '/build/' + cdash.build.id + '/update'">
                       {{ cdash.update.nwarnings }}
                     </a>
                   </b>
@@ -229,7 +229,7 @@
                   :class="cdash.previousbuild.nupdateerrors > 0 ? 'error' : 'normal'"
                 >
                   <b>
-                    <a :href="$baseURL + '/viewUpdate.php?buildid=' + cdash.previousbuild.buildid">
+                    <a :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/update'">
                       {{ cdash.previousbuild.nupdateerrors }}
                     </a>
                   </b>
@@ -239,7 +239,7 @@
                   :class="cdash.previousbuild.nupdatewarnings > 0 ? 'warning' : 'normal'"
                 >
                   <b>
-                    <a :href="$baseURL + '/viewUpdate.php?buildid=' + cdash.previousbuild.buildid">
+                    <a :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/update'">
                       {{ cdash.previousbuild.nupdatewarnings }}
                     </a>
                   </b>
@@ -640,7 +640,7 @@
         <b>Number of Updates: </b>
         <a
           id="update_link"
-          :href="$baseURL + '/viewUpdate.php?buildid=' + cdash.build.id"
+          :href="$baseURL + '/build/' + cdash.build.id + '/update'"
         >
           {{ cdash.update.nupdates }}
         </a>

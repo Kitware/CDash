@@ -26,7 +26,7 @@ class BuildUpdateTest extends TestCase
 
         $sut = new BuildUpdate();
         $sut->BuildId = 1001;
-        $expected = 'https://cdash.tld/viewUpdate.php?buildid=1001';
+        $expected = 'https://cdash.tld/build/1001/update';
         $actual = $sut->GetUrlForSelf();
         $this->assertEquals($expected, $actual);
 

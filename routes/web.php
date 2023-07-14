@@ -72,6 +72,13 @@ Route::get('/viewConfigure.php', function (Request $request) {
     return redirect("/build/{$buildid}/configure");
 });
 
+
+Route::get('/build/{id}/update', 'BuildController@update');
+Route::get('/viewUpdate.php', function (Request $request) {
+    $buildid = $request->query('buildid');
+    return redirect("/build/{$buildid}/update", 301);
+});
+
 Route::get('/build/{id}/notes', 'BuildController@notes');
 Route::get('/viewNotes.php', function (Request $request) {
     $buildid = $request->query('buildid');
@@ -110,8 +117,6 @@ Route::get('/ajax/showtestfailuregraph.php', 'TestController@ajaxTestFailureGrap
 
 Route::match(['get', 'post'], '/projects', 'ViewProjectsController@viewAllProjects');
 Route::permanentRedirect('/viewProjects.php', '/projects');
-
-Route::get('/viewUpdate.php', 'AdminController@viewUpdate');
 
 Route::get('/viewTest.php', 'ViewTestController@viewTest');
 

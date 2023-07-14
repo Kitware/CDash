@@ -147,7 +147,7 @@ function get_email_summary(int $buildid, array $errors, $errorkey, int $maxitems
             throw new RuntimeException('Error querying update status for build ' . $buildid);
         }
 
-        $information .= "Status: {$update['status']} ({$serverURI}/viewUpdate.php?buildid={$buildid})\n";
+        $information .= "Status: {$update['status']} ({$serverURI}/build/{$buildid}/update)\n";
         $information .= 'Command: ';
         $information .= substr($update['command'], 0, $maxchars);
         $information .= "\n";
@@ -578,7 +578,7 @@ function send_update_email(UpdateHandler $handler, int $projectid): void
 
             $body = "$sitename has encountered errors during the Update step and you have been identified as the maintainer of this site.\n\n";
             $body .= "*Update Errors*\n";
-            $body .= 'Status: ' . $update['status'] . ' (' . $serverURI . '/viewUpdate.php?buildid=' . $buildid . ")\n";
+            $body .= 'Status: ' . $update['status'] . ' (' . $serverURI . '/build/' . $buildid . "/update)\n";
             if (cdashmail($recipients, $subject, $body)) {
                 add_log('email sent to: ' . implode(', ', $recipients), 'send_update_email');
             } else {

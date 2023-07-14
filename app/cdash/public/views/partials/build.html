@@ -220,7 +220,7 @@
                 build.update.warning == 1 ? 'warning' : 'normal'))">
   <div ng-if="::build.hasupdate">
     <img ng-if="::build.userupdates > 0" src="img/yellowled.png" height="10px" alt="star" title="I checked in some code for this build!"/>
-    <a ng-href="viewUpdate.php?buildid={{::build.id}}">
+    <a ng-href="build/{{::build.id}}/update">
       {{::build.update.files}}
     </a>
   </div>
