@@ -1,141 +1,144 @@
-      <table class="table-bordered table-responsive table-condensed container-fluid">
-        <caption class="h4">
-          <a id="build" ng-click="jumpToAnchor('build')">
-            Configure / Build / Test
-          </a>
-        </caption>
-        <tr class="row">
-          <th class="col-md-1"> </th>
-          <th ng-repeat="group in cdash.groups"
-              class="col-md-2 border-right border-left center-text" colspan="2">
-            {{group.name}}
-          </th>
-        </tr>
+<div class="h4">
+  <a id="build" ng-click="jumpToAnchor('build')">
+    Configure / Build / Test
+  </a>
+</div>
+<table class="table-bordered table table-striped table-responsive">
+  <tr>
+    <th></th>
+    <th ng-repeat="group in cdash.groups"
+        class="border-left center-text" colspan="2">
+      {{group.name}}
+    </th>
+  </tr>
 
-        <tr ng-repeat="measurement in cdash.measurements" class="row">
-          <td class="col-md-1 border-right center-text">
-            <b>{{measurement.name}}</b>
-          </td>
-          <td ng-repeat-start="group in measurement.groups"
-              class="col-md-1 border-left center-text">
-            {{group.value}}
-          </td>
-          <td ng-repeat-end class="col-md-1 border-right">
-            <linechart
-              data=group.chart
-              groupname=group.name_clean
-              measurementname=measurement.name_clean
-              project=cdash.projectname_encoded
-              anchor=group.name_clean
-              sort=measurement.sort>
-            </linechart>
-          </td>
-        </tr>
-      </table> <!-- end of build info table -->
+  <tr ng-repeat="measurement in cdash.measurements">
+    <th class="center-text" style="vertical-align: middle;">
+      {{measurement.name}}
+    </th>
+    <td ng-repeat-start="group in measurement.groups"
+        class="border-left center-text"
+        style="vertical-align: middle;">
+      {{group.value}}
+    </td>
+    <td ng-repeat-end>
+      <linechart
+        data=group.chart
+        groupname=group.name_clean
+        measurementname=measurement.name_clean
+        project=cdash.projectname_encoded
+        anchor=group.name_clean
+        sort=measurement.sort
+        style="overflow: clip;">
+      </linechart>
+    </td>
+  </tr>
+</table> <!-- end of build info table -->
 
-      <table ng-if="cdash.coverages.length > 0"
-             class="table-bordered table-responsive table-condensed
-                    container-fluid">
-        <caption class="h4">
-          <a id="coverage" ng-click="jumpToAnchor('coverage')">
-            Coverage
-          </a>
-        </caption>
+<div ng-if="cdash.coverages.length > 0">
+  <div class="h4">
+    <a id="coverage" ng-click="jumpToAnchor('coverage')">
+      Coverage
+    </a>
+  </div>
+  <table class="table-bordered table table-striped table-responsive">
+    <tr>
+      <th></th>
+      <th ng-repeat="buildgroup in cdash.coverage_buildgroups"
+          class="border-left center-text" colspan="3">
+        {{buildgroup}}
+      </th>
+    </tr>
 
-        <tr class="row">
-          <th class="col-md-1"> </th>
-          <th ng-repeat="buildgroup in cdash.coverage_buildgroups"
-              class="col-md-2 border-right border-left center-text" colspan="3">
-            {{buildgroup}}
-          </th>
-        </tr>
+    <tr ng-repeat="coverage in cdash.coverages | orderBy:'position'">
+      <th class="center-text" style="vertical-align: middle;">
+        {{coverage.name}}
+      </th>
+      <td ng-repeat-start="group in coverage.groups" class="center-text border-left" style="vertical-align: middle;">
+        {{group.current}}%
+      </td>
+      <td>
+        <linechart
+          data=group.chart
+          groupname=group.name_clean
+          measurementname=coverage.name_clean
+          project=cdash.projectname_encoded
+          anchor="'Coverage'"
+          style="overflow: clip;">
+        </linechart>
+      </td>
+      <td ng-repeat-end>
+        <bulletchart
+          data=group
+          categoryname=coverage.name_clean>
+        </bulletchart>
+      </td>
+    </tr>
+  </table>
+</div><!-- end of coverage -->
 
-        <tr ng-repeat="coverage in cdash.coverages | orderBy:'position'"
-            class="row">
-          <td class="col-md-1 border-right center-text">
-            <b>{{coverage.name}}</b>
-          </td>
-          <td ng-repeat-start="group in coverage.groups" class="col-md-1 center-text">
-            {{group.current}}%
-          </td>
-          <td class="col-md-1">
-            <linechart
-              data=group.chart
-              groupname=group.name_clean
-              measurementname=coverage.name_clean
-              project=cdash.projectname_encoded
-              anchor="'Coverage'">
-            </linechart>
-          </td>
-          <td ng-repeat-end class="col-md-1 border-right">
-            <bulletchart
-              data=group
-              categoryname=coverage.name_clean>
-            </bulletchart>
-          </td>
-        </tr>
-      </table> <!-- end of coverage -->
+<div ng-if="cdash.dynamicanalyses.length > 0">
+  <div class="h4">
+    <a id="dynamic" ng-click="jumpToAnchor('dynamic')">
+      Dynamic Analysis
+    </a>
+  </div>
+  <table class="table-bordered table table-striped table-responsive">
+    <tr ng-repeat="DA in cdash.dynamicanalyses">
+      <th ng-repeat-start="group in DA.groups" class="center-text" style="vertical-align: middle;">
+        {{DA.name}}
+      </th>
+      <td class="center-text" style="vertical-align: middle;">
+        {{group.name}}
+      </td>
+      <td class="center-text" style="vertical-align: middle;">
+        {{group.value}}
+      </td>
+      <td ng-repeat-end>
+        <linechart
+          data=group.chart
+          groupname=group.name_clean
+          measurementname=DA.name_clean
+          project=cdash.projectname_encoded
+          anchor="'DynamicAnalysis'"
+          style="overflow: clip;">
+        </linechart>
+      </td>
+    </tr>
+  </table>
+</div><!-- end of dynamic analysis -->
 
-      <table ng-if="cdash.dynamicanalyses.length > 0"
-             style="width:100%;"
-             class="table-bordered table-responsive table-condensed
-                    container-fluid">
-        <caption class="h4">
-          <a id="dynamic" ng-click="jumpToAnchor('dynamic')">
-            Dynamic Analysis
-          </a>
-        </caption>
-        <tr ng-repeat="DA in cdash.dynamicanalyses" class="row">
-          <td ng-repeat-start="group in DA.groups" class="col-md-1 center-text">
-            <b>{{DA.name}}</b>
-          </td>
-          <td class="col-md-1 center-text">
-            {{group.name}}
-          </td>
-          <td class="col-md-1 center-text">
-            {{group.value}}
-          </td>
-          <td ng-repeat-end class="col-md-1">
-            <linechart
-              data=group.chart
-              groupname=group.name_clean
-              measurementname=DA.name_clean
-              project=cdash.projectname_encoded
-              anchor="'DynamicAnalysis'">
-            </linechart>
-          </td>
-        </tr>
-      </table> <!-- end of dynamic analysis -->
-
-      <table ng-if="cdash.staticanalyses.length > 0"
-             style="width:100%;"
-             class="table-bordered table-responsive table-condensed
-                    container-fluid">
-        <caption class="h4">
-          <a id="static" ng-click="jumpToAnchor('static')">
-            Static Analysis
-          </a>
-        </caption>
-        <tr ng-repeat="SA in cdash.staticanalyses" class="row">
-          <td class="col-md-1 center-text">
-            <b>{{SA.group_name}}</b>
-          </td>
-          <td ng-repeat-start="measurement in SA.measurements"
-              class="col-md-1 center-text">
-            {{measurement.name}}
-          </td>
-          <td class="col-md-1 center-text">
-            {{measurement.value}}
-          </td>
-          <td ng-repeat-end class="col-md-1">
-            <linechart
-              data=measurement.chart
-              groupname=SA.group_name_clean
-              measurementname=measurement.name_clean
-              project=cdash.projectname_encoded
-              anchor=SA.group_name_clean
-              sort=measurement.sort>
-            </linechart>
-          </td>
-        </tr>
-      </table> <!-- end of static analysis -->
+<div ng-if="cdash.staticanalyses.length > 0">
+  <div class="h4">
+    <a id="static" ng-click="jumpToAnchor('static')">
+      Static Analysis
+    </a>
+  </div>
+  <table
+    class="table-bordered table table-striped table-responsive">
+    <tr ng-repeat="SA in cdash.staticanalyses">
+      <th class="center-text" style="vertical-align: middle;">
+        {{SA.group_name}}
+      </th>
+      <td ng-repeat-start="measurement in SA.measurements"
+          class="center-text"
+          style="vertical-align: middle;">
+        {{measurement.name}}
+      </td>
+      <td class="center-text" style="vertical-align: middle;">
+        {{measurement.value}}
+      </td>
+      <td ng-repeat-end
+      <linechart
+        data=measurement.chart
+        groupname=SA.group_name_clean
+        measurementname=measurement.name_clean
+        project=cdash.projectname_encoded
+        anchor=SA.group_name_clean
+        sort=measurement.sort
+        style="overflow: clip;">
+      </linechart>
+      </td>
+    </tr>
+  </table>
+</div><!-- end of static analysis -->
