@@ -6,7 +6,9 @@ use App\Services\PageTimer;
 use CDash\Database;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 include_once 'include/repository.php';
 
@@ -96,75 +98,41 @@ class TestController extends AbstractProjectController
         return response()->angular_view('testSummary');
     }
 
-    public function apiTestSummary(): JsonResponse
+    public function apiTestSummary(): JsonResponse|StreamedResponse
     {
-        $response = [];
-
         // Checks
-        $date = htmlspecialchars($_GET['date']);
-        if (!isset($date) || strlen($date) === 0) {
-            $response['error'] = 'No date specified.';
-            echo json_encode($response);
-            return;
+        $date = htmlspecialchars($_GET['date'] ?? '');
+        if (strlen($date) === 0) {
+            abort(400, 'No date specified.');
         }
-        $projectid = pdo_real_escape_numeric($_GET['project']);
-        if (!isset($projectid)) {
-            $response['error'] = 'No project specified.';
-            echo json_encode($response);
-            return;
-        }
-        if (!is_numeric($projectid)) {
-            $response['error'] = 'Not a valid projectid!';
-            echo json_encode($response);
-            return;
-        }
+        $this->setProjectById(intval($_GET['project'] ?? -1));
 
-        $testName = htmlspecialchars($_GET['name']);
-        if (!isset($testName)) {
-            $response['error'] = 'No test name specified.';
-            echo json_encode($response);
-            return;
+        $testName = htmlspecialchars($_GET['name'] ?? '');
+        if ($testName === '') {
+            abort(400, 'No test name specified.');
         }
 
         $pageTimer = new PageTimer();
 
-        $db = Database::getInstance();
-
-        $project_array = $db->executePreparedSingleRow('SELECT * FROM project WHERE id=?', [intval($projectid)]);
-        if (!empty($project_array)) {
-            $projectname = $project_array['name'];
-            $nightlytime = $project_array['nightlytime'];
-            $projectshowtesttime = $project_array['showtesttime'];
-        } else {
-            $response['error'] = 'Not a valid projectid!';
-            echo json_encode($response);
-            return;
-        }
-
-        if (!can_access_project($projectid)) {
-            return;
-        }
-
         $response = begin_JSON_response();
         $response['showcalendar'] = 1;
-        $response['title'] = "$projectname - Test Summary";
-        get_dashboard_JSON_by_name($projectname, $date, $response);
+        $response['title'] = "{$this->project->Name} - Test Summary";
+        get_dashboard_JSON_by_name($this->project->Name, $date, $response);
         $response['testName'] = $testName;
 
-        list($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date, $nightlytime);
-        $menu = array();
-        $menu['back'] = 'index.php?project=' . urlencode($projectname) . "&date=$date";
-        $menu['previous'] = "testSummary.php?project=$projectid&name=$testName&date=$previousdate";
-        $menu['current'] = "testSummary.php?project=$projectid&name=$testName&date=" . date(FMT_DATE);
-        if ($date != '' && date(FMT_DATE, $currentstarttime) != date(FMT_DATE)) {
-            $menu['next'] = "testSummary.php?project=$projectid&name=$testName&date=$nextdate";
+        list($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date, $this->project->NightlyTime);
+        $menu = [
+            'back' => 'index.php?project=' . urlencode($this->project->Name) . "&date=$date",
+            'previous' => "testSummary.php?project={$this->project->Id}&name=$testName&date=$previousdate",
+            'current' => "testSummary.php?project={$this->project->Id}&name=$testName&date=" . date(FMT_DATE),
+        ];
+        if (date(FMT_DATE, $currentstarttime) != date(FMT_DATE)) {
+            $menu['next'] = "testSummary.php?project={$this->project->Id}&name=$testName&date=$nextdate";
         } else {
             $menu['next'] = false;
         }
         $response['menu'] = $menu;
 
-        $testName = pdo_real_escape_string($testName);
-        list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
         $beginning_timestamp = $currentstarttime;
         $end_timestamp = $currentstarttime + 3600 * 24;
 
@@ -172,7 +140,7 @@ class TestController extends AbstractProjectController
         $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
         // Count how many extra test measurements we have.
-        $getcolumnnumber = $db->executePrepared('
+        $getcolumnnumber = DB::select('
             SELECT testmeasurement.name
             FROM test
             JOIN build2test ON (build2test.testid = test.id)
@@ -188,14 +156,14 @@ class TestController extends AbstractProjectController
                 AND build.starttime<?
                 AND test.projectid=?
             GROUP by testmeasurement.name
-        ', [$testName, $beginning_UTCDate, $end_UTCDate, intval($projectid)]);
+        ', [$testName, $beginning_UTCDate, $end_UTCDate, intval($this->project->Id)]);
 
-        $columns = array();
+        $columns = [];
         $response['hasprocessors'] = false;
         $processors_idx = -1;
         foreach ($getcolumnnumber as $row) {
-            $columns[] = $row['name'];
-            if ($row['name'] == 'Processors') {
+            $columns[] = $row->name;
+            if ($row->name === 'Processors') {
                 $processors_idx = count($columns) - 1;
                 $response['hasprocessors'] = true;
             }
@@ -203,20 +171,17 @@ class TestController extends AbstractProjectController
         $response['columns'] = $columns;
 
         // Add the date/time
-        $response['projectid'] = $projectid;
+        $response['projectid'] = $this->project->Id;
         $response['currentstarttime'] = $currentstarttime;
         $response['teststarttime'] = date(FMT_DATETIME, $beginning_timestamp);
         $response['testendtime'] = date(FMT_DATETIME, $end_timestamp);
-
-        //Get information about all the builds for the given date and project
-        $builds = array();
 
         $columncount = count($getcolumnnumber);
 
         $etestquery = null;
         // If at least one column is selected
         if ($columncount > 0) {
-            $etestquery = $db->executePrepared('
+            $etestquery = DB::select('
                 SELECT
                     test.id,
                     test.projectid,
@@ -244,10 +209,10 @@ class TestController extends AbstractProjectController
                 ORDER BY
                     build2test.buildid,
                     testmeasurement.name
-            ', [$testName, $beginning_UTCDate, $end_UTCDate, intval($projectid)]);
+            ', [$testName, $beginning_UTCDate, $end_UTCDate, intval($this->project->Id)]);
         }
 
-        $result = $db->executePrepared('
+        $result = DB::select('
             SELECT
                 b.id AS buildid,
                 b.name,
@@ -264,10 +229,10 @@ class TestController extends AbstractProjectController
                 t.name = ?
                 AND b.projectid = ?
                 AND b.starttime BETWEEN ? AND ?
-        ', [$testName, intval($projectid), $beginning_UTCDate, $end_UTCDate]);
+        ', [$testName, intval($this->project->Id), $beginning_UTCDate, $end_UTCDate]);
 
         // If user wants to export as CSV file.
-        if (isset($_GET['export']) && $_GET['export'] == 'csv') {
+        if (isset($_GET['export']) && $_GET['export'] === 'csv') {
             //    header('Cache-Control: public');
             //    header('Content-Description: File Transfer');
             //    // Prepare some headers to download.
@@ -277,10 +242,12 @@ class TestController extends AbstractProjectController
             // Standard columns.
             $filecontent = 'Site,Build Name,Build Stamp,Status,Time(s)';
 
+            $etest = [];
+
             // Store named measurements in an array.
             if (is_array($etestquery)) {
                 foreach ($etestquery as $row) {
-                    $etest[$row['buildid']][$row['name']] = $row['value'];
+                    $etest[$row->buildid][$row->name] = $row->value;
                 }
             }
 
@@ -291,12 +258,12 @@ class TestController extends AbstractProjectController
             $filecontent .= "\n";
 
             foreach ($result as $row) {
-                $currentStatus = $row['status'];
+                $currentStatus = $row->status;
 
-                $filecontent .= "{$row['sitename']},{$row['name']},{$row['stamp']},{$row['time']},";
+                $filecontent .= "{$row->sitename},{$row->name},{$row->stamp},{$row->time},";
 
-                if ($projectshowtesttime) {
-                    if ($row['timestatus'] < $project_array['testtimemaxstatus']) {
+                if ($this->project->ShowTestTime) {
+                    if ($row->timestatus < $this->project->TestTimeMaxStatus) {
                         $filecontent .= 'Passed,';
                     } else {
                         $filecontent .= 'Failed,';
@@ -314,21 +281,19 @@ class TestController extends AbstractProjectController
                         $filecontent .= 'Not Run,';
                         break;
                 }
-                // start writing test results
+                // Start writing test results
                 for ($t = 0; $t < count($columns); $t++) {
-                    $filecontent .= $etest[$row['buildid']][$columns[$t]] . ',';
+                    $filecontent .= $etest[$row->buildid][$columns[$t]] . ',';
                 }
                 $filecontent .= "\n";
             }
 
-            return [
-                'type' => 'text/csv',
-                'file' => $filecontent,
-                'filename' => 'test-export.csv',
-            ];
+            return response()->streamDownload(function () use ($filecontent) {
+                echo $filecontent;
+            }, 'test-export.csv', ['Content-type' => 'text/csv']);
         }
 
-        //now that we have the data we need, generate our response.
+        // Now that we have the data we need, generate our response.
         $numpassed = 0;
         $numfailed = 0;
         $numtotal = 0;
@@ -336,8 +301,8 @@ class TestController extends AbstractProjectController
 
         $builds_response = [];
         foreach ($result as $row) {
-            $buildid = $row['buildid'];
-            $build_response = array();
+            $buildid = $row->buildid;
+            $build_response = [];
 
             // Find the repository revision
             $update_response = [
@@ -345,10 +310,10 @@ class TestController extends AbstractProjectController
                 'priorrevision' => '',
                 'path' => '',
                 'revisionurl' => '',
-                'revisiondiff' => ''
+                'revisiondiff' => '',
             ];
             // Return the status
-            $status_array = $db->executePreparedSingleRow('
+            $status_array = DB::select('
                 SELECT
                     status,
                     revision,
@@ -360,36 +325,36 @@ class TestController extends AbstractProjectController
                 WHERE
                     b2u.updateid = buildupdate.id
                     AND b2u.buildid = ?
-            ', [intval($buildid)]);
+            ', [intval($buildid)])[0] ?? [];
 
-            if (!empty($status_array)) {
-                if (strlen($status_array['status']) > 0 && $status_array['status'] != '0') {
-                    $update_response['status'] = $status_array['status'];
+            if ($status_array !== []) {
+                if (strlen($status_array->status) > 0 && $status_array->status != '0') {
+                    $update_response['status'] = $status_array->status;
                 } else {
                     $update_response['status'] = ''; // empty status
                 }
-                $update_response['revision'] = $status_array['revision'];
-                $update_response['priorrevision'] = $status_array['priorrevision'];
-                $update_response['path'] = $status_array['path'];
+                $update_response['revision'] = $status_array->revision;
+                $update_response['priorrevision'] = $status_array->priorrevision;
+                $update_response['path'] = $status_array->path;
                 $update_response['revisionurl'] =
-                    get_revision_url($projectid, $status_array['revision'], $status_array['priorrevision']);
+                    get_revision_url($this->project->Id, $status_array->revision, $status_array->priorrevision);
                 $update_response['revisiondiff'] =
-                    get_revision_url($projectid, $status_array['priorrevision'], ''); // no prior prior revision...
+                    get_revision_url($this->project->Id, $status_array->priorrevision, ''); // no prior prior revision...
             }
             $build_response['update'] = $update_response;
 
-            $build_response['site'] = $row['sitename'];
-            $build_response['buildName'] = $row['name'];
-            $build_response['buildStamp'] = $row['stamp'];
-            $build_response['time'] = floatval($row['time']);
+            $build_response['site'] = $row->sitename;
+            $build_response['buildName'] = $row->name;
+            $build_response['buildStamp'] = $row->stamp;
+            $build_response['time'] = floatval($row->time);
 
             $buildLink = "viewTest.php?buildid=$buildid";
             $build_response['buildid'] = $buildid;
             $build_response['buildLink'] = $buildLink;
-            $buildtestid = $row['buildtestid'];
+            $buildtestid = $row->buildtestid;
             $testLink = "test/$buildtestid";
             $build_response['testLink'] = $testLink;
-            switch ($row['status']) {
+            switch ($row->status) {
                 case 'passed':
                     $build_response['status'] = 'Passed';
                     $build_response['statusclass'] = 'normal';
@@ -418,7 +383,7 @@ class TestController extends AbstractProjectController
 
         // Fill in extra test measurements for each build.
         if ($columncount > 0) {
-            $etestquery = $db->executePrepared('
+            $etestquery = DB::select('
                 SELECT
                     test.id,
                     test.projectid,
@@ -446,21 +411,21 @@ class TestController extends AbstractProjectController
                 ORDER BY
                     build2test.buildid,
                     testmeasurement.name
-            ', [$testName, $beginning_UTCDate, $end_UTCDate, intval($projectid)]);
+            ', [$testName, $beginning_UTCDate, $end_UTCDate, intval($this->project->Id)]);
             if (is_array($etestquery)) {
                 foreach ($etestquery as $row) {
                     // Get the index of this measurement in the list of columns.
-                    $idx = array_search($row['name'], $columns);
+                    $idx = array_search($row->name, $columns, true);
 
                     // Fill in this measurement value for this build's run of the test.
-                    $test_measurements[$row['buildid']][$idx] = $row['value'];
+                    $test_measurements[$row->buildid][$idx] = $row->value;
                 }
             }
         }
 
         // Assign these extra measurements to each build.
         foreach ($builds_response as $i => $build_response) {
-            $buildid = $builds_response[$i]['buildid'];
+            $buildid = $build_response['buildid'];
             $builds_response[$i]['measurements'] = $test_measurements[$buildid];
             if ($response['hasprocessors']) {
                 // Show an additional column "proc time" if these tests have
@@ -469,8 +434,7 @@ class TestController extends AbstractProjectController
                 if (!$num_procs) {
                     $num_procs = 1;
                 }
-                $builds_response[$i]['proctime'] =
-                    floatval($builds_response[$i]['time'] * $num_procs);
+                $builds_response[$i]['proctime'] = floatval($builds_response[$i]['time'] * $num_procs);
             }
         }
 
@@ -482,6 +446,6 @@ class TestController extends AbstractProjectController
         $response['percentagepassed'] = $numtotal > 0 ? round($numpassed / $numtotal, 2) * 100 : 0;
 
         $pageTimer->end($response);
-        echo json_encode($response);
+        return response()->json($response);
     }
 }
