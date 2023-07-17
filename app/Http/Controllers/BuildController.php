@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\BuildNote;
 use App\Models\User;
 use App\Services\PageTimer;
 use App\Services\TestingDay;
@@ -15,7 +16,6 @@ use CDash\Model\BuildRelationship;
 use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUserNote;
 use CDash\Model\Label;
-use CDash\Model\Project;
 use CDash\ServiceContainer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use PDO;
+
+require_once('include/repository.php');
 
 class BuildController extends AbstractBuildController
 {
@@ -65,48 +67,30 @@ class BuildController extends AbstractBuildController
     public function apiBuildSummary(): JsonResponse
     {
         $pageTimer = new PageTimer();
-        $response = [];
 
-        $build = get_request_build();
+        $this->setBuildById(intval($_GET['buildid'] ?? -1));
 
-        if (is_null($build)) {
-            return;
-        }
-
-        $buildid = $build->Id;
-        $siteid = $build->SiteId;
-
-        $service = ServiceContainer::getInstance();
-        $project = $service->create(Project::class);
-        $project->Id = $build->ProjectId;
-        $project->Fill();
-        if (!can_access_project($project->Id)) {
-            $response['error'] = 'You do not have permission to view this project.';
-            echo json_encode($response);
-            return;
-        }
-
-        $date = TestingDay::get($project, $build->StartTime);
+        $date = TestingDay::get($this->project, $this->build->StartTime);
 
         $response = begin_JSON_response();
-        $response['title'] = "$project->Name - Build Summary";
+        $response['title'] = "{$this->project->Name} - Build Summary";
 
-        $previous_buildid = $build->GetPreviousBuildId();
-        $current_buildid = $build->GetCurrentBuildId();
-        $next_buildid = $build->GetNextBuildId();
+        $previous_buildid = $this->build->GetPreviousBuildId();
+        $current_buildid = $this->build->GetCurrentBuildId();
+        $next_buildid = $this->build->GetNextBuildId();
 
         $menu = [];
-        if ($build->GetParentId() > 0) {
-            $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
+        if ($this->build->GetParentId() > 0) {
+            $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . "&parentid={$this->build->GetParentId()}";
         } else {
-            $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&date=$date";
+            $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . "&date=$date";
         }
 
         if ($previous_buildid > 0) {
             $menu['previous'] = "/build/$previous_buildid";
 
             // Find the last submit date.
-            $previous_build = $service->create(Build::class);
+            $previous_build = new Build();
             $previous_build->Id = $previous_buildid;
             $previous_build->FillFromId($previous_build->Id);
             $lastsubmitdate = date(FMT_DATETIMETZ, strtotime($previous_build->StartTime . ' UTC'));
@@ -125,19 +109,21 @@ class BuildController extends AbstractBuildController
 
         $response['menu'] = $menu;
 
-        get_dashboard_JSON($project->Name, $date, $response);
+        get_dashboard_JSON($this->project->Name, $date, $response);
 
+        // TODO: (williamjallen) verify if this block of code is still necessary
         if (Auth::check()) {
+            /** @var User $user */
             $user = Auth::user();
-            $userid = $user->id;
-            $user_response['id'] = $userid;
-            $user_response['admin'] = $user->admin;
-            $response['user'] = $user_response;
+            $response['user'] = [
+                'id' => $user->id,
+                'admin' => $user->admin,
+            ];
         }
 
         // Notes added by users.
         $notes_response = [];
-        $notes = BuildUserNote::getNotesForBuild($buildid);
+        $notes = BuildUserNote::getNotesForBuild($this->build->Id);
         foreach ($notes as $note) {
             $note_response = $note->marshal();
             $notes_response[] = $note_response;
@@ -147,28 +133,25 @@ class BuildController extends AbstractBuildController
         // Build
         $build_response = [];
 
-        $db = Database::getInstance();
+        $site_name = $this->build->GetSite()->name;
+        $build_response['site'] = $site_name;
+        $build_response['sitename_encoded'] = urlencode($site_name);
+        $build_response['siteid'] = $this->build->SiteId;
 
-        $site_array = $db->executePreparedSingleRow('SELECT name FROM site WHERE id=?', [$siteid]);
-        $build_response['site'] = $site_array['name'];
-        $build_response['sitename_encoded'] = urlencode($site_array['name']);
-        $build_response['siteid'] = $siteid;
+        $build_response['name'] = $this->build->Name;
+        $build_response['id'] = $this->build->Id;
+        $build_response['stamp'] = $this->build->GetStamp();
+        $build_response['time'] = date(FMT_DATETIMETZ, strtotime($this->build->StartTime . ' UTC'));
+        $build_response['type'] = $this->build->Type;
 
-        $build_response['name'] = $build->Name;
-        $build_response['id'] = $buildid;
-        $build_response['stamp'] = $build->GetStamp();
-        $build_response['time'] = date(FMT_DATETIMETZ, strtotime($build->StartTime . ' UTC'));
-        $build_response['type'] = $build->Type;
-
-        $note = $db->executePreparedSingleRow('SELECT count(buildid) AS c FROM build2note WHERE buildid=?', [$buildid]);
-        $build_response['note'] = intval($note['c']);
+        $build_response['note'] = BuildNote::where('buildid', '=', $this->build->Id)->count();
 
         // Find the OS and compiler information
-        $buildinfo = $service->create(BuildInformation::class);
-        if ($build->GetParentId() > 0) {
-            $buildinfo->BuildId = $build->GetParentId();
+        $buildinfo = new BuildInformation();
+        if ($this->build->GetParentId() > 0) {
+            $buildinfo->BuildId = $this->build->GetParentId();
         } else {
-            $buildinfo->BuildId = $buildid;
+            $buildinfo->BuildId = $this->build->Id;
         }
         $buildinfo->Fill();
         $build_response['osname'] = $buildinfo->OSName;
@@ -178,19 +161,19 @@ class BuildController extends AbstractBuildController
         $build_response['compilername'] = $buildinfo->CompilerName;
         $build_response['compilerversion'] = $buildinfo->CompilerVersion;
 
-        $build_response['generator'] = $build->Generator;
-        $build_response['command'] = $build->Command;
-        $build_response['starttime'] = date(FMT_DATETIMETZ, strtotime($build->StartTime . ' UTC'));
-        $build_response['endtime'] = date(FMT_DATETIMETZ, strtotime($build->EndTime . ' UTC'));
+        $build_response['generator'] = $this->build->Generator;
+        $build_response['command'] = $this->build->Command;
+        $build_response['starttime'] = date(FMT_DATETIMETZ, strtotime($this->build->StartTime . ' UTC'));
+        $build_response['endtime'] = date(FMT_DATETIMETZ, strtotime($this->build->EndTime . ' UTC'));
 
         $build_response['lastsubmitbuild'] = $previous_buildid;
         $build_response['lastsubmitdate'] = $lastsubmitdate;
 
-        $e_errors = $build->GetErrors(['type' => Build::TYPE_ERROR]);
-        $e_warnings = $build->GetErrors(['type' => Build::TYPE_WARN]);
+        $e_errors = $this->build->GetErrors(['type' => Build::TYPE_ERROR]);
+        $e_warnings = $this->build->GetErrors(['type' => Build::TYPE_WARN]);
 
-        $f_errors = $build->GetFailures(['type' => Build::TYPE_ERROR]);
-        $f_warnings = $build->GetFailures(['type' => Build::TYPE_WARN]);
+        $f_errors = $this->build->GetFailures(['type' => Build::TYPE_ERROR]);
+        $f_warnings = $this->build->GetFailures(['type' => Build::TYPE_WARN]);
 
         $nerrors = count($e_errors) + count($f_errors);
         $nwarnings = count($e_warnings) + count($f_warnings);
@@ -256,47 +239,52 @@ class BuildController extends AbstractBuildController
 
         // Update
         $update_response = [];
-        $update_array = $db->executePreparedSingleRow('
+        $update_array = DB::select('
             SELECT *
-            FROM buildupdate AS u, build2update AS b2u
-            WHERE b2u.updateid=u.id AND b2u.buildid=?
-        ', [$buildid]);
+            FROM
+                buildupdate AS u,
+                build2update AS b2u
+            WHERE
+                b2u.updateid = u.id
+                AND b2u.buildid = ?
+        ', [$this->build->Id])[0] ?? [];
 
-        if (!empty($buildupdate)) {
+        // TODO: (williamjallen) Determine what $buildupdate was supposed to be.  It is currently undefined.
+        if (isset($buildupdate)) {
             // show the update only if we have one
             $response['hasupdate'] = true;
             // Checking for locally modify files
-            $updatelocal = $db->executePreparedSingleRow("
+            $nerrors = (int) DB::select("
                 SELECT count(*) AS c
-                FROM updatefile,build2update AS b2u
+                FROM
+                    updatefile,
+                    build2update AS b2u
                 WHERE
                     updatefile.updateid=b2u.updateid
-                    AND b2u.buildid=?
-                    AND author='Local User'
-            ", [$buildid]);
-            $nerrors = intval($updatelocal['c']);
+                    AND b2u.buildid = ?
+                    AND author = 'Local User'
+            ", [$this->build->Id])[0]->c;
 
             // Check also if the status is not zero
-            if (strlen($update_array['status']) > 0 && $update_array['status'] != '0') {
+            if (strlen($update_array->status) > 0 && $update_array->status != '0') {
                 $nerrors += 1;
-                $update_response['status'] = $update_array['status'];
+                $update_response['status'] = $update_array->status;
             }
             $nwarnings = 0;
             $update_response['nerrors'] = $nerrors;
             $update_response['nwarnings'] = $nwarnings;
 
-            $update = $db->executePreparedSingleRow('
+            $nupdates = (int) DB::select('
                 SELECT count(*) AS c
                 FROM updatefile, build2update AS b2u
                 WHERE updatefile.updateid=b2u.updateid AND b2u.buildid=?
-            ', [$buildid]);
-            $nupdates = intval($update['c']);
+            ', [$this->build->Id])[0]->c;
             $update_response['nupdates'] = $nupdates;
 
-            $update_response['command'] = $update_array['command'];
-            $update_response['type'] = $update_array['type'];
-            $update_response['starttime'] = date(FMT_DATETIMETZ, strtotime($update_array['starttime'] . ' UTC'));
-            $update_response['endtime'] = date(FMT_DATETIMETZ, strtotime($update_array['endtime'] . ' UTC'));
+            $update_response['command'] = $update_array->command;
+            $update_response['type'] = $update_array->type;
+            $update_response['starttime'] = date(FMT_DATETIMETZ, strtotime($update_array->starttime . ' UTC'));
+            $update_response['endtime'] = date(FMT_DATETIMETZ, strtotime($update_array->endtime . ' UTC'));
         } else {
             $response['hasupdate'] = false;
             $update_response['nerrors'] = 0;
@@ -306,27 +294,27 @@ class BuildController extends AbstractBuildController
 
         // Configure
         $configure_response = [];
-        $configure_array = $db->executePreparedSingleRow('
+        $configure_array = DB::select('
             SELECT *
             FROM configure c
             JOIN build2configure b2c ON b2c.configureid=c.id
             WHERE b2c.buildid=?
-        ', [$buildid]);
-        if (!empty($configure_array)) {
+        ', [$this->build->Id])[0] ?? [];
+        if ($configure_array !== []) {
             $response['hasconfigure'] = true;
             $nerrors = 0;
-            if ($configure_array['status'] != 0) {
+            if ($configure_array->status != 0) {
                 $nerrors = 1;
             }
 
             $configure_response['nerrors'] = $nerrors;
-            $configure_response['nwarnings'] = $configure_array['warnings'];
+            $configure_response['nwarnings'] = $configure_array->warnings;
 
-            $configure_response['status'] = $configure_array['status'];
-            $configure_response['command'] = $configure_array['command'];
-            $configure_response['output'] = $configure_array['log'];
-            $configure_response['starttime'] = date(FMT_DATETIMETZ, strtotime($configure_array['starttime'] . ' UTC'));
-            $configure_response['endtime'] = date(FMT_DATETIMETZ, strtotime($configure_array['endtime'] . ' UTC'));
+            $configure_response['status'] = $configure_array->status;
+            $configure_response['command'] = $configure_array->command;
+            $configure_response['output'] = $configure_array->log;
+            $configure_response['starttime'] = date(FMT_DATETIMETZ, strtotime($configure_array->starttime . ' UTC'));
+            $configure_response['endtime'] = date(FMT_DATETIMETZ, strtotime($configure_array->endtime . ' UTC'));
             $response['configure'] = $configure_response;
         } else {
             $response['hasconfigure'] = false;
@@ -339,45 +327,38 @@ class BuildController extends AbstractBuildController
         $test_response['nerrors'] = $nerrors;
         $test_response['nwarnings'] = $nwarnings;
 
-        $npass_array = $db->executePreparedSingleRow("
+        $test_response['npassed'] = (int) DB::select("
             SELECT count(testid) AS c
             FROM build2test
             WHERE buildid=? AND status='passed'
-        ", [$buildid]);
-        $npass = intval($npass_array['c']);
+        ", [$this->build->Id])[0]->c;
 
-        $nnotrun_array = $db->executePreparedSingleRow("
+        $test_response['nnotrun'] = (int) DB::select("
             SELECT count(testid) AS c
             FROM build2test
             WHERE buildid=? AND status='notrun'
-        ", [$buildid]);
-        $nnotrun = intval($nnotrun_array['c']);
+        ", [$this->build->Id])[0]->c;
 
-        $nfail_array = $db->executePreparedSingleRow("
+        $test_response['nfailed'] = (int) DB::select("
             SELECT count(testid) AS c
             FROM build2test
             WHERE buildid=? AND status='failed'
-        ", [$buildid]);
-        $nfail = intval($nfail_array['c']);
-
-        $test_response['npassed'] = $npass;
-        $test_response['nnotrun'] = $nnotrun;
-        $test_response['nfailed'] = $nfail;
+        ", [$this->build->Id])[0]->c;
 
         $response['test'] = $test_response;
 
         // Coverage
         $response['hascoverage'] = false;
-        $coverage_array = $db->executePreparedSingleRow('SELECT * FROM coveragesummary WHERE buildid=?', [$buildid]);
-        if ($coverage_array) {
-            $coverage_percent = round($coverage_array['loctested'] /
-                ($coverage_array['loctested'] + $coverage_array['locuntested']) * 100, 2);
+        $coverage_array = DB::select('SELECT * FROM coveragesummary WHERE buildid=?', [$this->build->Id])[0] ?? [];
+        if ($coverage_array !== []) {
+            $coverage_percent = round($coverage_array->loctested /
+                ($coverage_array->loctested + $coverage_array->locuntested) * 100, 2);
             $response['coverage'] = $coverage_percent;
             $response['hascoverage'] = true;
         }
 
         // Previous build
-        if ($previous_buildid > 0) {
+        if ($previous_buildid > 0 && isset($previous_build)) {
             $previous_response = [];
             $previous_response['buildid'] = $previous_buildid;
 
@@ -406,7 +387,7 @@ class BuildController extends AbstractBuildController
         // Check if this project uses a supported bug tracker.
         $generate_issue_link = false;
         $new_issue_url = '';
-        switch ($project->BugTrackerType) {
+        switch ($this->project->BugTrackerType) {
             case 'Buganizer':
             case 'JIRA':
             case 'GitHub':
@@ -414,23 +395,20 @@ class BuildController extends AbstractBuildController
                 break;
         }
         if ($generate_issue_link) {
-            require_once('include/repository.php');
-            $new_issue_url = generate_bugtracker_new_issue_link($build, $project);
-            $response['bugtracker'] = $project->BugTrackerType;
+            $new_issue_url = generate_bugtracker_new_issue_link($this->build, $this->project);
+            $response['bugtracker'] = $this->project->BugTrackerType;
         }
         $response['newissueurl'] = $new_issue_url;
 
         // Check if this build is related to any others.
-        /** @var BuildRelationship $build_relationship */
-        $build_relationship = $service->create(BuildRelationship::class);
-        $relationships = $build_relationship->GetRelationships($build);
+        $build_relationship = new BuildRelationship();
+        $relationships = $build_relationship->GetRelationships($this->build);
         $response['relationships_to'] = $relationships['to'];
         $response['relationships_from'] = $relationships['from'];
-        $response['hasrelationships'] = !empty($response['relationships_to']) ||
-            !empty($response['relationships_from']);
+        $response['hasrelationships'] = !empty($response['relationships_to']) || !empty($response['relationships_from']);
 
         $pageTimer->end($response);
-        echo json_encode(cast_data_for_JSON($response));
+        return response()->json(cast_data_for_JSON($response));
     }
 
     /**
