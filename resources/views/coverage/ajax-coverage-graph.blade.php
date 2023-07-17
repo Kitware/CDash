@@ -18,9 +18,11 @@
         const options = {
             lines: {show: true},
             points: {show: true},
-            xaxis: {mode: "time"},
-            yaxis: {min: 0, max: 100},
-            legend: {position: "nw"},
+            xaxis: {mode: "time", axisLabel: 'Time of build (UTC)',
+                            timeformat: "%Y/%m/%d %H:%M",
+                            timeBase: "milliseconds"},
+            yaxis: {min: 0, max: 100, axisLabel: 'Coverage Percentage',},
+            legend: {position: "nw", show: true},
             grid: {
                 backgroundColor: "#fffaff",
                 clickable: true,
@@ -32,11 +34,33 @@
             colors: ["#0000FF", "#dba255", "#919733"]
         };
 
+        $("<div id='tooltip'></div>").css({
+			position: "absolute",
+			display: "none",
+			border: "1px solid #fdd",
+			padding: "2px",
+			"background-color": "#fee",
+			opacity: 0.80
+		}).appendTo("body");
+
+        $("#grapholder").bind("plothover", function (event, pos, item) {
+
+            if (!pos.x || !pos.y) {
+                return;
+            }
+            if (item) {
+                $("#tooltip").html(`${item.series.label}: ${item.datapoint[1]}<br>LOC Untested: ${locuntested_array[item.dataIndex][1]}<br>LOC Tested: ${loctested_array[item.dataIndex][1]}`)
+                    .css({top: item.pageY+5, left: item.pageX+5})
+                    .fadeIn(200);
+            } else {
+                $("#tooltip").hide();
+            }
+        });
+
+
         $("#grapholder").bind("selected", function (event, area) {
             plot = $.plot($("#grapholder"),
-                [{label: "% coverage", data: percent_array},
-                    {label: "loc tested", data: loctested_array, yaxis: 2},
-                    {label: "loc untested", data: locuntested_array, yaxis: 2}],
+                [{label: "% coverage", data: percent_array}],
                 $.extend(true, {}, options, {xaxis: {min: area.x1, max: area.x2}}));
         });
 
@@ -48,8 +72,6 @@
             }
         });
 
-        plot = $.plot($("#grapholder"), [{label: "% coverage", data: percent_array},
-            {label: "loc tested", data: loctested_array, yaxis: 2},
-            {label: "loc untested", data: locuntested_array, yaxis: 2}], options);
+        plot = $.plot($("#grapholder"), [{label: "% coverage", data: percent_array}], options);
     });
 </script>
