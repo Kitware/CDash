@@ -59,8 +59,7 @@ class BuildUpdate
     public function Insert(): int|bool
     {
         if (strlen($this->BuildId) == 0 || !is_numeric($this->BuildId)) {
-            echo 'BuildUpdate:Insert BuildId not set';
-            return false;
+            abort(500, 'BuildUpdate:Insert BuildId not set');
         }
 
         // Avoid a race condition when parallel processing.
@@ -211,8 +210,7 @@ class BuildUpdate
     public function GetNumberOfFiles(): int|false
     {
         if (!$this->UpdateId) {
-            echo 'BuildUpdate::GetNumberOfFiles(): Id not set';
-            return false;
+            abort(500, 'BuildUpdate::GetNumberOfFiles(): Id not set');
         }
 
         $row = DB::table('buildupdate')
@@ -230,8 +228,7 @@ class BuildUpdate
     public function GetUpdateForBuild(): array|false
     {
         if (!$this->BuildId) {
-            echo 'BuildUpdate::GetUpdateStatusForBuild(): BuildId not set';
-            return false;
+            abort(500, 'BuildUpdate::GetUpdateStatusForBuild(): BuildId not set');
         }
 
         $sql = "
@@ -271,8 +268,7 @@ class BuildUpdate
     public function GetNumberOfErrors(): int|false
     {
         if (!$this->BuildId) {
-            echo 'BuildUpdate::GetNumberOfErrors(): BuildId not set';
-            return false;
+            abort(500, 'BuildUpdate::GetNumberOfErrors(): BuildId not set');
         }
 
         $db = Database::getInstance();
@@ -293,8 +289,7 @@ class BuildUpdate
     public function AssociateBuild(int $siteid, string $name, $stamp): bool
     {
         if (!$this->BuildId) {
-            echo 'BuildUpdate::AssociateBuild(): BuildId not set';
-            return false;
+            abort(500, 'BuildUpdate::AssociateBuild(): BuildId not set');
         }
 
         // If we already have something in the databse we return

@@ -46,8 +46,7 @@ class BuildError
     public function Insert(): bool
     {
         if (!$this->BuildId) {
-            echo 'BuildError::Insert(): BuildId not set<br>';
-            return false;
+            abort(500, 'BuildError::Insert(): BuildId not set.');
         }
 
         if (empty($this->SourceLine)) {

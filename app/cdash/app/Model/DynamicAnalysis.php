@@ -69,8 +69,7 @@ class DynamicAnalysis
     public function GetNumberOfErrors(): int|false
     {
         if (strlen($this->BuildId) == 0) {
-            echo 'DynamicAnalysis::GetNumberOfErrors BuildId not set';
-            return false;
+            abort(500, 'DynamicAnalysis::GetNumberOfErrors BuildId not set');
         }
 
         $db = Database::getInstance();
@@ -88,8 +87,7 @@ class DynamicAnalysis
     public function RemoveAll(): bool
     {
         if (strlen($this->BuildId) == 0) {
-            echo 'DynamicAnalysis::RemoveAll BuildId not set';
-            return false;
+            abort(500, 'DynamicAnalysis::RemoveAll BuildId not set');
         }
 
         $this->BuildId = intval($this->BuildId);
@@ -162,8 +160,7 @@ class DynamicAnalysis
     public function Insert()
     {
         if (strlen($this->BuildId) == 0) {
-            echo 'DynamicAnalysis::Insert BuildId not set';
-            return false;
+            abort(500, 'DynamicAnalysis::Insert BuildId not set');
         }
 
         $max_log_length = 1024 * 1024;

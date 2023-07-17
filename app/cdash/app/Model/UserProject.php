@@ -99,13 +99,11 @@ class UserProject
     public function Save(): bool
     {
         if (!$this->ProjectId) {
-            echo 'UserProject::Save(): no ProjectId specified';
-            return false;
+            abort(500, 'UserProject::Save(): no ProjectId specified');
         }
 
         if (!$this->UserId) {
-            echo 'UserProject::Save(): no UserId specified';
-            return false;
+            abort(500, 'UserProject::Save(): no UserId specified');
         }
 
         $db = Database::getInstance();
@@ -176,8 +174,7 @@ class UserProject
     public function GetUsers(int $role = -1): array|false
     {
         if (!$this->ProjectId) {
-            echo 'UserProject GetUsers(): ProjectId not set';
-            return false;
+            abort(500, 'UserProject GetUsers(): ProjectId not set');
         }
 
         $db = Database::getInstance();
@@ -360,8 +357,7 @@ class UserProject
     public function GetProjects(): array|false
     {
         if (!$this->UserId) {
-            echo 'UserProject GetProjects(): UserId not set';
-            return false;
+            abort(500, 'UserProject GetProjects(): UserId not set');
         }
 
         $stmt = $this->PDO->prepare(

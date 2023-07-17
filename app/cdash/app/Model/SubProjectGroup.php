@@ -92,8 +92,7 @@ class SubProjectGroup
         }
 
         if ($this->Id < 1) {
-            echo 'SubProjectGroup GetName(): Id not set';
-            return false;
+            abort(500, 'SubProjectGroup GetName(): Id not set');
         }
 
         $db = Database::getInstance();
