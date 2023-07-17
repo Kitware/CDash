@@ -2,9 +2,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\BuildTest;
+use App\Services\PageTimer;
 use CDash\Database;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
+include_once 'include/repository.php';
 
 class TestController extends AbstractProjectController
 {
@@ -90,5 +96,356 @@ class TestController extends AbstractProjectController
     public function testSummary(): Response
     {
         return response()->angular_view('testSummary');
+    }
+
+    public function apiTestSummary(): JsonResponse|StreamedResponse
+    {
+        // Checks
+        $date = htmlspecialchars($_GET['date'] ?? '');
+        if (strlen($date) === 0) {
+            abort(400, 'No date specified.');
+        }
+        $this->setProjectById(intval($_GET['project'] ?? -1));
+
+        $testName = htmlspecialchars($_GET['name'] ?? '');
+        if ($testName === '') {
+            abort(400, 'No test name specified.');
+        }
+
+        $pageTimer = new PageTimer();
+
+        $response = begin_JSON_response();
+        $response['showcalendar'] = 1;
+        $response['title'] = "{$this->project->Name} - Test Summary";
+        get_dashboard_JSON_by_name($this->project->Name, $date, $response);
+        $response['testName'] = $testName;
+
+        list($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date, $this->project->NightlyTime);
+        $menu = [
+            'back' => 'index.php?project=' . urlencode($this->project->Name) . "&date=$date",
+            'previous' => "testSummary.php?project={$this->project->Id}&name=$testName&date=$previousdate",
+            'current' => "testSummary.php?project={$this->project->Id}&name=$testName&date=" . date(FMT_DATE),
+        ];
+        if (date(FMT_DATE, $currentstarttime) != date(FMT_DATE)) {
+            $menu['next'] = "testSummary.php?project={$this->project->Id}&name=$testName&date=$nextdate";
+        } else {
+            $menu['next'] = false;
+        }
+        $response['menu'] = $menu;
+
+        $beginning_timestamp = $currentstarttime;
+        $end_timestamp = $currentstarttime + 3600 * 24;
+
+        $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
+        $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
+
+        // Count how many extra test measurements we have.
+        $getcolumnnumber = DB::select('
+            SELECT testmeasurement.name
+            FROM test
+            JOIN build2test ON (build2test.testid = test.id)
+            JOIN build ON (build.id = build2test.buildid)
+            JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
+            JOIN measurement ON (
+                test.projectid=measurement.projectid
+                AND testmeasurement.name=measurement.name
+            )
+            WHERE
+                test.name=?
+                AND build.starttime>=?
+                AND build.starttime<?
+                AND test.projectid=?
+            GROUP by testmeasurement.name
+        ', [$testName, $beginning_UTCDate, $end_UTCDate, intval($this->project->Id)]);
+
+        $columns = [];
+        $response['hasprocessors'] = false;
+        $processors_idx = -1;
+        foreach ($getcolumnnumber as $row) {
+            $columns[] = $row->name;
+            if ($row->name === 'Processors') {
+                $processors_idx = count($columns) - 1;
+                $response['hasprocessors'] = true;
+            }
+        }
+        $response['columns'] = $columns;
+
+        // Add the date/time
+        $response['projectid'] = $this->project->Id;
+        $response['currentstarttime'] = $currentstarttime;
+        $response['teststarttime'] = date(FMT_DATETIME, $beginning_timestamp);
+        $response['testendtime'] = date(FMT_DATETIME, $end_timestamp);
+
+        $columncount = count($getcolumnnumber);
+
+        $etestquery = null;
+        // If at least one column is selected
+        if ($columncount > 0) {
+            $etestquery = DB::select('
+                SELECT
+                    test.id,
+                    test.projectid,
+                    build2test.buildid,
+                    build2test.status,
+                    build2test.timestatus,
+                    test.name,
+                    testmeasurement.name,
+                    testmeasurement.value,
+                    build.starttime,
+                    build2test.time
+                FROM test
+                JOIN build2test ON (build2test.testid = test.id)
+                JOIN build ON (build.id = build2test.buildid)
+                JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
+                JOIN measurement ON (
+                    test.projectid = measurement.projectid
+                    AND testmeasurement.name = measurement.name
+                )
+                WHERE
+                    test.name=?
+                    AND build.starttime >= ?
+                    AND build.starttime < ?
+                    AND test.projectid = ?
+                ORDER BY
+                    build2test.buildid,
+                    testmeasurement.name
+            ', [$testName, $beginning_UTCDate, $end_UTCDate, intval($this->project->Id)]);
+        }
+
+        $result = DB::select('
+            SELECT
+                b.id AS buildid,
+                b.name,
+                b.stamp,
+                b2t.id AS buildtestid,
+                b2t.status,
+                b2t.time,
+                s.name AS sitename
+            FROM test AS t
+            LEFT JOIN build2test AS b2t ON (t.id = b2t.testid)
+            LEFT JOIN build AS b ON (b.id = b2t.buildid)
+            LEFT JOIN site AS s ON (s.id = b.siteid)
+            WHERE
+                t.name = ?
+                AND b.projectid = ?
+                AND b.starttime BETWEEN ? AND ?
+        ', [$testName, intval($this->project->Id), $beginning_UTCDate, $end_UTCDate]);
+
+        // If user wants to export as CSV file.
+        if (isset($_GET['export']) && $_GET['export'] === 'csv') {
+            //    header('Cache-Control: public');
+            //    header('Content-Description: File Transfer');
+            //    // Prepare some headers to download.
+            //    header('Content-Disposition: attachment; filename=testExport.csv');
+            //    header('Content-Type: application/octet-stream;');
+            //    header('Content-Transfer-Encoding: binary');
+            // Standard columns.
+            $filecontent = 'Site,Build Name,Build Stamp,Status,Time(s)';
+
+            $etest = [];
+
+            // Store named measurements in an array.
+            if (is_array($etestquery)) {
+                foreach ($etestquery as $row) {
+                    $etest[$row->buildid][$row->name] = $row->value;
+                }
+            }
+
+            for ($c = 0; $c < count($columns); $c++) {
+                $filecontent .= ',' . $columns[$c]; // Add selected columns to the next
+            }
+
+            $filecontent .= "\n";
+
+            foreach ($result as $row) {
+                $currentStatus = $row->status;
+
+                $filecontent .= "{$row->sitename},{$row->name},{$row->stamp},{$row->time},";
+
+                if ($this->project->ShowTestTime) {
+                    if ($row->timestatus < $this->project->TestTimeMaxStatus) {
+                        $filecontent .= 'Passed,';
+                    } else {
+                        $filecontent .= 'Failed,';
+                    }
+                }
+
+                switch ($currentStatus) {
+                    case 'passed':
+                        $filecontent .= 'Passed,';
+                        break;
+                    case 'failed':
+                        $filecontent .= 'Failed,';
+                        break;
+                    case 'notrun':
+                        $filecontent .= 'Not Run,';
+                        break;
+                }
+                // Start writing test results
+                for ($t = 0; $t < count($columns); $t++) {
+                    $filecontent .= $etest[$row->buildid][$columns[$t]] . ',';
+                }
+                $filecontent .= "\n";
+            }
+
+            return response()->streamDownload(function () use ($filecontent) {
+                echo $filecontent;
+            }, 'test-export.csv', ['Content-type' => 'text/csv']);
+        }
+
+        // Now that we have the data we need, generate our response.
+        $numpassed = 0;
+        $numfailed = 0;
+        $numtotal = 0;
+        $test_measurements = [];
+
+        $builds_response = [];
+        foreach ($result as $row) {
+            $buildid = $row->buildid;
+            $build_response = [];
+
+            // Find the repository revision
+            $update_response = [
+                'revision' => '',
+                'priorrevision' => '',
+                'path' => '',
+                'revisionurl' => '',
+                'revisiondiff' => '',
+            ];
+            // Return the status
+            $status_array = DB::select('
+                SELECT
+                    status,
+                    revision,
+                    priorrevision,
+                    path
+                FROM
+                    buildupdate,
+                    build2update AS b2u
+                WHERE
+                    b2u.updateid = buildupdate.id
+                    AND b2u.buildid = ?
+            ', [intval($buildid)])[0] ?? [];
+
+            if ($status_array !== []) {
+                if (strlen($status_array->status) > 0 && $status_array->status != '0') {
+                    $update_response['status'] = $status_array->status;
+                } else {
+                    $update_response['status'] = ''; // empty status
+                }
+                $update_response['revision'] = $status_array->revision;
+                $update_response['priorrevision'] = $status_array->priorrevision;
+                $update_response['path'] = $status_array->path;
+                $update_response['revisionurl'] =
+                    get_revision_url($this->project->Id, $status_array->revision, $status_array->priorrevision);
+                $update_response['revisiondiff'] =
+                    get_revision_url($this->project->Id, $status_array->priorrevision, ''); // no prior prior revision...
+            }
+            $build_response['update'] = $update_response;
+
+            $build_response['site'] = $row->sitename;
+            $build_response['buildName'] = $row->name;
+            $build_response['buildStamp'] = $row->stamp;
+            $build_response['time'] = floatval($row->time);
+
+            $buildLink = "viewTest.php?buildid=$buildid";
+            $build_response['buildid'] = $buildid;
+            $build_response['buildLink'] = $buildLink;
+            $buildtestid = $row->buildtestid;
+            $testLink = "test/$buildtestid";
+            $build_response['testLink'] = $testLink;
+            switch ($row->status) {
+                case 'passed':
+                    $build_response['status'] = 'Passed';
+                    $build_response['statusclass'] = 'normal';
+                    $numpassed += 1;
+                    break;
+                case 'failed':
+                    $build_response['status'] = 'Failed';
+                    $build_response['statusclass'] = 'error';
+                    $numfailed += 1;
+                    break;
+                case 'notrun':
+                    $build_response['status'] = 'Not Run';
+                    $build_response['statusclass'] = 'warning';
+                    break;
+            }
+            $numtotal += 1;
+
+            // Initialize an empty array of extra test measurements for this build.
+            $test_measurements[$buildid] = [];
+            for ($i = 0; $i < $columncount; $i++) {
+                $test_measurements[$buildid][$i] = '';
+            }
+
+            $builds_response[] = $build_response;
+        }
+
+        // Fill in extra test measurements for each build.
+        if ($columncount > 0) {
+            $etestquery = DB::select('
+                SELECT
+                    test.id,
+                    test.projectid,
+                    build2test.buildid,
+                    build2test.status,
+                    build2test.timestatus,
+                    test.name,
+                    testmeasurement.name,
+                    testmeasurement.value,
+                    build.starttime,
+                    build2test.time
+                FROM test
+                JOIN build2test ON (build2test.testid = test.id)
+                JOIN build ON (build.id = build2test.buildid)
+                JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
+                JOIN measurement ON (
+                    test.projectid = measurement.projectid
+                    AND testmeasurement.name = measurement.name
+                )
+                WHERE
+                    test.name=?
+                    AND build.starttime >= ?
+                    AND build.starttime < ?
+                    AND test.projectid = ?
+                ORDER BY
+                    build2test.buildid,
+                    testmeasurement.name
+            ', [$testName, $beginning_UTCDate, $end_UTCDate, intval($this->project->Id)]);
+            if (is_array($etestquery)) {
+                foreach ($etestquery as $row) {
+                    // Get the index of this measurement in the list of columns.
+                    $idx = array_search($row->name, $columns, true);
+
+                    // Fill in this measurement value for this build's run of the test.
+                    $test_measurements[$row->buildid][$idx] = $row->value;
+                }
+            }
+        }
+
+        // Assign these extra measurements to each build.
+        foreach ($builds_response as $i => $build_response) {
+            $buildid = $build_response['buildid'];
+            $builds_response[$i]['measurements'] = $test_measurements[$buildid];
+            if ($response['hasprocessors']) {
+                // Show an additional column "proc time" if these tests have
+                // the Processor measurement.
+                $num_procs = $test_measurements[$buildid][$processors_idx];
+                if (!$num_procs) {
+                    $num_procs = 1;
+                }
+                $builds_response[$i]['proctime'] = floatval($builds_response[$i]['time'] * $num_procs);
+            }
+        }
+
+        $response['builds'] = $builds_response;
+        $response['csvlink'] = $_SERVER['REQUEST_URI'] . '&export=csv';
+        $response['columncount'] = count($columns);
+        $response['numfailed'] = $numfailed;
+        $response['numtotal'] = $numtotal;
+        $response['percentagepassed'] = $numtotal > 0 ? round($numpassed / $numtotal, 2) * 100 : 0;
+
+        $pageTimer->end($response);
+        return response()->json($response);
     }
 }
