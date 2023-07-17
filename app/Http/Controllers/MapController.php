@@ -125,12 +125,24 @@ class MapController extends AbstractProjectController
         echo pdo_error();
 
         foreach ($site as $site_array) {
+            if ($site_array['processorclockfrequency'] > 0) {
+                $processor_speed = getByteValueWithExtension($site_array['processorclockfrequency'] * 1024 * 1024) . 'Hz';
+            } else {
+                $processor_speed = '';
+            }
+
+            if ($site_array['numberphysicalcpus'] > 0) {
+                $num_physical_cpus = $site_array['numberphysicalcpus'];
+            } else {
+                $num_physical_cpus = '';
+            }
+
             $xml .= '<site>';
             $xml .= add_XML_value('name', $site_array['name']);
             $xml .= add_XML_value('id', $site_array['id']);
             $xml .= add_XML_value('description', $site_array['description']);
-            $xml .= add_XML_value('processor_speed', getByteValueWithExtension($site_array['processorclockfrequency'] * 1024 * 1024));
-            $xml .= add_XML_value('numberphysicalcpus', $site_array['numberphysicalcpus']);
+            $xml .= add_XML_value('processor_speed', $processor_speed);
+            $xml .= add_XML_value('numberphysicalcpus', $num_physical_cpus);
             $xml .= add_XML_value('latitude', $site_array['latitude']);
             $xml .= add_XML_value('longitude', $site_array['longitude']);
             $xml .= add_XML_value('longitude', $site_array['longitude']);
