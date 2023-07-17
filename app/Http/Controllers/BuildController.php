@@ -9,6 +9,7 @@ use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
+use CDash\Model\BuildGroupRule;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Label;
 use CDash\ServiceContainer;
@@ -839,5 +840,18 @@ class BuildController extends AbstractBuildController
         return response()->json(cast_data_for_JSON([
             'builds' => $builds_response,
         ]));
+    }
+
+    /**
+     * Lookup whether or not this build is expected.
+     * This works only for the most recent dashboard (and future).
+     */
+    public function apiBuildExpected(): JsonResponse
+    {
+        $this->setBuildById(intval($_GET['buildid'] ?? -1));
+        $rule = new BuildGroupRule($this->build);
+        return response()->json([
+            'expected' => $rule->GetExpected()
+        ]);
     }
 }
