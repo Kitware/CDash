@@ -60,6 +60,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/v1/createProject.php', 'ProjectController@apiCreateProject');
 
+    Route::get('/v1/manageSubProject.php', 'SubProjectController@apiManageSubProject');
+
     Route::middleware(['admin'])->group(function () {
         Route::get('/authtokens/all', 'AuthTokenController@fetchAll');
 
