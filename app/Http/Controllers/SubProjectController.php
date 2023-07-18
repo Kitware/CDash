@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Banner;
+use App\Models\User;
 use App\Services\PageTimer;
-use CDash\Database;
-use CDash\Model\Project;
 use CDash\Model\SubProject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class SubProjectController extends AbstractProjectController
@@ -36,35 +37,28 @@ class SubProjectController extends AbstractProjectController
         $response['title'] = 'Manage SubProjects';
         $response['hidenav'] = 1;
 
-        // Checks
-        if (!Auth::check()) {
-            $response['requirelogin'] = 1;
-            echo json_encode($response);
-            return;
-        }
-
+        /** @var User $user */
         $user = Auth::user();
-        $userid = $user->id;
 
         // List the available projects that this user has admin rights to.
         $projectid = intval($_GET['projectid'] ?? 0);
 
-        $sql = 'SELECT id,name FROM project';
+
+        $sql = 'SELECT id, name FROM project';
         $params = [];
-        if ($user->IsAdmin() == false) {
-            $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)";
-            $params[] = intval($userid);
+        if (!$user->IsAdmin()) {
+            $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid = ? AND role > 0)";
+            $params[] = intval(Auth::id());
         }
 
-        $db = Database::getInstance();
-
-        $projects = $db->executePrepared($sql, $params);
-        $availableprojects = array();
+        $projects = DB::select($sql, $params);
+        $availableprojects = [];
         foreach ($projects as $project_array) {
-            $availableproject = array();
-            $availableproject['id'] = $project_array['id'];
-            $availableproject['name'] = $project_array['name'];
-            if (intval($project_array['id']) === $projectid) {
+            $availableproject = [
+                'id' => $project_array->id,
+                'name' => $project_array->name,
+            ];
+            if (intval($project_array->id) === $projectid) {
                 $availableproject['selected'] = '1';
             }
             $availableprojects[] = $availableproject;
@@ -73,58 +67,39 @@ class SubProjectController extends AbstractProjectController
 
         if ($projectid < 1) {
             $response['error'] = 'Please select a project to continue.';
-            echo json_encode($response);
-            return;
+            return response()->json($response);
         }
+        $this->setProjectById($projectid);
+        Gate::authorize('edit-project', $this->project);
 
         $response['projectid'] = $projectid;
 
-        $Project = new Project;
-        $Project->Id = $projectid;
+        get_dashboard_JSON($this->project->GetName(), null, $response);
 
-        // Make sure the user has admin rights to this project.
-        get_dashboard_JSON($Project->GetName(), null, $response);
-        if ($response['user']['admin'] != 1) {
-            $response['error'] = "You don't have the permissions to access this page";
-            echo json_encode($response);
-            return;
-        }
+        $response['threshold'] = $this->project->GetCoverageThreshold();
 
-        $response['threshold'] = $Project->GetCoverageThreshold();
-
-        $SubProject = new SubProject();
-        $SubProject->SetProjectId($projectid);
-
-        $subprojectids = $Project->GetSubProjects();
-
-        $subprojs = array(); // subproject models
-        $subprojects_response = array(); // JSON for subprojects
-
-        // Initialize our list of subprojects so dependencies can be resolved.
-        // TODO: probably don't need this anymore?
-        foreach ($subprojectids as $subprojectid) {
+        $subprojects_response = []; // JSON for subprojects
+        // TODO: (williamjallen) The number of databse queries executed by this loop scales linearly with the
+        //       number of subprojects.  This can be simplified into a single query...
+        foreach ($this->project->GetSubProjects() as $subprojectid) {
             $SubProject = new SubProject();
             $SubProject->SetId($subprojectid);
-            $subprojs[$subprojectid] = $SubProject;
-        }
-
-        foreach ($subprojectids as $subprojectid) {
-            $SubProject = $subprojs[$subprojectid];
-            $subproject_response = array();
-            $subproject_response['id'] = $subprojectid;
-            $subproject_response['name'] = $SubProject->GetName();
-            $subproject_response['group'] = $SubProject->GetGroupId();
-            $subprojects_response[] = $subproject_response;
+            $subprojects_response[] = [
+                'id' => $subprojectid,
+                'name' => $SubProject->GetName(),
+                'group' => $SubProject->GetGroupId(),
+            ];
         }
         $response['subprojects'] = $subprojects_response;
 
-        $groups = array();
-        foreach ($Project->GetSubProjectGroups() as $subProjectGroup) {
-            $group = array();
-            $group['id'] = $subProjectGroup->GetId();
-            $group['name'] = $subProjectGroup->GetName();
-            $group['position'] = $subProjectGroup->GetPosition();
-            $group['coverage_threshold'] = $subProjectGroup->GetCoverageThreshold();
+        $groups = [];
+        foreach ($this->project->GetSubProjectGroups() as $subProjectGroup) {
+            $group = [
+                'id' => $subProjectGroup->GetId(),
+                'name' => $subProjectGroup->GetName(),
+                'position' => $subProjectGroup->GetPosition(),
+                'coverage_threshold' => $subProjectGroup->GetCoverageThreshold(),
+            ];
             $groups[] = $group;
             if ($subProjectGroup->GetIsDefault()) {
                 $response['default_group_id'] = $group['id'];
@@ -133,7 +108,7 @@ class SubProjectController extends AbstractProjectController
         $response['groups'] = $groups;
 
         $pageTimer->end($response);
-        echo json_encode(cast_data_for_JSON($response));
+        return response()->json(cast_data_for_JSON($response));
     }
 
     public function dependencies(): View|RedirectResponse
