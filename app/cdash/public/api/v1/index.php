@@ -462,6 +462,7 @@ foreach ($build_rows as $build_array) {
 
         $DA_response = array();
         $DA_response['site'] = $build_array['sitename'];
+        $DA_response['siteid'] = $build_array['siteid'];
         $DA_response['buildname'] = $build_array['name'];
         $DA_response['buildid'] = (int) $build_array['id'];
         $DA_response['checker'] = $build_array['checker'];

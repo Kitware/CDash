@@ -409,7 +409,9 @@
               </td>
 
               <td ng-if="::cdash.childview != 1" class="paddt" align="left">
-                {{::da.site}}
+                <a ng-href="viewSite.php?siteid={{::da.siteid}}&project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
+                  {{::da.site}}
+                </a>
               </td>
 
               <td ng-if="::cdash.childview != 1" class="paddt" align="left">
