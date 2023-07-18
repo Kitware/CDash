@@ -296,7 +296,9 @@
               </td>
 
               <td ng-if="::cdash.childview != 1" align="left" class="paddt">
-                {{::coverage.buildname}}
+                <a ng-href="build/{{::coverage.buildid}}">
+                  {{::coverage.buildname}}
+                </a>
               </td>
 
               <td ng-if="::cdash.childview == 1" align="left" class="paddt">
