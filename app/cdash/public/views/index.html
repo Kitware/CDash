@@ -413,7 +413,9 @@
               </td>
 
               <td ng-if="::cdash.childview != 1" class="paddt" align="left">
-                {{::da.buildname}}
+                <a ng-href="build/{{::da.buildid}}">
+                  {{::da.buildname}}
+                </a>
               </td>
 
               <td class="paddt" class="center-text">{{::da.checker}}</td>
