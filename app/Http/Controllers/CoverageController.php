@@ -25,7 +25,7 @@ use Illuminate\View\View;
 
 require_once 'include/filterdataFunctions.php';
 
-class CoverageController extends AbstractBuildController
+final class CoverageController extends AbstractBuildController
 {
     public function compareCoverage(): Response|RedirectResponse
     {

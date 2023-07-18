@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 
-class IndexController extends AbstractController
+final class IndexController extends AbstractController
 {
     public function showIndexPage(): Response|RedirectResponse
     {

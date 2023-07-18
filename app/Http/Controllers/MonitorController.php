@@ -13,7 +13,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-class MonitorController extends AbstractController
+final class MonitorController extends AbstractController
 {
     public function monitor(): View
     {

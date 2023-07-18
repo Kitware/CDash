@@ -5,7 +5,7 @@ use CDash\Model\BuildUserNote;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
-class UserNoteController extends AbstractBuildController
+final class UserNoteController extends AbstractBuildController
 {
     public function apiAddUserNote(): JsonResponse
     {

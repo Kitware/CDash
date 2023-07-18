@@ -12,7 +12,7 @@ use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 
-class AuthTokenController extends AbstractController
+final class AuthTokenController extends AbstractController
 {
     public function manage(): View
     {

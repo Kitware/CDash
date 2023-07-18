@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
-class SiteController extends AbstractController
+final class SiteController extends AbstractController
 {
     public function siteStatistics(): View|RedirectResponse
     {
