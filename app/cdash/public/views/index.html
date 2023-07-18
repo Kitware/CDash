@@ -292,7 +292,9 @@
           <tbody ng-if="::!cdash.coveragegroups || cdash.coveragegroups.length == 0" id="coveragebody">
             <tr class="child_row" ng-repeat="coverage in cdash.coverages |orderBy:sortCoverage.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
               <td ng-if="::cdash.childview != 1" align="left" class="paddt">
-                {{::coverage.site}}
+                <a ng-href="viewSite.php?siteid={{::coverage.siteid}}&project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
+                  {{::coverage.site}}
+                </a>
               </td>
 
               <td ng-if="::cdash.childview != 1" align="left" class="paddt">
