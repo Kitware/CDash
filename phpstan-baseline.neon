@@ -659,6 +659,11 @@ parameters:
 			path: app/Http/Controllers/EditProjectController.php
 
 		-
+			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
+			count: 1
+			path: app/Http/Controllers/FilterController.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
 			count: 1
 			path: app/Http/Controllers/IndexController.php
@@ -12848,7 +12853,7 @@ parameters:
 				#^Call to deprecated function pdo_real_escape_numeric\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 6
+			count: 2
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
@@ -12861,11 +12866,6 @@ parameters:
 
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: "#^Call to function is_int\\(\\) with int will always evaluate to true\\.$#"
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
@@ -13236,11 +13236,6 @@ parameters:
 
 		-
 			message: "#^Method ViewTestPhpFilters\\:\\:getSqlField\\(\\) has parameter \\$field with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, float\\|int\\|string given\\.$#"
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
@@ -15732,46 +15727,6 @@ parameters:
 			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has parameter \\$siteid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/filterdata.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\FilterData\\\\getFiltersForPage\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/filterdata.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\FilterData\\\\getFiltersForPage\\(\\) has parameter \\$page_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/filterdata.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\FilterData\\\\get_filterdata_array_from_request\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/filterdata.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\FilterData\\\\get_filterdata_array_from_request\\(\\) has parameter \\$page_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/filterdata.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\FilterData\\\\isDatePage\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/filterdata.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\FilterData\\\\isDatePage\\(\\) has parameter \\$page_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/filterdata.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 10
-			path: app/cdash/public/api/v1/filterdata.php
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
