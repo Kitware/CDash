@@ -159,7 +159,6 @@ add_php_test(viewdynamicanalysis)
 add_php_test(viewdynamicanalysisfile)
 add_php_test(viewmap)
 
-add_php_test(viewsubprojectdependencies)
 add_php_test(buildmodel)
 add_unit_test(/CDash/Model/PendingSubmissions)
 add_php_test(projectxmlsequence)

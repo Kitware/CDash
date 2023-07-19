@@ -1168,17 +1168,12 @@ parameters:
 				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 3
-			path: app/Http/Controllers/SubProjectController.php
-
-		-
-			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
+			count: 2
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 3
+			count: 2
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
@@ -26138,16 +26133,6 @@ parameters:
 			message: "#^Method ViewMapTestCase\\:\\:testViewMap\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_viewmap.php
-
-		-
-			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 1
-			path: app/cdash/tests/test_viewsubprojectdependencies.php
-
-		-
-			message: "#^Method ViewSubProjectDependenciesTestCase\\:\\:testViewSubProjectDependencies\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_viewsubprojectdependencies.php
 
 		-
 			message: "#^Method ViewSubProjectsTestCase\\:\\:testViewSubProjects\\(\\) has no return type specified\\.$#"
