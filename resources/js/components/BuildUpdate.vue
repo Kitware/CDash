@@ -221,10 +221,11 @@ export default {
         }], $.extend(true, {}, options, {xaxis: {min: area.x1, max: area.x2}}));
       });
 
+      let baseURL = this.$baseURL;
       $("#graph_holder").bind("plotclick", function (e, pos, item) {
         if (item) {
           plot.highlight(item.series, item.datapoint);
-          window.location = "build/" + data.buildids[item.datapoint[0]];
+          window.location = baseURL + '/build/' + data.buildids[item.datapoint[0]];
         }
       });
     },
