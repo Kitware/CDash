@@ -61,7 +61,10 @@ This circle plot captures the interrelationships among subgroups. Mouse over any
     }
 
     function mouseOvered(d) {
-      var header1Text = "Name: " + d.key + ", Group: " + d.group;
+      var header1Text = "Name: " + d.key;
+      if (d.group !== undefined) {
+        header1Text += ", Group: " + d.group;
+      }
       $('#header1').html(header1Text);
       if (d.depends) {
         var depends = "&lt;p&gt;Depends: ";
