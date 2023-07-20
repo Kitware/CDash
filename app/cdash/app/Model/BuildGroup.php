@@ -501,7 +501,6 @@ class BuildGroup
                              WHERE groupid=?
                          )
                      ', [$this->Id]);
-        echo pdo_error();
 
         foreach ($oldbuilds as $oldbuilds_array) {
             // Move the builds
@@ -521,8 +520,7 @@ class BuildGroup
                              FROM buildgroup
                              WHERE name='Experimental' AND projectid=?
                          ", [$this->ProjectId]);
-            }
-            echo pdo_error();
+            };
             $grouptype = $query['id'];
 
             $this->PDO->executePrepared('
@@ -530,7 +528,6 @@ class BuildGroup
                 SET groupid=?
                 WHERE buildid=?
             ', [$grouptype, $buildid]);
-            echo pdo_error();
         }
 
         // Delete the buildgroupposition and update the position

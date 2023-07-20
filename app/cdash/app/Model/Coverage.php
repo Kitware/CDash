@@ -76,8 +76,7 @@ class Coverage
     public function GetFiles(): array|false
     {
         if (!$this->BuildId) {
-            echo 'Coverage GetFiles(): BuildId not set';
-            return false;
+            abort(500, 'Coverage GetFiles(): BuildId not set');
         }
 
         return EloquentCoverage::where('buildid', $this->BuildId)->pluck('fileid')->toArray();

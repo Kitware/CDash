@@ -5374,14 +5374,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function pdo_error\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 3
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""

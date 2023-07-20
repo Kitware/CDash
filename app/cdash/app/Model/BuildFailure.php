@@ -80,8 +80,7 @@ class BuildFailure
     public function Insert(): bool
     {
         if (!$this->BuildId) {
-            echo 'BuildFailure::Insert(): BuildId not set<br>';
-            return false;
+            abort(500, 'BuildFailure::Insert(): BuildId not set.');
         }
 
         $workingDirectory = $this->WorkingDirectory ?? '';
