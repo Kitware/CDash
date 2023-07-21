@@ -480,8 +480,8 @@ class UpgradeTestCase extends KWWebTestCase
                 if ($table_to_update === 'build') {
                     // Handle unique constraint here.
                     $insert_query =
-                        "INSERT INTO $table_to_update (siteid, uuid)
-                        VALUES ($dupe, '$dupe')";
+                        "INSERT INTO $table_to_update (projectid, siteid, uuid)
+                        VALUES (1, $dupe, '$dupe')";
                 } elseif ($table_to_update === 'client_job') {
                     $insert_query =
                         "INSERT INTO $table_to_update (siteid, scheduleid, osid, cmakeid, compilerid)

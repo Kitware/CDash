@@ -211,6 +211,8 @@ class TestUseCase extends UseCase
             $properties['FullCommandLine'] = "{$properties['FullName']} --run-test .";
         }
 
+        $properties['ProjectId'] = $this->projectId;
+
         $this->setModel('Test', $properties);
         return $this;
     }

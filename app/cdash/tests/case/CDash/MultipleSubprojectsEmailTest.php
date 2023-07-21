@@ -25,26 +25,23 @@ use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Model\Label;
-use CDash\Model\Project;
 use CDash\Model\Subscriber;
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\UseCase;
+use Illuminate\Support\Facades\DB;
 
 class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
 {
     private static $tz;
     private static $database;
 
-    private static $projectId = 2;
+    private int $projectid = -1;
 
     /** @var  Database|PHPUnit_Framework_MockObject_MockObject $db */
     private $db;
 
     /** @var  ActionableBuildInterface $submission */
     private $submission;
-
-    /** @var  Project|PHPUnit_Framework_MockObject_MockObject $project */
-    private $project;
 
     /** @var UseCase $useCase */
     private $useCase;
@@ -105,6 +102,17 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
 
         $this->createApplication();
         config(['app.url' => 'http://open.cdash.org']);
+
+        $this->projectid = DB::table('project')->insertGetId([
+            'name' => 'TestProject1',
+        ]);
+    }
+
+    public function tearDown(): void
+    {
+        DB::delete('DELETE FROM project WHERE id = ?', [$this->projectid]);
+
+        parent::tearDown();
     }
 
     /**
@@ -159,6 +167,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
     public function testMultipleSubprojectsTestSubmission()
     {
         $this->useCase = UseCase::createBuilder($this, UseCase::TEST)
+            ->setProjectId($this->projectid)
             ->createSite([
                 'BuildName' => 'CTestTest-Linux-c++-Subprojects',
                 'BuildStamp' => '20160728-1932-Experimental',

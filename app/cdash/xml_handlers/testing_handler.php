@@ -171,6 +171,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             if ($this->Labels) {
                 $this->TestCreator->labels = $this->Labels;
             }
+            $this->TestCreator->projectid = $this->projectid;
             $this->TestCreator->create($build);
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             if (!empty($this->TestSubProjectName)) {

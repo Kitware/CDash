@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use CDash\Model\Project;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -28,9 +29,17 @@ class MeasurementPositionMigration extends TestCase
         // Verify that worked.
         $this::assertFalse(Schema::hasColumn('measurement', 'position'));
 
+        $project1 = new Project();
+        $project1->Name = 'testMeasurementPositionMigration1';
+        $project1->Save();
+
+        $project2 = new Project();
+        $project2->Name = 'testMeasurementPositionMigration2';
+        $project2->Save();
+
         // Populate some data to migrate.
         $base_measurement = [
-            'projectid'    => 1,
+            'projectid'    => $project1->Id,
             'name'         => 'a'
         ];
         $measurement1 = $base_measurement;
@@ -42,14 +51,14 @@ class MeasurementPositionMigration extends TestCase
         $measurement3['name'] = 'b';
 
         $measurement4 = $base_measurement;
-        $measurement4['projectid'] = '2';
+        $measurement4['projectid'] = $project2->Id;
 
         $measurement5 = $base_measurement;
-        $measurement5['projectid'] = '2';
+        $measurement5['projectid'] = $project2->Id;
         $measurement5['name'] = 'c';
 
         $measurement6 = $base_measurement;
-        $measurement6['projectid'] = '2';
+        $measurement6['projectid'] = $project2->Id;
         $measurement6['name'] = 'b';
 
         DB::table('measurement')->insert(
@@ -64,32 +73,32 @@ class MeasurementPositionMigration extends TestCase
         $this::assertEquals(DB::table('measurement')->count(), 6);
         $expected_measurements = [
             [
-                'projectid' => 1,
+                'projectid' => $project1->Id,
                 'name' => 'a',
                 'position' => 1,
             ],
             [
-                'projectid' => 1,
+                'projectid' => $project1->Id,
                 'name' => 'b',
                 'position' => 2,
             ],
             [
-                'projectid' => 1,
+                'projectid' => $project1->Id,
                 'name' => 'c',
                 'position' => 3,
             ],
             [
-                'projectid' => 2,
+                'projectid' => $project2->Id,
                 'name' => 'a',
                 'position' => 1,
             ],
             [
-                'projectid' => 2,
+                'projectid' => $project2->Id,
                 'name' => 'b',
                 'position' => 2,
             ],
             [
-                'projectid' => 2,
+                'projectid' => $project2->Id,
                 'name' => 'c',
                 'position' => 3,
             ],
@@ -106,5 +115,8 @@ class MeasurementPositionMigration extends TestCase
 
         Artisan::call('migrate:fresh', [
             '--force' => true]);
+
+        $project1->Delete();
+        $project2->Delete();
     }
 }

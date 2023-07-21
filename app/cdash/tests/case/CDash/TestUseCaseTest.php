@@ -5,9 +5,29 @@ use CDash\Collection\BuildCollection;
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\TestUseCase;
 use CDash\Test\UseCase\UseCase;
+use Illuminate\Support\Facades\DB;
 
 class TestUseCaseTest extends CDashUseCaseTestCase
 {
+    private int $projectid = -1;
+
+    public function setUp(): void
+    {
+        $this->createApplication();
+        $this->projectid = DB::table('project')->insertGetId([
+            'name' => 'TestProject1',
+        ]);
+
+        parent::setUp();
+    }
+
+    public function tearDown(): void
+    {
+        DB::delete('DELETE FROM project WHERE id = ?', [$this->projectid]);
+
+        parent::tearDown();
+    }
+
     public function testUseCaseBuildsTestUseCase()
     {
         $sut = UseCase::createBuilder($this, UseCase::TEST);
@@ -157,6 +177,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
 
         /** @var UseCase $sut */
         $sut
+            ->setProjectId($this->projectid)
             ->createSite(['Name' => 'Site.Name'])
             ->createTestPassed('some.test.name');
 
@@ -181,6 +202,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
 
         /** @var UseCase $sut */
         $sut
+            ->setProjectId($this->projectid)
             ->createSite(['Name' => 'Site.Name'])
             ->createTestFailed('some.test.name');
 
@@ -205,6 +227,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
 
         /** @var UseCase $sut */
         $sut
+            ->setProjectId($this->projectid)
             ->createSite(['Name' => 'Site.Name'])
             ->createTestTimedout('some.test.name');
 
@@ -229,6 +252,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
 
         /** @var UseCase $sut */
         $sut
+            ->setProjectId($this->projectid)
             ->createSite(['Name' => 'Site.Name'])
             ->createTestNotRun('some.test.name');
 
@@ -253,6 +277,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
 
         /** @var TestUseCase $sut */
         $sut
+            ->setProjectId($this->projectid)
             ->createSite([
                 'Name' => 'Site.Name',
                 'BuildName' => 'SomeOS-SomeBuild',
@@ -309,6 +334,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST);
         $sut
+            ->setProjectId($this->projectid)
             ->createSite([
                 'Name' => 'elysium',
                 'BuildName' => 'test_timing',

@@ -18908,27 +18908,7 @@ parameters:
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
 		-
-			message: "#^Property MultipleSubprojectsEmailTest\\:\\:\\$project has unknown class PHPUnit_Framework_MockObject_MockObject as its type\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			message: "#^Property MultipleSubprojectsEmailTest\\:\\:\\$project is unused\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			message: "#^Property MultipleSubprojectsEmailTest\\:\\:\\$projectId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
 			message: "#^Property MultipleSubprojectsEmailTest\\:\\:\\$tz has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			message: "#^Static property MultipleSubprojectsEmailTest\\:\\:\\$projectId is never read, only written\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
