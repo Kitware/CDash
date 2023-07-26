@@ -109,7 +109,7 @@ class ProjectController extends AbstractProjectController
             $project_response['TestTimeMaxStatus'] = 3;
             $project_response['TestTimeStd'] = 4.0;
             $project_response['TestTimeStdThreshold'] = 1.0;
-            if (!$config->get('CDASH_USER_CREATE_PROJECTS') || $User->IsAdmin()) {
+            if (!boolval(config('cdash.user_create_projects')) || $User->IsAdmin()) {
                 $project_response['UploadQuota'] = 1;
             }
             $project_response['WarningsFilter'] = "";
