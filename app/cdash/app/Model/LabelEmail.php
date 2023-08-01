@@ -55,18 +55,15 @@ class LabelEmail
     public function Insert(): bool
     {
         if (!$this->ProjectId) {
-            echo 'LabelEmail Insert(): ProjectId not set';
-            return false;
+            abort(500, 'LabelEmail Insert(): ProjectId not set');
         }
 
         if (!$this->UserId) {
-            echo 'LabelEmail Insert(): UserId not set';
-            return false;
+            abort(500, 'LabelEmail Insert(): UserId not set');
         }
 
         if (!$this->LabelId) {
-            echo 'LabelEmail Insert(): LabelId not set';
-            return false;
+            abort(500, 'LabelEmail Insert(): LabelId not set');
         }
 
         if (!$this->Exists()) {
@@ -86,13 +83,11 @@ class LabelEmail
     public function UpdateLabels(array|null $labels): bool
     {
         if (!$this->ProjectId) {
-            echo 'LabelEmail UpdateLabels(): ProjectId not set';
-            return false;
+            abort(500, 'LabelEmail UpdateLabels(): ProjectId not set');
         }
 
         if (!$this->UserId) {
-            echo 'LabelEmail UpdateLabels(): UserId not set';
-            return false;
+            abort(500, 'LabelEmail UpdateLabels(): UserId not set');
         }
 
         if ($labels === null) {
@@ -123,13 +118,11 @@ class LabelEmail
     public function GetLabels(): array|false
     {
         if (empty($this->ProjectId)) {
-            echo 'LabelEmail GetLabels(): ProjectId not set';
-            return false;
+            abort(500, 'LabelEmail GetLabels(): ProjectId not set');
         }
 
         if (empty($this->UserId)) {
-            echo 'LabelEmail GetLabels(): UserId not set';
-            return false;
+            abort(500, 'LabelEmail GetLabels(): UserId not set');
         }
 
         $db = Database::getInstance();

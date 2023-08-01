@@ -171,8 +171,7 @@ class CoverageFile
     public function GetPath()
     {
         if (!$this->Id) {
-            echo 'CoverageFile GetPath(): Id not set';
-            return false;
+            abort(500, 'CoverageFile GetPath(): Id not set');
         }
 
         $stmt = $this->PDO->prepare(
@@ -189,8 +188,7 @@ class CoverageFile
     public function GetMetric()
     {
         if (!$this->Id) {
-            echo 'CoverageFile GetMetric(): Id not set';
-            return false;
+            abort(500, 'CoverageFile GetMetric(): Id not set');
         }
 
         $stmt = $this->PDO->prepare(

@@ -43,8 +43,7 @@ class CoverageSummary
     public function RemoveAll(): bool
     {
         if (!$this->BuildId) {
-            echo 'CoverageSummary::RemoveAll(): BuildId not set';
-            return false;
+            abort(500, 'CoverageSummary::RemoveAll(): BuildId not set');
         }
 
         $db = Database::getInstance();
@@ -90,8 +89,7 @@ class CoverageSummary
     public function Insert($append = false): bool
     {
         if (!$this->BuildId || !is_numeric($this->BuildId)) {
-            echo 'CoverageSummary::Insert(): BuildId not set';
-            return false;
+            abort(500, 'CoverageSummary::Insert(): BuildId not set');
         }
 
         if (count($this->Coverages) > 0) {

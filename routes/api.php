@@ -37,6 +37,8 @@ Route::get('/v1/user.php', 'UserController@userPageContent');
 
 Route::get('/v1/userStatistics.php', 'UserStatisticsController@api');
 
+Route::get('/v1/filterdata.php', 'FilterController@getFilterDataArray');
+
 Route::get('/v1/viewSubProjects.php', 'SubProjectController@apiViewSubProjects');
 
 Route::get('/v1/viewDynamicAnalysis.php', 'DynamicAnalysisController@apiViewDynamicAnalysis');
@@ -51,6 +53,8 @@ Route::get('/v1/getPreviousBuilds.php', 'BuildController@apiGetPreviousBuilds');
 Route::get('/v1/testSummary.php', 'TestController@apiTestSummary');
 
 Route::get('/v1/is_build_expected.php', 'BuildController@apiBuildExpected');
+
+Route::get('/v1/buildUpdateGraph.php', 'BuildController@apiBuildUpdateGraph');
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/authtokens/create', 'AuthTokenController@createToken');

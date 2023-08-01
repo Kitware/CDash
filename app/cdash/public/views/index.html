@@ -150,7 +150,7 @@
       <ng-include ng-if="::cdash.subproject.dependencies.length > 0" ng-init="cdash.tableName = 'SubProject Dependencies'; cdash.subprojects = cdash.subproject.dependencies" src="'build/views/partials/subProjectTable_@@version.html'"></ng-include>
 
       <!-- BuildGroups -->
-      <div ng-repeat="buildgroup in ::cdash.buildgroups | orderBy:'position'" class="buildgroup"
+      <div ng-repeat="buildgroup in cdash.buildgroups | orderBy:'position'| limitTo:buildgroup_limit" class="buildgroup"
            buildgroup>
       </div>  <!-- end BuildGroups -->
 

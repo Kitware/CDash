@@ -27,8 +27,7 @@ class DynamicAnalysisDefect
     public function Insert(): bool
     {
         if (strlen($this->DynamicAnalysisId) == 0) {
-            echo 'DynamicAnalysisDefect::Insert DynamicAnalysisId not set';
-            return false;
+            abort(500, 'DynamicAnalysisDefect::Insert DynamicAnalysisId not set');
         }
 
         $db = Database::getInstance();

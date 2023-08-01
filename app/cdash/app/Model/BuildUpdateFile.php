@@ -35,8 +35,7 @@ class BuildUpdateFile
     public function Insert(): bool
     {
         if (strlen($this->UpdateId) == 0) {
-            echo 'BuildUpdateFile:Insert UpdateId not set';
-            return false;
+            abort(500, 'BuildUpdateFile:Insert UpdateId not set');
         }
 
         // Sometimes the checkin date is not found in that case we put the usual date
