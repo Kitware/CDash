@@ -81,6 +81,16 @@ a:hover{
  color: #FFFFFF;
 }
 
+.table-heading1 a,
+.table-heading1 a:visited {
+ color: #FFFFFF !important;
+}
+
+.table-heading1 a,
+.table-heading1 a:hover {
+ color: #FFFFFF !important;
+}
+
 .table-heading0 {
  background-color : #7796DF;
  color: #FFFFFF;
@@ -95,19 +105,6 @@ a:hover{
  padding-right: 0px;
  padding-bottom: 0px;
  padding-left: 7px;
-}
-
-.table-heading1 a:link{
- font-size:10px;
- color:#FFFFFF;
- font-weight: normal;
- text-decoration: none;
-}
-.table-heading1 a:visited{
- font-size:10px;
- color:#FFFFFF;
- font-weight: normal;
- text-decoration: none;
 }
 
 .table-heading1 h3{
