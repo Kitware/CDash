@@ -54,7 +54,7 @@
     "phpstan/phpstan-mockery": "^1.1",
     "phpstan/phpstan-phpunit": "^1.3",
     "phpstan/phpstan-strict-rules": "^1.5",
-    "phpunit/phpunit": "^9.0"
+    "phpunit/phpunit": "^10.2"
   },
   "suggest": {
     "ext-memcached": "",
