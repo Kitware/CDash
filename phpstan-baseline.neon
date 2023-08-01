@@ -329,6 +329,16 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 2
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BuildNote\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
 			count: 3
 			path: app/Http/Controllers/BuildController.php
@@ -345,6 +355,11 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:add_file\\(\\) has parameter \\$list_of_files with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:apiBuildSummary\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php
 
@@ -380,6 +395,11 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:summary\\(\\) has parameter \\$build_id with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Variable \\$buildupdate in isset\\(\\) is never defined\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php
 
@@ -15352,29 +15372,6 @@ parameters:
 			message: "#^Function rest_put not found\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 10
-			path: app/cdash/public/api/v1/buildSummary.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 4
-			path: app/cdash/public/api/v1/buildSummary.php
-
-		-
-			message: "#^Implicit array creation is not allowed \\- variable \\$user_response might not exist\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildSummary.php
-
-		-
-			message: "#^Variable \\$previous_build might not be defined\\.$#"
-			count: 7
-			path: app/cdash/public/api/v1/buildSummary.php
 
 		-
 			message: "#^Call to an undefined method CDash\\\\Model\\\\BuildGroup\\:\\:GetDependencies\\(\\)\\.$#"
