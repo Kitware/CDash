@@ -34,7 +34,7 @@
     "eslint-webpack-plugin": "^2.5.4",
     "flot": "^4.2.3",
     "git-revision-webpack-plugin": "^5.0.0",
-    "jquery": "^3.5",
+    "jquery": "^3.7",
     "jquery-ui-dist": "^1.13.1",
     "jquery.cookie": "^1.4.1",
     "laravel-mix": "^6.0.49",
