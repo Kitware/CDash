@@ -86,7 +86,7 @@
       <a href="" ng-click="toggleAdminOptions(build)">
         <img name="adminoptions" src="img/folder.png" class="icon"/>
       </a>
-      <img src="img/loading.gif" ng-show="build.loading == 1"/>
+      <img src="img/loading.gif" ng-if="build.loading == 1"/>
     </div>
   </div>
 
@@ -170,10 +170,10 @@
             <b>{{::group.name}}</b>:
           </td>
           <td ng-if="::group.name == buildgroup.name" colspan="2">
-            <a ng-show="build.expected == 0" href="" ng-click="toggleExpected(build, group.id)">
+            <a ng-if="build.expected == 0" href="" ng-click="toggleExpected(build, group.id)">
               [mark as expected]
             </a>
-            <a ng-show="build.expected == 1 || build.expectedandmissing == 1" href="" ng-click="toggleExpected(build, group.id)">
+            <a ng-if="build.expected == 1 || build.expectedandmissing == 1" href="" ng-click="toggleExpected(build, group.id)">
               [mark as non expected]
             </a>
           </td>
@@ -195,10 +195,10 @@
            tooltip-append-to-body="true"
            uib-tooltip="Done builds will be overwritten if a new one is submitted with the same site, build name, and timestamp."
       >
-        <a ng-show="build.done == 0" href="" ng-click="toggleDone(build)">
+        <a ng-if="build.done == 0" href="" ng-click="toggleDone(build)">
           [mark as done]
         </a>
-        <a ng-show="build.done == 1" href="" ng-click="toggleDone(build)">
+        <a ng-if="build.done == 1" href="" ng-click="toggleDone(build)">
           [mark as not done]
         </a>
       </div>
