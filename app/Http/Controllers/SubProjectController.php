@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Banner;
+use App\Models\User;
 use App\Services\PageTimer;
-use CDash\Model\Project;
 use CDash\Model\SubProject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 final class SubProjectController extends AbstractProjectController
@@ -21,6 +24,91 @@ final class SubProjectController extends AbstractProjectController
     public function manageSubProject(): Response
     {
         return response()->angular_view('manageSubProject');
+    }
+
+    public function apiManageSubProject(): JsonResponse
+    {
+        $pageTimer = new PageTimer();
+
+        $response = begin_JSON_response();
+        $response['backurl'] = 'user.php';
+        $response['menutitle'] = 'CDash';
+        $response['menusubtitle'] = 'SubProjects';
+        $response['title'] = 'Manage SubProjects';
+        $response['hidenav'] = 1;
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        // List the available projects that this user has admin rights to.
+        $projectid = intval($_GET['projectid'] ?? 0);
+
+
+        $sql = 'SELECT id, name FROM project';
+        $params = [];
+        if (!$user->IsAdmin()) {
+            $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid = ? AND role > 0)";
+            $params[] = intval(Auth::id());
+        }
+
+        $projects = DB::select($sql, $params);
+        $availableprojects = [];
+        foreach ($projects as $project_array) {
+            $availableproject = [
+                'id' => $project_array->id,
+                'name' => $project_array->name,
+            ];
+            if (intval($project_array->id) === $projectid) {
+                $availableproject['selected'] = '1';
+            }
+            $availableprojects[] = $availableproject;
+        }
+        $response['availableprojects'] = $availableprojects;
+
+        if ($projectid < 1) {
+            $response['error'] = 'Please select a project to continue.';
+            return response()->json($response);
+        }
+        $this->setProjectById($projectid);
+        Gate::authorize('edit-project', $this->project);
+
+        $response['projectid'] = $projectid;
+
+        get_dashboard_JSON($this->project->GetName(), null, $response);
+
+        $response['threshold'] = $this->project->GetCoverageThreshold();
+
+        $subprojects_response = []; // JSON for subprojects
+        // TODO: (williamjallen) The number of databse queries executed by this loop scales linearly with the
+        //       number of subprojects.  This can be simplified into a single query...
+        foreach ($this->project->GetSubProjects() as $subprojectid) {
+            $SubProject = new SubProject();
+            $SubProject->SetId($subprojectid);
+            $subprojects_response[] = [
+                'id' => $subprojectid,
+                'name' => $SubProject->GetName(),
+                'group' => $SubProject->GetGroupId(),
+            ];
+        }
+        $response['subprojects'] = $subprojects_response;
+
+        $groups = [];
+        foreach ($this->project->GetSubProjectGroups() as $subProjectGroup) {
+            $group = [
+                'id' => $subProjectGroup->GetId(),
+                'name' => $subProjectGroup->GetName(),
+                'position' => $subProjectGroup->GetPosition(),
+                'coverage_threshold' => $subProjectGroup->GetCoverageThreshold(),
+            ];
+            $groups[] = $group;
+            if ($subProjectGroup->GetIsDefault()) {
+                $response['default_group_id'] = $group['id'];
+            }
+        }
+        $response['groups'] = $groups;
+
+        $pageTimer->end($response);
+        return response()->json(cast_data_for_JSON($response));
     }
 
     public function dependencies(): View|RedirectResponse
