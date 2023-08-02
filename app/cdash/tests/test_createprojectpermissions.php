@@ -7,8 +7,6 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
-use CDash\Config;
-
 class CreateProjectPermissionsTestCase extends KWWebTestCase
 {
     protected $BuildId;
@@ -106,8 +104,7 @@ class CreateProjectPermissionsTestCase extends KWWebTestCase
         $this->assertTrue(property_exists($response, 'error'));
 
         // Modify config, enable user-creatable projects.
-        $config = Config::getInstance();
-        $config->set('CDASH_USER_CREATE_PROJECTS', true);
+        config(['cdash.user_create_projects' => true]);
         unset($_GET['projectid']);
         $response = $this->get($this->url . '/api/v1/createProject.php');
         $response = json_decode($response);

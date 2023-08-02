@@ -77,5 +77,6 @@ return [
     'allow_submit_only_tokens' => env('ALLOW_SUBMIT_ONLY_TOKENS', true),
     'unlimited_projects' => $unlimited_projects,
     'use_compression' => env('USE_COMPRESSION', true),
+    'user_create_projects' => env('USER_CREATE_PROJECTS', false),
     'use_vcs_api' => env('USE_VCS_API', true),
 ];
