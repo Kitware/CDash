@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use DateTime;
-use DateInterval;
 use App\Enums\ClassicPalette;
 use App\Enums\HighContrastPalette;
 use Illuminate\Http\JsonResponse;
@@ -40,28 +38,43 @@ final class MonitorController extends AbstractController
             $palette = ClassicPalette::class;
         }
 
+        // Get pass/fail data.
+        $pass_data = $this->resultsPerHour('successful_jobs', 'finished_at');
+        $fail_data = $this->resultsPerHour('failed_jobs', 'failed_at');
+
+        // Get beginning and end of our time range.
+        if ($pass_data->isNotEmpty() && $fail_data->isNotEmpty()) {
+            $begin = min($fail_data->first()->truncated_time, $pass_data->first()->truncated_time);
+            $end = max($fail_data->last()->truncated_time, $pass_data->last()->truncated_time);
+        } else {
+            if ($pass_data->isNotEmpty()) {
+                $begin = $pass_data->first()->truncated_time;
+                $end = $pass_data->last()->truncated_time;
+            } elseif ($fail_data->isNotEmpty()) {
+                $begin = $fail_data->first()->truncated_time;
+                $end = $fail_data->last()->truncated_time;
+            } else {
+                $begin = time();
+                $end = time();
+            }
+        }
+
         // Initialize trendline data.
         $success_values = [];
         $fail_values = [];
         $ticks = [];
-        $period = new \DatePeriod(
-            new DateTime('24 hours ago'),
-            new DateInterval('PT1H'),
-            24);
-        $i = 0;
-        foreach ($period as $datetime) {
+        $num_hours = 0;
+        for ($timestamp = $begin; $timestamp <= $end; $timestamp += 3600) {
             // Truncate this timestamp to the beginning of the hour.
-            $timestamp = $datetime->setTime(intval($datetime->format('H')), 0, 0)->getTimestamp();
             $success_values[$timestamp] = 0;
             $fail_values[$timestamp] = 0;
-            $i++;
-            if ($i % 3 === 0) {
+            $num_hours++;
+            if ($num_hours % 6 === 0) {
                 $ticks[] = $timestamp;
             }
         }
 
-        // Populate pass/fail trendline data.
-        foreach ($this->resultsPerHour('failed_jobs', 'failed_at') as $row) {
+        foreach ($fail_data as $row) {
             $key = $row->truncated_time;
             if (array_key_exists($key, $fail_values)) {
                 $fail_values[$key] += $row->n_jobs;
@@ -70,7 +83,7 @@ final class MonitorController extends AbstractController
             }
         }
 
-        foreach ($this->resultsPerHour('successful_jobs', 'finished_at') as $row) {
+        foreach ($pass_data as $row) {
             $key = $row->truncated_time;
             if (array_key_exists($key, $success_values)) {
                 $success_values[$key] += $row->n_jobs;
@@ -103,6 +116,7 @@ final class MonitorController extends AbstractController
         return response()->json([
             'backlog_length' => $backlog_length,
             'backlog_time' => $backlog_time,
+            'num_hours' => $num_hours,
             'time_chart_data' => $time_chart_data,
             'ticks' => $ticks,
             'log_directory' => config('logging.default') === 'stack' ? storage_path('logs') : '',
@@ -131,7 +145,7 @@ final class MonitorController extends AbstractController
         // Group jobs by hour.
         // We achieve this by:
         // 1) subtracting the seconds
-        // 2) subracting the minutes
+        // 2) subtracting the minutes
         // 3) casting the result to a UNIX timestamp
         return DB::table($table)
             ->select(DB::raw("
