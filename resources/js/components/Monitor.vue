@@ -10,7 +10,7 @@
       The oldest submission was created {{ cdash.backlog_time }}.
     </h4>
     <h3 class="center-text">
-      Submissions parsed over the past 24 hours
+      Submissions parsed over the past {{ cdash.num_hours }} hours
     </h3>
     <div
       id="timechart"
