@@ -1057,26 +1057,23 @@ function get_filterdata_from_request($page_id = '')
     $pageSpecificFilters = createPageSpecificFilters($page_id);
     $filterdata['pageSpecificFilters'] = $pageSpecificFilters;
 
-    $filtercount = isset($_REQUEST['filtercount']) ? pdo_real_escape_numeric($_REQUEST['filtercount']) : 0;
-    $showfilters = isset($_REQUEST['showfilters']) ? pdo_real_escape_numeric($_REQUEST['showfilters']) : 0;
-    $showlimit = isset($_REQUEST['showlimit']) ? pdo_real_escape_numeric($_REQUEST['showlimit']) : 0;
-    $limit = isset($_REQUEST['limit']) ? intval(pdo_real_escape_numeric($_REQUEST['limit'])) : 0;
-    if (!is_int($limit)) {
-        $limit = 0;
-    }
+    $filtercount = intval($_GET['filtercount'] ?? 0);
+    $showfilters = intval($_GET['showfilters'] ?? 0);
+    $showlimit = intval($_GET['showlimit'] ?? 0);
+    $limit = intval($_GET['limit'] ?? 0);
 
-    $clear = isset($_REQUEST['clear']) ? $_REQUEST['clear'] : '';
+    $clear = isset($_GET['clear']) ? $_GET['clear'] : '';
     if ($clear == 'Clear') {
         $filtercount = 0;
     }
 
-    $filtercombine = isset($_REQUEST['filtercombine']) ? htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine'])) : 'and';
+    $filtercombine = isset($_GET['filtercombine']) ? htmlspecialchars(pdo_real_escape_string($_GET['filtercombine'])) : 'and';
     $othercombine = get_othercombine($filtercombine);
 
     for ($i = 1; $i <= $filtercount; ++$i) {
-        if (array_key_exists("field{$i}count", $_REQUEST)) {
+        if (array_key_exists("field{$i}count", $_GET)) {
             // Handle block of filters.
-            $subfiltercount = pdo_real_escape_numeric(@$_REQUEST["field{$i}count"]);
+            $subfiltercount = pdo_real_escape_numeric(@$_GET["field{$i}count"]);
             $filter = [
                 'filters' => []
             ];
@@ -1102,7 +1099,7 @@ function get_filterdata_from_request($page_id = '')
 
     // Fill up filterdata and return it:
     //
-    @$debug = $_REQUEST['debug'];
+    @$debug = $_GET['debug'];
     if ($debug) {
         $filterdata['debug'] = 1; // '0' or '1' -- shows debug info in HTML output
     } else {
@@ -1115,7 +1112,7 @@ function get_filterdata_from_request($page_id = '')
     $filterdata['filters'] = $filters;
     $filterdata['limit'] = $limit;
 
-    if ($showfilters) {
+    if ($showfilters === 1) {
         $filterdata['showfilters'] = 1;
     } else {
         $filterdata['showfilters'] = 0;
@@ -1132,7 +1129,7 @@ function get_filterdata_from_request($page_id = '')
         }
     }
 
-    if (!array_key_exists('showlimit', $_REQUEST)) {
+    if (!array_key_exists('showlimit', $_GET)) {
         $showlimit = $pageSpecificFilters->getDefaultShowLimit();
     }
 

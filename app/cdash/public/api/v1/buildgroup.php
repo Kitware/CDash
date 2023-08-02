@@ -50,8 +50,7 @@ switch ($method) {
         rest_delete();
         break;
     case 'POST':
-        rest_post($pdo, $projectid);
-        break;
+        return rest_post($pdo, $projectid);
     case 'PUT':
         rest_put($projectid);
         break;

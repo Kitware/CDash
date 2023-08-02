@@ -186,7 +186,7 @@ final class DynamicAnalysisController extends AbstractBuildController
         $date = TestingDay::get($this->project, $this->build->StartTime);
         $response = begin_JSON_response();
         get_dashboard_JSON($this->project->Name, $date, $response);
-        $response['title'] = "{$this->project->Name} : Dynamic Analysis";
+        $response['title'] = "{$this->project->Name} - Dynamic Analysis";
 
         // Build
         $build_response = [];

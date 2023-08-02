@@ -61,13 +61,11 @@ class CoverageFile2User
     public function Insert(): bool
     {
         if (!isset($this->UserId) || $this->UserId < 1) {
-            echo 'CoverageFile2User:Insert: UserId not set';
-            return false;
+            abort(500, 'CoverageFile2User:Insert: UserId not set');
         }
 
         if ($this->FullPath == '' || $this->ProjectId < 1) {
-            echo 'CoverageFile2User:Insert: FullPath or ProjectId not set';
-            return false;
+            abort(500, 'CoverageFile2User:Insert: FullPath or ProjectId not set');
         }
 
         // Check if is already in the database
@@ -112,8 +110,7 @@ class CoverageFile2User
     public function RemoveAuthors(): bool
     {
         if ($this->FullPath == '' || $this->ProjectId < 1) {
-            echo 'CoverageFile2User:RemoveAuthors: FullPath or ProjectId not set';
-            return false;
+            abort(500, 'CoverageFile2User:RemoveAuthors: FullPath or ProjectId not set');
         }
 
         $db = Database::getInstance();
@@ -190,8 +187,7 @@ class CoverageFile2User
     public function GetAuthors(): array|false
     {
         if ($this->FullPath == '' || $this->ProjectId < 1) {
-            echo 'CoverageFile2User:GetAuthors: FullPath or ProjectId not set';
-            return false;
+            abort(500, 'CoverageFile2User:GetAuthors: FullPath or ProjectId not set');
         }
 
         $db = Database::getInstance();
@@ -219,8 +215,7 @@ class CoverageFile2User
     public function GetId(): int|false
     {
         if ($this->FullPath == '' || $this->ProjectId < 1) {
-            echo 'CoverageFile2User:GetId: FullPath or ProjectId not set';
-            return false;
+            abort(500, 'CoverageFile2User:GetId: FullPath or ProjectId not set');
         }
 
         $db = Database::getInstance();
@@ -249,8 +244,7 @@ class CoverageFile2User
     public function GetFiles(): array|false
     {
         if (!isset($this->UserId) || $this->UserId < 1) {
-            echo 'CoverageFile2User:GetFiles: UserId not set';
-            return false;
+            abort(500, 'CoverageFile2User:GetFiles: UserId not set');
         }
 
         $db = Database::getInstance();
@@ -271,8 +265,7 @@ class CoverageFile2User
     public function GetCoverageFileId($buildid): int|false
     {
         if ($this->FileId == 0) {
-            echo 'CoverageFile2User:GetCoverageFileId: FileId not set';
-            return false;
+            abort(500, 'CoverageFile2User:GetCoverageFileId: FileId not set');
         }
 
         $db = Database::getInstance();
@@ -301,8 +294,7 @@ class CoverageFile2User
     public function GetUsersFromProject(): array|false
     {
         if (!isset($this->ProjectId) || $this->ProjectId < 1) {
-            echo 'CoverageFile2User:GetUsersFromProject: projectid not valid';
-            return false;
+            abort(500, 'CoverageFile2User:GetUsersFromProject: projectid not valid');
         }
 
         $db = Database::getInstance();
@@ -328,13 +320,11 @@ class CoverageFile2User
     public function AssignLastAuthor(int $buildid): bool
     {
         if (!isset($this->ProjectId) || $this->ProjectId < 1) {
-            echo 'CoverageFile2User:AssignLastAuthor: ProjectId not set';
-            return false;
+            abort(500, 'CoverageFile2User:AssignLastAuthor: ProjectId not set');
         }
 
         if ($buildid === 0) {
-            echo 'CoverageFile2User:AssignLastAuthor: buildid not valid';
-            return false;
+            abort(500, 'CoverageFile2User:AssignLastAuthor: buildid not valid');
         }
 
         // Find the files associated with the build
@@ -363,13 +353,11 @@ class CoverageFile2User
     public function AssignAllAuthors(int $buildid): bool
     {
         if (!isset($this->ProjectId) || $this->ProjectId < 1) {
-            echo 'CoverageFile2User:AssignLastAuthor: ProjectId not set';
-            return false;
+            abort(500, 'CoverageFile2User:AssignLastAuthor: ProjectId not set');
         }
 
         if ($buildid === 0) {
-            echo 'CoverageFile2User:AssignLastAuthor: buildid not valid';
-            return false;
+            abort(500, 'CoverageFile2User:AssignLastAuthor: buildid not valid');
         }
 
         // Find the files associated with the build
@@ -398,8 +386,7 @@ class CoverageFile2User
     public function GetPriority(): int|false
     {
         if ($this->FullPath == '' || $this->ProjectId < 1) {
-            echo 'CoverageFile2User:GetPriority: FullPath or ProjectId not set';
-            return false;
+            abort(500, 'CoverageFile2User:GetPriority: FullPath or ProjectId not set');
         }
 
         $db = Database::getInstance();
@@ -419,12 +406,10 @@ class CoverageFile2User
     public function SetPriority(int $priority): bool
     {
         if ($this->ProjectId == 0) {
-            echo 'CoverageFile2User:SetPriority:ProjectId not set';
-            return false;
+            abort(500, 'CoverageFile2User:SetPriority:ProjectId not set');
         }
         if ($this->FullPath == '') {
-            echo 'CoverageFile2User:SetPriority:FullPath not set';
-            return false;
+            abort(500, 'CoverageFile2User:SetPriority:FullPath not set');
         }
         $db = Database::getInstance();
         $query_result = $db->executePreparedSingleRow('

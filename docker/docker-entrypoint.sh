@@ -37,7 +37,7 @@ usage() {
 
 
     echo "  start-worker"
-    echo "      Start the Laravel asynchronus submission parsing"
+    echo "      Start the Laravel asynchronous submission parsing"
     echo ""
 
 

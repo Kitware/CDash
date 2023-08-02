@@ -43,7 +43,7 @@
     <xsl:for-each select="error">
     <b><xsl:value-of select="buildname"/>: </b>
     <xsl:for-each select="text">
-      <xsl:value-of select="."/><br/>
+      <pre style="white-space: pre-wrap;"><xsl:value-of select="."/></pre>
     </xsl:for-each>
     </xsl:for-each>
   </xsl:if>
@@ -54,7 +54,7 @@
     <xsl:for-each select="warning">
     <b><xsl:value-of select="buildname"/>: </b>
     <xsl:for-each select="text">
-      <xsl:value-of select="."/><br/>
+      <pre style="white-space: pre-wrap;"><xsl:value-of select="."/></pre>
     </xsl:for-each>
     </xsl:for-each>
   </xsl:if>
