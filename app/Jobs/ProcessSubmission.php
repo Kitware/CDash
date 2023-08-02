@@ -92,9 +92,10 @@ class ProcessSubmission implements ShouldQueue
             // Move file back to inbox.
             Storage::move("inprogress/{$this->filename}", "inbox/{$this->filename}");
 
-            // Requeue the file.
+            // Requeue the file with exponential backoff.
             PendingSubmissions::IncrementForBuildId($this->buildid);
-            self::dispatch($this->filename, $this->projectid, $buildid, md5_file(Storage::path("inbox/{$this->filename}")));
+            $delay = pow(config('cdash.retry_base'), $retry_handler->Retries);
+            self::dispatch($this->filename, $this->projectid, $buildid, md5_file(Storage::path("inbox/{$this->filename}")))->delay(now()->addSeconds($delay));
             return true;
         }
     }

@@ -20,6 +20,7 @@
 class RetryHandler
 {
     private $FileName;
+    public int $Retries;
 
     public function __construct($filename)
     {
@@ -38,10 +39,11 @@ class RetryHandler
         $xml = simplexml_load_file($this->FileName);
         $attributes = $xml->attributes();
         if (isset($attributes['retries'])) {
-            $xml['retries'] = $attributes['retries'] + 1;
+            $this->Retries = intval($attributes['retries']) + 1;
         } else {
-            $xml['retries'] = 1;
+            $this->Retries = 1;
         }
+        $xml['retries'] = $this->Retries;
 
         return $xml->asXML($this->FileName);
     }

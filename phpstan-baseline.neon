@@ -28535,11 +28535,6 @@ parameters:
 			path: app/cdash/xml_handlers/retry_handler.php
 
 		-
-			message: "#^Only numeric types are allowed in \\+, SimpleXMLElement given on the left side\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/retry_handler.php
-
-		-
 			message: "#^Property RetryHandler\\:\\:\\$FileName has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/retry_handler.php
