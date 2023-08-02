@@ -56,6 +56,8 @@ CDash.filter("showEmptyBuildsLast", function () {
   $scope.showfilters = false;
   $scope.showsettings = false;
 
+  $scope.buildgroup_limit = 1;
+
   // Check if we have a cookie for auto-refresh.
   const refresh_cookie = $.cookie('cdash_refresh') === 'true';
   if (refresh_cookie) {
@@ -258,6 +260,19 @@ CDash.filter("showEmptyBuildsLast", function () {
       anchors.jumpToAnchor($location.hash());
     }
 
+    $scope.incrementDisplayedBuildgroups();
+  };
+
+  // This is a hack to load one build group at a time. Doing so makes the page "feel" faster because the
+  // first build group gets rendered faster than it would if everything got rendered at once.
+  $scope.incrementDisplayedBuildgroups = function() {
+    setTimeout(function() {
+      if ($scope.buildgroup_limit < $scope.cdash.buildgroups.length) {
+        $scope.buildgroup_limit++;
+        $scope.incrementDisplayedBuildgroups();
+        $scope.$digest();
+      }
+    }, 100);
   };
 
 
