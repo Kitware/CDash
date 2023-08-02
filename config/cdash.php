@@ -67,6 +67,7 @@ return [
     'notify_pull_request' => env('NOTIFY_PULL_REQUEST', false),
     'php_exe' => env('PHP_EXE', ''),
     'phpunit_exe' => env('PHPUNIT_EXE', ''),
+    'queue_timeout' => env('QUEUE_TIMEOUT', 2000),
     'remote_workers' => env('REMOTE_WORKERS', false),
     'show_last_submission' => env('SHOW_LAST_SUBMISSION', true),
     'slow_page_time' => env('SLOW_PAGE_TIME', 10),

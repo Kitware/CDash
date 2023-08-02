@@ -27,6 +27,8 @@ class ProcessSubmission implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public int $timeout;
+
     public $filename;
     public $projectid;
     public $buildid;
@@ -39,6 +41,8 @@ class ProcessSubmission implements ShouldQueue
      */
     public function __construct($filename, $projectid, $buildid, $expected_md5)
     {
+        $this->timeout = config('cdash.queue_timeout');
+
         $this->filename = $filename;
         $this->projectid = $projectid;
         $this->buildid = $buildid;

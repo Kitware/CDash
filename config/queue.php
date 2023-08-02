@@ -38,14 +38,14 @@ return [
             'driver' => 'database',
             'table' => 'jobs',
             'queue' => 'default',
-            'retry_after' => 90,
+            'retry_after' => env('QUEUE_TIMEOUT', 2000) + 60,
         ],
 
         'beanstalkd' => [
             'driver' => 'beanstalkd',
             'host' => 'localhost',
             'queue' => 'default',
-            'retry_after' => 90,
+            'retry_after' => env('QUEUE_TIMEOUT', 2000) + 60,
         ],
 
         'sqs' => [
@@ -61,7 +61,7 @@ return [
             'driver' => 'redis',
             'connection' => 'default',
             'queue' => env('REDIS_QUEUE', 'default'),
-            'retry_after' => 90,
+            'retry_after' => env('QUEUE_TIMEOUT', 2000) + 60,
             'block_for' => null,
         ],
 
