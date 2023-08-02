@@ -20,7 +20,7 @@ use Illuminate\View\View;
 
 require_once 'include/cdashmail.php';
 
-class UserController extends AbstractController
+final class UserController extends AbstractController
 {
     public function userPage(): View
     {

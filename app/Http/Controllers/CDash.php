@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Storage;
  * Class CDash
  * @package App\Http\Controllers
  */
-class CDash extends AbstractController
+final class CDash extends AbstractController
 {
     /** @var Request $request */
     private $request;

@@ -11,7 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 
-class SubProjectController extends AbstractProjectController
+final class SubProjectController extends AbstractProjectController
 {
     public function viewSubProjects(): Response
     {

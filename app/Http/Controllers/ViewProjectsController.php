@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-class ViewProjectsController extends AbstractController
+final class ViewProjectsController extends AbstractController
 {
     public function viewAllProjects(): View|RedirectResponse
     {

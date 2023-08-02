@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 require_once 'include/api_common.php';
 
-class ViewTestController extends AbstractController
+final class ViewTestController extends AbstractController
 {
     public function viewTest(): View
     {

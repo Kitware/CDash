@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use CDash\Model\SubProject;
 use Illuminate\Http\Response;
 
-class CTestConfigurationController extends AbstractProjectController
+final class CTestConfigurationController extends AbstractProjectController
 {
     public function get(int $id): Response
     {

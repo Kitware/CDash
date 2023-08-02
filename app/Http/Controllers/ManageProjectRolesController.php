@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use RuntimeException;
 
-class ManageProjectRolesController extends AbstractProjectController
+final class ManageProjectRolesController extends AbstractProjectController
 {
     /**
      * TODO: (williamjallen) this function contains legacy XSL templating and should be converted

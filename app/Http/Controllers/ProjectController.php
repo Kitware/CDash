@@ -14,7 +14,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
-class ProjectController extends AbstractProjectController
+final class ProjectController extends AbstractProjectController
 {
     public function apiCreateProject(): JsonResponse
     {

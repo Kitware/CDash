@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Gate;
 
-class ManageMeasurementsController extends AbstractProjectController
+final class ManageMeasurementsController extends AbstractProjectController
 {
     // Render the 'manage measurements' page.
     public function show($project_id)

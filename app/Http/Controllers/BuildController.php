@@ -28,7 +28,7 @@ use PDO;
 
 require_once('include/repository.php');
 
-class BuildController extends AbstractBuildController
+final class BuildController extends AbstractBuildController
 {
     // Render the build configure page.
     public function configure($build_id = null)

@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Gate;
 
-class EditProjectController extends AbstractProjectController
+final class EditProjectController extends AbstractProjectController
 {
     // Render the create project form.
     public function create()
