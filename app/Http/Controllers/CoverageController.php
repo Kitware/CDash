@@ -115,12 +115,17 @@ final class CoverageController extends AbstractBuildController
         $CoverageFile2User = new CoverageFile2User();
         $CoverageFile2User->ProjectId = $projectid;
 
-        // Change the priority of selected files
+        // Change the priority of selected files, assuming that the bulk replacement takes priority.
         if (isset($_POST['changePrioritySelected'])) {
             foreach ($_POST['selectionFiles'] as $key => $value) {
                 $CoverageFile2User->FullPath = htmlspecialchars($value);
                 $CoverageFile2User->SetPriority(intval($_POST['prioritySelectedSelection']));
             }
+        } elseif (isset($_POST['prioritySelection'])) {
+            $CoverageFile2User = new CoverageFile2User();
+            $CoverageFile2User->ProjectId = $projectid;
+            $CoverageFile2User->FullPath = htmlspecialchars($_POST['fullpath']);
+            $CoverageFile2User->SetPriority(intval($_POST['prioritySelection']));
         }
 
         // Remove the selected authors
@@ -273,14 +278,6 @@ final class CoverageController extends AbstractBuildController
                     $xml .= add_XML_value('warning', '*No email sent because the coverage is green.');
                 }
             }
-        }
-
-        // If we change the priority
-        if (isset($_POST['prioritySelection'])) {
-            $CoverageFile2User = new CoverageFile2User();
-            $CoverageFile2User->ProjectId = $projectid;
-            $CoverageFile2User->FullPath = htmlspecialchars($_POST['fullpath']);
-            $CoverageFile2User->SetPriority(intval($_POST['prioritySelection']));
         }
 
         /* We start generating the XML here */
