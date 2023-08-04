@@ -217,7 +217,10 @@ final class CoverageController extends AbstractBuildController
         // Send an email
         if (isset($_POST['sendEmail'])) {
             $coverageThreshold = $Project->GetCoverageThreshold();
-            $userids = $CoverageFile2User->GetUsersFromProject();
+            $userids = DB::table('coveragefilepriority')
+                        ->join('coveragefile2user', 'coveragefilepriority.id', '=', 'coveragefile2user.fileid')
+                        ->where('coveragefilepriority.projectid', '=', intval($projectid))->distinct()
+                        ->pluck('userid')->toArray();
             foreach ($userids as $userid) {
                 $CoverageFile2User->UserId = $userid;
                 $fileids = $CoverageFile2User->GetFiles();
