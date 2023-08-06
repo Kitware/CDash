@@ -67,7 +67,9 @@ return [
     'notify_pull_request' => env('NOTIFY_PULL_REQUEST', false),
     'php_exe' => env('PHP_EXE', ''),
     'phpunit_exe' => env('PHPUNIT_EXE', ''),
+    'queue_timeout' => env('QUEUE_TIMEOUT', 2000),
     'remote_workers' => env('REMOTE_WORKERS', false),
+    'retry_base' => env('QUEUE_RETRY_BASE', 5),
     'show_last_submission' => env('SHOW_LAST_SUBMISSION', true),
     'slow_page_time' => env('SLOW_PAGE_TIME', 10),
     'token_duration' => env('TOKEN_DURATION', 15811200),
@@ -77,5 +79,6 @@ return [
     'allow_submit_only_tokens' => env('ALLOW_SUBMIT_ONLY_TOKENS', true),
     'unlimited_projects' => $unlimited_projects,
     'use_compression' => env('USE_COMPRESSION', true),
+    'user_create_projects' => env('USER_CREATE_PROJECTS', false),
     'use_vcs_api' => env('USE_VCS_API', true),
 ];

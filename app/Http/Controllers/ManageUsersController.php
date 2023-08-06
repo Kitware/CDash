@@ -7,7 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-class ManageUsersController extends AbstractController
+final class ManageUsersController extends AbstractController
 {
     /**
      * TODO: (williamjallen) this function contains legacy XSL templating and should be converted

@@ -150,7 +150,7 @@
       <ng-include ng-if="::cdash.subproject.dependencies.length > 0" ng-init="cdash.tableName = 'SubProject Dependencies'; cdash.subprojects = cdash.subproject.dependencies" src="'build/views/partials/subProjectTable_@@version.html'"></ng-include>
 
       <!-- BuildGroups -->
-      <div ng-repeat="buildgroup in ::cdash.buildgroups | orderBy:'position'" class="buildgroup"
+      <div ng-repeat="buildgroup in cdash.buildgroups | orderBy:'position'| limitTo:buildgroup_limit" class="buildgroup"
            buildgroup>
       </div>  <!-- end BuildGroups -->
 
@@ -292,11 +292,15 @@
           <tbody ng-if="::!cdash.coveragegroups || cdash.coveragegroups.length == 0" id="coveragebody">
             <tr class="child_row" ng-repeat="coverage in cdash.coverages |orderBy:sortCoverage.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
               <td ng-if="::cdash.childview != 1" align="left" class="paddt">
-                {{::coverage.site}}
+                <a ng-href="viewSite.php?siteid={{::coverage.siteid}}&project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
+                  {{::coverage.site}}
+                </a>
               </td>
 
               <td ng-if="::cdash.childview != 1" align="left" class="paddt">
-                {{::coverage.buildname}}
+                <a ng-href="build/{{::coverage.buildid}}">
+                  {{::coverage.buildname}}
+                </a>
               </td>
 
               <td ng-if="::cdash.childview == 1" align="left" class="paddt">
@@ -409,11 +413,15 @@
               </td>
 
               <td ng-if="::cdash.childview != 1" class="paddt" align="left">
-                {{::da.site}}
+                <a ng-href="viewSite.php?siteid={{::da.siteid}}&project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
+                  {{::da.site}}
+                </a>
               </td>
 
               <td ng-if="::cdash.childview != 1" class="paddt" align="left">
-                {{::da.buildname}}
+                <a ng-href="build/{{::da.buildid}}">
+                  {{::da.buildname}}
+                </a>
               </td>
 
               <td class="paddt" class="center-text">{{::da.checker}}</td>

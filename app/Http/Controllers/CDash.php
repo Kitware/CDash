@@ -3,21 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Filesystem\FilesystemAdapter;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
- * TODO: (williamjallen) should some of this logic be moved to AbstractController.php?
+ * TODO: (williamjallen) This file now only serves as a route handler for API routes which have not
+ *       been migrated to Laravel yet.  The ultimate goal is to remove this file entirely.
  *
  * Class CDash
  * @package App\Http\Controllers
  */
-class CDash extends AbstractController
+final class CDash extends AbstractController
 {
     /** @var Request $request */
     private $request;
@@ -42,23 +40,17 @@ class CDash extends AbstractController
      * Handle the incoming request.
      *
      * @param Request $request
-     * @return Response $response
+     * @return mixed $response
      */
     public function __invoke(Request $request)
     {
         $this->request = $request;
         $this->path = '';
-        if (!$this->isValidRequest()) {
+        if (!$this->isValidRequest() || !$this->isApiRequest()) {
             abort(404);
         }
 
-        if ($this->isRequestForExport()) {
-            $response = $this->handleFileRequest();
-        } elseif ($this->isApiRequest()) {
-            $response = $this->handleApiRequest();
-        } else {
-            $response = $this->handleRequest();
-        }
+        $response = $this->handleApiRequest();
 
         $status = http_response_code();
         if ($status > Response::HTTP_OK) {
@@ -93,12 +85,6 @@ class CDash extends AbstractController
     {
         $path = $this->getPath();
         return str_starts_with($path, 'api/');
-    }
-
-    public function isRequestForExport(): bool
-    {
-        $export = request('export');
-        return $export && in_array($export, ['csv']);
     }
 
     /**
@@ -149,45 +135,6 @@ class CDash extends AbstractController
     }
 
     /**
-     * Returns the requested file
-     */
-    public function handleFileRequest(): Response|RedirectResponse|StreamedResponse
-    {
-        $content = $this->getRequestContents();
-
-        if (is_array($content)
-            && array_key_exists('file', $content)
-            && array_key_exists('type', $content)
-        ) {
-            $headers = [];
-            $headers['Content-Type'] = $content['type'];
-            if (isset($content['filename'])) {
-                $headers['Content-Disposition'] = "attachment; filename=\"{$content['filename']}\"";
-            }
-            $response = response()->stream(function () use ($content) {
-                echo $content['file'];
-            }, 200, $headers);
-        } elseif (is_a($content, RedirectResponse::class)) {
-            $response = $content;
-        } else {
-            // return a regular response because the output is not what we expected
-            $response = response($content, 400);
-        }
-
-        return $response;
-    }
-
-    /**
-     * Returns a Laravel view response
-     */
-    public function handleRequest(): RedirectResponse|View
-    {
-        $content = $this->getRequestContents() ?: ''; // view does not like null
-        return is_a($content, RedirectResponse::class) ?
-            $content : $this->view($content);
-    }
-
-    /**
      * Returns the path of the request with consideration given to the root path
      */
     public function getPath(): string
@@ -205,19 +152,5 @@ class CDash extends AbstractController
         $path = $this->getPath();
         $file = $this->disk->path($path);
         return $file;
-    }
-
-    /**
-     * Returns the blade view with CDash layout
-     */
-    protected function view(string $content): View
-    {
-        return view('cdash',
-            [
-                'xsl_content' => $content,
-                'xsl' => true,
-                'js_version' => self::getJsVersion(),
-            ]
-        );
     }
 }

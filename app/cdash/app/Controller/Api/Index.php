@@ -249,7 +249,7 @@ class Index extends ResultsApi
                     $query_params[] = (int) $rule->siteid;
                 }
                 if (!empty($rule->buildname)) {
-                    $whereClauses[] = "b.name LIKE ?";
+                    $whereClauses[] = "b.name = ?";
                     $query_params[] = $rule->buildname;
                 }
                 if (count($whereClauses) > 0) {

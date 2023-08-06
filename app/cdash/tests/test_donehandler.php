@@ -35,6 +35,7 @@ class DoneHandlerTestCase extends KWWebTestCase
         config(['cdash.remote_workers' => 'true']);
         config(['queue.default' => 'database']);
         file_put_contents($this->ConfigFile, "QUEUE_CONNECTION=database\n", FILE_APPEND | LOCK_EX);
+        file_put_contents($this->ConfigFile, "QUEUE_RETRY_BASE=0\n", FILE_APPEND | LOCK_EX);
         file_put_contents($this->ConfigFile, "REMOTE_WORKERS=true\n", FILE_APPEND | LOCK_EX);
 
         $this->performTest(true);

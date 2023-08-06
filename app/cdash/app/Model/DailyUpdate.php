@@ -34,8 +34,7 @@ class DailyUpdate
     public function GetAuthors(string $filename, bool $onlylast = false): array|false
     {
         if (!$this->ProjectId) {
-            echo 'DailyUpdate::GetAuthors(): ProjectId is not set<br>';
-            return false;
+            abort(500, 'DailyUpdate::GetAuthors(): ProjectId is not set');
         }
 
         // Check if the note already exists

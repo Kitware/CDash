@@ -21,6 +21,7 @@ describe("manageBuildGroup", function() {
     element(by.name('newBuildGroupName')).sendKeys('latestBuildGroup');
     element(by.name('newBuildGroupType')).element(by.cssContainingText('option', 'Latest')).click();
     element(by.buttonText('Create BuildGroup')).click();
+    expect(element(by.id('buildgroup_created')).isDisplayed()).toBeTruthy();
 
     // Make sure they're both on our list of current BuildGroups.
     browser.get('manageBuildGroup.php?projectid=5');
@@ -129,7 +130,7 @@ describe("manageBuildGroup", function() {
     element(by.name('parentBuildGroupSelection')).element(by.cssContainingText('option', 'Experimental')).click();
     var matchField = element(by.name('dynamicBuildNameMatch'));
     matchField.clear();
-    matchField.sendKeys('same*mage');
+    matchField.sendKeys('CDash-CTest-sameImage');
     element(by.buttonText('Add content to BuildGroup')).click();
     browser.waitForAngular();
 

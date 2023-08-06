@@ -37,7 +37,7 @@ class TestOverview extends ResultsApi
 
         // Begin our JSON response.
         $response = begin_JSON_response();
-        $response['title'] = "{$this->project->Name} : Test Overview";
+        $response['title'] = "{$this->project->Name} - Test Overview";
         $response['showcalendar'] = 1;
         $response['hassubprojects'] = $has_subprojects;
 

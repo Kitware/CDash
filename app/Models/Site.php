@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -65,7 +66,12 @@ class Site extends Model
             $this->longitude = $location['longitude'];
         }
 
-        return parent::save($options);
+        try {
+            return parent::save($options);
+        } catch (QueryException $e) {
+            \Log::warning("Failed to save Site {$this->name}");
+            return false;
+        }
     }
 
     private function LookupIP(): void

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
-class ManageBannerController extends AbstractController
+final class ManageBannerController extends AbstractController
 {
     /**
      * TODO: (williamjallen) this function contains legacy XSL templating and should be converted

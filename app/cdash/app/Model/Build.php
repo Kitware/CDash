@@ -2533,7 +2533,7 @@ class Build
      * Returns the current Build's Site property. This method lazily loads the Site if no such
      * object exists.
      */
-    public function GetSite(): \App\Models\Site
+    public function GetSite(): \App\Models\Site|null
     {
         if (!$this->Site) {
             $this->Site = \App\Models\Site::find($this->SiteId);

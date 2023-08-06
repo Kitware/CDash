@@ -21,7 +21,7 @@ require_once 'include/ctestparser.php';
 require_once 'include/version.php';
 require_once 'include/upgrade_functions.php';
 
-class AdminController extends AbstractController
+final class AdminController extends AbstractController
 {
     public function import(): View
     {

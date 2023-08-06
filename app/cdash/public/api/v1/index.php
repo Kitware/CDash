@@ -444,6 +444,7 @@ foreach ($build_rows as $build_array) {
             $coverage_groups[$groupId]['coverages'][] = $coverage_response;
         } else {
             $coverage_response['site'] = $build_array['sitename'];
+            $coverage_response['siteid'] = $build_array['siteid'];
             $coverage_response['buildname'] = $build_array['name'];
             $response['coverages'][] = $coverage_response;
         }
@@ -462,6 +463,7 @@ foreach ($build_rows as $build_array) {
 
         $DA_response = array();
         $DA_response['site'] = $build_array['sitename'];
+        $DA_response['siteid'] = $build_array['siteid'];
         $DA_response['buildname'] = $build_array['name'];
         $DA_response['buildid'] = (int) $build_array['id'];
         $DA_response['checker'] = $build_array['checker'];

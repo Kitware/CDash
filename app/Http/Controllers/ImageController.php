@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class ImageController extends AbstractController
+final class ImageController extends AbstractController
 {
     /**
      * @throws HttpException

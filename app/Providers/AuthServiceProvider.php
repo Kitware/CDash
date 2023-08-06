@@ -8,7 +8,6 @@ use App\Models\Test;
 use App\Models\TestImage;
 use App\Models\User;
 use App\Services\ProjectPermissions;
-use CDash\Config;
 use CDash\Model\Image;
 use CDash\Model\Project;
 use Illuminate\Auth\Access\Response;
@@ -61,8 +60,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('create-project', function (User $user) {
-            $config = Config::getInstance();
-            if (!$user->IsAdmin() && !$config->get('CDASH_USER_CREATE_PROJECTS')) {
+            if (!$user->IsAdmin() && !boolval(config('cdash.user_create_projects'))) {
                 return Response::denyWithStatus(403, 'You do not have permission to create new projects.');
             }
             return Response::allow();

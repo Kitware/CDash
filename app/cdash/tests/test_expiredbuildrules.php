@@ -27,7 +27,7 @@ class ExpiredBuildRulesTestCase extends KWWebTestCase
                 (:groupid, :buildname, :siteid, :parentgroupid, :starttime, :endtime)');
         $query_params = [
             ':groupid' => $buildGroup->GetId(),
-            ':buildname' => '%Lesion%',
+            ':buildname' => 'Linux-g++-4.1-LesionSizingSandbox_Debug',
             ':siteid' => 0,
             ':parentgroupid' => 0,
             ':starttime' => '2009-02-23 00:00:00',

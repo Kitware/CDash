@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 include_once 'include/repository.php';
 
-class TestController extends AbstractProjectController
+final class TestController extends AbstractProjectController
 {
     // Render the test details page.
     public function details($buildtest_id = null)

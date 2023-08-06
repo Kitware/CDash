@@ -13,7 +13,7 @@ use PDOStatement;
 
 require_once 'include/filterdataFunctions.php';
 
-class BuildPropertiesController extends AbstractBuildController
+final class BuildPropertiesController extends AbstractBuildController
 {
     public function buildProperties(): View
     {

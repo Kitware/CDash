@@ -25,7 +25,7 @@ use Illuminate\View\View;
 
 require_once 'include/filterdataFunctions.php';
 
-class CoverageController extends AbstractBuildController
+final class CoverageController extends AbstractBuildController
 {
     public function compareCoverage(): Response|RedirectResponse
     {
@@ -341,7 +341,7 @@ class CoverageController extends AbstractBuildController
                     foreach ($authorids as $authorid) {
                         $xml .= '<author>';
                         $user = User::find($authorid);
-                        $xml .= add_XML_value('name', $user->full_name);
+                        $xml .= add_XML_value('name', $user !== null ? $user->full_name : '');
                         $xml .= add_XML_value('id', $authorid);
                         $xml .= '</author>';
                     }
@@ -363,7 +363,7 @@ class CoverageController extends AbstractBuildController
                 $User = User::find($userid);
                 $xml .= '<user>';
                 $xml .= add_XML_value('id', $userid);
-                $xml .= add_XML_value('name', $User->full_name);
+                $xml .= add_XML_value('name', $User !== null ? $User->full_name : 1);
                 $xml .= '</user>';
             }
 

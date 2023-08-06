@@ -51,9 +51,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_REQUEST['filename']) && iss
     // Move file back to inbox.
     Storage::move("inprogress/{$filename}", "inbox/{$filename}");
 
-    // Requeue the file.
+    // Requeue the file with exponential backoff.
     PendingSubmissions::IncrementForBuildId($buildid);
-    ProcessSubmission::dispatch($filename, $projectid, $buildid, md5_file(Storage::path("inbox/{$filename}")));
+    $delay = pow(config('cdash.retry_base'), $retry_handler->Retries);
+    ProcessSubmission::dispatch($filename, $projectid, $buildid, md5_file(Storage::path("inbox/{$filename}")))->delay(now()->addSeconds($delay));
     return response('OK', Response::HTTP_OK);
 } else {
     return response('Bad request', Response::HTTP_BAD_REQUEST);
