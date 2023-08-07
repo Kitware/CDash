@@ -266,7 +266,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         } elseif ($parent == 'TEST') {
             switch ($element) {
                 case 'NAME':
-                    $this->TestCreator->testName = $data;
+                    $this->TestCreator->setTestName($data);
                     break;
                 case 'PATH':
                     $this->TestCreator->testPath = $data;
