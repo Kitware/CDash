@@ -41,7 +41,7 @@ class TestCreator
     public $testCommand;
     public $testDetails;
     public $testOutput;
-    public $testName;
+    private $testName;
     public $testPath;
     public $testStatus;
 
@@ -153,6 +153,14 @@ class TestCreator
             $compressed_output = $this->testOutput;
         }
         $this->testOutput = $compressed_output;
+    }
+
+    /**
+     * Set test name, truncated to 255 characters.
+     */
+    public function setTestName(string $testName): void
+    {
+        $this->testName = substr($testName, 0, 255);
     }
 
     /**
