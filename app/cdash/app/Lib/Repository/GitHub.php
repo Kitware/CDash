@@ -32,8 +32,6 @@ use CDash\Model\BuildUpdateFile;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 
-require_once 'include/log.php';
-
 /**
  * Class GitHub
  * @package CDash\Lib\Repository

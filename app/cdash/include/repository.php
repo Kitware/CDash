@@ -14,9 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'include/log.php';
-
-use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
 use CDash\Database;
