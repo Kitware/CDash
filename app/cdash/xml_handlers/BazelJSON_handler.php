@@ -174,7 +174,7 @@ class BazelJSONHandler extends NonSaxHandler
             $testCreator->projectid = $this->Project->Id;
             $testCreator->testCommand = $this->CommandLine;
             $testCreator->testDetails = $testdata->details;
-            $testCreator->testName = $testdata->name;
+            $testCreator->setTestName($testdata->name);
             $testCreator->testStatus = $testdata->status;
 
             if (array_key_exists($testdata->name, $this->TestsOutput)) {
