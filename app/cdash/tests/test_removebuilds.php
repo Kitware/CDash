@@ -270,7 +270,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $test_creator->projectid = 1;
         $test_creator->alreadyCompressed = false;
         $test_creator->testDetails = 'Completed';
-        $test_creator->testName = 'removal test';
+        $test_creator->setTestName('removal test');
         $test_creator->testPath = '/path/to/removal/test';
         $test_creator->testCommand = 'php test_removebuilds.php';
         $test_creator->testOutput = 'build removed successfully';
@@ -299,7 +299,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $test_creator2->projectid = 1;
         $test_creator2->alreadyCompressed = false;
         $test_creator2->testDetails = 'Completed';
-        $test_creator2->testName = 'shared test';
+        $test_creator2->setTestName('shared test');
         $test_creator2->testPath = '/path/to/shared/test';
         $test_creator2->testCommand = 'php test_sharedbuilds.php';
         $test_creator2->testOutput = 'build shared successfully';
