@@ -13,6 +13,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 use CDash\Database;
@@ -284,36 +285,6 @@ class CoverageFile2User
         }
 
         return intval($query_result['id']);
-    }
-
-    /**
-     * Get the list of authors for the project
-     *
-     * @return array<int>|false
-     */
-    public function GetUsersFromProject(): array|false
-    {
-        if (!isset($this->ProjectId) || $this->ProjectId < 1) {
-            abort(500, 'CoverageFile2User:GetUsersFromProject: projectid not valid');
-        }
-
-        $db = Database::getInstance();
-        $query_result = $db->executePrepared('
-                            SELECT DISTINCT userid
-                            FROM coveragefile2user, coveragefilepriority
-                            WHERE
-                                coveragefilepriority.id=coveragefile2user.fileid
-                                AND coveragefilepriority.projectid=?
-                        ', [intval($this->ProjectId)]);
-        if (empty($query_result)) {
-            add_last_sql_error('CoverageFile2User:GetUsersFromProject');
-            return false;
-        }
-        $userids = [];
-        foreach ($query_result as $query_array) {
-            $userids[] = intval($query_array['userid']);
-        }
-        return $userids;
     }
 
     /** Assign the last author */
