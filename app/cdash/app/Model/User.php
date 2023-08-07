@@ -17,8 +17,6 @@ namespace CDash\Model;
 
 use CDash\Database;
 
-
-
 class User
 {
     public $Id;

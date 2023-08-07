@@ -16,9 +16,6 @@
 
 namespace CDash\Api\v1\HasFile;
 
-
-
-
 use CDash\Database;
 
 $md5sums_get = isset($_GET['md5sums']) ? htmlspecialchars($_GET['md5sums']) : '';

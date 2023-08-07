@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use CDash\Database;
 use Illuminate\Console\Command;
 
-
 require_once 'include/autoremove.php';
 
 class AutoRemoveBuilds extends Command

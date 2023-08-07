@@ -16,7 +16,6 @@
 
 namespace CDash\Api\v1\DeleteSubmissionFile;
 
-
 require_once 'include/ctestparser.php';
 
 use Illuminate\Support\Facades\Storage;

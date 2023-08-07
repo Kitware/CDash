@@ -15,8 +15,6 @@
 
 namespace CDash\Api\v1\ManageMeasurements;
 
-
-
 require_once 'include/api_common.php';
 
 use App\Models\Measurement;

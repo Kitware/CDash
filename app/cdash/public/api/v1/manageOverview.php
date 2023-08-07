@@ -16,7 +16,6 @@
 
 namespace CDash\Api\v1\ManageOverview;
 
-
 include_once 'include/api_common.php';
 
 use App\Services\PageTimer;

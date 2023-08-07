@@ -31,8 +31,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
-
-
 /**
  * This class handles submissions that should be parsed on the server-side
  * by CDash. This is in contrast to the XML files that are typically generated

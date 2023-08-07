@@ -16,8 +16,6 @@
 
 namespace CDash\Api\v1\GetSubmissionFile;
 
-
-
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 

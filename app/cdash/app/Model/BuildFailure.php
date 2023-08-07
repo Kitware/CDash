@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-
 require_once 'include/repository.php';
 
 use CDash\Config;
