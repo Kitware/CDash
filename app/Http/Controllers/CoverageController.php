@@ -124,8 +124,8 @@ final class CoverageController extends AbstractBuildController
         } elseif (isset($_POST['prioritySelection'])) {
             $CoverageFile2User = new CoverageFile2User();
             $CoverageFile2User->ProjectId = $projectid;
-            $CoverageFile2User->FullPath = htmlspecialchars($_POST['fullpath']);
-            $CoverageFile2User->SetPriority(intval($_POST['prioritySelection']));
+            $CoverageFile2User->FullPath = htmlspecialchars($_POST['fullpath'] ?? '');
+            $CoverageFile2User->SetPriority(intval($_POST['prioritySelection'] ?? -1));
         }
 
         // Remove the selected authors
