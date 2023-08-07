@@ -16,7 +16,6 @@
 namespace CDash\Messaging\Notification\Email;
 
 use CDash\Collection\BuildEmailCollection;
-use CDash\Config;
 use CDash\Messaging\FactoryInterface;
 use CDash\Collection\CollectionInterface;
 use CDash\Messaging\Notification\NotificationCollection;
