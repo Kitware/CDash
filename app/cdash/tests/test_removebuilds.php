@@ -52,7 +52,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
     public function testBuildRemovalWorksAsExpected()
     {
 
-        require_once 'include/pdo.php';
+
 
 
         $time = gmdate(FMT_DATETIME);

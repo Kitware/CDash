@@ -16,7 +16,7 @@
 
 namespace CDash\Api\v1\GetSubmissionFile;
 
-require_once 'include/pdo.php';
+
 
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;

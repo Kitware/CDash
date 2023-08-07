@@ -500,7 +500,7 @@ function generate_broken_build_message(array $emailtext, $Build, $Project): arra
 /** function to send email to site maintainers when the update step fails */
 function send_update_email(UpdateHandler $handler, int $projectid): void
 {
-    require_once 'include/pdo.php';
+
 
     $Project = new Project();
     $Project->Id = $projectid;

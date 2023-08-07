@@ -6,7 +6,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'tests/test_branchcoverage.php';
 
-require_once 'include/pdo.php';
+
 
 
 class ActualBranchCoverageTestCase extends BranchCoverageTestCase

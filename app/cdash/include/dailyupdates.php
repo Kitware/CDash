@@ -19,7 +19,7 @@
 // the input, the project's nightly start time, now
 //
 
-require_once 'include/pdo.php';
+
 require_once 'include/cdashmail.php';
 
 use CDash\Config;

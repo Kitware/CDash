@@ -6,7 +6,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
-require_once 'include/pdo.php';
+
 
 use App\Models\User;
 use CDash\Model\Project;

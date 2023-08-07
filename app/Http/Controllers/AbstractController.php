@@ -8,7 +8,8 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-include_once 'include/common.php';
+require_once 'include/common.php';
+require_once 'include/pdo.php';
 require_once 'include/defines.php';
 
 abstract class AbstractController extends BaseController

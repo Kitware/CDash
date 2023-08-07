@@ -17,7 +17,7 @@
 namespace CDash\Api\v1\HasFile;
 
 
-require_once 'include/pdo.php';
+
 
 use CDash\Database;
 

@@ -19,7 +19,7 @@ use CDash\Database;
 /** Remove builds by their group-specific auto-remove timeframe setting */
 function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
 {
-    require_once 'include/pdo.php';
+
 
 
     if (!$force && !config('cdash.autoremove_builds')) {
@@ -70,7 +70,7 @@ function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
 /** Remove the first builds that are at the beginning of the queue */
 function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false, $echo = true)
 {
-    require_once 'include/pdo.php';
+
 
 
     @set_time_limit(0);

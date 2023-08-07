@@ -24,8 +24,6 @@ class ViewDynamicAnalysisFileTestCase extends KWWebTestCase
 
     public function testNextPrevious()
     {
-        require_once('include/pdo.php');
-
         // Get id of existing build.
         $pdo = get_link_identifier()->getPdo();
         $stmt = $pdo->query(
