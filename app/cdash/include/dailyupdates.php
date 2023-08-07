@@ -970,7 +970,7 @@ function sendEmailUnregisteredUsers(int $projectid, $cvsauthors): void
 /** Add daily changes if necessary */
 function addDailyChanges(int $projectid): void
 {
-    include_once 'include/sendemail.php';
+    require_once 'include/sendemail.php';
 
     $project = new Project();
     $project->Id = $projectid;
@@ -1194,7 +1194,7 @@ function addDailyChanges(int $projectid): void
         }
 
         // Remove the first builds of the project
-        include_once 'include/autoremove.php';
+        require_once 'include/autoremove.php';
         removeFirstBuilds($projectid, $project->AutoremoveTimeframe, $project->AutoremoveMaxBuilds);
         removeBuildsGroupwise($projectid, $project->AutoremoveMaxBuilds);
     }

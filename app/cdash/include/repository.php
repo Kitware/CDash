@@ -858,7 +858,7 @@ function generate_bugtracker_new_issue_link($build, $project)
     }
 
     // Use our email functions to generate a message body and title for this build.
-    require_once('include/sendemail.php');
+    require_once 'include/sendemail.php';
     $errors = check_email_errors(intval($build->Id), false, 0, true);
     $emailtext = [];
     foreach ($errors as $errorkey => $nerrors) {

@@ -16,8 +16,8 @@
 
 namespace CDash\Model;
 
-include_once 'include/ctestparserutils.php';
-include_once 'include/repository.php';
+require_once 'include/ctestparserutils.php';
+require_once 'include/repository.php';
 
 use App\Models\Test;
 use App\Services\TestingDay;

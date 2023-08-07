@@ -17,7 +17,7 @@
 namespace CDash\Api\v1\DeleteSubmissionFile;
 
 
-include_once 'include/ctestparser.php';
+require_once 'include/ctestparser.php';
 
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
