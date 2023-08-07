@@ -16,7 +16,6 @@
 
 namespace CDash\Model;
 
-include_once 'include/common.php';
 include_once 'include/ctestparserutils.php';
 include_once 'include/repository.php';
 

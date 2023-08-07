@@ -315,7 +315,6 @@ class KWWebTestCase extends WebTestCase
 
     public function userExists($email)
     {
-        require_once('include/common.php');
         require_once('include/pdo.php');
         $pdo = get_link_identifier()->getPdo();
         $user_table = qid('user');

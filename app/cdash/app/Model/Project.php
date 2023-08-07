@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-require_once  'include/common.php';
 require_once 'include/cdashmail.php';
 
 use CDash\Collection\SubscriberCollection;
@@ -639,7 +638,6 @@ class Project
             $this->WebApiKey = $project_array['webapikey'];
             if ($this->WebApiKey == '') {
                 // If no web API key exists, we add one
-                include_once 'include/common.php';
                 $newKey = generate_password(40);
                 $this->PDO->executePrepared('
                     UPDATE project SET webapikey=? WHERE id=?
@@ -1644,7 +1642,7 @@ class Project
         $totalUploadSize = $this->GetUploadsTotalSize();
 
         if ($totalUploadSize > $this->UploadQuota) {
-            require_once 'include/common.php';
+
             add_log('Upload quota exceeded, removing old files', 'Project::CullUploadedFiles',
                 LOG_INFO, $this->Id);
 

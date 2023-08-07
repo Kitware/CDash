@@ -17,7 +17,6 @@
 namespace CDash\Api\v1\DeleteSubmissionFile;
 
 require_once 'include/pdo.php';
-include_once 'include/common.php';
 include_once 'include/ctestparser.php';
 
 use Illuminate\Support\Facades\Storage;

@@ -20,7 +20,7 @@ use CDash\Database;
 function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
 {
     require_once 'include/pdo.php';
-    require_once 'include/common.php';
+
 
     if (!$force && !config('cdash.autoremove_builds')) {
         return;
@@ -71,7 +71,7 @@ function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
 function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false, $echo = true)
 {
     require_once 'include/pdo.php';
-    require_once 'include/common.php';
+
 
     @set_time_limit(0);
     $remove_builds = config('cdash.autoremove_builds');

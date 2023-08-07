@@ -29,6 +29,8 @@ use DI\ContainerBuilder;
 
 use Tests\TestCase;
 
+require_once 'include/common.php';
+
 class CDashTestCase extends TestCase
 {
     protected $mockPDO;

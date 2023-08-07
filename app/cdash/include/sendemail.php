@@ -347,8 +347,6 @@ function get_email_summary(int $buildid, array $errors, $errorkey, int $maxitems
 /** Generate the title and body for a broken build. */
 function generate_broken_build_message(array $emailtext, $Build, $Project): array|false
 {
-    include_once 'include/common.php';
-
     $config = Config::getInstance();
     $serverURI = $config->getBaseUrl();
 
@@ -502,7 +500,6 @@ function generate_broken_build_message(array $emailtext, $Build, $Project): arra
 /** function to send email to site maintainers when the update step fails */
 function send_update_email(UpdateHandler $handler, int $projectid): void
 {
-    include_once 'include/common.php';
     require_once 'include/pdo.php';
 
     $Project = new Project();

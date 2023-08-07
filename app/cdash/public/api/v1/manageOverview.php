@@ -17,7 +17,6 @@
 namespace CDash\Api\v1\ManageOverview;
 
 require_once 'include/pdo.php';
-include_once 'include/common.php';
 include_once 'include/api_common.php';
 
 use App\Services\PageTimer;

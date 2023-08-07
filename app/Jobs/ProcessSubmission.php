@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Storage;
 
 use UpdateHandler;
 
-include_once 'include/common.php';
 require_once 'include/ctestparser.php';
 require_once 'include/sendemail.php';
 

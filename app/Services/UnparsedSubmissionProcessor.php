@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
-require_once 'include/common.php';
+
 
 /**
  * This class handles submissions that should be parsed on the server-side

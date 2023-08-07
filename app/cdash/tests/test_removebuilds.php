@@ -51,7 +51,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
 
     public function testBuildRemovalWorksAsExpected()
     {
-        require_once 'include/common.php';
+
         require_once 'include/pdo.php';
 
 

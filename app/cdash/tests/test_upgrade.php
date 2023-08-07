@@ -141,7 +141,7 @@ class UpgradeTestCase extends KWWebTestCase
     public function testBuildFailureDetailsUpgrade()
     {
         require_once dirname(__FILE__) . '/cdash_test_case.php';
-        require_once 'include/common.php';
+
         require_once 'include/pdo.php';
 
         $retval = 0;
@@ -282,7 +282,7 @@ class UpgradeTestCase extends KWWebTestCase
     public function testUpgradeDurations()
     {
         require_once dirname(__FILE__) . '/cdash_test_case.php';
-        require_once 'include/common.php';
+
         require_once 'include/pdo.php';
 
         $retval = 0;
@@ -362,7 +362,7 @@ class UpgradeTestCase extends KWWebTestCase
     public function testSiteConstraintUpgrade()
     {
         require_once dirname(__FILE__) . '/cdash_test_case.php';
-        require_once 'include/common.php';
+
         require_once 'include/pdo.php';
 
         $retval = 0;
@@ -589,7 +589,7 @@ class UpgradeTestCase extends KWWebTestCase
     public function testBuild2ConfigureUpgrade()
     {
         require_once dirname(__FILE__) . '/cdash_test_case.php';
-        require_once 'include/common.php';
+
         require_once 'include/pdo.php';
 
         $retval = 0;
@@ -753,7 +753,7 @@ class UpgradeTestCase extends KWWebTestCase
     public function testPopulateTestDuration()
     {
         require_once dirname(__FILE__) . '/cdash_test_case.php';
-        require_once 'include/common.php';
+
         require_once 'include/pdo.php';
 
         $config = Config::getInstance();

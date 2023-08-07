@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-require_once 'include/common.php';
+
 require_once 'include/pdo.php';
 
 use App\Models\AuthToken;
