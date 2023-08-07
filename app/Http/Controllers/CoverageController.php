@@ -117,7 +117,7 @@ final class CoverageController extends AbstractBuildController
 
         // Change the priority of selected files, assuming that the bulk replacement takes priority.
         if (isset($_POST['changePrioritySelected'])) {
-            foreach ($_POST['selectionFiles'] as $key => $value) {
+            foreach ($_POST['selectionFiles'] ?? [] as $key => $value) {
                 $CoverageFile2User->FullPath = htmlspecialchars($value);
                 $CoverageFile2User->SetPriority(intval($_POST['prioritySelectedSelection']));
             }
@@ -130,7 +130,7 @@ final class CoverageController extends AbstractBuildController
 
         // Remove the selected authors
         if (isset($_POST['removeAuthorsSelected'])) {
-            foreach ($_POST['selectionFiles'] as $key => $value) {
+            foreach ($_POST['selectionFiles'] ?? [] as $key => $value) {
                 $CoverageFile2User->FullPath = htmlspecialchars($value);
                 $CoverageFile2User->RemoveAuthors();
             }
@@ -138,7 +138,7 @@ final class CoverageController extends AbstractBuildController
 
         // Add the selected authors
         if (isset($_POST['addAuthorsSelected'])) {
-            foreach ($_POST['selectionFiles'] as $key => $value) {
+            foreach ($_POST['selectionFiles'] ?? [] as $key => $value) {
                 $CoverageFile2User->UserId = intval($_POST['userSelectedSelection']);
                 $CoverageFile2User->FullPath = htmlspecialchars($value);
                 $CoverageFile2User->Insert();
