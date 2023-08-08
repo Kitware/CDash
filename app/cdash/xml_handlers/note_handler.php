@@ -115,7 +115,7 @@ class NoteHandler extends AbstractHandler
             } elseif (!$this->NoteCreator->name) {
                 \Log::error("Note missing name for build #{$this->Build->Id}");
             } elseif (!$this->NoteCreator->text) {
-                \Log::error("No note text for '{$this->NoteCreator->name}' on build #{$this->Build->Id}");
+                \Log::info("No note text for '{$this->NoteCreator->name}' on build #{$this->Build->Id}");
             } elseif ($this->Timestamp === 0) {
                 \Log::error("No note time for '{$this->NoteCreator->name}' on build #{$this->Build->Id}");
             } else {
