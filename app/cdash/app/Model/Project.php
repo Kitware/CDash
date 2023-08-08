@@ -77,7 +77,7 @@ class Project
     public $AuthenticateSubmissions;
     public $ShowCoverageCode;
     public $AutoremoveTimeframe;
-    public $AutoremoveMaxBuilds;
+    public int $AutoremoveMaxBuilds;
     public $UploadQuota;
     public $RobotName;
     public $RobotRegex;
@@ -494,7 +494,7 @@ class Project
                      intval($this->AuthenticateSubmissions),
                      intval($this->ShowCoverageCode),
                      intval($this->AutoremoveTimeframe),
-                     intval($this->AutoremoveMaxBuilds),
+                     $this->AutoremoveMaxBuilds,
                      intval($this->UploadQuota),
                      $this->WebApiKey
                  ]));
@@ -626,7 +626,7 @@ class Project
             $this->AuthenticateSubmissions = $project_array['authenticatesubmissions'];
             $this->ShowCoverageCode = $project_array['showcoveragecode'];
             $this->AutoremoveTimeframe = $project_array['autoremovetimeframe'];
-            $this->AutoremoveMaxBuilds = $project_array['autoremovemaxbuilds'];
+            $this->AutoremoveMaxBuilds = (int) $project_array['autoremovemaxbuilds'];
             $this->UploadQuota = $project_array['uploadquota'];
             $this->CvsViewerType = $project_array['cvsviewertype'];
             $this->TestTimeStd = $project_array['testtimestd'];
