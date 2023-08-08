@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Services\TestingDay;
 use CDash\Model\Build;
 
-class AbstractBuildController extends AbstractProjectController
+abstract class AbstractBuildController extends AbstractProjectController
 {
     protected Build $build;
 

@@ -5,7 +5,7 @@ use Illuminate\Http\JsonResponse;
 
 include_once 'include/filterdataFunctions.php';
 
-class FilterController extends AbstractController
+final class FilterController extends AbstractController
 {
     public function getFilterDataArray(): JsonResponse
     {
