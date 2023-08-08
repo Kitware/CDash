@@ -397,8 +397,8 @@ final class UserController extends AbstractController
 
             if ($password_is_good && config('cdash.password.expires') > 0) {
                 $query = 'SELECT password FROM password WHERE userid=?';
-                $unique_count = config('cdash.password.unique');
-                if ($unique_count) {
+                $unique_count = (int) config('cdash.password.unique');
+                if ($unique_count > 0) {
                     $query .= " ORDER BY date DESC LIMIT $unique_count";
                 }
                 $stmt = $pdo->prepare($query);
