@@ -154,8 +154,6 @@ Route::get('/viewSubProjectDependenciesGraph.php', 'SubProjectController@depende
 // TODO: (williamjallen) Replace this /ajax route with an equivalent /api route
 Route::get('/ajax/getsubprojectdependencies.php', 'SubProjectController@ajaxDependenciesGraph');
 
-Route::get('/viewSubProjectDependencies.php', 'SubProjectController@dependencies');
-
 Route::get('/viewSite.php', 'SiteController@viewSite');
 
 Route::get('/viewMap.php', 'MapController@viewMap');
