@@ -16,9 +16,6 @@
 
 namespace CDash\Api\v1\SubProject;
 
-require_once 'include/pdo.php';
-include_once 'include/common.php';
-
 use App\Services\PageTimer;
 
 use CDash\Database;

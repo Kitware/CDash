@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use PDO;
 
-require_once('include/repository.php');
+require_once 'include/repository.php';
 
 final class BuildController extends AbstractBuildController
 {

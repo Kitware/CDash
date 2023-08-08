@@ -16,9 +16,8 @@
 
 namespace CDash\Api\v1\GetUserID;
 
-require_once 'include/common.php';
 require_once 'include/api_common.php';
-require_once 'include/pdo.php';
+
 
 use App\Models\User;
 use CDash\Model\Project;

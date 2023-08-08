@@ -8,7 +8,7 @@ use CDash\Config;
 use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-require_once 'include/pdo.php';
+
 
 class EmailTestCase extends KWWebTestCase
 {

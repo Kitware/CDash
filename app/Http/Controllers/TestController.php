@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-include_once 'include/repository.php';
+require_once 'include/repository.php';
 
 final class TestController extends AbstractProjectController
 {

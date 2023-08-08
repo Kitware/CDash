@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 
-include_once 'include/filterdataFunctions.php';
+require_once 'include/filterdataFunctions.php';
 
 class FilterController extends AbstractController
 {

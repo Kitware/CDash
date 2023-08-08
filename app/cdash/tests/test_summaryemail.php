@@ -4,8 +4,8 @@ use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-require_once 'include/common.php';
-require_once 'include/pdo.php';
+
+
 
 class SummaryEmailTestCase extends KWWebTestCase
 {

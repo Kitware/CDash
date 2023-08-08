@@ -14,8 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(dirname(dirname(__FILE__))) . '/include/pdo.php';
-
 /**
  *    db object to allow the user to interact with
  *    a database

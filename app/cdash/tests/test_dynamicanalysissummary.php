@@ -14,8 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-require_once 'include/common.php';
-require_once 'include/pdo.php';
+
+
 
 class DynamicAnalysisSummaryTestCase extends KWWebTestCase
 {

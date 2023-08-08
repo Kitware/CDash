@@ -16,9 +16,8 @@
 
 namespace CDash\Api\v1\Project;
 
-require_once 'include/pdo.php';
 require_once 'include/api_common.php';
-require_once 'include/common.php';
+
 
 
 use CDash\Model\Project;
@@ -134,7 +133,7 @@ function rest_post($user)
 
 function get_repo_url_example()
 {
-    require_once 'include/common.php';
+
     require_once 'include/repository.php';
     $url = get_param('url');
     $type = get_param('type');

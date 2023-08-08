@@ -1,5 +1,5 @@
 <?php
-require_once 'include/common.php';
+
 
 class ExtractTarTestCase extends KWWebTestCase
 {

@@ -16,9 +16,6 @@
 
 namespace CDash\Api\v1\ManageBuildGroup;
 
-require_once 'include/pdo.php';
-require_once 'include/common.php';
-
 use App\Services\PageTimer;
 use CDash\Database;
 use CDash\Model\BuildGroup;

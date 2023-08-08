@@ -108,7 +108,7 @@ class UpgradeTestCase extends KWWebTestCase
 
     public function testGetVendorVersion()
     {
-        require_once 'include/pdo.php';
+
 
         $version = pdo_get_vendor_version();
         list($major, $minor, ) = $version? explode(".", $version) : array(null,null,null);
@@ -141,8 +141,8 @@ class UpgradeTestCase extends KWWebTestCase
     public function testBuildFailureDetailsUpgrade()
     {
         require_once dirname(__FILE__) . '/cdash_test_case.php';
-        require_once 'include/common.php';
-        require_once 'include/pdo.php';
+
+
 
         $retval = 0;
         $old_table = 'testbuildfailure';
@@ -282,8 +282,8 @@ class UpgradeTestCase extends KWWebTestCase
     public function testUpgradeDurations()
     {
         require_once dirname(__FILE__) . '/cdash_test_case.php';
-        require_once 'include/common.php';
-        require_once 'include/pdo.php';
+
+
 
         $retval = 0;
 
@@ -362,8 +362,8 @@ class UpgradeTestCase extends KWWebTestCase
     public function testSiteConstraintUpgrade()
     {
         require_once dirname(__FILE__) . '/cdash_test_case.php';
-        require_once 'include/common.php';
-        require_once 'include/pdo.php';
+
+
 
         $retval = 0;
         $table_name = 'testsite';
@@ -589,8 +589,8 @@ class UpgradeTestCase extends KWWebTestCase
     public function testBuild2ConfigureUpgrade()
     {
         require_once dirname(__FILE__) . '/cdash_test_case.php';
-        require_once 'include/common.php';
-        require_once 'include/pdo.php';
+
+
 
         $retval = 0;
         $configure_table_name = 'testconfigure';
@@ -753,8 +753,8 @@ class UpgradeTestCase extends KWWebTestCase
     public function testPopulateTestDuration()
     {
         require_once dirname(__FILE__) . '/cdash_test_case.php';
-        require_once 'include/common.php';
-        require_once 'include/pdo.php';
+
+
 
         $config = Config::getInstance();
         $pdo = Database::getInstance()->getPdo();

@@ -16,8 +16,6 @@
 
 namespace CDash\Api\v1\ComputeClassifier;
 
-require_once 'include/log.php';
-require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
 $builds = $_GET['builds'];

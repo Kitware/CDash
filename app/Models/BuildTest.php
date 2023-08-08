@@ -111,7 +111,6 @@ class BuildTest extends Model
     // Only used in api/v1/viewTest.php
     public static function marshal($data, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate): array
     {
-        require_once 'include/common.php';
         $marshaledStatus = self::marshalStatus($data['status']);
         if ($data['details'] === 'Disabled') {
             $marshaledStatus = array('Not Run', 'disabled-test');

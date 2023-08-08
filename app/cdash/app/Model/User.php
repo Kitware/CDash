@@ -17,8 +17,6 @@ namespace CDash\Model;
 
 use CDash\Database;
 
-require_once 'include/common.php';
-
 class User
 {
     public $Id;

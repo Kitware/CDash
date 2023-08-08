@@ -14,8 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'include/log.php';
-
 use CDash\Database;
 
 /**

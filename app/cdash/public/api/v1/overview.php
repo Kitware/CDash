@@ -10,7 +10,6 @@
 
 namespace CDash\Api\v1\Overview;
 
-require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/memcache_functions.php';
 
