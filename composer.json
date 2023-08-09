@@ -22,7 +22,6 @@
     "ext-xml": "*",
     "ext-zlib": "*",
     "ext-simplexml": "*",
-    "ext-tidy": "*",
     "ext-fileinfo": "*",
     "24slides/laravel-saml2": "2.2.0",
     "adldap2/adldap2-laravel": "6.1.7",
