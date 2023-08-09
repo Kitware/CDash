@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "17f7c79d11119b53ae575f822aa9a0f6",
+    "content-hash": "a2e92feb77b4d402c48e828ad189376e",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -4917,6 +4917,7 @@
                 "issues": "https://github.com/php-http/message-factory/issues",
                 "source": "https://github.com/php-http/message-factory/tree/1.1.0"
             },
+            "abandoned": "psr/http-factory",
             "time": "2023-04-14T14:16:17+00:00"
         },
         {
@@ -11144,14 +11145,20 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "8.*",
+        "php": "^8.1",
         "ext-bcmath": "*",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-pdo": "*",
         "ext-posix": "*",
-        "ext-xsl": "*"
+        "ext-xsl": "*",
+        "ext-libxml": "*",
+        "ext-xml": "*",
+        "ext-zlib": "*",
+        "ext-simplexml": "*",
+        "ext-tidy": "*",
+        "ext-fileinfo": "*"
     },
     "platform-dev": {
         "ext-dom": "*",
