@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 
+require_once 'include/common.php';
+require_once 'include/pdo.php';
+require_once 'include/defines.php';
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
