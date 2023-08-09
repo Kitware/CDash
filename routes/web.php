@@ -38,7 +38,7 @@ Route::get('/recoverPassword.php', 'UserController@recoverPassword');
 Route::post('/recoverPassword.php', 'UserController@recoverPassword');
 
 Route::get('/login.php', function () {
-    return redirect('/login');
+    return redirect('/login', 301);
 });
 
 Route::get('ping', function (Response $response) {
@@ -65,13 +65,13 @@ Route::get('/displayImage.php', function (Request $request) {
 Route::get('/build/{id}', 'BuildController@summary');
 Route::get('/buildSummary.php', function (Request $request) {
     $buildid = $request->query('buildid');
-    return redirect("/build/{$buildid}");
+    return redirect("/build/{$buildid}", 301);
 });
 
 Route::get('/build/{id}/configure', 'BuildController@configure');
 Route::get('/viewConfigure.php', function (Request $request) {
     $buildid = $request->query('buildid');
-    return redirect("/build/{$buildid}/configure");
+    return redirect("/build/{$buildid}/configure", 301);
 });
 
 
@@ -84,7 +84,7 @@ Route::get('/viewUpdate.php', function (Request $request) {
 Route::get('/build/{id}/notes', 'BuildController@notes');
 Route::get('/viewNotes.php', function (Request $request) {
     $buildid = $request->query('buildid');
-    return redirect("/build/{$buildid}/notes");
+    return redirect("/build/{$buildid}/notes", 301);
 });
 
 Route::get('/project/{id}/edit', 'EditProjectController@edit');
@@ -107,7 +107,7 @@ Route::get('/testDetails.php', function (Request $request) {
     $testid = $request->query('test');
     $buildtest = \App\Models\BuildTest::where('buildid', $buildid)->where('testid', $testid)->first();
     if ($buildtest !== null) {
-        return redirect("/test/{$buildtest->id}");
+        return redirect("/test/{$buildtest->id}", 301);
     }
     abort(404);
 });
@@ -229,7 +229,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/monitor', 'MonitorController@monitor');
         Route::get('/monitor.php', function () {
-            return redirect('/monitor');
+            return redirect('/monitor', 301);
         });
     });
 });
