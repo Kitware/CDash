@@ -15,9 +15,10 @@
 =========================================================================*/
 
 use CDash\Database;
+use Illuminate\Support\Facades\DB;
 
 /** Remove builds by their group-specific auto-remove timeframe setting */
-function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
+function removeBuildsGroupwise(int $projectid, int $maxbuilds, bool $force = false): void
 {
 
 
@@ -38,26 +39,26 @@ function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
         if ($days < 2) {
             continue;
         }
-        $groupid = $buildgroup['id'];
+        $groupid = (int) $buildgroup['id'];
 
         $cutoff = time() - 3600 * 24 * $days;
 
         $cutoffdate = date(FMT_DATETIME, $cutoff);
 
-        $builds = $db->executePrepared('
+        $builds = DB::select('
                       SELECT build.id AS id
                       FROM build, build2group
                       WHERE
                           build.parentid IN (0, -1)
-                          AND build.starttime<?
-                          AND build2group.buildid=build.id
-                          AND build2group.groupid=?
+                          AND build.starttime < ?
+                          AND build2group.buildid = build.id
+                          AND build2group.groupid = ?
                       ORDER BY build.starttime ASC
                       LIMIT ?
                   ', [$cutoffdate, $groupid, $maxbuilds]);
 
         foreach ($builds as $build) {
-            $buildids[] = $build['id'];
+            $buildids[] = (int) $build->id;
         }
     }
 
