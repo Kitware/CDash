@@ -42,7 +42,6 @@
     "paragonie/random_compat": "2.0.4",
     "pear/archive_tar": "1.4.14",
     "php-di/php-di": "7.0.2",
-    "predis/predis": "0.8.7",
     "ramsey/uuid": "4.7.4"
   },
   "require-dev": {

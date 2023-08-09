@@ -24,7 +24,7 @@ return [
     | is used by your application. A default configuration has been added
     | for each back-end shipped with Laravel. You are free to add more.
     |
-    | Drivers: "sync", "database", "beanstalkd", "sqs", "redis", "null"
+    | Drivers: "sync", "database", "beanstalkd", "sqs", "null"
     |
     */
 
@@ -56,15 +56,6 @@ return [
             'queue' => env('SQS_QUEUE', 'your-queue-name'),
             'region' => env('SQS_REGION', 'us-east-1'),
         ],
-
-        'redis' => [
-            'driver' => 'redis',
-            'connection' => 'default',
-            'queue' => env('REDIS_QUEUE', 'default'),
-            'retry_after' => env('QUEUE_TIMEOUT', 2000) + 60,
-            'block_for' => null,
-        ],
-
     ],
 
     /*

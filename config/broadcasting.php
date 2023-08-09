@@ -41,11 +41,6 @@ return [
             ],
         ],
 
-        'redis' => [
-            'driver' => 'redis',
-            'connection' => 'default',
-        ],
-
         'log' => [
             'driver' => 'log',
         ],
