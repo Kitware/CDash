@@ -374,7 +374,7 @@
             </tr>
             <tr class="trodd">
                 <td id="nob">
-                    <a href="manageBackup.php">Manage Backup</a>
+                    <a href="removeBuilds.php">Remove Builds</a>
                 </td>
             </tr>
             <tr class="treven" ng-if="::cdash.show_monitor">

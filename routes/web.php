@@ -209,15 +209,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/upgrade.php', 'AdminController@upgrade');
         Route::post('/upgrade.php', 'AdminController@upgrade');
 
-        Route::get('/import.php', 'AdminController@import');
-        Route::post('/import.php', 'AdminController@import');
-
-        Route::get('/importBackup.php', 'AdminController@importBackup');
-        Route::post('/importBackup.php', 'AdminController@importBackup');
-
-        Route::get('/manageBackup.php', 'AdminController@manageBackup');
-        Route::post('/manageBackup.php', 'AdminController@manageBackup');
-
         Route::get('/removeBuilds.php', 'AdminController@removeBuilds');
         Route::post('/removeBuilds.php', 'AdminController@removeBuilds');
 
