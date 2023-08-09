@@ -71,6 +71,9 @@ fi
 # Assign www-data ownership of apache2 configuration files
 RUN chown -R www-data:www-data /etc/apache2
 
+# Disable git repo ownership check system wide
+RUN git config --system --add safe.directory '*'
+
 # Run the rest of the commands as www-data
 USER www-data
 
