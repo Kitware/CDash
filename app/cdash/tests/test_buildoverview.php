@@ -16,7 +16,7 @@ class BuildOverviewTestCase extends KWWebTestCase
     {
         $this->login();
         $this->get($this->url . '/buildOverview.php');
-        if (strpos($this->getBrowser()->getContentAsText(), 'Project not specified') === false) {
+        if (!str_contains($this->getBrowser()->getContentAsText(), 'You do not have access to the requested project or the requested project does not exist.')) {
             $this->fail("'Project not specified' not found when expected");
             return 1;
         }

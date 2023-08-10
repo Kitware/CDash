@@ -879,7 +879,7 @@ class Project
     {
         $buildgroups = array();
         $query = $this->PDO->executePrepared("
-                     SELECT id
+                     SELECT id, name
                      FROM buildgroup
                      WHERE projectid=? AND endtime='1980-01-01 00:00:00'
                  ", [intval($this->Id)]);
@@ -888,6 +888,7 @@ class Project
         foreach ($query as $row) {
             $buildgroup = new BuildGroup();
             $buildgroup->SetId(intval($row['id']));
+            $buildgroup->SetName($row['name']);
             $buildgroups[] = $buildgroup;
         }
         return $buildgroups;
