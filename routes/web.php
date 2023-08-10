@@ -114,6 +114,9 @@ Route::get('/testDetails.php', function (Request $request) {
 
 Route::get('/overview.php', 'ProjectOverviewController@overview');
 
+// TODO: (williamjallen) This should be in the auth section, but needs to be here until we get rid of Protractor..
+Route::get('/manageOverview.php', 'ProjectOverviewController@manageOverview');
+
 Route::get('/ajax/showtestfailuregraph.php', 'TestController@ajaxTestFailureGraph');
 
 Route::match(['get', 'post'], '/projects', 'ViewProjectsController@viewAllProjects');
@@ -201,8 +204,6 @@ Route::middleware(['auth'])->group(function () {
 
     // TODO: Determine if this route should go in the admin section
     Route::get('/userStatistics.php', 'AdminController@userStatistics');
-
-    Route::get('/manageOverview.php', 'ProjectOverviewController@manageOverview');
 
     Route::middleware(['admin'])->group(function () {
         Route::get('/authtokens/manage', 'AuthTokenController@manage');
