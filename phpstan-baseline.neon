@@ -1828,11 +1828,6 @@ parameters:
 			path: app/Listeners/ConfiguredSendEmailVerificationNotification.php
 
 		-
-			message: "#^Method App\\\\Models\\\\BuildNote\\:\\:note\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Models/BuildNote.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Models/BuildTest.php
@@ -3176,26 +3171,6 @@ parameters:
 			message: "#^Property CDash\\\\Controller\\\\Api\\\\Timeline\\:\\:\\$timeToDate has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/Timeline.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\BuildNote\\:\\:\\$note\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewNotes.php
-
-		-
-			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\ViewNotes\\:\\:\\$build\\.$#"
-			count: 9
-			path: app/cdash/app/Controller/Api/ViewNotes.php
-
-		-
-			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\ViewNotes\\:\\:\\$pageTimer\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewNotes.php
-
-		-
-			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewNotes\\:\\:getResponse\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewNotes.php
 
 		-
 			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:\\$pageTimer\\.$#"
