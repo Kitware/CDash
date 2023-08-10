@@ -112,8 +112,7 @@ Route::get('/testDetails.php', function (Request $request) {
     abort(404);
 });
 
-Route::get('/overview.php', 'ProjectController@overview');
-Route::get('/manageOverview.php', 'ProjectController@manageOverview');
+Route::get('/overview.php', 'ProjectOverviewController@overview');
 
 Route::get('/ajax/showtestfailuregraph.php', 'TestController@ajaxTestFailureGraph');
 
@@ -202,6 +201,8 @@ Route::middleware(['auth'])->group(function () {
 
     // TODO: Determine if this route should go in the admin section
     Route::get('/userStatistics.php', 'AdminController@userStatistics');
+
+    Route::get('/manageOverview.php', 'ProjectOverviewController@manageOverview');
 
     Route::middleware(['admin'])->group(function () {
         Route::get('/authtokens/manage', 'AuthTokenController@manage');
