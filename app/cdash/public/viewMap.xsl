@@ -71,7 +71,7 @@
 </a>
 </xsl:if>
 </center></td>
-<td><center><xsl:value-of select="processor_speed"/>Hz</center></td>
+<td><center><xsl:value-of select="processor_speed"/></center></td>
 <td><center><xsl:value-of select="numberphysicalcpus"/></center></td>
 </tr>
 </xsl:for-each>
