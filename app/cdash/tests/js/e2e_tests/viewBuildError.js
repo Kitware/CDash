@@ -22,12 +22,12 @@ describe("viewBuildError", function() {
   });
 
   it("displays build errors inline", function() {
-    browser.get('viewBuildError.php?buildid=75&type=0');
+    browser.get('viewBuildError.php?buildid=74&type=0');
     expect(browser.getPageSource()).toContain("error: 'foo' was not declared in this scope");
   });
 
   it("displays build errors inline on parent builds", function() {
-    browser.get('viewBuildError.php?buildid=74&type=0');
+    browser.get('viewBuildError.php?buildid=73&type=0');
     expect(browser.getPageSource()).toContain("some-test-subproject");
     expect(browser.getPageSource()).toContain("error: 'foo' was not declared in this scope");
   });
