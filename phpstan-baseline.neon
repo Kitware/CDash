@@ -15658,24 +15658,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 2
-			path: app/cdash/public/api/v1/getbuildid.php
-
-		-
-			message: "#^Call to function is_numeric\\(\\) with int will always evaluate to true\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/getbuildid.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/getbuildid.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
 				04/01/2023$#
 			"""
