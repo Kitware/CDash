@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\BuildNote;
 use App\Models\Site;
 use App\Models\User;
 use App\Models\Build as EloquentBuild;
@@ -20,7 +19,6 @@ use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUserNote;
 use CDash\Model\Label;
 use CDash\Model\Project;
-use CDash\Model\UserProject;
 use CDash\ServiceContainer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -1013,16 +1011,9 @@ final class BuildController extends AbstractBuildController
     public function apiManageBuildGroup(): JsonResponse
     {
         $pageTimer = new PageTimer();
-        $response = [];
 
-        // Checks
-        if (!Auth::check()) {
-            $response['requirelogin'] = '1';
-            echo json_encode($response);
-            return;
-        }
+        /** @var User $user */
         $user = Auth::user();
-        $userid = $user->id;
 
         $response = begin_JSON_response();
         $response['backurl'] = 'user.php';
@@ -1031,101 +1022,69 @@ final class BuildController extends AbstractBuildController
         $response['title'] = 'Build Groups';
         $response['hidenav'] = 1;
 
-        @$projectid = $_GET['projectid'];
-        if (isset($projectid)) {
-            $projectid = intval($projectid);
-        }
-        $db = Database::getInstance();
+        $projectid = intval($_GET['projectid'] ?? 0);
 
         // If the projectid is not set and there is only one project we go directly to the page
-        if (!isset($projectid)) {
-            $project_array = $db->executePreparedSingleRow('SELECT id FROM project');
-            if (!empty($project)) {
-                $projectid = intval($project_array['id']);
-            }
+        if ($projectid === 0) {
+            $projectid = (int) (DB::select('SELECT id FROM project')[0] ?? 0);
         }
 
-        @$show = $_GET['show'];
-
-        if ($projectid && is_numeric($projectid)) {
-            $user2project = new UserProject();
-            $user2project->UserId = $userid;
-            $user2project->ProjectId = $projectid;
-            $user2project->FillFromUserId();
-        }
-
-        if (!$user->IsAdmin() && $user2project->Role <= 1) {
-            $response['error'] = "You don't have the permissions to access this page";
-            echo json_encode($response);
-            return;
-        }
+        $this->setProjectById($projectid);
+        Gate::authorize('edit-project', $this->project);
 
         // List the available projects that this user has admin rights to.
         $sql = 'SELECT id,name FROM project';
         $params = [];
         if (!$user->IsAdmin()) {
-            $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)";
-            $params[] = intval($userid);
+            $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid = ? AND role > 0)";
+            $params[] = Auth::id();
         }
-        $projects = $db->executePrepared($sql, $params);
+        $projects = DB::select($sql, $params);
         $availableprojects = [];
         foreach ($projects as $project_array) {
-            $availableproject =[];
-            $availableproject['id'] = $project_array['id'];
-            $availableproject['name'] = $project_array['name'];
-            if ($project_array['id'] == $projectid) {
+            $availableproject = [
+                'id' => (int) $project_array->id,
+                'name' => $project_array->name,
+            ];
+            if ((int) $project_array->id === $this->project->Id) {
                 $availableproject['selected'] = '1';
             }
             $availableprojects[] = $availableproject;
         }
         $response['availableprojects'] = $availableprojects;
 
-        if (intval($projectid) < 1) {
-            $pageTimer->end($response);
-            echo json_encode($response);
-            return;
-        }
-
         // Find sites that have recently submitted to this project.
         $currentUTCTime = gmdate(FMT_DATETIME);
         $beginUTCTime = gmdate(FMT_DATETIME, time() - 3600 * 7 * 24); // 7 days
 
-        $stmt = $db->prepare('
+        $sites_query = DB::select('
             SELECT DISTINCT b.siteid, s.name
             FROM build b
             JOIN site s ON (b.siteid=s.id)
-            WHERE projectid=:projectid AND
-            starttime BETWEEN :start AND :end AND
-            parentid IN (-1, 0)
-        ');
-        $stmt->bindParam(':projectid', $projectid);
-        $stmt->bindParam(':start', $beginUTCTime);
-        $stmt->bindParam(':end', $currentUTCTime);
-        if (!$db->execute($stmt)) {
-            $response['error'] = 'Database error during site lookup';
-        }
+            WHERE
+                projectid = ?
+                AND starttime BETWEEN ? AND ?
+                AND parentid IN (-1, 0)
+        ', [$this->project->Id, $beginUTCTime, $currentUTCTime]);
 
         $sites = [];
-        while ($row = $stmt->fetch()) {
-            $site = [];
-            $site['id'] = $row['siteid'];
-            $site['name'] = $row['name'];
-            $sites[] = $site;
+        foreach ($sites_query as $row) {
+            $sites[] = [
+                'id' => (int) $row->siteid,
+                'name' => $row->name,
+            ];
         }
-
         $response['sites'] = $sites;
 
         // Get the BuildGroups for this Project.
-        $Project = new Project();
-        $Project->Id = $projectid;
-        $buildgroups = $Project->GetBuildGroups();
-        $buildgroups_response = array();
-        $dynamics_response = array();
+        $buildgroups = $this->project->GetBuildGroups();
+        $buildgroups_response = [];
+        $dynamics_response = [];
         /** @var BuildGroup $buildgroup */
         foreach ($buildgroups as $buildgroup) {
-            $buildgroup_response = array();
+            $buildgroup_response = [];
 
-            if ($show == $buildgroup->GetId()) {
+            if (intval($_GET['show'] ?? 0) === $buildgroup->GetId()) {
                 $buildgroup_response['selected'] = '1';
             }
 
@@ -1144,7 +1103,7 @@ final class BuildController extends AbstractBuildController
 
             $buildgroups_response[] = $buildgroup_response;
 
-            if ($buildgroup->GetType() != 'Daily') {
+            if ($buildgroup->GetType() !== 'Daily') {
                 // Get the rules associated with this dynamic group.
                 $dynamic_response = $buildgroup_response;
                 $rules = $buildgroup->GetRules();
@@ -1204,49 +1163,44 @@ final class BuildController extends AbstractBuildController
         $response['dynamics'] = $dynamics_response;
 
         // Store some additional details about this project.
-        get_dashboard_JSON($Project->GetName(), null, $response);
+        get_dashboard_JSON($this->project->GetName(), null, $response);
 
         // Generate response for any wildcard groups.
-        $wildcards = $db->executePrepared("
-                 SELECT
-                     bg.name,
-                     bg.id,
-                     b2gr.buildtype,
-                     b2gr.buildname
-                 FROM
-                     build2grouprule AS b2gr,
-                     buildgroup AS bg
-                 WHERE
-                     b2gr.buildname LIKE '\%%\%'
-                     AND b2gr.groupid = bg.id
-                     AND bg.type = 'Daily'
-                     AND bg.projectid=?
-                     AND b2gr.endtime = '1980-01-01 00:00:00'
-             ", [intval($projectid)]);
-        $err = pdo_error();
-        if (!empty($err)) {
-            $response['error'] = $err;
-        }
+        $wildcards = DB::select("
+            SELECT
+                bg.name,
+                bg.id,
+                b2gr.buildtype,
+                b2gr.buildname
+            FROM
+                build2grouprule AS b2gr,
+                buildgroup AS bg
+            WHERE
+                b2gr.buildname LIKE '\%%\%'
+                AND b2gr.groupid = bg.id
+                AND bg.type = 'Daily'
+                AND bg.projectid = ?
+                AND b2gr.endtime = '1980-01-01 00:00:00'
+        ", [intval($this->project->Id)]);
 
-        $wildcards_response = array();
+        $wildcards_response = [];
         foreach ($wildcards as $wildcard_array) {
-            $wildcard_response = array();
-            $wildcard_response['buildgroupname'] = $wildcard_array['name'];
-            $wildcard_response['buildgroupid'] = $wildcard_array['id'];
-            $wildcard_response['buildtype'] = $wildcard_array['buildtype'];
-
-            $match = $wildcard_array['buildname'];
+            $match = $wildcard_array->buildname;
             $match = trim($match, '%');
             $match = str_replace('%', '*', $match);
-            $wildcard_response['match'] = $match;
 
-            $wildcards_response[] = $wildcard_response;
+            $wildcards_response[] = [
+                'buildgroupname' => $wildcard_array->name,
+                'buildgroupid' => (int) $wildcard_array->id,
+                'buildtype' => $wildcard_array->buildtype,
+                'match' => $match,
+            ];
         }
 
         $response['wildcards'] = $wildcards_response;
 
         $pageTimer->end($response);
-        echo json_encode(cast_data_for_JSON($response));
+        return response()->json(cast_data_for_JSON($response));
     }
 
     public function viewBuildError(): Response
