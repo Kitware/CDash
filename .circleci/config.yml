@@ -50,14 +50,23 @@ jobs:
           name: Build Production Docker Images
           command: |
               cp docker/cdash.docker Dockerfile
-              docker build -t kitware/cdash:latest --target cdash .
-              docker build -t kitware/cdash-worker:latest --target cdash-worker .
+              DOCKER_TAG="${CIRCLE_TAG:-latest}"
+              docker build -t kitware/cdash:${DOCKER_TAG} --target cdash .
+              docker build -t kitware/cdash-worker:${DOCKER_TAG} --target cdash-worker .
       - run:
           name: Publish Docker Images
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            if [ "${CIRCLE_BRANCH}" == "master" ] || [ -n "${CIRCLE_TAG}" ]; then
+              DOCKER_TAG="${CIRCLE_TAG:-latest}"
               echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
               docker push kitware/cdash:testing
-              docker push kitware/cdash:latest
-              docker push kitware/cdash-worker:latest
+              docker push kitware/cdash:${DOCKER_TAG}
+              docker push kitware/cdash-worker:${DOCKER_TAG}
             fi
+workflows:
+  all-builds:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /^.*/
