@@ -418,52 +418,15 @@ final class BuildController extends AbstractBuildController
      */
     public function buildOverview(): View|RedirectResponse
     {
-        $projectname = htmlspecialchars($_GET['project'] ?? '');
-
-        if (strlen($projectname) === 0) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Project not specified'
-            ]);
-        }
-
-        $this->setProjectByName($projectname);
+        $this->setProjectByName(htmlspecialchars($_GET['project'] ?? ''));
 
         $date = htmlspecialchars($_GET['date'] ?? '');
 
-        $xml = begin_XML_for_XSLT();
-        $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
-
-        $db = Database::getInstance();
-
         // We select the builds
-        list($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date, $this->project->NightlyTime);
-        $xml .= '<menu>';
-        $xml .= add_XML_value('previous', 'buildOverview.php?project=' . urlencode($projectname) . '&date=' . $previousdate);
-        if (has_next_date($date, $currentstarttime)) {
-            $xml .= add_XML_value('next', 'buildOverview.php?project=' . urlencode($projectname) . '&date=' . $nextdate);
-        } else {
-            $xml .= add_XML_value('nonext', '1');
-        }
-        $xml .= add_XML_value('current', 'buildOverview.php?project=' . urlencode($projectname) . '&date=');
-
-        $xml .= add_XML_value('back', 'index.php?project=' . urlencode($projectname) . '&date=' . $today);
-        $xml .= '</menu>';
+        $currentstarttime = get_dates($date, $this->project->NightlyTime)[1];
 
         // Return the available groups
-        $groupSelection = $_POST['groupSelection'] ?? 0;
-        $groupSelection = intval($groupSelection);
-
-        $buildgroup = $db->executePrepared('SELECT id, name FROM buildgroup WHERE projectid=?', [$this->project->Id]);
-        foreach ($buildgroup as $buildgroup_array) {
-            $xml .= '<group>';
-            $xml .= add_XML_value('id', $buildgroup_array['id']);
-            $xml .= add_XML_value('name', $buildgroup_array['name']);
-            if ($groupSelection === intval($buildgroup_array['id'])) {
-                $xml .= add_XML_value('selected', '1');
-            }
-            $xml .= '</group>';
-        }
+        $selected_group = intval($_POST['groupSelection'] ?? 0);
 
         // Check the builds
         $beginning_timestamp = $currentstarttime;
@@ -474,14 +437,14 @@ final class BuildController extends AbstractBuildController
 
         $groupSelectionSQL = '';
         $params = [];
-        if ($groupSelection > 0) {
+        if ($selected_group > 0) {
             $groupSelectionSQL = " AND b2g.groupid=? ";
-            $params[] = $groupSelection;
+            $params[] = $selected_group;
         }
 
-        $builds = $db->executePrepared("
+        $builds = DB::select("
               SELECT
-                  s.name,
+                  s.name AS sitename,
                   b.name AS buildname,
                   be.type,
                   be.sourcefile,
@@ -506,55 +469,34 @@ final class BuildController extends AbstractBuildController
                   be.sourceline ASC
           ", array_merge([$end_UTCDate, $beginning_UTCDate, $this->project->Id], $params));
 
-        echo pdo_error();
+        $sourcefiles = [];
 
-        if (count($builds) === 0) {
-            $xml .= '<message>No warnings or errors today!</message>';
-        }
-
-        $current_file = 'ThisIsMyFirstFile';
+        // NOTE: Query results are already ordered by sourcefile...
         foreach ($builds as $build_array) {
-            if ($build_array['sourcefile'] != $current_file) {
-                if ($current_file != 'ThisIsMyFirstFile') {
-                    $xml .= '</sourcefile>';
-                }
-                $xml .= '<sourcefile>';
-                $xml .= '<name>' . $build_array['sourcefile'] . '</name>';
-                $current_file = $build_array['sourcefile'];
+            $filename = $build_array->sourcefile;
+
+            if (!isset($sourcefiles[$filename])) {
+                $sourcefiles[$filename] = [
+                    'name' => $filename,
+                    'errors' => [],
+                    'warnings' => [],
+                ];
             }
 
-            if (intval($build_array['type']) === 0) {
-                $xml .= '<error>';
-            } else {
-                $xml .= '<warning>';
-            }
-            $xml .= '<line>' . $build_array['sourceline'] . '</line>';
-            $textarray = explode("\n", $build_array['text']);
-            foreach ($textarray as $text) {
-                if (strlen($text) > 0) {
-                    $xml .= add_XML_value('text', $text);
-                }
-            }
-            $xml .= '<sitename>' . $build_array['name'] . '</sitename>';
-            $xml .= '<buildname>' . $build_array['buildname'] . '</buildname>';
-            if ($build_array['type'] == 0) {
-                $xml .= '</error>';
-            } else {
-                $xml .= '</warning>';
-            }
+            $type = (int) $build_array->type === 0 ? 'errors' : 'warnings';
+            $sourcefiles[$filename][$type][] = [
+                'line' => (int) $build_array->sourceline,
+                'sitename' => $build_array->sitename,
+                'buildname' => $build_array->buildname,
+                'text' => $build_array->text,
+            ];
         }
 
-        if (count($builds) > 0) {
-            $xml .= '</sourcefile>';
-        }
-        $xml .= '</cdash>';
-
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/buildOverview', true),
-            'project' => $this->project,
-            'title' => 'Build Overview'
-        ]);
+        return view('build.overview')
+            ->with('project', $this->project)
+            ->with('selected_group', $selected_group)
+            ->with('sourcefiles', $sourcefiles)
+            ->with('startdate', date('l, F d Y H:i:s', $currentstarttime));
     }
 
     public function viewUpdatePageContent(): JsonResponse
