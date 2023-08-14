@@ -9,6 +9,7 @@ use CDash\Database;
 use CDash\Model\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -16,15 +17,8 @@ final class SiteController extends AbstractController
 {
     public function siteStatistics(): View|RedirectResponse
     {
-        $xml = begin_XML_for_XSLT();
-        $xml .= '<backurl>user.php</backurl>';
-        $xml .= '<menutitle>CDash</menutitle>';
-        $xml .= '<menusubtitle>Site Statistics</menusubtitle>';
-
-        $db = Database::getInstance();
-
         if (config('database.default') === 'pgsql') {
-            $query = $db->executePrepared("
+            $sites = DB::select("
                          SELECT
                              siteid,
                              sitename,
@@ -63,7 +57,7 @@ final class SiteController extends AbstractController
                          ORDER BY busytime DESC
                      ");
         } else {
-            $query = $db->executePrepared('
+            $sites = DB::select('
                          SELECT
                              siteid,
                              sitename,
@@ -99,22 +93,9 @@ final class SiteController extends AbstractController
                          ORDER BY busytime DESC
                      ');
         }
-        echo pdo_error();
-        foreach ($query as $query_array) {
-            $xml .= '<site>';
-            $xml .= add_XML_value('id', $query_array['siteid']);
-            $xml .= add_XML_value('name', $query_array['sitename']);
-            $xml .= add_XML_value('busytime', $query_array['busytime']);
-            $xml .= '</site>';
-        }
 
-        $xml .= '</cdash>';
-
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/siteStatistics', true),
-            'title' => 'Site Statistics'
-        ]);
+        return view('site.site-statistics')
+            ->with('sites', $sites);
     }
 
     public function editSite(): View|RedirectResponse
