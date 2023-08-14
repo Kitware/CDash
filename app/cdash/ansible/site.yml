@@ -24,7 +24,6 @@
         - php5-curl
         - php5-gd
         - php5-json
-        - php5-memcached
         - php5-mysql
         - php5-xdebug
         - php5-xsl

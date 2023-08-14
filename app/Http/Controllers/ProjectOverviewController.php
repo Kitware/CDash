@@ -7,8 +7,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
-require_once 'include/memcache_functions.php';
-
 final class ProjectOverviewController extends AbstractProjectController
 {
     public function overview(): Response
