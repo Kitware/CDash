@@ -9,36 +9,31 @@ use Illuminate\View\View;
 
 final class ManageUsersController extends AbstractController
 {
-    /**
-     * TODO: (williamjallen) this function contains legacy XSL templating and should be converted
-     *       to a proper Blade template with Laravel-based DB queries eventually.  This contents
-     *       this function are originally from manageUsers.php and have been copied (almost) as-is.
-     */
     public function showPage(): View|RedirectResponse
     {
-        $xml = begin_XML_for_XSLT();
-        $xml .= '<backurl>user.php</backurl>';
-
-        @$postuserid = $_POST['userid'];
-        if ($postuserid != null && $postuserid > 0) {
+        $postuserid = (int) ($_POST['userid'] ?? -1);
+        if ($postuserid > 0) {
             $post_user = User::find($postuserid);
         }
 
+        $warning = '';
+        $error = '';
+
         if (isset($_POST['adduser'])) {
             // arrive from register form
-            $email = $_POST['email'];
-            $passwd = $_POST['passwd'];
-            $passwd2 = $_POST['passwd2'];
-            if (!($passwd == $passwd2)) {
-                $xml .= add_XML_value('error', 'Passwords do not match!');
+            $email = $_POST['email'] ?? '';
+            $passwd = $_POST['passwd'] ?? '';
+            $passwd2 = $_POST['passwd2'] ?? '';
+            if ($passwd !== $passwd2) {
+                $error = 'Passwords do not match!';
             } else {
-                $fname = $_POST['fname'];
-                $lname = $_POST['lname'];
-                $institution = $_POST['institution'];
-                if ($email && $passwd && $passwd2 && $fname && $lname && $institution) {
+                $fname = $_POST['fname'] ?? '';
+                $lname = $_POST['lname'] ?? '';
+                $institution = $_POST['institution'] ?? '';
+                if ($email !== '' && $passwd !== '' && $passwd2 !== '' && $fname !== '' && $lname !== '' && $institution !== '') {
                     $new_user = User::where('email', $email)->first();
-                    if (!is_null($new_user)) {
-                        $xml .= add_XML_value('error', 'Email already registered!');
+                    if ($new_user !== null) {
+                        $error = 'Email already registered!';
                     } else {
                         $new_user = new User();
                         $passwordHash = password_hash($passwd, PASSWORD_DEFAULT);
@@ -49,49 +44,39 @@ final class ManageUsersController extends AbstractController
                         $new_user->lastname = $lname;
                         $new_user->institution = $institution;
                         if ($new_user->save()) {
-                            $xml .= add_XML_value('warning', 'User ' . $email . ' added successfully with password:' . $passwd);
+                            $warning = "User $email added successfully with password: $passwd";
                         } else {
-                            $xml .= add_XML_value('error', 'Cannot add user');
+                            $error = 'Cannot add user';
                         }
                     }
                 } else {
-                    $xml .= add_XML_value('error', 'Please fill in all of the required fields');
+                    $error = 'Please fill in all of the required fields';
                 }
             }
         } elseif (isset($_POST['makenormaluser'])) {
             if ($postuserid > 1) {
                 $post_user->admin = 0;
                 $post_user->save();
-                $xml .= "<warning>$post_user->full_name is not administrator anymore.</warning>";
+                $warning = "$post_user->full_name is not administrator anymore.";
             } else {
-                $xml .= '<error>Administrator should remain admin.</error>';
+                $error = 'Administrator should remain admin.';
             }
         } elseif (isset($_POST['makeadmin'])) {
             $post_user->admin = 1;
             $post_user->save();
-            $xml .= "<warning>$post_user->full_name is now an administrator.</warning>";
+            $warning = "$post_user->full_name is now an administrator.";
         } elseif (isset($_POST['removeuser'])) {
             $name = $post_user->full_name;
             $post_user->delete();
-            $xml .= "<warning>$name has been removed.</warning>";
+            $warning = "$name has been removed.";
         }
 
-        if (isset($_POST['search'])) {
-            $xml .= '<search>' . $_POST['search'] . '</search>';
-        }
 
-        $config = Config::getInstance();
-        if ($config->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER') == 1) {
-            $xml .= add_XML_value('fullemail', '1');
-        }
-
-        $xml .= '</cdash>';
-
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/manageUsers', true),
-            'title' => 'Manage Users'
-        ]);
+        return view('admin.manage-users')
+            ->with('warning', $warning)
+            ->with('error', $error)
+            ->with('search', $_POST['search'] ?? '')
+            ->with('fullemail', Config::getInstance()->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER'));
     }
 
     public function ajaxFindUsers(): View
