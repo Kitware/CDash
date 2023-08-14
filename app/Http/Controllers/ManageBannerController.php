@@ -2,11 +2,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use CDash\Database;
 use App\Models\Banner;
 use CDash\Model\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -22,18 +22,13 @@ final class ManageBannerController extends AbstractController
         /** @var User $user */
         $user = Auth::user();
 
-        $xml = begin_XML_for_XSLT();
-        $xml .= '<backurl>user.php</backurl>';
-        $xml .= '<menutitle>CDash</menutitle>';
-        $xml .= '<menusubtitle>Banner</menusubtitle>';
-
         $project = new Project;
         if (isset($_GET['projectid']) && (int) $_GET['projectid'] > 0) {
             $project->Id = (int) $_GET['projectid'];
             Gate::authorize('edit-project', $project);
         } elseif ($user->IsAdmin()) {
             // We are able to set the global banner
-            $project->Id = 0;
+            $project->Id = (int) ($_GET['projectid'] ?? 0);
         } else {
             // Deny access
             return view('cdash', [
@@ -42,15 +37,14 @@ final class ManageBannerController extends AbstractController
             ]);
         }
 
+        $available_projects = [];
+
         // If user is admin then we can add a banner for all projects
         if ($user->IsAdmin()) {
-            $xml .= '<availableproject>';
-            $xml .= add_XML_value('id', '0');
-            $xml .= add_XML_value('name', 'All');
-            if ($project->Id === 0) {
-                $xml .= add_XML_value('selected', '1');
-            }
-            $xml .= '</availableproject>';
+            $root_project = new Project();
+            $root_project->Id = 0;
+            $root_project->Name = 'All';
+            $available_projects[] = $root_project;
         }
 
         $sql = 'SELECT id, name FROM project';
@@ -60,49 +54,27 @@ final class ManageBannerController extends AbstractController
             $params[] = intval(Auth::id());
         }
 
-        $db = Database::getInstance();
-        $projects = $db->executePrepared($sql, $params);
+        $projects = DB::select($sql, $params);
         foreach ($projects as $project_array) {
-            $xml .= '<availableproject>';
-            $xml .= add_XML_value('id', $project_array['id']);
-            $xml .= add_XML_value('name', $project_array['name']);
-            if ($project_array['id'] == $project->Id) {
-                $xml .= add_XML_value('selected', '1');
-            }
-            $xml .= '</availableproject>';
+            $p = new Project();
+            $p->Id = (int) $project_array->id;
+            $p->Name = $project_array->name;
+            $available_projects[] = $p;
         }
-
-        $Banner = new Banner();
-        $Banner->projectid = $project->Id;
 
         // If submit has been pressed
-        @$updateMessage = $_POST['updateMessage'];
-        if (isset($updateMessage)) {
-            $Banner = Banner::updateOrCreate(['projectid' => $project->Id], ['text' => $_POST['message']]);
+        if (isset($_POST['updateMessage'])) {
+            $banner = Banner::updateOrCreate(['projectid' => $project->Id], ['text' => $_POST['message']]);
         } else {
-            $Banner = Banner::findOrNew($project->Id);
+            $banner = Banner::findOrNew($project->Id);
+            if (!isset($banner->projectid)) {
+                $banner->projectid = $project->Id;
+            }
         }
 
-        /* We start generating the XML here */
-        // List the available projects
-        $xml .= '<project>';
-        $xml .= add_XML_value('id', $project->Id);
-        $xml .= add_XML_value('text', $Banner->text);
-
-        if ($project->Id > 0) {
-            $xml .= add_XML_value('name', $project->GetName());
-            $xml .= add_XML_value('name_encoded', urlencode($project->GetName()));
-        }
-        $xml .= add_XML_value('id', $project->Id);
-        $xml .= '</project>';
-
-        $xml .= '</cdash>';
-
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/manageBanner', true),
-            'project' => $project,
-            'title' => 'Manage Banner'
-        ]);
+        return view('admin.banner')
+            ->with('project', $project)
+            ->with('available_projects', $available_projects)
+            ->with('banner', $banner);
     }
 }
