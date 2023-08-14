@@ -58,6 +58,8 @@ Route::get('/v1/is_build_expected.php', 'BuildController@apiBuildExpected');
 
 Route::get('/v1/buildUpdateGraph.php', 'BuildController@apiBuildUpdateGraph');
 
+Route::get('/v1/overview.php', 'ProjectOverviewController@apiOverview');
+
 Route::middleware(['auth'])->group(function () {
     Route::post('/authtokens/create', 'AuthTokenController@createToken');
     Route::delete('/authtokens/delete/{token_hash}', 'AuthTokenController@deleteToken');

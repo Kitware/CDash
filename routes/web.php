@@ -112,8 +112,10 @@ Route::get('/testDetails.php', function (Request $request) {
     abort(404);
 });
 
-Route::get('/overview.php', 'ProjectController@overview');
-Route::get('/manageOverview.php', 'ProjectController@manageOverview');
+Route::get('/overview.php', 'ProjectOverviewController@overview');
+
+// TODO: (williamjallen) This should be in the auth section, but needs to be here until we get rid of Protractor..
+Route::get('/manageOverview.php', 'ProjectOverviewController@manageOverview');
 
 Route::get('/ajax/showtestfailuregraph.php', 'TestController@ajaxTestFailureGraph');
 
