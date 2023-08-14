@@ -1,49 +1,37 @@
 <?php
-/*=========================================================================
-  Program:   CDash - Cross-Platform Dashboard System
-  Module:    $Id$
-  Language:  PHP
-  Date:      $Date$
-  Version:   $Revision$
 
-  Copyright (c) Kitware, Inc. All rights reserved.
-  See LICENSE or http://www.cdash.org/licensing/ for details.
-
-  This software is distributed WITHOUT ANY WARRANTY; without even
-  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-  PURPOSE. See the above copyright notices for more information.
-=========================================================================*/
-
-namespace CDash\Controller\Api;
+namespace App\Http\Controllers;
 
 use App\Models\BuildNote;
+use App\Services\PageTimer;
 use App\Services\TestingDay;
-
-use CDash\Database;
 use CDash\Model\Build;
+use Illuminate\Http\JsonResponse;
 
-class ViewNotes extends BuildApi
+/**
+ * NOTE: The "build note" functionality is distinct from the "user note" functionality.
+ */
+final class BuildNoteController extends AbstractBuildController
 {
-    public function __construct(Database $db, Build $build)
+    public function apiViewNotes(): JsonResponse
     {
-        parent::__construct($db, $build);
-        $this->project->Fill();
-    }
+        $this->setBuildById(intval($_GET['buildid'] ?? 0));
 
-    public function getResponse()
-    {
+        $pageTimer = new PageTimer();
+
         $response = begin_JSON_response();
         $response['title'] = "{$this->project->Name} - Build Notes";
 
-        $this->setDate(TestingDay::get($this->project, $this->build->StartTime));
-        get_dashboard_JSON_by_name($this->project->Name, $this->date, $response);
+        $date = TestingDay::get($this->project, $this->build->StartTime);
+
+        get_dashboard_JSON_by_name($this->project->Name, $date, $response);
 
         // Menu
         $menu = [];
         if ($this->build->GetParentId() > 0) {
             $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . "&parentid={$this->build->GetParentId()}";
         } else {
-            $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . '&date=' . $this->date;
+            $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . '&date=' . $date;
         }
 
         $previous_buildid = $this->build->GetPreviousBuildId();
@@ -83,7 +71,8 @@ class ViewNotes extends BuildApi
         }
         $response['notes'] = $notes_response;
 
-        $this->pageTimer->end($response);
-        return $response;
+        $pageTimer->end($response);
+
+        return response()->json(cast_data_for_JSON($response));
     }
 }

@@ -60,6 +60,8 @@ Route::get('/v1/buildUpdateGraph.php', 'BuildController@apiBuildUpdateGraph');
 
 Route::get('/v1/overview.php', 'ProjectOverviewController@apiOverview');
 
+Route::get('/v1/viewNotes.php', 'BuildNoteController@apiViewNotes');
+
 Route::middleware(['auth'])->group(function () {
     Route::post('/authtokens/create', 'AuthTokenController@createToken');
     Route::delete('/authtokens/delete/{token_hash}', 'AuthTokenController@deleteToken');
