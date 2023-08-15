@@ -6,6 +6,7 @@ use App\Validators\Password;
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\BuildUpdate;
+use CDash\Model\Project;
 use CDash\Model\SubProject;
 use Exception;
 use Illuminate\Http\RedirectResponse;
@@ -25,33 +26,28 @@ final class AdminController extends AbstractController
 {
     public function removeBuilds(): View|RedirectResponse
     {
-        $config = Config::getInstance();
-
         @set_time_limit(0);
 
-        @$projectid = $_GET['projectid'];
-        if ($projectid != null) {
-            $projectid = intval($projectid);
-        }
+        $projectid = intval($_GET['projectid'] ?? 0);
 
-        $db = Database::getInstance();
+        $alert = '';
 
         //get date info here
         @$dayTo = intval($_POST['dayFrom']);
         if (empty($dayTo)) {
             $time = strtotime('2000-01-01 00:00:00');
 
-            if (isset($projectid)) {
+            if ($projectid > 0) {
                 // find the first and last builds
-                $startttime = $db->executePreparedSingleRow('
-                                  SELECT starttime
-                                  FROM build
-                                  WHERE projectid=?
-                                  ORDER BY starttime ASC
-                                  LIMIT 1
-                              ', [intval($projectid)]);
-                if (!empty($startttime)) {
-                    $time = strtotime($startttime['starttime']);
+                $starttime = DB::select('
+                    SELECT starttime
+                    FROM build
+                    WHERE projectid=?
+                    ORDER BY starttime ASC
+                    LIMIT 1
+                ', [$projectid]);
+                if (count($starttime) === 1) {
+                    $time = strtotime($starttime[0]->starttime);
                 }
             }
             $dayFrom = date('d', $time);
@@ -69,46 +65,35 @@ final class AdminController extends AbstractController
             $yearTo = intval($_POST['yearTo']);
         }
 
-        $xml = '<cdash>';
-        $xml .= '<cssfile>' . $config->get('CDASH_CSS_FILE') . '</cssfile>';
-        $xml .= '<version>' . $config->get('CDASH_VERSION') . '</version>';
-        $xml .= '<menutitle>CDash</menutitle>';
-        $xml .= '<menusubtitle>Remove Builds</menusubtitle>';
-
         // List the available projects
-        $projects = $db->executePrepared('SELECT id, name FROM project');
+        $available_projects = [];
+        $projects = DB::select('SELECT id, name FROM project');
         foreach ($projects as $projects_array) {
-            $xml .= '<availableproject>';
-            $xml .= add_XML_value('id', $projects_array['id']);
-            $xml .= add_XML_value('name', $projects_array['name']);
-            if ($projects_array['id'] == $projectid) {
-                $xml .= add_XML_value('selected', '1');
-            }
-            $xml .= '</availableproject>';
+            $available_project = new Project();
+            $available_project->Id = (int) $projects_array->id;
+            $available_project->Name = $projects_array->name;
+            $available_projects[] = $available_project;
         }
 
-        $xml .= '<dayFrom>' . $dayFrom . '</dayFrom>';
-        $xml .= '<monthFrom>' . $monthFrom . '</monthFrom>';
-        $xml .= '<yearFrom>' . $yearFrom . '</yearFrom>';
-        $xml .= '<dayTo>' . $dayTo . '</dayTo>';
-        $xml .= '<monthTo>' . $monthTo . '</monthTo>';
-        $xml .= '<yearTo>' . $yearTo . '</yearTo>';
-
-        @$submit = $_POST['Submit'];
-
         // Delete the builds
-        if (isset($submit)) {
-            $build = $db->executePrepared("
+        if (isset($_POST['Submit'])) {
+            if (config('database.default') === 'pgsql') {
+                $timestamp_sql =  "CAST(CONCAT(?, '-', ?, '-', ?, ' 00:00:00') AS timestamp)";
+            } else {
+                $timestamp_sql =  "TIMESTAMP(CONCAT(?, '-', ?, '-', ?, ' 00:00:00'))";
+            }
+
+            $build = DB::select("
                          SELECT id
                          FROM build
                          WHERE
-                             projectid=?
+                             projectid = ?
                              AND parentid IN (0, -1)
-                             AND starttime<=?||'-'||?||'-'||?||' 00:00:00'
-                             AND starttime>=?||'-'||?||'-'||?||' 00:00:00'
+                             AND starttime <= $timestamp_sql
+                             AND starttime >= $timestamp_sql
                          ORDER BY starttime ASC
                      ", [
-                intval($projectid),
+                $projectid,
                 $yearTo,
                 $monthTo,
                 $dayTo,
@@ -119,19 +104,23 @@ final class AdminController extends AbstractController
 
             $builds = array();
             foreach ($build as $build_array) {
-                $builds[] = intval($build_array['id']);
+                $builds[] = (int) $build_array->id;
             }
 
             remove_build_chunked($builds);
-            $xml .= add_XML_value('alert', 'Removed ' . count($builds) . ' builds.');
+            $alert = 'Removed ' . count($builds) . ' builds.';
         }
-        $xml .= '</cdash>';
 
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/removeBuilds', true),
-            'title' => 'Remove Builds'
-        ]);
+        return view('admin.remove-builds')
+            ->with('alert', $alert)
+            ->with('selected_projectid', $projectid)
+            ->with('available_projects', $available_projects)
+            ->with('monthFrom', $monthFrom)
+            ->with('dayFrom', $dayFrom)
+            ->with('yearFrom', $yearFrom)
+            ->with('monthTo', $monthTo)
+            ->with('dayTo', $dayTo)
+            ->with('yearTo', $yearTo);
     }
 
     public function upgrade()
