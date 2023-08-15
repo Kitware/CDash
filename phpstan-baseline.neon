@@ -15892,19 +15892,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/hasfile.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/hasfile.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
 				04/01/2023$#
 			"""
@@ -21088,11 +21075,6 @@ parameters:
 
 		-
 			message: "#^Method APITestCase\\:\\:testAPI\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_api.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, bool given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_api.php
 

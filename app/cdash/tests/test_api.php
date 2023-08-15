@@ -38,17 +38,6 @@ class APITestCase extends KWWebTestCase
             $this->fail("Expected output not found when querying API for version: $version");
         }
 
-        $hasfile = $this->get($this->url . '/api/v1/hasfile.php');
-        if ($hasfile !== 'md5sum not specified') {
-            $this->fail("No output found when querying API for hasfile: $hasfile");
-        }
-
-        $hasfile = $this->get($this->url . '/api/v1/hasfile.php?md5sums=1q2w3e4r5t');
-        if (strpos($hasfile, '1q2w3e4r5t') === false) {
-            $this->fail("Expected output not found when querying API for hasfile\n$hasfile\n");
-        }
-
-
         $this->login();
         $userid = $this->get($this->url . '/api/v1/getuserid.php?author=simpleuser@localhost');
         if (!preg_match("/..xml version..1.0. encoding..UTF-8....userid.\d+..userid./", $userid)) {
