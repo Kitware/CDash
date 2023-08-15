@@ -35,7 +35,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
     private static $tz;
     private static $database;
 
-    private int $projectid = -1;
+    private static int $projectid = -1;
 
     /** @var  Database|PHPUnit_Framework_MockObject_MockObject $db */
     private $db;
@@ -68,6 +68,13 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         // restore state
         date_default_timezone_set(self::$tz);
         Database::setInstance(Database::class, self::$database);
+
+        DB::delete('DELETE FROM project WHERE id = ?', [self::$projectid]);
+
+        // Clean up all of the placeholder builds we created
+        for ($i = 0; $i < 10; $i++) {
+            DB::table('build')->where('name', '=', 'TestBuild' . $i)->delete();
+        }
 
         parent::tearDownAfterClass();
     }
@@ -103,16 +110,20 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         $this->createApplication();
         config(['app.url' => 'http://open.cdash.org']);
 
-        $this->projectid = DB::table('project')->insertGetId([
-            'name' => 'TestProject1',
-        ]);
-    }
+        if (self::$projectid === -1) {
+            self::$projectid = DB::table('project')->insertGetId([
+                'name' => 'TestProject1',
+            ]);
 
-    public function tearDown(): void
-    {
-        DB::delete('DELETE FROM project WHERE id = ?', [$this->projectid]);
-
-        parent::tearDown();
+            // A hack to make sure builds exist and can be referenced so we don't violate our foreign key constraints
+            for ($i = 0; $i < 10; $i++) {
+                DB::table('build')->insertOrIgnore([
+                    'projectid' => self::$projectid,
+                    'name' => 'TestBuild' . $i,
+                    'uuid' => 'TestBuild' . $i,
+                ]);
+            }
+        }
     }
 
     /**
@@ -167,7 +178,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
     public function testMultipleSubprojectsTestSubmission()
     {
         $this->useCase = UseCase::createBuilder($this, UseCase::TEST)
-            ->setProjectId($this->projectid)
+            ->setProjectId(self::$projectid)
             ->createSite([
                 'BuildName' => 'CTestTest-Linux-c++-Subprojects',
                 'BuildStamp' => '20160728-1932-Experimental',

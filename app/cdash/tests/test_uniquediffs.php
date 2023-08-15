@@ -3,6 +3,9 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use CDash\Model\Build;
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -19,27 +22,14 @@ class UniqueDiffsTestCase extends KWWebTestCase
 
     public function testUniqueDiffs()
     {
-        // Find the highest buildid created so far and add one to it.
-        // This should give us a buildid that doesn't exist yet.
         $pdo = \CDash\Database::getInstance();
-        $stmt = $pdo->query('SELECT id FROM build ORDER BY id DESC LIMIT 1');
-        $row = $stmt->fetch();
-        $buildid = $row['id'];
-        $buildid++;
 
-        // Verify that this buildid does not exist yet.
-        $safe_build = false;
-        while (!$safe_build) {
-            $stmt = $pdo->prepare('SELECT id FROM build WHERE id=?');
-            $stmt->execute([$buildid]);
-            $row = $stmt->fetch();
-            if (!$row) {
-                $this->BuildId = $buildid;
-                $safe_build = true;
-            } else {
-                $buildid++;
-            }
-        }
+        $build = new Build();
+        $build->ProjectId = 1;
+        $build->Name = 'uniquediffs_test_build';
+        $this->assertTrue($build->AddBuild());
+        $this->BuildId = $build->Id;
+
 
         // Perform multiple INSERTs that violate the unique constraint
         // and verify that only one row is recorded.
@@ -92,6 +82,8 @@ class UniqueDiffsTestCase extends KWWebTestCase
         $stmt->execute([$this->BuildId]);
         $stmt = $pdo->prepare('DELETE FROM testdiff WHERE buildid=?');
         $stmt->execute([$this->BuildId]);
+
+        DB::delete('DELETE FROM build WHERE id = ?', [$build->Id]);
     }
 
     public function testUniqueDiffsUpgrade()
