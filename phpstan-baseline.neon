@@ -752,12 +752,27 @@ parameters:
 			path: app/Http/Controllers/ManageBannerController.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageMeasurementsController.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageMeasurementsController\\:\\:show\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageMeasurementsController\\:\\:show\\(\\) has parameter \\$project_id with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageMeasurementsController.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, int\\|null given\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageMeasurementsController.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
@@ -16593,54 +16608,6 @@ parameters:
 			message: "#^Variable \\$user2project might not be defined\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_real_escape_numeric\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/manageMeasurements.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageMeasurements.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ManageMeasurements\\\\rest_delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageMeasurements.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ManageMeasurements\\\\rest_get\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageMeasurements.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ManageMeasurements\\\\rest_get\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageMeasurements.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ManageMeasurements\\\\rest_post\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageMeasurements.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ManageMeasurements\\\\rest_post\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageMeasurements.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageMeasurements.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, int\\|null given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageMeasurements.php
 
 		-
 			message: """
