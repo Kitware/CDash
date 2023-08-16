@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Site;
 use App\Models\User;
 use App\Services\PageTimer;
 use App\Services\TestingDay;
@@ -739,23 +738,19 @@ final class CoverageController extends AbstractBuildController
     {
         $this->setBuildById(intval($_GET['buildid'] ?? 0));
 
-        @$fileid = intval($_GET['fileid'] ?? 0);
+        $fileid = intval($_GET['fileid'] ?? 0);
 
-        @$date = $_GET['date'];
-        if ($date != null) {
-            $date = htmlspecialchars(pdo_real_escape_string($date));
-        }
 
         $db = Database::getInstance();
 
         $role = 0;
         $user2project = $db->executePreparedSingleRow('
-                    SELECT role
-                    FROM user2project
-                    WHERE
-                        userid=?
-                        AND projectid=?
-                ', [intval(Auth::id() ?? 0), $this->project->Id]);
+            SELECT role
+            FROM user2project
+            WHERE
+                userid=?
+                AND projectid=?
+        ', [intval(Auth::id() ?? 0), $this->project->Id]);
         if (!empty($user2project)) {
             $role = $user2project['role'];
         }
@@ -763,24 +758,10 @@ final class CoverageController extends AbstractBuildController
             abort(403, "This project doesn't allow display of coverage code. Contact the administrator of the project.");
         }
 
-        $xml = begin_XML_for_XSLT();
-        $xml .= get_cdash_dashboard_xml_by_name($this->project->Name, $date);
-
-        // Build
-        $xml .= '<build>';
-        $xml .= add_XML_value('site', Site::findOrFail($this->build->SiteId)->name);
-        $xml .= add_XML_value('buildname', $this->build->Name);
-        $xml .= add_XML_value('buildid', $this->build->Id);
-        $xml .= add_XML_value('buildtime', $this->build->StartTime);
-        $xml .= '</build>';
-
         // Load coverage file.
         $coverageFile = new CoverageFile();
         $coverageFile->Id = $fileid;
         $coverageFile->Load();
-
-        $xml .= '<coverage>';
-        $xml .= add_XML_value('fullpath', $coverageFile->FullPath);
 
         // Generating the html file
         $file_array = explode('<br>', $coverageFile->File);
@@ -838,16 +819,9 @@ final class CoverageController extends AbstractBuildController
 
         $file = implode('<br>', $file_array);
 
-        $xml .= '<file>' . utf8_encode(htmlspecialchars($file)) . '</file>';
-        $xml .= '</coverage>';
-        $xml .= '</cdash>';
-
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/viewCoverageFile', true),
-            'project' => $this->project,
-            'title' => 'Coverage for ' . $coverageFile->FullPath,
-        ]);
+        return $this->view('coverage.coverage-file')
+            ->with('coverage_file', $coverageFile)
+            ->with('log', $file);
     }
 
     public function ajaxGetViewCoverage(): JsonResponse
