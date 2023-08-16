@@ -39,10 +39,9 @@ abstract class Collection implements CollectionInterface
     /**
      * Return the current element
      * @link http://php.net/manual/en/iterator.current.php
-     * @return mixed Can return any type.
      * @since 5.0.0
      */
-    public function current()
+    public function current(): mixed
     {
         if ($this->valid()) {
             return $this->collection[$this->key()];
@@ -53,10 +52,9 @@ abstract class Collection implements CollectionInterface
     /**
      * Move forward to next element
      * @link http://php.net/manual/en/iterator.next.php
-     * @return void Any returned value is ignored.
      * @since 5.0.0
      */
-    public function next()
+    public function next(): void
     {
         ++$this->position;
     }
@@ -67,7 +65,7 @@ abstract class Collection implements CollectionInterface
      * @return mixed scalar on success, or null on failure.
      * @since 5.0.0
      */
-    public function key()
+    public function key(): mixed
     {
         if (isset($this->keys[$this->position])) {
             return $this->keys[$this->position];
@@ -82,7 +80,7 @@ abstract class Collection implements CollectionInterface
      * Returns true on success or false on failure.
      * @since 5.0.0
      */
-    public function valid()
+    public function valid(): bool
     {
         $key = $this->key();
         // a call to key may result in null, e.g. !isset. To prevent endless loop in the event
@@ -98,21 +96,17 @@ abstract class Collection implements CollectionInterface
     /**
      * Rewind the Iterator to the first element
      * @link http://php.net/manual/en/iterator.rewind.php
-     * @return void Any returned value is ignored.
      * @since 5.0.0
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->position = 0;
     }
 
     /**
-     * @param $item
-     * @param null $name
-     * @return $this|mixed
      * TODO: Watch this in a debugger when integration testing
      */
-    public function addItem($item, $name = null)
+    public function addItem($item, $name = null): self
     {
         $ptr = count($this->collection);
         $key = is_null($name) ? $ptr : $name;
@@ -126,9 +120,8 @@ abstract class Collection implements CollectionInterface
 
     /**
      * Returns true if the collection has items, and false if not.
-     * @return boolean
      */
-    public function hasItems()
+    public function hasItems(): bool
     {
         return count($this->collection) > 0;
     }
@@ -136,13 +129,13 @@ abstract class Collection implements CollectionInterface
     /**
      * Count elements of an object
      * @link http://php.net/manual/en/countable.count.php
-     * @return int The custom count as an integer.
+     * @return int<0,max> The custom count as an integer.
      * </p>
      * <p>
      * The return value is cast to an integer.
      * @since 5.1.0
      */
-    public function count()
+    public function count(): int
     {
         return count($this->collection);
     }
@@ -182,10 +175,7 @@ abstract class Collection implements CollectionInterface
         return $item;
     }
 
-    /**
-     * @return array
-     */
-    public function toArray()
+    public function toArray(): array
     {
         return array_values($this->collection);
     }

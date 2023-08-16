@@ -9847,6 +9847,61 @@ parameters:
 			path: app/cdash/include/Collection/BuildErrorCollection.php
 
 		-
+			message: "#^Call to function array_search\\(\\) requires parameter \\#3 to be set\\.$#"
+			count: 1
+			path: app/cdash/include/Collection/Collection.php
+
+		-
+			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
+			count: 3
+			path: app/cdash/include/Collection/Collection.php
+
+		-
+			message: "#^Method CDash\\\\Collection\\\\Collection\\:\\:__construct\\(\\) has parameter \\$collection with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/include/Collection/Collection.php
+
+		-
+			message: "#^Method CDash\\\\Collection\\\\Collection\\:\\:addItem\\(\\) has parameter \\$item with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/Collection/Collection.php
+
+		-
+			message: "#^Method CDash\\\\Collection\\\\Collection\\:\\:get\\(\\) has parameter \\$key with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/Collection/Collection.php
+
+		-
+			message: "#^Method CDash\\\\Collection\\\\Collection\\:\\:has\\(\\) has parameter \\$key with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/Collection/Collection.php
+
+		-
+			message: "#^Method CDash\\\\Collection\\\\Collection\\:\\:remove\\(\\) has parameter \\$key with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/Collection/Collection.php
+
+		-
+			message: "#^Method CDash\\\\Collection\\\\Collection\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/include/Collection/Collection.php
+
+		-
+			message: "#^Property CDash\\\\Collection\\\\Collection\\:\\:\\$collection type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/include/Collection/Collection.php
+
+		-
+			message: "#^Property CDash\\\\Collection\\\\Collection\\:\\:\\$keys type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/include/Collection/Collection.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/include/Collection/Collection.php
+
+		-
 			message: "#^Parameter \\#2 \\$name of method CDash\\\\Collection\\\\Collection\\:\\:addItem\\(\\) expects null, class\\-string\\<CDash\\\\Collection\\\\CollectionInterface\\> given\\.$#"
 			count: 1
 			path: app/cdash/include/Collection/CollectionCollection.php
