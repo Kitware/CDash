@@ -15439,11 +15439,6 @@ parameters:
 			path: app/cdash/public/api/v1/GitHub/webhook.php
 
 		-
-			message: "#^Only booleans are allowed in an if condition, string given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/addBuild.php
-
-		-
 			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
@@ -20882,11 +20877,6 @@ parameters:
 			path: app/cdash/tests/test_actualtrilinossubmission.php
 
 		-
-			message: "#^Method AddBuildAPITestCase\\:\\:testBuildRelationships\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_addbuildapi.php
-
-		-
 			message: """
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
@@ -21104,7 +21094,7 @@ parameters:
 				#^Call to deprecated method getConfig\\(\\) of class GuzzleHttp\\\\Client\\:
 				Client\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#
 			"""
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_authtoken.php
 
 		-
@@ -21118,16 +21108,6 @@ parameters:
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\AuthToken\\>\\:\\:Exists\\(\\)\\.$#"
 			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
-			message: "#^Method AuthTokenTestCase\\:\\:addBuildApiTestCase\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
-			message: "#^Method AuthTokenTestCase\\:\\:addBuildApiTestCase\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 3
 			path: app/cdash/tests/test_authtoken.php
 
 		-
@@ -21157,11 +21137,6 @@ parameters:
 
 		-
 			message: "#^Method AuthTokenTestCase\\:\\:putSubmit\\(\\) has parameter \\$headers with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
-			message: "#^Method AuthTokenTestCase\\:\\:testAddBuild\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
 
@@ -21217,7 +21192,7 @@ parameters:
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_authtoken.php
 
 		-
@@ -21227,12 +21202,12 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, Psr\\\\Http\\\\Message\\\\ResponseInterface given\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_authtoken.php
 
 		-
 			message: "#^Only booleans are allowed in a ternary operator condition, Psr\\\\Http\\\\Message\\\\ResponseInterface given\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_authtoken.php
 
 		-
@@ -21282,11 +21257,6 @@ parameters:
 
 		-
 			message: "#^Ternary operator condition is always true\\.$#"
-			count: 2
-			path: app/cdash/tests/test_authtoken.php
-
-		-
-			message: "#^Variable \\$response might not be defined\\.$#"
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
 
