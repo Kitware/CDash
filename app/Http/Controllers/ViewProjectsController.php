@@ -22,7 +22,7 @@ final class ViewProjectsController extends AbstractController
             return $this->redirectToLogin();
         }
 
-        return view("project.view-all-projects");
+        return $this->view("project.view-all-projects");
     }
 
     public function fetchPageContent(): JsonResponse

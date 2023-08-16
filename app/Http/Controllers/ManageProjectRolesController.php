@@ -24,14 +24,6 @@ final class ManageProjectRolesController extends AbstractProjectController
     public function viewPage(): View|RedirectResponse
     {
         $usersessionid = Auth::id();
-        // Checks
-        if (!isset($usersessionid) || !is_numeric($usersessionid)) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Not a valid usersessionid!'
-            ]);
-        }
-
         $current_user = Auth::user();
 
         @$projectid = $_GET['projectid'];

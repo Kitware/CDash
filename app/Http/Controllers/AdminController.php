@@ -697,11 +697,9 @@ final class AdminController extends AbstractController
 
         $xml .= '</cdash>';
 
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/upgrade', true),
-            'title' => 'Maintenance'
-        ]);
+        return $this->view('cdash', 'Maintenance')
+            ->with('xsl', true)
+            ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/upgrade', true));
     }
 
     /**
@@ -733,21 +731,17 @@ final class AdminController extends AbstractController
 
         // This is the installation script for CDash
         if (class_exists('XsltProcessor') === false) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => '<font color="#FF0000">Your PHP installation does not support XSL. Please install the XSL extension.</font>',
-                'title' => 'Installation'
-            ]);
+            return $this->view('cdash', 'Installation')
+                ->with('xsl', true)
+                ->with('xsl_content', '<font color="#FF0000">Your PHP installation does not support XSL. Please install the XSL extension.</font>');
         }
 
         $config = Config::getInstance();
 
         if (config('app.env') === 'production') {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'CDash is in production mode. Install cannot be accessed. Set APP_ENV=development in your .env file if you want to access the installation.',
-                'title' => 'Installation'
-            ]);
+            return $this->view('cdash', 'Installation')
+                ->with('xsl', true)
+                ->with('xsl_content', 'CDash is in production mode. Install cannot be accessed. Set APP_ENV=development in your .env file if you want to access the installation.');
         }
 
         $xml = begin_XML_for_XSLT();
@@ -959,11 +953,9 @@ final class AdminController extends AbstractController
 
         $xml .= '</cdash>';
 
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/install', true),
-            'title' => 'Installation'
-        ]);
+        return $this->view('cdash', 'Installation')
+            ->with('xsl', true)
+            ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/install', true));
     }
 
     public function userStatistics(): \Illuminate\Http\Response

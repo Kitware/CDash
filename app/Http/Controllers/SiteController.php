@@ -367,11 +367,9 @@ final class SiteController extends AbstractController
 
         $xml .= '</cdash>';
 
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/editSite', true),
-            'title' => 'Edit Site'
-        ]);
+        return $this->view('cdash', 'Edit Site')
+            ->with('xsl', true)
+            ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/editSite', true));
     }
 
     public function viewSite(): View
@@ -385,10 +383,7 @@ final class SiteController extends AbstractController
 
         // Checks
         if (!isset($siteid) || !is_numeric($siteid)) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Not a valid siteid!'
-            ]);
+            abort(400, 'Not a valid siteid!');
         }
 
         $site_array = $db->executePreparedSingleRow("SELECT * FROM site WHERE id=?", [$siteid]);
@@ -578,10 +573,7 @@ final class SiteController extends AbstractController
         // If the current site as only private projects we check that we have the right
         // to view the page
         if (!$displayPage) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'You cannot access this page'
-            ]);
+            abort(403, 'You cannot access this page');
         }
 
         // Compute the time for all the projects (faster than individually) average of the week
@@ -665,11 +657,9 @@ final class SiteController extends AbstractController
 
         $xml .= '</cdash>';
 
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/viewSite', true),
-            'title' => $sitename
-        ]);
+        return $this->view('cdash', $sitename)
+            ->with('xsl', true)
+            ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/viewSite', true));
     }
 
     /**

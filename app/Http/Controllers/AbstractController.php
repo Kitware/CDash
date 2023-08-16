@@ -7,12 +7,31 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\View\View;
 
 abstract class AbstractController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    /** Returns the version used to find compiled css and javascript files */
+    /**
+     * Add global data to each view
+     */
+    protected function view(string $view, string $title = ''): View
+    {
+        $result = view($view)->with('js_version', self::getJsVersion());
+
+        if ($title !== '') {
+            $result = $result->with('title', $title);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns the version used to find compiled css and javascript files
+     *
+     * TODO: (williamjallen) make this a private function and rip the remaining usages.
+     */
     public static function getJsVersion(): string
     {
         $path = config('cdash.file.path.js.version');

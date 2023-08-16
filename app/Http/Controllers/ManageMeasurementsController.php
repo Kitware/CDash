@@ -12,8 +12,6 @@ final class ManageMeasurementsController extends AbstractProjectController
         $this->setProjectById((int) $project_id);
         Gate::authorize('edit-project', $this->project);
 
-        return view('admin.measurements')
-            ->with('project', $this->project)
-            ->with('title', 'Test Measurements');
+        return $this->view('admin.measurements', 'Test Measurements');
     }
 }

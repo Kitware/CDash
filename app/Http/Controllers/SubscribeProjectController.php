@@ -330,11 +330,9 @@ final class SubscribeProjectController extends AbstractProjectController
 
         $xml .= '</cdash>';
 
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/subscribeProject', true),
-            'title' => 'Subscription Settings'
-        ]);
+        return $this->view('cdash', 'Subscription Settings')
+            ->with('xsl', true)
+            ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/subscribeProject', true));
     }
 
     /**

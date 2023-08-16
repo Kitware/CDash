@@ -6,11 +6,14 @@ use App\Models\Password;
 use App\Models\User;
 use App\Http\Controllers\AbstractController;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class RegisterController extends AbstractController
 {
@@ -44,20 +47,16 @@ class RegisterController extends AbstractController
         $this->middleware('guest');
     }
 
-    public function showRegistrationForm(Request $request)
+    public function showRegistrationForm(Request $request): View
     {
         if (config('auth.user_registration_form_enabled') === false) {
             abort(404, 'Registration via form is disabled');
         }
         // We can route a user here with our form pre-populated
-        $params = [
-            'title' => 'Register',
-            'js_version' => self::getJsVersion(),
-            'fname' => $request->get('fname'),
-            'lname' => $request->get('lname'),
-            'email' => $request->get('email'),
-        ];
-        return view('auth.register', $params);
+        return $this->view('auth.register', 'Register')
+            ->with('fname', $request->get('fname'))
+            ->with('lname', $request->get('lname'))
+            ->with('email', $request->get('email'));
     }
 
     /**
@@ -120,12 +119,9 @@ class RegisterController extends AbstractController
     /**
      * Handle a registration request for the application.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     *
      * @throws ValidationException
      */
-    public function register(Request $request)
+    public function register(Request $request): Response|RedirectResponse
     {
         if (config('auth.user_registration_form_enabled') === false) {
             return response("Registration via form is disabled", 404);
@@ -133,20 +129,12 @@ class RegisterController extends AbstractController
         try {
             $this->validator($request->all())->validate();
         } catch (ValidationException $e) {
-            $e->response = response()
-                ->view(
-                    'auth.register',
-                    [
-                        'errors' => $e->validator->getMessageBag(),
-                        'title' => 'Register',
-                        'js_version' => self::getJsVersion(),
-                        'fname' => $request->get('fname'),
-                        'lname' => $request->get('lname'),
-                        'email' => $request->get('email'),
-                        'institution' => $request->get('institution')
-                    ],
-                    422
-                );
+            $e->response = response($this->view('auth.register', 'Register')
+                    ->with('errors', $e->validator->getMessageBag())
+                    ->with('fname', $request->get('fname'))
+                    ->with('lname', $request->get('lname'))
+                    ->with('email', $request->get('email'))
+                    ->with('institution', $request->get('institution')), 422);
             throw $e;
         }
 

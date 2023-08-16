@@ -59,10 +59,7 @@ final class BuildController extends AbstractBuildController
         if ($page_title === '') {
             $page_title = ucfirst($page_name);
         }
-        return view("build.{$page_name}")
-            ->with('build', json_encode($this->build))
-            ->with('project', $this->project)
-            ->with('title', $page_title);
+        return $this->view("build.{$page_name}", $page_title);
     }
     public function apiBuildSummary(): JsonResponse
     {
@@ -723,11 +720,7 @@ final class BuildController extends AbstractBuildController
     public function viewFiles(): View|RedirectResponse
     {
         if (!isset($_GET['buildid'])) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Build id not set',
-                'title' => 'View Files'
-            ]);
+            abort(400, 'Build id not set');
         }
 
         $this->setBuildById((int) $_GET['buildid']);
@@ -798,11 +791,9 @@ final class BuildController extends AbstractBuildController
 
         $xml .= '</cdash>';
 
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/viewFiles', true),
-            'title' => 'View Files'
-        ]);
+        return $this->view('cdash', 'View Files')
+            ->with('xsl', true)
+            ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/viewFiles', true));
     }
 
     public function ajaxBuildNote(): View

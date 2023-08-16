@@ -24,7 +24,7 @@ final class UserController extends AbstractController
 {
     public function userPage(): View
     {
-        return view("admin.user");
+        return $this->view("admin.user");
     }
 
     public function userPageContent(): JsonResponse
@@ -499,11 +499,9 @@ final class UserController extends AbstractController
 
         $xml .= '</cdash>';
 
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/editUser', true),
-            'title' => 'My Profile'
-        ]);
+        return $this->view('cdash', 'My Profile')
+            ->with('xsl', true)
+            ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/editUser', true));
     }
 
     public function recoverPassword(): View
@@ -546,9 +544,8 @@ final class UserController extends AbstractController
             }
         }
 
-        return view('user.recover-password', [
-            'message' => $message,
-            'warning' => $warning,
-        ]);
+        return $this->view('user.recover-password')
+            ->with('message', $message)
+            ->with('warning', $warning);
     }
 }

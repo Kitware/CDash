@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Services\TestingDay;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\View\View;
 
 abstract class AbstractProjectController extends AbstractController
 {
@@ -13,6 +14,16 @@ abstract class AbstractProjectController extends AbstractController
     public function __construct()
     {
         $this->date = date(FMT_DATETIME);
+    }
+
+    protected function view(string $view, string $title = ''): View
+    {
+        if (!isset($this->project)) {
+            return parent::view($view, $title);
+        }
+
+        return parent::view($view, $title)
+            ->with('project', $this->project);
     }
 
     /** Retrieve common data used by all project-specific pages in CDash. */

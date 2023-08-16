@@ -153,11 +153,8 @@ final class MapController extends AbstractProjectController
 
         $xml .= '</cdash>';
 
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/viewMap', true),
-            'project' => $this->project,
-            'title' => 'Sites Map'
-        ]);
+        return $this->view('cdash', 'Sites Map')
+            ->with('xsl', true)
+            ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/viewMap', true));
     }
 }

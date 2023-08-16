@@ -19,11 +19,7 @@ final class CTestConfigurationController extends AbstractProjectController
             $subprojects[] = $subproject;
         }
 
-
-        $view = view('project.ctest-configuration', [
-            'project' => $this->project,
-            'subprojects' => $subprojects
-        ]);
+        $view = $this->view('project.ctest-configuration')->with('subprojects', $subprojects);
         return response($view, 200, ['Content-Type' => 'text/plain']);
     }
 }
