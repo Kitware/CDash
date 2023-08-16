@@ -1632,11 +1632,6 @@ parameters:
 			path: app/Http/Middleware/VerifyCsrfToken.php
 
 		-
-			message: "#^Method App\\\\Http\\\\View\\\\Composers\\\\BuildPageHeaderComposer\\:\\:compose\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Http/View/Composers/BuildPageHeaderComposer.php
-
-		-
 			message: "#^Access to an undefined property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$backupFileName\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
