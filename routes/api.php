@@ -64,6 +64,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/v1/createProject.php', 'ProjectController@apiCreateProject');
 
+    Route::match(['get', 'post'], '/v1/manageOverview.php', 'ProjectOverviewController@apiManageOverview');
+
     Route::get('/v1/manageSubProject.php', 'SubProjectController@apiManageSubProject');
 
     Route::get('/v1/manageMeasurements.php', 'ManageMeasurementsController@apiGet');
