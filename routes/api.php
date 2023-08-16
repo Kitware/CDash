@@ -1,6 +1,5 @@
 <?php
 
-use CDash\Config;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,13 +14,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 // NOTE: All routes listed in this file will be prefixed with /api
-
-Route::get('/v1/getversion.php', function () {
-    return response(Config::getInstance()->get('CDASH_VERSION'));
-});
-Route::get('/version', function () {
-    return response(Config::getInstance()->get('CDASH_VERSION'));
-});
 
 Route::get('/v1/viewProjects.php', 'ViewProjectsController@fetchPageContent');
 
