@@ -7,12 +7,14 @@ use CDash\Model\DynamicAnalysis;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 final class DynamicAnalysisController extends AbstractBuildController
 {
-    public function viewDynamicAnalysis(): Response
+    public function viewDynamicAnalysis(int $buildid): View
     {
-        return response()->angular_view('viewDynamicAnalysis');
+        $this->setBuildById($buildid);
+        return $this->view('dynamicanalysis.dynamic-analysis');
     }
 
     public function viewDynamicAnalysisFile(): Response
@@ -52,17 +54,17 @@ final class DynamicAnalysisController extends AbstractBuildController
 
         $previousbuildid = self::get_previous_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name, $this->build->StartTime);
         if ($previousbuildid > 0) {
-            $menu['previous'] = "viewDynamicAnalysis.php?buildid=$previousbuildid";
+            $menu['previous'] = "/build/$previousbuildid/dynamic_analysis";
         } else {
             $menu['previous'] = false;
         }
 
         $currentbuildid = self::get_last_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name);
-        $menu['current'] = "viewDynamicAnalysis.php?buildid=$currentbuildid";
+        $menu['current'] = "/build/$currentbuildid/dynamic_analysis";
 
         $nextbuildid = self::get_next_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name, $this->build->StartTime);
         if ($nextbuildid > 0) {
-            $menu['next'] = "viewDynamicAnalysis.php?buildid=$nextbuildid";
+            $menu['next'] = "/build/$nextbuildid/dynamic_analysis";
         } else {
             $menu['next'] = false;
         }
@@ -198,7 +200,7 @@ final class DynamicAnalysisController extends AbstractBuildController
 
         // Menu
         $menu_response = [];
-        $menu_response['back'] = "viewDynamicAnalysis.php?buildid={$this->build->Id}";
+        $menu_response['back'] = "/build/{$this->build->Id}/dynamic_analysis";
         $previous_id = $DA->GetPreviousId($this->build);
         if ($previous_id > 0) {
             $menu_response['previous'] = "viewDynamicAnalysisFile.php?id=$previous_id";

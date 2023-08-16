@@ -87,12 +87,20 @@ Route::get('/viewNotes.php', function (Request $request) {
     return redirect("/build/{$buildid}/notes", 301);
 });
 
+Route::get('/build/{id}/dynamic_analysis', 'DynamicAnalysisController@viewDynamicAnalysis')
+    ->whereNumber('id');
+Route::get('/viewDynamicAnalysis.php', function (Request $request) {
+    $buildid = $request->query('buildid');
+    return redirect("/build/{$buildid}/dynamic_analysis", 301);
+});
+
 Route::get('/project/{id}/edit', 'EditProjectController@edit');
 Route::get('/project/new', 'EditProjectController@create');
 
 Route::get('/project/{id}/testmeasurements', 'ManageMeasurementsController@show');
 
-Route::get('/project/{id}/ctest_configuration', 'CTestConfigurationController@get')->whereNumber('id');
+Route::get('/project/{id}/ctest_configuration', 'CTestConfigurationController@get')
+    ->whereNumber('id');
 Route::get('/generateCTestConfig.php', function (Request $request) {
     $projectid = $request->query('projectid');
     if (!is_numeric($projectid)) {
@@ -162,7 +170,6 @@ Route::get('/viewMap.php', 'MapController@viewMap');
 
 Route::get('/viewFiles.php', 'BuildController@viewFiles');
 
-Route::get('/viewDynamicAnalysis.php', 'DynamicAnalysisController@viewDynamicAnalysis');
 Route::get('/viewDynamicAnalysisFile.php', 'DynamicAnalysisController@viewDynamicAnalysisFile');
 
 // TODO: (williamjallen) This route is probably not necessary anymore, and should be removed.

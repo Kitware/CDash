@@ -17,6 +17,7 @@ import TestDetails from "./components/TestDetails";
 import HeaderNav from "./components/page-header/HeaderNav.vue";
 import HeaderMenu from "./components/page-header/HeaderMenu.vue";
 import HeaderLogo from "./components/page-header/HeaderLogo.vue";
+import ViewDynamicAnalysis from "./components/ViewDynamicAnalysis.vue";
 
 const cdash_components = {
   BuildConfigure,
@@ -30,7 +31,8 @@ const cdash_components = {
   TestDetails,
   HeaderNav,
   HeaderMenu,
-  HeaderLogo
+  HeaderLogo,
+  ViewDynamicAnalysis,
 };
 
 /**

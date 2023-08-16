@@ -8,10 +8,23 @@
 .warning-text { color : #ffffbf; }
 .error-text   { color : #fc8d59; }
 
-.tabb tbody tr.odd td.normal { background-color: #88b3ce !important; }
-.tabb tbody tr.odd td.warning { background-color: #eeeeb3 !important; }
-.tabb tbody tr.odd td.disabled-test { background-color: #edcf7f !important; }
-.tabb tbody tr.odd td.error { background-color: #ef8553 !important; }
+.tabb tbody tr.odd td.normal,
+.striped.tabb tbody tr:nth-child(odd) td.normal {
+  background-color: #88b3ce !important;
+}
+
+.tabb tbody tr.odd td.warning,
+.striped.tabb tbody tr:nth-child(odd) td.warning {
+  background-color: #eeeeb3 !important;
+}
+.tabb tbody tr.odd td.disabled-test,
+.striped.tabb tbody tr:nth-child(odd) td.disabled-test {
+  background-color: #edcf7f !important;
+}
+.tabb tbody tr.odd td.error,
+.striped.tabb tbody tr:nth-child(odd) td.error {
+  background-color: #ef8553 !important;
+}
 
 .Passed  { background-color : #91bfdb; }
 .Failed  { background-color : #ffffbf; }

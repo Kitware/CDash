@@ -640,7 +640,10 @@ textarea {
 }
 
 .missing {background-color: #dfdfdf; }
-.tabb tbody tr.odd td.missing { background-color: #cdcdcd; }
+.tabb tbody tr.odd td.missing,
+.striped.tabb tbody tr:nth-child(odd) td.missing {
+  background-color: #cdcdcd;
+}
 
 /* =======================================
 ** Design Refresh Styles
