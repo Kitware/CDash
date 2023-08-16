@@ -16,7 +16,6 @@
 namespace CDash\Messaging\Notification\Email;
 
 use CDash\Collection\BuildEmailCollection;
-use CDash\Config;
 use CDash\Messaging\FactoryInterface;
 use CDash\Collection\CollectionInterface;
 use CDash\Messaging\Notification\NotificationCollection;
@@ -29,25 +28,16 @@ use CDash\Model\BuildEmail;
 
 class EmailBuilder extends SubscriptionNotificationBuilder
 {
-    /** @var string $templateDirectory */
-    private $templateDirectory;
-
-    /** @var string $cacheDirectory */
-    private $cacheDirectory;
-
     public function __construct(FactoryInterface $factory, CollectionInterface $collection)
     {
         parent::__construct($factory, $collection);
-        $this->templateDirectory = __DIR__ . '/Template';
-        $this->cacheDirectory = Config::getInstance()->get('CDASH_ROOT_DIR') . '/log';
     }
 
     /**
      * @param SubscriptionInterface $subscription
      * @param string $templateName
-     * @return EmailMessage|NotificationInterface|null
      */
-    public function createNotification(SubscriptionInterface $subscription, $templateName)
+    public function createNotification(SubscriptionInterface $subscription, $templateName): EmailMessage|NotificationInterface
     {
         $subject_template = "email.{$templateName}.subject";
         $template = "email.{$templateName}";

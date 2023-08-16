@@ -17,6 +17,16 @@ parameters:
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/Console/Commands/AutoRemoveBuilds.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/Console/Commands/AutoRemoveBuilds.php
+
+		-
 			message: "#^Method App\\\\Console\\\\Commands\\\\AutoRemoveBuilds\\:\\:handle\\(\\) should return mixed but return statement is missing\\.$#"
 			count: 1
 			path: app/Console/Commands/AutoRemoveBuilds.php
@@ -28,6 +38,16 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 1
+			path: app/Console/Commands/MigrateConfig.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/Console/Commands/MigrateConfig.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/Console/Commands/MigrateConfig.php
 
@@ -80,6 +100,11 @@ parameters:
 			message: "#^PHPDoc type string of property App\\\\Console\\\\Commands\\\\RemoveUser\\:\\:\\$description is not the same as PHPDoc type string\\|null of overridden property Illuminate\\\\Console\\\\Command\\:\\:\\$description\\.$#"
 			count: 1
 			path: app/Console/Commands/RemoveUser.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/Console/Commands/SaveUser.php
 
 		-
 			message: "#^Method App\\\\Console\\\\Commands\\\\SaveUser\\:\\:handle\\(\\) should return mixed but return statement is missing\\.$#"
@@ -140,6 +165,16 @@ parameters:
 			message: "#^Property App\\\\Exceptions\\\\Handler\\:\\:\\$dontReport type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Exceptions/Handler.php
+
+		-
+			message: "#^Class App\\\\Http\\\\Controllers\\\\AbstractBuildController has an uninitialized property \\$build\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/Http/Controllers/AbstractBuildController.php
+
+		-
+			message: "#^Class App\\\\Http\\\\Controllers\\\\AbstractProjectController has an uninitialized property \\$project\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/Http/Controllers/AbstractProjectController.php
 
 		-
 			message: "#^Call to an undefined static method App\\\\Models\\\\User\\:\\:PasswordHash\\(\\)\\.$#"
@@ -221,13 +256,43 @@ parameters:
 			path: app/Http/Controllers/AdminController.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 11
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 4
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:removeBuilds\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:upgrade\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Only booleans are allowed in &&, mixed given on the left side\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Only booleans are allowed in an elseif condition, mixed given\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
+			count: 11
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -307,6 +372,16 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 4
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 4
+			path: app/Http/Controllers/BuildController.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:add_file\\(\\) has parameter \\$file with no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php
@@ -318,6 +393,11 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:apiBuildSummary\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:buildOverview\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php
 
@@ -353,6 +433,11 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:summary\\(\\) has parameter \\$build_id with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:viewFiles\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php
 
@@ -477,8 +562,18 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Left side of && is always true\\.$#"
+			message: "#^Loose comparison using \\=\\= between 1 and 1 will always evaluate to true\\.$#"
 			count: 4
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 12
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 62
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -489,6 +584,11 @@ parameters:
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:apiCompareCoverage_get_coverage\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 2
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:manageCoverage\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
+			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -562,6 +662,11 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:viewCoverage\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:viewCoverage\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 2
 			path: app/Http/Controllers/CoverageController.php
@@ -573,6 +678,11 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, int given\\.$#"
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			message: "#^PHPDoc tag @var with type App\\\\Models\\\\User is not subtype of type Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\User\\>\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
@@ -635,6 +745,11 @@ parameters:
 			message: "#^Only booleans are allowed in a ternary operator condition, mixed given\\.$#"
 			count: 1
 			path: app/Http/Controllers/IndexController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageBannerController\\:\\:manageBanner\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageBannerController.php
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageMeasurementsController\\:\\:show\\(\\) has no return type specified\\.$#"
@@ -700,6 +815,16 @@ parameters:
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 8
+			path: app/Http/Controllers/ManageProjectRolesController.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 3
+			path: app/Http/Controllers/ManageProjectRolesController.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageProjectRolesController\\:\\:register_user\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageProjectRolesController.php
@@ -730,14 +855,34 @@ parameters:
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageProjectRolesController\\:\\:viewPage\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageProjectRolesController.php
+
+		-
 			message: "#^Only booleans are allowed in an if condition, App\\\\Models\\\\User\\|null given\\.$#"
 			count: 1
+			path: app/Http/Controllers/ManageProjectRolesController.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
+			count: 6
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
 			message: "#^Variable \\$project_array might not be defined\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageProjectRolesController.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageUsersController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageUsersController\\:\\:showPage\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageUsersController.php
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageUsersController\\:\\:showPage\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
@@ -763,6 +908,21 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 2
+			path: app/Http/Controllers/MapController.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/Http/Controllers/MapController.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/Http/Controllers/MapController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\MapController\\:\\:viewMap\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
+			count: 1
 			path: app/Http/Controllers/MapController.php
 
 		-
@@ -831,6 +991,11 @@ parameters:
 			path: app/Http/Controllers/OAuthController.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProjectController.php
+
+		-
 			message: "#^Access to an undefined property object\\:\\:\\$numdefects\\.$#"
 			count: 2
 			path: app/Http/Controllers/ProjectOverviewController.php
@@ -868,6 +1033,11 @@ parameters:
 		-
 			message: "#^Implicit array creation is not allowed \\- variable \\$menu does not exist\\.$#"
 			count: 1
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 2
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
@@ -1144,6 +1314,21 @@ parameters:
 			path: app/Http/Controllers/SiteController.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 4
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 22
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:siteStatistics\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$description with no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/SiteController.php
@@ -1255,6 +1440,21 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, float\\|int\\|string given\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
+			count: 4
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Only booleans are allowed in \\|\\|, mixed given on the left side\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Only booleans are allowed in \\|\\|, mixed given on the right side\\.$#"
 			count: 1
 			path: app/Http/Controllers/SiteController.php
 
@@ -1382,6 +1582,11 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SubProjectController\\:\\:dependenciesGraph\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
+			count: 1
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 1
 			path: app/Http/Controllers/SubProjectController.php
@@ -1392,6 +1597,11 @@ parameters:
 				04/01/2023$#
 			"""
 			count: 3
+			path: app/Http/Controllers/SubmissionController.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
 			path: app/Http/Controllers/SubmissionController.php
 
 		-
@@ -1416,6 +1626,21 @@ parameters:
 			path: app/Http/Controllers/SubscribeProjectController.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 8
+			path: app/Http/Controllers/SubscribeProjectController.php
+
+		-
+			message: "#^Only booleans are allowed in an elseif condition, mixed given\\.$#"
+			count: 2
+			path: app/Http/Controllers/SubscribeProjectController.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
+			count: 1
+			path: app/Http/Controllers/SubscribeProjectController.php
+
+		-
 			message: """
 				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
@@ -1426,6 +1651,11 @@ parameters:
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
 			count: 3
+			path: app/Http/Controllers/TestController.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 2
 			path: app/Http/Controllers/TestController.php
 
 		-
@@ -1468,6 +1698,16 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 3
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\UserController\\:\\:ReportLastBuild\\(\\) has parameter \\$nightlytime with no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/UserController.php
@@ -1484,7 +1724,7 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 3
+			count: 6
 			path: app/Http/Controllers/UserController.php
 
 		-
@@ -1562,7 +1802,17 @@ parameters:
 			path: app/Http/Middleware/Admin.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/Http/Middleware/CheckDatabaseConnection.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Middleware\\\\CheckDirectoryPermissions\\:\\:handle\\(\\) throws checked exception UnexpectedValueException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/Http/Middleware/CheckDirectoryPermissions.php
+
+		-
+			message: "#^PHPDoc tag @var with type DirectoryIterator is not subtype of native type RecursiveIteratorIterator\\<RecursiveDirectoryIterator\\>\\.$#"
 			count: 1
 			path: app/Http/Middleware/CheckDirectoryPermissions.php
 
@@ -1595,6 +1845,11 @@ parameters:
 			message: "#^Property App\\\\Http\\\\Middleware\\\\EncryptCookies\\:\\:\\$except type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Http/Middleware/EncryptCookies.php
+
+		-
+			message: "#^PHPDoc tag @var with type CDash\\\\Model\\\\User is not subtype of type App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Http/Middleware/PasswordExpired.php
 
 		-
 			message: "#^PHPDoc type array of property App\\\\Http\\\\Middleware\\\\TrimStrings\\:\\:\\$except is not the same as PHPDoc type array\\<int, string\\> of overridden property Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TrimStrings\\:\\:\\$except\\.$#"
@@ -1644,6 +1899,11 @@ parameters:
 		-
 			message: "#^Instantiated class App\\\\Jobs\\\\GuzzleHttp\\\\Client not found\\.$#"
 			count: 1
+			path: app/Jobs/ProcessSubmission.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 2
 			path: app/Jobs/ProcessSubmission.php
 
 		-
@@ -1802,8 +2062,18 @@ parameters:
 			path: app/Listeners/ConfiguredSendEmailVerificationNotification.php
 
 		-
+			message: "#^PHPDoc tag @var with type Illuminate\\\\Contracts\\\\Auth\\\\MustVerifyEmail is not subtype of type Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\.$#"
+			count: 1
+			path: app/Listeners/ConfiguredSendEmailVerificationNotification.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
+			path: app/Models/BuildTest.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 2
 			path: app/Models/BuildTest.php
 
 		-
@@ -1967,7 +2237,7 @@ parameters:
 			path: app/Models/User.php
 
 		-
-			message: "#^PHPDoc type array of property App\\\\Models\\\\User\\:\\:\\$hidden is not the same as PHPDoc type array\\<int, string\\> of overridden property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$hidden\\.$#"
+			message: "#^PHPDoc type array of property App\\\\Models\\\\User\\:\\:\\$hidden is not the same as PHPDoc type list\\<string\\> of overridden property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$hidden\\.$#"
 			count: 1
 			path: app/Models/User.php
 
@@ -2008,6 +2278,11 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:save\\(\\)\\.$#"
+			count: 1
+			path: app/Providers/CDashDatabaseUserProvider.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/Providers/CDashDatabaseUserProvider.php
 
@@ -2155,6 +2430,11 @@ parameters:
 			path: app/Services/NoteCreator.php
 
 		-
+			message: "#^Class App\\\\Services\\\\PageTimer has an uninitialized property \\$duration\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/Services/PageTimer.php
+
+		-
 			message: "#^Method App\\\\Services\\\\PageTimer\\:\\:end\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Services/PageTimer.php
@@ -2165,6 +2445,11 @@ parameters:
 			path: app/Services/PageTimer.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 3
+			path: app/Services/ProjectPermissions.php
+
+		-
 			message: "#^Access to an undefined property App\\\\Models\\\\BuildTest\\:\\:\\$measurements\\.$#"
 			count: 1
 			path: app/Services/TestCreator.php
@@ -2172,6 +2457,11 @@ parameters:
 		-
 			message: "#^Call to function base64_decode\\(\\) requires parameter \\#2 to be set\\.$#"
 			count: 2
+			path: app/Services/TestCreator.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
 			path: app/Services/TestCreator.php
 
 		-
@@ -2272,6 +2562,11 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
+			path: app/Services/UnparsedSubmissionProcessor.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
 			path: app/Services/UnparsedSubmissionProcessor.php
 
 		-
@@ -2377,6 +2672,11 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
+			path: app/Validators/Password.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 3
 			path: app/Validators/Password.php
 
 		-
@@ -2533,6 +2833,16 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 16
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 13
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 3
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
@@ -2744,6 +3054,11 @@ parameters:
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 10
+			path: app/cdash/app/Controller/Api/QueryTests.php
+
+		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\QueryTests\\:\\:addExtraMeasurements\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/QueryTests.php
@@ -2802,6 +3117,11 @@ parameters:
 			message: "#^Variable \\$parent_build might not be defined\\.$#"
 			count: 3
 			path: app/cdash/app/Controller/Api/QueryTests.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ResultsApi.php
 
 		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\ResultsApi\\:\\:determineDateRange\\(\\) has no return type specified\\.$#"
@@ -2959,6 +3279,16 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/TestDetails.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 8
+			path: app/cdash/app/Controller/Api/TestDetails.php
+
+		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\TestDetails\\:\\:getRelatedBuildTest\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/TestDetails.php
@@ -2999,6 +3329,16 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestGraph.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/app/Controller/Api/TestGraph.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/TestGraph.php
+
+		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\TestGraph\\:\\:getResponse\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/TestGraph.php
@@ -3025,6 +3365,11 @@ parameters:
 
 		-
 			message: "#^Implicit array creation is not allowed \\- variable \\$tests_response does not exist\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/TestOverview.php
 
@@ -3064,6 +3409,16 @@ parameters:
 		-
 			message: "#^Foreach overwrites \\$start_of_day with its key variable\\.$#"
 			count: 1
+			path: app/cdash/app/Controller/Api/Timeline.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/Timeline.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 2
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
@@ -3152,6 +3507,16 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/app/Controller/Api/ViewProjects.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 4
+			path: app/cdash/app/Controller/Api/ViewProjects.php
+
+		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:getProjects\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewProjects.php
@@ -3220,6 +3585,16 @@ parameters:
 		-
 			message: "#^Foreach overwrites \\$test with its value variable\\.$#"
 			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 8
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 11
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
@@ -3429,11 +3804,6 @@ parameters:
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
-			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
 			message: """
 				#^Fetching deprecated class constant AUTH_ACCESS_TOKEN of class Github\\\\Client\\:
 				Use the AuthMethod const$#
@@ -3448,6 +3818,11 @@ parameters:
 
 		-
 			message: "#^Implicit array creation is not allowed \\- variable \\$cached_commits might not exist\\.$#"
+			count: 2
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 2
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
@@ -3824,6 +4199,16 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 12
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 34
+			path: app/cdash/app/Model/Build.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddBuild\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -4025,6 +4410,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GenerateUuid\\(\\) has parameter \\$subprojectname with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetBuildEmailCollection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4550,6 +4940,11 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @param references unknown parameter\\: \\$test$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^PHPDoc tag @return has invalid value \\(BuildEmailCollection;\\)\\: Unexpected token \";\", expected TOKEN_HORIZONTAL_WS at offset 196 on line 6$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -5387,6 +5782,11 @@ parameters:
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/app/Model/BuildFailure.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\BuildFailure\\:\\:AddArgument\\(\\) has parameter \\$argument with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
@@ -5596,6 +5996,16 @@ parameters:
 			path: app/cdash/app/Model/BuildGroup.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Model/BuildGroup.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/app/Model/BuildGroup.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:FillFromRow\\(\\) has parameter \\$row with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroup.php
@@ -5785,6 +6195,11 @@ parameters:
 			path: app/cdash/app/Model/BuildGroupRule.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Model/BuildGroupRule.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\BuildGroupRule\\:\\:ChangeGroup\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroupRule.php
@@ -5941,6 +6356,11 @@ parameters:
 			path: app/cdash/app/Model/BuildInformation.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 4
+			path: app/cdash/app/Model/BuildInformation.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\BuildInformation\\:\\:Fill\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildInformation.php
@@ -6087,6 +6507,16 @@ parameters:
 				v2\\.5\\.0 01/22/2018$#
 			"""
 			count: 6
+			path: app/cdash/app/Model/BuildRelationship.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Model/BuildRelationship.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
 			path: app/cdash/app/Model/BuildRelationship.php
 
 		-
@@ -6238,6 +6668,16 @@ parameters:
 			path: app/cdash/app/Model/BuildUpdate.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Model/BuildUpdate.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 4
+			path: app/cdash/app/Model/BuildUpdate.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\BuildUpdate\\:\\:AddFile\\(\\) has parameter \\$file with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildUpdate.php
@@ -6353,6 +6793,11 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 1
+			path: app/cdash/app/Model/BuildUpdateFile.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildUpdateFile.php
 
@@ -6621,6 +7066,11 @@ parameters:
 			path: app/cdash/app/Model/CoverageFile.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Model/CoverageFile.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\CoverageFile\\:\\:GetIdFromName\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/CoverageFile.php
@@ -6748,6 +7198,11 @@ parameters:
 			path: app/cdash/app/Model/CoverageFile2User.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 10
+			path: app/cdash/app/Model/CoverageFile2User.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\CoverageFile2User\\:\\:GetCoverageFileId\\(\\) has parameter \\$buildid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/CoverageFile2User.php
@@ -6800,6 +7255,16 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 3
+			path: app/cdash/app/Model/CoverageFileLog.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Model/CoverageFileLog.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 3
 			path: app/cdash/app/Model/CoverageFileLog.php
 
@@ -7241,6 +7706,11 @@ parameters:
 			path: app/cdash/app/Model/DynamicAnalysis.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 6
+			path: app/cdash/app/Model/DynamicAnalysis.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\DynamicAnalysis\\:\\:AddDefect\\(\\) has parameter \\$defect with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/DynamicAnalysis.php
@@ -7382,6 +7852,11 @@ parameters:
 			path: app/cdash/app/Model/DynamicAnalysisDefect.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Model/DynamicAnalysisDefect.php
+
+		-
 			message: "#^Property CDash\\\\Model\\\\DynamicAnalysisDefect\\:\\:\\$DynamicAnalysisId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/DynamicAnalysisDefect.php
@@ -7497,6 +7972,11 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
+			path: app/cdash/app/Model/Image.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 2
 			path: app/cdash/app/Model/Image.php
 
 		-
@@ -7869,6 +8349,11 @@ parameters:
 			path: app/cdash/app/Model/PendingSubmissions.php
 
 		-
+			message: "#^Access to an uninitialized property CDash\\\\Model\\\\Project\\:\\:\\$AutoremoveMaxBuilds\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
 			message: """
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
@@ -7958,6 +8443,16 @@ parameters:
 		-
 			message: "#^Implicit array creation is not allowed \\- variable \\$rep might not exist\\.$#"
 			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 5
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 4
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -8272,6 +8767,11 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, array\\|null given\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: "#^Parameter \\#3 \\$value of function curl_setopt expects 0\\|2, false given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -8700,6 +9200,11 @@ parameters:
 			path: app/cdash/app/Model/SubProject.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:CommonBuildQuery\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
@@ -8833,6 +9338,11 @@ parameters:
 			message: "#^Only booleans are allowed in an if condition, int given\\.$#"
 			count: 3
 			path: app/cdash/app/Model/SubProjectGroup.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Subscriber.php
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Subscriber\\:\\:getLabels\\(\\) has invalid return type CDash\\\\Model\\\\Collection\\.$#"
@@ -8991,6 +9501,16 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
+			path: app/cdash/app/Model/User.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Model/User.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 3
 			path: app/cdash/app/Model/User.php
 
 		-
@@ -9197,6 +9717,11 @@ parameters:
 			path: app/cdash/app/Model/UserProject.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Model/UserProject.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\UserProject\\:\\:AddCredential\\(\\) has parameter \\$credential with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/UserProject.php
@@ -9332,6 +9857,16 @@ parameters:
 			path: app/cdash/include/CDash/Config.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/include/CDash/Config.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/include/CDash/Config.php
+
+		-
 			message: "#^Method CDash\\\\Config\\:\\:get\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Config.php
@@ -9453,6 +9988,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\ServiceContainer\\:\\:singleton\\(\\) has parameter \\$class_name with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/CDash/ServiceContainer.php
+
+		-
+			message: "#^PHPDoc tag @var with type CDash\\\\ServiceContainer is not subtype of type static\\(CDash\\\\ServiceContainer\\)\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/ServiceContainer.php
 
@@ -9673,16 +10213,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$body of method CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage\\:\\:setBody\\(\\) expects CDash\\\\Messaging\\\\Notification\\\\Email\\\\Decorator\\\\DecoratorInterface, Illuminate\\\\View\\\\View given\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php
-
-		-
-			message: "#^Property CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailBuilder\\:\\:\\$cacheDirectory is never read, only written\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php
-
-		-
-			message: "#^Property CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailBuilder\\:\\:\\$templateDirectory is never read, only written\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php
 
@@ -10142,6 +10672,11 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/BuildErrorTopic.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/include/Messaging/Topic/BuildErrorTopic.php
+
+		-
 			message: "#^Method CDash\\\\Messaging\\\\Topic\\\\BuildErrorTopic\\:\\:getFixes\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/BuildErrorTopic.php
@@ -10557,11 +11092,6 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/Topic.php
 
 		-
-			message: "#^Only booleans are allowed in &&, mixed given on the left side\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Topic/Topic.php
-
-		-
 			message: "#^Only booleans are allowed in a negated boolean, CDash\\\\Collection\\\\BuildCollection given\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/Topic.php
@@ -10815,6 +11345,16 @@ parameters:
 			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
+			message: "#^Access to an undefined property CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:\\$missingTests\\.$#"
+			count: 1
+			path: app/cdash/include/Test/CDashUseCaseTestCase.php
+
+		-
+			message: "#^Access to an undefined property PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:\\$Errors\\.$#"
+			count: 1
+			path: app/cdash/include/Test/CDashUseCaseTestCase.php
+
+		-
 			message: "#^Access to an undefined property PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:\\$Id\\.$#"
 			count: 5
 			path: app/cdash/include/Test/CDashUseCaseTestCase.php
@@ -10859,6 +11399,11 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @var for variable \\$model contains unknown class Build\\.$#"
+			count: 1
+			path: app/cdash/include/Test/CDashUseCaseTestCase.php
+
+		-
+			message: "#^PHPDoc tag @var with type Build is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 1
 			path: app/cdash/include/Test/CDashUseCaseTestCase.php
 
@@ -11864,6 +12409,11 @@ parameters:
 			path: app/cdash/include/api_common.php
 
 		-
+			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
+			count: 1
+			path: app/cdash/include/api_common.php
+
+		-
 			message: "#^Only booleans are allowed in an if condition, int given\\.$#"
 			count: 1
 			path: app/cdash/include/api_common.php
@@ -12433,6 +12983,16 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 5
+			path: app/cdash/include/common.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 10
+			path: app/cdash/include/common.php
+
+		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 3
 			path: app/cdash/include/common.php
@@ -12577,6 +13137,16 @@ parameters:
 			path: app/cdash/include/ctestparser.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/include/ctestparser.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/include/ctestparser.php
+
+		-
 			message: "#^Access to an undefined property object\\:\\:\\$Id\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparserutils.php
@@ -12683,6 +13253,16 @@ parameters:
 		-
 			message: "#^Function extract_type_from_buildstamp\\(\\) has parameter \\$buildstamp with no type specified\\.$#"
 			count: 1
+			path: app/cdash/include/ctestparserutils.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/include/ctestparserutils.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 4
 			path: app/cdash/include/ctestparserutils.php
 
 		-
@@ -12914,6 +13494,16 @@ parameters:
 		-
 			message: "#^Implicit array creation is not allowed \\- variable \\$results does not exist\\.$#"
 			count: 3
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 6
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 15
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -13197,6 +13787,16 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 4
+			path: app/cdash/include/filterdataFunctions.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 16
+			path: app/cdash/include/filterdataFunctions.php
+
+		-
 			message: "#^Method CompareCoveragePhpFilters\\:\\:getDefaultFilter\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
@@ -13373,6 +13973,11 @@ parameters:
 
 		-
 			message: "#^Method ViewTestPhpFilters\\:\\:getSqlField\\(\\) has parameter \\$field with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/filterdataFunctions.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
@@ -13579,6 +14184,11 @@ parameters:
 
 		-
 			message: "#^Instanceof between PDOStatement and PDOStatement will always evaluate to true\\.$#"
+			count: 1
+			path: app/cdash/include/pdo.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/include/pdo.php
 
@@ -14838,6 +15448,16 @@ parameters:
 			path: app/cdash/include/repository.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 29
+			path: app/cdash/include/repository.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/include/repository.php
+
+		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 2
 			path: app/cdash/include/repository.php
@@ -14851,6 +15471,16 @@ parameters:
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 1
 			path: app/cdash/include/repository.php
+
+		-
+			message: "#^Parameter \\#3 \\$value of function curl_setopt expects bool, int given\\.$#"
+			count: 2
+			path: app/cdash/include/repository.php
+
+		-
+			message: "#^Access to an undefined property UpdateHandler\\:\\:\\$BuildId\\.$#"
+			count: 1
+			path: app/cdash/include/sendemail.php
 
 		-
 			message: "#^Anonymous function has an unused use \\$buildid\\.$#"
@@ -14934,6 +15564,16 @@ parameters:
 		-
 			message: "#^Function get_email_summary\\(\\) has parameter \\$errors with no value type specified in iterable type array\\.$#"
 			count: 1
+			path: app/cdash/include/sendemail.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 7
+			path: app/cdash/include/sendemail.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 14
 			path: app/cdash/include/sendemail.php
 
 		-
@@ -15398,6 +16038,16 @@ parameters:
 			path: app/cdash/include/upgrade_functions.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/include/upgrade_functions.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 18
+			path: app/cdash/include/upgrade_functions.php
+
+		-
 			message: "#^Only booleans are allowed in &&, mixed given on the left side\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
@@ -15430,6 +16080,16 @@ parameters:
 
 		-
 			message: "#^Function handle_error\\(\\) has parameter \\$msg with no type specified\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/GitHub/webhook.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/GitHub/webhook.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/GitHub/webhook.php
 
@@ -15505,6 +16165,11 @@ parameters:
 
 		-
 			message: "#^Function rest_put not found\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/build.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/build.php
 
@@ -15624,6 +16289,11 @@ parameters:
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 5
+			path: app/cdash/public/api/v1/buildgroup.php
+
+		-
 			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
@@ -15695,6 +16365,16 @@ parameters:
 			message: "#^Function CDash\\\\Api\\\\v1\\\\ComputeClassifier\\\\value_to_string\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/computeClassifier.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/deleteSubmissionFile.php
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
@@ -15822,6 +16502,11 @@ parameters:
 			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/expectedbuild.php
+
+		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/getSubmissionFile.php
@@ -15895,6 +16580,16 @@ parameters:
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/manageBuildGroup.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 4
+			path: app/cdash/public/api/v1/manageBuildGroup.php
+
+		-
 			message: "#^Variable \\$user2project might not be defined\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/manageBuildGroup.php
@@ -15934,6 +16629,11 @@ parameters:
 
 		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\ManageMeasurements\\\\rest_post\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/manageMeasurements.php
+
+		-
+			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/manageMeasurements.php
 
@@ -16103,6 +16803,11 @@ parameters:
 			path: app/cdash/public/api/v1/project.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/project.php
+
+		-
 			message: "#^Variable \\$filetype might not be defined\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
@@ -16111,6 +16816,11 @@ parameters:
 			message: "#^Variable property access on mixed\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 3
+			path: app/cdash/public/api/v1/relateBuilds.php
 
 		-
 			message: "#^Call to method RetryHandler\\:\\:increment\\(\\) with incorrect case\\: Increment$#"
@@ -16609,6 +17319,11 @@ parameters:
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
 
 		-
+			message: "#^PHPDoc tag @var with type PDOStatement&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/DatabaseTest.php
+
+		-
 			message: "#^Call to an undefined method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\|CDash\\\\Test\\\\UseCase\\\\ConfigUseCase\\|CDash\\\\Test\\\\UseCase\\\\TestUseCase\\|CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setChecker\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
@@ -16768,6 +17483,11 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @var for variable \\$parser contains unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
+
+		-
+			message: "#^PHPDoc tag @var with type AbstractHandler&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
 
@@ -16960,6 +17680,31 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
+			message: "#^PHPDoc tag @var with type ActionableBuildInterface&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			message: "#^PHPDoc tag @var with type App\\\\Models\\\\Site is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			message: "#^PHPDoc tag @var with type CDash\\\\Model\\\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			message: "#^PHPDoc tag @var with type CDash\\\\Model\\\\BuildGroup&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			message: "#^PHPDoc tag @var with type CDash\\\\Model\\\\Project is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
 			message: "#^Property CommitAuthorSubscriptionBuilderTest\\:\\:\\$diff has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
@@ -17093,6 +17838,11 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
 
 		-
+			message: "#^PHPDoc tag @var with type CDash\\\\Model\\\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
 			message: "#^Property UserSubscriptionBuilderTest\\:\\:\\$diff has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
@@ -17142,6 +17892,11 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @var for variable \\$build contains unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
+
+		-
+			message: "#^PHPDoc tag @var with type CDash\\\\Model\\\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
 
@@ -17315,6 +18070,11 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @var for variable \\$build contains unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
+			count: 2
+			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			message: "#^PHPDoc tag @var with type CDash\\\\Model\\\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 2
 			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
 
@@ -17632,6 +18392,11 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
 
 		-
+			message: "#^PHPDoc tag @var with type CDash\\\\Model\\\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
+
+		-
 			message: "#^Property FixedTopicTest\\:\\:\\$diff has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
@@ -17732,6 +18497,11 @@ parameters:
 		-
 			message: "#^PHPDoc tag @var for variable \\$build2 contains unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
 			count: 2
+			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
+
+		-
+			message: "#^PHPDoc tag @var with type CDash\\\\Model\\\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 3
 			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
 
 		-
@@ -17899,6 +18669,11 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @var for variable \\$build contains unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			message: "#^PHPDoc tag @var with type CDash\\\\Model\\\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
@@ -18142,6 +18917,11 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @var for variable \\$build contains unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
+
+		-
+			message: "#^PHPDoc tag @var with type CDash\\\\Model\\\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
 
@@ -18594,6 +19374,11 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @var for variable \\$sut contains unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Model/BuildTest.php
+
+		-
+			message: "#^PHPDoc tag @var with type CDash\\\\Model\\\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Model/BuildTest.php
 
@@ -19201,6 +19986,16 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @var for variable \\$tests contains generic class Illuminate\\\\Support\\\\Collection but does not specify its types\\: TKey, TValue$#"
+			count: 4
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
+			message: "#^PHPDoc tag @var with type CDash\\\\Test\\\\UseCase\\\\UseCase is not subtype of type CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\|CDash\\\\Test\\\\UseCase\\\\ConfigUseCase\\|CDash\\\\Test\\\\UseCase\\\\TestUseCase\\|CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\.$#"
+			count: 5
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
+			message: "#^PHPDoc tag @var with type Illuminate\\\\Support\\\\Collection is not subtype of type CDash\\\\Model\\\\TestCollection\\.$#"
 			count: 4
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
@@ -19862,6 +20657,11 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_test_manager.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/tests/kwtest/kw_test_manager.php
+
+		-
 			message: "#^Method TestManager\\:\\:_installdb4test\\(\\) has parameter \\$port with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_test_manager.php
@@ -19945,6 +20745,16 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 3
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 3
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
@@ -20393,16 +21203,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, bool given\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Parameter \\#1 \\$page of method KWWebTestCase\\:\\:analyse\\(\\) expects object, bool given\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: "#^Parameter \\#1 \\$prefix of function uniqid expects string, int\\<0, max\\> given\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -20419,6 +21219,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$encoding \\(SimpleEncoding\\) of method CDashControllerUserAgent\\:\\:fetch\\(\\) should be contravariant with parameter \\$encoding \\(SimpleFormEncoding\\) of method SimpleUserAgent\\:\\:fetch\\(\\)$#"
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			message: "#^Parameter \\#3 \\$value of function curl_setopt expects bool, int given\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -20870,6 +21675,11 @@ parameters:
 			path: app/cdash/tests/test_aggregatecoverage.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 6
+			path: app/cdash/tests/test_aggregatecoverage.php
+
+		-
 			message: "#^Method AggregateCoverageTestCase\\:\\:checkCoverage\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_aggregatecoverage.php
@@ -20911,6 +21721,16 @@ parameters:
 
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
+			count: 1
+			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 6
+			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
 
@@ -21070,6 +21890,11 @@ parameters:
 			path: app/cdash/tests/test_authtoken.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_authtoken.php
+
+		-
 			message: "#^Method AuthTokenTestCase\\:\\:normalSubmit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
@@ -21175,7 +22000,7 @@ parameters:
 			path: app/cdash/tests/test_authtoken.php
 
 		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
+			message: "#^Parameter \\#3 \\$value of function curl_setopt expects bool, int given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
 
@@ -21293,6 +22118,11 @@ parameters:
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
+
+		-
 			message: "#^Method AutoRemoveBuildsOnSubmitTestCase\\:\\:enableAutoRemoveConfigSetting\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
@@ -21344,6 +22174,11 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
+			path: app/cdash/tests/test_bazeljson.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 14
 			path: app/cdash/tests/test_bazeljson.php
 
 		-
@@ -21463,6 +22298,11 @@ parameters:
 			path: app/cdash/tests/test_branchcoverage.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 3
+			path: app/cdash/tests/test_branchcoverage.php
+
+		-
 			message: "#^Method BranchCoverageTestCase\\:\\:clearPriorBranchCoverageResults\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_branchcoverage.php
@@ -21498,8 +22338,8 @@ parameters:
 			path: app/cdash/tests/test_branchcoverage.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, bool given\\.$#"
-			count: 2
+			message: "#^Parameter \\#3 \\$value of function curl_setopt expects bool, int given\\.$#"
+			count: 1
 			path: app/cdash/tests/test_branchcoverage.php
 
 		-
@@ -21578,6 +22418,16 @@ parameters:
 			path: app/cdash/tests/test_builddetails.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_builddetails.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 3
+			path: app/cdash/tests/test_builddetails.php
+
+		-
 			message: "#^Method BuildDetailsTestCase\\:\\:__construct\\(\\) with return type void returns int but should not return anything\\.$#"
 			count: 1
 			path: app/cdash/tests/test_builddetails.php
@@ -21615,11 +22465,6 @@ parameters:
 		-
 			message: "#^Method BuildDetailsTestCase\\:\\:testViewTestReturnsProperFormatForParentBuilds\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
-			count: 7
 			path: app/cdash/tests/test_builddetails.php
 
 		-
@@ -21667,6 +22512,11 @@ parameters:
 			path: app/cdash/tests/test_buildfailuredetails.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 9
+			path: app/cdash/tests/test_buildfailuredetails.php
+
+		-
 			message: "#^Method BuildFailureDetailsTestCase\\:\\:testBuildFailureDetails\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_buildfailuredetails.php
@@ -21704,6 +22554,16 @@ parameters:
 
 		-
 			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: app/cdash/tests/test_buildgrouprule.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_buildgrouprule.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_buildgrouprule.php
 
@@ -21746,6 +22606,11 @@ parameters:
 				04/01/2023$#
 			"""
 			count: 3
+			path: app/cdash/tests/test_buildmodel.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 4
 			path: app/cdash/tests/test_buildmodel.php
 
 		-
@@ -21853,6 +22718,11 @@ parameters:
 
 		-
 			message: "#^Empty array passed to foreach\\.$#"
+			count: 1
+			path: app/cdash/tests/test_buildproperties.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_buildproperties.php
 
@@ -22079,6 +22949,11 @@ parameters:
 			path: app/cdash/tests/test_committerinfo.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/tests/test_committerinfo.php
+
+		-
 			message: "#^Method CommitterInfoTestCase\\:\\:testCommitterInfo\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_committerinfo.php
@@ -22096,6 +22971,16 @@ parameters:
 		-
 			message: "#^Foreach overwrites \\$file with its value variable\\.$#"
 			count: 1
+			path: app/cdash/tests/test_compressedtest.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/tests/test_compressedtest.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 3
 			path: app/cdash/tests/test_compressedtest.php
 
 		-
@@ -22132,6 +23017,11 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 2
+			path: app/cdash/tests/test_configurewarnings.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
 			path: app/cdash/tests/test_configurewarnings.php
 
 		-
@@ -22176,6 +23066,11 @@ parameters:
 			path: app/cdash/tests/test_consistenttestingday.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_coveragedirectories.php
+
+		-
 			message: "#^Method CoverageDirectoriesTestCase\\:\\:testCoverageDirectories\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_coveragedirectories.php
@@ -22204,11 +23099,6 @@ parameters:
 		-
 			message: "#^Method CreateProjectPermissionsTestCase\\:\\:testCreateProjectPermissions\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
-			path: app/cdash/tests/test_createprojectpermissions.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
-			count: 11
 			path: app/cdash/tests/test_createprojectpermissions.php
 
 		-
@@ -22261,6 +23151,11 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
+			path: app/cdash/tests/test_crosssubprojectcoverage.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 6
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
 		-
@@ -22355,11 +23250,6 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, int given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_crosssubprojectcoverage.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
@@ -22463,11 +23353,6 @@ parameters:
 
 		-
 			message: "#^Method DeferredSubmissionsTestCase\\:\\:verifyNormalSubmission\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_deferredsubmissions.php
 
@@ -22643,6 +23528,16 @@ parameters:
 			path: app/cdash/tests/test_dynamicanalysissummary.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 5
+			path: app/cdash/tests/test_dynamicanalysissummary.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_dynamicanalysissummary.php
+
+		-
 			message: "#^Method DynamicAnalysisSummaryTestCase\\:\\:VerifyStandaloneBuild\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_dynamicanalysissummary.php
@@ -22710,11 +23605,6 @@ parameters:
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
 			count: 3
-			path: app/cdash/tests/test_edituser.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, bool given\\.$#"
-			count: 7
 			path: app/cdash/tests/test_edituser.php
 
 		-
@@ -22809,6 +23699,11 @@ parameters:
 			path: app/cdash/tests/test_excludesubprojects.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_excludesubprojects.php
+
+		-
 			message: "#^Method ExcludeSubProjectsTestCase\\:\\:testExcludeAllButOneSubProject\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_excludesubprojects.php
@@ -22852,6 +23747,11 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
+			path: app/cdash/tests/test_expectedandmissing.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 3
 			path: app/cdash/tests/test_expectedandmissing.php
 
 		-
@@ -22901,6 +23801,11 @@ parameters:
 			path: app/cdash/tests/test_expiredbuildrules.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_expiredbuildrules.php
+
+		-
 			message: "#^Method ExpiredBuildRulesTestCase\\:\\:checkForGroup\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_expiredbuildrules.php
@@ -22942,6 +23847,11 @@ parameters:
 			message: "#^Method ExtractTarTestCase\\:\\:testExtractTarArchiveTarWithInvalidFile\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_extracttar.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/tests/test_filterblocks.php
 
 		-
 			message: "#^Method FilterBlocksTestCase\\:\\:testFilterBlocks\\(\\) has no return type specified\\.$#"
@@ -23011,6 +23921,11 @@ parameters:
 			path: app/cdash/tests/test_filterbuilderrors.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_filterbuilderrors.php
+
+		-
 			message: "#^Method FilterBuildErrorsTestCase\\:\\:testFilterBuildErrors\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_filterbuilderrors.php
@@ -23042,6 +23957,11 @@ parameters:
 			path: app/cdash/tests/test_filtertestlabels.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 7
+			path: app/cdash/tests/test_filtertestlabels.php
+
+		-
 			message: "#^Method FilterTestLabelsTestCase\\:\\:testFilterLabels\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_filtertestlabels.php
@@ -23057,6 +23977,11 @@ parameters:
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 1
+			path: app/cdash/tests/test_hidecolumns.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 16
 			path: app/cdash/tests/test_hidecolumns.php
 
 		-
@@ -23124,6 +24049,11 @@ parameters:
 			message: "#^Property ImageComparisonTestCase\\:\\:\\$BuildId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_imagecomparison.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_indexfilters.php
 
 		-
 			message: "#^Method IndexFiltersTestCase\\:\\:filter\\(\\) has no return type specified\\.$#"
@@ -23210,12 +24140,12 @@ parameters:
 			path: app/cdash/tests/test_issuecreation.php
 
 		-
-			message: "#^Method IssueCreationTestCase\\:\\:testIssueCreation\\(\\) has no return type specified\\.$#"
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_issuecreation.php
 
 		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
+			message: "#^Method IssueCreationTestCase\\:\\:testIssueCreation\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_issuecreation.php
 
@@ -23235,32 +24165,22 @@ parameters:
 			path: app/cdash/tests/test_issuecreation.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_javajsoncoverage.php
+
+		-
 			message: "#^Method JavaJSONCoverageTestCase\\:\\:testJavaJSONCoverage\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_javajsoncoverage.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, bool given\\.$#"
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
-			path: app/cdash/tests/test_javajsoncoverage.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_javajsoncoverage.php
+			path: app/cdash/tests/test_jscovercoverage.php
 
 		-
 			message: "#^Method JSCoverCoverageTestCase\\:\\:testJSCoverCoverage\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_jscovercoverage.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, bool given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_jscovercoverage.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_jscovercoverage.php
 
@@ -23389,16 +24309,21 @@ parameters:
 			path: app/cdash/tests/test_managebanner.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, bool given\\.$#"
-			count: 2
-			path: app/cdash/tests/test_managebanner.php
-
-		-
 			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
+			path: app/cdash/tests/test_managemeasurements.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 21
+			path: app/cdash/tests/test_managemeasurements.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 9
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
@@ -23547,11 +24472,6 @@ parameters:
 			path: app/cdash/tests/test_manageusers.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, bool given\\.$#"
-			count: 2
-			path: app/cdash/tests/test_manageusers.php
-
-		-
 			message: """
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
@@ -23570,6 +24490,11 @@ parameters:
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 2
+			path: app/cdash/tests/test_multicoverage.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 5
 			path: app/cdash/tests/test_multicoverage.php
 
 		-
@@ -23600,16 +24525,6 @@ parameters:
 		-
 			message: "#^Only booleans are allowed in an if condition, int given\\.$#"
 			count: 2
-			path: app/cdash/tests/test_multicoverage.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, bool given\\.$#"
-			count: 2
-			path: app/cdash/tests/test_multicoverage.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
-			count: 1
 			path: app/cdash/tests/test_multicoverage.php
 
 		-
@@ -23661,6 +24576,16 @@ parameters:
 		-
 			message: "#^Foreach overwrites \\$build with its value variable\\.$#"
 			count: 3
+			path: app/cdash/tests/test_multiplesubprojects.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 32
+			path: app/cdash/tests/test_multiplesubprojects.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 4
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
@@ -23794,6 +24719,11 @@ parameters:
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/tests/test_namedmeasurements.php
+
+		-
 			message: "#^Method NamedMeasurementsTestCase\\:\\:testNamedMeasurements\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_namedmeasurements.php
@@ -23825,17 +24755,17 @@ parameters:
 			path: app/cdash/tests/test_nobackup.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/tests/test_nobackup.php
+
+		-
 			message: "#^Method NoBackupTestCase\\:\\:testNoBackup\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_nobackup.php
 
 		-
 			message: "#^Method NoBackupTestCase\\:\\:testNoBackup\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/test_nobackup.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_nobackup.php
 
@@ -23868,6 +24798,11 @@ parameters:
 			path: app/cdash/tests/test_notesapi.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_notesapi.php
+
+		-
 			message: "#^Method NotesAPICase\\:\\:testNotesAPI\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_notesapi.php
@@ -23893,6 +24828,11 @@ parameters:
 			path: app/cdash/tests/test_numericupdate.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/tests/test_opencovercoverage.php
+
+		-
 			message: "#^Method OpenCoverCoverageTestCase\\:\\:tearDown\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_opencovercoverage.php
@@ -23905,16 +24845,6 @@ parameters:
 		-
 			message: "#^Method OpenCoverCoverageTestCase\\:\\:testOpenCoverCoverageWithDataJson\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/tests/test_opencovercoverage.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, bool given\\.$#"
-			count: 2
-			path: app/cdash/tests/test_opencovercoverage.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
-			count: 2
 			path: app/cdash/tests/test_opencovercoverage.php
 
 		-
@@ -23951,6 +24881,11 @@ parameters:
 			message: "#^Property ParallelSubmissionsTestCase\\:\\:\\$Original has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_parallelsubmissions.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_passwordcomplexity.php
 
 		-
 			message: "#^Method PasswordComplexityTestCase\\:\\:complexityTest\\(\\) has no return type specified\\.$#"
@@ -24177,21 +25112,6 @@ parameters:
 			path: app/cdash/tests/test_pubproject.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, bool given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_pubproject.php
-
-		-
-			message: "#^Parameter \\#1 \\$mystring of method KWWebTestCase\\:\\:findString\\(\\) expects string, bool given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_pubproject.php
-
-		-
-			message: "#^Parameter \\#1 \\$text of method WebTestCase\\:\\:assertText\\(\\) expects string, bool given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_pubproject.php
-
-		-
 			message: "#^Property PubProjectTestCase\\:\\:\\$ProjectId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_pubproject.php
@@ -24250,6 +25170,11 @@ parameters:
 			path: app/cdash/tests/test_putdynamicbuilds.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 3
+			path: app/cdash/tests/test_querytests.php
+
+		-
 			message: "#^Method QueryTestsTestCase\\:\\:testQueryTests\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_querytests.php
@@ -24273,6 +25198,11 @@ parameters:
 			message: "#^Method RecoverPasswordTestCase\\:\\:testRecoverPassword\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_recoverpassword.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/tests/test_redundanttests.php
 
 		-
 			message: "#^Method RedundantTestsTestCase\\:\\:testRedundantTests\\(\\) has no return type specified\\.$#"
@@ -24303,6 +25233,11 @@ parameters:
 			message: "#^Property RegisterUserTestCase\\:\\:\\$project is unused\\.$#"
 			count: 1
 			path: app/cdash/tests/test_registeruser.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_rehashpassword.php
 
 		-
 			message: "#^Method RehashPasswordTestCase\\:\\:testSubscribeProjectShowsLabels\\(\\) has no return type specified\\.$#"
@@ -24573,6 +25508,11 @@ parameters:
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 23
+			path: app/cdash/tests/test_sequenceindependence.php
+
+		-
 			message: "#^Method SequenceIndependenceTestCase\\:\\:PerformOrderTest\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_sequenceindependence.php
@@ -24667,11 +25607,6 @@ parameters:
 
 		-
 			message: "#^Method SiteStatisticsTestCase\\:\\:testSiteStatistics\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_sitestatistics.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, bool given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_sitestatistics.php
 
@@ -24841,6 +25776,16 @@ parameters:
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 3
+			path: app/cdash/tests/test_subprojectnextprevious.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_subprojectnextprevious.php
+
+		-
 			message: "#^Method SubProjectNextPreviousTestCase\\:\\:testSubProjectNextPrevious\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_subprojectnextprevious.php
@@ -24870,6 +25815,11 @@ parameters:
 			message: "#^Property SubProjectOrderTestCase\\:\\:\\$project has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_subprojectorder.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/tests/test_subprojecttestfilters.php
 
 		-
 			message: "#^Method SubProjectTestFiltersTestCase\\:\\:testSubProjectTestFilters\\(\\) has no return type specified\\.$#"
@@ -24976,6 +25926,11 @@ parameters:
 			path: app/cdash/tests/test_testgraphpermissions.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/tests/test_testgraphpermissions.php
+
+		-
 			message: "#^Method TestGraphPermissionsTestCase\\:\\:__construct\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/test_testgraphpermissions.php
@@ -24996,16 +25951,6 @@ parameters:
 			path: app/cdash/tests/test_testgraphpermissions.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, bool given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_testgraphpermissions.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
-			count: 4
-			path: app/cdash/tests/test_testgraphpermissions.php
-
-		-
 			message: "#^Property TestGraphPermissionsTestCase\\:\\:\\$build has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_testgraphpermissions.php
@@ -25018,6 +25963,11 @@ parameters:
 		-
 			message: "#^Left side of && is always true\\.$#"
 			count: 2
+			path: app/cdash/tests/test_testhistory.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 5
 			path: app/cdash/tests/test_testhistory.php
 
 		-
@@ -25066,6 +26016,11 @@ parameters:
 			path: app/cdash/tests/test_testhistory.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/tests/test_testimages.php
+
+		-
 			message: "#^Method TestImagesTestCase\\:\\:testTestImages\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_testimages.php
@@ -25102,16 +26057,21 @@ parameters:
 			path: app/cdash/tests/test_testoverview.php
 
 		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
-			count: 7
-			path: app/cdash/tests/test_testoverview.php
-
-		-
 			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
+			path: app/cdash/tests/test_timeline.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 4
+			path: app/cdash/tests/test_timeline.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 3
 			path: app/cdash/tests/test_timeline.php
 
 		-
@@ -25254,6 +26214,11 @@ parameters:
 			path: app/cdash/tests/test_timestatus.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_timestatus.php
+
+		-
 			message: "#^Method TimeStatusTestCase\\:\\:testTimeStatus\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_timestatus.php
@@ -25342,6 +26307,16 @@ parameters:
 			path: app/cdash/tests/test_truncateoutput.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_truncateoutput.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 4
+			path: app/cdash/tests/test_truncateoutput.php
+
+		-
 			message: "#^Method TruncateOutputTestCase\\:\\:removeBuild\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_truncateoutput.php
@@ -25400,6 +26375,16 @@ parameters:
 				#^Call to deprecated method query\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
+			count: 1
+			path: app/cdash/tests/test_uniquediffs.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_uniquediffs.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_uniquediffs.php
 
@@ -25482,6 +26467,11 @@ parameters:
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 1
+			path: app/cdash/tests/test_updateappend.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 11
 			path: app/cdash/tests/test_updateappend.php
 
 		-
@@ -25596,6 +26586,16 @@ parameters:
 			path: app/cdash/tests/test_upgrade.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 17
+			path: app/cdash/tests/test_upgrade.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 9
+			path: app/cdash/tests/test_upgrade.php
+
+		-
 			message: "#^Method UpgradeTestCase\\:\\:getMaintenancePage\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_upgrade.php
@@ -25676,6 +26676,11 @@ parameters:
 			path: app/cdash/tests/test_upgrade.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/tests/test_uploadfile.php
+
+		-
 			message: "#^Method UploadFileTestCase\\:\\:testSubmitUploadXML\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_uploadfile.php
@@ -25706,6 +26711,11 @@ parameters:
 			path: app/cdash/tests/test_uploadfile.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_user.php
+
+		-
 			message: "#^Method UserTestCase\\:\\:testUser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_user.php
@@ -25724,11 +26734,6 @@ parameters:
 				04/01/2023$#
 			"""
 			count: 1
-			path: app/cdash/tests/test_usernotes.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
-			count: 3
 			path: app/cdash/tests/test_usernotes.php
 
 		-
@@ -25791,11 +26796,6 @@ parameters:
 			path: app/cdash/tests/test_viewdynamicanalysisfile.php
 
 		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_viewdynamicanalysisfile.php
-
-		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 1
 			path: app/cdash/tests/test_viewmap.php
@@ -25809,6 +26809,11 @@ parameters:
 			message: "#^Method ViewSubProjectsTestCase\\:\\:testViewSubProjects\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_viewsubprojects.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/test_viewsubprojectslinkoption.php
 
 		-
 			message: "#^Method ViewSubProjectsLinkOptionTestCase\\:\\:getTrilinosLink\\(\\) has no return type specified\\.$#"
@@ -25834,6 +26839,16 @@ parameters:
 			message: "#^Property ViewSubProjectsLinkOptionTestCase\\:\\:\\$project is unused\\.$#"
 			count: 1
 			path: app/cdash/tests/test_viewsubprojectslinkoption.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 4
+			path: app/cdash/tests/trilinos_submission_test.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/tests/trilinos_submission_test.php
 
 		-
 			message: "#^Method TrilinosSubmissionTestCase\\:\\:submitFiles\\(\\) has no return type specified\\.$#"
@@ -25929,6 +26944,11 @@ parameters:
 
 		-
 			message: "#^Foreach overwrites \\$line with its value variable\\.$#"
+			count: 2
+			path: app/cdash/xml_handlers/BazelJSON_handler.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 2
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
@@ -26219,6 +27239,16 @@ parameters:
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/GcovTar_handler.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 3
+			path: app/cdash/xml_handlers/GcovTar_handler.php
+
+		-
 			message: "#^Method GCovTarHandler\\:\\:Parse\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
@@ -26365,6 +27395,11 @@ parameters:
 			path: app/cdash/xml_handlers/JSCoverTar_handler.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 3
+			path: app/cdash/xml_handlers/JSCoverTar_handler.php
+
+		-
 			message: "#^Method JSCoverTarHandler\\:\\:Parse\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/JSCoverTar_handler.php
@@ -26418,6 +27453,16 @@ parameters:
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 1
+			path: app/cdash/xml_handlers/JavaJSONTar_handler.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/JavaJSONTar_handler.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 2
 			path: app/cdash/xml_handlers/JavaJSONTar_handler.php
 
 		-
@@ -26531,6 +27576,11 @@ parameters:
 		-
 			message: "#^Foreach overwrites \\$coverageSummary with its value variable\\.$#"
 			count: 1
+			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 6
 			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
 
 		-
@@ -26734,6 +27784,11 @@ parameters:
 		-
 			message: "#^Class stack referenced with incorrect case\\: Stack\\.$#"
 			count: 1
+			path: app/cdash/xml_handlers/abstract_handler.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 2
 			path: app/cdash/xml_handlers/abstract_handler.php
 
 		-
@@ -27002,6 +28057,11 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 30
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
 			message: "#^Method BuildHandler\\:\\:GetCommitAuthors\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/build_handler.php
@@ -27207,6 +28267,11 @@ parameters:
 			path: app/cdash/xml_handlers/configure_handler.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 14
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
 			message: "#^Method ConfigureHandler\\:\\:CreateBuild\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/configure_handler.php
@@ -27372,6 +28437,11 @@ parameters:
 			path: app/cdash/xml_handlers/coverage_handler.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 12
+			path: app/cdash/xml_handlers/coverage_handler.php
+
+		-
 			message: "#^Method CoverageHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/coverage_handler.php
@@ -27464,6 +28534,11 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
+			path: app/cdash/xml_handlers/coverage_junit_handler.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 14
 			path: app/cdash/xml_handlers/coverage_junit_handler.php
 
 		-
@@ -27572,6 +28647,11 @@ parameters:
 			path: app/cdash/xml_handlers/coverage_log_handler.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 7
+			path: app/cdash/xml_handlers/coverage_log_handler.php
+
+		-
 			message: "#^Method CoverageLogHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/coverage_log_handler.php
@@ -27667,6 +28747,11 @@ parameters:
 			path: app/cdash/xml_handlers/coverage_log_handler.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 3
+			path: app/cdash/xml_handlers/done_handler.php
+
+		-
 			message: "#^Method DoneHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/done_handler.php
@@ -27748,7 +28833,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property DynamicAnalysisHandler\\:\\:\\$BuildName\\.$#"
-			count: 4
+			count: 5
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
@@ -27777,8 +28862,18 @@ parameters:
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
+			message: "#^Class DynamicAnalysisHandler has an uninitialized property \\$DynamicAnalysis\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 7
+			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 23
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
@@ -27937,6 +29032,16 @@ parameters:
 			path: app/cdash/xml_handlers/note_handler.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 2
+			path: app/cdash/xml_handlers/note_handler.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 5
+			path: app/cdash/xml_handlers/note_handler.php
+
+		-
 			message: "#^Method NoteHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/note_handler.php
@@ -28073,6 +29178,16 @@ parameters:
 			path: app/cdash/xml_handlers/project_handler.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/project_handler.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 9
+			path: app/cdash/xml_handlers/project_handler.php
+
+		-
 			message: "#^Method ProjectHandler\\:\\:__construct\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/project_handler.php
@@ -28171,6 +29286,11 @@ parameters:
 			message: "#^Property ProjectHandler\\:\\:\\$SubProjects has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/project_handler.php
+
+		-
+			message: "#^Class RetryHandler has an uninitialized property \\$Retries\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/retry_handler.php
 
 		-
 			message: "#^Method RetryHandler\\:\\:__construct\\(\\) has parameter \\$filename with no type specified\\.$#"
@@ -28363,6 +29483,11 @@ parameters:
 			path: app/cdash/xml_handlers/sax_handler.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/stack.php
+
+		-
 			message: "#^Method stack\\:\\:at\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/stack.php
@@ -28425,6 +29550,11 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 5
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 35
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
@@ -28603,6 +29733,11 @@ parameters:
 			path: app/cdash/xml_handlers/testing_junit_handler.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 21
+			path: app/cdash/xml_handlers/testing_junit_handler.php
+
+		-
 			message: "#^Method TestingJUnitHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/testing_junit_handler.php
@@ -28753,6 +29888,16 @@ parameters:
 			path: app/cdash/xml_handlers/update_handler.php
 
 		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 9
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 23
+			path: app/cdash/xml_handlers/update_handler.php
+
+		-
 			message: "#^Method UpdateHandler\\:\\:GetCommitAuthors\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/update_handler.php
@@ -28861,6 +30006,16 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 3
+			path: app/cdash/xml_handlers/upload_handler.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/upload_handler.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 11
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
@@ -29099,6 +30254,11 @@ parameters:
 			path: database/migrations/2020_01_10_120602_drop_cdash_at_home.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 3
+			path: database/migrations/2020_02_17_112005_reformat_test_data.php
+
+		-
 			message: "#^Method Illuminate\\\\Database\\\\Schema\\\\Blueprint\\:\\:text\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: database/migrations/2020_02_17_112005_reformat_test_data.php
@@ -29291,6 +30451,26 @@ parameters:
 			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$public_project has no type specified\\.$#"
 			count: 1
 			path: tests/Feature/ProjectPermissions.php
+
+		-
+			message: "#^Class Tests\\\\Feature\\\\PurgeUnusedProjectsCommand has an uninitialized property \\$project1\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: tests/Feature/PurgeUnusedProjectsCommand.php
+
+		-
+			message: "#^Class Tests\\\\Feature\\\\PurgeUnusedProjectsCommand has an uninitialized property \\$project2\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: tests/Feature/PurgeUnusedProjectsCommand.php
+
+		-
+			message: "#^@dataProvider adminRoutes related method must be public\\.$#"
+			count: 1
+			path: tests/Feature/RouteAccessTest.php
+
+		-
+			message: "#^@dataProvider protectedRoutes related method must be public\\.$#"
+			count: 1
+			path: tests/Feature/RouteAccessTest.php
 
 		-
 			message: "#^Method Tests\\\\Feature\\\\RouteAccessTest\\:\\:adminRoutes\\(\\) is unused\\.$#"

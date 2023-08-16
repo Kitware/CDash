@@ -30,8 +30,11 @@ parameters:
             missingCheckedExceptionInThrows: true
 
     treatPhpDocTypesAsCertain: false
+    checkUninitializedProperties: true
+    checkTooWideReturnTypesInProtectedAndPublicMethods: true
 
     level: 6
 
 includes:
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
     - phpstan-baseline.neon
