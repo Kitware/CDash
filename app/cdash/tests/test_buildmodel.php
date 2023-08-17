@@ -307,6 +307,7 @@ class BuildModelTestCase extends KWWebTestCase
     public function testBuildModelAddBuild()
     {
         $build = new Build();
+        $build->ProjectId = 1;
         $this->assertTrue($build->AddBuild());
         $this->assertTrue($build->Id > 0);
 
