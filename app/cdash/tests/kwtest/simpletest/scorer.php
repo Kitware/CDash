@@ -245,7 +245,7 @@ class SimpleReporter extends SimpleScorer
     public function __construct()
     {
         parent::__construct();
-        $this->test_stack = array();
+        $this->test_stack = [];
         $this->size = null;
         $this->progress = 0;
     }
@@ -452,7 +452,7 @@ class SimpleReporterDecorator
         if (method_exists($this->reporter, 'getTestList')) {
             return $this->reporter->getTestList();
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -627,7 +627,7 @@ class SimpleReporterDecorator
  */
 class MultipleReporter
 {
-    private $reporters = array();
+    private $reporters = [];
 
     /**
      *    Adds a reporter to the subscriber list.

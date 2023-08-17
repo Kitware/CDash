@@ -16,7 +16,7 @@
 
 class stack
 {
-    private $stack = array();
+    private $stack = [];
 
     public function __construct()
     {

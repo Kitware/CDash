@@ -40,11 +40,11 @@ class SimpleForm
         $this->encoding = $this->setEncodingClass($tag);
         $this->default_target = false;
         $this->id = $tag->getAttribute('id');
-        $this->buttons = array();
-        $this->images = array();
-        $this->widgets = array();
-        $this->radios = array();
-        $this->checkboxes = array();
+        $this->buttons = [];
+        $this->images = [];
+        $this->widgets = [];
+        $this->radios = [];
+        $this->checkboxes = [];
     }
 
     /**
@@ -303,7 +303,7 @@ class SimpleForm
      */
     public function submitButton($selector, $additional = false)
     {
-        $additional = $additional ? $additional : array();
+        $additional = $additional ? $additional : [];
         foreach ($this->buttons as $button) {
             if ($selector->isMatch($button)) {
                 $encoding = $this->encode();
@@ -329,7 +329,7 @@ class SimpleForm
      */
     public function submitImage($selector, $x, $y, $additional = false)
     {
-        $additional = $additional ? $additional : array();
+        $additional = $additional ? $additional : [];
         foreach ($this->images as $image) {
             if ($selector->isMatch($image)) {
                 $encoding = $this->encode();

@@ -153,7 +153,7 @@ class BuildFailure
         $id = pdo_insert_id('buildfailure');
 
         // Insert the arguments
-        $argumentids = array();
+        $argumentids = [];
 
         foreach ($this->Arguments as $argument) {
             // Limit the argument to 255
@@ -284,7 +284,7 @@ class BuildFailure
     {
         deepEncodeHTMLEntities($data);
 
-        $marshaled = array_merge(array(
+        $marshaled = array_merge([
             'language' => $data['language'],
             'sourcefile' => $data['sourcefile'],
             'targetname' => $data['targetname'],
@@ -292,7 +292,7 @@ class BuildFailure
             'outputtype' => $data['outputtype'],
             'workingdirectory' => $data['workingdirectory'],
             'exitcondition' => $data['exitcondition']
-        ), $buildfailure->GetBuildFailureArguments($data['id']));
+        ], $buildfailure->GetBuildFailureArguments($data['id']));
 
         $marshaled['stderror'] = $data['stderror'];
         $marshaled['stdoutput'] = $data['stdoutput'];

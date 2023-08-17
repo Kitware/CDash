@@ -272,9 +272,9 @@ function ComputeTestTiming($days = 4)
                         ");
                 echo pdo_error();
 
-                $testarray = array();
+                $testarray = [];
                 while ($test_array = pdo_fetch_array($previoustest)) {
-                    $test = array();
+                    $test = [];
                     $test['id'] = $test_array['testid'];
                     $test['name'] = $test_array['name'];
                     $testarray[] = $test;
@@ -658,10 +658,10 @@ function AddUniqueConstraintToSiteTable($site_table)
 
     // Tables with a siteid field that will need to be updated as we prune
     // out duplicate sites.
-    $tables_to_update = array('build', 'build2grouprule', 'site2user',
+    $tables_to_update = ['build', 'build2grouprule', 'site2user',
         'client_job', 'client_site2cmake', 'client_site2compiler',
         'client_site2library', 'client_site2program',
-        'client_site2project');
+        'client_site2project'];
 
     // Find all the rows that will violate this new unique constraint.
     $query = "SELECT name, COUNT(*) FROM $site_table
@@ -690,7 +690,7 @@ function AddUniqueConstraintToSiteTable($site_table)
 
         // Now that we've identified which row to keep, let's find all its
         // duplicates to remove.
-        $ids_to_remove = array();
+        $ids_to_remove = [];
         $dupe_query =
             "SELECT id FROM $site_table
             WHERE id != $id_to_keep AND name = '$name'";

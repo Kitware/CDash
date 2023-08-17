@@ -77,7 +77,7 @@ class BuildTest extends Model
      */
     public static function marshalMissing($name, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate): array
     {
-        $data = array();
+        $data = [];
         $data['name'] = $name;
         $data['status'] = 'missing';
         $data['id'] = '';
@@ -100,10 +100,10 @@ class BuildTest extends Model
 
     public static function marshalStatus($status): array
     {
-        $statuses = array('passed' => array('Passed', 'normal'),
-                          'failed' => array('Failed', 'error'),
-                          'notrun' => array('Not Run', 'warning'),
-                          'missing' => array('Missing', 'missing'));
+        $statuses = ['passed' => ['Passed', 'normal'],
+                          'failed' => ['Failed', 'error'],
+                          'notrun' => ['Not Run', 'warning'],
+                          'missing' => ['Missing', 'missing']];
 
         return $statuses[$status];
     }
@@ -113,7 +113,7 @@ class BuildTest extends Model
     {
         $marshaledStatus = self::marshalStatus($data['status']);
         if ($data['details'] === 'Disabled') {
-            $marshaledStatus = array('Not Run', 'disabled-test');
+            $marshaledStatus = ['Not Run', 'disabled-test'];
         }
         $marshaledData = [
             'id' => $data['id'],

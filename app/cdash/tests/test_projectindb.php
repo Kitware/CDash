@@ -34,18 +34,18 @@ class ProjectInDbTestCase extends KWWebTestCase
         $this->projecttestid = $result[0]['id'];
         $query = "SELECT name,starttime,endtime,description FROM buildgroup WHERE projectid = '" . $this->projecttestid . "' order by name desc";
         $result = $this->db->query($query);
-        $expected = array('0' => array('name' => 'Nightly',
+        $expected = ['0' => ['name' => 'Nightly',
             'starttime' => '1980-01-01 00:00:00',
             'endtime' => '1980-01-01 00:00:00',
-            'description' => 'Nightly builds'),
-            '1' => array('name' => 'Experimental',
+            'description' => 'Nightly builds'],
+            '1' => ['name' => 'Experimental',
                 'starttime' => '1980-01-01 00:00:00',
                 'endtime' => '1980-01-01 00:00:00',
-                'description' => 'Experimental builds'),
-            '2' => array('name' => 'Continuous',
+                'description' => 'Experimental builds'],
+            '2' => ['name' => 'Continuous',
                 'starttime' => '1980-01-01 00:00:00',
                 'endtime' => '1980-01-01 00:00:00',
-                'description' => 'Continuous builds'));
+                'description' => 'Continuous builds']];
         $this->assertEqual($result, $expected);
     }
 
@@ -65,19 +65,19 @@ class ProjectInDbTestCase extends KWWebTestCase
     {
         $query = 'SELECT userid, role, emailtype, emailcategory FROM user2project WHERE projectid=' . $this->projecttestid;
         $result = $this->db->query($query);
-        $expected = array('userid' => 1,
+        $expected = ['userid' => 1,
             'role' => 2,
             'emailtype' => 3,
-            'emailcategory' => 126);
+            'emailcategory' => 126];
         $this->assertEqual($result[0], $expected);
     }
 
     public function createProjectTest4Db()
     {
-        $settings = array(
+        $settings = [
                 'Name' => 'ProjectTest4Db',
                 'Description' => 'This is a project test for cdash',
-                'Public' => 0);
+                'Public' => 0];
         $this->createProject($settings);
     }
 }

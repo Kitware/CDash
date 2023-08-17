@@ -32,9 +32,9 @@ class SimpleFrameset
     public function __construct($page)
     {
         $this->frameset = $page;
-        $this->frames = array();
+        $this->frames = [];
         $this->focus = false;
-        $this->names = array();
+        $this->names = [];
     }
 
     /**
@@ -81,10 +81,10 @@ class SimpleFrameset
     public function getFrameFocus()
     {
         if ($this->focus === false) {
-            return array();
+            return [];
         }
         return array_merge(
-            array($this->getPublicNameFromIndex($this->focus)),
+            [$this->getPublicNameFromIndex($this->focus)],
             $this->frames[$this->focus]->getFrameFocus());
     }
 
@@ -183,7 +183,7 @@ class SimpleFrameset
      */
     public function getFrames()
     {
-        $report = array();
+        $report = [];
         for ($i = 0; $i < count($this->frames); $i++) {
             $report[$this->getPublicNameFromIndex($i)] =
                 $this->frames[$i]->getFrames();
@@ -393,7 +393,7 @@ class SimpleFrameset
         if (is_integer($this->focus)) {
             return $this->frames[$this->focus]->getUrls();
         }
-        $urls = array();
+        $urls = [];
         foreach ($this->frames as $frame) {
             $urls = array_merge($urls, $frame->getUrls());
         }
@@ -413,7 +413,7 @@ class SimpleFrameset
                 $this->frames[$this->focus]->getUrlsByLabel($label),
                 $this->focus);
         }
-        $urls = array();
+        $urls = [];
         foreach ($this->frames as $index => $frame) {
             $urls = array_merge(
                 $urls,
@@ -453,7 +453,7 @@ class SimpleFrameset
      */
     protected function tagUrlsWithFrame($urls, $frame)
     {
-        $tagged = array();
+        $tagged = [];
         foreach ($urls as $url) {
             if (!$url->getTarget()) {
                 $url->setTarget($this->getPublicNameFromIndex($frame));

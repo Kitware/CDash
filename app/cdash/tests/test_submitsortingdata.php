@@ -24,8 +24,8 @@ class SubmitSortingDataTestCase extends KWWebTestCase
 
     public function testSubmitSortingData()
     {
-        $builds = array('short', 'medium', 'long');
-        $types = array('Build', 'Configure', 'Test', 'Update', 'Notes');
+        $builds = ['short', 'medium', 'long'];
+        $types = ['Build', 'Configure', 'Test', 'Update', 'Notes'];
         foreach ($builds as $build) {
             foreach ($types as $type) {
                 $this->submitFile($build, $type);

@@ -130,11 +130,11 @@ $response['sites'] = $sites;
 $Project = new Project();
 $Project->Id = $projectid;
 $buildgroups = $Project->GetBuildGroups();
-$buildgroups_response = array();
-$dynamics_response = array();
+$buildgroups_response = [];
+$dynamics_response = [];
 /** @var BuildGroup $buildgroup */
 foreach ($buildgroups as $buildgroup) {
-    $buildgroup_response = array();
+    $buildgroup_response = [];
 
     if ($show == $buildgroup->GetId()) {
         $buildgroup_response['selected'] = '1';
@@ -239,9 +239,9 @@ if (!empty($err)) {
     $response['error'] = $err;
 }
 
-$wildcards_response = array();
+$wildcards_response = [];
 foreach ($wildcards as $wildcard_array) {
-    $wildcard_response = array();
+    $wildcard_response = [];
     $wildcard_response['buildgroupname'] = $wildcard_array['name'];
     $wildcard_response['buildgroupid'] = $wildcard_array['id'];
     $wildcard_response['buildtype'] = $wildcard_array['buildtype'];

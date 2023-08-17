@@ -167,7 +167,7 @@ class DynamicAnalysis
 
         // Handle log decoding/decompression
         if (strtolower($this->LogEncoding ?? '') == 'base64') {
-            $this->Log = str_replace(array("\r\n", "\n", "\r"), '', $this->Log);
+            $this->Log = str_replace(["\r\n", "\n", "\r"], '', $this->Log);
             $this->Log = base64_decode($this->Log);
         }
         if (strtolower($this->LogCompression ?? '') == 'gzip') {

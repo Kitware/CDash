@@ -53,8 +53,8 @@ class XmlReporter extends SimpleReporter
     public function toParsedXml($text)
     {
         return str_replace(
-            array('&', '<', '>', '"', '\''),
-            array('&amp;', '&lt;', '&gt;', '&quot;', '&apos;'),
+            ['&', '<', '>', '"', '\''],
+            ['&amp;', '&lt;', '&gt;', '&quot;', '&apos;'],
             $text);
     }
 
@@ -477,10 +477,10 @@ class SimpleTestXmlParser
     {
         $this->listener = &$listener;
         $this->expat = &$this->createParser();
-        $this->tag_stack = array();
+        $this->tag_stack = [];
         $this->in_content_tag = false;
         $this->content = '';
-        $this->attributes = array();
+        $this->attributes = [];
     }
 
     /**
@@ -551,8 +551,8 @@ class SimpleTestXmlParser
      */
     protected function isLeaf($tag)
     {
-        return in_array($tag, array(
-            'NAME', 'PASS', 'FAIL', 'EXCEPTION', 'SKIP', 'MESSAGE', 'FORMATTED', 'SIGNAL'));
+        return in_array($tag, [
+            'NAME', 'PASS', 'FAIL', 'EXCEPTION', 'SKIP', 'MESSAGE', 'FORMATTED', 'SIGNAL']);
     }
 
     /**
@@ -586,7 +586,7 @@ class SimpleTestXmlParser
     protected function endElement($expat, $tag)
     {
         $this->in_content_tag = false;
-        if (in_array($tag, array('GROUP', 'CASE', 'TEST'))) {
+        if (in_array($tag, ['GROUP', 'CASE', 'TEST'])) {
             $nesting_tag = $this->popNestingTag();
             $nesting_tag->paintEnd($this->listener);
         } elseif ($tag == 'NAME') {

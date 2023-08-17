@@ -79,7 +79,7 @@ class SimpleReflection
      */
     public function getInterfaces()
     {
-        return array();
+        return [];
     }
 
     /**

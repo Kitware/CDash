@@ -10,9 +10,9 @@
 class SimpleTidyPageBuilder
 {
     private $page;
-    private $forms = array();
-    private $labels = array();
-    private $widgets_by_id = array();
+    private $forms = [];
+    private $labels = [];
+    private $widgets_by_id = [];
 
     public function __destruct()
     {
@@ -26,8 +26,8 @@ class SimpleTidyPageBuilder
     private function free()
     {
         unset($this->page);
-        $this->forms = array();
-        $this->labels = array();
+        $this->forms = [];
+        $this->labels = [];
     }
 
     /**
@@ -48,7 +48,7 @@ class SimpleTidyPageBuilder
     {
         $this->page = new SimplePage($response);
         $tidied = tidy_parse_string($input = $this->insertGuards($response->getContent()),
-            array('output-xml' => false, 'wrap' => '0', 'indent' => 'no'),
+            ['output-xml' => false, 'wrap' => '0', 'indent' => 'no'],
             'latin1');
         $this->walkTree($tidied->html());
         $this->attachLabels($this->widgets_by_id, $this->labels);
@@ -116,7 +116,7 @@ class SimpleTidyPageBuilder
     private function insertTextareaSimpleWhitespaceGuards($html)
     {
         return preg_replace_callback('#<textarea([^>]*)>(.*?)</textarea>#is',
-            array($this, 'insertWhitespaceGuards'),
+            [$this, 'insertWhitespaceGuards'],
             $html);
     }
 
@@ -128,8 +128,8 @@ class SimpleTidyPageBuilder
     private function insertWhitespaceGuards($matches)
     {
         return '<textarea' . $matches[1] . '>' .
-        str_replace(array("\n", "\r", "\t", ' '),
-            array('___NEWLINE___', '___CR___', '___TAB___', '___SPACE___'),
+        str_replace(["\n", "\r", "\t", ' '],
+            ['___NEWLINE___', '___CR___', '___TAB___', '___SPACE___'],
             $matches[2]) .
         '</textarea>';
     }
@@ -142,8 +142,8 @@ class SimpleTidyPageBuilder
      */
     private function stripTextareaWhitespaceGuards($html)
     {
-        return str_replace(array('___NEWLINE___', '___CR___', '___TAB___', '___SPACE___'),
-            array("\n", "\r", "\t", ' '),
+        return str_replace(['___NEWLINE___', '___CR___', '___TAB___', '___SPACE___'],
+            ["\n", "\r", "\t", ' '],
             $html);
     }
 
@@ -205,7 +205,7 @@ class SimpleTidyPageBuilder
         if ($node->name == 'a') {
             $this->page->addLink($this->tags()->createTag($node->name, (array)$node->attribute)
                 ->addContent($this->innerHtml($node)));
-        } elseif (in_array($node->name, array('input', 'button', 'textarea', 'select'))) {
+        } elseif (in_array($node->name, ['input', 'button', 'textarea', 'select'])) {
             $this->addWidgetToForm($node, $form, $enclosing_label);
         } elseif ($node->name == 'label') {
             $this->labels[] = $this->tags()->createTag($node->name, (array)$node->attribute)
@@ -267,7 +267,7 @@ class SimpleTidyPageBuilder
             return;
         }
         if (!isset($this->widgets_by_id[$id])) {
-            $this->widgets_by_id[$id] = array();
+            $this->widgets_by_id[$id] = [];
         }
         $this->widgets_by_id[$id][] = $widget;
     }
@@ -279,7 +279,7 @@ class SimpleTidyPageBuilder
      */
     private function collectSelectOptions($node)
     {
-        $options = array();
+        $options = [];
         if ($node->name == 'option') {
             $options[] = $this->tags()->createTag($node->name, $this->attributes($node))
                 ->addContent($this->innerHtml($node));
@@ -301,9 +301,9 @@ class SimpleTidyPageBuilder
     private function attributes($node)
     {
         if (!preg_match('|<[^ ]+\s(.*?)/?>|s', $node->value, $first_tag_contents)) {
-            return array();
+            return [];
         }
-        $attributes = array();
+        $attributes = [];
         preg_match_all('/\S+\s*=\s*\'[^\']*\'|(\S+\s*=\s*"[^"]*")|([^ =]+\s*=\s*[^ "\']+?)|[^ "\']+/', $first_tag_contents[1], $matches);
         foreach ($matches[0] as $unparsed) {
             $attributes = $this->mergeAttribute($attributes, $unparsed);
@@ -321,7 +321,7 @@ class SimpleTidyPageBuilder
     private function mergeAttribute($attributes, $raw)
     {
         $parts = explode('=', $raw);
-        list($name, $value) = count($parts) == 1 ? array($parts[0], $parts[0]) : $parts;
+        list($name, $value) = count($parts) == 1 ? [$parts[0], $parts[0]] : $parts;
         $attributes[trim($name)] = html_entity_decode($this->dequote(trim($value)), ENT_QUOTES);
         return $attributes;
     }
@@ -346,11 +346,11 @@ class SimpleTidyPageBuilder
      */
     private function collectFrames($node)
     {
-        $frames = array();
+        $frames = [];
         if ($node->name == 'frame') {
-            $frames = array($this->tags()->createTag($node->name, (array)$node->attribute));
+            $frames = [$this->tags()->createTag($node->name, (array)$node->attribute)];
         } elseif ($node->hasChildren()) {
-            $frames = array();
+            $frames = [];
             foreach ($node->child as $child) {
                 $frames = array_merge($frames, $this->collectFrames($child));
             }

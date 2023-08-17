@@ -26,11 +26,11 @@ class SubProjectTestCase extends KWWebTestCase
 
     public function testAccessToWebPageProjectTest()
     {
-        $settings = array(
+        $settings = [
                 'Name' => 'SubProjectExample',
                 'Description' => 'Project SubProjectExample test for cdash testing',
                 'EmailBrokenSubmission' => 1,
-                'EmailRedundantFailures' => 1);
+                'EmailRedundantFailures' => 1];
         $this->createProject($settings);
     }
 

@@ -86,9 +86,9 @@ function generate_XSLT($xml, string $pageName, bool $return_html = false): strin
 
     $xh = new XSLTProcessor();
 
-    $arguments = array(
+    $arguments = [
         '/_xml' => $xml
-    );
+    ];
 
     if (!empty($config->get('CDASH_DEBUG_XML'))) {
         $tmp = preg_replace("#<[A-Za-z0-9\-_.]{1,250}>#", "\\0\n", $xml);
@@ -374,7 +374,7 @@ function get_project_name($projectid): string
  */
 function get_geolocation($ip)
 {
-    $location = array();
+    $location = [];
 
     $lat = '';
     $long = '';
@@ -395,7 +395,7 @@ function get_geolocation($ip)
             ob_end_clean();
             curl_close($curl);
         } elseif (ini_get('allow_url_fopen')) {
-            $options = array('http' => array('timeout' => 5.0));
+            $options = ['http' => ['timeout' => 5.0]];
             $context = stream_context_create($options);
             $httpReply = file_get_contents($url, false, $context);
         } else {
@@ -429,7 +429,7 @@ function get_geolocation($ip)
 
         foreach ($config->get('CDASH_DEFAULT_IP_LOCATIONS') as $defaultlocation) {
             $defaultip = $defaultlocation['IP'];
-            if (preg_match('#^' . strtr(preg_quote($defaultip, '#'), array('\*' => '.*', '\?' => '.')) . '$#i', $ip)) {
+            if (preg_match('#^' . strtr(preg_quote($defaultip, '#'), ['\*' => '.*', '\?' => '.']) . '$#i', $ip)) {
                 $location['latitude'] = $defaultlocation['latitude'];
                 $location['longitude'] = $defaultlocation['longitude'];
             }
@@ -449,7 +449,7 @@ function remove_project_builds($projectid): void
 
     $build = DB::select('SELECT id FROM build WHERE projectid=?', [intval($projectid)]);
 
-    $buildids = array();
+    $buildids = [];
     foreach ($build as $build_array) {
         $buildids[] = (int) $build_array->id;
     }
@@ -982,7 +982,7 @@ function get_dates($date, $nightlytime): array
     $todaydate = mktime(0, 0, 0, intval(date2month($date)), intval(date2day($date)), intval(date2year($date)));
     $previousdate = date(FMT_DATE, $todaydate - 3600 * 24);
     $nextdate = date(FMT_DATE, $todaydate + 3600 * 24);
-    return array($previousdate, $today, $nextdate, $date);
+    return [$previousdate, $today, $nextdate, $date];
 }
 
 function has_next_date($date, $currentstarttime): bool
@@ -1237,10 +1237,10 @@ function begin_XML_for_XSLT(): string
 
 function begin_JSON_response(): array
 {
-    $response = array();
+    $response = [];
     $response['version'] = CDash\Config::getVersion();
 
-    $user_response = array();
+    $user_response = [];
     $userid = Auth::id();
     if ($userid) {
         $user = Auth::user();
@@ -1360,7 +1360,7 @@ function DeleteDirectory(string $dirName): void
         new RecursiveDirectoryIterator($dirName),
         RecursiveIteratorIterator::CHILD_FIRST);
     foreach ($iterator as $file) {
-        if (in_array($file->getBasename(), array('.', '..'))) {
+        if (in_array($file->getBasename(), ['.', '..'])) {
             continue;
         }
         if ($file->isDir()) {

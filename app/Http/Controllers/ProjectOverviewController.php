@@ -55,23 +55,23 @@ final class ProjectOverviewController extends AbstractProjectController
         ];
 
         // sanitized versions of these measurements.
-        $clean_measurements = array(
+        $clean_measurements = [
             'configure warnings' => 'configure_warnings',
             'configure errors'   => 'configure_errors',
             'build warnings'     => 'build_warnings',
             'build errors'       => 'build_errors',
-            'failing tests'      => 'failing_tests');
+            'failing tests'      => 'failing_tests'];
 
         // for static analysis, we only care about errors & warnings.
-        $static_measurements = array('errors', 'warnings');
+        $static_measurements = ['errors', 'warnings'];
 
         // information on how to sort by the various build measurements
-        $sort = array(
+        $sort = [
             'configure warnings' => '-configure.warning',
             'configure errors'   => '-configure.error',
             'build warnings'     => '-compilation.warning',
             'build errors'       => '-compilation.error',
-            'failing tests'      => '-test.fail');
+            'failing tests'      => '-test.fail'];
 
         // get the build groups that are included in this project's overview,
         // split up by type (currently only static analysis and general builds).
@@ -83,8 +83,8 @@ final class ProjectOverviewController extends AbstractProjectController
                      ORDER BY obg.position
                  ', [$this->project->Id]);
 
-        $build_groups = array();
-        $static_groups = array();
+        $build_groups = [];
+        $static_groups = [];
 
         foreach ($query as $group_row) {
             if ($group_row->type === 'build') {
@@ -101,9 +101,9 @@ final class ProjectOverviewController extends AbstractProjectController
         }
 
         $has_subproject_groups = false;
-        $subproject_groups = array();
-        $coverage_categories = array();
-        $coverage_build_group_names = array();
+        $subproject_groups = [];
+        $coverage_categories = [];
+        $coverage_build_group_names = [];
         if ($has_subprojects) {
             // Detect if the subprojects are split up into groups.
             $groups = $this->project->GetSubProjectGroups();
@@ -117,7 +117,7 @@ final class ProjectOverviewController extends AbstractProjectController
                     // for this group.
                     $group_name = $group->GetName();
                     $threshold = $group->GetCoverageThreshold();
-                    $coverage_category = array();
+                    $coverage_category = [];
                     $coverage_category['name'] = $group_name;
                     $coverage_category['position'] = $group->GetPosition();
                     $coverage_category['low'] = 0.7 * $threshold;
@@ -126,7 +126,7 @@ final class ProjectOverviewController extends AbstractProjectController
                     $coverage_categories[] = $coverage_category;
                 }
                 // Also save a 'Total' category to summarize across groups.
-                $coverage_category = array();
+                $coverage_category = [];
                 $coverage_category['name'] = 'Total';
                 $coverage_category['position'] = 0;
                 $threshold = intval($this->project->CoverageThreshold);
@@ -139,7 +139,7 @@ final class ProjectOverviewController extends AbstractProjectController
 
         $threshold = $this->project->CoverageThreshold;
         if (!$has_subproject_groups) {
-            $coverage_category = array();
+            $coverage_category = [];
             $coverage_category['name']  = 'coverage';
             $coverage_category['position']  = 1;
             $coverage_category['low'] = 0.7 * $threshold;
@@ -165,27 +165,27 @@ final class ProjectOverviewController extends AbstractProjectController
         // are defined:
         //   coverage_data[day][build group][coverage group] = percent_coverage
         //   dynamic_analysis_data[day][group][checker] = num_defects
-        $overview_data = array();
-        $coverage_data = array();
-        $dynamic_analysis_data = array();
+        $overview_data = [];
+        $coverage_data = [];
+        $dynamic_analysis_data = [];
 
         for ($i = 0; $i < $date_range; $i++) {
-            $overview_data[$i] = array();
+            $overview_data[$i] = [];
             foreach ($build_groups as $build_group) {
                 $build_group_name = $build_group['name'];
 
                 // overview
-                $overview_data[$i][$build_group_name] = array();
+                $overview_data[$i][$build_group_name] = [];
 
                 // dynamic analysis
-                $dynamic_analysis_data[$i][$build_group_name] = array();
+                $dynamic_analysis_data[$i][$build_group_name] = [];
             }
 
             // coverage
             foreach ($coverage_build_group_names as $build_group_name) {
                 foreach ($coverage_categories as $coverage_category) {
                     $category_name = $coverage_category['name'];
-                    $coverage_data[$i][$build_group_name][$category_name] = array();
+                    $coverage_data[$i][$build_group_name][$category_name] = [];
                     $coverage_array =
                 &$coverage_data[$i][$build_group_name][$category_name];
                     $coverage_array['loctested'] = 0;
@@ -197,7 +197,7 @@ final class ProjectOverviewController extends AbstractProjectController
             // static analysis
             foreach ($static_groups as $static_group) {
                 $static_group_name = $static_group['name'];
-                $overview_data[$i][$static_group_name] = array();
+                $overview_data[$i][$static_group_name] = [];
             }
         }
 
@@ -237,12 +237,12 @@ final class ProjectOverviewController extends AbstractProjectController
 
         // If we have multiple coverage builds in a single day we will also
         // show the aggregate.
-        $aggregate_tracker = array();
+        $aggregate_tracker = [];
         $show_aggregate = false;
 
         // Keep track of the different types of dynamic analysis that are being
         // performed on our build groups of interest.
-        $dynamic_analysis_types = array();
+        $dynamic_analysis_types = [];
 
         // TODO: (williamjallen) Much of this can be done in SQL for efficiency and better readability
         foreach ($builds_array as $build_row) {
@@ -394,23 +394,23 @@ final class ProjectOverviewController extends AbstractProjectController
 
         // Now that the data has been collected we can generate the XML.
         // Start with the general build groups.
-        $groups = array();
+        $groups = [];
         foreach ($build_groups as $build_group) {
-            $groups[] = array('name' => $build_group['name']);
+            $groups[] = ['name' => $build_group['name']];
         }
         $response['groups'] = $groups;
 
-        $measurements_response = array();
+        $measurements_response = [];
         foreach ($build_measurements as $measurement) {
             $clean_measurement = $clean_measurements[$measurement];
-            $measurement_response = array();
+            $measurement_response = [];
             $measurement_response['name'] = $measurement;
             $measurement_response['name_clean'] = $clean_measurement;
             $measurement_response['sort'] = $sort[$measurement];
 
-            $groups_response = array();
+            $groups_response = [];
             foreach ($build_groups as $build_group) {
-                $group_response = array();
+                $group_response = [];
                 $group_response['name'] = $build_group['name'];
                 $group_response['name_clean'] = self::sanitize_string($build_group['name']);
                 $value = self::get_current_value($build_group['name'], $measurement, $date_range, $overview_data);
@@ -426,16 +426,16 @@ final class ProjectOverviewController extends AbstractProjectController
         $response['measurements'] = $measurements_response;
 
         // coverage
-        $coverages_response = array();
-        $coverage_buildgroups = array();
+        $coverages_response = [];
+        $coverage_buildgroups = [];
 
         foreach ($coverage_categories as $coverage_category) {
             $category_name = $coverage_category['name'];
-            $coverage_category_response = array();
+            $coverage_category_response = [];
             $coverage_category_response['name_clean'] = self::sanitize_string($category_name);
             $coverage_category_response['name'] = $category_name;
             $coverage_category_response['position'] = $coverage_category['position'];
-            $coverage_category_response['groups'] = array();
+            $coverage_category_response['groups'] = [];
 
             foreach ($coverage_build_group_names as $build_group_name) {
                 // Skip groups that don't have any coverage.
@@ -452,7 +452,7 @@ final class ProjectOverviewController extends AbstractProjectController
                     continue;
                 }
 
-                $coverage_response = array();
+                $coverage_response = [];
 
                 $coverage_response['name'] = $build_group_name;
                 if (!in_array($build_group_name, $coverage_buildgroups)) {
@@ -482,13 +482,13 @@ final class ProjectOverviewController extends AbstractProjectController
         $response['coverage_buildgroups'] = $coverage_buildgroups;
 
         // dynamic analysis
-        $dynamic_analyses_response = array();
+        $dynamic_analyses_response = [];
         foreach ($dynamic_analysis_types as $checker) {
-            $DA_response = array();
+            $DA_response = [];
             $DA_response['name_clean'] = self::sanitize_string($checker);
             $DA_response['name'] = $checker;
 
-            $groups_response = array();
+            $groups_response = [];
             foreach ($build_groups as $build_group) {
                 // Skip groups that don't have any data for this tool.
                 $found = false;
@@ -503,7 +503,7 @@ final class ProjectOverviewController extends AbstractProjectController
                     continue;
                 }
 
-                $group_response = array();
+                $group_response = [];
                 $group_response['name'] = $build_group['name'];
                 $group_response['name_clean'] = self::sanitize_string($build_group['name']);
 
@@ -520,7 +520,7 @@ final class ProjectOverviewController extends AbstractProjectController
         $response['dynamicanalyses'] = $dynamic_analyses_response;
 
         // static analysis
-        $static_analyses_response = array();
+        $static_analyses_response = [];
         foreach ($static_groups as $static_group) {
             // Skip this group if no data was found for it.
             $found = false;
@@ -540,12 +540,12 @@ final class ProjectOverviewController extends AbstractProjectController
                 continue;
             }
 
-            $SA_response = array();
+            $SA_response = [];
             $SA_response['group_name'] = $static_group['name'];
             $SA_response['group_name_clean'] = self::sanitize_string($static_group['name']);
-            $measurements_response = array();
+            $measurements_response = [];
             foreach ($static_measurements as $measurement) {
-                $measurement_response = array();
+                $measurement_response = [];
                 $measurement_response['name'] = $measurement;
                 $measurement_response['name_clean'] = self::sanitize_string($measurement);
                 $measurement_response['sort'] = $sort["build $measurement"];
@@ -661,14 +661,14 @@ final class ProjectOverviewController extends AbstractProjectController
      */
     private static function get_chart_data($group_name, $measurement, $date_range, $overview_data, $beginning_timestamp): string
     {
-        $chart_data = array();
+        $chart_data = [];
 
         for ($i = 0; $i < $date_range; $i++) {
             if (!array_key_exists($measurement, $overview_data[$i][$group_name])) {
                 continue;
             }
             $chart_date = self::get_date_from_index($i, $beginning_timestamp);
-            $chart_data[] = array($chart_date, $overview_data[$i][$group_name][$measurement]);
+            $chart_data[] = [$chart_date, $overview_data[$i][$group_name][$measurement]];
         }
 
         // JSON encode the chart data to make it easier to use on the client side.
@@ -680,7 +680,7 @@ final class ProjectOverviewController extends AbstractProjectController
      */
     private static function get_coverage_chart_data($build_group_name, $coverage_category, $date_range, $coverage_data, $beginning_timestamp): string
     {
-        $chart_data = array();
+        $chart_data = [];
 
         for ($i = 0; $i < $date_range; $i++) {
             $coverage_array =
@@ -691,7 +691,7 @@ final class ProjectOverviewController extends AbstractProjectController
             }
 
             $chart_date = self::get_date_from_index($i, $beginning_timestamp);
-            $chart_data[] = array($chart_date, $coverage_array['percent']);
+            $chart_data[] = [$chart_date, $coverage_array['percent']];
         }
         return json_encode($chart_data);
     }
@@ -717,7 +717,7 @@ final class ProjectOverviewController extends AbstractProjectController
                 $current_value_found = true;
             } else {
                 $previous_value = $coverage_array['percent'];
-                return array($current_value, $previous_value);
+                return [$current_value, $previous_value];
             }
         }
 
@@ -725,7 +725,7 @@ final class ProjectOverviewController extends AbstractProjectController
         // of coverage for these groups.  In this case, we make previous & current
         // hold the same value.  We do this because nvd3's bullet chart implementation
         // does not support leaving the "marker" off of the chart.
-        return array($current_value, $current_value);
+        return [$current_value, $current_value];
     }
 
     /**
@@ -733,7 +733,7 @@ final class ProjectOverviewController extends AbstractProjectController
      */
     private static function get_DA_chart_data($group_name, $checker, $date_range, $dynamic_analysis_data, $beginning_timestamp): string
     {
-        $chart_data = array();
+        $chart_data = [];
 
         for ($i = 0; $i < $date_range; $i++) {
             $dynamic_analysis_array = &$dynamic_analysis_data[$i][$group_name];
@@ -742,7 +742,7 @@ final class ProjectOverviewController extends AbstractProjectController
             }
 
             $chart_date = self::get_date_from_index($i, $beginning_timestamp);
-            $chart_data[] = array($chart_date, $dynamic_analysis_data[$i][$group_name][$checker]);
+            $chart_data[] = [$chart_date, $dynamic_analysis_data[$i][$group_name][$checker]];
         }
         return json_encode($chart_data);
     }

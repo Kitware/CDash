@@ -245,7 +245,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         $pdo = get_link_identifier()->getPdo();
         $parentid = null;
 
-        $subprojects = array("MyThirdPartyDependency", "MyExperimentalFeature", "MyProductionCode", "EmptySubproject");
+        $subprojects = ["MyThirdPartyDependency", "MyExperimentalFeature", "MyProductionCode", "EmptySubproject"];
 
         // Check index.php for this date.
         $this->get($this->url . "/api/v1/index.php?project=SubProjectExample&date=2016-07-28");
@@ -635,7 +635,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
         // Check top-level project results.
         $project = $jsonobj['project'];
-        $project_expected = array(
+        $project_expected = [
             'nbuilderror' => 1,
             'nbuildwarning' => 1,
             'nbuildpass' => 0,
@@ -644,7 +644,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             'nconfigurepass' => 0,
             'ntestpass' => 1,
             'ntestfail' => 5,       // Total number of tests failed
-            'ntestnotrun' => 1);
+            'ntestnotrun' => 1];
         foreach ($project_expected as $key => $expected) {
             $found = $project[$key];
             if ($found !== $expected) {
@@ -653,8 +653,8 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         }
 
         // Check results for each individual SubProject.
-        $subprojects_expected = array(
-            'MyThirdPartyDependency' => array(
+        $subprojects_expected = [
+            'MyThirdPartyDependency' => [
                 'nbuilderror' => 1,
                 'nbuildwarning' => 0,
                 'nbuildpass' => 0,
@@ -663,8 +663,8 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                 'nconfigurepass' => 0,
                 'ntestpass' => 0,
                 'ntestfail' => 0,
-                'ntestnotrun' => 1),
-            'MyExperimentalFeature' => array(
+                'ntestnotrun' => 1],
+            'MyExperimentalFeature' => [
                 'nbuilderror' => 0,
                 'nbuildwarning' => 1,
                 'nbuildpass' => 0,
@@ -673,8 +673,8 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                 'nconfigurepass' => 0,
                 'ntestpass' => 0,
                 'ntestfail' => 5,
-                'ntestnotrun' => 0),
-            'MyProductionCode' => array(
+                'ntestnotrun' => 0],
+            'MyProductionCode' => [
                 'nbuilderror' => 0,
                 'nbuildwarning' => 1,
                 'nbuildpass' => 0,
@@ -683,7 +683,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                 'nconfigurepass' => 0,
                 'ntestpass' => 1,
                 'ntestfail' => 0,
-                'ntestnotrun' => 0));
+                'ntestnotrun' => 0]];
         foreach ($jsonobj['subprojects'] as $subproj) {
             $subproj_name = $subproj['name'];
             if (!array_key_exists($subproj_name, $subprojects_expected)) {

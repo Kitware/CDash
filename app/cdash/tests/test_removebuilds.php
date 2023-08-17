@@ -511,7 +511,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
             $this->fail("Expected $expected for $table, found $num_rows");
         }
         $row = pdo_fetch_array($result);
-        $retval = array();
+        $retval = [];
         foreach ($columns as $c) {
             $retval[] = $row[$c];
         }
@@ -525,7 +525,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         if ($num_rows !== $expected) {
             $this->fail("Expected $expected for $table, found $num_rows");
         }
-        $arr = array();
+        $arr = [];
         while ($row = pdo_fetch_array($result)) {
             $arr[] = $row[$column];
         }

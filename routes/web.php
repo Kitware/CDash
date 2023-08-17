@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
-$routeList = array('verify' => true);
+$routeList = ['verify' => true];
 
 if(config('auth.user_registration_form_enabled') === false) {
     $routeList['register'] = false;

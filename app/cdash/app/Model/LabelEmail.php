@@ -136,7 +136,7 @@ class LabelEmail
             return false;
         }
 
-        $labelids = array();
+        $labelids = [];
         foreach ($labels as $labels_array) {
             $labelids[] = intval($labels_array['labelid']);
         }

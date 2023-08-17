@@ -18,7 +18,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         parent::__construct();
 
         $this->testDataDir = dirname(__FILE__) . '/data/BuildDetails';
-        $this->testDataFiles = array('Subbuild1.xml', 'Subbuild2.xml', 'Subbuild3.xml');
+        $this->testDataFiles = ['Subbuild1.xml', 'Subbuild2.xml', 'Subbuild3.xml'];
 
         $this->createProject(['Name' => 'BuildDetails']);
 
@@ -29,7 +29,7 @@ class BuildDetailsTestCase extends KWWebTestCase
             }
         }
 
-        $this->builds = array();
+        $this->builds = [];
         $builds = pdo_query("SELECT * FROM build WHERE name = 'linux' ORDER BY id");
         while ($build = pdo_fetch_array($builds)) {
             $this->builds[] = $build;

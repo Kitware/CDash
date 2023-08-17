@@ -761,7 +761,7 @@ class IsAExpectation extends SimpleExpectation
     protected function canonicalType($type)
     {
         $type = strtolower($type);
-        $map = array('boolean' => 'bool');
+        $map = ['boolean' => 'bool'];
         if (isset($map[$type])) {
             $type = $map[$type];
         }

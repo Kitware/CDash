@@ -7,9 +7,9 @@
 /**#@+
  * Lexer mode stack constants
  */
-foreach (array('LEXER_ENTER', 'LEXER_MATCHED',
+foreach (['LEXER_ENTER', 'LEXER_MATCHED',
              'LEXER_UNMATCHED', 'LEXER_EXIT',
-             'LEXER_SPECIAL') as $i => $constant) {
+             'LEXER_SPECIAL'] as $i => $constant) {
     if (!defined($constant)) {
         define($constant, $i + 1);
     }
@@ -36,8 +36,8 @@ class ParallelRegex
     public function ParallelRegex($case)
     {
         $this->_case = $case;
-        $this->_patterns = array();
-        $this->_labels = array();
+        $this->_patterns = [];
+        $this->_labels = [];
         $this->_regex = null;
     }
 
@@ -94,8 +94,8 @@ class ParallelRegex
         if ($this->_regex == null) {
             for ($i = 0, $count = count($this->_patterns); $i < $count; $i++) {
                 $this->_patterns[$i] = '(' . str_replace(
-                    array('/', '(', ')'),
-                    array('\/', '\(', '\)'),
+                    ['/', '(', ')'],
+                    ['\/', '\(', '\)'],
                     $this->_patterns[$i]) . ')';
             }
             $this->_regex = '/' . implode('|', $this->_patterns) . '/' . $this->_getPerlMatchingFlags();
@@ -126,7 +126,7 @@ class SimpleStateStack
      */
     public function SimpleStateStack($start)
     {
-        $this->_stack = array($start);
+        $this->_stack = [$start];
     }
 
     /**
@@ -190,10 +190,10 @@ class SimpleLexer
     public function SimpleLexer(&$parser, $start = 'accept', $case = false)
     {
         $this->_case = $case;
-        $this->_regexes = array();
+        $this->_regexes = [];
         $this->_parser = &$parser;
         $this->_mode = new SimpleStateStack($start);
-        $this->_mode_handlers = array($start => $start);
+        $this->_mode_handlers = [$start => $start];
     }
 
     /**
@@ -431,7 +431,7 @@ class SimpleLexer
             $unparsed_character_count = strpos($raw, $match);
             $unparsed = substr($raw, 0, $unparsed_character_count);
             $raw = substr($raw, $unparsed_character_count + strlen($match));
-            return array($raw, $unparsed, $match, $action);
+            return [$raw, $unparsed, $match, $action];
         }
         return true;
     }
@@ -465,8 +465,8 @@ class SimpleHtmlLexer extends SimpleLexer
      */
     public function _getParsedTags()
     {
-        return array('a', 'base', 'title', 'form', 'input', 'button', 'textarea', 'select',
-            'option', 'frameset', 'frame', 'label');
+        return ['a', 'base', 'title', 'form', 'input', 'button', 'textarea', 'select',
+            'option', 'frameset', 'frame', 'label'];
     }
 
     /**
@@ -548,7 +548,7 @@ class SimpleHtmlSaxParser
         $this->_listener = &$listener;
         $this->_lexer = &$this->createLexer($this);
         $this->_tag = '';
-        $this->_attributes = array();
+        $this->_attributes = [];
         $this->_current_attribute = '';
     }
 
@@ -596,7 +596,7 @@ class SimpleHtmlSaxParser
                 $this->_tag,
                 $this->_attributes);
             $this->_tag = '';
-            $this->_attributes = array();
+            $this->_attributes = [];
             return $success;
         }
         if ($token != '=') {

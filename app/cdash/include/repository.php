@@ -804,13 +804,13 @@ function post_github_pull_request_comment(Project $project, $pull_request, $comm
     // Format our comment using Github's comment syntax.
     $message = "[$comment]($cdash_url)";
 
-    $data = array('body' => $message);
+    $data = ['body' => $message];
     $data_string = json_encode($data);
 
     $ch = curl_init($post_url);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_string))
+            'Content-Length: ' . strlen($data_string)]
     );
     curl_setopt($ch, CURLOPT_HEADER, 1);
     $userpwd = $repo['username'] . ':' . $repo['password'];
@@ -827,7 +827,7 @@ function post_github_pull_request_comment(Project $project, $pull_request, $comm
             'post_github_pull_request_comment',
             LOG_ERR, $project->Id);
     } elseif (config('app.debug')) {
-        $matches = array();
+        $matches = [];
         preg_match("#/comments/(\d+)#", $retval, $matches);
         add_log(
             'Just posted comment #' . $matches[1],

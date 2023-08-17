@@ -104,20 +104,20 @@ function rest_get($projectid): bool
     }
 
     $dependencies = $SubProject->GetDependencies();
-    $dependencies_response = array();
-    $available_dependencies_response = array();
+    $dependencies_response = [];
+    $available_dependencies_response = [];
 
     foreach ($query as $row) {
         if (intval($row['id']) === $subprojectid) {
             continue;
         }
         if (is_array($dependencies) && in_array($row['id'], $dependencies)) {
-            $dep = array();
+            $dep = [];
             $dep['id'] = intval($row['id']);
             $dep['name'] = $row['name'];
             $dependencies_response[] = $dep;
         } else {
-            $avail = array();
+            $avail = [];
             $avail['id'] = intval($row['id']);
             $avail['name'] = $row['name'];
             $available_dependencies_response[] = $avail;
@@ -183,7 +183,7 @@ function rest_post($projectid)
         $SubProject->Save();
 
         // Respond with a JSON representation of this new subproject
-        $response = array();
+        $response = [];
         $response['id'] = $SubProject->GetId();
         $response['name'] = $SubProject->GetName();
         $response['group'] = $SubProject->GetGroupId();
@@ -205,7 +205,7 @@ function rest_post($projectid)
         $Group->Save();
 
         // Respond with a JSON representation of this new group
-        $response = array();
+        $response = [];
         $response['id'] = $Group->GetId();
         $response['name'] = $Group->GetName();
         $response['is_default'] = $Group->GetIsDefault();

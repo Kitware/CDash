@@ -21,11 +21,11 @@ class EmailTestCase extends KWWebTestCase
 
     public function testCreateProjectTest()
     {
-        $settings = array(
+        $settings = [
                 'Name' => 'EmailProjectExample',
                 'Description' => 'Project EmailProjectExample test for cdash testing',
                 'EmailBrokenSubmission' => 1,
-                'EmailRedundantFailures' => 0);
+                'EmailRedundantFailures' => 0];
         $this->project = $this->createProject($settings);
     }
 

@@ -42,7 +42,7 @@ class CoverageLogHandler extends AbstractHandler
         $this->Build = new Build();
         $this->Site = new Site();
         $this->UpdateEndTime = false;
-        $this->CoverageFiles = array();
+        $this->CoverageFiles = [];
         $this->CurrentLine = "";
     }
 
@@ -149,13 +149,13 @@ class CoverageLogHandler extends AbstractHandler
         } elseif ($name == 'FILE') {
             // Store these objects to be inserted after we're guaranteed
             // to have a valid buildid.
-            $this->CoverageFiles[] = array($this->CurrentCoverageFile,
-                $this->CurrentCoverageFileLog);
+            $this->CoverageFiles[] = [$this->CurrentCoverageFile,
+                $this->CurrentCoverageFileLog];
         } elseif ($name == 'COVERAGELOG') {
             if (empty($this->CoverageFiles)) {
                 // Store these objects to be inserted after we're guaranteed
                 // to have a valid buildid.
-                $this->CoverageFiles[] = array(new CoverageFile(), new CoverageFileLog());
+                $this->CoverageFiles[] = [new CoverageFile(), new CoverageFileLog()];
             }
         }
     }

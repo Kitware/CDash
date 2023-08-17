@@ -85,7 +85,7 @@ final class ProjectController extends AbstractProjectController
 
             $repositories = $this->project->GetRepositories();
             foreach ($repositories as $repository) {
-                $repository_response = array();
+                $repository_response = [];
                 $repository_response['url'] = $repository['url'];
                 $repository_response['username'] = $repository['username'];
                 $repository_response['password'] = $repository['password'];

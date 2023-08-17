@@ -102,7 +102,7 @@ final class AdminController extends AbstractController
                 $dayFrom
             ]);
 
-            $builds = array();
+            $builds = [];
             foreach ($build as $build_array) {
                 $builds[] = (int) $build_array->id;
             }
@@ -238,7 +238,7 @@ final class AdminController extends AbstractController
 
             // Add new multi-column index to build table.
             // This improves the rendering speed of overview.php.
-            $multi_index = array('projectid', 'parentid', 'starttime');
+            $multi_index = ['projectid', 'parentid', 'starttime'];
             AddTableIndex('build', $multi_index);
 
             // Support for dynamic BuildGroups.

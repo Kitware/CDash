@@ -85,7 +85,7 @@ class BuildUserNote
     public function marshal()
     {
         $pdo = get_link_identifier()->getPdo();
-        $marshaledNote = array();
+        $marshaledNote = [];
 
         $user = User::find($this->UserId);
         $marshaledNote['user'] = $user->full_name;
@@ -122,7 +122,7 @@ class BuildUserNote
             'SELECT * FROM buildnote WHERE buildid=? ORDER BY timestamp ASC');
         pdo_execute($stmt, [$buildid]);
 
-        $notes = array();
+        $notes = [];
         while ($row = $stmt->fetch()) {
             $note = new BuildUserNote();
             $note->BuildId = $buildid;

@@ -25,8 +25,8 @@ class BuildModelTestCase extends KWWebTestCase
         $this->deleteLog($this->logfilename);
 
         $this->testDataDir = dirname(__FILE__) . '/data/BuildModel';
-        $this->testDataFiles = array('build1.xml', 'build2.xml', 'build3.xml', 'build4.xml',
-                                     'build5.xml', 'configure1.xml');
+        $this->testDataFiles = ['build1.xml', 'build2.xml', 'build3.xml', 'build4.xml',
+                                     'build5.xml', 'configure1.xml'];
 
         pdo_query("INSERT INTO project (name) VALUES ('BuildModel')");
 
@@ -37,13 +37,13 @@ class BuildModelTestCase extends KWWebTestCase
             }
         }
 
-        $this->builds = array();
+        $this->builds = [];
         $builds = pdo_query("SELECT * FROM build WHERE name = 'buildmodel-test-build' ORDER BY id");
         while ($build = pdo_fetch_array($builds)) {
             $this->builds[] = $build;
         }
 
-        $this->parentBuilds = array();
+        $this->parentBuilds = [];
         $parentBuilds = pdo_query("SELECT * FROM build WHERE name = 'buildmodel-test-parent-build' AND parentid = -1 ORDER BY id");
         while ($build = pdo_fetch_array($parentBuilds)) {
             $this->parentBuilds[] = $build;
@@ -239,12 +239,12 @@ class BuildModelTestCase extends KWWebTestCase
     {
         // Make sure the first build returns no resolved build failures since it can't have any
         $build = $this->getBuildModel(0);
-        $this->assertTrue($build->GetResolvedBuildFailures(0)->fetchAll() === array());
+        $this->assertTrue($build->GetResolvedBuildFailures(0)->fetchAll() === []);
 
         // The second build resolves the errored failure, but not the warning failure
         $build = $this->getBuildModel(1);
         $this->assertTrue(count($build->GetResolvedBuildFailures(0)->fetchAll()) === 1);
-        $this->assertTrue($build->GetResolvedBuildFailures(1)->fetchAll() === array());
+        $this->assertTrue($build->GetResolvedBuildFailures(1)->fetchAll() === []);
 
         // The third build has a resolved failure of type warning
         $build = $this->getBuildModel(2);

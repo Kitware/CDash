@@ -910,12 +910,12 @@ final class BuildController extends AbstractBuildController
                     ', [intval($resolvedBuildFailure['id'])], $marshaledResolvedBuildFailure);
                 }
 
-                $marshaledResolvedBuildFailure = array_merge($marshaledResolvedBuildFailure, array(
+                $marshaledResolvedBuildFailure = array_merge($marshaledResolvedBuildFailure, [
                     'stderr' => $resolvedBuildFailure['stderror'],
                     'stderrorrows' => min(10, substr_count($resolvedBuildFailure['stderror'], "\n") + 1),
                     'stdoutput' => $resolvedBuildFailure['stdoutput'],
                     'stdoutputrows' => min(10, substr_count($resolvedBuildFailure['stdoutput'], "\n") + 1),
-                ));
+                ]);
 
                 $this->addErrorResponse($marshaledResolvedBuildFailure, $response);
             }

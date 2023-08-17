@@ -52,7 +52,7 @@ if (!function_exists('CDash\Api\v1\ExpectedBuild\rest_get')) {
      */
     function rest_get($siteid, $buildgroupid, $buildname, $buildtype, $projectid)
     {
-        $response = array();
+        $response = [];
 
         if (!array_key_exists('currenttime', $_REQUEST)) {
             abort(400, '"currenttime" not specified in request.');
@@ -124,7 +124,7 @@ $rest_json = json_decode(file_get_contents('php://input'), true);
 if (!is_null($rest_json)) {
     $_REQUEST = array_merge($_REQUEST, $rest_json);
 }
-$required_params = array('siteid', 'groupid', 'name', 'type');
+$required_params = ['siteid', 'groupid', 'name', 'type'];
 foreach ($required_params as $param) {
     if (!array_key_exists($param, $_REQUEST)) {
         abort(400, "$param not specified.");

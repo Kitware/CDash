@@ -14,14 +14,14 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testAccessToWebPageProjectTest()
     {
-        $settings = array(
+        $settings = [
                 'Name' => 'BatchmakeExample',
-                'Description' => "Project Batchmake's test for cdash testing");
+                'Description' => "Project Batchmake's test for cdash testing"];
         $this->createProject($settings);
 
-        $settings = array(
+        $settings = [
                 'Name' => 'InsightExample',
-                'Description' => 'Project Insight test for cdash testing');
+                'Description' => 'Project Insight test for cdash testing'];
         $this->createProject($settings);
     }
 
@@ -168,13 +168,13 @@ class ProjectWebPageTestCase extends KWWebTestCase
         // TODO: (williamjallen) This is a terrible test with hardcoded values.  The ID should be determined dynamically.
         $query = 'SELECT id, stamp, name, type, generator, command FROM build WHERE id=7';
         $result = $this->db->query($query);
-        $expected = array('id' => '7',
+        $expected = ['id' => '7',
             'stamp' => '20090223-0100-Nightly',
             'name' => 'Win32-MSVC2009',
             'type' => 'Nightly',
             'generator' => 'ctest2.6-patch 0',
             'command' => 'F:\PROGRA~1\MICROS~1.0\Common7\IDE\VCExpress.exe BatchMake.sln /build Release /project ALL_BUILD'
-        );
+        ];
         $this->assertEqual($result[0], $expected);
     }
 

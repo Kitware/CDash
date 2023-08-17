@@ -31,7 +31,7 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
         parent::__construct();
         $this->DataDir = dirname(__FILE__) . '/data/UpdateOnlyUserStats';
         $this->ProjectId = null;
-        $this->Users = array();
+        $this->Users = [];
     }
 
     public function testSetup()
@@ -53,19 +53,19 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
         $this->ProjectId = $this->createProject($settings);
 
         // Create some users for the CDash project.
-        $users_details = array(
-                array(
+        $users_details = [
+                [
                     'email' => 'dan.lamanna@kitware.com',
                     'firstname' => 'Dan',
-                    'lastname' => 'LaManna'),
-                array(
+                    'lastname' => 'LaManna'],
+                [
                     'email' => 'jamie.snape@kitware.com',
                     'firstname' => 'Jamie',
-                    'lastname' => 'Snape'),
-                array(
+                    'lastname' => 'Snape'],
+                [
                     'email' => 'zack.galbreath@kitware.com',
                     'firstname' => 'Zack',
-                    'lastname' => 'Galbreath'));
+                    'lastname' => 'Galbreath']];
         $userproject = new UserProject();
         $userproject->ProjectId = $this->ProjectId;
         foreach ($users_details as $user_details) {
@@ -86,8 +86,8 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
     public function testUpdateOnlyUserStats()
     {
         // Submit testing data.
-        $dirs = array('1', '2', '3');
-        $files = array('Build.xml', 'Test.xml', 'Update.xml');
+        $dirs = ['1', '2', '3'];
+        $files = ['Build.xml', 'Test.xml', 'Update.xml'];
         foreach ($dirs as $dir) {
             foreach ($files as $file) {
                 $file_to_submit = "$this->DataDir/$dir/$file";
@@ -109,31 +109,31 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
             $this->fail("Expected stats for 3 users, found $numusers");
         }
 
-        $expected_results = array(
-                'Dan LaManna' => array(
+        $expected_results = [
+                'Dan LaManna' => [
                     'failed_errors' => 0,
                     'fixed_errors' => 0,
                     'failed_warnings' => 0,
                     'fixed_warnings' => 1,
                     'failed_tests' => 0,
                     'fixed_tests' => 0,
-                    'totalupdatedfiles' => 2),
-                'Jamie Snape' => array(
+                    'totalupdatedfiles' => 2],
+                'Jamie Snape' => [
                     'failed_errors' => 0,
                     'fixed_errors' => 1,
                     'failed_warnings' => 0,
                     'fixed_warnings' => 0,
                     'failed_tests' => 0,
                     'fixed_tests' => 0,
-                    'totalupdatedfiles' => 7),
-                'Zack Galbreath' => array(
+                    'totalupdatedfiles' => 7],
+                'Zack Galbreath' => [
                     'failed_errors' => 0,
                     'fixed_errors' => 0,
                     'failed_warnings' => 0,
                     'fixed_warnings' => 0,
                     'failed_tests' => 2,
                     'fixed_tests' => 0,
-                    'totalupdatedfiles' => 3));
+                    'totalupdatedfiles' => 3]];
 
         foreach ($jsonobj['users'] as $user) {
             $name = $user['name'];

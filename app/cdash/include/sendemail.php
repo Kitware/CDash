@@ -110,7 +110,7 @@ function check_email_errors(int $buildid, bool $checktesttimeingchanged, int $te
 /** Check for update errors for a given build. */
 function check_email_update_errors(int $buildid): array
 {
-    $errors = array();
+    $errors = [];
     $errors['errors'] = true;
     $errors['hasfixes'] = false;
 

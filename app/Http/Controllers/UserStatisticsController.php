@@ -42,7 +42,7 @@ final class UserStatisticsController extends AbstractProjectController
         $response['range'] = $range;
 
         // Set up links from this page.
-        $menu = array();
+        $menu = [];
         $menu['back'] = "index.php?project={$this->project->Name}&date=$date";
         $nextdate = $response['nextdate'];
         $menu['next'] = "userStatistics.php?project={$this->project->Name}&date=$nextdate&range=$range";
@@ -68,12 +68,12 @@ final class UserStatisticsController extends AbstractProjectController
         $stmt->bindParam(':projectid', $this->project->Id);
         pdo_execute($stmt);
 
-        $users = array();
+        $users = [];
         while ($row = $stmt->fetch()) {
             if (array_key_exists($row['userid'], $users)) {
                 $user = $users[$row['userid']];
             } else {
-                $user = array();
+                $user = [];
                 $user['nfailedwarnings'] = 0;
                 $user['nfixedwarnings'] = 0;
                 $user['nfailederrors'] = 0;
@@ -95,9 +95,9 @@ final class UserStatisticsController extends AbstractProjectController
         }
 
         // Generate the response used to render the main table of this page.
-        $users_response = array();
+        $users_response = [];
         foreach ($users as $key => $user) {
-            $user_response = array();
+            $user_response = [];
             $user_obj = User::where('id', $key)->first();
             $user_response['name'] = $user_obj->full_name;
             $user_response['id'] = $key;

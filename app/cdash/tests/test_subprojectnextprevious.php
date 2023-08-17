@@ -51,7 +51,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             return 1;
         }
 
-        $buildids = array();
+        $buildids = [];
         while ($row = pdo_fetch_array($result)) {
             $buildids[] = $row['id'];
         }

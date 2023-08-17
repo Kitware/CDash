@@ -88,7 +88,7 @@ if (!function_exists('add_log')) {
             $buildid = $GLOBALS['PHP_ERROR_BUILD_ID'];
         }
 
-        $context = array('function' => $function);
+        $context = ['function' => $function];
 
         if ($projectid !== 0 && !is_null($projectid)) {
             $context['project_id'] = $projectid;

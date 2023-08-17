@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Storage;
 
 function get_related_dates(string $projectnightlytime, string $basedate): array
 {
-    $dates = array();
+    $dates = [];
     $nightlytime = $projectnightlytime;
 
     if (strlen($basedate) == 0) {
@@ -128,7 +128,7 @@ function is_cvs_root($root): bool
 /** Get the CVS repository commits */
 function get_cvs_repository_commits($cvsroot, $dates): array
 {
-    $commits = array();
+    $commits = [];
 
     // Compute time stamp range expressed as $fromtime and $totime for cvs
     //
@@ -170,7 +170,7 @@ function get_cvs_repository_commits($cvsroot, $dates): array
         $npos = strpos($vv, '--------------------');
         if ($npos !== false && $npos === 0) {
             if ($in_revision_chunk === 1) {
-                $commit = array();
+                $commit = [];
                 $commit['directory'] = $current_directory;
                 $commit['filename'] = $current_filename;
                 $commit['revision'] = $current_revision;
@@ -234,7 +234,7 @@ function get_cvs_repository_commits($cvsroot, $dates): array
             // still $in_revision_chunk?
             $npos = strpos($vv, '====================');
             if ($npos !== false && $npos === 0) {
-                $commit = array();
+                $commit = [];
                 $commit['directory'] = $current_directory;
                 $commit['filename'] = $current_filename;
                 $commit['revision'] = $current_revision;
@@ -266,8 +266,8 @@ function get_cvs_repository_commits($cvsroot, $dates): array
 function get_p4_repository_commits($root, $branch, $dates): array
 {
     $config = Config::getInstance();
-    $commits = array();
-    $users = array();
+    $commits = [];
+    $users = [];
 
     // Add the command line specified by the user in the "Repository" field
     // of the project settings "Repository" tab and set the message language
@@ -292,7 +292,7 @@ function get_p4_repository_commits($root, $branch, $dates): array
             $raw_output = `$p4command describe -s $matches[1]`;
             $describe_lines = explode("\n", $raw_output);
 
-            $commit = array();
+            $commit = [];
 
             // Parse the changelist description and add each file modified to the
             // commits list
@@ -311,7 +311,7 @@ function get_p4_repository_commits($root, $branch, $dates): array
                     } else {
                         $raw_output = `$p4command users -m 1 $user`;
                         if (preg_match("/^(.+) <(.*)> \((.*)\) accessed (.*)$/", $raw_output, $matches)) {
-                            $newuser = array();
+                            $newuser = [];
                             $newuser['username'] = $matches[1];
                             $newuser['email'] = $matches[2];
                             $newuser['name'] = $matches[3];
@@ -344,7 +344,7 @@ function get_p4_repository_commits($root, $branch, $dates): array
 function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision): array
 {
     $config = Config::getInstance();
-    $commits = array();
+    $commits = [];
 
     $gitcommand = $config->get('CDASH_GIT_COMMAND');
     $gitlocaldirectory = $config->get('CDASH_DEFAULT_GIT_DIRECTORY');
@@ -402,7 +402,7 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
 
     foreach ($lines as $line) {
         if (substr($line, 0, 6) == 'commit') {
-            $commit = array();
+            $commit = [];
             $commit['revision'] = substr($line, 7);
             $commit['priorrevision'] = '';
             $commit['comment'] = '';
@@ -439,7 +439,7 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
 /** Get the SVN repository commits */
 function get_svn_repository_commits($svnroot, $dates, $username = '', $password = ''): array
 {
-    $commits = array();
+    $commits = [];
 
     // To pick up all possible changes, the svn log query has to go back
     // *2* days -- svn log (for date queries) spits out all changes since
@@ -464,7 +464,7 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
 
     $lines = explode("\n", $raw_output);
 
-    $gathered_file_lines = array();
+    $gathered_file_lines = [];
     $current_author = '';
     $current_comment = '';
     $current_directory = '';
@@ -510,7 +510,7 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
 
                         $current_directory = remove_directory_from_filename($current_filename);
 
-                        $commit = array();
+                        $commit = [];
                         $commit['directory'] = $current_directory;
                         $commit['filename'] = $current_filename;
                         $commit['revision'] = $current_revision;
@@ -523,7 +523,7 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
                 } else {
                     //echo "excluding: '" . $current_time . "' (" . gmdate(FMT_DATETIMEMS, $current_time) . ")<br/>";
                 }
-                $gathered_file_lines = array();
+                $gathered_file_lines = [];
             }
             $current_comment = '';
             $last_chunk_line_number = $line_number;
@@ -595,7 +595,7 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
 /** Get BZR repository commits */
 function get_bzr_repository_commits($bzrroot, $dates): array
 {
-    $commits = array();
+    $commits = [];
 
     $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1'] + 1) . ' GMT';
     $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . ' GMT';
@@ -619,7 +619,7 @@ function get_bzr_repository_commits($bzrroot, $dates): array
         foreach ($files as $file) {
             $current_filename = $file->nodeValue;
             $current_directory = remove_directory_from_filename($current_filename);
-            $commit = array();
+            $commit = [];
             $commit['directory'] = $current_directory;
             $commit['filename'] = $current_filename;
             $commit['revision'] = $current_revision;
@@ -664,7 +664,7 @@ function get_repository_commits(int $projectid, $dates): array
     $cvsviewer = $cvsviewers_array['cvsviewertype'];
 
     // Start with an empty array:
-    $commits = array();
+    $commits = [];
 
     foreach ($repositories as $repositories_array) {
         $root = $repositories_array['url'];
@@ -907,7 +907,7 @@ function cleanUserTemp(): void
 function sendEmailUnregisteredUsers(int $projectid, $cvsauthors): void
 {
     $config = Config::getInstance();
-    $unregisteredusers = array();
+    $unregisteredusers = [];
     foreach ($cvsauthors as $author) {
         if ($author == 'Local User') {
             continue;
@@ -989,7 +989,7 @@ function addDailyChanges(int $projectid): void
                      AND date=?
              ', [$projectid, $date]);
     if (intval($query['c']) === 0) {
-        $cvsauthors = array();
+        $cvsauthors = [];
 
         $db->executePrepared("
             INSERT INTO dailyupdate (projectid, date, command, type, status)

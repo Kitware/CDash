@@ -211,7 +211,7 @@ class dbo_mysql extends dbo
         if (!$resource || $resource === true) {
             return false;
         }
-        $result = array();
+        $result = [];
         while ($row = pdo_fetch_array($resource, PDO::FETCH_ASSOC)) {
             $result[] = $row;
         }
@@ -253,7 +253,7 @@ class dbo_pgsql extends dbo
         if (!$resource) {
             return false;
         }
-        $result = array();
+        $result = [];
         while ($row = pdo_fetch_array($resource, PDO::FETCH_ASSOC)) {
             $result[] = $row;
         }

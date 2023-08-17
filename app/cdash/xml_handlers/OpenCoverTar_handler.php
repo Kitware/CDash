@@ -36,14 +36,14 @@ class OpenCoverTarHandler extends AbstractHandler
         $this->Build->Id = $buildid;
         $this->Build->FillFromId($this->Build->Id);
 
-        $this->CoverageSummaries = array();
+        $this->CoverageSummaries = [];
         $coverageSummary = new CoverageSummary();
         $coverageSummary->BuildId = $this->Build->Id;
         $this->CoverageSummaries['default'] = $coverageSummary;
 
-        $this->Coverages = array();
-        $this->CoverageFiles = array();
-        $this->CoverageFileLogs = array();
+        $this->Coverages = [];
+        $this->CoverageFiles = [];
+        $this->CoverageFileLogs = [];
 
         $this->ParseCSFiles = true;
     }
@@ -130,7 +130,7 @@ class OpenCoverTarHandler extends AbstractHandler
         }
         // MODULENAME gives the folder structure that the .cs file belongs in
         if ($element == 'MODULENAME' && (strlen($data))) {
-            $this->currentModule = array($data, strtolower($data));
+            $this->currentModule = [$data, strtolower($data)];
         }
     }
 
@@ -212,7 +212,7 @@ class OpenCoverTarHandler extends AbstractHandler
         }
 
         // Insert coverage summaries
-        $completedSummaries = array();
+        $completedSummaries = [];
         foreach ($this->CoverageSummaries as $coverageSummary) {
             if (in_array($coverageSummary->BuildId, $completedSummaries)) {
                 continue;
@@ -283,8 +283,8 @@ class OpenCoverTarHandler extends AbstractHandler
         $parser = xml_parser_create();
         $fileContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
         $parser = xml_parser_create();
-        xml_set_element_handler($parser, array($this,"startElement"), array($this,'endElement'));
-        xml_set_character_data_handler($parser, array($this, 'text'));
+        xml_set_element_handler($parser, [$this,"startElement"], [$this,'endElement']);
+        xml_set_character_data_handler($parser, [$this, 'text']);
         xml_parse($parser, $fileContents, false);
     }
 }

@@ -240,69 +240,69 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
     {
         $baseurl = "$this->url/api/v1/index.php?project=Trilinos&date=2011-07-22&filtercombine=and&field1=site&compare1=61&value1=hut11.kitware&showfilters=1";
 
-        $test_cases = array(
-            array(
+        $test_cases = [
+            [
                 'filter' => 'buildduration',
                 'compare' => 43,
                 'value' => '10m%2045s',
                 'exclude' => 'Teuchos'
-            ),
-            array(
+            ],
+            [
                 'filter' => 'buildduration',
                 'compare' => 44,
                 'value' => '6m%2026s',
                 'exclude' => 'Sacado',
                 'reverse' => true
-            ),
-            array(
+            ],
+            [
                 'filter' => 'builderrors',
                 'compare' => 43,
                 'value' => 5,
                 'exclude' => 'Mesquite'
-            ),
-            array(
+            ],
+            [
                 'filter' => 'buildwarnings',
                 'compare' => 42,
                 'value' => 29,
                 'exclude' => 'Sacado'
-            ),
-            array(
+            ],
+            [
                 'filter' => 'configureduration',
                 'compare' => 41,
                 'value' => 309,
                 'exclude' => 'Teuchos'
-            ),
-            array(
+            ],
+            [
                 'filter' => 'configureerrors',
                 'compare' => 43,
                 'value' => 21,
                 'exclude' => 'Kokkos'
-            ),
-            array(
+            ],
+            [
                 'filter' => 'configurewarnings',
                 'compare' => 42,
                 'value' => 35,
                 'exclude' => 'Sacado'
-            ),
-            array(
+            ],
+            [
                 'filter' => 'testsfailed',
                 'compare' => 43,
                 'value' => 10,
                 'exclude' => 'TrilinosFramework'
-            ),
-            array(
+            ],
+            [
                 'filter' => 'testsnotrun',
                 'compare' => 42,
                 'value' => 65,
                 'exclude' => 'Didasko'
-            ),
-            array(
+            ],
+            [
                 'filter' => 'testspassed',
                 'compare' => 42,
                 'value' => 33,
                 'exclude' => 'Sacado'
-            )
-        );
+            ]
+        ];
 
         foreach ($test_cases as $test_case) {
             $filter = $test_case['filter'];

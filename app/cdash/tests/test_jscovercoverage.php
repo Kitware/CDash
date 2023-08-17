@@ -15,7 +15,7 @@ class JSCoverCoverageTestCase extends KWWebTestCase
     public function testJSCoverCoverage()
     {
         // Do the POST submission to get a pending buildid.
-        $post_result = $this->post($this->url . '/submit.php', array(
+        $post_result = $this->post($this->url . '/submit.php', [
             'project' => 'SubProjectExample',
             'build' => 'jscover_coverage',
             'site' => 'localhost',
@@ -24,7 +24,7 @@ class JSCoverCoverageTestCase extends KWWebTestCase
             'endtime' => '1422455768',
             'track' => 'Experimental',
             'type' => 'JSCoverTar',
-            'datafilesmd5[0]=' => 'e99bdd400ab4643e4fbeef7ec649f04e'));
+            'datafilesmd5[0]=' => 'e99bdd400ab4643e4fbeef7ec649f04e']);
 
         $post_json = json_decode($post_result, true);
         if ($post_json['status'] != 0) {

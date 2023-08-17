@@ -1137,7 +1137,7 @@ class Index extends ResultsApi
         // Trim off any filter parameters.  Previously we did this step with a simple
         // strpos check, but since the change to AngularJS query parameters are no
         // longer guaranteed to appear in any particular order.
-        $accepted_parameters = array('project', 'parentid', 'subproject');
+        $accepted_parameters = ['project', 'parentid', 'subproject'];
 
         $parsed_url = parse_url($baseurl);
         $query = $parsed_url['query'];

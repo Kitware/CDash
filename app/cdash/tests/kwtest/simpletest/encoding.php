@@ -197,7 +197,7 @@ class SimpleEncoding
     public function __construct($query = false)
     {
         if (!$query) {
-            $query = array();
+            $query = [];
         }
         $this->clear();
         $this->merge($query);
@@ -208,7 +208,7 @@ class SimpleEncoding
      */
     public function clear()
     {
-        $this->request = array();
+        $this->request = [];
     }
 
     /**
@@ -276,7 +276,7 @@ class SimpleEncoding
      */
     public function getValue($key)
     {
-        $values = array();
+        $values = [];
         foreach ($this->request as $pair) {
             if ($pair->isKey($key)) {
                 $values[] = $pair->getValue();
@@ -307,7 +307,7 @@ class SimpleEncoding
      */
     protected function encode()
     {
-        $statements = array();
+        $statements = [];
         foreach ($this->request as $pair) {
             if ($statement = $pair->asRequest()) {
                 $statements[] = $statement;
@@ -516,7 +516,7 @@ class SimplePostEncoding extends SimpleEntityEncoding
 
     public function rewriteArrayWithMultipleLevels($query)
     {
-        $query_ = array();
+        $query_ = [];
         foreach ($query as $key => $value) {
             if (is_array($value)) {
                 foreach ($value as $sub_key => $sub_value) {

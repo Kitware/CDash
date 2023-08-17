@@ -34,7 +34,7 @@ class SimpleUserAgent
     private $proxy_username = false;
     private $proxy_password = false;
     private $connection_timeout = DEFAULT_CONNECTION_TIMEOUT;
-    private $additional_headers = array();
+    private $additional_headers = [];
 
     /**
      *    Starts with no cookies, realms or proxies.

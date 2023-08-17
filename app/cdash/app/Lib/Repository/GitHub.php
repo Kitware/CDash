@@ -637,7 +637,7 @@ class GitHub implements RepositoryInterface
                         if (!is_array($commit_array) ||
                                 !array_key_exists('files', $commit_array)) {
                             // Skip to the next commit if no list of files was returned.
-                            $cached_commits[$sha] = array();
+                            $cached_commits[$sha] = [];
                             continue;
                         }
 

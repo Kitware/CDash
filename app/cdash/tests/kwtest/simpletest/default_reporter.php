@@ -20,10 +20,10 @@ require_once dirname(__FILE__) . '/xml.php';
  */
 class SimpleCommandLineParser
 {
-    private $to_property = array(
+    private $to_property = [
         'case' => 'case', 'c' => 'case',
         'test' => 'test', 't' => 'test',
-    );
+    ];
     private $case = '';
     private $test = '';
     private $xml = false;
@@ -137,7 +137,7 @@ class DefaultReporter extends SimpleReporterDecorator
     {
         if (SimpleReporter::inCli()) {
             $parser = new SimpleCommandLineParser($_SERVER['argv']);
-            $interfaces = $parser->isXml() ? array('XmlReporter') : array('TextReporter');
+            $interfaces = $parser->isXml() ? ['XmlReporter'] : ['TextReporter'];
             if ($parser->help()) {
                 // I'm not sure if we should do the echo'ing here -- ezyang
                 echo $parser->getHelpText();

@@ -390,7 +390,7 @@ class UploadHandler extends AbstractHandler
             switch ($element) {
                 case 'CONTENT':
                     // Write base64 encoded chunch to temporary file
-                    $charsToReplace = array("\r\n", "\n", "\r");
+                    $charsToReplace = ["\r\n", "\n", "\r"];
                     fwrite($this->Base64TmpFileWriteHandle, str_replace($charsToReplace, '', $data));
                     break;
             }

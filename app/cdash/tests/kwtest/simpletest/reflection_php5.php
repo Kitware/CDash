@@ -98,7 +98,7 @@ class SimpleReflection
     {
         $reflection = new ReflectionClass($this->interface);
         if ($reflection->isInterface()) {
-            return array($this->interface);
+            return [$this->interface];
         }
         return $this->onlyParents($reflection->getInterfaces());
     }
@@ -110,7 +110,7 @@ class SimpleReflection
      */
     public function getInterfaceMethods()
     {
-        $methods = array();
+        $methods = [];
         foreach ($this->getInterfaces() as $interface) {
             $methods = array_merge($methods, get_class_methods($interface));
         }
@@ -187,8 +187,8 @@ class SimpleReflection
      */
     protected function onlyParents($interfaces)
     {
-        $parents = array();
-        $blacklist = array();
+        $parents = [];
+        $blacklist = [];
         foreach ($interfaces as $interface) {
             foreach ($interfaces as $possible_parent) {
                 if ($interface->getName() == $possible_parent->getName()) {
@@ -279,7 +279,7 @@ class SimpleReflection
         if ($name == '__call') {
             return 'function __call($method, $arguments)';
         }
-        if (in_array($name, array('__get', '__isset', $name == '__unset'))) {
+        if (in_array($name, ['__get', '__isset', $name == '__unset'])) {
             return "function {$name}(\$key)";
         }
         if ($name == '__toString') {
@@ -327,7 +327,7 @@ class SimpleReflection
      */
     protected function getParameterSignatures($method)
     {
-        $signatures = array();
+        $signatures = [];
         foreach ($method->getParameters() as $parameter) {
             $signature = '';
             $type = $parameter->getClass();
@@ -357,7 +357,7 @@ class SimpleReflection
      */
     protected function suppressSpurious($name)
     {
-        return str_replace(array('[', ']', ' '), '', $name);
+        return str_replace(['[', ']', ' '], '', $name);
     }
 
     /**

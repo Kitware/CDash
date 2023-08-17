@@ -22,7 +22,7 @@ class SetupRepositoriesTestCase extends KWWebTestCase
         $insight->Id = $row['id'];
         $insight->Fill();
         $insight->AddRepositories(
-            array(':pserver:anoncvs@itk.org:/cvsroot/Insight'), array('anoncvs'), array(''), array(''));
+            [':pserver:anoncvs@itk.org:/cvsroot/Insight'], ['anoncvs'], [''], ['']);
         $insight->CTestTemplateScript = 'client testing works';
         $insight->Save();
 
@@ -31,7 +31,7 @@ class SetupRepositoriesTestCase extends KWWebTestCase
         $pub->Id = $row['id'];
         $pub->Fill();
         $pub->AddRepositories(
-            array('git://cmake.org/cmake.git'), array(''), array(''), array(''));
+            ['git://cmake.org/cmake.git'], [''], [''], ['']);
         $pub->CvsViewerType = 'gitweb';
         $pub->CvsUrl ='cmake.org/gitweb?p=cmake.git';
         $pub->Save();
@@ -41,7 +41,7 @@ class SetupRepositoriesTestCase extends KWWebTestCase
         $email->Id = $row['id'];
         $email->Fill();
         $email->AddRepositories(
-            array('https://www.kitware.com/svn/CDash/trunk'), array(''), array(''), array(''));
+            ['https://www.kitware.com/svn/CDash/trunk'], [''], [''], ['']);
         $pub->CvsViewerType = 'websvn';
         $email->CvsUrl = 'https://www.kitware.com/svn/CDash/trunk';
         $email->Save();

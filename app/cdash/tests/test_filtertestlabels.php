@@ -32,7 +32,7 @@ class FilterTestLabelsTestCase extends KWWebTestCase
                 WHERE name='EmailProjectExample'");
 
         // Get the buildid that we just created so we can delete it later.
-        $buildids = array();
+        $buildids = [];
         $buildid_results = pdo_query(
             "SELECT id FROM build WHERE name='labeltest_build'");
         while ($buildid_array = pdo_fetch_array($buildid_results)) {

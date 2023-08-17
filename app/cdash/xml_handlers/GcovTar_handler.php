@@ -47,7 +47,7 @@ class GCovTarHandler extends NonSaxHandler
         $this->CoverageSummary->BuildId = $this->Build->Id;
         $this->SourceDirectory = '';
         $this->BinaryDirectory = '';
-        $this->Labels = array();
+        $this->Labels = [];
 
         $this->SubProjectPath = '';
 
@@ -60,7 +60,7 @@ class GCovTarHandler extends NonSaxHandler
                 $this->SubProjectPath = $path;
             }
         }
-        $this->SubProjectSummaries = array();
+        $this->SubProjectSummaries = [];
         $this->PreviousAggregateParentId = null;
     }
 
@@ -412,7 +412,7 @@ class GCovTarHandler extends NonSaxHandler
 
         // Parse out any target-wide labels first.  These apply to
         // every source file found below.
-        $target_labels = array();
+        $target_labels = [];
         if (array_key_exists('target', $jsonDecoded)) {
             $target = $jsonDecoded['target'];
             if (array_key_exists('labels', $target)) {

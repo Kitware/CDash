@@ -34,7 +34,7 @@ class JavaJSONTarHandler extends NonSaxHandler
         $this->Build->Id = $buildid;
         $this->Build->FillFromId($this->Build->Id);
 
-        $this->CoverageSummaries = array();
+        $this->CoverageSummaries = [];
         $coverageSummary = new CoverageSummary();
         $coverageSummary->BuildId = $this->Build->Id;
         $this->CoverageSummaries['default'] = $coverageSummary;
@@ -79,7 +79,7 @@ class JavaJSONTarHandler extends NonSaxHandler
         }
 
         // Insert coverage summaries
-        $completedSummaries = array();
+        $completedSummaries = [];
         foreach ($this->CoverageSummaries as $coverageSummary) {
             if (in_array($coverageSummary->BuildId, $completedSummaries)) {
                 continue;

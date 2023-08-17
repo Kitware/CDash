@@ -456,7 +456,7 @@ class KWWebTestCase extends WebTestCase
                 return false;
             }
             // Specify some default settings.
-            $settings = array(
+            $settings = [
                     'AutoremoveMaxBuilds' => 500,
                     'AutoremoveTimeframe' => 60,
                     'CoverageThreshold' => 70,
@@ -473,7 +473,7 @@ class KWWebTestCase extends WebTestCase
                     'UploadQuota' => 1,
                     'ViewSubProjectsLink' => 1,
                     'WarningsFilter' => '',
-                    'ErrorsFilter' => '');
+                    'ErrorsFilter' => ''];
             $submit_button = 'Submit';
         }
 
@@ -547,7 +547,7 @@ class KWWebTestCase extends WebTestCase
         $client = $this->getGuzzleClient();
 
         // Delete project.
-        $project_array = array('Id' => $projectid);
+        $project_array = ['Id' => $projectid];
         try {
             $response = $client->delete(
                 $this->url . '/api/v1/project.php',

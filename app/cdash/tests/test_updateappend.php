@@ -37,7 +37,7 @@ class UppdateAppendTestCase extends KWWebTestCase
         }
 
         // Get the buildid that we just created so we can delete it later.
-        $buildids = array();
+        $buildids = [];
         $buildid_results = pdo_query(
             "SELECT id FROM build WHERE name='test_updateappend'");
         while ($buildid_array = pdo_fetch_array($buildid_results)) {
