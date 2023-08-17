@@ -199,12 +199,12 @@ class DynamicAnalysis
             $this->Log .= $truncated_msg;
         }
 
-        $this->Status =  $this->Status ?? '';
-        $this->Checker = $this->Checker ?? '';
-        $this->Name = $this->Name ?? '';
+        $this->Status ??= '';
+        $this->Checker ??= '';
+        $this->Name ??= '';
         $path = substr($this->Path, 0, 255);
         $fullCommandLine = substr($this->FullCommandLine, 0, 255);
-        $this->Log = $this->Log ?? '';
+        $this->Log ??= '';
         $this->BuildId = intval($this->BuildId);
 
         $db = Database::getInstance();

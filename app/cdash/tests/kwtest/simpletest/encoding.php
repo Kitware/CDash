@@ -461,7 +461,7 @@ class SimpleEntityEncoding extends SimpleEncoding
      */
     public function writeHeadersTo(&$socket)
     {
-        $socket->write('Content-Length: ' . (integer)strlen($this->encode()) . "\r\n");
+        $socket->write('Content-Length: ' . (int)strlen($this->encode()) . "\r\n");
         $socket->write('Content-Type: ' . $this->getContentType() . "\r\n");
     }
 
@@ -604,7 +604,7 @@ class SimpleMultipartEncoding extends SimplePostEncoding
      */
     public function writeHeadersTo(&$socket)
     {
-        $socket->write('Content-Length: ' . (integer)strlen($this->encode()) . "\r\n");
+        $socket->write('Content-Length: ' . (int)strlen($this->encode()) . "\r\n");
         $socket->write('Content-Type: multipart/form-data; boundary=' . $this->boundary . "\r\n");
     }
 

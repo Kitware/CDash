@@ -276,7 +276,7 @@ class Build
         // tests.
         $total_proc_time = 0.0;
         foreach ($this->TestCollection as $test) {
-            $exec_time = (double)$test->time;
+            $exec_time = (float)$test->time;
             $num_procs = 1.0;
             foreach ($test->measurements as $measurement) {
                 if ($measurement->name == 'Processors') {

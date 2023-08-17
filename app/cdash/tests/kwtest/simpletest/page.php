@@ -268,7 +268,7 @@ class SimplePage
     protected function linkIsAbsolute($url)
     {
         $parsed = new SimpleUrl($url);
-        return (boolean)($parsed->getScheme() && $parsed->getHost());
+        return (bool)($parsed->getScheme() && $parsed->getHost());
     }
 
     /**
