@@ -218,7 +218,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/removeBuilds.php', 'AdminController@removeBuilds');
         Route::post('/removeBuilds.php', 'AdminController@removeBuilds');
 
-        Route::get('/siteStatistics.php', 'SiteController@siteStatistics');
+        // TODO: (williamjallen) Move this out of the admin-only section, and instead query only
+        //       the sites a given user is able to see.
+        Route::get('/sites', 'SiteController@siteStatistics');
+        Route::permanentRedirect('/siteStatistics.php', '/sites');
 
         Route::get('/manageUsers.php', 'ManageUsersController@showPage');
         Route::post('/manageUsers.php', 'ManageUsersController@showPage');

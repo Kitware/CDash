@@ -364,7 +364,7 @@
             </tr>
             <tr class="trodd">
                 <td id="nob">
-                    <a href="siteStatistics.php">Site Statistics</a>
+                    <a href="sites">Site Statistics</a>
                 </td>
             </tr>
             <tr class="treven">
