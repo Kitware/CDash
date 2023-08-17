@@ -27,7 +27,7 @@ final class ProjectOverviewController extends AbstractProjectController
 
         // Handle optional date argument.
         $date = htmlspecialchars($_GET['date'] ?? date(FMT_DATE));
-        list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $this->project->NightlyTime);
+        [$previousdate, $currentstarttime, $nextdate] = get_dates($date, $this->project->NightlyTime);
 
         // Date range is currently hardcoded to two weeks in the past.
         // This could become a configurable value instead.
@@ -463,7 +463,7 @@ final class ProjectOverviewController extends AbstractProjectController
                 $coverage_response['medium'] = $coverage_category['medium'];
                 $coverage_response['satisfactory'] = $coverage_category['satisfactory'];
 
-                list($current_value, $previous_value) =
+                [$current_value, $previous_value] =
                     self::get_recent_coverage_values($build_group_name, $category_name, $date_range, $coverage_data);
                 $coverage_response['current'] = $current_value;
                 $coverage_response['previous'] = $previous_value;

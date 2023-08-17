@@ -40,9 +40,9 @@ class Timeline extends Index
     // in Javascript.
     private $timeToDate;
 
-    const ERROR = 0;
-    const FAILURE = 1;
-    const CLEAN = 2;
+    public const ERROR = 0;
+    public const FAILURE = 1;
+    public const CLEAN = 2;
 
     public function __construct(Database $db, Project $project)
     {
@@ -322,7 +322,7 @@ class Timeline extends Index
             // Use this build's starttime to get the beginning of the appropriate
             // testing day.
             $test_date = TestingDay::get($this->project, $build['starttime']);
-            list($unused, $start_of_day) =
+            [$unused, $start_of_day] =
                 get_dates($test_date, $this->project->NightlyTime);
 
             // Convert timestamp to milliseconds for our JS charting library.
@@ -359,9 +359,9 @@ class Timeline extends Index
 
         // Determine the range of the chart that should be selected by default.
         // This is referred to as the extent.
-        list($unused, $begin_extent) = get_dates($this->beginDate, $this->project->NightlyTime);
+        [$unused, $begin_extent] = get_dates($this->beginDate, $this->project->NightlyTime);
         $begin_extent *= 1000;
-        list($unused, $end_extent) = get_dates($this->endDate, $this->project->NightlyTime);
+        [$unused, $end_extent] = get_dates($this->endDate, $this->project->NightlyTime);
         $end_extent *= 1000;
         if ($begin_extent > $end_extent) {
             $begin_extent = $end_extent;
@@ -392,7 +392,7 @@ class Timeline extends Index
             new \DateTime($this->timeToDate[$newest_time_ms]));
         foreach ($period as $datetime) {
             $date = $datetime->format('Y-m-d');
-            list($unused, $start_of_day) = get_dates($date, $this->project->NightlyTime);
+            [$unused, $start_of_day] = get_dates($date, $this->project->NightlyTime);
             $start_of_day_ms = $start_of_day * 1000;
             $this->initializeDate($start_of_day_ms, $date);
         }

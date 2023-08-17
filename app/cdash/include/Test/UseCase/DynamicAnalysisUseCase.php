@@ -24,8 +24,8 @@ use DynamicAnalysisHandler;
 
 class DynamicAnalysisUseCase extends UseCase
 {
-    const FAILED = 'failed';
-    const PASSED = 'passed';
+    public const FAILED = 'failed';
+    public const PASSED = 'passed';
 
     private $working_directory;
     private $checker;

@@ -1470,7 +1470,7 @@ class Index extends ResultsApi
         }
 
         // Use the project model to get the bounds of the current testing day.
-        list($beginningOfDay, $endOfDay) =
+        [$beginningOfDay, $endOfDay] =
             $this->project->ComputeTestingDayBounds($this->date);
 
         // Query the database to find the previous testing day

@@ -8,20 +8,20 @@ use TestingHandler;
 
 class TestUseCase extends UseCase
 {
-    const EXIT_CODE = 'Exit Code';
-    const EXIT_VALUE = 'Exit Value';
-    const EXE_TIME = 'Execution Time';
-    const COMPLETION_STATUS = 'Completion Status';
-    const CMD_LINE = 'Command Line';
+    public const EXIT_CODE = 'Exit Code';
+    public const EXIT_VALUE = 'Exit Value';
+    public const EXE_TIME = 'Execution Time';
+    public const COMPLETION_STATUS = 'Completion Status';
+    public const CMD_LINE = 'Command Line';
 
-    const TEXT_STRING = 'text/string';
-    const NUM_DOUBLE = 'numeric/double';
+    public const TEXT_STRING = 'text/string';
+    public const NUM_DOUBLE = 'numeric/double';
 
-    const FAILED = 'failed';
-    const PASSED = 'passed';
-    const OTHERFAULT = 'OTHER_FAULT';
-    const TIMEOUT = 'Timeout';
-    const NOTRUN = 'notrun';
+    public const FAILED = 'failed';
+    public const PASSED = 'passed';
+    public const OTHERFAULT = 'OTHER_FAULT';
+    public const TIMEOUT = 'Timeout';
+    public const NOTRUN = 'notrun';
 
     public function __construct(array $properties = [])
     {

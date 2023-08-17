@@ -20,29 +20,29 @@ use CDash\Service\RepositoryService;
 
 class Repository
 {
-    const CVS = 0;
-    const SVN = 1;
+    public const CVS = 0;
+    public const SVN = 1;
 
-    const VIEWER_CGIT = 'CGit';
-    const VIEWER_CVSTRAC = 'CVSTrac';
-    const VIEWER_FISHEYE = 'Fisheye';
-    const VIEWER_GITHUB = 'GitHub';
-    const VIEWER_GITLAB = 'GitLab';
-    const VIEWER_GITORIOUS = 'Gitorious';
-    const VIEWER_GITWEB = 'GitWeb';
-    const VIEWER_GITWEB2 = 'GitWeb2';
-    const VIEWER_HGWEB = 'Hgweb';
-    const VIEWER_STASH = 'Atlassian Stash';
-    const VIEWER_LOGGERHEAD = 'Loggerhead';
-    const VIEWER_P4WEB = 'P4Web';
-    const VIEWER_PHAB_GIT = 'Phabricator';
-    const VIEWER_REDMINE = 'Redmine';
-    const VIEWER_ALLURA = 'SourceForge Allura';
-    const VIEWER_TRAC = 'Trac';
-    const VIEWER_VIEWCVS = 'ViewCVS';
-    const VIEWER_VIEWVC = 'ViewVC';
-    const VIEWER_VIEWVC_1_1 = 'ViewVC1.1';
-    const VIEWER_WEBSVN = 'WebSVN';
+    public const VIEWER_CGIT = 'CGit';
+    public const VIEWER_CVSTRAC = 'CVSTrac';
+    public const VIEWER_FISHEYE = 'Fisheye';
+    public const VIEWER_GITHUB = 'GitHub';
+    public const VIEWER_GITLAB = 'GitLab';
+    public const VIEWER_GITORIOUS = 'Gitorious';
+    public const VIEWER_GITWEB = 'GitWeb';
+    public const VIEWER_GITWEB2 = 'GitWeb2';
+    public const VIEWER_HGWEB = 'Hgweb';
+    public const VIEWER_STASH = 'Atlassian Stash';
+    public const VIEWER_LOGGERHEAD = 'Loggerhead';
+    public const VIEWER_P4WEB = 'P4Web';
+    public const VIEWER_PHAB_GIT = 'Phabricator';
+    public const VIEWER_REDMINE = 'Redmine';
+    public const VIEWER_ALLURA = 'SourceForge Allura';
+    public const VIEWER_TRAC = 'Trac';
+    public const VIEWER_VIEWCVS = 'ViewCVS';
+    public const VIEWER_VIEWVC = 'ViewVC';
+    public const VIEWER_VIEWVC_1_1 = 'ViewVC1.1';
+    public const VIEWER_WEBSVN = 'WebSVN';
 
     /**
      * @return array

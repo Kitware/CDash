@@ -206,7 +206,7 @@ class HttpHeaderExpectation extends SimpleExpectation
         if (count($parsed = explode(':', $line, 2)) < 2) {
             return false;
         }
-        list($header, $value) = $parsed;
+        [$header, $value] = $parsed;
         if ($this->normaliseHeader($header) != $this->expected_header) {
             return false;
         }

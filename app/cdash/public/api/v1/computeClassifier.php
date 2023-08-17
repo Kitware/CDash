@@ -73,7 +73,7 @@ $classifiers = [];
 foreach ($allProperties as $propertyName => $propertyData) {
     if ($propertyData['type'] == 'number') {
         // Numerical property.
-        list($classifierName, $score) =
+        [$classifierName, $score] =
             find_numerical_classifier($propertyName, $propertyData, $builds);
         $classifiers[] =
             ['classifier' => $classifierName, 'accuracy' => $score];
@@ -137,8 +137,8 @@ function compute_classifier_score($inGroup, $outGroup)
     }
 
     // Count number of successful and failed samples for the in & out groups.
-    list($numSucceededInGroup, $numFailedInGroup) = count_samples($inGroup);
-    list($numSucceededOutGroup, $numFailedOutGroup) = count_samples($outGroup);
+    [$numSucceededInGroup, $numFailedInGroup] = count_samples($inGroup);
+    [$numSucceededOutGroup, $numFailedOutGroup] = count_samples($outGroup);
 
     // We initially assume that the in group should contain true samples and the
     // out group should contain false samples.

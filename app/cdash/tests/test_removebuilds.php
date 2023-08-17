@@ -389,7 +389,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('subproject2build', 'buildid', '=', $build->Id, 1);
         $this->verify('testdiff', 'buildid', '=', $build->Id, 1);
 
-        list($buildfailureid, $detailsid) =
+        [$buildfailureid, $detailsid] =
             $this->verify_get_columns('buildfailure', ['id', 'detailsid'], 'buildid', '=', $build->Id, 1);
         $this->verify('buildfailure2argument', 'buildfailureid', '=', $buildfailureid, 1);
         $this->verify('buildfailuredetails', 'id', '=', $detailsid, 1);

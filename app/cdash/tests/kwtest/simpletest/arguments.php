@@ -26,7 +26,7 @@ class SimpleArguments
     {
         array_shift($arguments);
         while (count($arguments) > 0) {
-            list($key, $value) = $this->parseArgument($arguments);
+            [$key, $value] = $this->parseArgument($arguments);
             $this->assign($key, $value);
         }
     }

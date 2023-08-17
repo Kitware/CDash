@@ -377,7 +377,7 @@ class SimpleDumper
             return 0;
         }
         if (strlen($first) < strlen($second)) {
-            list($first, $second) = [$second, $first];
+            [$first, $second] = [$second, $first];
         }
         $position = 0;
         $step = strlen($first);

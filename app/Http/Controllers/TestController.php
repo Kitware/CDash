@@ -120,7 +120,7 @@ final class TestController extends AbstractProjectController
         get_dashboard_JSON_by_name($this->project->Name, $date, $response);
         $response['testName'] = $testName;
 
-        list($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date, $this->project->NightlyTime);
+        [$previousdate, $currentstarttime, $nextdate, $today] = get_dates($date, $this->project->NightlyTime);
         $menu = [
             'back' => 'index.php?project=' . urlencode($this->project->Name) . "&date=$date",
             'previous' => "testSummary.php?project={$this->project->Id}&name=$testName&date=$previousdate",

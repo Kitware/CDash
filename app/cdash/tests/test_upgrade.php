@@ -111,7 +111,7 @@ class UpgradeTestCase extends KWWebTestCase
 
 
         $version = pdo_get_vendor_version();
-        list($major, $minor, ) = $version? explode(".", $version) : [null,null,null];
+        [$major, $minor, ] = $version? explode(".", $version) : [null,null,null];
 
         $this->assertTrue(is_numeric($major));
         $this->assertTrue(is_numeric($minor));

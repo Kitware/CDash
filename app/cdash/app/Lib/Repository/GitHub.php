@@ -38,7 +38,7 @@ use CDash\Model\Project;
  */
 class GitHub implements RepositoryInterface
 {
-    const BASE_URI = 'https://api.github.com';
+    public const BASE_URI = 'https://api.github.com';
 
     /** @var string $installationId */
     private $installationId;
@@ -505,7 +505,7 @@ class GitHub implements RepositoryInterface
         $memcache_enabled = $this->config->get('CDASH_MEMECACHE_ENABLED');
         $memcache_prefix = $this->config->get('CDASH_MEMCACHE_PREFIX');
         if ($memcache_enabled) {
-            list($server, $port) = $this->config->get('CDASH_MEMCACHE_SERVER');
+            [$server, $port] = $this->config->get('CDASH_MEMCACHE_SERVER');
             $memcache = cdash_memcache_connect($server, $port);
             // Disable memcache for this request if it fails to connect.
             if ($memcache === false) {

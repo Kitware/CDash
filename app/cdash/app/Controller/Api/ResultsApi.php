@@ -90,7 +90,7 @@ abstract class ResultsApi extends ProjectApi
     public function setDate($date)
     {
         $this->project->Fill();
-        list($previousdate, $beginning_timestamp, $nextdate, $d) =
+        [$previousdate, $beginning_timestamp, $nextdate, $d] =
             get_dates($date, $this->project->NightlyTime);
         if (is_null($date)) {
             $date = $d;
@@ -124,7 +124,7 @@ abstract class ResultsApi extends ProjectApi
         if ($begin && $end) {
             // Honor 'begin' & 'end' parameters to specify a range of dates.
             // Compute a date range if both arguments were specified.
-            list($unused, $beginning_timestamp) =
+            [$unused, $beginning_timestamp] =
                 get_dates($begin, $this->project->NightlyTime);
             $this->currentStartTime = $beginning_timestamp;
             $this->beginDate = gmdate(FMT_DATETIME, $beginning_timestamp);
@@ -132,7 +132,7 @@ abstract class ResultsApi extends ProjectApi
 
             $this->date = $end;
             $response['end'] = $this->date;
-            list($previousdate, $end_timestamp, $nextdate) =
+            [$previousdate, $end_timestamp, $nextdate] =
                 get_dates($this->date, $this->project->NightlyTime);
             $this->previousDate = $previousdate;
             $this->nextDate = $nextdate;

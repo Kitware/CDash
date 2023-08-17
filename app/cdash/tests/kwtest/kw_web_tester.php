@@ -732,7 +732,7 @@ class CDashControllerBrowser extends SimpleBrowser
         if (!empty($query)) {
             foreach (explode("&", $query) as $parameter) {
                 if (strpos($parameter, '=') !== false) {
-                    list($key, $value) = explode('=', $parameter);
+                    [$key, $value] = explode('=', $parameter);
                     $this->setRequestKeyValuePair($parameters, $key, $value);
                 } else {
                     $this->setRequestKeyValuePair($parameters, $parameter, '');
@@ -755,13 +755,13 @@ class CDashControllerBrowser extends SimpleBrowser
 
         // Handle key names that represent arrays of values
         if (preg_match('/^(\w+)\[(\w+)\]=?$/', $key, $parts)) {
-            list(, $key, $index) = $parts;
+            [, $key, $index] = $parts;
             if (!isset($parameters[$key])) {
                 $parameters[$key] = [];
             }
             $parameters[$key][$index] = $value;
         } elseif (preg_match('/^(\w+)\[]$/', $key, $parts)) {
-            list(, $key) = $parts;
+            [, $key] = $parts;
             if (!isset($parameters[$key])) {
                 $parameters[$key] = [];
             }

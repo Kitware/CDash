@@ -16,12 +16,12 @@ namespace CDash\Model;
 
 class ModelType
 {
-    const PROJECT = 1;
-    const BUILD = 2;
-    const UPDATE = 3;
-    const CONFIGURE = 4;
-    const TEST = 5;
-    const COVERAGE = 6;
-    const DYNAMICANALYSIS = 7;
-    const USER = 8;
+    public const PROJECT = 1;
+    public const BUILD = 2;
+    public const UPDATE = 3;
+    public const CONFIGURE = 4;
+    public const TEST = 5;
+    public const COVERAGE = 6;
+    public const DYNAMICANALYSIS = 7;
+    public const USER = 8;
 }

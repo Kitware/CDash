@@ -21,8 +21,8 @@ use Illuminate\Support\Facades\Log;
 
 class BuildGroup
 {
-    const NIGHTLY = 'Nightly';
-    const EXPERIMENTAL = 'Experimental';
+    public const NIGHTLY = 'Nightly';
+    public const EXPERIMENTAL = 'Experimental';
 
     private $Id;
     private $ProjectId;

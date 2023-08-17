@@ -1033,7 +1033,7 @@ function get_cdash_dashboard_xml_by_name(string $projectname, $date): string
 
     $project_array = array_merge($default, $result);
 
-    list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
+    [$previousdate, $currentstarttime, $nextdate] = get_dates($date, $project_array['nightlytime']);
 
     $xml = '<dashboard>
   <datetime>' . date('l, F d Y H:i:s', time()) . '</datetime>
@@ -1275,7 +1275,7 @@ function get_dashboard_JSON($projectname, $date, &$response)
     if (is_null($date)) {
         $date = date(FMT_DATE);
     }
-    list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
+    [$previousdate, $currentstarttime, $nextdate] = get_dates($date, $project_array['nightlytime']);
 
     $response['datetime'] = date('l, F d Y H:i:s', time());
     $response['date'] = $date;

@@ -159,7 +159,7 @@ final class SubProjectController extends AbstractProjectController
             $response['showlastsubmission'] = 1;
         }
 
-        list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $this->project->NightlyTime);
+        [$previousdate, $currentstarttime, $nextdate] = get_dates($date, $this->project->NightlyTime);
 
         // Main dashboard section
         get_dashboard_JSON($this->project->GetName(), $date, $response);

@@ -20,9 +20,9 @@ use CDash\Database;
 
 class DynamicAnalysis
 {
-    const PASSED = 'passed';
-    const FAILED = 'failed';
-    const NOTRUN = 'notrun';
+    public const PASSED = 'passed';
+    public const FAILED = 'failed';
+    public const NOTRUN = 'notrun';
 
     public $Id;
     public $Status;

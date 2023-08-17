@@ -321,7 +321,7 @@ class SimpleTidyPageBuilder
     private function mergeAttribute($attributes, $raw)
     {
         $parts = explode('=', $raw);
-        list($name, $value) = count($parts) == 1 ? [$parts[0], $parts[0]] : $parts;
+        [$name, $value] = count($parts) == 1 ? [$parts[0], $parts[0]] : $parts;
         $attributes[trim($name)] = html_entity_decode($this->dequote(trim($value)), ENT_QUOTES);
         return $attributes;
     }

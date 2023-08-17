@@ -28,7 +28,7 @@ abstract class SimpleResult
      */
     public function __construct($breadcrumb, $message)
     {
-        list($this->time, $this->breadcrumb, $this->message) =
+        [$this->time, $this->breadcrumb, $this->message] =
             [time(), $breadcrumb, $message];
     }
 }

@@ -9,8 +9,8 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class MultipleSubprojectsTestCase extends KWWebTestCase
 {
-    const EMAIL_NORMAL = 0;
-    const EMAIL_SUMMARY = 1;
+    public const EMAIL_NORMAL = 0;
+    public const EMAIL_SUMMARY = 1;
 
     private $buildIds;
     private $dataDir;
@@ -160,7 +160,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         ";
 
         $stmt = $pdo->query($sql);
-        list($this->summaryEmail, $this->emailMaxChars) = $stmt->fetch();
+        [$this->summaryEmail, $this->emailMaxChars] = $stmt->fetch();
 
         $sql = "
             UPDATE buildgroup

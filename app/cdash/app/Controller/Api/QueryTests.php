@@ -210,7 +210,7 @@ class QueryTests extends ResultsApi
 
         get_dashboard_JSON_by_name($this->project->Name, $this->date, $response);
 
-        list($previousdate, $currentstarttime, $nextdate) =
+        [$previousdate, $currentstarttime, $nextdate] =
             get_dates($this->date, $this->project->NightlyTime);
 
         // Filters

@@ -518,7 +518,7 @@ class SimpleHttpResponse extends SimpleStickyError
             $this->setError('Could not split headers from content');
             $this->headers = new SimpleHttpHeaders($raw);
         } else {
-            list($headers, $this->content) = explode("\r\n\r\n", $raw, 2);
+            [$headers, $this->content] = explode("\r\n\r\n", $raw, 2);
             $this->headers = new SimpleHttpHeaders($headers);
         }
     }

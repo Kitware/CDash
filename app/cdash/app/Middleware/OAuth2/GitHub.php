@@ -27,8 +27,8 @@ use League\OAuth2\Client\Provider\Github as GitHubProvider;
  */
 class GitHub extends OAuth2
 {
-    const AUTH_REQUEST_METHOD = 'GET';
-    const AUTH_REQUEST_URI = 'https://api.github.com/user/emails';
+    public const AUTH_REQUEST_METHOD = 'GET';
+    public const AUTH_REQUEST_URI = 'https://api.github.com/user/emails';
 
     /**
      * GitHub constructor

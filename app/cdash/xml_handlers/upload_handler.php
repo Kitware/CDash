@@ -125,7 +125,7 @@ class UploadHandler extends AbstractHandler
             $build_date =
                 extract_date_from_buildstamp($this->Build->GetStamp());
 
-            list($prev, $nightly_start_time, $next) =
+            [$prev, $nightly_start_time, $next] =
                 get_dates($build_date, $nightly_time);
 
             // If the nightly start time is after noon (server time)

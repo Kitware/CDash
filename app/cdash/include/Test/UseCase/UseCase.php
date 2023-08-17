@@ -10,16 +10,16 @@ use DOMText;
 abstract class UseCase
 {
     /* actionable steps */
-    const TEST = 'Test';
-    const CONFIG = 'Config';
-    const UPDATE = 'Update';
-    const BUILD = 'Build';
-    const DYNAMIC_ANALYSIS = 'DynamicAnalysis';
+    public const TEST = 'Test';
+    public const CONFIG = 'Config';
+    public const UPDATE = 'Update';
+    public const BUILD = 'Build';
+    public const DYNAMIC_ANALYSIS = 'DynamicAnalysis';
 
     /* build types (modes) */
-    const NIGHTLY = 'Nightly';
-    const CONTINUOUS = 'Continuous';
-    const EXPERIMENTAL = 'Experimental';
+    public const NIGHTLY = 'Nightly';
+    public const CONTINUOUS = 'Continuous';
+    public const EXPERIMENTAL = 'Experimental';
 
     private $faker;
     private $ids;

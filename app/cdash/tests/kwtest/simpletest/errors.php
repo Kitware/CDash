@@ -124,11 +124,11 @@ class SimpleErrorQueue
      */
     public function tally()
     {
-        while (list($severity, $message, $file, $line) = $this->extract()) {
+        while ([$severity, $message, $file, $line] = $this->extract()) {
             $severity = $this->getSeverityAsString($severity);
             $this->test->error($severity, $message, $file, $line);
         }
-        while (list($expected, $message) = $this->extractExpectation()) {
+        while ([$expected, $message] = $this->extractExpectation()) {
             $this->test->assert($expected, false, '%s -> Expected error not caught');
         }
     }
@@ -144,7 +144,7 @@ class SimpleErrorQueue
     protected function testLatestError($severity, $content, $filename, $line)
     {
         if ($expectation = $this->extractExpectation()) {
-            list($expected, $message) = $expectation;
+            [$expected, $message] = $expectation;
             $this->test->assert($expected, $content, sprintf(
                 $message,
                 "%s -> PHP error [$content] severity [" .

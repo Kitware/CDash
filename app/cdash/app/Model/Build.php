@@ -31,12 +31,12 @@ use PDO;
 
 class Build
 {
-    const TYPE_ERROR = 0;
-    const TYPE_WARN = 1;
-    const STATUS_NEW = 1;
+    public const TYPE_ERROR = 0;
+    public const TYPE_WARN = 1;
+    public const STATUS_NEW = 1;
 
-    const PARENT_BUILD = -1;
-    const STANDALONE_BUILD = 0;
+    public const PARENT_BUILD = -1;
+    public const STANDALONE_BUILD = 0;
 
     public $Id;
     public $SiteId;
@@ -2425,7 +2425,7 @@ class Build
 
         $build_date = $this->GetDate();
         $this->GetProject()->Fill();
-        list($this->BeginningOfDay, $this->EndOfDay) =
+        [$this->BeginningOfDay, $this->EndOfDay] =
             $this->Project->ComputeTestingDayBounds($build_date);
         return true;
     }

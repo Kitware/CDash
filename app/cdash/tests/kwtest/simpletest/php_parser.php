@@ -306,7 +306,7 @@ class SimpleLexer
         }
         $length = strlen($raw);
         while (is_array($parsed = $this->reduce($raw))) {
-            list($raw, $unmatched, $matched, $mode) = $parsed;
+            [$raw, $unmatched, $matched, $mode] = $parsed;
             if (!$this->dispatchTokens($unmatched, $matched, $mode)) {
                 return false;
             }

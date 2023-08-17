@@ -182,7 +182,7 @@ function AddTablePrimaryKey($table, $field)
     add_log("Adding primarykey $field to $table", 'AddTablePrimaryKey');
     $query = 'ALTER TABLE "' . $table . '" ADD PRIMARY KEY ("' . $field . '")';
     $version = pdo_get_vendor_version();
-    list($major, $minor, $patch) = explode(".", $version);
+    [$major, $minor, $patch] = explode(".", $version);
 
     // As of MySQL 5.7.4, the IGNORE clause for ALTER TABLE is removed and its use produces an error.
     // Retaining original query for backwards compatibility

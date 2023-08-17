@@ -1756,7 +1756,7 @@ final class CoverageController extends AbstractBuildController
 
         $date = isset($_GET['date']) ? htmlspecialchars($_GET['date']) : null;
 
-        list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $this->project->NightlyTime);
+        [$previousdate, $currentstarttime, $nextdate] = get_dates($date, $this->project->NightlyTime);
 
         $response = begin_JSON_response();
         $response['title'] = $this->project->Name . ' - Compare Coverage';

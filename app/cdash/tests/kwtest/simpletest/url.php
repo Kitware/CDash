@@ -39,7 +39,7 @@ class SimpleUrl
      */
     public function __construct($url = '')
     {
-        list($x, $y) = $this->chompCoordinates($url);
+        [$x, $y] = $this->chompCoordinates($url);
         $this->setCoordinates($x, $y);
         $this->scheme = $this->chompScheme($url);
         if ($this->scheme === 'file') {
@@ -50,7 +50,7 @@ class SimpleUrl
             // the scheme is file.
             $url = str_replace('\\', '/', $url);
         }
-        list($this->username, $this->password) = $this->chompLogin($url);
+        [$this->username, $this->password] = $this->chompLogin($url);
         $this->host = $this->chompHost($url);
         $this->port = false;
         if (preg_match('/(.*?):(.*)/', $this->host, $host_parts)) {
