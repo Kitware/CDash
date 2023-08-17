@@ -16,7 +16,7 @@ class CheckDatabaseConnection
      */
     public function handle($request, Closure $next)
     {
-        $exempted_endpoints = ['install.php', 'submit.php'];
+        $exempted_endpoints = ['install', 'submit.php'];
         $skip_check = false;
         foreach ($exempted_endpoints as $exempted_endpoint) {
             if (strpos($request->fullUrl(), $exempted_endpoint) !== false) {
@@ -34,7 +34,7 @@ class CheckDatabaseConnection
                 if (config('app.env') == 'production') {
                     \App::abort(503, 'CDash cannot connect to the database.');
                 } else {
-                    return redirect(config('app.url') . '/install.php');
+                    return redirect(url('/install'));
                 }
             }
         }

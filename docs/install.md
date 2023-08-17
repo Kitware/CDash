@@ -105,7 +105,7 @@ php artisan config:migrate
 ## Finish CDash installation
 
 Open up your new CDash instance in a web browser. You should be automatically
-redirected to `install.php`. Fill out the installation form to create the
+redirected to `/install`. Fill out the installation form to create the
 database tables and the initial admin user.
 
 Once that is complete you can create a project and start submitting builds to it.

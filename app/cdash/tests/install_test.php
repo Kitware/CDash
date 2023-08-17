@@ -35,7 +35,7 @@ class BaseInstallTestCase extends KWWebTestCase
             $this->db->create($this->databaseName);
         }
 
-        $this->get($this->url . '/install.php');
+        $this->get($this->url . '/install');
         if (!$this->setFieldByName('admin_email', 'simpletest@localhost')) {
             $this->fail('Set admin email returned false');
             return 1;

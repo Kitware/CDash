@@ -24,8 +24,8 @@ if(config('auth.user_registration_form_enabled') === false) {
 }
 Auth::routes($routeList);
 
-Route::get('/install.php', 'AdminController@install');
-Route::post('/install.php', 'AdminController@install');
+Route::match(['get', 'post'], '/install', 'AdminController@install');
+Route::permanentRedirect('/install.php', '/install');
 
 Route::get('/oauth/{service}', 'OAuthController@authenticate');
 Route::get('/oauth/callback/{service}', 'OAuthController@login')
