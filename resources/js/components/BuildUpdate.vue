@@ -8,7 +8,7 @@
     </div>
     <div v-else>
       <h4 v-if="cdash.build.site">
-        Files changed on <a :href="$baseURL + '/viewSite.php?siteid=' + cdash.build.siteid">{{ cdash.build.site }}</a>
+        Files changed on <a :href="$baseURL + '/sites/' + cdash.build.siteid">{{ cdash.build.site }}</a>
         ({{ cdash.build.buildname }}) as of {{ cdash.build.buildtime }}
       </h4>
 

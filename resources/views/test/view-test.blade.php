@@ -25,7 +25,7 @@
                         <b>Site Name:</b>
                     </td>
                     <td>
-                        <a ng-href="viewSite.php?siteid={{::cdash.build.siteid}}"
+                        <a ng-href="sites/{{::cdash.build.siteid}}"
                            ng-click="cancelAjax()">{{::cdash.build.site}}</a>
                     </td>
                 </tr>

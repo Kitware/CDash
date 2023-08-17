@@ -39,7 +39,7 @@
       </a>
       <a
         id="site_link"
-        :href="$baseURL + '/viewSite.php?siteid=' + cdash.test.siteid"
+        :href="$baseURL + '/sites/' + cdash.test.siteid"
       >
         ({{ cdash.test.site }})
       </a>

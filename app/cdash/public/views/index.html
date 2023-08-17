@@ -70,7 +70,7 @@
         <br/>
         <div id="site" align="left">
           <b>Site</b>:
-          <a ng-href="viewSite.php?siteid={{::cdash.siteid}}&project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
+          <a ng-href="sites/{{::cdash.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
             {{::cdash.site}}
           </a>
           <img ng-if="::cdash.siteoutoforder == 1" src="img/flag.png" title="flag"/>
@@ -292,7 +292,7 @@
           <tbody ng-if="::!cdash.coveragegroups || cdash.coveragegroups.length == 0" id="coveragebody">
             <tr class="child_row" ng-repeat="coverage in cdash.coverages |orderBy:sortCoverage.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
               <td ng-if="::cdash.childview != 1" align="left" class="paddt">
-                <a ng-href="viewSite.php?siteid={{::coverage.siteid}}&project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
+                <a ng-href="sites/{{::coverage.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
                   {{::coverage.site}}
                 </a>
               </td>
@@ -413,7 +413,7 @@
               </td>
 
               <td ng-if="::cdash.childview != 1" class="paddt" align="left">
-                <a ng-href="viewSite.php?siteid={{::da.siteid}}&project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
+                <a ng-href="sites/{{::da.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
                   {{::da.site}}
                 </a>
               </td>

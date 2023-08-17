@@ -15,7 +15,7 @@
                 <tr>
                     <td>
                         <b>
-                            <a href="{{ url('viewSite.php') }}?siteid={{ $site->siteid }}">
+                            <a href="{{ url('/sites/' . $site->siteid) }}">
                                 {{ $site->sitename }}
                             </a>
                         </b>

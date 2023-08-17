@@ -58,7 +58,7 @@
 <tr>
 <td><center>
 <a>
-<xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="id"/></xsl:attribute>
+<xsl:attribute name="href">sites/<xsl:value-of select="id"/></xsl:attribute>
 <xsl:value-of select="name"/></a></center></td>
 <td><center>
 <xsl:if test="string-length(maintainer_name)>1">

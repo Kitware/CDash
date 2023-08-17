@@ -101,7 +101,7 @@ test('BuildSummary handles API response', async () => {
   expect(html).toContain('mysite');
   expect(html).toContain('Linux');
   const site_link = component.find('#site_link');
-  expect(site_link.attributes('href')).toMatch('/viewSite.php?siteid=1');
+  expect(site_link.attributes('href')).toMatch('/sites/1');
   expect(site_link.text()).toBe('mysite');
 
   const configure_link = component.find('#configure_link');

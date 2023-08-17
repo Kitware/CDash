@@ -156,7 +156,11 @@ Route::get('/viewSubProjectDependenciesGraph.php', 'SubProjectController@depende
 // TODO: (williamjallen) Replace this /ajax route with an equivalent /api route
 Route::get('/ajax/getsubprojectdependencies.php', 'SubProjectController@ajaxDependenciesGraph');
 
-Route::get('/viewSite.php', 'SiteController@viewSite');
+Route::match(['get', 'post'], '/sites/{siteid}', 'SiteController@viewSite')->whereNumber('siteid');
+Route::get('/viewSite.php', function (Request $request) {
+    $siteid = $request->query('siteid');
+    return redirect("/sites/$siteid", 301);
+});
 
 Route::get('/viewMap.php', 'MapController@viewMap');
 

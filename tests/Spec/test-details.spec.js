@@ -146,7 +146,7 @@ lines</pre>`);
 
   const site_link = component.find('#site_link');
   expect(site_link.text()).toBe('(my site)');
-  expect(site_link.attributes('href')).toMatch('/viewSite.php?siteid=1');
+  expect(site_link.attributes('href')).toMatch('/sites/1');
 
   const revision_link = component.find('#revision_link');
   expect(revision_link.text()).toBe('asdf');
