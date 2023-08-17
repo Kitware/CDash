@@ -107,7 +107,7 @@ final class ProjectOverviewController extends AbstractProjectController
         if ($has_subprojects) {
             // Detect if the subprojects are split up into groups.
             $groups = $this->project->GetSubProjectGroups();
-            if (is_array($groups) && !empty($groups)) {
+            if (count($groups) > 0) {
                 $has_subproject_groups = true;
                 foreach ($groups as $group) {
                     // Store subproject groups in an array keyed by id.

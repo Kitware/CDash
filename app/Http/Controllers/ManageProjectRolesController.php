@@ -5,6 +5,7 @@ use App\Models\User;
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\Project;
+use App\Models\Project as EloquentProject;
 use CDash\Model\UserProject;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -31,11 +32,8 @@ final class ManageProjectRolesController extends AbstractProjectController
         $project = new Project();
 
         // If the projectid is not set and there is only one project we go directly to the page
-        if (!isset($projectid)) {
-            $projectids = $project->GetIds();
-            if (count($projectids) == 1) {
-                $projectid = $projectids[0];
-            }
+        if (!isset($projectid) && EloquentProject::count() === 1) {
+            $projectid = EloquentProject::all()->firstOrFail()->id;
         }
         $projectid = intval($projectid);
 

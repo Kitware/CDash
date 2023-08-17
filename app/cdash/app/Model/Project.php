@@ -26,8 +26,13 @@ use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Preferences\NotificationPreferences;
 use CDash\ServiceContainer;
 use DateTime;
+use DateTimeZone;
 use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\Project as EloquentProject;
+use RuntimeException;
 
 /** Main project class */
 class Project
@@ -79,8 +84,6 @@ class Project
     public $AutoremoveTimeframe;
     public int $AutoremoveMaxBuilds;
     public $UploadQuota;
-    public $RobotName;
-    public $RobotRegex;
     public $WebApiKey;
     public $WarningsFilter;
     public $ErrorsFilter;
@@ -168,7 +171,7 @@ class Project
     }
 
     /** Add a build group */
-    public function AddBuildGroup($buildgroup): void
+    public function AddBuildGroup(BuildGroup $buildgroup): void
     {
         $buildgroup->SetProjectId($this->Id);
         $buildgroup->Save();
@@ -177,59 +180,59 @@ class Project
     /** Delete a project */
     public function Delete(): bool
     {
-        if (!$this->Id) {
+        if (!$this->Id || EloquentProject::find($this->Id) === null) {
             return false;
         }
         // Remove the project groups and rules
-        $buildgroup = $this->PDO->executePrepared('SELECT * FROM buildgroup WHERE projectid=?', [intval($this->Id)]);
+        // TODO: (williamjallen) This can be done with one delete statement for each table...
+        $buildgroup = DB::select('SELECT * FROM buildgroup WHERE projectid=?', [intval($this->Id)]);
         foreach ($buildgroup as $buildgroup_array) {
-            $groupid = intval($buildgroup_array['id']);
-            $this->PDO->executePrepared('DELETE FROM buildgroupposition WHERE buildgroupid=?', [$groupid]);
-            $this->PDO->executePrepared('DELETE FROM build2grouprule WHERE groupid=?', [$groupid]);
-            $this->PDO->executePrepared('DELETE FROM build2group WHERE groupid=?', [$groupid]);
+            $groupid = intval($buildgroup_array->id);
+            DB::delete('DELETE FROM buildgroupposition WHERE buildgroupid=?', [$groupid]);
+            DB::delete('DELETE FROM build2grouprule WHERE groupid=?', [$groupid]);
+            DB::delete('DELETE FROM build2group WHERE groupid=?', [$groupid]);
         }
 
-        $this->PDO->executePrepared('DELETE FROM buildgroup WHERE projectid=?', [intval($this->Id)]);
-        $this->PDO->executePrepared('DELETE FROM blockbuild WHERE projectid=?', [intval($this->Id)]);
-        $this->PDO->executePrepared('DELETE FROM user2project WHERE projectid=?', [intval($this->Id)]);
-        $this->PDO->executePrepared('DELETE FROM labelemail WHERE projectid=?', [intval($this->Id)]);
-        $this->PDO->executePrepared('DELETE FROM labelemail WHERE projectid=?', [intval($this->Id)]);
-        $this->PDO->executePrepared('DELETE FROM project2repositories WHERE projectid=?', [intval($this->Id)]);
+        DB::delete('DELETE FROM buildgroup WHERE projectid=?', [intval($this->Id)]);
+        DB::delete('DELETE FROM blockbuild WHERE projectid=?', [intval($this->Id)]);
+        DB::delete('DELETE FROM user2project WHERE projectid=?', [intval($this->Id)]);
+        DB::delete('DELETE FROM labelemail WHERE projectid=?', [intval($this->Id)]);
+        DB::delete('DELETE FROM labelemail WHERE projectid=?', [intval($this->Id)]);
+        DB::delete('DELETE FROM project2repositories WHERE projectid=?', [intval($this->Id)]);
 
-        $dailyupdate = $this->PDO->executePrepared('SELECT id FROM dailyupdate WHERE projectid=?', [intval($this->Id)]);
+        $dailyupdate = DB::select('SELECT id FROM dailyupdate WHERE projectid=?', [intval($this->Id)]);
+        $dailyupdate_ids = [];
         foreach ($dailyupdate as $dailyupdate_array) {
-            $dailyupdateid = intval($dailyupdate_array['id']);
-            $this->PDO->executePrepared('DELETE FROM dailyupdatefile WHERE dailyupdateid=?', [$dailyupdateid]);
+            $dailyupdate_ids[] = (int) $dailyupdate_array->id;
         }
+        DB::table('dailyupdatefile')->whereIn('dailyupdateid', $dailyupdate_ids)->delete();
 
-        $this->PDO->executePrepared('DELETE FROM dailyupdate WHERE projectid=?', [intval($this->Id)]);
-        $this->PDO->executePrepared('DELETE FROM projectrobot WHERE projectid=?', [intval($this->Id)]);
-        $this->PDO->executePrepared('DELETE FROM build_filters WHERE projectid=?', [intval($this->Id)]);
+        DB::delete('DELETE FROM dailyupdate WHERE projectid=?', [intval($this->Id)]);
+        DB::delete('DELETE FROM build_filters WHERE projectid=?', [intval($this->Id)]);
 
         // Delete any repositories that aren't shared with other projects.
-        $repositories_query = $this->PDO->executePrepared('
+        // TODO: (williamjallen) rewrite this to use a single query...
+        $repositories_query = DB::select('
                                   SELECT repositoryid
                                   FROM project2repositories
                                   WHERE projectid=?
                                   ORDER BY repositoryid
-                              ', [intval($this->Id)]);
-        add_last_sql_error('Project DeleteRepositories1', $this->Id);
+                              ', [(int) $this->Id]);
         foreach ($repositories_query as $repository_array) {
-            $repoid = intval($repository_array['repositoryid']);
-            $projects_query = $this->PDO->executePreparedSingleRow('
+            $repoid = (int) $repository_array->repositoryid;
+            $projects_query = DB::select('
                                   SELECT COUNT(projectid) AS c
                                   FROM project2repositories
                                   WHERE repositoryid=?
                               ', [$repoid]);
-            add_last_sql_error('Project DeleteRepositories1', $this->Id);
-            if ($projects_query['c'] > 1) {
+            if ($projects_query[0]->c > 1) {
                 continue;
             }
-            $this->PDO->executePrepared('DELETE FROM repositories WHERE id=?', [$repoid]);
+            DB::delete('DELETE FROM repositories WHERE id=?', [$repoid]);
         }
-        $this->PDO->executePrepared('DELETE FROM project2repositories WHERE projectid=?', [intval($this->Id)]);
+        DB::delete('DELETE FROM project2repositories WHERE projectid=?', [intval($this->Id)]);
 
-        $this->PDO->executePrepared('DELETE FROM project WHERE id=?', [intval($this->Id)]);
+        EloquentProject::findOrFail((int) $this->Id)->delete();
 
         return true;
     }
@@ -241,302 +244,64 @@ class Project
         if (!$this->Id) {
             return false;
         }
-        /** @var \PDOStatement $stmt */
-        $stmt = $this->PDO->prepare("SELECT count(*) FROM project WHERE id=:id");
-        $stmt->bindParam(':id', $this->Id);
-        $stmt->execute();
-        $query_array = pdo_fetch_array($stmt);
-        if ($query_array[0] > 0) {
-            return true;
-        }
-        return false;
+        return EloquentProject::find($this->Id) !== null;
     }
 
-    // Save the project in the database
+    /** Save the project in the database */
     public function Save(): bool
     {
-        // Escape the values
-        $Description = $this->Description ?? '';
-        $HomeUrl = $this->HomeUrl ?? '';
-        $CvsUrl = $this->CvsUrl ?? '';
-        $DocumentationUrl = $this->DocumentationUrl ?? '';
-        $BugTrackerUrl = $this->BugTrackerUrl ?? '';
-        $BugTrackerFileUrl = $this->BugTrackerFileUrl ?? '';
-        $BugTrackerNewIssueUrl = $this->BugTrackerNewIssueUrl ?? '';
-        $BugTrackerType = $this->BugTrackerType ?? '';
-        $TestingDataUrl = $this->TestingDataUrl ?? '';
-        $NightlyTime = $this->NightlyTime ?? '';
-        $GoogleTracker = $this->GoogleTracker ?? '';
-        $RobotName = $this->RobotName ?? '';
-        $RobotRegex = $this->RobotRegex ?? '';
-        $Name = $this->Name ?? '';
-        $CvsViewerType = $this->CvsViewerType ?? '';
+        // Trim the name
+        $this->Name = trim($this->Name);
+        $this->Initialize();
 
-        // Check if the project is already
-        if ($this->Exists()) {
-            // Trim the name
-            $this->Name = trim($this->Name);
-            $this->Initialize();
+        $project = EloquentProject::findOrNew($this->Id);
+        $project->fill([
+            'name' => $this->Name ?? '',
+            'description' => $this->Description ?? '',
+            'homeurl' => $this->HomeUrl ?? '',
+            'cvsurl' => $this->CvsUrl ?? '',
+            'documentationurl' => $this->DocumentationUrl ?? '',
+            'bugtrackerurl' => $this->BugTrackerUrl ?? '',
+            'bugtrackerfileurl' => $this->BugTrackerFileUrl ?? '',
+            'bugtrackernewissueurl' => $this->BugTrackerNewIssueUrl ?? '',
+            'bugtrackertype' => $this->BugTrackerType ?? '',
+            'public' => (int) $this->Public,
+            'coveragethreshold' => (int) $this->CoverageThreshold,
+            'testingdataurl' => $this->TestingDataUrl ?? '',
+            'nightlytime' => $this->NightlyTime ?? '',
+            'googletracker' => $this->GoogleTracker ?? '',
+            'emaillowcoverage' => (int) $this->EmailLowCoverage,
+            'emailtesttimingchanged' => (int) $this->EmailTestTimingChanged,
+            'emailbrokensubmission' => (int) $this->EmailBrokenSubmission,
+            'emailredundantfailures' => (int) $this->EmailRedundantFailures,
+            'emailadministrator' => (int) $this->EmailAdministrator,
+            'showipaddresses' => (int) $this->ShowIPAddresses,
+            'displaylabels' => (int) $this->DisplayLabels,
+            'sharelabelfilters' => (int) $this->ShareLabelFilters,
+            'viewsubprojectslink' => (int) $this->ViewSubProjectsLink,
+            'authenticatesubmissions' => (int) $this->AuthenticateSubmissions,
+            'showcoveragecode' => (int) $this->ShowCoverageCode,
+            'autoremovetimeframe' => (int) $this->AutoremoveTimeframe,
+            'autoremovemaxbuilds' => (int) $this->AutoremoveMaxBuilds,
+            'uploadquota' => (int) $this->UploadQuota,
+            'cvsviewertype' => $this->CvsViewerType ?? '',
+            'testtimestd' => (int) $this->TestTimeStd,
+            'testtimestdthreshold' => (int) $this->TestTimeStdThreshold,
+            'showtesttime' => (int) $this->ShowTestTime,
+            'testtimemaxstatus' => (int) $this->TestTimeMaxStatus,
+            'emailmaxitems' => (int) $this->EmailMaxItems,
+            'emailmaxchars' => (int) $this->EmailMaxChars,
+            'imageid' => $this->ImageId ?? 0,
+        ]);
+        $project->save();
+        $this->Id = $project->id;
 
-            $query = $this->PDO->executePrepared('
-                         UPDATE project
-                         SET
-                             description=?,
-                             homeurl=?,
-                             cvsurl=?,
-                             documentationurl=?,
-                             bugtrackerurl=?,
-                             bugtrackerfileurl=?,
-                             bugtrackernewissueurl=?,
-                             bugtrackertype=?,
-                             public=?,
-                             coveragethreshold=?,
-                             testingdataurl=?,
-                             nightlytime=?,
-                             googletracker=?,
-                             emaillowcoverage=?,
-                             emailtesttimingchanged=?,
-                             emailbrokensubmission=?,
-                             emailredundantfailures=?,
-                             emailadministrator=?,
-                             showipaddresses=?,
-                             displaylabels=?,
-                             sharelabelfilters=?,
-                             viewsubprojectslink=?,
-                             authenticatesubmissions=?,
-                             showcoveragecode=?,
-                             autoremovetimeframe=?,
-                             autoremovemaxbuilds=?,
-                             uploadquota=?,
-                             cvsviewertype=?,
-                             testtimestd=?,
-                             testtimestdthreshold=?,
-                             showtesttime=?,
-                             testtimemaxstatus=?,
-                             emailmaxitems=?,
-                             emailmaxchars=?
-                         WHERE id=?
-                     ', [
-                         $Description,
-                         $HomeUrl,
-                         $CvsUrl,
-                         $DocumentationUrl,
-                         $BugTrackerUrl,
-                         $BugTrackerFileUrl,
-                         $BugTrackerNewIssueUrl,
-                         $BugTrackerType,
-                         intval($this->Public),
-                         intval($this->CoverageThreshold),
-                         $TestingDataUrl,
-                         $NightlyTime,
-                         $GoogleTracker,
-                         intval($this->EmailLowCoverage),
-                         intval($this->EmailTestTimingChanged),
-                         intval($this->EmailBrokenSubmission),
-                         intval($this->EmailRedundantFailures),
-                         intval($this->EmailAdministrator),
-                         intval($this->ShowIPAddresses),
-                         intval($this->DisplayLabels),
-                         intval($this->ShareLabelFilters),
-                         intval($this->ViewSubProjectsLink),
-                         intval($this->AuthenticateSubmissions),
-                         intval($this->ShowCoverageCode),
-                         intval($this->AutoremoveTimeframe),
-                         intval($this->AutoremoveMaxBuilds),
-                         intval($this->UploadQuota),
-                         $CvsViewerType,
-                         intval($this->TestTimeStd),
-                         intval($this->TestTimeStdThreshold),
-                         intval($this->ShowTestTime),
-                         intval($this->TestTimeMaxStatus),
-                         intval($this->EmailMaxItems),
-                         intval($this->EmailMaxChars),
-                         intval($this->Id)
-                     ]);
-
-            if ($query === false) {
-                add_last_sql_error('Project Update', $this->Id);
-                return false;
-            }
-
-            if ($this->RobotName != '') {
-                // Check if it exists
-                $robot = $this->PDO->executePreparedSingleRow('
-                             SELECT projectid
-                             FROM projectrobot
-                             WHERE projectid=?
-                         ', [intval($this->Id)]);
-                if (!empty($robot)) {
-                    $query = $this->PDO->executePrepared('
-                                 UPDATE projectrobot
-                                 SET
-                                     robotname=?,
-                                     authorregex=?
-                                 WHERE projectid=?
-                             ', [$RobotName, $RobotRegex, intval($this->Id)]);
-                    if ($query === false) {
-                        add_last_sql_error('Project Update', $this->Id);
-                        return false;
-                    }
-                } else {
-                    $query = $this->PDO->executePrepared('
-                                 INSERT INTO projectrobot (
-                                     projectid,
-                                     robotname,
-                                     authorregex
-                                 )
-                                 VALUES (?, ?, ?)
-                             ', [intval($this->Id), $RobotName, $RobotRegex]);
-                    if ($query === false) {
-                        add_last_sql_error('Project Update', $this->Id);
-                        return false;
-                    }
-                }
-            }
-
-            if (!$this->UpdateBuildFilters()) {
-                return false;
-            }
-        } else {
-            // insert the project
-
-            $id = '';
-            $idvalue = [];
-            $prepared_array = $this->PDO->createPreparedArray(37);
-            if ($this->Id) {
-                $id = 'id, ';
-                $idvalue[] = intval($this->Id);
-                $prepared_array = $this->PDO->createPreparedArray(38);
-            }
-
-            if (strlen($this->ImageId) === 0) {
-                $this->ImageId = 0;
-            }
-
-            // Trim the name
-            $this->Name = trim($this->Name);
-            $this->Initialize();
-
-            $query = $this->PDO->executePrepared("
-                         INSERT INTO project(
-                             $id
-                             name,
-                             description,
-                             homeurl,
-                             cvsurl,
-                             bugtrackerurl,
-                             bugtrackerfileurl,
-                             bugtrackernewissueurl,
-                             bugtrackertype,
-                             documentationurl,
-                             public,
-                             imageid,
-                             coveragethreshold,
-                             testingdataurl,
-                             nightlytime,
-                             googletracker,
-                             emailbrokensubmission,
-                             emailredundantfailures,
-                             emaillowcoverage,
-                             emailtesttimingchanged,
-                             cvsviewertype,
-                             testtimestd,
-                             testtimestdthreshold,
-                             testtimemaxstatus,
-                             emailmaxitems,
-                             emailmaxchars,
-                             showtesttime,
-                             emailadministrator,
-                             showipaddresses,
-                             displaylabels,
-                             sharelabelfilters,
-                             viewsubprojectslink,
-                             authenticatesubmissions,
-                             showcoveragecode,
-                             autoremovetimeframe,
-                             autoremovemaxbuilds,
-                             uploadquota,
-                             webapikey
-                         )
-                     VALUES $prepared_array
-                 ", array_merge($idvalue, [
-                     $Name,
-                     $Description,
-                     $HomeUrl,
-                     $CvsUrl,
-                     $BugTrackerUrl,
-                     $BugTrackerFileUrl,
-                     $BugTrackerNewIssueUrl,
-                     $BugTrackerType,
-                     $DocumentationUrl,
-                     intval($this->Public),
-                     intval($this->ImageId),
-                     intval($this->CoverageThreshold),
-                     $TestingDataUrl,
-                     $NightlyTime,
-                     $GoogleTracker,
-                     intval($this->EmailBrokenSubmission),
-                     intval($this->EmailRedundantFailures),
-                     intval($this->EmailLowCoverage),
-                     intval($this->EmailTestTimingChanged),
-                     $CvsViewerType,
-                     intval($this->TestTimeStd),
-                     intval($this->TestTimeStdThreshold),
-                     intval($this->TestTimeMaxStatus),
-                     intval($this->EmailMaxItems),
-                     intval($this->EmailMaxChars),
-                     intval($this->ShowTestTime),
-                     intval($this->EmailAdministrator),
-                     intval($this->ShowIPAddresses),
-                     intval($this->DisplayLabels),
-                     intval($this->ShareLabelFilters),
-                     intval($this->ViewSubProjectsLink),
-                     intval($this->AuthenticateSubmissions),
-                     intval($this->ShowCoverageCode),
-                     intval($this->AutoremoveTimeframe),
-                     $this->AutoremoveMaxBuilds,
-                     intval($this->UploadQuota),
-                     $this->WebApiKey
-                 ]));
-
-            if ($query === false) {
-                add_last_sql_error('Project Create');
-                return false;
-            }
-
-            if (!$this->Id) {
-                $this->Id = pdo_insert_id('project');
-            }
-
-            if ($this->RobotName != '') {
-                $query = $this->PDO->executePrepared('
-                             INSERT INTO projectrobot (
-                                 projectid,
-                                 robotname,
-                                 authorregex
-                             )
-                             VALUES (?, ?, ?)
-                         ', [intval($this->Id), $RobotName, $RobotRegex]);
-                if ($query === false) {
-                    return false;
-                }
-            }
-
-            if (!$this->UpdateBuildFilters()) {
-                return false;
-            }
-        }
-        return true;
+        return $this->UpdateBuildFilters();
     }
 
     public function GetIdByName()
     {
-        $pdo = Database::getInstance()->getPdo();
-        $stmt = $pdo->prepare('SELECT id FROM project WHERE name = :name');
-        $stmt->bindParam(':name', $this->Name);
-        pdo_execute($stmt);
-        $stmt->bindColumn('id', $this->Id);
-        $stmt->fetch(\PDO::FETCH_BOUND);
+        $this->Id = EloquentProject::where('name', $this->Name)->first()?->id;
         return $this->Id;
     }
 
@@ -552,31 +317,22 @@ class Project
     }
 
     /** Return true if the project exists */
-    public function ExistsByName($name): bool
+    public function ExistsByName(string $name): bool
     {
+        // TODO: (williamjallen) Side effects are almost always a bad thing.  Get rid of this...
         $this->Name = $name;
-        if ($this->GetIdByName()) {
-            return true;
-        }
-        return false;
+
+        return EloquentProject::where('name', $this->Name)->exists();
     }
 
     /** Get the logo id */
     public function GetLogoId(): int
     {
-        $query = $this->PDO->executePreparedSingleRow('
-                     SELECT imageid FROM project WHERE id=?
-                 ', [intval($this->Id)]);
-
-        if ($query === false) {
-            add_last_sql_error('Project GetLogoId', $this->Id);
-            return 0;
+        if (!$this->Filled) {
+            $this->Fill();
         }
 
-        if (!empty($query)) {
-            return intval($query['imageid']);
-        }
-        return 0;
+        return $this->Id > 0 ? $this->ImageId : 0;
     }
 
     /** Fill in all the information from the database */
@@ -587,98 +343,68 @@ class Project
         }
 
         if (!$this->Id) {
-            echo 'Project Fill(): Id not set';
+            throw new RuntimeException('ID not set for project');
         }
 
-
-        $project_array = $this->PDO->executePreparedSingleRow('
-                             SELECT * FROM project WHERE id=?
-                         ', [intval($this->Id)]);
-        if ($project_array === false) {
-            add_last_sql_error('Project Fill', $this->Id);
-            return;
-        }
-        if ($project_array) {
-            $this->Name = $project_array['name'];
-            $this->Description = $project_array['description'];
-            $this->HomeUrl = $project_array['homeurl'];
-            $this->CvsUrl = $project_array['cvsurl'];
-            $this->DocumentationUrl = $project_array['documentationurl'];
-            $this->BugTrackerUrl = $project_array['bugtrackerurl'];
-            $this->BugTrackerFileUrl = $project_array['bugtrackerfileurl'];
-            $this->BugTrackerNewIssueUrl = $project_array['bugtrackernewissueurl'];
-            $this->BugTrackerType = $project_array['bugtrackertype'];
-            $this->ImageId = $project_array['imageid'];
-            $this->Public = $project_array['public'];
-            $this->CoverageThreshold = $project_array['coveragethreshold'];
-            $this->TestingDataUrl = $project_array['testingdataurl'];
-            $this->SetNightlyTime($project_array['nightlytime']);
-            $this->GoogleTracker = $project_array['googletracker'];
-            $this->EmailLowCoverage = $project_array['emaillowcoverage'];
-            $this->EmailTestTimingChanged = $project_array['emailtesttimingchanged'];
-            $this->EmailBrokenSubmission = $project_array['emailbrokensubmission'];
-            $this->EmailRedundantFailures = $project_array['emailredundantfailures'];
-            $this->EmailAdministrator = $project_array['emailadministrator'];
-            $this->ShowIPAddresses = $project_array['showipaddresses'];
-            $this->DisplayLabels = $project_array['displaylabels'];
-            $this->ShareLabelFilters = $project_array['sharelabelfilters'];
-            $this->ViewSubProjectsLink = $project_array['viewsubprojectslink'];
-            $this->AuthenticateSubmissions = $project_array['authenticatesubmissions'];
-            $this->ShowCoverageCode = $project_array['showcoveragecode'];
-            $this->AutoremoveTimeframe = $project_array['autoremovetimeframe'];
-            $this->AutoremoveMaxBuilds = (int) $project_array['autoremovemaxbuilds'];
-            $this->UploadQuota = $project_array['uploadquota'];
-            $this->CvsViewerType = $project_array['cvsviewertype'];
-            $this->TestTimeStd = $project_array['testtimestd'];
-            $this->TestTimeStdThreshold = $project_array['testtimestdthreshold'];
-            $this->ShowTestTime = $project_array['showtesttime'];
-            $this->TestTimeMaxStatus = $project_array['testtimemaxstatus'];
-            $this->EmailMaxItems = $project_array['emailmaxitems'];
-            $this->EmailMaxChars = $project_array['emailmaxchars'];
-            $this->WebApiKey = $project_array['webapikey'];
-            if ($this->WebApiKey == '') {
+        $project = EloquentProject::find((int) $this->Id);
+        if ($project !== null) {
+            $this->Name = $project->name;
+            $this->Description = $project->description;
+            $this->HomeUrl = $project->homeurl;
+            $this->CvsUrl = $project->cvsurl;
+            $this->DocumentationUrl = $project->documentationurl;
+            $this->BugTrackerUrl = $project->bugtrackerurl;
+            $this->BugTrackerFileUrl = $project->bugtrackerfileurl;
+            $this->BugTrackerNewIssueUrl = $project->bugtrackernewissueurl;
+            $this->BugTrackerType = $project->bugtrackertype;
+            $this->ImageId = $project->imageid;
+            $this->Public = $project->public;
+            $this->CoverageThreshold = $project->coveragethreshold;
+            $this->TestingDataUrl = $project->testingdataurl;
+            $this->SetNightlyTime($project->nightlytime);
+            $this->GoogleTracker = $project->googletracker;
+            $this->EmailLowCoverage = $project->emaillowcoverage;
+            $this->EmailTestTimingChanged = $project->emailtesttimingchanged;
+            $this->EmailBrokenSubmission = $project->emailbrokensubmission;
+            $this->EmailRedundantFailures = $project->emailredundantfailures;
+            $this->EmailAdministrator = $project->emailadministrator;
+            $this->ShowIPAddresses = $project->showipaddresses;
+            $this->DisplayLabels = $project->displaylabels;
+            $this->ShareLabelFilters = $project->sharelabelfilters;
+            $this->ViewSubProjectsLink = $project->viewsubprojectslink;
+            $this->AuthenticateSubmissions = $project->authenticatesubmissions;
+            $this->ShowCoverageCode = $project->showcoveragecode;
+            $this->AutoremoveTimeframe = $project->autoremovetimeframe;
+            $this->AutoremoveMaxBuilds = $project->autoremovemaxbuilds;
+            $this->UploadQuota = $project->uploadquota;
+            $this->CvsViewerType = $project->cvsviewertype;
+            $this->TestTimeStd = $project->testtimestd;
+            $this->TestTimeStdThreshold = $project->testtimestdthreshold;
+            $this->ShowTestTime = $project->showtesttime;
+            $this->TestTimeMaxStatus = $project->testtimemaxstatus;
+            $this->EmailMaxItems = $project->emailmaxitems;
+            $this->EmailMaxChars = $project->emailmaxchars;
+            $this->WebApiKey = $project->webapikey;
+            if (strlen($this->WebApiKey) === 0) {
                 // If no web API key exists, we add one
-                $newKey = generate_password(40);
-                $this->PDO->executePrepared('
-                    UPDATE project SET webapikey=? WHERE id=?
-                ', [$newKey, intval($this->Id)]);
-                $this->WebApiKey = $newKey;
+                $project->webapikey = generate_password(40);
+                $project->save();
+                $this->WebApiKey = $project->webapikey;
             }
         }
 
-        // Check if we have a robot
-        $robot = $this->PDO->executePreparedSingleRow('
-                     SELECT * FROM projectrobot WHERE projectid=?
-                 ', [intval($this->Id)]);
-        if ($robot === false) {
-            add_last_sql_error('Project Fill', $this->Id);
-            return;
-        }
-
-        if (!empty($robot)) {
-            $this->RobotName = $robot['robotname'];
-            $this->RobotRegex = $robot['authorregex'];
-        }
-
         // Check if we have filters
-        $build_filters = $this->PDO->executePreparedSingleRow('
-                             SELECT * FROM build_filters WHERE projectid=?
-                         ', [intval($this->Id)]);
-        if ($build_filters === false) {
-            add_last_sql_error('Project Fill', $this->Id);
-            throw new Exception(var_export($this->Id, true));
-            return;
-        }
+        $build_filters = DB::select('SELECT * FROM build_filters WHERE projectid=?', [(int) $this->Id]);
 
-        if (!empty($build_filters)) {
-            $this->WarningsFilter = $build_filters['warnings'];
-            $this->ErrorsFilter = $build_filters['errors'];
+        if (count($build_filters) > 0) {
+            $this->WarningsFilter = $build_filters[0]->warnings;
+            $this->ErrorsFilter = $build_filters[0]->errors;
         }
 
         $this->Filled = true;
     }
 
-    public function SetNightlyTime($nightly_time): void
+    public function SetNightlyTime(string $nightly_time): void
     {
         $this->NightlyTime = $nightly_time;
 
@@ -688,7 +414,7 @@ class Project
             $this->NightlyTimezone = $this->NightlyDateTime->getTimezone();
         } catch (Exception) {
             // Bad timezone (probably) specified, try defaulting to UTC.
-            $this->NightlyTimezone = new \DateTimeZone('UTC');
+            $this->NightlyTimezone = new DateTimeZone('UTC');
             $parts = explode(' ', $nightly_time);
             $this->NightlyTime = $parts[0];
             try {
@@ -710,8 +436,12 @@ class Project
         date_default_timezone_set($timezone_name);
     }
 
-    /** Add a logo */
-    public function AddLogo($contents, $filetype)
+    /**
+     * Add a logo
+     *
+     * TODO: (williamjallen) This function is only ever used in the tests.  Remove it?
+     */
+    public function AddLogo($contents, string $filetype)
     {
         if (strlen($contents) === 0) {
             return;
@@ -728,10 +458,9 @@ class Project
         }
 
         if ($image->Save(true)) {
-            $this->PDO->executePrepared('
-                UPDATE project SET imageid=? WHERE id=?
-            ', [$image->Id, intval($this->Id)]);
-            add_last_sql_error('Project AddLogo', $this->Id);
+            $project = EloquentProject::findOrFail((int) $this->Id);
+            $project->imageid = $image->Id;
+            $project->save();
         }
         return $image->Id;
     }
@@ -748,57 +477,43 @@ class Project
                                   ORDER BY repositoryid
                               ', [intval($this->Id)]);
 
-        add_last_sql_error('Project AddRepositories', $this->Id);
         foreach ($repositories_query as $repository_array) {
             $repositoryid = intval($repository_array['repositoryid']);
             if (!isset($repositories[$currentRepository]) || strlen($repositories[$currentRepository]) === 0) {
-                $query = $this->PDO->executePrepared('
+                // TODO: (wiliamjallen) This should be done with one query
+                $query = DB::select('
                              SELECT COUNT(*) AS c
                              FROM project2repositories
                              WHERE repositoryid=?
                          ', [$repositoryid]);
-                add_last_sql_error('Project AddRepositories', $this->Id);
-                if (intval($query['c']) === 1) {
-                    $this->PDO->executePrepared('DELETE FROM repositories WHERE id=?', [$repositoryid]);
-                    add_last_sql_error('Project AddRepositories', $this->Id);
+                if ((int) $query[0]->c === 1) {
+                    DB::delete('DELETE FROM repositories WHERE id=?', [$repositoryid]);
                 }
-                $this->PDO->executePrepared('
+                DB::delete('
                     DELETE FROM project2repositories
                     WHERE projectid=? AND repositoryid=?
-                ', [intval($this->Id), $repositoryid]);
-                add_last_sql_error('Project AddRepositories', $this->Id);
+                ', [(int) $this->Id, $repositoryid]);
             } else {
                 // If the repository is not shared by any other project we update
-                $count_array = $this->PDO->executePreparedSingleRow('
+                $count_array = DB::select('
                                    SELECT count(*) as c
                                    FROM project2repositories
                                    WHERE repositoryid=?
                                ', [$repositoryid]);
-                if (intval($count_array['c']) === 1) {
-                    $this->PDO->executePrepared('
-                        UPDATE repositories
-                        SET
-                            url=?,
-                            username=?,
-                            password=?,
-                            branch=?
-                        WHERE id=?
-                    ', [
-                        $repositories[$currentRepository],
-                        $usernames[$currentRepository],
-                        $passwords[$currentRepository],
-                        $branches[$currentRepository],
-                        $repositoryid]
-                    );
-                    add_last_sql_error('Project AddRepositories', $this->Id);
+                if ((int) $count_array[0]->c === 1) {
+                    DB::table('repositories')->where('id', $repositoryid)->update([
+                        'url' => $repositories[$currentRepository],
+                        'username' => $usernames[$currentRepository],
+                        'password' => $passwords[$currentRepository],
+                        'branch' => $branches[$currentRepository],
+                    ]);
                 } else {
                     // Otherwise we remove it from the current project and add it to the queue to be created
-                    $this->PDO->executePrepared('
+                    DB::delete('
                         DELETE FROM project2repositories
                         WHERE projectid=? AND repositoryid=?
                     ', [intval($this->Id), $repositoryid]);
 
-                    add_last_sql_error('Project AddRepositories', $this->Id);
                     $repositories[] = $repositories[$currentRepository];
                     $usernames[] = $usernames[$currentRepository];
                     $passwords[] = $passwords[$currentRepository];
@@ -819,40 +534,29 @@ class Project
             }
 
             // Insert into repositories if not any
-            $repositories_query = $this->PDO->executePreparedSingleRow('
-                                      SELECT id
-                                      FROM repositories
-                                      WHERE url=?
-                                  ', [$url]);
+            $repositories_query = DB::select('SELECT id FROM repositories WHERE url=?', [$url]);
 
-            if (empty($repositories_query)) {
-                $this->PDO->executePrepared('
-                    INSERT INTO repositories (
-                        url,
-                        username,
-                        password,
-                        branch
-                    ) VALUES (?, ?, ?, ?)
-                ', [$url, $username, $password, $branch]);
-                add_last_sql_error('Project AddRepositories', $this->Id);
-                $repositoryid = intval(pdo_insert_id('repositories'));
+            if ($repositories_query === []) {
+                $repositoryid = DB::table('repositories')->insertGetId([
+                    'url' => $url,
+                    'username' => $username,
+                    'password' => $password,
+                    'branch' => $branch,
+                ]);
             } else {
                 $repositoryid = intval($repositories['id']);
             }
-            $this->PDO->executePrepared('
-                INSERT INTO project2repositories (
-                    projectid,
-                    repositoryid
-                ) VALUES (?, ?)', [intval($this->Id), $repositoryid]);
-            add_last_sql_error('Project AddRepositories', $this->Id);
+            DB::table('project2repositories')->insert([
+                'projectid' => (int) $this->Id,
+                'repositoryid' => $repositoryid
+            ]);
         }
     }
 
     /** Get the repositories */
     public function GetRepositories(): array
     {
-        $repositories = array();
-        $repository = $this->PDO->executePrepared('
+        $repository = DB::select('
                           SELECT
                               url,
                               username,
@@ -862,13 +566,14 @@ class Project
                           WHERE
                               repositories.id=project2repositories.repositoryid
                               AND project2repositories.projectid=?
-                      ', [intval($this->Id)]);
-        add_last_sql_error('Project GetRepositories', $this->Id);
+                      ', [(int) $this->Id]);
+
+        $repositories = [];
         foreach ($repository as $repository_array) {
-            $rep['url'] = $repository_array['url'];
-            $rep['username'] = $repository_array['username'];
-            $rep['password'] = $repository_array['password'];
-            $rep['branch'] = $repository_array['branch'];
+            $rep['url'] = $repository_array->url;
+            $rep['username'] = $repository_array->username;
+            $rep['password'] = $repository_array->password;
+            $rep['branch'] = $repository_array->branch;
             $repositories[] = $rep;
         }
         return $repositories;
@@ -877,18 +582,17 @@ class Project
     /** Get the build groups */
     public function GetBuildGroups(): array
     {
-        $buildgroups = array();
-        $query = $this->PDO->executePrepared("
+        $query = DB::select("
                      SELECT id, name
                      FROM buildgroup
                      WHERE projectid=? AND endtime='1980-01-01 00:00:00'
-                 ", [intval($this->Id)]);
+                 ", [(int) $this->Id]);
 
-        add_last_sql_error('Project GetBuildGroups', $this->Id);
+        $buildgroups = [];
         foreach ($query as $row) {
             $buildgroup = new BuildGroup();
-            $buildgroup->SetId(intval($row['id']));
-            $buildgroup->SetName($row['name']);
+            $buildgroup->SetId(intval($row->id));
+            $buildgroup->SetName($row->name);
             $buildgroups[] = $buildgroup;
         }
         return $buildgroups;
@@ -897,8 +601,7 @@ class Project
     /** Get the list of block builds */
     public function GetBlockedBuilds(): array
     {
-        $sites = array();
-        $site = $this->PDO->executePrepared('
+        $site = DB::select('
                     SELECT
                         id,
                         buildname,
@@ -906,104 +609,72 @@ class Project
                         ipaddress
                     FROM blockbuild
                     WHERE projectid=?
-                ', [intval($this->Id)]);
-        add_last_sql_error('Project GetBlockedBuilds', $this->Id);
+                ', [(int) $this->Id]);
+
+        $sites = [];
         foreach ($site as $site_array) {
-            $sites[] = $site_array;
+            $sites[] = (array) $site_array;
         }
         return $sites;
     }
 
-    /**
-     * Get Ids of all the project registered
-     * Maybe this function should go somewhere else but for now here
-     *
-     * @return array<int>
-     */
-    public function GetIds(): array
-    {
-        $ids = array();
-        $query = $this->PDO->executePrepared('SELECT id FROM project ORDER BY id');
-        add_last_sql_error('Project GetIds', $this->Id);
-        foreach ($query as $query_array) {
-            $ids[] = intval($query_array['id']);
-        }
-        return $ids;
-    }
-
     /** Get the Name of the project */
-    public function GetName()
+    public function GetName(): string|false
     {
         if (strlen($this->Name) > 0) {
             return $this->Name;
         }
 
         if (!$this->Id) {
-            echo 'Project GetName(): Id not set';
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
-        $project = $this->PDO->executePreparedSingleRow('
-                       SELECT name FROM project WHERE id=?
-                   ', [intval($this->Id)]);
-        if ($project === false) {
-            add_last_sql_error('Project GetName', $this->Id);
-            return false;
+        if (!$this->Filled) {
+            $this->Fill();
         }
-        $this->Name = $project['name'];
+
         return $this->Name;
     }
 
     /** Get the coveragethreshold */
-    public function GetCoverageThreshold()
+    public function GetCoverageThreshold(): int|false
     {
         if (strlen($this->CoverageThreshold) > 0) {
-            return $this->CoverageThreshold;
+            return (int) $this->CoverageThreshold;
         }
 
         if (!$this->Id) {
-            echo 'Project GetCoverageThreshold(): Id not set';
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
-        $project = $this->PDO->executePreparedSingleRow('
-                       SELECT coveragethreshold FROM project WHERE id=?
-                   ', [intval($this->Id)]);
-        if ($project === false) {
-            add_last_sql_error('Project GetCoverageThreshold', $this->Id);
-            return false;
+        if (!$this->Filled) {
+            $this->Fill();
         }
-        $this->CoverageThreshold = intval($project['coveragethreshold']);
-        return $this->CoverageThreshold;
+
+        return (int) $this->CoverageThreshold;
     }
 
     /** Get the number of subproject */
     public function GetNumberOfSubProjects($date = null): int|false
     {
         if (!$this->Id) {
-            echo 'Project GetNumberOfSubProjects(): Id not set';
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
         if ($date == null) {
             $date = gmdate(FMT_DATETIME);
         }
 
-        $project = $this->PDO->executePreparedSingleRow("
-                       SELECT count(*) AS c
-                       FROM subproject
-                       WHERE
-                           projectid=?
-                           AND (
-                               endtime='1980-01-01 00:00:00'
-                               OR endtime>?
-                           )
-                   ", [intval($this->Id), $date]);
-        if ($project === false) {
-            add_last_sql_error('Project GetNumberOfSubProjects', $this->Id);
-            return false;
-        }
-        return intval($project['c']);
+        return (int) DB::select("
+            SELECT count(*) AS c
+            FROM subproject
+            WHERE
+                projectid=?
+                AND (
+                    endtime = '1980-01-01 00:00:00'
+                    OR endtime > ?
+                )
+        ", [(int) $this->Id, $date])[0]->c;
     }
 
     /**
@@ -1014,28 +685,22 @@ class Project
     public function GetSubProjects(): array|false
     {
         if (!$this->Id) {
-            echo 'Project GetNumberOfSubProjects(): Id not set';
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
         $date = gmdate(FMT_DATETIME);
-
-        $project = $this->PDO->executePrepared("
+        $project = DB::select("
                        SELECT id
                        FROM subproject
                        WHERE
                            projectid=?
                            AND starttime<=?
                            AND (endtime>? OR endtime='1980-01-01 00:00:00')
-                   ", [intval($this->Id), $date, $date]);
-        if ($project === false) {
-            add_last_sql_error('Project GetSubProjects', $this->Id);
-            return false;
-        }
+                   ", [(int) $this->Id, $date, $date]);
 
-        $ids = array();
+        $ids = [];
         foreach ($project as $project_array) {
-            $ids[] = intval($project_array['id']);
+            $ids[] = (int) $project_array->id;
         }
         return $ids;
     }
@@ -1048,97 +713,72 @@ class Project
         }
 
         if (!$this->Id) {
-            echo 'Project GetLastSubmission(): Id not set';
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
-        $build = $this->PDO->executePreparedSingleRow('
+        $build = DB::select('
                      SELECT starttime
                      FROM build
                      WHERE projectid=?
                      ORDER BY starttime DESC
                      LIMIT 1
-                 ', [intval($this->Id)]);
+                 ', [(int) $this->Id]);
 
-        if ($build === false) {
-            add_last_sql_error('Project GetLastSubmission', $this->Id);
+        if ($build === []) {
             return false;
         }
 
-        if (!is_array($build) || !array_key_exists('starttime', $build)) {
-            return false;
-        }
-
-        return date(FMT_DATETIMESTD, strtotime($build['starttime'] . 'UTC'));
+        return date(FMT_DATETIMESTD, strtotime($build[0]->starttime . 'UTC'));
     }
 
     /** Get the total number of builds for a project*/
-    public function GetTotalNumberOfBuilds(): int|false
+    public function GetTotalNumberOfBuilds(): int
     {
         if (!$this->Id) {
-            echo 'Project GetTotalNumberOfBuilds(): Id not set';
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
-        $project = $this->PDO->executePreparedSingleRow('
-                       SELECT count(*) AS c
-                       FROM build
-                       WHERE
-                           parentid IN (-1, 0)
-                           AND projectid=?
-                   ', [intval($this->Id)]);
-
-        if ($project === false) {
-            add_last_sql_error('Project GetTotalNumberOfBuilds', $this->Id);
-            return false;
-        }
-        return intval($project['c']);
+        return (int) DB::select('
+            SELECT count(*) AS c
+            FROM build
+            WHERE
+                parentid IN (-1, 0)
+                AND projectid=?
+        ', [(int) $this->Id])[0]->c;
     }
 
     /** Get the number of builds given a date range */
-    public function GetNumberOfBuilds($startUTCdate = null, $endUTCdate = null): int|false
+    public function GetNumberOfBuilds(string|null $startUTCdate = null, string|null $endUTCdate = null): int
     {
         if (!$this->Id) {
-            add_log('Id not set', 'Project::GetNumberOfBuilds', LOG_ERR,
-                $this->Id);
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
         // Construct our query given the optional parameters of this function.
-        $sql = 'SELECT COUNT(build.id) FROM build
-                WHERE projectid = :projectid AND parentid IN (-1, 0)';
-        if (!is_null($startUTCdate)) {
-            $sql .= ' AND build.starttime > :start';
+        $sql = 'SELECT COUNT(build.id) AS c
+                FROM build
+                WHERE projectid = ? AND parentid IN (-1, 0)';
+        $query_params = [(int) $this->Id];
+        if ($startUTCdate !== null) {
+            $sql .= ' AND build.starttime > ?';
+            $query_params[] = $startUTCdate;
         }
-        if (!is_null($endUTCdate)) {
-            $sql .= ' AND build.starttime <= :end';
-        }
-
-        $stmt = $this->PDO->prepare($sql);
-        $stmt->bindParam(':projectid', $this->Id);
-        if (!is_null($startUTCdate)) {
-            $stmt->bindParam(':start', $startUTCdate);
-        }
-        if (!is_null($endUTCdate)) {
-            $stmt->bindParam(':end', $endUTCdate);
+        if ($endUTCdate !== null) {
+            $sql .= ' AND build.starttime <= ?';
+            $query_params[] = $endUTCdate;
         }
 
-        if (!pdo_execute($stmt)) {
-            return false;
-        }
-
-        return intval($stmt->fetchColumn());
+        return (int) DB::select($sql, $query_params)[0]->c;
     }
 
     /** Get the number of builds given per day */
-    public function GetBuildsDailyAverage($startUTCdate, $endUTCdate): int|false
+    public function GetBuildsDailyAverage(string $startUTCdate, string $endUTCdate): int
     {
         if (!$this->Id) {
-            echo 'Project GetNumberOfBuilds(): Id not set';
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
-        $nbuilds = $this->GetNumberOfBuilds($startUTCdate, $endUTCdate);
-        $project = $this->PDO->executePreparedSingleRow('
+
+        $project = DB::select('
                        SELECT starttime
                        FROM build
                        WHERE
@@ -1148,323 +788,215 @@ class Project
                            AND parentid IN (-1, 0)
                        ORDER BY starttime ASC
                        LIMIT 1
-                   ', [intval($this->Id), $startUTCdate, $endUTCdate]);
-        if (empty($project)) {
+                   ', [(int) $this->Id, $startUTCdate, $endUTCdate]);
+        if ($project === []) {
             return 0;
         }
-        $first_build = $project['starttime'];
+        $first_build = $project[0]->starttime;
         $nb_days = strtotime($endUTCdate) - strtotime($first_build);
         $nb_days = intval($nb_days / 86400) + 1;
+        $nbuilds = $this->GetNumberOfBuilds($startUTCdate, $endUTCdate);
         return $nbuilds / $nb_days;
     }
 
     /** Get the number of warning builds given a date range */
-    public function GetNumberOfWarningBuilds($startUTCdate, $endUTCdate,
-        $childrenOnly = false): int|false
+    public function GetNumberOfWarningBuilds(string $startUTCdate, string $endUTCdate): int
     {
         if (!$this->Id) {
-            echo 'Project GetNumberOfWarningBuilds(): Id not set';
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
-        $params = [intval($this->Id), $startUTCdate, $endUTCdate];
-        $query = 'SELECT count(*) AS c
-                  FROM build, build2group, buildgroup
-                  WHERE
-                      build.projectid=?
-                      AND build.starttime>?
-                      AND build.starttime<=?
-                      AND build2group.buildid=build.id
-                      AND build2group.groupid=buildgroup.id
-                      AND buildgroup.includesubprojectotal=1
-                      AND build.buildwarnings>0';
-        if ($childrenOnly) {
-            $query .= ' AND build.parentid > 0';
-        } else {
-            $query .= ' AND build.parentid IN (-1, 0)';
-        }
-
-        $project = $this->PDO->executePreparedSingleRow($query, $params);
-        if ($project === false) {
-            add_last_sql_error('Project GetNumberOfWarningBuilds', $this->Id);
-            return false;
-        }
-        return intval($project['c']);
+        return (int) DB::select('
+            SELECT count(*) AS c
+            FROM build, build2group, buildgroup
+            WHERE
+                build.projectid = ?
+                AND build.starttime > ?
+                AND build.starttime <= ?
+                AND build2group.buildid = build.id
+                AND build2group.groupid = buildgroup.id
+                AND buildgroup.includesubprojectotal = 1
+                AND build.buildwarnings > 0
+                AND build.parentid IN (-1, 0)
+        ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->c;
     }
 
     /** Get the number of error builds given a date range */
-    public function GetNumberOfErrorBuilds($startUTCdate, $endUTCdate,
-        $childrenOnly = false): int|false
+    public function GetNumberOfErrorBuilds(string $startUTCdate, string $endUTCdate): int
     {
         if (!$this->Id) {
-            echo 'Project GetNumberOfErrorBuilds(): Id not set';
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
-        // build failures
-        $params = [intval($this->Id), $startUTCdate, $endUTCdate];
-        $query = 'SELECT count(*) AS c
-                  FROM build, build2group, buildgroup
-                  WHERE
-                      build.projectid=?
-                      AND build.starttime>?
-                      AND build.starttime<=?
-                      AND build2group.buildid=build.id
-                      AND build2group.groupid=buildgroup.id
-                      AND buildgroup.includesubprojectotal=1
-                      AND build.builderrors>0';
-        if ($childrenOnly) {
-            $query .= ' AND build.parentid > 0';
-        } else {
-            $query .= ' AND build.parentid IN (-1, 0)';
-        }
-
-        $project = $this->PDO->executePreparedSingleRow($query, $params);
-        if ($project === false) {
-            add_last_sql_error('Project GetNumberOfErrorBuilds', $this->Id);
-            return false;
-        }
-        return intval($project['c']);
+        return (int) DB::select('
+            SELECT count(*) AS c
+            FROM build, build2group, buildgroup
+            WHERE
+                build.projectid = ?
+                AND build.starttime > ?
+                AND build.starttime <= ?
+                AND build2group.buildid = build.id
+                AND build2group.groupid = buildgroup.id
+                AND buildgroup.includesubprojectotal = 1
+                AND build.builderrors > 0
+                AND build.parentid IN (-1, 0)
+        ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->c;
     }
 
     /** Get the number of failing builds given a date range */
-    public function GetNumberOfPassingBuilds($startUTCdate, $endUTCdate,
-        $childrenOnly = false): int|false
+    public function GetNumberOfPassingBuilds(string $startUTCdate, string $endUTCdate): int
     {
         if (!$this->Id) {
-            echo 'Project GetNumberOfPassingBuilds(): Id not set';
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
-        $params = [intval($this->Id), $startUTCdate, $endUTCdate];
-        $query = 'SELECT count(*) AS c
-                  FROM build b
-                  JOIN build2group b2g ON (b2g.buildid=b.id)
-                  JOIN buildgroup bg ON (bg.id=b2g.groupid)
-                  WHERE
-                      b.projectid=?
-                      AND b.starttime>?
-                      AND b.starttime<=?
-                      AND bg.includesubprojectotal=1
-                      AND b.builderrors=0
-                      AND b.buildwarnings=0';
-        if ($childrenOnly) {
-            $query .= ' AND b.parentid > 0';
-        } else {
-            $query .= ' AND b.parentid IN (-1, 0)';
-        }
-
-        $project = $this->PDO->executePreparedSingleRow($query, $params);
-        if ($project === false) {
-            add_last_sql_error('Project GetNumberOfPassingBuilds', $this->Id);
-            return false;
-        }
-        return intval($project['c']);
+        return (int) DB::select('
+            SELECT count(*) AS c
+            FROM build b
+            JOIN build2group b2g ON (b2g.buildid=b.id)
+            JOIN buildgroup bg ON (bg.id=b2g.groupid)
+            WHERE
+                b.projectid=?
+                AND b.starttime>?
+                AND b.starttime<=?
+                AND bg.includesubprojectotal=1
+                AND b.builderrors=0
+                AND b.buildwarnings=0
+                AND b.parentid IN (-1, 0)
+        ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->c;
     }
 
     /** Get the number of failing configure given a date range */
-    public function GetNumberOfWarningConfigures($startUTCdate, $endUTCdate,
-        $childrenOnly = false): int|false
+    public function GetNumberOfWarningConfigures(string $startUTCdate, string $endUTCdate): int
     {
         if (!$this->Id) {
-            echo 'Project GetNumberOfWarningConfigures(): Id not set';
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
-        $params = [intval($this->Id), $startUTCdate, $endUTCdate];
-        $query = 'SELECT COUNT(*) AS c
-                  FROM build b
-                  JOIN build2group b2g ON (b2g.buildid = b.id)
-                  JOIN buildgroup bg ON (bg.id = b2g.groupid)
-                  WHERE
-                      b.projectid = ?
-                      AND b.starttime > ?
-                      AND b.starttime <= ?
-                      AND b.configurewarnings > 0
-                      AND bg.includesubprojectotal = 1';
-        if ($childrenOnly) {
-            $query .= ' AND b.parentid > 0';
-        } else {
-            $query .= ' AND b.parentid IN (-1, 0)';
-        }
-
-        $project = $this->PDO->executePreparedSingleRow($query, $params);
-        if ($project === false) {
-            add_last_sql_error('Project GetNumberOfWarningConfigures', $this->Id);
-            return false;
-        }
-        return intval($project['c']);
+        return (int) DB::select('
+            SELECT COUNT(*) AS c
+            FROM build b
+            JOIN build2group b2g ON (b2g.buildid = b.id)
+            JOIN buildgroup bg ON (bg.id = b2g.groupid)
+            WHERE
+                b.projectid = ?
+                AND b.starttime > ?
+                AND b.starttime <= ?
+                AND b.configurewarnings > 0
+                AND bg.includesubprojectotal = 1
+                AND b.parentid IN (-1, 0)
+        ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->c;
     }
 
     /** Get the number of failing configure given a date range */
-    public function GetNumberOfErrorConfigures($startUTCdate, $endUTCdate,
-        $childrenOnly = false): int|false
+    public function GetNumberOfErrorConfigures(string $startUTCdate, string $endUTCdate): int
     {
         if (!$this->Id) {
-            echo 'Project GetNumberOfErrorConfigures(): Id not set';
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
-        $params = [intval($this->Id), $startUTCdate, $endUTCdate];
-        $query = 'SELECT COUNT(*) AS c
-                  FROM build b
-                  JOIN build2group b2g ON (b2g.buildid = b.id)
-                  JOIN buildgroup bg ON (bg.id = b2g.groupid)
-                  WHERE
-                      b.projectid = ?
-                      AND b.starttime > ?
-                      AND b.starttime <= ?
-                      AND b.configureerrors > 0
-                      AND bg.includesubprojectotal = 1';
-        if ($childrenOnly) {
-            $query .= ' AND b.parentid > 0';
-        } else {
-            $query .= ' AND b.parentid IN (-1, 0)';
-        }
-
-        $project = $this->PDO->executePreparedSingleRow($query, $params);
-        if ($project === false) {
-            add_last_sql_error('Project GetNumberOfErrorConfigures', $this->Id);
-            return false;
-        }
-        return intval($project['c']);
+        return (int) DB::select('
+            SELECT COUNT(*) AS c
+            FROM build b
+            JOIN build2group b2g ON (b2g.buildid = b.id)
+            JOIN buildgroup bg ON (bg.id = b2g.groupid)
+            WHERE
+                b.projectid = ?
+                AND b.starttime > ?
+                AND b.starttime <= ?
+                AND b.configureerrors > 0
+                AND bg.includesubprojectotal = 1
+                AND b.parentid IN (-1, 0)
+        ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->c;
     }
 
     /** Get the number of failing configure given a date range */
-    public function GetNumberOfPassingConfigures($startUTCdate, $endUTCdate,
-        $childrenOnly = false): int|false
+    public function GetNumberOfPassingConfigures(string $startUTCdate, string $endUTCdate): int
     {
         if (!$this->Id) {
-            echo 'Project GetNumberOfPassingConfigures(): Id not set';
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
-        $params = [intval($this->Id), $startUTCdate, $endUTCdate];
-        $query = 'SELECT COUNT(*) AS c
-                  FROM build b
-                  JOIN build2group b2g ON (b2g.buildid = b.id)
-                  JOIN buildgroup bg ON (bg.id = b2g.groupid)
-                  WHERE
-                      b.projectid = ?
-                      AND b.starttime > ?
-                      AND b.starttime <= ?
-                      AND b.configureerrors = 0
-                      AND b.configurewarnings = 0
-                      AND bg.includesubprojectotal = 1';
-        if ($childrenOnly) {
-            $query .= ' AND b.parentid > 0';
-        } else {
-            $query .= ' AND b.parentid IN (-1, 0)';
-        }
-
-        $project = $this->PDO->executePreparedSingleRow($query, $params);
-        if ($project === false) {
-            add_last_sql_error('Project GetNumberOfPassingConfigures', $this->Id);
-            return false;
-        }
-        return intval($project['c']);
+        return (int) DB::select('
+            SELECT COUNT(*) AS c
+            FROM build b
+            JOIN build2group b2g ON (b2g.buildid = b.id)
+            JOIN buildgroup bg ON (bg.id = b2g.groupid)
+            WHERE
+                b.projectid = ?
+                AND b.starttime > ?
+                AND b.starttime <= ?
+                AND b.configureerrors = 0
+                AND b.configurewarnings = 0
+                AND bg.includesubprojectotal = 1
+                AND b.parentid IN (-1, 0)
+        ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->c;
     }
 
     /** Get the number of tests given a date range */
-    public function GetNumberOfPassingTests($startUTCdate, $endUTCdate,
-        $childrenOnly = false): int|false
+    public function GetNumberOfPassingTests(string $startUTCdate, string $endUTCdate): int
     {
         if (!$this->Id) {
-            echo 'Project GetNumberOfPassingTests(): Id not set';
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
-        $params = [intval($this->Id), $startUTCdate, $endUTCdate];
-        $query = 'SELECT SUM(build.testpassed) AS s
-                  FROM build, build2group, buildgroup
-                  WHERE
-                      build.projectid=?
-                      AND build2group.buildid=build.id
-                      AND build.testpassed>=0
-                      AND build2group.groupid=buildgroup.id
-                      AND buildgroup.includesubprojectotal=1
-                      AND build.starttime>?
-                      AND build.starttime<=?';
-        if ($childrenOnly) {
-            $query .= ' AND build.parentid > 0';
-        } else {
-            $query .= ' AND build.parentid IN (-1, 0)';
-        }
-
-        $project = $this->PDO->executePreparedSingleRow($query, $params);
-        if ($project === false) {
-            add_last_sql_error('Project GetNumberOfPassingTests', $this->Id);
-            return false;
-        }
-        return intval($project['s']);
+        return (int) DB::select('
+            SELECT COALESCE(SUM(build.testpassed), 0) AS s
+            FROM build, build2group, buildgroup
+            WHERE
+                build.projectid = ?
+                AND build2group.buildid = build.id
+                AND build.testpassed >= 0
+                AND build2group.groupid = buildgroup.id
+                AND buildgroup.includesubprojectotal = 1
+                AND build.starttime > ?
+                AND build.starttime <= ?
+                AND build.parentid IN (-1, 0)
+        ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->s;
     }
 
     /** Get the number of tests given a date range */
-    public function GetNumberOfFailingTests($startUTCdate, $endUTCdate,
-        $childrenOnly = false): int|false
+    public function GetNumberOfFailingTests(string $startUTCdate, string $endUTCdate): int
     {
         if (!$this->Id) {
-            echo 'Project GetNumberOfFailingTests(): Id not set';
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
-        $params = [intval($this->Id), $startUTCdate, $endUTCdate];
-        $query = 'SELECT SUM(build.testfailed) AS s
-                  FROM build, build2group, buildgroup
-                  WHERE
-                      build.projectid=?
-                      AND build2group.buildid=build.id
-                      AND build.testfailed>=0
-                      AND build2group.groupid=buildgroup.id
-                      AND buildgroup.includesubprojectotal=1
-                      AND build.starttime>?
-                      AND build.starttime<=?';
-        if ($childrenOnly) {
-            $query .= ' AND build.parentid > 0';
-        } else {
-            $query .= ' AND build.parentid IN (-1, 0)';
-        }
-
-        $project = $this->PDO->executePreparedSingleRow($query, $params);
-        if ($project === false) {
-            add_last_sql_error('Project GetNumberOfFailingTests', $this->Id);
-            return false;
-        }
-        return intval($project['s']);
+        return (int) DB::select('
+            SELECT COALESCE(SUM(build.testfailed), 0) AS s
+            FROM build, build2group, buildgroup
+            WHERE
+                build.projectid = ?
+                AND build2group.buildid = build.id
+                AND build.testfailed >= 0
+                AND build2group.groupid = buildgroup.id
+                AND buildgroup.includesubprojectotal = 1
+                AND build.starttime > ?
+                AND build.starttime <= ?
+                AND build.parentid IN (-1, 0)
+        ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->s;
     }
 
     /** Get the number of tests given a date range */
-    public function GetNumberOfNotRunTests($startUTCdate, $endUTCdate,
-        $childrenOnly = false): int|false
+    public function GetNumberOfNotRunTests(string $startUTCdate, string $endUTCdate): int
     {
         if (!$this->Id) {
-            echo 'Project GetNumberOfNotRunTests(): Id not set';
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
-        $params = [intval($this->Id), $startUTCdate, $endUTCdate];
-        $query = 'SELECT SUM(build.testnotrun) AS s
-                  FROM build, build2group, buildgroup
-                  WHERE
-                      build.projectid=?
-                      AND build2group.buildid=build.id
-                      AND build.testnotrun>=0
-                      AND build2group.groupid=buildgroup.id
-                      AND buildgroup.includesubprojectotal=1
-                      AND build.starttime>?
-                      AND build.starttime<=?';
-        if ($childrenOnly) {
-            $query .= ' AND build.parentid > 0';
-        } else {
-            $query .= ' AND build.parentid IN (-1, 0)';
-        }
-
-        $project = $this->PDO->executePreparedSingleRow($query, $params);
-        if ($project === false) {
-            add_last_sql_error('Project GetNumberOfNotRunTests', $this->Id);
-            return false;
-        }
-        return intval($project['s']);
+        return (int) DB::select('
+            SELECT COALESCE(SUM(build.testnotrun), 0) AS s
+            FROM build, build2group, buildgroup
+            WHERE
+                build.projectid = ?
+                AND build2group.buildid = build.id
+                AND build.testnotrun >= 0
+                AND build2group.groupid = buildgroup.id
+                AND buildgroup.includesubprojectotal = 1
+                AND build.starttime > ?
+                AND build.starttime <= ?
+                AND build.parentid IN (-1, 0)
+        ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->s;
     }
 
     /**
@@ -1483,8 +1015,7 @@ class Project
             $straightjoin = 'STRAIGHT_JOIN';
         }
 
-        $labelids = array();
-        $labels = $this->PDO->executePrepared("
+        $labels = DB::select("
                       (
                           SELECT labelid AS id
                           FROM label2build, build
@@ -1536,13 +1067,9 @@ class Project
                       $today
                   ]);
 
-        if ($labels === false) {
-            add_last_sql_error('Project GetLabels', $this->Id);
-            return false;
-        }
-
+        $labelids = [];
         foreach ($labels as $label_array) {
-            $labelids[] = intval($label_array['id']);
+            $labelids[] = (int) $label_array->id;
         }
         return array_unique($labelids);
     }
@@ -1551,22 +1078,16 @@ class Project
     public function SendEmailToAdmin(string $subject, string $body): bool
     {
         if (!$this->Id) {
-            echo 'Project SendEmailToAdmin(): Id not set';
-            return false;
-        }
-        $config = Config::getInstance();
-        // Check if we should send emails
-        $project = $this->PDO->executePreparedSingleRow('
-                       SELECT emailadministrator, name
-                       FROM project
-                       WHERE id = ?
-                   ', [intval($this->Id)]);
-        if ($project === false) {
-            add_last_sql_error('Project SendEmailToAdmin', $this->Id);
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
-        if (intval($project['emailadministrator']) === 0) {
+        if (!$this->Filled) {
+            $this->Fill();
+        }
+
+        $config = Config::getInstance();
+
+        if (intval($this->EmailAdministrator) === 0) {
             return true;
         }
 
@@ -1583,7 +1104,7 @@ class Project
         }
 
         if (!empty($recipients)) {
-            $projectname = $project['name'];
+            $projectname = $this->Name;
             $emailtitle = 'CDash [' . $projectname . '] - Administration ';
             $emailbody = 'Object: ' . $subject . "\n";
             $emailbody .= $body . "\n";
@@ -1605,28 +1126,19 @@ class Project
     public function GetUploadsTotalSize(): int|false
     {
         if (!$this->Id) {
-            add_log('Id not set', 'Project::GetUploadsTotalSize', LOG_ERR);
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
-        $totalSizeQuery = $this->PDO->executePrepared('
-                              SELECT DISTINCT uploadfile.id, uploadfile.filesize AS size
-                              FROM build, build2uploadfile, uploadfile
-                              WHERE
-                                  build.projectid=?
-                                  AND build.id=build2uploadfile.buildid
-                                  AND build2uploadfile.fileid=uploadfile.id
-                          ', [intval($this->Id)]);
-        if ($totalSizeQuery === false) {
-            add_last_sql_error('Project::GetUploadsTotalSize', $this->Id);
-            return false;
-        }
-
-        // TODO: (williamjallen) This should be done in SQL
-        $totalSize = 0;
-        foreach ($totalSizeQuery as $result) {
-            $totalSize += intval($result['size']);
-        }
-        return $totalSize;
+        return DB::select('
+                   SELECT COALESCE(SUM(query_result.size), 0) AS s
+                   FROM (
+                       SELECT DISTINCT uploadfile.id, uploadfile.filesize AS size
+                       FROM build, build2uploadfile, uploadfile
+                       WHERE
+                           build.projectid=?
+                           AND build.id=build2uploadfile.buildid
+                           AND build2uploadfile.fileid=uploadfile.id
+                   ) AS query_result;
+               ', [(int) $this->Id])[0]->s;
     }
 
     /**
@@ -1637,17 +1149,14 @@ class Project
     public function CullUploadedFiles(): bool
     {
         if (!$this->Id) {
-            add_log('Id not set', 'Project::CullUploadedFiles', LOG_ERR);
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
         $totalUploadSize = $this->GetUploadsTotalSize();
 
         if ($totalUploadSize > $this->UploadQuota) {
+            Log::info("Upload quota exceeded, removing old files for project $this->Name...");
 
-            add_log('Upload quota exceeded, removing old files', 'Project::CullUploadedFiles',
-                LOG_INFO, $this->Id);
-
-            $query = $this->PDO->executePrepared('
+            $query = DB::select('
                          SELECT DISTINCT build.id AS id, build.starttime
                          FROM build, build2uploadfile, uploadfile
                          WHERE
@@ -1660,22 +1169,21 @@ class Project
             foreach ($query as $builds_array) {
                 // Delete the uploaded files
                 $fileids = [];
-                $build2uploadfiles = $this->PDO->executePrepared('
+                $build2uploadfiles = DB::select('
                                          SELECT fileid
                                          FROM build2uploadfile
                                          WHERE buildid = ?
-                                     ', [intval($builds_array['id'])]);
+                                     ', [(int) $builds_array->id]);
                 foreach ($build2uploadfiles as $build2uploadfile_array) {
-                    $fileid = intval($build2uploadfile_array['fileid']);
+                    $fileid = (int) $build2uploadfile_array->fileid;
                     $fileids[] = $fileid;
                     $totalUploadSize -= unlink_uploaded_file($fileid);
-                    add_log("Removed file $fileid", 'Project::CullUploadedFiles', LOG_INFO, $this->Id);
+                    Log::info("Removed file $fileid for project $this->Name.");
                 }
 
                 if (count($fileids) > 0) {
-                    $prepared_array = $this->PDO->createPreparedArray(count($fileids));
-                    $this->PDO->executePrepared("DELETE FROM uploadfile WHERE id IN $prepared_array", $fileids);
-                    $this->PDO->executePrepared("DELETE FROM build2uploadfile WHERE fileid IN $prepared_array", $fileids);
+                    DB::table('uploadfile')->whereIn('id', $fileids)->delete();
+                    DB::table('build2uploadfile')->whereIn('fileid', $fileids)->delete();
                 }
 
                 // Stop if we get below the quota
@@ -1691,30 +1199,25 @@ class Project
     /**
      * Return the list of subproject groups that belong to this project.
      *
-     * @return array<SubProjectGroup>|false
+     * @return array<SubProjectGroup>
      */
-    public function GetSubProjectGroups(): array|false
+    public function GetSubProjectGroups(): array
     {
         if (!$this->Id) {
-            add_log('Id not set', 'Project::GetSubProjectGroups', LOG_ERR);
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
-        $query = $this->PDO->executePrepared("
+        $query = DB::select("
                      SELECT id
                      FROM subprojectgroup
                      WHERE projectid=? AND endtime='1980-01-01 00:00:00'
-                 ", [intval($this->Id)]);
-        if ($query === false) {
-            add_last_sql_error('Project::GetSubProjectGroups', $this->Id);
-            return false;
-        }
+                 ", [(int) $this->Id]);
 
-        $subProjectGroups = array();
+        $subProjectGroups = [];
         foreach ($query as $result) {
             $subProjectGroup = new SubProjectGroup();
             // SetId automatically loads the rest of the group's data.
-            $subProjectGroup->SetId(intval($result['id']));
+            $subProjectGroup->SetId((int) $result->id);
             $subProjectGroups[] = $subProjectGroup;
         }
         return $subProjectGroups;
@@ -1722,8 +1225,10 @@ class Project
 
     /**
      * Return a JSON representation of this object.
+     *
+     * @return array<string,mixed>
      */
-    public function ConvertToJSON(\App\Models\User $user): array
+    public function ConvertToJSON(): array
     {
         $config = Config::getInstance();
         $response = [];
@@ -1736,9 +1241,7 @@ class Project
         }
         $response['name_encoded'] = urlencode($this->Name ?? '');
 
-        $includeQuota = !$config->get('CDASH_USER_CREATE_PROJECTS') || $user->IsAdmin();
-
-        if ($includeQuota) {
+        if (!$config->get('CDASH_USER_CREATE_PROJECTS') || (Auth::check() && Auth::user()->IsAdmin())) {
             $uploadQuotaGB = 0;
 
             if ($this->UploadQuota > 0) {
@@ -1760,7 +1263,7 @@ class Project
     public function InitialSetup(): bool
     {
         if (!$this->Id) {
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
         // Add the default groups.
@@ -1787,16 +1290,13 @@ class Project
         $groups = $this->GetBuildGroups();
         foreach ($groups as $group) {
             if ($group->GetName() == 'Nightly') {
-                $buildgroupid = $group->GetId();
-                $this->PDO->executePrepared("
-                    INSERT INTO overview_components (
-                        projectid,
-                        buildgroupid,
-                        position,
-                        type
-                    )
-                    VALUES (?, ?, '1', 'build')", [intval($this->Id), intval($buildgroupid)]);
-                add_last_sql_error('CreateProject :: DefaultOverview', $this->Id);
+                $buildgroupid = (int) $group->GetId();
+                DB::table('overview_components')->insert([
+                    'projectid' => $this->Id,
+                    'buildgroupid' => $buildgroupid,
+                    'position' => 1,
+                    'type' => 'build',
+                ]);
                 break;
             }
         }
@@ -1812,42 +1312,36 @@ class Project
         return true;
     }
 
-    public function AddBlockedBuild(string $buildname, string $sitename, string $ip)
+    public function AddBlockedBuild(string $buildname, string $sitename, string $ip): int
     {
-        $stmt = $this->PDO->prepare(
-            'INSERT INTO blockbuild (projectid,buildname,sitename,ipaddress)
-                VALUES (:projectid, :buildname, :sitename, :ip)');
-        $stmt->bindParam(':projectid', $this->Id);
-        $stmt->bindParam(':buildname', $buildname);
-        $stmt->bindParam(':sitename', $sitename);
-        $stmt->bindParam(':ip', $ip);
-        pdo_execute($stmt);
-        $blocked_id = pdo_insert_id('blockbuild');
-        return $blocked_id;
+        return DB::table('blockbuild')->insertGetId([
+            'projectid' => $this->Id,
+            'buildname' => $buildname,
+            'sitename' => $sitename,
+            'ip' => $ip,
+        ]);
     }
 
-    public function RemoveBlockedBuild($id): void
+    public function RemoveBlockedBuild(int $id): void
     {
-        $stmt = $this->PDO->prepare('DELETE FROM blockbuild WHERE id=?');
-        pdo_execute($stmt, [$id]);
+        DB::table('blockbuild')->delete($id);
     }
 
-    // Delete old builds if this project has too many.
+    /** Delete old builds if this project has too many. */
     public function CheckForTooManyBuilds(): bool
     {
         if (!$this->Id) {
-            return false;
+            throw new RuntimeException('ID not set for project');
         }
 
         // Perform the "daily update" step asychronously here via cURL.
         if (config('cdash.daily_updates') === true) {
             $baseUrl = Config::getInstance()->getBaseUrl();
-            $this->curlRequest("{$baseUrl}/ajax/dailyupdatescurl.php?projectid={$this->Id}");
+            self::curlRequest("{$baseUrl}/ajax/dailyupdatescurl.php?projectid={$this->Id}");
         }
 
-        $max_builds = config('cdash.builds_per_project');
-        if ($max_builds == 0 ||
-                in_array($this->GetName(), config('cdash.unlimited_projects'))) {
+        $max_builds = (int) config('cdash.builds_per_project');
+        if ($max_builds === 0 || in_array($this->GetName(), config('cdash.unlimited_projects'))) {
             return false;
         }
 
@@ -1863,18 +1357,15 @@ class Project
         require_once 'include/autoremove.php';
         removeFirstBuilds($this->Id, -1, $num_to_remove, true, false);
 
-        add_log("Too many builds for $this->Name", 'project_has_too_many_builds',
-            LOG_INFO, $this->Id);
+        Log::info("Too many builds for $this->Name");
         return true;
     }
 
     /**
      * Returns the Project's SubscriberCollection object. This method lazily loads the
      * SubscriberCollection if the object does not exist.
-     *
-     * @returns \CDash\Collection\SubscriberCollection
      */
-    public function GetSubscriberCollection()
+    public function GetSubscriberCollection(): SubscriberCollection
     {
         if (!$this->SubscriberCollection) {
             $this->Fill();
@@ -1886,8 +1377,6 @@ class Project
 
     /**
      * Sets the Project's SubscriberCollection property.
-     *
-     * @param SubscriberCollection $subscribers
      */
     public function SetSubscriberCollection(SubscriberCollection $subscribers)
     {
@@ -1896,10 +1385,8 @@ class Project
 
     /**
      * Returns a SubscriberCollection; a collection of all users and their subscription preferences.
-     *
-     * @return SubscriberCollection
      */
-    public function GetProjectSubscribers()
+    public function GetProjectSubscribers(): SubscriberCollection
     {
         $service = ServiceContainer::getInstance()->getContainer();
         $collection = $service->make(SubscriberCollection::class);
@@ -1948,14 +1435,13 @@ class Project
         return $collection;
     }
 
-    // Modify the build error/warning filters for this project if necessary.
+    /** Modify the build error/warning filters for this project if necessary. */
     public function UpdateBuildFilters(): bool
     {
         $buildErrorFilter = new BuildErrorFilter($this);
         if ($buildErrorFilter->GetErrorsFilter() != $this->ErrorsFilter ||
                 $buildErrorFilter->GetWarningsFilter() != $this->WarningsFilter) {
-            return $buildErrorFilter->AddOrUpdateFilters(
-                $this->WarningsFilter, $this->ErrorsFilter);
+            return $buildErrorFilter->AddOrUpdateFilters($this->WarningsFilter, $this->ErrorsFilter);
         }
         return true;
     }
@@ -1968,8 +1454,7 @@ class Project
      */
     public function ComputeTestingDayBounds($date): array
     {
-        list($unused, $beginning_timestamp) =
-            get_dates($date, $this->NightlyTime);
+        list($unused, $beginning_timestamp) = get_dates($date, $this->NightlyTime);
 
         $datetime = new \DateTime();
         $datetime->setTimeStamp($beginning_timestamp);
@@ -1996,7 +1481,7 @@ class Project
         return true;
     }
 
-    private function curlRequest(string $request) : void
+    private static function curlRequest(string $request) : void
     {
         $use_https = config('app.env') === 'production';
         $ch = curl_init();
