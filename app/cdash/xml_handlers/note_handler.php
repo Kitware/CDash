@@ -74,7 +74,7 @@ class NoteHandler extends AbstractHandler
         } elseif ($name == 'NOTE') {
             $this->NoteCreator = new NoteCreator;
             $this->NoteCreator->name =
-                isset($attributes['NAME']) ? $attributes['NAME'] : '';
+                $attributes['NAME'] ?? '';
             $this->Timestamp = 0;
         }
     }

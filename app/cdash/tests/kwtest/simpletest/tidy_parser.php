@@ -334,7 +334,7 @@ class SimpleTidyPageBuilder
     private function dequote($quoted)
     {
         if (preg_match('/^(\'([^\']*)\'|"([^"]*)")$/', $quoted, $matches)) {
-            return isset($matches[3]) ? $matches[3] : $matches[2];
+            return $matches[3] ?? $matches[2];
         }
         return $quoted;
     }

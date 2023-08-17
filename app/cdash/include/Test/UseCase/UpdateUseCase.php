@@ -77,7 +77,7 @@ class UpdateUseCase extends UseCase
 
         // create UpdateReturnStatus element
         $status = $update->appendChild(new \DOMElement('UpdateReturnStatus'));
-        $text = isset($prop['UpdateReturnStatus']) ? $prop['UpdateReturnStatus'] : '';
+        $text = $prop['UpdateReturnStatus'] ?? '';
         $status->appendChild(new \DOMText($text));
 
         $xml_str = $xml->saveXML($xml);

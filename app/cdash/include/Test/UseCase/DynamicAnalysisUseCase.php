@@ -34,7 +34,7 @@ class DynamicAnalysisUseCase extends UseCase
     {
         parent::__construct('DynamicAnalysis', $properties);
         $faker = parent::getFaker();
-        $this->working_directory = isset($properties['WorkingDirectory']) ? $properties['WorkingDirectory'] :
+        $this->working_directory = $properties['WorkingDirectory'] ??
             "/users/{$faker->firstName}/{$faker->word}";
         $this->checker = '/usr/bin/valgrind';
     }

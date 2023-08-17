@@ -332,7 +332,7 @@ class SimpleCookieJar
                 }
             }
         }
-        return (isset($value) ? $value : false);
+        return ($value ?? false);
     }
 
     /**

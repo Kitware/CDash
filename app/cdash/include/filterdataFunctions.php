@@ -1062,7 +1062,7 @@ function get_filterdata_from_request($page_id = '')
     $showlimit = intval($_GET['showlimit'] ?? 0);
     $limit = intval($_GET['limit'] ?? 0);
 
-    $clear = isset($_GET['clear']) ? $_GET['clear'] : '';
+    $clear = $_GET['clear'] ?? '';
     if ($clear == 'Clear') {
         $filtercount = 0;
     }

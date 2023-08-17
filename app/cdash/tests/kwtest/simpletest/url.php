@@ -250,7 +250,7 @@ class SimpleUrl
     public function getTld()
     {
         $path_parts = pathinfo($this->getHost());
-        return (isset($path_parts['extension']) ? $path_parts['extension'] : false);
+        return ($path_parts['extension'] ?? false);
     }
 
     /**

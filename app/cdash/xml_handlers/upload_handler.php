@@ -183,7 +183,7 @@ class UploadHandler extends AbstractHandler
             $this->UploadFile = new UploadFile();
             $this->UploadFile->Filename = $attributes['FILENAME'];
         } elseif ($name == 'CONTENT') {
-            $fileEncoding = isset($attributes['ENCODING']) ? $attributes['ENCODING'] : 'base64';
+            $fileEncoding = $attributes['ENCODING'] ?? 'base64';
 
             if (strcmp($fileEncoding, 'base64') != 0) {
                 // Only base64 encoding is supported for file upload

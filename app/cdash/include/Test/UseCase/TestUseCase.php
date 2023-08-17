@@ -143,8 +143,7 @@ class TestUseCase extends UseCase
         $code_value = $code->appendChild(new DOMElement('Value'));
 
         /** @var DOMElement $exectime */
-        $exectime_text = isset($attributes['Execution Time']) ?
-            $attributes['Execution Time'] : '0.012004';
+        $exectime_text = $attributes['Execution Time'] ?? '0.012004';
 
         $exectime = $results->appendChild(new DOMElement('NamedMeasurement'));
         $exectime->setAttribute('name', 'Execution Time');

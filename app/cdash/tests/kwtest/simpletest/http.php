@@ -463,8 +463,8 @@ class SimpleHttpHeaders
         return new SimpleCookie(
             $cookie[1],
             trim($cookie[2]),
-            isset($cookie['path']) ? $cookie['path'] : '',
-            isset($cookie['expires']) ? $cookie['expires'] : false);
+            $cookie['path'] ?? '',
+            $cookie['expires'] ?? false);
     }
 }
 

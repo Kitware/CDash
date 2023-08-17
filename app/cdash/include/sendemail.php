@@ -324,7 +324,7 @@ function get_email_summary(int $buildid, array $errors, $errorkey, int $maxitems
         }
     } elseif ($errorkey === 'missing_tests') {
         // sanity check
-        $missing = isset($errors['missing_tests']['count']) ? $errors['missing_tests']['count'] : 0;
+        $missing = $errors['missing_tests']['count'] ?? 0;
 
         if ($missing) {
             $information .= "\n\n*Missing tests*";

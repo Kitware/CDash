@@ -108,7 +108,7 @@ function can_administrate_project($projectid)
  */
 function get_param($name, $required = true)
 {
-    $value = isset($_REQUEST[$name]) ? $_REQUEST[$name] : null;
+    $value = $_REQUEST[$name] ?? null;
     if ($required && !$value) {
         json_error_response(['error' => "Valid $name required"]);
         return null;
