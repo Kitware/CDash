@@ -110,16 +110,16 @@ class SimpleCommandLineParser
     public function getHelpText()
     {
         return <<<HELP
-SimpleTest command line default reporter (autorun)
-Usage: php <test_file> [args...]
+            SimpleTest command line default reporter (autorun)
+            Usage: php <test_file> [args...]
 
-    -c <class>      Run only the test-case <class>
-    -t <method>     Run only the test method <method>
-    -s              Suppress skip messages
-    -x              Return test results in XML
-    -h              Display this help message
+                -c <class>      Run only the test-case <class>
+                -t <method>     Run only the test method <method>
+                -s              Suppress skip messages
+                -x              Return test results in XML
+                -h              Display this help message
 
-HELP;
+            HELP;
     }
 }
 

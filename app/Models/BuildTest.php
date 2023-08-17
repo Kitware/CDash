@@ -17,7 +17,7 @@ class BuildTest extends Model
 
     protected $attributes = [
         'timemean' => 0.0,
-        'timestd' => 0.0
+        'timestd' => 0.0,
     ];
 
     /**
@@ -127,7 +127,7 @@ class BuildTest extends Model
             'details' => $data['details'],
             'summaryLink' => "testSummary.php?project=$projectid&name=" . urlencode($data['name']) . "&date=$testdate",
             'summary' => 'Summary', /* Default value later replaced by AJAX */
-            'detailsLink' => "test/{$data['buildtestid']}"
+            'detailsLink' => "test/{$data['buildtestid']}",
         ];
 
         if ($data['newstatus']) {

@@ -31,152 +31,152 @@ class TestHistoryTestCase extends KWWebTestCase
         }
 
         $retval = <<<EOT
-        <?xml version="1.0" encoding="UTF-8"?>
-        <Site BuildName="TestHistory"
-          BuildStamp="20151116-19{$mm}-Experimental"
-          Name="localhost"
-          Generator="ctest"
-          >
-          <Testing>
-            <StartTestTime>{$timestamp}</StartTestTime>
-            <TestList>
-              <Test>./passes</Test>
-              <Test>./fails</Test>
-              <Test>./flaky</Test>
-              <Test>./notrun</Test>
-
-        EOT;
-        if ($include_sporadic) {
-            $retval .= <<<EOT
-                  <Test>./sporadic</Test>
+            <?xml version="1.0" encoding="UTF-8"?>
+            <Site BuildName="TestHistory"
+              BuildStamp="20151116-19{$mm}-Experimental"
+              Name="localhost"
+              Generator="ctest"
+              >
+              <Testing>
+                <StartTestTime>{$timestamp}</StartTestTime>
+                <TestList>
+                  <Test>./passes</Test>
+                  <Test>./fails</Test>
+                  <Test>./flaky</Test>
+                  <Test>./notrun</Test>
 
             EOT;
+        if ($include_sporadic) {
+            $retval .= <<<EOT
+                      <Test>./sporadic</Test>
+
+                EOT;
         }
         $retval .= <<<EOT
-            </TestList>
-            <Test Status="passed">
-              <Name>passes</Name>
-              <Path>.</Path>
-              <FullName>./passes</FullName>
-              <FullCommandLine>/bin/true</FullCommandLine>
-              <Results>
-                <NamedMeasurement type="numeric/double" name="Execution Time">
-                  <Value>0</Value>
-                </NamedMeasurement>
-                <NamedMeasurement type="text/string" name="Completion Status">
-                  <Value>Completed</Value>
-                </NamedMeasurement>
-                <NamedMeasurement type="text/string" name="Command Line">
-                  <Value>/bin/true</Value>
-                </NamedMeasurement>
-                <Measurement>
-                  <Value></Value>
-                </Measurement>
-              </Results>
-            </Test>
-            <Test Status="failed">
-              <Name>fails</Name>
-              <Path>.</Path>
-              <FullName>./fails</FullName>
-              <FullCommandLine>/bin/false</FullCommandLine>
-              <Results>
-                <NamedMeasurement type="text/string" name="Exit Code">
-                  <Value>Failed</Value>
-                </NamedMeasurement>
-                <NamedMeasurement type="numeric/double" name="Execution Time">
-                  <Value>0</Value>
-                </NamedMeasurement>
-                <NamedMeasurement type="text/string" name="Completion Status">
-                  <Value>Completed</Value>
-                </NamedMeasurement>
-                <NamedMeasurement type="text/string" name="Command Line">
-                  <Value>/bin/false</Value>
-                </NamedMeasurement>
-                <Measurement>
-                  <Value></Value>
-                </Measurement>
-              </Results>
-            </Test>
-            <Test Status="{$flaky_status}">
-              <Name>flaky</Name>
-              <Path>.</Path>
-              <FullName>./flaky</FullName>
-              <FullCommandLine>/bin/flaky</FullCommandLine>
-              <Results>
-
-        EOT;
-        if (!$flaky_passed) {
-            $retval .= <<<EOT
+                </TestList>
+                <Test Status="passed">
+                  <Name>passes</Name>
+                  <Path>.</Path>
+                  <FullName>./passes</FullName>
+                  <FullCommandLine>/bin/true</FullCommandLine>
+                  <Results>
+                    <NamedMeasurement type="numeric/double" name="Execution Time">
+                      <Value>0</Value>
+                    </NamedMeasurement>
+                    <NamedMeasurement type="text/string" name="Completion Status">
+                      <Value>Completed</Value>
+                    </NamedMeasurement>
+                    <NamedMeasurement type="text/string" name="Command Line">
+                      <Value>/bin/true</Value>
+                    </NamedMeasurement>
+                    <Measurement>
+                      <Value></Value>
+                    </Measurement>
+                  </Results>
+                </Test>
+                <Test Status="failed">
+                  <Name>fails</Name>
+                  <Path>.</Path>
+                  <FullName>./fails</FullName>
+                  <FullCommandLine>/bin/false</FullCommandLine>
+                  <Results>
                     <NamedMeasurement type="text/string" name="Exit Code">
                       <Value>Failed</Value>
                     </NamedMeasurement>
+                    <NamedMeasurement type="numeric/double" name="Execution Time">
+                      <Value>0</Value>
+                    </NamedMeasurement>
+                    <NamedMeasurement type="text/string" name="Completion Status">
+                      <Value>Completed</Value>
+                    </NamedMeasurement>
+                    <NamedMeasurement type="text/string" name="Command Line">
+                      <Value>/bin/false</Value>
+                    </NamedMeasurement>
+                    <Measurement>
+                      <Value></Value>
+                    </Measurement>
+                  </Results>
+                </Test>
+                <Test Status="{$flaky_status}">
+                  <Name>flaky</Name>
+                  <Path>.</Path>
+                  <FullName>./flaky</FullName>
+                  <FullCommandLine>/bin/flaky</FullCommandLine>
+                  <Results>
 
             EOT;
+        if (!$flaky_passed) {
+            $retval .= <<<EOT
+                        <NamedMeasurement type="text/string" name="Exit Code">
+                          <Value>Failed</Value>
+                        </NamedMeasurement>
+
+                EOT;
         }
         $retval .= <<<EOT
-                <NamedMeasurement type="numeric/double" name="Execution Time">
-                  <Value>{$flaky_time}</Value>
-                </NamedMeasurement>
-                <NamedMeasurement type="text/string" name="Completion Status">
-                  <Value>Completed</Value>
-                </NamedMeasurement>
-                <NamedMeasurement type="text/string" name="Command Line">
-                  <Value>/bin/flaky</Value>
-                </NamedMeasurement>
-                <Measurement>
-                  <Value></Value>
-                </Measurement>
-              </Results>
-            </Test>
-            <Test Status="notrun">
-              <Name>notrun</Name>
-              <Path>.</Path>
-              <FullName>./notrun</FullName>
-              <FullCommandLine></FullCommandLine>
-              <Results>
-                <NamedMeasurement type="text/string" name="Command Line">
-                  <Value></Value>
-                </NamedMeasurement>
-                <Measurement>
-                  <Value>Unable to find executable: /tmp/notrun</Value>
-                </Measurement>
-              </Results>
-            </Test>
+                    <NamedMeasurement type="numeric/double" name="Execution Time">
+                      <Value>{$flaky_time}</Value>
+                    </NamedMeasurement>
+                    <NamedMeasurement type="text/string" name="Completion Status">
+                      <Value>Completed</Value>
+                    </NamedMeasurement>
+                    <NamedMeasurement type="text/string" name="Command Line">
+                      <Value>/bin/flaky</Value>
+                    </NamedMeasurement>
+                    <Measurement>
+                      <Value></Value>
+                    </Measurement>
+                  </Results>
+                </Test>
+                <Test Status="notrun">
+                  <Name>notrun</Name>
+                  <Path>.</Path>
+                  <FullName>./notrun</FullName>
+                  <FullCommandLine></FullCommandLine>
+                  <Results>
+                    <NamedMeasurement type="text/string" name="Command Line">
+                      <Value></Value>
+                    </NamedMeasurement>
+                    <Measurement>
+                      <Value>Unable to find executable: /tmp/notrun</Value>
+                    </Measurement>
+                  </Results>
+                </Test>
 
-        EOT;
+            EOT;
         if ($include_sporadic) {
             $retval .= <<<EOT
-            <Test Status="passed">
-              <Name>sporadic</Name>
-              <Path>.</Path>
-              <FullName>./sporadic</FullName>
-              <FullCommandLine>/bin/true</FullCommandLine>
-              <Results>
-                <NamedMeasurement type="numeric/double" name="Execution Time">
-                  <Value>0</Value>
-                </NamedMeasurement>
-                <NamedMeasurement type="text/string" name="Completion Status">
-                  <Value>Completed</Value>
-                </NamedMeasurement>
-                <NamedMeasurement type="text/string" name="Command Line">
-                  <Value>/bin/true</Value>
-                </NamedMeasurement>
-                <Measurement>
-                  <Value></Value>
-                </Measurement>
-              </Results>
-            </Test>
+                    <Test Status="passed">
+                      <Name>sporadic</Name>
+                      <Path>.</Path>
+                      <FullName>./sporadic</FullName>
+                      <FullCommandLine>/bin/true</FullCommandLine>
+                      <Results>
+                        <NamedMeasurement type="numeric/double" name="Execution Time">
+                          <Value>0</Value>
+                        </NamedMeasurement>
+                        <NamedMeasurement type="text/string" name="Completion Status">
+                          <Value>Completed</Value>
+                        </NamedMeasurement>
+                        <NamedMeasurement type="text/string" name="Command Line">
+                          <Value>/bin/true</Value>
+                        </NamedMeasurement>
+                        <Measurement>
+                          <Value></Value>
+                        </Measurement>
+                      </Results>
+                    </Test>
 
-        EOT;
+                EOT;
         }
         $retval .= <<<EOT
-            <EndDateTime>Nov 16 14:{$mm} EST</EndDateTime>
-            <EndTestTime>{$timestamp}</EndTestTime>
-            <ElapsedMinutes>0</ElapsedMinutes>
-          </Testing>
-        </Site>
+                <EndDateTime>Nov 16 14:{$mm} EST</EndDateTime>
+                <EndTestTime>{$timestamp}</EndTestTime>
+                <ElapsedMinutes>0</ElapsedMinutes>
+              </Testing>
+            </Site>
 
-        EOT;
+            EOT;
         return $retval;
     }
 

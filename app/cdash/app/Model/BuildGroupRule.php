@@ -76,7 +76,7 @@ class BuildGroupRule
             ':buildtype'     => $this->BuildType,
             ':buildname'     => $this->BuildName,
             ':siteid'        => $this->SiteId,
-            ':endtime'       => $this->EndTime
+            ':endtime'       => $this->EndTime,
         ];
 
         $this->PDO->execute($stmt, $query_params);
@@ -110,7 +110,7 @@ class BuildGroupRule
                 ':siteid'        => $this->SiteId,
                 ':expected'      => $this->Expected,
                 ':starttime'     => $this->StartTime,
-                ':endtime'       => $this->EndTime
+                ':endtime'       => $this->EndTime,
             ];
             return $this->PDO->execute($stmt, $query_params);
         }
@@ -188,7 +188,7 @@ class BuildGroupRule
             ':buildtype'       => $this->BuildType,
             ':buildname'       => $this->BuildName,
             ':siteid'          => $this->SiteId,
-            ':begin_epoch'     => '1980-01-01 00:00:00'
+            ':begin_epoch'     => '1980-01-01 00:00:00',
         ];
         return $this->PDO->execute($stmt, $query_params);
     }
@@ -214,7 +214,7 @@ class BuildGroupRule
             ':siteid'          => $this->SiteId,
             ':expected'        => $this->Expected,
             ':starttime'       => $this->StartTime,
-            ':endtime'         => $this->EndTime
+            ':endtime'         => $this->EndTime,
         ];
         return $this->PDO->execute($stmt, $query_params);
     }
@@ -281,7 +281,7 @@ class BuildGroupRule
             AND endtime < :endtime");
         $query_params = [
             ':projectid' => $projectid,
-            ':endtime'   => $cutoff_date
+            ':endtime'   => $cutoff_date,
         ];
         $db->execute($stmt, $query_params);
     }

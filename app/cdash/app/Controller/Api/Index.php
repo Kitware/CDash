@@ -223,7 +223,7 @@ class Index extends ResultsApi
                     self::BEGIN_EPOCH,
                     $this->endDate,
                     self::BEGIN_EPOCH,
-                    $this->endDate
+                    $this->endDate,
                 ]);
 
         foreach ($stmt as $rule) {
@@ -1477,7 +1477,7 @@ class Index extends ResultsApi
         // that has build results.
         $query_params = [
             ':projectid' => $this->project->Id,
-            ':time'      => $beginningOfDay
+            ':time'      => $beginningOfDay,
         ];
 
         // Only search for builds from a certain group when buildGroupName is set.

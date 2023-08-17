@@ -99,7 +99,7 @@ final class AdminController extends AbstractController
                 $dayTo,
                 $yearFrom,
                 $monthFrom,
-                $dayFrom
+                $dayFrom,
             ]);
 
             $builds = [];

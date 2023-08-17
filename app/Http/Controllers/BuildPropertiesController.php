@@ -81,18 +81,18 @@ final class BuildPropertiesController extends AbstractBuildController
             [
                 'name' => 'builderrors',
                 'prettyname' => 'Errors',
-                'selected' => false
+                'selected' => false,
             ],
             [
                 'name' => 'buildwarnings',
                 'prettyname' => 'Warnings',
-                'selected' => false
+                'selected' => false,
             ],
             [
                 'name' => 'testfailed',
                 'prettyname' => 'Test Failures',
-                'selected' => false
-            ]
+                'selected' => false,
+            ],
         ];
 
         // Mark specified types of defects as selected.
@@ -289,7 +289,7 @@ final class BuildPropertiesController extends AbstractBuildController
                 $defects_response[] = [
                     'descr' => $descr,
                     'type' => $prettyname,
-                    'builds' => []
+                    'builds' => [],
                 ];
                 $idx = count($defects_response) - 1;
             }

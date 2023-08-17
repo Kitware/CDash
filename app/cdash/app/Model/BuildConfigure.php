@@ -351,7 +351,7 @@ class BuildConfigure
             'command' => $data['command'],
             'output' => $data['log'],
             'configureerrors' => $data['configureerrors'],
-            'configurewarnings' => $data['configurewarnings']
+            'configurewarnings' => $data['configurewarnings'],
         ];
 
         if (isset($data['subprojectid'])) {

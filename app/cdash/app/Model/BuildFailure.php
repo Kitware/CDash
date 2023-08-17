@@ -126,7 +126,7 @@ class BuildFailure
                          $targetName,
                          $outputFile,
                          $outputType,
-                         $crc32
+                         $crc32,
                      ]);
             if ($query === false) {
                 add_last_sql_error('BuildFailure InsertDetails', 0, $this->BuildId);
@@ -248,7 +248,7 @@ class BuildFailure
     {
         $response = [
             'argumentfirst' => null,
-            'arguments' => []
+            'arguments' => [],
         ];
 
         $sql = "
@@ -291,7 +291,7 @@ class BuildFailure
             'outputfile' => $data['outputfile'],
             'outputtype' => $data['outputtype'],
             'workingdirectory' => $data['workingdirectory'],
-            'exitcondition' => $data['exitcondition']
+            'exitcondition' => $data['exitcondition'],
         ], $buildfailure->GetBuildFailureArguments($data['id']));
 
         $marshaled['stderror'] = $data['stderror'];

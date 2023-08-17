@@ -79,7 +79,7 @@ class BuildUpdateFile
                      $this->PriorRevision ?? '',
                      $this->Status ?? '',
                      $this->Committer ?? '',
-                     $this->CommitterEmail ?? ''
+                     $this->CommitterEmail ?? '',
                  ]);
 
         if ($query === false) {

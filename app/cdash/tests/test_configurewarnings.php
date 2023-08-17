@@ -52,7 +52,7 @@ class ConfigureWarningTestCase extends KWWebTestCase
         // Create a project for this test.
         $settings = [
             'Name' => 'ConfigureWarningProject',
-            'Description' => 'ConfigureWarningProject'
+            'Description' => 'ConfigureWarningProject',
         ];
         $this->ProjectId = $this->createProject($settings);
         if ($this->ProjectId < 1) {

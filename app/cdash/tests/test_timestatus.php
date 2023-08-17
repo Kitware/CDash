@@ -34,7 +34,7 @@ class TimeStatusTestCase extends KWWebTestCase
         $settings = [
             'Name' => 'TimeStatus',
             'Description' => 'Project for test time status',
-            'ShowTestTime' => 1
+            'ShowTestTime' => 1,
         ];
         $projectid = $this->createProject($settings);
         if ($projectid < 1) {
@@ -47,7 +47,7 @@ class TimeStatusTestCase extends KWWebTestCase
             ->createSite([
                 'BuildName' => 'test_timing',
                 'BuildStamp' => '20180127-1723-Experimental',
-                'Name' => 'elysium'
+                'Name' => 'elysium',
             ])
             ->setProjectId($projectid)
             ->setStartTime(1516900999)

@@ -22,7 +22,7 @@ class ProjectInDbTestCase extends KWWebTestCase
         $expected = [
             'name' => 'ProjectTest4Db',
             'description' => 'This is a project test for cdash',
-            'public' => 0
+            'public' => 0,
         ];
         $this->assertEqual($result[0], $expected);
     }

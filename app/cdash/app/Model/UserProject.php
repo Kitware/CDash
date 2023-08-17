@@ -129,7 +129,7 @@ class UserProject
                          $this->EmailSuccess,
                          $this->EmailMissingSites,
                          $this->UserId,
-                         $this->ProjectId
+                         $this->ProjectId,
                      ]);
             if ($query === false) {
                 add_last_sql_error('User2Project Update');
@@ -156,7 +156,7 @@ class UserProject
                          $this->EmailType,
                          $this->EmailCategory,
                          $this->EmailSuccess,
-                         $this->EmailMissingSites
+                         $this->EmailMissingSites,
                      ]);
             if ($query === false) {
                 add_last_sql_error('User2Project Create');

@@ -133,7 +133,7 @@ class Timeline extends Index
             [
                 'name' => 'testfailed',
                 'prettyname' => 'Test Failures',
-            ]
+            ],
         ];
 
         // Query for defects on expected builds only.
@@ -155,7 +155,7 @@ class Timeline extends Index
         $response['colors'] = [
             $this->colors[self::CLEAN],
             $this->colors[self::FAILURE],
-            $this->colors[self::ERROR]
+            $this->colors[self::ERROR],
         ];
         return $response;
     }
@@ -174,7 +174,7 @@ class Timeline extends Index
             [
                 'name' => 'testpassed',
                 'prettyname' => 'Passing Tests',
-            ]
+            ],
         ];
 
         $stmt = $this->db->prepare("
@@ -191,7 +191,7 @@ class Timeline extends Index
         $response['colors'] = [
             $this->colors[self::CLEAN],
             $this->colors[self::FAILURE],
-            $this->colors[self::ERROR]
+            $this->colors[self::ERROR],
         ];
         return $response;
     }
@@ -215,12 +215,12 @@ class Timeline extends Index
             [
                 'name' => 'testfailed',
                 'prettyname' => 'Test Failures',
-            ]
+            ],
         ];
         $colors = [
             $this->colors[self::CLEAN],
             $this->colors[self::FAILURE],
-            $this->colors[self::ERROR]
+            $this->colors[self::ERROR],
         ];
 
         $group_type = $buildgroup->GetType();
@@ -239,7 +239,7 @@ class Timeline extends Index
                     ORDER BY starttime');
             $query_params = [
                 ':projectid'      => $this->project->Id,
-                ':buildgroupname' => $groupname
+                ':buildgroupname' => $groupname,
             ];
             if (!pdo_execute($stmt, $query_params)) {
                 abort(500, 'Failed to load results');
@@ -289,7 +289,7 @@ class Timeline extends Index
                     $error_types = [
                         'countbuilderrors',
                         'countconfigureerrors',
-                        'countupdateerrors'
+                        'countupdateerrors',
                     ];
                     $build['errors'] = 0;
                     foreach ($error_types as $error_type) {
@@ -409,7 +409,7 @@ class Timeline extends Index
         foreach ($this->defectTypes as $defect_type) {
             $chart_keys[] = [
                 'name' => $defect_type['name'],
-                'prettyname' => $defect_type['prettyname']
+                'prettyname' => $defect_type['prettyname'],
             ];
         }
         if ($this->includeCleanBuilds) {

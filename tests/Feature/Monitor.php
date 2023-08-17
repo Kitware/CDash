@@ -72,7 +72,7 @@ class Monitor extends TestCase
         // Verify default (empty) JSON result.
         $this->actingAs($this->admin_user)->get('/api/monitor')->assertJsonFragment([
             'backlog_length' => 0,
-            'backlog_time' => null
+            'backlog_time' => null,
         ]);
 
         // Populate some testing data.
@@ -82,14 +82,14 @@ class Monitor extends TestCase
             'payload' => '1',
             'attempts' => 0,
             'available_at' => $now,
-            'created_at' => $now
+            'created_at' => $now,
         ]);
 
         DB::table('failed_jobs')->insert([
             'connection' => 'database',
             'queue' => 'default',
             'payload' => '2',
-            'exception' => 'problem'
+            'exception' => 'problem',
         ]);
 
         DB::table('successful_jobs')->insert(['filename' => 'Build.xml']);
@@ -101,7 +101,7 @@ class Monitor extends TestCase
         $response = $this->actingAs($this->admin_user)->getJson('/api/monitor');
         $response->assertJsonFragment([
             'backlog_length' => 1,
-            'backlog_time' => 'just now'
+            'backlog_time' => 'just now',
         ]);
         $response_json = $response->json();
         $this::assertTrue(array_key_exists('time_chart_data', $response_json));

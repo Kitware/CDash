@@ -33,6 +33,6 @@ $factory->afterCreating(App\Models\User::class, function ($user, $faker) {
     $user->passwords()->insert([
         'userid' => $user->id,
         'date' => now(),
-        'password' => $user->password
+        'password' => $user->password,
     ]);
 });

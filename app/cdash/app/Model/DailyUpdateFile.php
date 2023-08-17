@@ -88,7 +88,7 @@ class DailyUpdateFile
                          $this->Revision,
                          $this->PriorRevision,
                          $this->DailyUpdateId,
-                         $this->Filename
+                         $this->Filename,
                      ]);
 
             if ($query === false) {
@@ -114,7 +114,7 @@ class DailyUpdateFile
                          $this->Author,
                          $this->Log,
                          $this->Revision,
-                         $this->PriorRevision
+                         $this->PriorRevision,
                      ]);
 
             if ($query === false) {

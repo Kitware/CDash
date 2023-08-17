@@ -548,7 +548,7 @@ class Project
             }
             DB::table('project2repositories')->insert([
                 'projectid' => (int) $this->Id,
-                'repositoryid' => $repositoryid
+                'repositoryid' => $repositoryid,
             ]);
         }
     }
@@ -1064,7 +1064,7 @@ class Project
                       intval($this->Id),
                       $today,
                       intval($this->Id),
-                      $today
+                      $today,
                   ]);
 
         $labelids = [];

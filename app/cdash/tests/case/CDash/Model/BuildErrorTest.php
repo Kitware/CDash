@@ -44,7 +44,7 @@ class BuildErrorTest extends CDashTestCase
             'postcontext' => "   asdf = 0;\n   ^\n[100%] Linking CXX executable main",
             'sourcefile'  => 'src/main.cpp',
             'sourceline'  => '2',
-            'text' => '/.../foo/src/main.cpp:2:3: error: `asdf` not declared in this scope'
+            'text' => '/.../foo/src/main.cpp:2:3: error: `asdf` not declared in this scope',
         ];
 
         $this->mock_project->CvsUrl = 'https://github.com/FooCo/foo';
@@ -58,7 +58,7 @@ class BuildErrorTest extends CDashTestCase
             'text' => "<a href='https://github.com/FooCo/foo/blob/12/src/main.cpp#L2'>src/main.cpp:2</a>:3: error: `asdf` not declared in this scope",
             'postcontext' => "   asdf = 0;\n   ^\n[100%] Linking CXX executable main",
             'sourcefile' => 'src/main.cpp',
-            'sourceline' => '2'
+            'sourceline' => '2',
         ];
         $this->assertEquals($expected, $marshaled);
     }

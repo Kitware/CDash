@@ -47,8 +47,8 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
                 'url' => 'https://github.com/Kitware/CDash',
                 'branch' => 'master',
                 'username' => '',
-                'password' => ''
-            ]]
+                'password' => '',
+            ]],
         ];
         $this->ProjectId = $this->createProject($settings);
 

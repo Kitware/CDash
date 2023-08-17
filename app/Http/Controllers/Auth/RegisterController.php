@@ -99,7 +99,7 @@ class RegisterController extends AbstractController
             'lastname' => $data['lname'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'institution' => $data['institution']
+            'institution' => $data['institution'],
         ]);
     }
 

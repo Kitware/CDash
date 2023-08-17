@@ -30,7 +30,7 @@ class StartTimeFromNotesTestCase extends KWWebTestCase
         $this->project = new Project();
         $this->project->Id = $this->createProject([
             'Name' => 'StartTimeFromNotes',
-            'NightlyTime' => '18:00:00 America/Denver'
+            'NightlyTime' => '18:00:00 America/Denver',
         ]);
         $this->project->Fill();
 

@@ -61,7 +61,7 @@ class BranchCoverageTestCase extends KWWebTestCase
             'endtime' => '1422455768',
             'track' => 'Experimental',
             'type' => 'GcovTar',
-            'datafilesmd5[0]=' => '5454e16948a1d58d897e174b75cc5633'
+            'datafilesmd5[0]=' => '5454e16948a1d58d897e174b75cc5633',
         ];
 
         $ch = curl_init();

@@ -10,12 +10,12 @@ return [
         'database' => [
             'guid_column' => 'email',
             'username_column' => 'email',
-        ]
+        ],
     ],
     'sync_attributes' => [
         'email' => env('LDAP_EMAIL_ATTRIBUTE', 'mail'),
         'firstname' => 'givenName',
-        'lastname' => 'sn'
+        'lastname' => 'sn',
     ],
     'logging' => [
         'enabled' => env('LDAP_LOGGING', true),
@@ -34,6 +34,6 @@ return [
         ],
     ],
     'rules' => [
-        App\Rules\LdapFilterRules::class
-    ]
+        App\Rules\LdapFilterRules::class,
+    ],
 ];

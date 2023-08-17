@@ -77,7 +77,7 @@ class BuildProperties
             VALUES (:buildid, :properties)');
         $query_params = [
             ':buildid' => $this->Build->Id,
-            ':properties' => $properties_str
+            ':properties' => $properties_str,
         ];
         return $this->PDO->execute($stmt, $query_params);
     }

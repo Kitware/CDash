@@ -124,7 +124,7 @@ class EmailTestCase extends KWWebTestCase
             'Build Time: 2009-02-23 10:02:04',
             'Type: Nightly',
             'Warnings fixed: 6',
-            '-CDash on'
+            '-CDash on',
         ];
         if ($this->assertLogContains($expected, 15)) {
             $this->pass('Passed');
@@ -170,7 +170,7 @@ class EmailTestCase extends KWWebTestCase
             'Build Time: 2009-02-23 10:02:04',
             'Type: Nightly',
             'Test failures fixed: 2',
-            '-CDash on'
+            '-CDash on',
         ];
 
         if ($this->assertLogContains($expected, 15)) {

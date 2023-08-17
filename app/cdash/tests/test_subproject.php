@@ -59,7 +59,7 @@ class SubProjectTestCase extends KWWebTestCase
         $url = Config::getInstance()->getBaseUrl();
         $expected = [
             'simpletest@localhost',
-            'FAILED (w=21): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly' ,
+            'FAILED (w=21): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly',
             'A submission to CDash for the project SubProjectExample has warnings.',
             "Details on the submission can be found at {$url}/build/",
             'Project: SubProjectExample',

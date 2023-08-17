@@ -26,7 +26,7 @@ return [
     'registration' => [
         'email' => [
             'verify' => env('REGISTRATION_EMAIL_VERIFY', true),
-        ]
+        ],
     ],
     'file' => [
         'path' => [

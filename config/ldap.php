@@ -5,7 +5,7 @@ $schemas = [
     'activedirectory' => Adldap\Schemas\ActiveDirectory::class,
     'openldap'        => \App\Schemas\OpenLDAP::class,
     'freeipa'         => Adldap\Schemas\FreeIPA::class,
-    ''                => null
+    ''                => null,
 ];
 
 return [

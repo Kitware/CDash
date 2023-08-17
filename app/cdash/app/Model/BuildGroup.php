@@ -411,7 +411,7 @@ class BuildGroup
                          $this->IncludeSubProjectTotal,
                          $this->EmailCommitters,
                          $this->Type,
-                         $this->Id
+                         $this->Id,
                      ]);
 
             if ($query === false) {
@@ -435,7 +435,7 @@ class BuildGroup
                 $this->SummaryEmail,
                 $this->IncludeSubProjectTotal,
                 $this->EmailCommitters,
-                $this->Type
+                $this->Type,
             ]);
 
             $prepared_array = $this->PDO->createPreparedArray(count($values));

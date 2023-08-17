@@ -88,7 +88,7 @@ class BuildError
                      $this->PreContext,
                      $this->PostContext,
                      intval($this->RepeatCount),
-                     $crc32
+                     $crc32,
                  ]);
         if ($query === false) {
             add_last_sql_error('BuildError Insert', 0, $this->BuildId);
@@ -151,7 +151,7 @@ class BuildError
         $marshaled = [
             'new' => (isset($data['newstatus'])) ? $data['newstatus'] : -1,
             'logline' => $data['logline'],
-            'cvsurl' => get_diff_url($project->Id, $project->CvsUrl, $directory, $file, $revision)
+            'cvsurl' => get_diff_url($project->Id, $project->CvsUrl, $directory, $file, $revision),
         ];
 
         // When building without launchers, CTest truncates the source dir to

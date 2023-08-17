@@ -157,7 +157,7 @@ class TestDetails extends BuildTestApi
             'priorrevision' => '',
             'path' => '',
             'revisionurl' => '',
-            'revisiondiff' => ''
+            'revisiondiff' => '',
         ];
         $stmt = $this->db->prepare(
             'SELECT status, revision, priorrevision, path

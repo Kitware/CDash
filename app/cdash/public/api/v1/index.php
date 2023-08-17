@@ -529,7 +529,7 @@ $response['all_buildgroups'] = [];
 foreach ($controller->buildgroupsResponse as $group) {
     $response['all_buildgroups'][] = [
         'id' => $group['id'],
-        'name' => $group['name']
+        'name' => $group['name'],
     ];
 }
 

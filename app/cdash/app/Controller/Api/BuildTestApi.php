@@ -62,7 +62,7 @@ abstract class BuildTestApi extends BuildApi
             ':projectid' => $this->project->Id,
             ':type' => $this->build->Type,
             ':buildname' => $this->build->Name,
-            ':testname' => $this->test->name
+            ':testname' => $this->test->name,
         ];
     }
 

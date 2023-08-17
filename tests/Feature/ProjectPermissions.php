@@ -102,7 +102,7 @@ class ProjectPermissions extends TestCase
         $response = $this->get('/api/v1/index.php');
         $response->assertJson([
             'projectname' => 'PublicProject',
-            'public' => Project::ACCESS_PUBLIC
+            'public' => Project::ACCESS_PUBLIC,
         ]);
 
         // Verify that viewProjects.php only lists the public project.
@@ -138,7 +138,7 @@ class ProjectPermissions extends TestCase
         $response = $this->actingAs($this->normal_user)->get('/api/v1/index.php');
         $response->assertJson([
             'projectname' => 'PublicProject',
-            'public' => Project::ACCESS_PUBLIC
+            'public' => Project::ACCESS_PUBLIC,
         ]);
 
         // Verify that we can access the protected project when logged in
@@ -147,7 +147,7 @@ class ProjectPermissions extends TestCase
         $response = $this->actingAs($this->normal_user)->get('/api/v1/index.php');
         $response->assertJson([
             'projectname' => 'ProtectedProject',
-            'public' => Project::ACCESS_PROTECTED
+            'public' => Project::ACCESS_PROTECTED,
         ]);
 
         // Add the user to PrivateProject1.
@@ -167,7 +167,7 @@ class ProjectPermissions extends TestCase
         $response = $this->actingAs($this->normal_user)->get('/api/v1/index.php');
         $response->assertJson([
             'projectname' => 'PrivateProject1',
-            'public' => Project::ACCESS_PRIVATE
+            'public' => Project::ACCESS_PRIVATE,
         ]);
 
         // Verify that she cannot access PrivateProject2.
@@ -198,25 +198,25 @@ class ProjectPermissions extends TestCase
         $response = $this->actingAs($this->admin_user)->get('/api/v1/index.php');
         $response->assertJson([
             'projectname' => 'PublicProject',
-            'public' => Project::ACCESS_PUBLIC
+            'public' => Project::ACCESS_PUBLIC,
         ]);
         $_GET['project'] = 'ProtectedProject';
         $response = $this->actingAs($this->admin_user)->get('/api/v1/index.php');
         $response->assertJson([
             'projectname' => 'ProtectedProject',
-            'public' => Project::ACCESS_PROTECTED
+            'public' => Project::ACCESS_PROTECTED,
         ]);
         $_GET['project'] = 'PrivateProject1';
         $response = $this->actingAs($this->admin_user)->get('/api/v1/index.php');
         $response->assertJson([
             'projectname' => 'PrivateProject1',
-            'public' => Project::ACCESS_PRIVATE
+            'public' => Project::ACCESS_PRIVATE,
         ]);
         $_GET['project'] = 'PrivateProject2';
         $response = $this->actingAs($this->admin_user)->get('/api/v1/index.php');
         $response->assertJson([
             'projectname' => 'PrivateProject2',
-            'public' => Project::ACCESS_PRIVATE
+            'public' => Project::ACCESS_PRIVATE,
         ]);
 
         // Verify that admin sees all four projects on viewProjects.php

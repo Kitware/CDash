@@ -50,7 +50,7 @@ final class CoverageController extends AbstractBuildController
         if (!isset($userid) || !is_numeric($userid)) {
             return view('cdash', [
                 'xsl' => true,
-                'xsl_content' => 'Not a valid userid!'
+                'xsl_content' => 'Not a valid userid!',
             ]);
         }
 
@@ -84,7 +84,7 @@ final class CoverageController extends AbstractBuildController
         if (!Gate::allows('edit-project', $Project)) {
             return view('cdash', [
                 'xsl' => true,
-                'xsl_content' => "You don't have the permissions to access this page"
+                'xsl_content' => "You don't have the permissions to access this page",
             ]);
         }
 
@@ -374,7 +374,7 @@ final class CoverageController extends AbstractBuildController
             'xsl' => true,
             'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/manageCoverage', true),
             'project' => $Project,
-            'title' => 'Manage Coverage'
+            'title' => 'Manage Coverage',
         ]);
     }
 
@@ -730,7 +730,7 @@ final class CoverageController extends AbstractBuildController
             'xsl' => true,
             'xsl_content' => generate_XSLT($xml, 'viewCoverage', true),
             'project' => $this->project,
-            'title' => 'Coverage'
+            'title' => 'Coverage',
         ]);
     }
 

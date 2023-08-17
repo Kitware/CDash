@@ -634,7 +634,7 @@ class ViewTest extends BuildApi
 
         $csv_contents = [];
         // Standard columns.
-        $csv_headers = ['Name', 'Time' ,'Details' , 'Status'];
+        $csv_headers = ['Name', 'Time','Details', 'Status'];
         if ($projectshowtesttime) {
             $csv_headers[] = 'Time Status';
         }

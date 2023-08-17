@@ -173,7 +173,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
             'name' => 'Win32-MSVC2009',
             'type' => 'Nightly',
             'generator' => 'ctest2.6-patch 0',
-            'command' => 'F:\PROGRA~1\MICROS~1.0\Common7\IDE\VCExpress.exe BatchMake.sln /build Release /project ALL_BUILD'
+            'command' => 'F:\PROGRA~1\MICROS~1.0\Common7\IDE\VCExpress.exe BatchMake.sln /build Release /project ALL_BUILD',
         ];
         $this->assertEqual($result[0], $expected);
     }

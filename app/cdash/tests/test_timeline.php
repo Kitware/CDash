@@ -26,7 +26,7 @@ class TimelineTestCase extends KWWebTestCase
         $payload = [
             'buildid' => $build->Id,
             'groupid' => $build->GroupId,
-            'expected' => $expected
+            'expected' => $expected,
         ];
         try {
             $response = $client->request('POST',
@@ -81,15 +81,15 @@ class TimelineTestCase extends KWWebTestCase
 
         $answer_key = [
             'index.php' => [
-                'Test Failures' => 1
+                'Test Failures' => 1,
             ],
             'testOverview.php' => [
                 'Failing Tests' => 1,
                 'Not Run Tests' => 1,
-                'Passing Tests' => 1
+                'Passing Tests' => 1,
             ],
             'viewBuildGroup.php' => [
-                'Test Failures' => 1
+                'Test Failures' => 1,
             ],
         ];
         foreach ($pages_to_check as $page) {
@@ -145,8 +145,8 @@ class TimelineTestCase extends KWWebTestCase
                 [
                     'field'   => 'buildname',
                     'compare' => 63,
-                    'value'   => 'vs'
-                ]
+                    'value'   => 'vs',
+                ],
             ],
         ];
 
@@ -155,16 +155,16 @@ class TimelineTestCase extends KWWebTestCase
         $answer_key = [
             'index.php' => [
                 'Errors' => 1,
-                'Test Failures' => 2
+                'Test Failures' => 2,
             ],
             'testOverview.php' => [
                 'Failing Tests' => 2,
                 'Not Run Tests' => 2,
-                'Passing Tests' => 2
+                'Passing Tests' => 2,
             ],
             'viewBuildGroup.php' => [
                 'Errors' => 1,
-                'Test Failures' => 2
+                'Test Failures' => 2,
             ],
         ];
 

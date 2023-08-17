@@ -334,7 +334,7 @@ class GitHub implements RepositoryInterface
             'head_sha'    => $head_sha,
             'details_url' => $summary_url,
             'started_at'  => $now,
-            'status'      => 'in_progress'
+            'status'      => 'in_progress',
         ];
 
         // Populate payload with build results.

@@ -33,7 +33,7 @@ class JUnitHandlerTestCase extends KWWebTestCase
         // Create project.
         $settings = [
             'Name' => 'JUnitHandlerProject',
-            'Public' => 1
+            'Public' => 1,
         ];
         $projectid = $this->createProject($settings);
         if ($projectid < 1) {

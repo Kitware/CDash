@@ -29,6 +29,6 @@ class AuthToken extends Model
         'expires',
         'description',
         'projectid',
-        'scope'
+        'scope',
     ];
 }

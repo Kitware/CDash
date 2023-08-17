@@ -49,7 +49,7 @@ class RepositoryService
             'description' => $description,
             'commit_hash' => $revision,
             'state'       => $state,
-            'target_url'  => $target_url
+            'target_url'  => $target_url,
         ];
         $this->repository->setStatus($options);
     }

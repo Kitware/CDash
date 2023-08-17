@@ -82,7 +82,7 @@ class TestSchemaMigration extends TestCase
             'path'      => '/tmp',
             'command'   => 'ls',
             'details'   => 'Completed',
-            'output'    => '0'
+            'output'    => '0',
         ];
         $test1 = $base_test;
 
@@ -108,7 +108,7 @@ class TestSchemaMigration extends TestCase
             'timemean' => 0.00,
             'timestd' => 0.00,
             'timestatus' => 0,
-            'newstatus' => 1
+            'newstatus' => 1,
         ];
 
         $buildtest1 = $base_buildtest;
@@ -123,7 +123,7 @@ class TestSchemaMigration extends TestCase
         $base_testlabel = [
             'labelid' => 1,
             'buildid' => 1,
-            'testid' => 1
+            'testid' => 1,
         ];
         $testlabel1 = $base_testlabel;
         $testlabel2 = $base_testlabel;
@@ -137,7 +137,7 @@ class TestSchemaMigration extends TestCase
         $base_testimage = [
             'imgid' => 1,
             'testid' => 1,
-            'role' => 'BaseImage'
+            'role' => 'BaseImage',
         ];
         $testimage1 = $base_testimage;
         $testimage2 = $base_testimage;
@@ -154,7 +154,7 @@ class TestSchemaMigration extends TestCase
             'testid' => 1,
             'name' => 'WallTime',
             'type' => 'numeric/double',
-            'value' => 0.1
+            'value' => 0.1,
         ];
         $testmeasurement1 = $base_testmeasurement;
         $testmeasurement2 = $base_testmeasurement;
@@ -199,19 +199,19 @@ class TestSchemaMigration extends TestCase
                 'crc32' => 123,
                 'path' => '/tmp',
                 'command' => 'ls',
-                'output' => '0'
+                'output' => '0',
             ],
             [
                 'crc32' => 456,
                 'path' => '/tmp',
                 'command' => 'ls',
-                'output' => '0 0 0'
+                'output' => '0 0 0',
             ],
             [
                 'crc32' => 789,
                 'path' => '/tmp',
                 'command' => 'ls',
-                'output' => 'something else'
+                'output' => 'something else',
             ],
         ];
         foreach ($expected_testoutputs as $expected_testoutput) {

@@ -79,7 +79,7 @@ class LoginController extends AbstractController
             ->response = response()
                 ->view('auth.login', [
                         'errors' => $e->validator->getMessageBag(),
-                        'title' => 'Login'
+                        'title' => 'Login',
                     ],
                     401
                 );

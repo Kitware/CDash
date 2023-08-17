@@ -43,7 +43,7 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
             'release_case/thirdparty/Coverage.xml',
             'release_case/thirdparty/CoverageLog-0.xml',
             'release_case/releaseonly/Coverage.xml',
-            'release_case/releaseonly/CoverageLog-0.xml'
+            'release_case/releaseonly/CoverageLog-0.xml',
             ];
         foreach ($files as $filename) {
             $file_to_submit = "$this->DataDir/$filename";

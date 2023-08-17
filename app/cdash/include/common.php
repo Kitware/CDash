@@ -87,7 +87,7 @@ function generate_XSLT($xml, string $pageName, bool $return_html = false): strin
     $xh = new XSLTProcessor();
 
     $arguments = [
-        '/_xml' => $xml
+        '/_xml' => $xml,
     ];
 
     if (!empty($config->get('CDASH_DEBUG_XML'))) {

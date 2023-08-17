@@ -75,7 +75,7 @@ if (!function_exists('CDash\Api\v1\ExpectedBuild\rest_get')) {
             ':buildtype' => $buildtype,
             ':buildname' => $buildname,
             ':projectid' => $projectid,
-            ':starttime' => $currentUTCtime
+            ':starttime' => $currentUTCtime,
         ];
         $db->execute($stmt, $query_params);
         $lastBuildDate = $stmt->fetchColumn();

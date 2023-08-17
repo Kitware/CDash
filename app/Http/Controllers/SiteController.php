@@ -744,7 +744,7 @@ final class SiteController extends AbstractController
             'ip' => $ip,
             'latitude' => $latitude,
             'longitude' => $longitude,
-            'outoforder' => $outoforder
+            'outoforder' => $outoforder,
         ]);
 
         add_last_sql_error('update_site');

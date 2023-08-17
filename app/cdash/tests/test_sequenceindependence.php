@@ -24,7 +24,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             'Notes',
             'Test',
             'Update',
-            'Upload'
+            'Upload',
         ];
         if ($this->PerformOrderTest($file_order)) {
             $this->pass('Passed');

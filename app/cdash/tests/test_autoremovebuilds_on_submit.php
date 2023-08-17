@@ -110,7 +110,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
             VALUES (:groupid, :endtime)');
         $query_params = [
             ':groupid' => $existing_group_id,
-            ':endtime' => '2010-02-25 00:00:00'
+            ':endtime' => '2010-02-25 00:00:00',
         ];
         $db->execute($stmt, $query_params);
 

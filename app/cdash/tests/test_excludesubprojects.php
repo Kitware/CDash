@@ -245,63 +245,63 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
                 'filter' => 'buildduration',
                 'compare' => 43,
                 'value' => '10m%2045s',
-                'exclude' => 'Teuchos'
+                'exclude' => 'Teuchos',
             ],
             [
                 'filter' => 'buildduration',
                 'compare' => 44,
                 'value' => '6m%2026s',
                 'exclude' => 'Sacado',
-                'reverse' => true
+                'reverse' => true,
             ],
             [
                 'filter' => 'builderrors',
                 'compare' => 43,
                 'value' => 5,
-                'exclude' => 'Mesquite'
+                'exclude' => 'Mesquite',
             ],
             [
                 'filter' => 'buildwarnings',
                 'compare' => 42,
                 'value' => 29,
-                'exclude' => 'Sacado'
+                'exclude' => 'Sacado',
             ],
             [
                 'filter' => 'configureduration',
                 'compare' => 41,
                 'value' => 309,
-                'exclude' => 'Teuchos'
+                'exclude' => 'Teuchos',
             ],
             [
                 'filter' => 'configureerrors',
                 'compare' => 43,
                 'value' => 21,
-                'exclude' => 'Kokkos'
+                'exclude' => 'Kokkos',
             ],
             [
                 'filter' => 'configurewarnings',
                 'compare' => 42,
                 'value' => 35,
-                'exclude' => 'Sacado'
+                'exclude' => 'Sacado',
             ],
             [
                 'filter' => 'testsfailed',
                 'compare' => 43,
                 'value' => 10,
-                'exclude' => 'TrilinosFramework'
+                'exclude' => 'TrilinosFramework',
             ],
             [
                 'filter' => 'testsnotrun',
                 'compare' => 42,
                 'value' => 65,
-                'exclude' => 'Didasko'
+                'exclude' => 'Didasko',
             ],
             [
                 'filter' => 'testspassed',
                 'compare' => 42,
                 'value' => 33,
-                'exclude' => 'Sacado'
-            ]
+                'exclude' => 'Sacado',
+            ],
         ];
 
         foreach ($test_cases as $test_case) {

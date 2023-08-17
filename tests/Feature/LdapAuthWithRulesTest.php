@@ -30,7 +30,7 @@ class LdapAuthWithRulesTest extends LdapTest
             'userprinciplename' => [$email],
             'mail' => $email,
             'sn' => 'Bobby',
-            'givenName' => 'Ricky'
+            'givenName' => 'Ricky',
         ]);
 
         Resolver::shouldReceive('byCredentials')
@@ -70,7 +70,7 @@ class LdapAuthWithRulesTest extends LdapTest
             'userprinciplename' => [$email],
             'mail' => $email,
             'sn' => 'Bobby',
-            'givenName' => 'Ricky'
+            'givenName' => 'Ricky',
         ]);
 
         $mock_ldap_resource = fopen(__FILE__, 'r');

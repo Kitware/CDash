@@ -135,7 +135,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $response = $this->post($this->url . '/api/authtokens/create', [
             'description' => 'mytoken',
             'scope' => $scope,
-            'projectid' => $this->project->Id
+            'projectid' => $this->project->Id,
         ]);
         $response = json_decode($response, true);
         $this->token = $response['raw_token'];

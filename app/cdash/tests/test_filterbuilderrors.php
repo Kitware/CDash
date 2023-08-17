@@ -26,9 +26,9 @@ class FilterBuildErrorsTestCase extends KWWebTestCase
             'Name' => 'FilterErrors',
             'Public' => 1,
             'ErrorsFilter' => <<<FILTER
-was not declared in this scope
-No such file or directory
-FILTER
+                was not declared in this scope
+                No such file or directory
+                FILTER,
 ];
         $projectid = $this->createProject($settings);
         if ($projectid < 1) {

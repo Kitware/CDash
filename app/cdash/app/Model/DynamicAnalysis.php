@@ -237,7 +237,7 @@ class DynamicAnalysis
                      $this->Name,
                      $path,
                      $fullCommandLine,
-                     $this->Log
+                     $this->Log,
                  ]));
 
         if ($query === false) {

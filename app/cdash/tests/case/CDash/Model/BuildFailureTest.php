@@ -54,7 +54,7 @@ class BuildFailureTest extends CDashTestCase
             'stdoutput'        => '',
             'stderror'         => '/projects/foo/src/main.cpp: In function `int main(int, char**)`:
 /projects/foo/src/main.cpp:2:3: error: `asdf` was not declared in this scope
-   asdf = 0;'
+   asdf = 0;',
         ];
         $this->mock_project->CvsUrl = 'https://github.com/FooCo/foo';
         $marshaled = $this->mock_buildfailure->marshal($input_data, $this->mock_project, '12', true, $this->mock_buildfailure);
@@ -69,7 +69,7 @@ class BuildFailureTest extends CDashTestCase
             'exitcondition'    => '2',
             'stdoutput'        => '',
             'stderror'         => "foo/src/main.cpp: In function `int main(int, char**)`:\n<a href='https://github.com/FooCo/foo/blob/12/src/main.cpp#L2'>src/main.cpp:2</a>:3: error: `asdf` was not declared in this scope\n   asdf = 0;",
-            'cvsurl' => 'https://github.com/FooCo/foo/blob/12/src/main.cpp'
+            'cvsurl' => 'https://github.com/FooCo/foo/blob/12/src/main.cpp',
         ];
         $this->assertEquals($expected, $marshaled);
     }

@@ -362,7 +362,7 @@ class IndexChildrenPhpFilters extends IndexPhpFilters
         return [
             'field' => 'subprojects',
             'compare' => 92,
-            'value' => ''
+            'value' => '',
         ];
     }
 }
@@ -638,7 +638,7 @@ class CompareCoveragePhpFilters extends DefaultFilters
             'field' => 'subproject',
             'fieldtype' => 'string',
             'compare' => 61,
-            'value' => ''
+            'value' => '',
         ];
     }
 
@@ -673,7 +673,7 @@ class TestOverviewPhpFilters extends DefaultFilters
             'field' => 'buildname',
             'fieldtype' => 'string',
             'compare' => 63,
-            'value' => ''
+            'value' => '',
         ];
     }
 
@@ -1020,7 +1020,7 @@ function parse_filter_from_request($field_var, $compare_var, $value_var,
     return [
         'field'   => $field,
         'compare' => $compare,
-        'value'   => $value
+        'value'   => $value,
     ];
 }
 
@@ -1075,7 +1075,7 @@ function get_filterdata_from_request($page_id = '')
             // Handle block of filters.
             $subfiltercount = pdo_real_escape_numeric(@$_GET["field{$i}count"]);
             $filter = [
-                'filters' => []
+                'filters' => [],
             ];
             for ($j = 1; $j <= $subfiltercount; ++$j) {
                 $filter['filters'][] = parse_filter_from_request(

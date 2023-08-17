@@ -191,28 +191,28 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
                 [
                     'simpletest@localhost',
                     BitmaskNotificationPreferences::EMAIL_TEST |
-                    BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION
+                    BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION,
                 ],
                 [
                     'nox-noemail@noemail',
                     BitmaskNotificationPreferences::EMAIL_TEST |
                     BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
                     BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
-                    ['NOX', 'MyExperimentalFeature']
+                    ['NOX', 'MyExperimentalFeature'],
                 ],
                 [
                     'optika-noemail@noemail',
                     BitmaskNotificationPreferences::EMAIL_TEST |
                     BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
                     BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
-                    ['Optika', 'MyThirdPartyDependency']
+                    ['Optika', 'MyThirdPartyDependency'],
                 ],
                 [
                     'trop-noemail@noemail',
                     BitmaskNotificationPreferences::EMAIL_TEST |
                     BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
                     BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
-                    ['RTOp']
+                    ['RTOp'],
                 ],
             ];
 
@@ -266,28 +266,28 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
             [
                 'simpletest@localhost',
                 BitmaskNotificationPreferences::EMAIL_CONFIGURE |
-                BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION
+                BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION,
             ],
             [
                 'nox-noemail@noemail',
                 BitmaskNotificationPreferences::EMAIL_CONFIGURE |
                 BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
                 BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
-                ['NOX', 'MyExperimentalFeature']
+                ['NOX', 'MyExperimentalFeature'],
             ],
             [
                 'optika-noemail@noemail',
                 BitmaskNotificationPreferences::EMAIL_CONFIGURE |
                 BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
                 BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
-                ['Optika', 'MyThirdPartyDependency']
+                ['Optika', 'MyThirdPartyDependency'],
             ],
             [
                 'trop-noemail@noemail',
                 BitmaskNotificationPreferences::EMAIL_CONFIGURE |
                 BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
                 BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
-                ['RTOp']
+                ['RTOp'],
             ],
         ];
 
@@ -323,7 +323,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
                 'simpletest@localhost',
                 BitmaskNotificationPreferences::EMAIL_ERROR |
                 BitmaskNotificationPreferences::EMAIL_WARNING |
-                BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION
+                BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION,
             ],
             [
                 'nox-noemail@noemail',
@@ -331,7 +331,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
                 BitmaskNotificationPreferences::EMAIL_WARNING |
                 BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
                 BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
-                ['NOX', 'MyExperimentalFeature']
+                ['NOX', 'MyExperimentalFeature'],
             ],
             [
                 'optika-noemail@noemail',
@@ -339,7 +339,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
                 BitmaskNotificationPreferences::EMAIL_WARNING |
                 BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
                 BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
-                ['Optika', 'MyThirdPartyDependency']
+                ['Optika', 'MyThirdPartyDependency'],
             ],
             [
                 'trop-noemail@noemail',
@@ -347,7 +347,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
                 BitmaskNotificationPreferences::EMAIL_WARNING |
                 BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
                 BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
-                ['RTOp']
+                ['RTOp'],
             ],
         ];
 
@@ -383,7 +383,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
             ->createPassedTest(
                 'thirdparty',
                 ['Labels' =>
-                    ['MyThirdPartyDependency', 'NotASubproject']
+                    ['MyThirdPartyDependency', 'NotASubproject'],
                 ]
             )
             ->setStartTime($start)
@@ -393,7 +393,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
             [ // This user should receive email
                 'user_1@company.tld',
                 BitmaskNotificationPreferences::EMAIL_DYNAMIC_ANALYSIS,
-                []
+                [],
             ],
             [
                 // This user should not receive an email as they are not an author
@@ -401,13 +401,13 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
                 BitmaskNotificationPreferences::EMAIL_WARNING |
                 BitmaskNotificationPreferences::EMAIL_ERROR |
                 BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION,
-                []
+                [],
             ],
             [
                 // This user should receive an email, subscribed to two labels, one present
                 'user_3@company.tld',
                 BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
-                ['MyThirdPartyDependency1', 'MyProductionCode']
+                ['MyThirdPartyDependency1', 'MyProductionCode'],
             ],
             [
                 // This user should receive an email, with MyExperimentalFeature appended to subject
@@ -420,7 +420,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
                 'user_5@company.tld',
                 BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION,
                 [],
-            ]
+            ],
         ];
 
         $notifications = $this->getNotifications($subscribers);

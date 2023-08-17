@@ -31,42 +31,42 @@ class MigrateConfigCommand extends TestCase
 
         // Write an example config.local.php file.
         $config_contents = <<<'EOT'
-<?php
-date_default_timezone_set('America/New_York');
-$CDASH_TESTING_MODE = true;
-$CDASH_DB_TYPE = 'mysql';
-$CDASH_DB_NAME = 'cdash4simpletest';
-$CDASH_DB_PASS = 'my_fake_cdash_db_password';
-$CDASH_DB_LOGIN = 'my_fake_cdash_db_user';
-$CDASH_COOKIE_EXPIRATION_TIME = '7200';
-$CDASH_EMAIL_SMTP_HOST = 'cdash_smtp_host';
-$CDASH_EMAIL_SMTP_LOGIN = 'cdash_smtp_user';
-$CDASH_EMAIL_SMTP_PASS = 'cdash_smtp_password';
-$CDASH_BASE_URL = 'https://localhost/CDash';
-$CDASH_LOG_LEVEL = LOG_DEBUG;
-$CDASH_UNLIMITED_PROJECTS = ['Project1', 'Project2'];
-$CDASH_GOOGLE_MAP_API_KEY['cdash.org'] = 'ABC123';
-$OAUTH2_PROVIDERS['GitHub'] = [
-    'clientId'          => 'github_client_id',
-    'clientSecret'      => 'github_client_secret'
-];
-$OAUTH2_PROVIDERS['GitLab'] = [
-    'clientId'          => 'gitlab_client_id',
-    'clientSecret'      => 'gitlab_client_secret',
-    'domain'            => 'https://gitlab.kitware.com'
-];
-$OAUTH2_PROVIDERS['Google'] = [
-    'clientId'          => 'google_client_id',
-    'clientSecret'      => 'google_client_secret'
-];
+            <?php
+            date_default_timezone_set('America/New_York');
+            $CDASH_TESTING_MODE = true;
+            $CDASH_DB_TYPE = 'mysql';
+            $CDASH_DB_NAME = 'cdash4simpletest';
+            $CDASH_DB_PASS = 'my_fake_cdash_db_password';
+            $CDASH_DB_LOGIN = 'my_fake_cdash_db_user';
+            $CDASH_COOKIE_EXPIRATION_TIME = '7200';
+            $CDASH_EMAIL_SMTP_HOST = 'cdash_smtp_host';
+            $CDASH_EMAIL_SMTP_LOGIN = 'cdash_smtp_user';
+            $CDASH_EMAIL_SMTP_PASS = 'cdash_smtp_password';
+            $CDASH_BASE_URL = 'https://localhost/CDash';
+            $CDASH_LOG_LEVEL = LOG_DEBUG;
+            $CDASH_UNLIMITED_PROJECTS = ['Project1', 'Project2'];
+            $CDASH_GOOGLE_MAP_API_KEY['cdash.org'] = 'ABC123';
+            $OAUTH2_PROVIDERS['GitHub'] = [
+                'clientId'          => 'github_client_id',
+                'clientSecret'      => 'github_client_secret'
+            ];
+            $OAUTH2_PROVIDERS['GitLab'] = [
+                'clientId'          => 'gitlab_client_id',
+                'clientSecret'      => 'gitlab_client_secret',
+                'domain'            => 'https://gitlab.kitware.com'
+            ];
+            $OAUTH2_PROVIDERS['Google'] = [
+                'clientId'          => 'google_client_id',
+                'clientSecret'      => 'google_client_secret'
+            ];
 
-EOT;
+            EOT;
         file_put_contents($this->config_file, $config_contents);
 
         file_put_contents($this->test_file, <<<'EOT'
-MIX_APP_URL="${APP_URL}"
-DB_PASSWORD=my_db_password
-EOT, FILE_APPEND);
+            MIX_APP_URL="${APP_URL}"
+            DB_PASSWORD=my_db_password
+            EOT, FILE_APPEND);
 
         // Run the migration command.
         $this->artisan('config:migrate', ['output' => $this->test_file]);
@@ -77,8 +77,8 @@ EOT, FILE_APPEND);
         $this::assertStringContainsString('APP_URL=https://localhost/CDash', $actual);
         $this::assertStringContainsString('APP_ENV=production', $actual);
         $expected = <<<'EOT'
-MIX_APP_URL="${APP_URL}"
-EOT;
+            MIX_APP_URL="${APP_URL}"
+            EOT;
         $this::assertStringContainsString($expected, $actual);
         $this::assertStringContainsString('SESSION_LIFETIME=120', $actual);
         $this::assertStringContainsString('MAIL_HOST=cdash_smtp_host', $actual);

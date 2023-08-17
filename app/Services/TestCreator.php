@@ -177,7 +177,7 @@ class TestCreator
         } else {
             DB::insert('INSERT INTO test (projectid, name) VALUES (:projectid, :name)', [
                 ':projectid' => $this->projectid,
-                ':name'      => $this->testName
+                ':name'      => $this->testName,
             ]);
             $testid = DB::getPdo()->lastInsertId();
         }

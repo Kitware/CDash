@@ -2643,7 +2643,7 @@ class Build
                     'buildwarnings'  => $nbuildwarnings,
                     'parentid'       => $this->ParentId,
                     'uuid'           => $this->Uuid,
-                    'changeid'       => $this->PullRequest
+                    'changeid'       => $this->PullRequest,
                 ]);
                 $build_created = true;
                 $this->Id = $new_id;
@@ -3083,7 +3083,7 @@ class Build
                     'Configure' => [
                         'errors' => ($this->BuildConfigure ? $this->BuildConfigure->NumberOfErrors : 0),
                         'warnings' => ($this->BuildConfigure ? $this->BuildConfigure->NumberOfWarnings : 0),
-                    ] ,
+                    ],
                     'TestFailure' => [
                         'passed' => [
                             'new' => $passed,
@@ -3113,11 +3113,11 @@ class Build
                     'Configure' => [
                         'errors' => $diff['configureerrors'],
                         'warnings' => $diff['configurewarnings'],
-                    ] ,
+                    ],
                     'TestFailure' => [
                         'passed' => [
                             'new' => $diff['testpassedpositive'],
-                            'broken' => $diff['testpassednegative']
+                            'broken' => $diff['testpassednegative'],
                         ],
                         'failed' => [
                             'new' => $diff['testfailedpositive'],
@@ -3125,7 +3125,7 @@ class Build
                         ],
                         'notrun' => [
                             'new' => $diff['testnotrunpositive'],
-                            'fixed' => $diff['testnotrunnegative']
+                            'fixed' => $diff['testnotrunnegative'],
                         ],
                     ],
                 ];

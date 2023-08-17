@@ -687,16 +687,16 @@ final class BuildController extends AbstractBuildController
         $update_groups = [
             [
                 'description' => "{$this->project->Name} Updated Files ($num_updated_files)",
-                'directories' => $updated_files
+                'directories' => $updated_files,
             ],
             [
                 'description' => "Modified Files ($num_modified_files)",
-                'directories' => $modified_files
+                'directories' => $modified_files,
             ],
             [
                 'description' => "Conflicting Files ($num_conflicting_files)",
-                'directories' => $conflicting_files
-            ]
+                'directories' => $conflicting_files,
+            ],
         ];
         $response['updategroups'] = $update_groups;
 
@@ -850,7 +850,7 @@ final class BuildController extends AbstractBuildController
 
         // Site
         $extra_build_fields = [
-            'site' => $this->build->GetSite()->name
+            'site' => $this->build->GetSite()->name,
         ];
 
         // Update
@@ -1177,7 +1177,7 @@ final class BuildController extends AbstractBuildController
         $this->setBuildById(intval($_GET['buildid'] ?? -1));
         $rule = new BuildGroupRule($this->build);
         return response()->json([
-            'expected' => $rule->GetExpected()
+            'expected' => $rule->GetExpected(),
         ]);
     }
 }

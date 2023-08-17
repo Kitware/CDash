@@ -137,7 +137,7 @@ class BuildGroupRuleTestCase extends KWWebTestCase
             $payload = [
                 'buildid'  => $build->Id,
                 'groupid'  => $build->GroupId,
-                'expected' => 1
+                'expected' => 1,
             ];
             try {
                 $response = $client->request('POST',
@@ -155,7 +155,7 @@ class BuildGroupRuleTestCase extends KWWebTestCase
         $payload = [
             'buildid'    => $build1->Id,
             'expected'   => 1,
-            'newgroupid' => $group->GetId()
+            'newgroupid' => $group->GetId(),
         ];
         try {
             $response = $client->request('POST',

@@ -175,7 +175,7 @@ class BuildRelationship
         return [
             'buildid'      => $this->Build->Id,
             'relatedid'    => $this->RelatedBuild->Id,
-            'relationship' => $this->Relationship
+            'relationship' => $this->Relationship,
         ];
     }
 

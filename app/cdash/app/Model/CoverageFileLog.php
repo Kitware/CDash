@@ -91,7 +91,7 @@ class CoverageFileLog
                         ->insert([
                             'buildid' => $this->BuildId,
                             'fileid' => $this->FileId,
-                            'log' => $log
+                            'log' => $log,
                         ]);
                 }
             }
@@ -237,7 +237,7 @@ class CoverageFileLog
                        ', [
                            intval($this->AggregateBuildId),
                            intval($this->Build->ProjectId),
-                           intval($this->Build->SubProjectId)
+                           intval($this->Build->SubProjectId),
                        ]);
                 if (!$row || !array_key_exists('id', $row)) {
                     // An aggregate build for this SubProject doesn't exist yet.

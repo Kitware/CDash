@@ -797,7 +797,7 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime): void
                            $currentEndUTCTime,
                            $projectid,
                            $currentBeginUTCTime,
-                           $currentEndUTCTime
+                           $currentEndUTCTime,
                        ]);
 
     $projectname = get_project_name($projectid);
@@ -1036,7 +1036,7 @@ function addDailyChanges(int $projectid): void
                 $email,
                 $log,
                 $revision,
-                $priorrevision
+                $priorrevision,
             ]);
             add_last_sql_error('addDailyChanges', $projectid);
         }
@@ -1167,7 +1167,7 @@ function addDailyChanges(int $projectid): void
                   endtime < :endtime");
         $query_params = [
             ':projectid' => $project->Id,
-            ':endtime' => $cutoff_date
+            ':endtime' => $cutoff_date,
         ];
         $db->execute($stmt, $query_params);
         while ($row = $stmt->fetch()) {

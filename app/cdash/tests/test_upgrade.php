@@ -832,7 +832,7 @@ class UpgradeTestCase extends KWWebTestCase
         $expected = [
             1 => 1,
             2 => 2,
-            3 => 0
+            3 => 0,
         ];
         $stmt = $pdo->query(
             "SELECT id, testduration FROM $build_table_name");

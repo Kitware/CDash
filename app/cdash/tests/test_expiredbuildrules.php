@@ -31,7 +31,7 @@ class ExpiredBuildRulesTestCase extends KWWebTestCase
             ':siteid' => 0,
             ':parentgroupid' => 0,
             ':starttime' => '2009-02-23 00:00:00',
-            ':endtime' => '2009-02-25 00:00:00'
+            ':endtime' => '2009-02-25 00:00:00',
         ];
         $db->execute($stmt, $query_params);
 

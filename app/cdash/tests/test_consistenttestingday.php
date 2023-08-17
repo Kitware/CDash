@@ -32,7 +32,7 @@ class ConsistentTestingDayTestCase extends KWWebTestCase
         $this->project = new Project();
         $this->project->Id = $this->createProject([
             'Name' => 'ConsistentTestingDay',
-            'NightlyTime' => '16:30:00 America/New_York'
+            'NightlyTime' => '16:30:00 America/New_York',
         ]);
         $this->project->Fill();
 

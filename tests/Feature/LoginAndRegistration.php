@@ -174,7 +174,7 @@ class LoginAndRegistration extends TestCase
             'idp_logout_url' => "$saml2_tenant_uri/logout",
             'idp_x509_cert' => base64_encode('asdf'),
             'metadata' => '{}',
-            'name_id_format' => 'persistent'
+            'name_id_format' => 'persistent',
         ];
         $saml2_tenant_id = DB::table('saml2_tenants')->insertGetId($params);
 
