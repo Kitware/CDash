@@ -11,19 +11,19 @@ namespace CDash\Model;
  */
 class ActionableTypes
 {
-    const BUILD_ERROR = 'BuildError';
-    const BUILD_WARNING = 'BuildWarning';
-    const CONFIGURE = 'Configure';
-    const DYNAMIC_ANALYSIS = 'DynamicAnalysis';
-    const TEST = 'TestFailure';
-    const UPDATE = 'UpdateError';
+    public const BUILD_ERROR = 'BuildError';
+    public const BUILD_WARNING = 'BuildWarning';
+    public const CONFIGURE = 'Configure';
+    public const DYNAMIC_ANALYSIS = 'DynamicAnalysis';
+    public const TEST = 'TestFailure';
+    public const UPDATE = 'UpdateError';
 
-    const UPDATE_FIX = 'UpdateFix';
-    const BUILD_WARNING_FIX = 'BuildWarningFix';
-    const BUILD_ERROR_FIX = 'BuildErrorFix';
-    const CONFIGURE_FIX = 'ConfigureFix';
-    const TEST_FIX = 'TestFix';
-    const MISSING_TEST = 'TestMissing';
+    public const UPDATE_FIX = 'UpdateFix';
+    public const BUILD_WARNING_FIX = 'BuildWarningFix';
+    public const BUILD_ERROR_FIX = 'BuildErrorFix';
+    public const CONFIGURE_FIX = 'ConfigureFix';
+    public const TEST_FIX = 'TestFix';
+    public const MISSING_TEST = 'TestMissing';
 
     public static $categories = [
         self::UPDATE => 1,

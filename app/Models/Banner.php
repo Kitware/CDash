@@ -24,6 +24,6 @@ class Banner extends Model
 
     protected $fillable = [
         'projectid',
-        'text'
+        'text',
     ];
 }

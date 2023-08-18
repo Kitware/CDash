@@ -232,7 +232,7 @@ class SimpleCookieJar
      */
     public function __construct()
     {
-        $this->cookies = array();
+        $this->cookies = [];
     }
 
     /**
@@ -242,7 +242,7 @@ class SimpleCookieJar
      */
     public function restartSession($date = false)
     {
-        $surviving_cookies = array();
+        $surviving_cookies = [];
         for ($i = 0; $i < count($this->cookies); $i++) {
             if (!$this->cookies[$i]->getValue()) {
                 continue;
@@ -332,7 +332,7 @@ class SimpleCookieJar
                 }
             }
         }
-        return (isset($value) ? $value : false);
+        return ($value ?? false);
     }
 
     /**
@@ -367,7 +367,7 @@ class SimpleCookieJar
      */
     public function selectAsPairs($url)
     {
-        $pairs = array();
+        $pairs = [];
         foreach ($this->cookies as $cookie) {
             if ($this->isMatch($cookie, $url->getHost(), $url->getPath(), $cookie->getName())) {
                 $pairs[] = $cookie->getName() . '=' . $cookie->getValue();

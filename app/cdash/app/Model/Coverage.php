@@ -40,7 +40,7 @@ class Coverage
     public function AddLabel($label)
     {
         if (!isset($this->Labels)) {
-            $this->Labels = array();
+            $this->Labels = [];
         }
 
         $label->CoverageFileId = $this->CoverageFile->Id;

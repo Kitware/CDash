@@ -63,7 +63,7 @@ class BuildErrorFilter
         $query_params = [
             ':errors' => $errors,
             ':projectid' => $this->Project->Id,
-            ':warnings' => $warnings
+            ':warnings' => $warnings,
         ];
         if ($this->PDO->execute($stmt, $query_params)) {
             $this->Fill();

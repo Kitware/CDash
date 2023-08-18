@@ -3,21 +3,21 @@ namespace CDash\Messaging\Notification;
 
 class NotifyOn
 {
-    const AUTHORED = 'Authored';
-    const UPDATE_ERROR = 'UpdateError';
-    const UPDATE = 'Update';
-    const CONFIGURE = 'Configure';
-    const BUILD_WARNING = 'BuildWarning';
-    const BUILD_ERROR = 'BuildError';
-    const TEST_FAILURE = 'TestFailure';
-    const DYNAMIC_ANALYSIS = 'DynamicAnalysis';
-    const FIXED = 'Fixed';
-    const FILTERED = 'Filtered';
-    const LABELED = 'Labeled';
-    const SITE_MISSING = 'SiteMissing';
-    const GROUP_NIGHTLY = 'GroupMembership';
-    const ANY = 'Any';
-    const NEVER = 'Never';
-    const REDUNDANT = 'Redundant';
-    const SUMMARY = 'Summary';
+    public const AUTHORED = 'Authored';
+    public const UPDATE_ERROR = 'UpdateError';
+    public const UPDATE = 'Update';
+    public const CONFIGURE = 'Configure';
+    public const BUILD_WARNING = 'BuildWarning';
+    public const BUILD_ERROR = 'BuildError';
+    public const TEST_FAILURE = 'TestFailure';
+    public const DYNAMIC_ANALYSIS = 'DynamicAnalysis';
+    public const FIXED = 'Fixed';
+    public const FILTERED = 'Filtered';
+    public const LABELED = 'Labeled';
+    public const SITE_MISSING = 'SiteMissing';
+    public const GROUP_NIGHTLY = 'GroupMembership';
+    public const ANY = 'Any';
+    public const NEVER = 'Never';
+    public const REDUNDANT = 'Redundant';
+    public const SUMMARY = 'Summary';
 }

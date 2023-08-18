@@ -31,7 +31,7 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
         // Create a project for this test.
         $settings = [
             'Name' => 'PutDynamicBuildsProject',
-            'Description' => 'PutDynamicBuildsProject'
+            'Description' => 'PutDynamicBuildsProject',
         ];
         $this->ProjectId = $this->createProject($settings);
 
@@ -80,7 +80,7 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
         foreach (['%bar%', '%baz%'] as $match) {
             $query_params = [
                 ':buildname'     => $match,
-                ':parentgroupid' => $this->ParentGroupId
+                ':parentgroupid' => $this->ParentGroupId,
             ];
             $this->PDO->execute($starttime_stmt, $query_params);
             $endtime = $starttime_stmt->fetchColumn();
@@ -125,7 +125,7 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
         foreach ($build_rules as $build_rule) {
             $query_params = [
                 ':buildname'     => "%{$build_rule['match']}%",
-                ':parentgroupid' => $build_rule['parentgroupid']
+                ':parentgroupid' => $build_rule['parentgroupid'],
             ];
             $this->PDO->execute($stmt, $query_params);
             $starttime = $stmt->fetchColumn();

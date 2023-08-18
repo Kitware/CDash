@@ -38,7 +38,7 @@ class BazelJSONTestCase extends KWWebTestCase
             'testfailed' => 1,
             'testpassed' => 1,
             'configureerrors' => 0,
-            'configurewarnings' => 0
+            'configurewarnings' => 0,
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -90,7 +90,7 @@ class BazelJSONTestCase extends KWWebTestCase
             'Name' => 'Bazel',
             'Public' => 1,
             'WarningsFilter' => 'unused variable',
-            'ErrorsFilter' => 'use of undeclared identifier'
+            'ErrorsFilter' => 'use of undeclared identifier',
         ];
         $projectid = $this->createProject($settings);
         if ($projectid < 1) {
@@ -121,7 +121,7 @@ class BazelJSONTestCase extends KWWebTestCase
             'testfailed' => 1,
             'testpassed' => 1,
             'configureerrors' => 0,
-            'configurewarnings' => 0
+            'configurewarnings' => 0,
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -140,7 +140,7 @@ class BazelJSONTestCase extends KWWebTestCase
         // Create a new project.
         $settings = [
             'Name' => 'BazelSubProj',
-            'Public' => 1
+            'Public' => 1,
         ];
         $projectid = $this->createProject($settings);
         if ($projectid < 1) {
@@ -185,7 +185,7 @@ class BazelJSONTestCase extends KWWebTestCase
             'testfailed' => 1,
             'testpassed' => 1,
             'configureerrors' => 0,
-            'configurewarnings' => 0
+            'configurewarnings' => 0,
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -215,7 +215,7 @@ class BazelJSONTestCase extends KWWebTestCase
                         'testfailed' => 0,
                         'testpassed' => 1,
                         'configureerrors' => 0,
-                        'configurewarnings' => 0
+                        'configurewarnings' => 0,
                     ];
                     break;
                 case 'subproj2':
@@ -225,7 +225,7 @@ class BazelJSONTestCase extends KWWebTestCase
                         'testfailed' => 1,
                         'testpassed' => 0,
                         'configureerrors' => 0,
-                        'configurewarnings' => 0
+                        'configurewarnings' => 0,
                     ];
                     break;
                 default:
@@ -268,7 +268,7 @@ class BazelJSONTestCase extends KWWebTestCase
             'testfailed' => 1,
             'testpassed' => 1,
             'configureerrors' => 0,
-            'configurewarnings' => 0
+            'configurewarnings' => 0,
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -324,7 +324,7 @@ class BazelJSONTestCase extends KWWebTestCase
             'testfailed' => 1,
             'testpassed' => 18,
             'configureerrors' => 0,
-            'configurewarnings' => 1
+            'configurewarnings' => 1,
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -380,7 +380,7 @@ class BazelJSONTestCase extends KWWebTestCase
             'testfailed' => 0,
             'testpassed' => 0,
             'configureerrors' => 1,
-            'configurewarnings' => 700
+            'configurewarnings' => 700,
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -416,7 +416,7 @@ class BazelJSONTestCase extends KWWebTestCase
             'testfailed' => 1,
             'testpassed' => 0,
             'configureerrors' => 0,
-            'configurewarnings' => 0
+            'configurewarnings' => 0,
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -452,7 +452,7 @@ class BazelJSONTestCase extends KWWebTestCase
             'testfailed' => 0,
             'testpassed' => 0,
             'configureerrors' => 0,
-            'configurewarnings' => 0
+            'configurewarnings' => 0,
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -498,7 +498,7 @@ class BazelJSONTestCase extends KWWebTestCase
             'testfailed' => 0,
             'testpassed' => 1,
             'configureerrors' => 0,
-            'configurewarnings' => 0
+            'configurewarnings' => 0,
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -554,7 +554,7 @@ class BazelJSONTestCase extends KWWebTestCase
             'testfailed' => 2,
             'testpassed' => 36,
             'configureerrors' => 0,
-            'configurewarnings' => 0
+            'configurewarnings' => 0,
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -650,7 +650,7 @@ class BazelJSONTestCase extends KWWebTestCase
             'testfailed' => 1,
             'testpassed' => 0,
             'configureerrors' => 0,
-            'configurewarnings' => 0
+            'configurewarnings' => 0,
         ];
         foreach ($answer_key as $key => $expected) {
             $found = $row[$key];
@@ -732,7 +732,7 @@ class BazelJSONTestCase extends KWWebTestCase
             $response = $client->request('POST',
                 $this->url . '/submit.php',
                 [
-                    'form_params' => $fields
+                    'form_params' => $fields,
                 ]
             );
         } catch (GuzzleHttp\Exception\ClientException $e) {

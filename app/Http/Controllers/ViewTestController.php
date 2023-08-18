@@ -53,7 +53,7 @@ final class ViewTestController extends AbstractController
             return response()->json(cast_data_for_JSON($response));
         } else {
             $headers = [
-                'Content-Type' => 'text/csv'
+                'Content-Type' => 'text/csv',
             ];
             return response()->streamDownload(function () use ($response) {
                 echo $response;

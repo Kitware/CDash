@@ -37,7 +37,7 @@ class NoBackupTestCase extends KWWebTestCase
         }
 
         // Submit gcov.tar to test the 'PUT' submission path.
-        $post_result = $this->post($this->url . '/submit.php', array(
+        $post_result = $this->post($this->url . '/submit.php', [
             'project' => 'InsightExample',
             'build' => 'nobackup',
             'site' => 'localhost',
@@ -46,7 +46,7 @@ class NoBackupTestCase extends KWWebTestCase
             'endtime' => '1475599870',
             'track' => 'Nightly',
             'type' => 'GcovTar',
-            'datafilesmd5[0]=' => '5454e16948a1d58d897e174b75cc5633'));
+            'datafilesmd5[0]=' => '5454e16948a1d58d897e174b75cc5633']);
         $post_json = json_decode($post_result, true);
         if ($post_json['status'] != 0) {
             $this->fail(
@@ -75,7 +75,7 @@ class NoBackupTestCase extends KWWebTestCase
             'SELECT b.builderrors, cs.loctested FROM build b
                 JOIN coveragesummary cs ON (cs.buildid=b.id)
                 WHERE b.id=?');
-        $stmt->execute(array($buildid));
+        $stmt->execute([$buildid]);
         $row = $stmt->fetch();
         if ($row['builderrors'] != 0) {
             $this->fail("Unexpected number of build errors found");

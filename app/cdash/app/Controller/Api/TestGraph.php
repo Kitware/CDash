@@ -48,22 +48,22 @@ class TestGraph extends BuildTestApi
                 $this->testHistoryQueryExtraColumns = ', b2t.time, b2t.timemean, b2t.timestd';
                 $chart_data[] = [
                     'label' => 'Execution Time (seconds)',
-                    'data' => []
+                    'data' => [],
                 ];
                 $chart_data[] = [
                     'label' => 'Acceptable Range',
-                    'data' => []
+                    'data' => [],
                 ];
                 break;
             case 'status':
                 $this->testHistoryQueryExtraColumns = ', b2t.status';
                 $chart_data[] = [
                     'label' => 'Passed',
-                    'data' => []
+                    'data' => [],
                 ];
                 $chart_data[] = [
                     'label' => 'Failed',
-                    'data' => []
+                    'data' => [],
                 ];
                 break;
             case 'measurement':
@@ -73,7 +73,7 @@ class TestGraph extends BuildTestApi
                 }
                 $chart_data[] = [
                     'label' => $measurement_name,
-                    'data' => []
+                    'data' => [],
                 ];
                 $this->testHistoryQueryExtraColumns = ', tm.value';
                 $this->testHistoryQueryExtraJoins = 'JOIN testmeasurement tm ON (b2t.outputid = tm.outputid)';

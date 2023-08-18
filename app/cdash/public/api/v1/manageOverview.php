@@ -111,10 +111,10 @@ $query = $db->executePrepared('
 
 add_last_sql_error('manageOverview::overviewgroups', $projectid);
 
-$build_response = array();
-$static_response = array();
+$build_response = [];
+$static_response = [];
 foreach ($query as $overviewgroup_row) {
-    $group_response = array();
+    $group_response = [];
     $group_response['id'] = intval($overviewgroup_row['id']);
     $group_response['name'] = $overviewgroup_row['name'];
     $type = $overviewgroup_row['type'];
@@ -148,9 +148,9 @@ $buildgroup_rows = $db->executePrepared('
                    ', [intval($projectid)]);
 add_last_sql_error('manageOverview::buildgroups', $projectid);
 
-$availablegroups_response = array();
+$availablegroups_response = [];
 foreach ($buildgroup_rows as $buildgroup_row) {
-    $buildgroup_response = array();
+    $buildgroup_response = [];
     $buildgroup_response['id'] = intval($buildgroup_row['id']);
     $buildgroup_response['name'] = $buildgroup_row['name'];
     $availablegroups_response[] = $buildgroup_response;

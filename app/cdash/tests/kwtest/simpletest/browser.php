@@ -17,7 +17,7 @@ require_once dirname(__FILE__) . '/selector.php';
 require_once dirname(__FILE__) . '/frames.php';
 require_once dirname(__FILE__) . '/user_agent.php';
 if (!SimpleTest::getParsers()) {
-    SimpleTest::setParsers(array(new SimplePHPPageBuilder()));
+    SimpleTest::setParsers([new SimplePHPPageBuilder()]);
 }
 /**#@-*/
 
@@ -30,7 +30,7 @@ if (!defined('DEFAULT_MAX_NESTED_FRAMES')) {
  */
 class SimpleBrowserHistory
 {
-    private $sequence = array();
+    private $sequence = [];
     private $position = -1;
 
     /**
@@ -70,7 +70,7 @@ class SimpleBrowserHistory
         $this->dropFuture();
         array_push(
             $this->sequence,
-            array('url' => $url, 'parameters' => $parameters));
+            ['url' => $url, 'parameters' => $parameters]);
         $this->position++;
     }
 
@@ -318,7 +318,7 @@ class SimpleBrowser
         if (!$frame || !$this->page->hasFrames() || (strtolower($frame) == '_top')) {
             return $this->loadPage($url, $parameters);
         }
-        return $this->loadFrame(array($frame), $url, $parameters);
+        return $this->loadFrame([$frame], $url, $parameters);
     }
 
     /**
@@ -950,7 +950,7 @@ class SimpleBrowser
      */
     public function isSubmit($label)
     {
-        return (boolean)$this->page->getFormBySubmit(new SimpleByLabel($label));
+        return (bool)$this->page->getFormBySubmit(new SimpleByLabel($label));
     }
 
     /**
@@ -1029,7 +1029,7 @@ class SimpleBrowser
      */
     public function isImage($label)
     {
-        return (boolean)$this->page->getFormByImage(new SimpleByLabel($label));
+        return (bool)$this->page->getFormByImage(new SimpleByLabel($label));
     }
 
     /**

@@ -33,7 +33,7 @@ class TestOverviewTestCase extends KWWebTestCase
 
         $content = $this->get($this->url . '/api/v1/testOverview.php?project=InsightExample');
         $jsonobj = json_decode($content, true);
-        if ($jsonobj['tests'] !== array()) {
+        if ($jsonobj['tests'] !== []) {
             $this->fail("Empty list of tests not found when expected");
         }
 

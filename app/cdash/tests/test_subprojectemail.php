@@ -45,7 +45,7 @@ class SubProjectEmailTestCase extends KWWebTestCase
             'Name' => 'SubProjectEmails',
             'Public' => 1,
             'EmailBrokenSubmission' => 1,
-            'EmailRedundantFailures' => 0
+            'EmailRedundantFailures' => 0,
         ];
         $projectid = $this->createProject($settings);
         if ($projectid < 1) {

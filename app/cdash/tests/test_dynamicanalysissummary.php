@@ -31,7 +31,7 @@ class DynamicAnalysisSummaryTestCase extends KWWebTestCase
         $this->DataDir = dirname(__FILE__) . '/data/DynamicAnalysisSummary';
         $this->ParentId = 0;
         $this->StandaloneBuildId = 0;
-        $this->ChildIds = array();
+        $this->ChildIds = [];
     }
 
     public function testDynamicAnalysisSummary()

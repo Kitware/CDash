@@ -35,7 +35,7 @@ final class MapController extends AbstractProjectController
 
         $db = Database::getInstance();
 
-        list($previousdate, $currenttime, $nextdate) = get_dates($date, $this->project->NightlyTime);
+        [$previousdate, $currenttime, $nextdate] = get_dates($date, $this->project->NightlyTime);
 
         $nightlytime = strtotime($this->project->NightlyTime);
 

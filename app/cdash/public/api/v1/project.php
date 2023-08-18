@@ -272,10 +272,10 @@ function populate_project($Project)
 
     if (isset($project_settings['repositories'])) {
         // Add the repositories.
-        $repo_urls = array();
-        $repo_branches = array();
-        $repo_usernames = array();
-        $repo_passwords = array();
+        $repo_urls = [];
+        $repo_branches = [];
+        $repo_usernames = [];
+        $repo_passwords = [];
         foreach ($project_settings['repositories'] as $repo) {
             $repo_urls[] = $repo['url'];
             $repo_branches[] = $repo['branch'];

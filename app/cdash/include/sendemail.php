@@ -110,7 +110,7 @@ function check_email_errors(int $buildid, bool $checktesttimeingchanged, int $te
 /** Check for update errors for a given build. */
 function check_email_update_errors(int $buildid): array
 {
-    $errors = array();
+    $errors = [];
     $errors['errors'] = true;
     $errors['hasfixes'] = false;
 
@@ -324,7 +324,7 @@ function get_email_summary(int $buildid, array $errors, $errorkey, int $maxitems
         }
     } elseif ($errorkey === 'missing_tests') {
         // sanity check
-        $missing = isset($errors['missing_tests']['count']) ? $errors['missing_tests']['count'] : 0;
+        $missing = $errors['missing_tests']['count'] ?? 0;
 
         if ($missing) {
             $information .= "\n\n*Missing tests*";

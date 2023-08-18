@@ -8,8 +8,8 @@ use BuildHandler;
 
 class BuildUseCase extends UseCase
 {
-    const WARNING = 0;
-    const ERROR = 1;
+    public const WARNING = 0;
+    public const ERROR = 1;
 
     private $command;
 
@@ -103,7 +103,7 @@ class BuildUseCase extends UseCase
 
     public function createFailure(array $default_properties)
     {
-        list($type, $properties) = $default_properties;
+        [$type, $properties] = $default_properties;
         $properties['type'] = $type === self::ERROR ? 'Error' : 'Warning';
 
         $this->createAction($properties)

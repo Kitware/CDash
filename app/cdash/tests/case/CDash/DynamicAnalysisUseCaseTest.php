@@ -45,7 +45,7 @@ class DynamicAnalysisUseCaseTest extends CDashUseCaseTestCase
             ->createPassedTest(
                 'thirdparty',
                 ['Labels' =>
-                    ['MyThirdPartyDependency', 'NotASubproject']
+                    ['MyThirdPartyDependency', 'NotASubproject'],
                 ]
             );
 

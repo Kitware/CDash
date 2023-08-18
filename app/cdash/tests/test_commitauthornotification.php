@@ -18,7 +18,7 @@ class CommitAuthorNotificationTestCase extends KWWebTestCase
             'Name' => $this->projectName,
             'Description' => "Project {$this->projectName} test for cdash testing",
             'EmailBrokenSubmission' => 1,
-            'EmailRedundantFailures' => 0
+            'EmailRedundantFailures' => 0,
         ]);
         $group = new BuildGroup();
         $group->SetName('Continuous');

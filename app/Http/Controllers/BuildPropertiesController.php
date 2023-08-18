@@ -46,8 +46,8 @@ final class BuildPropertiesController extends AbstractBuildController
         if (isset($_GET['begin']) && isset($_GET['end'])) {
             $beginning_date = $_GET['begin'];
             $end_date = $_GET['end'];
-            list($unused, $beginning_timestamp) = get_dates($beginning_date, $this->project->NightlyTime);
-            list($unused, $end_timestamp) = get_dates($end_date, $this->project->NightlyTime);
+            [$unused, $beginning_timestamp] = get_dates($beginning_date, $this->project->NightlyTime);
+            [$unused, $end_timestamp] = get_dates($end_date, $this->project->NightlyTime);
             $datetime = new DateTime();
             $datetime->setTimestamp($end_timestamp);
             $datetime->add(new DateInterval('P1D'));
@@ -62,7 +62,7 @@ final class BuildPropertiesController extends AbstractBuildController
             $date = date(FMT_DATE);
         }
         if (is_null($beginning_timestamp)) {
-            list($unused, $beginning_timestamp) = get_dates($date, $this->project->NightlyTime);
+            [$unused, $beginning_timestamp] = get_dates($date, $this->project->NightlyTime);
             $datetime = new DateTime();
             $datetime->setTimestamp($beginning_timestamp);
             $datetime->add(new DateInterval('P1D'));
@@ -81,18 +81,18 @@ final class BuildPropertiesController extends AbstractBuildController
             [
                 'name' => 'builderrors',
                 'prettyname' => 'Errors',
-                'selected' => false
+                'selected' => false,
             ],
             [
                 'name' => 'buildwarnings',
                 'prettyname' => 'Warnings',
-                'selected' => false
+                'selected' => false,
             ],
             [
                 'name' => 'testfailed',
                 'prettyname' => 'Test Failures',
-                'selected' => false
-            ]
+                'selected' => false,
+            ],
         ];
 
         // Mark specified types of defects as selected.
@@ -289,7 +289,7 @@ final class BuildPropertiesController extends AbstractBuildController
                 $defects_response[] = [
                     'descr' => $descr,
                     'type' => $prettyname,
-                    'builds' => []
+                    'builds' => [],
                 ];
                 $idx = count($defects_response) - 1;
             }

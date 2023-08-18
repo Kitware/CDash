@@ -10,16 +10,16 @@ use DOMText;
 abstract class UseCase
 {
     /* actionable steps */
-    const TEST = 'Test';
-    const CONFIG = 'Config';
-    const UPDATE = 'Update';
-    const BUILD = 'Build';
-    const DYNAMIC_ANALYSIS = 'DynamicAnalysis';
+    public const TEST = 'Test';
+    public const CONFIG = 'Config';
+    public const UPDATE = 'Update';
+    public const BUILD = 'Build';
+    public const DYNAMIC_ANALYSIS = 'DynamicAnalysis';
 
     /* build types (modes) */
-    const NIGHTLY = 'Nightly';
-    const CONTINUOUS = 'Continuous';
-    const EXPERIMENTAL = 'Experimental';
+    public const NIGHTLY = 'Nightly';
+    public const CONTINUOUS = 'Continuous';
+    public const EXPERIMENTAL = 'Experimental';
 
     private $faker;
     private $ids;
@@ -217,10 +217,10 @@ abstract class UseCase
         $parser = xml_parser_create();
         xml_set_element_handler(
             $parser,
-            array($handler, 'startElement'),
-            array($handler, 'endElement')
+            [$handler, 'startElement'],
+            [$handler, 'endElement']
         );
-        xml_set_character_data_handler($parser, array($handler, 'text'));
+        xml_set_character_data_handler($parser, [$handler, 'text']);
         xml_parse($parser, $xml, false);
         return $handler;
     }

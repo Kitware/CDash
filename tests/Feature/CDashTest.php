@@ -24,7 +24,7 @@ class CDashTest extends TestCase
         $expected = [
             'driver' => 'local',
             'root' => app_path('cdash/public'),
-            'visibility' => 'private'
+            'visibility' => 'private',
         ];
 
         $actual = Config::get('filesystems.disks.cdash');

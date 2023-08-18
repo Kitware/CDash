@@ -17,7 +17,7 @@ final class FilterController extends AbstractController
             'limit',
             'othercombine',
             'showfilters',
-            'showlimit'
+            'showlimit',
         ];
         foreach ($filterdata as $key => $value) {
             if (!in_array($key, $fields_to_preserve)) {

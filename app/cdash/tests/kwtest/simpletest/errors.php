@@ -79,8 +79,8 @@ class SimpleErrorQueue
      */
     public function clear()
     {
-        $this->queue = array();
-        $this->expectation_queue = array();
+        $this->queue = [];
+        $this->expectation_queue = [];
     }
 
     /**
@@ -102,7 +102,7 @@ class SimpleErrorQueue
      */
     public function expectError($expected, $message)
     {
-        array_push($this->expectation_queue, array($expected, $message));
+        array_push($this->expectation_queue, [$expected, $message]);
     }
 
     /**
@@ -124,11 +124,11 @@ class SimpleErrorQueue
      */
     public function tally()
     {
-        while (list($severity, $message, $file, $line) = $this->extract()) {
+        while ([$severity, $message, $file, $line] = $this->extract()) {
             $severity = $this->getSeverityAsString($severity);
             $this->test->error($severity, $message, $file, $line);
         }
-        while (list($expected, $message) = $this->extractExpectation()) {
+        while ([$expected, $message] = $this->extractExpectation()) {
             $this->test->assert($expected, false, '%s -> Expected error not caught');
         }
     }
@@ -144,7 +144,7 @@ class SimpleErrorQueue
     protected function testLatestError($severity, $content, $filename, $line)
     {
         if ($expectation = $this->extractExpectation()) {
-            list($expected, $message) = $expectation;
+            [$expected, $message] = $expectation;
             $this->test->assert($expected, $content, sprintf(
                 $message,
                 "%s -> PHP error [$content] severity [" .
@@ -191,7 +191,7 @@ class SimpleErrorQueue
      */
     public static function getSeverityAsString($severity)
     {
-        static $map = array(
+        static $map = [
             E_STRICT => 'E_STRICT',
             E_ERROR => 'E_ERROR',
             E_WARNING => 'E_WARNING',
@@ -203,7 +203,7 @@ class SimpleErrorQueue
             E_COMPILE_WARNING => 'E_COMPILE_WARNING',
             E_USER_ERROR => 'E_USER_ERROR',
             E_USER_WARNING => 'E_USER_WARNING',
-            E_USER_NOTICE => 'E_USER_NOTICE');
+            E_USER_NOTICE => 'E_USER_NOTICE'];
         if (defined('E_RECOVERABLE_ERROR')) {
             $map[E_RECOVERABLE_ERROR] = 'E_RECOVERABLE_ERROR';
         }

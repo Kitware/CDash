@@ -88,7 +88,7 @@ class BuildError
                      $this->PreContext,
                      $this->PostContext,
                      intval($this->RepeatCount),
-                     $crc32
+                     $crc32,
                  ]);
         if ($query === false) {
             add_last_sql_error('BuildError Insert', 0, $this->BuildId);
@@ -148,21 +148,21 @@ class BuildError
 
         // Sets up access to $file and $directory
         extract($builderror->GetSourceFile($data));
-        $marshaled = array(
+        $marshaled = [
             'new' => (isset($data['newstatus'])) ? $data['newstatus'] : -1,
             'logline' => $data['logline'],
-            'cvsurl' => get_diff_url($project->Id, $project->CvsUrl, $directory, $file, $revision)
-        );
+            'cvsurl' => get_diff_url($project->Id, $project->CvsUrl, $directory, $file, $revision),
+        ];
 
         // When building without launchers, CTest truncates the source dir to
         // /.../<project-name>/.  Use this pattern to linkify compiler output.
         $source_dir = "/\.\.\./[^/]+";
-        $marshaled = array_merge($marshaled, array(
+        $marshaled = array_merge($marshaled, [
             'precontext' => linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['precontext']),
             'text' => linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['text']),
             'postcontext' => linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['postcontext']),
             'sourcefile' => $data['sourcefile'],
-            'sourceline' => $data['sourceline']));
+            'sourceline' => $data['sourceline']]);
 
         if (isset($data['subprojectid'])) {
             $marshaled['subprojectid'] = $data['subprojectid'];

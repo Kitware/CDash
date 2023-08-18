@@ -32,7 +32,7 @@ class OpenLdapAuthWithOverrides extends LdapTest
                 'uid' => [$uid],
                 'mail' => $email,
                 'sn' => 'Bobby',
-                'givenName' => 'Ricky'
+                'givenName' => 'Ricky',
         ]);
 
         Resolver::shouldReceive('byCredentials')
@@ -71,7 +71,7 @@ class OpenLdapAuthWithOverrides extends LdapTest
                 'uid' => [$uid],
                 'mail' => $email,
                 'sn' => 'Bobby',
-                'givenName' => 'Ricky'
+                'givenName' => 'Ricky',
         ]);
 
         $this::assertEquals($email, $user->getConvertedGuid());

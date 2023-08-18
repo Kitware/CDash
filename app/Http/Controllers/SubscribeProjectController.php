@@ -140,7 +140,7 @@ final class SubscribeProjectController extends AbstractProjectController
                     $EmailMissingSites,
                     $EmailSuccess,
                     $user->id,
-                    $this->project->Id
+                    $this->project->Id,
                 ]);
 
                 // Update the repository credential
@@ -203,7 +203,7 @@ final class SubscribeProjectController extends AbstractProjectController
                     $EmailMissingSites,
                     $EmailSuccess,
                     $user->id,
-                    $this->project->Id
+                    $this->project->Id,
                 ]);
 
                 // Update the repository credential
@@ -248,7 +248,7 @@ final class SubscribeProjectController extends AbstractProjectController
                     $EmailType,
                     $EmailCategory,
                     $EmailSuccess,
-                    $EmailMissingSites
+                    $EmailMissingSites,
                 ]);
 
                 $UserProject = new UserProject();

@@ -125,7 +125,7 @@ class UploadHandler extends AbstractHandler
             $build_date =
                 extract_date_from_buildstamp($this->Build->GetStamp());
 
-            list($prev, $nightly_start_time, $next) =
+            [$prev, $nightly_start_time, $next] =
                 get_dates($build_date, $nightly_time);
 
             // If the nightly start time is after noon (server time)
@@ -183,7 +183,7 @@ class UploadHandler extends AbstractHandler
             $this->UploadFile = new UploadFile();
             $this->UploadFile->Filename = $attributes['FILENAME'];
         } elseif ($name == 'CONTENT') {
-            $fileEncoding = isset($attributes['ENCODING']) ? $attributes['ENCODING'] : 'base64';
+            $fileEncoding = $attributes['ENCODING'] ?? 'base64';
 
             if (strcmp($fileEncoding, 'base64') != 0) {
                 // Only base64 encoding is supported for file upload
@@ -194,7 +194,7 @@ class UploadHandler extends AbstractHandler
 
             // Create tmp file
             $this->TmpFilename = tempnam($config->get('CDASH_UPLOAD_DIRECTORY'), 'tmp'); // TODO Handle error
-            chmod($this->TmpFilename, 0644);
+            chmod($this->TmpFilename, 0o644);
 
             if (empty($this->TmpFilename)) {
                 add_log('Failed to create temporary filename', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
@@ -390,7 +390,7 @@ class UploadHandler extends AbstractHandler
             switch ($element) {
                 case 'CONTENT':
                     // Write base64 encoded chunch to temporary file
-                    $charsToReplace = array("\r\n", "\n", "\r");
+                    $charsToReplace = ["\r\n", "\n", "\r"];
                     fwrite($this->Base64TmpFileWriteHandle, str_replace($charsToReplace, '', $data));
                     break;
             }

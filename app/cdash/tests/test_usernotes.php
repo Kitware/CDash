@@ -33,7 +33,7 @@ class UserNotesAPICase extends KWWebTestCase
         $buildUserNote = [
             'buildid' => $id,
             'AddNote' => 'testAddNoteRequiresAuth',
-            'Status' => 1
+            'Status' => 1,
         ];
 
         $response = $this->post($endpoint, $buildUserNote);

@@ -159,7 +159,7 @@ class SimpleTestCase
      */
     public function getTests()
     {
-        $methods = array();
+        $methods = [];
         foreach (get_class_methods(get_class($this)) as $method) {
             if ($this->isTest($method)) {
                 $methods[] = $method;
@@ -190,7 +190,7 @@ class SimpleTestCase
     public function before($method)
     {
         $this->reporter->paintMethodStart($method);
-        $this->observers = array();
+        $this->observers = [];
     }
 
     /**
@@ -327,7 +327,7 @@ class SimpleTestCase
      */
     public function getAssertionLine()
     {
-        $trace = new SimpleStackTrace(array('assert', 'expect', 'pass', 'fail', 'skip'));
+        $trace = new SimpleStackTrace(['assert', 'expect', 'pass', 'fail', 'skip']);
         return $trace->traceMethod();
     }
 
@@ -426,7 +426,7 @@ class SimpleFileLoader
      */
     public function selectRunnableTests($candidates)
     {
-        $classes = array();
+        $classes = [];
         foreach ($candidates as $class) {
             if (TestSuite::getBaseTestCase($class)) {
                 $reflection = new SimpleReflection($class);
@@ -482,7 +482,7 @@ class TestSuite
     public function __construct($label = false)
     {
         $this->label = $label;
-        $this->test_cases = array();
+        $this->test_cases = [];
     }
 
     /**

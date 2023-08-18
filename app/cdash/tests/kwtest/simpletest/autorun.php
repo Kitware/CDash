@@ -67,7 +67,7 @@ function run_local_tests()
 function tests_have_run()
 {
     if ($context = SimpleTest::getContext()) {
-        return (boolean)$context->getTest();
+        return (bool)$context->getTest();
     }
     return false;
 }
@@ -100,5 +100,5 @@ function capture_new_classes()
     global $SIMPLETEST_AUTORUNNER_INITIAL_CLASSES;
     return array_map('strtolower', array_diff(get_declared_classes(),
         $SIMPLETEST_AUTORUNNER_INITIAL_CLASSES ?
-            $SIMPLETEST_AUTORUNNER_INITIAL_CLASSES : array()));
+            $SIMPLETEST_AUTORUNNER_INITIAL_CLASSES : []));
 }

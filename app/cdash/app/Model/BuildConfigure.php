@@ -346,13 +346,13 @@ class BuildConfigure
 
     public static function marshal($data)
     {
-        $response = array(
+        $response = [
             'status' => $data['status'],
             'command' => $data['command'],
             'output' => $data['log'],
             'configureerrors' => $data['configureerrors'],
-            'configurewarnings' => $data['configurewarnings']
-        );
+            'configurewarnings' => $data['configurewarnings'],
+        ];
 
         if (isset($data['subprojectid'])) {
             $response['subprojectid'] = $data['subprojectid'];

@@ -62,7 +62,7 @@ class BuildTest extends CDashTestCase
                 'testfailedpositive' => 90,
                 'testfailednegative' => 10,
                 'testnotrunpositive' => 11,
-                'testnotrunnegative' => 12
+                'testnotrunnegative' => 12,
 
             ]);
 

@@ -71,10 +71,10 @@ class ProjectHandler extends AbstractHandler
         }
 
         if ($name == 'PROJECT') {
-            $this->SubProjects = array();
-            $this->Dependencies = array();
+            $this->SubProjects = [];
+            $this->Dependencies = [];
         } elseif ($name == 'SUBPROJECT') {
-            $this->CurrentDependencies = array();
+            $this->CurrentDependencies = [];
             $this->SubProject = new SubProject();
             $this->SubProject->SetProjectId($this->projectid);
             $this->SubProject->SetName($attributes['NAME']);
@@ -184,7 +184,7 @@ class ProjectHandler extends AbstractHandler
             $this->SubProjects[$this->SubProject->GetId()] = $this->SubProject;
 
             // Handle dependencies here too.
-            $this->Dependencies[$this->SubProject->GetId()] = array();
+            $this->Dependencies[$this->SubProject->GetId()] = [];
             foreach ($this->CurrentDependencies as $dependencyid) {
                 $added = false;
 

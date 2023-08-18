@@ -91,7 +91,7 @@ class CoverageFileLog
                         ->insert([
                             'buildid' => $this->BuildId,
                             'fileid' => $this->FileId,
-                            'log' => $log
+                            'log' => $log,
                         ]);
                 }
             }
@@ -133,7 +133,7 @@ class CoverageFileLog
             if (empty($log_entry)) {
                 continue;
             }
-            list($line, $value) = explode(':', $log_entry);
+            [$line, $value] = explode(':', $log_entry);
             if (is_numeric($line)) {
                 $lines_retrieved[] = intval($line);
             } else {
@@ -159,11 +159,11 @@ class CoverageFileLog
             if (empty($log_entry)) {
                 continue;
             }
-            list($line, $value) = explode(':', $log_entry);
+            [$line, $value] = explode(':', $log_entry);
             if ($line[0] === 'b') {
                 // Branch coverage
                 $line = ltrim($line, 'b');
-                list($covered, $total) = explode('/', $value);
+                [$covered, $total] = explode('/', $value);
                 $this->AddBranch($line, $covered, $total);
             } else {
                 // Line coverage
@@ -196,7 +196,7 @@ class CoverageFileLog
         }
 
         foreach ($this->Branches as $line => $value) {
-            list($timesHit, $total) = explode('/', $value);
+            [$timesHit, $total] = explode('/', $value);
             $stats['branchestested'] += $timesHit;
             $stats['branchesuntested'] += ($total - $timesHit);
         }
@@ -237,7 +237,7 @@ class CoverageFileLog
                        ', [
                            intval($this->AggregateBuildId),
                            intval($this->Build->ProjectId),
-                           intval($this->Build->SubProjectId)
+                           intval($this->Build->SubProjectId),
                        ]);
                 if (!$row || !array_key_exists('id', $row)) {
                     // An aggregate build for this SubProject doesn't exist yet.

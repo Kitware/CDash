@@ -32,7 +32,7 @@ final class AuthTokenController extends AbstractController
         }
 
         return response()->json([
-            'tokens' => $token_map
+            'tokens' => $token_map,
         ]);
     }
 

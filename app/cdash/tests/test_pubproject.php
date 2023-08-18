@@ -17,10 +17,10 @@ class PubProjectTestCase extends KWWebTestCase
 
     public function testCreateProject()
     {
-        $settings = array(
+        $settings = [
                 'Name' => 'ProjectTest',
                 'Description' => 'This is a project test for cdash',
-                'EmailAdministrator' => 1);
+                'EmailAdministrator' => 1];
         $this->ProjectId = $this->createProject($settings);
     }
 
@@ -31,10 +31,10 @@ class PubProjectTestCase extends KWWebTestCase
         $nameexpected = 'ProjectTest';
         $descriptionexpected = 'This is a project test for cdash';
         $publicexpected = 1;
-        $expected = array(
+        $expected = [
             'name' => $nameexpected,
             'description' => $descriptionexpected,
-            'public' => $publicexpected);
+            'public' => $publicexpected];
 
         $this->assertEqual($result[0], $expected);
     }

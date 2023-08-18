@@ -144,7 +144,7 @@ final class SubProjectController extends AbstractProjectController
         $response['title'] = $this->project->Name;
         $response['showcalendar'] = 1;
 
-        $banners = array();
+        $banners = [];
         $global_banner = Banner::find(0);
         if ($global_banner !== null && strlen($global_banner->text) > 0) {
             $banners[] = $global_banner->text;
@@ -159,7 +159,7 @@ final class SubProjectController extends AbstractProjectController
             $response['showlastsubmission'] = 1;
         }
 
-        list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $this->project->NightlyTime);
+        [$previousdate, $currentstarttime, $nextdate] = get_dates($date, $this->project->NightlyTime);
 
         // Main dashboard section
         get_dashboard_JSON($this->project->GetName(), $date, $response);
@@ -175,7 +175,7 @@ final class SubProjectController extends AbstractProjectController
         $response['linkparams'] = $linkparams;
 
         // Menu definition
-        $menu_response = array();
+        $menu_response = [];
         $menu_response['subprojects'] = 1;
         $menu_response['previous'] = "viewSubProjects.php?project=$projectname_encoded&date=$previousdate";
         $menu_response['current'] = "viewSubProjects.php?project=$projectname_encoded";
@@ -190,7 +190,7 @@ final class SubProjectController extends AbstractProjectController
         $end_UTCDate = gmdate(FMT_DATETIME, $currentstarttime + 3600 * 24);
 
         // Get some information about the project
-        $project_response = array();
+        $project_response = [];
         $project_response['nbuilderror'] = $this->project->GetNumberOfErrorBuilds($beginning_UTCDate, $end_UTCDate);
         $project_response['nbuildwarning'] = $this->project->GetNumberOfWarningBuilds($beginning_UTCDate, $end_UTCDate);
         $project_response['nbuildpass'] = $this->project->GetNumberOfPassingBuilds($beginning_UTCDate, $end_UTCDate);
@@ -210,11 +210,11 @@ final class SubProjectController extends AbstractProjectController
 
         // Look for the subproject
         $subprojectids = $this->project->GetSubProjects();
-        $subprojProp = array();
+        $subprojProp = [];
         foreach ($subprojectids as $subprojectid) {
             $SubProject = new SubProject();
             $SubProject->SetId($subprojectid);
-            $subprojProp[$subprojectid] = array('name' => $SubProject->GetName());
+            $subprojProp[$subprojectid] = ['name' => $SubProject->GetName()];
         }
 
         // If all of the dates are the same, we can get the results in bulk.  Otherwise, we must query every
@@ -238,15 +238,15 @@ final class SubProjectController extends AbstractProjectController
             }
         }
 
-        $reportArray = array('nbuilderror', 'nbuildwarning', 'nbuildpass',
+        $reportArray = ['nbuilderror', 'nbuildwarning', 'nbuildpass',
             'nconfigureerror', 'nconfigurewarning', 'nconfigurepass',
-            'ntestpass', 'ntestfail', 'ntestnotrun');
-        $subprojects_response = array();
+            'ntestpass', 'ntestfail', 'ntestnotrun'];
+        $subprojects_response = [];
 
         foreach ($subprojectids as $subprojectid) {
             $SubProject = new SubProject();
             $SubProject->SetId($subprojectid);
-            $subproject_response = array();
+            $subproject_response = [];
             $subproject_response['name'] = $SubProject->GetName();
             $subproject_response['name_encoded'] = urlencode($SubProject->GetName());
 

@@ -153,11 +153,11 @@ class GitHubTest extends TestCase
             'name' => 'CDash',
             'head_sha' => 'zzz',
             'details_url' => $index_url,
-            'status' => 'in_progress'
+            'status' => 'in_progress',
         ];
         $expected['output'] = [
             'title' => 'Awaiting results',
-            'summary' => "[CDash has not parsed any results for this check yet.]($index_url)"
+            'summary' => "[CDash has not parsed any results for this check yet.]($index_url)",
         ];
         $build_rows = [];
         $actual = $sut->generateCheckPayloadFromBuildRows($build_rows, 'zzz');
@@ -178,7 +178,7 @@ class GitHubTest extends TestCase
             'configureerrors' => 0,
             'builderrors' => 0,
             'testfailed' => 0,
-            'done' => 0
+            'done' => 0,
         ];
         $build_rows[] = $build_row;
         $actual = $sut->generateCheckPayloadFromBuildRows($build_rows, 'zzz');
@@ -213,7 +213,7 @@ class GitHubTest extends TestCase
             'configureerrors' => 5,
             'builderrors' => 0,
             'testfailed' => 0,
-            'done' => 1
+            'done' => 1,
         ];
         $build_rows[] = [
             'name' => 'c',
@@ -222,7 +222,7 @@ class GitHubTest extends TestCase
             'configureerrors' => 0,
             'builderrors' => 1,
             'testfailed' => 0,
-            'done' => 1
+            'done' => 1,
         ];
         $build_rows[] = [
             'name' => 'd',
@@ -231,7 +231,7 @@ class GitHubTest extends TestCase
             'configureerrors' => 0,
             'builderrors' => 0,
             'testfailed' => 7,
-            'done' => 1
+            'done' => 1,
         ];
         $actual = $sut->generateCheckPayloadFromBuildRows($build_rows, 'zzz');
         unset($actual['started_at']);
@@ -258,7 +258,7 @@ class GitHubTest extends TestCase
         $expected = [
             ['id' => 4, 'name' => 'a', 'starttime' => '2019-05-01 18:08:38'],
             ['id' => 6, 'name' => 'b', 'starttime' => '2019-05-01 18:08:40'],
-            ['id' => 1, 'name' => 'c', 'starttime' => '2019-05-01 18:08:35']
+            ['id' => 1, 'name' => 'c', 'starttime' => '2019-05-01 18:08:35'],
         ];
         $this->assertEquals($expected, $actual);
     }
@@ -269,7 +269,7 @@ class GitHubTest extends TestCase
         $repositories = [];
         $repositories[] = [
             'url'      => $github_url,
-            'username' => 12345
+            'username' => 12345,
         ];
         $this->project->CvsUrl = $github_url;
         $this->project->expects($this->once())

@@ -119,7 +119,7 @@ $response['showtesttime'] = $Project->ShowTestTime;
 $page_id = 'index.php';
 
 // Begin menu definition
-$response['menu'] = array();
+$response['menu'] = [];
 $beginning_UTCDate = $controller->getBeginDate();
 $end_UTCDate = $controller->getEndDate();
 if ($Project->GetNumberOfSubProjects($end_UTCDate) > 0) {
@@ -138,14 +138,14 @@ if (isset($_GET['subproject'])) {
         $controller->setSubProjectId($subprojectid);
         $response['subprojectname'] = $subproject_name;
 
-        $subproject_response = array();
+        $subproject_response = [];
         $subproject_response['name'] = $SubProject->GetName();
 
         $dependencies = $SubProject->GetDependencies();
         if ($dependencies) {
-            $dependencies_response = array();
+            $dependencies_response = [];
             foreach ($dependencies as $dependency) {
-                $dependency_response = array();
+                $dependency_response = [];
                 $DependProject = new SubProject();
                 $DependProject->SetId($dependency);
                 $result = $DependProject->CommonBuildQuery($beginning_UTCDate, $end_UTCDate, false);
@@ -257,7 +257,7 @@ $build_data = array_merge($build_data, $controller->getDynamicBuilds());
 // Check if we need to summarize coverage by subproject groups.
 // This happens when we have subprojects and we're looking at the children
 // of a specific build.
-$coverage_groups = array();
+$coverage_groups = [];
 $groupId = -1;
 if (isset($_GET['parentid']) && (int) $_GET['parentid'] > 0 && $Project->GetNumberOfSubProjects($end_UTCDate) > 0) {
     $groups = $Project->GetSubProjectGroups();
@@ -265,7 +265,7 @@ if (isset($_GET['parentid']) && (int) $_GET['parentid'] > 0 && $Project->GetNumb
         // Keep track of coverage info on a per-group basis.
         $groupId = $group->GetId();
 
-        $coverage_groups[$groupId] = array();
+        $coverage_groups[$groupId] = [];
         $coverageThreshold = $group->GetCoverageThreshold();
         $coverage_groups[$groupId]['thresholdgreen'] = $coverageThreshold;
         $coverage_groups[$groupId]['thresholdyellow'] = $coverageThreshold * 0.7;
@@ -273,11 +273,11 @@ if (isset($_GET['parentid']) && (int) $_GET['parentid'] > 0 && $Project->GetNumb
         $coverage_groups[$groupId]['loctested'] = 0;
         $coverage_groups[$groupId]['locuntested'] = 0;
         $coverage_groups[$groupId]['position'] = $group->GetPosition();
-        $coverage_groups[$groupId]['coverages'] = array();
+        $coverage_groups[$groupId]['coverages'] = [];
     }
     if (count($groups) > 1) {
         // Add a Total group too.
-        $coverage_groups[0] = array();
+        $coverage_groups[0] = [];
         $coverageThreshold = (int) $Project->CoverageThreshold;
         $coverage_groups[0]['thresholdgreen'] = $coverageThreshold;
         $coverage_groups[0]['thresholdyellow'] = $coverageThreshold * 0.7;
@@ -297,8 +297,8 @@ foreach ($build_data as $build_row) {
 }
 
 // Generate the JSON response from the rows of builds.
-$response['coverages'] = array();
-$response['dynamicanalyses'] = array();
+$response['coverages'] = [];
+$response['dynamicanalyses'] = [];
 $num_nightly_coverages_builds = 0;
 $show_aggregate = false;
 $response['comparecoverage'] = 0;
@@ -371,7 +371,7 @@ foreach ($build_rows as $build_array) {
     $loctested = (int) $build_array['loctested'];
     $locuntested = (int) $build_array['locuntested'];
     if ($loctested + $locuntested > 0) {
-        $coverage_response = array();
+        $coverage_response = [];
         $coverage_response['buildid'] = (int) $build_array['id'];
         if ($linkToChildCoverage) {
             $coverage_response['childlink'] = $build_response['multiplebuildshyperlink'] . '##Coverage';
@@ -460,7 +460,7 @@ foreach ($build_rows as $build_array) {
         // of its own.
         $linkToChildrenDA = in_array((int) $build_array['id'], $linkToChildrenDAArray, true);
 
-        $DA_response = array();
+        $DA_response = [];
         $DA_response['site'] = $build_array['sitename'];
         $DA_response['siteid'] = $build_array['siteid'];
         $DA_response['buildname'] = $build_array['name'];
@@ -525,11 +525,11 @@ for ($i = 0; $i < count($controller->buildgroupsResponse); $i++) {
 
 // Create a separate "all buildgroups" section of our response.
 // This is used to allow project admins to move builds between groups.
-$response['all_buildgroups'] = array();
+$response['all_buildgroups'] = [];
 foreach ($controller->buildgroupsResponse as $group) {
     $response['all_buildgroups'][] = [
         'id' => $group['id'],
-        'name' => $group['name']
+        'name' => $group['name'],
     ];
 }
 
@@ -624,7 +624,7 @@ if ($response['childview'] === 1) {
 
 // Generate coverage by group here.
 if (count($coverage_groups) > 0) {
-    $response['coveragegroups'] = array();
+    $response['coveragegroups'] = [];
     foreach ($coverage_groups as $groupid => $group) {
         $loctested = $group['loctested'];
         $locuntested = $group['locuntested'];

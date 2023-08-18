@@ -140,7 +140,7 @@ class SimpleAuthenticator
      */
     public function restartSession()
     {
-        $this->realms = array();
+        $this->realms = [];
     }
 
     /**

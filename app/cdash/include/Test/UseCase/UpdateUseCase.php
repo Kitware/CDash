@@ -3,8 +3,8 @@ namespace CDash\Test\UseCase;
 
 class UpdateUseCase extends UseCase
 {
-    const TYPE = 'Update';
-    const FAILED = 'FAILED';
+    public const TYPE = 'Update';
+    public const FAILED = 'FAILED';
 
     private $mode;
     private $generator;
@@ -77,7 +77,7 @@ class UpdateUseCase extends UseCase
 
         // create UpdateReturnStatus element
         $status = $update->appendChild(new \DOMElement('UpdateReturnStatus'));
-        $text = isset($prop['UpdateReturnStatus']) ? $prop['UpdateReturnStatus'] : '';
+        $text = $prop['UpdateReturnStatus'] ?? '';
         $status->appendChild(new \DOMText($text));
 
         $xml_str = $xml->saveXML($xml);
@@ -222,7 +222,7 @@ class UpdateUseCase extends UseCase
     public function createPackage(array $properties)
     {
         if ($this->isSequential($properties)) {
-            list($name, $file, $author) = $properties;
+            [$name, $file, $author] = $properties;
             $properties = [
                 'Name' => $name,
                 'File' => $file,

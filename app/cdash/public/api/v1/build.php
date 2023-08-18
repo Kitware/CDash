@@ -122,7 +122,7 @@ function rest_get($build)
             ':type'      => $build->Type,
             ':name'      => $build->Name,
             ':projectid' => $build->ProjectId,
-            ':starttime' => $build->StartTime
+            ':starttime' => $build->StartTime,
         ];
 
         // Prepared statement to find the oldest submission for this build.

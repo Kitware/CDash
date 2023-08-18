@@ -344,7 +344,7 @@ class SubProjectGroup
                          $this->CoverageThreshold,
                          $starttime,
                          $endtime,
-                         $position
+                         $position,
                      ]));
 
             if ($query === false) {

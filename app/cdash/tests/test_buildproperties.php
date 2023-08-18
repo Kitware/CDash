@@ -212,7 +212,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
                 'POST',
                 config('app.url') . '/submit.php',
                 [
-                    'form_params' => $fields
+                    'form_params' => $fields,
                 ]
             );
         } catch (GuzzleHttp\Exception\ClientException $e) {

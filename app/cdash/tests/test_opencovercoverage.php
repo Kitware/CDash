@@ -22,7 +22,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
     public function testOpenCoverCoverage()
     {
         // Do the POST submission to get a pending buildid.
-        $post_result = $this->post($this->url."/submit.php", array(
+        $post_result = $this->post($this->url."/submit.php", [
             "project" => "SubProjectExample",
             "build" => "opencover_coverage",
             "site" => "localhost",
@@ -31,7 +31,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
             "endtime" => "1422455768",
             "track" => "Experimental",
             "type" => "OpenCoverTar",
-            "datafilesmd5[0]=" => "c0eeaf6be9838eacc75e652d6c85f925"));
+            "datafilesmd5[0]=" => "c0eeaf6be9838eacc75e652d6c85f925"]);
 
         $post_json = json_decode($post_result, true);
         if ($post_json["status"] != 0) {
@@ -72,7 +72,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
     public function testOpenCoverCoverageWithDataJson()
     {
         // Do the POST submission to get a pending buildid.
-        $post_result = $this->post($this->url."/submit.php", array(
+        $post_result = $this->post($this->url."/submit.php", [
             "project" => "SubProjectExample",
             "build" => "opencover_coverage",
             "site" => "localhost",
@@ -81,7 +81,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
             "endtime" => "1422455768",
             "track" => "Experimental",
             "type" => "OpenCoverTar",
-            "datafilesmd5[0]=" => "21eb5dff198d703652f8a7c93a290140"));
+            "datafilesmd5[0]=" => "21eb5dff198d703652f8a7c93a290140"]);
 
         $post_json = json_decode($post_result, true);
         if ($post_json["status"] != 0) {

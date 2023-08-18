@@ -31,12 +31,12 @@ use PDO;
 
 class Build
 {
-    const TYPE_ERROR = 0;
-    const TYPE_WARN = 1;
-    const STATUS_NEW = 1;
+    public const TYPE_ERROR = 0;
+    public const TYPE_WARN = 1;
+    public const STATUS_NEW = 1;
 
-    const PARENT_BUILD = -1;
-    const STANDALONE_BUILD = 0;
+    public const PARENT_BUILD = -1;
+    public const STANDALONE_BUILD = 0;
 
     public $Id;
     public $SiteId;
@@ -276,7 +276,7 @@ class Build
         // tests.
         $total_proc_time = 0.0;
         foreach ($this->TestCollection as $test) {
-            $exec_time = (double)$test->time;
+            $exec_time = (float)$test->time;
             $num_procs = 1.0;
             foreach ($test->measurements as $measurement) {
                 if ($measurement->name == 'Processors') {
@@ -2425,7 +2425,7 @@ class Build
 
         $build_date = $this->GetDate();
         $this->GetProject()->Fill();
-        list($this->BeginningOfDay, $this->EndOfDay) =
+        [$this->BeginningOfDay, $this->EndOfDay] =
             $this->Project->ComputeTestingDayBounds($build_date);
         return true;
     }
@@ -2643,7 +2643,7 @@ class Build
                     'buildwarnings'  => $nbuildwarnings,
                     'parentid'       => $this->ParentId,
                     'uuid'           => $this->Uuid,
-                    'changeid'       => $this->PullRequest
+                    'changeid'       => $this->PullRequest,
                 ]);
                 $build_created = true;
                 $this->Id = $new_id;
@@ -3083,7 +3083,7 @@ class Build
                     'Configure' => [
                         'errors' => ($this->BuildConfigure ? $this->BuildConfigure->NumberOfErrors : 0),
                         'warnings' => ($this->BuildConfigure ? $this->BuildConfigure->NumberOfWarnings : 0),
-                    ] ,
+                    ],
                     'TestFailure' => [
                         'passed' => [
                             'new' => $passed,
@@ -3113,11 +3113,11 @@ class Build
                     'Configure' => [
                         'errors' => $diff['configureerrors'],
                         'warnings' => $diff['configurewarnings'],
-                    ] ,
+                    ],
                     'TestFailure' => [
                         'passed' => [
                             'new' => $diff['testpassedpositive'],
-                            'broken' => $diff['testpassednegative']
+                            'broken' => $diff['testpassednegative'],
                         ],
                         'failed' => [
                             'new' => $diff['testfailedpositive'],
@@ -3125,7 +3125,7 @@ class Build
                         ],
                         'notrun' => [
                             'new' => $diff['testnotrunpositive'],
-                            'fixed' => $diff['testnotrunnegative']
+                            'fixed' => $diff['testnotrunnegative'],
                         ],
                     ],
                 ];

@@ -23,8 +23,8 @@ use CDash\System;
  */
 class Session
 {
-    const EXTEND_GC_LIFETIME = 600;
-    const CACHE_NOCACHE = 'nocache';
+    public const EXTEND_GC_LIFETIME = 600;
+    public const CACHE_NOCACHE = 'nocache';
 
     private $system;
 

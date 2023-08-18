@@ -50,7 +50,7 @@ return [
             'path' => storage_path('logs/cdash.log'),
             'level' => 'debug',
             'days' => 14,
-            'permission' => 0664,
+            'permission' => 0o664,
         ],
 
         'slack' => [

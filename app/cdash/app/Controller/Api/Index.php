@@ -223,7 +223,7 @@ class Index extends ResultsApi
                     self::BEGIN_EPOCH,
                     $this->endDate,
                     self::BEGIN_EPOCH,
-                    $this->endDate
+                    $this->endDate,
                 ]);
 
         foreach ($stmt as $rule) {
@@ -1137,7 +1137,7 @@ class Index extends ResultsApi
         // Trim off any filter parameters.  Previously we did this step with a simple
         // strpos check, but since the change to AngularJS query parameters are no
         // longer guaranteed to appear in any particular order.
-        $accepted_parameters = array('project', 'parentid', 'subproject');
+        $accepted_parameters = ['project', 'parentid', 'subproject'];
 
         $parsed_url = parse_url($baseurl);
         $query = $parsed_url['query'];
@@ -1470,14 +1470,14 @@ class Index extends ResultsApi
         }
 
         // Use the project model to get the bounds of the current testing day.
-        list($beginningOfDay, $endOfDay) =
+        [$beginningOfDay, $endOfDay] =
             $this->project->ComputeTestingDayBounds($this->date);
 
         // Query the database to find the previous testing day
         // that has build results.
         $query_params = [
             ':projectid' => $this->project->Id,
-            ':time'      => $beginningOfDay
+            ':time'      => $beginningOfDay,
         ];
 
         // Only search for builds from a certain group when buildGroupName is set.

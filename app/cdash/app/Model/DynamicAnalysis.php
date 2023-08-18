@@ -20,9 +20,9 @@ use CDash\Database;
 
 class DynamicAnalysis
 {
-    const PASSED = 'passed';
-    const FAILED = 'failed';
-    const NOTRUN = 'notrun';
+    public const PASSED = 'passed';
+    public const FAILED = 'failed';
+    public const NOTRUN = 'notrun';
 
     public $Id;
     public $Status;
@@ -167,7 +167,7 @@ class DynamicAnalysis
 
         // Handle log decoding/decompression
         if (strtolower($this->LogEncoding ?? '') == 'base64') {
-            $this->Log = str_replace(array("\r\n", "\n", "\r"), '', $this->Log);
+            $this->Log = str_replace(["\r\n", "\n", "\r"], '', $this->Log);
             $this->Log = base64_decode($this->Log);
         }
         if (strtolower($this->LogCompression ?? '') == 'gzip') {
@@ -199,12 +199,12 @@ class DynamicAnalysis
             $this->Log .= $truncated_msg;
         }
 
-        $this->Status =  $this->Status ?? '';
-        $this->Checker = $this->Checker ?? '';
-        $this->Name = $this->Name ?? '';
+        $this->Status ??= '';
+        $this->Checker ??= '';
+        $this->Name ??= '';
         $path = substr($this->Path, 0, 255);
         $fullCommandLine = substr($this->FullCommandLine, 0, 255);
-        $this->Log = $this->Log ?? '';
+        $this->Log ??= '';
         $this->BuildId = intval($this->BuildId);
 
         $db = Database::getInstance();
@@ -237,7 +237,7 @@ class DynamicAnalysis
                      $this->Name,
                      $path,
                      $fullCommandLine,
-                     $this->Log
+                     $this->Log,
                  ]));
 
         if ($query === false) {

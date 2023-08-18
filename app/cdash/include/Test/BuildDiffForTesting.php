@@ -37,7 +37,7 @@ trait BuildDiffForTesting
     ];
 
     private $fixed_keys = [
-        'builderrorsnegative' ,
+        'builderrorsnegative',
         'buildwarningsnegative',
         'testfailednegative',
         'testnotrunnegative',

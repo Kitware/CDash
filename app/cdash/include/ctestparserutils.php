@@ -77,8 +77,8 @@ function compute_error_difference($buildid, $previousbuildid, $warning)
     // Recurring buildfailures are represented by the buildfailuredetails table.
     // Get a list of buildfailuredetails IDs for the current build and the
     // previous build.
-    $current_failures = array();
-    $previous_failures = array();
+    $current_failures = [];
+    $previous_failures = [];
 
     $stmt = $pdo->prepare(
         'SELECT bf.detailsid FROM buildfailure AS bf

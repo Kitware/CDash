@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class AuthToken extends Model
 {
-    const SCOPE_FULL_ACCESS = 'full_access';
-    const SCOPE_SUBMIT_ONLY = 'submit_only';
+    public const SCOPE_FULL_ACCESS = 'full_access';
+    public const SCOPE_SUBMIT_ONLY = 'submit_only';
 
     // Eloquent requires this since we use a non-default creation date column
     // and have no updated timestamp column at all.
-    const CREATED_AT = 'created';
-    const UPDATED_AT = null;
+    public const CREATED_AT = 'created';
+    public const UPDATED_AT = null;
 
     protected $table = 'authtoken';
 
@@ -29,6 +29,6 @@ class AuthToken extends Model
         'expires',
         'description',
         'projectid',
-        'scope'
+        'scope',
     ];
 }

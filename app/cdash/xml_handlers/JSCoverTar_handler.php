@@ -34,14 +34,14 @@ class JSCoverTarHandler extends NonSaxHandler
         $this->Build->Id = $buildid;
         $this->Build->FillFromId($this->Build->Id);
 
-        $this->CoverageSummaries = array();
+        $this->CoverageSummaries = [];
         $coverageSummary = new CoverageSummary();
         $coverageSummary->BuildId = $this->Build->Id;
         $this->CoverageSummaries['default'] = $coverageSummary;
 
-        $this->Coverages = array();
-        $this->CoverageFiles = array();
-        $this->CoverageFileLogs = array();
+        $this->Coverages = [];
+        $this->CoverageFiles = [];
+        $this->CoverageFileLogs = [];
     }
 
     /**
@@ -102,7 +102,7 @@ class JSCoverTarHandler extends NonSaxHandler
         }
 
         // Insert coverage summaries
-        $completedSummaries = array();
+        $completedSummaries = [];
         foreach ($this->CoverageSummaries as $coverageSummary) {
             if (in_array($coverageSummary->BuildId, $completedSummaries)) {
                 continue;

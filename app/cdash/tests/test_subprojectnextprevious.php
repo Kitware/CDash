@@ -51,7 +51,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             return 1;
         }
 
-        $buildids = array();
+        $buildids = [];
         while ($row = pdo_fetch_array($result)) {
             $buildids[] = $row['id'];
         }
@@ -200,7 +200,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
                 $checks = [
                     'nwarningdiffp' => $build['compilation']['nwarningdiffp'],
                     'nnotrundiffn' => $build['test']['nnotrundiffn'],
-                    'npassdiffp' => $build['test']['npassdiffp']
+                    'npassdiffp' => $build['test']['npassdiffp'],
                 ];
                 foreach ($checks as $field => $found) {
                     if ($found != 1) {

@@ -38,7 +38,7 @@ use CDash\Model\Project;
  */
 class GitHub implements RepositoryInterface
 {
-    const BASE_URI = 'https://api.github.com';
+    public const BASE_URI = 'https://api.github.com';
 
     /** @var string $installationId */
     private $installationId;
@@ -334,7 +334,7 @@ class GitHub implements RepositoryInterface
             'head_sha'    => $head_sha,
             'details_url' => $summary_url,
             'started_at'  => $now,
-            'status'      => 'in_progress'
+            'status'      => 'in_progress',
         ];
 
         // Populate payload with build results.
@@ -505,7 +505,7 @@ class GitHub implements RepositoryInterface
         $memcache_enabled = $this->config->get('CDASH_MEMECACHE_ENABLED');
         $memcache_prefix = $this->config->get('CDASH_MEMCACHE_PREFIX');
         if ($memcache_enabled) {
-            list($server, $port) = $this->config->get('CDASH_MEMCACHE_SERVER');
+            [$server, $port] = $this->config->get('CDASH_MEMCACHE_SERVER');
             $memcache = cdash_memcache_connect($server, $port);
             // Disable memcache for this request if it fails to connect.
             if ($memcache === false) {
@@ -637,7 +637,7 @@ class GitHub implements RepositoryInterface
                         if (!is_array($commit_array) ||
                                 !array_key_exists('files', $commit_array)) {
                             // Skip to the next commit if no list of files was returned.
-                            $cached_commits[$sha] = array();
+                            $cached_commits[$sha] = [];
                             continue;
                         }
 

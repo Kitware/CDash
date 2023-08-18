@@ -94,9 +94,9 @@ class SimpleRoute
      */
     protected function createSocket($scheme, $host, $port, $timeout)
     {
-        if (in_array($scheme, array('file'))) {
+        if (in_array($scheme, ['file'])) {
             return new SimpleFileSocket($this->url);
-        } elseif (in_array($scheme, array('https'))) {
+        } elseif (in_array($scheme, ['https'])) {
             return new SimpleSecureSocket($host, $port, $timeout);
         } else {
             return new SimpleSocket($host, $port, $timeout);
@@ -207,8 +207,8 @@ class SimpleHttpRequest
     {
         $this->route = $route;
         $this->encoding = $encoding;
-        $this->headers = array();
-        $this->cookies = array();
+        $this->headers = [];
+        $this->cookies = [];
     }
 
     /**
@@ -308,7 +308,7 @@ class SimpleHttpHeaders
         $this->http_version = false;
         $this->mime_type = '';
         $this->location = false;
-        $this->cookies = array();
+        $this->cookies = [];
         $this->authentication = false;
         $this->realm = false;
         foreach (explode("\r\n", $headers) as $header_line) {
@@ -340,7 +340,7 @@ class SimpleHttpHeaders
      */
     public function getResponseCode()
     {
-        return (integer)$this->response_code;
+        return (int)$this->response_code;
     }
 
     /**
@@ -359,8 +359,8 @@ class SimpleHttpHeaders
      */
     public function isRedirect()
     {
-        return in_array($this->response_code, array(301, 302, 303, 307)) &&
-        (boolean)$this->getLocation();
+        return in_array($this->response_code, [301, 302, 303, 307]) &&
+        (bool)$this->getLocation();
     }
 
     /**
@@ -371,8 +371,8 @@ class SimpleHttpHeaders
     public function isChallenge()
     {
         return ($this->response_code == 401) &&
-        (boolean)$this->authentication &&
-        (boolean)$this->realm;
+        (bool)$this->authentication &&
+        (bool)$this->realm;
     }
 
     /**
@@ -453,7 +453,7 @@ class SimpleHttpHeaders
     protected function parseCookie($cookie_line)
     {
         $parts = explode(';', $cookie_line);
-        $cookie = array();
+        $cookie = [];
         preg_match('/\s*(.*?)\s*=(.*)/', array_shift($parts), $cookie);
         foreach ($parts as $part) {
             if (preg_match('/\s*(.*?)\s*=(.*)/', $part, $matches)) {
@@ -463,8 +463,8 @@ class SimpleHttpHeaders
         return new SimpleCookie(
             $cookie[1],
             trim($cookie[2]),
-            isset($cookie['path']) ? $cookie['path'] : '',
-            isset($cookie['expires']) ? $cookie['expires'] : false);
+            $cookie['path'] ?? '',
+            $cookie['expires'] ?? false);
     }
 }
 
@@ -518,7 +518,7 @@ class SimpleHttpResponse extends SimpleStickyError
             $this->setError('Could not split headers from content');
             $this->headers = new SimpleHttpHeaders($raw);
         } else {
-            list($headers, $this->content) = explode("\r\n\r\n", $raw, 2);
+            [$headers, $this->content] = explode("\r\n\r\n", $raw, 2);
             $this->headers = new SimpleHttpHeaders($headers);
         }
     }

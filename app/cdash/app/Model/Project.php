@@ -37,13 +37,13 @@ use RuntimeException;
 /** Main project class */
 class Project
 {
-    const PROJECT_ADMIN = 2;
-    const SITE_MAINTAINER = 1;
-    const PROJECT_USER = 0;
+    public const PROJECT_ADMIN = 2;
+    public const SITE_MAINTAINER = 1;
+    public const PROJECT_USER = 0;
 
-    const ACCESS_PRIVATE = 0;
-    const ACCESS_PUBLIC = 1;
-    const ACCESS_PROTECTED = 2;
+    public const ACCESS_PRIVATE = 0;
+    public const ACCESS_PUBLIC = 1;
+    public const ACCESS_PROTECTED = 2;
 
     public $Name;
     public $Id;
@@ -548,7 +548,7 @@ class Project
             }
             DB::table('project2repositories')->insert([
                 'projectid' => (int) $this->Id,
-                'repositoryid' => $repositoryid
+                'repositoryid' => $repositoryid,
             ]);
         }
     }
@@ -1064,7 +1064,7 @@ class Project
                       intval($this->Id),
                       $today,
                       intval($this->Id),
-                      $today
+                      $today,
                   ]);
 
         $labelids = [];
@@ -1454,7 +1454,7 @@ class Project
      */
     public function ComputeTestingDayBounds($date): array
     {
-        list($unused, $beginning_timestamp) = get_dates($date, $this->NightlyTime);
+        [$unused, $beginning_timestamp] = get_dates($date, $this->NightlyTime);
 
         $datetime = new \DateTime();
         $datetime->setTimeStamp($beginning_timestamp);

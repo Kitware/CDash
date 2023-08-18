@@ -176,7 +176,7 @@ abstract class OAuth2 implements OAuth2Interface
         if (!$this->Email) {
             $details = $this->getOwnerDetails();
             $email = (object)[
-                'email' => strtolower($details->getEmail())
+                'email' => strtolower($details->getEmail()),
             ];
             $this->Email = collect([$email]);
         }

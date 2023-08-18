@@ -266,7 +266,7 @@ final class SiteController extends AbstractController
             $xml .= '<site>';
             $site_array = $db->executePreparedSingleRow('SELECT * FROM site WHERE id=?', [intval($siteid)]);
 
-            $siteinformation_array = array();
+            $siteinformation_array = [];
             $siteinformation_array['description'] = 'NA';
             $siteinformation_array['processoris64bits'] = 'NA';
             $siteinformation_array['processorvendor'] = 'NA';
@@ -394,7 +394,7 @@ final class SiteController extends AbstractController
             $currenttime = pdo_real_escape_numeric($currenttime);
         }
 
-        $siteinformation_array = array();
+        $siteinformation_array = [];
         $siteinformation_array['description'] = 'NA';
         $siteinformation_array['processoris64bits'] = 'NA';
         $siteinformation_array['processorvendor'] = 'NA';
@@ -542,7 +542,7 @@ final class SiteController extends AbstractController
 
         // Select projects that belong to this site
         $displayPage = 0;
-        $projects = array();
+        $projects = [];
         $site2project = $db->executePrepared('
                             SELECT projectid, max(submittime) AS maxtime
                             FROM build
@@ -744,12 +744,12 @@ final class SiteController extends AbstractController
             'ip' => $ip,
             'latitude' => $latitude,
             'longitude' => $longitude,
-            'outoforder' => $outoforder
+            'outoforder' => $outoforder,
         ]);
 
         add_last_sql_error('update_site');
 
-        $names = array();
+        $names = [];
         $names[] = 'processoris64bits';
         $names[] = 'processorvendor';
         $names[] = 'processorvendorid';

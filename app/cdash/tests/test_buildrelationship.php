@@ -94,7 +94,7 @@ class BuildRelationshipTestCase extends KWWebTestCase
         $payload = [
             'project'    => 'InsightExample',
             'buildid'    => $build2->Id,
-            'relatedid'  => $build1->Id
+            'relatedid'  => $build1->Id,
         ];
         $response = $client->request('POST',
             $this->url .  '/api/v1/relateBuilds.php',
@@ -109,14 +109,14 @@ class BuildRelationshipTestCase extends KWWebTestCase
                 'project'    => 'InsightExample',
                 'buildid'      => $build2->Id,
                 'relatedid'    => $build1->Id,
-                'relationship' => 'depends on'
+                'relationship' => 'depends on',
             ],
             [
                 'project'    => 'InsightExample',
                 'buildid'      => $build3->Id,
                 'relatedid'    => $build2->Id,
-                'relationship' => 'uses results from'
-            ]
+                'relationship' => 'uses results from',
+            ],
         ];
         foreach ($payloads as $payload) {
             try {

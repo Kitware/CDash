@@ -33,7 +33,7 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
         }
 
         // Get the buildids that we just created so we can delete them later.
-        $buildids = array();
+        $buildids = [];
         $buildid_results = pdo_query(
             "SELECT id FROM build WHERE name='test_buildfailure'");
         while ($buildid_array = pdo_fetch_array($buildid_results)) {

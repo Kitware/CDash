@@ -28,7 +28,7 @@ class ViewSubProjectsTestCase extends KWWebTestCase
         foreach ($jsonobj['subprojects'] as $subproject) {
             if ($subproject['name'] === 'TrilinosFramework') {
                 $found_trilinos_framework = true;
-                $expected_values = array(
+                $expected_values = [
                         'nbuilderror' => 0,
                         'nbuildwarning' => 0,
                         'nbuildpass' => 1,
@@ -38,7 +38,7 @@ class ViewSubProjectsTestCase extends KWWebTestCase
                         'ntestpass' => 90,
                         'ntestfail' => 30,
                         'ntestnotrun' => 0,
-                        'starttime' => '2011-07-22 11:15:59');
+                        'starttime' => '2011-07-22 11:15:59'];
                 foreach ($expected_values as $k => $v) {
                     if ($subproject[$k] !== $v) {
                         $this->fail("Expected $v for TrilinosFramework $k, found " . $subproject[$k]);

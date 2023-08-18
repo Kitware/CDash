@@ -67,7 +67,7 @@ class TestManager
         if (!$this->testDir) {
             die("please, set the test directory\n");
         }
-        $testsFile = array();
+        $testsFile = [];
         foreach (glob($this->testDir . '/test_*.php') as $file) {
             $fileinfo = pathinfo($file);
             if (strcmp($fileinfo['basename'], 'test_install.php') != 0 &&

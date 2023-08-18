@@ -22,17 +22,17 @@ class ConfigureWarningTestCase extends KWWebTestCase
 
     public function testConfigureWarning()
     {
-        $warning_lines = array(
+        $warning_lines = [
             'CMake Warning (dev) at some/file/path:1234 (MESSAGE):',
-            'WARNING: blah blah blah');
+            'WARNING: blah blah blah'];
 
-        $non_warning_lines = array(
+        $non_warning_lines = [
             'warning: blah blah blah',
             'WARNING : blah blah blah',
             'WARNING some other text: blah blah blah',
             'This warning is for project developers. Use -Wno-dev to suppress it.',
             '<<< Configuring library with warnings >>>',
-            'library warnings................. : yes');
+            'library warnings................. : yes'];
 
         foreach ($warning_lines as $line) {
             if (!BuildConfigure::IsConfigureWarning($line)) {
@@ -52,7 +52,7 @@ class ConfigureWarningTestCase extends KWWebTestCase
         // Create a project for this test.
         $settings = [
             'Name' => 'ConfigureWarningProject',
-            'Description' => 'ConfigureWarningProject'
+            'Description' => 'ConfigureWarningProject',
         ];
         $this->ProjectId = $this->createProject($settings);
         if ($this->ProjectId < 1) {

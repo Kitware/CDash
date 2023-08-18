@@ -20,10 +20,10 @@ require_once dirname(__FILE__) . '/xml.php';
  */
 class SimpleCommandLineParser
 {
-    private $to_property = array(
+    private $to_property = [
         'case' => 'case', 'c' => 'case',
         'test' => 'test', 't' => 'test',
-    );
+    ];
     private $case = '';
     private $test = '';
     private $xml = false;
@@ -110,16 +110,16 @@ class SimpleCommandLineParser
     public function getHelpText()
     {
         return <<<HELP
-SimpleTest command line default reporter (autorun)
-Usage: php <test_file> [args...]
+            SimpleTest command line default reporter (autorun)
+            Usage: php <test_file> [args...]
 
-    -c <class>      Run only the test-case <class>
-    -t <method>     Run only the test method <method>
-    -s              Suppress skip messages
-    -x              Return test results in XML
-    -h              Display this help message
+                -c <class>      Run only the test-case <class>
+                -t <method>     Run only the test method <method>
+                -s              Suppress skip messages
+                -x              Return test results in XML
+                -h              Display this help message
 
-HELP;
+            HELP;
     }
 }
 
@@ -137,7 +137,7 @@ class DefaultReporter extends SimpleReporterDecorator
     {
         if (SimpleReporter::inCli()) {
             $parser = new SimpleCommandLineParser($_SERVER['argv']);
-            $interfaces = $parser->isXml() ? array('XmlReporter') : array('TextReporter');
+            $interfaces = $parser->isXml() ? ['XmlReporter'] : ['TextReporter'];
             if ($parser->help()) {
                 // I'm not sure if we should do the echo'ing here -- ezyang
                 echo $parser->getHelpText();

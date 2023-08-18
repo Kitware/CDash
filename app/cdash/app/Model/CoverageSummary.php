@@ -31,7 +31,7 @@ class CoverageSummary
 
     public function __construct()
     {
-        $this->Coverages = array();
+        $this->Coverages = [];
     }
 
     public function AddCoverage($coverage): void

@@ -25,16 +25,16 @@ class CoverageDirectoriesTestCase extends KWWebTestCase
             $project->Delete();
         }
 
-        $settings = array(
+        $settings = [
                 'Name' => 'CoverageDirectories',
-                'Description' => 'Test to make sure directories display proper files');
+                'Description' => 'Test to make sure directories display proper files'];
         $projectid = $this->createProject($settings);
         if ($projectid < 1) {
             $this->fail('Failed to create project');
             return;
         }
 
-        $filesToSubmit = array('prefix-Coverage.xml', 'prefix-CoverageLog-0.xml', 'sort-Coverage.xml', 'sort-CoverageLog-0.xml', 'sort-CoverageLog-1.xml');
+        $filesToSubmit = ['prefix-Coverage.xml', 'prefix-CoverageLog-0.xml', 'sort-Coverage.xml', 'sort-CoverageLog-0.xml', 'sort-CoverageLog-1.xml'];
         $dir = dirname(__FILE__) . '/data/CoverageDirectories';
         foreach ($filesToSubmit as $file) {
             if (!$this->submission('CoverageDirectories', "$dir/$file")) {

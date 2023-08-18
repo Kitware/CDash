@@ -27,9 +27,9 @@ class OutputColorTestCase extends KWWebTestCase
             $project->Delete();
         }
 
-        $settings = array(
+        $settings = [
                 'Name' => 'OutputColor',
-                'Description' => 'Test to make sure test output uses terminal colors');
+                'Description' => 'Test to make sure test output uses terminal colors'];
         $projectid = $this->createProject($settings);
         if ($projectid < 1) {
             $this->fail('Failed to create project');

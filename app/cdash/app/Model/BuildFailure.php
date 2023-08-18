@@ -126,7 +126,7 @@ class BuildFailure
                          $targetName,
                          $outputFile,
                          $outputType,
-                         $crc32
+                         $crc32,
                      ]);
             if ($query === false) {
                 add_last_sql_error('BuildFailure InsertDetails', 0, $this->BuildId);
@@ -153,7 +153,7 @@ class BuildFailure
         $id = pdo_insert_id('buildfailure');
 
         // Insert the arguments
-        $argumentids = array();
+        $argumentids = [];
 
         foreach ($this->Arguments as $argument) {
             // Limit the argument to 255
@@ -248,7 +248,7 @@ class BuildFailure
     {
         $response = [
             'argumentfirst' => null,
-            'arguments' => []
+            'arguments' => [],
         ];
 
         $sql = "
@@ -284,15 +284,15 @@ class BuildFailure
     {
         deepEncodeHTMLEntities($data);
 
-        $marshaled = array_merge(array(
+        $marshaled = array_merge([
             'language' => $data['language'],
             'sourcefile' => $data['sourcefile'],
             'targetname' => $data['targetname'],
             'outputfile' => $data['outputfile'],
             'outputtype' => $data['outputtype'],
             'workingdirectory' => $data['workingdirectory'],
-            'exitcondition' => $data['exitcondition']
-        ), $buildfailure->GetBuildFailureArguments($data['id']));
+            'exitcondition' => $data['exitcondition'],
+        ], $buildfailure->GetBuildFailureArguments($data['id']));
 
         $marshaled['stderror'] = $data['stderror'];
         $marshaled['stdoutput'] = $data['stdoutput'];

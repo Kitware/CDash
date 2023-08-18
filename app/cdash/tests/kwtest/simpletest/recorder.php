@@ -28,8 +28,8 @@ abstract class SimpleResult
      */
     public function __construct($breadcrumb, $message)
     {
-        list($this->time, $this->breadcrumb, $this->message) =
-            array(time(), $breadcrumb, $message);
+        [$this->time, $this->breadcrumb, $this->message] =
+            [time(), $breadcrumb, $message];
     }
 }
 
@@ -60,7 +60,7 @@ class SimpleResultOfException extends SimpleResult
  */
 class Recorder extends SimpleReporterDecorator
 {
-    public $results = array();
+    public $results = [];
 
     /**
      *    Stashes the pass as a SimpleResultOfPass

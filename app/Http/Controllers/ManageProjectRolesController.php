@@ -49,7 +49,7 @@ final class ManageProjectRolesController extends AbstractProjectController
         if (!$current_user->IsAdmin() && $role <= 1) {
             return view('cdash', [
                 'xsl' => true,
-                'xsl_content' => "You don't have the permissions to access this page!"
+                'xsl_content' => "You don't have the permissions to access this page!",
             ]);
         }
 
@@ -385,7 +385,7 @@ final class ManageProjectRolesController extends AbstractProjectController
                              intval($project_array['id']),
                              intval($project_array['id']),
                              intval($project_array['id']),
-                             $date
+                             $date,
                          ]);
 
                 add_last_sql_error('ManageProjectRole');
@@ -409,7 +409,7 @@ final class ManageProjectRolesController extends AbstractProjectController
             'xsl' => true,
             'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/manageProjectRoles', true),
             'project' => $project,
-            'title' => 'Project Roles'
+            'title' => 'Project Roles',
         ]);
     }
 

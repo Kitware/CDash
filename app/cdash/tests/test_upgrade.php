@@ -111,7 +111,7 @@ class UpgradeTestCase extends KWWebTestCase
 
 
         $version = pdo_get_vendor_version();
-        list($major, $minor, ) = $version? explode(".", $version) : array(null,null,null);
+        [$major, $minor, ] = $version? explode(".", $version) : [null,null,null];
 
         $this->assertTrue(is_numeric($major));
         $this->assertTrue(is_numeric($minor));
@@ -403,8 +403,8 @@ class UpgradeTestCase extends KWWebTestCase
         $row = pdo_single_row_query(
             'SELECT id FROM site ORDER BY id DESC LIMIT 1');
         $i = $row['id'];
-        $dupes = array();
-        $keepers = array();
+        $dupes = [];
+        $keepers = [];
 
         // Insert sites into our testing table that will violate
         // the unique constraint on the name column.
@@ -471,10 +471,10 @@ class UpgradeTestCase extends KWWebTestCase
 
         // We also need to verify that siteids in other tables get updated
         // properly as duplicates are removed.
-        $tables_to_update = array('build', 'build2grouprule', 'site2user',
+        $tables_to_update = ['build', 'build2grouprule', 'site2user',
             'client_job', 'client_site2cmake', 'client_site2compiler',
             'client_site2library', 'client_site2program',
-            'client_site2project');
+            'client_site2project'];
         foreach ($tables_to_update as $table_to_update) {
             foreach ($dupes as $dupe) {
                 if ($table_to_update === 'build') {
@@ -672,7 +672,7 @@ class UpgradeTestCase extends KWWebTestCase
 
         // Insert testing data in configure table.
         // Two rows that duplicate each other
-        $dupe_buildids = array(1, 2);
+        $dupe_buildids = [1, 2];
         foreach ($dupe_buildids as $buildid) {
             pdo_query(
                 "INSERT INTO $configure_table_name
@@ -695,7 +695,7 @@ class UpgradeTestCase extends KWWebTestCase
             VALUES (3, 0, 'unique error')");
 
         // Verify that the right number of testing rows made it into the database.
-        foreach (array($configure_table_name, $error_table_name) as $table_name) {
+        foreach ([$configure_table_name, $error_table_name] as $table_name) {
             $count_query = "
                 SELECT COUNT(*) AS numrows FROM $table_name";
             $count_results = pdo_single_row_query($count_query);
@@ -835,7 +835,7 @@ class UpgradeTestCase extends KWWebTestCase
         $expected = [
             1 => 1,
             2 => 2,
-            3 => 0
+            3 => 0,
         ];
         $stmt = $pdo->query(
             "SELECT id, testduration FROM $build_table_name");

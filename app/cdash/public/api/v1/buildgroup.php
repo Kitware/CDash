@@ -318,7 +318,7 @@ function rest_post($pdo, $projectid)
             $siteid = $_POST['site']['id'];
         }
 
-        $sql_match = $match = isset($_POST['match']) ? $_POST['match'] : '';
+        $sql_match = $match = $_POST['match'] ?? '';
         if (!empty($match)) {
             $sql_match = $_POST['match'];
         }

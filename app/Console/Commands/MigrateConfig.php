@@ -67,7 +67,7 @@ class MigrateConfig extends Command
             if (strpos($line, '=') === false) {
                 continue;
             }
-            list($key, $value) = explode('=', $line);
+            [$key, $value] = explode('=', $line);
             $config[$key] = $value;
         }
         fclose($handle);

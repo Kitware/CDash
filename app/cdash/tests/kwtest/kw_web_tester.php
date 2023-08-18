@@ -456,7 +456,7 @@ class KWWebTestCase extends WebTestCase
                 return false;
             }
             // Specify some default settings.
-            $settings = array(
+            $settings = [
                     'AutoremoveMaxBuilds' => 500,
                     'AutoremoveTimeframe' => 60,
                     'CoverageThreshold' => 70,
@@ -473,7 +473,7 @@ class KWWebTestCase extends WebTestCase
                     'UploadQuota' => 1,
                     'ViewSubProjectsLink' => 1,
                     'WarningsFilter' => '',
-                    'ErrorsFilter' => '');
+                    'ErrorsFilter' => ''];
             $submit_button = 'Submit';
         }
 
@@ -547,7 +547,7 @@ class KWWebTestCase extends WebTestCase
         $client = $this->getGuzzleClient();
 
         // Delete project.
-        $project_array = array('Id' => $projectid);
+        $project_array = ['Id' => $projectid];
         try {
             $response = $client->delete(
                 $this->url . '/api/v1/project.php',
@@ -732,7 +732,7 @@ class CDashControllerBrowser extends SimpleBrowser
         if (!empty($query)) {
             foreach (explode("&", $query) as $parameter) {
                 if (strpos($parameter, '=') !== false) {
-                    list($key, $value) = explode('=', $parameter);
+                    [$key, $value] = explode('=', $parameter);
                     $this->setRequestKeyValuePair($parameters, $key, $value);
                 } else {
                     $this->setRequestKeyValuePair($parameters, $parameter, '');
@@ -755,13 +755,13 @@ class CDashControllerBrowser extends SimpleBrowser
 
         // Handle key names that represent arrays of values
         if (preg_match('/^(\w+)\[(\w+)\]=?$/', $key, $parts)) {
-            list(, $key, $index) = $parts;
+            [, $key, $index] = $parts;
             if (!isset($parameters[$key])) {
                 $parameters[$key] = [];
             }
             $parameters[$key][$index] = $value;
         } elseif (preg_match('/^(\w+)\[]$/', $key, $parts)) {
-            list(, $key) = $parts;
+            [, $key] = $parts;
             if (!isset($parameters[$key])) {
                 $parameters[$key] = [];
             }

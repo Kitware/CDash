@@ -122,8 +122,8 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
         } elseif ($name == 'LABEL') {
             $this->Label = $factory->create(Label::class);
         } elseif ($name == 'LOG') {
-            $this->DynamicAnalysis->LogCompression = isset($attributes['COMPRESSION']) ? $attributes['COMPRESSION'] : '';
-            $this->DynamicAnalysis->LogEncoding = isset($attributes['ENCODING']) ? $attributes['ENCODING'] : '';
+            $this->DynamicAnalysis->LogCompression = $attributes['COMPRESSION'] ?? '';
+            $this->DynamicAnalysis->LogEncoding = $attributes['ENCODING'] ?? '';
         }
     }
 

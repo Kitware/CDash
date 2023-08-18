@@ -15,7 +15,7 @@ class JavaJSONCoverageTestCase extends KWWebTestCase
     public function testJavaJSONCoverage()
     {
         // Do the POST submission to get a pending buildid.
-        $post_result = $this->post($this->url . '/submit.php', array(
+        $post_result = $this->post($this->url . '/submit.php', [
             'project' => 'SubProjectExample',
             'build' => 'java_json_coverage',
             'site' => 'localhost',
@@ -24,7 +24,7 @@ class JavaJSONCoverageTestCase extends KWWebTestCase
             'endtime' => '1422455768',
             'track' => 'Experimental',
             'type' => 'JavaJSONTar',
-            'datafilesmd5[0]=' => '67b5d3cee7b951ff2981c440b4a515ec'));
+            'datafilesmd5[0]=' => '67b5d3cee7b951ff2981c440b4a515ec']);
 
         $post_json = json_decode($post_result, true);
         if ($post_json['status'] != 0) {

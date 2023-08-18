@@ -40,7 +40,7 @@ class MeasurementPositionMigration extends TestCase
         // Populate some data to migrate.
         $base_measurement = [
             'projectid'    => $project1->Id,
-            'name'         => 'a'
+            'name'         => 'a',
         ];
         $measurement1 = $base_measurement;
 

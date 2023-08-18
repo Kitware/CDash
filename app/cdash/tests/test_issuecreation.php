@@ -41,7 +41,7 @@ class IssueCreationTestCase extends KWWebTestCase
         foreach ($project_names as $project_name) {
             $settings = [
                 'Name' => $project_name,
-                'Public' => 1
+                'Public' => 1,
             ];
             $projectid = $this->createProject($settings);
             if ($projectid < 1) {
@@ -132,16 +132,16 @@ class IssueCreationTestCase extends KWWebTestCase
         $trackers = [
             [
                 'name' => 'Buganizer',
-                'url' => 'https://buganizer.com/issues/new?component=123&template=456'
+                'url' => 'https://buganizer.com/issues/new?component=123&template=456',
             ],
             [
                 'name' => 'GitHub',
-                'url' => 'https://github.com/Kitware/CDash/issues/new?'
+                'url' => 'https://github.com/Kitware/CDash/issues/new?',
             ],
             [
                 'name' => 'JIRA',
-                'url' => 'http://jira.atlassian.com/secure/CreateIssueDetails!init.jspa?pid=123&issuetype=1'
-            ]
+                'url' => 'http://jira.atlassian.com/secure/CreateIssueDetails!init.jspa?pid=123&issuetype=1',
+            ],
         ];
 
         // Lookup some IDs that we will need in the answer key below.
@@ -170,12 +170,12 @@ class IssueCreationTestCase extends KWWebTestCase
             ],
             'GitHub' => [
                 'Standalone' => "https://github.com/Kitware/CDash/issues/new?title=FAILED+%28w%3D3%2C+t%3D6%2C+d%3D10%29%3A+IssueCreationProject+-+Linux-g%2B%2B-4.1-LesionSizingSandbox_Debug+-+Experimental&body=Details+on+the+submission+can+be+found+at+$encoded_base_url%2Fbuild%2F{$buildid1}%0A%0AProject%3A+IssueCreationProject%0ASite%3A+camelot.kitware%0ABuild+Name%3A+Linux-g%2B%2B-4.1-LesionSizingSandbox_Debug%0ABuild+Time%3A+2009-02-23T07%3A10%3A38+UTC%0AType%3A+Experimental%0AWarnings%3A+3%0ATests+not+passing%3A+6%0ADynamic+analysis+tests+failing%3A+10%0A%0A%0A%2AWarnings%2A+%28first+1%29%0ATesting%5CitkDescoteauxSheetnessImageFilterTest2.cxx+line+187+%28$encoded_base_url%2FviewBuildError.php%3Ftype%3D1%26buildid%3D{$buildid1}%29%0A%5C...%5CSandbox%5CTesting%5CitkDescoteauxSheetnessImageFilterTest2.cxx%3A187%3A+warning%3A+converting+to+%3C-30%3E%3C-128%3E%3C-104%3Emain%3A%3AInputPixelType%3C-30%3E%3C-128%3E%3C-103%3E+from+%3C-30%3E%3C-128%3E%3C-104%3Edouble%3C-30%3E%3C-128%3E%3C-103%3E%0A%0A%0A%0A%0A%2ATests+failing%2A+%28first+1%29%0AitkVectorSegmentationLevelSetFunctionTest1+%7C+Completed+%28OTHER_FAULT%29+%7C+%28$encoded_base_url%2Ftest%2F{$build1failedtestid}%29%0A%0A%0A%0A%2ATests+not+run%2A+%28first+1%29%0AitkVectorFiniteDifferenceFunctionTest1+%7C++%7C+%28$encoded_base_url%2Ftest%2F{$build1notruntestid}%29%0A%0A%0A%0A%2ADynamic+analysis+tests+failing+or+not+run%2A+%28first+1%29%0AitkGeodesicActiveContourLevelSetSegmentationModuleTest1+%28$encoded_base_url%2FviewDynamicAnalysisFile.php%3Fid%3D{$da_id}%29%0A%0A",
-                'SubProject' => "https://github.com/Kitware/CDash/issues/new?title=FAILED+%28t%3D1%29%3A+CDash%2FSubProject1+-+test_PR_comment+-+Experimental&body=Details+on+the+submission+can+be+found+at+$encoded_base_url%2Fbuild%2F{$buildid2}%0A%0AProject%3A+CDash%0ASubProject%3A+SubProject1%0ASite%3A+elysium%0ABuild+Name%3A+test_PR_comment%0ABuild+Time%3A+2015-08-11T20%3A45%3A30+UTC%0AType%3A+Experimental%0ATests+not+passing%3A+1%0A%0A%0A%2ATests+failing%2A+%28first+1%29%0Afoo+%7C+Completed+%28Failed%29+%7C+%28$encoded_base_url%2Ftest%2F{$build2failedtestid}%29%0A%0A%40simpletest+%40user1+"
+                'SubProject' => "https://github.com/Kitware/CDash/issues/new?title=FAILED+%28t%3D1%29%3A+CDash%2FSubProject1+-+test_PR_comment+-+Experimental&body=Details+on+the+submission+can+be+found+at+$encoded_base_url%2Fbuild%2F{$buildid2}%0A%0AProject%3A+CDash%0ASubProject%3A+SubProject1%0ASite%3A+elysium%0ABuild+Name%3A+test_PR_comment%0ABuild+Time%3A+2015-08-11T20%3A45%3A30+UTC%0AType%3A+Experimental%0ATests+not+passing%3A+1%0A%0A%0A%2ATests+failing%2A+%28first+1%29%0Afoo+%7C+Completed+%28Failed%29+%7C+%28$encoded_base_url%2Ftest%2F{$build2failedtestid}%29%0A%0A%40simpletest+%40user1+",
             ],
             'JIRA' => [
                 'Standalone' => "http://jira.atlassian.com/secure/CreateIssueDetails!init.jspa?pid=123&issuetype=1&summary=FAILED+%28w%3D3%2C+t%3D6%2C+d%3D10%29%3A+IssueCreationProject+-+Linux-g%2B%2B-4.1-LesionSizingSandbox_Debug+-+Experimental&description=Details+on+the+submission+can+be+found+at+$encoded_base_url%2Fbuild%2F{$buildid1}%0A%0AProject%3A+IssueCreationProject%0ASite%3A+camelot.kitware%0ABuild+Name%3A+Linux-g%2B%2B-4.1-LesionSizingSandbox_Debug%0ABuild+Time%3A+2009-02-23T07%3A10%3A38+UTC%0AType%3A+Experimental%0AWarnings%3A+3%0ATests+not+passing%3A+6%0ADynamic+analysis+tests+failing%3A+10%0A%0A%0A%2AWarnings%2A+%28first+1%29%0ATesting%5CitkDescoteauxSheetnessImageFilterTest2.cxx+line+187+%28$encoded_base_url%2FviewBuildError.php%3Ftype%3D1%26buildid%3D{$buildid1}%29%0A%5C...%5CSandbox%5CTesting%5CitkDescoteauxSheetnessImageFilterTest2.cxx%3A187%3A+warning%3A+converting+to+%3C-30%3E%3C-128%3E%3C-104%3Emain%3A%3AInputPixelType%3C-30%3E%3C-128%3E%3C-103%3E+from+%3C-30%3E%3C-128%3E%3C-104%3Edouble%3C-30%3E%3C-128%3E%3C-103%3E%0A%0A%0A%0A%0A%2ATests+failing%2A+%28first+1%29%0AitkVectorSegmentationLevelSetFunctionTest1+%7C+Completed+%28OTHER_FAULT%29+%7C+%28$encoded_base_url%2Ftest%2F{$build1failedtestid}%29%0A%0A%0A%0A%2ATests+not+run%2A+%28first+1%29%0AitkVectorFiniteDifferenceFunctionTest1+%7C++%7C+%28$encoded_base_url%2Ftest%2F{$build1notruntestid}%29%0A%0A%0A%0A%2ADynamic+analysis+tests+failing+or+not+run%2A+%28first+1%29%0AitkGeodesicActiveContourLevelSetSegmentationModuleTest1+%28$encoded_base_url%2FviewDynamicAnalysisFile.php%3Fid%3D{$da_id}%29%0A%0A",
-                'SubProject' => "http://jira.atlassian.com/secure/CreateIssueDetails!init.jspa?pid=123&issuetype=1&summary=FAILED+%28t%3D1%29%3A+CDash%2FSubProject1+-+test_PR_comment+-+Experimental&description=Details+on+the+submission+can+be+found+at+$encoded_base_url%2Fbuild%2F{$buildid2}%0A%0AProject%3A+CDash%0ASubProject%3A+SubProject1%0ASite%3A+elysium%0ABuild+Name%3A+test_PR_comment%0ABuild+Time%3A+2015-08-11T20%3A45%3A30+UTC%0AType%3A+Experimental%0ATests+not+passing%3A+1%0A%0A%0A%2ATests+failing%2A+%28first+1%29%0Afoo+%7C+Completed+%28Failed%29+%7C+%28$encoded_base_url%2Ftest%2F{$build2failedtestid}%29%0A%0A%5B%7Esimpletest%5D+%5B%7Euser1%5D+"
-            ]
+                'SubProject' => "http://jira.atlassian.com/secure/CreateIssueDetails!init.jspa?pid=123&issuetype=1&summary=FAILED+%28t%3D1%29%3A+CDash%2FSubProject1+-+test_PR_comment+-+Experimental&description=Details+on+the+submission+can+be+found+at+$encoded_base_url%2Fbuild%2F{$buildid2}%0A%0AProject%3A+CDash%0ASubProject%3A+SubProject1%0ASite%3A+elysium%0ABuild+Name%3A+test_PR_comment%0ABuild+Time%3A+2015-08-11T20%3A45%3A30+UTC%0AType%3A+Experimental%0ATests+not+passing%3A+1%0A%0A%0A%2ATests+failing%2A+%28first+1%29%0Afoo+%7C+Completed+%28Failed%29+%7C+%28$encoded_base_url%2Ftest%2F{$build2failedtestid}%29%0A%0A%5B%7Esimpletest%5D+%5B%7Euser1%5D+",
+            ],
         ];
 
         foreach ($trackers as $tracker) {
@@ -184,7 +184,7 @@ class IssueCreationTestCase extends KWWebTestCase
             $settings = [
                 'Id' => $this->Projects['IssueCreationProject']->Id,
                 'BugTrackerType' => $tracker['name'],
-                'BugTrackerNewIssueUrl' => $tracker['url']
+                'BugTrackerNewIssueUrl' => $tracker['url'],
             ];
             $this->createProject($settings, true);
 

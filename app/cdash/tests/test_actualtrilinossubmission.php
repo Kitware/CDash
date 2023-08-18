@@ -15,14 +15,14 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
 
     public function createProjectWithName($project)
     {
-        $settings = array(
+        $settings = [
                 'Name' => $project,
                 'Description' => $project . ' project created by test code in file [' . __FILE__ . ']',
                 'EmailBrokenSubmission' => '1',
                 'ShowIPAddresses' => '1',
                 'DisplayLabels' => '1',
                 'NightlyTime' => '21:00:00 America/New_York',
-                'ShareLabelFilters' => '1');
+                'ShareLabelFilters' => '1'];
         return $this->createProject($settings);
     }
 

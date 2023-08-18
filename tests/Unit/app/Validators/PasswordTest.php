@@ -25,11 +25,11 @@ use Illuminate\Validation\Validator;
 
 class PasswordTest extends TestCase
 {
-    const LOWERCASE = 'abc';
-    const UPPERCASE = 'YYZ';
-    const DIGITS = '246';
-    const SYMBOLS = '+!#';
-    const UNDERSCORE = '_';
+    public const LOWERCASE = 'abc';
+    public const UPPERCASE = 'YYZ';
+    public const DIGITS = '246';
+    public const SYMBOLS = '+!#';
+    public const UNDERSCORE = '_';
 
     public function testGetComplexityConfigurationGivenDefault()
     {

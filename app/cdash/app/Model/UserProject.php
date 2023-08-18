@@ -30,9 +30,9 @@ class UserProject
     public $ProjectId;
     private $PDO;
 
-    const NORMAL_USER = 0;
-    const SITE_MAINTAINER = 1;
-    const PROJECT_ADMIN = 2;
+    public const NORMAL_USER = 0;
+    public const SITE_MAINTAINER = 1;
+    public const PROJECT_ADMIN = 2;
 
     public function __construct()
     {
@@ -129,7 +129,7 @@ class UserProject
                          $this->EmailSuccess,
                          $this->EmailMissingSites,
                          $this->UserId,
-                         $this->ProjectId
+                         $this->ProjectId,
                      ]);
             if ($query === false) {
                 add_last_sql_error('User2Project Update');
@@ -156,7 +156,7 @@ class UserProject
                          $this->EmailType,
                          $this->EmailCategory,
                          $this->EmailSuccess,
-                         $this->EmailMissingSites
+                         $this->EmailMissingSites,
                      ]);
             if ($query === false) {
                 add_last_sql_error('User2Project Create');

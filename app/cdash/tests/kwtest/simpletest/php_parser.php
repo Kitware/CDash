@@ -7,9 +7,9 @@
 /**#@+
  * Lexer mode stack constants
  */
-foreach (array('LEXER_ENTER', 'LEXER_MATCHED',
+foreach (['LEXER_ENTER', 'LEXER_MATCHED',
              'LEXER_UNMATCHED', 'LEXER_EXIT',
-             'LEXER_SPECIAL') as $i => $constant) {
+             'LEXER_SPECIAL'] as $i => $constant) {
     if (!defined($constant)) {
         define($constant, $i + 1);
     }
@@ -36,8 +36,8 @@ class ParallelRegex
     public function __construct($case)
     {
         $this->case = $case;
-        $this->patterns = array();
-        $this->labels = array();
+        $this->patterns = [];
+        $this->labels = [];
         $this->regex = null;
     }
 
@@ -94,8 +94,8 @@ class ParallelRegex
         if ($this->regex == null) {
             for ($i = 0, $count = count($this->patterns); $i < $count; $i++) {
                 $this->patterns[$i] = '(' . str_replace(
-                    array('/', '(', ')'),
-                    array('\/', '\(', '\)'),
+                    ['/', '(', ')'],
+                    ['\/', '\(', '\)'],
                     $this->patterns[$i]) . ')';
             }
             $this->regex = '/' . implode('|', $this->patterns) . '/' . $this->getPerlMatchingFlags();
@@ -126,7 +126,7 @@ class SimpleStateStack
      */
     public function __construct($start)
     {
-        $this->stack = array($start);
+        $this->stack = [$start];
     }
 
     /**
@@ -190,10 +190,10 @@ class SimpleLexer
     public function __construct($parser, $start = 'accept', $case = false)
     {
         $this->case = $case;
-        $this->regexes = array();
+        $this->regexes = [];
         $this->parser = $parser;
         $this->mode = new SimpleStateStack($start);
-        $this->mode_handlers = array($start => $start);
+        $this->mode_handlers = [$start => $start];
     }
 
     /**
@@ -306,7 +306,7 @@ class SimpleLexer
         }
         $length = strlen($raw);
         while (is_array($parsed = $this->reduce($raw))) {
-            list($raw, $unmatched, $matched, $mode) = $parsed;
+            [$raw, $unmatched, $matched, $mode] = $parsed;
             if (!$this->dispatchTokens($unmatched, $matched, $mode)) {
                 return false;
             }
@@ -431,7 +431,7 @@ class SimpleLexer
             $unparsed_character_count = strpos($raw, $match);
             $unparsed = substr($raw, 0, $unparsed_character_count);
             $raw = substr($raw, $unparsed_character_count + strlen($match));
-            return array($raw, $unparsed, $match, $action);
+            return [$raw, $unparsed, $match, $action];
         }
         return true;
     }
@@ -465,8 +465,8 @@ class SimpleHtmlLexer extends SimpleLexer
      */
     protected function getParsedTags()
     {
-        return array('a', 'base', 'title', 'form', 'input', 'button', 'textarea', 'select',
-            'option', 'frameset', 'frame', 'label');
+        return ['a', 'base', 'title', 'form', 'input', 'button', 'textarea', 'select',
+            'option', 'frameset', 'frame', 'label'];
     }
 
     /**
@@ -548,7 +548,7 @@ class SimpleHtmlSaxParser
         $this->listener = $listener;
         $this->lexer = $this->createLexer($this);
         $this->tag = '';
-        $this->attributes = array();
+        $this->attributes = [];
         $this->current_attribute = '';
     }
 
@@ -594,7 +594,7 @@ class SimpleHtmlSaxParser
                 $this->tag,
                 $this->attributes);
             $this->tag = '';
-            $this->attributes = array();
+            $this->attributes = [];
             return $success;
         }
         if ($token != '=') {
@@ -683,12 +683,12 @@ class SimplePhpPageBuilder
     private $tags;
     private $page;
     private $private_content_tag;
-    private $open_forms = array();
-    private $complete_forms = array();
+    private $open_forms = [];
+    private $complete_forms = [];
     private $frameset = false;
-    private $loading_frames = array();
+    private $loading_frames = [];
     private $frameset_nesting_level = 0;
-    private $left_over_labels = array();
+    private $left_over_labels = [];
 
     /**
      *    Frees up any references so as to allow the PHP garbage
@@ -699,12 +699,12 @@ class SimplePhpPageBuilder
         unset($this->tags);
         unset($this->page);
         unset($this->private_content_tags);
-        $this->open_forms = array();
-        $this->complete_forms = array();
+        $this->open_forms = [];
+        $this->complete_forms = [];
         $this->frameset = false;
-        $this->loading_frames = array();
+        $this->loading_frames = [];
         $this->frameset_nesting_level = 0;
-        $this->left_over_labels = array();
+        $this->left_over_labels = [];
     }
 
     /**
@@ -724,7 +724,7 @@ class SimplePhpPageBuilder
      */
     public function parse($response)
     {
-        $this->tags = array();
+        $this->tags = [];
         $this->page = $this->createPage($response);
         $parser = $this->createParser($this);
         $parser->parse($response->getContent());
@@ -895,7 +895,7 @@ class SimplePhpPageBuilder
     {
         $name = $tag->getTagName();
         if (!in_array($name, array_keys($this->tags))) {
-            $this->tags[$name] = array();
+            $this->tags[$name] = [];
         }
         $this->tags[$name][] = $tag;
     }
@@ -954,7 +954,7 @@ class SimplePhpPageBuilder
      */
     protected function isFormElement($name)
     {
-        return in_array($name, array('input', 'button', 'textarea', 'select'));
+        return in_array($name, ['input', 'button', 'textarea', 'select']);
     }
 
     /**

@@ -80,7 +80,7 @@ class ProcessSubmission implements ShouldQueue
             $response = $client->request('POST', $url, ['query' => [
                     'filename' => $this->filename,
                     'buildid' => $buildid,
-                    'projectid' => $this->projectid
+                    'projectid' => $this->projectid,
                 ]]);
             return $response->getStatusCode() == 200;
         } else {
@@ -140,7 +140,7 @@ class ProcessSubmission implements ShouldQueue
         // Store record for successful job if asynchronously parsing.
         if (config('queue.default') !== 'sync') {
             SuccessfulJob::create([
-                'filename' => $this->filename
+                'filename' => $this->filename,
             ]);
         }
     }

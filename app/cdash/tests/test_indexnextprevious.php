@@ -40,7 +40,7 @@ class IndexNextPreviousTestCase extends KWWebTestCase
         $build_rows = [
             [$first_date, 1476079800, 'Experimental'],
             [$second_date, 1507637400, 'Nightly'],
-            [$third_date, 1539195000, 'Experimental']
+            [$third_date, 1539195000, 'Experimental'],
         ];
         foreach ($build_rows as $build_row) {
             $date = str_replace('-', '', $build_row[0]);

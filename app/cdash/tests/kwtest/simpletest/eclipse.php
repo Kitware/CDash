@@ -74,8 +74,8 @@ class EclipseReporter extends SimpleScorer
      */
     public function escapeVal($raw)
     {
-        $needle = array('\\', '"', '/', "\b", "\f", "\n", "\r", "\t");
-        $replace = array('\\\\', '\"', '\/', '\b', '\f', '\n', '\r', '\t');
+        $needle = ['\\', '"', '/', "\b", "\f", "\n", "\r", "\t"];
+        $replace = ['\\\\', '\"', '\/', '\b', '\f', '\n', '\r', '\t'];
         return str_replace($needle, $replace, $raw);
     }
 

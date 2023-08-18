@@ -50,7 +50,7 @@ final class CoverageController extends AbstractBuildController
         if (!isset($userid) || !is_numeric($userid)) {
             return view('cdash', [
                 'xsl' => true,
-                'xsl_content' => 'Not a valid userid!'
+                'xsl_content' => 'Not a valid userid!',
             ]);
         }
 
@@ -84,7 +84,7 @@ final class CoverageController extends AbstractBuildController
         if (!Gate::allows('edit-project', $Project)) {
             return view('cdash', [
                 'xsl' => true,
-                'xsl_content' => "You don't have the permissions to access this page"
+                'xsl_content' => "You don't have the permissions to access this page",
             ]);
         }
 
@@ -178,7 +178,7 @@ final class CoverageController extends AbstractBuildController
                     $line = substr($contents, $pos, $pos2 - $pos);
 
                     $file = '';
-                    $authors = array();
+                    $authors = [];
 
                     // first is the svnuser
                     $posfile = strpos($line, ':');
@@ -374,7 +374,7 @@ final class CoverageController extends AbstractBuildController
             'xsl' => true,
             'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/manageCoverage', true),
             'project' => $Project,
-            'title' => 'Manage Coverage'
+            'title' => 'Manage Coverage',
         ]);
     }
 
@@ -506,7 +506,7 @@ final class CoverageController extends AbstractBuildController
         if ($this->project->DisplayLabels) {
             // Get the set of labels involved:
             //
-            $labels = array();
+            $labels = [];
 
             $covlabels = $db->executePrepared('
                              SELECT DISTINCT id, text
@@ -596,8 +596,8 @@ final class CoverageController extends AbstractBuildController
                                 AND c.fileid=cf.id
                         ', [intval($this->build->Id)]);
 
-        $directories = array();
-        $covfile_array = array();
+        $directories = [];
+        $covfile_array = [];
         foreach ($coveragefile as $coveragefile_array) {
             $covfile['covered'] = 1;
 
@@ -675,7 +675,7 @@ final class CoverageController extends AbstractBuildController
             $covfile_array[] = $covfile;
         }
 
-        $ncoveragefiles = array();
+        $ncoveragefiles = [];
         $ncoveragefiles[0] = count($directories);
         $ncoveragefiles[1] = 0;
         $ncoveragefiles[2] = 0;
@@ -730,7 +730,7 @@ final class CoverageController extends AbstractBuildController
             'xsl' => true,
             'xsl_content' => generate_XSLT($xml, 'viewCoverage', true),
             'project' => $this->project,
-            'title' => 'Coverage'
+            'title' => 'Coverage',
         ]);
     }
 
@@ -1080,12 +1080,12 @@ final class CoverageController extends AbstractBuildController
 
         // Contruct the directory view
         if ($status === -1) {
-            $directory_array = array();
+            $directory_array = [];
             foreach ($covfile_array as $covfile) {
                 $fullpath = $covfile['fullpath'];
                 $fullpath = dirname($fullpath);
                 if (!isset($directory_array[$fullpath])) {
-                    $directory_array[$fullpath] = array();
+                    $directory_array[$fullpath] = [];
                     $directory_array[$fullpath]['priority'] = 0;
                     $directory_array[$fullpath]['directory'] = 1;
                     $directory_array[$fullpath]['covered'] = 1;
@@ -1756,7 +1756,7 @@ final class CoverageController extends AbstractBuildController
 
         $date = isset($_GET['date']) ? htmlspecialchars($_GET['date']) : null;
 
-        list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $this->project->NightlyTime);
+        [$previousdate, $currentstarttime, $nextdate] = get_dates($date, $this->project->NightlyTime);
 
         $response = begin_JSON_response();
         $response['title'] = $this->project->Name . ' - Compare Coverage';

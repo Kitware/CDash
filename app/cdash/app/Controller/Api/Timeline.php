@@ -40,9 +40,9 @@ class Timeline extends Index
     // in Javascript.
     private $timeToDate;
 
-    const ERROR = 0;
-    const FAILURE = 1;
-    const CLEAN = 2;
+    public const ERROR = 0;
+    public const FAILURE = 1;
+    public const CLEAN = 2;
 
     public function __construct(Database $db, Project $project)
     {
@@ -133,7 +133,7 @@ class Timeline extends Index
             [
                 'name' => 'testfailed',
                 'prettyname' => 'Test Failures',
-            ]
+            ],
         ];
 
         // Query for defects on expected builds only.
@@ -155,7 +155,7 @@ class Timeline extends Index
         $response['colors'] = [
             $this->colors[self::CLEAN],
             $this->colors[self::FAILURE],
-            $this->colors[self::ERROR]
+            $this->colors[self::ERROR],
         ];
         return $response;
     }
@@ -174,7 +174,7 @@ class Timeline extends Index
             [
                 'name' => 'testpassed',
                 'prettyname' => 'Passing Tests',
-            ]
+            ],
         ];
 
         $stmt = $this->db->prepare("
@@ -191,7 +191,7 @@ class Timeline extends Index
         $response['colors'] = [
             $this->colors[self::CLEAN],
             $this->colors[self::FAILURE],
-            $this->colors[self::ERROR]
+            $this->colors[self::ERROR],
         ];
         return $response;
     }
@@ -215,12 +215,12 @@ class Timeline extends Index
             [
                 'name' => 'testfailed',
                 'prettyname' => 'Test Failures',
-            ]
+            ],
         ];
         $colors = [
             $this->colors[self::CLEAN],
             $this->colors[self::FAILURE],
-            $this->colors[self::ERROR]
+            $this->colors[self::ERROR],
         ];
 
         $group_type = $buildgroup->GetType();
@@ -239,7 +239,7 @@ class Timeline extends Index
                     ORDER BY starttime');
             $query_params = [
                 ':projectid'      => $this->project->Id,
-                ':buildgroupname' => $groupname
+                ':buildgroupname' => $groupname,
             ];
             if (!pdo_execute($stmt, $query_params)) {
                 abort(500, 'Failed to load results');
@@ -289,7 +289,7 @@ class Timeline extends Index
                     $error_types = [
                         'countbuilderrors',
                         'countconfigureerrors',
-                        'countupdateerrors'
+                        'countupdateerrors',
                     ];
                     $build['errors'] = 0;
                     foreach ($error_types as $error_type) {
@@ -322,7 +322,7 @@ class Timeline extends Index
             // Use this build's starttime to get the beginning of the appropriate
             // testing day.
             $test_date = TestingDay::get($this->project, $build['starttime']);
-            list($unused, $start_of_day) =
+            [$unused, $start_of_day] =
                 get_dates($test_date, $this->project->NightlyTime);
 
             // Convert timestamp to milliseconds for our JS charting library.
@@ -359,9 +359,9 @@ class Timeline extends Index
 
         // Determine the range of the chart that should be selected by default.
         // This is referred to as the extent.
-        list($unused, $begin_extent) = get_dates($this->beginDate, $this->project->NightlyTime);
+        [$unused, $begin_extent] = get_dates($this->beginDate, $this->project->NightlyTime);
         $begin_extent *= 1000;
-        list($unused, $end_extent) = get_dates($this->endDate, $this->project->NightlyTime);
+        [$unused, $end_extent] = get_dates($this->endDate, $this->project->NightlyTime);
         $end_extent *= 1000;
         if ($begin_extent > $end_extent) {
             $begin_extent = $end_extent;
@@ -392,7 +392,7 @@ class Timeline extends Index
             new \DateTime($this->timeToDate[$newest_time_ms]));
         foreach ($period as $datetime) {
             $date = $datetime->format('Y-m-d');
-            list($unused, $start_of_day) = get_dates($date, $this->project->NightlyTime);
+            [$unused, $start_of_day] = get_dates($date, $this->project->NightlyTime);
             $start_of_day_ms = $start_of_day * 1000;
             $this->initializeDate($start_of_day_ms, $date);
         }
@@ -409,7 +409,7 @@ class Timeline extends Index
         foreach ($this->defectTypes as $defect_type) {
             $chart_keys[] = [
                 'name' => $defect_type['name'],
-                'prettyname' => $defect_type['prettyname']
+                'prettyname' => $defect_type['prettyname'],
             ];
         }
         if ($this->includeCleanBuilds) {

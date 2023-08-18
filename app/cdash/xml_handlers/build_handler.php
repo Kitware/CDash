@@ -117,7 +117,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
         } elseif ($name == 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
-                $this->SubProjects[$this->SubProjectName] = array();
+                $this->SubProjects[$this->SubProjectName] = [];
             }
             if (!array_key_exists($this->SubProjectName, $this->Builds)) {
                 $build = $factory->create(Build::class);

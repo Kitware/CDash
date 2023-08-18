@@ -32,7 +32,7 @@ function removeBuildsGroupwise(int $projectid, int $maxbuilds, bool $force = fal
     $db = Database::getInstance();
     $buildgroups = $db->executePrepared('SELECT id, autoremovetimeframe FROM buildgroup WHERE projectid=?', [$projectid]);
 
-    $buildids = array();
+    $buildids = [];
     foreach ($buildgroups as $buildgroup) {
         $days = $buildgroup['autoremovetimeframe'];
 
@@ -103,7 +103,7 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false, $echo 
                    ', [$startdate, intval($projectid)]);
     add_last_sql_error('dailyupdates::removeFirstBuilds');
 
-    $buildids = array();
+    $buildids = [];
     foreach ($builds as $builds_array) {
         $buildids[] = $builds_array['id'];
     }

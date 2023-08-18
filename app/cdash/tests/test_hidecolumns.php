@@ -14,7 +14,7 @@ class HideColumnsTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->MethodsToTest = array('Update', 'Configure', 'Build', 'Test');
+        $this->MethodsToTest = ['Update', 'Configure', 'Build', 'Test'];
     }
 
     public function testHideColumns()

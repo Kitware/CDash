@@ -41,7 +41,7 @@ class NotesParserErrorMessagesTestCase extends KWWebTestCase
             'about to query for builds to remove',
             'removing old buildids for projectid:',
             'removing old buildids for projectid:',
-            'Note missing name for build'
+            'Note missing name for build',
         ];
         $this->assertLogContains($expected, 5);
         $this->deleteLog($this->logfilename);

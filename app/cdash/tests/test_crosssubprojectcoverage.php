@@ -30,9 +30,9 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
     public function testCreateProjectTest()
     {
         // Create a new project for this test.
-        $settings = array(
+        $settings = [
                 'Name' => 'CrossSubProjectExample',
-                'Description' => 'Example of coverage across SubProjects');
+                'Description' => 'Example of coverage across SubProjects'];
         $this->createProject($settings);
     }
 
@@ -87,7 +87,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
         }
 
         // Do the POST submission to get a pending buildid from CDash.
-        $post_data = array(
+        $post_data = [
             'project' => 'CrossSubProjectExample',
             'subproject' => $subproject,
             'build' => 'subproject_coverage_example',
@@ -97,7 +97,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
             'endtime' => $endtime,
             'track' => 'Nightly',
             'type' => 'GcovTar',
-            'datafilesmd5[0]=' => $md5);
+            'datafilesmd5[0]=' => $md5];
         $post_result = $this->post($this->url . '/submit.php', $post_data);
         $post_json = json_decode($post_result, true);
         if ($post_json['status'] != 0) {

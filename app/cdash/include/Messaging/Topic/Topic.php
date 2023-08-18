@@ -8,14 +8,14 @@ use CDash\Model\SubscriberInterface;
 
 abstract class Topic implements TopicInterface
 {
-    const BUILD_ERROR = 'BuildError';
-    const BUILD_WARNING = 'BuildWarning';
-    const CONFIGURE = 'Configure';
-    const DYNAMIC_ANALYSIS = 'DynamicAnalysis';
-    const LABELED = 'Labeled';
-    const TEST_FAILURE = 'TestFailure';
-    const TEST_MISSING = 'TestMissing';
-    const UPDATE_ERROR = 'UpdateError';
+    public const BUILD_ERROR = 'BuildError';
+    public const BUILD_WARNING = 'BuildWarning';
+    public const CONFIGURE = 'Configure';
+    public const DYNAMIC_ANALYSIS = 'DynamicAnalysis';
+    public const LABELED = 'Labeled';
+    public const TEST_FAILURE = 'TestFailure';
+    public const TEST_MISSING = 'TestMissing';
+    public const UPDATE_ERROR = 'UpdateError';
 
     /** @var  SubscriberInterface $subscriber */
     protected $subscriber;

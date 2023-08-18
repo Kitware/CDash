@@ -281,7 +281,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
             ->createSite([
                 'Name' => 'Site.Name',
                 'BuildName' => 'SomeOS-SomeBuild',
-                'BuildStamp' => '123456789-2018-Nightly'
+                'BuildStamp' => '123456789-2018-Nightly',
             ])
             ->setStartTime(1235383453)
             ->setEndTime(1235383473)

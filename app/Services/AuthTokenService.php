@@ -79,7 +79,7 @@ class AuthTokenService
         $auth_token = AuthToken::create($params);
         return [
             'raw_token' => $token,
-            'token' => $auth_token
+            'token' => $auth_token,
         ];
     }
 

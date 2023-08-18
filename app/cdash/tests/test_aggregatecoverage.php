@@ -29,11 +29,11 @@ class AggregateCoverageTestCase extends KWWebTestCase
 
     public function testAggregateCoverage()
     {
-        $files = array(
+        $files = [
             'debug_case/Coverage.xml',
             'debug_case/CoverageLog-0.xml',
             'release_case/Coverage.xml',
-            'release_case/CoverageLog-0.xml');
+            'release_case/CoverageLog-0.xml'];
 
         foreach ($files as $file) {
             if (!$this->submitTestingFile($file)) {

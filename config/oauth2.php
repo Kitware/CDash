@@ -24,5 +24,5 @@ return [
         'hostedDomain' => '*',
         'className' => Google::class,
         'enable' => env('GOOGLE_ENABLE', false),
-    ]
+    ],
 ];

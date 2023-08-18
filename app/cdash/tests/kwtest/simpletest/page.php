@@ -19,12 +19,12 @@ require_once dirname(__FILE__) . '/selector.php';
  */
 class SimplePage
 {
-    private $links = array();
+    private $links = [];
     private $title = false;
     private $last_widget;
     private $label;
-    private $forms = array();
-    private $frames = array();
+    private $forms = [];
+    private $frames = [];
     private $transport_error;
     private $raw;
     private $text = false;
@@ -222,7 +222,7 @@ class SimplePage
      */
     public function getFrameFocus()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -268,7 +268,7 @@ class SimplePage
     protected function linkIsAbsolute($url)
     {
         $parsed = new SimpleUrl($url);
-        return (boolean)($parsed->getScheme() && $parsed->getHost());
+        return (bool)($parsed->getScheme() && $parsed->getHost());
     }
 
     /**
@@ -311,7 +311,7 @@ class SimplePage
         if (!$this->hasFrames()) {
             return false;
         }
-        $urls = array();
+        $urls = [];
         for ($i = 0; $i < count($this->frames); $i++) {
             $name = $this->frames[$i]->getAttribute('name');
             $url = new SimpleUrl($this->frames[$i]->getAttribute('src'));
@@ -337,7 +337,7 @@ class SimplePage
      */
     public function getUrls()
     {
-        $all = array();
+        $all = [];
         foreach ($this->links as $link) {
             $url = $this->getUrlFromLink($link);
             $all[] = $url->asString();
@@ -353,7 +353,7 @@ class SimplePage
      */
     public function getUrlsByLabel($label)
     {
-        $matches = array();
+        $matches = [];
         foreach ($this->links as $link) {
             if ($link->getText() == $label) {
                 $matches[] = $this->getUrlFromLink($link);

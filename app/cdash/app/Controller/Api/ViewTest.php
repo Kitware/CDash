@@ -369,7 +369,7 @@ class ViewTest extends BuildApi
 
         // Gather date information.
         $testdate = $this->date;
-        list($previousdate, $currentstarttime, $nextdate, $today) =
+        [$previousdate, $currentstarttime, $nextdate, $today] =
             get_dates($this->date, $this->project->NightlyTime);
         $beginning_timestamp = $currentstarttime;
         $end_timestamp = $currentstarttime + 3600 * 24;
@@ -634,7 +634,7 @@ class ViewTest extends BuildApi
 
         $csv_contents = [];
         // Standard columns.
-        $csv_headers = array('Name', 'Time' ,'Details' , 'Status');
+        $csv_headers = ['Name', 'Time','Details', 'Status'];
         if ($projectshowtesttime) {
             $csv_headers[] = 'Time Status';
         }

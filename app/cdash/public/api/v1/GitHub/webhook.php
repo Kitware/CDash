@@ -34,7 +34,7 @@ if (!is_null($hookSecret)) {
     } elseif (!extension_loaded('hash')) {
         handle_error("Missing 'hash' extension to check the secret code validity.");
     }
-    list($algo, $hash) = explode('=', $_SERVER['HTTP_X_HUB_SIGNATURE'], 2) + array('', '');
+    [$algo, $hash] = explode('=', $_SERVER['HTTP_X_HUB_SIGNATURE'], 2) + ['', ''];
     if (!in_array($algo, hash_algos(), true)) {
         handle_error("Hash algorithm '$algo' is not supported.");
     }

@@ -39,7 +39,7 @@ class BuildUpdate
 
     public function __construct()
     {
-        $this->Files = array();
+        $this->Files = [];
         $this->Command = '';
         $this->Append = false;
         $this->PDO = Database::getInstance()->getPdo();

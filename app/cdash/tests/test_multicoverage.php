@@ -53,7 +53,7 @@ class MultiCoverageTestCase extends KWWebTestCase
 
     public function submitXML()
     {
-        $filesToSubmit = array('Coverage.xml', 'CoverageLog-0.xml');
+        $filesToSubmit = ['Coverage.xml', 'CoverageLog-0.xml'];
         $dir = dirname(__FILE__) . '/data/MultiCoverage';
         foreach ($filesToSubmit as $file) {
             if (!$this->submission('TrilinosDriver', "$dir/$file")) {
@@ -65,7 +65,7 @@ class MultiCoverageTestCase extends KWWebTestCase
 
     public function submitTar()
     {
-        $post_result = $this->post($this->url . '/submit.php', array(
+        $post_result = $this->post($this->url . '/submit.php', [
             'project' => 'TrilinosDriver',
             'build' => 'multi_coverage_example',
             'site' => 'localhost',
@@ -74,7 +74,7 @@ class MultiCoverageTestCase extends KWWebTestCase
             'endtime' => '1462462884',
             'track' => 'Experimental',
             'type' => 'GcovTar',
-            'datafilesmd5[0]=' => '65f385dd8d360e78a35453144c0919ab'));
+            'datafilesmd5[0]=' => '65f385dd8d360e78a35453144c0919ab']);
 
         $post_json = json_decode($post_result, true);
         if ($post_json['status'] != 0) {

@@ -226,6 +226,6 @@ class SimpleExceptionTrap
     {
         $this->expected = false;
         $this->message = false;
-        $this->ignored = array();
+        $this->ignored = [];
     }
 }

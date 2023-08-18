@@ -103,7 +103,7 @@ class IndexPhpFilters extends DefaultFilters
                 break;
             }
         }
-        $this->FiltersAffectedBySubProjects = array(
+        $this->FiltersAffectedBySubProjects = [
                 'buildduration',
                 'builderrors',
                 'buildwarnings',
@@ -114,17 +114,17 @@ class IndexPhpFilters extends DefaultFilters
                 'testsfailed',
                 'testsnotrun',
                 'testspassed',
-                'testtimestatus');
+                'testtimestatus'];
     }
 
     public function getDefaultFilter()
     {
-        return array(
+        return [
             'field' => 'site',
             'fieldtype' => 'string',
             'compare' => 63,
             'value' => '',
-        );
+        ];
     }
 
     public function getFilterDefinitionsXML()
@@ -362,7 +362,7 @@ class IndexChildrenPhpFilters extends IndexPhpFilters
         return [
             'field' => 'subprojects',
             'compare' => 92,
-            'value' => ''
+            'value' => '',
         ];
     }
 }
@@ -371,12 +371,12 @@ class QueryTestsPhpFilters extends DefaultFilters
 {
     public function getDefaultFilter()
     {
-        return array(
+        return [
             'field' => 'testname',
             'fieldtype' => 'string',
             'compare' => 63,
             'value' => '',
-        );
+        ];
     }
 
     public function getFilterDefinitionsXML()
@@ -473,12 +473,12 @@ class ViewCoveragePhpFilters extends DefaultFilters
 {
     public function getDefaultFilter()
     {
-        return array(
+        return [
             'field' => 'filename',
             'fieldtype' => 'string',
             'compare' => 63,
             'value' => '',
-        );
+        ];
     }
 
     public function getDefaultShowLimit()
@@ -561,12 +561,12 @@ class ViewTestPhpFilters extends DefaultFilters
 {
     public function getDefaultFilter()
     {
-        return array(
+        return [
             'field' => 'testname',
             'fieldtype' => 'string',
             'compare' => 63,
             'value' => '',
-        );
+        ];
     }
 
     public function getFilterDefinitionsXML()
@@ -634,12 +634,12 @@ class CompareCoveragePhpFilters extends DefaultFilters
 {
     public function getDefaultFilter()
     {
-        return array(
+        return [
             'field' => 'subproject',
             'fieldtype' => 'string',
             'compare' => 61,
-            'value' => ''
-        );
+            'value' => '',
+        ];
     }
 
     public function getFilterDefinitionsXML()
@@ -669,12 +669,12 @@ class TestOverviewPhpFilters extends DefaultFilters
 {
     public function getDefaultFilter()
     {
-        return array(
+        return [
             'field' => 'buildname',
             'fieldtype' => 'string',
             'compare' => 63,
-            'value' => ''
-        );
+            'value' => '',
+        ];
     }
 
     public function getFilterDefinitionsXML()
@@ -979,7 +979,7 @@ function get_sql_compare_and_value($compare, $value)
             trigger_error('unknown $compare value: ' . $compare, E_USER_WARNING);
             break;
     }
-    return array($sql_compare, $sql_value);
+    return [$sql_compare, $sql_value];
 }
 
 // Parse a filter's field, compare, and value from the request and return an
@@ -1020,7 +1020,7 @@ function parse_filter_from_request($field_var, $compare_var, $value_var,
     return [
         'field'   => $field,
         'compare' => $compare,
-        'value'   => $value
+        'value'   => $value,
     ];
 }
 
@@ -1062,7 +1062,7 @@ function get_filterdata_from_request($page_id = '')
     $showlimit = intval($_GET['showlimit'] ?? 0);
     $limit = intval($_GET['limit'] ?? 0);
 
-    $clear = isset($_GET['clear']) ? $_GET['clear'] : '';
+    $clear = $_GET['clear'] ?? '';
     if ($clear == 'Clear') {
         $filtercount = 0;
     }
@@ -1075,7 +1075,7 @@ function get_filterdata_from_request($page_id = '')
             // Handle block of filters.
             $subfiltercount = pdo_real_escape_numeric(@$_GET["field{$i}count"]);
             $filter = [
-                'filters' => []
+                'filters' => [],
             ];
             for ($j = 1; $j <= $subfiltercount; ++$j) {
                 $filter['filters'][] = parse_filter_from_request(
@@ -1231,7 +1231,7 @@ function generate_filterdata_sql($filterdata)
 // Return a list of label IDs that match the specified filterdata.
 function get_label_ids_from_filterdata($filterdata)
 {
-    $label_ids = array();
+    $label_ids = [];
     $clauses = 0;
     $label_sql = '';
     $sql_combine = $filterdata['filtercombine'];

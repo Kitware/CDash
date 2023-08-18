@@ -27,13 +27,13 @@ class ProjectXmlSequenceTestCase extends KWWebTestCase
 
     public function testProjectXmlSequence()
     {
-        $filenames = array(
+        $filenames = [
             'Trilinos_129273760744.57_Project.xml',
             'Trilinos_129273770005.15_Project.xml',
             'Trilinos_129273771745.07_Project.xml',
             'Trilinos_129273989317.97_Project.xml',
             'Trilinos_129274192973.58_Project.xml',
-        );
+        ];
 
         foreach ($filenames as $filename) {
             echo "submitting $filename\n";

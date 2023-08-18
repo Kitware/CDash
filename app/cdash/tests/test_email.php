@@ -21,11 +21,11 @@ class EmailTestCase extends KWWebTestCase
 
     public function testCreateProjectTest()
     {
-        $settings = array(
+        $settings = [
                 'Name' => 'EmailProjectExample',
                 'Description' => 'Project EmailProjectExample test for cdash testing',
                 'EmailBrokenSubmission' => 1,
-                'EmailRedundantFailures' => 0);
+                'EmailRedundantFailures' => 0];
         $this->project = $this->createProject($settings);
     }
 
@@ -124,7 +124,7 @@ class EmailTestCase extends KWWebTestCase
             'Build Time: 2009-02-23 10:02:04',
             'Type: Nightly',
             'Warnings fixed: 6',
-            '-CDash on'
+            '-CDash on',
         ];
         if ($this->assertLogContains($expected, 15)) {
             $this->pass('Passed');
@@ -170,7 +170,7 @@ class EmailTestCase extends KWWebTestCase
             'Build Time: 2009-02-23 10:02:04',
             'Type: Nightly',
             'Test failures fixed: 2',
-            '-CDash on'
+            '-CDash on',
         ];
 
         if ($this->assertLogContains($expected, 15)) {

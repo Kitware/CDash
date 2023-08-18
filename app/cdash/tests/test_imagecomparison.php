@@ -35,7 +35,7 @@ class ImageComparisonTestCase extends KWWebTestCase
             JOIN test2image t2i ON (b2t.outputid=t2i.outputid)
             JOIN image i ON (i.id=t2i.imgid)
             WHERE b.name='image_comparison'");
-        $imgids = array();
+        $imgids = [];
         $buildid = 0;
         while ($row = $stmt->fetch()) {
             $buildid = $row['buildid'];
