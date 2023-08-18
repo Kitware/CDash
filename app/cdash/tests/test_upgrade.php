@@ -498,6 +498,9 @@ class UpgradeTestCase extends KWWebTestCase
                     $insert_query =
                         "INSERT INTO $table_to_update (siteid, name, version, path)
                         VALUES ($dupe, 'asdf', 'asdf', 'asdf')";
+                } elseif ($table_to_update === 'site2user') {
+                    $insert_query =
+                        "INSERT INTO $table_to_update (userid, siteid) VALUES (1, $dupe)";
                 } else {
                     $insert_query =
                         "INSERT INTO $table_to_update (siteid) VALUES ($dupe)";
