@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use App\Models\CoverageSummaryDiff;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
 
@@ -326,17 +327,17 @@ class CoverageSummary
             $previousloctested = intval($previouscoverage['loctested']);
             $previouslocuntested = intval($previouscoverage['locuntested']);
 
-            $summaryDiff = new CoverageSummaryDiff();
-            $summaryDiff->BuildId = $this->BuildId;
             $loctesteddiff = $loctested - $previousloctested;
             $locuntesteddiff = $locuntested - $previouslocuntested;
 
-            // Don't log if no diff unless an entry already exists
-            // for this build.
-            if ($summaryDiff->Exists() || $loctesteddiff !== 0 || $locuntesteddiff !== 0) {
-                $summaryDiff->LocTested = $loctesteddiff;
-                $summaryDiff->LocUntested = $locuntesteddiff;
-                $summaryDiff->Insert();
+            // Don't log if no diff unless an entry already exists for this build.
+            if (CoverageSummaryDiff::where(['buildid' => $this->BuildId])->exists() || $loctesteddiff !== 0 || $locuntesteddiff !== 0) {
+                CoverageSummaryDiff::updateOrCreate([
+                    'buildid' => $this->BuildId,
+                    ], [
+                    'loctested' => $loctesteddiff,
+                    'locuntested' => $locuntesteddiff,
+                ]);
             }
         }
 
