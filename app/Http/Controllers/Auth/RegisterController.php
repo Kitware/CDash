@@ -15,7 +15,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
-class RegisterController extends AbstractController
+final class RegisterController extends AbstractController
 {
     /*
     |--------------------------------------------------------------------------

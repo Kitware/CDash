@@ -56,6 +56,8 @@ add_test(
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
+add_laravel_test(/Unit/app/ControllerNameTest)
+
 add_php_test(install)
 add_laravel_test(/Unit/app/Validators/PasswordTest)
 add_laravel_test(/Feature/CDashTest)
