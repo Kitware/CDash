@@ -30,6 +30,12 @@
         </tr>
         <tr>
           <td align="left">
+            <b>Build Start Time: </b>
+            {{ cdash.build.buildstarttime }}
+          </td>
+        </tr>
+        <tr>
+          <td align="left">
             <b>Configure Command: </b>
             <pre class="pre-wrap">{{ cdash.configures[0].command }}</pre>
           </td>

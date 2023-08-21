@@ -1044,13 +1044,14 @@ final class BuildController extends AbstractBuildController
 
         // Build
         $site = $this->build->GetSite();
-        $build_response = [];
-        $build_response['site'] = $site->name;
-        $build_response['siteid'] = $site->id;
-        $build_response['buildname'] = $this->build->Name;
-        $build_response['buildid'] = $this->build->Id;
-        $build_response['hassubprojects'] = $has_subprojects;
-        $response['build'] = $build_response;
+        $response['build'] = [
+            'site' => $site->name,
+            'siteid' => $site->id,
+            'buildname' => $this->build->Name,
+            'buildid' => $this->build->Id,
+            'buildstarttime' => $this->build->StartTime,
+            'hassubprojects' => $has_subprojects,
+        ];
 
         $pageTimer->end($response);
         return response()->json(cast_data_for_JSON($response));
