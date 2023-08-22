@@ -5498,24 +5498,8 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function add_last_sql_error\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildError.php
-
-		-
-			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildError.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
 			"""
 			count: 1
 			path: app/cdash/app/Model/BuildError.php
@@ -5526,22 +5510,17 @@ parameters:
 			path: app/cdash/app/Model/BuildError.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BuildError\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/BuildError.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\BuildError\\:\\:GetErrorsForBuild\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildError.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\BuildError\\:\\:GetSourceFile\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildError.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildError\\:\\:GetSourceFile\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildError.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildError\\:\\:marshal\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildError.php
 
@@ -5567,11 +5546,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Model\\\\BuildError\\:\\:\\$LogLine has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildError.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildError\\:\\:\\$PDO has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildError.php
 
@@ -18867,7 +18841,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property BuildErrorTest\\:\\:\\$mock_builderror\\.$#"
-			count: 3
+			count: 2
 			path: app/cdash/tests/case/CDash/Model/BuildErrorTest.php
 
 		-

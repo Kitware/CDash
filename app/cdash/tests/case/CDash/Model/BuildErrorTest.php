@@ -48,7 +48,7 @@ class BuildErrorTest extends CDashTestCase
         ];
 
         $this->mock_project->CvsUrl = 'https://github.com/FooCo/foo';
-        $marshaled = $this->mock_builderror->marshal($input_data, $this->mock_project, '12', $this->mock_builderror);
+        $marshaled = $this->mock_builderror->marshal($input_data, $this->mock_project, '12');
 
         $expected = [
             'new' => '1',

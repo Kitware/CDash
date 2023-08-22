@@ -890,7 +890,7 @@ final class BuildController extends AbstractBuildController
             $resolvedBuildErrors = $this->build->GetResolvedBuildErrors($type);
             if ($resolvedBuildErrors !== false) {
                 while ($resolvedBuildError = $resolvedBuildErrors->fetch()) {
-                    $this->addErrorResponse(BuildError::marshal($resolvedBuildError, $this->project, $revision, $builderror), $response);
+                    $this->addErrorResponse(BuildError::marshal($resolvedBuildError, $this->project, $revision), $response);
                 }
             }
 
@@ -930,7 +930,7 @@ final class BuildController extends AbstractBuildController
             $buildErrors = $this->build->GetErrors($filter_error_properties);
 
             foreach ($buildErrors as $error) {
-                $this->addErrorResponse(BuildError::marshal($error, $this->project, $revision, $builderror), $response);
+                $this->addErrorResponse(BuildError::marshal($error, $this->project, $revision), $response);
             }
 
             // Build failure table
