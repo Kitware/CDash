@@ -226,9 +226,9 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                 $build->UpdateBuild($build->Id, -1, -1);
 
                 // Update the number of tests in the Build table
-                $build->UpdateTestNumbers($this->NumberTestsPassed[$subproject],
-                    $this->NumberTestsFailed[$subproject],
-                    $this->NumberTestsNotRun[$subproject]);
+                $build->UpdateTestNumbers((int) $this->NumberTestsPassed[$subproject],
+                    (int) $this->NumberTestsFailed[$subproject],
+                    (int) $this->NumberTestsNotRun[$subproject]);
 
                 // Is it really necessary to have to load the build from the db here?
                 $build->ComputeTestTiming();
@@ -328,6 +328,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             $this->NumberTestsPassed[$this->SubProjectName] = 0;
         }
         $factory = $this->getModelFactory();
+        /** @var Build $build */
         $build = $factory->create(Build::class);
         $build->SetSite($this->Site);
 

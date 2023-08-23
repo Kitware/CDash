@@ -128,12 +128,12 @@ class BuildModelTestCase extends KWWebTestCase
             return 1;
         }
 
-        if ($build->ComputeDifferences() !== false) {
+        if ($build->ComputeDifferences()) {
             $this->fail("ComputeDifferences didn't return false for empty build id");
             return 1;
         }
 
-        if ($build->ComputeConfigureDifferences() !== false) {
+        if ($build->ComputeConfigureDifferences()) {
             $this->fail("ComputeConfigureDifferences didn't return false for empty build id");
             return 1;
         }
@@ -153,7 +153,7 @@ class BuildModelTestCase extends KWWebTestCase
             return 1;
         }
 
-        if ($build->SaveTotalTestsTime('100') !== false) {
+        if ($build->SaveTotalTestsTime() !== false) {
             $this->fail("SaveTotalTestsTime didn't return false for empty build id");
             return 1;
         }

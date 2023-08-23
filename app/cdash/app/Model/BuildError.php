@@ -100,7 +100,7 @@ class BuildError
     /**
      * Returns all errors from builderror for current build
      */
-    public function GetErrorsForBuild(int $fetchStyle = PDO::FETCH_ASSOC): array|bool
+    public function GetErrorsForBuild(int $fetchStyle = PDO::FETCH_ASSOC): array|false
     {
         if (!$this->BuildId) {
             add_log('BuildId not set', 'BuildError::GetErrorsForBuild', LOG_WARNING);

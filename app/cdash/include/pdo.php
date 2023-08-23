@@ -142,7 +142,7 @@ function pdo_query(string $query): PDOStatement|false
  *
  * @deprecated 04/01/2023
  */
-function pdo_real_escape_string(mixed $unescaped_string): string|false
+function pdo_real_escape_string(mixed $unescaped_string): string
 {
     $str = get_link_identifier()->getPdo()->quote($unescaped_string ?? '');
     return substr($str, 1, strlen($str) - 2); // remove enclosing quotes

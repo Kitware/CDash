@@ -149,7 +149,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $shared_note->create();
 
         // buildtesttime
-        $build->SaveTotalTestsTime(8);
+        $build->SaveTotalTestsTime();
 
         // BuildUpdate
         $updatefile = new BuildUpdateFile();

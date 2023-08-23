@@ -1,9 +1,10 @@
 <?php
 
+use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
 
 /** Add a new build */
-function add_build($build)
+function add_build(Build $build)
 {
     if (!is_numeric($build->ProjectId) || !is_numeric($build->SiteId)) {
         return;
@@ -34,16 +35,6 @@ function add_build($build)
     }
 
     return $build->Id;
-}
-
-/** Extract the type from the build stamp */
-function extract_type_from_buildstamp($buildstamp)
-{
-    // We assume that the time stamp is always of the form
-    // 20080912-1810-this-is-a-type
-    if (!empty($buildstamp)) {
-        return substr($buildstamp, strpos($buildstamp, '-', strpos($buildstamp, '-') + 1) + 1);
-    }
 }
 
 /** Extract the date from the build stamp */
