@@ -20988,11 +20988,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method LoginTestCase\\:\\:testLogin\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/loginCoverage.php
-
-		-
 			message: """
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
