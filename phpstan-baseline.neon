@@ -25779,11 +25779,6 @@ parameters:
 			path: app/cdash/tests/test_install.php
 
 		-
-			message: "#^Method InstallIntoEmptyDBTestCase\\:\\:testInstallIntoEmptyDB\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_install_into_empty_db.php
-
-		-
 			message: """
 				#^Call to deprecated function get_link_identifier\\(\\)\\:
 				04/22/2023$#

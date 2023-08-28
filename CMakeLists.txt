@@ -67,9 +67,26 @@ endif()
 
 find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php)
 
+find_program(NPX_EXE NAMES npx PATHS c:/usr/bin/npx /usr/bin/npx)
+
 if(CDASH_USE_SELENIUM)
   find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php vendor/bin)
 endif(CDASH_USE_SELENIUM)
+
+set_property(GLOBAL PROPERTY INSTALL_CDASH_COUNT "0")
+function(cdash_install)
+  get_property(OLD_COUNT GLOBAL PROPERTY INSTALL_CDASH_COUNT)
+  MATH(EXPR NEW_COUNT "${OLD_COUNT}+1")
+  set_property(GLOBAL PROPERTY INSTALL_CDASH_COUNT "${NEW_COUNT}")
+  add_test(
+    NAME install_${NEW_COUNT}
+    COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_install.php
+  )
+  set_tests_properties(
+    install_${NEW_COUNT} PROPERTIES
+    FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
+  )
+endfunction(cdash_install)
 
 # add the new tests directory
 add_subdirectory(tests)

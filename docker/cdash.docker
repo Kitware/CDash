@@ -39,6 +39,13 @@ RUN apt-get update                                                         \
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
   apt-get update                                                           \
   && apt-get install -y cmake rsync                                        \
+  `# Cypress dependencies`                                                 \
+  && apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev    \
+          libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb      \
+  && mkdir /tmp/.X11-unix                                                  \
+  && chmod 1777 /tmp/.X11-unix                                             \
+  && chown root /tmp/.X11-unix/                                            \
+  && mkdir -p /var/www/.cache/mesa_shader_cache                            \
   && pecl install xdebug                                                   \
   && docker-php-ext-enable xdebug;                                         \
 fi
@@ -109,10 +116,13 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
   -DCDASH_SERVER=localhost:8080                                            \
   -DCDASH_SELENIUM_HUB=selenium-hub                                        \
   -DCTEST_UPDATE_VERSION_ONLY=1 ..                                         \
- && cp /cdash/.env.dev /cdash/.env;   \
+ && export CYPRESS_CACHE_FOLDER=/cdash/cypress_cache                       \
+ && npm install                                                            \
+ && cp /cdash/.env.dev /cdash/.env;                                        \
 else                                                                       \
  composer install --no-interaction --no-progress --prefer-dist --no-dev    \
                   --optimize-autoloader                                    \
+ && npm install --omit=dev                                                 \
  && echo "LOG_CHANNEL=stderr" >> .env;                                     \
 fi
 
