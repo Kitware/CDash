@@ -1735,7 +1735,7 @@ class Project
         }
         $response['name_encoded'] = urlencode($this->Name ?? '');
 
-        $includeQuota = !$config->get('CDASH_USER_CREATE_PROJECTS') || $user->IsAdmin();
+        $includeQuota = !boolval(config('cdash.user_create_projects')) ||  $user->IsAdmin();
 
         if ($includeQuota) {
             $uploadQuotaGB = 0;
