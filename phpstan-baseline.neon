@@ -21500,11 +21500,6 @@ parameters:
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
 
 		-
-			message: "#^Method APITestCase\\:\\:testAPI\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_api.php
-
-		-
 			message: """
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
