@@ -700,7 +700,7 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: app/Http/Controllers/DynamicAnalysisController.php
 
 		-

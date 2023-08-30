@@ -431,7 +431,7 @@
                 <a ng-if="::da.childlink" ng-href="{{::da.childlink}}">
                   {{::da.defectcount}}
                 </a>
-                <a ng-if="::!da.childlink" ng-href="viewDynamicAnalysis.php?buildid={{::da.buildid}}">
+                <a ng-if="::!da.childlink" ng-href="build/{{::da.buildid}}/dynamic_analysis">
                   {{::da.defectcount}}
                 </a>
               </td>
