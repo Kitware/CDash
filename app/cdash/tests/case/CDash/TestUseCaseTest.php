@@ -18,12 +18,27 @@ class TestUseCaseTest extends CDashUseCaseTestCase
             'name' => 'TestProject1',
         ]);
 
+        // A hack to make sure builds exist and can be referenced so we don't violate our foreign key constraints
+        for ($i = 0; $i < 10; $i++) {
+            DB::table('build')->insert([
+                'id' => $i,
+                'projectid' => $this->projectid,
+                'name' => 'TestBuild' . $i,
+                'uuid' => 'TestBuild' . $i,
+            ]);
+        }
+
         parent::setUp();
     }
 
     public function tearDown(): void
     {
         DB::delete('DELETE FROM project WHERE id = ?', [$this->projectid]);
+
+        // Clean up all of the placeholder builds we created
+        for ($i = 0; $i < 10; $i++) {
+            DB::table('build')->where('name', '=', 'TestBuild' . $i)->delete();
+        }
 
         parent::tearDown();
     }
