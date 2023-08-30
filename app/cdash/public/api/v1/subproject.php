@@ -111,7 +111,7 @@ function rest_get($projectid): bool
         if (intval($row['id']) === $subprojectid) {
             continue;
         }
-        if (is_array($dependencies) && in_array($row['id'], $dependencies)) {
+        if (in_array((int) $row['id'], $dependencies, true)) {
             $dep = [];
             $dep['id'] = intval($row['id']);
             $dep['name'] = $row['name'];

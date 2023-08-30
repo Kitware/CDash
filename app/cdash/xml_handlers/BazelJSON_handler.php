@@ -219,7 +219,7 @@ class BazelJSONHandler extends NonSaxHandler
                 // currently building or testing.
                 if ($this->HasSubProjects) {
                     $target_name = $json_array['id']['pattern']['pattern'][0];
-                    $subproject_name = SubProject::GetSubProjectForPath(
+                    $subproject_name = self::GetSubProjectForPath(
                         $target_name, intval($this->Project->Id));
                     if (!empty($subproject_name)) {
                         $this->InitializeSubProjectBuild($subproject_name);
@@ -363,7 +363,7 @@ class BazelJSONHandler extends NonSaxHandler
                             if ($record_configure_error) {
                                 $subproject_name = '';
                                 if ($this->HasSubProjects) {
-                                    $subproject_name = SubProject::GetSubProjectForPath(
+                                    $subproject_name = self::GetSubProjectForPath(
                                         $source_file, intval($this->Project->Id));
                                     // Skip this defect if we cannot deduce what SubProject
                                     // it belongs to.
@@ -484,7 +484,7 @@ class BazelJSONHandler extends NonSaxHandler
                                 if ($this->HasSubProjects) {
                                     // Look up the subproject (if any) that contains
                                     // this source file.
-                                    $subproject_name = SubProject::GetSubProjectForPath(
+                                    $subproject_name = self::GetSubProjectForPath(
                                         $source_file, intval($this->Project->Id));
                                     // Skip this defect if we cannot deduce what SubProject
                                     // it belongs to.
@@ -532,7 +532,7 @@ class BazelJSONHandler extends NonSaxHandler
                         // we may want to assign this test to one of the children
                         // builds instead.
                         $target_name = $json_array['id']['testResult']['label'];
-                        $subproject_name = SubProject::GetSubProjectForPath(
+                        $subproject_name = self::GetSubProjectForPath(
                             $target_name, intval($this->Project->Id));
                         // Skip this defect if we cannot deduce what SubProject
                         // it belongs to.
@@ -587,7 +587,7 @@ class BazelJSONHandler extends NonSaxHandler
                     // we may want to assign this test to one of the children
                     // builds instead.
                     $target_name = $json_array['id']['testSummary']['label'];
-                    $subproject_name = SubProject::GetSubProjectForPath(
+                    $subproject_name = self::GetSubProjectForPath(
                         $target_name, intval($this->Project->Id));
                     // Skip this defect if we cannot deduce what SubProject
                     // it belongs to.
@@ -751,5 +751,31 @@ class BazelJSONHandler extends NonSaxHandler
         if (!$skip_error) {
             $this->BuildErrors[$subproject_name][] = $build_error;
         }
+    }
+
+    /**
+     * Return the name of the subproject whose path contains the specified
+     * source file.
+     */
+    private static function GetSubProjectForPath(string $filepath, int $projectid): string
+    {
+        $pdo = get_link_identifier()->getPdo();
+        // Get all the subprojects for this project that have a path defined.
+        // Sort by longest paths first.
+        $stmt = $pdo->prepare(
+            "SELECT name, path FROM subproject
+            WHERE projectid = ? AND path != ''
+            ORDER BY CHAR_LENGTH(path) DESC");
+        pdo_execute($stmt, [$projectid]);
+        while ($row = $stmt->fetch()) {
+            // Return the name of the subproject with the longest path
+            // that matches our input path.
+            if (str_contains($filepath, $row['path'])) {
+                return $row['name'];
+            }
+        }
+
+        // Return empty string if no match was found.
+        return '';
     }
 }
