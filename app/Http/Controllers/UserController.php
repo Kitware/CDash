@@ -59,7 +59,7 @@ final class UserController extends AbstractController
         $response['user_is_admin'] = $user->admin;
         $response['show_monitor'] = config('queue.default') === 'database';
 
-        if ($config->get('CDASH_USER_CREATE_PROJECTS')) {
+        if (boolval(config('cdash.user_create_projects'))) {
             $response['user_can_create_projects'] = 1;
         } else {
             $response['user_can_create_projects'] = 0;
