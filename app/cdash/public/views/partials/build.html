@@ -21,7 +21,7 @@
 
 <!-- Otherwise, show build name & site on the row. -->
 <td ng-if="::cdash.childview != 1" align="left" class="paddt">
-  <a ng-href="viewSite.php?siteid={{::build.siteid}}&project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">{{::build.site}}</a>
+  <a ng-href="sites/{{::build.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">{{::build.site}}</a>
   <img ng-if="::build.siteoutoforder == 1" border="0" src="img/flag.png" title="flag"></img>
 </td>
 

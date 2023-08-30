@@ -36,7 +36,7 @@
             <td>
               <a
                 id="site_link"
-                :href="$baseURL + '/viewSite.php?siteid=' + cdash.build.siteid"
+                :href="$baseURL + '/sites/' + cdash.build.siteid"
               >
                 {{ cdash.build.site }}
               </a>

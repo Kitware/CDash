@@ -415,7 +415,7 @@ class QueryTests extends ResultsApi
 
             $test['labels'] = $row->labelstring;
 
-            $siteLink = 'viewSite.php?siteid=' . $row->siteid;
+            $siteLink = 'sites/' . $row->siteid;
             $test['siteLink'] = $siteLink;
 
             $buildSummaryLink = "build/$buildid";

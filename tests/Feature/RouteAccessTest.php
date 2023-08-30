@@ -68,7 +68,7 @@ class RouteAccessTest extends TestCase
         return [
             ['/upgrade.php'],
             ['/removeBuilds.php'],
-            ['/siteStatistics.php'],
+            ['/sites'],
             ['/manageUsers.php'],
             ['/monitor'],
             ['/ajax/findusers.php'],

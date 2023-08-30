@@ -372,19 +372,9 @@ final class SiteController extends AbstractController
             ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/editSite', true));
     }
 
-    public function viewSite(): View
+    public function viewSite(int $siteid): View
     {
         $db = Database::getInstance();
-
-        @$siteid = $_GET['siteid'];
-        if ($siteid != null) {
-            $siteid = pdo_real_escape_numeric($siteid);
-        }
-
-        // Checks
-        if (!isset($siteid) || !is_numeric($siteid)) {
-            abort(400, 'Not a valid siteid!');
-        }
 
         $site_array = $db->executePreparedSingleRow("SELECT * FROM site WHERE id=?", [$siteid]);
         $sitename = $site_array['name'];

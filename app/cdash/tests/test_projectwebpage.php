@@ -189,7 +189,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $buildgroup = array_pop($jsonobj['buildgroups']);
         $siteid = $buildgroup['builds'][0]['siteid'];
 
-        $content = $this->connect($this->url . "/viewSite.php?siteid=$siteid&project=4&currenttime=1235354400");
+        $content = $this->connect($this->url . "/sites/$siteid?project=4&currenttime=1235354400");
         if (!$content) {
             return;
         } elseif (!$this->findString($content, '<b>Total Physical Memory: </b>15MiB<br />')) {

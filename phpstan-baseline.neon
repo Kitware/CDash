@@ -1288,7 +1288,7 @@ parameters:
 				#^Call to deprecated function pdo_real_escape_numeric\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 5
+			count: 4
 			path: app/Http/Controllers/SiteController.php
 
 		-
@@ -1327,7 +1327,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 4
+			count: 3
 			path: app/Http/Controllers/SiteController.php
 
 		-
