@@ -6448,60 +6448,12 @@ parameters:
 			path: app/cdash/app/Model/BuildInformation.php
 
 		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 5
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildProperties\\:\\:Delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildProperties\\:\\:Exists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildProperties\\:\\:Fill\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildProperties\\:\\:Save\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildProperties\\:\\:\\$Build has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildProperties\\:\\:\\$Filled has no type specified\\.$#"
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BuildProperties\\>\\:\\:exists\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildProperties.php
 
 		-
 			message: "#^Property CDash\\\\Model\\\\BuildProperties\\:\\:\\$Filled is never read, only written\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildProperties\\:\\:\\$PDO has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildProperties\\:\\:\\$Properties has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Variable property access on \\$this\\(CDash\\\\Model\\\\BuildProperties\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildProperties.php
 

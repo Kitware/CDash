@@ -35,7 +35,7 @@ class BuildPropertiesJSONHandler extends NonSaxHandler
     public function Parse($filename)
     {
         // Test that this file contains valid JSON that PHP can decode.
-        $json_obj = json_decode(file_get_contents($filename));
+        $json_obj = json_decode(file_get_contents($filename), true);
         if ($json_obj === null) {
             $err = json_last_error_msg();
             add_log("Failed to parse $filename: $err", 'BuildPropertiesJSONHandler::Parse', LOG_ERR);
