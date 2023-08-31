@@ -20,7 +20,7 @@ use CDash\Config;
 require_once 'include/repository.php';
 
 use PDO;
-use CDash\Database;
+use App\Models\BuildError as EloquentBuildError;
 
 /** BuildError */
 class BuildError
@@ -35,15 +35,8 @@ class BuildError
     public $RepeatCount;
     public $BuildId;
 
-    private $PDO;
-
-    public function __construct()
-    {
-        $this->PDO = Database::getInstance();
-    }
-
     // Insert in the database (no update possible)
-    public function Insert(): bool
+    public function Insert(): void
     {
         if (!$this->BuildId) {
             abort(500, 'BuildError::Insert(): BuildId not set.');
@@ -60,41 +53,22 @@ class BuildError
         if ($this->SourceLine === 0) {
             $crc32 = crc32($this->Text); // no need for precontext or postcontext, this doesn't work for parallel build
         } else {
-            $crc32 = crc32($this->Text . $this->SourceFile . $this->SourceLine); // some warning can be on the same line
+            $crc32 = crc32($this->Text . $this->SourceFile . $this->SourceLine); // some warnings can be on the same line
         }
 
-        $query = $this->PDO->executePrepared('
-                     INSERT INTO builderror (
-                         buildid,
-                         type,
-                         logline,
-                         text,
-                         sourcefile,
-                         sourceline,
-                         precontext,
-                         postcontext,
-                         repeatcount,
-                         newstatus,
-                         crc32
-                     )
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
-                 ', [
-                     intval($this->BuildId),
-                     $this->Type,
-                     $this->LogLine,
-                     $this->Text,
-                     $this->SourceFile ?? '',
-                     intval($this->SourceLine),
-                     $this->PreContext,
-                     $this->PostContext,
-                     intval($this->RepeatCount),
-                     $crc32,
-                 ]);
-        if ($query === false) {
-            add_last_sql_error('BuildError Insert', 0, $this->BuildId);
-            return false;
-        }
-        return true;
+        EloquentBuildError::create([
+            'buildid' => (int) $this->BuildId,
+            'type' => $this->Type,
+            'logline' => intval($this->LogLine),
+            'text' => $this->Text,
+            'sourcefile' => $this->SourceFile ?? '',
+            'sourceline' => (int) $this->SourceLine,
+            'precontext' => $this->PreContext,
+            'postcontext' => $this->PostContext,
+            'repeatcount' => (int) $this->RepeatCount,
+            'newstatus' => 0,
+            'crc32' => $crc32,
+        ]);
     }
 
     /**
@@ -107,22 +81,27 @@ class BuildError
             return false;
         }
 
-        $sql = "SELECT * FROM builderror WHERE buildid=? ORDER BY logline ASC";
+        $result = EloquentBuildError::where('buildid', $this->BuildId)
+            ->orderBy('logline')
+            ->get();
 
-        $query = $this->PDO->prepare($sql);
-        pdo_execute($query, [$this->BuildId]);
-
-        return $query->fetchAll($fetchStyle);
+        return $fetchStyle === PDO::FETCH_ASSOC ? $result->toArray() : $result->all();
     }
 
-    public function GetSourceFile($data)
+    /**
+     * @return array{
+     *     'file': string,
+     *     'directory': string,
+     * }
+     */
+    private static function GetSourceFile($data): array
     {
         $sourceFile = [];
 
         // Detect if the source directory has already been replaced by CTest
         // with /.../.  If so, sourcefile is already a relative path from the
         // root of the source tree.
-        if (strpos($data['text'], '/.../') !== false) {
+        if (str_contains($data['text'], '/.../')) {
             $parts = explode('/', $data['sourcefile']);
             $sourceFile['file'] = array_pop($parts);
             $sourceFile['directory'] = implode('/', $parts);
@@ -141,16 +120,18 @@ class BuildError
      * friendly format.
      *
      * Requires the $data of a build error, the $project, and the buildupdate.revision.
+     *
+     * @return array<string,mixed>
      **/
-    public static function marshal($data, Project $project, $revision, BuildError $builderror)
+    public static function marshal($data, Project $project, $revision): array
     {
         deepEncodeHTMLEntities($data);
 
         // Sets up access to $file and $directory
-        extract($builderror->GetSourceFile($data));
+        extract(self::GetSourceFile($data));
         $marshaled = [
-            'new' => (isset($data['newstatus'])) ? $data['newstatus'] : -1,
-            'logline' => $data['logline'],
+            'new' => (int) ($data['newstatus'] ?? -1),
+            'logline' => (int) $data['logline'],
             'cvsurl' => get_diff_url($project->Id, $project->CvsUrl, $directory, $file, $revision),
         ];
 
@@ -174,10 +155,8 @@ class BuildError
 
     /**
      * Returns a self referencing URI for the current BuildError.
-     *
-     * @return string
      */
-    public function GetUrlForSelf()
+    public function GetUrlForSelf(): string
     {
         $config = Config::getInstance();
         $url = $config->getBaseUrl();
