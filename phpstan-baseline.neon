@@ -316,6 +316,11 @@ parameters:
 			path: app/Http/Controllers/Auth/RegisterController.php
 
 		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\RegisterController\\:\\:create\\(\\) never returns null so it can be removed from the return type\\.$#"
+			count: 1
+			path: app/Http/Controllers/Auth/RegisterController.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\RegisterController\\:\\:validator\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Http/Controllers/Auth/RegisterController.php

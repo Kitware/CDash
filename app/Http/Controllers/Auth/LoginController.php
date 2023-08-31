@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
-class LoginController extends AbstractController
+final class LoginController extends AbstractController
 {
     /*
     |--------------------------------------------------------------------------
