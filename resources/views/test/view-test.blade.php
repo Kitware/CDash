@@ -42,6 +42,15 @@
 
                 <tr>
                     <td>
+                        <b>Build Start Time:</b>
+                    </td>
+                    <td>
+                        {{::cdash.build.starttime}}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
                         <b>Total time:</b>
                     </td>
                     <td>

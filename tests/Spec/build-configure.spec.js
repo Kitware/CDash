@@ -20,6 +20,7 @@ beforeEach(() => {
       siteid: 1,
       buildname: "my build",
       buildid: 2,
+      buildstarttime: "2023-08-21 12:30:48",
       hassubprojects: 0
     },
     configures: [{
@@ -48,6 +49,7 @@ test('BuildConfigure handles API response', async () => {
   var html = component.html();
   expect(html).toContain('mysite');
   expect(html).toContain('my build');
+  expect(html).toContain('2023-08-21 12:30:48');
   expect(html).toContain('Configuring done');
   expect(html).toContain('written to: /tmp/bin/');
 });
