@@ -1476,7 +1476,7 @@ parameters:
 			path: app/Http/Controllers/SiteController.php
 
 		-
-			message: "#^Parameter \\#1 \\$num of function round expects float\\|int, string\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$num of function round expects float\\|int, string given\\.$#"
 			count: 1
 			path: app/Http/Controllers/SiteController.php
 
@@ -3700,6 +3700,16 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
+			message: "#^Only booleans are allowed in &&, string given on the left side\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Only booleans are allowed in &&, string given on the right side\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
 			message: "#^Only booleans are allowed in an elseif condition, int given\\.$#"
 			count: 5
 			path: app/cdash/app/Controller/Api/ViewTest.php
@@ -4181,7 +4191,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 53
+			count: 52
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -4211,42 +4221,72 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
+			message: "#^Class CDash\\\\Model\\\\Build has an uninitialized property \\$BeginningOfDay\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Class CDash\\\\Model\\\\Build has an uninitialized property \\$BuildEmailCollection\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Class CDash\\\\Model\\\\Build has an uninitialized property \\$BuildErrorCount\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Class CDash\\\\Model\\\\Build has an uninitialized property \\$Done\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Class CDash\\\\Model\\\\Build has an uninitialized property \\$DynamicAnalysisCollection\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Class CDash\\\\Model\\\\Build has an uninitialized property \\$EndOfDay\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Class CDash\\\\Model\\\\Build has an uninitialized property \\$ErrorDifferences\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Class CDash\\\\Model\\\\Build has an uninitialized property \\$Information\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Class CDash\\\\Model\\\\Build has an uninitialized property \\$MissingTests\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Class CDash\\\\Model\\\\Build has an uninitialized property \\$Project\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Class CDash\\\\Model\\\\Build has an uninitialized property \\$TestFailedCount\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 21
 			path: app/cdash/app/Model/Build.php
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 12
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 34
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddBuild\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddBuild\\(\\) has parameter \\$nbuilderrors with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddBuild\\(\\) has parameter \\$nbuildwarnings with no type specified\\.$#"
-			count: 1
+			count: 2
 			path: app/cdash/app/Model/Build.php
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddBuild\\(\\) throws checked exception Error but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddError\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4256,17 +4296,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddLabel\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddLabel\\(\\) has parameter \\$label with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddUpdateStatistics\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4291,11 +4321,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddUpdateStatistics\\(\\) has parameter \\$firstbuild with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddUpdateStatistics\\(\\) has parameter \\$testdiff with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -4306,62 +4331,12 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AssignToGroup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:ComputeConfigureDifferences\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:ComputeDifferences\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:ComputeTestTiming\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:ComputeTestingDayBounds\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:ComputeUpdateStatistics\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:ConvertMissingToZero\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:ConvertMissingToZero\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:CreateParentBuild\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:CreateParentBuild\\(\\) has parameter \\$numErrors with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:CreateParentBuild\\(\\) has parameter \\$numWarnings with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:Exists\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4376,32 +4351,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:FindRealErrors\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:FindRealErrors\\(\\) has parameter \\$author with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:FindRealErrors\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:FindRealErrors\\(\\) has parameter \\$filename with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:FindRealErrors\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GenerateUuid\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4431,32 +4381,12 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetBuildEmailCollection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetCommitAuthors\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetDate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetDiffWithPreviousBuild\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetDone\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetErrorDifferences\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4476,6 +4406,16 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetFailedTests\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetFailedTimeStatusTests\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetFailures\\(\\) has parameter \\$propertyFilters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -4491,16 +4431,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetIdFromName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetIdFromName\\(\\) has parameter \\$subproject with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetIdFromUuid\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -4511,12 +4441,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetLabelCollection\\(\\) has invalid return type CDash\\\\Model\\\\Collection\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetLabels\\(\\) has no return type specified\\.$#"
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetLabelCollection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4526,52 +4451,17 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetName\\(\\) has no return type specified\\.$#"
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetLabels\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetNumberOfErrors\\(\\) has no return type specified\\.$#"
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetNotRunTests\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetNumberOfFailedTests\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetNumberOfNotRunTests\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetNumberOfPassedTests\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetNumberOfTestsByField\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetNumberOfTestsByField\\(\\) has parameter \\$field with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetNumberOfWarnings\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetParentId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetPullRequest\\(\\) has no return type specified\\.$#"
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetPassedTests\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4581,22 +4471,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetResolvedBuildErrors\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetResolvedBuildFailures\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetResolvedBuildFailures\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetSubProjectBuild\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4611,27 +4486,12 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetSubProjectName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetTestCollection\\(\\) has invalid return type CDash\\\\Model\\\\TestCollection\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetUploadedFilesOrUrls\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:LookupParentBuildId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:MarkAsDone\\(\\) has no return type specified\\.$#"
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetTests\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4681,52 +4541,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:QuerySubProjectId\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:RemoveIfDone\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:Save\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SaveInformation\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SaveTotalTestsTime\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SaveTotalTestsTime\\(\\) has parameter \\$update_parent with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetBuildConfigure\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetBuildEmailCollection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetBuildUpdate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetConfigureDuration\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4736,42 +4551,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetNumberOfConfigureErrors\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetNumberOfConfigureErrors\\(\\) has parameter \\$numErrors with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetNumberOfConfigureWarnings\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetNumberOfConfigureWarnings\\(\\) has parameter \\$numWarnings with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetParentId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetParentId\\(\\) has parameter \\$parentid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetProject\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetPullRequest\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4781,22 +4561,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetSite\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetSubProject\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetSubProject\\(\\) has parameter \\$subproject with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateBuild\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4821,72 +4586,12 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateBuildDuration\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateBuildDuration\\(\\) has parameter \\$duration with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateBuildTestTime\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateBuildTestTime\\(\\) has parameter \\$test_exec_time with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateDuration\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateDuration\\(\\) has parameter \\$duration with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateDuration\\(\\) has parameter \\$field with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateDuration\\(\\) has parameter \\$update_parent with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateEndTime\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateEndTime\\(\\) has parameter \\$end_time with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateParentConfigureNumbers\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateParentConfigureNumbers\\(\\) has parameter \\$newErrors with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateParentConfigureNumbers\\(\\) has parameter \\$newWarnings with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateParentTestNumbers\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4906,37 +4611,12 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateTestDuration\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateTestDuration\\(\\) has parameter \\$duration with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateTestDuration\\(\\) has parameter \\$update_parent with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateTestNumbers\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateTestNumbers\\(\\) has parameter \\$numberTestsFailed with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateTestNumbers\\(\\) has parameter \\$numberTestsNotRun with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateTestNumbers\\(\\) has parameter \\$numberTestsPassed with no type specified\\.$#"
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:extract_type_from_buildstamp\\(\\) has parameter \\$buildstamp with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4951,47 +4631,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$test$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^PHPDoc tag @return has invalid value \\(BuildEmailCollection;\\)\\: Unexpected token \";\", expected TOKEN_HORIZONTAL_WS at offset 196 on line 6$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$ActionableType has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Append has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$BeginningOfDay has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$BuildConfigure has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$BuildEmailCollection has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$BuildErrorCount has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -5001,67 +4641,22 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Command has no type specified\\.$#"
+			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$CommitAuthors type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$CommitAuthors has no type specified\\.$#"
+			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$ErrorDifferences type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Done has no type specified\\.$#"
+			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Errors type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$DynamicAnalysisCollection has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$EndOfDay has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$EndTime has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$ErrorDifferences has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$ErrorDiffs has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Errors has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Failures has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Filled has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Generator has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$GroupId has no type specified\\.$#"
+			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Failures type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -5071,47 +4666,17 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Information has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$InsertErrors has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$LabelCollection has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Log has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$MissingTests has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Name has no type specified\\.$#"
+			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$MissingTests type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
 			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$PDO has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$ParentId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Project has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -5136,16 +4701,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Stamp has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$StartTime has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$SubProjectId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -5156,27 +4711,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$SubmitTime has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$TestCollection has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$TestFailedCount has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Type has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$Uuid has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -9813,6 +9348,11 @@ parameters:
 			path: app/cdash/include/Collection/BuildCollection.php
 
 		-
+			message: "#^Parameter \\#2 \\$name of method CDash\\\\Collection\\\\Collection\\:\\:addItem\\(\\) expects null, mixed given\\.$#"
+			count: 1
+			path: app/cdash/include/Collection/BuildCollection.php
+
+		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 1
 			path: app/cdash/include/Collection/BuildEmailCollection.php
@@ -10499,7 +10039,7 @@ parameters:
 
 		-
 			message: "#^Iterating over an object of an unknown class CDash\\\\Model\\\\Collection\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/include/Messaging/Topic/ConfigureTopic.php
 
 		-
@@ -10834,6 +10374,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Messaging\\\\Topic\\\\Topic\\:\\:itemHasTopicSubject\\(\\) has parameter \\$item with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/Messaging/Topic/Topic.php
+
+		-
+			message: "#^Only booleans are allowed in &&, mixed given on the left side\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/Topic.php
 
@@ -12893,21 +12438,6 @@ parameters:
 			path: app/cdash/include/ctestparser.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$Id\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$Name\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:GetStamp\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
 			message: """
 				#^Call to deprecated function get_link_identifier\\(\\)\\:
 				04/22/2023$#
@@ -12943,16 +12473,11 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 2
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Function add_build\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparserutils.php
 
 		-
-			message: "#^Function add_build\\(\\) has parameter \\$build with no type specified\\.$#"
+			message: "#^Function add_build\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparserutils.php
 
@@ -12988,16 +12513,6 @@ parameters:
 
 		-
 			message: "#^Function extract_date_from_buildstamp\\(\\) has parameter \\$buildstamp with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Function extract_type_from_buildstamp\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Function extract_type_from_buildstamp\\(\\) has parameter \\$buildstamp with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparserutils.php
 
@@ -13910,11 +13425,6 @@ parameters:
 
 		-
 			message: "#^Function pdo_real_escape_numeric\\(\\) never returns float so it can be removed from the return type\\.$#"
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
-			message: "#^Function pdo_real_escape_string\\(\\) never returns false so it can be removed from the return type\\.$#"
 			count: 1
 			path: app/cdash/include/pdo.php
 
@@ -15259,11 +14769,6 @@ parameters:
 
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
-			message: "#^Comparison operation \"\\=\\=\" between \\(array\\|float\\|int\\) and 0 results in an error\\.$#"
 			count: 1
 			path: app/cdash/include/sendemail.php
 
@@ -19012,6 +18517,11 @@ parameters:
 
 		-
 			message: "#^Call to method GetDiffWithPreviousBuild\\(\\) on an unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Model/BuildTest.php
+
+		-
+			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'CDash\\\\\\\\Collection\\\\\\\\BuildEmailCollection' and CDash\\\\Collection\\\\BuildEmailCollection will always evaluate to true\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Model/BuildTest.php
 

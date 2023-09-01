@@ -206,10 +206,8 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                 }
 
                 // Record the number of warnings & errors with the build.
-                $build->SetNumberOfConfigureWarnings(
-                    $this->Configure->NumberOfWarnings);
-                $build->SetNumberOfConfigureErrors(
-                    $this->Configure->NumberOfErrors);
+                $build->SetNumberOfConfigureWarnings((int) $this->Configure->NumberOfWarnings);
+                $build->SetNumberOfConfigureErrors((int) $this->Configure->NumberOfErrors);
 
                 $build->ComputeConfigureDifferences();
 
@@ -232,7 +230,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
             // All subprojects share the same configure file and parent build,
             // so only need to do this once
             $build->UpdateParentConfigureNumbers(
-                $this->Configure->NumberOfWarnings, $this->Configure->NumberOfErrors);
+                (int) $this->Configure->NumberOfWarnings, (int) $this->Configure->NumberOfErrors);
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             if (isset($this->Configure)) {
                 $this->Configure->AddLabel($this->Label);

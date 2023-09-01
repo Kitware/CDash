@@ -74,7 +74,7 @@ class DoneHandlerTestCase extends KWWebTestCase
         $this->assertEqual($build->Id, $received_buildid);
 
         // Verify that the build is marked as done.
-        $this->assertEqual($build->GetDone(), 1);
+        $this->assertTrue($build->GetDone());
 
         // Mark the build as "not done" again.
         $build->MarkAsDone(0);

@@ -128,7 +128,7 @@ class BazelJSONHandler extends NonSaxHandler
                 $this->NumTestsFailed[$subproject_name];
             $num_notrun = $build->GetNumberOfNotRunTests() +
                 $this->NumTestsNotRun[$subproject_name];
-            $build->UpdateTestNumbers($num_passed, $num_failed, $num_notrun);
+            $build->UpdateTestNumbers((int) $num_passed, (int) $num_failed, (int) $num_notrun);
         }
 
         // Save configure information.
@@ -152,16 +152,16 @@ class BazelJSONHandler extends NonSaxHandler
 
                 // Record the number of warnings & errors with the build.
                 $build->SetNumberOfConfigureWarnings(
-                    $configure->NumberOfWarnings);
+                    (int) $configure->NumberOfWarnings);
                 $build->SetNumberOfConfigureErrors(
-                    $configure->NumberOfErrors);
+                    (int) $configure->NumberOfErrors);
                 $build->ComputeConfigureDifferences();
 
                 // Update the tally of warnings & errors in the parent build,
                 // if applicable.
                 if (!empty($subproject_name)) {
                     $build->UpdateParentConfigureNumbers(
-                        $configure->NumberOfWarnings, $configure->NumberOfErrors);
+                        (int) $configure->NumberOfWarnings, (int) $configure->NumberOfErrors);
                 }
             }
         }
@@ -660,7 +660,7 @@ class BazelJSONHandler extends NonSaxHandler
         // Initialize the child build.
         $child_build = new Build();
         $child_build->Generator = $this->ParentBuild->Generator;
-        $child_build->GroupId = $this->ParentBuild->GroupId;
+        $child_build->GroupId = (int) $this->ParentBuild->GroupId;
         $child_build->Name = $this->ParentBuild->Name;
         $child_build->ProjectId = $this->ParentBuild->ProjectId;
         $child_build->SiteId = $this->ParentBuild->SiteId;

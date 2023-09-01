@@ -181,6 +181,9 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
             // XML file represents multiple "all-at-once" SubProject builds.
             $all_at_once = count($this->Builds) > 1;
             $parent_duration_set = false;
+            /**
+             * @var Build $build
+             */
             foreach ($this->Builds as $subproject => $build) {
                 $build->ProjectId = $this->projectid;
                 $build->StartTime = $start_time;
@@ -203,7 +206,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                 $duration = $this->EndTimeStamp - $this->StartTimeStamp;
                 $build->UpdateBuildDuration($duration, !$all_at_once);
                 if ($all_at_once && !$parent_duration_set) {
-                    $parent_build = $factory->create(Build::class);
+                    $parent_build = new Build();
                     $parent_build->Id = $build->GetParentId();
                     $parent_build->UpdateBuildDuration($duration, false);
                     $parent_duration_set = true;
