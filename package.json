@@ -58,7 +58,7 @@
     "expect": "^27.3.1",
     "jest": "^27.3.1",
     "moment": "^2.29.4",
-    "postcss": "^8.3.5",
+    "postcss": "^8.4.29",
     "protractor": "^7.0.0",
     "resolve-url-loader": "^5.0.0"
   }
