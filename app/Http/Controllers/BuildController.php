@@ -1176,7 +1176,7 @@ final class BuildController extends AbstractBuildController
         if ($this->build->SubProjectId > 0) {
             $subproj_table = 'INNER JOIN subproject2build AS sp2b ON (b.id=sp2b.buildid)';
             $subproj_criteria = 'AND sp2b.subprojectid=:subprojectid';
-            $query_params = $this->build->SubProjectId;
+            $query_params[] = $this->build->SubProjectId;
         }
 
         // Get details about previous builds.
