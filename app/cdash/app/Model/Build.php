@@ -30,7 +30,9 @@ use CDash\Collection\DynamicAnalysisCollection;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
 use PDO;
+use App\Models\Build as EloquentBuild;
 
 class Build
 {
@@ -314,7 +316,9 @@ class Build
             return false;
         }
 
-        return (bool) DB::update('UPDATE build SET endtime = ? WHERE id = ?', [$end_time, $this->Id]);
+        return EloquentBuild::where('id', $this->Id)->update([
+            'endtime' => $end_time,
+        ]) > 0;
     }
 
     private function QuerySubProjectId(int $buildid): int|false
@@ -330,57 +334,34 @@ class Build
     }
 
     /** Fill the current build information from the buildid */
-    public function FillFromId($buildid)
+    public function FillFromId($buildid): void
     {
         $buildid = (int) $buildid;
 
         if ($this->Filled) {
             // Already filled, no need to do it again.
-            return false;
+            return;
         }
 
-        $stmt = $this->PDO->prepare(
-            'SELECT
-                projectid,
-                starttime,
-                endtime,
-                submittime,
-                siteid,
-                name,
-                stamp,
-                type,
-                parentid,
-                done,
-                builderrors,
-                testfailed,
-                generator,
-                command
-            FROM build
-            WHERE id = ?');
-
-        if (!pdo_execute($stmt, [$buildid])) {
-            return false;
+        $model = EloquentBuild::find($buildid);
+        if ($model === null) {
+            return;
         }
 
-        $build_array = $stmt->fetch();
-        if (!is_array($build_array)) {
-            return false;
-        }
-
-        $this->Name = $build_array['name'];
-        $this->SetStamp($build_array['stamp']);
-        $this->Type = $build_array['type'];
-        $this->StartTime = $build_array['starttime'];
-        $this->EndTime = $build_array['endtime'];
-        $this->SubmitTime = $build_array['submittime'];
-        $this->SiteId = $build_array['siteid'];
-        $this->ProjectId = $build_array['projectid'];
-        $this->SetParentId($build_array['parentid']);
-        $this->Done = (bool) $build_array['done'];
-        $this->Generator = $build_array['generator'];
-        $this->Command = $build_array['command'];
-        $this->BuildErrorCount = (int) $build_array['builderrors'];
-        $this->TestFailedCount = (int) $build_array['testfailed'];
+        $this->Name = $model->name;
+        $this->SetStamp($model->stamp);
+        $this->Type = $model->type;
+        $this->StartTime = $model->starttime;
+        $this->EndTime = $model->endtime;
+        $this->SubmitTime = $model->submittime;
+        $this->SiteId = $model->siteid;
+        $this->ProjectId = $model->projectid;
+        $this->SetParentId($model->parentid);
+        $this->Done = $model->done;
+        $this->Generator = $model->generator;
+        $this->Command = $model->command;
+        $this->BuildErrorCount = $model->builderrors;
+        $this->TestFailedCount = $model->testfailed;
 
         $subprojectid = $this->QuerySubProjectId($buildid);
         if ($subprojectid) {
@@ -790,11 +771,8 @@ class Build
         if (!$this->Id) {
             return false;
         }
-        $stmt = $this->PDO->prepare('SELECT COUNT(*) FROM build WHERE id = ?');
-        if (!pdo_execute($stmt, [$this->Id])) {
-            return false;
-        }
-        return $stmt->fetchColumn() > 0;
+
+        return EloquentBuild::where('id', $this->Id)->exists();
     }
 
     public function Save()
@@ -881,24 +859,14 @@ class Build
     }
 
     /** Helper function for test number accessors. */
-    private function GetNumberOfTestsByField(string $field): int|false
+    private function GetNumberOfTestsByField(string $field): int
     {
-        if ($field !== 'testpassed' && $field !== 'testfailed' && $field !== 'testnotrun') {
-            return false;
-        }
-        $stmt = $this->PDO->prepare("SELECT $field FROM build WHERE id = ?");
-        if (!pdo_execute($stmt, [$this->Id])) {
-            return false;
-        }
-        $numTests = $stmt->fetchColumn();
-        if ($numTests === false) {
-            return 0;
+        if (!in_array($field, ['testpassed', 'testfailed', 'testnotrun'], true)) {
+            throw new InvalidArgumentException('Invalid field specified.');
         }
 
-        $numTests = (int) $numTests;
-
-
-        return (int) max($numTests, 0);
+        $model = EloquentBuild::find($this->Id);
+        return $model === null ? 0 : max($model->$field, 0);
     }
 
     /** Get number of failed tests */
@@ -931,13 +899,11 @@ class Build
         $this->SetParentId($this->LookupParentBuildId());
         $this->UpdateParentTestNumbers($newFailed, $newNotRun, $newPassed);
 
-        // Update this build's test numbers.
-        $stmt = $this->PDO->prepare(
-            'UPDATE build SET testnotrun = ?, testfailed = ?, testpassed = ?
-            WHERE id = ?');
-        if (!pdo_execute($stmt, [$numberTestsNotRun, $numberTestsFailed, $numberTestsPassed, $this->Id])) {
-            return;
-        }
+        EloquentBuild::where('id', $this->Id)->update([
+            'testnotrun' => $numberTestsNotRun,
+            'testfailed' => $numberTestsFailed,
+            'testpassed' => $numberTestsPassed,
+        ]);
 
         // Should we should post test failures to a pull request?
         if (!empty($this->PullRequest) && $numberTestsFailed > 0) {
@@ -1210,8 +1176,8 @@ class Build
 
         // Look up the number of configure warnings for this build
         // and the previous one.
-        $nwarnings = (int) DB::table('build')->where('id', $this->Id)->first()->configurewarnings;
-        $npreviouswarnings = (int) DB::table('build')->where('id', $previousbuildid)->first()->configurewarnings;
+        $nwarnings = EloquentBuild::findOrFail($this->Id)->configurewarnings;
+        $npreviouswarnings = EloquentBuild::findOrFail($previousbuildid)->configurewarnings;
 
         DB::transaction(function () use ($nwarnings, $npreviouswarnings) {
             // Check if a diff already exists for this build.
@@ -1389,10 +1355,8 @@ class Build
             $buildtest = \App\Models\BuildTest::find($buildtestid);
             $buildtest->timestatus = $timestatus;
 
-            // TODO: remove these cast-to-strings after upgrading to Laravel 6.x.
-            // https://github.com/laravel/framework/issues/23850
-            $buildtest->timemean = "$timemean";
-            $buildtest->timestd = "$timestd";
+            $buildtest->timemean = $timemean;
+            $buildtest->timestd = $timestd;
 
             DB::transaction(function () use ($buildtest) {
                 $buildtest->save();
@@ -1403,11 +1367,9 @@ class Build
             }
         }
 
-        $stmt = $this->PDO->prepare('UPDATE build SET testtimestatusfailed = ? WHERE id = ?');
-        if (!pdo_execute($stmt, [$testtimestatusfailed, $this->Id])) {
-            return false;
-        }
-        return true;
+        return EloquentBuild::where('id', $this->Id)->update([
+            'testtimestatusfailed' => $testtimestatusfailed,
+        ]) > 0;
     }
 
     /** Compute the user statistics */
@@ -1650,22 +1612,23 @@ class Build
     public function GetName(): string|false
     {
         if (!$this->Id) {
-            add_log('Id not set', 'Build GetName()', LOG_ERR);
+            Log::error('Build GetName(): Id not set.');
             return false;
         }
 
-        $stmt = $this->PDO->prepare('SELECT name FROM build WHERE id = ?');
-        if (!pdo_execute($stmt, [$this->Id])) {
-            return false;
+        if ($this->Name !== '') {
+            return $this->Name;
         }
-        return (string) $stmt->fetchColumn();
+
+        $this->Name = EloquentBuild::findOrFail($this->Id)->name;
+        return $this->Name;
     }
 
     /** Get all the labels for a given build */
     public function GetLabels($labelarray = []): array|false
     {
         if (!$this->Id) {
-            add_log('Id not set', 'Build GetLabels()', LOG_ERR);
+            Log::error('Build GetLabels(): Id not set.');
             return false;
         }
 
@@ -1746,16 +1709,11 @@ class Build
     public function GetNumberOfErrors(): int|false
     {
         if (!$this->Id) {
-            add_log('Id not set', 'Build GetNumberOfErrors()', LOG_ERR);
+            Log::error('Build GetNumberOfErrors(): Id not set');
             return false;
         }
 
-        $stmt = $this->PDO->prepare(
-            'SELECT builderrors FROM build WHERE id = ?');
-        if (!pdo_execute($stmt, [$this->Id])) {
-            return false;
-        }
-        $num_errors = $stmt->fetchColumn();
+        $num_errors = EloquentBuild::findOrFail($this->Id)->builderrors;
         return self::ConvertMissingToZero($num_errors);
     }
 
@@ -1763,17 +1721,11 @@ class Build
     public function GetNumberOfWarnings(): int|false
     {
         if (!$this->Id) {
-            add_log('Id not set', 'Build GetNumberOfWarnings()', LOG_ERR);
+            Log::error('Build GetNumberOfWarnings(): Id not set');
             return false;
         }
 
-        $stmt = $this->PDO->prepare(
-            'SELECT buildwarnings FROM build WHERE id = ?');
-        if (!pdo_execute($stmt, [$this->Id])) {
-            return false;
-        }
-
-        $num_warnings = $stmt->fetchColumn();
+        $num_warnings = EloquentBuild::findOrFail($this->Id)->buildwarnings;
         return self::ConvertMissingToZero($num_warnings);
     }
 
@@ -1812,16 +1764,15 @@ class Build
             return 0;
         }
 
-        $stmt = $this->PDO->prepare(
-            'SELECT id FROM build WHERE parentid = -1 AND projectid = ? AND
-            siteid = ? AND name = ? AND stamp = ?');
-        pdo_execute($stmt, [$this->ProjectId, $this->SiteId, $this->Name, $this->Stamp]);
-        $parentid = $stmt->fetchColumn();
+        $builds = EloquentBuild::where([
+            'parentid' => -1,
+            'projectid' => $this->ProjectId,
+            'siteid' => $this->SiteId,
+            'name' => $this->Name,
+            'stamp' => $this->Stamp,
+        ]);
 
-        if ($parentid !== false) {
-            return (int) $parentid;
-        }
-        return 0;
+        return $builds->count() > 0 ? $builds->first()->id : 0;
     }
 
     /** Create a new build as a parent of $this and sets $this->ParentId.
@@ -1839,24 +1790,21 @@ class Build
         // Check if there's an existing build that should be the parent.
         // This would be a standalone build with no subproject that matches
         // our name, site, stamp, and projectid.
-        $stmt = $this->PDO->prepare(
-            'SELECT id FROM build
-            WHERE parentid = ' . Build::STANDALONE_BUILD . ' AND name = ? AND
-                  siteid = ? AND stamp = ? AND projectid = ?');
-        if (!pdo_execute($stmt,
-            [$this->Name, $this->SiteId, $this->Stamp, $this->ProjectId])) {
-            return false;
-        }
-        $existing_buildid = $stmt->fetchColumn();
-        if ($existing_buildid !== false) {
+        $existing_build = EloquentBuild::firstWhere([
+            'parentid' => Build::STANDALONE_BUILD,
+            'name' => $this->Name,
+            'siteid' => $this->SiteId,
+            'stamp' => $this->Stamp,
+            'projectid' => $this->ProjectId,
+        ]);
+
+        if ($existing_build !== null) {
             // Use the previously existing parent if one exists.
-            $this->SetParentId($existing_buildid);
+            $this->SetParentId($existing_build->id);
 
             // Mark it as a parent (parentid of -1).
-            $stmt = $this->PDO->prepare(
-                'UPDATE build SET parentid = ' . Build::PARENT_BUILD . '
-                WHERE id = ?');
-            pdo_execute($stmt, [$this->ParentId]);
+            $existing_build->parentid = Build::PARENT_BUILD;
+            $existing_build->save();
         } else {
             // Otherwise create a new build to be the parent.
             $parent = clone $this;
@@ -1885,23 +1833,20 @@ class Build
         // This happens when Update.xml is parsed first, because it doesn't
         // contain info about what subproject it came from.
         // TODO: maybe we don't need this any more?
-        $stmt = $this->PDO->prepare(
-            'UPDATE build SET parentid = ?
-            WHERE parentid = ' . Build::STANDALONE_BUILD . ' AND
-                  siteid = ? AND name = ? AND stamp = ? AND projectid = ?');
-        if (!pdo_execute($stmt,
-            [$this->ParentId, $this->SiteId, $this->Name, $this->Stamp,
-                $this->ProjectId])) {
-            return false;
-        }
-        return true;
+        return EloquentBuild::where([
+            'parentid' => Build::STANDALONE_BUILD,
+            'siteid' => $this->SiteId,
+            'name' => $this->Name,
+            'stamp' => $this->Stamp,
+            'projectid' => $this->ProjectId,
+        ])->update(['parentid' => $this->ParentId]) > 0;
     }
 
     /**
      * Update our database record of a build so that it accurately reflects
      * this object and the specified number of new warnings & errors.
      **/
-    public function UpdateBuild($buildid, $newErrors, $newWarnings, $lock = true): void
+    public function UpdateBuild($buildid, $newErrors, $newWarnings): void
     {
         if ($buildid < 1) {
             return;
@@ -1909,19 +1854,10 @@ class Build
 
         $buildid = (int) $buildid;
 
-        DB::transaction(function () use ($buildid, $newErrors, $newWarnings, $lock) {
-            if ($lock) {
-                $build = DB::table('build')
-                    ->where('id', $buildid)
-                    ->lockForUpdate()
-                    ->first();
-            } else {
-                $build = DB::table('build')
-                    ->where('id', $buildid)
-                    ->first();
-            }
+        DB::transaction(function () use ($buildid, $newErrors, $newWarnings) {
+            $build = EloquentBuild::find($buildid);
 
-            if (!$build) {
+            if ($build === null) {
                 return;
             }
 
@@ -1931,11 +1867,11 @@ class Build
             $errorsHandled = false;
             $warningsHandled = false;
             if ($this->InsertErrors) {
-                if ((int) $build->builderrors === -1 && (int) $newErrors === 0) {
+                if ($build->builderrors === -1 && (int) $newErrors === 0) {
                     $fields_to_update['builderrors'] = 0;
                     $errorsHandled = true;
                 }
-                if ((int) $build->buildwarnings === -1 && (int) $newWarnings === 0) {
+                if ($build->buildwarnings === -1 && (int) $newWarnings === 0) {
                     $fields_to_update['buildwarnings'] = 0;
                     $warningsHandled = true;
                 }
@@ -1960,7 +1896,7 @@ class Build
                 $fields_to_update['endtime'] = $this->EndTime;
             }
 
-            if ((int) $build->parentid !== -1) {
+            if ($build->parentid !== -1) {
                 // If this is not a parent build, check if its log or command
                 // has changed.
                 if ($this->Log !== '' && $this->Log !== $build->log) {
@@ -1992,25 +1928,20 @@ class Build
             }
 
             if (!empty($fields_to_update)) {
-                DB::table('build')
-                    ->where('id', $buildid)
-                    ->update($fields_to_update);
+                $build->update($fields_to_update);
             }
 
             $this->SaveInformation();
 
             // Also update the parent if necessary.
-            $build = DB::table('build')
-                ->where('id', $buildid)
-                ->first();
             if ($build->parentid > 0) {
-                if ($buildid === (int) $build->parentid) {
+                if ($buildid === $build->parentid) {
                     // Avoid infinite recursion.
                     // This should never happen, but we might as well be careful.
                     Log::error("$buildid is its own parent");
                     return;
                 }
-                $this->UpdateBuild($build->parentid, $newErrors, $newWarnings, false);
+                $this->UpdateBuild($build->parentid, $newErrors, $newWarnings);
                 if ($buildid === (int) $this->Id) {
                     $this->SetParentId($build->parentid);
                 }
@@ -2026,27 +1957,18 @@ class Build
         }
 
         DB::transaction(function () use ($newFailed, $newNotRun, $newPassed) {
-            $parent = DB::table('build')
-                ->where('id', $this->ParentId)
-                ->lockForUpdate()
-                ->first();
+            $parent = EloquentBuild::findOrFail($this->ParentId);
 
             // Don't let the -1 default value screw up our math.
             $parent_testfailed = self::ConvertMissingToZero($parent->testfailed);
             $parent_testnotrun = self::ConvertMissingToZero($parent->testnotrun);
             $parent_testpassed = self::ConvertMissingToZero($parent->testpassed);
 
-            $numFailed = $newFailed + $parent_testfailed;
-            $numNotRun = $newNotRun + $parent_testnotrun;
-            $numPassed = $newPassed + $parent_testpassed;
-
-            DB::table('build')
-                ->where('id', $this->ParentId)
-                ->update([
-                    'testnotrun' => $numNotRun,
-                    'testfailed' => $numFailed,
-                    'testpassed' => $numPassed,
-                ]);
+            $parent->update([
+                'testnotrun' => $newNotRun + $parent_testnotrun,
+                'testfailed' => $newFailed + $parent_testfailed,
+                'testpassed' => $newPassed + $parent_testpassed,
+            ]);
 
             // NOTE: as far as I can tell, build.testtimestatusfailed isn't used,
             // so for now it isn't being updated for parent builds.
@@ -2056,17 +1978,14 @@ class Build
     /**
      * Get/Set number of configure warnings for this build.
      */
-    public function GetNumberOfConfigureWarnings(): int|null
+    public function GetNumberOfConfigureWarnings(): int
     {
         if ($this->BuildConfigure) {
             return (int) $this->BuildConfigure->NumberOfWarnings;
         }
 
-        $stmt = $this->PDO->prepare('SELECT configurewarnings FROM build WHERE id = ?');
-        if (!pdo_execute($stmt, [$this->Id])) {
-            return null;
-        }
-        return self::ConvertMissingToZero((int) $stmt->fetchColumn());
+        $num_warnings = EloquentBuild::findOrFail($this->Id)->configurewarnings;
+        return self::ConvertMissingToZero($num_warnings);
     }
 
 
@@ -2076,8 +1995,9 @@ class Build
             return;
         }
 
-        $stmt = $this->PDO->prepare('UPDATE build SET configurewarnings = ? WHERE id = ?');
-        pdo_execute($stmt, [$numWarnings, $this->Id]);
+        EloquentBuild::where('id', (int) $this->Id)->update([
+            'configurewarnings' => $numWarnings,
+        ]);
     }
 
     /** Set number of configure errors for this build. */
@@ -2087,8 +2007,9 @@ class Build
             return;
         }
 
-        $stmt = $this->PDO->prepare('UPDATE build SET configureerrors = ? WHERE id = ?');
-        pdo_execute($stmt, [$numErrors, $this->Id]);
+        EloquentBuild::where('id', (int) $this->Id)->update([
+            'configureerrors' => $numErrors,
+        ]);
 
         // Should we post configure errors to a pull request?
         if (!empty($this->PullRequest) && $numErrors > 0) {
@@ -2098,20 +2019,13 @@ class Build
         }
     }
 
-    /**
-     * @return int|null
-     */
-    public function GetNumberOfConfigureErrors(): int|null
+    public function GetNumberOfConfigureErrors(): int
     {
         if ($this->BuildConfigure) {
             return (int) $this->BuildConfigure->NumberOfErrors;
         }
-        $stmt = $this->PDO->prepare('SELECT configureerrors FROM build WHERE id = ?');
-        if (!pdo_execute($stmt, [$this->Id])) {
-            return null;
-        }
-        $num_errors = $stmt->fetchColumn();
 
+        $num_errors = EloquentBuild::findOrFail($this->Id)->configureerrors;
         return self::ConvertMissingToZero($num_errors);
     }
 
@@ -2127,13 +2041,7 @@ class Build
         }
 
         DB::transaction(function () use ($newWarnings, $newErrors) {
-            $numErrors = 0;
-            $numWarnings = 0;
-
-            $parent = DB::table('build')
-                ->where('id', $this->ParentId)
-                ->lockForUpdate()
-                ->first();
+            $parent = EloquentBuild::findOrFail($this->ParentId);
 
             // Don't let the -1 default value screw up our math.
             $parent_configureerrors = self::ConvertMissingToZero($parent->configureerrors);
@@ -2142,12 +2050,10 @@ class Build
             $numErrors = $newErrors + $parent_configureerrors;
             $numWarnings = $newWarnings + $parent_configurewarnings;
 
-            DB::table('build')
-                ->where('id', $this->ParentId)
-                ->update([
-                    'configureerrors' => $numErrors,
-                    'configurewarnings' => $numWarnings,
-                ]);
+            $parent->update([
+                'configureerrors' => $numErrors,
+                'configurewarnings' => $numWarnings,
+            ]);
         }, 5);
     }
 
@@ -2165,12 +2071,8 @@ class Build
         }
 
         // Return early if this build already posted a comment on this PR.
-        $notified = true;
-        $stmt = $this->PDO->prepare(
-            'SELECT notified FROM build WHERE id = ?');
-        pdo_execute($stmt, [$idToNotify]);
-        $notified = $stmt->fetchColumn();
-        if ($notified) {
+        $buildToNotify = EloquentBuild::findOrFail($idToNotify);
+        if ($buildToNotify->notified) {
             return;
         }
 
@@ -2181,11 +2083,10 @@ class Build
         $message .= '.';
 
         // Post the PR comment & mark this build as 'notified'.
-        post_pull_request_comment($this->ProjectId, $this->PullRequest,
-            $message, $url);
-        $stmt = $this->PDO->prepare(
-            "UPDATE build SET notified='1' WHERE id = ?");
-        pdo_execute($stmt, [$idToNotify]);
+        post_pull_request_comment($this->ProjectId, $this->PullRequest, $message, $url);
+
+        $buildToNotify->notified = true;
+        $buildToNotify->save();
     }
 
     private function UpdateDuration(string $field, $duration, bool $update_parent = true): void
@@ -2200,8 +2101,7 @@ class Build
 
         DB::transaction(function () use ($field, $duration, $update_parent) {
             // Update duration of specified step for this build.
-            DB::table('build')
-                ->where('id', $this->Id)
+            EloquentBuild::where('id', $this->Id)
                 ->increment("{$field}duration", $duration);
 
             if (!$update_parent) {
@@ -2212,8 +2112,7 @@ class Build
             $this->SetParentId($this->LookupParentBuildId());
             if ($this->ParentId > 0) {
                 // Update duration of specified step for this build.
-                DB::table('build')
-                    ->where('id', $this->ParentId)
+                EloquentBuild::where('id', $this->ParentId)
                     ->increment("{$field}duration", $duration);
             }
         }, 5);
@@ -2258,21 +2157,16 @@ class Build
             return $this->Done;
         }
 
-        $stmt = $this->PDO->prepare('SELECT done FROM build WHERE id = ?');
-        if (!pdo_execute($stmt, [$this->Id])) {
-            return false;
-        }
-
-        $this->Done = (bool) $stmt->fetchColumn();
+        $this->Done = EloquentBuild::findOrFail($this->Id)->done;
         return $this->Done;
     }
 
     /** Set (or unset) the done bit in the database for this build. */
-    public function MarkAsDone($done): void
+    public function MarkAsDone(bool $done): void
     {
-        $done_stmt = $this->PDO->prepare(
-            'UPDATE build SET done = :done WHERE id = :buildid');
-        pdo_execute($done_stmt, [':done' => $done, ':buildid' => $this->Id]);
+        EloquentBuild::where('id', $this->Id)->update([
+            'done' => $done,
+        ]);
     }
 
     /**
@@ -2294,8 +2188,7 @@ class Build
     /** Generate a UUID from the specified build details. */
     private static function GenerateUuid($stamp, $name, $siteid, $projectid, $subprojectname): string
     {
-        $input_string = $stamp . '_' . $name . '_' . $siteid . '_' . '_' . $projectid . '_' . $subprojectname;
-        return md5($input_string);
+        return md5($stamp . '_' . $name . '_' . $siteid . '_' . '_' . $projectid . '_' . $subprojectname);
     }
 
     /** Get/set the parentid for this build. */
@@ -2471,13 +2364,10 @@ class Build
      * Return the Id of the Build matching the given $uuid,
      * or FALSE if no such build exists.
      */
-    private static function GetIdFromUuid($uuid)
+    private static function GetIdFromUuid($uuid): int|null
     {
-        $pdo = Database::getInstance()->getPdo();
-        $stmt = $pdo->prepare(
-            'SELECT id FROM build WHERE uuid = ?');
-        pdo_execute($stmt, [$uuid]);
-        return $stmt->fetchColumn();
+        $model = EloquentBuild::where('uuid', $uuid);
+        return $model->count() > 0 ? $model->first()->id : null;
     }
 
     /**
@@ -2497,7 +2387,7 @@ class Build
 
         // Check if a build with this uuid already exists.
         $id = self::GetIdFromUuid($this->Uuid);
-        if ($id) {
+        if ($id !== null) {
             $this->Id = $id;
             return false;
         }
@@ -2521,7 +2411,7 @@ class Build
         $build_created = false;
         try {
             DB::transaction(function () use ($nbuilderrors, $nbuildwarnings, &$build_created) {
-                $new_id = DB::table('build')->insertGetId([
+                $this->Id = EloquentBuild::create([
                     'siteid'         => $this->SiteId,
                     'projectid'      => $this->ProjectId,
                     'stamp'          => $this->Stamp,
@@ -2538,16 +2428,15 @@ class Build
                     'parentid'       => $this->ParentId,
                     'uuid'           => $this->Uuid,
                     'changeid'       => $this->PullRequest,
-                ]);
+                ])->id;
                 $build_created = true;
-                $this->Id = $new_id;
                 $this->AssignToGroup();
             });
         } catch (\Exception $e) {
             // This error might be due to a unique key violation on the UUID.
             // Check again for a previously existing build.
             $existing_id = self::GetIdFromUuid($this->Uuid);
-            if ($existing_id) {
+            if ($existing_id !== null) {
                 $this->Id = $existing_id;
                 $build_created = false;
             } else {
@@ -2676,10 +2565,8 @@ class Build
 
     /**
      * Returns the current Build's Type property.
-     *
-     * @return string
      */
-    public function GetBuildType()
+    public function GetBuildType(): string
     {
         return $this->Type;
     }
@@ -2687,10 +2574,8 @@ class Build
     /**
      * This method returns an array of all of the authors who are responsible for changes made
      * to the current Build.
-     *
-     * @return array
      */
-    public function GetCommitAuthors()
+    public function GetCommitAuthors(): array
     {
         // note: Per Zack: Depending on the type of submission (i.e. test, build error, etc)
         // this information may not yet be available as it is contained in the update xml

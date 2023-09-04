@@ -4108,7 +4108,7 @@ parameters:
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
 			"""
-			count: 24
+			count: 20
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -4116,7 +4116,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 52
+			count: 31
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -4132,7 +4132,7 @@ parameters:
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 3
+			count: 2
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -4206,6 +4206,16 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:count\\(\\)\\.$#"
+			count: 2
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 2
 			path: app/cdash/app/Model/Build.php
@@ -4266,13 +4276,13 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:FillFromId\\(\\) has no return type specified\\.$#"
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:FillFromId\\(\\) has parameter \\$buildid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:FillFromId\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:FillFromId\\(\\) throws checked exception TypeError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 3
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -4356,11 +4366,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetIdFromUuid\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetIdFromUuid\\(\\) has parameter \\$uuid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -4417,11 +4422,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetTests\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:MarkAsDone\\(\\) has parameter \\$done with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4492,11 +4492,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateBuild\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateBuild\\(\\) has parameter \\$lock with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4637,6 +4632,11 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$TestCollection has no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Variable property access on App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -13232,11 +13232,6 @@ parameters:
 
 		-
 			message: "#^Function pdo_execute\\(\\) has parameter \\$input_parameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
-			message: "#^Function pdo_execute\\(\\) never returns null so it can be removed from the return type\\.$#"
 			count: 1
 			path: app/cdash/include/pdo.php
 
