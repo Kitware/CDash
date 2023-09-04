@@ -3,7 +3,7 @@ namespace CDash;
 
 class Config extends Singleton
 {
-    private $_config;
+    private array $_config;
 
     protected function __construct()
     {
@@ -12,6 +12,9 @@ class Config extends Singleton
         $this->_config = get_defined_vars();
     }
 
+    /**
+     * @deprecated 09/04/2023  Use config() instead.
+     */
     public function get($name)
     {
         if (isset($this->_config[$name])) {
@@ -19,16 +22,17 @@ class Config extends Singleton
         }
     }
 
+    /**
+     * @deprecated 09/04/2023  Use config() instead.
+     */
     public function set($name, $value)
     {
         $this->_config[$name] = $value;
     }
 
-    public static function getVersion(): string
-    {
-        return file_get_contents(public_path('VERSION'));
-    }
-
+    /**
+     * @deprecated 09/04/2023  Use url() instead.
+     */
     public function getServer(): string
     {
         $server = $this->get('CDASH_SERVER_NAME');
@@ -42,6 +46,9 @@ class Config extends Singleton
         return $server;
     }
 
+    /**
+     * @deprecated 09/04/2023  Use url() instead.
+     */
     public function getProtocol(): string
     {
         $protocol = 'http';
@@ -53,18 +60,19 @@ class Config extends Singleton
     }
 
     /**
-     * @return string
+     * @deprecated 09/04/2023  Use url() instead.
      */
-    public function getServerPort()
+    public function getServerPort(): ?string
     {
         if (isset($_SERVER['SERVER_PORT'])
             && $_SERVER['SERVER_PORT'] != 80
             && $_SERVER['SERVER_PORT'] != 443) {
             return $_SERVER['SERVER_PORT'];
         }
+        return null;
     }
 
-    public function getPath(): string
+    private function getPath(): string
     {
         $path = config('cdash.curl_localhost_prefix') ?: $_SERVER['REQUEST_URI'];
         if (!str_starts_with($path, '/')) {
@@ -73,6 +81,9 @@ class Config extends Singleton
         return $path;
     }
 
+    /**
+     * @deprecated 09/04/2023  Use url() instead.
+     */
     public function getBaseUrl(): string
     {
         $uri = config('app.url');
@@ -80,7 +91,7 @@ class Config extends Singleton
         if (!$uri) {
             $protocol = $this->getProtocol();
             $host = $this->getServer();
-            $port = $this->getServerPort() ? ":{$this->getServerPort()}" : '';
+            $port = $this->getServerPort() !== null ? ":{$this->getServerPort()}" : '';
             $path = $this->getPath();
 
             // Trim any known subdirectories off of the path.
@@ -93,7 +104,7 @@ class Config extends Singleton
             }
 
             // Also trim any .php files from the path.
-            if (strpos($path, '.php') !== false) {
+            if (str_contains($path, '.php')) {
                 $path = dirname($path);
             }
 

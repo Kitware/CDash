@@ -27,6 +27,11 @@ abstract class AbstractController extends BaseController
         return $result;
     }
 
+    public static function getCDashVersion(): string
+    {
+        return file_get_contents(public_path('VERSION'));
+    }
+
     /**
      * Returns the version used to find compiled css and javascript files
      *
