@@ -15425,16 +15425,6 @@ parameters:
 			path: app/cdash/public/api/v1/build.php
 
 		-
-			message: "#^Call to an undefined method CDash\\\\Model\\\\BuildGroup\\:\\:GetDependencies\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Call to an undefined method CDash\\\\Model\\\\BuildGroup\\:\\:GetGroupId\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
 			message: """
 				#^Call to deprecated function get_link_identifier\\(\\)\\:
 				04/22/2023$#
@@ -15447,7 +15437,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 4
+			count: 3
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
@@ -15455,7 +15445,7 @@ parameters:
 				#^Call to deprecated function pdo_real_escape_numeric\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 10
+			count: 9
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
@@ -15471,11 +15461,6 @@ parameters:
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
@@ -15496,21 +15481,6 @@ parameters:
 
 		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_get\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_get\\(\\) has parameter \\$pdo with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_get\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
@@ -15541,7 +15511,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 5
+			count: 4
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-

@@ -17,13 +17,12 @@
 namespace CDash\Api\v1\BuildGroup;
 
 require_once 'include/api_common.php';
-require_once 'include/version.php';
 
-use App\Services\PageTimer;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
 use App\Models\Site;
+use Symfony\Component\HttpFoundation\Response;
 
 // Require administrative access to view this page.
 init_api_request();
@@ -53,61 +52,8 @@ switch ($method) {
     case 'PUT':
         rest_put($projectid);
         break;
-    case 'GET':
     default:
-        rest_get($pdo, $projectid);
-        break;
-}
-
-/** Handle GET requests */
-function rest_get($pdo, $projectid)
-{
-    if (!isset($_GET['buildgroupid'])) {
-        abort(400, 'buildgroupid not specified');
-    }
-    $buildgroupid = pdo_real_escape_numeric($_GET['buildgroupid']);
-
-    $pageTimer = new PageTimer();
-    $response = begin_JSON_response();
-    $response['projectid'] = $projectid;
-    $response['buildgroupid'] = $buildgroupid;
-
-    $BuildGroup = new BuildGroup();
-    $BuildGroup->SetId($buildgroupid);
-    $response['name'] = $BuildGroup->GetName();
-    $response['group'] = $BuildGroup->GetGroupId();
-
-    $stmt = $pdo->prepare(
-        "SELECT id, name FROM buildgroup
-        WHERE projectid = ? AND endtime = '1980-01-01 00:00:00'");
-    pdo_execute($stmt, [$projectid]);
-
-    $dependencies = $BuildGroup->GetDependencies();
-    $dependencies_response = [];
-    $available_dependencies_response = [];
-
-    while ($row = $stmt->fetch()) {
-        if ($row['id'] == $buildgroupid) {
-            continue;
-        }
-        if (is_array($dependencies) && in_array($row['id'], $dependencies)) {
-            $dep = [];
-            $dep['id'] = $row['id'];
-            $dep['name'] = $row['name'];
-            $dependencies_response[] = $dep;
-        } else {
-            $avail = [];
-            $avail['id'] = $row['id'];
-            $avail['name'] = $row['name'];
-            $available_dependencies_response[] = $avail;
-        }
-    }
-
-    $response['dependencies'] = $dependencies_response;
-    $response['available_dependencies'] = $available_dependencies_response;
-
-    $pageTimer->end($response);
-    echo json_encode(cast_data_for_JSON($response));
+        abort(Response::HTTP_NOT_IMPLEMENTED);
 }
 
 /** Handle DELETE requests */
