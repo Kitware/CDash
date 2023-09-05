@@ -38,7 +38,6 @@
     "league/oauth2-google": "4.0.1",
     "nyholm/psr7": "1.8.0",
     "omines/oauth2-gitlab": "3.5.0",
-    "paragonie/random_compat": "2.0.4",
     "pear/archive_tar": "1.4.14",
     "php-di/php-di": "7.0.2",
     "ramsey/uuid": "4.7.4"
