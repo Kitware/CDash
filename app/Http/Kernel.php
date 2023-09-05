@@ -20,6 +20,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
         \App\Http\Middleware\CheckDirectoryPermissions::class,
+        \App\Http\Middleware\Timer::class,
     ];
 
     /**
@@ -94,5 +95,6 @@ class Kernel extends HttpKernel
         'auth',
         'admin',
         'password.expired',
+        \App\Http\Middleware\Timer::class,
     ];
 }

@@ -29638,6 +29638,11 @@ parameters:
 			path: tests/Feature/RouteAccessTest.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Http\\\\Response\\:\\:content\\(\\)\\.$#"
+			count: 1
+			path: tests/Feature/SlowPageTest.php
+
+		-
 			message: "#^Property Tests\\\\Feature\\\\UserCommand\\:\\:\\$user has no type specified\\.$#"
 			count: 1
 			path: tests/Feature/UserCommand.php
