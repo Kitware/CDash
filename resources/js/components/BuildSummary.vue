@@ -53,6 +53,14 @@
               </span>
             </td>
           </tr>
+          <tr v-if="cdash.build.labels.length > 0">
+            <th>
+              Labels:
+            </th>
+            <td style="white-space: nowrap;">
+              {{ cdash.build.labels.join(', ') }}
+            </td>
+          </tr>
           <tr>
             <th>
               Stamp:
