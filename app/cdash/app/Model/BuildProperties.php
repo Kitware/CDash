@@ -15,51 +15,31 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use CDash\Database;
+use App\Models\BuildProperties as EloquentBuildProperties;
 
 /** BuildProperties class */
 class BuildProperties
 {
-    public $Build;
-    public $Properties;
-    private $Filled;
-    private $PDO;
+    public Build $Build;
+    /** @var array<mixed> */
+    public array $Properties = [];
+    private bool $Filled = false;
 
     public function __construct(Build $build)
     {
         $this->Build = $build;
-        $this->Properties = [];
-        $this->Filled = false;
-        $this->PDO = Database::getInstance();
     }
 
     /** Return true if this build already has properties. */
-    public function Exists()
+    public function Exists(): bool
     {
-        if (!$this->Build) {
-            return false;
-        }
-        $stmt = $this->PDO->prepare(
-            'SELECT COUNT(*) FROM buildproperties WHERE buildid = :buildid');
-        $this->PDO->execute($stmt, [':buildid' => $this->Build->Id]);
-        if ($stmt->fetchColumn() > 0) {
-            return true;
-        }
-        return false;
+        return EloquentBuildProperties::where('buildid', (int) $this->Build->Id)->exists();
     }
 
     /** Save these build properties to the database,
         overwriting any existing content. */
-    public function Save()
+    public function Save(): bool
     {
-        $required_params = ['Build', 'Properties'];
-        foreach ($required_params as $param) {
-            if (!$this->$param) {
-                add_log("$param not set", 'BuildProperties::Save', LOG_ERR);
-                return false;
-            }
-        }
-
         // Delete any previously existing properties for this build.
         if ($this->Exists()) {
             $this->Delete();
@@ -67,64 +47,37 @@ class BuildProperties
 
         $properties_str = json_encode($this->Properties);
         if ($properties_str === false) {
-            add_log('Failed to encode JSON: ' . json_last_error_msg(),
-                'BuildProperties::Save', LOG_ERR);
-            return false;
+            abort(500, 'Failed to encode JSON: ' . json_last_error_msg());
         }
 
-        $stmt = $this->PDO->prepare(
-            'INSERT INTO buildproperties (buildid, properties)
-            VALUES (:buildid, :properties)');
-        $query_params = [
-            ':buildid' => $this->Build->Id,
-            ':properties' => $properties_str,
-        ];
-        return $this->PDO->execute($stmt, $query_params);
+        return EloquentBuildProperties::create([
+            'buildid' => (int) $this->Build->Id,
+            'properties' => $properties_str,
+        ]) !== null;
     }
 
     /** Delete this record from the database. */
-    public function Delete()
+    public function Delete(): bool
     {
-        if (!$this->Build) {
-            add_log('Build not set', 'BuildProperties::Delete', LOG_ERR);
-            return false;
-        }
         if (!$this->Exists()) {
-            add_log('No properties exist for this build',
-                'BuildProperties::Delete', LOG_ERR);
-            return false;
+            abort(500, 'No properties exist for this build');
         }
 
-        $stmt = $this->PDO->prepare(
-            'DELETE FROM buildproperties WHERE buildid = :buildid');
-        return $this->PDO->execute($stmt, [':buildid' => $this->Build->Id]);
+        return (bool) EloquentBuildProperties::where('buildid', (int) $this->Build->Id)->delete();
     }
 
     /** Retrieve properties for a given build. */
-    public function Fill()
+    public function Fill(): void
     {
-        if (!$this->Build) {
-            add_log('Build not set', 'BuildProperties::Fill', LOG_ERR);
-            return false;
+        $model = EloquentBuildProperties::find((int) $this->Build->Id);
+        if ($model === null) {
+            return;
         }
 
-        $stmt = $this->PDO->prepare(
-            'SELECT properties FROM buildproperties
-             WHERE buildid = :buildid');
-        if (!$this->PDO->execute($stmt, [':buildid' => $this->Build->Id])) {
-            return false;
-        }
-
-        $row = $stmt->fetch();
-        if (!is_array($row)) {
-            return true;
-        }
-
-        $properties = json_decode($row['properties'], true);
+        $properties = json_decode($model->properties, true);
         if (is_array($properties)) {
             $this->Properties = $properties;
+            $this->Filled = true;
         }
-        $this->Filled = true;
-        return true;
     }
 }
