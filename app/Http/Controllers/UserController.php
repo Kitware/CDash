@@ -334,7 +334,6 @@ final class UserController extends AbstractController
     {
         $xml = begin_XML_for_XSLT();
         $xml .= '<title>CDash - My Profile</title>';
-        $xml .= '<backurl>user.php</backurl>';
         $xml .= '<menutitle>CDash</menutitle>';
         $xml .= '<menusubtitle>My Profile</menusubtitle>';
 
@@ -522,7 +521,7 @@ final class UserController extends AbstractController
                 $password = generate_password(10);
 
                 $currentURI = $config->getBaseUrl();
-                $url = $currentURI . '/user.php';
+                $url = $currentURI . '/user';
 
                 $text = "Hello,\n\n You have asked to recover your password for CDash.\n\n";
                 $text .= 'Your new password is: ' . $password . "\n";

@@ -184,7 +184,8 @@ Route::get('/manageBuildGroup.php', 'BuildController@manageBuildGroup');
 // The user must be logged in to access routes in this section.
 // Requests from users who are not logged in will be redirected to /login.
 Route::middleware(['auth'])->group(function () {
-    Route::get('/user.php', 'UserController@userPage');
+    Route::get('/user', 'UserController@userPage');
+    Route::permanentRedirect('/user.php', '/user');
 
     // TODO: (williamjallen) send the POST route to a different function
     Route::match(['get', 'post'], '/profile', 'UserController@edit');

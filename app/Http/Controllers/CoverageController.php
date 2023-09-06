@@ -54,7 +54,6 @@ final class CoverageController extends AbstractBuildController
         }
 
         $xml = begin_XML_for_XSLT();
-        $xml .= '<backurl>user.php</backurl>';
         $xml .= '<menutitle>CDash</menutitle>';
         $xml .= '<menusubtitle>Coverage</menusubtitle>';
 

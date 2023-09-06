@@ -130,7 +130,6 @@ final class AdminController extends AbstractController
         @set_time_limit(0);
 
         $xml = begin_XML_for_XSLT();
-        $xml .= '<backurl>user.php</backurl>';
         $xml .= '<menutitle>CDash</menutitle>';
         $xml .= '<menusubtitle>Maintenance</menusubtitle>';
 

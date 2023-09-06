@@ -52,7 +52,7 @@ class RouteAccessTest extends TestCase
     private function protectedRoutes(): array
     {
         return [
-            ['/user.php'],
+            ['/user'],
             ['/profile'],
             ['/subscribeProject.php'],
             ['/manageProjectRoles.php'],

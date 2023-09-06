@@ -37,7 +37,6 @@ $user = Auth::user();
 $userid = $user->id;
 
 $response = begin_JSON_response();
-$response['backurl'] = 'user.php';
 $response['menutitle'] = 'CDash';
 $response['menusubtitle'] = 'Build Groups';
 $response['title'] = 'Build Groups';

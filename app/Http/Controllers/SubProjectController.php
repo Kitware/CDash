@@ -32,7 +32,6 @@ final class SubProjectController extends AbstractProjectController
         $pageTimer = new PageTimer();
 
         $response = begin_JSON_response();
-        $response['backurl'] = 'user.php';
         $response['menutitle'] = 'CDash';
         $response['menusubtitle'] = 'SubProjects';
         $response['title'] = 'Manage SubProjects';

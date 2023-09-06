@@ -10,7 +10,7 @@ $hideRegistration = config('auth.user_registration_form_enabled') === false;
         <div id="topmenu">
             <a href="{{ url('/projects') }}">All Dashboards</a>
             @if(Auth::check())
-                <a href="{{ url('/user.php') }}">My CDash</a>
+                <a href="{{ url('/user') }}">My CDash</a>
             @endif
 
             <span style="float: right;">
