@@ -150,7 +150,7 @@ class ProcessSubmission implements ShouldQueue
      */
     public function failed(\Throwable $exception) : void
     {
-        \Log::warning("Failed to process {$this->filename}");
+        \Log::warning("Failed to process {$this->filename} with message: {$exception->getMessage()}");
         $this->renameSubmissionFile("inprogress/{$this->filename}", "failed/{$this->filename}");
     }
 
