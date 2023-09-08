@@ -63,7 +63,7 @@ class DoneHandler extends AbstractHandler
             }
 
             $this->Build->UpdateBuild($this->Build->Id, -1, -1);
-            $this->Build->MarkAsDone(1);
+            $this->Build->MarkAsDone(true);
 
             // Should we re-run any checks that were previously marked
             // as pending?

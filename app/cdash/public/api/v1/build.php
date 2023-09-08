@@ -101,7 +101,7 @@ function rest_post($build)
 
     // Should we change the 'done' setting for this build?
     if (isset($_POST['done'])) {
-        $build->MarkAsDone($_POST['done']);
+        $build->MarkAsDone((bool) $_POST['done']);
     }
 }
 

@@ -176,7 +176,7 @@ function pdo_real_escape_numeric(mixed $unescaped_string): float|int|string
  *
  * @deprecated v2.5.0 01/22/2018
  */
-function pdo_execute(PDOStatement $stmt, array|null $input_parameters=null): bool|null
+function pdo_execute(PDOStatement $stmt, array|null $input_parameters=null): bool
 {
     $db = Database::getInstance();
     return $db->execute($stmt, $input_parameters);
