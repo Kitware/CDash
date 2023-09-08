@@ -1229,7 +1229,7 @@ function begin_XML_for_XSLT(): string
 
     $xml = '<?xml version="1.0" encoding="UTF-8"?><cdash>';
     $xml .= add_XML_value('cssfile', $css_file);
-    $xml .= add_XML_value('version', CDash\Config::getVersion());
+    $xml .= add_XML_value('version', \App\Http\Controllers\AbstractController::getCDashVersion());
     $xml .= add_XML_value('_token', csrf_token());
 
     return $xml;
@@ -1238,7 +1238,7 @@ function begin_XML_for_XSLT(): string
 function begin_JSON_response(): array
 {
     $response = [];
-    $response['version'] = CDash\Config::getVersion();
+    $response['version'] = \App\Http\Controllers\AbstractController::getCDashVersion();
 
     $user_response = [];
     $userid = Auth::id();

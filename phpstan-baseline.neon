@@ -241,6 +241,14 @@ parameters:
 			path: app/Http/Controllers/AdminController.php
 
 		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 12
+			path: app/Http/Controllers/AdminController.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
@@ -516,6 +524,22 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 10
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -802,6 +826,22 @@ parameters:
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/Http/Controllers/ManageProjectRolesController.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/Http/Controllers/ManageProjectRolesController.php
+
+		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 8
 			path: app/Http/Controllers/ManageProjectRolesController.php
@@ -860,6 +900,14 @@ parameters:
 			message: "#^Variable \\$project_array might not be defined\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageProjectRolesController.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/Http/Controllers/ManageUsersController.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
@@ -1673,6 +1721,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -2142,6 +2198,14 @@ parameters:
 			message: "#^Property App\\\\Models\\\\BuildTest\\:\\:\\$labels has no type specified\\.$#"
 			count: 1
 			path: app/Models/BuildTest.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/Models/Site.php
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
@@ -3454,6 +3518,14 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 
 		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewProjects.php
+
+		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 2
 			path: app/cdash/app/Controller/Api/ViewProjects.php
@@ -3723,6 +3795,14 @@ parameters:
 			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
@@ -4676,6 +4756,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/BuildConfigure.php
+
+		-
+			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -4972,6 +5060,14 @@ parameters:
 			path: app/cdash/app/Model/BuildError.php
 
 		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/BuildError.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
 			path: app/cdash/app/Model/BuildError.php
@@ -5217,6 +5313,14 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 2
+			path: app/cdash/app/Model/BuildFailure.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
@@ -6055,6 +6159,14 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 3
+			path: app/cdash/app/Model/BuildUpdate.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
 			path: app/cdash/app/Model/BuildUpdate.php
 
 		-
@@ -7040,6 +7152,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/DynamicAnalysis.php
+
+		-
+			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -7716,6 +7836,22 @@ parameters:
 			message: """
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: """
+				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -8955,11 +9091,6 @@ parameters:
 			path: app/cdash/include/CDash/Config.php
 
 		-
-			message: "#^Method CDash\\\\Config\\:\\:getServerPort\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
 			message: "#^Method CDash\\\\Config\\:\\:set\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Config.php
@@ -8980,12 +9111,7 @@ parameters:
 			path: app/cdash/include/CDash/Config.php
 
 		-
-			message: "#^Only booleans are allowed in a ternary operator condition, string given\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
-			message: "#^Property CDash\\\\Config\\:\\:\\$_config has no type specified\\.$#"
+			message: "#^Property CDash\\\\Config\\:\\:\\$_config type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Config.php
 
@@ -9023,6 +9149,14 @@ parameters:
 			message: "#^Method CDash\\\\Database\\:\\:prepare\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Database.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/include/CDash/ServiceContainer.php
 
 		-
 			message: "#^Method CDash\\\\ServiceContainer\\:\\:create\\(\\) has parameter \\$class_name with no type specified\\.$#"
@@ -9685,6 +9819,14 @@ parameters:
 			path: app/cdash/include/Messaging/Subscription/CommitAuthorSubscriptionBuilder.php
 
 		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/include/Messaging/Subscription/Subscription.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 3
 			path: app/cdash/include/Messaging/Subscription/Subscription.php
@@ -10318,6 +10460,14 @@ parameters:
 			message: "#^Method CDash\\\\Submission\\\\CommitAuthorHandlerInterface\\:\\:GetCommitAuthors\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Submission/CommitAuthorHandlerInterface.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
 			message: """
@@ -11731,6 +11881,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 6
+			path: app/cdash/include/common.php
+
+		-
+			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -11741,6 +11899,14 @@ parameters:
 			message: """
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: """
+				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/include/common.php
@@ -12175,6 +12341,14 @@ parameters:
 			path: app/cdash/include/ctestparser.php
 
 		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/include/ctestparser.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 4
 			path: app/cdash/include/ctestparser.php
@@ -12409,6 +12583,30 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 8
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 3
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: """
+				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 2
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -12677,6 +12875,14 @@ parameters:
 				04/01/2023$#
 			"""
 			count: 5
+			path: app/cdash/include/filterdataFunctions.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
@@ -13147,6 +13353,14 @@ parameters:
 		-
 			message: "#^Access to undefined constant Memcached\\:\\:OPT_CLIENT_MODE\\.$#"
 			count: 1
+			path: app/cdash/include/memcache_functions.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 2
 			path: app/cdash/include/memcache_functions.php
 
 		-
@@ -14595,6 +14809,22 @@ parameters:
 			path: app/cdash/include/sendemail.php
 
 		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 3
+			path: app/cdash/include/sendemail.php
+
+		-
+			message: """
+				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/include/sendemail.php
+
+		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 1
 			path: app/cdash/include/sendemail.php
@@ -15147,6 +15377,14 @@ parameters:
 			message: """
 				#^Call to deprecated function json_error_response\\(\\)\\:
 				15/06/2023 Use abort\\(\\) to exit cleanly instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/public/api/v1/GitHub/webhook.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/public/api/v1/GitHub/webhook.php
@@ -15946,6 +16184,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/case/CDash/Api/GitHubWebhookTest.php
+
+		-
+			message: """
 				#^Call to deprecated method setMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
 				https\\://github\\.com/sebastianbergmann/phpunit/pull/3687$#
 			"""
@@ -16026,6 +16272,54 @@ parameters:
 			message: "#^Method BuildUseCaseTest\\:\\:testUseCaseCreateBuilderReturnsInstanceOfBuildUseCase\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 5
+			path: app/cdash/tests/case/CDash/ConfigTest.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/tests/case/CDash/ConfigTest.php
+
+		-
+			message: """
+				#^Call to deprecated method getProtocol\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 3
+			path: app/cdash/tests/case/CDash/ConfigTest.php
+
+		-
+			message: """
+				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/tests/case/CDash/ConfigTest.php
+
+		-
+			message: """
+				#^Call to deprecated method getServerPort\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 3
+			path: app/cdash/tests/case/CDash/ConfigTest.php
+
+		-
+			message: """
+				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 11
+			path: app/cdash/tests/case/CDash/ConfigTest.php
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
@@ -16340,6 +16634,22 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
+
+		-
+			message: """
+				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
+
+		-
+			message: """
 				#^Call to deprecated method setMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
 				https\\://github\\.com/sebastianbergmann/phpunit/pull/3687$#
 			"""
@@ -16440,6 +16750,14 @@ parameters:
 			message: "#^Method LinkifyCompilerOutputTest\\:\\:testLinkifyCompilerOutput\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/LinkifyCompilerOutputTest.php
+
+		-
+			message: """
+				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
 
 		-
 			message: "#^Call to method send\\(\\) on an unknown class CDash\\\\Messaging\\\\Messenger\\.$#"
@@ -18459,6 +18777,14 @@ parameters:
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
 		-
+			message: """
+				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
+
+		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\)\\.$#"
 			count: 4
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
@@ -19652,6 +19978,14 @@ parameters:
 				04/22/2023$#
 			"""
 			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 2
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
@@ -22466,6 +22800,14 @@ parameters:
 			path: app/cdash/tests/test_email.php
 
 		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 4
+			path: app/cdash/tests/test_email.php
+
+		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 5
 			path: app/cdash/tests/test_email.php
@@ -24481,6 +24823,14 @@ parameters:
 			path: app/cdash/tests/test_submitsortingdata.php
 
 		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/tests/test_subproject.php
+
+		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 3
 			path: app/cdash/tests/test_subproject.php
@@ -24980,6 +25330,14 @@ parameters:
 				04/01/2023$#
 			"""
 			count: 1
+			path: app/cdash/tests/test_timeoutsandmissingtests.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 2
 			path: app/cdash/tests/test_timeoutsandmissingtests.php
 
 		-
@@ -28783,6 +29141,14 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
+			path: app/cdash/xml_handlers/upload_handler.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 3
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-

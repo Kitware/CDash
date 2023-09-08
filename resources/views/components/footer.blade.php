@@ -1,9 +1,3 @@
-@php
-use CDash\Config;
-
-$version = Config::getVersion();
-@endphp
-
 {{-- Fill the space between the content and the footer to push the footer to the bottom of the page --}}
 <div style="flex:1;"></div>
 
@@ -19,7 +13,7 @@ $version = Config::getVersion();
             <img src="{{ asset('img/cdash_logo_full.svg?rev=2023-05-31') }}" height="30" alt="CDash logo">
         </a>
         <span id="footertext" class="pull-right">
-            CDash {{ $version }} ©&nbsp; <a href="https://www.kitware.com">Kitware</a>
+            CDash {{ $cdash_version }} ©&nbsp; <a href="https://www.kitware.com">Kitware</a>
             | <a href="https://github.com/Kitware/CDash/issues" target="_blank">Report problems</a>
 
             @if(isset($angular) && $angular === true)
