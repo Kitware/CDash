@@ -15,29 +15,21 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use App\Models\Project as EloquentProject;
+use App\Models\SubProject as EloquentSubProject;
 use CDash\Database;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 /** Main subproject class */
 class SubProject
 {
-    private $Name;
-    private $Id;
-    private $ProjectId;
-    private $GroupId;
-    private $Path;
-    private $Position;
-    private $PDO;
-
-    public function __construct()
-    {
-        $this->Id = 0;
-        $this->GroupId = 0;
-        $this->ProjectId = 0;
-        $this->Position = 0;
-        $this->Name = '';
-        $this->Path = '';
-        $this->PDO = Database::getInstance()->getPdo();
-    }
+    private string $Name = '';
+    private int $Id = 0;
+    private int $ProjectId = 0;
+    private int $GroupId = 0;
+    private string $Path = '';
+    private int $Position = 0;
 
     /** Function to get the id */
     public function GetId(): int
@@ -45,217 +37,151 @@ class SubProject
         return $this->Id;
     }
 
-    /** Function to set the id.  Also loads remaining data for this
+    /**
+     * Function to set the id.  Also loads remaining data for this
      * subproject from the database.
-     **/
-    public function SetId($id): bool
+     */
+    public function SetId($id): void
     {
         if (!is_numeric($id)) {
-            return false;
+            abort(500, 'Invalid SubProject ID.');
         }
 
-        $this->Id = $id;
+        $this->Id = (int) $id;
 
-        $db = Database::getInstance();
-        $row = $db->executePreparedSingleRow("
-                   SELECT name, projectid, groupid, path, position
-                   FROM subproject
-                   WHERE
-                       id=?
-                       AND endtime='1980-01-01 00:00:00'
-               ", [intval($this->Id)]);
+        $subproject = EloquentSubProject::where('endtime', Carbon::create(1980))->find($id);
 
-        if (empty($row)) {
-            return false;
+        if ($subproject === null) {
+            return;
         }
 
-        $this->Name = $row['name'];
-        $this->ProjectId = $row['projectid'];
-        $this->GroupId = $row['groupid'];
-        $this->Path = $row['path'];
-        $this->Position = $row['position'];
-        return true;
+        $this->Name = $subproject->name;
+        $this->ProjectId = $subproject->projectid;
+        $this->GroupId = $subproject->groupid;
+        $this->Path = $subproject->path;
+        $this->Position = $subproject->position;
     }
 
     /** Function to set the project id */
-    public function SetProjectId($projectid): bool
+    public function SetProjectId($projectid): void
     {
-        if (is_numeric($projectid)) {
-            $this->ProjectId = intval($projectid);
-            if ($this->Name != '') {
-                $this->Fill();
-            }
-            return true;
+        if (!is_numeric($projectid)) {
+            abort(500, 'Invalid SubProject ID.');
         }
-        return false;
+
+        $this->ProjectId = (int) $projectid;
+        if ($this->Name != '') {
+            $this->Fill();
+        }
     }
 
     /** Delete a subproject */
-    public function Delete($keephistory = true): bool
+    public function Delete($keephistory = true): void
     {
-        if ($this->Id < 1) {
-            return false;
+        if ($this->Id === 0) {
+            abort(500, 'SubProject ID not set.');
         }
 
-        $db = Database::getInstance();
-
         // If there is no build in the subproject we remove
-        $query = $db->executePreparedSingleRow('
-                     SELECT count(*) AS c
-                     FROM subproject2build
-                     WHERE subprojectid=?
-                 ', [intval($this->Id)]);
-        if (intval($query['c']) === 0) {
+        $count = (int) DB::select('
+            SELECT count(*) AS c
+            FROM subproject2build
+            WHERE subprojectid = ?
+        ', [$this->Id])[0]->c;
+        if ($count === 0) {
             $keephistory = false;
         }
 
+        $subproject = EloquentSubProject::findOrFail($this->Id);
+
         // Regardless of whether or not we're performing a "soft delete",
         // we should remove any dependencies on this subproject.
-        $db->executePrepared('DELETE FROM subproject2subproject WHERE dependsonid=?', [intval($this->Id)]);
+        DB::delete('DELETE FROM subproject2subproject WHERE dependsonid=?', [intval($this->Id)]);
 
         if (!$keephistory) {
-            $db->executePrepared('DELETE FROM subproject2build WHERE subprojectid=?', [intval($this->Id)]);
-            $db->executePrepared('DELETE FROM subproject2subproject WHERE subprojectid=?', [intval($this->Id)]);
-            $db->executePrepared('DELETE FROM subproject WHERE id=?', [intval($this->Id)]);
+            DB::delete('DELETE FROM subproject2build WHERE subprojectid=?', [intval($this->Id)]);
+            $subproject->children()->detach();
+            $subproject->delete();
         } else {
-            $endtime = gmdate(FMT_DATETIME);
-            $query = $db->executePrepared('UPDATE subproject SET endtime=? WHERE id=?', [$endtime, intval($this->Id)]);
-            if ($query === false) {
-                add_last_sql_error('SubProject Delete');
-                return false;
-            }
+            $subproject->update([
+                'endtime' => Carbon::now()->setTimezone('UTC'),
+            ]);
         }
-        return true;
     }
 
     /** Return if a subproject exists */
     public function Exists(): bool
     {
         // If no id specify return false
-        if ($this->Id < 1) {
+        if ($this->Id === 0) {
             return false;
         }
 
-        $db = Database::getInstance();
-
-        $query = $db->executePreparedSingleRow("
-                     SELECT count(*) AS c
-                     FROM subproject
-                     WHERE id=? AND endtime='1980-01-01 00:00:00'
-                 ", [intval($this->Id)]);
-        if (intval($query['c']) > 0) {
-            return true;
-        }
-        return false;
+        return EloquentSubProject::where([
+            'id' => $this->Id,
+            'endtime' => Carbon::create(1980),
+        ])->exists();
     }
 
-    // Save the subproject in the database
-    public function Save(): bool
+    /**
+     * Save the subproject in the database
+     */
+    public function Save(): void
     {
         // Assign it to the default group if necessary.
-        if ($this->GroupId < 1) {
-            $stmt = $this->PDO->prepare(
-                'SELECT id from subprojectgroup
-                 WHERE projectid = ? AND is_default = 1');
-            pdo_execute($stmt, [$this->ProjectId]);
-            $groupid = $stmt->fetchColumn();
-            if ($groupid) {
-                $this->GroupId = $groupid;
+        if ($this->GroupId === 0) {
+            $groupid_query = DB::select('
+                SELECT id
+                FROM subprojectgroup
+                WHERE
+                    projectid = ?
+                    AND is_default = 1
+            ', [$this->ProjectId])[0] ?? [];
+            if ($groupid_query !== []) {
+                $this->GroupId = (int) $groupid_query->id;
             }
         }
 
         // Trim the name.
         $this->Name = trim($this->Name);
 
-        // Check if the subproject already exists.
-        if ($this->Exists()) {
-            // Update the subproject
-            $stmt = $this->PDO->prepare(
-                'UPDATE subproject SET
-                    name = ?, projectid = ?, groupid = ?, path = ?, position = ?
-                WHERE id = ?');
-            return pdo_execute($stmt,
-                [$this->Name, $this->ProjectId, $this->GroupId, $this->Path,
-                 $this->Position, $this->Id]);
-        } else {
-            // Double check that it's not already in the database.
-            $exists_stmt = $this->PDO->prepare(
-                "SELECT id FROM subproject
-                WHERE name = ? AND projectid = ? AND
-                      endtime = '1980-01-01 00:00:00'");
-            if (!pdo_execute($exists_stmt, [$this->Name, $this->ProjectId])) {
-                return false;
-            }
-            $existing_id = $exists_stmt->fetchColumn();
-            if ($existing_id) {
-                $this->Id = $existing_id;
-                return true;
-            }
+        $subproject = EloquentSubProject::updateOrCreate(
+            [
+                'name' => $this->Name,
+                'projectid' => $this->ProjectId,
+                'endtime' => Carbon::create(1980),
+            ], [
+                // These attributes should always be updated
+                'groupid' => $this->GroupId,
+                'position' => $this->Position,
+                'path' => $this->Path,
+            ]
+        );
 
-            // Insert the subproject.
-            $id = '';
-            $idvalue = '';
-            if ($this->Id) {
-                $id = 'id,';
-                $idvalue = "'" . $this->Id . "',";
-            }
-
-            $starttime = gmdate(FMT_DATETIME);
-            $endtime = '1980-01-01 00:00:00';
-
-            $stmt = $this->PDO->prepare(
-                "INSERT INTO subproject
-                    ($id name, projectid, groupid, path, position, starttime,
-                     endtime)
-                VALUES ($idvalue ?, ?, ?, ?, ?, ?, ?)");
-            $params = [$this->Name, $this->ProjectId, $this->GroupId,
-                       $this->Path, $this->Position, $starttime, $endtime];
-
-            if (!$stmt->execute($params)) {
-                $error = pdo_error();
-                // Check if the query failed due to a race condition during
-                // parallel submission processing.
-                $failed = false;
-                if (!pdo_execute($exists_stmt, [$this->Name, $this->ProjectId])) {
-                    $failed = true;
-                } else {
-                    $existing_id = $exists_stmt->fetchColumn();
-                    if (!$existing_id) {
-                        $failed = true;
-                    }
-                }
-                if ($failed) {
-                    add_log("SQL error: $error", 'SubProject Create', LOG_ERR, $this->ProjectId);
-                    return false;
-                }
-                $this->Id = $existing_id;
-            }
-
-            if ($this->Id < 1) {
-                $this->Id = pdo_insert_id('subproject');
-            }
+        if ($subproject->wasRecentlyCreated) {
+            $subproject->save([
+                // We only set the start time if this is a new subproject
+                'starttime' => Carbon::now()->setTimezone('UTC'),
+            ]);
         }
-        return true;
+
+        $this->Id = $subproject->id;
     }
 
     /** Get the Name of the subproject */
-    public function GetName(): string|false
+    public function GetName(): string
     {
-        if (strlen($this->Name) > 0) {
+        if ($this->Name !== '') {
             return $this->Name;
         }
 
-        if ($this->Id < 1) {
-            return false;
+        if ($this->Id === 0) {
+            abort(500, 'SubProject ID not set.');
         }
 
-        $db = Database::getInstance();
-        $project = $db->executePreparedSingleRow('SELECT name FROM subproject WHERE id=?', [intval($this->Id)]);
-        if ($project === false) {
-            add_last_sql_error('SubProject GetName');
-            return false;
-        }
-        $this->Name = $project['name'];
+        // Sets the other properties too...
+        $this->SetId($this->Id);
+
         return $this->Name;
     }
 
@@ -268,52 +194,50 @@ class SubProject
         }
     }
 
-    /** Populate the ivars of an existing subproject.
+    /**
+     * Populate the ivars of an existing subproject.
      * Called automatically once name & projectid are set.
-     **/
-    public function Fill(): bool
+     */
+    public function Fill(): void
     {
         if ($this->Name === '' || $this->ProjectId === 0) {
-            add_log(
-                "Name='" . $this->Name . "' or ProjectId='" . $this->ProjectId . "' not set",
-                'SubProject::Fill',
-                LOG_WARNING);
-            return false;
+            abort(500, "Name='" . $this->Name . "' or ProjectId='" . $this->ProjectId . "' not set");
         }
 
-        $stmt = $this->PDO->prepare(
-            "SELECT * FROM subproject
-           WHERE projectid = ?  AND name = ? AND
-                 endtime = '1980-01-01 00:00:00'");
+        /** @var EloquentSubProject|null $subproject */
+        $subproject = EloquentProject::findOrFail($this->ProjectId)
+            ->subprojects()
+            ->where([
+                'name' => $this->Name,
+                'endtime' => Carbon::create(1980),
+            ])
+            ->first();
 
-        if (!pdo_execute($stmt, [$this->ProjectId, $this->Name])) {
-            return false;
-        }
-        $row = $stmt->fetch();
-        if (!$row) {
-            return false;
+        if ($subproject === null) {
+            return;
         }
 
-        $this->Id = intval($row['id']);
-        $this->GroupId = intval($row['groupid']);
-        $this->Path = $row['path'];
-        $this->Position = intval($row['position']);
-        return true;
+        $this->Id = $subproject->id;
+        $this->GroupId = $subproject->groupid;
+        $this->Path = $subproject->path;
+        $this->Position = $subproject->position;
     }
 
     /** Get the group that this subproject belongs to. */
-    public function GetGroupId(): int|false
+    public function GetGroupId(): int
     {
-        if ($this->Id < 1) {
-            return false;
+        if ($this->Id === 0) {
+            abort(500, 'SubProject ID not set.');
         }
 
-        $db = Database::getInstance();
-        $row = $db->executePreparedSingleRow('SELECT groupid FROM subproject WHERE id=?', [$this->Id]);
-        if (empty($row)) {
-            return false;
+        // Use the cached value if it's already set...
+        if ($this->GroupId > 0) {
+            return $this->GroupId;
         }
-        $this->GroupId = intval($row['groupid']);
+
+        // This fills the model for us...
+        $this->SetId($this->Id);
+
         return $this->GroupId;
     }
 
@@ -377,8 +301,7 @@ class SubProject
             return false;
         }
 
-        $db = Database::getInstance();
-        $project = $db->executePreparedSingleRow('
+        $project = DB::select('
                        SELECT build.starttime
                        FROM build, subproject2build, build2group, buildgroup
                        WHERE
@@ -389,17 +312,13 @@ class SubProject
                            AND subproject2build.buildid=build.id
                        ORDER BY build.starttime DESC
                        LIMIT 1
-                   ', [intval($this->Id)]);
-        if ($project === false) {
-            add_last_sql_error('SubProject GetLastSubmission');
+                   ', [$this->Id]);
+
+        if ($project === []) {
             return false;
         }
 
-        if (!is_array($project) || !array_key_exists('starttime', $project)) {
-            return false;
-        }
-
-        return date(FMT_DATETIMESTD, strtotime($project['starttime'] . 'UTC'));
+        return date(FMT_DATETIMESTD, strtotime($project[0]->starttime . 'UTC'));
     }
 
     /**
@@ -411,7 +330,7 @@ class SubProject
      */
     public function CommonBuildQuery($startUTCdate, $endUTCdate, bool $allSubProjects): array|false
     {
-        if (!$allSubProjects && $this->Id < 1) {
+        if (!$allSubProjects && $this->Id === 0) {
             return false;
         }
 
@@ -422,7 +341,7 @@ class SubProject
             $extraSelect = 'subprojectid, ';
         } else {
             $extraWhere = 'subprojectid = ? AND ';
-            $params[] = intval($this->Id);
+            $params[] = $this->Id;
         }
 
         $query = "
@@ -470,164 +389,100 @@ class SubProject
         }
     }
 
-    /** Get the subprojectids of the subprojects depending on this one */
-    public function GetDependencies(?string $date = null): array|false
+    /**
+     * Get the subprojectids of the subprojects depending on this one.
+     *
+     * TODO: This should return a list of subprojects instead of a list of IDs.
+     *
+     * @return array<int>
+     */
+    public function GetDependencies(?string $date = null): array
     {
-        if ($this->Id < 1) {
-            add_log(
-                "Id='" . $this->Id . "' not set",
-                'SubProject::GetDependencies',
-                LOG_WARNING);
-            return false;
+        if ($this->Id === 0) {
+            abort(500, "SubProject ID not set.");
         }
 
         // If not set, the date is now
-        if ($date === null) {
-            $date = gmdate(FMT_DATETIME);
+        if ($date !== null) {
+            $date = Carbon::parse($date);
         }
 
-        $db = Database::getInstance();
-        $project = $db->executePrepared("
-                       SELECT dependsonid
-                       FROM subproject2subproject
-                       WHERE
-                           subprojectid=?
-                           AND starttime<=?
-                           AND (
-                               endtime>?
-                               OR endtime='1980-01-01 00:00:00'
-                           )
-                       ", [intval($this->Id), $date, $date]);
-
-        if ($project === false) {
-            add_last_sql_error('SubProject GetDependencies');
-            return false;
-        }
+        $subprojects = EloquentSubProject::findOrFail($this->Id)
+            ->children($date)
+            ->get();
 
         $ids = [];
-        foreach ($project as $project_array) {
-            $ids[] = intval($project_array['dependsonid']);
+        /** @var EloquentSubProject $subproject */
+        foreach ($subprojects as $subproject) {
+            $ids[] = $subproject->id;
         }
         return $ids;
     }
 
     /** Add a dependency */
-    public function AddDependency(int $subprojectid): bool
+    public function AddDependency(int $subprojectid): void
     {
-        if ($this->Id < 1) {
-            return false;
+        if ($this->Id === 0) {
+            abort(500, "SubProject ID not set.");
         }
 
-        $db = Database::getInstance();
-
-        // Check that the dependency doesn't exist
-        $project = $db->executePreparedSingleRow("
-                       SELECT count(*) AS c
-                       FROM subproject2subproject
-                       WHERE
-                           subprojectid=?
-                           AND dependsonid=?
-                           AND endtime='1980-01-01 00:00:00'
-                   ", [intval($this->Id), $subprojectid]);
-
-        if ($project === false) {
-            add_last_sql_error('SubProject AddDependency');
-            return false;
-        }
-
-        if (intval($project['c']) > 0) {
-            return false;
+        // If the dependency already exists, exit early
+        $dependency_exists = EloquentSubProject::findOrFail($this->Id)
+            ->children()
+            ->where('id', $subprojectid)
+            ->exists();
+        if ($dependency_exists) {
+            return;
         }
 
         // Add the dependency
-        $starttime = gmdate(FMT_DATETIME);
-        $project = $db->executePrepared("
-                       INSERT INTO subproject2subproject (subprojectid, dependsonid, starttime, endtime)
-                       VALUES (?, ?, '$starttime', '1980-01-01 00:00:00')
-                   ", [intval($this->Id), intval($subprojectid)]);
-        if ($project === false) {
-            add_last_sql_error('SubProject AddDependency');
-            return false;
-        }
-        return true;
+        EloquentSubProject::findOrFail($this->Id)
+            ->children()
+            ->attach($subprojectid, [
+                'starttime' => Carbon::now()->setTimezone('UTC'),
+                'endtime' => Carbon::create(1980),
+            ]);
     }
 
     /** Remove a dependency */
-    public function RemoveDependency(int $subprojectid): bool
+    public function RemoveDependency(int $subprojectid): void
     {
-        if ($this->Id < 1) {
-            return false;
+        if ($this->Id === 0) {
+            abort(500, 'SubProject ID not set.');
         }
 
-        $db = Database::getInstance();
-
-        // Set the date of the dependency to be now
-        $now = gmdate(FMT_DATETIME);
-        $project = $db->executePrepared("
-                       UPDATE subproject2subproject
-                       SET endtime=?
-                       WHERE
-                           subprojectid=?
-                           AND dependsonid=?
-                           AND endtime='1980-01-01 00:00:00'
-                   ", [$now, intval($this->Id), $subprojectid]);
-
-        if ($project === false) {
-            add_last_sql_error('SubProject RemoveDependency');
-            return false;
-        }
-        return true;
+        EloquentSubProject::findOrFail($this->Id)
+            ->children()
+            ->updateExistingPivot($subprojectid, [
+                'endtime' => Carbon::now()->setTimezone('UTC'),
+            ]);
     }
 
-    /** Return a subproject object for a given file path and projectid. */
+    /**
+     * Return a subproject object for a given file path and projectid.
+     *
+     * TODO: Move this somewhere else...
+     */
     public static function GetSubProjectFromPath(string $path, int $projectid): SubProject|null
     {
-        $pdo = Database::getInstance()->getPdo();
-        $stmt = $pdo->prepare(
-            "SELECT id FROM subproject
-            WHERE projectid = :projectid AND
-            endtime = '1980-01-01 00:00:00' AND
-            path != '' AND
-            :path LIKE CONCAT('%',path,'%')");
+        $query = DB::select("
+            SELECT id
+            FROM subproject
+            WHERE
+                projectid = ?
+                AND endtime = '1980-01-01 00:00:00'
+                AND path != ''
+                AND ? LIKE CONCAT('%', path, '%')
+        ", [$projectid, $path]);
 
-        $stmt->bindValue(':projectid', $projectid);
-        $stmt->bindValue(':path', $path);
-        pdo_execute($stmt);
-        $id = $stmt->fetchColumn();
-        if (!$id) {
+        if ($query === []) {
             add_log(
                 "No SubProject found for '$path'", 'GetSubProjectFromPath',
                 LOG_INFO, $projectid, 0);
             return null;
         }
         $subproject = new SubProject();
-        $subproject->SetId($id);
+        $subproject->SetId((int) $query[0]->id);
         return $subproject;
-    }
-
-    /**
-     * Return the name of the subproject whose path contains the specified
-     * source file.
-     */
-    public static function GetSubProjectForPath(string $filepath, int $projectid): string
-    {
-        $pdo = get_link_identifier()->getPdo();
-        // Get all the subprojects for this project that have a path defined.
-        // Sort by longest paths first.
-        $stmt = $pdo->prepare(
-            "SELECT name, path FROM subproject
-            WHERE projectid = ? AND path != ''
-            ORDER BY CHAR_LENGTH(path) DESC");
-        pdo_execute($stmt, [$projectid]);
-        while ($row = $stmt->fetch()) {
-            // Return the name of the subproject with the longest path
-            // that matches our input path.
-            if (str_contains($filepath, $row['path'])) {
-                return $row['name'];
-            }
-        }
-
-        // Return empty string if no match was found.
-        return '';
     }
 }

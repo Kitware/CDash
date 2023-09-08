@@ -142,7 +142,7 @@ if (isset($_GET['subproject'])) {
         $subproject_response['name'] = $SubProject->GetName();
 
         $dependencies = $SubProject->GetDependencies();
-        if ($dependencies) {
+        if ($dependencies !== []) {
             $dependencies_response = [];
             foreach ($dependencies as $dependency) {
                 $dependency_response = [];

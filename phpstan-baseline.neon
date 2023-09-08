@@ -2218,6 +2218,16 @@ parameters:
 			path: app/Models/Site.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\SubProject\\>\\:\\:orWhere\\(\\)\\.$#"
+			count: 1
+			path: app/Models/SubProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Models/SubProject.php
+
+		-
 			message: "#^Call to function base64_decode\\(\\) requires parameter \\#2 to be set\\.$#"
 			count: 2
 			path: app/Models/TestOutput.php
@@ -8346,45 +8356,13 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 8
+			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
 		-
 			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 4
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_error\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 7
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
 			"""
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
@@ -8394,7 +8372,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 9
+			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
 		-
@@ -8402,24 +8380,46 @@ parameters:
 				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 8
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 3
+			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 3
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\SubProject\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\SubProject\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:first\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
+			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:AddDependency\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
@@ -8444,7 +8444,22 @@ parameters:
 			path: app/cdash/app/Model/SubProject.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetDependencies\\(\\) return type has no value type specified in iterable type array\\.$#"
+			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:Exists\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:Fill\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetDependencies\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:Save\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
@@ -8454,52 +8469,17 @@ parameters:
 			path: app/cdash/app/Model/SubProject.php
 
 		-
+			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:SetId\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:SetProjectId\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\SubProject\\:\\:\\$GroupId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\SubProject\\:\\:\\$Id has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\SubProject\\:\\:\\$Name has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\SubProject\\:\\:\\$PDO has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\SubProject\\:\\:\\$Path has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\SubProject\\:\\:\\$Position has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\SubProject\\:\\:\\$ProjectId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
@@ -16077,11 +16057,6 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 2
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
@@ -26068,7 +26043,7 @@ parameters:
 				#^Call to deprecated function get_link_identifier\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 1
+			count: 2
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
@@ -26076,7 +26051,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 1
+			count: 2
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
@@ -26084,7 +26059,7 @@ parameters:
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 1
+			count: 2
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
