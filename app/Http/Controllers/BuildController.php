@@ -11,7 +11,7 @@ use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroupRule;
-use CDash\Model\BuildInformation;
+use App\Models\BuildInformation;
 use CDash\Model\BuildRelationship;
 use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUserNote;
@@ -144,19 +144,17 @@ final class BuildController extends AbstractBuildController
         $build_response['note'] = BuildNote::where('buildid', '=', $this->build->Id)->count();
 
         // Find the OS and compiler information
-        $buildinfo = new BuildInformation();
         if ($this->build->GetParentId() > 0) {
-            $buildinfo->BuildId = $this->build->GetParentId();
+            $buildinfo = BuildInformation::findOrNew($this->build->GetParentId());
         } else {
-            $buildinfo->BuildId = $this->build->Id;
+            $buildinfo = BuildInformation::findOrNew($this->build->Id);
         }
-        $buildinfo->Fill();
-        $build_response['osname'] = $buildinfo->OSName;
-        $build_response['osplatform'] = $buildinfo->OSPlatform;
-        $build_response['osrelease'] = $buildinfo->OSRelease;
-        $build_response['osversion'] = $buildinfo->OSVersion;
-        $build_response['compilername'] = $buildinfo->CompilerName;
-        $build_response['compilerversion'] = $buildinfo->CompilerVersion;
+        $build_response['osname'] = $buildinfo->osname;
+        $build_response['osplatform'] = $buildinfo->osplatform;
+        $build_response['osrelease'] = $buildinfo->osrelease;
+        $build_response['osversion'] = $buildinfo->osversion;
+        $build_response['compilername'] = $buildinfo->compilername;
+        $build_response['compilerversion'] = $buildinfo->compilerversion;
 
         $build_response['generator'] = $this->build->Generator;
         $build_response['command'] = $this->build->Command;

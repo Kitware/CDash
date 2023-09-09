@@ -23,7 +23,7 @@ use CDash\Controller\Api\Index as IndexController;
 use CDash\Database;
 use App\Models\Banner;
 use CDash\Model\Build;
-use CDash\Model\BuildInformation;
+use App\Models\BuildInformation;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
@@ -81,15 +81,13 @@ if (isset($_GET['parentid'])) {
 
     // Include data about this build from the buildinformation table.
 
-    $buildinfo = new BuildInformation();
-    $buildinfo->BuildId = $parentid;
-    $buildinfo->Fill();
-    $response['osname'] = $buildinfo->OSName;
-    $response['osplatform'] = $buildinfo->OSPlatform;
-    $response['osrelease'] = $buildinfo->OSRelease;
-    $response['osversion'] = $buildinfo->OSVersion;
-    $response['compilername'] = $buildinfo->CompilerName;
-    $response['compilerversion'] = $buildinfo->CompilerVersion;
+    $buildinfo = BuildInformation::findOrNew($parentid);
+    $response['osname'] = $buildinfo->osname;
+    $response['osplatform'] = $buildinfo->osplatform;
+    $response['osrelease'] = $buildinfo->osrelease;
+    $response['osversion'] = $buildinfo->osversion;
+    $response['compilername'] = $buildinfo->compilername;
+    $response['compilerversion'] = $buildinfo->compilerversion;
 
     // Check if the parent build has any notes.
     $stmt = DB::select('SELECT COUNT(buildid) AS c FROM build2note WHERE buildid = ?', [$parentid])[0];

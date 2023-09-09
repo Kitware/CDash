@@ -26,7 +26,7 @@ use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildGroup;
-use CDash\Model\BuildInformation;
+use App\Models\BuildInformation;
 use CDash\Model\Label;
 use App\Models\Site;
 use App\Models\SiteInformation;
@@ -39,7 +39,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
     private $StartTimeStamp;
     private $EndTimeStamp;
     private $Builds;
-    private $BuildInformation;
+    private BuildInformation $BuildInformation;
     // Map SubProjects to Labels
     private $SubProjects;
     private $Configure;
@@ -72,7 +72,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
             $this->Site = Site::firstOrCreate(['name' => $sitename], ['name' => $sitename]);
 
             $siteInformation = new SiteInformation;
-            $this->BuildInformation = $this->ModelFactory->create(BuildInformation::class);
+            $this->BuildInformation = new BuildInformation();
             $this->BuildName = "";
             $this->BuildStamp = "";
             $this->SubProjectName = "";
@@ -87,7 +87,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                     $this->BuildStamp = $value;
                 } elseif ($key === 'GENERATOR') {
                     $this->Generator = $value;
-                } elseif ($key == 'CHANGEID') {
+                } elseif ($key === 'CHANGEID') {
                     $this->PullRequest = $value;
                 } else {
                     $siteInformation->SetValue($key, $value);

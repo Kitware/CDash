@@ -17,7 +17,7 @@ use CDash\Messaging\Topic\TestFailureTopic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
-use CDash\Model\BuildInformation;
+use App\Models\BuildInformation;
 use CDash\Model\Image;
 use CDash\Model\Label;
 use CDash\Model\Project;
@@ -41,7 +41,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 
     /** @var Build[] Builds */
     private $Builds;
-    private $BuildInformation;
+    private BuildInformation $BuildInformation;
 
     // Map SubProjects to Labels
     private $SubProjects;
@@ -85,7 +85,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
             $siteInformation = new SiteInformation;
-            $this->BuildInformation = $factory->create(BuildInformation::class);
+            $this->BuildInformation = new BuildInformation();
             $this->BuildName = "";
             $this->BuildStamp = "";
             $this->SubProjectName = "";
@@ -100,7 +100,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                     $this->BuildStamp = $value;
                 } elseif ($key === 'GENERATOR') {
                     $this->Generator = $value;
-                } elseif ($key == 'CHANGEID') {
+                } elseif ($key === 'CHANGEID') {
                     $this->PullRequest = $value;
                 } else {
                     $siteInformation->SetValue($key, $value);

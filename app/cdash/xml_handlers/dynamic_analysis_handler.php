@@ -31,7 +31,7 @@ use CDash\Model\DynamicAnalysis;
 use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\DynamicAnalysisDefect;
 use App\Models\SiteInformation;
-use CDash\Model\BuildInformation;
+use App\Models\BuildInformation;
 use CDash\Model\SubscriberInterface;
 
 class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildInterface
@@ -46,7 +46,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
     private $Label;
 
     private $Builds;
-    private $BuildInformation;
+    private BuildInformation $BuildInformation;
 
     // Map SubProjects to Labels
     private $SubProjects;
@@ -72,7 +72,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
             $siteInformation = new SiteInformation();
-            $this->BuildInformation = $factory->create(BuildInformation::class);
+            $this->BuildInformation = new BuildInformation();
 
             // Fill in the attribute
             foreach ($attributes as $key => $value) {
@@ -82,7 +82,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
                     $this->BuildStamp = $value;
                 } elseif ($key === 'GENERATOR') {
                     $this->Generator = $value;
-                } elseif ($key == 'CHANGEID') {
+                } elseif ($key === 'CHANGEID') {
                     $this->PullRequest = $value;
                 } else {
                     $siteInformation->SetValue($key, $value);
