@@ -104,4 +104,12 @@ class Project extends Model
     {
         return $this->hasMany(SubProject::class, 'projectid', 'id');
     }
+
+    /**
+     * @return HasMany<Measurement>
+     */
+    public function measurements(): HasMany
+    {
+        return $this->hasMany(Measurement::class, 'projectid', 'id');
+    }
 }

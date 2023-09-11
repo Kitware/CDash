@@ -3,11 +3,10 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
-
+use App\Models\Measurement;
 
 class ManageMeasurementsTestCase extends KWWebTestCase
 {
@@ -37,10 +36,8 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         if (!is_null($this->SubProjectBuildId)) {
             remove_build($this->SubProjectBuildId);
         }
-        foreach ($this->MeasurementIds as $measurement_id) {
-            $this->PDO->query(
-                "DELETE FROM measurement WHERE id = $measurement_id");
-        }
+
+        Measurement::destroy($this->MeasurementIds);
     }
 
     // function to validate test results returned by the API.

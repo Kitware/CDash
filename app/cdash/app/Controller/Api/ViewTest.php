@@ -17,6 +17,7 @@
 namespace CDash\Controller\Api;
 
 use App\Models\BuildTest;
+use App\Models\Project as EloquentProject;
 
 use CDash\Config;
 use CDash\Database;
@@ -273,16 +274,15 @@ class ViewTest extends BuildApi
         // Get the list of extra measurements that should be displayed on this page.
         $response['hasprocessors'] = false;
         $processors_idx = -1;
-        $extra_measurements_stmt = $this->db->prepare(
-            'SELECT name FROM measurement
-                WHERE projectid = ?
-                ORDER BY position');
-        $this->db->execute($extra_measurements_stmt, [$this->project->Id]);
-        while ($row = $extra_measurements_stmt->fetch()) {
-            $this->extraMeasurements[] = $row['name'];
+        $extra_measurements = EloquentProject::findOrFail($this->project->Id)
+            ->measurements()
+            ->orderBy('position')
+            ->get();
+        foreach ($extra_measurements as $extra_measurement) {
+            $this->extraMeasurements[] = $extra_measurement->name;
             // If we have the Processors measurement, then we should also
             // compute and display 'Proc Time'.
-            if ($row['name'] == 'Processors') {
+            if ($extra_measurement->name === 'Processors') {
                 $processors_idx = count($this->extraMeasurements) - 1;
                 $response['hasprocessors'] = true;
             }

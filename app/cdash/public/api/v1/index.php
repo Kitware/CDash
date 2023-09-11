@@ -22,6 +22,7 @@ require_once 'include/filterdataFunctions.php';
 use CDash\Controller\Api\Index as IndexController;
 use CDash\Database;
 use App\Models\Banner;
+use App\Models\Project as EloquentProject;
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
 use CDash\Model\BuildGroup;
@@ -641,14 +642,10 @@ if (count($coverage_groups) > 0) {
 // We support an additional advanced column called 'Proc Time'.
 // This is only shown if this project is setup to display
 // an extra test measurement called 'Processors'.
-$stmt = DB::select("
-            SELECT count(*) AS c
-            FROM measurement
-            WHERE
-                projectid = ?
-                AND name = 'Processors'
-        ", [$Project->Id])[0];
-$response['showProcTime'] = $stmt->c > 0;
+$response['showProcTime'] = EloquentProject::findOrFail($Project->Id)
+    ->measurements()
+    ->where('name', 'Processors')
+    ->exists();
 
 $response['buildgroups'] = $controller->buildgroupsResponse;
 $response['updatetype'] = $controller->updateType;

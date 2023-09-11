@@ -748,7 +748,17 @@ parameters:
 			path: app/Http/Controllers/ManageBannerController.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:delete\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageMeasurementsController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageMeasurementsController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:where\\(\\)\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
@@ -3075,8 +3085,13 @@ parameters:
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/QueryTests.php
+
+		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 10
+			count: 9
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
@@ -3297,6 +3312,16 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
+			path: app/cdash/app/Controller/Api/TestDetails.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/TestDetails.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 1
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
 		-
@@ -3607,6 +3632,11 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
 			message: "#^Foreach overwrites \\$test with its value variable\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
@@ -3618,7 +3648,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 11
+			count: 10
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
@@ -15783,6 +15813,16 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 3
+			path: app/cdash/public/api/v1/index.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/index.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:where\\(\\)\\.$#"
+			count: 1
 			path: app/cdash/public/api/v1/index.php
 
 		-

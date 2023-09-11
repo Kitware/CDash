@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Measurement;
+use App\Models\Project as EloquentProject;
 use App\Services\PageTimer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
@@ -37,16 +38,17 @@ final class ManageMeasurementsController extends AbstractProjectController
 
         // Get any measurements associated with this project's tests.
         $measurements_response = [];
-        $measurements = Measurement::where('projectid', $this->project->Id)
+        $measurements = EloquentProject::findOrFail($this->project->Id)
+            ->measurements()
             ->orderBy('position', 'asc')
             ->get();
 
         foreach ($measurements as $measurement) {
-            $measurement_response = [];
-            $measurement_response['id'] = $measurement->id;
-            $measurement_response['name'] = $measurement->name;
-            $measurement_response['position'] = $measurement->position;
-            $measurements_response[] = $measurement_response;
+            $measurements_response[] = [
+                'id' => $measurement->id,
+                'name' => $measurement->name,
+                'position' => $measurement->position,
+            ];
         }
         $response['measurements'] = $measurements_response;
         $pageTimer->end($response);
@@ -103,10 +105,10 @@ final class ManageMeasurementsController extends AbstractProjectController
             abort(400, 'Invalid measurement ID provided.');
         }
 
-        $deleted = Measurement::where([
-            'id' => (int) request()->input('id'),
-            'projectid' => $this->project->Id,
-        ])->delete();
+        $deleted = EloquentProject::findOrFail($this->project->Id)
+            ->measurements()
+            ->where('id', (int) request()->input('id'))
+            ->delete();
 
         if ($deleted) {
             return response()->json();
