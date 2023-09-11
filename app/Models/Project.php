@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -98,10 +99,21 @@ class Project extends Model
     ];
 
     /**
+     * Get the subprojects as of a specified date, or the latest subprojects if no date specified.
+     *
      * @return HasMany<SubProject>
      */
-    public function subprojects(): HasMany
+    public function subprojects(?Carbon $date = null): HasMany
     {
-        return $this->hasMany(SubProject::class, 'projectid', 'id');
+        if ($date === null) {
+            $date = Carbon::now()->setTimezone('UTC');
+        }
+
+        return $this->hasMany(SubProject::class, 'projectid', 'id')
+            ->where('starttime', '<=', Carbon::now()->setTimezone('UTC'))
+            ->where(function ($query) use ($date) {
+                $query->where('endtime', '>', $date)
+                    ->orWhere('endtime', '=', Carbon::create(1980));
+            });
     }
 }

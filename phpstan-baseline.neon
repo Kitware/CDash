@@ -1607,8 +1607,18 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\SubProject\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
 			count: 2
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SubProjectController\\:\\:ajaxDependenciesGraph\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
@@ -2198,6 +2208,16 @@ parameters:
 			message: "#^Property App\\\\Models\\\\BuildTest\\:\\:\\$labels has no type specified\\.$#"
 			count: 1
 			path: app/Models/BuildTest.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:orWhere\\(\\)\\.$#"
+			count: 1
+			path: app/Models/Project.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/Models/Project.php
 
 		-
 			message: """
@@ -7900,6 +7920,11 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
 			message: "#^Implicit array creation is not allowed \\- variable \\$rep might not exist\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -7911,7 +7936,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -7986,6 +8011,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfSubProjects\\(\\) has parameter \\$date with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfSubProjects\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -8445,11 +8475,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:Exists\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:Fill\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
@@ -26060,6 +26085,16 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 12
+			path: app/cdash/xml_handlers/BazelJSON_handler.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/BazelJSON_handler.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
+			count: 1
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-

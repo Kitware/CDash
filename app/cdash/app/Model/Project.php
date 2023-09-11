@@ -28,6 +28,8 @@ use CDash\ServiceContainer;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -655,54 +657,35 @@ class Project
     }
 
     /** Get the number of subproject */
-    public function GetNumberOfSubProjects($date = null): int|false
+    public function GetNumberOfSubProjects($date = null): int
     {
         if (!$this->Id) {
             throw new RuntimeException('ID not set for project');
         }
 
-        if ($date == null) {
-            $date = gmdate(FMT_DATETIME);
+        if ($date !== null) {
+            $date = Carbon::parse($date);
         }
 
-        return (int) DB::select("
-            SELECT count(*) AS c
-            FROM subproject
-            WHERE
-                projectid=?
-                AND (
-                    endtime = '1980-01-01 00:00:00'
-                    OR endtime > ?
-                )
-        ", [(int) $this->Id, $date])[0]->c;
+        return EloquentProject::findOrFail((int) $this->Id)
+            ->subprojects($date)
+            ->count();
     }
 
     /**
      * Get the subproject ids
      *
-     * @return array<int>|false
+     * @return Collection<int, \App\Models\SubProject>
      */
-    public function GetSubProjects(): array|false
+    public function GetSubProjects(): Collection
     {
         if (!$this->Id) {
             throw new RuntimeException('ID not set for project');
         }
 
-        $date = gmdate(FMT_DATETIME);
-        $project = DB::select("
-                       SELECT id
-                       FROM subproject
-                       WHERE
-                           projectid=?
-                           AND starttime<=?
-                           AND (endtime>? OR endtime='1980-01-01 00:00:00')
-                   ", [(int) $this->Id, $date, $date]);
-
-        $ids = [];
-        foreach ($project as $project_array) {
-            $ids[] = (int) $project_array->id;
-        }
-        return $ids;
+        return EloquentProject::findOrFail((int) $this->Id)
+            ->subprojects()
+            ->get();
     }
 
     /** Get the last submission of the subproject*/

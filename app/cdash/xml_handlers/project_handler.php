@@ -151,7 +151,7 @@ class ProjectHandler extends AbstractHandler
 
             if (config('cdash.delete_old_subprojects')) {
                 // Delete old subprojects that weren't included in this file.
-                $previousSubProjectIds = $this->Project->GetSubProjects();
+                $previousSubProjectIds = $this->Project->GetSubProjects()->pluck('id')->toArray();
                 foreach ($previousSubProjectIds as $previousId) {
                     $found = false;
                     foreach ($this->SubProjects as $subproject) {
