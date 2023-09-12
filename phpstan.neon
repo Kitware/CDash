@@ -19,10 +19,17 @@ parameters:
     exceptions:
         uncheckedExceptionRegexes:
             - '#^Exception$#'
-            - '#^RuntimeException$#'  # Ideally we should catch these too, but there are a lot of uncaught usages here
+            - '#^InvalidArgumentException$#'
+            - '#^LogicException$#'
+            - '#^RuntimeException$#'
+            - '#^ReflectionException$#'
+            - '#^PDOException$#'
 
         uncheckedExceptionClasses:
             - 'Symfony\Component\HttpKernel\Exception\HttpException'
+            - 'Illuminate\Support\ItemNotFoundException'
+            - 'Illuminate\Database\Eloquent\ModelNotFoundException'
+            - 'GuzzleHttp\Exception\GuzzleException'
 
         check:
             tooWideThrowType: true

@@ -12,8 +12,13 @@ ARG DEVELOPMENT_BUILD
 ENV DEVELOPMENT_BUILD=$DEVELOPMENT_BUILD
 
 RUN apt-get update                                                         \
- && apt-get install -y gnupg                                               \
- && curl -fsSL https://deb.nodesource.com/setup_19.x | bash                \
+ && apt-get install -y ca-certificates curl gnupg                          \
+ && mkdir -p /etc/apt/keyrings                                             \
+ && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key   \
+     | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg              \
+ && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" \
+     | tee /etc/apt/sources.list.d/nodesource.list                         \
+ && apt-get update                                                         \
  && apt-get install -y apt-utils git libbz2-dev libfreetype6-dev           \
     libjpeg62-turbo-dev libldap2-dev libmcrypt-dev libpng-dev libpq-dev    \
     libxslt-dev libxss1 nodejs unzip vim wget zip                          \

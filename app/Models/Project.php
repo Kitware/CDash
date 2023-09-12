@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -95,4 +96,12 @@ class Project extends Model
         'authenticatesubmissions',
         'viewsubprojectslink',
     ];
+
+    /**
+     * @return HasMany<SubProject>
+     */
+    public function subprojects(): HasMany
+    {
+        return $this->hasMany(SubProject::class, 'projectid', 'id');
+    }
 }

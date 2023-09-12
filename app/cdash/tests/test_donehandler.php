@@ -77,7 +77,7 @@ class DoneHandlerTestCase extends KWWebTestCase
         $this->assertTrue($build->GetDone());
 
         // Mark the build as "not done" again.
-        $build->MarkAsDone(0);
+        $build->MarkAsDone(false);
 
         // Clean backup directory.
         $this->removeParsedFiles();

@@ -87,11 +87,6 @@ parameters:
 			path: app/Console/Commands/RemoveUser.php
 
 		-
-			message: "#^Method App\\\\Console\\\\Commands\\\\RemoveUser\\:\\:handle\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Console/Commands/RemoveUser.php
-
-		-
 			message: "#^Only booleans are allowed in a negated boolean, App\\\\Models\\\\User\\|null given\\.$#"
 			count: 1
 			path: app/Console/Commands/RemoveUser.php
@@ -243,6 +238,14 @@ parameters:
 				04/01/2023$#
 			"""
 			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 12
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -483,22 +486,12 @@ parameters:
 			path: app/Http/Controllers/BuildPropertiesController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildPropertiesController\\:\\:get_defects_for_builds\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
-			path: app/Http/Controllers/BuildPropertiesController.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Http/Controllers/CDash.php
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\CDash\\:\\:getRequestContents\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/CDash.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\CDash\\:\\:handleApiRequest\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/Http/Controllers/CDash.php
 
@@ -531,6 +524,22 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 10
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -585,11 +594,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:manageCoverage\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:manageCoverage\\(\\) throws checked exception Illuminate\\\\Support\\\\ItemNotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
@@ -709,11 +713,6 @@ parameters:
 			path: app/Http/Controllers/DynamicAnalysisController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\DynamicAnalysisController\\:\\:apiViewDynamicAnalysis\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Http/Controllers/DynamicAnalysisController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:create\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/EditProjectController.php
@@ -827,6 +826,22 @@ parameters:
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/Http/Controllers/ManageProjectRolesController.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/Http/Controllers/ManageProjectRolesController.php
+
+		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 8
 			path: app/Http/Controllers/ManageProjectRolesController.php
@@ -872,11 +887,6 @@ parameters:
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageProjectRolesController\\:\\:viewPage\\(\\) throws checked exception Illuminate\\\\Support\\\\ItemNotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
 			message: "#^Only booleans are allowed in an if condition, App\\\\Models\\\\User\\|null given\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageProjectRolesController.php
@@ -892,17 +902,20 @@ parameters:
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/Http/Controllers/ManageUsersController.php
+
+		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageUsersController.php
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageUsersController\\:\\:showPage\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageUsersController\\:\\:showPage\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageUsersController.php
 
@@ -1708,6 +1721,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -1949,11 +1970,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:deleteSubmissionFile\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:doSubmit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
@@ -2024,17 +2040,7 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:renameSubmissionFile\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:requeueSubmissionFile\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:requeueSubmissionFile\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
@@ -2194,12 +2200,15 @@ parameters:
 			path: app/Models/BuildTest.php
 
 		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 2
 			path: app/Models/Site.php
 
 		-
-			message: "#^Method App\\\\Models\\\\Site\\:\\:mostRecentInformation\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Models/Site.php
 
@@ -2207,6 +2216,16 @@ parameters:
 			message: "#^Method App\\\\Models\\\\Site\\:\\:save\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Models/Site.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\SubProject\\>\\:\\:orWhere\\(\\)\\.$#"
+			count: 1
+			path: app/Models/SubProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Models/SubProject.php
 
 		-
 			message: "#^Call to function base64_decode\\(\\) requires parameter \\#2 to be set\\.$#"
@@ -2385,16 +2404,6 @@ parameters:
 
 		-
 			message: "#^Implicit array creation is not allowed \\- variable \\$params does not exist\\.$#"
-			count: 1
-			path: app/Services/AuthTokenService.php
-
-		-
-			message: "#^Method App\\\\Services\\\\AuthTokenService\\:\\:deleteToken\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Services/AuthTokenService.php
-
-		-
-			message: "#^Method App\\\\Services\\\\AuthTokenService\\:\\:isTokenExpired\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/Services/AuthTokenService.php
 
@@ -2588,11 +2597,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:deserializeBuildMetadata\\(\\) has parameter \\$fp with no type specified\\.$#"
-			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
-			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:populateBuildFileRow\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/Services/UnparsedSubmissionProcessor.php
 
@@ -3524,6 +3528,14 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 
 		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewProjects.php
+
+		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 2
 			path: app/cdash/app/Controller/Api/ViewProjects.php
@@ -3535,11 +3547,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:getProjects\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:getProjects\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 
@@ -3798,6 +3805,14 @@ parameters:
 			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
@@ -4183,7 +4198,7 @@ parameters:
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
 			"""
-			count: 24
+			count: 20
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -4191,7 +4206,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 52
+			count: 31
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -4207,7 +4222,7 @@ parameters:
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 3
+			count: 2
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -4281,6 +4296,16 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:count\\(\\)\\.$#"
+			count: 2
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 2
 			path: app/cdash/app/Model/Build.php
@@ -4341,13 +4366,13 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:FillFromId\\(\\) has no return type specified\\.$#"
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:FillFromId\\(\\) has parameter \\$buildid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:FillFromId\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:FillFromId\\(\\) throws checked exception TypeError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 3
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -4431,11 +4456,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetIdFromUuid\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetIdFromUuid\\(\\) has parameter \\$uuid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -4492,11 +4512,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetTests\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:MarkAsDone\\(\\) has parameter \\$done with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4567,11 +4582,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateBuild\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateBuild\\(\\) has parameter \\$lock with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -4716,6 +4726,11 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
+			message: "#^Variable property access on App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
 			message: "#^Variable property access on object\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -4745,6 +4760,14 @@ parameters:
 			message: """
 				#^Call to deprecated function pdo_insert_id\\(\\)\\:
 				04/01/2023$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/BuildConfigure.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
@@ -5047,6 +5070,14 @@ parameters:
 			path: app/cdash/app/Model/BuildError.php
 
 		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/BuildError.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
 			path: app/cdash/app/Model/BuildError.php
@@ -5292,6 +5323,14 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 2
+			path: app/cdash/app/Model/BuildFailure.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
@@ -5962,60 +6001,12 @@ parameters:
 			path: app/cdash/app/Model/BuildInformation.php
 
 		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 5
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildProperties\\:\\:Delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildProperties\\:\\:Exists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildProperties\\:\\:Fill\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildProperties\\:\\:Save\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildProperties\\:\\:\\$Build has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildProperties\\:\\:\\$Filled has no type specified\\.$#"
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BuildProperties\\>\\:\\:exists\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildProperties.php
 
 		-
 			message: "#^Property CDash\\\\Model\\\\BuildProperties\\:\\:\\$Filled is never read, only written\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildProperties\\:\\:\\$PDO has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildProperties\\:\\:\\$Properties has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
-
-		-
-			message: "#^Variable property access on \\$this\\(CDash\\\\Model\\\\BuildProperties\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildProperties.php
 
@@ -6178,6 +6169,14 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 3
+			path: app/cdash/app/Model/BuildUpdate.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
 			path: app/cdash/app/Model/BuildUpdate.php
 
 		-
@@ -7163,6 +7162,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/DynamicAnalysis.php
+
+		-
+			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -7845,6 +7852,22 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: """
+				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: """
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -7902,11 +7925,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:AddLogo\\(\\) throws checked exception Illuminate\\\\Database\\\\Eloquent\\\\ModelNotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Project\\:\\:AddRepositories\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -7933,16 +7951,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Project\\:\\:ComputeTestingDayBounds\\(\\) has parameter \\$date with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:Delete\\(\\) throws checked exception Illuminate\\\\Database\\\\Eloquent\\\\ModelNotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:Delete\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -7978,11 +7986,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfSubProjects\\(\\) has parameter \\$date with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetProjectSubscribers\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -8353,45 +8356,13 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 8
+			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
 		-
 			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 4
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_error\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 7
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
 			"""
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
@@ -8401,7 +8372,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 9
+			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
 		-
@@ -8409,24 +8380,46 @@ parameters:
 				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 8
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 3
+			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 3
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\SubProject\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\SubProject\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:first\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
+			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:AddDependency\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
@@ -8451,7 +8444,22 @@ parameters:
 			path: app/cdash/app/Model/SubProject.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetDependencies\\(\\) return type has no value type specified in iterable type array\\.$#"
+			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:Exists\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:Fill\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetDependencies\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:Save\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
@@ -8461,52 +8469,17 @@ parameters:
 			path: app/cdash/app/Model/SubProject.php
 
 		-
+			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:SetId\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:SetProjectId\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\SubProject\\:\\:\\$GroupId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\SubProject\\:\\:\\$Id has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\SubProject\\:\\:\\$Name has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\SubProject\\:\\:\\$PDO has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\SubProject\\:\\:\\$Path has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\SubProject\\:\\:\\$Position has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\SubProject\\:\\:\\$ProjectId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
@@ -8963,11 +8936,6 @@ parameters:
 			path: app/cdash/app/Model/UserProject.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\UserProject\\:\\:GetProjectsForUser\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/app/Model/UserProject.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\UserProject\\:\\:UpdateCredentials\\(\\) has parameter \\$credentials with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/UserProject.php
@@ -9103,11 +9071,6 @@ parameters:
 			path: app/cdash/include/CDash/Config.php
 
 		-
-			message: "#^Method CDash\\\\Config\\:\\:getServerPort\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
 			message: "#^Method CDash\\\\Config\\:\\:set\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Config.php
@@ -9128,12 +9091,7 @@ parameters:
 			path: app/cdash/include/CDash/Config.php
 
 		-
-			message: "#^Only booleans are allowed in a ternary operator condition, string given\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
-			message: "#^Property CDash\\\\Config\\:\\:\\$_config has no type specified\\.$#"
+			message: "#^Property CDash\\\\Config\\:\\:\\$_config type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Config.php
 
@@ -9141,11 +9099,6 @@ parameters:
 			message: "#^Short ternary operator is not allowed\\. Use null coalesce operator if applicable or consider using long ternary\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Config.php
-
-		-
-			message: "#^Method CDash\\\\Database\\:\\:createPreparedArray\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Database.php
 
 		-
 			message: "#^Method CDash\\\\Database\\:\\:execute\\(\\) has parameter \\$input_parameters with no value type specified in iterable type array\\.$#"
@@ -9176,6 +9129,14 @@ parameters:
 			message: "#^Method CDash\\\\Database\\:\\:prepare\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Database.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/include/CDash/ServiceContainer.php
 
 		-
 			message: "#^Method CDash\\\\ServiceContainer\\:\\:create\\(\\) has parameter \\$class_name with no type specified\\.$#"
@@ -9838,6 +9799,14 @@ parameters:
 			path: app/cdash/include/Messaging/Subscription/CommitAuthorSubscriptionBuilder.php
 
 		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/include/Messaging/Subscription/Subscription.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 3
 			path: app/cdash/include/Messaging/Subscription/Subscription.php
@@ -10471,6 +10440,14 @@ parameters:
 			message: "#^Method CDash\\\\Submission\\\\CommitAuthorHandlerInterface\\:\\:GetCommitAuthors\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Submission/CommitAuthorHandlerInterface.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
 			message: """
@@ -11884,6 +11861,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 6
+			path: app/cdash/include/common.php
+
+		-
+			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -11894,6 +11879,14 @@ parameters:
 			message: """
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: """
+				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/include/common.php
@@ -12139,11 +12132,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function get_project_name\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function get_seconds_from_interval\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -12200,11 +12188,6 @@ parameters:
 
 		-
 			message: "#^Function remove_build\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function remove_build\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -12338,6 +12321,14 @@ parameters:
 			path: app/cdash/include/ctestparser.php
 
 		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/include/ctestparser.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 4
 			path: app/cdash/include/ctestparser.php
@@ -12423,11 +12414,6 @@ parameters:
 			path: app/cdash/include/ctestparser.php
 
 		-
-			message: "#^Function parse_put_submission\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 3
-			path: app/cdash/include/ctestparser.php
-
-		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 2
 			path: app/cdash/include/ctestparser.php
@@ -12499,11 +12485,6 @@ parameters:
 		-
 			message: "#^Function compute_error_difference\\(\\) has parameter \\$warning with no type specified\\.$#"
 			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Function compute_error_difference\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 4
 			path: app/cdash/include/ctestparserutils.php
 
 		-
@@ -12582,6 +12563,30 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 8
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 3
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: """
+				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 2
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -12850,6 +12855,14 @@ parameters:
 				04/01/2023$#
 			"""
 			count: 5
+			path: app/cdash/include/filterdataFunctions.php
+
+		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
@@ -13323,6 +13336,14 @@ parameters:
 			path: app/cdash/include/memcache_functions.php
 
 		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/include/memcache_functions.php
+
+		-
 			message: "#^Function cdash_memcache_connect\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/memcache_functions.php
@@ -13405,11 +13426,6 @@ parameters:
 
 		-
 			message: "#^Function pdo_execute\\(\\) has parameter \\$input_parameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
-			message: "#^Function pdo_execute\\(\\) never returns null so it can be removed from the return type\\.$#"
 			count: 1
 			path: app/cdash/include/pdo.php
 
@@ -14768,6 +14784,22 @@ parameters:
 			path: app/cdash/include/sendemail.php
 
 		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 3
+			path: app/cdash/include/sendemail.php
+
+		-
+			message: """
+				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/include/sendemail.php
+
+		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 1
 			path: app/cdash/include/sendemail.php
@@ -15325,6 +15357,14 @@ parameters:
 			path: app/cdash/public/api/v1/GitHub/webhook.php
 
 		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/public/api/v1/GitHub/webhook.php
+
+		-
 			message: "#^Function handle_error\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/GitHub/webhook.php
@@ -15425,16 +15465,6 @@ parameters:
 			path: app/cdash/public/api/v1/build.php
 
 		-
-			message: "#^Call to an undefined method CDash\\\\Model\\\\BuildGroup\\:\\:GetDependencies\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Call to an undefined method CDash\\\\Model\\\\BuildGroup\\:\\:GetGroupId\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
 			message: """
 				#^Call to deprecated function get_link_identifier\\(\\)\\:
 				04/22/2023$#
@@ -15447,7 +15477,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 4
+			count: 3
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
@@ -15455,7 +15485,7 @@ parameters:
 				#^Call to deprecated function pdo_real_escape_numeric\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 10
+			count: 9
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
@@ -15471,11 +15501,6 @@ parameters:
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
@@ -15496,21 +15521,6 @@ parameters:
 
 		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_get\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_get\\(\\) has parameter \\$pdo with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\BuildGroup\\\\rest_get\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
@@ -15541,7 +15551,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 5
+			count: 4
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
@@ -16045,11 +16055,6 @@ parameters:
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\SubProject\\\\echo_error\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
@@ -16149,6 +16154,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/case/CDash/Api/GitHubWebhookTest.php
+
+		-
+			message: """
 				#^Call to deprecated method setMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
 				https\\://github\\.com/sebastianbergmann/phpunit/pull/3687$#
 			"""
@@ -16231,6 +16244,54 @@ parameters:
 			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
 
 		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 5
+			path: app/cdash/tests/case/CDash/ConfigTest.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/tests/case/CDash/ConfigTest.php
+
+		-
+			message: """
+				#^Call to deprecated method getProtocol\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 3
+			path: app/cdash/tests/case/CDash/ConfigTest.php
+
+		-
+			message: """
+				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/tests/case/CDash/ConfigTest.php
+
+		-
+			message: """
+				#^Call to deprecated method getServerPort\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 3
+			path: app/cdash/tests/case/CDash/ConfigTest.php
+
+		-
+			message: """
+				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 11
+			path: app/cdash/tests/case/CDash/ConfigTest.php
+
+		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
 			count: 11
 			path: app/cdash/tests/case/CDash/ConfigTest.php
@@ -16267,11 +16328,6 @@ parameters:
 
 		-
 			message: "#^Method ConfigTest\\:\\:testGetInstance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: "#^Method ConfigTest\\:\\:testGetInstance\\(\\) throws checked exception ReflectionException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/ConfigTest.php
 
@@ -16497,11 +16553,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
 
 		-
-			message: "#^Method DatabaseTest\\:\\:testInstance\\(\\) throws checked exception ReflectionException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
 			message: "#^PHPDoc tag @var for variable \\$stmt contains unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
@@ -16550,6 +16601,22 @@ parameters:
 			message: "#^Method DynamicAnalysisUseCaseTest\\:\\:testUseCaseBuildsDynamicAnalysisUseCase\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
+
+		-
+			message: """
+				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
 
 		-
 			message: """
@@ -16653,6 +16720,14 @@ parameters:
 			message: "#^Method LinkifyCompilerOutputTest\\:\\:testLinkifyCompilerOutput\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/LinkifyCompilerOutputTest.php
+
+		-
+			message: """
+				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
 
 		-
 			message: "#^Call to method send\\(\\) on an unknown class CDash\\\\Messaging\\\\Messenger\\.$#"
@@ -18159,11 +18234,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
 
 		-
-			message: "#^Method CDash\\\\Middleware\\\\OAuth2\\\\GitHubTest\\:\\:setUp\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
 			message: "#^Method CDash\\\\Middleware\\\\OAuth2\\\\GitHubTest\\:\\:testGetEmail\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
@@ -18244,11 +18314,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Middleware/OAuth2Test.php
 
 		-
-			message: "#^Method OAuth2Test\\:\\:setUp\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2Test.php
-
-		-
 			message: "#^Method OAuth2Test\\:\\:testAuthorization\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Middleware/OAuth2Test.php
@@ -18325,11 +18390,6 @@ parameters:
 
 		-
 			message: "#^Method BuildErrorFilterTest\\:\\:setUp\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildErrorFilterTest.php
-
-		-
-			message: "#^Method BuildErrorFilterTest\\:\\:setUp\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Model/BuildErrorFilterTest.php
 
@@ -18683,6 +18743,14 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\|CDash\\\\Test\\\\UseCase\\\\ConfigUseCase\\|CDash\\\\Test\\\\UseCase\\\\TestUseCase\\|CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setChecker\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
+
+		-
+			message: """
+				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
 			count: 1
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
@@ -19124,11 +19192,6 @@ parameters:
 
 		-
 			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseSetsSiteProperty\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseSetsSiteProperty\\(\\) throws checked exception ReflectionException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
@@ -19690,11 +19753,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_db.php
 
 		-
-			message: "#^Method dbo_mysql\\:\\:create\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
 			message: "#^Method dbo_mysql\\:\\:disconnect\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
@@ -19706,11 +19764,6 @@ parameters:
 
 		-
 			message: "#^Method dbo_mysql\\:\\:drop\\(\\) has parameter \\$db with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: "#^Method dbo_mysql\\:\\:drop\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
 
@@ -19740,11 +19793,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_db.php
 
 		-
-			message: "#^Method dbo_pgsql\\:\\:create\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
 			message: "#^Method dbo_pgsql\\:\\:disconnect\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
@@ -19756,11 +19804,6 @@ parameters:
 
 		-
 			message: "#^Method dbo_pgsql\\:\\:drop\\(\\) has parameter \\$db with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: "#^Method dbo_pgsql\\:\\:drop\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
 
@@ -19909,6 +19952,14 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -19942,11 +19993,6 @@ parameters:
 
 		-
 			message: "#^Method CDashControllerBrowser\\:\\:setFileParameters\\(\\) has parameter \\$encoding with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method CDashControllerBrowser\\:\\:setFileParameters\\(\\) throws checked exception ReflectionException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -20146,11 +20192,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method KWWebTestCase\\:\\:getGuzzleClient\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: "#^Method KWWebTestCase\\:\\:getUser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -20332,11 +20373,6 @@ parameters:
 
 		-
 			message: "#^Method KWWebTestCase\\:\\:userExists\\(\\) has parameter \\$email with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method KWWebTestCase\\:\\:userExists\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -21093,11 +21129,6 @@ parameters:
 			path: app/cdash/tests/test_authtoken.php
 
 		-
-			message: "#^Method AuthTokenTestCase\\:\\:testApiAccess\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
-			path: app/cdash/tests/test_authtoken.php
-
-		-
 			message: "#^Method AuthTokenTestCase\\:\\:testEnableAuthenticatedSubmissions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
@@ -21109,11 +21140,6 @@ parameters:
 
 		-
 			message: "#^Method AuthTokenTestCase\\:\\:testRemoveExpiredToken\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
-			message: "#^Method AuthTokenTestCase\\:\\:testRemoveExpiredToken\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
 
@@ -21296,18 +21322,8 @@ parameters:
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
-			message: "#^Method AutoRemoveBuildsOnSubmitTestCase\\:\\:setAutoRemoveTimeFrame\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
 			message: "#^Method AutoRemoveBuildsOnSubmitTestCase\\:\\:testBuildsRemovedOnSubmission\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: "#^Method AutoRemoveBuildsOnSubmitTestCase\\:\\:testBuildsRemovedOnSubmission\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
@@ -21376,11 +21392,6 @@ parameters:
 
 		-
 			message: "#^Method BazelJSONTestCase\\:\\:submit_data\\(\\) has parameter \\$upload_type with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_bazeljson.php
-
-		-
-			message: "#^Method BazelJSONTestCase\\:\\:submit_data\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/test_bazeljson.php
 
@@ -21915,11 +21926,6 @@ parameters:
 			path: app/cdash/tests/test_buildproperties.php
 
 		-
-			message: "#^Method BuildPropertiesTestCase\\:\\:create_build\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
 			message: "#^Method BuildPropertiesTestCase\\:\\:testComputeClassifiers\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_buildproperties.php
@@ -22255,11 +22261,6 @@ parameters:
 			path: app/cdash/tests/test_createprojectpermissions.php
 
 		-
-			message: "#^Method CreateProjectPermissionsTestCase\\:\\:testCreateProjectPermissions\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/test_createprojectpermissions.php
-
-		-
 			message: "#^Property CreateProjectPermissionsTestCase\\:\\:\\$BuildId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_createprojectpermissions.php
@@ -22426,11 +22427,6 @@ parameters:
 
 		-
 			message: "#^Method ExportToCSVTestCase\\:\\:testExportToCSV\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_csvexport.php
-
-		-
-			message: "#^Method ExportToCSVTestCase\\:\\:testExportToCSV\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/test_csvexport.php
 
@@ -22771,6 +22767,14 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 2
+			path: app/cdash/tests/test_email.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 4
 			path: app/cdash/tests/test_email.php
 
 		-
@@ -23797,11 +23801,6 @@ parameters:
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
-			message: "#^Method MultipleSubprojectsTestCase\\:\\:testMultipleSubprojects\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
-			path: app/cdash/tests/test_multiplesubprojects.php
-
-		-
 			message: "#^Method MultipleSubprojectsTestCase\\:\\:verifyBuild\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_multiplesubprojects.php
@@ -23919,11 +23918,6 @@ parameters:
 
 		-
 			message: "#^Method NoBackupTestCase\\:\\:testNoBackup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_nobackup.php
-
-		-
-			message: "#^Method NoBackupTestCase\\:\\:testNoBackup\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/test_nobackup.php
 
@@ -24378,11 +24372,6 @@ parameters:
 			path: app/cdash/tests/test_registeruser.php
 
 		-
-			message: "#^Method RegisterUserTestCase\\:\\:testRegisterUser\\(\\) throws checked exception GuzzleHttp\\\\Exception\\\\GuzzleException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
-			path: app/cdash/tests/test_registeruser.php
-
-		-
 			message: "#^Property RegisterUserTestCase\\:\\:\\$project has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_registeruser.php
@@ -24804,6 +24793,14 @@ parameters:
 			path: app/cdash/tests/test_submitsortingdata.php
 
 		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/tests/test_subproject.php
+
+		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 3
 			path: app/cdash/tests/test_subproject.php
@@ -25089,22 +25086,7 @@ parameters:
 			path: app/cdash/tests/test_testgraphpermissions.php
 
 		-
-			message: "#^Method TestGraphPermissionsTestCase\\:\\:__construct\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/test_testgraphpermissions.php
-
-		-
-			message: "#^Method TestGraphPermissionsTestCase\\:\\:__destruct\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/test_testgraphpermissions.php
-
-		-
 			message: "#^Method TestGraphPermissionsTestCase\\:\\:testTestGraphPermissions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_testgraphpermissions.php
-
-		-
-			message: "#^Method TestGraphPermissionsTestCase\\:\\:testTestGraphPermissions\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/test_testgraphpermissions.php
 
@@ -25318,6 +25300,14 @@ parameters:
 				04/01/2023$#
 			"""
 			count: 1
+			path: app/cdash/tests/test_timeoutsandmissingtests.php
+
+		-
+			message: """
+				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use url\\(\\) instead\\.$#
+			"""
+			count: 2
 			path: app/cdash/tests/test_timeoutsandmissingtests.php
 
 		-
@@ -25574,18 +25564,8 @@ parameters:
 			path: app/cdash/tests/test_uniquediffs.php
 
 		-
-			message: "#^Method UniqueDiffsTestCase\\:\\:testUniqueDiffs\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 6
-			path: app/cdash/tests/test_uniquediffs.php
-
-		-
 			message: "#^Method UniqueDiffsTestCase\\:\\:testUniqueDiffsUpgrade\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/tests/test_uniquediffs.php
-
-		-
-			message: "#^Method UniqueDiffsTestCase\\:\\:testUniqueDiffsUpgrade\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
 			path: app/cdash/tests/test_uniquediffs.php
 
 		-
@@ -25652,11 +25632,6 @@ parameters:
 
 		-
 			message: "#^Method UpdateOnlyUserStatsTestCase\\:\\:testCleanup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Method UpdateOnlyUserStatsTestCase\\:\\:testCleanup\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/test_updateonlyuserstats.php
 
@@ -26063,7 +26038,7 @@ parameters:
 				#^Call to deprecated function get_link_identifier\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 1
+			count: 2
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
@@ -26071,7 +26046,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 1
+			count: 2
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
@@ -26079,7 +26054,7 @@ parameters:
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 1
+			count: 2
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
@@ -26415,11 +26390,6 @@ parameters:
 
 		-
 			message: "#^Method GCovTarHandler\\:\\:ParseGcovFile\\(\\) has parameter \\$fileinfo with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/GcovTar_handler.php
-
-		-
-			message: "#^Method GCovTarHandler\\:\\:ParseGcovFile\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
@@ -29144,6 +29114,14 @@ parameters:
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
+			message: """
+				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
+				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 3
+			path: app/cdash/xml_handlers/upload_handler.php
+
+		-
 			message: "#^Call to function base64_decode\\(\\) requires parameter \\#2 to be set\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
@@ -29424,11 +29402,6 @@ parameters:
 			path: database/migrations/2020_02_17_112005_reformat_test_data.php
 
 		-
-			message: "#^Method AddMeasurementOrder\\:\\:up\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: database/migrations/2021_09_23_124054_add_measurement_order.php
-
-		-
 			message: "#^Undefined variable\\: \\$this$#"
 			count: 1
 			path: routes/console.php
@@ -29490,11 +29463,6 @@ parameters:
 			path: tests/Feature/CDashTest.php
 
 		-
-			message: "#^Method Tests\\\\Feature\\\\CDashTest\\:\\:testViewProjectsRedirectNoPublicProjects\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: tests/Feature/CDashTest.php
-
-		-
 			message: "#^Call to an undefined method Mockery\\\\Expectation\\:\\:shouldReceive\\(\\)\\.$#"
 			count: 3
 			path: tests/Feature/LdapAuthWithRulesTest.php
@@ -29513,11 +29481,6 @@ parameters:
 			message: "#^Method Tests\\\\Feature\\\\LdapAuthWithRulesTest\\:\\:testLdapAuthenticationRulesGivenDnMatch\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: tests/Feature/LdapAuthWithRulesTest.php
-
-		-
-			message: "#^Method Tests\\\\Feature\\\\LoginAndRegistration\\:\\:tearDownAfterClass\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: tests/Feature/LoginAndRegistration.php
 
 		-
 			message: "#^Missing call to parent\\:\\:tearDown\\(\\) method\\.$#"
@@ -29636,6 +29599,11 @@ parameters:
 			message: "#^Method Tests\\\\Feature\\\\RouteAccessTest\\:\\:protectedRoutes\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: tests/Feature/RouteAccessTest.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Http\\\\Response\\:\\:content\\(\\)\\.$#"
+			count: 1
+			path: tests/Feature/SlowPageTest.php
 
 		-
 			message: "#^Property Tests\\\\Feature\\\\UserCommand\\:\\:\\$user has no type specified\\.$#"
