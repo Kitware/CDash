@@ -296,7 +296,7 @@
                     colspan="3"
                     class="header"
                   >
-                    Current Build
+                    This Build
                   </th>
                 </tr>
                 <tr class="table-heading">

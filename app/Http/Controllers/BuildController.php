@@ -356,29 +356,25 @@ final class BuildController extends AbstractBuildController
 
         // Previous build
         if ($previous_buildid > 0 && isset($previous_build)) {
-            $previous_response = [];
-            $previous_response['buildid'] = $previous_buildid;
-
-            // Update
             $previous_build_update = new BuildUpdate();
             $previous_build_update->BuildId = $previous_build->Id;
             $previous_build_update->FillFromBuildId();
-            $previous_response['nupdateerrors'] = $previous_build_update->GetNumberOfErrors();
-            $previous_response['nupdatewarnings'] = $previous_build_update->GetNumberOfWarnings();
 
-            // Configure
-            $previous_response['nconfigureerrors'] = $previous_build->GetNumberOfConfigureErrors();
-            $previous_response['nconfigurewarnings'] = $previous_build->GetNumberOfConfigureWarnings();
-
-            // Build
-            $previous_response['nerrors'] = $previous_build->GetNumberOfErrors();
-            $previous_response['nwarnings'] = $previous_build->GetNumberOfWarnings();
-
-            // Test
-            $previous_response['ntestfailed'] = $previous_build->GetNumberOfFailedTests();
-            $previous_response['ntestnotrun'] = $previous_build->GetNumberOfNotRunTests();
-
-            $response['previousbuild'] = $previous_response;
+            $response['previousbuild'] = [
+                'buildid' => $previous_buildid,
+                // Update
+                'nupdateerrors' => $previous_build_update->GetNumberOfErrors(),
+                'nupdatewarnings' => $previous_build_update->GetNumberOfWarnings(),
+                // Configure
+                'nconfigureerrors' => $previous_build->GetNumberOfConfigureErrors(),
+                'nconfigurewarnings' => $previous_build->GetNumberOfConfigureWarnings(),
+                // Build
+                'nerrors' => $previous_build->GetNumberOfErrors(),
+                'nwarnings' => $previous_build->GetNumberOfWarnings(),
+                // Test
+                'ntestfailed' => $previous_build->GetNumberOfFailedTests(),
+                'ntestnotrun' => $previous_build->GetNumberOfNotRunTests(),
+            ];
         }
 
         // Next build
@@ -387,29 +383,25 @@ final class BuildController extends AbstractBuildController
             $next_build->Id = $next_buildid;
             $next_build->FillFromId($next_build->Id);
 
-            $next_response = [];
-            $next_response['buildid'] = $next_buildid;
-
-            // Update
             $next_build_update = new BuildUpdate();
             $next_build_update->BuildId = $next_build->Id;
             $next_build_update->FillFromBuildId();
-            $next_response['nupdateerrors'] = $next_build_update->GetNumberOfErrors();
-            $next_response['nupdatewarnings'] = $next_build_update->GetNumberOfWarnings();
 
-            // Configure
-            $next_response['nconfigureerrors'] = $next_build->GetNumberOfConfigureErrors();
-            $next_response['nconfigurewarnings'] = $next_build->GetNumberOfConfigureWarnings();
-
-            // Build
-            $next_response['nerrors'] = $next_build->GetNumberOfErrors();
-            $next_response['nwarnings'] = $next_build->GetNumberOfWarnings();
-
-            // Test
-            $next_response['ntestfailed'] = $next_build->GetNumberOfFailedTests();
-            $next_response['ntestnotrun'] = $next_build->GetNumberOfNotRunTests();
-
-            $response['nextbuild'] = $next_response;
+            $response['nextbuild'] = [
+                'buildid' => $next_buildid,
+                // Update
+                'nupdateerrors' => $next_build_update->GetNumberOfErrors(),
+                'nupdatewarnings' => $next_build_update->GetNumberOfWarnings(),
+                // Configure
+                'nconfigureerrors' => $next_build->GetNumberOfConfigureErrors(),
+                'nconfigurewarnings' => $next_build->GetNumberOfConfigureWarnings(),
+                // Build
+                'nerrors' => $next_build->GetNumberOfErrors(),
+                'nwarnings' => $next_build->GetNumberOfWarnings(),
+                // Test
+                'ntestfailed' => $next_build->GetNumberOfFailedTests(),
+                'ntestnotrun' => $next_build->GetNumberOfNotRunTests(),
+            ];
         }
 
         // Check if this project uses a supported bug tracker.

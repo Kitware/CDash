@@ -122,7 +122,7 @@ test('BuildSummary handles API response', async () => {
   // test the current build table
   const curr_build_table = component.findAll('table').at(1).findAll('table').at(1);
   const curr_build_rows = curr_build_table.findAll('tr');
-  expect(curr_build_rows.at(0).text()).toBe('Current Build');
+  expect(curr_build_rows.at(0).text()).toBe('This Build');
   expect(curr_build_rows.at(1).findAll('th').at(0).text()).toBe('Stage');
   expect(curr_build_rows.at(1).findAll('th').at(1).text()).toBe('Errors');
   expect(curr_build_rows.at(1).findAll('th').at(2).text()).toBe('Warnings');
