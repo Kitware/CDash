@@ -15,32 +15,25 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use CDash\Database;
-use PDO;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Models\Label as EloquentLabel;
 
 /** Label */
 class Label
 {
     public $Id;
-    public $Text;
+    public string $Text = '';
 
     public $BuildId;
     public $BuildFailureId;
     public $CoverageFileId;
-    public $CoverageFileBuildId;
+    public int $CoverageFileBuildId = 0;
     public $DynamicAnalysisId;
     public $TestId;
-    public $TestBuildId;
+    public int $TestBuildId = 0;
 
-    private $PDO;
-
-
-    public function __construct()
-    {
-        $this->PDO = Database::getInstance()->getPdo();
-    }
-
-    public function SetText($text): void
+    public function SetText(?string $text): void
     {
         $this->Text = $text ?? '';
     }
@@ -48,147 +41,101 @@ class Label
     /** Get the text of a label */
     public function GetText(): string
     {
-        $db = Database::getInstance();
-        return $db->executePreparedSingleRow('
-                   SELECT text FROM label WHERE id=?
-               ', [intval($this->Id)])['text'] ?? '';
+        $model = EloquentLabel::find((int) $this->Id);
+        return $model === null ? '' : $model->text;
     }
 
     /** Get the id from a label */
-    public function GetIdFromText()
+    public function GetIdFromText(): int
     {
-        $db = Database::getInstance();
-        return intval($db->executePreparedSingleRow('
-                   SELECT id FROM label WHERE text=?
-               ', [$this->Text ?? ''])['id'] ?? 0);
+        $model = EloquentLabel::where('text', $this->Text);
+        return $model->count() > 0 ? $model->first()->id : 0;
     }
 
-    public function GetTextFromBuildFailure($fetchType = PDO::FETCH_ASSOC): array|false
+    public function GetTextFromBuildFailure(): array|false
     {
         if (!$this->BuildFailureId) {
-            add_log('BuildFailureId not set', 'Label::GetTestFromBuildFailure', LOG_WARNING);
+            Log::warning('Label::GetTestFromBuildFailure(): BuildFailureId not set');
             return false;
         }
 
-        $sql = '
+        return DB::select('
             SELECT text FROM label, label2buildfailure
             WHERE label.id=label2buildfailure.labelid AND
             label2buildfailure.buildfailureid=?
             ORDER BY text ASC
-        ';
-
-        $query = $this->PDO->prepare($sql);
-        pdo_execute($query, [$this->BuildFailureId]);
-
-        return $query->fetchAll($fetchType);
+        ', [$this->BuildFailureId]);
     }
 
-    public function InsertAssociation(string $table, string $field1, ?int $value1 = null, ?string $field2 = null, ?int $value2 = null): void
+    private function InsertAssociation(string $table, string $field1, ?int $value1 = null, ?string $field2 = null, ?int $value2 = null): void
     {
         $duplicate_sql = '';
         if (config('database.default') !== 'pgsql') {
             $duplicate_sql = 'ON DUPLICATE KEY UPDATE labelid=labelid';
         }
         if (!empty($value1)) {
-            $db = Database::getInstance();
-
             if (!empty($value2)) {
-                $query = $db->executePreparedSingleRow("
+                $query = DB::select("
                              SELECT $field1
                              FROM $table
                              WHERE
                                  labelid=?
                                  AND $field1=?
                                  AND $field2=?
-                         ", [intval($this->Id), $value1, $value2]);
-                $v = intval($query[$field1] ?? 0);
+                         ", [intval($this->Id), $value1, $value2])[0] ?? [];
+                $v = intval($query->$field1 ?? 0);
 
                 // Only do the INSERT if it's not already there:
                 if ($v === 0) {
-                    $query = $db->executePrepared("
-                                 INSERT INTO $table (labelid, $field1, $field2)
-                                 VALUES (?, ?, ?)
-                                 $duplicate_sql
-                             ", [intval($this->Id), $value1, $value2]);
-
-                    if ($query === false) {
-                        add_last_sql_error('Label::InsertAssociation');
-                    }
+                    DB::insert("
+                        INSERT INTO $table (labelid, $field1, $field2)
+                        VALUES (?, ?, ?)
+                        $duplicate_sql
+                    ", [intval($this->Id), $value1, $value2]);
                 }
             } else {
-                $query = $db->executePreparedSingleRow("
+                $query = DB::select("
                              SELECT $field1
                              FROM $table
                              WHERE
                                  labelid=?
                                  AND $field1=?
-                         ", [intval($this->Id), $value1]);
+                         ", [intval($this->Id), $value1])[0] ?? [];
 
-                $v = intval($query[$field1] ?? 0);
+                $v = intval($query->$field1 ?? 0);
 
                 // Only do the INSERT if it's not already there:
                 if ($v === 0) {
-                    $query = $db->executePrepared("
-                                 INSERT INTO $table (labelid, $field1)
-                                 VALUES (?, ?)
-                                 $duplicate_sql
-                             ", [intval($this->Id), $value1]);
-
-                    if ($query === false) {
-                        add_last_sql_error('Label::InsertAssociation');
-                    }
+                    DB::insert("
+                        INSERT INTO $table (labelid, $field1)
+                        VALUES (?, ?)
+                        $duplicate_sql
+                    ", [intval($this->Id), $value1]);
                 }
             }
         }
     }
 
-    // Save in the database
+    /**
+     * Save in the database
+     */
     public function Insert()
     {
-        $text = $this->Text ?? '';
-
-        $db = Database::getInstance();
-
-        // Get this->Id from the database if text is already in the label table:
-        $query = $db->executePreparedSingleRow('SELECT id FROM label WHERE text=?', [$text]);
-        $this->Id = intval($query['id'] ?? 0);
-
-        // Or, if necessary, insert a new row, then get the id of the inserted row:
-        if ($this->Id === 0) {
-            $query = $db->executePrepared("INSERT INTO label (text) VALUES (?)", [$text]);
-            if ($query === false) {
-                // This insert might have failed due to a race condition
-                // during parallel processing.
-                // Query again to see if it exists before throwing an error.
-                $query = $db->executePreparedSingleRow('SELECT id FROM label WHERE text=?', [$text]);
-                $this->Id = intval($query['id'] ?? 0);
-                if ($this->Id === 0) {
-                    add_last_sql_error('Label::Insert');
-                    return false;
-                }
-            } else {
-                $this->Id = intval(pdo_insert_id('label'));
-            }
-        }
+        $this->Id = EloquentLabel::firstOrCreate(['text' => $this->Text ?? ''])->id;
 
         // Insert relationship records, too, but only for those relationships
         // established by callers. (If coming from test.php, for example, TestId
         // will be set, but none of the others will. Similarly for other callers.)
-        $this->InsertAssociation('label2build', 'buildid',
-            intval($this->BuildId));
+        $this->InsertAssociation('label2build', 'buildid', intval($this->BuildId));
 
-        $this->InsertAssociation('label2buildfailure', 'buildfailureid',
-            intval($this->BuildFailureId));
+        $this->InsertAssociation('label2buildfailure', 'buildfailureid', intval($this->BuildFailureId));
 
         $this->InsertAssociation('label2coveragefile', 'buildid',
-            intval($this->CoverageFileBuildId),
-            'coveragefileid', intval($this->CoverageFileId));
+            $this->CoverageFileBuildId, 'coveragefileid', intval($this->CoverageFileId));
 
-        $this->InsertAssociation('label2dynamicanalysis', 'dynamicanalysisid',
-            intval($this->DynamicAnalysisId));
+        $this->InsertAssociation('label2dynamicanalysis', 'dynamicanalysisid', intval($this->DynamicAnalysisId));
 
-        $this->InsertAssociation('label2test', 'buildid',
-            intval($this->TestBuildId), 'outputid', intval($this->TestId));
+        $this->InsertAssociation('label2test', 'buildid', $this->TestBuildId, 'outputid', intval($this->TestId));
 
         // TODO: Implement this:
         //

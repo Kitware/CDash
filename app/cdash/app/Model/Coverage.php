@@ -44,7 +44,7 @@ class Coverage
         }
 
         $label->CoverageFileId = $this->CoverageFile->Id;
-        $label->CoverageFileBuildId = $this->BuildId;
+        $label->CoverageFileBuildId = (int) $this->BuildId;
         $this->Labels[] = $label;
     }
 
@@ -61,7 +61,7 @@ class Coverage
 
             foreach ($this->Labels as $label) {
                 $label->CoverageFileId = $this->CoverageFile->Id;
-                $label->CoverageFileBuildId = $buildid;
+                $label->CoverageFileBuildId = (int) $buildid;
                 $label->Insert();
             }
         } else {

@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
-use PDO;
 
 require_once 'include/repository.php';
 
@@ -943,7 +942,7 @@ final class BuildController extends AbstractBuildController
                     /** @var Label $label */
                     $label = $service->get(Label::class);
                     $label->BuildFailureId = $fail['id'];
-                    $rows = $label->GetTextFromBuildFailure(PDO::FETCH_OBJ);
+                    $rows = $label->GetTextFromBuildFailure();
                     if ($rows && count($rows) > 0) {
                         $failure['labels'] = [];
                         foreach ($rows as $row) {
