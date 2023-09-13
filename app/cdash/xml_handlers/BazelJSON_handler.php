@@ -22,7 +22,7 @@ use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
 use CDash\Model\BuildErrorFilter;
 use CDash\Model\Project;
-use CDash\Model\SubProject;
+use App\Models\Project as EloquentProject;
 
 class BazelJSONHandler extends NonSaxHandler
 {
@@ -635,12 +635,16 @@ class BazelJSONHandler extends NonSaxHandler
         if (empty($subproject_name)) {
             return null;
         }
-        $subproject = new SubProject();
-        $subproject->SetProjectId($this->Project->Id);
-        $subproject->SetName($subproject_name);
-        if ($subproject->GetId() < 1) {
+
+        $subproject_exists = EloquentProject::findOrFail($this->Project->Id)
+            ->subprojects()
+            ->where('name', $subproject_name)
+            ->exists();
+
+        if (!$subproject_exists) {
             return null;
         }
+
         if (array_key_exists($subproject_name, $this->Builds)) {
             return $this->Builds[$subproject_name];
         }

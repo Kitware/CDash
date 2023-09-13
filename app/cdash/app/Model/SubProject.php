@@ -207,10 +207,7 @@ class SubProject
         /** @var EloquentSubProject|null $subproject */
         $subproject = EloquentProject::findOrFail($this->ProjectId)
             ->subprojects()
-            ->where([
-                'name' => $this->Name,
-                'endtime' => Carbon::create(1980),
-            ])
+            ->where(['name' => $this->Name])
             ->first();
 
         if ($subproject === null) {

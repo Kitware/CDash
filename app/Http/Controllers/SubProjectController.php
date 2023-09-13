@@ -9,6 +9,7 @@ use CDash\Model\SubProject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -79,15 +80,11 @@ final class SubProjectController extends AbstractProjectController
         $response['threshold'] = $this->project->GetCoverageThreshold();
 
         $subprojects_response = []; // JSON for subprojects
-        // TODO: (williamjallen) The number of databse queries executed by this loop scales linearly with the
-        //       number of subprojects.  This can be simplified into a single query...
-        foreach ($this->project->GetSubProjects() as $subprojectid) {
-            $SubProject = new SubProject();
-            $SubProject->SetId($subprojectid);
+        foreach ($this->project->GetSubProjects() as $subproject) {
             $subprojects_response[] = [
-                'id' => $subprojectid,
-                'name' => $SubProject->GetName(),
-                'group' => $SubProject->GetGroupId(),
+                'id' => $subproject->id,
+                'name' => $subproject->name,
+                'group' => $subproject->groupid,
             ];
         }
         $response['subprojects'] = $subprojects_response;
@@ -208,12 +205,10 @@ final class SubProjectController extends AbstractProjectController
         $response['project'] = $project_response;
 
         // Look for the subproject
-        $subprojectids = $this->project->GetSubProjects();
+        $subprojects = $this->project->GetSubProjects();
         $subprojProp = [];
-        foreach ($subprojectids as $subprojectid) {
-            $SubProject = new SubProject();
-            $SubProject->SetId($subprojectid);
-            $subprojProp[$subprojectid] = ['name' => $SubProject->GetName()];
+        foreach ($subprojects as $subproject) {
+            $subprojProp[$subproject->id] = ['name' => $subproject->name];
         }
 
         // If all of the dates are the same, we can get the results in bulk.  Otherwise, we must query every
@@ -242,35 +237,37 @@ final class SubProjectController extends AbstractProjectController
             'ntestpass', 'ntestfail', 'ntestnotrun'];
         $subprojects_response = [];
 
-        foreach ($subprojectids as $subprojectid) {
-            $SubProject = new SubProject();
-            $SubProject->SetId($subprojectid);
+        foreach ($subprojects as $subproject) {
             $subproject_response = [];
-            $subproject_response['name'] = $SubProject->GetName();
-            $subproject_response['name_encoded'] = urlencode($SubProject->GetName());
+            $subproject_response['name'] = $subproject->name;
+            $subproject_response['name_encoded'] = urlencode($subproject->name);
 
-            $last_submission_start_timestamp = $SubProject->GetLastSubmission();
+            // TODO: Replace this with something in the Eloquent SubProject model...
+            $legacy_subproject_model = new SubProject();
+            $legacy_subproject_model->SetId($subproject->id);
+
+            $last_submission_start_timestamp = $legacy_subproject_model->GetLastSubmission();
             if (!$date_specified) {
                 $currentstarttime = get_dates($last_submission_start_timestamp, $this->project->NightlyTime)[1];
                 $beginning_UTCDate = gmdate(FMT_DATETIME, $currentstarttime);
                 $end_UTCDate = gmdate(FMT_DATETIME, $currentstarttime + 3600 * 24);
 
-                $result = $SubProject->CommonBuildQuery($beginning_UTCDate, $end_UTCDate, false);
+                $result = $legacy_subproject_model->CommonBuildQuery($beginning_UTCDate, $end_UTCDate, false);
 
-                $subprojProp[$subprojectid]['nconfigureerror'] = (int) $result['nconfigureerrors'];
-                $subprojProp[$subprojectid]['nconfigurewarning'] = (int) $result['nconfigurewarnings'];
-                $subprojProp[$subprojectid]['nconfigurepass'] = (int) $result['npassingconfigures'];
-                $subprojProp[$subprojectid]['nbuilderror'] = (int) $result['nbuilderrors'];
-                $subprojProp[$subprojectid]['nbuildwarning'] = (int) $result['nbuildwarnings'];
-                $subprojProp[$subprojectid]['nbuildpass'] = (int) $result['npassingbuilds'];
-                $subprojProp[$subprojectid]['ntestnotrun'] = (int) $result['ntestsnotrun'];
-                $subprojProp[$subprojectid]['ntestfail'] = (int) $result['ntestsfailed'];
-                $subprojProp[$subprojectid]['ntestpass'] = (int) $result['ntestspassed'];
+                $subprojProp[$subproject->id]['nconfigureerror'] = (int) $result['nconfigureerrors'];
+                $subprojProp[$subproject->id]['nconfigurewarning'] = (int) $result['nconfigurewarnings'];
+                $subprojProp[$subproject->id]['nconfigurepass'] = (int) $result['npassingconfigures'];
+                $subprojProp[$subproject->id]['nbuilderror'] = (int) $result['nbuilderrors'];
+                $subprojProp[$subproject->id]['nbuildwarning'] = (int) $result['nbuildwarnings'];
+                $subprojProp[$subproject->id]['nbuildpass'] = (int) $result['npassingbuilds'];
+                $subprojProp[$subproject->id]['ntestnotrun'] = (int) $result['ntestsnotrun'];
+                $subprojProp[$subproject->id]['ntestfail'] = (int) $result['ntestsfailed'];
+                $subprojProp[$subproject->id]['ntestpass'] = (int) $result['ntestspassed'];
             }
 
             foreach ($reportArray as $reportnum) {
-                $reportval = array_key_exists($reportnum, $subprojProp[$subprojectid]) ?
-                    $subprojProp[$subprojectid][$reportnum] : 0;
+                $reportval = array_key_exists($reportnum, $subprojProp[$subproject->id]) ?
+                    $subprojProp[$subproject->id][$reportnum] : 0;
                 $subproject_response[$reportnum] = $reportval;
             }
 
@@ -291,9 +288,9 @@ final class SubProjectController extends AbstractProjectController
     {
         $this->setProjectByName(htmlspecialchars($_GET['project'] ?? ''));
 
-        $date = isset($_GET['date']) ? htmlspecialchars($_GET['date']) : null;
+        $date = isset($_GET['date']) ? Carbon::parse($_GET['date']) : null;
 
-        $subprojectids = $this->project->GetSubProjects();
+        $subprojects = $this->project->GetSubProjects();
 
         $subproject_groups = [];
         $groups = $this->project->GetSubProjectGroups();
@@ -302,32 +299,21 @@ final class SubProjectController extends AbstractProjectController
         }
 
         $result = []; # array to store the all the result
-        $subprojs = [];
-        foreach ($subprojectids as $subprojectid) {
-            $SubProject = new SubProject();
-            $SubProject->SetId($subprojectid);
-            $subprojs[$subprojectid] = $SubProject;
-        }
-
-        foreach ($subprojectids as $subprojectid) {
-            $SubProject = $subprojs[$subprojectid];
+        /** @var \App\Models\SubProject $subproject */
+        foreach ($subprojects as $subproject) {
             $subarray = [
-                'name' => $SubProject->GetName(),
-                'id' => $subprojectid,
+                'name' => $subproject->name,
+                'id' => $subproject->id,
             ];
-            $groupid = $SubProject->GetGroupId();
-            if ($groupid > 0) {
-                $subarray['group'] = $subproject_groups[$groupid]->GetName();
+
+            if ($subproject->groupid > 0) {
+                $subarray['group'] = $subproject_groups[$subproject->groupid]->GetName();
             }
-            $dependencies = $SubProject->GetDependencies($date);
-            $deparray = [];
-            foreach ($dependencies as $depprojid) {
-                if (array_key_exists($depprojid, $subprojs)) {
-                    $deparray[] = $subprojs[$depprojid]->GetName();
-                }
-            }
-            if (count($deparray) > 0) {
-                $subarray['depends'] = $deparray;
+
+            /** @var array<string> $dependencies */
+            $dependencies = $subproject->children($date)->pluck('name')->toArray();
+            if (count($dependencies) > 0) {
+                $subarray['depends'] = $dependencies;
             }
             $result[] = $subarray;
         }
