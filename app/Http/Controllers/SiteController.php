@@ -103,7 +103,6 @@ final class SiteController extends AbstractController
         $userid = Auth::id();
 
         $xml = begin_XML_for_XSLT();
-        $xml .= '<backurl>user.php</backurl>';
         $xml .= '<menutitle>CDash</menutitle>';
         $xml .= '<menusubtitle>Claim sites</menusubtitle>';
 
@@ -138,7 +137,7 @@ final class SiteController extends AbstractController
                     DELETE FROM site2user
                     WHERE siteid=? AND userid=?
                 ', [intval($_GET['siteid']), $userid]);
-            return redirect('/user.php');
+            return redirect('/user');
         }
 
         if ($updatesite || $geolocation) {

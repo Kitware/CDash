@@ -24,7 +24,6 @@ final class SubscribeProjectController extends AbstractProjectController
         $user = Auth::user();
 
         $xml = begin_XML_for_XSLT();
-        $xml .= '<backurl>user.php</backurl>';
         $xml .= '<menutitle>CDash</menutitle>';
         $xml .= '<menusubtitle>Subscription</menusubtitle>';
 
@@ -111,7 +110,7 @@ final class SubscribeProjectController extends AbstractProjectController
                         GROUP BY build.siteid
                     )
             ', [$user->id, $user->id]);
-            return redirect('user.php?note=unsubscribedtoproject');
+            return redirect('/user?note=unsubscribedtoproject');
         } elseif ($UpdateSubscription) {
             $emailcategory_update = intval($_POST['emailcategory_update'] ?? 0);
             $emailcategory_configure = intval($_POST['emailcategory_configure'] ?? 0);
@@ -174,7 +173,7 @@ final class SubscribeProjectController extends AbstractProjectController
                 $LabelEmail->UpdateLabels(null);
             }
             // Redirect
-            return redirect('user.php');
+            return redirect('/user');
         } elseif ($Subscribe) {
             $emailcategory_update = intval($_POST['emailcategory_update'] ?? 0);
             $emailcategory_configure = intval($_POST['emailcategory_configure'] ?? 0);
@@ -258,7 +257,7 @@ final class SubscribeProjectController extends AbstractProjectController
                     $UserProject->AddCredential($credential);
                 }
             }
-            return redirect('user.php?note=subscribedtoproject');
+            return redirect('/user?note=subscribedtoproject');
         }
 
         // XML

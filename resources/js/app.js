@@ -10,6 +10,7 @@ import BuildNotes from "./components/BuildNotes";
 import BuildSummary from "./components/BuildSummary";
 import BuildUpdate from "./components/BuildUpdate";
 import EditProject from "./components/EditProject";
+import UserHomepage from "./components/UserHomepage";
 import ManageAuthTokens from "./components/ManageAuthTokens.vue";
 import ManageMeasurements from "./components/ManageMeasurements";
 import Monitor from "./components/Monitor";
@@ -25,6 +26,7 @@ const cdash_components = {
   BuildSummary,
   BuildUpdate,
   EditProject,
+  UserHomepage,
   ManageAuthTokens,
   ManageMeasurements,
   Monitor,

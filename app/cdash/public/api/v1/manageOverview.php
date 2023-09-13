@@ -25,7 +25,6 @@ use Illuminate\Support\Facades\Auth;
 
 $pageTimer = new PageTimer();
 $response = begin_JSON_response();
-$response['backurl'] = 'user.php';
 $response['menutitle'] = 'CDash';
 $response['menusubtitle'] = 'Overview';
 $response['hidenav'] = 1;

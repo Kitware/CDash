@@ -45,9 +45,6 @@ final class ProjectController extends AbstractProjectController
             get_dashboard_JSON($this->project->GetName(), null, $response);
         }
         $response['hidenav'] = 1;
-        $menu =[];
-        $menu['back'] = 'user.php';
-        $response['menu'] = $menu;
 
         $nRepositories = 0;
         $repositories_response = [];

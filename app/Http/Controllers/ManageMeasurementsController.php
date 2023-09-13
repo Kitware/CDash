@@ -31,7 +31,7 @@ final class ManageMeasurementsController extends AbstractProjectController
 
         // Menu
         $menu_response = [];
-        $menu_response['back'] = 'user.php';
+        $menu_response['back'] = '/user';
         $response['menu'] = $menu_response;
         $response['hidenav'] = true;
 

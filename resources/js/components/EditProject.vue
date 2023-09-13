@@ -2381,8 +2381,8 @@ export default {
         this.$axios
           .delete('/api/v1/project.php', { data: parameters})
           .then(response => {
-            // Redirect to user.php
-            window.location = this.$baseURL + '/user.php';
+            // Redirect to /user
+            window.location = this.$baseURL + '/user';
           });
       }
     },
