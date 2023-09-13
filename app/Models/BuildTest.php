@@ -4,10 +4,28 @@ namespace App\Models;
 
 use CDash\Model\Label;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Config;
 
+/**
+ * NOTE: This model represents an individual test run.
+ *
+ * @property int $id
+ * @property int $buildid
+ * @property int $outputid
+ * @property string $status
+ * @property float $time
+ * @property float $timemean
+ * @property float $timestd
+ * @property int $timestatus
+ * @property int $newstatus
+ * @property string $details
+ * @property int $testid
+ *
+ * @mixin Builder<BuildTest>
+ */
 class BuildTest extends Model
 {
     public $timestamps = false;
@@ -20,6 +38,18 @@ class BuildTest extends Model
         'timestd' => 0.0,
     ];
 
+    protected $casts = [
+        'id' => 'integer',
+        'buildid' => 'integer',
+        'outputid' => 'integer',
+        'time' => 'float',
+        'timemean' => 'float',
+        'timestd' => 'float',
+        'timestatus' => 'integer',
+        'newstatus' => 'integer',
+        'testid' => 'integer',
+    ];
+
     /**
      * Get the test record for this buildtest.
      *
@@ -28,6 +58,22 @@ class BuildTest extends Model
     public function test(): BelongsTo
     {
         return $this->belongsTo('App\Models\Test', 'testid');
+    }
+
+    /**
+     * @return BelongsTo<Build, self>
+     */
+    public function build(): BelongsTo
+    {
+        return $this->belongsTo('App\Models\Build', 'buildid');
+    }
+
+    /**
+     * @return BelongsTo<TestOutput, self>
+     */
+    public function testOutput(): BelongsTo
+    {
+        return $this->belongsTo('App\Models\TestOutput', 'outputid');
     }
 
     /**

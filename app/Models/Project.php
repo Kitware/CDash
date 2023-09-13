@@ -225,4 +225,12 @@ class Project extends Model
     {
         return $this->hasMany(BlockedBuild::class, 'projectid', 'id');
     }
+
+    /**
+     * @return HasMany<Test>
+     */
+    public function tests(): HasMany
+    {
+        return $this->hasMany(Test::class, 'projectid', 'id');
+    }
 }
