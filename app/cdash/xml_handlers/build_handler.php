@@ -31,7 +31,7 @@ use CDash\Model\BuildError;
 use CDash\Model\BuildErrorFilter;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroup;
-use CDash\Model\BuildInformation;
+use App\Models\BuildInformation;
 use CDash\Model\Label;
 use CDash\Model\Project;
 use App\Models\Site;
@@ -49,7 +49,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
     private $Error;
     private $Label;
     private $Builds;
-    private $BuildInformation;
+    private BuildInformation $BuildInformation;
     private $BuildCommand;
     private $BuildGroup;
     private $BuildLog;
@@ -86,7 +86,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
             $siteInformation = new SiteInformation();
-            $this->BuildInformation = $factory->create(BuildInformation::class);
+            $this->BuildInformation = new BuildInformation();
             $this->BuildName = "";
             $this->BuildStamp = "";
             $this->SubProjectName = "";
@@ -101,7 +101,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                     $this->BuildStamp = $value;
                 } elseif ($key === 'GENERATOR') {
                     $this->Generator = $value;
-                } elseif ($key == 'CHANGEID') {
+                } elseif ($key === 'CHANGEID') {
                     $this->PullRequest = $value;
                 } else {
                     $siteInformation->SetValue($key, $value);

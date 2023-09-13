@@ -19,7 +19,7 @@ require_once 'xml_handlers/abstract_handler.php';
 use CDash\Config;
 use \CDash\Database;
 use CDash\Model\Build;
-use CDash\Model\BuildInformation;
+use App\Models\BuildInformation;
 use CDash\Model\Label;
 use App\Models\Site;
 use App\Models\SiteInformation;
@@ -42,7 +42,6 @@ use CDash\Model\UploadFile;
  */
 class UploadHandler extends AbstractHandler
 {
-    private $BuildId;
     private $UploadFile;
     private $TmpFilename;
     private $Base64TmpFileWriteHandle;
@@ -51,8 +50,6 @@ class UploadHandler extends AbstractHandler
 
     /** If True, means an error happened while processing the file */
     private $UploadError;
-
-    private $UpdateEndTime;
 
     /** Constructor */
     public function __construct($projectID)
@@ -168,8 +165,6 @@ class UploadHandler extends AbstractHandler
                 $this->Build->Append = false;
                 $this->Build->InsertErrors = false;
                 add_build($this->Build);
-
-                $this->UpdateEndTime = true;
             } else {
                 if ($this->Label) {
                     $this->Build->InsertLabelAssociations();

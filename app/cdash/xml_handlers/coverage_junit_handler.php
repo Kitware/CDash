@@ -17,7 +17,7 @@
 require_once 'xml_handlers/abstract_handler.php';
 
 use CDash\Model\Build;
-use CDash\Model\BuildInformation;
+use App\Models\BuildInformation;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageSummary;

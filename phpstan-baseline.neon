@@ -4292,7 +4292,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 21
+			count: 20
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -5903,102 +5903,6 @@ parameters:
 			message: "#^Property CDash\\\\Model\\\\BuildGroupRule\\:\\:\\$StartTime has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 4
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildInformation\\:\\:Fill\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildInformation\\:\\:Save\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildInformation\\:\\:SetValue\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildInformation\\:\\:SetValue\\(\\) has parameter \\$tag with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildInformation\\:\\:SetValue\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$BuildId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$CompilerName has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$CompilerVersion has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$Filled has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$OSName has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$OSPlatform has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$OSRelease has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$OSVersion has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$PDO has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Result of static method Illuminate\\\\Database\\\\Connection\\:\\:transaction\\(\\) \\(void\\) is used\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BuildProperties\\>\\:\\:exists\\(\\)\\.$#"
@@ -27012,13 +26916,18 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
+			message: "#^Class BuildHandler has an uninitialized property \\$BuildInformation\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 8
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 30
+			count: 29
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
@@ -27127,11 +27036,6 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
-			message: "#^Property BuildHandler\\:\\:\\$BuildInformation has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
 			message: "#^Property BuildHandler\\:\\:\\$BuildLog has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/build_handler.php
@@ -27222,13 +27126,18 @@ parameters:
 			path: app/cdash/xml_handlers/configure_handler.php
 
 		-
+			message: "#^Class ConfigureHandler has an uninitialized property \\$BuildInformation\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 6
 			path: app/cdash/xml_handlers/configure_handler.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 14
+			count: 13
 			path: app/cdash/xml_handlers/configure_handler.php
 
 		-
@@ -27303,11 +27212,6 @@ parameters:
 
 		-
 			message: "#^Method ConfigureHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Property ConfigureHandler\\:\\:\\$BuildInformation has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/configure_handler.php
 
@@ -27822,6 +27726,11 @@ parameters:
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
+			message: "#^Class DynamicAnalysisHandler has an uninitialized property \\$BuildInformation\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
+
+		-
 			message: "#^Class DynamicAnalysisHandler has an uninitialized property \\$DynamicAnalysis\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
@@ -27833,7 +27742,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 23
+			count: 22
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
@@ -27918,11 +27827,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$name of method CDash\\\\Collection\\\\Collection\\:\\:addItem\\(\\) expects null, mixed given\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Property DynamicAnalysisHandler\\:\\:\\$BuildInformation has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
@@ -28082,37 +27986,7 @@ parameters:
 			path: app/cdash/xml_handlers/note_handler.php
 
 		-
-			message: "#^Property NoteHandler\\:\\:\\$BuildId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/note_handler.php
-
-		-
-			message: "#^Property NoteHandler\\:\\:\\$BuildId is unused\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/note_handler.php
-
-		-
-			message: "#^Property NoteHandler\\:\\:\\$Configure has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/note_handler.php
-
-		-
-			message: "#^Property NoteHandler\\:\\:\\$Configure is never read, only written\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/note_handler.php
-
-		-
 			message: "#^Property NoteHandler\\:\\:\\$NoteCreator has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/note_handler.php
-
-		-
-			message: "#^Property NoteHandler\\:\\:\\$TimeStamp has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/note_handler.php
-
-		-
-			message: "#^Property NoteHandler\\:\\:\\$TimeStamp is unused\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/note_handler.php
 
@@ -28508,13 +28382,18 @@ parameters:
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
+			message: "#^Class TestingHandler has an uninitialized property \\$BuildInformation\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 5
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 35
+			count: 34
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
@@ -28594,11 +28473,6 @@ parameters:
 
 		-
 			message: "#^Method TestingHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
-			message: "#^Property TestingHandler\\:\\:\\$BuildInformation has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/testing_handler.php
 
@@ -29062,32 +28936,12 @@ parameters:
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
-			message: "#^Property UploadHandler\\:\\:\\$BuildId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
-			message: "#^Property UploadHandler\\:\\:\\$BuildId is unused\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
 			message: "#^Property UploadHandler\\:\\:\\$Label has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
 			message: "#^Property UploadHandler\\:\\:\\$TmpFilename has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
-			message: "#^Property UploadHandler\\:\\:\\$UpdateEndTime has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
-			message: "#^Property UploadHandler\\:\\:\\$UpdateEndTime is never read, only written\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 
