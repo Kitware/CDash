@@ -94,7 +94,11 @@ npm run production
 ```
 
 ##### Migrating settings from `config.local.php`
-If you're upgrading from CDash v3.0 or earlier you can use the following command to migrate
+As part of the CDash v3.1.0 release, we migrated some of the environment variables
+from `config.local.php` into the `.env` file, see the [release notes](https://github.com/Kitware/CDash/releases).
+If you're upgrading from CDash v3.0.3 or earlier, compare your `config.local.php` with the `config.php`
+included with the installation. Exclude variables not present in `config.php` from your `config.local.php`,
+and configure them in the `.env` file. You can use the following command to migrate
 your settings from `config.local.php` into the `.env` file used by Laravel.
 
 ```bash
