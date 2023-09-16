@@ -24926,21 +24926,6 @@ parameters:
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
-			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 3
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
 			message: "#^Method SubProjectNextPreviousTestCase\\:\\:testSubProjectNextPrevious\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_subprojectnextprevious.php

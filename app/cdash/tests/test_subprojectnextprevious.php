@@ -46,7 +46,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
                 ORDER BY b.starttime");
 
         $num_rows = pdo_num_rows($result);
-        if ($num_rows != 3) {
+        if ($num_rows !== 3) {
             $this->fail("Expected 3 rows, found $num_rows");
             return 1;
         }
@@ -66,8 +66,9 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
 
         $pages = ['viewBuildError'];
         $vue_pages = ['buildSummary', 'viewConfigure', 'viewNotes', 'viewUpdate'];
-        foreach ($pages as $page) {
-            if (in_array($page, $vue_pages)) {
+        $pages_with_preview_tables = ['buildSummary'];
+        foreach (array_merge($pages, $vue_pages) as $page) {
+            if (in_array($page, $vue_pages, true)) {
                 $path_to_first = "build/{$first_buildid}";
                 $path_to_second = "build/{$second_buildid}";
                 $path_to_third = "build/{$third_buildid}";
@@ -83,6 +84,12 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             // Verify 'Next' from build #1 points to build #2
             if (strpos($jsonobj['menu']['next'], $path_to_second) === false) {
                 $error_msg = "Expected 'Next' link not found on $page for $first_buildid";
+                $success = false;
+                break;
+            }
+            if (in_array($page, $pages_with_preview_tables, true) &&
+                $jsonobj['nextbuild']['buildid'] !== $second_buildid) {
+                $error_msg = "Expected id=$second_buildid in 'Next Build' table on $page, but got" . $jsonobj['nextbuild']['buildid'];
                 $success = false;
                 break;
             }
@@ -104,10 +111,22 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
                 $success = false;
                 break;
             }
+            if (in_array($page, $pages_with_preview_tables, true) &&
+                $jsonobj['previousbuild']['buildid'] !== $first_buildid) {
+                $error_msg = "Expected id=$first_buildid in 'Previous Build' table on $page, but got" . $jsonobj['previousbuild']['buildid'];
+                $success = false;
+                break;
+            }
 
             // Verify 'Next' from build #2 points to build #3
             if (strpos($jsonobj['menu']['next'], $path_to_third) === false) {
                 $error_msg = "Expected 'Next' link not found on $page for $second_buildid";
+                $success = false;
+                break;
+            }
+            if (in_array($page, $pages_with_preview_tables, true) &&
+                $jsonobj['nextbuild']['buildid'] !== $third_buildid) {
+                $error_msg = "Expected id=$third_buildid in 'Next Build' table on $page, but got" . $jsonobj['nextbuild']['buildid'];
                 $success = false;
                 break;
             }
@@ -126,6 +145,12 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             // Verify 'Previous' from build #3 points to build #2
             if (strpos($jsonobj['menu']['previous'], $path_to_second) === false) {
                 $error_msg = "Expected 'Previous' link not found on $page for $third_buildid";
+                $success = false;
+                break;
+            }
+            if (in_array($page, $pages_with_preview_tables, true) &&
+                $jsonobj['previousbuild']['buildid'] !== $second_buildid) {
+                $error_msg = "Expected id=$second_buildid in 'Previous Build' table on $page, but got" . $jsonobj['previousbuild']['buildid'];
                 $success = false;
                 break;
             }
@@ -195,7 +220,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         $build_found = false;
         $buildgroup = array_pop($jsonobj['buildgroups']);
         foreach ($buildgroup['builds'] as $build) {
-            if ($build['label'] == 'Didasko') {
+            if ($build['label'] === 'Didasko') {
                 $build_found = true;
                 $checks = [
                     'nwarningdiffp' => $build['compilation']['nwarningdiffp'],
@@ -203,7 +228,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
                     'npassdiffp' => $build['test']['npassdiffp'],
                 ];
                 foreach ($checks as $field => $found) {
-                    if ($found != 1) {
+                    if ($found !== 1) {
                         $this->fail("Expected 1 but found $found for $field");
                     }
                 }
@@ -293,7 +318,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $num_tests = count($jsonobj['builds']);
-        if ($num_tests != 549) {
+        if ($num_tests !== 549) {
             $error_msg = "Expected 549 tests, found $num_tests";
             $success = false;
         }
