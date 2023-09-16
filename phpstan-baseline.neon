@@ -1607,8 +1607,18 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\SubProject\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
 			count: 2
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\SubProjectController\\:\\:ajaxDependenciesGraph\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
@@ -2198,6 +2208,16 @@ parameters:
 			message: "#^Property App\\\\Models\\\\BuildTest\\:\\:\\$labels has no type specified\\.$#"
 			count: 1
 			path: app/Models/BuildTest.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:orWhere\\(\\)\\.$#"
+			count: 1
+			path: app/Models/Project.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/Models/Project.php
 
 		-
 			message: """
@@ -4292,7 +4312,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 21
+			count: 20
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -5905,102 +5925,6 @@ parameters:
 			path: app/cdash/app/Model/BuildGroupRule.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 4
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildInformation\\:\\:Fill\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildInformation\\:\\:Save\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildInformation\\:\\:SetValue\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildInformation\\:\\:SetValue\\(\\) has parameter \\$tag with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildInformation\\:\\:SetValue\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$BuildId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$CompilerName has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$CompilerVersion has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$Filled has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$OSName has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$OSPlatform has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$OSRelease has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$OSVersion has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildInformation\\:\\:\\$PDO has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
-			message: "#^Result of static method Illuminate\\\\Database\\\\Connection\\:\\:transaction\\(\\) \\(void\\) is used\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildInformation.php
-
-		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BuildProperties\\>\\:\\:exists\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildProperties.php
@@ -7058,65 +6982,6 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 2
-			path: app/cdash/app/Model/DailyUpdateFile.php
-
-		-
-			message: """
-				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 2
-			path: app/cdash/app/Model/DailyUpdateFile.php
-
-		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/DailyUpdateFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\DailyUpdateFile\\:\\:\\$Author has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/DailyUpdateFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\DailyUpdateFile\\:\\:\\$CheckinDate has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/DailyUpdateFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\DailyUpdateFile\\:\\:\\$DailyUpdateId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/DailyUpdateFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\DailyUpdateFile\\:\\:\\$Filename has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/DailyUpdateFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\DailyUpdateFile\\:\\:\\$Log has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/DailyUpdateFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\DailyUpdateFile\\:\\:\\$PriorRevision has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/DailyUpdateFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\DailyUpdateFile\\:\\:\\$Revision has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/DailyUpdateFile.php
-
-		-
-			message: """
-				#^Call to deprecated function add_last_sql_error\\(\\)\\:
-				04/22/2023$#
-			"""
 			count: 4
 			path: app/cdash/app/Model/DynamicAnalysis.php
 
@@ -7501,73 +7366,12 @@ parameters:
 			path: app/cdash/app/Model/Image.php
 
 		-
-			message: """
-				#^Call to deprecated function add_last_sql_error\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 3
-			path: app/cdash/app/Model/Label.php
-
-		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/Label.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/Label.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/Label.php
-
-		-
-			message: """
-				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 3
-			path: app/cdash/app/Model/Label.php
-
-		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 6
-			path: app/cdash/app/Model/Label.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/Label.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
 			path: app/cdash/app/Model/Label.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Label\\:\\:GetIdFromText\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Label.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Label\\:\\:GetTextFromBuildFailure\\(\\) has parameter \\$fetchType with no type specified\\.$#"
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Label\\>\\:\\:count\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Label.php
 
@@ -7582,22 +7386,12 @@ parameters:
 			path: app/cdash/app/Model/Label.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Label\\:\\:SetText\\(\\) has parameter \\$text with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Label.php
-
-		-
 			message: "#^Property CDash\\\\Model\\\\Label\\:\\:\\$BuildFailureId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Label.php
 
 		-
 			message: "#^Property CDash\\\\Model\\\\Label\\:\\:\\$BuildId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Label.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Label\\:\\:\\$CoverageFileBuildId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Label.php
 
@@ -7617,23 +7411,13 @@ parameters:
 			path: app/cdash/app/Model/Label.php
 
 		-
-			message: "#^Property CDash\\\\Model\\\\Label\\:\\:\\$PDO has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Label.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Label\\:\\:\\$TestBuildId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Label.php
-
-		-
 			message: "#^Property CDash\\\\Model\\\\Label\\:\\:\\$TestId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Label.php
 
 		-
-			message: "#^Property CDash\\\\Model\\\\Label\\:\\:\\$Text has no type specified\\.$#"
-			count: 1
+			message: "#^Variable property access on mixed\\.$#"
+			count: 2
 			path: app/cdash/app/Model/Label.php
 
 		-
@@ -7900,6 +7684,11 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
 			message: "#^Implicit array creation is not allowed \\- variable \\$rep might not exist\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -7911,7 +7700,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -7986,6 +7775,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfSubProjects\\(\\) has parameter \\$date with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfSubProjects\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -8445,11 +8239,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:Exists\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:Fill\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
@@ -22431,21 +22220,6 @@ parameters:
 			path: app/cdash/tests/test_csvexport.php
 
 		-
-			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 1
-			path: app/cdash/tests/test_dailyupdatefile.php
-
-		-
-			message: "#^Method DailyUpdateFileTestCase\\:\\:testDailyUpdateFile\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_dailyupdatefile.php
-
-		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: app/cdash/tests/test_dailyupdatefile.php
-
-		-
 			message: "#^Method DeferredSubmissionsTestCase\\:\\:getToken\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_deferredsubmissions.php
@@ -26048,6 +25822,16 @@ parameters:
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/BazelJSON_handler.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/BazelJSON_handler.php
+
+		-
 			message: "#^Foreach overwrites \\$line with its value variable\\.$#"
 			count: 2
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
@@ -27152,13 +26936,18 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
+			message: "#^Class BuildHandler has an uninitialized property \\$BuildInformation\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 8
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 30
+			count: 29
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
@@ -27267,11 +27056,6 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
-			message: "#^Property BuildHandler\\:\\:\\$BuildInformation has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
 			message: "#^Property BuildHandler\\:\\:\\$BuildLog has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/build_handler.php
@@ -27362,13 +27146,18 @@ parameters:
 			path: app/cdash/xml_handlers/configure_handler.php
 
 		-
+			message: "#^Class ConfigureHandler has an uninitialized property \\$BuildInformation\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 6
 			path: app/cdash/xml_handlers/configure_handler.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 14
+			count: 13
 			path: app/cdash/xml_handlers/configure_handler.php
 
 		-
@@ -27443,11 +27232,6 @@ parameters:
 
 		-
 			message: "#^Method ConfigureHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Property ConfigureHandler\\:\\:\\$BuildInformation has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/configure_handler.php
 
@@ -27962,6 +27746,11 @@ parameters:
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
+			message: "#^Class DynamicAnalysisHandler has an uninitialized property \\$BuildInformation\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
+
+		-
 			message: "#^Class DynamicAnalysisHandler has an uninitialized property \\$DynamicAnalysis\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
@@ -27973,7 +27762,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 23
+			count: 22
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
@@ -28058,11 +27847,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$name of method CDash\\\\Collection\\\\Collection\\:\\:addItem\\(\\) expects null, mixed given\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Property DynamicAnalysisHandler\\:\\:\\$BuildInformation has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
@@ -28222,37 +28006,7 @@ parameters:
 			path: app/cdash/xml_handlers/note_handler.php
 
 		-
-			message: "#^Property NoteHandler\\:\\:\\$BuildId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/note_handler.php
-
-		-
-			message: "#^Property NoteHandler\\:\\:\\$BuildId is unused\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/note_handler.php
-
-		-
-			message: "#^Property NoteHandler\\:\\:\\$Configure has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/note_handler.php
-
-		-
-			message: "#^Property NoteHandler\\:\\:\\$Configure is never read, only written\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/note_handler.php
-
-		-
 			message: "#^Property NoteHandler\\:\\:\\$NoteCreator has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/note_handler.php
-
-		-
-			message: "#^Property NoteHandler\\:\\:\\$TimeStamp has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/note_handler.php
-
-		-
-			message: "#^Property NoteHandler\\:\\:\\$TimeStamp is unused\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/note_handler.php
 
@@ -28648,13 +28402,18 @@ parameters:
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
+			message: "#^Class TestingHandler has an uninitialized property \\$BuildInformation\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 5
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 35
+			count: 34
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
@@ -28734,11 +28493,6 @@ parameters:
 
 		-
 			message: "#^Method TestingHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
-			message: "#^Property TestingHandler\\:\\:\\$BuildInformation has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/testing_handler.php
 
@@ -29202,32 +28956,12 @@ parameters:
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
-			message: "#^Property UploadHandler\\:\\:\\$BuildId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
-			message: "#^Property UploadHandler\\:\\:\\$BuildId is unused\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
 			message: "#^Property UploadHandler\\:\\:\\$Label has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
 			message: "#^Property UploadHandler\\:\\:\\$TmpFilename has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
-			message: "#^Property UploadHandler\\:\\:\\$UpdateEndTime has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
-			message: "#^Property UploadHandler\\:\\:\\$UpdateEndTime is never read, only written\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 

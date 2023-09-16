@@ -299,7 +299,7 @@ class EmailTestCase extends KWWebTestCase
             ->where('buildid', $builds[1]->id)
             ->orWhere('buildid', $builds[2]->id)
             ->get();
-        $this->assertTrue(count($testdiffs) === 4);
+        $this->assertEqual(count($testdiffs), 4);
 
         $found = [0 => false, 1 => false, 2 => false, 3 => false];
         $expected = [0 => true, 1 => true, 2 => true, 3 => true];

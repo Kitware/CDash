@@ -19,7 +19,7 @@ require_once 'xml_handlers/abstract_handler.php';
 use App\Services\TestCreator;
 
 use CDash\Model\Build;
-use CDash\Model\BuildInformation;
+use App\Models\BuildInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
 
@@ -102,16 +102,16 @@ class TestingJUnitHandler extends AbstractHandler
             if ($this->HasSiteTag == false) {
                 switch ($attributes['NAME']) {
                     case 'os.name':
-                        $this->Build->Information->OSName = $attributes['VALUE'];
+                        $this->Build->Information->osname = $attributes['VALUE'];
                         break;
                     case 'os.version':
-                        $this->Build->Information->OSVersion = $attributes['VALUE'];
+                        $this->Build->Information->osversion = $attributes['VALUE'];
                         break;
                     case 'java.vm.name':
-                        $this->Build->Information->CompilerName = $attributes['VALUE'];
+                        $this->Build->Information->compilername = $attributes['VALUE'];
                         break;
                     case 'java.vm.version':
-                        $this->Build->Information->CompilerVersion = $attributes['VALUE'];
+                        $this->Build->Information->compilerversion = $attributes['VALUE'];
                         break;
                     case 'hostname':
                         if (empty($this->Site->name)) {

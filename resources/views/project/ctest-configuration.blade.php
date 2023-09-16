@@ -16,7 +16,7 @@ set(CTEST_DROP_SITE_CDASH TRUE)
 @if(count($subprojects) > 0)
 set(CTEST_PROJECT_SUBPROJECTS
 @foreach($subprojects as $subproject)
-    {{ $subproject->GetName() }}
-@endforeach
+    {{ $subproject->name }}
+@endforeach()
 )
 @endif

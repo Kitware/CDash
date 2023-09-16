@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -96,4 +97,12 @@ class Build extends Model
         'notified' => 'boolean',
         'done' => 'boolean',
     ];
+
+    /**
+     * @return HasOne<BuildInformation>
+     */
+    public function information(): HasOne
+    {
+        return $this->hasOne(BuildInformation::class, 'buildid');
+    }
 }

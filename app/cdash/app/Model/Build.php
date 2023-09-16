@@ -24,6 +24,7 @@ use App\Models\Site;
 use App\Models\Test;
 use App\Services\TestingDay;
 use App\Services\TestDiffService;
+use App\Models\BuildInformation;
 
 use CDash\Collection\BuildEmailCollection;
 use CDash\Collection\DynamicAnalysisCollection;
@@ -2818,13 +2819,28 @@ class Build
     private function SaveInformation(): void
     {
         // Save the information
-        if (!empty($this->Information)) {
+        if (isset($this->Information)) {
             if ($this->ParentId > 0) {
-                $this->Information->BuildId = $this->ParentId;
+                $this->Information->buildid = $this->ParentId;
             } else {
-                $this->Information->BuildId = $this->Id;
+                $this->Information->buildid = (int) $this->Id;
             }
-            $this->Information->Save();
+
+            if ($this->Information->buildid < 1) {
+                return;
+            }
+
+            // Default values so we don't violate the non-null constraint if data is missing...
+            $this->Information->osname ??= '';
+            $this->Information->osplatform ??= '';
+            $this->Information->osrelease ??= '';
+            $this->Information->osversion ??= '';
+            $this->Information->compilername ??= 'unknown';
+            $this->Information->compilerversion ??= 'unknown';
+
+            // We can't use $this->Information->save() due to some weird Eloquent quirk
+            // related to the fact that the model was not retrieved from the DB originally...
+            BuildInformation::updateOrCreate(['buildid' => $this->Information->buildid], $this->Information->toArray());
         }
     }
 }

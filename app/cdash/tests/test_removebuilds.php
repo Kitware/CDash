@@ -5,8 +5,6 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-use App\Models\BuildNote;
-use App\Models\Test;
 use App\Models\TestMeasurement;
 use App\Services\TestCreator;
 use App\Services\NoteCreator;
@@ -16,7 +14,7 @@ use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroup;
-use CDash\Model\BuildInformation;
+use App\Models\BuildInformation;
 use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUpdateFile;
 use CDash\Model\Coverage;
@@ -78,9 +76,9 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $build->AddLabel($label);
         $buildgroup = new BuildGroup();
         $build->GroupId = $buildgroup->GetGroupIdFromRule($build);
-        $info = new BuildInformation();
-        $info->SetValue('OSNAME', 'Windows');
-        $build->Information = $info;
+        $build->Information = new BuildInformation([
+            'osname' => 'Windows',
+        ]);
 
         // BuildError
         $error = new BuildError();

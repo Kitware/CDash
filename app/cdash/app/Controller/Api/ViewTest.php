@@ -21,7 +21,7 @@ use App\Models\BuildTest;
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
-use CDash\Model\BuildInformation;
+use App\Models\BuildInformation;
 
 require_once 'include/filterdataFunctions.php';
 
@@ -157,32 +157,31 @@ class ViewTest extends BuildApi
         $response['menu'] = $menu;
 
         $build_response = Build::MarshalResponseArray($this->build, [
-                'displaylabels' => $this->project->DisplayLabels,
-                'site' =>  $this->build->GetSite()->name,
-                'testtime' => $this->build->EndTime,
+            'displaylabels' => $this->project->DisplayLabels,
+            'site' =>  $this->build->GetSite()->name,
+            'testtime' => $this->build->EndTime,
         ]);
 
         // Find the OS and compiler information
-        $buildinformation = new BuildInformation();
-        $buildinformation->BuildId = $this->build->Id;
-        if ($buildinformation->Fill()) {
-            if ($buildinformation->OSName != '') {
-                $build_response['osname'] = $buildinformation->OSName;
+        $buildinformation = BuildInformation::find($this->build->Id);
+        if ($buildinformation !== null) {
+            if ($buildinformation->osname != '') {
+                $build_response['osname'] = $buildinformation->osname;
             }
-            if ($buildinformation->OSPlatform != '') {
-                $build_response['osplatform'] = $buildinformation->OSPlatform;
+            if ($buildinformation->osplatform != '') {
+                $build_response['osplatform'] = $buildinformation->osplatform;
             }
-            if ($buildinformation->OSRelease != '') {
-                $build_response['osrelease'] = $buildinformation->OSRelease;
+            if ($buildinformation->osrelease != '') {
+                $build_response['osrelease'] = $buildinformation->osrelease;
             }
-            if ($buildinformation->OSVersion != '') {
-                $build_response['osversion'] = $buildinformation->OSVersion;
+            if ($buildinformation->osversion != '') {
+                $build_response['osversion'] = $buildinformation->osversion;
             }
-            if ($buildinformation->CompilerName != '') {
-                $build_response['compilername'] = $buildinformation->CompilerName;
+            if ($buildinformation->compilername != '') {
+                $build_response['compilername'] = $buildinformation->compilername;
             }
-            if ($buildinformation->CompilerVersion != '') {
-                $build_response['compilerversion'] = $buildinformation->CompilerVersion;
+            if ($buildinformation->compilerversion != '') {
+                $build_response['compilerversion'] = $buildinformation->compilerversion;
             }
         }
         $response['build'] = $build_response;

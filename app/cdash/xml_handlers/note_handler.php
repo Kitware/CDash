@@ -19,18 +19,14 @@ require_once 'xml_handlers/abstract_handler.php';
 use App\Services\NoteCreator;
 
 use CDash\Model\Build;
-use CDash\Model\BuildConfigure;
-use CDash\Model\BuildInformation;
+use App\Models\BuildInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
 
 class NoteHandler extends AbstractHandler
 {
     private $AdjustStartTime;
-    private $BuildId;
     private $NoteCreator;
-    private $Configure;
-    private $TimeStamp;
 
     /** Constructor */
     public function __construct($projectID)
@@ -38,7 +34,6 @@ class NoteHandler extends AbstractHandler
         parent::__construct($projectID);
         $this->Build = new Build();
         $this->Site = new Site();
-        $this->Configure = new BuildConfigure();
 
         $this->AdjustStartTime = false;
         $this->Timestamp = 0;

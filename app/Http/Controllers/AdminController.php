@@ -4,10 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Validators\Password;
 use CDash\Config;
-use CDash\Database;
-use CDash\Model\BuildUpdate;
 use CDash\Model\Project;
-use CDash\Model\SubProject;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -130,7 +127,6 @@ final class AdminController extends AbstractController
         @set_time_limit(0);
 
         $xml = begin_XML_for_XSLT();
-        $xml .= '<backurl>user.php</backurl>';
         $xml .= '<menutitle>CDash</menutitle>';
         $xml .= '<menusubtitle>Maintenance</menusubtitle>';
 

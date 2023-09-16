@@ -635,10 +635,6 @@ textarea {
   padding: 4px;
 }
 
-.bordertop {
-  border-top: 1px solid black;
-}
-
 .missing {background-color: #dfdfdf; }
 .tabb tbody tr.odd td.missing,
 .striped.tabb tbody tr:nth-child(odd) td.missing {

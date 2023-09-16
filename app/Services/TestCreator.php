@@ -236,7 +236,7 @@ class TestCreator
 
         foreach ($this->labels as $label) {
             $label->TestId = $outputid;
-            $label->TestBuildId = $build->Id;
+            $label->TestBuildId = (int) $build->Id;
             $label->Insert();
             $buildtest->addLabel($label);
         }
