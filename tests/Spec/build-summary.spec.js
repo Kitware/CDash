@@ -58,6 +58,17 @@ beforeEach(function() {
     hascoverage: true,
     hasupdate: true,
     newissueurl: null,
+    nextbuild: {
+      buildid: 2,
+      nupdateerrors: 0,
+      nupdatewarnings: 0,
+      nconfigureerrors: 0,
+      nconfigurewarnings: 0,
+      nerrors: 0,
+      nwarnings: 4,
+      ntestfailed: 2,
+      ntestnotrun: 1,
+    },
     notes: [],
     projectname_encoded: 'MyProject',
     relationships_from: [],
@@ -107,6 +118,38 @@ test('BuildSummary handles API response', async () => {
   const configure_link = component.find('#configure_link');
   expect(configure_link.attributes('href')).toMatch('/build/1/configure');
   expect(configure_link.text()).toBe('View Configure Summary');
+
+  // test the current build table
+  const curr_build_table = component.findAll('table').at(1).findAll('table').at(1);
+  const curr_build_rows = curr_build_table.findAll('tr');
+  expect(curr_build_rows.at(0).text()).toBe('This Build');
+  expect(curr_build_rows.at(1).findAll('th').at(0).text()).toBe('Stage');
+  expect(curr_build_rows.at(1).findAll('th').at(1).text()).toBe('Errors');
+  expect(curr_build_rows.at(1).findAll('th').at(2).text()).toBe('Warnings');
+  expect(curr_build_rows.at(4).findAll('th').at(0).text()).toBe('Build');
+  expect(curr_build_rows.at(4).findAll('td').at(0).text()).toBe('0');
+  expect(curr_build_rows.at(4).findAll('td').at(1).text()).toBe('5');
+
+  // test the next build table
+  const next_build_table = component.findAll('table').at(1).findAll('table').at(2);
+  const next_build_rows = next_build_table.findAll('tr');
+  expect(next_build_rows.at(0).text()).toBe('Next Build');
+  expect(next_build_rows.at(0).find('a').attributes('href')).toMatch('/build/2');
+  expect(next_build_rows.at(1).findAll('th').at(0).text()).toBe('Stage');
+  expect(next_build_rows.at(1).findAll('th').at(1).text()).toBe('Errors');
+  expect(next_build_rows.at(1).findAll('th').at(2).text()).toBe('Warnings');
+  expect(next_build_rows.at(2).findAll('th').at(0).text()).toBe('Update');
+  expect(next_build_rows.at(2).findAll('td').at(0).text()).toBe('0');
+  expect(next_build_rows.at(2).findAll('td').at(1).text()).toBe('0');
+  expect(next_build_rows.at(3).findAll('th').at(0).text()).toBe('Configure');
+  expect(next_build_rows.at(3).findAll('td').at(0).text()).toBe('0');
+  expect(next_build_rows.at(3).findAll('td').at(1).text()).toBe('0');
+  expect(next_build_rows.at(4).findAll('th').at(0).text()).toBe('Build');
+  expect(next_build_rows.at(4).findAll('td').at(0).text()).toBe('0');
+  expect(next_build_rows.at(4).findAll('td').at(1).text()).toBe('4');
+  expect(next_build_rows.at(5).findAll('th').at(0).text()).toBe('Test');
+  expect(next_build_rows.at(5).findAll('td').at(0).text()).toBe('2');
+  expect(next_build_rows.at(5).findAll('td').at(1).text()).toBe('1');
 });
 
 test('BuildSummary can toggle the graphs', async () => {
