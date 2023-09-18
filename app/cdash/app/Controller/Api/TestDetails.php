@@ -18,6 +18,7 @@ namespace CDash\Controller\Api;
 
 use App\Models\BuildTest;
 use App\Models\TestOutput;
+use App\Models\Project as EloquentProject;
 
 use CDash\Database;
 
@@ -286,13 +287,11 @@ class TestDetails extends BuildTestApi
         }
 
         // Get the list of extra test measurements that have been explicitly added to this project.
-        $stmt = $this->db->prepare(
-            'SELECT name FROM measurement WHERE projectid = ? ORDER BY position');
-        $this->db->execute($stmt, [$this->project->Id]);
-        $extra_measurements = [];
-        while ($row = $stmt->fetch()) {
-            $extra_measurements[] = $row['name'];
-        }
+        $extra_measurements = EloquentProject::findOrFail($this->project->Id)
+            ->measurements()
+            ->orderBy('position')
+            ->pluck('name')
+            ->toArray();
 
         // Sort measurements: put those listed explicitly first (sorted by position)
         // then sort the rest alphabetically by name.

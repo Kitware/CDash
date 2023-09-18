@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -46,7 +47,6 @@ class Build extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id',
         'siteid',
         'projectid',
         'parentid',
@@ -104,5 +104,14 @@ class Build extends Model
     public function information(): HasOne
     {
         return $this->hasOne(BuildInformation::class, 'buildid');
+    }
+
+    /**
+     * @return BelongsToMany<Note>
+     */
+    public function notes(): BelongsToMany
+    {
+        return $this->belongsToMany(Note::class, 'build2note', 'buildid', 'noteid')
+            ->withPivot('time');
     }
 }

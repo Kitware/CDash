@@ -365,7 +365,7 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BuildNote\\>\\:\\:count\\(\\)\\.$#"
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Note\\>\\:\\:count\\(\\)\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php
 
@@ -453,6 +453,11 @@ parameters:
 			message: "#^Variable \\$buildupdate in isset\\(\\) is never defined\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\Note\\:\\:\\$pivot\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildNoteController.php
 
 		-
 			message: """
@@ -748,7 +753,17 @@ parameters:
 			path: app/Http/Controllers/ManageBannerController.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:delete\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageMeasurementsController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageMeasurementsController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:where\\(\\)\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
@@ -2446,11 +2461,6 @@ parameters:
 			path: app/Services/NoteCreator.php
 
 		-
-			message: "#^Only booleans are allowed in a negated boolean, App\\\\Models\\\\Note\\|null given\\.$#"
-			count: 1
-			path: app/Services/NoteCreator.php
-
-		-
 			message: "#^Property App\\\\Services\\\\NoteCreator\\:\\:\\$buildid has no type specified\\.$#"
 			count: 1
 			path: app/Services/NoteCreator.php
@@ -3095,8 +3105,13 @@ parameters:
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/QueryTests.php
+
+		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 10
+			count: 9
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
@@ -3317,6 +3332,16 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
+			path: app/cdash/app/Controller/Api/TestDetails.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/TestDetails.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 1
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
 		-
@@ -3627,6 +3652,11 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
 			message: "#^Foreach overwrites \\$test with its value variable\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
@@ -3638,7 +3668,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 11
+			count: 10
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
@@ -15575,6 +15605,16 @@ parameters:
 			path: app/cdash/public/api/v1/index.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/index.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/index.php
+
+		-
 			message: """
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
@@ -24696,21 +24736,6 @@ parameters:
 
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
-			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 3
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_subprojectnextprevious.php
 

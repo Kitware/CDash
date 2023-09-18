@@ -116,4 +116,12 @@ class Project extends Model
                     ->orWhere('endtime', '=', Carbon::create(1980));
             });
     }
+
+    /**
+     * @return HasMany<Measurement>
+     */
+    public function measurements(): HasMany
+    {
+        return $this->hasMany(Measurement::class, 'projectid', 'id');
+    }
 }
