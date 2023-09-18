@@ -41,7 +41,6 @@ use Illuminate\Support\Carbon;
  * @property int $autoremovetimeframe
  * @property int $autoremovemaxbuilds
  * @property int $uploadquota
- * @property string $webapikey
  * @property int $tokenduration
  * @property int $showcoveragecode
  * @property int $sharelabelfilters
@@ -90,7 +89,6 @@ class Project extends Model
         'autoremovetimeframe',
         'autoremovemaxbuilds',
         'uploadquota',
-        'webapikey',
         'tokenduration',
         'showcoveragecode',
         'sharelabelfilters',

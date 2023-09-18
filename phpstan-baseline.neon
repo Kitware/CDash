@@ -7705,7 +7705,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 21
+			count: 20
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -8045,11 +8045,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Model\\\\Project\\:\\:\\$WarningsFilter has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Project\\:\\:\\$WebApiKey has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 

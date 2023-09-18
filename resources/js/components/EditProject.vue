@@ -1982,27 +1982,6 @@
                   <td />
                   <td>
                     <div align="right">
-                      <strong>Web API Key:</strong>
-                    </div>
-                  </td>
-                  <td @mouseover="showHelp('webapikey_help')">
-                    {{ cdash.project.webapikey }}
-                    <span
-                      id="webapikey_help"
-                      class="help_content"
-                    >
-                      <b>Web API key</b>
-                      <br>
-                      Use this key when calling the login method of the web API.
-                      It will return a token that you can temporarily use for authenticated access
-                      to other web API methods.
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td />
-                  <td>
-                    <div align="right">
                       <strong>Warnings Filters:</strong>
                     </div>
                   </td>
