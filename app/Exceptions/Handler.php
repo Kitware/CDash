@@ -3,7 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Http\JsonResponse;
 use Throwable;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -52,18 +52,21 @@ class Handler extends ExceptionHandler
             return $this->unauthenticated($request, $exception);
         }
 
-        if ($request->expectsJson()) {
-            $http_code = $this->convertExceptionToResponse($exception)->getStatusCode();
-            $response = [];
-            $response['error'] = $exception->getMessage();
-            $response['code'] = $http_code;
-            if ((bool) Config::get('app.debug')) {
-                $response['trace'] = $this->convertExceptionToArray($exception);
+        $response = parent::render($request, $exception);
+
+        if ($response instanceof JsonResponse) {
+            $response_array = [
+                'error' => $exception->getMessage(),
+                'code' => $response->getStatusCode(),
+            ];
+            $json = json_encode($response_array);
+            if ($json === false) {
+                $json = '';
             }
-            return response()->json($response, $http_code);
+            $response->setJson($json);
         }
 
-        return parent::render($request, $exception);
+        return $response;
     }
 
     /**

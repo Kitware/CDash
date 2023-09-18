@@ -77,5 +77,11 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+Route::prefix('/v2')->group(function () {
+    Route::apiResource('projects', \App\Http\Controllers\ProjectResource::class);
+    Route::apiResource('projects.users', \App\Http\Controllers\ProjectUserResource::class);
+    Route::apiResource('projects.administrators', \App\Http\Controllers\ProjectAdministratorResource::class);
+});
+
 // this *MUST* be the last route in the file
 Route::any('{url}', 'CDash')->where('url', '.*');

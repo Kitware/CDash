@@ -1690,6 +1690,16 @@ parameters:
 			path: app/Http/Controllers/OAuthController.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProjectAdministratorResource.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProjectAdministratorResource.php
+
+		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/Http/Controllers/ProjectController.php
@@ -2003,6 +2013,21 @@ parameters:
 			message: "#^Variable property access on mixed\\.$#"
 			count: 4
 			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Project\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProjectResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$pivot\\.$#"
+			count: 5
+			path: app/Http/Controllers/ProjectUserResource.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProjectUserResource.php
 
 		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
@@ -33202,37 +33227,7 @@ parameters:
 			path: tests/Feature/ProjectPermissions.php
 
 		-
-			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$admin_user has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
 			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$mock_system has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
-			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$normal_user has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
-			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$private_project1 has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
-			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$private_project2 has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
-			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$protected_project has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
-			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$public_project has no type specified\\.$#"
 			count: 1
 			path: tests/Feature/ProjectPermissions.php
 
@@ -33247,27 +33242,7 @@ parameters:
 			path: tests/Feature/PurgeUnusedProjectsCommand.php
 
 		-
-			message: "#^@dataProvider adminRoutes related method must be public\\.$#"
-			count: 1
-			path: tests/Feature/RouteAccessTest.php
-
-		-
-			message: "#^@dataProvider protectedRoutes related method must be public\\.$#"
-			count: 1
-			path: tests/Feature/RouteAccessTest.php
-
-		-
-			message: "#^Method Tests\\\\Feature\\\\RouteAccessTest\\:\\:adminRoutes\\(\\) is unused\\.$#"
-			count: 1
-			path: tests/Feature/RouteAccessTest.php
-
-		-
 			message: "#^Method Tests\\\\Feature\\\\RouteAccessTest\\:\\:adminRoutes\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: tests/Feature/RouteAccessTest.php
-
-		-
-			message: "#^Method Tests\\\\Feature\\\\RouteAccessTest\\:\\:protectedRoutes\\(\\) is unused\\.$#"
 			count: 1
 			path: tests/Feature/RouteAccessTest.php
 

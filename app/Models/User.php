@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,6 +14,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method bool IsAdmin()
  * @method GetEmail()
  * @method int|false GetIdFromName($name)
+ *
+ * @property int $id
+ * @property string $firstname
+ * @property string $lastname
+ * @property string $email
+ * @property string $password
+ * @property string $institution
+ *
+ * @mixin Builder<User>
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -31,7 +41,11 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'firstname', 'lastname', 'email', 'password', 'institution',
+        'firstname',
+        'lastname',
+        'email',
+        'password',
+        'institution',
     ];
 
     /**

@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Project;
 use CDash\Model\Image;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -24,9 +26,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-
         parent::boot();
+
         Route::bind('image', function ($id) {
             $image = new Image();
             $image->Id = $id;
@@ -34,6 +35,16 @@ class RouteServiceProvider extends ServiceProvider
                 return $image;
             }
             abort(404);
+        });
+
+        // Special binding handler for projects to ensure that Laravel doesn't reveal too much information
+        // about whether models exist or not.
+        Route::bind('project', function ($projectid) {
+            // TODO: Eventually we only want to use Eloquent models here, rather than querying the same project twice.
+            $project = new \CDash\Model\Project();
+            $project->Id = $projectid;
+            Gate::authorize('view-project', $project);
+            return Project::findOrFail($projectid);
         });
     }
 
