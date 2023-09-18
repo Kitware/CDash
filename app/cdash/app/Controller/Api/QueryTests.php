@@ -16,7 +16,9 @@
 
 namespace CDash\Controller\Api;
 
+use App\Models\Measurement;
 use App\Models\TestOutput;
+use App\Models\Project as EloquentProject;
 
 use CDash\Database;
 use CDash\Model\Build;
@@ -272,28 +274,20 @@ class QueryTests extends ResultsApi
         $project_response['showtesttime'] = $this->project->ShowTestTime;
         $response['project'] = $project_response;
 
-        // Get information about all the builds for the given project
-        // and date range.
-        $builds = [];
-
-        // Add the date/time
-        $builds['projectid'] = $this->project->Id;
-        $builds['currentstarttime'] = $this->currentStartTime;
-        $builds['teststarttime'] = $this->beginDate;
-        $builds['testendtime'] = $this->endDate;
-
         // Get the list of extra test measurements that should be displayed on this page.
         $this->extraMeasurements = [];
-        $stmt = $this->db->prepare(
-            'SELECT name FROM measurement WHERE projectid = ? ORDER BY position');
-        $this->db->execute($stmt, [$this->project->Id]);
-        while ($row = $stmt->fetch()) {
+        $measurements = EloquentProject::findOrFail($this->project->Id)
+            ->measurements()
+            ->orderBy('position')
+            ->get();
+        /** @var Measurement $measurement */
+        foreach ($measurements as $measurement) {
             // If we have the Processors measurement, then we should also
             // compute and display 'Proc Time'.
-            if ($row['name'] == 'Processors') {
+            if ($measurement->name === 'Processors') {
                 $this->hasProcessors = true;
             } else {
-                $this->extraMeasurements[] = $row['name'];
+                $this->extraMeasurements[] = $measurement->name;
             }
         }
         $this->numExtraMeasurements = count($this->extraMeasurements);
