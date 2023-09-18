@@ -365,7 +365,7 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BuildNote\\>\\:\\:count\\(\\)\\.$#"
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Note\\>\\:\\:count\\(\\)\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php
 
@@ -453,6 +453,11 @@ parameters:
 			message: "#^Variable \\$buildupdate in isset\\(\\) is never defined\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\Note\\:\\:\\$pivot\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildNoteController.php
 
 		-
 			message: """
@@ -2452,11 +2457,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Services\\\\NoteCreator\\:\\:create\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Services/NoteCreator.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, App\\\\Models\\\\Note\\|null given\\.$#"
 			count: 1
 			path: app/Services/NoteCreator.php
 

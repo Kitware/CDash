@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BuildNote;
+use App\Models\Build as EloquentBuild;
+use App\Models\Note;
 use App\Services\PageTimer;
 use App\Services\TestingDay;
 use CDash\Model\Build;
@@ -59,15 +60,15 @@ final class BuildNoteController extends AbstractBuildController
         $response['build'] = Build::MarshalResponseArray($this->build, ['site' => $site_name]);
 
         // Notes for this build.
-        $build2notes = BuildNote::where('buildid', '=', $this->build->Id)->get();
+        $notes = EloquentBuild::findOrFail($this->build->Id)->notes()->get();
         $notes_response = [];
-        foreach ($build2notes as $build2note) {
-            $note = $build2note->note;
-            $note_response = [];
-            $note_response['name'] = $note->name;
-            $note_response['text'] = $note->text;
-            $note_response['time'] = $build2note->time;
-            $notes_response[] = $note_response;
+        /** @var Note $note */
+        foreach ($notes as $note) {
+            $notes_response[] = [
+                'name' => $note->name,
+                'text' => $note->text,
+                'time' => $note->pivot->time,
+            ];
         }
         $response['notes'] = $notes_response;
 

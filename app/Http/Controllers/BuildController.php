@@ -1,8 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\BuildNote;
 use App\Models\User;
+use App\Models\Build as EloquentBuild;
 use App\Services\PageTimer;
 use App\Services\TestingDay;
 use CDash\Database;
@@ -140,7 +140,7 @@ final class BuildController extends AbstractBuildController
         $build_response['time'] = date(FMT_DATETIMETZ, strtotime($this->build->StartTime . ' UTC'));
         $build_response['type'] = $this->build->Type;
 
-        $build_response['note'] = BuildNote::where('buildid', '=', $this->build->Id)->count();
+        $build_response['note'] = EloquentBuild::findOrFail($this->build->Id)->notes()->count();
 
         // Find the OS and compiler information
         if ($this->build->GetParentId() > 0) {

@@ -16,7 +16,6 @@
 
 namespace App\Services;
 
-use App\Models\BuildNote;
 use App\Models\Note;
 
 /**
@@ -62,20 +61,13 @@ class NoteCreator
     {
         // Create the note if it doesn't already exist.
         $this->computeCrc32();
-        $note = Note::where('crc32', '=', $this->crc32)->first();
-        if (!$note) {
-            $note = new Note;
-            $note->name = $this->name;
-            $note->text = $this->text;
-            $note->crc32 = $this->crc32;
-            $note->save();
-        }
+        $note = Note::firstOrCreate(['crc32' => $this->crc32], [
+            'name' => $this->name,
+            'text' => $this->text,
+            'crc32' => $this->crc32,
+        ]);
 
         // Create the build2note record.
-        $buildnote = new BuildNote;
-        $buildnote->buildid = $this->buildid;
-        $buildnote->noteid = $note->id;
-        $buildnote->time = $this->time;
-        $buildnote->save();
+        $note->builds()->attach((int) $this->buildid, ['time' => $this->time]);
     }
 }
