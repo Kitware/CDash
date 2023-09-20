@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cbcc766ffee7777e6d5b48d3ebef731c",
+    "content-hash": "9bd0733204b23486c130143e04cea5d0",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -5341,6 +5341,76 @@
                 "source": "https://github.com/robrichards/xmlseclibs/tree/3.1.1"
             },
             "time": "2020-09-05T13:00:25+00:00"
+        },
+        {
+            "name": "shiftonelabs/laravel-sqs-fifo-queue",
+            "version": "3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shiftonelabs/laravel-sqs-fifo-queue.git",
+                "reference": "c40cc361d0a612ef369600991ca9bf8d94481dae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shiftonelabs/laravel-sqs-fifo-queue/zipball/c40cc361d0a612ef369600991ca9bf8d94481dae",
+                "reference": "c40cc361d0a612ef369600991ca9bf8d94481dae",
+                "shasum": ""
+            },
+            "require": {
+                "aws/aws-sdk-php": "~3.0",
+                "illuminate/queue": ">=9.0",
+                "illuminate/support": ">=9.0",
+                "php": ">=8.0.2",
+                "ramsey/uuid": ">=4.2.2"
+            },
+            "require-dev": {
+                "illuminate/mail": ">=9.0",
+                "illuminate/notifications": ">=9.0",
+                "mockery/mockery": "~1.3",
+                "phpunit/phpunit": "~9.3 || ~10.0",
+                "shiftonelabs/codesniffer-standard": "0.*",
+                "squizlabs/php_codesniffer": "3.*",
+                "vlucas/phpdotenv": "~5.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "ShiftOneLabs\\LaravelSqsFifoQueue\\LaravelSqsFifoQueueServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ShiftOneLabs\\LaravelSqsFifoQueue\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Patrick Carlo-Hickman",
+                    "email": "patrick@shiftonelabs.com"
+                }
+            ],
+            "description": "Adds a Laravel queue driver for Amazon SQS FIFO queues.",
+            "homepage": "https://github.com/shiftonelabs/laravel-sqs-fifo-queue",
+            "keywords": [
+                "aws",
+                "fifo",
+                "illuminate",
+                "laravel",
+                "lumen",
+                "queue",
+                "sqs"
+            ],
+            "support": {
+                "issues": "https://github.com/shiftonelabs/laravel-sqs-fifo-queue/issues",
+                "source": "https://github.com/shiftonelabs/laravel-sqs-fifo-queue"
+            },
+            "time": "2023-05-11T00:00:21+00:00"
         },
         {
             "name": "stella-maris/clock",
@@ -10974,16 +11044,16 @@
         "php": "^8.1",
         "ext-bcmath": "*",
         "ext-curl": "*",
+        "ext-fileinfo": "*",
         "ext-json": "*",
+        "ext-libxml": "*",
         "ext-mbstring": "*",
         "ext-pdo": "*",
         "ext-posix": "*",
-        "ext-xsl": "*",
-        "ext-libxml": "*",
-        "ext-xml": "*",
-        "ext-zlib": "*",
         "ext-simplexml": "*",
-        "ext-fileinfo": "*"
+        "ext-xml": "*",
+        "ext-xsl": "*",
+        "ext-zlib": "*"
     },
     "platform-dev": {
         "ext-dom": "*",
