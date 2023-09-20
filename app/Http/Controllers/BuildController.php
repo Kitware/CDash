@@ -169,6 +169,17 @@ final class BuildController extends AbstractBuildController
         $build_response['lastsubmitbuild'] = $previous_buildid;
         $build_response['lastsubmitdate'] = $lastsubmitdate;
 
+        // Add labels to the response
+        // TODO: Make this more efficient by getting all of the labels right away instead of the labelids
+        $labelids = $this->build->GetLabels();
+        $labels = [];
+        foreach ($labelids as $labelid) {
+            $label = new Label();
+            $label->Id = $labelid;
+            $labels[] = $label->GetText();
+        }
+        $build_response['labels'] = $labels;
+
         $e_errors = $this->build->GetErrors(['type' => Build::TYPE_ERROR]);
         $e_warnings = $this->build->GetErrors(['type' => Build::TYPE_WARN]);
 
