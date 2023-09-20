@@ -41,7 +41,6 @@ use Illuminate\Support\Carbon;
  * @property int $autoremovetimeframe
  * @property int $autoremovemaxbuilds
  * @property int $uploadquota
- * @property int $tokenduration
  * @property int $showcoveragecode
  * @property int $sharelabelfilters
  * @property int $authenticatesubmissions
@@ -89,7 +88,6 @@ class Project extends Model
         'autoremovetimeframe',
         'autoremovemaxbuilds',
         'uploadquota',
-        'tokenduration',
         'showcoveragecode',
         'sharelabelfilters',
         'authenticatesubmissions',

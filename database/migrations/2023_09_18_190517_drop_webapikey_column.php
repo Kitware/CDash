@@ -12,7 +12,7 @@ return new class extends Migration {
     public function up()
     {
         if (Schema::hasTable('project')) {
-            Schema::dropColumns('project', 'webapikey');
+            Schema::dropColumns('project', ['webapikey', 'tokenduration']);
         }
     }
 
