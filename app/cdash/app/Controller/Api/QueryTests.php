@@ -17,6 +17,7 @@
 namespace CDash\Controller\Api;
 
 use App\Models\Measurement;
+use App\Models\TestMeasurement;
 use App\Models\TestOutput;
 use App\Models\Project as EloquentProject;
 
@@ -154,15 +155,20 @@ class QueryTests extends ResultsApi
     private function applySafeDelimiter($pattern)
     {
         foreach ($this->delimiters as $delimiter) {
-            if (strpos($pattern, $delimiter) === false) {
+            if (!str_contains($pattern, $delimiter)) {
                 return $delimiter . $pattern . $delimiter;
             }
         }
         return $pattern;
     }
 
-    // Add extra test measurement fields (including proc time) for this build.
-    private function addExtraMeasurements(&$test, $outputid)
+    /**
+     * Add extra test measurement fields (including proc time) for this build.
+     *
+     * @param array<string,mixed> $test
+     * @param array<TestMeasurement> $testmeasurements
+     */
+    private function addExtraMeasurements(array &$test, array $testmeasurements)
     {
         if ($this->hasProcessors) {
             $test['nprocs'] = '';
@@ -171,23 +177,20 @@ class QueryTests extends ResultsApi
             $test['prettyProcTime'] = time_difference($test['procTime'], true, '', true);
         }
         $test['measurements'] = array_fill(0, $this->numExtraMeasurements, '');
-        $stmt = $this->db->prepare(
-            'SELECT name, value FROM testmeasurement WHERE outputid = ?');
-        $this->db->execute($stmt, [$outputid]);
-        while ($row = $stmt->fetch()) {
-            if ($row['name'] == 'Processors') {
+        foreach ($testmeasurements as $row) {
+            if ($row->name === 'Processors') {
                 // For API backwards compatibility, we continue to report 'nprocs' separately
                 // rather than including it in the 'measurements' array.
-                $test['nprocs'] = $row['value'];
+                $test['nprocs'] = $row->value;
                 // Update Proc Time.
-                $test['procTime'] = $test['time'] * $row['value'];
+                $test['procTime'] = $test['time'] * $row->value;
                 $test['prettyProcTime'] = time_difference($test['procTime'], true, '', true);
             } else {
-                $idx = array_search($row['name'], $this->extraMeasurements);
+                $idx = array_search($row->name, $this->extraMeasurements);
                 if ($idx === false) {
                     continue;
                 }
-                $test['measurements'][$idx] = $row['value'];
+                $test['measurements'][$idx] = $row->value;
             }
         }
     }
@@ -380,7 +383,21 @@ class QueryTests extends ResultsApi
                         $date_clause
                         $this->filterSQL
                     ORDER BY build2test.status, test.name
-                    $this->limitSQL", $query_params);
+                    $this->limitSQL
+                ", $query_params);
+
+        $outputids = [];
+        foreach ($rows as $row) {
+            $outputids[] = (int) $row->outputid;
+        }
+
+        $outputid_to_testmeasurements = [];
+        foreach (TestMeasurement::whereIn('outputid', $outputids)->get() as $testmeasurement) {
+            if (!isset($outputid_to_testmeasurements[$testmeasurement->outputid])) {
+                $outputid_to_testmeasurements[$testmeasurement->outputid] = [];
+            }
+            $outputid_to_testmeasurements[$testmeasurement->outputid][] = $testmeasurement;
+        }
 
         // Rows of test data to be displayed to the user.
         $tests = [];
@@ -446,7 +463,7 @@ class QueryTests extends ResultsApi
             }
 
             if ($this->hasProcessors || $this->numExtraMeasurements > 0) {
-                $this->addExtraMeasurements($test, $row->outputid);
+                $this->addExtraMeasurements($test, $outputid_to_testmeasurements[(int) $row->outputid] ?? []);
             }
 
             $tests[] = $test;
