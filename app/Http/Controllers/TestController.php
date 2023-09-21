@@ -299,9 +299,35 @@ final class TestController extends AbstractProjectController
         $numtotal = 0;
         $test_measurements = [];
 
+        $buildids = [];
+        foreach ($result as $row) {
+            $buildids[] = (int) $row->buildid;
+        }
+        $buildids = array_unique($buildids);
+
+        $prepared_array = Database::getInstance()->createPreparedArray(count($buildids));
+        $query = DB::select("
+            SELECT
+                b2u.buildid as buildid,
+                status,
+                revision,
+                priorrevision,
+                path
+            FROM
+                buildupdate,
+                build2update AS b2u
+            WHERE
+                b2u.updateid = buildupdate.id
+                AND b2u.buildid IN $prepared_array
+        ", $buildids);
+        $status_by_buildid = [];
+        foreach ($query as $row) {
+            $status_by_buildid[(int) $row->buildid] = $row;
+        }
+
         $builds_response = [];
         foreach ($result as $row) {
-            $buildid = $row->buildid;
+            $buildid = (int) $row->buildid;
             $build_response = [];
 
             // Find the repository revision
@@ -312,22 +338,9 @@ final class TestController extends AbstractProjectController
                 'revisionurl' => '',
                 'revisiondiff' => '',
             ];
-            // Return the status
-            $status_array = DB::select('
-                SELECT
-                    status,
-                    revision,
-                    priorrevision,
-                    path
-                FROM
-                    buildupdate,
-                    build2update AS b2u
-                WHERE
-                    b2u.updateid = buildupdate.id
-                    AND b2u.buildid = ?
-            ', [intval($buildid)])[0] ?? [];
 
-            if ($status_array !== []) {
+            if (isset($status_by_buildid[$buildid])) {
+                $status_array = $status_by_buildid[$buildid];
                 if (strlen($status_array->status) > 0 && $status_array->status != '0') {
                     $update_response['status'] = $status_array->status;
                 } else {
