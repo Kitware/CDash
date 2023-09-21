@@ -31,8 +31,7 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
     protected $Append;
     /** @var  Build $Build */
     protected $Build;
-    /** @var  Site $Site */
-    protected $Site;
+    protected Site $Site;
     protected $SubProjectName;
 
     protected $ModelFactory;
