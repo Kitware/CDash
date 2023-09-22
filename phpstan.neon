@@ -39,7 +39,7 @@ parameters:
     checkUninitializedProperties: true
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
 
-    level: 7
+    level: 8
 
 includes:
     - vendor/phpstan/phpstan/conf/bleedingEdge.neon

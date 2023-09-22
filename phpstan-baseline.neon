@@ -52,7 +52,7 @@ parameters:
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
-			message: "#^Part \\$projectname \\(array\\|bool\\|string\\) of encapsed string cannot be cast to string\\.$#"
+			message: "#^Part \\$projectname \\(array\\|bool\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
 			count: 2
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
@@ -127,7 +127,7 @@ parameters:
 			path: app/Console/Commands/MigrateConfig.php
 
 		-
-			message: "#^Part \\$output_filename \\(array\\|bool\\|string\\) of encapsed string cannot be cast to string\\.$#"
+			message: "#^Part \\$output_filename \\(array\\|bool\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
 			count: 4
 			path: app/Console/Commands/MigrateConfig.php
 
@@ -389,52 +389,52 @@ parameters:
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^Cannot access offset 'groupid' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'groupid' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^Cannot access offset 'major' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'major' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^Cannot access offset 'minor' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'minor' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^Cannot access offset 'name' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'name' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^Cannot access offset 'projectid' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'projectid' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^Cannot access offset 'siteid' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'siteid' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^Cannot access offset 'submittime' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'submittime' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^Cannot access offset 'type' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'type' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^Cannot access offset 0 on array\\|false\\.$#"
+			message: "#^Cannot access offset 0 on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/Http/Controllers/AdminController.php
 
@@ -524,6 +524,16 @@ parameters:
 			path: app/Http/Controllers/Auth/LoginController.php
 
 		-
+			message: "#^Cannot access property \\$password on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/Auth/RegisterController.php
+
+		-
+			message: "#^Cannot call method passwords\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/Auth/RegisterController.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\RegisterController\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Http/Controllers/Auth/RegisterController.php
@@ -535,6 +545,16 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\RegisterController\\:\\:validator\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/Http/Controllers/Auth/RegisterController.php
+
+		-
+			message: "#^Parameter \\#1 \\$user of class Illuminate\\\\Auth\\\\Events\\\\Registered constructor expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, App\\\\Models\\\\User\\|null given\\.$#"
+			count: 1
+			path: app/Http/Controllers/Auth/RegisterController.php
+
+		-
+			message: "#^Parameter \\#1 \\$user of method Illuminate\\\\Contracts\\\\Auth\\\\StatefulGuard\\:\\:login\\(\\) expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, App\\\\Models\\\\User\\|null given\\.$#"
 			count: 1
 			path: app/Http/Controllers/Auth/RegisterController.php
 
@@ -627,6 +647,16 @@ parameters:
 		-
 			message: "#^Call to function array_search\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\Site\\|null\\.$#"
+			count: 3
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Cannot access property \\$name on App\\\\Models\\\\Site\\|null\\.$#"
+			count: 5
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -780,6 +810,11 @@ parameters:
 			path: app/Http/Controllers/BuildNoteController.php
 
 		-
+			message: "#^Cannot access property \\$name on App\\\\Models\\\\Site\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildNoteController.php
+
+		-
 			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
@@ -856,11 +891,6 @@ parameters:
 			path: app/Http/Controllers/CDash.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\User\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\User\\>\\:\\:\\$email\\.$#"
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			message: "#^Access to an undefined property App\\\\Models\\\\User\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\User\\>\\:\\:\\$full_name\\.$#"
 			count: 2
 			path: app/Http/Controllers/CoverageController.php
@@ -908,32 +938,42 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Cannot access offset 'branchestested' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'branchestested' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Cannot access offset 'branchesuntested' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'branchesuntested' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Cannot access offset 'c' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'c' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Cannot access offset 'loctested' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'loctested' on array\\|false\\|null\\.$#"
 			count: 4
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Cannot access offset 'locuntested' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'locuntested' on array\\|false\\|null\\.$#"
 			count: 4
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Cannot access offset 'text' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'text' on array\\|false\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			message: "#^Cannot access property \\$email on App\\\\Models\\\\User\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\User\\>\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			message: "#^Cannot access property \\$name on App\\\\Models\\\\Site\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
@@ -1123,6 +1163,11 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
+			message: "#^Only numeric types are allowed in \\*, int\\|null given on the left side\\.$#"
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
 			message: "#^Only numeric types are allowed in \\+, int\\<0, max\\>\\|false given on the left side\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
@@ -1213,6 +1258,11 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
+			message: "#^Cannot access property \\$name on App\\\\Models\\\\Site\\|null\\.$#"
+			count: 2
+			path: app/Http/Controllers/DynamicAnalysisController.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
 			count: 1
 			path: app/Http/Controllers/DynamicAnalysisController.php
@@ -1255,6 +1305,31 @@ parameters:
 		-
 			message: "#^Call to an undefined method App\\\\Models\\\\Project\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Project\\>\\:\\:measurements\\(\\)\\.$#"
 			count: 2
+			path: app/Http/Controllers/ManageMeasurementsController.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\Measurement\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageMeasurementsController.php
+
+		-
+			message: "#^Cannot access property \\$name on App\\\\Models\\\\Measurement\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageMeasurementsController.php
+
+		-
+			message: "#^Cannot access property \\$position on App\\\\Models\\\\Measurement\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageMeasurementsController.php
+
+		-
+			message: "#^Cannot access property \\$projectid on App\\\\Models\\\\Measurement\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageMeasurementsController.php
+
+		-
+			message: "#^Cannot call method save\\(\\) on App\\\\Models\\\\Measurement\\|null\\.$#"
+			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
@@ -1372,6 +1447,11 @@ parameters:
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
+			message: "#^Cannot call method IsAdmin\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 2
+			path: app/Http/Controllers/ManageProjectRolesController.php
+
+		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 8
 			path: app/Http/Controllers/ManageProjectRolesController.php
@@ -1480,6 +1560,26 @@ parameters:
 			path: app/Http/Controllers/ManageUsersController.php
 
 		-
+			message: "#^Cannot access property \\$admin on App\\\\Models\\\\User\\|null\\.$#"
+			count: 2
+			path: app/Http/Controllers/ManageUsersController.php
+
+		-
+			message: "#^Cannot access property \\$full_name on App\\\\Models\\\\User\\|null\\.$#"
+			count: 3
+			path: app/Http/Controllers/ManageUsersController.php
+
+		-
+			message: "#^Cannot call method delete\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/ManageUsersController.php
+
+		-
+			message: "#^Cannot call method save\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 2
+			path: app/Http/Controllers/ManageUsersController.php
+
+		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageUsersController.php
@@ -1571,9 +1671,14 @@ parameters:
 			path: app/Http/Controllers/MapController.php
 
 		-
-			message: "#^Part \\$date \\(0\\|0\\.0\\|array\\{\\}\\|string\\|false\\) of encapsed string cannot be cast to string\\.$#"
+			message: "#^Part \\$date \\(0\\|0\\.0\\|array\\{\\}\\|string\\|false\\|null\\) of encapsed string cannot be cast to string\\.$#"
 			count: 1
 			path: app/Http/Controllers/MapController.php
+
+		-
+			message: "#^Cannot access property \\$truncated_time on stdClass\\|null\\.$#"
+			count: 8
+			path: app/Http/Controllers/MonitorController.php
 
 		-
 			message: "#^Call to an undefined method CDash\\\\Middleware\\\\OAuth2\\\\OAuth2Interface\\:\\:getPrimaryEmail\\(\\)\\.$#"
@@ -1911,6 +2016,11 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
+			message: "#^Only numeric types are allowed in \\*, int\\|null given on the right side\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
 			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, float given\\.$#"
 			count: 1
 			path: app/Http/Controllers/ProjectOverviewController.php
@@ -1979,42 +2089,47 @@ parameters:
 			path: app/Http/Controllers/SiteController.php
 
 		-
-			message: "#^Cannot access offset 'c' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'c' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/SiteController.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/SiteController.php
 
 		-
-			message: "#^Cannot access offset 'ip' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'ip' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/Http/Controllers/SiteController.php
 
 		-
-			message: "#^Cannot access offset 'latitude' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'latitude' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/Http/Controllers/SiteController.php
 
 		-
-			message: "#^Cannot access offset 'longitude' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'longitude' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/Http/Controllers/SiteController.php
 
 		-
-			message: "#^Cannot access offset 'name' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'name' on array\\|false\\|null\\.$#"
 			count: 4
 			path: app/Http/Controllers/SiteController.php
 
 		-
-			message: "#^Cannot access offset 'outoforder' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'outoforder' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/Http/Controllers/SiteController.php
 
 		-
 			message: "#^Cannot access offset 0 on array\\|false\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Cannot access property \\$admin on App\\\\Models\\\\User\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/SiteController.php
 
@@ -2469,7 +2584,12 @@ parameters:
 			path: app/Http/Controllers/TestController.php
 
 		-
-			message: "#^Cannot access offset 'c' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'c' on array\\|false\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/TestController.php
+
+		-
+			message: "#^Cannot access property \\$projectid on App\\\\Models\\\\Test\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/TestController.php
 
@@ -2490,6 +2610,11 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\TestController\\:\\:details\\(\\) has parameter \\$buildtest_id with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/TestController.php
+
+		-
+			message: "#^Parameter \\#1 \\$projectid of method App\\\\Http\\\\Controllers\\\\AbstractProjectController\\:\\:setProjectById\\(\\) expects int, int\\|null given\\.$#"
 			count: 1
 			path: app/Http/Controllers/TestController.php
 
@@ -2640,6 +2765,16 @@ parameters:
 			path: app/Http/Controllers/UserStatisticsController.php
 
 		-
+			message: "#^Cannot access property \\$full_name on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/UserStatisticsController.php
+
+		-
+			message: "#^Parameter \\#2 \\$build of class CDash\\\\Controller\\\\Api\\\\ViewTest constructor expects CDash\\\\Model\\\\Build, CDash\\\\Model\\\\Build\\|null given\\.$#"
+			count: 1
+			path: app/Http/Controllers/ViewTestController.php
+
+		-
 			message: "#^PHPDoc type array of property App\\\\Http\\\\Kernel\\:\\:\\$middleware is not the same as PHPDoc type array\\<int, string\\> of overridden property Illuminate\\\\Foundation\\\\Http\\\\Kernel\\:\\:\\$middleware\\.$#"
 			count: 1
 			path: app/Http/Kernel.php
@@ -2678,6 +2813,11 @@ parameters:
 			message: "#^Property App\\\\Http\\\\Kernel\\:\\:\\$routeMiddleware type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Http/Kernel.php
+
+		-
+			message: "#^Cannot call method IsAdmin\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Http/Middleware/Admin.php
 
 		-
 			message: "#^Method App\\\\Http\\\\Middleware\\\\Admin\\:\\:handle\\(\\) has no return type specified\\.$#"
@@ -3203,6 +3343,11 @@ parameters:
 			path: app/Providers/AppServiceProvider.php
 
 		-
+			message: "#^Cannot access property \\$test on App\\\\Models\\\\TestOutput\\|null\\.$#"
+			count: 1
+			path: app/Providers/AuthServiceProvider.php
+
+		-
 			message: "#^PHPDoc type array of property App\\\\Providers\\\\AuthServiceProvider\\:\\:\\$policies is not the same as PHPDoc type array\\<class\\-string, class\\-string\\> of overridden property Illuminate\\\\Foundation\\\\Support\\\\Providers\\\\AuthServiceProvider\\:\\:\\$policies\\.$#"
 			count: 1
 			path: app/Providers/AuthServiceProvider.php
@@ -3294,6 +3439,11 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
+			count: 1
+			path: app/Rules/LdapFilterRules.php
+
+		-
+			message: "#^Parameter \\#1 \\$dn of method Adldap\\\\Connections\\\\ConnectionInterface\\:\\:search\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: app/Rules/LdapFilterRules.php
 
@@ -3586,6 +3736,11 @@ parameters:
 			path: app/Services/UnparsedSubmissionProcessor.php
 
 		-
+			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|null given\\.$#"
+			count: 1
+			path: app/Services/UnparsedSubmissionProcessor.php
+
+		-
 			message: "#^Parameter \\#2 \\$contents of static method Illuminate\\\\Contracts\\\\Filesystem\\\\Filesystem\\:\\:put\\(\\) expects resource\\|string, string\\|false given\\.$#"
 			count: 2
 			path: app/Services/UnparsedSubmissionProcessor.php
@@ -3852,7 +4007,7 @@ parameters:
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
-			message: "#^Cannot access offset 'a' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'a' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/Index.php
 
@@ -4731,11 +4886,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$projectid\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
 			message: "#^Call to an undefined method App\\\\Models\\\\Project\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Project\\>\\:\\:measurements\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
@@ -4758,6 +4908,11 @@ parameters:
 
 		-
 			message: "#^Call to function array_search\\(\\) requires parameter \\#3 to be set\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Cannot access property \\$projectid on object\\|null\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
@@ -5324,6 +5479,11 @@ parameters:
 			path: app/cdash/app/Middleware/OAuth2.php
 
 		-
+			message: "#^Parameter \\#1 \\$pattern of static method Illuminate\\\\Support\\\\Str\\:\\:is\\(\\) expects iterable\\<string\\>\\|string, array\\|string\\|null given\\.$#"
+			count: 1
+			path: app/cdash/app/Middleware/OAuth2.php
+
+		-
 			message: "#^Parameter \\#1 \\$token of method League\\\\OAuth2\\\\Client\\\\Provider\\\\AbstractProvider\\:\\:getResourceOwner\\(\\) expects League\\\\OAuth2\\\\Client\\\\Token\\\\AccessToken, League\\\\OAuth2\\\\Client\\\\Token\\\\AccessTokenInterface given\\.$#"
 			count: 1
 			path: app/cdash/app/Middleware/OAuth2.php
@@ -5389,21 +5549,6 @@ parameters:
 			path: app/cdash/app/Model/ActionableTypes.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\:\\:\\$timemean\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\:\\:\\$timestatus\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\:\\:\\$timestd\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$builderrors\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -5465,11 +5610,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property object\\:\\:\\$time\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\:\\:save\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -5577,6 +5717,36 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'testpassedpositive' on array\\{builderrorspositive\\: int, builderrorsnegative\\: int, buildwarningspositive\\: int, buildwarningsnegative\\: int, configureerrors\\: int, configurewarnings\\: int, testpassedpositive\\: int, testpassednegative\\: int, \\.\\.\\.\\}\\|false\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\Build\\|null\\.$#"
+			count: 2
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Cannot access property \\$name on App\\\\Models\\\\Test\\|null\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Cannot access property \\$timemean on App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\|null\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Cannot access property \\$timestatus on App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\|null\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Cannot access property \\$timestd on App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\|null\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Cannot call method save\\(\\) on App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\|null\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -7582,7 +7752,7 @@ parameters:
 			path: app/cdash/app/Model/BuildUpdate.php
 
 		-
-			message: "#^Cannot access offset 'c' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'c' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildUpdate.php
 
@@ -7788,11 +7958,6 @@ parameters:
 			path: app/cdash/app/Model/BuildUpdateFile.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\User\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\User\\>\\:\\:\\$full_name\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
 			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
@@ -7822,6 +7987,11 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 3
+			path: app/cdash/app/Model/BuildUserNote.php
+
+		-
+			message: "#^Cannot access property \\$full_name on App\\\\Models\\\\User\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\User\\>\\|null\\.$#"
+			count: 1
 			path: app/cdash/app/Model/BuildUserNote.php
 
 		-
@@ -8149,7 +8319,7 @@ parameters:
 			path: app/cdash/app/Model/CoverageFile2User.php
 
 		-
-			message: "#^Cannot access offset 'c' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'c' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/app/Model/CoverageFile2User.php
 
@@ -8165,6 +8335,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\CoverageFile2User\\:\\:GetCoverageFileId\\(\\) has parameter \\$buildid with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/CoverageFile2User.php
+
+		-
+			message: "#^Offset 'c' might not exist on array\\|null\\.$#"
 			count: 1
 			path: app/cdash/app/Model/CoverageFile2User.php
 
@@ -8225,7 +8400,7 @@ parameters:
 			path: app/cdash/app/Model/CoverageFileLog.php
 
 		-
-			message: "#^Cannot access offset 'fullpath' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'fullpath' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/app/Model/CoverageFileLog.php
 
@@ -8412,7 +8587,7 @@ parameters:
 			path: app/cdash/app/Model/CoverageSummary.php
 
 		-
-			message: "#^Cannot access offset 'c' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'c' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/app/Model/CoverageSummary.php
 
@@ -8637,7 +8812,7 @@ parameters:
 			path: app/cdash/app/Model/DynamicAnalysis.php
 
 		-
-			message: "#^Cannot access offset 'c' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'c' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/app/Model/DynamicAnalysis.php
 
@@ -8916,7 +9091,7 @@ parameters:
 			path: app/cdash/app/Model/Image.php
 
 		-
-			message: "#^Cannot access offset 'c' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'c' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Image.php
 
@@ -8999,6 +9174,11 @@ parameters:
 			message: "#^Property CDash\\\\Model\\\\Image\\:\\:\\$Name has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Image.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\Label\\|null\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Label.php
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
@@ -9085,7 +9265,7 @@ parameters:
 			path: app/cdash/app/Model/LabelEmail.php
 
 		-
-			message: "#^Cannot access offset 'c' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'c' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/app/Model/LabelEmail.php
 
@@ -9340,6 +9520,11 @@ parameters:
 
 		-
 			message: "#^Call to method DateTime\\:\\:setTimestamp\\(\\) with incorrect case\\: setTimeStamp$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: "#^Cannot call method IsAdmin\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -10043,13 +10228,18 @@ parameters:
 			path: app/cdash/app/Model/SubProjectGroup.php
 
 		-
-			message: "#^Cannot access offset 'c' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'c' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubProjectGroup.php
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 6
+			path: app/cdash/app/Model/SubProjectGroup.php
+
+		-
+			message: "#^Offset 'c' might not exist on array\\|null\\.$#"
+			count: 2
 			path: app/cdash/app/Model/SubProjectGroup.php
 
 		-
@@ -10104,6 +10294,11 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a ternary operator condition, CDash\\\\Model\\\\User\\|null given\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Subscriber.php
+
+		-
+			message: "#^Property CDash\\\\Model\\\\Subscriber\\:\\:\\$topics \\(CDash\\\\Messaging\\\\Topic\\\\TopicCollection\\) does not accept CDash\\\\Messaging\\\\Topic\\\\TopicCollection\\|null\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Subscriber.php
 
@@ -10435,7 +10630,7 @@ parameters:
 			path: app/cdash/app/Model/UserProject.php
 
 		-
-			message: "#^Cannot access offset 'c' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'c' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/app/Model/UserProject.php
 
@@ -10513,6 +10708,11 @@ parameters:
 			message: "#^Property CDash\\\\Model\\\\UserProject\\:\\:\\$UserId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/UserProject.php
+
+		-
+			message: "#^Cannot access property \\$Revision on CDash\\\\Model\\\\BuildUpdate\\|null\\.$#"
+			count: 2
+			path: app/cdash/app/Service/RepositoryService.php
 
 		-
 			message: "#^Method CDash\\\\Service\\\\RepositoryService\\:\\:setStatus\\(\\) has no return type specified\\.$#"
@@ -10646,6 +10846,11 @@ parameters:
 
 		-
 			message: "#^Cannot call method fetchAll\\(\\) on PDOStatement\\|false\\.$#"
+			count: 1
+			path: app/cdash/include/CDash/Database.php
+
+		-
+			message: "#^Cannot call method prepare\\(\\) on PDO\\|null\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Database.php
 
@@ -10859,6 +11064,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\System\\:\\:trimNullArguments\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/include/CDash/System.php
+
+		-
+			message: "#^Parameter \\#3 \\$response_code of function header expects int, int\\|null given\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/System.php
 
@@ -12440,6 +12650,11 @@ parameters:
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
+			message: "#^Parameter \\#1 \\$string of function strtolower expects string, string\\|null given\\.$#"
+			count: 1
+			path: app/cdash/include/Test/UseCase/BuildUseCase.php
+
+		-
 			message: "#^Property CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:\\$command has no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
@@ -13180,6 +13395,11 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
+			message: "#^Parameter \\#1 \\$useCase of method CDash\\\\Test\\\\CDashUseCaseTestCase\\:\\:setUseCaseModelFactory\\(\\) expects CDash\\\\Test\\\\UseCase\\\\UseCase, CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\|CDash\\\\Test\\\\UseCase\\\\ConfigUseCase\\|CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\|CDash\\\\Test\\\\UseCase\\\\TestUseCase\\|CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\|null given\\.$#"
+			count: 1
+			path: app/cdash/include/Test/UseCase/UseCase.php
+
+		-
 			message: "#^Property CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:\\$authors has no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UseCase.php
@@ -13536,6 +13756,16 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			message: "#^Cannot access property \\$admin on App\\\\Models\\\\User\\|null\\.$#"
+			count: 2
+			path: app/cdash/include/common.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
+			count: 2
+			path: app/cdash/include/common.php
+
+		-
 			message: "#^Cannot call method bindParam\\(\\) on PDOStatement\\|false\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -13562,6 +13792,11 @@ parameters:
 
 		-
 			message: "#^Function DeleteDirectory\\(\\) throws checked exception UnexpectedValueException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: "#^Function XMLStrFormat\\(\\) should return string but returns string\\|null\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -14031,6 +14266,11 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, array\\<int, string\\>\\|string\\|null given\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
 			message: "#^Parameter \\#4 \\$resultcontainer of function xslt_process expects string, null given\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -14387,18 +14627,23 @@ parameters:
 			path: app/cdash/include/dailyupdates.php
 
 		-
-			message: "#^Cannot access offset 'c' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'c' on array\\|false\\|null\\.$#"
 			count: 4
 			path: app/cdash/include/dailyupdates.php
 
 		-
-			message: "#^Cannot access offset 'cvsviewertype' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'cvsviewertype' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/include/dailyupdates.php
 
 		-
-			message: "#^Cannot access offset 'status' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'status' on array\\|false\\|null\\.$#"
 			count: 1
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: "#^Cannot access property \\$nodeValue on DOMElement\\|null\\.$#"
+			count: 4
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -14637,7 +14882,22 @@ parameters:
 			path: app/cdash/include/dailyupdates.php
 
 		-
+			message: "#^Parameter \\#1 \\$datetime of function strtotime expects string, string\\|null given\\.$#"
+			count: 1
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|null given\\.$#"
+			count: 1
+			path: app/cdash/include/dailyupdates.php
+
+		-
 			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
+			count: 1
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
 			count: 1
 			path: app/cdash/include/dailyupdates.php
 
@@ -15424,12 +15684,12 @@ parameters:
 			path: app/cdash/include/repository.php
 
 		-
-			message: "#^Cannot access offset 'cvsurl' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'cvsurl' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/include/repository.php
 
 		-
-			message: "#^Cannot access offset 'cvsviewertype' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'cvsviewertype' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/include/repository.php
 
@@ -16704,6 +16964,11 @@ parameters:
 			path: app/cdash/include/repository.php
 
 		-
+			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, string\\|null given\\.$#"
+			count: 1
+			path: app/cdash/include/repository.php
+
+		-
 			message: "#^Parameter \\#3 \\$value of function curl_setopt expects array\\|string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/include/repository.php
@@ -17005,37 +17270,37 @@ parameters:
 			path: app/cdash/include/upgrade_functions.php
 
 		-
-			message: "#^Cannot access offset 'configureduration' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'configureduration' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
 
 		-
-			message: "#^Cannot access offset 'duration' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'duration' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
 
 		-
-			message: "#^Cannot access offset 'numfails' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'numfails' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
 
 		-
-			message: "#^Cannot access offset 'timemean' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'timemean' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
 
 		-
-			message: "#^Cannot access offset 'timestd' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'timestd' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
 
 		-
-			message: "#^Cannot access offset 0 on array\\|false\\.$#"
+			message: "#^Cannot access offset 0 on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
 
@@ -18020,6 +18285,21 @@ parameters:
 			path: app/cdash/public/api/v1/index.php
 
 		-
+			message: "#^Cannot call method GetCurrentBuildId\\(\\) on CDash\\\\Model\\\\Build\\|null\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/index.php
+
+		-
+			message: "#^Cannot call method GetNextBuildId\\(\\) on CDash\\\\Model\\\\Build\\|null\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/index.php
+
+		-
+			message: "#^Cannot call method GetPreviousBuildId\\(\\) on CDash\\\\Model\\\\Build\\|null\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/index.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 3
 			path: app/cdash/public/api/v1/index.php
@@ -18050,6 +18330,11 @@ parameters:
 			path: app/cdash/public/api/v1/index.php
 
 		-
+			message: "#^Only numeric types are allowed in \\*, int\\|null given on the left side\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/index.php
+
+		-
 			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
 			count: 6
 			path: app/cdash/public/api/v1/index.php
@@ -18063,11 +18348,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
 			count: 4
 			path: app/cdash/public/api/v1/index.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Site\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Site\\>\\:\\:\\$name\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
@@ -18120,8 +18400,23 @@ parameters:
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 1
+			path: app/cdash/public/api/v1/manageBuildGroup.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/manageBuildGroup.php
+
+		-
+			message: "#^Cannot access property \\$name on App\\\\Models\\\\Site\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Site\\>\\|null\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/manageBuildGroup.php
+
+		-
+			message: "#^Cannot call method IsAdmin\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 2
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
@@ -21430,6 +21725,11 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
+			message: "#^Cannot access property \\$mostRecentInformation on App\\\\Models\\\\Site\\|null\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayHasKey\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
@@ -22327,7 +22627,7 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_unlink.php
 
 		-
-			message: "#^Argument of an invalid type array\\|string supplied for foreach, only iterables are supported\\.$#"
+			message: "#^Argument of an invalid type array\\|string\\|null supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -22362,6 +22662,11 @@ parameters:
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			message: "#^Cannot call method getAttribute\\(\\) on DOMElement\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -23861,7 +24166,7 @@ parameters:
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
-			message: "#^Cannot access offset 0 on array\\|false\\.$#"
+			message: "#^Cannot access offset 0 on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
@@ -24121,7 +24426,7 @@ parameters:
 			path: app/cdash/tests/test_branchcoverage.php
 
 		-
-			message: "#^Part \\$this\\-\\>buildid \\(0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\) of encapsed string cannot be cast to string\\.$#"
+			message: "#^Part \\$this\\-\\>buildid \\(0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\|null\\) of encapsed string cannot be cast to string\\.$#"
 			count: 1
 			path: app/cdash/tests/test_branchcoverage.php
 
@@ -24221,7 +24526,7 @@ parameters:
 			path: app/cdash/tests/test_builddetails.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 4
 			path: app/cdash/tests/test_builddetails.php
 
@@ -24325,7 +24630,7 @@ parameters:
 			path: app/cdash/tests/test_buildfailuredetails.php
 
 		-
-			message: "#^Cannot access offset 'numfails' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'numfails' on array\\|false\\|null\\.$#"
 			count: 6
 			path: app/cdash/tests/test_buildfailuredetails.php
 
@@ -25012,7 +25317,7 @@ parameters:
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
@@ -25155,27 +25460,32 @@ parameters:
 			path: app/cdash/tests/test_csvexport.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$builderrors\\.$#"
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$buildwarnings\\.$#"
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
 			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 4
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$testfailed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_deferredsubmissions.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$testpassed\\.$#"
+			message: "#^Cannot access property \\$builderrors on object\\|null\\.$#"
+			count: 1
+			path: app/cdash/tests/test_deferredsubmissions.php
+
+		-
+			message: "#^Cannot access property \\$buildwarnings on object\\|null\\.$#"
+			count: 1
+			path: app/cdash/tests/test_deferredsubmissions.php
+
+		-
+			message: "#^Cannot access property \\$id on object\\|null\\.$#"
+			count: 3
+			path: app/cdash/tests/test_deferredsubmissions.php
+
+		-
+			message: "#^Cannot access property \\$testfailed on object\\|null\\.$#"
+			count: 1
+			path: app/cdash/tests/test_deferredsubmissions.php
+
+		-
+			message: "#^Cannot access property \\$testpassed on object\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_deferredsubmissions.php
 
@@ -25344,6 +25654,16 @@ parameters:
 			path: app/cdash/tests/test_donehandler.php
 
 		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\Site\\|null\\.$#"
+			count: 1
+			path: app/cdash/tests/test_donehandler.php
+
+		-
+			message: "#^Cannot access property \\$name on App\\\\Models\\\\Site\\|null\\.$#"
+			count: 2
+			path: app/cdash/tests/test_donehandler.php
+
+		-
 			message: "#^Method DoneHandlerTestCase\\:\\:performTest\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_donehandler.php
@@ -25461,12 +25781,12 @@ parameters:
 			path: app/cdash/tests/test_dynamicanalysissummary.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_dynamicanalysissummary.php
 
 		-
-			message: "#^Cannot access offset 'numdefects' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'numdefects' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_dynamicanalysissummary.php
 
@@ -25556,11 +25876,6 @@ parameters:
 			path: app/cdash/tests/test_edituser.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
 			message: """
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
@@ -25587,6 +25902,16 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 2
+			path: app/cdash/tests/test_email.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\Site\\|null\\.$#"
+			count: 2
+			path: app/cdash/tests/test_email.php
+
+		-
+			message: "#^Cannot access property \\$id on object\\|null\\.$#"
+			count: 1
 			path: app/cdash/tests/test_email.php
 
 		-
@@ -25815,7 +26140,7 @@ parameters:
 			path: app/cdash/tests/test_externallinksfromtests.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_externallinksfromtests.php
 
@@ -25966,7 +26291,7 @@ parameters:
 			path: app/cdash/tests/test_hidecolumns.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_hidecolumns.php
 
@@ -26097,6 +26422,11 @@ parameters:
 			path: app/cdash/tests/test_indexfilters.php
 
 		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\Site\\|null\\.$#"
+			count: 1
+			path: app/cdash/tests/test_indexnextprevious.php
+
+		-
 			message: "#^Method IndexNextPreviousTestCase\\:\\:testIndexNextPrevious\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_indexnextprevious.php
@@ -26132,6 +26462,11 @@ parameters:
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
+			count: 1
+			path: app/cdash/tests/test_issuecreation.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_issuecreation.php
 
@@ -26537,6 +26872,16 @@ parameters:
 			message: "#^Property MultiCoverageTestCase\\:\\:\\$BuildId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_multicoverage.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\BuildTest\\|null\\.$#"
+			count: 1
+			path: app/cdash/tests/test_multiplelabelsfortests.php
+
+		-
+			message: "#^Cannot call method getLabels\\(\\) on App\\\\Models\\\\BuildTest\\|null\\.$#"
+			count: 1
+			path: app/cdash/tests/test_multiplelabelsfortests.php
 
 		-
 			message: "#^Method MultipleLabelsForTestsTestCase\\:\\:testMultipleLabelsForTests\\(\\) has no return type specified\\.$#"
@@ -27113,6 +27458,11 @@ parameters:
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
+			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, string\\|null given\\.$#"
+			count: 1
+			path: app/cdash/tests/test_projectwebpage.php
+
+		-
 			message: "#^Method ProjectXmlSequenceTestCase\\:\\:submitFile\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_projectxmlsequence.php
@@ -27157,6 +27507,16 @@ parameters:
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
+			count: 1
+			path: app/cdash/tests/test_putdynamicbuilds.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\Site\\|null\\.$#"
+			count: 1
+			path: app/cdash/tests/test_putdynamicbuilds.php
+
+		-
+			message: "#^Cannot access property \\$name on App\\\\Models\\\\Site\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_putdynamicbuilds.php
 
@@ -27266,6 +27626,16 @@ parameters:
 			path: app/cdash/tests/test_registeruser.php
 
 		-
+			message: "#^Cannot access property \\$password on App\\\\Models\\\\User\\|null\\.$#"
+			count: 3
+			path: app/cdash/tests/test_rehashpassword.php
+
+		-
+			message: "#^Cannot call method save\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/cdash/tests/test_rehashpassword.php
+
+		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_rehashpassword.php
@@ -27313,12 +27683,12 @@ parameters:
 			path: app/cdash/tests/test_removebuilds.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_removebuilds.php
 
 		-
-			message: "#^Cannot access offset mixed on array\\|false\\.$#"
+			message: "#^Cannot access offset mixed on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_removebuilds.php
 
@@ -27487,12 +27857,12 @@ parameters:
 			path: app/cdash/tests/test_replacebuild.php
 
 		-
-			message: "#^Cannot access offset 'generator' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'generator' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_replacebuild.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_replacebuild.php
 
@@ -27579,37 +27949,37 @@ parameters:
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
-			message: "#^Cannot access offset 'filename' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'filename' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
-			message: "#^Cannot access offset 'loctested' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'loctested' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
-			message: "#^Cannot access offset 'nfiles' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'nfiles' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
-			message: "#^Cannot access offset 'numdefects' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'numdefects' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
-			message: "#^Cannot access offset 'numfiles' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'numfiles' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
-			message: "#^Cannot access offset 'starttime' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'starttime' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
-			message: "#^Cannot access offset 'time' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'time' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_sequenceindependence.php
 
@@ -27707,7 +28077,7 @@ parameters:
 			path: app/cdash/tests/test_setup_repositories.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 3
 			path: app/cdash/tests/test_setup_repositories.php
 
@@ -27823,6 +28193,11 @@ parameters:
 			path: app/cdash/tests/test_subprojectemail.php
 
 		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/cdash/tests/test_subprojectemail.php
+
+		-
 			message: "#^Cannot access property \\$id on null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_subprojectemail.php
@@ -27900,7 +28275,7 @@ parameters:
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
-			message: "#^Cannot access offset 'parentid' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'parentid' on array\\|false\\|null\\.$#"
 			count: 3
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
@@ -28320,7 +28695,7 @@ parameters:
 			path: app/cdash/tests/test_timeoutsandmissingtests.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_timeoutsandmissingtests.php
 
@@ -28464,7 +28839,7 @@ parameters:
 			path: app/cdash/tests/test_truncateoutput.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_truncateoutput.php
 
@@ -28619,12 +28994,12 @@ parameters:
 			path: app/cdash/tests/test_updateappend.php
 
 		-
-			message: "#^Cannot access offset 'nfiles' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'nfiles' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_updateappend.php
 
 		-
-			message: "#^Cannot access offset 'updateid' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'updateid' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_updateappend.php
 
@@ -28740,42 +29115,42 @@ parameters:
 			path: app/cdash/tests/test_upgrade.php
 
 		-
-			message: "#^Cannot access offset 'buildduration' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'buildduration' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_upgrade.php
 
 		-
-			message: "#^Cannot access offset 'configureduration' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'configureduration' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_upgrade.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_upgrade.php
 
 		-
-			message: "#^Cannot access offset 'numdetails' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'numdetails' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_upgrade.php
 
 		-
-			message: "#^Cannot access offset 'numfails' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'numfails' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_upgrade.php
 
 		-
-			message: "#^Cannot access offset 'numrows' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'numrows' on array\\|false\\|null\\.$#"
 			count: 8
 			path: app/cdash/tests/test_upgrade.php
 
 		-
-			message: "#^Cannot access offset 'numsites' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'numsites' on array\\|false\\|null\\.$#"
 			count: 8
 			path: app/cdash/tests/test_upgrade.php
 
 		-
-			message: "#^Cannot access offset 'testduration' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'testduration' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_upgrade.php
 
@@ -28951,7 +29326,7 @@ parameters:
 			path: app/cdash/tests/test_usernotes.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_usernotes.php
 
@@ -29337,6 +29712,16 @@ parameters:
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
+			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
+			count: 3
+			path: app/cdash/xml_handlers/BazelJSON_handler.php
+
+		-
+			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, string\\|null given\\.$#"
+			count: 7
+			path: app/cdash/xml_handlers/BazelJSON_handler.php
+
+		-
 			message: "#^Property BazelJSONHandler\\:\\:\\$BuildErrorFilter has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
@@ -29588,13 +29973,28 @@ parameters:
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
+			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|null given\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/GcovTar_handler.php
+
+		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
 			count: 2
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
+			message: "#^Parameter \\#1 \\$key of function array_key_exists expects int\\|string, string\\|null given\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/GcovTar_handler.php
+
+		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, array\\|string\\|false given\\.$#"
 			count: 2
+			path: app/cdash/xml_handlers/GcovTar_handler.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function trim expects string, string\\|null given\\.$#"
+			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
@@ -29605,6 +30005,11 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, array\\|string\\|false given\\.$#"
 			count: 2
+			path: app/cdash/xml_handlers/GcovTar_handler.php
+
+		-
+			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, string\\|null given\\.$#"
+			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
@@ -30426,7 +30831,7 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
-			message: "#^Cannot access offset '' on 0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\.$#"
+			message: "#^Cannot access offset '' on 0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/build_handler.php
 
@@ -30641,7 +31046,7 @@ parameters:
 			path: app/cdash/xml_handlers/configure_handler.php
 
 		-
-			message: "#^Cannot access an offset on array\\|float\\|int\\|string\\|false\\.$#"
+			message: "#^Cannot access an offset on array\\|float\\|int\\|string\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/configure_handler.php
 
@@ -31026,7 +31431,7 @@ parameters:
 			path: app/cdash/xml_handlers/coverage_log_handler.php
 
 		-
-			message: "#^Cannot access an offset on array\\|float\\|int\\|string\\|false\\.$#"
+			message: "#^Cannot access an offset on array\\|float\\|int\\|string\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/coverage_log_handler.php
 
@@ -31139,6 +31544,11 @@ parameters:
 			message: "#^Property CoverageLogHandler\\:\\:\\$UpdateEndTime is never read, only written\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/coverage_log_handler.php
+
+		-
+			message: "#^Cannot access property \\$name on App\\\\Models\\\\Site\\|null\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/done_handler.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
@@ -31256,7 +31666,7 @@ parameters:
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
-			message: "#^Cannot access offset mixed on 0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\.$#"
+			message: "#^Cannot access offset mixed on 0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
@@ -32436,7 +32846,7 @@ parameters:
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
-			message: "#^Cannot access offset 'nightlytime' on array\\|false\\.$#"
+			message: "#^Cannot access offset 'nightlytime' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 
@@ -32761,17 +33171,17 @@ parameters:
 			path: routes/console.php
 
 		-
-			message: "#^Part \\$buildid \\(array\\|string\\) of encapsed string cannot be cast to string\\.$#"
+			message: "#^Part \\$buildid \\(array\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
 			count: 5
 			path: routes/web.php
 
 		-
-			message: "#^Part \\$imgid \\(array\\|string\\) of encapsed string cannot be cast to string\\.$#"
+			message: "#^Part \\$imgid \\(array\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
 			count: 1
 			path: routes/web.php
 
 		-
-			message: "#^Part \\$siteid \\(array\\|string\\) of encapsed string cannot be cast to string\\.$#"
+			message: "#^Part \\$siteid \\(array\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
 			count: 1
 			path: routes/web.php
 
@@ -32867,8 +33277,23 @@ parameters:
 			path: tests/Feature/LdapAuthWithRulesTest.php
 
 		-
+			message: "#^Cannot call method delete\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: tests/Feature/LoginAndRegistration.php
+
+		-
 			message: "#^Missing call to parent\\:\\:tearDown\\(\\) method\\.$#"
 			count: 1
+			path: tests/Feature/LoginAndRegistration.php
+
+		-
+			message: "#^Parameter \\#1 \\$model of method Illuminate\\\\Foundation\\\\Testing\\\\TestCase\\:\\:assertModelExists\\(\\) expects Illuminate\\\\Database\\\\Eloquent\\\\Model, App\\\\Models\\\\User\\|null given\\.$#"
+			count: 2
+			path: tests/Feature/LoginAndRegistration.php
+
+		-
+			message: "#^Parameter \\#1 \\$user of method Illuminate\\\\Foundation\\\\Testing\\\\TestCase\\:\\:assertAuthenticatedAs\\(\\) expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, App\\\\Models\\\\User\\|null given\\.$#"
+			count: 3
 			path: tests/Feature/LoginAndRegistration.php
 
 		-
@@ -32905,6 +33330,21 @@ parameters:
 			message: "#^Method Tests\\\\Feature\\\\OpenLdapAuthWithOverrides\\:\\:testOpenLdapUnmodifiedGuid\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: tests/Feature/OpenLdapAuthWithOverrides.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
+			count: 4
+			path: tests/Feature/PasswordRotation.php
+
+		-
+			message: "#^Cannot access property \\$institution on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: tests/Feature/PasswordRotation.php
+
+		-
+			message: "#^Parameter \\#1 \\$user of method Illuminate\\\\Foundation\\\\Testing\\\\TestCase\\:\\:actingAs\\(\\) expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, App\\\\Models\\\\User\\|null given\\.$#"
+			count: 5
+			path: tests/Feature/PasswordRotation.php
 
 		-
 			message: "#^Property Tests\\\\Feature\\\\PasswordRotation\\:\\:\\$user has no type specified\\.$#"
@@ -32998,6 +33438,16 @@ parameters:
 			message: "#^Dynamic call to static method Illuminate\\\\Http\\\\Response\\:\\:content\\(\\)\\.$#"
 			count: 1
 			path: tests/Feature/SlowPageTest.php
+
+		-
+			message: "#^Cannot access property \\$admin on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: tests/Feature/UserCommand.php
+
+		-
+			message: "#^Cannot access property \\$institution on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: tests/Feature/UserCommand.php
 
 		-
 			message: "#^Property Tests\\\\Feature\\\\UserCommand\\:\\:\\$user has no type specified\\.$#"
