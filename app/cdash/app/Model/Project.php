@@ -86,7 +86,6 @@ class Project
     public $AutoremoveTimeframe;
     public int $AutoremoveMaxBuilds;
     public $UploadQuota;
-    public $WebApiKey;
     public $WarningsFilter;
     public $ErrorsFilter;
     /** @var Database $PDO */
@@ -151,9 +150,6 @@ class Project
         }
         if (empty($this->UploadQuota)) {
             $this->UploadQuota = 0;
-        }
-        if (empty($this->WebApiKey)) {
-            $this->WebApiKey = '';
         }
         if (empty($this->EmailMaxItems)) {
             $this->EmailMaxItems = 5;
@@ -386,13 +382,6 @@ class Project
             $this->TestTimeMaxStatus = $project->testtimemaxstatus;
             $this->EmailMaxItems = $project->emailmaxitems;
             $this->EmailMaxChars = $project->emailmaxchars;
-            $this->WebApiKey = $project->webapikey;
-            if (strlen($this->WebApiKey) === 0) {
-                // If no web API key exists, we add one
-                $project->webapikey = generate_password(40);
-                $project->save();
-                $this->WebApiKey = $project->webapikey;
-            }
         }
 
         // Check if we have filters
