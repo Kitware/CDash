@@ -1,0 +1,432 @@
+apiVersion: v1
+items:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: cdash
+      name: cdash
+    spec:
+      ports:
+        - name: "8080"
+          port: 8080
+          targetPort: 8080
+      selector:
+        io.kompose.service: cdash
+    status:
+      loadBalancer: {}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: selenium-hub
+      name: selenium-hub
+    spec:
+      ports:
+        - name: "4444"
+          port: 4444
+          targetPort: 4444
+      selector:
+        io.kompose.service: selenium-hub
+    status:
+      loadBalancer: {}
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: cdash
+      name: cdash
+    spec:
+      replicas: 1
+      selector:
+        io.kompose.service: cdash
+      strategy:
+        resources: {}
+        type: Recreate
+      template:
+        metadata:
+          creationTimestamp: null
+          labels:
+            io.kompose.network/cdash-default: "true"
+            io.kompose.service: cdash
+        spec:
+          containers:
+            - env:
+                - name: CDASH_ROOT_ADMIN_EMAIL
+                  value: root@docker.container
+                - name: CDASH_ROOT_ADMIN_PASS
+                  value: secret
+                - name: DB_CONNECTION
+                  value: mysql
+                - name: DB_HOST
+                  value: database
+                - name: DB_LOGIN
+                  value: root
+                - name: DB_PORT
+                  value: "3306"
+              image: ' '
+              livenessProbe:
+                exec:
+                  command:
+                    - ps aux | grep apache2 | grep -v grep > /dev/null
+                failureThreshold: 20
+                periodSeconds: 5
+                timeoutSeconds: 10
+              name: cdash
+              ports:
+                - containerPort: 8080
+              resources: {}
+              volumeMounts:
+                - mountPath: /cdash/storage
+                  name: storage
+                - mountPath: /cdash_src
+                  name: cdash-claim1
+                  readOnly: true
+          restartPolicy: Always
+          volumes:
+            - name: storage
+              persistentVolumeClaim:
+                claimName: storage
+            - name: cdash-claim1
+              persistentVolumeClaim:
+                claimName: cdash-claim1
+                readOnly: true
+      test: false
+      triggers:
+        - type: ConfigChange
+        - imageChangeParams:
+            automatic: true
+            containerNames:
+              - cdash
+            from:
+              kind: ImageStreamTag
+              name: cdash:testing
+          type: ImageChange
+    status:
+      availableReplicas: 0
+      latestVersion: 0
+      observedGeneration: 0
+      replicas: 0
+      unavailableReplicas: 0
+      updatedReplicas: 0
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: cdash
+      name: cdash
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - annotations: null
+          from:
+            kind: DockerImage
+            name: kitware/cdash:testing
+          generation: null
+          importPolicy: {}
+          name: testing
+          referencePolicy:
+            type: ""
+    status:
+      dockerImageRepository: ""
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: storage
+      name: storage
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Mi
+    status: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: cdash-claim1
+      name: cdash-claim1
+    spec:
+      accessModes:
+        - ReadOnlyMany
+      resources:
+        requests:
+          storage: 100Mi
+    status: {}
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: chrome
+      name: chrome
+    spec:
+      replicas: 1
+      selector:
+        io.kompose.service: chrome
+      strategy:
+        resources: {}
+        type: Recreate
+      template:
+        metadata:
+          creationTimestamp: null
+          labels:
+            io.kompose.network/cdash-default: "true"
+            io.kompose.service: chrome
+        spec:
+          containers:
+            - env:
+                - name: HUB_HOST
+                  value: selenium-hub
+                - name: HUB_PORT
+                  value: "4444"
+              image: ' '
+              name: chrome
+              resources: {}
+              volumeMounts:
+                - mountPath: /dev/shm
+                  name: chrome-claim0
+          restartPolicy: Always
+          volumes:
+            - name: chrome-claim0
+              persistentVolumeClaim:
+                claimName: chrome-claim0
+      test: false
+      triggers:
+        - type: ConfigChange
+        - imageChangeParams:
+            automatic: true
+            containerNames:
+              - chrome
+            from:
+              kind: ImageStreamTag
+              name: chrome:3.141.59-mercury
+          type: ImageChange
+    status:
+      availableReplicas: 0
+      latestVersion: 0
+      observedGeneration: 0
+      replicas: 0
+      unavailableReplicas: 0
+      updatedReplicas: 0
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: chrome
+      name: chrome
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - annotations: null
+          from:
+            kind: DockerImage
+            name: selenium/node-chrome:3.141.59-mercury
+          generation: null
+          importPolicy: {}
+          name: 3.141.59-mercury
+          referencePolicy:
+            type: ""
+    status:
+      dockerImageRepository: ""
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: chrome-claim0
+      name: chrome-claim0
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Mi
+    status: {}
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: database
+      name: database
+    spec:
+      replicas: 1
+      selector:
+        io.kompose.service: database
+      strategy:
+        resources: {}
+        type: Recreate
+      template:
+        metadata:
+          creationTimestamp: null
+          labels:
+            io.kompose.network/cdash-default: "true"
+            io.kompose.service: database
+        spec:
+          containers:
+            - env:
+                - name: MYSQL_DATABASE
+                  value: cdash4simpletest
+                - name: MYSQL_ROOT_HOST
+                  value: '%'
+                - name: MYSQL_ROOT_PASSWORD
+                  value: cdash4simpletest
+              image: ' '
+              livenessProbe:
+                exec:
+                  command:
+                    - mysql
+                    - -u
+                    - root
+                    - -pcdash4simpletest
+                    - -e
+                    - USE information_schema;
+                failureThreshold: 20
+                periodSeconds: 1
+                timeoutSeconds: 5
+              name: cdash-mysql
+              resources: {}
+              volumeMounts:
+                - mountPath: /var/lib/mysql
+                  name: mysqldata
+          restartPolicy: Always
+          volumes:
+            - name: mysqldata
+              persistentVolumeClaim:
+                claimName: mysqldata
+      test: false
+      triggers:
+        - type: ConfigChange
+        - imageChangeParams:
+            automatic: true
+            containerNames:
+              - cdash_mysql
+            from:
+              kind: ImageStreamTag
+              name: database:8.0
+          type: ImageChange
+    status:
+      availableReplicas: 0
+      latestVersion: 0
+      observedGeneration: 0
+      replicas: 0
+      unavailableReplicas: 0
+      updatedReplicas: 0
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: database
+      name: database
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - annotations: null
+          from:
+            kind: DockerImage
+            name: mysql/mysql-server:8.0
+          generation: null
+          importPolicy: {}
+          name: "8.0"
+          referencePolicy:
+            type: ""
+    status:
+      dockerImageRepository: ""
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mysqldata
+      name: mysqldata
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Mi
+    status: {}
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: selenium-hub
+      name: selenium-hub
+    spec:
+      replicas: 1
+      selector:
+        io.kompose.service: selenium-hub
+      strategy:
+        resources: {}
+      template:
+        metadata:
+          creationTimestamp: null
+          labels:
+            io.kompose.network/cdash-default: "true"
+            io.kompose.service: selenium-hub
+        spec:
+          containers:
+            - image: ' '
+              name: selenium-hub
+              ports:
+                - containerPort: 4444
+              resources: {}
+          restartPolicy: Always
+      test: false
+      triggers:
+        - type: ConfigChange
+        - imageChangeParams:
+            automatic: true
+            containerNames:
+              - selenium-hub
+            from:
+              kind: ImageStreamTag
+              name: selenium-hub:3.141.59-mercury
+          type: ImageChange
+    status:
+      availableReplicas: 0
+      latestVersion: 0
+      observedGeneration: 0
+      replicas: 0
+      unavailableReplicas: 0
+      updatedReplicas: 0
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: selenium-hub
+      name: selenium-hub
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - annotations: null
+          from:
+            kind: DockerImage
+            name: selenium/hub:3.141.59-mercury
+          generation: null
+          importPolicy: {}
+          name: 3.141.59-mercury
+          referencePolicy:
+            type: ""
+    status:
+      dockerImageRepository: ""
+kind: List
+metadata: {}
+

@@ -1,0 +1,108 @@
+# name: cdash
+version: "3.8"
+services:
+  cdash:
+    build:
+      context: /home/softhat/Work/LANL/CDash
+      dockerfile: ./docker/cdash.docker
+      args:
+        DEVELOPMENT_BUILD: "1"
+      target: cdash
+    container_name: cdash
+    depends_on:
+      - chrome
+      - database
+      - selenium-hub
+    environment:
+      CDASH_ROOT_ADMIN_EMAIL: root@docker.container
+      CDASH_ROOT_ADMIN_PASS: secret
+      DB_CONNECTION: mysql
+      DB_HOST: database
+      DB_LOGIN: root
+      DB_PORT: 3306
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - ps aux | grep apache2 | grep -v grep > /dev/null
+      timeout: 10s
+      interval: 5s
+      retries: 20
+    image: kitware/cdash:testing
+    links:
+    - database
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 8080
+      published: 8080
+      protocol: tcp
+    volumes:
+    - type: volume
+      source: storage
+      target: /cdash/storage
+    - type: bind
+      source: /home/softhat/Work/LANL/CDash
+      target: /cdash_src
+      read_only: true
+      bind:
+        create_host_path: true
+  chrome:
+    depends_on:
+      - selenium-hub
+    environment:
+      HUB_HOST: selenium-hub
+      HUB_PORT: 4444
+    image: selenium/node-chrome:3.141.59-mercury
+    networks:
+      default: null
+    volumes:
+    - type: bind
+      source: /dev/shm
+      target: /dev/shm
+      bind:
+        create_host_path: true
+  database:
+    container_name: cdash_mysql
+    environment:
+      MYSQL_DATABASE: cdash4simpletest
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: cdash4simpletest
+    healthcheck:
+      test:
+      - CMD
+      - mysql
+      - -u
+      - root
+      - -pcdash4simpletest
+      - -e
+      - USE information_schema;
+      timeout: 5s
+      interval: 1s
+      retries: 20
+    image: mysql/mysql-server:8.0
+    networks:
+      default: null
+    volumes:
+    - type: volume
+      source: mysqldata
+      target: /var/lib/mysql
+      volume: {}
+  selenium-hub:
+    container_name: selenium-hub
+    image: selenium/hub:3.141.59-mercury
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 4444
+      published: 4444
+      protocol: tcp
+networks:
+  default:
+    name: cdash_default
+volumes:
+  mysqldata:
+    name: cdash_mysqldata
+  storage:
+    name: cdash_storage

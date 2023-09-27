@@ -1,0 +1,320 @@
+apiVersion: v1
+items:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --provider kubernetes -f kompose.yml -o kubernetes
+        kompose.version: 1.27.0 (b0ed6a2c9)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: cdash
+      name: cdash
+    spec:
+      ports:
+        - name: "8080"
+          port: 8080
+          targetPort: 8080
+      selector:
+        io.kompose.service: cdash
+    status:
+      loadBalancer: {}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --provider kubernetes -f kompose.yml -o kubernetes
+        kompose.version: 1.27.0 (b0ed6a2c9)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: selenium-hub
+      name: selenium-hub
+    spec:
+      ports:
+        - name: "4444"
+          port: 4444
+          targetPort: 4444
+      selector:
+        io.kompose.service: selenium-hub
+    status:
+      loadBalancer: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --provider kubernetes -f kompose.yml -o kubernetes
+        kompose.version: 1.27.0 (b0ed6a2c9)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: cdash
+      name: cdash
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: cdash
+      strategy:
+        type: Recreate
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose convert --provider kubernetes -f kompose.yml -o kubernetes
+            kompose.version: 1.27.0 (b0ed6a2c9)
+          creationTimestamp: null
+          labels:
+            io.kompose.network/cdash-default: "true"
+            io.kompose.service: cdash
+        spec:
+          containers:
+            - env:
+                - name: CDASH_ROOT_ADMIN_EMAIL
+                  value: root@docker.container
+                - name: CDASH_ROOT_ADMIN_PASS
+                  value: secret
+                - name: DB_CONNECTION
+                  value: mysql
+                - name: DB_HOST
+                  value: database
+                - name: DB_LOGIN
+                  value: root
+                - name: DB_PORT
+                  value: "3306"
+              image: kitware/cdash:testing
+              livenessProbe:
+                exec:
+                  command:
+                    - ps aux | grep apache2 | grep -v grep > /dev/null
+                failureThreshold: 20
+                periodSeconds: 5
+                timeoutSeconds: 10
+              name: cdash
+              ports:
+                - containerPort: 8080
+              resources: {}
+              volumeMounts:
+                - mountPath: /cdash/storage
+                  name: storage
+                - mountPath: /cdash_src
+                  name: cdash-claim1
+                  readOnly: true
+          restartPolicy: Always
+          volumes:
+            - name: storage
+              persistentVolumeClaim:
+                claimName: storage
+            - name: cdash-claim1
+              persistentVolumeClaim:
+                claimName: cdash-claim1
+                readOnly: true
+    status: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: storage
+      name: storage
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Mi
+    status: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: cdash-claim1
+      name: cdash-claim1
+    spec:
+      accessModes:
+        - ReadOnlyMany
+      resources:
+        requests:
+          storage: 100Mi
+    status: {}
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      creationTimestamp: null
+      name: cdash-default
+    spec:
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  io.kompose.network/cdash-default: "true"
+      podSelector:
+        matchLabels:
+          io.kompose.network/cdash-default: "true"
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --provider kubernetes -f kompose.yml -o kubernetes
+        kompose.version: 1.27.0 (b0ed6a2c9)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: chrome
+      name: chrome
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: chrome
+      strategy:
+        type: Recreate
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose convert --provider kubernetes -f kompose.yml -o kubernetes
+            kompose.version: 1.27.0 (b0ed6a2c9)
+          creationTimestamp: null
+          labels:
+            io.kompose.network/cdash-default: "true"
+            io.kompose.service: chrome
+        spec:
+          containers:
+            - env:
+                - name: HUB_HOST
+                  value: selenium-hub
+                - name: HUB_PORT
+                  value: "4444"
+              image: selenium/node-chrome:3.141.59-mercury
+              name: chrome
+              resources: {}
+              volumeMounts:
+                - mountPath: /dev/shm
+                  name: chrome-claim0
+          restartPolicy: Always
+          volumes:
+            - name: chrome-claim0
+              persistentVolumeClaim:
+                claimName: chrome-claim0
+    status: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: chrome-claim0
+      name: chrome-claim0
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Mi
+    status: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --provider kubernetes -f kompose.yml -o kubernetes
+        kompose.version: 1.27.0 (b0ed6a2c9)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: database
+      name: database
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: database
+      strategy:
+        type: Recreate
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose convert --provider kubernetes -f kompose.yml -o kubernetes
+            kompose.version: 1.27.0 (b0ed6a2c9)
+          creationTimestamp: null
+          labels:
+            io.kompose.network/cdash-default: "true"
+            io.kompose.service: database
+        spec:
+          containers:
+            - env:
+                - name: MYSQL_DATABASE
+                  value: cdash4simpletest
+                - name: MYSQL_ROOT_HOST
+                  value: '%'
+                - name: MYSQL_ROOT_PASSWORD
+                  value: cdash4simpletest
+              image: mysql/mysql-server:8.0
+              livenessProbe:
+                exec:
+                  command:
+                    - mysql
+                    - -u
+                    - root
+                    - -pcdash4simpletest
+                    - -e
+                    - USE information_schema;
+                failureThreshold: 20
+                periodSeconds: 1
+                timeoutSeconds: 5
+              name: cdash-mysql
+              resources: {}
+              volumeMounts:
+                - mountPath: /var/lib/mysql
+                  name: mysqldata
+          restartPolicy: Always
+          volumes:
+            - name: mysqldata
+              persistentVolumeClaim:
+                claimName: mysqldata
+    status: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mysqldata
+      name: mysqldata
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Mi
+    status: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --provider kubernetes -f kompose.yml -o kubernetes
+        kompose.version: 1.27.0 (b0ed6a2c9)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: selenium-hub
+      name: selenium-hub
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: selenium-hub
+      strategy: {}
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose convert --provider kubernetes -f kompose.yml -o kubernetes
+            kompose.version: 1.27.0 (b0ed6a2c9)
+          creationTimestamp: null
+          labels:
+            io.kompose.network/cdash-default: "true"
+            io.kompose.service: selenium-hub
+        spec:
+          containers:
+            - image: selenium/hub:3.141.59-mercury
+              name: selenium-hub
+              ports:
+                - containerPort: 4444
+              resources: {}
+          restartPolicy: Always
+    status: {}
+kind: List
+metadata: {}
+
