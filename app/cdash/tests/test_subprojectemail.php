@@ -15,6 +15,7 @@ use CDash\Model\Project;
 use CDash\Model\SubProject;
 use CDash\Model\UserProject;
 use CDash\Database;
+use Illuminate\Support\Facades\DB;
 
 class SubProjectEmailTestCase extends KWWebTestCase
 {
@@ -55,9 +56,7 @@ class SubProjectEmailTestCase extends KWWebTestCase
         $this->Project->Id = $projectid;
 
         // Unsubscribe default admin from this project.
-        $stmt = $this->PDO->prepare(
-            'DELETE FROM user2project WHERE userid = ? AND projectid = ?');
-        pdo_execute($stmt, [1, $this->Project->Id]);
+        DB::delete('DELETE FROM user2project WHERE userid = 1 AND projectid = ?', [$this->Project->Id]);
 
         // Configure this project to send email for Experimental builds.
         $stmt = $this->PDO->prepare(

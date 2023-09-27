@@ -17,6 +17,7 @@
 namespace CDash\Model;
 
 use CDash\Database;
+use Illuminate\Support\Facades\DB;
 
 /** Coverage file to users */
 class CoverageFile2User
@@ -108,45 +109,32 @@ class CoverageFile2User
     } // function Insert
 
     /** Remove authors */
-    public function RemoveAuthors(): bool
+    public function RemoveAuthors(): void
     {
         if ($this->FullPath == '' || $this->ProjectId < 1) {
             abort(500, 'CoverageFile2User:RemoveAuthors: FullPath or ProjectId not set');
         }
-
-        $db = Database::getInstance();
-        $query_result = $db->executePrepared('DELETE FROM coveragefile2user WHERE fileid=?', [$this->GetId()]);
-        if (!$query_result) {
-            add_last_sql_error('CoverageFile2User:RemoveAuthors');
-            return false;
-        }
-        return true;
+        DB::delete('DELETE FROM coveragefile2user WHERE fileid = ?', [$this->GetId()]);
     }
 
     /** Remove the new user */
-    public function Remove(): bool
+    public function Remove(): void
     {
         if (!isset($this->UserId) || $this->UserId < 1) {
-            return false;
+            abort(500, 'Invalid UserId');
         }
         if (!isset($this->FileId) || $this->FileId < 1) {
-            return false;
+            abort(500, 'Invalid FileId');
         }
 
-        $db = Database::getInstance();
-        $query_result = $db->executePrepared('
-                            DELETE FROM coveragefile2user
-                            WHERE
-                                userid=?
-                                AND fileid=?
-                        ', [$this->UserId, $this->FileId]);
-        if ($query_result === false) {
-            add_last_sql_error('CoverageFile2User:Remove');
-            return false;
-        }
+        DB::delete('
+            DELETE FROM coveragefile2user
+            WHERE
+                userid=?
+                AND fileid=?
+        ', [$this->UserId, $this->FileId]);
 
         $this->FixPosition();
-        return true;
     }
 
     /** Fix the position given a file */

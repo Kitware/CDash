@@ -7,6 +7,7 @@ use App\Models\AuthToken;
 use App\Services\AuthTokenService;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
+use Illuminate\Support\Facades\DB;
 
 class AuthTokenTestCase extends KWWebTestCase
 {
@@ -211,7 +212,7 @@ class AuthTokenTestCase extends KWWebTestCase
     public function testSubmissionFailsWithInvalidToken()
     {
         // Revoke user's access to this project.
-        $this->PDO->query("DELETE FROM user2project WHERE projectid = {$this->Project->Id}");
+        DB::delete("DELETE FROM user2project WHERE projectid = {$this->Project->Id}");
 
         // Make sure the various submission paths fail for our token now.
         $headers = ["Authorization: Bearer {$this->Token}"];

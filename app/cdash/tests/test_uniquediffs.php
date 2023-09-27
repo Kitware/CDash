@@ -76,13 +76,9 @@ class UniqueDiffsTestCase extends KWWebTestCase
         $this->checkRowCount($pdo, 'testdiff', 1);
 
         // Cleanup
-        $stmt = $pdo->prepare('DELETE FROM builderrordiff WHERE buildid=?');
-        $stmt->execute([$this->BuildId]);
-        $stmt = $pdo->prepare('DELETE FROM configureerrordiff WHERE buildid=?');
-        $stmt->execute([$this->BuildId]);
-        $stmt = $pdo->prepare('DELETE FROM testdiff WHERE buildid=?');
-        $stmt->execute([$this->BuildId]);
-
+        DB::delete('DELETE FROM builderrordiff WHERE buildid=?', [$this->BuildId]);
+        DB::delete('DELETE FROM configureerrordiff WHERE buildid=?', [$this->BuildId]);
+        DB::delete('DELETE FROM testdiff WHERE buildid=?', [$this->BuildId]);
         DB::delete('DELETE FROM build WHERE id = ?', [$build->Id]);
     }
 

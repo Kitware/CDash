@@ -16,6 +16,7 @@
 namespace CDash\Model;
 
 use CDash\Database;
+use Illuminate\Support\Facades\DB;
 
 class BuildGroupRule
 {
@@ -220,7 +221,7 @@ class BuildGroupRule
     }
 
     /** Soft delete all active previous versions of this rule. */
-    public function SoftDeleteExpiredRules($now)
+    public function SoftDeleteExpiredRules($now): void
     {
         $stmt = $this->PDO->prepare(
             "UPDATE build2grouprule
@@ -240,7 +241,7 @@ class BuildGroupRule
     }
 
     /** Change the group that this rule points to. */
-    public function ChangeGroup($newgroupid)
+    public function ChangeGroup($newgroupid): void
     {
         $stmt = $this->PDO->prepare(
             "UPDATE build2grouprule SET groupid = :newgroupid
@@ -270,24 +271,20 @@ class BuildGroupRule
         $this->PDO->execute($stmt, $query_params);
     }
 
-    public static function DeleteExpiredRulesForProject($projectid, $cutoff_date)
+    public static function DeleteExpiredRulesForProject($projectid, $cutoff_date): void
     {
-        $db = Database::getInstance();
-        $stmt = $db->prepare(
-            "DELETE FROM build2grouprule
-            WHERE groupid IN
-                (SELECT id FROM buildgroup WHERE projectid = :projectid)
+        DB::delete("
+            DELETE FROM build2grouprule
+            WHERE groupid IN (
+                SELECT id FROM buildgroup WHERE projectid = ?
+            )
             AND endtime != '1980-01-01 00:00:00'
-            AND endtime < :endtime");
-        $query_params = [
-            ':projectid' => $projectid,
-            ':endtime'   => $cutoff_date,
-        ];
-        $db->execute($stmt, $query_params);
+            AND endtime < ?
+        ", [$projectid, $cutoff_date]);
     }
 
     // Populate this object with a row from the database and a projectid.
-    public function FillFromRow($row, $projectid)
+    public function FillFromRow($row, $projectid): void
     {
         $this->BuildName = $row['buildname'];
         $this->BuildType = $row['buildtype'];

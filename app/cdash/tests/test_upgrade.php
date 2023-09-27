@@ -10,6 +10,7 @@ use CDash\Config;
 use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
+use Illuminate\Support\Facades\DB;
 
 class UpgradeTestCase extends KWWebTestCase
 {
@@ -573,10 +574,10 @@ class UpgradeTestCase extends KWWebTestCase
         // Remove any testing data that we inserted in the existing tables.
         foreach ($tables_to_update as $table_to_update) {
             foreach ($keepers as $keeper) {
-                pdo_query("DELETE FROM $table_to_update WHERE siteid=$keeper");
+                DB::delete("DELETE FROM $table_to_update WHERE siteid=$keeper");
             }
             foreach ($dupes as $dupe) {
-                pdo_query("DELETE FROM $table_to_update WHERE siteid=$dupe");
+                DB::delete("DELETE FROM $table_to_update WHERE siteid=$dupe");
             }
         }
 

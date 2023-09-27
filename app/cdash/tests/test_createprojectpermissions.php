@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -75,8 +77,8 @@ class CreateProjectPermissionsTestCase extends KWWebTestCase
         $stmt->execute(['user1@kw']);
         $row = $stmt->fetch();
         $userid = $row['id'];
-        $pdo->query("DELETE FROM user2project WHERE userid=$userid");
-        $pdo->query("INSERT INTO user2project (userid, projectid, role, emailtype) VALUES ($userid, 5, 2, 2)");
+        DB::delete("DELETE FROM user2project WHERE userid=$userid");
+        DB::insert("INSERT INTO user2project (userid, projectid, role, emailtype) VALUES ($userid, 5, 2, 2)");
 
         // Cannot create project.
         $response = $this->get($this->url . '/api/v1/createProject.php');
@@ -114,6 +116,6 @@ class CreateProjectPermissionsTestCase extends KWWebTestCase
         $this->assertFalse(property_exists($response->project, 'UploadQuota'));
 
         // Cleanup.
-        $pdo->query("DELETE FROM user2project WHERE userid=$userid");
+        DB::delete("DELETE FROM user2project WHERE userid=$userid");
     }
 }

@@ -17,6 +17,7 @@
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\DynamicAnalysisSummary;
+use Illuminate\Support\Facades\DB;
 
 // Helper function to alter a table
 function AddTableField($table, $field, $mySQLType, $pgSqlType, $default)
@@ -407,7 +408,7 @@ function ComputeUpdateStatistics($days = 4)
 /** Delete unused rows */
 function delete_unused_rows($table, $field, $targettable, $selectfield = 'id')
 {
-    pdo_query("DELETE FROM $table WHERE $field NOT IN (SELECT $selectfield AS $field FROM $targettable)");
+    DB::delete("DELETE FROM $table WHERE $field NOT IN (SELECT $selectfield AS $field FROM $targettable)");
     echo pdo_error();
 }
 
@@ -703,9 +704,9 @@ function AddUniqueConstraintToSiteTable($site_table)
                         WHERE siteid=$id_to_remove");
             }
             // Remove the duplicate.
-            pdo_query("DELETE FROM siteinformation WHERE siteid=$id_to_remove");
-            pdo_query("DELETE FROM client_jobschedule2site WHERE siteid=$id_to_remove");
-            pdo_query("DELETE FROM $site_table WHERE id=$id_to_remove");
+            DB::delete("DELETE FROM siteinformation WHERE siteid=$id_to_remove");
+            DB::delete("DELETE FROM client_jobschedule2site WHERE siteid=$id_to_remove");
+            DB::delete("DELETE FROM $site_table WHERE id=$id_to_remove");
         }
     }
 
@@ -896,7 +897,7 @@ function PopulateBuild2Configure($configure_table, $b2c_table)
         }
         if ($current_batch_size >= 5000) {
             // Insert this batch.
-            pdo_query(
+            DB::insert(
                 "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
              VALUES " . implode(',', $inserts));
             $total_inserted += $current_batch_size;
@@ -913,14 +914,14 @@ function PopulateBuild2Configure($configure_table, $b2c_table)
     }
     if (!empty($inserts)) {
         add_log("Inserting b2c rows for duplicate crc32s (100%)", 'PopulateBuild2Configure');
-        pdo_query(
+        DB::insert(
             "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
          VALUES " . implode(',', $inserts));
     }
 
     // Delete configure rows that have duplicate crc32 values.
     add_log('Deleting duplicate crc32s', 'PopulateBuild2Configure');
-    pdo_query("
+    DB::delete("
         DELETE FROM $configure_table WHERE id NOT IN
             (SELECT * FROM
                 (SELECT MIN(c.id) FROM $configure_table c GROUP BY c.crc32)
@@ -928,7 +929,7 @@ function PopulateBuild2Configure($configure_table, $b2c_table)
 
     // Populate build2configure for surviving configure rows.
     add_log('Inserting remaining b2c rows', 'PopulateBuild2Configure');
-    pdo_query(
+    DB::insert(
         "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
         SELECT id, buildid, starttime, endtime FROM $configure_table");
     add_log('Migration complete!', 'PopulateBuild2Configure');
@@ -991,7 +992,7 @@ function PopulateTestDuration($src_table = 'buildtesttime',
                 INNER JOIN $src_table btt ON b.id = btt.buildid
                 SET b.testduration = btt.time");
     }
-    $pdo->exec("DELETE FROM $src_table");
+    DB::delete("DELETE FROM $src_table");
 }
 
 /** Migrate values from buildtesttime.time to build.testduration

@@ -22,6 +22,7 @@ use App\Services\PageTimer;
 use CDash\Database;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 $pageTimer = new PageTimer();
 $response = begin_JSON_response();
@@ -65,8 +66,7 @@ if (isset($_POST['saveLayout'])) {
     $inputRows = json_decode($_POST['saveLayout'], true);
     if (!is_null($inputRows)) {
         // Remove any old overview layout from this project.
-        $db->executePrepared('DELETE FROM overview_components WHERE projectid=?', [intval($projectid)]);
-        add_last_sql_error('manageOverview::saveLayout::DELETE', $projectid);
+        DB::delete('DELETE FROM overview_components WHERE projectid=?', [intval($projectid)]);
 
         // Construct a query to insert the new layout.
         $query = 'INSERT INTO overview_components (projectid, buildgroupid, position, type) VALUES ';

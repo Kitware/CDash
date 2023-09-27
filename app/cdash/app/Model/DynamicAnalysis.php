@@ -17,6 +17,7 @@ namespace CDash\Model;
 
 use CDash\Config;
 use CDash\Database;
+use Illuminate\Support\Facades\DB;
 
 class DynamicAnalysis
 {
@@ -84,7 +85,7 @@ class DynamicAnalysis
     }
 
     /** Remove all the dynamic analysis associated with a buildid */
-    public function RemoveAll(): bool
+    public function RemoveAll(): void
     {
         if (strlen($this->BuildId) == 0) {
             abort(500, 'DynamicAnalysis::RemoveAll BuildId not set');
@@ -99,42 +100,25 @@ class DynamicAnalysis
             //
             // TODO: (williamjallen) Figure out what to do with the potential race condition caused here.
             //       Ideally this should be done via a cascading delete, or at least in a single transaction.
-            $query = $db->executePrepared('
-                         DELETE FROM dynamicanalysisdefect
-                         USING dynamicanalysis
-                         WHERE
-                             dynamicanalysis.buildid=?
-                             AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid
-                     ', [$this->BuildId]);
+            DB::delete('
+                 DELETE FROM dynamicanalysisdefect
+                 USING dynamicanalysis
+                 WHERE
+                     dynamicanalysis.buildid = ?
+                     AND dynamicanalysis.id = dynamicanalysisdefect.dynamicanalysisid
+            ', [$this->BuildId]);
 
-            if ($query === false) {
-                add_last_sql_error('DynamicAnalysis RemoveAll', 0, $this->BuildId);
-                return false;
-            }
-
-            $query = $db->executePrepared('DELETE FROM dynamicanalysis WHERE dynamicanalysis.buildid=?', [$this->BuildId]);
+            DB::delete('DELETE FROM dynamicanalysis WHERE dynamicanalysis.buildid = ?', [$this->BuildId]);
         } else {
-            $query = $db->executePrepared('
-                         DELETE dynamicanalysisdefect, dynamicanalysis
-                         FROM dynamicanalysisdefect, dynamicanalysis
-                         WHERE
-                             dynamicanalysis.buildid=?
-                             AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid
-                     ', [$this->BuildId]);
+            DB::delete('
+                DELETE dynamicanalysisdefect, dynamicanalysis
+                FROM dynamicanalysisdefect, dynamicanalysis
+                WHERE
+                 dynamicanalysis.buildid=?
+                 AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid
+            ', [$this->BuildId]);
         }
-
-        if ($query === false) {
-            add_last_sql_error('DynamicAnalysis RemoveAll', 0, $this->BuildId);
-            return false;
-        }
-
-        $query = $db->executePrepared('DELETE FROM dynamicanalysis WHERE buildid=?', [$this->BuildId]);
-        if ($query === false) {
-            add_last_sql_error('DynamicAnalysis RemoveAll', 0, $this->BuildId);
-            return false;
-        }
-
-        return true;
+        DB::delete('DELETE FROM dynamicanalysis WHERE buildid=?', [$this->BuildId]);
     }
 
     /** Insert labels */

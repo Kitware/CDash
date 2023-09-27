@@ -8,6 +8,7 @@ use App\Services\TestingDay;
 use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -115,7 +116,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         $db->execute($stmt, $query_params);
 
         // Looks like it's a new day
-        $pdo->exec("DELETE FROM dailyupdate WHERE projectid='{$projectid}'");
+        DB::delete("DELETE FROM dailyupdate WHERE projectid='{$projectid}'");
 
         $testxml2 = "$rep/2_test.xml";
         if (!$this->submission('EmailProjectExample', $testxml2)) {

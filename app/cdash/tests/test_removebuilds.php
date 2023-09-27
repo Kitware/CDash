@@ -27,6 +27,7 @@ use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\Image;
 use CDash\Model\Label;
 use CDash\Model\UploadFile;
+use Illuminate\Support\Facades\DB;
 
 class RemoveBuildsTestCase extends KWWebTestCase
 {
@@ -168,7 +169,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $update->Command = 'git fetch';
         $update->Insert();
 
-        pdo_query("INSERT INTO build2update (buildid, updateid)
+        DB::insert("INSERT INTO build2update (buildid, updateid)
             VALUES ($existing_build->Id, $update->UpdateId)");
 
         // Coverage

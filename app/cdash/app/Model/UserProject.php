@@ -17,6 +17,7 @@ namespace CDash\Model;
 
 use CDash\Database;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class UserProject
 {
@@ -223,14 +224,13 @@ class UserProject
 
         // Remove the one that have been removed
         $prepared_array = $db->createPreparedArray(count($credentials));
-        $db->executePrepared("
+        DB::delete("
             DELETE FROM user2repository
             WHERE
                 userid=?
                 AND projectid=?
                 AND credential NOT IN $prepared_array
         ", array_merge([$this->UserId, $this->ProjectId], $credentials));
-        add_last_sql_error('UserProject UpdateCredentials');
         return true;
     }
 

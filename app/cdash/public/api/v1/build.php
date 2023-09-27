@@ -20,6 +20,7 @@ require_once 'include/api_common.php';
 
 use CDash\Database;
 use CDash\Model\BuildGroupRule;
+use Illuminate\Support\Facades\DB;
 
 init_api_request();
 $build = get_request_build();
@@ -77,9 +78,7 @@ function rest_post($build)
         $newgroupid = $_POST['newgroupid'];
 
         // Remove the build from its previous group.
-        $delete_stmt = $pdo->prepare(
-            'DELETE FROM build2group WHERE buildid = :buildid');
-        $pdo->execute($delete_stmt, [':buildid' => $build->Id]);
+        DB::delete('DELETE FROM build2group WHERE buildid = ?', [$build->Id]);
 
         // Insert it into the new group.
         $insert_stmt = $pdo->prepare(

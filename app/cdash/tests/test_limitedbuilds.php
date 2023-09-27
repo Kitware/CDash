@@ -11,6 +11,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 class LimitedBuildsTestCase extends KWWebTestCase
 {
@@ -100,9 +101,8 @@ class LimitedBuildsTestCase extends KWWebTestCase
         foreach ($this->Projects as $project) {
             remove_project_builds($project->Id);
         }
-        $delete_stmt = $this->PDO->prepare('DELETE FROM project WHERE name = ?');
-        $delete_stmt->execute(['Limited']);
-        $delete_stmt->execute(['Unlimited']);
+        DB::delete("DELETE FROM project WHERE name = 'Limited'");
+        DB::delete("DELETE FROM project WHERE name = 'Unlimited'");
         $this->deleteLog($this->logfilename);
     }
 }

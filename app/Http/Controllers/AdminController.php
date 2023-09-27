@@ -192,7 +192,7 @@ final class AdminController extends AbstractController
             // We need to move the buildupdate build ids to the build2update table
             $query = pdo_query('SELECT buildid FROM buildupdate');
             while ($query_array = pdo_fetch_array($query)) {
-                pdo_query("INSERT INTO build2update (buildid,updateid) VALUES ('" . $query_array['buildid'] . "','" . $query_array['buildid'] . "')");
+                DB::insert("INSERT INTO build2update (buildid,updateid) VALUES ('" . $query_array['buildid'] . "','" . $query_array['buildid'] . "')");
             }
             RemoveTableIndex('buildupdate', 'buildid');
             RenameTableField('buildupdate', 'buildid', 'id', 'int(11)', 'bigint', '0');
@@ -678,7 +678,7 @@ final class AdminController extends AbstractController
                 $buildgroup_array = pdo_fetch_array(pdo_query("SELECT id FROM buildgroup WHERE name='$buildtype' AND projectid='$projectid'"));
 
                 $groupid = $buildgroup_array['id'];
-                pdo_query("INSERT INTO build2group(buildid,groupid) VALUES ('$buildid','$groupid')");
+                DB::insert("INSERT INTO build2group(buildid,groupid) VALUES ('$buildid','$groupid')");
             }
 
             $xml .= add_XML_value('alert', 'Builds have been added to default groups successfully.');
