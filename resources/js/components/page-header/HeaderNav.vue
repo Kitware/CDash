@@ -29,7 +29,7 @@
       id="header-nav-current-btn"
       :class="currentClass"
     >
-      <a :href="current">CURRENT</a>
+      <a :href="current">LATEST</a>
     </li>
     <li
       id="header-nav-next-btn"

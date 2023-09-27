@@ -76,7 +76,7 @@ $hideRegistration = config('auth.user_registration_form_enabled') === false;
                         <li class="btncurr">
                             <a ng-if="cdash.menu.current"
                                ng-href="{{::cdash.menu.current}}{{::cdash.filterurl}}">
-                                Current
+                                Latest
                             </a>
                         </li>
                         <li class="btnnext">
