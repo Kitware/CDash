@@ -149,27 +149,6 @@ function pdo_real_escape_string(mixed $unescaped_string): string
 }
 
 /**
- * Case for numeric empty string in Postgres.
- *
- * @deprecated 04/01/2023
- */
-function pdo_real_escape_numeric(mixed $unescaped_string): float|int|string
-{
-    if (config('database.default') === 'pgsql' && $unescaped_string == '') {
-        // MySQL interprets an empty string as zero when assigned to a numeric field,
-        // for PostgreSQL this must be done explicitly:
-        $unescaped_string = '0';
-    }
-
-    // Return zero if we don't end up with a numeric value.
-    $escaped_string = pdo_real_escape_string($unescaped_string);
-    if (!is_numeric($escaped_string)) {
-        return 0;
-    }
-    return $escaped_string;
-}
-
-/**
  * DEPRECATED - use Database::getInstance()->execute(...)
  *
  * Execute a prepared statement and log any errors that occur.

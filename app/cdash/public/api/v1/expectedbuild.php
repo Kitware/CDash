@@ -54,10 +54,10 @@ if (!function_exists('CDash\Api\v1\ExpectedBuild\rest_get')) {
     {
         $response = [];
 
-        if (!array_key_exists('currenttime', $_REQUEST)) {
+        if (!isset($_REQUEST['currenttime'])) {
             abort(400, '"currenttime" not specified in request.');
         }
-        $currenttime = pdo_real_escape_numeric($_REQUEST['currenttime']);
+        $currenttime = (int) $_REQUEST['currenttime'];
         $currentUTCtime = gmdate(FMT_DATETIME, $currenttime);
 
         // Find the last time this expected build submitted.
@@ -130,8 +130,8 @@ foreach ($required_params as $param) {
         abort(400, "$param not specified.");
     }
 }
-$siteid = pdo_real_escape_numeric($_REQUEST['siteid']);
-$buildgroupid = pdo_real_escape_numeric($_REQUEST['groupid']);
+$siteid = (int) $_REQUEST['siteid'];
+$buildgroupid = (int) $_REQUEST['groupid'];
 $buildname = htmlspecialchars(pdo_real_escape_string($_REQUEST['name']));
 $buildtype = htmlspecialchars(pdo_real_escape_string($_REQUEST['type']));
 

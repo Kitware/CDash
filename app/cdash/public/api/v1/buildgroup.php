@@ -27,8 +27,8 @@ use Symfony\Component\HttpFoundation\Response;
 // Require administrative access to view this page.
 init_api_request();
 
-if (array_key_exists('projectid', $_REQUEST)) {
-    $projectid = pdo_real_escape_numeric($_REQUEST['projectid']);
+if (isset($_REQUEST['projectid'])) {
+    $projectid = (int) $_REQUEST['projectid'];
 } else {
     $project = get_project_from_request();
     $projectid = $project->Id;
@@ -61,7 +61,7 @@ function rest_delete()
 {
     if (isset($_GET['buildgroupid'])) {
         // Delete the specified BuildGroup.
-        $buildgroupid = pdo_real_escape_numeric($_GET['buildgroupid']);
+        $buildgroupid = (int) $_GET['buildgroupid'];
         $Group = new BuildGroup();
         $Group->SetId($buildgroupid);
         $Group->Delete();
@@ -197,8 +197,7 @@ function rest_post($pdo, $projectid)
             $groupid = $group['id'];
 
             $Build = new Build();
-            $buildid = pdo_real_escape_numeric($buildinfo['id']);
-            $Build->Id = $buildid;
+            $Build->Id = (int) $buildinfo['id'];
             $Build->FillFromId($Build->Id);
             $prevgroupid = $Build->GroupId;
 
@@ -208,7 +207,7 @@ function rest_post($pdo, $projectid)
                 SET groupid = :groupid
                 WHERE groupid = :prevgroupid AND
                       buildid = :buildid');
-            pdo_execute($stmt, [$groupid, $prevgroupid, $buildid]);
+            pdo_execute($stmt, [$groupid, $prevgroupid, $Build->Id]);
 
             // Soft delete any previous rules.
             $buildgrouprule = new BuildGroupRule($Build);
@@ -315,18 +314,14 @@ function rest_put($projectid)
         }
 
         $BuildGroup = new BuildGroup();
-        $BuildGroup->SetId(pdo_real_escape_numeric($buildgroup['id']));
+        $BuildGroup->SetId((int) $buildgroup['id']);
         $BuildGroup->SetName(pdo_real_escape_string($buildgroup['name']));
         $BuildGroup->SetDescription(
             pdo_real_escape_string($buildgroup['description']));
-        $BuildGroup->SetSummaryEmail(
-            pdo_real_escape_numeric($buildgroup['summaryemail']));
-        $BuildGroup->SetEmailCommitters(
-            pdo_real_escape_numeric($buildgroup['emailcommitters']));
-        $BuildGroup->SetIncludeSubProjectTotal(
-            pdo_real_escape_numeric($buildgroup['includesubprojecttotal']));
-        $BuildGroup->SetAutoRemoveTimeFrame(
-            pdo_real_escape_numeric($buildgroup['autoremovetimeframe']));
+        $BuildGroup->SetSummaryEmail((int) $buildgroup['summaryemail']);
+        $BuildGroup->SetEmailCommitters((int) $buildgroup['emailcommitters']);
+        $BuildGroup->SetIncludeSubProjectTotal((int) $buildgroup['includesubprojecttotal']);
+        $BuildGroup->SetAutoRemoveTimeFrame((int) $buildgroup['autoremovetimeframe']);
 
         if (!$BuildGroup->Save()) {
             abort(500, 'Failed to save BuildGroup');
@@ -335,7 +330,7 @@ function rest_put($projectid)
 
     if (isset($_REQUEST['dynamiclist']) && !empty($_REQUEST['dynamiclist'])) {
         // Update a list of dynamic builds.
-        $buildgroupid = pdo_real_escape_numeric($_REQUEST['buildgroupid']);
+        $buildgroupid = (int) $_REQUEST['buildgroupid'];
         $build_group = new BuildGroup();
         $build_group->SetId($buildgroupid);
         $old_rules = $build_group->GetRules();

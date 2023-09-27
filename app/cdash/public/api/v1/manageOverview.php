@@ -36,23 +36,17 @@ if (!Auth::check()) {
 }
 
 // Make sure a project was specified.
-$projectid_ok = false;
-@$projectid = $_GET['projectid'];
-if (!isset($projectid)) {
+$projectid = $_GET['projectid'] ?? null;
+if ($projectid === null) {
     $rest_json = file_get_contents('php://input');
     $_POST = json_decode($rest_json, true);
     $projectid = $_POST['projectid'];
 }
-if (isset($projectid)) {
-    $projectid = pdo_real_escape_numeric($projectid);
-    if (is_numeric($projectid)) {
-        $projectid_ok = true;
-    }
-}
-if (!$projectid_ok) {
+if (!is_numeric($projectid)) {
     $response['error'] = "Please specify a project";
     return json_encode($response);
 }
+$projectid = (int) $projectid;
 
 $Project = new Project();
 $Project->Id = $projectid;

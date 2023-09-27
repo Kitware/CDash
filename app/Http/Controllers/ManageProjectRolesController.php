@@ -61,19 +61,19 @@ final class ManageProjectRolesController extends AbstractProjectController
         @$adduser = $_POST['adduser'];
         @$removeuser = $_POST['removeuser'];
 
-        @$userid = $_POST['userid'];
-        if ($userid != null) {
-            $userid = pdo_real_escape_numeric($userid);
+        $userid = $_POST['userid'] ?? null;
+        if ($userid !== null) {
+            $userid = (int) $userid;
         }
 
-        @$role = $_POST['role'];
-        if ($role != null) {
-            $role = pdo_real_escape_numeric($role);
+        $role = $_POST['role'] ?? null;
+        if ($role !== null) {
+            $role = (int) $role;
         }
 
-        @$emailtype = $_POST['emailtype'];
-        if ($emailtype != null) {
-            $emailtype = pdo_real_escape_numeric($emailtype);
+        $emailtype = $_POST['emailtype'] ?? null;
+        if ($emailtype !== null) {
+            $emailtype = (int) $emailtype;
         }
 
         @$credentials = $_POST['credentials'];

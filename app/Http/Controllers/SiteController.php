@@ -213,12 +213,12 @@ final class SiteController extends AbstractController
         }
 
         // If we have a projectid that means we should list all the sites
-        @$projectid = $_GET['projectid'];
-        if ($projectid != null) {
-            $projectid = pdo_real_escape_numeric($projectid);
+        $projectid = $_GET['projectid'] ?? null;
+        if ($projectid !== null) {
+            $projectid = (int) $projectid;
         }
-        if (isset($projectid) && is_numeric($projectid)) {
-            $project_array = $db->executePreparedSingleRow('SELECT name FROM project WHERE id=?', [intval($projectid)]);
+        if ($projectid !== null) {
+            $project_array = $db->executePreparedSingleRow('SELECT name FROM project WHERE id=?', [$projectid]);
             $xml .= '<project>';
             $xml .= add_XML_value('id', $projectid);
             $xml .= add_XML_value('name', $project_array['name']);
@@ -234,7 +234,7 @@ final class SiteController extends AbstractController
                                     AND build.starttime>?
                                     AND site.id=build.siteid
                                 ORDER BY site.name ASC
-                            ', [intval($projectid), $beginUTCTime]);
+                            ', [$projectid, $beginUTCTime]);
 
             foreach ($site2project as $site2project_array) {
                 $siteid = intval($site2project_array['id']);
@@ -256,14 +256,14 @@ final class SiteController extends AbstractController
         }
 
         // If we have a siteid we look if the user has claimed the site or not
-        @$siteid = $_GET['siteid'];
-        if ($siteid != null) {
-            $siteid = pdo_real_escape_numeric($siteid);
+        $siteid = $_GET['siteid'] ?? null;
+        if ($siteid !== null) {
+            $siteid = (int) $siteid;
         }
-        if (isset($siteid) && is_numeric($siteid)) {
+        if ($siteid !== null) {
             $xml .= '<user>';
             $xml .= '<site>';
-            $site_array = $db->executePreparedSingleRow('SELECT * FROM site WHERE id=?', [intval($siteid)]);
+            $site_array = $db->executePreparedSingleRow('SELECT * FROM site WHERE id=?', [$siteid]);
 
             $siteinformation_array = [];
             $siteinformation_array['description'] = 'NA';
@@ -287,7 +287,7 @@ final class SiteController extends AbstractController
                          WHERE siteid=?
                          ORDER BY timestamp DESC
                          LIMIT 1
-                     ', [intval($siteid)]);
+                     ', [$siteid]);
             if (!empty($query)) {
                 $siteinformation_array = $query;
                 if ($siteinformation_array['processoris64bits'] == -1) {
@@ -353,7 +353,7 @@ final class SiteController extends AbstractController
                                  AND up.role>0
                                  AND su.siteid=?
                                  AND su.userid=?
-                         ', [intval($siteid), intval($userid)]);
+                         ', [$siteid, $userid]);
             echo pdo_error();
             if (!empty($user2site)) {
                 $xml .= add_XML_value('siteclaimed', '0');
@@ -378,25 +378,26 @@ final class SiteController extends AbstractController
         $site_array = $db->executePreparedSingleRow("SELECT * FROM site WHERE id=?", [$siteid]);
         $sitename = $site_array['name'];
 
-        @$currenttime = $_GET['currenttime'];
-        if ($currenttime != null) {
-            $currenttime = pdo_real_escape_numeric($currenttime);
+        $currenttime = $_GET['currenttime'] ?? null;
+        if ($currenttime !== null) {
+            $currenttime = (int) $currenttime;
         }
 
-        $siteinformation_array = [];
-        $siteinformation_array['description'] = 'NA';
-        $siteinformation_array['processoris64bits'] = 'NA';
-        $siteinformation_array['processorvendor'] = 'NA';
-        $siteinformation_array['processorvendorid'] = 'NA';
-        $siteinformation_array['processorfamilyid'] = 'NA';
-        $siteinformation_array['processormodelid'] = 'NA';
-        $siteinformation_array['processorcachesize'] = 'NA';
-        $siteinformation_array['numberlogicalcpus'] = 'NA';
-        $siteinformation_array['numberphysicalcpus'] = 'NA';
-        $siteinformation_array['totalvirtualmemory'] = 'NA';
-        $siteinformation_array['totalphysicalmemory'] = 'NA';
-        $siteinformation_array['logicalprocessorsperphysical'] = 'NA';
-        $siteinformation_array['processorclockfrequency'] = 'NA';
+        $siteinformation_array = [
+            'description' => 'NA',
+            'processoris64bits' => 'NA',
+            'processorvendor' => 'NA',
+            'processorvendorid' => 'NA',
+            'processorfamilyid' => 'NA',
+            'processormodelid' => 'NA',
+            'processorcachesize' => 'NA',
+            'numberlogicalcpus' => 'NA',
+            'numberphysicalcpus' => 'NA',
+            'totalvirtualmemory' => 'NA',
+            'totalphysicalmemory' => 'NA',
+            'logicalprocessorsperphysical' => 'NA',
+            'processorclockfrequency' => 'NA',
+        ];
 
         // Current timestamp is the beginning of the dashboard and we want the end
         $currenttimestamp = gmdate(FMT_DATETIME, $currenttime + 3600 * 24);
@@ -447,8 +448,8 @@ final class SiteController extends AbstractController
 
         $xml = begin_XML_for_XSLT();
 
-        @$projectid = pdo_real_escape_numeric($_GET['project']);
-        if ($projectid) {
+        $projectid = (int) $_GET['project'];
+        if ($projectid > 0) {
             $project = new Project();
             $project->Id = $projectid;
             $project->Fill();
@@ -503,7 +504,7 @@ final class SiteController extends AbstractController
         $xml .= add_XML_value('logicalprocessorsperphysical', $siteinformation_array['logicalprocessorsperphysical']);
         $xml .= add_XML_value('processorclockfrequency', getByteValueWithExtension($processor_clock_frequency, 1000) . 'Hz');
         $xml .= add_XML_value('outoforder', $site_array['outoforder']);
-        if ($projectid && $project->ShowIPAddresses) {
+        if ($projectid > 0 && $project->ShowIPAddresses) {
             $xml .= add_XML_value('ip', $site_array['ip']);
             $xml .= add_XML_value('latitude', $site_array['latitude']);
             $xml .= add_XML_value('longitude', $site_array['longitude']);
