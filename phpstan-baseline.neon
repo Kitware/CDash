@@ -2569,16 +2569,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
-			message: "#^Method CDash\\\\Controller\\\\Api\\\\QueryTests\\:\\:addExtraMeasurements\\(\\) has parameter \\$outputid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/QueryTests.php
-
-		-
-			message: "#^Method CDash\\\\Controller\\\\Api\\\\QueryTests\\:\\:addExtraMeasurements\\(\\) has parameter \\$test with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/QueryTests.php
-
-		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\QueryTests\\:\\:applySafeDelimiter\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/QueryTests.php
