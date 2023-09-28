@@ -1912,11 +1912,6 @@ parameters:
 			path: app/Services/AuthTokenService.php
 
 		-
-			message: "#^Method App\\\\Services\\\\AuthTokenService\\:\\:generateToken\\(\\) throws checked exception Random\\\\RandomException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Services/AuthTokenService.php
-
-		-
 			message: "#^Method App\\\\Services\\\\AuthTokenService\\:\\:isTokenExpired\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/Services/AuthTokenService.php
