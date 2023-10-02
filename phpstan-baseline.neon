@@ -30546,6 +30546,11 @@ parameters:
 			path: app/cdash/xml_handlers/abstract_handler.php
 
 		-
+			message: "#^Class AbstractHandler has an uninitialized property \\$Site\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/abstract_handler.php
+
+		-
 			message: "#^Class stack referenced with incorrect case\\: Stack\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/abstract_handler.php

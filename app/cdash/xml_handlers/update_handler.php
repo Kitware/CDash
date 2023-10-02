@@ -78,7 +78,11 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface,
     {
         parent::endElement($parser, $name);
         if ($name == 'SITE') {
-            $this->Site->save();
+            if (!isset($this->Site)) {
+                $this->Site = Site::firstOrCreate(['name' => '(unknown)']);
+            } else {
+                $this->Site->save();
+            }
         } elseif ($name == 'UPDATE') {
             $this->Build->SiteId = $this->Site->id;
 
