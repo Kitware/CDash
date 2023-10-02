@@ -57,7 +57,7 @@ class Timeline extends Index
 
     public function getResponse()
     {
-        $this->filterdata = json_decode($_REQUEST['filterdata'], true);
+        $this->filterdata = json_decode(request()->input('filterdata'), true);
         $page = htmlentities($this->filterdata['pageId']);
         $this->filterSQL = generate_filterdata_sql($this->filterdata);
         $this->generateColorMap();
@@ -107,15 +107,33 @@ class Timeline extends Index
 
         // Construct an SQL SELECT clause for the requested types of defects.
         $defect_keys = [];
+        $valid_defect_types = [
+            'configureerrors',
+            'configurewarnings',
+            'builderrors',
+            'buildwarnings',
+            'testnotrun',
+            'testfailed',
+            'testpassed',
+        ];
         foreach ($this->defectTypes as $type) {
-            $defect_keys[] = "{$type['name']}";
+            if (!in_array($type['name'], $valid_defect_types, true)) {
+                abort(400, "Invalid defect type: {$type['name']}");
+            }
+            $defect_keys[] = $type['name'];
         }
         $defect_selection = implode(', ', $defect_keys);
-        $query =
-            "SELECT id, $defect_selection, starttime
-            FROM build b WHERE projectid = ? AND parentid IN (0, -1)
-            ORDER BY starttime";
-        $stmt = $this->db->prepare($query);
+        $stmt = $this->db->prepare("
+            SELECT
+                id,
+                $defect_selection,
+                starttime
+            FROM build b
+            WHERE
+                projectid = ?
+                AND parentid IN (0, -1)
+            ORDER BY starttime
+        ");
         if (!pdo_execute($stmt, [$this->project->Id])) {
             abort(500, 'Failed to load results');
         }
