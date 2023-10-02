@@ -891,11 +891,6 @@ parameters:
 			path: app/Http/Controllers/CDash.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\User\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\User\\>\\:\\:\\$full_name\\.$#"
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			message: "#^Argument of an invalid type array\\<int\\>\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 3
 			path: app/Http/Controllers/CoverageController.php
@@ -4445,7 +4440,7 @@ parameters:
 			path: app/cdash/app/Controller/Api/ResultsApi.php
 
 		-
-			message: "#^Only booleans are allowed in a negated boolean, float\\|int given\\.$#"
+			message: "#^Only booleans are allowed in a negated boolean, \\(float\\|int\\) given\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ResultsApi.php
 
@@ -6744,16 +6739,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Model\\\\BuildError\\:\\:\\$Type has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildError.php
-
-		-
-			message: "#^Variable \\$directory might not be defined\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildError.php
-
-		-
-			message: "#^Variable \\$file might not be defined\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildError.php
 
@@ -9535,6 +9520,11 @@ parameters:
 
 		-
 			message: "#^Casting to int something that's already int\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: "#^Class CDash\\\\Model\\\\Project has an uninitialized property \\$AutoremoveMaxBuilds\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -13887,6 +13877,11 @@ parameters:
 
 		-
 			message: "#^Function generate_XSLT\\(\\) has parameter \\$xml with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: "#^Function generate_password\\(\\) throws checked exception Random\\\\RandomException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -23277,11 +23272,6 @@ parameters:
 
 		-
 			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:872\\:\\:\\$response has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
