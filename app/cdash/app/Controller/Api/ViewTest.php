@@ -23,6 +23,7 @@ use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use App\Models\BuildInformation;
+use Illuminate\Support\Facades\DB;
 
 require_once 'include/filterdataFunctions.php';
 
@@ -557,16 +558,16 @@ class ViewTest extends BuildApi
             return;
         }
 
-        $projectid = pdo_real_escape_numeric($_GET['projectid']);
+        $projectid = (int) $_GET['projectid'];
 
         $previous_buildids = [];
         if (array_key_exists('previous_builds', $_GET)) {
             foreach (explode(', ', $_GET['previous_builds']) as $previous_buildid) {
                 if (is_numeric($previous_buildid) && $previous_buildid > 1) {
-                    $previous_build_row = \DB::table('build')
+                    $previous_build_row = DB::table('build')
                         ->where('id', $previous_buildid)
                         ->first();
-                    if ($previous_build_row->projectid == $projectid) {
+                    if ((int) $previous_build_row->projectid === $projectid) {
                         $previous_buildids[] = $previous_buildid;
                     }
                 }
@@ -581,7 +582,7 @@ class ViewTest extends BuildApi
         if (array_key_exists('time_end', $_GET)) {
             $time_end = pdo_real_escape_string($_GET['time_end']);
         }
-        $groupid = pdo_real_escape_numeric($_GET['groupid']);
+        $groupid = (int) $_GET['groupid'];
 
         $response = [];
         $tests_response = [];

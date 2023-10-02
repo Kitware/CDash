@@ -41,7 +41,7 @@ if (!isset($projectid)) {
     echo_error('projectid not specified.');
     return;
 }
-$projectid = pdo_real_escape_numeric($projectid);
+$projectid = (int) $projectid;
 
 // Make sure the user has access to this page.
 $project = new Project;
@@ -138,9 +138,8 @@ function rest_delete(): void
 {
     if (isset($_GET['groupid'])) {
         // Delete subproject group.
-        $groupid = pdo_real_escape_numeric($_GET['groupid']);
         $Group = new SubProjectGroup();
-        $Group->SetId(intval($groupid));
+        $Group->SetId((int) $_GET['groupid']);
         $Group->Delete();
         return;
     }

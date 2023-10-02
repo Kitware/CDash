@@ -30,10 +30,11 @@ if (is_null($build)) {
     return;
 }
 
-$testid = pdo_real_escape_numeric($_GET['testid']);
-if (!isset($testid) || !is_numeric($testid)) {
+$testid = $_GET['testid'] ?? null;
+if (!is_numeric($testid)) {
     abort(400, 'A valid test was not specified.');
 }
+$testid = (int) $testid;
 
 $buildtest = BuildTest::where('buildid', '=', $build->Id)
     ->where('testid', '=', $testid)

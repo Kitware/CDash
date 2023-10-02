@@ -204,9 +204,8 @@ class QueryTests extends ResultsApi
         // If parentid is set we need to lookup the date for this build
         // because it is not specified as a query string parameter.
         if (isset($_GET['parentid'])) {
-            $parentid = pdo_real_escape_numeric($_GET['parentid']);
             $parent_build = new Build();
-            $parent_build->Id = $parentid;
+            $parent_build->Id = (int) $_GET['parentid'];
             $this->setDate($parent_build->GetDate());
         } else {
             // Handle the optional arguments that dictate our time range.

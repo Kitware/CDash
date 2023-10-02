@@ -92,7 +92,7 @@ class IndexPhpFilters extends DefaultFilters
         // If so, we won't add SQL clauses for some other filters.
         // Instead we handle them in PHP code via build_survives_filter().
         $this->HasSubProjectsFilter = false;
-        $filtercount = pdo_real_escape_numeric(@$_REQUEST['filtercount']);
+        $filtercount = (int) ($_REQUEST['filtercount'] ?? 0);
         for ($i = 1; $i <= $filtercount; ++$i) {
             if (empty($_REQUEST['field' . $i])) {
                 continue;
@@ -104,17 +104,18 @@ class IndexPhpFilters extends DefaultFilters
             }
         }
         $this->FiltersAffectedBySubProjects = [
-                'buildduration',
-                'builderrors',
-                'buildwarnings',
-                'configureduration',
-                'configureerrors',
-                'configurewarnings',
-                'testsduration',
-                'testsfailed',
-                'testsnotrun',
-                'testspassed',
-                'testtimestatus'];
+            'buildduration',
+            'builderrors',
+            'buildwarnings',
+            'configureduration',
+            'configureerrors',
+            'configurewarnings',
+            'testsduration',
+            'testsfailed',
+            'testsnotrun',
+            'testspassed',
+            'testtimestatus',
+        ];
     }
 
     public function getDefaultFilter()
@@ -1073,7 +1074,7 @@ function get_filterdata_from_request($page_id = '')
     for ($i = 1; $i <= $filtercount; ++$i) {
         if (array_key_exists("field{$i}count", $_GET)) {
             // Handle block of filters.
-            $subfiltercount = pdo_real_escape_numeric(@$_GET["field{$i}count"]);
+            $subfiltercount = (int) ($_GET["field{$i}count"] ?? 0);
             $filter = [
                 'filters' => [],
             ];

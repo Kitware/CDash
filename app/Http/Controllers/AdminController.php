@@ -493,11 +493,8 @@ final class AdminController extends AbstractController
 
         // Compute the testtime
         if ($ComputeTestTiming) {
-            @$TestTimingDays = $_POST['TestTimingDays'];
-            if ($TestTimingDays != null) {
-                $TestTimingDays = pdo_real_escape_numeric($TestTimingDays);
-            }
-            if (is_numeric($TestTimingDays) && $TestTimingDays > 0) {
+            $TestTimingDays = (int) ($_POST['TestTimingDays'] ?? 0);
+            if ($TestTimingDays > 0) {
                 ComputeTestTiming($TestTimingDays);
                 $xml .= add_XML_value('alert', 'Timing for tests has been computed successfully.');
             } else {
@@ -507,11 +504,8 @@ final class AdminController extends AbstractController
 
         // Compute the user statistics
         if ($ComputeUpdateStatistics) {
-            @$UpdateStatisticsDays = $_POST['UpdateStatisticsDays'];
-            if ($UpdateStatisticsDays != null) {
-                $UpdateStatisticsDays = pdo_real_escape_numeric($UpdateStatisticsDays);
-            }
-            if (is_numeric($UpdateStatisticsDays) && $UpdateStatisticsDays > 0) {
+            $UpdateStatisticsDays = (int) ($_POST['UpdateStatisticsDays'] ?? 0);
+            if ($UpdateStatisticsDays > 0) {
                 ComputeUpdateStatistics($UpdateStatisticsDays);
                 $xml .= add_XML_value('alert', 'User statistics has been computed successfully.');
             } else {
