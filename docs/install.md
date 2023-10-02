@@ -21,7 +21,6 @@ CDash needs the following PHP modules installed and enabled.
 - bz2
 - curl
 - gd
-- json
 - ldap
 - mbstring
 - pdo_mysql or pdo_pgsql
