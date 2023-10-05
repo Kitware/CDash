@@ -155,7 +155,6 @@ class ProjectPermissions extends TestCase
             'userid' => $this->normal_user->id,
             'projectid' => $this->private_project1->Id,
             'role' => 0,
-            'cvslogin' => '',
             'emailtype' => 0,
             'emailcategory' => 0,
             'emailsuccess' => 0,
