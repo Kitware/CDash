@@ -361,7 +361,7 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 45
+			count: 43
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -1385,7 +1385,7 @@ parameters:
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 3
+			count: 2
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
@@ -1401,7 +1401,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 6
+			count: 4
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
@@ -2011,14 +2011,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function add_last_sql_error\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 2
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
 			"""
@@ -2038,7 +2030,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 11
+			count: 8
 			path: app/Http/Controllers/SiteController.php
 
 		-
@@ -2475,7 +2467,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 10
+			count: 5
 			path: app/Http/Controllers/SubscribeProjectController.php
 
 		-
@@ -6248,7 +6240,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 9
+			count: 7
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
@@ -7289,28 +7281,7 @@ parameters:
 			path: app/cdash/app/Model/BuildGroupRule.php
 
 		-
-			message: """
-				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
-			message: """
-				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroupRule\\:\\:ChangeGroup\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroupRule.php
 
@@ -7330,11 +7301,6 @@ parameters:
 			path: app/cdash/app/Model/BuildGroupRule.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroupRule\\:\\:DeleteExpiredRulesForProject\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildGroupRule\\:\\:DeleteExpiredRulesForProject\\(\\) has parameter \\$cutoff_date with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroupRule.php
@@ -7346,11 +7312,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\BuildGroupRule\\:\\:Exists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroupRule\\:\\:FillFromRow\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroupRule.php
 
@@ -7390,17 +7351,7 @@ parameters:
 			path: app/cdash/app/Model/BuildGroupRule.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroupRule\\:\\:SoftDeleteExpiredRules\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildGroupRule\\:\\:SoftDeleteExpiredRules\\(\\) has parameter \\$now with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroupRule.php
 
@@ -8057,7 +8008,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 14
+			count: 13
 			path: app/cdash/app/Model/CoverageFile.php
 
 		-
@@ -8201,7 +8152,7 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 12
+			count: 10
 			path: app/cdash/app/Model/CoverageFile2User.php
 
 		-
@@ -8217,7 +8168,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 10
+			count: 8
 			path: app/cdash/app/Model/CoverageFile2User.php
 
 		-
@@ -8250,11 +8201,6 @@ parameters:
 
 		-
 			message: "#^Offset 'c' might not exist on array\\|null\\.$#"
-			count: 1
-			path: app/cdash/app/Model/CoverageFile2User.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, array\\|false given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/CoverageFile2User.php
 
@@ -8469,15 +8415,7 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 6
-			path: app/cdash/app/Model/CoverageSummary.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
+			count: 2
 			path: app/cdash/app/Model/CoverageSummary.php
 
 		-
@@ -8485,7 +8423,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 9
+			count: 3
 			path: app/cdash/app/Model/CoverageSummary.php
 
 		-
@@ -8657,7 +8595,7 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 4
+			count: 1
 			path: app/cdash/app/Model/DynamicAnalysis.php
 
 		-
@@ -8689,7 +8627,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 5
+			count: 1
 			path: app/cdash/app/Model/DynamicAnalysis.php
 
 		-
@@ -8907,7 +8845,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 4
+			count: 3
 			path: app/cdash/app/Model/DynamicAnalysisSummary.php
 
 		-
@@ -8940,11 +8878,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\DynamicAnalysisSummary\\:\\:Insert\\(\\) has parameter \\$append with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysisSummary.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\DynamicAnalysisSummary\\:\\:Remove\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/DynamicAnalysisSummary.php
 
@@ -10121,7 +10054,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 5
+			count: 4
 			path: app/cdash/app/Model/SubProjectGroup.php
 
 		-
@@ -10315,7 +10248,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 14
+			count: 12
 			path: app/cdash/app/Model/User.php
 
 		-
@@ -10496,7 +10429,7 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 7
+			count: 6
 			path: app/cdash/app/Model/UserProject.php
 
 		-
@@ -10520,7 +10453,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 5
+			count: 4
 			path: app/cdash/app/Model/UserProject.php
 
 		-
@@ -14493,7 +14426,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 13
+			count: 10
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -17139,7 +17072,7 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 70
+			count: 62
 			path: app/cdash/include/upgrade_functions.php
 
 		-
@@ -17696,7 +17629,7 @@ parameters:
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 2
+			count: 1
 			path: app/cdash/public/api/v1/build.php
 
 		-
@@ -17712,7 +17645,7 @@ parameters:
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 2
+			count: 1
 			path: app/cdash/public/api/v1/build.php
 
 		-
@@ -17762,7 +17695,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/public/api/v1/build.php
 
 		-
@@ -18345,7 +18278,7 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 4
+			count: 3
 			path: app/cdash/public/api/v1/manageOverview.php
 
 		-
@@ -18361,7 +18294,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 4
+			count: 3
 			path: app/cdash/public/api/v1/manageOverview.php
 
 		-
@@ -24565,7 +24498,7 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 3
+			count: 2
 			path: app/cdash/tests/test_buildmodel.php
 
 		-
@@ -25084,14 +25017,6 @@ parameters:
 			path: app/cdash/tests/test_createprojectpermissions.php
 
 		-
-			message: """
-				#^Call to deprecated method query\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 3
-			path: app/cdash/tests/test_createprojectpermissions.php
-
-		-
 			message: "#^Cannot call method execute\\(\\) on PDOStatement\\|false\\.$#"
 			count: 1
 			path: app/cdash/tests/test_createprojectpermissions.php
@@ -25601,7 +25526,7 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 3
+			count: 2
 			path: app/cdash/tests/test_dynamicanalysissummary.php
 
 		-
@@ -25717,7 +25642,7 @@ parameters:
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_email.php
 
 		-
@@ -25738,7 +25663,7 @@ parameters:
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_email.php
 
 		-
@@ -25803,7 +25728,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_email.php
 
 		-
@@ -25865,14 +25790,6 @@ parameters:
 			message: "#^Variable \\$build might not be defined\\.$#"
 			count: 48
 			path: app/cdash/tests/test_excludesubprojects.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_expectedandmissing.php
 
 		-
 			message: """
@@ -27503,7 +27420,7 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 11
+			count: 10
 			path: app/cdash/tests/test_removebuilds.php
 
 		-
@@ -28011,7 +27928,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 3
+			count: 2
 			path: app/cdash/tests/test_subprojectemail.php
 
 		-
@@ -28741,12 +28658,12 @@ parameters:
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 6
+			count: 3
 			path: app/cdash/tests/test_uniquediffs.php
 
 		-
 			message: "#^Cannot call method execute\\(\\) on PDOStatement\\|false\\.$#"
-			count: 9
+			count: 6
 			path: app/cdash/tests/test_uniquediffs.php
 
 		-
@@ -28911,7 +28828,7 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 30
+			count: 28
 			path: app/cdash/tests/test_upgrade.php
 
 		-
@@ -29145,14 +29062,6 @@ parameters:
 			message: "#^Method UserTestCase\\:\\:testUser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_user.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_usernotes.php
 
 		-
 			message: """
@@ -29922,7 +29831,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 3
+			count: 2
 			path: app/cdash/xml_handlers/JSCoverTar_handler.php
 
 		-

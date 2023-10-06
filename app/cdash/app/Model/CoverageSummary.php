@@ -41,7 +41,7 @@ class CoverageSummary
     }
 
     /** Remove all coverage information */
-    public function RemoveAll(): bool
+    public function RemoveAll(): void
     {
         if (!$this->BuildId) {
             abort(500, 'CoverageSummary::RemoveAll(): BuildId not set');
@@ -49,11 +49,7 @@ class CoverageSummary
 
         $db = Database::getInstance();
 
-        $query = $db->executePrepared('DELETE FROM coveragesummarydiff WHERE buildid=?', [intval($this->BuildId)]);
-        if ($query === false) {
-            add_last_sql_error('CoverageSummary RemoveAll');
-            return false;
-        }
+        DB::delete('DELETE FROM coveragesummarydiff WHERE buildid=?', [intval($this->BuildId)]);
 
         // coverage file are kept unless they are shared
         $coverage = $db->executePrepared('SELECT fileid FROM coverage WHERE buildid=?', [intval($this->BuildId)]);
@@ -62,29 +58,14 @@ class CoverageSummary
             // Make sure the file is not shared
             $numfiles = $db->executePreparedSingleRow('SELECT count(*) AS c FROM coveragefile WHERE id=?', [$fileid]);
             if (intval($numfiles['c']) === 1) {
-                $db->executePrepared('DELETE FROM coveragefile WHERE id=?', [$fileid]);
+                DB::delete('DELETE FROM coveragefile WHERE id=?', [$fileid]);
             }
         }
 
-        $query = $db->executePrepared('DELETE FROM coverage WHERE buildid=?', [intval($this->BuildId)]);
-        if ($query === false) {
-            add_last_sql_error('CoverageSummary RemoveAll');
-            return false;
-        }
-
-        $query = $db->executePrepared('DELETE FROM coveragefilelog WHERE buildid=?', [intval($this->BuildId)]);
-        if ($query === false) {
-            add_last_sql_error('CoverageSummary RemoveAll');
-            return false;
-        }
-
-        $query = $db->executePrepared('DELETE FROM coveragesummary WHERE buildid=?', [intval($this->BuildId)]);
-        if ($query === false) {
-            add_last_sql_error('CoverageSummary RemoveAll');
-            return false;
-        }
-        return true;
-    }   // RemoveAll()
+        DB::delete('DELETE FROM coverage WHERE buildid=?', [intval($this->BuildId)]);
+        DB::delete('DELETE FROM coveragefilelog WHERE buildid=?', [intval($this->BuildId)]);
+        DB::delete('DELETE FROM coveragesummary WHERE buildid=?', [intval($this->BuildId)]);
+    }
 
     /** Insert a new summary */
     public function Insert($append = false): bool
@@ -117,8 +98,10 @@ class CoverageSummary
                                    ', [$fullpath, intval($this->BuildId)]);
                     if (empty($coveragefile)) {
                         // Create an empty file if doesn't exist.
-                        $db->executePrepared('INSERT INTO coveragefile (fullpath, crc32) VALUES (?, 0)', [$fullpath]);
-                        $fileid = intval(pdo_insert_id('coveragefile'));
+                        $fileid = DB::table('coveragefile')->insertGetId([
+                            'fullpath' => $fullpath,
+                            'crc32' => 0,
+                        ]);
                     } else {
                         $fileid = intval($coveragefile['id']);
                     }

@@ -13,6 +13,9 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -68,8 +71,7 @@ class DynamicAnalysisSummaryTestCase extends KWWebTestCase
         $ids[] = $this->ParentId;
         $ids[] = $this->StandaloneBuildId;
         $id_arg = implode(', ', $ids);
-        pdo_query(
-            "DELETE FROM dynamicanalysissummary WHERE buildid IN ($id_arg)");
+        DB::delete("DELETE FROM dynamicanalysissummary WHERE buildid IN ($id_arg)");
 
         // Run the upgrade function.
         require_once 'include/upgrade_functions.php';

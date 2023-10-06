@@ -10,6 +10,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Build;
 use CDash\Model\BuildError;
+use Illuminate\Support\Facades\DB;
 
 class BuildModelTestCase extends KWWebTestCase
 {
@@ -28,7 +29,7 @@ class BuildModelTestCase extends KWWebTestCase
         $this->testDataFiles = ['build1.xml', 'build2.xml', 'build3.xml', 'build4.xml',
                                      'build5.xml', 'configure1.xml'];
 
-        pdo_query("INSERT INTO project (name) VALUES ('BuildModel')");
+        DB::insert("INSERT INTO project (name) VALUES ('BuildModel')");
 
         foreach ($this->testDataFiles as $testDataFile) {
             if (!$this->submission('BuildModel', $this->testDataDir . '/' . $testDataFile)) {

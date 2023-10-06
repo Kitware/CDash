@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use Illuminate\Support\Facades\DB;
 use PDO;
 use CDash\Database;
 
@@ -147,18 +148,13 @@ class BuildConfigure
         pdo_execute($stmt, [$this->Id]);
         $row = $stmt->fetch();
         if ($row['c'] < 2) {
-            $stmt = $this->PDO->prepare('DELETE FROM configure WHERE id = ?');
-            pdo_execute($stmt, [$this->Id]);
+            DB::delete('DELETE FROM configure WHERE id = ?', [$this->Id]);
             $retval = true;
         }
 
         if ($this->BuildId) {
             // Delete the build2configure row for this build.
-            $stmt = $this->PDO->prepare(
-                'DELETE FROM build2configure WHERE buildid = ?');
-            if (!pdo_execute($stmt, [$this->BuildId])) {
-                return false;
-            }
+            DB::delete('DELETE FROM build2configure WHERE buildid = ?', [$this->BuildId]);
         }
 
         return $retval;

@@ -890,17 +890,14 @@ function cleanBuildEmail(): void
 {
     $now = date(FMT_DATETIME, time() - 3600 * 48);
 
-    $db = Database::getInstance();
-    $db->executePrepared('DELETE FROM buildemail WHERE time<?', [$now]);
+    DB::delete('DELETE FROM buildemail WHERE time<?', [$now]);
 }
 
 /** Clean the usertemp table if more than 24hrs */
 function cleanUserTemp(): void
 {
     $now = date(FMT_DATETIME, time() - 3600 * 24);
-
-    $db = Database::getInstance();
-    $db->executePrepared('DELETE FROM usertemp WHERE registrationdate<?', [$now]);
+    DB::delete('DELETE FROM usertemp WHERE registrationdate < ?', [$now]);
 }
 
 /** Send an email to administrator of the project for users who are not registered */
@@ -1151,7 +1148,7 @@ function addDailyChanges(int $projectid): void
         }
 
         // Delete expired authentication tokens.
-        $db->executePrepared('DELETE FROM authtoken WHERE expires < NOW()');
+        DB::delete('DELETE FROM authtoken WHERE expires < NOW()');
 
         // Delete expired buildgroups and rules.
         $current_date = gmdate(FMT_DATETIME);

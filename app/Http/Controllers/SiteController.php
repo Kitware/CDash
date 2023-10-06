@@ -133,7 +133,7 @@ final class SiteController extends AbstractController
         $db = Database::getInstance();
 
         if (isset($_POST['unclaimsite']) && isset($_GET['siteid'])) {
-            $db->executePrepared('
+            DB::delete('
                     DELETE FROM site2user
                     WHERE siteid=? AND userid=?
                 ', [intval($_GET['siteid']), $userid]);
@@ -660,8 +660,7 @@ final class SiteController extends AbstractController
         $db = Database::getInstance();
         $site2user = $db->executePrepared('SELECT * FROM site2user WHERE siteid=? AND userid=?', [intval($siteid), intval($userid)]);
         if (!empty($site2user)) {
-            $db->executePrepared('INSERT INTO site2user (siteid, userid) VALUES (?, ?)', [$siteid, $userid]);
-            add_last_sql_error('add_site2user');
+            DB::insert('INSERT INTO site2user (siteid, userid) VALUES (?, ?)', [$siteid, $userid]);
         }
     }
 
@@ -670,9 +669,7 @@ final class SiteController extends AbstractController
      */
     private static function remove_site2user(int $siteid, int $userid): void
     {
-        $db = Database::getInstance();
-        $db->executePrepared('DELETE FROM site2user WHERE siteid=? AND userid=?', [$siteid, $userid]);
-        add_last_sql_error('remove_site2user');
+        DB::delete('DELETE FROM site2user WHERE siteid=? AND userid=?', [$siteid, $userid]);
     }
 
     /**

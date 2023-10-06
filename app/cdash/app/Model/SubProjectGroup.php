@@ -16,6 +16,7 @@
 namespace CDash\Model;
 
 use CDash\Database;
+use Illuminate\Support\Facades\DB;
 
 class SubProjectGroup
 {
@@ -200,7 +201,7 @@ class SubProjectGroup
         }
 
         if (!$keephistory) {
-            $db->executePrepared('DELETE FROM subprojectgroup WHERE id=?', [$this->Id]);
+            DB::delete('DELETE FROM subprojectgroup WHERE id=?', [$this->Id]);
         } else {
             $endtime = gmdate(FMT_DATETIME);
             $query = $db->executePrepared('

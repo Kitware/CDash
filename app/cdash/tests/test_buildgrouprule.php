@@ -12,6 +12,7 @@ use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
+use Illuminate\Support\Facades\DB;
 
 class BuildGroupRuleTestCase extends KWWebTestCase
 {
@@ -110,8 +111,7 @@ class BuildGroupRuleTestCase extends KWWebTestCase
         while ($row = $stmt->fetch()) {
             remove_build($row['id']);
         }
-        $this->PDO->exec(
-            "DELETE FROM build2grouprule WHERE buildname = 'no-project-leakage'");
+        DB::delete("DELETE FROM build2grouprule WHERE buildname = 'no-project-leakage'");
 
         // Create two similar builds that belong to different projects.
         $build1 = new Build();

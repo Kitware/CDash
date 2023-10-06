@@ -16,6 +16,7 @@
 namespace CDash\Model;
 
 use CDash\Database;
+use Illuminate\Support\Facades\DB;
 use PDO;
 
 /** This class shouldn't be used externally */
@@ -110,11 +111,13 @@ class CoverageFile
                 }
 
                 // Remove the file if the crc32 is NULL
-                $stmt = $this->PDO->prepare(
-                    'DELETE FROM coveragefile
-                        WHERE id=:prevfileid AND file IS NULL AND crc32 IS NULL');
-                $stmt->bindParam(':prevfileid', $prevfileid);
-                pdo_execute($stmt);
+                DB::delete('
+                    DELETE FROM coveragefile
+                    WHERE
+                        id = ?
+                        AND file IS NULL
+                        AND crc32 IS NULL
+                ', [$prevfileid]);
             }
         } else {
             // The file doesn't exist in the database

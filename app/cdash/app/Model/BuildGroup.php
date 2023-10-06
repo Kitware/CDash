@@ -486,10 +486,10 @@ class BuildGroup
         }
 
         // We delete all the build2grouprule associated with the group
-        $this->PDO->executePrepared('DELETE FROM build2grouprule WHERE groupid=?', [$this->Id]);
+        DB::delete('DELETE FROM build2grouprule WHERE groupid=?', [$this->Id]);
 
         // We delete the buildgroup
-        $this->PDO->executePrepared('DELETE FROM buildgroup WHERE id=?', [$this->Id]);
+        DB::delete('DELETE FROM buildgroup WHERE id=?', [$this->Id]);
 
         // Restore the builds that were associated with this group
         $oldbuilds = $this->PDO->executePrepared('
@@ -532,7 +532,7 @@ class BuildGroup
 
         // Delete the buildgroupposition and update the position
         // of the other groups.
-        $this->PDO->executePrepared('DELETE FROM buildgroupposition WHERE buildgroupid=?', [$this->Id]);
+        DB::delete('DELETE FROM buildgroupposition WHERE buildgroupid=?', [$this->Id]);
         $buildgroupposition = $this->PDO->executePrepared('
                                   SELECT bg.buildgroupid
                                   FROM buildgroupposition AS bg, buildgroup AS g

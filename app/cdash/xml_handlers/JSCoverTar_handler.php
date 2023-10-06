@@ -22,6 +22,7 @@ use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class JSCoverTarHandler extends NonSaxHandler
@@ -153,7 +154,7 @@ class JSCoverTarHandler extends NonSaxHandler
                                           WHERE fullpath=? AND file IS NULL
                                       ', [$path]);
                 if (count($coveragefile_array) == 0) {
-                    $db->executePrepared('INSERT INTO coveragefile (fullpath) VALUES (?)', [$path]);
+                    DB::insert('INSERT INTO coveragefile (fullpath) VALUES (?)', [$path]);
                     $coveragefile_array = $db->executePrepared('
                                               SELECT id
                                               FROM coveragefile

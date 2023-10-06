@@ -16,6 +16,7 @@
 namespace CDash\Model;
 
 use CDash\Database;
+use Illuminate\Support\Facades\DB;
 
 class User
 {
@@ -169,8 +170,7 @@ class User
         if (!$this->Id) {
             return false;
         }
-        $stmt = $this->PDO->prepare("DELETE FROM $this->TableName WHERE id = ?");
-        pdo_execute($stmt, [$this->Id]);
+        DB::delete("DELETE FROM $this->TableName WHERE id = ?", [$this->Id]);
     }
 
     /** Get the email */
@@ -314,12 +314,7 @@ class User
                 $row = $stmt->fetch();
                 $cutoff = $row['date'];
                 // Then delete the ones that are too old
-                $stmt = $this->PDO->prepare(
-                    'DELETE FROM password
-                    WHERE userid= :userid AND date < :date');
-                $stmt->bindParam(':userid', $this->Id);
-                $stmt->bindParam(':date', $cutoff);
-                pdo_execute($stmt);
+                DB::delete('DELETE FROM password WHERE userid = ? AND date < ?', [$this->Id, $cutoff]);
             }
         }
     }

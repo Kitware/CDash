@@ -16,6 +16,7 @@
 namespace CDash\Model;
 
 use CDash\Database;
+use Illuminate\Support\Facades\DB;
 
 class DynamicAnalysisSummary
 {
@@ -57,18 +58,16 @@ class DynamicAnalysisSummary
     }
 
     /** Remove the dynamic analysis summary for this build. */
-    public function Remove()
+    public function Remove(): void
     {
         if ($this->BuildId < 1) {
-            return false;
+            abort(500, 'Invalid BuildId');
         }
         if (!$this->Exists()) {
-            return false;
+            abort(500, 'Dynamic Analysis does not exist.');
         }
 
-        $stmt = $this->PDO->prepare('
-            DELETE FROM dynamicanalysissummary WHERE buildid = ?');
-        return pdo_execute($stmt, [$this->BuildId]);
+        DB::delete('DELETE FROM dynamicanalysissummary WHERE buildid = ?', [$this->BuildId]);
     }
 
     // Insert the DynamicAnalysisSummary
@@ -84,7 +83,6 @@ class DynamicAnalysisSummary
                 INSERT INTO dynamicanalysissummary
                 (buildid, checker, numdefects)
                 VALUES (:buildid, :checker, :numdefects)');
-        $error_name = 'DynamicAnalysisSummary Insert';
 
         if ($this->Exists()) {
             if ($append) {

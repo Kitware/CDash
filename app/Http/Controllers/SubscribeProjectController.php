@@ -9,6 +9,7 @@ use CDash\Model\Project;
 use CDash\Model\UserProject;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 final class SubscribeProjectController extends AbstractProjectController
@@ -92,11 +93,11 @@ final class SubscribeProjectController extends AbstractProjectController
         $LabelEmail->UserId = $user->id;
 
         if ($Unsubscribe) {
-            $db->executePrepared('DELETE FROM user2project WHERE userid=? AND projectid=?', [$user->id, $this->project->Id]);
-            $db->executePrepared('DELETE FROM user2repository WHERE userid=? AND projectid=?', [$user->id, $this->project->Id]);
+            DB::delete('DELETE FROM user2project WHERE userid=? AND projectid=?', [$user->id, $this->project->Id]);
+            DB::delete('DELETE FROM user2repository WHERE userid=? AND projectid=?', [$user->id, $this->project->Id]);
 
             // Remove the claim sites for this project if they are only part of this project
-            $db->executePrepared('
+            DB::delete('
                 DELETE FROM site2user
                 WHERE
                     userid=?
@@ -150,20 +151,20 @@ final class SubscribeProjectController extends AbstractProjectController
 
                 if ($Role == 0) {
                     // Remove the claim sites for this project if they are only part of this project
-                    $db->executePrepared('
-                    DELETE FROM site2user
-                    WHERE
-                        userid=?
-                        AND siteid NOT IN (
-                            SELECT build.siteid
-                            FROM build, user2project AS up
-                            WHERE
-                                up.projectid=build.projectid
-                                AND up.userid=?
-                                AND up.role>0
-                            GROUP BY build.siteid
-                        )
-                ', [$user->id, $user->id]);
+                    DB::delete('
+                        DELETE FROM site2user
+                        WHERE
+                            userid=?
+                            AND siteid NOT IN (
+                                SELECT build.siteid
+                                FROM build, user2project AS up
+                                WHERE
+                                    up.projectid=build.projectid
+                                    AND up.userid=?
+                                    AND up.role>0
+                                GROUP BY build.siteid
+                            )
+                    ', [$user->id, $user->id]);
                 }
             }
 
@@ -213,20 +214,20 @@ final class SubscribeProjectController extends AbstractProjectController
 
                 if ($Role == 0) {
                     // Remove the claim sites for this project if they are only part of this project
-                    $db->executePrepared('
-                    DELETE FROM site2user
-                    WHERE
-                        userid=?
-                        AND siteid NOT IN (
-                            SELECT build.siteid
-                            FROM build, user2project AS up
-                            WHERE
-                                up.projectid0=build.projectid
-                                AND up.userid=?
-                                AND up.role>0
-                            GROUP BY build.siteid
-                        )
-                ', [$user->id, $user->id]);
+                    DB::delete('
+                        DELETE FROM site2user
+                        WHERE
+                            userid=?
+                            AND siteid NOT IN (
+                                SELECT build.siteid
+                                FROM build, user2project AS up
+                                WHERE
+                                    up.projectid0=build.projectid
+                                    AND up.userid=?
+                                    AND up.role>0
+                                GROUP BY build.siteid
+                            )
+                    ', [$user->id, $user->id]);
                 }
             } else {
                 $db->executePrepared('

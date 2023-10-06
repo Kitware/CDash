@@ -10,6 +10,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroupRule;
+use Illuminate\Support\Facades\DB;
 
 class ExpectedAndMissingTestCase extends KWWebTestCase
 {
@@ -112,7 +113,7 @@ class ExpectedAndMissingTestCase extends KWWebTestCase
 
         // Make it unexpected again by hard-deleting this buildgroup rule.
         $rule->Delete(false);
-        pdo_query("DELETE FROM build2grouprule WHERE buildname='$buildname'");
+        DB::delete("DELETE FROM build2grouprule WHERE buildname='$buildname'");
 
         if (!$found) {
             $this->fail("Expected missing build '$buildname' not included");

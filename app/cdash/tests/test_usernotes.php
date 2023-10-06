@@ -8,6 +8,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 class UserNotesAPICase extends KWWebTestCase
 {
@@ -47,11 +48,7 @@ class UserNotesAPICase extends KWWebTestCase
         $project->Public = 1;
         $project->Save();
 
-        $query = "DELETE FROM buildnote WHERE note='{$expected}'";
-        $result = pdo_query($query);
-        if (false === $result) {
-            $this->fail("Test successful but delete of data failed [sql: {$query}");
-        }
+        DB::delete("DELETE FROM buildnote WHERE note='{$expected}'");
     }
 
     public function testAddNoteRequiresBuildId(): void
