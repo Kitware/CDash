@@ -3,7 +3,7 @@
 ])
 
 @section('main_content')
-    <div style="position:relative; top:10px; left:20px; overflow:hidden;">
+    <div style="top:10px; left:20px; overflow:hidden;">
         <label style="font-size:1.2em;"><b>SubProject Dependencies Graph</b></label>
         <label for="selectedsort" style="margin-left:80px; font-size:.95em;">Sorted by:</label>
         <select id="selectedsort">
@@ -12,10 +12,10 @@
         </select>
         <button onclick="download_svg()" style="float:right; width:200px; margin-right:30px">Export as svg file</button>
     </div>
-    <div class="hint" style="position:relative; top:20px; left:20px; font-size:0.9em; width:350px; color:#999;">
+    <div class="hint" style="top:20px; left:20px; font-size:0.9em; width:350px; color:#999;">
         This circle plot captures the interrelationships among subgroups. Mouse over any of the subgroup in this graph to see incoming links (dependents) in green and the outgoing links (dependencies) in red.
     </div>
-    <div id="chart_placeholder" style="position:relative; left:150px; top:-60px">
+    <div id="chart_placeholder" style="left:150px; top:-60px; text-align:center;">
     </div>
     <!-- Tooltip -->
     <div id="toolTip" class="tooltip" style="opacity:0;">
