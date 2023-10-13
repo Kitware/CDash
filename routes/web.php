@@ -32,6 +32,10 @@ Route::get('/oauth/callback/{service}', 'OAuthController@login')
     ->name('oauth.callback');
 Route::post('/saml2/login', 'Auth\LoginController@saml2Login');
 
+Route::get('/auth/{service}/redirect', 'OAuthController@socialite');
+
+Route::get('/auth/{service}/callback', 'OAuthController@callback');
+
 Route::get('/logout', 'Auth\LoginController@logout');
 
 Route::get('/recoverPassword.php', 'UserController@recoverPassword');

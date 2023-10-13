@@ -13,7 +13,15 @@ return [
     | to have a conventional place to find your various credentials.
     |
     */
-
+    'github' => [
+        'client_id' => env('GITHUB_CLIENT_ID'),
+        'client_secret' => env('GITHUB_CLIENT_SECRET'),
+        'redirect' => env('GITHUB_REDIRECT_URI'),
+        'enable' => env('GITHUB_ENABLE', false),
+        'autoregister' => env('GITHUB_AUTO_REGISTER_NEW_USERS', false),
+        'oauth' => true,
+        'display_name' => "GitHub",
+    ],
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),
