@@ -548,15 +548,19 @@ final class BuildController extends AbstractBuildController
         $next_buildid = $this->build->GetNextBuildId();
 
         if ($previous_buildid > 0) {
-            $menu_response['previous'] = url("/build/$previous_buildid/update");
+            $menu_response['previous'] = "/build/$previous_buildid/update";
         } else {
             $menu_response['previous'] = false;
         }
 
-        $menu_response['current'] = url("/build/$current_buildid/update");
+        if ($current_buildid > 0) {
+            $menu_response['current'] = "/build/$current_buildid/update";
+        } else {
+            $menu_response['current'] = false;
+        }
 
         if ($next_buildid > 0) {
-            $menu_response['next'] = url("/build/$next_buildid/update");
+            $menu_response['next'] = "/build/$next_buildid/update";
         } else {
             $menu_response['next'] = false;
         }
