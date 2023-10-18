@@ -118,7 +118,7 @@ Route::get('/manageOverview.php', 'ProjectController@manageOverview');
 Route::get('/ajax/showtestfailuregraph.php', 'TestController@ajaxTestFailureGraph');
 
 Route::match(['get', 'post'], '/projects', 'ViewProjectsController@viewAllProjects');
-Route::permanentRedirect('/viewProjects.php', '/projects');
+Route::permanentRedirect('/viewProjects.php', url('/projects'));
 
 Route::get('/viewTest.php', 'ViewTestController@viewTest');
 
