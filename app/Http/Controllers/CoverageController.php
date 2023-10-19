@@ -158,12 +158,12 @@ final class CoverageController extends AbstractBuildController
 
         // Assign last author
         if (isset($_POST['assignLastAuthor'])) {
-            $CoverageFile2User->AssignLastAuthor(intval($buildid));
+            $CoverageFile2User->AssignAuthors($buildid, onlylast: true);
         }
 
         // Assign all authors
         if (isset($_POST['assignAllAuthors'])) {
-            $CoverageFile2User->AssignAllAuthors(intval($buildid));
+            $CoverageFile2User->AssignAuthors($buildid);
         }
 
         // Upload file
