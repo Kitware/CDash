@@ -120,4 +120,12 @@ class Project extends Model
     {
         return $this->hasMany(Measurement::class, 'projectid', 'id');
     }
+
+    /**
+     * @return HasMany<BuildGroup>
+     */
+    public function buildgroups(): HasMany
+    {
+        return $this->hasMany(BuildGroup::class, 'projectid', 'id');
+    }
 }

@@ -30,6 +30,7 @@ parameters:
             - 'Illuminate\Support\ItemNotFoundException'
             - 'Illuminate\Database\Eloquent\ModelNotFoundException'
             - 'GuzzleHttp\Exception\GuzzleException'
+            - 'Carbon\Exceptions\InvalidFormatException'
 
         check:
             tooWideThrowType: true
