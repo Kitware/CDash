@@ -38,6 +38,7 @@ parameters:
     treatPhpDocTypesAsCertain: false
     checkUninitializedProperties: true
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
+    checkBenevolentUnionTypes: true
 
     level: 8
 

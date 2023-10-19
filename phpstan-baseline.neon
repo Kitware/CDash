@@ -112,6 +112,11 @@ parameters:
 			path: app/Console/Commands/MigrateConfig.php
 
 		-
+			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, \\(int\\|string\\) given\\.$#"
+			count: 2
+			path: app/Console/Commands/MigrateConfig.php
+
+		-
 			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
 			count: 2
 			path: app/Console/Commands/MigrateConfig.php
@@ -123,6 +128,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$stream of function fwrite expects resource, resource\\|false given\\.$#"
+			count: 1
+			path: app/Console/Commands/MigrateConfig.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function substr expects string, \\(int\\|string\\) given\\.$#"
 			count: 1
 			path: app/Console/Commands/MigrateConfig.php
 
@@ -149,6 +159,26 @@ parameters:
 		-
 			message: "#^PHPDoc type string of property App\\\\Console\\\\Commands\\\\QueueSubmissions\\:\\:\\$description is not the same as PHPDoc type string\\|null of overridden property Illuminate\\\\Console\\\\Command\\:\\:\\$description\\.$#"
 			count: 1
+			path: app/Console/Commands/QueueSubmissions.php
+
+		-
+			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
+			count: 2
+			path: app/Console/Commands/QueueSubmissions.php
+
+		-
+			message: "#^Parameter \\#1 \\$haystack of function strrpos expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
+			count: 2
+			path: app/Console/Commands/QueueSubmissions.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function strlen expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
+			count: 1
+			path: app/Console/Commands/QueueSubmissions.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function substr expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
+			count: 3
 			path: app/Console/Commands/QueueSubmissions.php
 
 		-
@@ -496,6 +526,11 @@ parameters:
 			path: app/Http/Controllers/AdminController.php
 
 		-
+			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, \\(int\\|false\\) given\\.$#"
+			count: 3
+			path: app/Http/Controllers/AdminController.php
+
+		-
 			message: "#^Variable \\$pdo might not be defined\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
@@ -762,6 +797,11 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
+			message: "#^Parameter \\#1 \\$haystack of function strrpos expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
+			count: 2
+			path: app/Http/Controllers/BuildController.php
+
+		-
 			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php
@@ -772,6 +812,11 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
+			message: "#^Parameter \\#1 \\$string of function substr expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
+			count: 2
+			path: app/Http/Controllers/BuildController.php
+
+		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|false given\\.$#"
 			count: 4
 			path: app/Http/Controllers/BuildController.php
@@ -779,6 +824,11 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
 			count: 9
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
+			count: 1
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -840,6 +890,16 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, float\\|int\\|string given\\.$#"
 			count: 1
+			path: app/Http/Controllers/BuildPropertiesController.php
+
+		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildPropertiesController.php
+
+		-
+			message: "#^Parameter \\#1 \\$stmt of method App\\\\Http\\\\Controllers\\\\BuildPropertiesController\\:\\:gather_defects\\(\\) expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 2
 			path: app/Http/Controllers/BuildPropertiesController.php
 
 		-
@@ -962,11 +1022,6 @@ parameters:
 		-
 			message: "#^Cannot access property \\$name on App\\\\Models\\\\Site\\|null\\.$#"
 			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			message: "#^Comparison operation \"\\>\" between \\(array\\|float\\|int\\) and 0 results in an error\\.$#"
-			count: 5
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1216,6 +1271,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
@@ -1620,6 +1680,16 @@ parameters:
 			path: app/Http/Controllers/MapController.php
 
 		-
+			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
+			count: 7
+			path: app/Http/Controllers/MapController.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(int\\|false\\) given\\.$#"
+			count: 3
+			path: app/Http/Controllers/MapController.php
+
+		-
 			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, int\\|false given\\.$#"
 			count: 1
 			path: app/Http/Controllers/MapController.php
@@ -1712,11 +1782,6 @@ parameters:
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 2
-			path: app/Http/Controllers/ProjectOverviewController.php
-
-		-
-			message: "#^Comparison operation \"\\>\" between \\(array\\|float\\|int\\) and 0 results in an error\\.$#"
-			count: 1
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
@@ -1960,6 +2025,11 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\ProjectOverviewController\\:\\:sanitize_string\\(\\) should return string but returns \\(array\\<int, string\\>\\|string\\|null\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
 			message: "#^Offset 'loctested' might not exist on array\\{\\}\\|array\\{loctested\\?\\: \\(array\\|float\\|int\\), locuntested\\?\\: \\(array\\|float\\|int\\)\\}\\.$#"
 			count: 6
 			path: app/Http/Controllers/ProjectOverviewController.php
@@ -1992,6 +2062,11 @@ parameters:
 		-
 			message: "#^Only numeric types are allowed in \\*, int\\|null given on the right side\\.$#"
 			count: 1
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
+			count: 2
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
@@ -2435,6 +2510,11 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
+			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
+			count: 2
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
 			message: """
 				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
 				04/01/2023$#
@@ -2557,6 +2637,16 @@ parameters:
 			path: app/Http/Controllers/TestController.php
 
 		-
+			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, \\(float\\|int\\) given\\.$#"
+			count: 1
+			path: app/Http/Controllers/TestController.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
+			count: 2
+			path: app/Http/Controllers/TestController.php
+
+		-
 			message: "#^Access to an undefined property App\\\\Models\\\\Site\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Site\\>\\:\\:\\$id\\.$#"
 			count: 2
 			path: app/Http/Controllers/UserController.php
@@ -2664,6 +2754,16 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 7
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, \\(int\\|false\\) given\\.$#"
+			count: 2
+			path: app/Http/Controllers/UserController.php
+
+		-
 			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
 			count: 2
 			path: app/Http/Controllers/UserController.php
@@ -2704,6 +2804,21 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$full_name on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/UserStatisticsController.php
+
+		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 1
+			path: app/Http/Controllers/UserStatisticsController.php
+
+		-
+			message: "#^Parameter \\#2 \\$baseTimestamp of function strtotime expects int\\|null, \\(float\\|int\\) given\\.$#"
+			count: 1
+			path: app/Http/Controllers/UserStatisticsController.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
 			count: 1
 			path: app/Http/Controllers/UserStatisticsController.php
 
@@ -2999,6 +3114,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$from of function rename expects string, string\\|false given\\.$#"
+			count: 1
+			path: app/Jobs/ProcessSubmission.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of method Carbon\\\\Carbon\\:\\:addSeconds\\(\\) expects int, \\(float\\|int\\) given\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
@@ -3406,6 +3526,11 @@ parameters:
 			path: app/Services/AuthTokenService.php
 
 		-
+			message: "#^Parameter \\#2 \\$string of function explode expects string, \\(int\\|string\\) given\\.$#"
+			count: 1
+			path: app/Services/AuthTokenService.php
+
+		-
 			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, float\\|int given\\.$#"
 			count: 1
 			path: app/Services/AuthTokenService.php
@@ -3669,12 +3794,22 @@ parameters:
 			path: app/Services/UnparsedSubmissionProcessor.php
 
 		-
+			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
+			count: 2
+			path: app/Services/UnparsedSubmissionProcessor.php
+
+		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/Services/UnparsedSubmissionProcessor.php
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|null given\\.$#"
+			count: 1
+			path: app/Services/UnparsedSubmissionProcessor.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function substr expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
 			count: 1
 			path: app/Services/UnparsedSubmissionProcessor.php
 
@@ -4055,13 +4190,38 @@ parameters:
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
+			message: "#^Parameter \\#1 \\$url of function parse_url expects string, \\(array\\<int, string\\>\\|string\\|null\\) given\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|false given\\.$#"
 			count: 2
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
+			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, \\(float\\|int\\) given\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, \\(int\\|false\\) given\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
 			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
 			count: 4
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
+			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, \\(array\\<int, string\\>\\|string\\|null\\) given\\.$#"
+			count: 1
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
@@ -4688,6 +4848,11 @@ parameters:
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
+			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(int\\|false\\) given\\.$#"
+			count: 2
+			path: app/cdash/app/Controller/Api/Timeline.php
+
+		-
 			message: "#^Property CDash\\\\Controller\\\\Api\\\\Timeline\\:\\:\\$defectTypes has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/Timeline.php
@@ -4984,6 +5149,11 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
+			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
 			message: "#^Property CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:\\$JSONEncodeResponse has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
@@ -5248,6 +5418,11 @@ parameters:
 		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 2
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			message: "#^Parameter \\#2 \\$string of function explode expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
+			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
@@ -6125,6 +6300,16 @@ parameters:
 		-
 			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
 			count: 7
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Parameter \\#2 \\$property of function property_exists expects string, \\(int\\|string\\) given\\.$#"
+			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -7876,6 +8061,11 @@ parameters:
 			path: app/cdash/app/Model/BuildUserNote.php
 
 		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 1
+			path: app/cdash/app/Model/BuildUserNote.php
+
+		-
 			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildUserNote.php
@@ -8029,11 +8219,6 @@ parameters:
 
 		-
 			message: "#^Call to function base64_decode\\(\\) requires parameter \\#2 to be set\\.$#"
-			count: 2
-			path: app/cdash/app/Model/CoverageFile.php
-
-		-
-			message: "#^Comparison operation \"\\>\" between \\(array\\|float\\|int\\) and 0 results in an error\\.$#"
 			count: 2
 			path: app/cdash/app/Model/CoverageFile.php
 
@@ -8727,6 +8912,11 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$context of function inflate_add expects InflateContext, InflateContext\\|false given\\.$#"
 			count: 2
+			path: app/cdash/app/Model/DynamicAnalysis.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function base64_decode expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
+			count: 1
 			path: app/cdash/app/Model/DynamicAnalysis.php
 
 		-
@@ -9482,6 +9672,11 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
+			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetBuildsDailyAverage\\(\\) should return int but returns \\(float\\|int\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetBuildsDailyAverage\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -9538,6 +9733,11 @@ parameters:
 
 		-
 			message: "#^Only numeric types are allowed in \\-, int\\|false given on the left side\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, \\(float\\|int\\) given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -10351,6 +10551,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\User\\:\\:hasExpiredPassword\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/User.php
+
+		-
+			message: "#^Parameter \\#2 \\$baseTimestamp of function strtotime expects int\\|null, \\(int\\|false\\) given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/User.php
 
@@ -12235,6 +12440,11 @@ parameters:
 			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
+			message: "#^Parameter \\#1 \\$string of function md5 expects string, \\(array\\<int, string\\>\\|string\\|null\\) given\\.$#"
+			count: 1
+			path: app/cdash/include/Test/CDashTestCase.php
+
+		-
 			message: "#^Property CDash\\\\Test\\\\CDashTestCase\\:\\:\\$endpoint \\(string\\) does not accept string\\|false\\.$#"
 			count: 1
 			path: app/cdash/include/Test/CDashTestCase.php
@@ -12998,6 +13208,11 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
 
 		-
+			message: "#^Parameter \\#1 \\$data of class DOMText constructor expects string, \\(int\\|string\\) given\\.$#"
+			count: 2
+			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
+
+		-
 			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
@@ -13238,6 +13453,11 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
+			message: "#^Parameter \\#1 \\$qualifiedName of class DOMElement constructor expects string, \\(int\\|string\\) given\\.$#"
+			count: 1
+			path: app/cdash/include/Test/UseCase/UseCase.php
+
+		-
 			message: "#^Parameter \\#1 \\$useCase of method CDash\\\\Test\\\\CDashUseCaseTestCase\\:\\:setUseCaseModelFactory\\(\\) expects CDash\\\\Test\\\\UseCase\\\\UseCase, CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\|CDash\\\\Test\\\\UseCase\\\\ConfigUseCase\\|CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\|CDash\\\\Test\\\\UseCase\\\\TestUseCase\\|CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\|null given\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UseCase.php
@@ -13438,6 +13658,11 @@ parameters:
 			path: app/cdash/include/autoremove.php
 
 		-
+			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, \\(float\\|int\\) given\\.$#"
+			count: 2
+			path: app/cdash/include/autoremove.php
+
+		-
 			message: "#^Anonymous function has an unused use \\$config\\.$#"
 			count: 1
 			path: app/cdash/include/cdashmail.php
@@ -13621,11 +13846,6 @@ parameters:
 		-
 			message: "#^Class DOMDocument referenced with incorrect case\\: DomDocument\\.$#"
 			count: 2
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Comparison operation \"\\>\" between \\(array\\|float\\|int\\) and 0 results in an error\\.$#"
-			count: 1
 			path: app/cdash/include/common.php
 
 		-
@@ -14014,6 +14234,11 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			message: "#^Only booleans are allowed in an if condition, \\(int\\|false\\) given\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
 			message: "#^Only booleans are allowed in an if condition, int\\|false given\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -14054,6 +14279,11 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			message: "#^Parameter \\#1 \\$filename of function file_get_contents expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
 			message: "#^Parameter \\#1 \\$haystack of function stripos expects string, float\\|int\\|string given\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -14079,7 +14309,17 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 2
+			path: app/cdash/include/common.php
+
+		-
 			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: "#^Parameter \\#1 \\$str of function XMLStrFormat expects string, \\(array\\<int, string\\>\\|string\\|null\\) given\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -14109,8 +14349,18 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, \\(int\\|false\\) given\\.$#"
+			count: 8
+			path: app/cdash/include/common.php
+
+		-
 			message: "#^Parameter \\#3 \\$length of function substr expects int\\|null, int\\<0, max\\>\\|false given\\.$#"
 			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, \\(array\\<int, string\\>\\|string\\|null\\) given\\.$#"
+			count: 2
 			path: app/cdash/include/common.php
 
 		-
@@ -14310,11 +14560,6 @@ parameters:
 			path: app/cdash/include/ctestparserutils.php
 
 		-
-			message: "#^Comparison operation \"\\=\\=\" between \\(array\\|float\\|int\\) and 0 results in an error\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparserutils.php
@@ -14372,6 +14617,11 @@ parameters:
 		-
 			message: "#^Only numeric types are allowed in \\+, int\\<0, max\\>\\|false given on the left side\\.$#"
 			count: 1
+			path: app/cdash/include/ctestparserutils.php
+
+		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 9
 			path: app/cdash/include/ctestparserutils.php
 
 		-
@@ -14750,8 +15000,18 @@ parameters:
 			path: app/cdash/include/dailyupdates.php
 
 		-
+			message: "#^Parameter \\#1 \\$timestamp of method DateTime\\:\\:setTimestamp\\(\\) expects int, \\(float\\|int\\) given\\.$#"
+			count: 1
+			path: app/cdash/include/dailyupdates.php
+
+		-
 			message: "#^Parameter \\#2 \\$offset of function substr expects int, int\\<0, max\\>\\|false given\\.$#"
 			count: 1
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
+			count: 6
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -15251,6 +15511,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|false\\|null given\\.$#"
+			count: 1
+			path: app/cdash/include/filterdataFunctions.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(int\\|false\\) given\\.$#"
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
@@ -16779,6 +17044,11 @@ parameters:
 			path: app/cdash/include/repository.php
 
 		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 1
+			path: app/cdash/include/repository.php
+
+		-
 			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/include/repository.php
@@ -17560,6 +17830,16 @@ parameters:
 			path: app/cdash/include/upgrade_functions.php
 
 		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 4
+			path: app/cdash/include/upgrade_functions.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
+			count: 2
+			path: app/cdash/include/upgrade_functions.php
+
+		-
 			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
@@ -17691,6 +17971,11 @@ parameters:
 		-
 			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
 			count: 2
+			path: app/cdash/public/api/v1/build.php
+
+		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 4
 			path: app/cdash/public/api/v1/build.php
 
 		-
@@ -18467,6 +18752,11 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/requeueSubmissionFile.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of method Carbon\\\\Carbon\\:\\:addSeconds\\(\\) expects int, \\(float\\|int\\) given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/requeueSubmissionFile.php
 
@@ -22367,6 +22657,11 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_test_manager.php
 
 		-
+			message: "#^Parameter \\#1 \\$test_file of method TestSuite\\:\\:addFile\\(\\) expects string, \\(int\\|string\\) given\\.$#"
+			count: 1
+			path: app/cdash/tests/kwtest/kw_test_manager.php
+
+		-
 			message: "#^Property TestManager\\:\\:\\$database has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_test_manager.php
@@ -22923,6 +23218,11 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$handle of function curl_setopt expects CurlHandle, CurlHandle\\|false given\\.$#"
 			count: 7
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, \\(int\\|string\\) given\\.$#"
+			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
@@ -27072,6 +27372,11 @@ parameters:
 			path: app/cdash/tests/test_pdoexecutelogserrors.php
 
 		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 1
+			path: app/cdash/tests/test_pdoexecutelogserrors.php
+
+		-
 			message: "#^Method ProjectInDbTestCase\\:\\:createProjectTest4Db\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_projectindb.php
@@ -29131,6 +29436,11 @@ parameters:
 			path: app/cdash/tests/test_viewdynamicanalysisfile.php
 
 		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 2
+			path: app/cdash/tests/test_viewdynamicanalysisfile.php
+
+		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 1
 			path: app/cdash/tests/test_viewmap.php
@@ -29444,6 +29754,11 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, int\\|false given\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/BazelJSON_handler.php
+
+		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
@@ -29973,6 +30288,11 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
 			count: 2
+			path: app/cdash/xml_handlers/JavaJSONTar_handler.php
+
+		-
+			message: "#^Parameter \\#1 \\$key of function array_key_exists expects int\\|string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
+			count: 1
 			path: app/cdash/xml_handlers/JavaJSONTar_handler.php
 
 		-
@@ -30673,6 +30993,16 @@ parameters:
 
 		-
 			message: "#^Method BuildHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Parameter \\#2 \\$offset of function substr expects int, \\(float\\|int\\) given\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Parameter \\#3 \\$length of function substr expects int\\|null, \\(float\\|int\\) given\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/build_handler.php
 
@@ -32722,6 +33052,21 @@ parameters:
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
+			message: "#^Parameter \\#2 \\$baseTimestamp of function strtotime expects int\\|null, \\(int\\|false\\) given\\.$#"
+			count: 2
+			path: app/cdash/xml_handlers/upload_handler.php
+
+		-
+			message: "#^Parameter \\#2 \\$data of function fwrite expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/upload_handler.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, \\(int\\|false\\) given\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/upload_handler.php
+
+		-
 			message: "#^Parameter \\#2 \\$use_include_path of function file_get_contents expects bool, null given\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
@@ -32905,6 +33250,11 @@ parameters:
 			message: "#^Method ReformatTestData\\:\\:up\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: database/migrations/2020_02_17_112005_reformat_test_data.php
+
+		-
+			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, \\(array\\<int, string\\>\\|string\\|null\\) given\\.$#"
+			count: 1
+			path: database/migrations/2023_04_16_204249_project_name_regex.php
 
 		-
 			message: "#^Undefined variable\\: \\$this$#"
