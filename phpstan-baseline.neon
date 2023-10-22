@@ -3263,6 +3263,16 @@ parameters:
 			path: app/Models/BuildTest.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:orWhere\\(\\)\\.$#"
+			count: 1
+			path: app/Models/Project.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Models/Project.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:orWhere\\(\\)\\.$#"
 			count: 1
 			path: app/Models/Project.php
@@ -9370,6 +9380,21 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:betweenDates\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:max\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 

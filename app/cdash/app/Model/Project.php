@@ -324,7 +324,7 @@ class Project
     }
 
     /** Get the logo id */
-    public function GetLogoId(): int
+    private function GetLogoId(): int
     {
         if (!$this->Filled) {
             $this->Fill();
@@ -688,35 +688,15 @@ class Project
             throw new RuntimeException('ID not set for project');
         }
 
-        $build = DB::select('
-                     SELECT starttime
-                     FROM build
-                     WHERE projectid=?
-                     ORDER BY starttime DESC
-                     LIMIT 1
-                 ', [(int) $this->Id]);
+        $starttime = EloquentProject::findOrFail((int) $this->Id)
+            ->builds()
+            ->max('starttime');
 
-        if ($build === []) {
+        if ($starttime === null) {
             return false;
         }
 
-        return date(FMT_DATETIMESTD, strtotime($build[0]->starttime . 'UTC'));
-    }
-
-    /** Get the total number of builds for a project*/
-    public function GetTotalNumberOfBuilds(): int
-    {
-        if (!$this->Id) {
-            throw new RuntimeException('ID not set for project');
-        }
-
-        return (int) DB::select('
-            SELECT count(*) AS c
-            FROM build
-            WHERE
-                parentid IN (-1, 0)
-                AND projectid=?
-        ', [(int) $this->Id])[0]->c;
+        return date(FMT_DATETIMESTD, strtotime($starttime . 'UTC'));
     }
 
     /** Get the number of builds given a date range */
@@ -726,21 +706,18 @@ class Project
             throw new RuntimeException('ID not set for project');
         }
 
-        // Construct our query given the optional parameters of this function.
-        $sql = 'SELECT COUNT(build.id) AS c
-                FROM build
-                WHERE projectid = ? AND parentid IN (-1, 0)';
-        $query_params = [(int) $this->Id];
         if ($startUTCdate !== null) {
-            $sql .= ' AND build.starttime > ?';
-            $query_params[] = $startUTCdate;
-        }
-        if ($endUTCdate !== null) {
-            $sql .= ' AND build.starttime <= ?';
-            $query_params[] = $endUTCdate;
+            $startUTCdate = Carbon::parse($startUTCdate);
         }
 
-        return (int) DB::select($sql, $query_params)[0]->c;
+        if ($endUTCdate !== null) {
+            $endUTCdate = Carbon::parse($endUTCdate);
+        }
+
+        return EloquentProject::findOrFail((int) $this->Id)
+            ->builds()
+            ->betweenDates($startUTCdate, $endUTCdate)
+            ->count();
     }
 
     /** Get the number of builds given per day */
@@ -1202,7 +1179,6 @@ class Project
      */
     public function ConvertToJSON(): array
     {
-        $config = Config::getInstance();
         $response = [];
         $clone = new \ReflectionObject($this);
         $properties = $clone->getProperties(\ReflectionProperty::IS_PUBLIC);

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
@@ -37,6 +38,8 @@ use Illuminate\Support\Carbon;
  * @property bool $done
  * @property string $uuid
  * @property string $changeid
+ *
+ * @method static Builder betweenDates(?Carbon $starttime, ?Carbon $endtime)
  *
  * @mixin Builder<Build>
  */
@@ -113,5 +116,29 @@ class Build extends Model
     {
         return $this->belongsToMany(Note::class, 'build2note', 'buildid', 'noteid')
             ->withPivot('time');
+    }
+
+    /**
+     * @return BelongsTo<Project, self>
+     */
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class, 'id', 'projectid');
+    }
+
+    /**
+     * Adds a betweenDates() query builder filter method...
+     *
+     * @param Builder<self> $query
+     */
+    public function scopeBetweenDates(Builder $query, ?Carbon $starttime, ?Carbon $endtime): void
+    {
+        if ($starttime !== null) {
+            $query->where('starttime', '>', $starttime);
+        }
+
+        if ($endtime !== null) {
+            $query->where('endtime', '<=', $endtime);
+        }
     }
 }
