@@ -80,7 +80,7 @@ final class UserController extends AbstractController
             $project_response['role'] = $project_row['role']; // 0 is normal user, 1 is maintainer, 2 is administrator
             $project_response['name'] = $Project->Name;
             $project_response['name_encoded'] = urlencode($Project->Name);
-            $project_response['nbuilds'] = $Project->GetTotalNumberOfBuilds();
+            $project_response['nbuilds'] = $Project->GetNumberOfBuilds();
             $project_response['average_builds'] = round($Project->GetBuildsDailyAverage(gmdate(FMT_DATETIME, time() - (3600 * 24 * 7)), gmdate(FMT_DATETIME)), 2);
             $project_response['success'] = $Project->GetNumberOfPassingBuilds($start, gmdate(FMT_DATETIME));
             $project_response['error'] = $Project->GetNumberOfErrorBuilds($start, gmdate(FMT_DATETIME));

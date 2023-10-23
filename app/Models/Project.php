@@ -128,4 +128,16 @@ class Project extends Model
     {
         return $this->hasMany(BuildGroup::class, 'projectid', 'id');
     }
+
+    /**
+     * @return HasMany<Build>
+     */
+    public function builds(): HasMany
+    {
+        return $this->hasMany(Build::class, 'projectid', 'id')
+            ->where(function ($query) {
+                $query->where('parentid', 0)
+                    ->orWhere('parentid', -1);
+            });
+    }
 }
