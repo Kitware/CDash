@@ -16,39 +16,34 @@
 namespace CDash\Model;
 
 use CDash\Database;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\BuildGroup as EloquentBuildGroup;
 
 class BuildGroup
 {
     public const NIGHTLY = 'Nightly';
     public const EXPERIMENTAL = 'Experimental';
 
-    private $Id;
-    private $ProjectId;
-    private $Name;
-    private $StartTime;
-    private $EndTime;
-    private $Description;
-    private $SummaryEmail;
-    private $Type;
-    private $Position;
-    private $PDO;
+    private int $Position = 0;
+    private Database $PDO;
+    /** @var EloquentBuildGroup $eloquent_model */
+    private $eloquent_model;
 
     public function __construct()
     {
-        $this->Id = 0;
-        $this->Name = '';
-        $this->ProjectId = 0;
-        $this->StartTime = '1980-01-01 00:00:00';
-        $this->EndTime = '1980-01-01 00:00:00';
-        $this->AutoRemoveTimeFrame = 0;
-        $this->Description = '';
-        $this->SummaryEmail = 0;
-        $this->IncludeSubProjectTotal = 1;
-        $this->EmailCommitters = 0;
-        $this->Type = 'Daily';
-        $this->Position = 0;
+        $this->eloquent_model = new EloquentBuildGroup([
+            'projectid' => 0,
+            'name' => '',
+            'starttime' => Carbon::create(1980),
+            'endtime' => Carbon::create(1980),
+            'description' => '',
+            'summaryemail' => 0,
+            'type' => 'Daily',
+            'includesubprojectotal' => 1,
+            'emailcommitters' => 0,
+        ]);
 
         $this->PDO = Database::getInstance();
     }
@@ -56,125 +51,116 @@ class BuildGroup
     /** Get the id */
     public function GetId(): int
     {
-        return intval($this->Id);
+        return $this->eloquent_model->id ?? 0;
     }
 
-    /** Set the id.  Also loads remaining data for this
+    /**
+     * Set the id.  Also loads remaining data for this
      * buildgroup from the database.
-     **/
+     */
     public function SetId($id): bool
     {
         if (!is_numeric($id)) {
             return false;
         }
 
-        $this->Id = intval($id);
-
-        $row = $this->PDO->executePreparedSingleRow('SELECT * FROM buildgroup WHERE id=?', [$this->Id]);
-        if (empty($row)) {
+        $model = EloquentBuildGroup::find((int) $id);
+        if ($model === null) {
             return false;
         }
 
-        $this->FillFromRow($row);
+        $this->eloquent_model = $model;
+
         return true;
     }
 
     /** Get the Name of the buildgroup */
     public function GetName(): string|false
     {
-        if (strlen($this->Name) > 0) {
-            return $this->Name;
+        if (strlen($this->eloquent_model->name) > 0) {
+            return $this->eloquent_model->name;
         }
 
-        if ($this->Id < 1) {
-            add_log('BuildGroup GetName(): Id not set', 'GetName', LOG_ERR);
+        if (!isset($this->eloquent_model->id)) {
+            Log::error('BuildGroup GetName(): Id not set');
             return false;
         }
 
-        $project = $this->PDO->executePreparedSingleRow('SELECT name FROM buildgroup WHERE id=?', [$this->Id]);
-        if (!$project) {
-            add_last_sql_error('BuildGroup GetName');
-            return false;
-        }
-        $this->Name = $project['name'];
-        return $this->Name;
+        return $this->eloquent_model->name;
     }
 
     /** Set the Name of the buildgroup. */
-    public function SetName($name): void
+    public function SetName(string $name): void
     {
-        $this->Name = $name ?? '';
-        if ($this->ProjectId > 0) {
+        $this->eloquent_model->name = $name;
+        if ($this->eloquent_model->projectid > 0) {
             $this->Fill();
         }
     }
 
     /** Get the project id */
-    public function GetProjectId()
+    public function GetProjectId(): int
     {
-        return $this->ProjectId;
+        return $this->eloquent_model->projectid;
     }
 
     /** Set the project id */
     public function SetProjectId($projectid): bool
     {
-        if (is_numeric($projectid)) {
-            $this->ProjectId = $projectid;
-            if ($this->Name != '') {
-                $this->Fill();
-            }
-            return true;
+        if (!is_numeric($projectid)) {
+            return false;
         }
-        return false;
+
+        $this->eloquent_model->projectid = (int) $projectid;
+        if (strlen($this->eloquent_model->name) > 0) {
+            $this->Fill();
+        }
+        return true;
     }
 
     /** Get/Set the start time */
-    public function GetStartTime()
+    public function GetStartTime(): Carbon|false
     {
-        if ($this->Id < 1) {
-            add_log('BuildGroup GetStartTime(): Id not set', 'GetStartTime', LOG_ERR);
+        if (!isset($this->eloquent_model->id)) {
+            Log::error('BuildGroup GetStartTime(): Id not set');
             return false;
         }
-        return $this->StartTime;
+        return $this->eloquent_model->starttime;
     }
 
-    public function SetEndTime($time)
+    public function SetEndTime(Carbon $time): void
     {
-        $this->EndTime = pdo_real_escape_string($time);
+        $this->eloquent_model->endtime = $time;
     }
 
     /** Get/Set the autoremove timeframe */
-    public function GetAutoRemoveTimeFrame()
+    public function GetAutoRemoveTimeFrame(): int|false
     {
-        if ($this->Id < 1) {
-            add_log('BuildGroup GetAutoRemoveTimeFrame(): Id not set', 'GetAutoRemoveTimeFrame', LOG_ERR);
+        if ($this->eloquent_model->autoremovetimeframe === null) {
+            Log::error('BuildGroup GetAutoRemoveTimeFrame(): property not set.');
             return false;
         }
-        return $this->AutoRemoveTimeFrame;
+        return $this->eloquent_model->autoremovetimeframe;
     }
 
-    public function SetAutoRemoveTimeFrame($timeframe): bool
+    public function SetAutoRemoveTimeFrame(int $timeframe): void
     {
-        if (!is_numeric($timeframe)) {
-            return false;
-        }
-        $this->AutoRemoveTimeFrame = $timeframe;
-        return true;
+        $this->eloquent_model->autoremovetimeframe = $timeframe;
     }
 
     /** Get/Set the description */
     public function GetDescription(): string|false
     {
-        if ($this->Id < 1) {
-            add_log('BuildGroup GetDescription(): Id not set', 'GetDescription', LOG_ERR);
+        if (!isset($this->eloquent_model->id)) {
+            Log::error('BuildGroup GetDescription(): Id not set');
             return false;
         }
-        return $this->Description;
+        return $this->eloquent_model->description;
     }
 
-    public function SetDescription(string $desc): void
+    public function SetDescription(string $description): void
     {
-        $this->Description = $desc;
+        $this->eloquent_model->description = $description;
     }
 
     /** Get/Set the email settings for this BuildGroup.
@@ -184,39 +170,35 @@ class BuildGroup
      **/
     public function GetSummaryEmail()
     {
-        if ($this->Id < 1) {
+        if (!isset($this->eloquent_model->id)) {
             Log::error("BuildGroup GetSummaryEmail(): Id not set");
             return false;
         }
-        return $this->SummaryEmail;
+        return $this->eloquent_model->summaryemail;
     }
 
-    public function SetSummaryEmail($email): bool
+    public function SetSummaryEmail(int $email): bool
     {
-        if (!is_numeric($email)) {
+        if ($email < 0 || $email > 2) {
             return false;
         }
-        $this->SummaryEmail = $email;
+        $this->eloquent_model->summaryemail = $email;
         return true;
     }
 
     /** Get/Set whether or not this group should include subproject total. */
     public function GetIncludeSubProjectTotal(): int|false
     {
-        if ($this->Id < 1) {
-            add_log('BuildGroup GetIncludeSubProjectTotal(): Id not set', 'GetIncludeSubProjectTotal', LOG_ERR);
+        if (!isset($this->eloquent_model->id)) {
+            Log::error('BuildGroup GetIncludeSubProjectTotal(): Id not set');
             return false;
         }
-        return intval($this->IncludeSubProjectTotal);
+        return $this->eloquent_model->includesubprojectotal;
     }
 
-    public function SetIncludeSubProjectTotal($b): void
+    public function SetIncludeSubProjectTotal(int $b): void
     {
-        if ($b) {
-            $this->IncludeSubProjectTotal = 1;
-        } else {
-            $this->IncludeSubProjectTotal = 0;
-        }
+        $this->eloquent_model->includesubprojectotal = $b > 0 ? 1 : 0;
     }
 
     /**
@@ -226,254 +208,131 @@ class BuildGroup
      */
     public function isNotifyingCommitters(): bool
     {
-        // TODO: (williamjallen) is the double negation here intentional?
-        return !!$this->GetEmailCommitters();
+        return (bool) $this->GetEmailCommitters();
     }
 
     /** Get/Set whether or not committers should be emailed for this group. */
-    public function GetEmailCommitters()
+    public function GetEmailCommitters(): int|false
     {
-        if ($this->Id < 1) {
-            add_log('BuildGroup GetEmailCommitters(): Id not set', 'GetEmailCommitters', LOG_ERR);
+        if (!isset($this->eloquent_model->id)) {
+            Log::error('BuildGroup GetEmailCommitters(): Id not set');
             return false;
         }
-        return $this->EmailCommitters;
+        return $this->eloquent_model->emailcommitters;
     }
 
-    public function SetEmailCommitters($b)
+    public function SetEmailCommitters($b): void
     {
-        if ($b) {
-            $this->EmailCommitters = 1;
-        } else {
-            $this->EmailCommitters = 0;
-        }
+        $this->eloquent_model->emailcommitters = $b ? 1 : 0;
     }
 
     /** Get/Set the type */
-    public function GetType()
+    public function GetType(): string|false
     {
-        if ($this->Id < 1) {
-            add_log('BuildGroup GetType(): Id not set', 'GetType', LOG_ERR);
+        if (!isset($this->eloquent_model->id)) {
+            Log::error('BuildGroup GetType(): Id not set');
             return false;
         }
-        return $this->Type;
+        return $this->eloquent_model->type;
     }
 
-    public function SetType($type): void
+    public function SetType(string $type): void
     {
-        $this->Type = $type ?? '';
+        $this->eloquent_model->type = $type;
     }
 
-    /** Populate the ivars of an existing buildgroup.
+    /**
+     * Populate the ivars of an existing buildgroup.
      * Called automatically once name & projectid are set.
-     **/
-    public function Fill(): bool
+     */
+    private function Fill(): bool
     {
-        if ($this->Name == '' || $this->ProjectId == 0) {
-            add_log(
-                "Name='" . $this->Name . "' or ProjectId='" . $this->ProjectId . "' not set",
-                'BuildGroup::Fill',
-                LOG_WARNING);
+        if (strlen($this->eloquent_model->name) === 0 || $this->eloquent_model->projectid === 0) {
+            Log::warning("Name='{$this->eloquent_model->name}' or ProjectId='{$this->eloquent_model->projectid}' not set.");
             return false;
         }
 
-        $db = Database::getInstance();
+        $model = EloquentBuildGroup::where([
+            'projectid' => $this->eloquent_model->projectid,
+            'name' => $this->eloquent_model->name,
+        ])->first();
 
-        $row = $db->executePreparedSingleRow('
-                   SELECT *
-                   FROM buildgroup
-                   WHERE
-                       projectid=?
-                       AND name=?
-               ', [intval($this->ProjectId), $this->Name]);
-
-        if (empty($row)) {
+        if ($model === null) {
             return false;
         }
 
-        $this->FillFromRow($row);
+        $this->eloquent_model = $model;
+
         return true;
-    }
-
-    /** Helper function for filling in a buildgroup instance */
-    public function FillFromRow($row): void
-    {
-        $this->Id = $row['id'];
-        $this->Name = $row['name'];
-        $this->ProjectId = $row['projectid'];
-        $this->StartTime = $row['starttime'];
-        $this->EndTime = $row['endtime'];
-        $this->AutoRemoveTimeFrame = $row['autoremovetimeframe'];
-        $this->Description = $row['description'];
-        $this->SummaryEmail = $row['summaryemail'];
-        $this->IncludeSubProjectTotal = $row['includesubprojectotal'];
-        $this->EmailCommitters = $row['emailcommitters'];
-        $this->Type = $row['type'];
     }
 
     /** Get/Set this BuildGroup's position (the order it should appear in) */
     public function GetPosition(): int|false
     {
         if ($this->Position > 0) {
-            return intval($this->Position);
+            return $this->Position;
         }
 
-        if ($this->Id < 1) {
-            add_log('BuildGroup GetPosition(): Id not set', 'GetPosition', LOG_ERR);
+        if (!isset($this->eloquent_model->id)) {
+            Log::error('BuildGroup GetPosition(): Id not set');
             return false;
         }
 
-        $stmt = $this->PDO->prepare('
+        $position = (int) (DB::select('
             SELECT position FROM buildgroupposition
-            WHERE buildgroupid = :id
-            ORDER BY position DESC LIMIT 1');
-        pdo_execute($stmt, [':id' => $this->Id]);
-        $position = $stmt->fetchColumn();
+            WHERE buildgroupid = ?
+            ORDER BY position DESC LIMIT 1
+        ', [$this->eloquent_model->id])[0]->position ?? -1);
 
-        if (!$position) {
-            add_log(
-                "BuildGroup GetPosition(): no position found for buildgroup # $this->Id !",
-                'GetPosition',
-                LOG_ERR);
+        if ($position === -1) {
+            Log::error("BuildGroup GetPosition(): no position found for buildgroup #{$this->eloquent_model->id}!");
             return false;
         }
 
-        $this->Position = intval($position);
+        $this->Position = $position;
         return $this->Position;
     }
 
     /** Get the next position available for that group */
-    public function GetNextPosition(): int
+    private function GetNextPosition(): int
     {
-        $query = $this->PDO->executePreparedSingleRow("
-                     SELECT bg.position
-                     FROM buildgroupposition AS bg, buildgroup AS g
-                     WHERE
-                         bg.buildgroupid=g.id
-                         AND g.projectid=?
-                          AND bg.endtime='1980-01-01 00:00:00'
-                     ORDER BY bg.position DESC
-                     LIMIT 1
-                 ", [$this->ProjectId]);
-        if (!empty($query)) {
-            return intval($query['position']) + 1;
-        }
-        return 1;
+        return 1 + (int) (DB::select("
+            SELECT bg.position
+            FROM
+                buildgroupposition AS bg,
+                buildgroup AS g
+            WHERE
+                bg.buildgroupid=g.id
+                AND g.projectid=?
+                AND bg.endtime='1980-01-01 00:00:00'
+            ORDER BY bg.position DESC
+            LIMIT 1
+            ", [$this->eloquent_model->projectid])[0]->position ?? 0);
     }
 
     /** Check if the group already exists */
     public function Exists(): bool
     {
-        // If no id specify return false
-        if (!$this->Id || !$this->ProjectId) {
-            return false;
-        }
-
-        $query = $this->PDO->executePreparedSingleRow('
-                     SELECT count(*) AS c
-                     FROM buildgroup
-                     WHERE id=? AND projectid=?
-                 ', [$this->Id, $this->ProjectId]);
-        add_last_sql_error('BuildGroup:Exists', $this->ProjectId);
-        if (!$query || intval($query['c']) === 0) {
-            return false;
-        }
-        return true;
+        return isset($this->eloquent_model->id) && $this->eloquent_model->exists();
     }
 
     /** Save the group */
     public function Save(): bool
     {
         if ($this->Exists()) {
-            // Update the project
-            $query = $this->PDO->executePrepared('
-                         UPDATE buildgroup
-                         SET
-                             name=?,
-                             projectid=?,
-                             starttime=?,
-                             endtime=?,
-                             autoremovetimeframe=?,
-                             description=?,
-                             summaryemail=?,
-                             includesubprojectotal=?,
-                             emailcommitters=?,
-                             type=?
-                         WHERE id=?
-                     ', [
-                         $this->Name,
-                         $this->ProjectId,
-                         $this->StartTime,
-                         $this->EndTime,
-                         $this->AutoRemoveTimeFrame,
-                         $this->Description,
-                         $this->SummaryEmail,
-                         $this->IncludeSubProjectTotal,
-                         $this->EmailCommitters,
-                         $this->Type,
-                         $this->Id,
-                     ]);
-
-            if ($query === false) {
-                add_last_sql_error('BuildGroup:Update', $this->ProjectId);
-                return false;
-            }
+            $this->eloquent_model->save();
         } else {
-            $id = '';
-            $values = [];
-            if ($this->Id > 0) {
-                $id = 'id,';
-                $values[] = $this->Id;
-            }
-            $values = array_merge($values, [
-                $this->Name,
-                $this->ProjectId,
-                $this->StartTime,
-                $this->EndTime,
-                $this->AutoRemoveTimeFrame,
-                $this->Description,
-                $this->SummaryEmail,
-                $this->IncludeSubProjectTotal,
-                $this->EmailCommitters,
-                $this->Type,
-            ]);
-
-            $prepared_array = $this->PDO->createPreparedArray(count($values));
-            $query = $this->PDO->executePrepared("
-                         INSERT INTO buildgroup (
-                              $id
-                              name,
-                              projectid,
-                              starttime,
-                              endtime,
-                              autoremovetimeframe,
-                              description,
-                              summaryemail,
-                              includesubprojectotal,
-                              emailcommitters,
-                              type
-                         )
-                         VALUES $prepared_array
-                     ", $values);
-
-            if ($query === false) {
-                add_last_sql_error('Buildgroup Insert', $this->ProjectId);
-                return false;
-            }
-
-            if (!$this->Id) {
-                $this->Id = pdo_insert_id('buildgroup');
-            }
+            $this->eloquent_model->save();
 
             // Insert the default position for this group
             // Find the position for this group
             $position = $this->GetNextPosition();
-            $this->PDO->executePrepared('
+            DB::insert('
                 INSERT INTO buildgroupposition
                     (buildgroupid, position, starttime, endtime)
                 VALUES
                     (?, ?, ?, ?)
-            ', [$this->Id, $position, $this->StartTime, $this->EndTime]);
+            ', [$this->eloquent_model->id, $position, $this->eloquent_model->starttime, $this->eloquent_model->endtime]);
         }
         return true;
     }
@@ -486,13 +345,13 @@ class BuildGroup
         }
 
         // We delete all the build2grouprule associated with the group
-        DB::delete('DELETE FROM build2grouprule WHERE groupid=?', [$this->Id]);
+        DB::delete('DELETE FROM build2grouprule WHERE groupid=?', [$this->eloquent_model->id]);
 
         // We delete the buildgroup
-        DB::delete('DELETE FROM buildgroup WHERE id=?', [$this->Id]);
+        $this->eloquent_model->delete();
 
         // Restore the builds that were associated with this group
-        $oldbuilds = $this->PDO->executePrepared('
+        $oldbuilds = DB::select('
                          SELECT id, type
                          FROM build
                          WHERE id IN (
@@ -500,30 +359,30 @@ class BuildGroup
                              FROM build2group
                              WHERE groupid=?
                          )
-                     ', [$this->Id]);
+                     ', [$this->eloquent_model->id]);
 
         foreach ($oldbuilds as $oldbuilds_array) {
             // Move the builds
-            $buildid = $oldbuilds_array['id'];
-            $buildtype = $oldbuilds_array['type'];
+            $buildid = $oldbuilds_array->id;
+            $buildtype = $oldbuilds_array->type;
 
             // Find the group corresponding to the build type
-            $query = $this->PDO->executePrepared('
+            $query = DB::select('
                          SELECT id
                          FROM buildgroup
                          WHERE name=? AND projectid=?
-                     ', [$buildtype, $this->ProjectId]);
+                     ', [$buildtype, $this->eloquent_model->projectid])[0] ?? [];
 
-            if (empty($query)) {
-                $query = $this->PDO->executePrepared("
+            if ($query === []) {
+                $query = DB::select("
                              SELECT id
                              FROM buildgroup
                              WHERE name='Experimental' AND projectid=?
-                         ", [$this->ProjectId]);
+                         ", [$this->eloquent_model->projectid])[0];
             };
-            $grouptype = $query['id'];
+            $grouptype = $query->id;
 
-            $this->PDO->executePrepared('
+            DB::update('
                 UPDATE build2group
                 SET groupid=?
                 WHERE buildid=?
@@ -532,19 +391,19 @@ class BuildGroup
 
         // Delete the buildgroupposition and update the position
         // of the other groups.
-        DB::delete('DELETE FROM buildgroupposition WHERE buildgroupid=?', [$this->Id]);
-        $buildgroupposition = $this->PDO->executePrepared('
+        DB::delete('DELETE FROM buildgroupposition WHERE buildgroupid=?', [$this->eloquent_model->id]);
+        $buildgroupposition = DB::select('
                                   SELECT bg.buildgroupid
                                   FROM buildgroupposition AS bg, buildgroup AS g
                                   WHERE g.projectid=? AND bg.buildgroupid=g.id
                                   ORDER BY bg.position ASC
-                              ', [strval($this->ProjectId)]);
+                              ', [$this->eloquent_model->projectid]);
 
         $p = 1;
         foreach ($buildgroupposition as $buildgroupposition_array) {
             // TODO: (williamjallen) Refactor this to make a constant number of queries
-            $buildgroupid = $buildgroupposition_array['buildgroupid'];
-            $this->PDO->executePrepared('
+            $buildgroupid = $buildgroupposition_array->buildgroupid;
+            DB::update('
                 UPDATE buildgroupposition
                 SET position=?
                 WHERE buildgroupid=?
@@ -555,111 +414,104 @@ class BuildGroup
         return true;
     }
 
-    public function GetGroupIdFromRule($build): int
+    public function GetGroupIdFromRule(Build $build): int
     {
-        $name = $build->Name;
-        $type = $build->Type;
-        $siteid = $build->SiteId;
         $starttime = $build->StartTime;
-        $projectid = $build->ProjectId;
 
         // Insert the build into the proper group
         // 1) Check if we have any build2grouprules for this build
         $rule_row = DB::table('build2grouprule')
             ->join('buildgroup', 'buildgroup.id', '=', 'build2grouprule.groupid')
-            ->where('buildgroup.projectid', '=', $projectid)
-            ->where('build2grouprule.buildtype', '=', $type)
-            ->where('build2grouprule.siteid', '=', $siteid)
-            ->where('build2grouprule.buildname', '=', $name)
-            ->where('build2grouprule.starttime', '<', $starttime)
+            ->where('buildgroup.projectid', '=', $build->ProjectId)
+            ->where('build2grouprule.buildtype', '=', $build->Type)
+            ->where('build2grouprule.siteid', '=', $build->SiteId)
+            ->where('build2grouprule.buildname', '=', $build->Name)
+            ->where('build2grouprule.starttime', '<', $build->StartTime)
             ->where(function ($query) use ($starttime) {
                 $query->where('build2grouprule.endtime', '=', '1980-01-01 00:00:00')
                       ->orWhere('build2grouprule.endtime', '>', $starttime);
             })->first();
-        if ($rule_row) {
-            return intval($rule_row->groupid);
+        if ($rule_row !== null) {
+            return (int) $rule_row->groupid;
         }
 
         // 2) Check for buildname-based groups
         $name_rule_row = DB::table('build2grouprule')
             ->join('buildgroup', 'buildgroup.id', '=', 'build2grouprule.groupid')
-            ->where('buildgroup.projectid', '=', $projectid)
-            ->where('build2grouprule.buildtype', '=', $type)
+            ->where('buildgroup.projectid', '=', $build->ProjectId)
+            ->where('build2grouprule.buildtype', '=', $build->Type)
             ->where('build2grouprule.siteid', '=', -1)
-            ->whereRaw("'$name' LIKE build2grouprule.buildname")
-            ->where('build2grouprule.starttime', '<', $starttime)
+            ->whereRaw("'{$build->Name}' LIKE build2grouprule.buildname")
+            ->where('build2grouprule.starttime', '<', $build->StartTime)
             ->where(function ($query) use ($starttime) {
                 $query->where('build2grouprule.endtime', '=', '1980-01-01 00:00:00')
                       ->orWhere('build2grouprule.endtime', '>', $starttime);
             })
             ->orderByRaw('LENGTH(build2grouprule.buildname) DESC')
             ->first();
-        if ($name_rule_row) {
-            return intval($name_rule_row->groupid);
+        if ($name_rule_row !== null) {
+            return (int) $name_rule_row->groupid;
         }
 
         // If we reach this far, none of the rules matched.
         // Just use the default group for the build type.
-        $default_rule_row = DB::table('buildgroup')
-            ->where('name', '=', $type)
-            ->where('projectid', '=', $projectid)
-            ->first();
-        if ($default_rule_row) {
-            return intval($default_rule_row->id);
+        $default_model = EloquentBuildGroup::where([
+            'name' => $build->Type,
+            'projectid' => $build->ProjectId,
+        ])->first();
+        if ($default_model !== null) {
+            return $default_model->id;
         }
 
-        // If the group does not exist we assign it to Experimental.
-        $experimental_rule_row = DB::table('buildgroup')
-            ->where('name', '=', 'Experimental')
-            ->where('projectid', '=', $projectid)
-            ->first();
-        if ($experimental_rule_row) {
-            return intval($experimental_rule_row->id);
-        }
-        return 0;
+        return EloquentBuildGroup::where([
+            'name' => 'Experimental',
+            'projectid' => (int)$build->ProjectId,
+        ])->first()->id ?? 0;
     }
 
-    // Return an array of currently active BuildGroups
-    // given a projectid and a starting datetime string.
+    /**
+     * Return an array of currently active BuildGroups
+     * given a projectid and a starting datetime string.
+     */
     public static function GetBuildGroups($projectid, $begin): array
     {
-        $pdo = Database::getInstance();
         $buildgroups = [];
 
-        $stmt = $pdo->prepare("
+        $stmt = DB::select("
             SELECT bg.id, bg.name, bgp.position
             FROM buildgroup AS bg
             LEFT JOIN buildgroupposition AS bgp ON (bgp.buildgroupid = bg.id)
-            WHERE bg.projectid = :projectid AND
-                  bg.starttime < :begin AND
-                  (bg.endtime > :begin OR bg.endtime='1980-01-01 00:00:00')");
+            WHERE bg.projectid = ? AND
+                  bg.starttime < ? AND
+                  (bg.endtime > ? OR bg.endtime='1980-01-01 00:00:00')
+        ", [$projectid, $begin, $begin]);
 
-        $pdo->execute($stmt, [':projectid' => $projectid, ':begin' => $begin]);
-        while ($row = $stmt->fetch()) {
+        foreach ($stmt as $row) {
             $buildgroup = new BuildGroup();
-            $buildgroup->Id = $row['id'];
-            $buildgroup->Name = $row['name'];
-            $buildgroup->Position = $row['position'];
+            $buildgroup->SetId((int) $row->id);
+            $buildgroup->SetName($row->name);
+            // TODO: Clean this up.  Position is a *private* member...
+            $buildgroup->Position = (int) $row->position;
             $buildgroups[] = $buildgroup;
         }
 
         return $buildgroups;
     }
 
-    // Get the active rules for this build group.
+    /** Get the active rules for this build group. */
     public function GetRules(): array|false
     {
         $stmt = $this->PDO->prepare("
                 SELECT * FROM build2grouprule
                 WHERE groupid = :groupid AND
                       endtime = '1980-01-01 00:00:00'");
-        if (!$this->PDO->execute($stmt, [':groupid' => $this->Id])) {
+        if ($stmt === false || !$this->PDO->execute($stmt, [':groupid' => $this->eloquent_model->id])) {
             return false;
         }
         $rules = [];
         while ($row = $stmt->fetch()) {
             $rule = new BuildGroupRule();
-            $rule->FillFromRow($row, $this->ProjectId);
+            $rule->FillFromRow($row, $this->eloquent_model->projectid);
             $rules[] = $rule;
         }
         return $rules;

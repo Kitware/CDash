@@ -8,6 +8,7 @@ use App\Services\TestingDay;
 use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
@@ -97,7 +98,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         $new_build_group = new BuildGroup();
         $new_build_group->SetProjectId($projectid);
         $new_build_group->SetName('delete me');
-        $new_build_group->SetEndTime('2010-01-01 00:00:00');
+        $new_build_group->SetEndTime(Carbon::create(2010));
         $new_build_group->Save();
         $new_group_id = $new_build_group->GetId();
 

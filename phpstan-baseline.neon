@@ -2490,11 +2490,6 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SubProjectController\\:\\:ajaxDependenciesGraph\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Http/Controllers/SubProjectController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\SubProjectController\\:\\:dependenciesGraph\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
 			count: 1
 			path: app/Http/Controllers/SubProjectController.php
@@ -7174,81 +7169,13 @@ parameters:
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
-			message: "#^Access to an undefined property CDash\\\\Model\\\\BuildGroup\\:\\:\\$AutoRemoveTimeFrame\\.$#"
-			count: 6
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Access to an undefined property CDash\\\\Model\\\\BuildGroup\\:\\:\\$EmailCommitters\\.$#"
-			count: 7
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Access to an undefined property CDash\\\\Model\\\\BuildGroup\\:\\:\\$IncludeSubProjectTotal\\.$#"
-			count: 7
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
 			message: "#^Access to an undefined property object\\:\\:\\$groupid\\.$#"
 			count: 2
 			path: app/cdash/app/Model/BuildGroup.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 2
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: """
-				#^Call to deprecated function add_last_sql_error\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 4
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 10
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
 			message: """
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
@@ -7263,32 +7190,7 @@ parameters:
 			path: app/cdash/app/Model/BuildGroup.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 4
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 2
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:FillFromRow\\(\\) has parameter \\$row with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:GetAutoRemoveTimeFrame\\(\\) has no return type specified\\.$#"
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BuildGroup\\>\\:\\:exists\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroup.php
 
@@ -7308,27 +7210,7 @@ parameters:
 			path: app/cdash/app/Model/BuildGroup.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:GetEmailCommitters\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:GetGroupIdFromRule\\(\\) has parameter \\$build with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:GetProjectId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:GetRules\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:GetStartTime\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroup.php
 
@@ -7338,32 +7220,7 @@ parameters:
 			path: app/cdash/app/Model/BuildGroup.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:GetType\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:SetAutoRemoveTimeFrame\\(\\) has parameter \\$timeframe with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:SetEmailCommitters\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:SetEmailCommitters\\(\\) has parameter \\$b with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:SetEndTime\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:SetEndTime\\(\\) has parameter \\$time with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroup.php
 
@@ -7373,87 +7230,7 @@ parameters:
 			path: app/cdash/app/Model/BuildGroup.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:SetIncludeSubProjectTotal\\(\\) has parameter \\$b with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:SetName\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:SetProjectId\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:SetSummaryEmail\\(\\) has parameter \\$email with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:SetType\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, object\\|null given\\.$#"
-			count: 4
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildGroup\\:\\:\\$Description has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildGroup\\:\\:\\$EndTime has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildGroup\\:\\:\\$Id has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildGroup\\:\\:\\$Name has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildGroup\\:\\:\\$PDO has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildGroup\\:\\:\\$Position has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildGroup\\:\\:\\$ProjectId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildGroup\\:\\:\\$StartTime has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildGroup\\:\\:\\$SummaryEmail has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildGroup\\:\\:\\$Type has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroup.php
 
@@ -9697,11 +9474,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetNumberOfSubProjects\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetRepositories\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -10161,11 +9933,6 @@ parameters:
 			path: app/cdash/app/Model/SubProject.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:AddDependency\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:CommonBuildQuery\\(\\) has parameter \\$endUTCdate with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
@@ -10186,27 +9953,7 @@ parameters:
 			path: app/cdash/app/Model/SubProject.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:Exists\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:GetDependencies\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:Save\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:SetId\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubProject\\:\\:SetId\\(\\) throws checked exception Carbon\\\\Exceptions\\\\InvalidFormatException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
@@ -24278,6 +24025,11 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
 			count: 4
+			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
+
+		-
+			message: "#^Parameter \\#1 \\$time of method CDash\\\\Model\\\\BuildGroup\\:\\:SetEndTime\\(\\) expects Illuminate\\\\Support\\\\Carbon, Illuminate\\\\Support\\\\Carbon\\|false given\\.$#"
+			count: 1
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
