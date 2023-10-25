@@ -63,7 +63,7 @@
             align="center"
           >
             <td align="left">
-              <a :href="$baseURL + 'viewDynamicAnalysisFile.php?id=' + DA.id">
+              <a :href="$baseURL + '/viewDynamicAnalysisFile.php?id=' + DA.id">
                 {{ DA.name }}
               </a>
             </td>
