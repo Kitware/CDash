@@ -1264,17 +1264,21 @@ class Project
 
     public function AddBlockedBuild(string $buildname, string $sitename, string $ip): int
     {
-        return DB::table('blockbuild')->insertGetId([
-            'projectid' => $this->Id,
-            'buildname' => $buildname,
-            'sitename' => $sitename,
-            'ip' => $ip,
-        ]);
+        return EloquentProject::findOrFail((int) $this->Id)
+            ->blockedbuilds()
+            ->create([
+                'buildname' => $buildname,
+                'sitename' => $sitename,
+                'ipaddress' => $ip,
+            ])->id;
     }
 
     public function RemoveBlockedBuild(int $id): void
     {
-        DB::table('blockbuild')->delete($id);
+        EloquentProject::findOrFail((int) $this->Id)
+            ->blockedbuilds()
+            ->findOrFail($id)
+            ->delete();
     }
 
     /** Delete old builds if this project has too many. */

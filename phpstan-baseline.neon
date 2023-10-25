@@ -9384,6 +9384,11 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\BlockedBuild\\>\\:\\:findOrFail\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:betweenDates\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php

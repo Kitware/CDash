@@ -140,4 +140,12 @@ class Project extends Model
                     ->orWhere('parentid', -1);
             });
     }
+
+    /**
+     * @return HasMany<BlockedBuild>
+     */
+    public function blockedbuilds(): HasMany
+    {
+        return $this->hasMany(BlockedBuild::class, 'projectid', 'id');
+    }
 }
