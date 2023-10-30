@@ -95,7 +95,7 @@ WORKDIR /cdash
 
 COPY --chown=www-data:www-data ./.env.example ./.env
 
-COPY ./app/cdash/php.ini /usr/local/etc/php/conf.d/cdash.ini
+COPY ./php.ini /usr/local/etc/php/conf.d/cdash.ini
 
 # Install PHP dependencies with composer
 # Set up testing environment if this is a development build
