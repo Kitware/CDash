@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @property int $id
@@ -46,6 +48,8 @@ use Illuminate\Support\Carbon;
  * @property int $authenticatesubmissions
  * @property int $viewsubprojectslink
  *
+ * @method static Builder forUser(?User $user = null)
+ *
  * @mixin Builder<Project>
  */
 class Project extends Model
@@ -55,7 +59,6 @@ class Project extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id',
         'name',
         'description',
         'homeurl',
@@ -93,6 +96,80 @@ class Project extends Model
         'authenticatesubmissions',
         'viewsubprojectslink',
     ];
+
+    protected $casts = [
+        'id' => 'integer',
+        'imageid' => 'integer',
+        'public' => 'integer',
+        'coveragethreshold' => 'integer',
+        // TODO: figure out boolean vs int issues with the rest of the variables...
+    ];
+
+    public const PROJECT_ADMIN = 2;
+    public const SITE_MAINTAINER = 1;
+    public const PROJECT_USER = 0;
+
+    public const ACCESS_PRIVATE = 0;
+    public const ACCESS_PUBLIC = 1;
+    public const ACCESS_PROTECTED = 2;
+
+    /**
+     * Get the users who have been added to this project.
+     *
+     * Note: This is *not* all of the users who have access to this project!
+     *
+     * @return BelongsToMany<User>
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user2project', 'projectid', 'userid');
+    }
+
+    /**
+     * Get the users who have the administrator role for this project
+     *
+     * @return BelongsToMany<User>
+     */
+    public function administrators(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user2project', 'projectid', 'userid')
+            ->wherePivot('role', self::PROJECT_ADMIN);
+    }
+
+    /**
+     * Get the users who maintain a site for this project
+     *
+     * @return BelongsToMany<User>
+     */
+    public function siteMaintainers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user2project', 'projectid', 'userid')
+            ->wherePivot('role', self::SITE_MAINTAINER);
+    }
+
+    /**
+     * Get the projects available to the specified user, or the current user if no user specified.
+     * Available as a query builder function: Project::forUser(?User)->...
+     *
+     * @param Builder<self> $query
+     */
+    public function scopeForUser(Builder $query, ?User $user = null): void
+    {
+        if ($user === null) {
+            $user = Auth::user();
+        }
+
+        if ($user === null) {
+            $query->where('public', self::ACCESS_PUBLIC);
+        } elseif (!$user->IsAdmin()) {
+            $query->whereHas('users', function ($query2) use ($user) {
+                $query2->where('user.id', $user->id);
+                $query2->orWhere('public', self::ACCESS_PUBLIC);
+                $query2->orWhere('public', self::ACCESS_PROTECTED);
+            });
+        }
+        // Else, this is an admin user, so we shouldn't apply any filters...
+    }
 
     /**
      * Get the subprojects as of a specified date, or the latest subprojects if no date specified.
