@@ -2,9 +2,26 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
+require_once 'include/common.php';
+
 return new class extends Migration {
+    private const tables_to_modify = [
+        'authtoken',
+        'buildemail',
+        'buildnote',
+        'coveragefile2user',
+        'labelemail',
+        'lockout',
+        'password',
+        'site2user',
+        'user2project',
+        'user2repository',
+        'userstatistics',
+    ];
+
     /**
      * Run the migrations.
      *
@@ -12,71 +29,16 @@ return new class extends Migration {
      */
     public function up()
     {
-        echo 'Adding userid foreign key to authtoken table...' . PHP_EOL;
-        Schema::table('authtoken', function (Blueprint $table) {
-            $table->integer('userid')->nullable(false)->change();
-            $table->foreign('userid')->references('id')->on('user')->cascadeOnDelete();
-        });
-
-        echo 'Adding userid foreign key to buildemail table...' . PHP_EOL;
-        Schema::table('buildemail', function (Blueprint $table) {
-            $table->integer('userid')->nullable(false)->change();
-            $table->foreign('userid')->references('id')->on('user')->cascadeOnDelete();
-        });
-
-        echo 'Adding userid foreign key to buildnote table...' . PHP_EOL;
-        Schema::table('buildnote', function (Blueprint $table) {
-            $table->integer('userid')->nullable(false)->change();
-            $table->foreign('userid')->references('id')->on('user')->cascadeOnDelete();
-        });
-
-        echo 'Adding userid foreign key to coveragefile2user table...' . PHP_EOL;
-        Schema::table('coveragefile2user', function (Blueprint $table) {
-            $table->integer('userid')->nullable(false)->change();
-            $table->foreign('userid')->references('id')->on('user')->cascadeOnDelete();
-        });
-
-        echo 'Adding userid foreign key to labelemail table...' . PHP_EOL;
-        Schema::table('labelemail', function (Blueprint $table) {
-            $table->integer('userid')->nullable(false)->change();
-            $table->foreign('userid')->references('id')->on('user')->cascadeOnDelete();
-        });
-
-        echo 'Adding userid foreign key to lockout table...' . PHP_EOL;
-        Schema::table('lockout', function (Blueprint $table) {
-            $table->integer('userid')->nullable(false)->change();
-            $table->foreign('userid')->references('id')->on('user')->cascadeOnDelete();
-        });
-
-        echo 'Adding userid foreign key to password table...' . PHP_EOL;
-        Schema::table('password', function (Blueprint $table) {
-            $table->integer('userid')->nullable(false)->change();
-            $table->foreign('userid')->references('id')->on('user')->cascadeOnDelete();
-        });
-
-        echo 'Adding userid foreign key to site2user table...' . PHP_EOL;
-        Schema::table('site2user', function (Blueprint $table) {
-            $table->integer('userid')->nullable(false)->change();
-            $table->foreign('userid')->references('id')->on('user')->cascadeOnDelete();
-        });
-
-        echo 'Adding userid foreign key to user2project table...' . PHP_EOL;
-        Schema::table('user2project', function (Blueprint $table) {
-            $table->integer('userid')->nullable(false)->change();
-            $table->foreign('userid')->references('id')->on('user')->cascadeOnDelete();
-        });
-
-        echo 'Adding userid foreign key to user2repository table...' . PHP_EOL;
-        Schema::table('user2repository', function (Blueprint $table) {
-            $table->integer('userid')->nullable(false)->change();
-            $table->foreign('userid')->references('id')->on('user')->cascadeOnDelete();
-        });
-
-        echo 'Adding userid foreign key to userstatistics table...' . PHP_EOL;
-        Schema::table('userstatistics', function (Blueprint $table) {
-            $table->integer('userid')->nullable(false)->change();
-            $table->foreign('userid')->references('id')->on('user')->cascadeOnDelete();
-        });
+        foreach (self::tables_to_modify as $table) {
+            echo "Adding userid foreign key to $table table...";
+            $user_table = qid('user');
+            $num_deleted = DB::delete("DELETE FROM $table WHERE userid NOT IN (SELECT id FROM $user_table)");
+            echo $num_deleted . ' invalid rows deleted' . PHP_EOL;
+            Schema::table($table, function (Blueprint $table) {
+                $table->integer('userid')->nullable(false)->change();
+                $table->foreign('userid')->references('id')->on('user')->cascadeOnDelete();
+            });
+        }
     }
 
     /**
@@ -86,59 +48,11 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::table('authtoken', function (Blueprint $table) {
-            $table->integer('userid')->change();
-            $table->dropForeign(['userid']);
-        });
-
-        Schema::table('buildemail', function (Blueprint $table) {
-            $table->integer('userid')->change();
-            $table->dropForeign(['userid']);
-        });
-
-        Schema::table('buildnote', function (Blueprint $table) {
-            $table->integer('userid')->change();
-            $table->dropForeign(['userid']);
-        });
-
-        Schema::table('coveragefile2user', function (Blueprint $table) {
-            $table->integer('userid')->change();
-            $table->dropForeign(['userid']);
-        });
-
-        Schema::table('labelemail', function (Blueprint $table) {
-            $table->integer('userid')->change();
-            $table->dropForeign(['userid']);
-        });
-
-        Schema::table('lockout', function (Blueprint $table) {
-            $table->integer('userid')->change();
-            $table->dropForeign(['userid']);
-        });
-
-        Schema::table('password', function (Blueprint $table) {
-            $table->integer('userid')->change();
-            $table->dropForeign(['userid']);
-        });
-
-        Schema::table('site2user', function (Blueprint $table) {
-            $table->integer('userid')->change();
-            $table->dropForeign(['userid']);
-        });
-
-        Schema::table('user2project', function (Blueprint $table) {
-            $table->integer('userid')->change();
-            $table->dropForeign(['userid']);
-        });
-
-        Schema::table('user2repository', function (Blueprint $table) {
-            $table->integer('userid')->change();
-            $table->dropForeign(['userid']);
-        });
-
-        Schema::table('userstatistics', function (Blueprint $table) {
-            $table->integer('userid')->change();
-            $table->dropForeign(['userid']);
-        });
+        foreach (self::tables_to_modify as $table) {
+            Schema::table($table, function (Blueprint $table) {
+                $table->integer('userid')->change();
+                $table->dropForeign(['userid']);
+            });
+        }
     }
 };
