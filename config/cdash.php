@@ -52,7 +52,6 @@ return [
     'builds_per_project' => env('BUILDS_PER_PROJECT', 0),
     'coverage_dir' => env('CDASH_COVERAGE_DIR', '/cdash/_build/xdebugCoverage'),
     'curl_localhost_prefix' => env('CURL_LOCALHOST_PREFIX', ''),
-    'curl_request_localhost' => env('CURL_REQUEST_LOCALHOST', true),
     'daily_updates' => env('DAILY_UPDATES', true),
     'default_git_dir' => env('DEFAULT_GIT_DIRECTORY', '/cdash/_build'),
     'default_google_analytics' => env('DEFAULT_GOOGLE_ANALYTICS', ''),
