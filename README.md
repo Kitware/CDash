@@ -34,7 +34,3 @@ Your efforts to improve CDash are welcome and appreciated!
 but you're not sure where to start.
 
 For bigger changes, please begin by [introducing yourself on our mailing list](http://public.kitware.com/mailman/listinfo/cdash).
-
-## Testing
-
-[See here for information about our testing infrastructure](http://public.kitware.com/Wiki/CDash:Testing).
