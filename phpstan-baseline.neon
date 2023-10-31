@@ -4621,7 +4621,7 @@ parameters:
 
 		-
 			message: "#^Call to function base64_decode\\(\\) requires parameter \\#2 to be set\\.$#"
-			count: 2
+			count: 3
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
 		-
