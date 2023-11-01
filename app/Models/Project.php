@@ -153,11 +153,9 @@ class Project extends Model
      *
      * @param Builder<self> $query
      */
-    public function scopeForUser(Builder $query, ?User $user = null): void
+    public function scopeForUser(Builder $query): void
     {
-        if ($user === null) {
-            $user = Auth::user();
-        }
+        $user = Auth::user();
 
         if ($user === null) {
             $query->where('public', self::ACCESS_PUBLIC);
