@@ -17,7 +17,7 @@ type Query {
   users(
     "Filters by email. Accepts SQL LIKE wildcards `%` and `_`."
     email: String @where(operator: "like")
-  ): [User!]! @all
+  ): [User!]! @all @orderBy(column: "id")
 
   "Find a single project."
   project(
@@ -31,7 +31,7 @@ type Query {
   "List the projects available to the current user."
   projects(
     id: ID @in
-  ): [Project!]! @all(scopes: ["forUser"])
+  ): [Project!]! @all(scopes: ["forUser"]) @orderBy(column: "id")
 }
 
 
@@ -71,7 +71,7 @@ type Project {
   "Homepage for this project."
   homeurl: String!
 
-  builds: [Build!]! @hasMany
+  builds: [Build!]! @hasMany @orderBy(column: "id")
 }
 
 
