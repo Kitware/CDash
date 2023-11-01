@@ -46,7 +46,6 @@ endif()
 add_laravel_test(/Unit/app/ControllerNameTest)
 
 cdash_install()
-add_laravel_test(/Feature/GraphQL/ProjectTest)
 add_laravel_test(/Unit/app/Validators/PasswordTest)
 add_laravel_test(/Feature/CDashTest)
 add_laravel_test(/Feature/LdapAuthWithRulesTest)
@@ -96,6 +95,8 @@ add_unit_test(/CDash/XmlHandler/ConfigureHandler)
 add_unit_test(/CDash/XmlHandler/DynamicAnalysisHandler)
 add_unit_test(/CDash/XmlHandler/TestingHandler)
 add_unit_test(/CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/GraphQL/ProjectTest)
 
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
 add_laravel_test(/Feature/TestSchemaMigration)

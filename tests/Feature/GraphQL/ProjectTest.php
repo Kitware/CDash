@@ -4,6 +4,7 @@ namespace Tests\Feature\GraphQL;
 
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
@@ -219,5 +220,75 @@ class ProjectTest extends TestCase
                 ],
             ], true);
         }
+    }
+
+    public function testBuildRelationship(): void
+    {
+        // Note: Deleting projects will also delete associated builds automatically via the foreign-key relationship.
+        //       There is no need to clean up anything manually after this test.
+
+        // Add a few builds
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid(),
+        ]);
+        $this->projects['public1']->builds()->create([
+            'name' => 'build2',
+            'uuid' => Str::uuid(),
+        ]);
+        $this->projects['public1']->builds()->create([
+            'name' => 'build3',
+            'uuid' => Str::uuid(),
+        ]);
+
+        $this->projects['public2']->builds()->create([
+            'name' => 'build4',
+            'uuid' => Str::uuid(),
+        ]);
+        $this->projects['public2']->builds()->create([
+            'name' => 'build5',
+            'uuid' => Str::uuid(),
+        ]);
+
+        $this->graphQL('
+            query {
+                projects {
+                    name
+                    builds {
+                        name
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    [
+                        'name' => $this->projects['public1']->name,
+                        'builds' => [
+                            [
+                                'name' => 'build1',
+                            ],
+                            [
+                                'name' => 'build2',
+                            ],
+                            [
+                                'name' => 'build3',
+                            ],
+                        ],
+                    ],
+                    [
+                        'name' => $this->projects['public2']->name,
+                        'builds' => [
+                            [
+                                'name' => 'build4',
+                            ],
+                            [
+                                'name' => 'build5',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
     }
 }
