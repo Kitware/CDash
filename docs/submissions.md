@@ -38,9 +38,9 @@ Description=CDash queue worker #%i
 Type=simple
 User=www-data
 WorkingDirectory=/var/www/CDash
-Restart=on-failure
+Restart=always
 RestartSec=5s
-ExecStart=/usr/bin/php artisan queue:work
+ExecStart=/usr/bin/php artisan queue:work --max-time=3600
 
 [Install]
 WantedBy=multi-user.target
