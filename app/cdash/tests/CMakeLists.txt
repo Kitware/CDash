@@ -46,6 +46,7 @@ endif()
 add_laravel_test(/Unit/app/ControllerNameTest)
 
 cdash_install()
+add_laravel_test(/Feature/GraphQL/ProjectTest)
 add_laravel_test(/Unit/app/Validators/PasswordTest)
 add_laravel_test(/Feature/CDashTest)
 add_laravel_test(/Feature/LdapAuthWithRulesTest)
