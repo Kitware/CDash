@@ -36,6 +36,9 @@ parameters:
             tooWideThrowType: true
             missingCheckedExceptionInThrows: true
 
+    stubFiles:
+        - vendor/nuwave/lighthouse/_ide_helper.php
+
     treatPhpDocTypesAsCertain: false
     checkUninitializedProperties: true
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
