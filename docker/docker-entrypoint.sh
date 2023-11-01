@@ -28,7 +28,7 @@ usage() {
     echo ""
 
     echo "  install"
-    echo "      run CDash's initial install process (install.php)."
+    echo "      run CDash's initial install process."
     echo ""
 
     echo "  upgrade"
