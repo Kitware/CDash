@@ -1,7 +1,7 @@
 var LoginPage = function () {};
 
 LoginPage.prototype = Object.create({}, {
-  login: { value: function (url = 'manageBuildGroup.php') {
+  login: { value: function (url = 'manageSubProject.php') {
 
     // Fill out the login form.
       browser.get(url);
