@@ -1177,6 +1177,11 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
+			message: "#^Only booleans are allowed in an if condition, int given\\.$#"
+			count: 1
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 1
 			path: app/Http/Controllers/SubProjectController.php
@@ -1907,6 +1912,11 @@ parameters:
 			path: app/Services/AuthTokenService.php
 
 		-
+			message: "#^Method App\\\\Services\\\\AuthTokenService\\:\\:generateToken\\(\\) throws checked exception Random\\\\RandomException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/Services/AuthTokenService.php
+
+		-
 			message: "#^Method App\\\\Services\\\\AuthTokenService\\:\\:isTokenExpired\\(\\) throws checked exception LogicException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/Services/AuthTokenService.php
@@ -1976,6 +1986,11 @@ parameters:
 
 		-
 			message: "#^Call to function base64_decode\\(\\) requires parameter \\#2 to be set\\.$#"
+			count: 2
+			path: app/Services/TestCreator.php
+
+		-
+			message: "#^Method App\\\\Services\\\\TestCreator\\:\\:create\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 2
 			path: app/Services/TestCreator.php
 
@@ -2684,7 +2699,7 @@ parameters:
 			path: app/cdash/app/Controller/Api/ResultsApi.php
 
 		-
-			message: "#^Only booleans are allowed in a negated boolean, float\\|int given\\.$#"
+			message: "#^Only booleans are allowed in a negated boolean, \\(float\\|int\\) given\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ResultsApi.php
 
@@ -7326,6 +7341,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Image\\:\\:Save\\(\\) has parameter \\$update with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Image.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\Image\\:\\:Save\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Image.php
 
@@ -12018,6 +12038,11 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			message: "#^Function generate_password\\(\\) throws checked exception Random\\\\RandomException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
 			message: "#^Function getByteValueWithExtension\\(\\) has parameter \\$base with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -13379,6 +13404,11 @@ parameters:
 
 		-
 			message: "#^Function pdo_get_vendor_version\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/include/pdo.php
+
+		-
+			message: "#^Function pdo_insert_id\\(\\) throws checked exception PDOException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/pdo.php
 
@@ -17962,16 +17992,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
 		-
-			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayHasKey\\(\\) with 'failed' and \\*NEVER\\* will always evaluate to true\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayHasKey\\(\\) with 'notrun' and \\*NEVER\\* will always evaluate to true\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
 			message: "#^Call to method expects\\(\\) on an unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
 			count: 2
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
@@ -20688,11 +20708,6 @@ parameters:
 
 		-
 			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:872\\:\\:\\$response has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -29188,7 +29203,7 @@ parameters:
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
-			message: "#^Property UploadHandler\\:\\:\\$BuildId is unused\\.$#"
+			message: "#^Property UploadHandler\\:\\:\\$BuildId is never read, only written\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 
