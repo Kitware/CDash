@@ -28,7 +28,8 @@ class AuthTokenService
      */
     public static function generateToken(int $user_id, int $project_id, string $scope, string $description): array
     {
-        $token = bin2hex(random_bytes(16));
+        // 86 characters generates more than 512 bits of entropy (and is thus limited by the entropy of the hash)
+        $token = generate_password(86);
         $params['hash'] = hash('sha512', $token);
 
         $params['userid'] = $user_id;

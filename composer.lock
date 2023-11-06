@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ea5bffb36acb314934496f9f9a281404",
+    "content-hash": "afb886ab0059c70a3d4021b995201dd1",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -144,6 +144,7 @@
                 "issues": "https://github.com/Adldap2/Adldap2/issues",
                 "source": "https://github.com/Adldap2/Adldap2"
             },
+            "abandoned": true,
             "time": "2023-02-23T15:00:03+00:00"
         },
         {
@@ -202,6 +203,7 @@
                 "issues": "https://github.com/Adldap2/Adldap2-Laravel/issues",
                 "source": "https://github.com/Adldap2/Adldap2-Laravel/tree/v6.1.7"
             },
+            "abandoned": true,
             "time": "2023-02-15T14:51:44+00:00"
         },
         {
@@ -11195,7 +11197,6 @@
         "ext-bcmath": "*",
         "ext-curl": "*",
         "ext-fileinfo": "*",
-        "ext-json": "*",
         "ext-libxml": "*",
         "ext-mbstring": "*",
         "ext-pdo": "*",

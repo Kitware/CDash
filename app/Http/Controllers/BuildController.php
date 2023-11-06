@@ -169,6 +169,17 @@ final class BuildController extends AbstractBuildController
         $build_response['lastsubmitbuild'] = $previous_buildid;
         $build_response['lastsubmitdate'] = $lastsubmitdate;
 
+        // Add labels to the response
+        // TODO: Make this more efficient by getting all of the labels right away instead of the labelids
+        $labelids = $this->build->GetLabels();
+        $labels = [];
+        foreach ($labelids as $labelid) {
+            $label = new Label();
+            $label->Id = $labelid;
+            $labels[] = $label->GetText();
+        }
+        $build_response['labels'] = $labels;
+
         $e_errors = $this->build->GetErrors(['type' => Build::TYPE_ERROR]);
         $e_warnings = $this->build->GetErrors(['type' => Build::TYPE_WARN]);
 
@@ -578,15 +589,19 @@ final class BuildController extends AbstractBuildController
         $next_buildid = $this->build->GetNextBuildId();
 
         if ($previous_buildid > 0) {
-            $menu_response['previous'] = url("/build/$previous_buildid/update");
+            $menu_response['previous'] = "/build/$previous_buildid/update";
         } else {
             $menu_response['previous'] = false;
         }
 
-        $menu_response['current'] = url("/build/$current_buildid/update");
+        if ($current_buildid > 0) {
+            $menu_response['current'] = "/build/$current_buildid/update";
+        } else {
+            $menu_response['current'] = false;
+        }
 
         if ($next_buildid > 0) {
-            $menu_response['next'] = url("/build/$next_buildid/update");
+            $menu_response['next'] = "/build/$next_buildid/update";
         } else {
             $menu_response['next'] = false;
         }
@@ -1175,8 +1190,8 @@ final class BuildController extends AbstractBuildController
         $query_params = [];
         if ($this->build->SubProjectId > 0) {
             $subproj_table = 'INNER JOIN subproject2build AS sp2b ON (b.id=sp2b.buildid)';
-            $subproj_criteria = 'AND sp2b.subprojectid=:subprojectid';
-            $query_params = $this->build->SubProjectId;
+            $subproj_criteria = 'AND sp2b.subprojectid = ?';
+            $query_params[] = $this->build->SubProjectId;
         }
 
         // Get details about previous builds.

@@ -43,6 +43,10 @@ beforeEach(function() {
       time: 'earlier',
       type: 'Experimental',
       warnings: [],
+      labels: [
+        'label1',
+        'label2',
+      ],
     },
     configure: {
       command: 'cmake',
@@ -100,6 +104,7 @@ test('BuildSummary handles API response', async () => {
   expect(html).toContain('MyProject');
   expect(html).toContain('mysite');
   expect(html).toContain('Linux');
+  expect(html).toContain('label1, label2');
   const site_link = component.find('#site_link');
   expect(site_link.attributes('href')).toMatch('/viewSite.php?siteid=1');
   expect(site_link.text()).toBe('mysite');
