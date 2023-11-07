@@ -194,9 +194,6 @@ class MigrateConfig extends Command
                 }
             }
 
-            /* still TODO for special handling:
-             * associative arrays that will need code-level changes: MEMCACHE_SERVER
-             */
             // End special handling
 
             // If a value is set in both places, .env gets priority over

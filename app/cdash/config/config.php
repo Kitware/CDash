@@ -75,16 +75,6 @@ $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS = '5';
 //    'domain'            => 'https://my.gitlab.example'
 $OAUTH2_PROVIDERS = [];
 
-// Whether or not to use Memcache for certain pages
-$CDASH_MEMCACHE_ENABLED = false;
-
-// Array of (server, port) to access Memcache on
-$CDASH_MEMCACHE_SERVER = array('localhost', 11211);
-
-// A prefix in the case of multiple applications using memcache
-// Note: Memcache limits key size to 250 characters
-$CDASH_MEMCACHE_PREFIX = 'cdash';
-
 // Whether to use the AWS ElastiCache Auto Discovery feature
 $CDASH_USE_ELASTICACHE_AUTO_DISCOVERY = false;
 

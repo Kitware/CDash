@@ -500,36 +500,11 @@ class GitHub implements RepositoryInterface
         // that we will get rate-limited by the API.
         $this->authenticate(false);
 
-        // Connect to memcache.
-        require_once 'include/memcache_functions.php';
-        $memcache_enabled = $this->config->get('CDASH_MEMECACHE_ENABLED');
-        $memcache_prefix = $this->config->get('CDASH_MEMCACHE_PREFIX');
-        if ($memcache_enabled) {
-            [$server, $port] = $this->config->get('CDASH_MEMCACHE_SERVER');
-            $memcache = cdash_memcache_connect($server, $port);
-            // Disable memcache for this request if it fails to connect.
-            if ($memcache === false) {
-                $this->config->set('CDASH_MEMCACHE_ENABLED', false);
-            }
-        }
-
-        // Check if we've memcached the difference between these two revisions.
-        $commits = null;
-        $diff_key = "$memcache_prefix:{$this->project->Name}:$base:$head";
-        if ($memcache_enabled) {
-            $cached_response = cdash_memcache_get($memcache, $diff_key);
-            if ($cached_response !== false) {
-                $commits = json_decode($cached_response, true);
-            }
-        }
-
-        if (is_null($commits)) {
-            // Use the GitHub API to find what changed between these two revisions.
-            $commits = $this->apiClient
-                ->api('repo')
-                ->commits()
-                ->compare($this->owner, $this->repo, $base, $head);
-        }
+        // Use the GitHub API to find what changed between these two revisions.
+        $commits = $this->apiClient
+            ->api('repo')
+            ->commits()
+            ->compare($this->owner, $this->repo, $base, $head);
 
         // To do anything meaningful here our response needs to tell us about commits
         // and the files that changed.  Abort early if either of these pieces of
@@ -543,8 +518,7 @@ class GitHub implements RepositoryInterface
         // Discard merge commits.  We want to assign credit to the author who did
         // the actual work, not the approver who clicked the merge button.
         foreach ($commits['commits'] as $idx => $commit) {
-            if (strpos($commit['commit']['message'], 'Merge pull request')
-                    !== false) {
+            if (str_contains($commit['commit']['message'], 'Merge pull request')) {
                 unset($commits['commits'][$idx]);
             }
         }
@@ -611,28 +585,10 @@ class GitHub implements RepositoryInterface
                             continue;
                         }
 
-                        $commit_array = null;
-                        $commit_key = "$memcache_prefix:{$this->project->Name}:$sha";
-                        if ($memcache_enabled) {
-                            // Check memcache if it is enabled before hitting
-                            // the GitHub API.
-                            $cached_response = cdash_memcache_get($memcache, $commit_key);
-                            if ($cached_response !== false) {
-                                $commit_array = json_decode($cached_response, true);
-                            }
-                        }
-
-                        if (is_null($commit_array)) {
-                            $commit_array = $this->apiClient
-                                ->api('repo')
-                                ->commits()
-                                ->show($this->owner, $this->repo, $sha);
-
-                            if ($memcache_enabled) {
-                                // Cache this response for 24 hours.
-                                cdash_memcache_set($memcache, $commit_key, json_encode($commit_array), 60 * 60 * 24);
-                            }
-                        }
+                        $commit_array = $this->apiClient
+                            ->api('repo')
+                            ->commits()
+                            ->show($this->owner, $this->repo, $sha);
 
                         if (!is_array($commit_array) ||
                                 !array_key_exists('files', $commit_array)) {
