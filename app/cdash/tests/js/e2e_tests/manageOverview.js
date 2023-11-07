@@ -2,12 +2,10 @@ var LoginPage = require('../pages/login.page.js');
 require('../pages/catchConsoleErrors.page.js');
 
 describe("manageOverview", function() {
-  it("is protected by login", function () {
-    var loginPage = new LoginPage();
-    loginPage.login("manageOverview.php?projectid=5");
-  });
-
   it("can manage overview", function() {
+    var loginPage = new LoginPage();
+    loginPage.login();
+
     browser.get('manageOverview.php?projectid=5');
 
     // Add a column for Experimental.
