@@ -795,49 +795,26 @@ final class BuildController extends AbstractBuildController
 
     public function viewFiles(): View|RedirectResponse
     {
-        if (!isset($_GET['buildid'])) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Build id not set',
-                'title' => 'View Files'
-            ]);
-        }
-
-        $this->setBuildById((int) $_GET['buildid']);
-
-        $Site = $this->build->GetSite();
-
-        @$date = $_GET['date'];
-        if ($date != null) {
-            $date = htmlspecialchars($date);
-        }
-
-        $xml = begin_XML_for_XSLT();
-        $xml .= get_cdash_dashboard_xml_by_name($this->project->Name, $date);
-        $xml .= add_XML_value('title', 'CDash - Uploaded files');
-        $xml .= add_XML_value('menutitle', 'CDash');
-        $xml .= add_XML_value('menusubtitle', 'Uploaded files');
-
-        $xml .= '<hostname>' . $_SERVER['SERVER_NAME'] . '</hostname>';
-        $xml .= '<date>' . date('r') . '</date>';
-        $xml .= '<backurl>index.php</backurl>';
-
-        $xml .= '<buildid>' . $this->build->Id . '</buildid>';
-        $xml .= '<buildname>' . $this->build->Name . '</buildname>';
-        $xml .= '<buildstarttime>' . $this->build->StartTime . '</buildstarttime>';
-        $xml .= '<siteid>' . $Site->id . '</siteid>';
-        $xml .= '<sitename>' . $Site->name . '</sitename>';
-
+        $this->setBuildById(intval($_GET['buildid'] ?? 0));
         $uploadFilesOrURLs = $this->build->GetUploadedFilesOrUrls();
 
+        $urls = [];
+        $files = [];
+
         foreach ($uploadFilesOrURLs as $uploadFileOrURL) {
-            if (!$uploadFileOrURL->IsUrl) {
-                $xml .= '<uploadfile>';
-                $xml .= '<id>' . $uploadFileOrURL->Id . '</id>';
-                $xml .= '<href>upload/' . $uploadFileOrURL->Sha1Sum . '/' . $uploadFileOrURL->Filename . '</href>';
-                $xml .= '<sha1sum>' . $uploadFileOrURL->Sha1Sum . '</sha1sum>';
-                $xml .= '<filename>' . $uploadFileOrURL->Filename . '</filename>';
-                $xml .= '<filesize>' . $uploadFileOrURL->Filesize . '</filesize>';
+            if ($uploadFileOrURL->IsUrl) {
+                $url = [];
+                $url['id'] = $uploadFileOrURL->Id;
+                $url['filename'] = htmlspecialchars($uploadFileOrURL->Filename);
+                $urls[] = $url;
+            } else {
+                $file = [];
+
+                $file['id'] = $uploadFileOrURL->Id;
+                $file['href'] = 'upload/' . $uploadFileOrURL->Sha1Sum . '/' . $uploadFileOrURL->Filename;
+                $file['sha1sum'] = $uploadFileOrURL->Sha1Sum;
+                $file['filename'] = $uploadFileOrURL->Filename;
+                $file['filesize'] = $uploadFileOrURL->Filesize;
 
                 $filesize = $uploadFileOrURL->Filesize;
                 $ext = 'b';
@@ -858,24 +835,16 @@ final class BuildController extends AbstractBuildController
                     $ext = 'Tb';
                 }
 
-                $xml .= '<filesizedisplay>' . round($filesize) . ' ' . $ext . '</filesizedisplay>';
-                $xml .= '<isurl>' . $uploadFileOrURL->IsUrl . '</isurl>';
-                $xml .= '</uploadfile>';
-            } else {
-                $xml .= '<uploadurl>';
-                $xml .= '<id>' . $uploadFileOrURL->Id . '</id>';
-                $xml .= '<filename>' . htmlspecialchars($uploadFileOrURL->Filename) . '</filename>';
-                $xml .= '</uploadurl>';
+                $file['filesizedisplay'] = round($filesize) . ' ' . $ext;
+
+                $files[] = $file;
             }
         }
 
-        $xml .= '</cdash>';
-
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/viewFiles', true),
-            'title' => 'View Files'
-        ]);
+        return view('build.files')
+            ->with('build', $this->build)
+            ->with('files', $files)
+            ->with('urls', $urls);
     }
 
     public function ajaxBuildNote(): View
