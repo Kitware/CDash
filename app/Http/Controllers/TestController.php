@@ -303,7 +303,7 @@ final class TestController extends AbstractProjectController
         foreach ($result as $row) {
             $buildids[] = (int) $row->buildid;
         }
-        $buildids = array_unique($buildids);
+        $buildids = array_values(array_unique($buildids));
 
         $prepared_array = Database::getInstance()->createPreparedArray(count($buildids));
         $query = DB::select("
