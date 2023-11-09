@@ -157,7 +157,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         }
 
         // Make sure we didn't inadvertently delete the whole upload directory.
-        if (!file_exists(base_path('app/cdash/public/upload'))) {
+        if (!Storage::exists('upload')) {
             $this->fail('upload directory does not exist');
         }
 

@@ -87,11 +87,13 @@ Route::get('/viewNotes.php', function (Request $request) {
     return redirect("/build/{$buildid}/notes", 301);
 });
 
-Route::get('/build/{id}/files', 'BuildController@files');
+Route::get('/build/{build_id}/files', 'BuildController@files')->whereNumber('build_id');
 Route::get('/viewFiles.php', function (Request $request) {
     $buildid = $request->query('buildid');
     return redirect("/build/{$buildid}/files", 301);
 });
+
+Route::get('/build/{build_id}/file/{file_id}', 'BuildController@build_file')->whereNumber('build_id')->whereNumber('file_id');
 
 Route::get('/project/{id}/edit', 'EditProjectController@edit');
 Route::get('/project/new', 'EditProjectController@create');

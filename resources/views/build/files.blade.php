@@ -3,19 +3,19 @@
 ])
 
 @section('main_content')
-		<b>Site:</b> {{ $build->GetSite()->name }}<br />
-		<b>Build name:</b> <a href="{{ $build->GetBuildSummaryUrl() }}">{{ $build->Name }}</a><br />
+    <b>Site:</b> {{ $build->GetSite()->name }}<br />
+    <b>Build name:</b> <a href="{{ $build->GetBuildSummaryUrl() }}">{{ $build->Name }}</a><br />
     <b>Build start time:</b> {{ $build->StartTime }}<br />
 
-		<h3>URLs or Files submitted with this build</h3>
+    <h3>URLs or Files submitted with this build</h3>
 
-		@if(count($urls) > 0)
-				<table id="filesTable" class="tabb">
-						<thead class="table-heading1">
-								<tr>
-										<th id="sort_0">URL</th>
-								</tr>
-						</thead>
+    @if(count($urls) > 0)
+        <table id="filesTable" class="tabb">
+            <thead class="table-heading1">
+                <tr>
+                    <th id="sort_0">URL</th>
+                </tr>
+            </thead>
             @foreach($urls as $url)
                 <tr>
                     <td>
@@ -23,11 +23,11 @@
                     </td>
                 </tr>
             @endforeach
-				</table>
-				<br/>
+        </table>
+        <br/>
     @endif
 
-		@if(count($files) > 0)
+    @if(count($files) > 0)
         <table id="filesTable" class="tabb">
             <thead class="table-heading1">
                 <tr>

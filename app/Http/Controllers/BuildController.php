@@ -16,6 +16,7 @@ use CDash\Model\BuildRelationship;
 use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUserNote;
 use CDash\Model\Label;
+use CDash\Model\UploadFile;
 use CDash\ServiceContainer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -23,7 +24,9 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use PDO;
 
 require_once 'include/repository.php';
@@ -793,7 +796,7 @@ final class BuildController extends AbstractBuildController
         }
     }
 
-    public function files($build_id = null): View|RedirectResponse
+    public function files(int $build_id): View
     {
         $this->setBuildById($build_id);
         $uploadFilesOrURLs = $this->build->GetUploadedFilesOrUrls();
@@ -803,19 +806,11 @@ final class BuildController extends AbstractBuildController
 
         foreach ($uploadFilesOrURLs as $uploadFileOrURL) {
             if ($uploadFileOrURL->IsUrl) {
-                $url = [];
-                $url['id'] = $uploadFileOrURL->Id;
-                $url['filename'] = htmlspecialchars($uploadFileOrURL->Filename);
-                $urls[] = $url;
+                $urls[] = [
+                    'id' => (int) $uploadFileOrURL->Id,
+                    'filename' => htmlspecialchars($uploadFileOrURL->Filename),
+                ];
             } else {
-                $file = [];
-
-                $file['id'] = $uploadFileOrURL->Id;
-                $file['href'] = 'upload/' . $uploadFileOrURL->Sha1Sum . '/' . $uploadFileOrURL->Filename;
-                $file['sha1sum'] = $uploadFileOrURL->Sha1Sum;
-                $file['filename'] = $uploadFileOrURL->Filename;
-                $file['filesize'] = $uploadFileOrURL->Filesize;
-
                 $filesize = $uploadFileOrURL->Filesize;
                 $ext = 'b';
                 if ($filesize > 1024) {
@@ -834,10 +829,14 @@ final class BuildController extends AbstractBuildController
                     $filesize /= 1024;
                     $ext = 'Tb';
                 }
-
-                $file['filesizedisplay'] = round($filesize) . ' ' . $ext;
-
-                $files[] = $file;
+                $files[] = [
+                    'id' => (int) $uploadFileOrURL->Id,
+                    'href' => url("/build/{$build_id}/file/{$uploadFileOrURL->Id}"),
+                    'sha1sum' => $uploadFileOrURL->Sha1Sum,
+                    'filename' => $uploadFileOrURL->Filename,
+                    'filesize' => $uploadFileOrURL->Filesize,
+                    'filesizedisplay' => round($filesize) . ' ' . $ext
+                ];
             }
         }
 
@@ -845,6 +844,21 @@ final class BuildController extends AbstractBuildController
             ->with('build', $this->build)
             ->with('files', $files)
             ->with('urls', $urls);
+    }
+
+    public function build_file(int $build_id, int $file_id) : StreamedResponse
+    {
+        $this->setBuildById($build_id);
+
+        // Validate that the file is associated with the build.
+        if (DB::table('build2uploadfile')->where('buildid', $build_id)->where('fileid', $file_id)->doesntExist()) {
+            abort(404, 'File not found');
+        }
+
+        $uploadFile = new UploadFile();
+        $uploadFile->Id = $file_id;
+        $uploadFile->Fill();
+        return Storage::download("upload/{$uploadFile->Sha1Sum}", $uploadFile->Filename);
     }
 
     public function ajaxBuildNote(): View

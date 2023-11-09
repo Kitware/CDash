@@ -26,15 +26,17 @@ use App\Models\SiteInformation;
 use CDash\Model\Project;
 use CDash\Model\UploadFile;
 
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+
 /**
  * For each uploaded file the following steps occur:
  *  1) Temporary file 'tmpXXX-base64' is created (See startElement())
  *  2) Chunk of base64 data are written to that file  (See text())
  *  3) File 'tmpXXX-base64' is then decoded into 'tmpXXX'
  *  4) SHA1 of file 'tmpXXX' is computed
- *  5) If directory '<CDASH_UPLOAD_DIRECTORY>/<SHA1>' doesn't exist, it's created
- *  6) If file '<CDASH_UPLOAD_DIRECTORY>/<SHA1>/<SHA1>' doesn't exist, 'tmpXXX' is renamed accordingly
- *  7) Symbolic link <CDASH_UPLOAD_DIRECTORY>/<SHA1>/<FILENAME> pointing to <CDASH_UPLOAD_DIRECTORY>/<SHA1>/<SHA1> is then created
+ *  5) If file 'storage/app/upload/<SHA1>' doesn't exist, 'tmpXXX' is renamed accordingly
  *
  * Ideally, CDash and CTest should first exchange information to make sure the file hasn't been uploaded already.
  *
@@ -187,26 +189,27 @@ class UploadHandler extends AbstractHandler
 
             if (strcmp($fileEncoding, 'base64') != 0) {
                 // Only base64 encoding is supported for file upload
-                add_log("upload_handler:  Only 'base64' encoding is supported", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+                Log::error('Only base64 encoding is supported');
                 $this->UploadError = true;
                 return;
             }
 
             // Create tmp file
-            $this->TmpFilename = tempnam($config->get('CDASH_UPLOAD_DIRECTORY'), 'tmp'); // TODO Handle error
+            $this->TmpFilename = tempnam(sys_get_temp_dir(), 'cdash_upload'); // TODO Handle error
+
             chmod($this->TmpFilename, 0644);
 
             if (empty($this->TmpFilename)) {
-                add_log('Failed to create temporary filename', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+                Log::error('Failed to create temporary filename');
                 $this->UploadError = true;
                 return;
             }
             $this->Base64TmpFilename = $this->TmpFilename . '-base64';
 
-            // Open base64 temporary file for writting
+            // Open base64 temporary file for writing
             $this->Base64TmpFileWriteHandle = fopen($this->Base64TmpFilename, 'w');
             if (!$this->Base64TmpFileWriteHandle) {
-                add_log("Failed to open file '" . $this->Base64TmpFilename . "' for writting", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+                Log::error("Failed to open file '{$this->Base64TmpFilename}' for writing");
                 $this->UploadError = true;
                 return;
             }
@@ -215,7 +218,9 @@ class UploadHandler extends AbstractHandler
         }
     }
 
-    /** Function endElement */
+    /** Function endElement
+     * @throws \Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException
+     */
     public function endElement($parser, $name)
     {
         $parent = $this->getParent(); // should be before endElement
@@ -250,7 +255,7 @@ class UploadHandler extends AbstractHandler
             // Delete base64 encoded file
             $success = cdash_unlink($this->Base64TmpFilename);
             if (!$success) {
-                add_log("Failed to delete file '" . $this->Base64TmpFilename . "'", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_WARNING);
+                Log::warning("Failed to delete file '{$this->Base64TmpFilename}'");
             }
 
             // Check file size against the upload quota
@@ -259,9 +264,7 @@ class UploadHandler extends AbstractHandler
             $Project->Id = $this->projectid;
             $Project->Fill();
             if ($upload_file_size > $Project->UploadQuota) {
-                add_log("Size of uploaded file $this->TmpFilename is $upload_file_size bytes, which is greater " .
-                    "than the total upload quota for this project ($Project->UploadQuota bytes)",
-                    __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+                Log::error("Size of uploaded file {$this->TmpFilename} is {$upload_file_size} bytes, which is greater than the total upload quota for this project ({$Project->UploadQuota} bytes)");
                 $this->UploadError = true;
                 cdash_unlink($this->TmpFilename);
                 return;
@@ -286,88 +289,32 @@ class UploadHandler extends AbstractHandler
                 // Read content of the file
                 $url_length = 255; // max length of 'uploadfile.filename' field
                 $this->UploadFile->Filename = trim(file_get_contents($this->TmpFilename, null, null, 0, $url_length));
-                cdash_unlink($this->TmpFilename);
             } else {
                 $this->UploadFile->IsUrl = false;
 
-                $upload_dir = realpath($config->get('CDASH_UPLOAD_DIRECTORY'));
-                if (!$upload_dir) {
-                    add_log("realpath cannot resolve CDASH_UPLOAD_DIRECTORY '" .
-                        $config->get('CDASH_UPLOAD_DIRECTORY') . "' with cwd '" . getcwd() . "'",
-                        __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_WARNING);
-                }
-                $upload_dir .= '/' . $this->UploadFile->Sha1Sum;
-
-                $uploadfilepath = $upload_dir . '/' . $this->UploadFile->Sha1Sum;
-
-                // Check if upload directory should be created
-                if (!file_exists($upload_dir)) {
-                    $success = mkdir($upload_dir);
-                    if (!$success) {
-                        add_log("Failed to create directory '" . $upload_dir . "'", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+                // Store the file if we don't already have it.
+                $upload_filepath = "upload/{$this->UploadFile->Sha1Sum}";
+                if (!Storage::exists($upload_filepath)) {
+                    $result = Storage::putFileAs('upload', new File($this->TmpFilename), $this->UploadFile->Sha1Sum);
+                    if ($result === false) {
+                        Log::error("Failed to store {$this->TmpFilename} as {$upload_filepath}");
                         $this->UploadError = true;
+                        cdash_unlink($this->TmpFilename);
                         return;
                     }
                 }
+            }
 
-                // Check if file has already been referenced
-                if (!file_exists($uploadfilepath)) {
-                    $success = rename($this->TmpFilename, $uploadfilepath);
-                    if (!$success) {
-                        add_log("Failed to rename file '" . $this->TmpFilename . "' into '" . $uploadfilepath . "'", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
-                        $this->UploadError = true;
-                        return;
-                    }
-                } else {
-                    // Delete decoded temporary file since it has already been addressed
-                    $success = cdash_unlink($this->TmpFilename);
-                    if (!$success) {
-                        add_log("Failed to delete file '" . $this->TmpFilename . "'", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_WARNING);
-                    }
-                }
-
-                // Generate symlink name
-                $symlinkName = $path_parts['basename'];
-
-                // Check if symlink should be created
-                $createSymlink = !file_exists($upload_dir . '/' . $symlinkName);
-
-                if ($createSymlink) {
-                    // Create symlink
-                    if (function_exists('symlink')) {
-                        $success = symlink($uploadfilepath, $upload_dir . '/' . $symlinkName);
-                    } else {
-                        $success = 0;
-                    }
-
-                    if (!$success) {
-                        // Log actual non-testing symlink failure as an error:
-                        $level = LOG_ERR;
-
-                        // But if testing, log as info only:
-                        if (config('app.debug')) {
-                            $level = LOG_INFO;
-                        }
-
-                        add_log("Failed to create symlink [target:'" . $uploadfilepath . "', name: '" . $upload_dir . '/' . $symlinkName . "']", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, $level);
-
-                        // Fall back to a full copy if symlink does not exist, or if it failed:
-                        $success = copy($uploadfilepath, $upload_dir . '/' . $symlinkName);
-
-                        if (!$success) {
-                            add_log("Failed to copy file (symlink fallback) [target:'" . $uploadfilepath . "', name: '" . $upload_dir . '/' . $symlinkName . "']", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
-
-                            $this->UploadError = true;
-                            return;
-                        }
-                    }
-                }
+            // Delete decoded temporary file.
+            $success = cdash_unlink($this->TmpFilename);
+            if (!$success) {
+                Log::error("Failed to delete file '{$this->TmpFilename}");
             }
 
             // Update model
             $success = $this->UploadFile->Insert();
             if (!$success) {
-                add_log("UploadFile model - Failed to insert row associated with file: '" . $this->UploadFile->Filename . "'", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+                Log::error("UploadFile model - Failed to insert row associated with file: '{$this->UploadFile->Filename}'");
             }
             $Project->CullUploadedFiles();
 
