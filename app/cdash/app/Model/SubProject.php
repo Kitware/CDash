@@ -298,18 +298,27 @@ class SubProject
             return false;
         }
 
+        // This query is overconstrained, but the extra constraints greatly improve query performance in practice
         $project = DB::select('
-                       SELECT build.starttime
-                       FROM build, subproject2build, build2group, buildgroup
-                       WHERE
-                           subprojectid=?
-                           AND build2group.buildid=build.id
-                           AND build2group.groupid=buildgroup.id
-                           AND buildgroup.includesubprojectotal=1
-                           AND subproject2build.buildid=build.id
-                       ORDER BY build.starttime DESC
-                       LIMIT 1
-                   ', [$this->Id]);
+            SELECT max(build.starttime) as starttime
+            FROM
+                build,
+                subproject2build,
+                build2group,
+                buildgroup,
+                subproject,
+                project
+            WHERE
+                subproject.id = ?
+                AND subproject.projectid = project.id
+                AND build.projectid = project.id
+                AND subproject2build.subprojectid = subproject.id
+                AND subproject2build.buildid = build.id
+                AND build2group.buildid = build.id
+                AND build2group.groupid = buildgroup.id
+                AND buildgroup.includesubprojectotal = 1
+                AND buildgroup.projectid = project.id
+        ', [$this->Id]);
 
         if ($project === []) {
             return false;
