@@ -87,6 +87,12 @@ Route::get('/viewNotes.php', function (Request $request) {
     return redirect("/build/{$buildid}/notes", 301);
 });
 
+Route::get('/build/{id}/files', 'BuildController@files');
+Route::get('/viewFiles.php', function (Request $request) {
+    $buildid = $request->query('buildid');
+    return redirect("/build/{$buildid}/files", 301);
+});
+
 Route::get('/project/{id}/edit', 'EditProjectController@edit');
 Route::get('/project/new', 'EditProjectController@create');
 
@@ -157,8 +163,6 @@ Route::get('/ajax/getsubprojectdependencies.php', 'SubProjectController@ajaxDepe
 Route::get('/viewSite.php', 'SiteController@viewSite');
 
 Route::get('/viewMap.php', 'MapController@viewMap');
-
-Route::get('/viewFiles.php', 'BuildController@viewFiles');
 
 Route::get('/viewDynamicAnalysis.php', 'DynamicAnalysisController@viewDynamicAnalysis');
 Route::get('/viewDynamicAnalysisFile.php', 'DynamicAnalysisController@viewDynamicAnalysisFile');

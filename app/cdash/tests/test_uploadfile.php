@@ -47,7 +47,7 @@ class UploadFileTestCase extends KWWebTestCase
         }
         $this->BuildId = $query[0]['buildid'];
 
-        $content = $this->connect($this->url . "/viewFiles.php?buildid=$this->BuildId");
+        $content = $this->connect("{$this->url}/build/{$this->BuildId}/files");
         if (!$content) {
             return;
         }

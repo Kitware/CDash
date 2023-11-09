@@ -793,9 +793,9 @@ final class BuildController extends AbstractBuildController
         }
     }
 
-    public function viewFiles(): View|RedirectResponse
+    public function files($build_id = null): View|RedirectResponse
     {
-        $this->setBuildById(intval($_GET['buildid'] ?? 0));
+        $this->setBuildById($build_id);
         $uploadFilesOrURLs = $this->build->GetUploadedFilesOrUrls();
 
         $urls = [];
