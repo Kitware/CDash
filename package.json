@@ -45,7 +45,7 @@
     "tiny-emitter": "^2.1.0",
     "vue": "^3.3.8",
     "vue-loader": "^17.3.1",
-    "vuedraggable": "^2.24.3",
+    "vuedraggable": "^4.1.0",
     "webpack": "^5.89.0"
   },
   "devDependencies": {
@@ -55,6 +55,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "expect": "^27.3.1",
     "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "moment": "^2.29.4",
     "postcss": "^8.4.31",
     "protractor": "^7.0.0",

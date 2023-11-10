@@ -5,8 +5,8 @@ import bootstrap from 'bootstrap'
 import expect from 'expect';
 import ManageMeasurements from '../../resources/js/components/ManageMeasurements.vue';
 
-config.mocks['$baseURL'] = '';
-axios.defaults.baseURL = config.mocks['$baseURL'];
+config.global.mocks['$baseURL'] = '';
+axios.defaults.baseURL = config.global.mocks['$baseURL'];
 
 import $ from 'jquery'
 global.$ = $
@@ -16,7 +16,7 @@ let apiResponse;
 
 beforeEach(function() {
   axiosMockAdapter = new AxiosMockAdapter(axios);
-  config.mocks['$axios'] = axios;
+  config.global.mocks['$axios'] = axios;
   apiResponse = {
     measurements: [
       {
@@ -40,10 +40,7 @@ afterEach(function() {
 test('ManageMeasurements handles API response', async () => {
   axiosMockAdapter.onGet('/api/v1/manageMeasurements.php?projectid=').reply(200, apiResponse);
   const component = mount(ManageMeasurements);
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
   expect(component.vm.loading).toBe(false);
   expect(component.vm.cdash.measurements.length).toBe(1);
 });
@@ -51,10 +48,7 @@ test('ManageMeasurements handles API response', async () => {
 test('ManageMeasurements can add a measurement', async () => {
   axiosMockAdapter.onGet('/api/v1/manageMeasurements.php?projectid=').reply(200, apiResponse);
   const component = mount(ManageMeasurements);
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
 
   var api_response = {
     id: 2,
@@ -64,13 +58,12 @@ test('ManageMeasurements can add a measurement', async () => {
   const new_measurement_input = component.find('#newMeasurement');
   new_measurement_input.element.value = 'my new measurement';
   new_measurement_input.trigger('input');
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
   expect(component.vm.newMeasurementName).toBe('my new measurement');
 
   const save_button = component.find('#submit_button');
   save_button.trigger('click');
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
 
   expect(component.vm.cdash.measurements.length).toBe(2);
   expect(component.vm.cdash.measurements[1].name).toBe('my new measurement');
@@ -79,16 +72,12 @@ test('ManageMeasurements can add a measurement', async () => {
 test('ManageMeasurements can delete a measurement', async () => {
   axiosMockAdapter.onGet('/api/v1/manageMeasurements.php?projectid=').reply(200, apiResponse);
   const component = mount(ManageMeasurements);
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
 
   // Click trash can icon.
   const delete_measurement_span = component.find('.glyphicon-trash');
   delete_measurement_span.trigger('click');
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
   expect(component.vm.measurementToDelete).toBe(1);
 
   // Click confirmation button.
@@ -98,9 +87,6 @@ test('ManageMeasurements can delete a measurement', async () => {
   axiosMockAdapter.onDelete('/api/v1/manageMeasurements.php').reply(200, api_response);
   const delete_measurement_button = component.find('#confirmDeleteMeasurementButton');
   delete_measurement_button.trigger('click');
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
   expect(component.vm.cdash.measurements.length).toBe(0);
 });

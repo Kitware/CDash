@@ -52,71 +52,60 @@
       >
         <div class="tabs">
           <!-- navigation panel -->
-          <b-nav
-            tabs
+          <ul
+            class="nav nav-tabs"
           >
-            <b-nav-item
-              href="#Info"
-              :active="activeTab == 'Info'"
+            <li
+              class="nav-item"
               @click="setTabByName('Info');"
             >
-              Information
-            </b-nav-item>
+              <a href="#Info" class="nav-link" :class="{ active: activeTab === 'Info' }">Information</a>
+            </li>
 
-            <b-nav-item
-              href="#Logo"
-              :active="activeTab == 'Logo'"
-              :disabled="cdash.tabs.Logo.disabled"
+            <li
+              class="nav-item"
               @click="setTabByName('Logo');"
             >
-              Logo
-            </b-nav-item>
+              <a href="#Logo" class="nav-link" :class="{ active: activeTab === 'Logo', disabled: cdash.tabs.Logo.disabled }">Logo</a>
+            </li>
 
-            <b-nav-item
-              href="#Repos"
-              :active="activeTab == 'Repos'"
-              :disabled="cdash.tabs.Repos.disabled"
+            <li
+
+              class="nav-item"
               @click="setTabByName('Repos');"
             >
-              Repository
-            </b-nav-item>
+              <a href="#Repos" class="nav-link" :class="{ active: activeTab === 'Repos', disabled: cdash.tabs.Repos.disabled }">Repository</a>
+            </li>
 
-            <b-nav-item
-              href="#Testing"
-              :active="activeTab == 'Testing'"
-              :disabled="cdash.tabs.Testing.disabled"
+            <li
+              class="nav-item"
               @click="setTabByName('Testing');"
             >
-              Testing
-            </b-nav-item>
+              <a href="#Testing" class="nav-link" :class="{ active: activeTab === 'Testing', disabled: cdash.tabs.Testing.disabled }">Testing</a>
+            </li>
 
-            <b-nav-item
-              href="#Email"
-              :active="activeTab == 'Email'"
-              :disabled="cdash.tabs.Email.disabled"
+            <li
+              class="nav-item"
               @click="setTabByName('Email');"
             >
-              Email
-            </b-nav-item>
+              <a href="#Email" class="nav-link" :class="{ active: activeTab === 'Email', disabled: cdash.tabs.Email.disabled }">Email</a>
+            </li>
 
-            <b-nav-item
+            <li
               v-if="cdash.edit == 1"
-              href="#Spam"
-              :active="activeTab == 'Spam'"
+              class="nav-item"
               @click="setTabByName('Spam');"
             >
-              Spam
-            </b-nav-item>
+              <a href="#Spam" class="nav-link" :class="{ active: activeTab === 'Spam' }">Spam</a>
+            </li>
 
-            <b-nav-item
-              href="#Misc"
-              :active="activeTab == 'Misc'"
-              :disabled="cdash.tabs.Misc.disabled"
+            <li
+              class="nav-item"
               @click="setTabByName('Misc');"
             >
-              Miscellaneous
-            </b-nav-item>
-          </b-nav>
+              <a href="#Misc" class="nav-link" :class="{ active: activeTab === 'Misc', disabled: cdash.tabs.Misc.disabled }">Miscellaneous</a>
+            </li>
+          </ul>
 
           <!-- tab contents -->
           <div class="tab-content">
@@ -709,9 +698,7 @@
                     </div>
                   </td>
                   <td>
-                    <font size="1">
-                      <span>{{ repositoryurlexample }}</span>
-                    </font>
+                    <span>{{ repositoryurlexample }}</span>
                   </td>
                 </tr>
                 <template v-for="repo in cdash.project.repositories">

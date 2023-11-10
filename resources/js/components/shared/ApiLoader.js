@@ -47,7 +47,7 @@ export default {
         }
 
         // Let other components know that data has been loaded from the API.
-        vm.$root.$emit('api-loaded', vm.cdash);
+        this.$emit('api-loaded', vm.cdash);
       })
       .catch(error => {
         console.log(error)

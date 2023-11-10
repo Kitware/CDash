@@ -331,7 +331,7 @@ export default {
           if (this.cdash.menu.next) {
             this.cdash.menu.next = this.cdash.menu.next.split("?")[0] + graph_query;
           }
-          this.$root.$emit('api-loaded', this.cdash);
+          ApiLoader.$emit('api-loaded', this.cdash);
         }
       }
 

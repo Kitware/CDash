@@ -1,18 +1,18 @@
-import {mount, config} from "@vue/test-utils";
+import { mount, config } from "@vue/test-utils";
 import axios from 'axios';
 import AxiosMockAdapter from 'axios-mock-adapter';
 import expect from 'expect';
 import BuildConfigure from "../../resources/js/components/BuildConfigure.vue";
 
-config.mocks['$baseURL'] = 'http://localhost';
-axios.defaults.baseURL = config.mocks['$baseURL'];
+config.global.mocks['$baseURL'] = 'http://localhost';
+axios.defaults.baseURL = config.global.mocks['$baseURL'];
 
 let apiResponse;
 let axiosMockAdapter;
 
 beforeEach(() => {
   axiosMockAdapter = new AxiosMockAdapter(axios);
-  config.mocks['$axios'] = axios;
+  config.global.mocks['$axios'] = axios;
 
   apiResponse = {
     build: {
@@ -41,10 +41,7 @@ afterEach(() => {
 test('BuildConfigure handles API response', async () => {
   axiosMockAdapter.onGet('/api/v1/viewConfigure.php?buildid=').reply(200, apiResponse);
   const component = mount(BuildConfigure);
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
   expect(component.vm.loading).toBe(false);
   var html = component.html();
   expect(html).toContain('mysite');
