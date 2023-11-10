@@ -1,4 +1,11 @@
+import emitter from 'tiny-emitter/instance'
+
 export default {
+  // Replacement emitters for the Vue 2 -> 3 conversion.  TODO: Remove these eventually.
+  // See: https://v3-migration.vuejs.org/breaking-changes/events-api.html#event-bus
+  $on: (...args) => emitter.on(...args),
+  $emit: (...args) => emitter.emit(...args),
+
   loadPageData: function (vm, endpoint_path) {
     vm.start = new Date().getTime();
     vm.$axios

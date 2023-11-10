@@ -1,12 +1,10 @@
 import {mount, config, createLocalVue} from "@vue/test-utils";
 import axios from 'axios'
 import AxiosMockAdapter from 'axios-mock-adapter';
-import BootstrapVue from 'bootstrap-vue';
 import expect from 'expect';
 import EditProject from "../../resources/js/components/EditProject.vue";
 
 const localVue = createLocalVue();
-localVue.use(BootstrapVue);
 
 config.mocks['$baseURL'] = '';
 axios.defaults.baseURL = config.mocks['$baseURL'];

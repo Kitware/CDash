@@ -4,7 +4,8 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-import './bootstrap';
+import * as Vue from 'vue'
+import axios from 'axios';
 import BuildConfigure from "./components/BuildConfigure";
 import BuildNotes from "./components/BuildNotes";
 import BuildSummary from "./components/BuildSummary";
@@ -45,7 +46,22 @@ const cdash_components = {
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-const app = new Vue({
-  el: '#app',
-  components: cdash_components,
+const app = Vue.createApp({
+  components:  cdash_components
 });
+
+app.config.globalProperties.$baseURL = process.env.MIX_APP_URL;
+
+axios.defaults.baseURL = process.env.MIX_APP_URL;
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+let token = document.head.querySelector('meta[name="csrf-token"]');
+if (token) {
+  axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+} else {
+  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+}
+
+app.config.globalProperties.$axios = axios;
+
+window.Vue = Vue;
+app.mount('#app');

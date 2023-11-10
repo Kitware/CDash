@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import ApiLoader from '../shared/ApiLoader';
 export default {
   name: "HeaderNav",
 
@@ -84,7 +85,7 @@ export default {
   },
 
   mounted() {
-    this.$root.$on('api-loaded', cdash => {
+    ApiLoader.$on('api-loaded', cdash => {
       if (!cdash.menu) {
         return;
       }

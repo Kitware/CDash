@@ -112,6 +112,7 @@
 </template>
 
 <script>
+import ApiLoader from '../shared/ApiLoader';
 export default {
   name: "HeaderMenu",
   props: {
@@ -156,7 +157,7 @@ export default {
   },
 
   mounted() {
-    this.$root.$on('api-loaded', cdash => {
+    ApiLoader.$on('api-loaded', cdash => {
       this.handleApiResponse(cdash);
     });
   },

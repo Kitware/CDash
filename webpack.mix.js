@@ -89,7 +89,6 @@ mix.copy('public/css/colorblind.css', 'public/build/css/colorblind_' + version +
 mix.copy('public/css/common.css', 'public/build/css/common.css');
 mix.styles([
   'node_modules/bootstrap/dist/css/bootstrap.css',
-  'node_modules/bootstrap-vue/dist/bootstrap-vue.css',
   'node_modules/jquery-ui-dist/jquery-ui.css',
   'node_modules/nvd3/build/nv.d3.min.css'
 ], 'public/build/css/3rdparty.css').version();
