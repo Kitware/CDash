@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Site;
 use App\Models\User;
 use App\Models\Build as EloquentBuild;
 use App\Services\PageTimer;
@@ -10,12 +11,14 @@ use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
+use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
 use App\Models\BuildInformation;
 use CDash\Model\BuildRelationship;
 use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUserNote;
 use CDash\Model\Label;
+use CDash\Model\Project;
 use CDash\ServiceContainer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -1003,6 +1006,201 @@ final class BuildController extends AbstractBuildController
     public function manageBuildGroup(): Response
     {
         return response()->angular_view('manageBuildGroup');
+    }
+
+    public function apiManageBuildGroup(): JsonResponse
+    {
+        $pageTimer = new PageTimer();
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        $response = begin_JSON_response();
+        $response['backurl'] = 'user.php';
+        $response['menutitle'] = 'CDash';
+        $response['menusubtitle'] = 'Build Groups';
+        $response['title'] = 'Build Groups';
+        $response['hidenav'] = 1;
+
+        $projectid = intval($_GET['projectid'] ?? 0);
+
+        // If the projectid is not set and there is only one project we go directly to the page
+        if ($projectid === 0) {
+            $projectid = (int) (DB::select('SELECT id FROM project')[0] ?? 0);
+        }
+
+        $this->setProjectById($projectid);
+        Gate::authorize('edit-project', $this->project);
+
+        // List the available projects that this user has admin rights to.
+        $sql = 'SELECT id,name FROM project';
+        $params = [];
+        if (!$user->IsAdmin()) {
+            $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid = ? AND role > 0)";
+            $params[] = Auth::id();
+        }
+        $projects = DB::select($sql, $params);
+        $availableprojects = [];
+        foreach ($projects as $project_array) {
+            $availableproject = [
+                'id' => (int) $project_array->id,
+                'name' => $project_array->name,
+            ];
+            if ((int) $project_array->id === $this->project->Id) {
+                $availableproject['selected'] = '1';
+            }
+            $availableprojects[] = $availableproject;
+        }
+        $response['availableprojects'] = $availableprojects;
+
+        // Find sites that have recently submitted to this project.
+        $currentUTCTime = gmdate(FMT_DATETIME);
+        $beginUTCTime = gmdate(FMT_DATETIME, time() - 3600 * 7 * 24); // 7 days
+
+        $sites_query = DB::select('
+            SELECT DISTINCT b.siteid, s.name
+            FROM build b
+            JOIN site s ON (b.siteid=s.id)
+            WHERE
+                projectid = ?
+                AND starttime BETWEEN ? AND ?
+                AND parentid IN (-1, 0)
+        ', [$this->project->Id, $beginUTCTime, $currentUTCTime]);
+
+        $sites = [];
+        foreach ($sites_query as $row) {
+            $sites[] = [
+                'id' => (int) $row->siteid,
+                'name' => $row->name,
+            ];
+        }
+        $response['sites'] = $sites;
+
+        // Get the BuildGroups for this Project.
+        $buildgroups = $this->project->GetBuildGroups();
+        $buildgroups_response = [];
+        $dynamics_response = [];
+        /** @var BuildGroup $buildgroup */
+        foreach ($buildgroups as $buildgroup) {
+            $buildgroup_response = [];
+
+            if (intval($_GET['show'] ?? 0) === $buildgroup->GetId()) {
+                $buildgroup_response['selected'] = '1';
+            }
+
+            $buildgroup_response['id'] = $buildgroup->GetId();
+            $buildgroup_response['name'] = $buildgroup->GetName();
+            $buildgroup_response['description'] = $buildgroup->GetDescription();
+            $buildgroup_response['type'] = $buildgroup->GetType();
+            $buildgroup_response['summaryemail'] = $buildgroup->GetSummaryEmail();
+            $buildgroup_response['emailcommitters'] = $buildgroup->GetEmailCommitters();
+            $buildgroup_response['includesubprojecttotal'] =
+                $buildgroup->GetIncludeSubProjectTotal();
+            $buildgroup_response['position'] = $buildgroup->GetPosition();
+            $buildgroup_response['startdate'] = $buildgroup->GetStartTime();
+            $buildgroup_response['autoremovetimeframe'] =
+                $buildgroup->GetAutoRemoveTimeFrame();
+
+            $buildgroups_response[] = $buildgroup_response;
+
+            if ($buildgroup->GetType() !== 'Daily') {
+                // Get the rules associated with this dynamic group.
+                $dynamic_response = $buildgroup_response;
+                $rules = $buildgroup->GetRules();
+                $rules_response = [];
+                foreach ($rules as $rule) {
+                    $rule_response = [];
+                    $match = $rule->BuildName;
+                    if (!empty($match)) {
+                        $match = trim($match, '%');
+                        $match = str_replace('%', '*', $match);
+                    }
+                    $rule_response['match'] = $match;
+
+                    $siteid = $rule->SiteId;
+                    if (empty($siteid)) {
+                        $rule_response['sitename'] = 'Any';
+                        $rule_response['siteid'] = 0;
+                    } else {
+                        $rule_response['siteid'] = $siteid;
+                        $found = false;
+                        foreach ($sites as $site) {
+                            if ($site['id'] == $siteid) {
+                                $rule_response['sitename'] = $site['name'];
+                                $found = true;
+                                break;
+                            }
+                        }
+                        if (!$found) {
+                            $site = Site::find($siteid);
+                            $rule_response['sitename'] = $site->name;
+                        }
+                    }
+
+                    $parentgroupid = $rule->ParentGroupId;
+                    if (empty($parentgroupid)) {
+                        $rule_response['parentgroupname'] = 'Any';
+                        $rule_response['parentgroupid'] = 0;
+                    } else {
+                        foreach ($buildgroups as $buildgroup) {
+                            if ($buildgroup->GetId() == $parentgroupid) {
+                                $rule_response['parentgroupname'] = $buildgroup->GetName();
+                                $rule_response['parentgroupid'] = $parentgroupid;
+                                break;
+                            }
+                        }
+                    }
+
+                    $rules_response[] = $rule_response;
+                }
+                if (!empty($rules_response)) {
+                    $dynamic_response['rules'] = $rules_response;
+                }
+                $dynamics_response[] = $dynamic_response;
+            }
+        }
+        $response['buildgroups'] = $buildgroups_response;
+        $response['dynamics'] = $dynamics_response;
+
+        // Store some additional details about this project.
+        get_dashboard_JSON($this->project->GetName(), null, $response);
+
+        // Generate response for any wildcard groups.
+        $wildcards = DB::select("
+            SELECT
+                bg.name,
+                bg.id,
+                b2gr.buildtype,
+                b2gr.buildname
+            FROM
+                build2grouprule AS b2gr,
+                buildgroup AS bg
+            WHERE
+                b2gr.buildname LIKE '\%%\%'
+                AND b2gr.groupid = bg.id
+                AND bg.type = 'Daily'
+                AND bg.projectid = ?
+                AND b2gr.endtime = '1980-01-01 00:00:00'
+        ", [intval($this->project->Id)]);
+
+        $wildcards_response = [];
+        foreach ($wildcards as $wildcard_array) {
+            $match = $wildcard_array->buildname;
+            $match = trim($match, '%');
+            $match = str_replace('%', '*', $match);
+
+            $wildcards_response[] = [
+                'buildgroupname' => $wildcard_array->name,
+                'buildgroupid' => (int) $wildcard_array->id,
+                'buildtype' => $wildcard_array->buildtype,
+                'match' => $match,
+            ];
+        }
+
+        $response['wildcards'] = $wildcards_response;
+
+        $pageTimer->end($response);
+        return response()->json(cast_data_for_JSON($response));
     }
 
     public function viewBuildError(): Response
