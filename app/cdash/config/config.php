@@ -66,10 +66,6 @@ $CDASH_P4_COMMAND = 'p4';
 //    'domain'            => 'https://my.gitlab.example'
 $OAUTH2_PROVIDERS = [];
 
-// Set to true if this copy of CDash is serving as a remote submission
-// processor hosted somewhere other than the web server.
-$CDASH_REMOTE_PROCESSOR = false;
-
 // Location of the private key that allows this CDash installation to act
 // as a GitHub App.
 $CDASH_GITHUB_PRIVATE_KEY = dirname(__FILE__) . '/github.pem';
