@@ -275,8 +275,7 @@ class CoverageFile2User
         return intval($query_result['id']);
     }
 
-    /** Assign the last author */
-    public function AssignLastAuthor(int $buildid): bool
+    public function AssignAuthors(int $buildid, bool $onlylast = false): bool
     {
         if (!isset($this->ProjectId) || $this->ProjectId < 1) {
             abort(500, 'CoverageFile2User:AssignLastAuthor: ProjectId not set');
@@ -297,40 +296,7 @@ class CoverageFile2User
 
             $DailyUpdate = new DailyUpdate();
             $DailyUpdate->ProjectId = $this->ProjectId;
-            $userids = $DailyUpdate->GetAuthors($fullpath, true); // only last
-
-            foreach ($userids as $userid) {
-                $this->FullPath = $fullpath;
-                $this->UserId = $userid;
-                $this->Insert();
-            }
-        }
-        return true;
-    }
-
-    /** Assign all author author */
-    public function AssignAllAuthors(int $buildid): bool
-    {
-        if (!isset($this->ProjectId) || $this->ProjectId < 1) {
-            abort(500, 'CoverageFile2User:AssignLastAuthor: ProjectId not set');
-        }
-
-        if ($buildid === 0) {
-            abort(500, 'CoverageFile2User:AssignLastAuthor: buildid not valid');
-        }
-
-        // Find the files associated with the build
-        $Coverage = new Coverage();
-        $Coverage->BuildId = $buildid;
-        $fileIds = $Coverage->GetFiles();
-        foreach ($fileIds as $fileid) {
-            $CoverageFile = new CoverageFile();
-            $CoverageFile->Id = $fileid;
-            $fullpath = $CoverageFile->GetPath();
-
-            $DailyUpdate = new DailyUpdate();
-            $DailyUpdate->ProjectId = $this->ProjectId;
-            $userids = $DailyUpdate->GetAuthors($fullpath);
+            $userids = $DailyUpdate->GetAuthors($fullpath, $onlylast);
 
             foreach ($userids as $userid) {
                 $this->FullPath = $fullpath;

@@ -8106,12 +8106,12 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type array\\<int\\>\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/CoverageFile2User.php
 
 		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/CoverageFile2User.php
 
 		-
