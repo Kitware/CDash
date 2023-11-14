@@ -28,8 +28,6 @@ if (!isset($ONLY_LOAD_DEFAULTS)) {
 $CDASH_ROOT_DIR = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);
 
-// API Key for SendGrid
-$CDASH_SENDGRID_API_KEY = null;
 // Using HTTPS protocol to access CDash
 $CDASH_USE_HTTPS = '0';
 // Name of the server running CDash.
