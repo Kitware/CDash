@@ -66,9 +66,6 @@ $CDASH_P4_COMMAND = 'p4';
 //    'domain'            => 'https://my.gitlab.example'
 $OAUTH2_PROVIDERS = [];
 
-// Whether to use the AWS ElastiCache Auto Discovery feature
-$CDASH_USE_ELASTICACHE_AUTO_DISCOVERY = false;
-
 // Set to true if this copy of CDash is serving as a remote submission
 // processor hosted somewhere other than the web server.
 $CDASH_REMOTE_PROCESSOR = false;
