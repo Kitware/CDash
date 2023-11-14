@@ -52,8 +52,6 @@ $CDASH_GIT_COMMAND = 'git';
 $CDASH_DEFAULT_GIT_DIRECTORY = 'git';
 // Define the p4 command
 $CDASH_P4_COMMAND = 'p4';
-// Number of times to attempt processing a single submission before giving up
-$CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS = '5';
 
 // Settings to enable external authentication using OAuth 2.0.
 // Currently recognized providers are GitHub, GitLab, and Google.
