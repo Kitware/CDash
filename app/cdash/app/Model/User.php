@@ -57,14 +57,8 @@ class User
         if (!$this->Id || !is_numeric($this->Id)) {
             return false;
         }
-        $stmt = $this->PDO->prepare(
-            "SELECT admin FROM $this->TableName WHERE id = ?");
-        pdo_execute($stmt, [$this->Id]);
-        $row = $stmt->fetch();
-        if ($row && array_key_exists('admin', $row) && $row['admin'] == 1) {
-            return true;
-        }
-        return false;
+        $this->Fill();
+        return (bool) $this->Admin;
     }
 
     /** Return if a user exists */
