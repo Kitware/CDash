@@ -134,7 +134,6 @@ final class AdminController extends AbstractController
         $version_array = pdo_fetch_array($version);
         $xml .= '<minversion>' . $version_array['major'] . '.' . $version_array['minor'] . '</minversion>';
 
-        @$CreateDefaultGroups = $_POST['CreateDefaultGroups'];
         @$AssignBuildToDefaultGroups = $_POST['AssignBuildToDefaultGroups'];
         @$FixBuildBasedOnRule = $_POST['FixBuildBasedOnRule'];
         @$DeleteBuildsWrongDate = $_POST['DeleteBuildsWrongDate'];
@@ -342,37 +341,7 @@ final class AdminController extends AbstractController
             }
         }
 
-        if ($CreateDefaultGroups) {
-            // Loop throught the projects
-            $n = 0;
-            $projects = pdo_query('SELECT id FROM project');
-            while ($project_array = pdo_fetch_array($projects)) {
-                $projectid = $project_array['id'];
-
-                if (pdo_num_rows(pdo_query("SELECT projectid FROM buildgroup WHERE projectid='$projectid'")) == 0) {
-                    // Add the default groups
-                    pdo_query("INSERT INTO buildgroup(name,projectid,starttime,endtime,description)
-                  VALUES ('Nightly','$projectid','1980-01-01 00:00:00','1980-01-01 00:00:00','Nightly Builds')");
-                    $id = pdo_insert_id('buildgroup');
-                    pdo_query("INSERT INTO buildgroupposition(buildgroupid,position,starttime,endtime)
-                  VALUES ('$id','1','1980-01-01 00:00:00','1980-01-01 00:00:00')");
-                    echo pdo_error();
-                    pdo_query("INSERT INTO buildgroup(name,projectid,starttime,endtime,description)
-                  VALUES ('Continuous','$projectid','1980-01-01 00:00:00','1980-01-01 00:00:00','Continuous Builds')");
-                    $id = pdo_insert_id('buildgroup');
-                    pdo_query("INSERT INTO buildgroupposition(buildgroupid,position,starttime,endtime)
-                  VALUES ('$id','2','1980-01-01 00:00:00','1980-01-01 00:00:00')");
-                    pdo_query("INSERT INTO buildgroup(name,projectid,starttime,endtime,description)
-                  VALUES ('Experimental','$projectid','1980-01-01 00:00:00','1980-01-01 00:00:00','Experimental Builds')");
-                    $id = pdo_insert_id('buildgroup');
-                    pdo_query("INSERT INTO buildgroupposition(buildgroupid,position,starttime,endtime)
-                  VALUES ('$id','3','1980-01-01 00:00:00','1980-01-01 00:00:00')");
-                    $n++;
-                }
-            }
-
-            $xml .= add_XML_value('alert', $n . ' projects have now default groups.');
-        } elseif ($AssignBuildToDefaultGroups) {
+        if ($AssignBuildToDefaultGroups) {
             // Loop throught the builds
             $builds = pdo_query('SELECT id,type,projectid FROM build WHERE id NOT IN (SELECT buildid as id FROM build2group)');
 
