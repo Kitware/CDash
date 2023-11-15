@@ -256,10 +256,10 @@ class User
     /** Record this user's password for the purposes of password rotation.
       * Does nothing if this feature is disabled.
       */
-    public function RecordPassword()
+    private function RecordPassword(): void
     {
         if (config('cdash.password.expires') < 1 || !$this->Id || !$this->Password) {
-            return false;
+            return;
         }
 
         $now = gmdate(FMT_DATETIME);
