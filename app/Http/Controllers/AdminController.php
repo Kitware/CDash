@@ -150,40 +150,6 @@ final class AdminController extends AbstractController
 
         $configFile = $config->get('CDASH_ROOT_DIR') . "/AuditReport.log";
 
-        if (!config('database.default')) {
-            $db_type = 'mysql';
-        } else {
-            $db_type = config('database.default');
-        }
-
-        if (isset($_GET['upgrade-tables'])) {
-            // Apply all the patches
-            foreach (glob($config->get('CDASH_ROOT_DIR') . "/sql/$db_type/cdash-upgrade-*.sql") as $filename) {
-                $file_content = file($filename);
-                $query = '';
-                foreach ($file_content as $sql_line) {
-                    $tsl = trim($sql_line);
-
-                    if (($sql_line != '') && (substr($tsl, 0, 2) != '--') && (substr($tsl, 0, 1) != '#')) {
-                        $query .= $sql_line;
-                        if (preg_match("/;\s*$/", $sql_line)) {
-                            $query = str_replace(';', '', "$query");
-                            $result = pdo_query($query);
-                            if (!$result) {
-                                if ($db_type != 'pgsql') {
-                                    // postgresql < 9.1 doesn't know CREATE TABLE IF NOT EXISTS so we don't die
-
-                                    die(pdo_error());
-                                }
-                            }
-                            $query = '';
-                        }
-                    }
-                }
-            }
-            return;
-        }
-
         // When adding new tables they should be added to the SQL installation file
         // and here as well
         if ($Upgrade) {
