@@ -29,14 +29,7 @@ class UserTestCase extends KWWebTestCase
             return 1;
         }
 
-        $id = $user->GetIdFromEmail('simpletest@localhost');
-
-        if ($id === false) {
-            $this->fail('User::GetIdFromEmail returned false for a valid user');
-            return 1;
-        }
-
-        $user->Id = $id;
+        $user->Id = App\Models\User::firstWhere('email', 'simpletest@localhost')->id;
         $user->Admin = '1';
         $user->FirstName = 'administrator';
         $user->Institution = 'Kitware Inc.';

@@ -506,8 +506,8 @@ final class UserController extends AbstractController
         if (isset($_POST['recover'])) {
             $email = $_POST['email'];
             $user = new \CDash\Model\User();
-            $userid = $user->GetIdFromEmail($email);
-            if (!$userid) {
+            $userid = User::firstWhere('email', $email)?->id;
+            if ($userid === null) {
                 // Don't reveal whether or not this is a valid account.
                 $message = 'A confirmation message has been sent to your inbox.';
             } else {

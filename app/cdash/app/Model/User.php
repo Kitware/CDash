@@ -61,9 +61,9 @@ class User
             }
 
             // Check if the email is already there
-            $userid = $this->GetIdFromEmail($this->Email);
-            if ($userid) {
-                $this->Id = $userid;
+            $user = \App\Models\User::firstWhere('email', $this->Email);
+            if ($user !== null) {
+                $this->Id = $user->id;
                 return true;
             }
             return false;
@@ -187,24 +187,6 @@ class User
             return false;
         }
         return intval($row['id']);
-    }
-
-    /** Get the user id from the email */
-    public function GetIdFromEmail($email)
-    {
-        $email = trim($email);
-        $stmt = $this->PDO->prepare(
-            "SELECT id FROM $this->TableName WHERE email = :email");
-        $stmt->bindParam(':email', $email);
-        if (!pdo_execute($stmt)) {
-            return false;
-        }
-
-        $row = $stmt->fetch();
-        if (!$row) {
-            return false;
-        }
-        return $row['id'];
     }
 
     /** Load this user's details from the datbase. */
