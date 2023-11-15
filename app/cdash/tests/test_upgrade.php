@@ -6,11 +6,6 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/upgrade_functions.php';
 
-use CDash\Config;
-use CDash\Database;
-use CDash\Model\BuildGroup;
-use CDash\Model\BuildGroupRule;
-use Illuminate\Support\Facades\DB;
 
 class UpgradeTestCase extends KWWebTestCase
 {
