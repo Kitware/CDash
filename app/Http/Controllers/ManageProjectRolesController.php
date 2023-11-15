@@ -95,9 +95,7 @@ final class ManageProjectRolesController extends AbstractProjectController
                     if (strlen($email) > 0) {
                         $email .= ', ';
                     }
-                    $maintainer = new User();
-                    $maintainer->Id = $maintainerid;
-                    $email .= $maintainer->GetEmail();
+                    $email .= User::findOrFail((int) $maintainerid)->email;
                 }
 
                 $projectname = get_project_name($projectid);

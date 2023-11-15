@@ -167,21 +167,6 @@ class User
         DB::delete("DELETE FROM $this->TableName WHERE id = ?", [$this->Id]);
     }
 
-    /** Get the email */
-    public function GetEmail()
-    {
-        // If no id specified return false.
-        if (!$this->Id) {
-            return false;
-        }
-
-        $stmt = $this->PDO->prepare(
-            "SELECT email FROM $this->TableName WHERE id = ?");
-        pdo_execute($stmt, [$this->Id]);
-        $row = $stmt->fetch();
-        return $row['email'];
-    }
-
     /** Get the password */
     public function GetPassword()
     {
