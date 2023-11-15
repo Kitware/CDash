@@ -477,7 +477,7 @@ final class AdminController extends AbstractController
             }
 
             // check if the upload directory is writable
-            if (!is_writable($config->get('CDASH_UPLOAD_DIRECTORY'))) {
+            if (!is_writable(Storage::path('upload'))) {
                 $xml .= '<uploadwritable>0</uploadwritable>';
             } else {
                 $xml .= '<uploadwritable>1</uploadwritable>';
@@ -832,7 +832,7 @@ final class AdminController extends AbstractController
         }
 
         // check if the upload directory is writable
-        if (!is_writable($config->get('CDASH_UPLOAD_DIRECTORY'))) {
+        if (!is_writable(Storage::path('upload'))) {
             $xml .= '<uploadwritable>0</uploadwritable>';
         } else {
             $xml .= '<uploadwritable>1</uploadwritable>';

@@ -86,7 +86,7 @@
           </a>
 
           <a ng-if="::cdash.uploadfilecount > 0"
-             ng-href="viewFiles.php?buildid={{::cdash.parentid}}"
+             ng-href="build/{{::cdash.parentid}}/files"
              title="{{::cdash.uploadfilecount}} files uploaded with this build">
             <img src="img/package.png" alt="Files" class="icon"/>
           </a>

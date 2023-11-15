@@ -849,7 +849,7 @@ function unlink_uploaded_file($fileid)
     }
 
     $sha1sum = $row['sha1sum'];
-    $symlinkname = $row['filename'];
+    $filename = $row['filename'];
     $filesize = $row['filesize'];
 
     $shareCount = 0;
@@ -863,14 +863,10 @@ function unlink_uploaded_file($fileid)
     }
 
     if ($shareCount == 0) {
-        //If only one name maps to this content
-
-        // Delete the content and symlink
-        rmdirr($config->get('CDASH_UPLOAD_DIRECTORY') . '/' . $sha1sum);
+        // Delete file if this is the only build referencing it.
+        Storage::delete("upload/{$sha1sum}");
         return $filesize;
     } else {
-        // Just delete the symlink, keep the content around
-        cdash_unlink($config->get('CDASH_UPLOAD_DIRECTORY') . '/' . $sha1sum . '/' . $symlinkname);
         return 0;
     }
 }
