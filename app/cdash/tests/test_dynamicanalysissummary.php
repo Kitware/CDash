@@ -64,25 +64,6 @@ class DynamicAnalysisSummaryTestCase extends KWWebTestCase
         $this->pass('Test passed');
     }
 
-    public function testDynamicAnalysisSummaryUpgrade()
-    {
-        // Delete the summaries examined by this test.
-        $ids = $this->ChildIds;
-        $ids[] = $this->ParentId;
-        $ids[] = $this->StandaloneBuildId;
-        $id_arg = implode(', ', $ids);
-        DB::delete("DELETE FROM dynamicanalysissummary WHERE buildid IN ($id_arg)");
-
-        // Run the upgrade function.
-        require_once 'include/upgrade_functions.php';
-        PopulateDynamicAnalysisSummaryTable();
-
-        // Verify the summaries are still correct.
-        $this->VerifyStandaloneBuild();
-        $this->VerifySubProjectBuild();
-        $this->pass('Test passed');
-    }
-
     public function testDynamicAnalysisSummaryGetsDeleted()
     {
         // Remove the builds we just created.
