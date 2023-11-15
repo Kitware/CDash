@@ -21215,7 +21215,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, bool given\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_api.php
 
 		-
@@ -23739,11 +23739,6 @@ parameters:
 			message: "#^Variable \\$selected_test_id might not be defined\\.$#"
 			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 1
-			path: app/cdash/tests/test_manageprojectroles.php
 
 		-
 			message: "#^Method ManageProjectRolesTestCase\\:\\:connectAndGetProjectId\\(\\) has no return type specified\\.$#"

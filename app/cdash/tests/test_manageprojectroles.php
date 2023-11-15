@@ -1,8 +1,8 @@
 <?php
-//
-// After including cdash_test_case.php, subsequent require_once calls are
-// relative to the top of the CDash source tree
-//
+
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class ManageProjectRolesTestCase extends KWWebTestCase
@@ -19,29 +19,39 @@ class ManageProjectRolesTestCase extends KWWebTestCase
         if (!$this->connectAndGetProjectId()) {
             return 1;
         }
+
+        $email = 'simpleuser@localhost';
+
         $this->get($this->url . "/manageProjectRoles.php?projectid=$this->projectid#fragment-3");
-        if (!$this->setFieldByName('registeruseremail', 'simpleuser@localhost')) {
+        if (!$this->setFieldByName('registeruseremail', $email)) {
             $this->fail('Set user email returned false');
-            return 1;
         }
         if (!$this->setFieldByName('registeruserfirstname', 'Simple')) {
             $this->fail('Set user first name returned false');
-            return 1;
         }
         if (!$this->setFieldByName('registeruserlastname', 'User')) {
             $this->fail('Set user last name returned false');
-            return 1;
         }
         if (!$this->setFieldByName('registeruserrepositorycredential', 'simpleuser')) {
             $this->fail('Set user repository credential returned false');
-            return 1;
         }
         $this->clickSubmitByName('registerUser');
-        if (strpos($this->getBrowser()->getContentAsText(), 'simpleuser@localhost') === false) {
-            $this->fail("'simpleuser@localhost' not found when expected");
-            return 1;
+        if (!str_contains($this->getBrowser()->getContentAsText(), $email)) {
+            $this->fail("'{$email}' not found when expected");
         }
-        $this->pass('Passed');
+
+        // Remove the user we just added to this project.
+        $user = User::firstWhere('email', $email);
+        $payload = ['removeuser' => 'Remove', 'userid' => $user->id];
+        $this->post("{$this->url}/manageProjectRoles.php?projectid={$this->projectid}", $payload);
+
+        // Verify that they are no longer associated with this project.
+        if (DB::table('user2project')->where('userid', $user->id)->where('projectid', $this->projectid)->exists()) {
+            $this->fail('user2project row still exists after deletion');
+        }
+        if (DB::table('user2repository')->where('userid', $user->id)->where('projectid', $this->projectid)->exists()) {
+            $this->fail('user2repository row still exists after deletion');
+        }
     }
 
     public function connectAndGetProjectId()

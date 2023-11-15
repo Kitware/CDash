@@ -55,11 +55,6 @@ class APITestCase extends KWWebTestCase
             $this->fail("Output does not match expected pattern when querying API for userid (test1): $userid");
         }
 
-        $userid = $this->get($this->url . '/api/v1/getuserid.php?author=simpleuser&project=PublicDashboard');
-        if (!preg_match("/..xml version..1.0. encoding..UTF-8....userid.\d+..userid./", $userid)) {
-            $this->fail("Output does not match expected pattern when querying API for userid (test2): $userid");
-        }
-
         $userid = $this->get($this->url . '/api/v1/getuserid.php');
         if ($userid !== '<?xml version="1.0" encoding="UTF-8"?><userid>error<no-author-param/></userid>') {
             $this->fail("Expected error output not found when querying API for userid (test3): $userid");
