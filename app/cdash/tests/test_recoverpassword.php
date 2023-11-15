@@ -37,7 +37,7 @@ class RecoverPasswordTestCase extends KWWebTestCase
         $user = new User();
         $user->Id = $user->GetIdFromEmail('simpletest@localhost');
         $user->Fill();
-        $user->Password = User::PasswordHash('simpletest');
+        $user->Password = password_hash('simpletest', PASSWORD_DEFAULT);
         if (!$user->Save()) {
             $this->fail('user->Save() returned false');
         }

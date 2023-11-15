@@ -327,18 +327,6 @@ class User
         return false;
     }
 
-    /** Wrapper around PHP's builtin password_hash function.
-      * Logs an error if it returns FALSE.
-      */
-    public static function PasswordHash($password)
-    {
-        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-        if ($passwordHash === false) {
-            add_log('password_hash returned false', 'PasswordHash', LOG_ERR);
-        }
-        return $passwordHash;
-    }
-
     /**
      * Returns the current User's repository credentials. (There may be multiple credentials
      * for multiple repositories).

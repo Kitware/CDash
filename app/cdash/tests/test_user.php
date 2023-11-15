@@ -59,7 +59,7 @@ class UserTestCase extends KWWebTestCase
             return 1;
         }
 
-        $user->Password = User::PasswordHash('simpletest');
+        $user->Password = password_hash('simpletest', PASSWORD_DEFAULT);
 
         // Coverage for update save
         $user->Save();
