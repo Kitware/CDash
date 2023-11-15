@@ -4,8 +4,8 @@ import AxiosMockAdapter from 'axios-mock-adapter';
 import expect from 'expect';
 import TestDetails from "../../resources/js/components/TestDetails.vue";
 
-config.mocks['$baseURL'] = "http://localhost";
-axios.defaults.baseURL = config.mocks['$baseURL'];
+config.global.mocks['$baseURL'] = "http://localhost";
+axios.defaults.baseURL = config.global.mocks['$baseURL'];
 
 import $ from 'jquery'
 $.plot = function() { return null; };
@@ -24,7 +24,7 @@ let graphData;
 
 beforeEach(function() {
   axiosMockAdapter = new AxiosMockAdapter(axios);
-  config.mocks['$axios'] = axios;
+  config.global.mocks['$axios'] = axios;
   apiResponse = {
     menu: {
       current: '',
@@ -110,10 +110,7 @@ afterEach(function() {
 it('handles API response', async () => {
   axiosMockAdapter.onGet('/api/v1/testDetails.php?buildtestid=').reply(200, apiResponse);
   const component = mount(TestDetails);
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
   expect(component.vm.loading).toBe(false);
 
   // Verify some expected content.
@@ -160,10 +157,7 @@ lines</pre>`);
 it('can toggle command line', async () => {
   axiosMockAdapter.onGet('/api/v1/testDetails.php?buildtestid=').reply(200, apiResponse);
   const component = mount(TestDetails);
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
 
   // Command line hidden by default.
   expect(component.find('#commandline').isVisible()).toBe(false);
@@ -171,20 +165,14 @@ it('can toggle command line', async () => {
   // Toggle it on.
   var commandlinelink = component.find('#commandlinelink')
   commandlinelink.trigger('click');
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
   expect(component.find('#commandline').isVisible()).toBe(true);
 });
 
 it('can toggle environment', async () => {
   axiosMockAdapter.onGet('/api/v1/testDetails.php?buildtestid=').reply(200, apiResponse);
   const component = mount(TestDetails);
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
 
   // We have an environment but it's hidden by default.
   expect(component.vm.hasenvironment).toBe(true);
@@ -194,10 +182,7 @@ it('can toggle environment', async () => {
   // Toggle it on.
   var environmentlink = component.find('#environmentlink')
   environmentlink.trigger('click');
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
   expect(component.find('#environment').isVisible()).toBe(true);
 });
 
@@ -205,20 +190,14 @@ it('"Show Environment" toggle is conditionally rendered', async () => {
   apiResponse.test.environment = '';
   axiosMockAdapter.onGet('/api/v1/testDetails.php?buildtestid=').reply(200, apiResponse);
   const component = mount(TestDetails);
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
   expect(component.find('#environmentlink').exists()).toBe(false);
 });
 
 it('can toggle the graphs', async () => {
   axiosMockAdapter.onGet('/api/v1/testDetails.php?buildtestid=').reply(200, apiResponse);
   const component = mount(TestDetails);
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
 
   expect(component.vm.showgraph).toBe(false);
   expect(component.find('#graph_holder').isVisible()).toBe(false);
@@ -236,10 +215,7 @@ it('can toggle the graphs', async () => {
 
   options.at(1).setSelected();
 
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
 
   expect(component.vm.showgraph).toBe(true);
   expect(component.find('#graph_holder').isVisible()).toBe(true);
@@ -258,9 +234,6 @@ it('can load the graphs by default', async () => {
   axiosMockAdapter.onGet('/api/v1/testDetails.php?buildtestid=&graph=time').reply(200, apiResponse);
   axiosMockAdapter.onGet('/api/v1/testGraph.php?testid=1&buildid=1&type=time').reply(200, graphData);
   const component = mount(TestDetails);
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
   expect(component.vm.showgraph).toBe(true);
 });

@@ -759,7 +759,7 @@
       >
         Show Build Time Graph
       </a>
-      <center>
+      <div style="text-align: center;">
         <img
           v-show="showTimeGraph && graphLoading"
           :src="$baseURL + '/img/loading.gif'"
@@ -769,7 +769,7 @@
           id="buildtimegrapholder"
           class="graph_holder"
         />
-      </center>
+      </div>
 
       <img
         :src="$baseURL + '/img/graph.png'"
@@ -781,7 +781,7 @@
       >
         Show Build Errors Graph
       </a>
-      <center>
+      <div style="text-align: center;">
         <img
           v-show="showErrorGraph && graphLoading"
           :src="$baseURL + '/img/loading.gif'"
@@ -791,7 +791,7 @@
           id="builderrorsgrapholder"
           class="graph_holder"
         />
-      </center>
+      </div>
 
       <img
         :src="$baseURL + '/img/graph.png'"
@@ -803,7 +803,7 @@
       >
         Show Build Warnings Graph
       </a>
-      <center>
+      <div style="text-align: center;">
         <img
           v-show="showWarningGraph && graphLoading"
           :src="$baseURL + '/img/loading.gif'"
@@ -813,7 +813,7 @@
           id="buildwarningsgrapholder"
           class="graph_holder"
         />
-      </center>
+      </div>
 
       <img
         :src="$baseURL + '/img/graph.png'"
@@ -825,7 +825,7 @@
       >
         Show Build Tests Failed Graph
       </a>
-      <center>
+      <div style="text-align: center;">
         <img
           v-show="showTestGraph && graphLoading"
           :src="$baseURL + '/img/loading.gif'"
@@ -835,7 +835,7 @@
           id="buildtestsfailedgrapholder"
           class="graph_holder"
         />
-      </center>
+      </div>
       <br>
 
       <!-- Relationships -->

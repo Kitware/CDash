@@ -1,15 +1,13 @@
 import {mount, config, createLocalVue} from "@vue/test-utils";
 import axios from 'axios'
 import AxiosMockAdapter from 'axios-mock-adapter';
-import BootstrapVue from 'bootstrap-vue';
 import expect from 'expect';
 import EditProject from "../../resources/js/components/EditProject.vue";
 
-const localVue = createLocalVue();
-localVue.use(BootstrapVue);
+// const localVue = createLocalVue();
 
-config.mocks['$baseURL'] = '';
-axios.defaults.baseURL = config.mocks['$baseURL'];
+config.global.mocks['$baseURL'] = '';
+axios.defaults.baseURL = config.global.mocks['$baseURL'];
 
 import $ from 'jquery'
 global.$ = $
@@ -20,7 +18,7 @@ let editResponse;
 
 beforeEach(function() {
   axiosMockAdapter = new AxiosMockAdapter(axios);
-  config.mocks['$axios'] = axios;
+  config.global.mocks['$axios'] = axios;
   newResponse = {
     edit: 0,
     noproject: 1,
@@ -98,11 +96,8 @@ afterEach(function() {
 
 test('EditProject handles new project API response', async () => {
   axiosMockAdapter.onGet('/api/v1/createProject.php').reply(200, newResponse);
-  const component = mount(EditProject, { localVue } );
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  const component = mount(EditProject);
+  await new Promise(process.nextTick);
   expect(component.vm.loading).toBe(false);
   expect(component.vm.selectedProject).toBe(0);
   expect(component.vm.cdash.tabs.Logo.disabled).toBe(true);
@@ -111,11 +106,8 @@ test('EditProject handles new project API response', async () => {
 
 test('EditProject handles edit project API response', async () => {
   axiosMockAdapter.onGet('/api/v1/createProject.php?projectid=999999999').reply(200, editResponse);
-  const component = mount(EditProject, { localVue, propsData: { projectid: 999999999 } } );
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  const component = mount(EditProject, { propsData: { projectid: 999999999 } } );
+  await new Promise(process.nextTick);
   expect(component.vm.loading).toBe(false);
   expect(component.vm.selectedProject).toBe(999999999);
   expect(component.vm.cdash.tabs.Logo.disabled).toBe(false);

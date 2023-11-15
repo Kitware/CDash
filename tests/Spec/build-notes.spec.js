@@ -1,11 +1,11 @@
-import {mount, config} from "@vue/test-utils";
+import { mount, config } from "@vue/test-utils";
 import axios from 'axios'
 import AxiosMockAdapter from 'axios-mock-adapter';
 import expect from 'expect';
 import BuildNotes from "../../resources/js/components/BuildNotes.vue";
 
-config.mocks['$baseURL'] = 'http://localhost';
-axios.defaults.baseURL = config.mocks['$baseURL'];
+config.global.mocks['$baseURL'] = 'http://localhost';
+axios.defaults.baseURL = config.global.mocks['$baseURL'];
 
 import $ from 'jquery'
 $.plot = function() { return null; };
@@ -16,7 +16,7 @@ let axiosMockAdapter;
 
 beforeEach(function() {
   axiosMockAdapter = new AxiosMockAdapter(axios);
-  config.mocks['$axios'] = axios;
+  config.global.mocks['$axios'] = axios;
   apiResponse = {
     build: {
       buildid: 1,
@@ -45,10 +45,7 @@ afterEach(function() {
 test('BuildNote handles API response', async () => {
   axiosMockAdapter.onGet('/api/v1/viewNotes.php?buildid=').reply(200, apiResponse);
   const component = mount(BuildNotes);
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
   expect(component.vm.loading).toBe(false);
   expect(component.vm.cdash.notes.length).toBe(1);
 
@@ -70,10 +67,7 @@ test('BuildNote can toggle notes', async () => {
   });
   axiosMockAdapter.onGet('/api/v1/viewNotes.php?buildid=').reply(200, apiResponse);
   const component = mount(BuildNotes);
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
 
   // Two notes, both hidden by default.
   expect(component.vm.cdash.notes.length).toBe(2);
@@ -83,9 +77,6 @@ test('BuildNote can toggle notes', async () => {
   // Toggle a note back on.
   var note_button = component.find('#note0')
   note_button.trigger('click');
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
-  await component.vm.$nextTick();
+  await new Promise(process.nextTick);
   expect(component.find('#notetext0').isVisible()).toBe(true);
 });

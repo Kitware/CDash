@@ -26,31 +26,31 @@
           :list="cdash.measurements"
           tag="tbody"
           style="cursor: move;"
+          item-key="id"
           @end="updatePositions()"
         >
-          <tr
-            v-for="measurement in cdash.measurements"
-            :id="'measurement_' + measurement.id"
-          >
-            <td>
-              <input
-                v-model="measurement.name"
-                type="text"
-                size="25"
-                name="measurement_name"
-              >
-            </td>
-            <td>
-              <span
-                class="glyphicon glyphicon-trash"
-                style="cursor: pointer;"
-                aria-hidden="true"
-                data-toggle="modal"
-                data-target="#deleteMeasurementDialog"
-                @click="measurementToDelete = measurement.id"
-              />
-            </td>
-          </tr>
+          <template #item="{ element }">
+            <tr :id="'measurement_' + element.id">
+              <td>
+                <input
+                  v-model="element.name"
+                  type="text"
+                  size="25"
+                  name="element.name"
+                >
+              </td>
+              <td>
+                <span
+                  class="glyphicon glyphicon-trash"
+                  style="cursor: pointer;"
+                  aria-hidden="true"
+                  data-toggle="modal"
+                  data-target="#deleteMeasurementDialog"
+                  @click="measurementToDelete = element.id"
+                />
+              </td>
+            </tr>
+          </template>
         </draggable>
 
         <tbody>
@@ -79,7 +79,7 @@
         <img
           id="save_complete"
           :src="$baseURL + '/img/check.gif'"
-          style="display: none; height:16px; width=16px; margin-top:9px;"
+          style="display: none; height:16px; width:16px; margin-top:9px;"
         >
       </div>
       <br>

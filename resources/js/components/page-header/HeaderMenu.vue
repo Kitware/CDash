@@ -30,11 +30,6 @@
       <li
         v-if="showBack"
         id="Back"
-        v-tooltip.bottom="{
-          content: 'Go back up one level in the hierarchy of results',
-          delay: 1500,
-          placement: 'bottom'
-        }"
       >
         <a :href="backUrl">Up</a>
       </li>
@@ -112,6 +107,7 @@
 </template>
 
 <script>
+import ApiLoader from '../shared/ApiLoader';
 export default {
   name: "HeaderMenu",
   props: {
@@ -156,7 +152,7 @@ export default {
   },
 
   mounted() {
-    this.$root.$on('api-loaded', cdash => {
+    ApiLoader.$on('api-loaded', cdash => {
       this.handleApiResponse(cdash);
     });
   },
