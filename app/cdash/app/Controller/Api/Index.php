@@ -159,13 +159,13 @@ class Index extends ResultsApi
         } elseif (!is_numeric($this->subProjectId)) {
             // Only show builds that are not children.
             $sql .= ' AND (b.parentid = -1 OR b.parentid = 0) ';
+        }
 
-            // If the filter data doesn't have a date clause, use this as a default
-            if (!$this->filterdata['hasdateclause']) {
-                $sql .= " AND b.starttime < ? AND b.starttime >= ? ";
-                $query_params[] = $this->endDate;
-                $query_params[] = $this->beginDate;
-            }
+        // If the filter data doesn't have a date clause, use this as a default
+        if (!$this->filterdata['hasdateclause']) {
+            $sql .= " AND b.starttime < ? AND b.starttime >= ? ";
+            $query_params[] = $this->endDate;
+            $query_params[] = $this->beginDate;
         }
 
         // Should we query by subproject?
