@@ -168,7 +168,7 @@ class User
     }
 
     /** Get the password */
-    public function GetPassword()
+    private function GetPassword()
     {
         if (!$this->Id) {
             return false;
