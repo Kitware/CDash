@@ -60,7 +60,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('create-project', function (User $user) {
-            if (!$user->IsAdmin() && !boolval(config('cdash.user_create_projects'))) {
+            if (!$user->admin && !boolval(config('cdash.user_create_projects'))) {
                 return Response::denyWithStatus(403, 'You do not have permission to create new projects.');
             }
             return Response::allow();

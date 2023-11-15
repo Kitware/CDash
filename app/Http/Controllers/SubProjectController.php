@@ -47,7 +47,7 @@ final class SubProjectController extends AbstractProjectController
 
         $sql = 'SELECT id, name FROM project';
         $params = [];
-        if (!$user->IsAdmin()) {
+        if (!$user->admin) {
             $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid = ? AND role > 0)";
             $params[] = intval(Auth::id());
         }

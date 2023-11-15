@@ -88,7 +88,7 @@ final class CoverageController extends AbstractBuildController
 
         $sql = 'SELECT id,name FROM project';
         $params = [];
-        if ($User->IsAdmin() == false) {
+        if ($User->admin) {
             $sql .= ' WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)';
             $params[] = intval($userid);
         }

@@ -313,7 +313,7 @@ final class SubscribeProjectController extends AbstractProjectController
 
         $sql = 'SELECT id, name FROM project';
         $params = [];
-        if ($user->IsAdmin() === false) {
+        if (!$user->admin) {
             $sql .= " WHERE public=1 OR id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)";
             $params[] = $user->id;
         }

@@ -16,6 +16,7 @@
 
 namespace CDash\Api\v1\ManageBuildGroup;
 
+use App\Models\User;
 use App\Services\PageTimer;
 use CDash\Database;
 use CDash\Model\BuildGroup;
@@ -33,6 +34,7 @@ if (!Auth::check()) {
     echo json_encode($response);
     return;
 }
+/** @var User $user */
 $user = Auth::user();
 $userid = $user->id;
 
@@ -65,7 +67,7 @@ if ($projectid && is_numeric($projectid)) {
     $user2project->FillFromUserId();
 }
 
-if (!$user->IsAdmin() && $user2project->Role <= 1) {
+if (!$user->admin && $user2project->Role <= 1) {
     $response['error'] = "You don't have the permissions to access this page";
     echo json_encode($response);
     return;
@@ -74,7 +76,7 @@ if (!$user->IsAdmin() && $user2project->Role <= 1) {
 // List the available projects that this user has admin rights to.
 $sql = 'SELECT id,name FROM project';
 $params = [];
-if (!$user->IsAdmin()) {
+if (!$user->admin) {
     $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)";
     $params[] = intval($userid);
 }

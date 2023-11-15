@@ -26,7 +26,7 @@ final class ManageBannerController extends AbstractController
         if (isset($_GET['projectid']) && (int) $_GET['projectid'] > 0) {
             $project->Id = (int) $_GET['projectid'];
             Gate::authorize('edit-project', $project);
-        } elseif ($user->IsAdmin()) {
+        } elseif ($user->admin) {
             // We are able to set the global banner
             $project->Id = (int) ($_GET['projectid'] ?? 0);
         } else {
@@ -37,7 +37,7 @@ final class ManageBannerController extends AbstractController
         $available_projects = [];
 
         // If user is admin then we can add a banner for all projects
-        if ($user->IsAdmin()) {
+        if ($user->admin) {
             $root_project = new Project();
             $root_project->Id = 0;
             $root_project->Name = 'All';
@@ -46,7 +46,7 @@ final class ManageBannerController extends AbstractController
 
         $sql = 'SELECT id, name FROM project';
         $params = [];
-        if (!$user->IsAdmin()) {
+        if (!$user->admin) {
             $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)";
             $params[] = intval(Auth::id());
         }

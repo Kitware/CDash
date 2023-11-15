@@ -20,21 +20,8 @@ class UserTestCase extends KWWebTestCase
     public function testUser()
     {
         $user = new User();
-        $user->Id = 'non_numeric';
-
-        if (!($user->IsAdmin() === false)) {
-            $this->fail("User::IsAdmin didn't return false for non-numeric user id");
-            return 1;
-        }
 
         $user->Id = '';
-        $user->Email = '';
-
-        if (!($user->IsAdmin() === false)) {
-            $this->fail("User::Exists didn't return false for no user id and no email");
-            return 1;
-        }
-
         $user->Email = 'simpletest@localhost';
 
         if ($user->Exists() === false) {

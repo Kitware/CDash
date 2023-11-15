@@ -11,11 +11,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * All of these methods are accessed through reflection.  Only the ones currently necessary are
  * listed to encourage future developers to move User logic to this class.
  *
- * @method bool IsAdmin()
  * @method GetEmail()
  * @method int|false GetIdFromName($name)
  *
  * @property int $id
+ * @property bool $admin
  * @property string $firstname
  * @property string $lastname
  * @property string $email
@@ -55,6 +55,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $hidden = [
         'password', 'remember_token',
+    ];
+
+    protected $casts = [
+        'admin' => 'boolean',
     ];
 
     public function passwords()

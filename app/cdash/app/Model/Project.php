@@ -1189,7 +1189,7 @@ class Project
         }
         $response['name_encoded'] = urlencode($this->Name ?? '');
 
-        $includeQuota = !boolval(config('cdash.user_create_projects')) || (Auth::check() && Auth::user()->IsAdmin());
+        $includeQuota = !boolval(config('cdash.user_create_projects')) || (Auth::check() && Auth::user()->admin);
 
         if ($includeQuota) {
             $uploadQuotaGB = 0;

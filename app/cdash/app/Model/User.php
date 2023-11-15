@@ -51,16 +51,6 @@ class User
         $this->LabelCollection = collect();
     }
 
-    /** Return if the user is admin */
-    public function IsAdmin(): bool
-    {
-        if (!$this->Id || !is_numeric($this->Id)) {
-            return false;
-        }
-        $this->Fill();
-        return (bool) $this->Admin;
-    }
-
     /** Return if a user exists */
     public function Exists()
     {
