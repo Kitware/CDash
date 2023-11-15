@@ -46,7 +46,7 @@ class SaveUser extends Command
 
         // Are we creating a new user or updating an existing one?
         $user = \App\Models\User::where('email', $email)->first();
-        if (!$user) {
+        if ($user === null) {
             $user = new User();
             $user->email = $email;
             $create_new_user = true;
@@ -72,7 +72,7 @@ class SaveUser extends Command
 
         // Handle admin flag.
         if ($this->option('admin')) {
-            $user->admin = $this->option('admin');
+            $user->admin = (bool) $this->option('admin');
         }
 
         $user->save();

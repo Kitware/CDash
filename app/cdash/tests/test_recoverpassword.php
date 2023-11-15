@@ -35,7 +35,7 @@ class RecoverPasswordTestCase extends KWWebTestCase
 
         // fix the password so others can still login...
         $user = new User();
-        $user->Id = App\Models\User::firstWhere('email', 'simpletest@localhost')->id;
+        $user->Id = App\Models\User::firstWhere('email', 'simpletest@localhost')?->id;
         $user->Fill();
         $user->Password = password_hash('simpletest', PASSWORD_DEFAULT);
         if (!$user->Save()) {

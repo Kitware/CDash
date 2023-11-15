@@ -212,11 +212,6 @@ parameters:
 			path: app/Console/Commands/SaveUser.php
 
 		-
-			message: "#^Only booleans are allowed in a negated boolean, App\\\\Models\\\\User\\|null given\\.$#"
-			count: 1
-			path: app/Console/Commands/SaveUser.php
-
-		-
 			message: "#^Only booleans are allowed in an if condition, array\\|bool\\|string\\|null given\\.$#"
 			count: 1
 			path: app/Console/Commands/SaveUser.php
@@ -234,11 +229,6 @@ parameters:
 		-
 			message: "#^Part \\$email \\(array\\|bool\\|string\\) of encapsed string cannot be cast to string\\.$#"
 			count: 2
-			path: app/Console/Commands/SaveUser.php
-
-		-
-			message: "#^Property App\\\\Models\\\\User\\:\\:\\$admin \\(int\\) does not accept array\\|string\\|true\\.$#"
-			count: 1
 			path: app/Console/Commands/SaveUser.php
 
 		-
@@ -1051,7 +1041,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 61
+			count: 60
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1468,11 +1458,6 @@ parameters:
 				09/04/2023  Use url\\(\\) instead\\.$#
 			"""
 			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Cannot call method IsAdmin\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
-			count: 2
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
@@ -2841,11 +2826,6 @@ parameters:
 			message: "#^Property App\\\\Http\\\\Kernel\\:\\:\\$routeMiddleware type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Http/Kernel.php
-
-		-
-			message: "#^Cannot call method IsAdmin\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: app/Http/Middleware/Admin.php
 
 		-
 			message: "#^Method App\\\\Http\\\\Middleware\\\\Admin\\:\\:handle\\(\\) has no return type specified\\.$#"
@@ -9324,11 +9304,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Cannot call method IsAdmin\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: "#^Cannot call method bindParam\\(\\) on PDOStatement\\|false\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -10197,7 +10172,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 10
+			count: 9
 			path: app/cdash/app/Model/User.php
 
 		-
@@ -10240,16 +10215,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\User\\:\\:Fill\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\User\\:\\:GetIdFromEmail\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\User\\:\\:GetIdFromEmail\\(\\) has parameter \\$email with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/User.php
 
@@ -18135,18 +18100,8 @@ parameters:
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
-			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
 			message: "#^Cannot access property \\$name on App\\\\Models\\\\Site\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Site\\>\\|null\\.$#"
 			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			message: "#^Cannot call method IsAdmin\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
-			count: 2
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-

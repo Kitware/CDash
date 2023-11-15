@@ -29,7 +29,7 @@ class UserTestCase extends KWWebTestCase
             return 1;
         }
 
-        $user->Id = App\Models\User::firstWhere('email', 'simpletest@localhost')->id;
+        $user->Id = App\Models\User::firstWhere('email', 'simpletest@localhost')?->id;
         $user->Admin = '1';
         $user->FirstName = 'administrator';
         $user->Institution = 'Kitware Inc.';
