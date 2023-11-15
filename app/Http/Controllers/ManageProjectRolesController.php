@@ -188,8 +188,8 @@ final class ManageProjectRolesController extends AbstractProjectController
 
         // Remove the user
         if ($removeuser) {
-            $db->executePrepared('DELETE FROM user2project WHERE userid=? AND projectid=?', [$userid. $projectid]);
-            $db->executePrepared('DELETE FROM user2repository WHERE userid=? AND projectid=?', [$userid. $projectid]);
+            $db->executePrepared('DELETE FROM user2project WHERE userid=? AND projectid=?', [$userid, $projectid]);
+            $db->executePrepared('DELETE FROM user2repository WHERE userid=? AND projectid=?', [$userid, $projectid]);
             echo pdo_error();
         }
 
