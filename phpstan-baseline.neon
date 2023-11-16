@@ -10189,37 +10189,12 @@ parameters:
 			path: app/cdash/app/Model/User.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\User\\:\\:AddLabel\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\User\\:\\:Delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\User\\:\\:Exists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\User\\:\\:Fill\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\User\\:\\:GetIdFromName\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/User.php
 
 		-
 			message: "#^Method CDash\\\\Model\\\\User\\:\\:GetLabelCollection\\(\\) has invalid return type CDash\\\\Model\\\\Collection\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\User\\:\\:GetPassword\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/User.php
 

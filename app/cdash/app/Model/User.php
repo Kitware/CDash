@@ -50,7 +50,7 @@ class User
     }
 
     /** Return if a user exists */
-    public function Exists()
+    public function Exists(): bool
     {
         if (!$this->Id) {
             // If no id is set check if a user with this email address exists.
@@ -147,7 +147,7 @@ class User
     }
 
     /** Get the password */
-    private function GetPassword()
+    private function GetPassword(): string|false
     {
         if (!$this->Id) {
             return false;
@@ -179,7 +179,7 @@ class User
     }
 
     /** Load this user's details from the datbase. */
-    public function Fill()
+    public function Fill(): bool
     {
         if (!$this->Id) {
             return false;
@@ -314,10 +314,8 @@ class User
 
     /**
      * Given a $label, the $label is added to the LabelCollection.
-     *
-     * @param Label $label
      */
-    public function AddLabel(Label $label)
+    public function AddLabel(Label $label): void
     {
         $this->LabelCollection->put($label->Text, $label);
     }
