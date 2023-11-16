@@ -3,8 +3,6 @@
 1stparty.min.js.map
 3rdparty.min.js
 3rdparty.min.js.map
-ansible/roles/*
-ansible/site.retry
 /app/cdash/backup/
 /app/cdash/log/
 /app/cdash/public/.htaccess
