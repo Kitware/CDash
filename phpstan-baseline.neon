@@ -18285,16 +18285,6 @@ parameters:
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Call to an undefined method CDash\\\\Middleware\\\\OAuth2\\\\GitLab\\:\\:auth\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/public/auth/GitLab.php
-
-		-
-			message: "#^Class CDash\\\\Middleware\\\\OAuth2\\\\GitLab constructor invoked with 3 parameters, 0 required\\.$#"
-			count: 1
-			path: app/cdash/public/auth/GitLab.php
-
-		-
 			message: "#^Call to an undefined method CDash\\\\Middleware\\\\OAuth2\\\\Google\\:\\:auth\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/public/auth/Google.php
@@ -20349,16 +20339,6 @@ parameters:
 			message: "#^Property UpdateErrorTopicTest\\:\\:\\$fixed_keys has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitLabTest.php
-
-		-
-			message: "#^Method GitLabTest\\:\\:testGetProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitLabTest.php
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
