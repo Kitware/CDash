@@ -38,7 +38,7 @@ class Configure extends Model
     ];
 
     /**
-     * @return HasManyThrough<Build, BuildConfigure>
+     * @return HasManyThrough<Build>
      */
     public function builds(): HasManyThrough
     {

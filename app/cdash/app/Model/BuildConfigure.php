@@ -15,9 +15,10 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use Illuminate\Support\Facades\DB;
 use PDO;
 use CDash\Database;
+use App\Models\Configure as EloquentConfigure;
+use App\Models\BuildConfigure as EloquentBuildConfigure;
 
 /** BuildConfigure class */
 class BuildConfigure
@@ -47,14 +48,14 @@ class BuildConfigure
         $this->PDO = Database::getInstance()->getPdo();
     }
 
-    public function AddLabel($label)
+    public function AddLabel($label): void
     {
         $label->BuildId = $this->BuildId;
         $this->LabelCollection->put($label->Text, $label);
     }
 
     /** Check if the configure exists */
-    public function Exists()
+    public function Exists(): bool
     {
         // Check by Id if it is set.
         if ($this->Id > 0) {
@@ -70,28 +71,29 @@ class BuildConfigure
         return $this->ExistsByBuildId();
     }
 
-    /** Check if a configure record exists for a given field and value.
-     *  Populate this object from the database if such a record is found.
+    /**
+     * TODO: This is a beautiful example of why getters with side effects are a horrible idea...
+     *
+     * Check if a configure record exists for a given field and value.
+     * Populate this object from the database if such a record is found.
      */
-    private function ExistsHelper($field, $value)
+    private function ExistsHelper(string $field, $value): bool
     {
-        $stmt = $this->PDO->prepare("SELECT * FROM configure WHERE $field = ?");
-        pdo_execute($stmt, [$value]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (is_array($row)) {
-            $this->Id = $row['id'];
-            $this->Command = $row['command'];
-            $this->Log = $row['log'];
-            $this->NumberOfErrors = $row['status'];
-            $this->NumberOfWarnings = $row['warnings'];
-            $this->Crc32 = $row['crc32'];
+        $configure = EloquentConfigure::where($field, $value)->first();
+        if ($configure !== null) {
+            $this->Id = $configure->id;
+            $this->Command = $configure->command;
+            $this->Log = $configure->log;
+            $this->NumberOfErrors = $configure->status;
+            $this->NumberOfWarnings = $configure->warnings;
+            $this->Crc32 = $configure->crc32;
             return true;
         }
         return false;
     }
 
     /** Check if a configure record exists for these contents. */
-    public function ExistsByCrc32()
+    public function ExistsByCrc32(): bool
     {
         if ($this->Command === '' || $this->Status === '') {
             return false;
@@ -101,7 +103,7 @@ class BuildConfigure
     }
 
     /** Check if a configure record exists for this Id. */
-    public function ExistsByBuildId()
+    public function ExistsByBuildId(): bool
     {
         if (!$this->BuildId) {
             add_log('BuildId not set',
@@ -116,22 +118,18 @@ class BuildConfigure
             return false;
         }
 
-        $stmt = $this->PDO->prepare(
-            'SELECT configureid FROM build2configure WHERE buildid = ?');
-        if (!pdo_execute($stmt, [$this->BuildId])) {
+        $configure = EloquentBuildConfigure::firstWhere('buildid', (int) $this->BuildId);
+
+        if ($configure === null) {
             return false;
         }
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!is_array($row)) {
-            return false;
-        }
-        return $this->ExistsHelper('id', $row['configureid']);
+        return $this->ExistsHelper('id', $configure->configureid);
     }
 
     /** Delete a current configure given a buildid
       * Returns true if the configure row was deleted from the database.
       */
-    public function Delete()
+    public function Delete(): bool
     {
         if (!$this->Exists()) {
             add_log('this configure does not exist',
@@ -142,25 +140,21 @@ class BuildConfigure
 
         // Delete the configure row if it is not shared with any other build.
         $retval = false;
-        $stmt = $this->PDO->prepare(
-            'SELECT COUNT(*) AS c FROM build2configure
-            WHERE configureid = ?');
-        pdo_execute($stmt, [$this->Id]);
-        $row = $stmt->fetch();
-        if ($row['c'] < 2) {
-            DB::delete('DELETE FROM configure WHERE id = ?', [$this->Id]);
+        $count = EloquentBuildConfigure::where('configureid', (int) $this->Id)->count();
+        if ($count < 2) {
+            EloquentConfigure::find((int) $this->Id)?->delete();
             $retval = true;
         }
 
         if ($this->BuildId) {
             // Delete the build2configure row for this build.
-            DB::delete('DELETE FROM build2configure WHERE buildid = ?', [$this->BuildId]);
+            EloquentBuildConfigure::where('buildid', (int) $this->BuildId)->delete();
         }
 
         return $retval;
     }
 
-    public function InsertLabelAssociations()
+    public function InsertLabelAssociations(): void
     {
         if ($this->BuildId) {
             if ($this->LabelCollection->isEmpty()) {
@@ -178,8 +172,10 @@ class BuildConfigure
         }
     }
 
-    // Save in the database.  Returns true is a new configure row was created,
-    // false otherwise.
+    /**
+     * Save in the database.  Returns true is a new configure row was created,
+     * false otherwise.
+     */
     public function Insert()
     {
         if (!$this->BuildId) {
@@ -252,23 +248,15 @@ class BuildConfigure
     /** Return true if the specified line contains a configure warning,
      * false otherwise.
      */
-    public static function IsConfigureWarning($line)
+    public static function IsConfigureWarning($line): bool
     {
-        if (strpos($line, 'CMake Warning') !== false ||
-            strpos($line, 'WARNING:') !== false
-        ) {
-            return true;
-        }
-        return false;
+        return str_contains($line, 'CMake Warning') || str_contains($line, 'WARNING:');
     }
 
     /**
      * Returns configurations for the build
-     *
-     * @param int $fetchType
-     * @return bool|mixed
      */
-    public function GetConfigureForBuild($fetchType = PDO::FETCH_ASSOC)
+    public function GetConfigureForBuild(): mixed
     {
         if (!$this->BuildId) {
             add_log('BuildId not set', 'BuildConfigure::GetConfigureForBuild()', LOG_WARNING);
@@ -283,11 +271,11 @@ class BuildConfigure
 
         pdo_execute($query, [$this->BuildId]);
 
-        return $query->fetch($fetchType);
+        return $query->fetch(PDO::FETCH_ASSOC);
     }
 
     /** Compute the warnings from the log. In the future we might want to add errors */
-    public function ComputeWarnings()
+    public function ComputeWarnings(): void
     {
         $this->NumberOfWarnings = 0;
         $log_lines = explode("\n", $this->Log);
@@ -324,23 +312,24 @@ class BuildConfigure
             }
         }
 
-        $stmt = $this->PDO->prepare(
-            'UPDATE configure SET warnings = :numwarnings WHERE id = :id');
-        $stmt->bindParam(':numwarnings', $this->NumberOfWarnings);
-        $stmt->bindParam(':id', $this->Id);
-        pdo_execute($stmt);
+        EloquentConfigure::find((int) $this->Id)?->update([
+            'warnings' => $this->NumberOfWarnings,
+        ]);
     }
 
     /** Get the number of configure error for a build */
-    public function ComputeErrors()
+    public function ComputeErrors(): int
     {
         if (!$this->Exists()) {
             return 0;
         }
-        return $this->NumberOfErrors;
+        return (int) $this->NumberOfErrors;
     }
 
-    public static function marshal($data)
+    /**
+     * @return array<string, mixed>
+     */
+    public static function marshal($data): array
     {
         $response = [
             'status' => $data['status'],
@@ -356,20 +345,6 @@ class BuildConfigure
         }
 
         return $response;
-    }
-
-    /**
-     * This method returns the URI for the given BuildConfigure id, or the URI for the current
-     * BuildConfigure if no id is provided.
-     *
-     * @param null $default_id
-     * @return string
-     */
-    public function getURL($default_id = null)
-    {
-        $config = \CDash\Config::getInstance();
-        $id = is_null($default_id) ? $this->BuildId : $default_id;
-        return "{$config->getBaseUrl()}/build/{$id}/configure";
     }
 
     /**

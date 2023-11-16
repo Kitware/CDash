@@ -16,6 +16,7 @@
 
 require_once 'include/cdashmail.php';
 
+use App\Models\Configure;
 use CDash\Config;
 use CDash\Database;
 use CDash\Messaging\Notification\Email\EmailBuilder;
@@ -26,7 +27,6 @@ use CDash\Messaging\Notification\NotificationDirector;
 use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
-use CDash\Model\BuildConfigure;
 use CDash\Model\BuildUpdate;
 use CDash\Model\DynamicAnalysis;
 use CDash\Model\Project;
@@ -39,9 +39,9 @@ function check_email_errors(int $buildid, bool $checktesttimeingchanged, int $te
     $errors['hasfixes'] = false;
 
     // Configure errors
-    $BuildConfigure = new BuildConfigure();
-    $BuildConfigure->BuildId = $buildid;
-    $errors['configure_errors'] = $BuildConfigure->ComputeErrors();
+    /** @var Configure $BuildConfigure */
+    $BuildConfigure = \App\Models\Build::findOrFail($buildid)->configure()->first();
+    $errors['configure_errors'] = $BuildConfigure->status ?? 0;
 
     // Build errors and warnings
     $Build = new Build();
@@ -156,13 +156,12 @@ function get_email_summary(int $buildid, array $errors, $errorkey, int $maxitems
 
         $information = "\n\n*Configure*\n";
 
-        $buildConfigure = new BuildConfigure();
-        $buildConfigure->BuildId = $buildid;
-        $configure = $buildConfigure->GetConfigureForBuild(PDO::FETCH_OBJ);
+        /** @var Configure $configure */
+        $configure = \App\Models\Build::findOrFail($buildid)->configure()->first();
 
         // If this is false pdo_execute called in BuildConfigure will
         // have already logged the error.
-        if (is_object($configure)) {
+        if ($configure !== null) {
             $information .= "Status: {$configure->status} ({$serverURI}/build/{$buildid})\n/configure";
             $information .= 'Output: ';
             $information .= substr($configure->log, 0, $maxchars);

@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-use CDash\Model\BuildConfigure;
+use App\Models\Build;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
 
@@ -54,9 +54,8 @@ class LongBuildNameTestCase extends KWWebTestCase
         $this->assertTrue(1 === count($results));
 
         // Its configure log was stored correctly.
-        $configure = new BuildConfigure();
-        $configure->BuildId = $results[0]->id;
-        $log = $configure->GetConfigureForBuild()['log'];
-        $this->assertTrue(str_contains($log, 'This is my config output'));
+        $configure = Build::findOrFail((int) $results[0]->id)->configure()->first();
+        $this->assertTrue($configure !== null);
+        $this->assertTrue(str_contains($configure->log, 'This is my config output'));
     }
 }

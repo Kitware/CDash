@@ -153,7 +153,7 @@ class Build extends Model
     }
 
     /**
-     * @return HasOneThrough<Configure, BuildConfigure>
+     * @return HasOneThrough<Configure>
      */
     public function configure(): HasOneThrough
     {

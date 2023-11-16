@@ -1073,7 +1073,7 @@ final class BuildController extends AbstractBuildController
             if (isset($configure['subprojectid'])) {
                 $has_subprojects = 1;
             }
-            $configures_response[] = buildconfigure::marshal($configure);
+            $configures_response[] = BuildConfigure::marshal($configure);
         }
         $response['configures'] = $configures_response;
 
