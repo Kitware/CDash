@@ -2,7 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use CDash\Model\User;
+use App\Models\User;
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -23,9 +24,14 @@ class PasswordExpired
             if (!Str::contains(url()->current(), $password_expired_path)) {
                 /** @var User $user */
                 $user = Auth::user();
-                if ($user->hasExpiredPassword()) {
-                    $password_expired_uri = "{$password_expired_path}?password_expired=1";
-                    return redirect($password_expired_uri);
+                $current_password = $user->currentPassword ?? null;
+                if ($current_password !== null) {
+                    $password_lifetime = (int) config('cdash.password.expires');
+                    $password_expired = $current_password->date->addDays($password_lifetime) < Carbon::now();
+                    if ($password_lifetime > 0 && $password_expired) {
+                        $password_expired_uri = "{$password_expired_path}?password_expired=1";
+                        return redirect($password_expired_uri);
+                    }
                 }
             }
         }

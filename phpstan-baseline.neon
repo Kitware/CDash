@@ -2893,11 +2893,6 @@ parameters:
 			path: app/Http/Middleware/EncryptCookies.php
 
 		-
-			message: "#^PHPDoc tag @var with type CDash\\\\Model\\\\User is not subtype of type App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: app/Http/Middleware/PasswordExpired.php
-
-		-
 			message: "#^PHPDoc type array of property App\\\\Http\\\\Middleware\\\\TrimStrings\\:\\:\\$except is not the same as PHPDoc type array\\<int, string\\> of overridden property Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TrimStrings\\:\\:\\$except\\.$#"
 			count: 1
 			path: app/Http/Middleware/TrimStrings.php
@@ -3322,11 +3317,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Models\\\\User\\:\\:__call\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/Models/User.php
-
-		-
-			message: "#^Method App\\\\Models\\\\User\\:\\:passwords\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Models/User.php
 
@@ -10240,16 +10230,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\User\\:\\:Save\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\User\\:\\:hasExpiredPassword\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Parameter \\#2 \\$baseTimestamp of function strtotime expects int\\|null, \\(int\\|false\\) given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/User.php
 

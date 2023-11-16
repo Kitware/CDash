@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -21,6 +23,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string $email
  * @property string $password
  * @property string $institution
+ *
+ * @property Password $currentPassword
  *
  * @mixin Builder<User>
  */
@@ -61,9 +65,20 @@ class User extends Authenticatable implements MustVerifyEmail
         'admin' => 'boolean',
     ];
 
-    public function passwords()
+    /**
+     * @return HasMany<Password>
+     */
+    public function passwords(): HasMany
     {
-        return $this->hasMany('App\Models\Password', 'userid')->orderBy('date');
+        return $this->hasMany(Password::class, 'userid')->orderBy('date', 'desc');
+    }
+
+    /**
+     * @return HasOne<Password>
+     */
+    public function currentPassword(): HasOne
+    {
+        return $this->hasOne(Password::class, 'userid')->ofMany('date', 'max');
     }
 
     /**
