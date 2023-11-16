@@ -55,7 +55,7 @@
     "phpstan/phpstan-phpunit": "1.3.15",
     "phpstan/phpstan-strict-rules": "1.5.1",
     "phpunit/phpunit": "9.6.4",
-    "friendsofphp/php-cs-fixer": "3.17.0"
+    "friendsofphp/php-cs-fixer": "3.38.2"
   },
   "suggest": {
     "ext-memcached": "",
