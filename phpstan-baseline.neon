@@ -10294,11 +10294,6 @@ parameters:
 			path: app/cdash/app/Model/User.php
 
 		-
-			message: "#^Property CDash\\\\Model\\\\User\\:\\:\\$TempTableName has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
 			message: """
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#

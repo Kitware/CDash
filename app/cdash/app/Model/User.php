@@ -27,9 +27,8 @@ class User
     public $LastName;
     public $Institution;
     public $Admin;
-    public $Filled;
+    private $Filled;
     public $TableName;
-    public $TempTableName;
     private $PDO;
     private $Credentials;
     private $LabelCollection;
@@ -45,7 +44,6 @@ class User
         $this->Admin = 0;
         $this->Filled = false;
         $this->TableName = qid('user');
-        $this->TempTableName = qid('usertemp');
         $this->PDO = Database::getInstance();
         $this->Credentials = null;
         $this->LabelCollection = collect();
