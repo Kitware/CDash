@@ -39,7 +39,7 @@
     "omines/oauth2-gitlab": "3.6.0",
     "pear/archive_tar": "1.4.14",
     "php-di/php-di": "7.0.5",
-    "ramsey/uuid": "4.7.4"
+    "ramsey/uuid": "4.7.5"
   },
   "require-dev": {
     "ext-dom": "*",
