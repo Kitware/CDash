@@ -146,15 +146,6 @@ class User
         return true;
     }
 
-    // Remove this user from the database.
-    public function Delete()
-    {
-        if (!$this->Id) {
-            return false;
-        }
-        DB::delete("DELETE FROM $this->TableName WHERE id = ?", [$this->Id]);
-    }
-
     /** Get the password */
     private function GetPassword()
     {
