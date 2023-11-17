@@ -55,8 +55,7 @@ class UserProject
         /** @var \PDO $pdo */
         $pdo = Database::getInstance()->getPdo();
         $sql = 'SELECT id, name FROM project';
-        $admin = $user->IsAdmin();
-        if (!$admin) {
+        if (!$user->admin) {
             $sql .= "
                 WHERE id IN (
                     SELECT projectid AS id
@@ -70,7 +69,7 @@ class UserProject
 
         /** @var \PDOStatement $stmt */
         $stmt = $pdo->prepare($sql);
-        if (!$admin) {
+        if (!$user->admin) {
             $stmt->bindParam(':userid', $id);
         }
         $stmt->execute();

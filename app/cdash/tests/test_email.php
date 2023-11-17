@@ -64,7 +64,7 @@ class EmailTestCase extends KWWebTestCase
         $user->firstname = 'user2';
         $user->lastname = 'kw';
         $user->institution = 'Kitware';
-        $user->admin = 0;
+        $user->admin = false;
         $user->save();
         if (!$user->id) {
             $this->fail('Failed to create user2');

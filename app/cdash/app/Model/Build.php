@@ -1480,9 +1480,8 @@ class Build
         $testdiff
     ): void {
         // Find user by email address.
-        $user = new User();
-        $userid = $user->GetIdFromEmail($email);
-        if (!$userid) {
+        $user = \App\Models\User::firstWhere('email', $email);
+        if ($user === null) {
             // Find user by author name.
             $stmt = $this->PDO->prepare(
                 'SELECT up.userid FROM user2project AS up
@@ -1500,6 +1499,8 @@ class Build
                 return;
             }
             $userid = $row['userid'];
+        } else {
+            $userid = $user->id;
         }
 
         $totalbuilds = 0;

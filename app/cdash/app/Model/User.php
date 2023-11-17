@@ -27,9 +27,8 @@ class User
     public $LastName;
     public $Institution;
     public $Admin;
-    public $Filled;
+    private $Filled;
     public $TableName;
-    public $TempTableName;
     private $PDO;
     private $Credentials;
     private $LabelCollection;
@@ -45,30 +44,13 @@ class User
         $this->Admin = 0;
         $this->Filled = false;
         $this->TableName = qid('user');
-        $this->TempTableName = qid('usertemp');
         $this->PDO = Database::getInstance();
         $this->Credentials = null;
         $this->LabelCollection = collect();
     }
 
-    /** Return if the user is admin */
-    public function IsAdmin(): bool
-    {
-        if (!$this->Id || !is_numeric($this->Id)) {
-            return false;
-        }
-        $stmt = $this->PDO->prepare(
-            "SELECT admin FROM $this->TableName WHERE id = ?");
-        pdo_execute($stmt, [$this->Id]);
-        $row = $stmt->fetch();
-        if ($row && array_key_exists('admin', $row) && $row['admin'] == 1) {
-            return true;
-        }
-        return false;
-    }
-
     /** Return if a user exists */
-    public function Exists()
+    public function Exists(): bool
     {
         if (!$this->Id) {
             // If no id is set check if a user with this email address exists.
@@ -77,9 +59,9 @@ class User
             }
 
             // Check if the email is already there
-            $userid = $this->GetIdFromEmail($this->Email);
-            if ($userid) {
-                $this->Id = $userid;
+            $user = \App\Models\User::firstWhere('email', $this->Email);
+            if ($user !== null) {
+                $this->Id = $user->id;
                 return true;
             }
             return false;
@@ -164,32 +146,8 @@ class User
         return true;
     }
 
-    // Remove this user from the database.
-    public function Delete()
-    {
-        if (!$this->Id) {
-            return false;
-        }
-        DB::delete("DELETE FROM $this->TableName WHERE id = ?", [$this->Id]);
-    }
-
-    /** Get the email */
-    public function GetEmail()
-    {
-        // If no id specified return false.
-        if (!$this->Id) {
-            return false;
-        }
-
-        $stmt = $this->PDO->prepare(
-            "SELECT email FROM $this->TableName WHERE id = ?");
-        pdo_execute($stmt, [$this->Id]);
-        $row = $stmt->fetch();
-        return $row['email'];
-    }
-
     /** Get the password */
-    public function GetPassword()
+    private function GetPassword(): string|false
     {
         if (!$this->Id) {
             return false;
@@ -220,26 +178,8 @@ class User
         return intval($row['id']);
     }
 
-    /** Get the user id from the email */
-    public function GetIdFromEmail($email)
-    {
-        $email = trim($email);
-        $stmt = $this->PDO->prepare(
-            "SELECT id FROM $this->TableName WHERE email = :email");
-        $stmt->bindParam(':email', $email);
-        if (!pdo_execute($stmt)) {
-            return false;
-        }
-
-        $row = $stmt->fetch();
-        if (!$row) {
-            return false;
-        }
-        return $row['id'];
-    }
-
     /** Load this user's details from the datbase. */
-    public function Fill()
+    public function Fill(): bool
     {
         if (!$this->Id) {
             return false;
@@ -277,10 +217,10 @@ class User
     /** Record this user's password for the purposes of password rotation.
       * Does nothing if this feature is disabled.
       */
-    public function RecordPassword()
+    private function RecordPassword(): void
     {
         if (config('cdash.password.expires') < 1 || !$this->Id || !$this->Password) {
-            return false;
+            return;
         }
 
         $now = gmdate(FMT_DATETIME);
@@ -317,47 +257,6 @@ class User
                 DB::delete('DELETE FROM password WHERE userid = ? AND date < ?', [$this->Id, $cutoff]);
             }
         }
-    }
-
-    public function hasExpiredPassword()
-    {
-        $expires = config('cdash.password.expires');
-
-        if ($expires < 1) {
-            return false;
-        }
-
-        $stmt = $this->PDO->prepare(
-            'SELECT date FROM password WHERE userid = ?
-        ORDER BY date DESC LIMIT 1');
-        $this->PDO->execute($stmt, [$this->Id]);
-        $row = $stmt->fetch();
-
-        if (!$row) {
-            // If no result, then password rotation must have been enabled
-            // after this user set their password.  Force them to change it now.
-            return true;
-        }
-
-        $password_created_time = strtotime($row['date']);
-        $password_expiration_time =
-            strtotime("+{$expires} days", $password_created_time);
-        if (time() > $password_expiration_time) {
-            return true;
-        }
-        return false;
-    }
-
-    /** Wrapper around PHP's builtin password_hash function.
-      * Logs an error if it returns FALSE.
-      */
-    public static function PasswordHash($password)
-    {
-        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-        if ($passwordHash === false) {
-            add_log('password_hash returned false', 'PasswordHash', LOG_ERR);
-        }
-        return $passwordHash;
     }
 
     /**
@@ -415,10 +314,8 @@ class User
 
     /**
      * Given a $label, the $label is added to the LabelCollection.
-     *
-     * @param Label $label
      */
-    public function AddLabel(Label $label)
+    public function AddLabel(Label $label): void
     {
         $this->LabelCollection->put($label->Text, $label);
     }

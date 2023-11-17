@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Project as EloquentProject;
+use App\Models\User;
 use RuntimeException;
 
 /** Main project class */
@@ -1046,10 +1047,9 @@ class Project
 
         $userids = $UserProject->GetUsers(2); // administrators
         $recipients = [];
+        // TODO: Simplify this loop
         foreach ($userids as $userid) {
-            $User = new User;
-            $User->Id = $userid;
-            $recipients[] = $User->GetEmail();
+            $recipients[] = User::findOrFail($userid)->email;
         }
 
         if (!empty($recipients)) {
@@ -1189,7 +1189,8 @@ class Project
         }
         $response['name_encoded'] = urlencode($this->Name ?? '');
 
-        $includeQuota = !boolval(config('cdash.user_create_projects')) || (Auth::check() && Auth::user()->IsAdmin());
+        $user = Auth::user();
+        $includeQuota = !boolval(config('cdash.user_create_projects')) || ($user !== null && $user->admin);
 
         if ($includeQuota) {
             $uploadQuotaGB = 0;

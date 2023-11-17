@@ -31,7 +31,7 @@ class ProjectPermissions
     public static function canEditProject(Project $project, User $user): bool
     {
         // Check if this user is a global admin.
-        if ($user->IsAdmin()) {
+        if ($user->admin) {
             return true;
         }
 
@@ -65,7 +65,7 @@ class ProjectPermissions
         }
 
         // Global admins have access to all projects.
-        if ($user->IsAdmin()) {
+        if ($user->admin) {
             return true;
         }
 

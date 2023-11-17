@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,16 +13,18 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * All of these methods are accessed through reflection.  Only the ones currently necessary are
  * listed to encourage future developers to move User logic to this class.
  *
- * @method bool IsAdmin()
  * @method GetEmail()
  * @method int|false GetIdFromName($name)
  *
  * @property int $id
+ * @property bool $admin
  * @property string $firstname
  * @property string $lastname
  * @property string $email
  * @property string $password
  * @property string $institution
+ *
+ * @property Password $currentPassword
  *
  * @mixin Builder<User>
  */
@@ -57,9 +61,24 @@ class User extends Authenticatable implements MustVerifyEmail
         'password', 'remember_token',
     ];
 
-    public function passwords()
+    protected $casts = [
+        'admin' => 'boolean',
+    ];
+
+    /**
+     * @return HasMany<Password>
+     */
+    public function passwords(): HasMany
     {
-        return $this->hasMany('App\Models\Password', 'userid')->orderBy('date');
+        return $this->hasMany(Password::class, 'userid')->orderBy('date', 'desc');
+    }
+
+    /**
+     * @return HasOne<Password>
+     */
+    public function currentPassword(): HasOne
+    {
+        return $this->hasOne(Password::class, 'userid')->ofMany('date', 'max');
     }
 
     /**

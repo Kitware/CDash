@@ -161,7 +161,7 @@ class Project extends Model
 
         if ($user === null) {
             $query->where('public', self::ACCESS_PUBLIC);
-        } elseif (!$user->IsAdmin()) {
+        } elseif (!$user->admin) {
             $query->whereHas('users', function ($query2) use ($user) {
                 $query2->where('user.id', $user->id);
                 $query2->orWhere('public', self::ACCESS_PUBLIC);

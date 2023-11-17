@@ -24,7 +24,7 @@ final class ManageProjectRolesController extends AbstractProjectController
      */
     public function viewPage(): View|RedirectResponse
     {
-        $usersessionid = Auth::id();
+        /** @var User $current_user */
         $current_user = Auth::user();
 
         @$projectid = $_GET['projectid'];
@@ -41,12 +41,12 @@ final class ManageProjectRolesController extends AbstractProjectController
         if ($projectid > 0) {
             $current_user_project = new UserProject();
             $current_user_project->ProjectId = $projectid;
-            $current_user_project->UserId = $usersessionid;
+            $current_user_project->UserId = Auth::id();
             $current_user_project->FillFromUserId();
             $role = $current_user_project->Role;
         }
 
-        if (!$current_user->IsAdmin() && $role <= 1) {
+        if (!$current_user->admin && $role <= 1) {
             return view('cdash', [
                 'xsl' => true,
                 'xsl_content' => "You don't have the permissions to access this page!",
@@ -95,9 +95,7 @@ final class ManageProjectRolesController extends AbstractProjectController
                     if (strlen($email) > 0) {
                         $email .= ', ';
                     }
-                    $maintainer = new User();
-                    $maintainer->Id = $maintainerid;
-                    $email .= $maintainer->GetEmail();
+                    $email .= User::findOrFail((int) $maintainerid)->email;
                 }
 
                 $projectname = get_project_name($projectid);
@@ -262,9 +260,9 @@ final class ManageProjectRolesController extends AbstractProjectController
 
         $sql = 'SELECT id, name FROM project';
         $params = [];
-        if (!$current_user->IsAdmin()) {
+        if (!$current_user->admin) {
             $sql .= ' WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)';
-            $params[] = intval($usersessionid);
+            $params[] = intval(Auth::id());
         }
         $sql .= ' ORDER BY name';
         $projects = $db->executePrepared($sql, $params);

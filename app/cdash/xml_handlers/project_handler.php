@@ -216,7 +216,7 @@ class ProjectHandler extends AbstractHandler
                 }
                 $user->email = $email;
                 $user->password = password_hash($email, PASSWORD_DEFAULT);
-                $user->admin = 0;
+                $user->admin = false;
                 $existing_user = User::where('email', $email)->first();
                 if ($existing_user) {
                     $userid = $existing_user->id;

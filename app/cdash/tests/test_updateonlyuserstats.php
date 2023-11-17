@@ -75,7 +75,7 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
             $user->lastname = $user_details['lastname'];
             $user->password = password_hash('12345', PASSWORD_DEFAULT);
             $user->institution = 'Kitware';
-            $user->admin = 0;
+            $user->admin = false;
             $user->Save();
             $userproject->UserId = $user->id;
             $userproject->Save();

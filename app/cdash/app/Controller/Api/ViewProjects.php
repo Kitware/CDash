@@ -141,11 +141,11 @@ class ViewProjects extends \CDash\Controller\Api
      **/
     public function getVisibleProjects()
     {
-        if (is_null($this->user)) {
+        if ($this->user === null) {
             $this->projectids = DB::table('project')
                 ->where('public', Project::ACCESS_PUBLIC)
                 ->pluck('id');
-        } elseif ($this->user->IsAdmin()) {
+        } elseif ($this->user->admin) {
             $this->projectids = DB::table('project')
                 ->pluck('id');
         } else {

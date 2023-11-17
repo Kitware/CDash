@@ -15,7 +15,7 @@ trait CreatesUsers
         $admin->email = 'admin@user';
         $admin->password = '45678';
         $admin->institution = 'me';
-        $admin->admin = 1;
+        $admin->admin = true;
         $admin->save();
         return $admin;
     }
@@ -29,7 +29,7 @@ trait CreatesUsers
         $user->email = 'jane@smith';
         $user->password = '12345';
         $user->institution = 'me';
-        $user->admin = 0;
+        $user->admin = false;
         $user->save();
         return $user;
     }

@@ -388,12 +388,6 @@ final class UserController extends AbstractController
                 $error_msg = "Password must be at least $minimum_length characters.";
             }
 
-            $password_hash = User::PasswordHash($passwd);
-            if ($password_hash === false) {
-                $password_is_good = false;
-                $error_msg = 'Failed to hash password.  Contact an admin.';
-            }
-
             if ($password_is_good && config('cdash.password.expires') > 0) {
                 $query = 'SELECT password FROM password WHERE userid=?';
                 $unique_count = (int) config('cdash.password.unique');
@@ -429,7 +423,7 @@ final class UserController extends AbstractController
             if (!$password_is_good) {
                 $xml .= "<error>$error_msg</error>";
             } else {
-                $user->Password = $password_hash;
+                $user->Password = password_hash($passwd, PASSWORD_DEFAULT);
                 if ($user->Save()) {
                     $xml .= '<error>Your password has been updated.</error>';
                     if (isset($_SESSION['cdash']['redirect'])) {
@@ -512,8 +506,8 @@ final class UserController extends AbstractController
         if (isset($_POST['recover'])) {
             $email = $_POST['email'];
             $user = new \CDash\Model\User();
-            $userid = $user->GetIdFromEmail($email);
-            if (!$userid) {
+            $userid = User::firstWhere('email', $email)?->id;
+            if ($userid === null) {
                 // Don't reveal whether or not this is a valid account.
                 $message = 'A confirmation message has been sent to your inbox.';
             } else {
@@ -531,10 +525,9 @@ final class UserController extends AbstractController
 
                 if (cdashmail("$email", 'CDash password recovery', $text)) {
                     // If we can send the email we update the database
-                    $passwordHash = User::PasswordHash($password);
                     $user->Id = $userid;
                     $user->Fill();
-                    $user->Password = $passwordHash;
+                    $user->Password = password_hash($password, PASSWORD_DEFAULT);
                     $user->Save();
                     $message = 'A confirmation message has been sent to your inbox.';
                 } else {

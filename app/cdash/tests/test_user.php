@@ -20,21 +20,8 @@ class UserTestCase extends KWWebTestCase
     public function testUser()
     {
         $user = new User();
-        $user->Id = 'non_numeric';
-
-        if (!($user->IsAdmin() === false)) {
-            $this->fail("User::IsAdmin didn't return false for non-numeric user id");
-            return 1;
-        }
 
         $user->Id = '';
-        $user->Email = '';
-
-        if (!($user->IsAdmin() === false)) {
-            $this->fail("User::Exists didn't return false for no user id and no email");
-            return 1;
-        }
-
         $user->Email = 'simpletest@localhost';
 
         if ($user->Exists() === false) {
@@ -42,14 +29,7 @@ class UserTestCase extends KWWebTestCase
             return 1;
         }
 
-        $id = $user->GetIdFromEmail('simpletest@localhost');
-
-        if ($id === false) {
-            $this->fail('User::GetIdFromEmail returned false for a valid user');
-            return 1;
-        }
-
-        $user->Id = $id;
+        $user->Id = App\Models\User::firstWhere('email', 'simpletest@localhost')?->id;
         $user->Admin = '1';
         $user->FirstName = 'administrator';
         $user->Institution = 'Kitware Inc.';
@@ -59,7 +39,7 @@ class UserTestCase extends KWWebTestCase
             return 1;
         }
 
-        $user->Password = User::PasswordHash('simpletest');
+        $user->Password = password_hash('simpletest', PASSWORD_DEFAULT);
 
         // Coverage for update save
         $user->Save();
