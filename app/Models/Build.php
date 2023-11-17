@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -140,5 +141,13 @@ class Build extends Model
         if ($endtime !== null) {
             $query->where('endtime', '<=', $endtime);
         }
+    }
+
+    /**
+     * @return HasMany<BuildTest>
+     */
+    public function buildtests(): HasMany
+    {
+        return $this->hasMany(BuildTest::class, 'buildid');
     }
 }

@@ -3,11 +3,29 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * @property int $id
+ * @property int $projectid
+ * @property string $name
+ *
+ * @mixin Builder<Test>
+ */
 class Test extends Model
 {
     protected $table = 'test';
-    protected $fillable = ['name', 'projectid'];
+
+    protected $fillable = [
+        'name',
+        'projectid',
+    ];
+
+    protected $casts = [
+        'id' => 'integer',
+        'projectid' => 'integer',
+    ];
 
     public $timestamps = false;
 
@@ -17,4 +35,12 @@ class Test extends Model
     public const TIMEOUT = 'Timeout';
     public const NOTRUN = 'notrun';
     public const DISABLED = 'Disabled';
+
+    /**
+     * @return BelongsTo<Project, self>
+     */
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class, 'projectid');
+    }
 }
