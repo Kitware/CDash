@@ -200,7 +200,11 @@ export default {
       const options = {
         lines: {show: true},
         points: {show: true},
-        xaxis: {mode: "time"},
+        xaxis: {
+          mode: "time",
+          timeformat: "%Y/%m/%d %H:%M",
+          timeBase: "milliseconds",
+        },
         grid: {
           backgroundColor: "#fffaff",
           clickable: true,
