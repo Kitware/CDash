@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Carbon;
 
 /**
@@ -149,5 +150,13 @@ class Build extends Model
     public function buildtests(): HasMany
     {
         return $this->hasMany(BuildTest::class, 'buildid');
+    }
+
+    /**
+     * @return HasOneThrough<Configure>
+     */
+    public function configure(): HasOneThrough
+    {
+        return $this->hasOneThrough(Configure::class, BuildConfigure::class, 'buildid', 'id', 'id', 'configureid');
     }
 }

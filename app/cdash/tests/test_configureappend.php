@@ -1,8 +1,10 @@
 <?php
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use App\Models\Build;
+use App\Models\Configure;
 use CDash\Model\Project;
-use CDash\Model\BuildConfigure;
+use Illuminate\Support\Facades\DB;
 
 class ConfigureAppendTestCase extends KWWebTestCase
 {
@@ -43,21 +45,22 @@ class ConfigureAppendTestCase extends KWWebTestCase
         }
 
         // Verify that the two configures were combined successfully.
-        $build_results = \DB::select(
-            DB::raw('SELECT id, configureerrors, configurewarnings, configureduration
-                FROM build WHERE projectid = :projectid'),
-            [':projectid' => $this->project->Id]
-        );
+        $build_results = DB::select('
+            SELECT
+                id,
+                configureerrors,
+                configurewarnings,
+                configureduration
+            FROM build
+            WHERE projectid = ?
+        ', [$this->project->Id]);
         $this->assertTrue(1 === count($build_results));
 
-        $configure = new BuildConfigure();
-        $configure->BuildId = $build_results[0]->id;
-        $this->assertTrue($configure->Exists());
+        /** @var Configure $configure */
+        $configure = Build::findOrFail((int) $build_results[0]->id)->configure()->firstOrFail();
+        $this->assertEqual($configure->status, 3);
 
-        $configure_results = $configure->GetConfigureForBuild();
-        $this->assertEqual($configure_results['status'], 3);
-
-        $log = $configure_results['log'];
+        $log = $configure->log;
         $this->assertTrue(strpos($log, 'This is the first part of my configure') !== false);
         $this->assertTrue(strpos($log, 'This is the second part of my configure') !== false);
 

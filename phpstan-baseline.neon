@@ -6370,21 +6370,13 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 7
+			count: 3
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
 			message: """
 				#^Call to deprecated function pdo_insert_id\\(\\)\\:
 				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: """
-				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use url\\(\\) instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
@@ -6403,57 +6395,17 @@ parameters:
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BuildConfigure\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/BuildConfigure.php
+
+		-
 			message: "#^If condition is always false\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:AddLabel\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:AddLabel\\(\\) has parameter \\$label with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:ComputeErrors\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:ComputeWarnings\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:Delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:Exists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:ExistsByBuildId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:ExistsByCrc32\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:ExistsHelper\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:ExistsHelper\\(\\) has parameter \\$field with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
 
@@ -6473,32 +6425,12 @@ parameters:
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:InsertLabelAssociations\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:IsConfigureWarning\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:IsConfigureWarning\\(\\) has parameter \\$line with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:marshal\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:marshal\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, array\\|float\\|int\\|string\\|false\\|null given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
 
@@ -16626,16 +16558,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property UpdateHandler\\:\\:\\$BuildId\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$log\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$status\\.$#"
 			count: 1
 			path: app/cdash/include/sendemail.php
 
