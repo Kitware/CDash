@@ -80,7 +80,7 @@ RUN chown -R www-data:www-data /etc/apache2
 RUN git config --system --add safe.directory '*'
 
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                               \
-  echo "alias cdash_install='rsync -r -l --exclude-from /cdash_src/.rsyncignore /cdash_src/ /cdash'" >> /etc/bash.bashrc; \
+  echo "alias cdash_copy_source='rsync -r -l --exclude-from /cdash_src/.rsyncignore /cdash_src/ /cdash'" >> /etc/bash.bashrc; \
 fi
 
 # Run the rest of the commands as www-data
