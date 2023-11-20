@@ -1,13 +1,15 @@
 @php
-    $collection = collect(config('oauth2'));
-    $has_oauth2_login = $collection->firstWhere('enable', true);
+    $oauthCollection = collect(config('oauth2'));
+    $has_oauth2_login = $oauthCollection->firstWhere('enable', true);
+
+    $socialiteCollection = collect(config('services'))->where("oauth","true");
+    $has_socialite_login = $socialiteCollection->firstWhere('enable', true);
 
     $has_saml2_login = config('saml2.enabled');
     $saml2_login_text = config('saml2.login_text');
 
     $login_field = config('cdash.login_field');
     $show_login_form = config('auth.username_password_authentication_enabled');
-
     $title = 'Login';
 @endphp
 
@@ -65,7 +67,7 @@
         </form>
     @endif  <!-- $show_login_form -->
 
-    @if ($has_oauth2_login || $has_saml2_login)
+    @if ($has_oauth2_login || $has_saml2_login || $has_socialite_login)
     <div class="row table-heading border-top pt-2">
         <div class="col-auto offset-1">
             <p>
@@ -78,9 +80,21 @@
                         </button>
                     </form>
                 @endif
-                @foreach($collection as $key => $config)
+                @foreach($socialiteCollection as $key => $config)
                     @if ($config['enable'])
-                        <a href="/oauth/{{ $key  }}"><img class="paddr" src="img/{{ $key }}_signin.png" title="Log in with your {{ $key }} account"/></a>
+                        <a href="/auth/{{ $key }}/redirect">
+                            <button>
+                                <img class="paddr" src="img/{{ $key }}_signin.png" title="Log in with your {{ $key }} account" style="height:40px"/>
+                                {{ $config['display_name']}}
+                            </button>
+                        </a>
+                    @endif
+                @endforeach
+                @foreach($oauthCollection as $key => $config)
+                    @if ($config['enable'])
+                        <a href="/oauth/{{ $key }}">
+                            <img class="paddr" src="img/{{ $key }}_signin.png" title="Log in with your {{ $key }} account"/>
+                        </a>
                     @endif
                 @endforeach
             </p>

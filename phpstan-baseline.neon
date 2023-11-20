@@ -5561,16 +5561,6 @@ parameters:
 			path: app/cdash/app/Middleware/OAuth2.php
 
 		-
-			message: "#^Method CDash\\\\Middleware\\\\OAuth2\\\\GitHub\\:\\:getEmail\\(\\) return type with generic class Illuminate\\\\Support\\\\Collection does not specify its types\\: TKey, TValue$#"
-			count: 1
-			path: app/cdash/app/Middleware/OAuth2/GitHub.php
-
-		-
-			message: "#^Short ternary operator is not allowed\\. Use null coalesce operator if applicable or consider using long ternary\\.$#"
-			count: 1
-			path: app/cdash/app/Middleware/OAuth2/GitHub.php
-
-		-
 			message: "#^Call to an undefined method League\\\\OAuth2\\\\Client\\\\Provider\\\\ResourceOwnerInterface\\:\\:getFirstName\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Middleware/OAuth2/Google.php
@@ -18373,16 +18363,6 @@ parameters:
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Call to an undefined method CDash\\\\Middleware\\\\OAuth2\\\\GitHub\\:\\:auth\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/public/auth/GitHub.php
-
-		-
-			message: "#^Class CDash\\\\Middleware\\\\OAuth2\\\\GitHub constructor invoked with 3 parameters, 0 required\\.$#"
-			count: 1
-			path: app/cdash/public/auth/GitHub.php
-
-		-
 			message: "#^Call to an undefined method CDash\\\\Middleware\\\\OAuth2\\\\GitLab\\:\\:auth\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/public/auth/GitLab.php
@@ -20447,71 +20427,6 @@ parameters:
 			message: "#^Property UpdateErrorTopicTest\\:\\:\\$fixed_keys has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:any\\(\\)\\.$#"
-			count: 5
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:once\\(\\)\\.$#"
-			count: 3
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Method CDash\\\\Middleware\\\\OAuth2\\\\GitHubTest\\:\\:getProvider\\(\\) has parameter \\$methods with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Method CDash\\\\Middleware\\\\OAuth2\\\\GitHubTest\\:\\:testGetEmail\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Method CDash\\\\Middleware\\\\OAuth2\\\\GitHubTest\\:\\:testGetProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$session of method Illuminate\\\\Http\\\\Request\\:\\:setLaravelSession\\(\\) expects Illuminate\\\\Contracts\\\\Session\\\\Session, Illuminate\\\\Session\\\\SessionManager given\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Property CDash\\\\Middleware\\\\OAuth2\\\\GitHubTest\\:\\:\\$accessToken has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Trying to mock an undefined method getBody\\(\\) on class League\\\\OAuth2\\\\Client\\\\Provider\\\\AbstractProvider\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Trying to mock an undefined method getName\\(\\) on class League\\\\OAuth2\\\\Client\\\\Provider\\\\ResourceOwnerInterface\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
