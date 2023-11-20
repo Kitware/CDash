@@ -62,16 +62,12 @@ final class MonitorController extends AbstractController
         // Initialize trendline data.
         $success_values = [];
         $fail_values = [];
-        $ticks = [];
         $num_hours = 0;
         for ($timestamp = $begin; $timestamp <= $end; $timestamp += 3600) {
             // Truncate this timestamp to the beginning of the hour.
             $success_values[$timestamp] = 0;
             $fail_values[$timestamp] = 0;
             $num_hours++;
-            if ($num_hours % 6 === 0) {
-                $ticks[] = $timestamp;
-            }
         }
 
         foreach ($fail_data as $row) {
@@ -92,33 +88,36 @@ final class MonitorController extends AbstractController
             }
         }
 
-        // Massage data into the format expected by nvd3.
-        $success_trend = [];
-        $success_trend['key'] = 'success';
-        $success_trend['color'] =  $palette::Success;
-        $success_trend['values'] = [];
+        // Massage data into the expected format
+        $success_trend = [
+            'color' =>  $palette::Success,
+            'name' => 'Success',
+            'values' => [],
+        ];
         foreach ($success_values as $key => $value) {
-            $data_point = [$key, $value];
-            $success_trend['values'][] = $data_point;
+            $success_trend['values'][] = [$key, $value];
         }
 
-        $fail_trend = [];
-        $fail_trend['key'] = 'fail';
-        $fail_trend['color'] =  $palette::Failure;
-        $fail_trend['values'] = [];
+        $fail_trend = [
+            'color' =>  $palette::Failure,
+            'name' => 'Fail',
+            'values' => [],
+        ];
         foreach ($fail_values as $key => $value) {
-            $data_point = [$key, $value];
-            $fail_trend['values'][] = $data_point;
+            $fail_trend['values'][] = [$key, $value];
         }
-
-        $time_chart_data = [$success_trend, $fail_trend];
 
         return response()->json([
             'backlog_length' => $backlog_length,
             'backlog_time' => $backlog_time,
-            'num_hours' => $num_hours,
-            'time_chart_data' => $time_chart_data,
-            'ticks' => $ticks,
+            'time_chart_data' => [
+                "data" => [$success_trend, $fail_trend],
+                "labels" => [
+                    "title" => "Submissions Parsed Over the Past {$num_hours} Hours",
+                    "x_axis" => "Date",
+                    "y_axis" => "# of Submissions",
+                ],
+            ],
             'log_directory' => config('logging.default') === 'stack' ? storage_path('logs') : '',
         ]);
     }
