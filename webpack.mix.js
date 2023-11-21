@@ -103,7 +103,6 @@ mix.scripts([
   'node_modules/flot/source/jquery.flot.pie.js',
   'node_modules/jquery.cookie/jquery.cookie.js',
   'public/js/bootstrap.min.js',
-  'public/js/tooltip.js',
   'public/js/je_compare.js',
   'node_modules/angular/angular.min.js',
   'node_modules/angular-animate/angular-animate.min.js',
