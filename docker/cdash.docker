@@ -79,8 +79,11 @@ RUN chown -R www-data:www-data /etc/apache2
 # Disable git repo ownership check system wide
 RUN git config --system --add safe.directory '*'
 
-RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                               \
+RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
   echo "alias cdash_copy_source='rsync -r -l --exclude-from /cdash_src/.rsyncignore /cdash_src/ /cdash'" >> /etc/bash.bashrc; \
+  echo "alias cdash_install='cdash_copy_source && bash /cdash/install.sh'" >> /etc/bash.bashrc; \
+else                                                                       \
+  echo "alias cdash_install='bash /cdash/install.sh'" >> /etc/bash.bashrc; \
 fi
 
 # Run the rest of the commands as www-data
