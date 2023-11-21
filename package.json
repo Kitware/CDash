@@ -25,7 +25,6 @@
     "autoprefixer": "10.4.16",
     "axios": "^0.21",
     "bootstrap": "^4.6.2",
-    "cross-env": "^5.1",
     "d3": "^3.5.17",
     "del": "^6.1.1",
     "eslint": "^8.52.0",

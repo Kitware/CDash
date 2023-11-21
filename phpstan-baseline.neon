@@ -5561,16 +5561,6 @@ parameters:
 			path: app/cdash/app/Middleware/OAuth2.php
 
 		-
-			message: "#^Method CDash\\\\Middleware\\\\OAuth2\\\\GitHub\\:\\:getEmail\\(\\) return type with generic class Illuminate\\\\Support\\\\Collection does not specify its types\\: TKey, TValue$#"
-			count: 1
-			path: app/cdash/app/Middleware/OAuth2/GitHub.php
-
-		-
-			message: "#^Short ternary operator is not allowed\\. Use null coalesce operator if applicable or consider using long ternary\\.$#"
-			count: 1
-			path: app/cdash/app/Middleware/OAuth2/GitHub.php
-
-		-
 			message: "#^Call to an undefined method League\\\\OAuth2\\\\Client\\\\Provider\\\\ResourceOwnerInterface\\:\\:getFirstName\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Middleware/OAuth2/Google.php
@@ -6380,21 +6370,13 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 7
+			count: 3
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
 			message: """
 				#^Call to deprecated function pdo_insert_id\\(\\)\\:
 				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: """
-				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use url\\(\\) instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
@@ -6413,57 +6395,17 @@ parameters:
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BuildConfigure\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/BuildConfigure.php
+
+		-
 			message: "#^If condition is always false\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:AddLabel\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:AddLabel\\(\\) has parameter \\$label with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:ComputeErrors\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:ComputeWarnings\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:Delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:Exists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:ExistsByBuildId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:ExistsByCrc32\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:ExistsHelper\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:ExistsHelper\\(\\) has parameter \\$field with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
 
@@ -6483,32 +6425,12 @@ parameters:
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:InsertLabelAssociations\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:IsConfigureWarning\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:IsConfigureWarning\\(\\) has parameter \\$line with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:marshal\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildConfigure\\:\\:marshal\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, array\\|float\\|int\\|string\\|false\\|null given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
 
@@ -16640,16 +16562,6 @@ parameters:
 			path: app/cdash/include/sendemail.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$log\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$status\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
 			message: "#^Anonymous function has an unused use \\$buildid\\.$#"
 			count: 1
 			path: app/cdash/include/sendemail.php
@@ -18371,16 +18283,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			message: "#^Call to an undefined method CDash\\\\Middleware\\\\OAuth2\\\\GitHub\\:\\:auth\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/public/auth/GitHub.php
-
-		-
-			message: "#^Class CDash\\\\Middleware\\\\OAuth2\\\\GitHub constructor invoked with 3 parameters, 0 required\\.$#"
-			count: 1
-			path: app/cdash/public/auth/GitHub.php
 
 		-
 			message: "#^Call to an undefined method CDash\\\\Middleware\\\\OAuth2\\\\GitLab\\:\\:auth\\(\\)\\.$#"
@@ -20447,71 +20349,6 @@ parameters:
 			message: "#^Property UpdateErrorTopicTest\\:\\:\\$fixed_keys has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:any\\(\\)\\.$#"
-			count: 5
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:once\\(\\)\\.$#"
-			count: 3
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Method CDash\\\\Middleware\\\\OAuth2\\\\GitHubTest\\:\\:getProvider\\(\\) has parameter \\$methods with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Method CDash\\\\Middleware\\\\OAuth2\\\\GitHubTest\\:\\:testGetEmail\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Method CDash\\\\Middleware\\\\OAuth2\\\\GitHubTest\\:\\:testGetProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$session of method Illuminate\\\\Http\\\\Request\\:\\:setLaravelSession\\(\\) expects Illuminate\\\\Contracts\\\\Session\\\\Session, Illuminate\\\\Session\\\\SessionManager given\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Property CDash\\\\Middleware\\\\OAuth2\\\\GitHubTest\\:\\:\\$accessToken has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Trying to mock an undefined method getBody\\(\\) on class League\\\\OAuth2\\\\Client\\\\Provider\\\\AbstractProvider\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
-
-		-
-			message: "#^Trying to mock an undefined method getName\\(\\) on class League\\\\OAuth2\\\\Client\\\\Provider\\\\ResourceOwnerInterface\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GitHubTest.php
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
