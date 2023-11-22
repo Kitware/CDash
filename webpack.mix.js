@@ -1,11 +1,12 @@
 // Load required modules.
 const mix = require('laravel-mix');
 mix.disableNotifications();
+mix.options({
+  clearConsole: false,
+});
 
 const ESLintPlugin = require('eslint-webpack-plugin');
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
-
-const { exec } = require('child_process');
 
 // Clean up from previous webpack runs.
 del = require('del'),
@@ -151,9 +152,9 @@ mix.sass('resources/sass/app.scss', 'public/laravel/css').version();
 // Added this line to get mocha testing working with versioning.
 mix.copy('resources/js/app.js', 'public/main.js');
 
-exec('php artisan route:cache');
-exec('php artisan view:cache');
-
 mix.webpackConfig({
-  plugins: webpack_plugins
+  plugins: webpack_plugins,
+  stats: {
+    children: true,
+  },
 });
