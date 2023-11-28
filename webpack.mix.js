@@ -9,7 +9,7 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 
 // Clean up from previous webpack runs.
-del = require('del'),
+const del = require('del');
 del.sync('public/build/css');
 del.sync('public/build/js');
 del.sync('public/build/views');
@@ -17,29 +17,30 @@ del.sync('public/js/CDash_*.js');
 
 // Determine if this is a git clone of CDash or not.
 fs = require('fs');
-var git_clone = false;
+let git_clone = false;
+let version;
 if (fs.existsSync('.git')) {
-  var git_clone = true;
+  git_clone = true;
   // If this is a git clone, we will use the `git describe` to generate a version
   // to report in the footer.
   // Use current UNIX timestamp for cache busting.
   version = new Date().getTime().toString();
 } else {
   // Otherwise if this is a release download, use the version from package.json.
-  var config = require('./package.json');
+  const config = require('./package.json');
   version = config.version;
   fs.writeFileSync('./public/VERSION', 'v' + version);
 }
 
 // Write out version file for angular.js
-var dir = 'public/build/js';
+const dir = 'public/build/js';
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir);
 }
 fs.writeFileSync(dir + '/version.js', "angular.module('CDash').constant('VERSION', '" + version + "');");
 
 // Webpack plugins.
-var webpack_plugins = [
+const webpack_plugins = [
   // Replace version string in angular files.
   new ReplaceInFileWebpackPlugin([
     {
@@ -77,7 +78,7 @@ if (git_clone) {
 mix.copy('public/views/*.html', 'public/build/views/');
 
 // Cache busting for angularjs partials.
-var glob = require("glob");
+const glob = require("glob");
 glob.sync('public/views/partials/*.html').forEach(function(src) {
   let dest = src.replace('.html', '_' + version + '.html');
   dest = dest.replace('views', 'build/views');
