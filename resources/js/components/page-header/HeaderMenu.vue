@@ -183,7 +183,7 @@ export default {
       this.hasProject = true;
 
       this.indexUrl = `${this.$baseURL}/index.php?project=${cdash.projectname_encoded}&date=${cdash.date}`;
-      if (cdash.menu.subprojects == 1) {
+      if (cdash.menu && cdash.menu.subprojects) {
         this.showSubProjects = true;
         this.subProjectsUrl = `${this.$baseURL}/viewSubProjects.php?project=${cdash.projectname_encoded}&date=${cdash.date}`;
       }
