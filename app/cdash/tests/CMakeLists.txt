@@ -56,6 +56,13 @@ add_test(
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
+# Run the JS linter
+add_test(
+  NAME eslint
+  COMMAND npm run eslint
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
 add_laravel_test(/Unit/app/ControllerNameTest)
 
 add_php_test(install)
