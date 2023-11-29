@@ -22,6 +22,16 @@ return [
         'oauth' => true,
         'display_name' => "GitHub",
     ],
+    'gitlab' => [
+        'client_id' => env('GITLAB_CLIENT_ID'),
+        'client_secret' => env('GITLAB_CLIENT_SECRET'),
+        'redirect' => env('GITLAB_REDIRECT_URI'),
+        'instance_uri' => env('GITLAB_DOMAIN'),
+        'enable' => env('GITLAB_ENABLE', false),
+        'autoregister' => env('GITLAB_AUTO_REGISTER_NEW_USERS', false),
+        'oauth' => true,
+        'display_name' => "GitLab",
+    ],
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),

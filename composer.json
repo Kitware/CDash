@@ -41,7 +41,8 @@
     "pear/archive_tar": "1.4.14",
     "php-di/php-di": "7.0.5",
     "ramsey/uuid": "4.7.5",
-    "socialiteproviders/github": "4.1.0"
+    "socialiteproviders/github": "4.1.0",
+    "socialiteproviders/gitlab": "4.1.0"
   },
   "require-dev": {
     "ext-dom": "*",
