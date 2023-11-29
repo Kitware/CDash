@@ -6,7 +6,6 @@
 /app/cdash/backup/
 /app/cdash/log/
 /app/cdash/public/.htaccess
-/app/cdash/public/build/
 /app/cdash/public/js/nv.d3.js.map
 /app/cdash/AuditReport.log
 _build/
