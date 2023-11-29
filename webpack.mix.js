@@ -5,7 +5,6 @@ mix.options({
   clearConsole: false,
 });
 
-const ESLintPlugin = require('eslint-webpack-plugin');
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 
 // Clean up from previous webpack runs.
@@ -60,13 +59,6 @@ const webpack_plugins = [
       }]
     },
   ]),
-
-  // Linter for Vuejs files.
-  new ESLintPlugin({
-    exclude: ['node_modules', 'vendor'],
-    extensions: 'vue',
-    fix: true,
-  }),
 ];
 
 if (git_clone) {

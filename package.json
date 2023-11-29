@@ -29,7 +29,6 @@
     "del": "^6.1.1",
     "eslint": "^8.52.0",
     "eslint-plugin-vue": "^9.11.0",
-    "eslint-webpack-plugin": "^4.0.1",
     "flot": "^4.2.6",
     "git-revision-webpack-plugin": "^5.0.0",
     "jquery": "^3.7",
