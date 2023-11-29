@@ -37,22 +37,12 @@ parameters:
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
-			message: "#^Only booleans are allowed in an if condition, array\\|bool\\|string\\|null given\\.$#"
-			count: 1
-			path: app/Console/Commands/AutoRemoveBuilds.php
-
-		-
 			message: "#^PHPDoc type string of property App\\\\Console\\\\Commands\\\\AutoRemoveBuilds\\:\\:\\$description is not the same as PHPDoc type string\\|null of overridden property Illuminate\\\\Console\\\\Command\\:\\:\\$description\\.$#"
 			count: 1
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
 			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 2
-			path: app/Console/Commands/AutoRemoveBuilds.php
-
-		-
-			message: "#^Part \\$projectname \\(array\\|bool\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
 			count: 2
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
@@ -92,26 +82,6 @@ parameters:
 			path: app/Console/Commands/MigrateConfig.php
 
 		-
-			message: "#^Parameter \\#1 \\$filename of function file_exists expects string, array\\|bool\\|string\\|null given\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Parameter \\#1 \\$filename of function fopen expects string, array\\|bool\\|string\\|null given\\.$#"
-			count: 2
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Parameter \\#1 \\$filename of function is_writable expects string, array\\|bool\\|string\\|null given\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Parameter \\#1 \\$from of function copy expects string, array\\|bool\\|string\\|null given\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, \\(int\\|string\\) given\\.$#"
 			count: 2
 			path: app/Console/Commands/MigrateConfig.php
@@ -134,11 +104,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, \\(int\\|string\\) given\\.$#"
 			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Part \\$output_filename \\(array\\|bool\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
-			count: 4
 			path: app/Console/Commands/MigrateConfig.php
 
 		-
@@ -197,11 +162,6 @@ parameters:
 			path: app/Console/Commands/RemoveUser.php
 
 		-
-			message: "#^Part \\$email \\(array\\|bool\\|string\\) of encapsed string cannot be cast to string\\.$#"
-			count: 2
-			path: app/Console/Commands/RemoveUser.php
-
-		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/Console/Commands/SaveUser.php
@@ -212,47 +172,12 @@ parameters:
 			path: app/Console/Commands/SaveUser.php
 
 		-
-			message: "#^Only booleans are allowed in an if condition, array\\|bool\\|string\\|null given\\.$#"
+			message: "#^Only booleans are allowed in an if condition, string\\|null given\\.$#"
 			count: 1
 			path: app/Console/Commands/SaveUser.php
 
 		-
 			message: "#^PHPDoc type string of property App\\\\Console\\\\Commands\\\\SaveUser\\:\\:\\$description is not the same as PHPDoc type string\\|null of overridden property Illuminate\\\\Console\\\\Command\\:\\:\\$description\\.$#"
-			count: 1
-			path: app/Console/Commands/SaveUser.php
-
-		-
-			message: "#^Parameter \\#1 \\$password of function password_hash expects string, array\\|bool\\|string given\\.$#"
-			count: 1
-			path: app/Console/Commands/SaveUser.php
-
-		-
-			message: "#^Part \\$email \\(array\\|bool\\|string\\) of encapsed string cannot be cast to string\\.$#"
-			count: 2
-			path: app/Console/Commands/SaveUser.php
-
-		-
-			message: "#^Property App\\\\Models\\\\User\\:\\:\\$email \\(string\\) does not accept array\\|bool\\|string\\.$#"
-			count: 1
-			path: app/Console/Commands/SaveUser.php
-
-		-
-			message: "#^Property App\\\\Models\\\\User\\:\\:\\$firstname \\(string\\) does not accept array\\|bool\\|string\\.$#"
-			count: 1
-			path: app/Console/Commands/SaveUser.php
-
-		-
-			message: "#^Property App\\\\Models\\\\User\\:\\:\\$institution \\(string\\) does not accept array\\|bool\\|string\\.$#"
-			count: 1
-			path: app/Console/Commands/SaveUser.php
-
-		-
-			message: "#^Property App\\\\Models\\\\User\\:\\:\\$lastname \\(string\\) does not accept array\\|bool\\|string\\.$#"
-			count: 1
-			path: app/Console/Commands/SaveUser.php
-
-		-
-			message: "#^Property App\\\\Models\\\\User\\:\\:\\$password \\(string\\) does not accept array\\|bool\\|string\\.$#"
 			count: 1
 			path: app/Console/Commands/SaveUser.php
 
@@ -264,11 +189,6 @@ parameters:
 		-
 			message: "#^Method App\\\\Console\\\\Commands\\\\UpdateDependencies\\:\\:handle\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/Console/Commands/UpdateDependencies.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, array\\|bool\\|string\\|null given\\.$#"
-			count: 2
 			path: app/Console/Commands/UpdateDependencies.php
 
 		-
