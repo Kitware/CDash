@@ -17,13 +17,12 @@
 require_once 'xml_handlers/abstract_handler.php';
 
 use CDash\Config;
-use \CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
 use CDash\Model\Label;
+use CDash\Model\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
-use CDash\Model\Project;
 use CDash\Model\UploadFile;
 
 use Illuminate\Http\File;
@@ -50,6 +49,7 @@ class UploadHandler extends AbstractHandler
     private $Base64TmpFileWriteHandle;
     private $Base64TmpFilename;
     private $Label;
+    protected Project $Project;
 
     /** If True, means an error happened while processing the file */
     private $UploadError;
@@ -66,6 +66,7 @@ class UploadHandler extends AbstractHandler
         $this->Base64TmpFileWriteHandle = 0;
         $this->Base64TmpFilename = '';
         $this->UploadError = false;
+        $this->Project = $this->GetProject();
     }
 
     /** Start element */
@@ -110,51 +111,19 @@ class UploadHandler extends AbstractHandler
             // when we call UpdateBuild() below.
             //
             // For end time, we use the start of the testing day.
-            // For start time, we use either the submit time (now) or
-            // one second before the start time of the *next* testing day
-            // (whichever is earlier).
+            // For start time, we use the end of the testing day.
             // Yes, this means the build finished before it began.
             //
             // This associates the build with the correct day if it is only
             // an upload.  Otherwise we defer to the values set by the
             // other handlers.
-
-            $db = Database::getInstance();
-            $row = $db->executePreparedSingleRow('
-                       SELECT nightlytime FROM project where id=?
-                   ', [intval($this->projectid)]);
-            $nightly_time = $row['nightlytime'];
-            $build_date =
+            $buildDate =
                 extract_date_from_buildstamp($this->Build->GetStamp());
+            [$beginningOfDay, $endOfDay] = $this->Project->ComputeTestingDayBounds($buildDate);
 
-            list($prev, $nightly_start_time, $next) =
-                get_dates($build_date, $nightly_time);
-
-            // If the nightly start time is after noon (server time)
-            // and this buildstamp is on or after the nightly start time
-            // then this build belongs to the next testing day.
-            if (date(FMT_TIME, $nightly_start_time) > '12:00:00') {
-                $build_timestamp = strtotime($build_date);
-                $next_timestamp = strtotime($next);
-                if (strtotime(date(FMT_TIME, $build_timestamp), $next_timestamp) >=
-                    strtotime(date(FMT_TIME, $nightly_start_time), $next_timestamp)) {
-                    $nightly_start_time += 3600 * 24;
-                }
-            }
-
-            $this->Build->EndTime = gmdate(FMT_DATETIME, $nightly_start_time);
-
-            $now = time();
-            $one_second_before_tomorrow =
-                strtotime('+1 day -1 second', $nightly_start_time);
-            if ($one_second_before_tomorrow < time()) {
-                $this->Build->StartTime =
-                    gmdate(FMT_DATETIME, $one_second_before_tomorrow);
-            } else {
-                $this->Build->StartTime = gmdate(FMT_DATETIME, $now);
-            }
-
-            $this->Build->SubmitTime = gmdate(FMT_DATETIME, $now);
+            $this->Build->EndTime = $beginningOfDay;
+            $this->Build->StartTime = $endOfDay;
+            $this->Build->SubmitTime = gmdate(FMT_DATETIME);
 
             $this->Build->ProjectId = $this->projectid;
             $this->Build->SetSubProject($this->SubProjectName);
@@ -260,11 +229,8 @@ class UploadHandler extends AbstractHandler
 
             // Check file size against the upload quota
             $upload_file_size = filesize($this->TmpFilename);
-            $Project = new Project;
-            $Project->Id = $this->projectid;
-            $Project->Fill();
-            if ($upload_file_size > $Project->UploadQuota) {
-                Log::error("Size of uploaded file {$this->TmpFilename} is {$upload_file_size} bytes, which is greater than the total upload quota for this project ({$Project->UploadQuota} bytes)");
+            if ($upload_file_size > $this->Project->UploadQuota) {
+                Log::error("Size of uploaded file {$this->TmpFilename} is {$upload_file_size} bytes, which is greater than the total upload quota for this project ({$this->Project->UploadQuota} bytes)");
                 $this->UploadError = true;
                 cdash_unlink($this->TmpFilename);
                 return;
@@ -316,7 +282,7 @@ class UploadHandler extends AbstractHandler
             if (!$success) {
                 Log::error("UploadFile model - Failed to insert row associated with file: '{$this->UploadFile->Filename}'");
             }
-            $Project->CullUploadedFiles();
+            $this->Project->CullUploadedFiles();
 
             // Reset UploadError so that the handler could attempt to process following files
             $this->UploadError = false;
