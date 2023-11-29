@@ -119,8 +119,7 @@ class UploadHandler extends AbstractHandler
             // other handlers.
             $buildDate =
                 extract_date_from_buildstamp($this->Build->GetStamp());
-            list($beginningOfDay, $endOfDay) =
-                $this->Project->ComputeTestingDayBounds($buildDate);
+            [$beginningOfDay, $endOfDay] = $this->Project->ComputeTestingDayBounds($buildDate);
 
             $this->Build->EndTime = $beginningOfDay;
             $this->Build->StartTime = $endOfDay;
