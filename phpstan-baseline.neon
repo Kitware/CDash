@@ -26951,16 +26951,6 @@ parameters:
 			path: app/cdash/xml_handlers/SubProjectDirectories_handler.php
 
 		-
-			message: "#^Access to an undefined property AbstractHandler\\:\\:\\$config\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Class stack referenced with incorrect case\\: Stack\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
 			message: "#^Method AbstractHandler\\:\\:GetProject\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/abstract_handler.php
@@ -27186,17 +27176,7 @@ parameters:
 			path: app/cdash/xml_handlers/abstract_handler.php
 
 		-
-			message: "#^Property AbstractHandler\\:\\:\\$Project has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
 			message: "#^Property AbstractHandler\\:\\:\\$SubProjectName has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Property AbstractHandler\\:\\:\\$conifg has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/abstract_handler.php
 
@@ -29060,14 +29040,6 @@ parameters:
 			message: "#^Property UpdateHandler\\:\\:\\$UpdateFile has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/update_handler.php
-
-		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
 			message: "#^Call to function base64_decode\\(\\) requires parameter \\#2 to be set\\.$#"

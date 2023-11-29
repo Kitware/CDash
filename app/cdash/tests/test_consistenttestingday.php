@@ -110,5 +110,23 @@ class ConsistentTestingDayTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $this->assertEqual(0, count($jsonobj['buildgroups']));
+
+        // Change nightly time & time zone for this project.
+        $this->createProject([
+            'Id' => $this->project->Id,
+            'Name' => 'ConsistentTestingDay',
+            'NightlyTime' => '22:00:00 America/Denver'
+        ], true);
+
+        // Submit Upload.xml file.
+        $this->submission('ConsistentTestingDay', "$dir/Upload.xml");
+
+        // Verify that it appears on the correct date.
+        $this->get("{$this->url}/api/v1/index.php?project=ConsistentTestingDay&date=2023-11-29");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $buildgroup = array_pop($jsonobj['buildgroups']);
+        $this->assertEqual(1, count($buildgroup['builds']));
+        $this->assertEqual('testing_day_upload_file', $buildgroup['builds'][0]['buildname']);
     }
 }
