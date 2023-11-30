@@ -17792,17 +17792,22 @@ parameters:
 			path: app/cdash/public/api/v1/index.php
 
 		-
-			message: "#^Offset 'loctested' might not exist on array\\{\\}\\|array\\{thresholdgreen\\?\\: int\\|null, thresholdyellow\\?\\: float, label\\?\\: string\\|false, loctested\\?\\: mixed, locuntested\\?\\: int, position\\?\\: int, coverages\\?\\: list\\<array\\{buildid\\: int, childlink\\?\\: non\\-falsy\\-string, percentage\\: float, locuntested\\: int, loctested\\: int, datefull\\: int\\|false, date\\: string, dateelapsed\\: string, \\.\\.\\.\\}\\|array\\{buildid\\: int, childlink\\?\\: non\\-falsy\\-string, percentage\\: float, locuntested\\: int, loctested\\: int, percentagediff\\: float, locuntesteddiff\\: int, loctesteddiff\\: int\\<1, max\\>, \\.\\.\\.\\}\\>\\}\\.$#"
+			message: "#^Offset 'loctested' might not exist on array\\{\\}\\|array\\{thresholdgreen\\?\\: int\\|null, thresholdyellow\\?\\: float, label\\?\\: string\\|false, loctested\\?\\: int, locuntested\\?\\: int, position\\?\\: int, coverages\\?\\: list\\<array\\{buildid\\: int, childlink\\?\\: non\\-falsy\\-string, percentage\\: float, locuntested\\: int, loctested\\: int, datefull\\: int\\|false, date\\: string, dateelapsed\\: string, \\.\\.\\.\\}\\|array\\{buildid\\: int, childlink\\?\\: non\\-falsy\\-string, percentage\\: float, locuntested\\: int, loctested\\: int, percentagediff\\: float, locuntesteddiff\\: int, loctesteddiff\\: int\\<1, max\\>, \\.\\.\\.\\}\\>\\}\\.$#"
+			count: 2
+			path: app/cdash/public/api/v1/index.php
+
+		-
+			message: "#^Offset 'locuntested' might not exist on array\\{thresholdgreen\\?\\: int\\|null, thresholdyellow\\?\\: float, label\\?\\: string\\|false, loctested\\: int, locuntested\\?\\: int, position\\?\\: int, coverages\\?\\: list\\<array\\{buildid\\: int, childlink\\?\\: non\\-falsy\\-string, percentage\\: float, locuntested\\: int, loctested\\: int, datefull\\: int\\|false, date\\: string, dateelapsed\\: string, \\.\\.\\.\\}\\|array\\{buildid\\: int, childlink\\?\\: non\\-falsy\\-string, percentage\\: float, locuntested\\: int, loctested\\: int, percentagediff\\: float, locuntesteddiff\\: int, loctesteddiff\\: int\\<1, max\\>, \\.\\.\\.\\}\\>\\}\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/index.php
 
 		-
-			message: "#^Offset 'locuntested' might not exist on array\\{thresholdgreen\\?\\: int\\|null, thresholdyellow\\?\\: float, label\\?\\: string\\|false, loctested\\: \\(float\\|int\\), locuntested\\?\\: int, position\\?\\: int, coverages\\?\\: list\\<array\\{buildid\\: int, childlink\\?\\: non\\-falsy\\-string, percentage\\: float, locuntested\\: int, loctested\\: int, datefull\\: int\\|false, date\\: string, dateelapsed\\: string, \\.\\.\\.\\}\\|array\\{buildid\\: int, childlink\\?\\: non\\-falsy\\-string, percentage\\: float, locuntested\\: int, loctested\\: int, percentagediff\\: float, locuntesteddiff\\: int, loctesteddiff\\: int\\<1, max\\>, \\.\\.\\.\\}\\>\\}\\.$#"
+			message: "#^Offset 'locuntested' might not exist on array\\{\\}\\|array\\{thresholdgreen\\?\\: int\\|null, thresholdyellow\\?\\: float, label\\?\\: string\\|false, loctested\\?\\: int, locuntested\\?\\: int, position\\?\\: int, coverages\\?\\: list\\<array\\{buildid\\: int, childlink\\?\\: non\\-falsy\\-string, percentage\\: float, locuntested\\: int, loctested\\: int, datefull\\: int\\|false, date\\: string, dateelapsed\\: string, \\.\\.\\.\\}\\|array\\{buildid\\: int, childlink\\?\\: non\\-falsy\\-string, percentage\\: float, locuntested\\: int, loctested\\: int, percentagediff\\: float, locuntesteddiff\\: int, loctesteddiff\\: int\\<1, max\\>, \\.\\.\\.\\}\\>\\}\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/index.php
 
 		-
-			message: "#^Offset 'locuntested' might not exist on array\\{\\}\\|array\\{thresholdgreen\\?\\: int\\|null, thresholdyellow\\?\\: float, label\\?\\: string\\|false, loctested\\?\\: mixed, locuntested\\?\\: int, position\\?\\: int, coverages\\?\\: list\\<array\\{buildid\\: int, childlink\\?\\: non\\-falsy\\-string, percentage\\: float, locuntested\\: int, loctested\\: int, datefull\\: int\\|false, date\\: string, dateelapsed\\: string, \\.\\.\\.\\}\\|array\\{buildid\\: int, childlink\\?\\: non\\-falsy\\-string, percentage\\: float, locuntested\\: int, loctested\\: int, percentagediff\\: float, locuntesteddiff\\: int, loctesteddiff\\: int\\<1, max\\>, \\.\\.\\.\\}\\>\\}\\.$#"
+			message: "#^Offset 'thresholdgreen' might not exist on array\\{\\}\\|array\\{thresholdgreen\\?\\: int\\|null, thresholdyellow\\?\\: float, label\\?\\: string\\|false, loctested\\?\\: int, locuntested\\?\\: int, position\\?\\: int, coverages\\?\\: list\\<array\\{buildid\\: int, childlink\\?\\: non\\-falsy\\-string, percentage\\: float, locuntested\\: int, loctested\\: int, datefull\\: int\\|false, date\\: string, dateelapsed\\: string, \\.\\.\\.\\}\\|array\\{buildid\\: int, childlink\\?\\: non\\-falsy\\-string, percentage\\: float, locuntested\\: int, loctested\\: int, percentagediff\\: float, locuntesteddiff\\: int, loctesteddiff\\: int\\<1, max\\>, \\.\\.\\.\\}\\>\\}\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/index.php
 
@@ -17917,7 +17922,7 @@ parameters:
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
-			message: "#^Only booleans are allowed in &&, array\\|float\\|int\\|string\\|false\\|null given on the left side\\.$#"
+			message: "#^Only booleans are allowed in &&, int\\|null given on the left side\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
@@ -17958,6 +17963,11 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 3
+			path: app/cdash/public/api/v1/manageOverview.php
+
+		-
+			message: "#^Magic constant __FUNCTION__ is always empty outside a function\\.$#"
+			count: 1
 			path: app/cdash/public/api/v1/manageOverview.php
 
 		-
@@ -30180,11 +30190,6 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
-			message: "#^Cannot access offset '' on 0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
 			message: "#^Class BuildHandler has an uninitialized property \\$BuildInformation\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/build_handler.php
@@ -30401,11 +30406,6 @@ parameters:
 
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot access an offset on array\\|float\\|int\\|string\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/configure_handler.php
 
@@ -30790,11 +30790,6 @@ parameters:
 			path: app/cdash/xml_handlers/coverage_log_handler.php
 
 		-
-			message: "#^Cannot access an offset on array\\|float\\|int\\|string\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/coverage_log_handler.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 4
 			path: app/cdash/xml_handlers/coverage_log_handler.php
@@ -31021,11 +31016,6 @@ parameters:
 
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access offset mixed on 0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
