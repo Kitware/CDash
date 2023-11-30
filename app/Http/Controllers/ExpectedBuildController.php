@@ -1,126 +1,108 @@
 <?php
 namespace App\Http\Controllers;
 
-use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
-use CDash\Model\Project;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
-final class ExpectedBuildController extends AbstractBuildController
+final class ExpectedBuildController extends AbstractProjectController
 {
-    public function apiResponse()
+    public function apiResponse(Request $request): JsonResponse
     {
-        // Check that required params were specified.
-        $rest_json = json_decode(file_get_contents('php://input'), true);
-        if (!is_null($rest_json)) {
-            $_REQUEST = array_merge($_REQUEST, $rest_json);
-        }
         $required_params = ['siteid', 'groupid', 'name', 'type'];
         foreach ($required_params as $param) {
-            if (!array_key_exists($param, $_REQUEST)) {
+            if (!$request->has($param)) {
                 abort(400, "$param not specified.");
             }
         }
-        $siteid = (int) $_REQUEST['siteid'];
-        $buildgroupid = (int) $_REQUEST['groupid'];
-        $buildname = htmlspecialchars(pdo_real_escape_string($_REQUEST['name']));
-        $buildtype = htmlspecialchars(pdo_real_escape_string($_REQUEST['type']));
+        $siteid = (int) $request->input('siteid');
+        $buildgroupid = (int) $request->input('groupid');
+        $buildname = htmlspecialchars($request->input('name'));
+        $buildtype = htmlspecialchars($request->input('type'));
 
         // Make sure the user has access to this project.
         $buildgroup = new BuildGroup();
         if (!$buildgroup->SetId($buildgroupid)) {
             abort(404, "Could not find project for buildgroup #$buildgroupid");
         }
-        $projectid = $buildgroup->GetProjectId();
-        if (!can_access_project($projectid)) {
-            return;
-        }
 
-        $method = $_SERVER['REQUEST_METHOD'];
+        $this->setProjectById($buildgroup->GetProjectId());
 
         // Make sure the user is an admin before proceeding with non-read-only methods.
-        if ($method != 'GET') {
-            if (!Auth::check()) {
-                abort(401, 'No session found.');
-            }
-
-            $project = new Project();
-            $project->Id = $projectid;
-            if (!Gate::allows('edit-project', $project)) {
-                abort(403, 'You do not have permission to access this page');
-            }
+        if (!$request->isMethod('GET') && !Gate::allows('edit-project', $this->project)) {
+            abort(403, 'You do not have permission to access this page');
         }
 
         // Route based on what type of request this is.
-        switch ($method) {
+        switch ($request->method()) {
             case 'DELETE':
                 self::rest_delete($siteid, $buildgroupid, $buildname, $buildtype);
                 break;
             case 'GET':
-                self::rest_get($siteid, $buildgroupid, $buildname, $buildtype, $projectid);
-                break;
+                return self::rest_get($request, $siteid, $buildname, $buildtype, $this->project->Id);
             case 'POST':
-                self::rest_post($siteid, $buildgroupid, $buildname, $buildtype);
+                self::rest_post($request, $siteid, $buildgroupid, $buildname, $buildtype);
                 break;
             default:
-                add_log("Unhandled method: $method", 'expectedBuildAPI', LOG_WARNING);
-                break;
+                abort(500, "Unhandled method: " . $request->method());
         }
+
+        return response()->json();
     }
 
-    private static function rest_get($siteid, $buildgroupid, $buildname, $buildtype, $projectid)
+    private static function rest_get(Request $request, int $siteid, string $buildname, string $buildtype, int $projectid): JsonResponse
     {
         $response = [];
 
-        if (!isset($_REQUEST['currenttime'])) {
+        if (!$request->has('currenttime')) {
             abort(400, '"currenttime" not specified in request.');
         }
-        $currenttime = (int) $_REQUEST['currenttime'];
+        $currenttime = (int) $request->input('currenttime');
         $currentUTCtime = gmdate(FMT_DATETIME, $currenttime);
 
         // Find the last time this expected build submitted.
-        $db = Database::getInstance();
-        $stmt = $db->prepare(
-            'SELECT starttime FROM build
-                WHERE siteid    = :siteid AND
-                      type      = :buildtype AND
-                      name      = :buildname AND
-                      projectid = :projectid AND
-                      starttime <= :starttime
-                ORDER BY starttime DESC LIMIT 1');
-        $query_params = [
-            ':siteid'    => $siteid,
-            ':buildtype' => $buildtype,
-            ':buildname' => $buildname,
-            ':projectid' => $projectid,
-            ':starttime' => $currentUTCtime,
-        ];
-        $db->execute($stmt, $query_params);
-        $lastBuildDate = $stmt->fetchColumn();
-        if ($lastBuildDate === false) {
+        $lastBuildDate = DB::select('
+            SELECT starttime
+            FROM build
+            WHERE
+                siteid = ?
+                AND type = ?
+                AND name = ?
+                AND projectid = ?
+                AND starttime <= ?
+            ORDER BY starttime DESC
+            LIMIT 1
+        ', [
+            $siteid,
+            $buildtype,
+            $buildname,
+            $projectid,
+            $currentUTCtime,
+        ])[0]->starttime ?? null;
+
+        if ($lastBuildDate === null) {
             $response['lastSubmission'] = -1;
-            echo json_encode($response);
-            return;
+            return response()->json($response);
         }
 
         $gmtime = strtotime($lastBuildDate . ' UTC');
         $response['lastSubmission'] = date('M j, Y ', $gmtime);
         $response['lastSubmissionDate'] = date('Y-m-d', $gmtime);
-        $response['daysSinceLastBuild'] =
-            round(($currenttime - strtotime($lastBuildDate)) / (3600 * 24));
+        $response['daysSinceLastBuild'] = round(($currenttime - strtotime($lastBuildDate)) / (3600 * 24));
 
-        echo json_encode(cast_data_for_JSON($response));
+        return response()->json(cast_data_for_JSON($response));
     }
 
-    private static function rest_post($siteid, $buildgroupid, $buildname, $buildtype): void
+    private static function rest_post(Request $request, int $siteid, int $buildgroupid, string $buildname, string $buildtype): void
     {
-        if (!array_key_exists('newgroupid', $_REQUEST)) {
+        if (!$request->has('newgroupid')) {
             abort(400, 'newgroupid not specified.');
         }
 
-        $newgroupid = htmlspecialchars(pdo_real_escape_string($_REQUEST['newgroupid']));
+        $newgroupid = htmlspecialchars($request->input('newgroupid'));
 
         $rule = new BuildGroupRule();
         $rule->SiteId = $siteid;
@@ -130,7 +112,7 @@ final class ExpectedBuildController extends AbstractBuildController
         $rule->ChangeGroup($newgroupid);
     }
 
-    private static function rest_delete($siteid, $buildgroupid, $buildname, $buildtype): void
+    private static function rest_delete(int $siteid, int $buildgroupid, string $buildname, string $buildtype): void
     {
         $rule = new BuildGroupRule();
         $rule->SiteId = $siteid;
