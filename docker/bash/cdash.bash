@@ -5,6 +5,7 @@ source "$BASH_LIB/debug.bash"
 source "$BASH_LIB/on_exit.bash"
 
 cdash_upgrade() {
+    cd /cdash && php artisan storage:mkdirs
     cd /cdash && php artisan migrate --force
 }
 
