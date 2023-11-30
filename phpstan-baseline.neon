@@ -5481,16 +5481,6 @@ parameters:
 			path: app/cdash/app/Middleware/OAuth2.php
 
 		-
-			message: "#^Call to an undefined method League\\\\OAuth2\\\\Client\\\\Provider\\\\ResourceOwnerInterface\\:\\:getFirstName\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Middleware/OAuth2/Google.php
-
-		-
-			message: "#^Call to an undefined method League\\\\OAuth2\\\\Client\\\\Provider\\\\ResourceOwnerInterface\\:\\:getLastName\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Middleware/OAuth2/Google.php
-
-		-
 			message: "#^Method CDash\\\\Middleware\\\\OAuth2\\\\OAuth2Interface\\:\\:getEmail\\(\\) return type with generic class Illuminate\\\\Support\\\\Collection does not specify its types\\: TKey, TValue$#"
 			count: 1
 			path: app/cdash/app/Middleware/OAuth2/OAuth2Interface.php
@@ -18215,16 +18205,6 @@ parameters:
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Call to an undefined method CDash\\\\Middleware\\\\OAuth2\\\\Google\\:\\:auth\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/public/auth/Google.php
-
-		-
-			message: "#^Class CDash\\\\Middleware\\\\OAuth2\\\\Google constructor invoked with 3 parameters, 0 required\\.$#"
-			count: 1
-			path: app/cdash/public/auth/Google.php
-
-		-
 			message: "#^Access to an undefined property GitHubWebhookTest\\:\\:\\$config\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Api/GitHubWebhookTest.php
@@ -20269,16 +20249,6 @@ parameters:
 			message: "#^Property UpdateErrorTopicTest\\:\\:\\$fixed_keys has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GoogleTest.php
-
-		-
-			message: "#^Method GoogleTest\\:\\:testGetProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GoogleTest.php
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEmpty\\(\\)\\.$#"
