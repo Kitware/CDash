@@ -32,6 +32,18 @@ return [
         'oauth' => true,
         'display_name' => "GitLab",
     ],
+
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'hosted_domain' => '*',
+        'redirect' => env('GOOGLE_REDIRECT_URI'),
+        'enable' => env('GOOGLE_ENABLE', false),
+        'autoregister' => env('GOOGLE_AUTO_REGISTER_NEW_USERS', false),
+        'oauth' => true,
+        'display_name' => "Google",
+    ],
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),
