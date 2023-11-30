@@ -18,7 +18,7 @@ namespace CDash\Api\v1\RelateBuilds;
 
 require_once 'include/api_common.php';
 
-use App\Utils\AuthTokenService;
+use App\Utils\AuthTokenUtil;
 use CDash\Model\Build;
 use CDash\Model\BuildRelationship;
 use CDash\Model\Project;
@@ -78,8 +78,8 @@ if ($request_method == 'POST') {
     // Check for valid authentication token if this project requires one.
     $project->Fill();
 
-    $token_hash = AuthTokenService::hashToken(AuthTokenService::getBearerToken());
-    if ($project->AuthenticateSubmissions && !AuthTokenService::checkToken($token_hash, $project->Id)) {
+    $token_hash = AuthTokenUtil::hashToken(AuthTokenUtil::getBearerToken());
+    if ($project->AuthenticateSubmissions && !AuthTokenUtil::checkToken($token_hash, $project->Id)) {
         return;
     }
 

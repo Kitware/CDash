@@ -2,7 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Utils\AuthTokenService;
+use App\Utils\AuthTokenUtil;
 use App\Utils\PageTimer;
 use App\Validators\Password;
 use CDash\Config;
@@ -89,7 +89,7 @@ final class UserController extends AbstractController
         }
         $response['projects'] = $projects_response;
 
-        $response['authtokens'] = AuthTokenService::getTokensForUser($userid);
+        $response['authtokens'] = AuthTokenUtil::getTokensForUser($userid);
         $response['allow_full_access_tokens'] = config('cdash.allow_full_access_tokens') === true;
         $response['allow_submit_only_tokens'] = config('cdash.allow_submit_only_tokens') === true;
 

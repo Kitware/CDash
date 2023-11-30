@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\ProcessSubmission;
-use App\Utils\AuthTokenService;
+use App\Utils\AuthTokenUtil;
 use CDash\Model\Project;
 
 use Illuminate\Console\Command;
@@ -88,7 +88,7 @@ class QueueSubmissions extends Command
                 return;
             }
             $len = $end - $begin;
-            if (!AuthTokenService::checkToken(substr($filename, $begin, $len), $project->Id)) {
+            if (!AuthTokenUtil::checkToken(substr($filename, $begin, $len), $project->Id)) {
                 \Storage::move("inbox/{$filename}", "failed/{$filename}");
                 echo "Invalid authentication token for $filename\n";
                 return;

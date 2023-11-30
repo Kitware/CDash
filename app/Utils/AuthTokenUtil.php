@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use RuntimeException;
 
-class AuthTokenService
+class AuthTokenUtil
 {
     /**
      * Contract: we assume that $user_id has already been validated and blindly create a token

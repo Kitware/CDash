@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ProcessSubmission;
 use App\Models\Site;
-use App\Utils\AuthTokenService;
+use App\Utils\AuthTokenUtil;
 use App\Utils\UnparsedSubmissionProcessor;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
@@ -75,8 +75,8 @@ final class SubmissionController extends AbstractProjectController
         }
 
         // Get auth token (if any).
-        $authtoken = AuthTokenService::getBearerToken();
-        $authtoken_hash = $authtoken === null || $authtoken === '' ? '' : AuthTokenService::hashToken($authtoken);
+        $authtoken = AuthTokenUtil::getBearerToken();
+        $authtoken_hash = $authtoken === null || $authtoken === '' ? '' : AuthTokenUtil::hashToken($authtoken);
 
         // Save the incoming file in the inbox directory.
         $filename = "{$projectname}_-_{$authtoken_hash}_-_" . Str::uuid()->toString() . "_-_{$expected_md5}.xml";
@@ -115,7 +115,7 @@ final class SubmissionController extends AbstractProjectController
         $this->project->CheckForTooManyBuilds();
 
         // Check for valid authentication token if this project requires one.
-        if ($this->project->AuthenticateSubmissions && !AuthTokenService::checkToken($authtoken_hash, $this->project->Id)) {
+        if ($this->project->AuthenticateSubmissions && !AuthTokenUtil::checkToken($authtoken_hash, $this->project->Id)) {
             Storage::delete("inbox/{$filename}");
             abort(Response::HTTP_FORBIDDEN, 'Invalid Token');
         } elseif (intval($this->project->Id) < 1) {

@@ -154,7 +154,7 @@ class UnparsedSubmissionProcessor
         $projectid = $project_row->id;
 
         // Check if this submission requires a valid authentication token.
-        if (($this->token || $project_row->authenticatesubmissions) && !AuthTokenService::checkToken($this->token, $projectid)) {
+        if (($this->token || $project_row->authenticatesubmissions) && !AuthTokenUtil::checkToken($this->token, $projectid)) {
             abort(Response::HTTP_FORBIDDEN, 'Forbidden');
         }
 
@@ -311,9 +311,9 @@ class UnparsedSubmissionProcessor
 
         // Check if this submission requires a valid authentication token.
         if ($this->project->AuthenticateSubmissions) {
-            $token = AuthTokenService::getBearerToken();
-            $authtoken_hash = AuthTokenService::hashToken($token);
-            if (!AuthTokenService::checkToken($authtoken_hash, $this->project->Id)) {
+            $token = AuthTokenUtil::getBearerToken();
+            $authtoken_hash = AuthTokenUtil::hashToken($token);
+            if (!AuthTokenUtil::checkToken($authtoken_hash, $this->project->Id)) {
                 Storage::delete($this->inboxdatafilename);
                 abort(Response::HTTP_FORBIDDEN, 'Forbidden');
             }
@@ -444,9 +444,9 @@ class UnparsedSubmissionProcessor
         if ($this->token) {
             return;
         }
-        $token = AuthTokenService::getBearerToken();
+        $token = AuthTokenUtil::getBearerToken();
         if ($token) {
-            $this->token = AuthTokenService::hashToken($token);
+            $this->token = AuthTokenUtil::hashToken($token);
         } else {
             $this->token = '';
         }
