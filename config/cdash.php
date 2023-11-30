@@ -30,13 +30,13 @@ return [
     'file' => [
         'path' => [
             'js' => [
-                'controllers' => "{$cdash}/public/js/controllers",
-                'version' => "{$cdash}/public/build/js/version.js",
+                'controllers' => base_path("public/js/controllers"),
+                'version' => base_path("public/build/js/version.js"),
             ],
             'custom' => [
-                'views' => "{$cdash}/public/local/views",
+                'views' => base_path("public/local/views"),
             ],
-            'public' => "{$cdash}/public",
+            'public' => base_path("public"),
         ],
     ],
     'login' => [
