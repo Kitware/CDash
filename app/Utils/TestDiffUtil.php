@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
  * It also sets `build2test::newstatus` = 1 as appropriate.
  **/
 
-class TestDiffService
+class TestDiffUtil
 {
     public static function computeDifferences(Build $build) : bool
     {
