@@ -398,7 +398,11 @@ export default {
         },
         pan: { interactive: true },
         zoom: { interactive: true, amount: 1.1 },
-        xaxis: { mode: "time" },
+        xaxis: {
+          mode: "time",
+          timeformat: "%Y/%m/%d %H:%M",
+          timeBase: "milliseconds",
+        },
         yaxis: {
           zoomRange: false,
           panRange: false

@@ -23,6 +23,8 @@
                 mode: "time",
                 min: {{ $t - 604800 }},
                 max: {{ $t + 100000 }},
+                timeformat: "%Y/%m/%d %H:%M",
+                timeBase: "milliseconds",
             },
             grid: {backgroundColor: "#fffaff"},
             selection: {mode: "x"},
