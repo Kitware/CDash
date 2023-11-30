@@ -12,7 +12,9 @@
     "watch-poll": "mix watch -- --watch-options-poll=1000",
     "hot": "mix watch --hot",
     "prod": "npm run production",
-    "production": "mix --production"
+    "production": "mix --production",
+    "eslint": "eslint \"**/*.js\" \"**/*.vue\"",
+    "eslint:fix": "eslint --fix \"**/*.js\" \"**/*.vue\""
   },
   "dependencies": {
     "angular": "^1.8.0",
@@ -29,7 +31,6 @@
     "del": "^6.1.1",
     "eslint": "^8.54.0",
     "eslint-plugin-vue": "^9.11.0",
-    "eslint-webpack-plugin": "^4.0.1",
     "flot": "^4.2.6",
     "git-revision-webpack-plugin": "^5.0.0",
     "jquery": "^3.7",

@@ -9,13 +9,13 @@
 <script>
 import ApiLoader from '../shared/ApiLoader';
 export default {
-  name: "HeaderLogo",
+  name: 'HeaderLogo',
 
   data () {
     return {
       logoUrl: `${this.$baseURL}/img/cdash.svg`,
       showNav: false,
-    }
+    };
   },
 
   mounted() {
@@ -25,5 +25,5 @@ export default {
       }
     });
   },
-}
+};
 </script>
