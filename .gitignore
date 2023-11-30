@@ -5,8 +5,6 @@
 3rdparty.min.js.map
 /app/cdash/backup/
 /app/cdash/log/
-/app/cdash/public/.htaccess
-/app/cdash/public/js/nv.d3.js.map
 /app/cdash/AuditReport.log
 _build/
 CDash_*.min.js*
@@ -39,7 +37,6 @@ public/main.js
 yarn-error.log
 
 # Files generated for Vue
-app/cdash/public/js/3rdparty.js
 public/laravel/
 public/mix-manifest.json
 _lighthouse_ide_helper.php
