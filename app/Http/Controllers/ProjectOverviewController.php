@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\PageTimer;
+use App\Utils\PageTimer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;

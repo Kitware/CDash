@@ -2,8 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Services\AuthTokenService;
-use App\Services\PageTimer;
+use App\Utils\AuthTokenService;
+use App\Utils\PageTimer;
 use App\Validators\Password;
 use CDash\Config;
 use CDash\Database;

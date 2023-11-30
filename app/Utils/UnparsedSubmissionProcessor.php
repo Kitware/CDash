@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-namespace App\Services;
+namespace App\Utils;
 
 use App\Jobs\ProcessSubmission;
 use CDash\Model\Build;

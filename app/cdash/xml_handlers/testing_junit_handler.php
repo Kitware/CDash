@@ -16,7 +16,7 @@
 
 require_once 'xml_handlers/abstract_handler.php';
 
-use App\Services\TestCreator;
+use App\Utils\TestCreator;
 
 use CDash\Model\Build;
 use App\Models\BuildInformation;

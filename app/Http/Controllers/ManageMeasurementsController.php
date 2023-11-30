@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Measurement;
 use App\Models\Project as EloquentProject;
-use App\Services\PageTimer;
+use App\Utils\PageTimer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
 

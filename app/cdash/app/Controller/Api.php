@@ -15,7 +15,7 @@
 =========================================================================*/
 namespace CDash\Controller;
 
-use App\Services\PageTimer;
+use App\Utils\PageTimer;
 use CDash\Database;
 
 /**

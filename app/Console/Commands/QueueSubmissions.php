@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\ProcessSubmission;
-use App\Services\AuthTokenService;
+use App\Utils\AuthTokenService;
 use CDash\Model\Project;
 
 use Illuminate\Console\Command;

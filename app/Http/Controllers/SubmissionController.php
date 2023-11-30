@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ProcessSubmission;
 use App\Models\Site;
-use App\Services\AuthTokenService;
-use App\Services\UnparsedSubmissionProcessor;
+use App\Utils\AuthTokenService;
+use App\Utils\UnparsedSubmissionProcessor;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;

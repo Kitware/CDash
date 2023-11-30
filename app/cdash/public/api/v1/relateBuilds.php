@@ -18,7 +18,7 @@ namespace CDash\Api\v1\RelateBuilds;
 
 require_once 'include/api_common.php';
 
-use App\Services\AuthTokenService;
+use App\Utils\AuthTokenService;
 use CDash\Model\Build;
 use CDash\Model\BuildRelationship;
 use CDash\Model\Project;

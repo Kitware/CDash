@@ -17,7 +17,7 @@
 namespace CDash\Api\v1\ManageBuildGroup;
 
 use App\Models\User;
-use App\Services\PageTimer;
+use App\Utils\PageTimer;
 use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;

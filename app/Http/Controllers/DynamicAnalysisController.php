@@ -1,8 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Services\PageTimer;
-use App\Services\TestingDay;
+use App\Utils\PageTimer;
+use App\Utils\TestingDay;
 use CDash\Model\DynamicAnalysis;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;

@@ -4,7 +4,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
 use App\Models\AuthToken;
-use App\Services\AuthTokenService;
+use App\Utils\AuthTokenService;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 use Illuminate\Support\Facades\DB;

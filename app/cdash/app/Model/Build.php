@@ -22,8 +22,8 @@ require_once 'include/repository.php';
 use App\Models\BuildTest;
 use App\Models\Site;
 use App\Models\Test;
-use App\Services\TestingDay;
-use App\Services\TestDiffService;
+use App\Utils\TestingDay;
+use App\Utils\TestDiffService;
 use App\Models\BuildInformation;
 
 use CDash\Collection\BuildEmailCollection;

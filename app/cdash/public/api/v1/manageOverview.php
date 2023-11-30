@@ -18,7 +18,7 @@ namespace CDash\Api\v1\ManageOverview;
 
 include_once 'include/api_common.php';
 
-use App\Services\PageTimer;
+use App\Utils\PageTimer;
 use CDash\Database;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Auth;
