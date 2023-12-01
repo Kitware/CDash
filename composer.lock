@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f1aff961c8afb5c01da1b356483e1890",
+    "content-hash": "29354d06428868ef74e96d542024e96a",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
-            "version": "2.2.0",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/24Slides/laravel-saml2.git",
-                "reference": "dbac551c654eb37a27903fb8c8e44bc73749cfa4"
+                "reference": "e96f4a27067efce984ffe26dfe1233d36ea5427d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/24Slides/laravel-saml2/zipball/dbac551c654eb37a27903fb8c8e44bc73749cfa4",
-                "reference": "dbac551c654eb37a27903fb8c8e44bc73749cfa4",
+                "url": "https://api.github.com/repos/24Slides/laravel-saml2/zipball/e96f4a27067efce984ffe26dfe1233d36ea5427d",
+                "reference": "e96f4a27067efce984ffe26dfe1233d36ea5427d",
                 "shasum": ""
             },
             "require": {
@@ -77,9 +77,9 @@
             ],
             "support": {
                 "issues": "https://github.com/24Slides/laravel-saml2/issues",
-                "source": "https://github.com/24Slides/laravel-saml2/tree/2.2.0"
+                "source": "https://github.com/24Slides/laravel-saml2/tree/2.3.0"
             },
-            "time": "2023-02-20T20:21:13+00:00"
+            "time": "2023-11-26T10:59:23+00:00"
         },
         {
             "name": "adldap2/adldap2",

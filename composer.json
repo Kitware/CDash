@@ -22,7 +22,7 @@
     "ext-xml": "*",
     "ext-xsl": "*",
     "ext-zlib": "*",
-    "24slides/laravel-saml2": "2.2.0",
+    "24slides/laravel-saml2": "2.3.0",
     "adldap2/adldap2-laravel": "6.1.7",
     "aws/aws-sdk-php": "3.283.17",
     "doctrine/dbal": "3.7.2",
