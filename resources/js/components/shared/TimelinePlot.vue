@@ -10,6 +10,27 @@ export default {
       required: true,
       default: () => { return null }
     },
+    title: {
+      type: String,
+      required: true,
+      default() {
+        return "Timeline Plot"
+      },
+    },
+    xLabel: {
+      type: String,
+      required: true,
+      default() {
+        return "Time"
+      },
+    },
+    yLabel: {
+      type: String,
+      required: true,
+      default() {
+        return "Value"
+      },
+    },
   },
   mounted() {
     this.plot_timeline_graph();
@@ -21,8 +42,7 @@ export default {
        * where each set is allowed to have a different number of data points.
        *
        * The expected input is of the form:
-       *   plotData = {
-       *   | data: [
+       *   plotData = [
        *   |   {
        *   |   | color: <line color>,  <--- d3 accepts most color formats (hex, rgb, etc.)
        *   |   | name: "<name to appear in legend>",
@@ -37,19 +57,18 @@ export default {
        *   |   },
        *   |   ...
        *   | ],
-       *   | labels: {
-       *   |   title: "<plot title>",
-       *   |   x_axis: "<x-axis label>",
-       *   |   y_axis: "<y-axis label>"
-       *   | }
-       *   }
+       *   },
+       *   title: "<plot title>",
+       *   xLabel: "<x-axis label>",
+       *   yLabel: "<y-axis label>"
        */
 
-      const input = this.plotData;
-      const data = input.data.map((d) => { return d['values'] });
-      const colors = input.data.map((d) => { return d.color });
-      const line_names = input.data.map((d) => { return d.name });
-      const labels = input.labels;
+      const data = this.plotData.map((d) => { return d['values'] });
+      const colors = this.plotData.map((d) => { return d.color });
+      const line_names = this.plotData.map((d) => { return d.name });
+      const title = this.title;
+      const xLabel = this.xLabel;
+      const yLabel = this.yLabel;
 
 
       // ################## INPUT DATA (temporary) ##################
@@ -66,7 +85,7 @@ export default {
 
       // ################## INITIALIZE PLOT ##################
       // create main svg object in which we draw the plot
-      let svg = d3.select("#timeline_plot")
+      const svg = d3.select("#timeline_plot")
         .append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
@@ -79,7 +98,7 @@ export default {
         .attr("x", width / 2)
         .attr("y", -margin.top/2)
         .attr("text-anchor", "middle")
-        .text(labels.title)
+        .text(title)
         .style("font-size", title_font_size+"px");;
 
 
@@ -94,12 +113,12 @@ export default {
       const x_min = d3.min(x_extents, (d) => { return d[0] });
       const x_max = d3.max(x_extents, (d) => { return d[1] });
       // create x scale that maps dates to width in pixels
-      let x = d3.time.scale()
+      const x = d3.time.scale()
         .domain([x_min, x_max])
         .range([0,width]);
 
       // plot x-axis
-      let xAxis = svg.append("g")
+      const xAxis = svg.append("g")
         .attr("class","x-axis")
         .attr("transform", `translate(0,${height})`)
         .call(d3.svg.axis().scale(x).orient("bottom"));
@@ -108,7 +127,7 @@ export default {
         .attr("x", width)
         .attr("y", -legend_font_size/2)
         .style("text-anchor", "end")
-        .text(labels.x_axis)
+        .text(xLabel)
         .style("font-size", legend_font_size+"px");
 
       // likewise, find extent of data on y-axis across all sets of points
@@ -118,11 +137,11 @@ export default {
       const y_min = d3.min(y_extents, (d) => { return d[0] });
       const y_max = d3.max(y_extents, (d) => { return d[1] });
       // create y scale that maps data values to height in pixels
-      let y = d3.scale.linear()
+      const y = d3.scale.linear()
         .domain([y_min, y_max])
         .range([height,0]);
       // plot y-axis
-      let yAxis = svg.append("g")
+      const yAxis = svg.append("g")
         .attr("class", "y-axis")
         .call(d3.svg.axis().scale(y).orient("left"));
       // add y label
@@ -131,7 +150,7 @@ export default {
         .attr("y", legend_font_size/2)
         .attr("dy", legend_font_size/2)
         .style("text-anchor", "end")
-        .text(labels.y_axis)
+        .text(yLabel)
         .style("font-size", legend_font_size+"px");
 
       // define useful getters for location of point in the plot (in pixels)
@@ -141,7 +160,7 @@ export default {
 
       // ################## ADD BRUSHING ##################
       // add a clipPath object to restrict object to render only inside the plot
-      let clip = svg.append("defs")
+      const clip = svg.append("defs")
         .append("svg:clipPath")
           .attr("id", "clip")
         .append("svg:rect")
@@ -151,7 +170,7 @@ export default {
           .attr("y", 0);
 
       // initialize the brush object
-      let brush = d3.svg.brush()
+      const brush = d3.svg.brush()
         .x(x) // 1D brush only acts on the x-axis
         .extent(x.domain()) // initialise the brush area
         .on("brush", () => {
@@ -200,9 +219,9 @@ export default {
       // zoom-in the plot using the coordinates of the brushed area
       function zoomOnSelection() {
         // get the boundaries of the selection
-        let extent = d3.select(".extent");
-        let coord1 = Number(extent.attr("x"));
-        let coord2 = coord1 + Number(extent.attr("width"));
+        const extent = d3.select(".extent");
+        const coord1 = Number(extent.attr("x"));
+        const coord2 = coord1 + Number(extent.attr("width"));
 
         if (coord2 - coord1 < 2) {
           return; // selection too small to be meaningfull (e.g. accidental mouse click)
@@ -217,7 +236,7 @@ export default {
 
       // ################## ADD TOOLTIP ##################
       // add div which serves as the tooltip
-      let tooltip = d3.select("#timeline_plot").append("div")
+      const tooltip = d3.select("#timeline_plot").append("div")
         .attr("class", "my_tooltip")
         .style("position", "absolute")
         .style("text-align", "left")
@@ -241,12 +260,20 @@ export default {
           let [x_val, y_val] = Object.values(d).map(String);
           // render the html div element with this point's data
           let content =
-            `<b>${line_names[k]}</b>: ${y_val}
-            <br/>
-            <b>${labels.x_axis}</b>: ${x_val}`;
+            `<span class=tooltip-row1>
+               <b></b>: <text></text>
+             </span>
+             <br/>
+             <span class=tooltip-row2>
+               <b></b>: <text></text>
+             </span>`;
           tooltip.html(content) // add slight offset for visiblity
             .style("left", (d3.event.pageX + 15)+"px")
             .style("top", (d3.event.pageY - 10)+"px");
+          tooltip.select(".tooltip-row1").select("b").text(line_names[k]);
+          tooltip.select(".tooltip-row1").select("text").text(y_val);
+          tooltip.select(".tooltip-row2").select("b").text(xLabel);
+          tooltip.select(".tooltip-row2").select("text").text(x_val);
         }
       }
 
@@ -258,8 +285,8 @@ export default {
 
 
       // ################## DRAW THE LINES ##################
-      let plot_lines = [];
-      let plot_points = [];
+      const plot_lines = [];
+      const plot_points = [];
       for (let i = 0; i < data.length; i += 1) {
         let current_color = colors[i];
 
@@ -308,7 +335,7 @@ export default {
       // calculate width of legend ahead of time so that it fits the text exactly
       // by creating a dummy element with the full texts and removing it immediately
       // TODO: this is not ideal, but text in SVG is difficult...
-      let textWidths = []
+      const textWidths = []
       svg.append('g')
         .selectAll('.getTextWidth')
         .data(line_names)
@@ -333,13 +360,13 @@ export default {
       const legendHeight = numKeys*legendRectSize + (numKeys+1)*legendSpacing;
 
       // create new SVG group to gather all objects associated with the legend
-      let legend = svg.append("g")
+      const legend = svg.append("g")
         .attr('class', 'legend')
         .attr("width", legendWidth)
         .attr("height", legendHeight)
         .attr("transform", `translate(${(width-legendWidth)},0)`);
       // add SVG rect object to serve as our legend border
-      let legend_box = legend.append("rect")
+      const legend_box = legend.append("rect")
         .attr("width", legendWidth)
         .attr("height", legendHeight)
         .attr("fill", "white")
@@ -360,7 +387,7 @@ export default {
       };
 
       // add rows to the legend for each dataset
-      let legend_items = legend.selectAll('.legend-item')
+      const legend_items = legend.selectAll('.legend-item')
         .data(line_names)
         .enter()
         .append('g')

@@ -95,7 +95,10 @@ final class MonitorController extends AbstractController
             'values' => [],
         ];
         foreach ($success_values as $key => $value) {
-            $success_trend['values'][] = [$key, $value];
+            $success_trend['values'][] = [
+                $key,
+                $value,
+            ];
         }
 
         $fail_trend = [
@@ -104,19 +107,23 @@ final class MonitorController extends AbstractController
             'values' => [],
         ];
         foreach ($fail_values as $key => $value) {
-            $fail_trend['values'][] = [$key, $value];
+            $fail_trend['values'][] = [
+                $key,
+                $value,
+            ];
         }
 
         return response()->json([
             'backlog_length' => $backlog_length,
             'backlog_time' => $backlog_time,
             'time_chart_data' => [
-                "data" => [$success_trend, $fail_trend],
-                "labels" => [
-                    "title" => "Submissions Parsed Over the Past {$num_hours} Hours",
-                    "x_axis" => "Date",
-                    "y_axis" => "# of Submissions",
+                "data" => [
+                    $success_trend,
+                    $fail_trend,
                 ],
+                "title" => "Submissions Parsed Over the Past {$num_hours} Hours",
+                "xLabel" => "Date",
+                "yLabel" => "# of Submissions",
             ],
             'log_directory' => config('logging.default') === 'stack' ? storage_path('logs') : '',
         ]);

@@ -10,7 +10,12 @@
       The oldest submission was created {{ cdash.backlog_time }}.
     </h4>
     <div v-if="plot_data" class="center-text">
-       <TimelinePlot :plot-data="plot_data"/>
+       <TimelinePlot
+         :plotData="plot_data"
+         :title="cdash.time_chart_data.title"
+         :xLabel="cdash.time_chart_data.xLabel"
+         :yLabel="cdash.time_chart_data.yLabel"
+       />
     </div>
     <br>
     <p>
@@ -50,24 +55,21 @@ export default {
 
   methods: {
     postSetup: function() {
-      const api_data = this.cdash.time_chart_data;
+      const api_data = this.cdash.time_chart_data.data;
 
       // perform data marshalling before sending data to plot template
-      let formatted_data = [];
-      for (let i = 0; i < api_data.data.length; i++) {
+      const formatted_data = [];
+      for (let i = 0; i < api_data.length; i++) {
         formatted_data[i] = {
-          color: api_data.data[i].color,
-          name: api_data.data[i].name,
-          values: api_data.data[i].values.map((d) => {
+          color: api_data[i].color,
+          name: api_data[i].name,
+          values: api_data[i].values.map((d) => {
             // converts UNIX epoch format from API to JS date object
             return { x: new Date(d[0]*1000), y: d[1] };
           })
         };
       }
-      this.plot_data = {
-        "labels": api_data.labels,
-        "data": formatted_data
-      };
+      this.plot_data = formatted_data;
     }
   },
 }
