@@ -1235,6 +1235,11 @@ parameters:
 			path: app/Http/Controllers/EditProjectController.php
 
 		-
+			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
+			count: 2
+			path: app/Http/Controllers/ExpectedBuildController.php
+
+		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 1
 			path: app/Http/Controllers/FilterController.php
@@ -17535,153 +17540,6 @@ parameters:
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/deleteSubmissionFile.php
-
-		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 3
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: """
-				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: """
-				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on PDOStatement\\|false\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_delete\\(\\) has parameter \\$buildgroupid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_delete\\(\\) has parameter \\$buildname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_delete\\(\\) has parameter \\$buildtype with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_delete\\(\\) has parameter \\$siteid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has parameter \\$buildgroupid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has parameter \\$buildname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has parameter \\$buildtype with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has parameter \\$siteid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has parameter \\$buildgroupid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has parameter \\$buildname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has parameter \\$buildtype with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has parameter \\$siteid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Parameter \\#1 \\$datetime of function strtotime expects string, int\\|string\\|null given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/expectedbuild.php
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
