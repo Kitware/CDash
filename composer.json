@@ -39,7 +39,7 @@
     "nyholm/psr7": "1.8.1",
     "omines/oauth2-gitlab": "3.6.0",
     "pear/archive_tar": "1.4.14",
-    "php-di/php-di": "7.0.5",
+    "php-di/php-di": "7.0.6",
     "ramsey/uuid": "4.7.5",
     "socialiteproviders/github": "4.1.0",
     "socialiteproviders/gitlab": "4.1.0",
