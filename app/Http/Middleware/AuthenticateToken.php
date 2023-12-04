@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\AuthTokenService;
+use App\Utils\AuthTokenUtil;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +19,7 @@ class AuthenticateToken
      */
     public function handle(Request $request, Closure $next)
     {
-        $user_id = AuthTokenService::getUserIdFromRequest();
+        $user_id = AuthTokenUtil::getUserIdFromRequest();
         if ($user_id !== null) {
             Auth::loginUsingId($user_id);
         }

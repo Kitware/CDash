@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-namespace App\Services;
+namespace App\Utils;
 
 /**
  * This class handles page load time calculations, reporting, and logging.

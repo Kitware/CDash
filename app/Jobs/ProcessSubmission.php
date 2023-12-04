@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Services\UnparsedSubmissionProcessor;
+use App\Utils\UnparsedSubmissionProcessor;
 use App\Models\SuccessfulJob;
 
 use BuildPropertiesJSONHandler;

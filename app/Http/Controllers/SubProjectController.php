@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Banner;
 use App\Models\User;
-use App\Services\PageTimer;
+use App\Utils\PageTimer;
 use CDash\Model\SubProject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Site;
 use App\Models\User;
-use App\Services\TestingDay;
+use App\Utils\TestingDay;
 use CDash\Database;
 use CDash\Model\Project;
 use Illuminate\Http\RedirectResponse;
