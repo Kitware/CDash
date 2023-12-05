@@ -56,6 +56,13 @@ add_test(
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
+# Run the JS linter
+add_test(
+  NAME eslint
+  COMMAND npm run eslint
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
 add_laravel_test(/Unit/app/ControllerNameTest)
 
 add_php_test(install)
@@ -93,8 +100,6 @@ add_unit_test(/CDash/Messaging/Topic/TestFailureTopic)
 add_unit_test(/CDash/Messaging/Topic/TopicDecorator)
 add_unit_test(/CDash/Messaging/Topic/UpdateErrorTopic)
 add_unit_test(/CDash/Middleware/OAuth2)
-add_unit_test(/CDash/Middleware/OAuth2/GitLab)
-add_unit_test(/CDash/Middleware/OAuth2/Google)
 add_unit_test(/CDash/Model/BuildError)
 add_unit_test(/CDash/Model/BuildErrorFilter)
 add_unit_test(/CDash/Model/BuildFailure)

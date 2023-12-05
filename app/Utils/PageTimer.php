@@ -14,18 +14,27 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\Config;
-use CDash\Controller\Auth\Session;
-use CDash\Middleware\OAuth2\GitLab;
-use CDash\Model\User;
-use CDash\ServiceContainer;
-use CDash\System;
+namespace App\Utils;
 
-$config = Config::getInstance();
-$service = ServiceContainer::getInstance();
-$session = $service->get(Session::class);
-$system = $service->get(System::class);
+/**
+ * This class handles page load time calculations, reporting, and logging.
+ **/
+class PageTimer
+{
+    protected float $start;
+    protected float $end;
+    protected float $duration;
 
-$user = $service->create(User::class);
-$provider = new GitLab($system, $session, $config);
-$provider->auth($user);
+    public function __construct()
+    {
+        $this->end = 0.0;
+        $this->start = LARAVEL_START;
+    }
+
+    public function end(&$response)
+    {
+        $this->end = microtime(true);
+        $this->duration = round($this->end - LARAVEL_START, 2);
+        $response['generationtime'] = $this->duration;
+    }
+}

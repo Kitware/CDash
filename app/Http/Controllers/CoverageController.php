@@ -2,8 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Services\PageTimer;
-use App\Services\TestingDay;
+use App\Utils\PageTimer;
+use App\Utils\TestingDay;
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;

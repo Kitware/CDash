@@ -4,7 +4,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
 use App\Models\AuthToken;
-use App\Services\AuthTokenService;
+use App\Utils\AuthTokenUtil;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 use Illuminate\Support\Facades\DB;
@@ -258,7 +258,7 @@ class AuthTokenTestCase extends KWWebTestCase
     public function testRemoveExpiredToken()
     {
         // Put an expired token in the database.
-        $result = AuthTokenService::generateToken(1, -1, AuthToken::SCOPE_FULL_ACCESS, "Test Token 1");
+        $result = AuthTokenUtil::generateToken(1, -1, AuthToken::SCOPE_FULL_ACCESS, "Test Token 1");
         $token = $result['raw_token'];
         $authtoken = $result['token'];
         $authtoken['expires'] = gmdate(FMT_DATETIME, 1);

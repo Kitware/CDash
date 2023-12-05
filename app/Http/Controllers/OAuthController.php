@@ -52,6 +52,7 @@ final class OAuthController extends AbstractController
                     Log::error("Error registering new user via $service: $email");
                     abort(500, "Error registering new user");
                 }
+                Auth::login($user, true);
             } else {
                 $parameters = compact('fname', "lname", 'email');
                 $to = route('register', $parameters);

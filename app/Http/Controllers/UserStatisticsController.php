@@ -2,7 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Services\PageTimer;
+use App\Utils\PageTimer;
 use Illuminate\Http\JsonResponse;
 
 final class UserStatisticsController extends AbstractProjectController

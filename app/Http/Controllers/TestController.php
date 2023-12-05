@@ -2,7 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BuildTest;
-use App\Services\PageTimer;
+use App\Utils\PageTimer;
 use CDash\Database;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;

@@ -1,5 +1,0 @@
-User-agent: *
-Disallow: /local
-Disallow: /backup
-Disallow: /tests
-Disallow: /sql

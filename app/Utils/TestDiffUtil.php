@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services;
+namespace App\Utils;
 
 use App\Enums\TestDiffType;
 use App\Models\TestDiff;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
  * It also sets `build2test::newstatus` = 1 as appropriate.
  **/
 
-class TestDiffService
+class TestDiffUtil
 {
     public static function computeDifferences(Build $build) : bool
     {

@@ -14,7 +14,7 @@
  * =========================================================================
  */
 
-use App\Services\TestingDay;
+use App\Utils\TestingDay;
 
 use CDash\Model\Project;
 use Tests\TestCase;

@@ -16,7 +16,7 @@
 
 namespace CDash\Api\v1\SubProject;
 
-use App\Services\PageTimer;
+use App\Utils\PageTimer;
 
 use CDash\Database;
 use CDash\Model\Project;
