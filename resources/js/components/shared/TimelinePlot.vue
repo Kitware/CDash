@@ -1,9 +1,36 @@
 <template>
-  <div id="timeline_plot"></div>
+  <div ref="divRef"></div>
 </template>
 <script>
+import {ref, onMounted } from 'vue';
 export default {
   name: "TimelinePlot",
+  /*
+   * This template generates a line plot for a group of time-series datasets,
+   * where each set is allowed to have a different number of data points.
+   *
+   * The expected input is of the form:
+   *   plotData: [
+   *   |   {
+   *   |   | color: <line color>,  <--- d3 accepts most color formats (hex, rgb, etc.)
+   *   |   | name: "<name to appear in legend>",
+   *   |   | values: [
+   *   |   |   {
+   *   |   |   | x: <Date object>,
+   *   |   |   | y: <numeric>,
+   *   |   |   | url: "<url>"      <--- optional, renders clickable points if provided
+   *   |   |   },
+   *   |   |   ...
+   *   |   | ],
+   *   |   },
+   *   |   ...
+   *   | ],
+   *   },
+   *   title: "<plot title>",
+   *   xLabel: "<x-axis label>",
+   *   yLabel: "<y-axis label>"
+   */
+
   props: {
     plotData: {
       type: Object,
@@ -32,37 +59,23 @@ export default {
       },
     },
   },
-  mounted() {
-    this.plot_timeline_graph();
+
+  setup () {
+    // initialize ref to div element in which to render the plot
+    const divRef = ref();
+    onMounted(() => {
+      divRef.value
+    });
   },
+
+  mounted () {
+      this.plot_timeline_graph();
+  },
+
   methods: {
     plot_timeline_graph() {
-      /*
-       * This template generates a line plot for a group of time-series datasets,
-       * where each set is allowed to have a different number of data points.
-       *
-       * The expected input is of the form:
-       *   plotData = [
-       *   |   {
-       *   |   | color: <line color>,  <--- d3 accepts most color formats (hex, rgb, etc.)
-       *   |   | name: "<name to appear in legend>",
-       *   |   | values: [
-       *   |   |   {
-       *   |   |   | x: <Date object>,
-       *   |   |   | y: <numeric>,
-       *   |   |   | url: "<url>"      <--- optional, render clickable points if provided
-       *   |   |   },
-       *   |   |   ...
-       *   |   | ],
-       *   |   },
-       *   |   ...
-       *   | ],
-       *   },
-       *   title: "<plot title>",
-       *   xLabel: "<x-axis label>",
-       *   yLabel: "<y-axis label>"
-       */
 
+      const plot_div = this.$refs.divRef;
       const data = this.plotData.map((d) => { return d['values'] });
       const colors = this.plotData.map((d) => { return d.color });
       const line_names = this.plotData.map((d) => { return d.name });
@@ -85,7 +98,7 @@ export default {
 
       // ################## INITIALIZE PLOT ##################
       // create main svg object in which we draw the plot
-      const svg = d3.select("#timeline_plot")
+      const svg = d3.select(plot_div)
         .append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
@@ -231,12 +244,12 @@ export default {
       }
 
       // on double-click, reinitialize the chart to original zoom level
-      d3.select("#timeline_plot").on("dblclick", updateChart(x_min, x_max, 200))
+      d3.select(plot_div).on("dblclick", updateChart(x_min, x_max, 200))
 
 
       // ################## ADD TOOLTIP ##################
       // add div which serves as the tooltip
-      const tooltip = d3.select("#timeline_plot").append("div")
+      const tooltip = d3.select(plot_div).append("div")
         .attr("class", "my_tooltip")
         .style("position", "absolute")
         .style("text-align", "left")

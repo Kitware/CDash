@@ -9,7 +9,7 @@
     <h4 v-if="cdash.backlog_length > 0">
       The oldest submission was created {{ cdash.backlog_time }}.
     </h4>
-    <div v-if="plot_data" class="center-text">
+    <div v-if="plot_data && cdash.time_chart_data" class="center-text">
        <TimelinePlot
          :plotData="plot_data"
          :title="cdash.time_chart_data.title"
@@ -46,6 +46,7 @@ export default {
       cdash: {},
       loading: true,
       errored: false,
+      plot_data: {},
     }
   },
 
