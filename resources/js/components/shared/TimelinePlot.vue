@@ -1,5 +1,15 @@
 <template>
-  <div ref="divRef"></div>
+  <div ref="divRef">
+    <div class="timeline-tooltip">
+      <span>
+        <b ref="tooltipRow1Axis"></b>: <text ref="tooltipRow1Value"></text>
+      </span>
+      <br/>
+      <span>
+        <b ref="tooltipRow2Axis"></b>: <text ref="tooltipRow2Value"></text>
+      </span>
+    </div>
+  </div>
 </template>
 <script>
 import {ref, onMounted } from 'vue';
@@ -61,10 +71,18 @@ export default {
   },
 
   setup () {
-    // initialize ref to div element in which to render the plot
-    const divRef = ref();
+    // initialize refs
+    const divRef = ref(); // div element in which to render the plot
+    const tooltipRow1Axis = ref();
+    const tooltipRow1Value = ref();
+    const tooltipRow2Axis = ref();
+    const tooltipRow2Value = ref();
     onMounted(() => {
-      divRef.value
+      divRef.value;
+      tooltipRow1Axis.value;
+      tooltipRow1Value.value;
+      tooltipRow2Axis.value;
+      tooltipRow2Value.value;
     });
   },
 
@@ -82,6 +100,10 @@ export default {
       const title = this.title;
       const xLabel = this.xLabel;
       const yLabel = this.yLabel;
+      const tooltipRow1Axis = this.$refs.tooltipRow1Axis;
+      const tooltipRow1Value = this.$refs.tooltipRow1Value;
+      const tooltipRow2Axis = this.$refs.tooltipRow2Axis;
+      const tooltipRow2Value = this.$refs.tooltipRow2Value;
 
 
       // ################## INPUT DATA (temporary) ##################
@@ -248,17 +270,8 @@ export default {
 
 
       // ################## ADD TOOLTIP ##################
-      // add div which serves as the tooltip
-      const tooltip = d3.select(plot_div).append("div")
-        .attr("class", "my_tooltip")
-        .style("position", "absolute")
-        .style("text-align", "left")
-        .style("opacity", "0")
-        .style("background-color", "white")
-        .style("border", "solid")
-        .style("border-width", "1px")
-        .style("border-radius", "3px")
-        .style("padding", "5px");
+      // select div which serves as the tooltip and define functions to update it
+      const tooltip = d3.select("div .timeline-tooltip");
 
       // make tooltip visible when user hovers on a point
       function showTooltip(d,i) {
@@ -271,22 +284,14 @@ export default {
         return function(d,i) {
           // get x,y coordinates from the circle the user is hovering on
           let [x_val, y_val] = Object.values(d).map(String);
-          // render the html div element with this point's data
-          let content =
-            `<span class=tooltip-row1>
-               <b></b>: <text></text>
-             </span>
-             <br/>
-             <span class=tooltip-row2>
-               <b></b>: <text></text>
-             </span>`;
-          tooltip.html(content) // add slight offset for visiblity
+          // render the tooltip div element with this point's data
+          tooltip // add slight offset for visiblity
             .style("left", (d3.event.pageX + 15)+"px")
             .style("top", (d3.event.pageY - 10)+"px");
-          tooltip.select(".tooltip-row1").select("b").text(line_names[k]);
-          tooltip.select(".tooltip-row1").select("text").text(y_val);
-          tooltip.select(".tooltip-row2").select("b").text(xLabel);
-          tooltip.select(".tooltip-row2").select("text").text(x_val);
+          d3.select(tooltipRow1Axis).text(line_names[k]);
+          d3.select(tooltipRow1Value).text(y_val);
+          d3.select(tooltipRow2Axis).text(xLabel);
+          d3.select(tooltipRow2Value).text(x_val);
         }
       }
 
@@ -431,3 +436,15 @@ export default {
   }
 }
 </script>
+<style scoped>
+div .timeline-tooltip {
+  position: absolute;
+  text-align: left;
+  opacity: 0;
+  background-color: white;
+  border: solid;
+  border-width: 1px;
+  border-radius: 3px;
+  padding: 5px;
+}
+</style>

@@ -11,10 +11,10 @@
     </h4>
     <div v-if="plot_data && cdash.time_chart_data" class="center-text">
        <TimelinePlot
-         :plotData="plot_data"
+         :plot-data="plot_data"
          :title="cdash.time_chart_data.title"
-         :xLabel="cdash.time_chart_data.xLabel"
-         :yLabel="cdash.time_chart_data.yLabel"
+         :x-label="cdash.time_chart_data.xLabel"
+         :y-label="cdash.time_chart_data.yLabel"
        />
     </div>
     <br>
@@ -56,20 +56,19 @@ export default {
 
   methods: {
     postSetup: function() {
-      const api_data = this.cdash.time_chart_data.data;
 
       // perform data marshalling before sending data to plot template
       const formatted_data = [];
-      for (let i = 0; i < api_data.length; i++) {
-        formatted_data[i] = {
-          color: api_data[i].color,
-          name: api_data[i].name,
-          values: api_data[i].values.map((d) => {
+      this.cdash.time_chart_data.data.forEach((line) => {
+        formatted_data.push({
+          color: line.color,
+          name: line.name,
+          values: line.values.map((d) => {
             // converts UNIX epoch format from API to JS date object
             return { x: new Date(d[0]*1000), y: d[1] };
           })
-        };
-      }
+        })
+      });
       this.plot_data = formatted_data;
     }
   },
