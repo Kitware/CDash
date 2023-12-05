@@ -105,30 +105,40 @@ class Monitor extends TestCase
         ]);
         $response_json = $response->json();
         $this::assertTrue(array_key_exists('time_chart_data', $response_json));
-        $this::assertEquals($response_json['time_chart_data'][0]['key'], 'success');
-        $this::assertEquals($response_json['time_chart_data'][0]['color'], ClassicPalette::Success->value);
-        $success_values = $response_json['time_chart_data'][0]['values'];
-        $last_success_value = $success_values[array_key_last($success_values)][1];
-        $this::assertEquals($last_success_value, 1);
+        $this::assertTrue(array_key_exists('data', $response_json['time_chart_data']));
+        $this::assertTrue(array_key_exists('title', $response_json['time_chart_data']));
+        $this::assertTrue(array_key_exists('xLabel', $response_json['time_chart_data']));
+        $this::assertTrue(array_key_exists('yLabel', $response_json['time_chart_data']));
 
-        $this::assertEquals($response_json['time_chart_data'][1]['key'], 'fail');
-        $this::assertEquals($response_json['time_chart_data'][1]['color'], ClassicPalette::Failure->value);
-        $fail_values = $response_json['time_chart_data'][1]['values'];
-        $last_fail_value = $fail_values[array_key_last($fail_values)][1];
-        $this::assertEquals($last_fail_value, 1);
+        $data = $response_json['time_chart_data']['data'];
+        $this::assertEquals(2, count($data));
+
+        $this::assertTrue(array_key_exists('name', $data[0]));
+        $this::assertTrue(array_key_exists('color', $data[0]));
+        $this::assertTrue(array_key_exists('values', $data[0]));
+        $this::assertEquals('Success', $data[0]['name']);
+        $this::assertEquals(ClassicPalette::Success->value, $data[0]['color']);
+        $this::assertEquals(1, end($data[0]['values'])[1]);
+
+        $this::assertTrue(array_key_exists('name', $data[1]));
+        $this::assertTrue(array_key_exists('color', $data[1]));
+        $this::assertTrue(array_key_exists('values', $data[1]));
+        $this::assertEquals('Fail', $data[1]['name']);
+        $this::assertEquals(ClassicPalette::Failure->value, $data[1]['color']);
+        $this::assertEquals(1, end($data[1]['values'])[1]);
 
         // Verify that we use the classic palette when explicitly requested.
         $_COOKIE['colorblind'] = 0;
         $response = $this->actingAs($this->admin_user)->getJson('/api/monitor');
-        $response_json = $response->json();
-        $this::assertEquals($response_json['time_chart_data'][0]['color'], ClassicPalette::Success->value);
-        $this::assertEquals($response_json['time_chart_data'][1]['color'], ClassicPalette::Failure->value);
+        $data = $response->json()['time_chart_data']['data'];
+        $this::assertEquals(ClassicPalette::Success->value, $data[0]['color']);
+        $this::assertEquals(ClassicPalette::Failure->value, $data[1]['color']);
 
         // Verify that we use the high contrast palette when requested.
         $_COOKIE['colorblind'] = 1;
         $response = $this->actingAs($this->admin_user)->getJson('/api/monitor');
-        $response_json = $response->json();
-        $this::assertEquals($response_json['time_chart_data'][0]['color'], HighContrastPalette::Success->value);
-        $this::assertEquals($response_json['time_chart_data'][1]['color'], HighContrastPalette::Failure->value);
+        $data = $response->json()['time_chart_data']['data'];
+        $this::assertEquals(HighContrastPalette::Success->value, $data[0]['color']);
+        $this::assertEquals(HighContrastPalette::Failure->value, $data[1]['color']);
     }
 }
