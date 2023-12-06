@@ -29,7 +29,7 @@ class BuildRelationshipTest extends CDashTestCase
 
         $this->mock_build1 = $this->getMockBuilder(Build::class)
             ->disableOriginalConstructor()
-            ->setMethods(['Exists', 'FillFromId'])
+            ->onlyMethods(['Exists', 'FillFromId'])
             ->getMock();
         $this->mock_build1->Id = 1;
         $this->mock_build1->ProjectId = 1;
@@ -37,7 +37,7 @@ class BuildRelationshipTest extends CDashTestCase
 
         $this->mock_build2 = $this->getMockBuilder(Build::class)
             ->disableOriginalConstructor()
-            ->setMethods(['Exists', 'FillFromId'])
+            ->onlyMethods(['Exists', 'FillFromId'])
             ->getMock();
         $this->mock_build2->Id = 2;
         $this->mock_build2->ProjectId = 1;

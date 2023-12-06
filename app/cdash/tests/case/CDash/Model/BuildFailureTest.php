@@ -24,7 +24,7 @@ class BuildFailureTest extends CDashTestCase
         $container = ServiceContainer::container();
         $this->mock_buildfailure = $this->getMockBuilder(BuildFailure::class)
             ->disableOriginalConstructor()
-            ->setMethods(['GetBuildFailureArguments'])
+            ->onlyMethods(['GetBuildFailureArguments'])
             ->getMock();
         $this->mock_project = $this->getMockBuilder(Project::class)
             ->disableOriginalConstructor()

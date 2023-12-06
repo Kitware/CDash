@@ -37,7 +37,7 @@ class UpdateHandlerTest extends CDashTestCase
     public function testGetCommitAuthors()
     {
         $build = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetCommitAuthors'])
+            ->onlyMethods(['GetCommitAuthors'])
             ->disableOriginalConstructor()
             ->getMock();
 

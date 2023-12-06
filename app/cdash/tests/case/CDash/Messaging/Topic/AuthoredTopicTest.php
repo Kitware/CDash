@@ -37,9 +37,9 @@ class AuthoredTopicTest extends \CDash\Test\CDashTestCase
             ->method('subscribesToBuild')
             ->willReturn(true);
 
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build */
+        /** @var Build&PHPUnit_Framework_MockObject_MockObject $build */
         $build = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetCommitAuthors'])
+            ->onlyMethods(['GetCommitAuthors'])
             ->getMock();
 
         $build->expects($this->exactly(2))

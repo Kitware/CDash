@@ -79,12 +79,12 @@ class CDashTestCase extends TestCase
 
         $mock_stmt = $this->getMockBuilder(\PDOStatement::class)
             ->disableOriginalConstructor()
-            ->setMethods([
+            ->onlyMethods([
                 'prepare', 'fetch', 'fetchAll', 'fetchColumn', 'bindParam', 'bindValue', 'rowCount', 'closeCursor'])
             ->getMock();
 
         $mock_pdo = $this->getMockBuilder(Database::class)
-            ->setMethods(
+            ->onlyMethods(
                 ['getPdo', 'prepare', 'execute', 'query', 'beginTransaction', 'commit', 'rollBack', 'quote']
             )
             ->getMock();
@@ -107,10 +107,9 @@ class CDashTestCase extends TestCase
         $mock_pdo
             ->expects($this->any())
             ->method('quote')
-            ->will($this->returnCallback(function ($arg) {
+            ->willReturnCallback(function ($arg) {
                 return "'" . $arg . "'";
-            })
-            );
+            });
 
         Database::setInstance(Database::class, $mock_pdo);
     }
@@ -218,7 +217,7 @@ class CDashTestCase extends TestCase
     {
         return $this->getMockBuilder('\ActionableBuildInterface')
             ->disableOriginalConstructor()
-            ->setMethods(['getActionableBuilds', 'getType', 'getProjectId', 'getBuildGroupId'])
+            ->onlyMethods(['getActionableBuilds', 'getType', 'getProjectId', 'getBuildGroupId'])
             ->getMock();
     }
 

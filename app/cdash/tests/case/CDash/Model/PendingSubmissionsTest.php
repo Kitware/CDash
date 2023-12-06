@@ -29,7 +29,7 @@ class PendingSubmissionsTest extends CDashTestCase
 
         $this->mock_build = $this->getMockBuilder(Build::class)
             ->disableOriginalConstructor()
-            ->setMethods(['Exists', 'FillFromId'])
+            ->onlyMethods(['Exists', 'FillFromId'])
             ->getMock();
         $this->mock_build->Id = 1;
         $this->mock_build->ProjectId = 1;

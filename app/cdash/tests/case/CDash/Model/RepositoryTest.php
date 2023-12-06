@@ -30,7 +30,7 @@ class RepositoryTest extends TestCase
 
         $this->project = $this->getMockBuilder(Project::class)
             ->disableOriginalConstructor()
-            ->setMethods(['GetRepositories'])
+            ->onlyMethods(['GetRepositories'])
             ->getMock();
 
         $this->project->CvsViewerType = Repository::VIEWER_GITHUB;

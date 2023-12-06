@@ -280,7 +280,7 @@ class GitHubTest extends TestCase
 
         $statuses = $this->getMockBuilder(\Github\Api\Apps::class)
             ->disableOriginalConstructor()
-            ->setMethods(['create'])
+            ->onlyMethods(['create'])
             ->getMock();
         $statuses->expects($this->any())
             ->method('create')
@@ -288,7 +288,7 @@ class GitHubTest extends TestCase
 
         $api = $this->getMockBuilder(\Github\Api\Apps::class)
             ->disableOriginalConstructor()
-            ->setMethods(['createInstallationToken', 'statuses'])
+            ->onlyMethods(['createInstallationToken', 'statuses'])
             ->getMock();
         $api->expects($this->any())
             ->method('createInstallationToken');
@@ -298,7 +298,7 @@ class GitHubTest extends TestCase
 
         $client = $this->getMockBuilder(\Github\Client::class)
             ->disableOriginalConstructor()
-            ->setMethods(['api', 'authenticate', 'getHttpClient'])
+            ->onlyMethods(['api', 'authenticate', 'getHttpClient'])
             ->getMock();
         $client->expects($this->any())
             ->method('authenticate');
@@ -319,7 +319,7 @@ class GitHubTest extends TestCase
         $sut = $this->setupAuthentication();
         $check = $this->getMockBuilder(\CDash\Lib\Repository\Check::class)
             ->disableOriginalConstructor()
-            ->setMethods(['create'])
+            ->onlyMethods(['create'])
             ->getMock();
         $sut->setCheck($check);
         $sut->createCheck(str_replace('-', '', Uuid::uuid4()->toString()));
