@@ -918,8 +918,8 @@ final class CoverageController extends AbstractBuildController
         $SQLsearchTerm = '';
         $SQLsearchTermParams = [];
         if (isset($_GET['sSearch']) && $_GET['sSearch'] != '') {
-            $SQLsearchTerm = " AND cf.fullpath LIKE CONCAT('%', ?, '%')";
-            $SQLsearchTermParams[] = htmlspecialchars($_GET['sSearch']);
+            $SQLsearchTerm = " AND cf.fullpath LIKE ?";
+            $SQLsearchTermParams[] = '%' . htmlspecialchars($_GET['sSearch']) . '%';
         }
 
         $SQLDisplayAuthors = '';
