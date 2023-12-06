@@ -13,19 +13,10 @@
 =========================================================================*/
 namespace CDash\Test;
 
-use App\Models\Test;
-use App\Models\User;
-
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
-use CDash\Model\BuildGroup;
-use CDash\Model\Project;
-use App\Models\Site;
-use CDash\Model\UserProject;
 use CDash\ServiceContainer;
-use DI\Container;
-use DI\ContainerBuilder;
 
 use Tests\TestCase;
 
@@ -34,20 +25,16 @@ require_once 'include/common.php';
 class CDashTestCase extends TestCase
 {
     protected $mockPDO;
-    private $queries;
 
     /** @var  Database $originalDatabase*/
     private $originalDatabase;
-
-    /** @var Container $originalServiceContainer */
-    private static $originalServiceContainer;
 
     /** @var String $endpoint */
     private $endpoint;
 
     public static function tearDownAfterClass() : void
     {
-        ServiceContainer::setInstance(ServiceContainer::class, self::$originalServiceContainer);
+        ServiceContainer::setInstance(ServiceContainer::class, null);
         parent::tearDownAfterClass();
     }
 
@@ -59,18 +46,6 @@ class CDashTestCase extends TestCase
             Database::setInstance(Database::class, $this->originalDatabase);
         }
         parent::tearDown();
-    }
-
-    protected function createServiceContainerForTesting()
-    {
-        $service = ServiceContainer::getInstance();
-        self::$originalServiceContainer = $service->getContainer();
-
-        $builder = new ContainerBuilder();
-        $builder->useAutowiring(false);
-        $builder->useAttributes(false);
-        $container = $builder->build();
-        $service->setContainer($container);
     }
 
     protected function setDatabaseMocked()
@@ -115,60 +90,6 @@ class CDashTestCase extends TestCase
         Database::setInstance(Database::class, $mock_pdo);
     }
 
-    protected function getMockStmt()
-    {
-        return $this->getMockBuilder('PDOStatement')
-            ->disableOriginalConstructor()
-            ->getMock();
-    }
-
-    public function prepare($query)
-    {
-        $stmt = $this->getMockStmt();
-        $execute = false;
-        $hash = $this->hashQuery($query);
-        if (isset($this->queries[$hash])) {
-            $execute = true;
-
-            $records = $this->queries[$hash];
-
-            $stmt
-                ->expects($this->any())
-                ->method('fetchAll')
-                ->willReturn($records);
-
-            $stmt
-                ->expects($this->any())
-                ->method('fetch')
-                ->willReturn($records);
-
-            $stmt
-                ->expects($this->any())
-                ->method('fetchColumn')
-                ->willReturn($records);
-        }
-
-        $stmt
-            ->expects($this->any())
-            ->method('execute')
-            ->willReturn($execute);
-
-        return $stmt;
-    }
-
-    public function mockFetchCall($query, $records)
-    {
-        $hash = $this->hashQuery($query);
-
-        $this->queries[$hash] = $records;
-    }
-
-    private function hashQuery($query)
-    {
-        $hash = preg_replace('/\s+/', ' ', $query);
-        return md5($hash);
-    }
-
     protected function createMockFromBuilder($className)
     {
         return $this->getMockBuilder($className)
@@ -182,44 +103,6 @@ class CDashTestCase extends TestCase
     protected function getMockBuild()
     {
         return $this->createMockFromBuilder(Build::class);
-    }
-
-    protected function getMockTest()
-    {
-        return $this->createMockFromBuilder(Test::class);
-    }
-
-    protected function getMockProject()
-    {
-        return $this->createMockFromBuilder(Project::class);
-    }
-
-    protected function getMockUser()
-    {
-        return $this->createMockFromBuilder(User::class);
-    }
-
-    protected function getMockUserProject()
-    {
-        return $this->createMockFromBuilder(UserProject::class);
-    }
-
-    protected function getMockBuildGroup()
-    {
-        return $this->createMockFromBuilder(BuildGroup::class);
-    }
-
-    protected function getMockSite()
-    {
-        return $this->createMockFromBuilder(Site::class);
-    }
-
-    protected function getMockActionableBuild()
-    {
-        return $this->getMockBuilder('\ActionableBuildInterface')
-            ->disableOriginalConstructor()
-            ->setMethods(['getActionableBuilds', 'getType', 'getProjectId', 'getBuildGroupId'])
-            ->getMock();
     }
 
     protected function setEndpoint($endpoint)

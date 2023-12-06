@@ -40,7 +40,6 @@ class BuildUseCaseTest extends CDashUseCaseTestCase
           ->createBuildFailureWarning('MyExperimentalFeature')
           ->createBuildFailureWarning('MyProductionCode');
 
-        /** @var ActionableBuildInterface $handler */
         $handler = $sut->build();
         $this->assertInstanceOf(BuildHandler::class, $handler);
 

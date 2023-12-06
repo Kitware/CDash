@@ -16,7 +16,7 @@ class UpdateUseCase extends UseCase
         $this->generator = 'ctest-2.8.4.20110707-g0eecf';
     }
 
-    public function build()
+    public function build(): \AbstractHandler
     {
         $prop = $this->properties[self::UPDATE];
 
@@ -81,11 +81,14 @@ class UpdateUseCase extends UseCase
         $status->appendChild(new \DOMText($text));
 
         $xml_str = $xml->saveXML($xml);
+        if ($xml_str === false) {
+            throw new \Exception('Invalid XML.');
+        }
         $handler = new \UpdateHandler($this->projectId);
         return $this->getXmlHandler($handler, $xml_str);
     }
 
-    protected function createDirectoryElement(\DOMElement $root, array $directories)
+    protected function createDirectoryElement(\DOMElement $root, array $directories): void
     {
         foreach ($directories as $dir => $packages) {
             $directory = $root->appendChild(new \DOMElement('Directory'));
@@ -150,63 +153,42 @@ class UpdateUseCase extends UseCase
     }
 
 
-    protected function set($property, $value)
+    protected function set($property, $value): self
     {
         $this->properties[self::UPDATE][$property] = $value;
         return $this;
     }
-    /**
-     * Update does not have a site tag common to all of the other actionable build classes
-     * so we must override the parents class here, setting only the name of the site.
-     *
-     * @param string $name
-     * @return $this
-     */
-    public function setSite($name)
-    {
-        return $this->set('Site', $name);
-    }
 
-    public function setBuildName($name)
+    public function setBuildName(string $name): self
     {
         return $this->set('BuildName', $name);
     }
 
-    public function setBuildType($type)
+    public function setBuildType(string $type): self
     {
         $today = date('Ymd');
         $stamp = "{$today}-0000-{$type}";
         return $this->set('BuildStamp', $stamp);
     }
 
-    public function setUpdateCommand($command)
+    public function setUpdateCommand(string $command): self
     {
         return $this->set('UpdateCommand', $command);
     }
 
-    public function setUpdateType($type)
-    {
-        return $this->set('UpdateType', $type);
-    }
-
-    public function setRevision($revision)
+    public function setRevision(string $revision): self
     {
         // this can be done automatically if not called
         return $this->set('Revision', $revision);
     }
 
-    public function setPriorRevision($revision)
+    public function setPriorRevision(string $revision): self
     {
         // this can be done automatically if not called
         return $this->set('PriorRevision', $revision);
     }
 
-    public function setUpdateReturnStatus($status)
-    {
-        return $this->set('UpdateReturnStatus', $status);
-    }
-
-    public function setPackages(array $packages)
+    public function setPackages(array $packages): self
     {
         $directories = [];
         foreach ($packages as $package) {
@@ -214,12 +196,23 @@ class UpdateUseCase extends UseCase
             if (!isset($directories[$key])) {
                 $directories[$package['Directory']] = [];
             }
-            array_push($directories[$key], $package);
+            $directories[$key][] = $package;
         }
         return $this->set('Directory', $directories);
     }
 
-    public function createPackage(array $properties)
+    /**
+     * Checks if an array is associative, sequential or a mixture of both. Will return true
+     * only if all array keys are ints.
+     *
+     * @ref https://gist.github.com/Thinkscape/1965669
+     */
+    private function isSequential(array $array): bool
+    {
+        return $array === array_values($array);
+    }
+
+    public function createPackage(array $properties): array
     {
         if ($this->isSequential($properties)) {
             [$name, $file, $author] = $properties;
@@ -279,25 +272,19 @@ class UpdateUseCase extends UseCase
         return $properties;
     }
 
-    /**
-     * @return string
-     */
-    public function createRevisionHash()
+    public function createRevisionHash(): string
     {
         return sha1(uniqid('_package_', true));
     }
 
-    /**
-     * @return string
-     */
-    public function randomizeCheckinDate()
+    public function randomizeCheckinDate(): string
     {
         $random = rand(1, 9*60*60) + (9*60*60); // seconds between 8am and 5pm
         $time = strtotime("yesterday +{$random} seconds");
         return date('Y-m-d H:i:s -0500', $time);
     }
 
-    public function createEmail($author)
+    protected function createEmail(string $author): string
     {
         $names = explode(" ", $author);
         $first = preg_replace('/\W/', '', $names[0]);

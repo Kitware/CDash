@@ -18,7 +18,7 @@ class BuildUseCase extends UseCase
         parent::__construct('Failure', $properties);
     }
 
-    public function build()
+    public function build(): \AbstractHandler
     {
         $xml = new DOMDocument('1.0', 'UTF-8');
         $startDateTimeText = date('M d H:i T', $this->startTime);
@@ -47,11 +47,14 @@ class BuildUseCase extends UseCase
         $endTestTime->appendChild(new DOMText($this->endTime));
 
         $xml_str = $xml->saveXML($xml);
+        if ($xml_str === false) {
+            throw new \Exception('Invalid XML.');
+        }
         $handler = new BuildHandler($this->projectId);
         return $this->getXmlHandler($handler, $xml_str);
     }
 
-    protected function createFailureElement(DOMElement $parent, array $attributes)
+    protected function createFailureElement(DOMElement $parent, array $attributes): void
     {
         /** @var DOMElement $failure */
         $failure = $parent->appendChild(new DOMElement('Failure'));
@@ -63,7 +66,7 @@ class BuildUseCase extends UseCase
             ->createFailureLabelsElement($failure, $attributes);
     }
 
-    protected function createActionElement(DOMElement $parent, array $attributes)
+    protected function createActionElement(DOMElement $parent, array $attributes): self
     {
         $action = $parent->appendChild(new DOMElement('Action'));
         $keys = ['TargetName', 'Language', 'SourceFile', 'OutputFile', 'OutputType'];
@@ -72,7 +75,7 @@ class BuildUseCase extends UseCase
         return $this;
     }
 
-    protected function createCommandElement(DOMElement $parent, array $attributes)
+    protected function createCommandElement(DOMElement $parent, array $attributes): self
     {
         $command = $parent->appendChild(new DOMElement('Command'));
         $keys = ['WorkingDirectory', 'Argument'];
@@ -81,7 +84,7 @@ class BuildUseCase extends UseCase
         return $this;
     }
 
-    protected function createResultElement(DOMElement $parent, $attributes)
+    protected function createResultElement(DOMElement $parent, array $attributes): self
     {
         $result = $parent->appendChild(new DOMElement('Result'));
         $keys = ['StdOut', 'StdErr', 'ExitCondition'];
@@ -90,7 +93,7 @@ class BuildUseCase extends UseCase
         return $this;
     }
 
-    protected function createFailureLabelsElement(DOMElement $parent, $attributes)
+    protected function createFailureLabelsElement(DOMElement $parent, array $attributes): void
     {
         if (isset($attributes['Labels'])) {
             $labels = $parent->appendChild(new DOMElement('Labels'));
@@ -101,7 +104,7 @@ class BuildUseCase extends UseCase
         }
     }
 
-    public function createFailure(array $default_properties)
+    protected function createFailure(array $default_properties): void
     {
         [$type, $properties] = $default_properties;
         $properties['type'] = $type === self::ERROR ? 'Error' : 'Warning';
@@ -114,11 +117,9 @@ class BuildUseCase extends UseCase
     }
 
     /**
-     * @param array $properties
-     * @return $this
      * TODO: properties like $cmake_dir, $target_name should be instance props so not to re-create per failure basis
      */
-    public function createAction(array &$properties)
+    protected function createAction(array &$properties): self
     {
         $faker = $this->getFaker();
         $cmake_dir = '';
@@ -160,7 +161,7 @@ class BuildUseCase extends UseCase
         return $this;
     }
 
-    public function createCommand(array &$properties)
+    protected function createCommand(array &$properties): self
     {
         if (!isset($properties['WorkingDirectory'])) {
             $properties['WorkingDirectory'] = pathinfo($properties['SourceFile'], PATHINFO_DIRNAME);
@@ -184,7 +185,7 @@ class BuildUseCase extends UseCase
         return $this;
     }
 
-    public function createResult(array &$properties, $type)
+    protected function createResult(array &$properties, $type): self
     {
         $faker = $this->getFaker();
         $condition = $type === self::ERROR ? $faker->numberBetween(1, 127) : 0;
@@ -199,34 +200,20 @@ class BuildUseCase extends UseCase
         return $this;
     }
 
-    /**
-     * @param string $command
-     * @return $this
-     */
-    public function setBuildCommand($command)
+    public function setBuildCommand(string $command): self
     {
         $this->command = $command;
         return $this;
     }
 
-    /**
-     * @param null $name
-     * @param array $properties
-     * @return $this
-     */
-    public function createBuildFailureError($name = null, array $properties = [])
+    public function createBuildFailureError(string $name, array $properties = []): self
     {
         $this->setNameInLabels($name, $properties);
         $this->createFailure([self::ERROR, $properties]);
         return $this;
     }
 
-    /**
-     * @param null $name
-     * @param array $properties
-     * @return $this
-     */
-    public function createBuildFailureWarning($name = null, array $properties = [])
+    public function createBuildFailureWarning(string $name, array $properties = []): self
     {
         $this->setNameInLabels($name, $properties);
         $this->createFailure([self::WARNING, $properties]);

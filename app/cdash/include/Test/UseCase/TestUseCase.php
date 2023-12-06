@@ -8,15 +8,6 @@ use TestingHandler;
 
 class TestUseCase extends UseCase
 {
-    public const EXIT_CODE = 'Exit Code';
-    public const EXIT_VALUE = 'Exit Value';
-    public const EXE_TIME = 'Execution Time';
-    public const COMPLETION_STATUS = 'Completion Status';
-    public const CMD_LINE = 'Command Line';
-
-    public const TEXT_STRING = 'text/string';
-    public const NUM_DOUBLE = 'numeric/double';
-
     public const FAILED = 'failed';
     public const PASSED = 'passed';
     public const OTHERFAULT = 'OTHER_FAULT';
@@ -28,11 +19,7 @@ class TestUseCase extends UseCase
         parent::__construct('Test', $properties);
     }
 
-    /**
-     * @return \AbstractHandler
-     * @throws \Exception
-     */
-    public function build()
+    public function build(): \AbstractHandler
     {
         $xml = new DOMDocument('1.0', 'UTF-8');
         $startDateTimeText = date('M d H:i T', $this->startTime);
@@ -60,15 +47,14 @@ class TestUseCase extends UseCase
         $endTestTime->appendChild(new DOMText($this->endTime));
 
         $xml_str = $xml->saveXML($xml);
+        if ($xml_str === false) {
+            throw new \Exception('Invalid XML.');
+        }
         $handler = new TestingHandler($this->projectId);
         return $this->getXmlHandler($handler, $xml_str);
     }
 
-    /**
-     * @param DOMElement $parent
-     * @param $attributes
-     */
-    protected function createTestElement(DOMElement $parent, $attributes)
+    protected function createTestElement(DOMElement $parent, $attributes): void
     {
         $path_info = pathinfo($attributes['FullName']);
 
@@ -97,11 +83,7 @@ class TestUseCase extends UseCase
         }
     }
 
-    /**
-     * @param DOMElement $test
-     * @param $status
-     */
-    protected function setTestStatus(DOMElement $test, $status)
+    protected function setTestStatus(DOMElement $test, string $status): void
     {
         switch ($status) {
             case self::FAILED:
@@ -117,11 +99,7 @@ class TestUseCase extends UseCase
         }
     }
 
-    /**
-     * @param DOMElement $parent
-     * @param $attributes
-     */
-    protected function createResultsElement(DOMElement $parent, $attributes)
+    protected function createResultsElement(DOMElement $parent, $attributes): void
     {
         $results = $parent->appendChild(new DOMElement('Results'));
 
@@ -182,11 +160,7 @@ class TestUseCase extends UseCase
         }
     }
 
-    /**
-     * @param array $properties
-     * @return UseCase
-     */
-    public function createTest(array $properties)
+    protected function createTest(array $properties): self
     {
         if (isset($properties[0])) {
             $hash = [
@@ -216,44 +190,25 @@ class TestUseCase extends UseCase
         return $this;
     }
 
-    /**
-     * @param $name
-     * @param array $labels
-     * @return $this
-     */
-    public function createTestPassed($name, array $labels = [])
+    public function createTestPassed(string $name, array $labels = []): self
     {
         $this->createTest([$name, TestUseCase::PASSED, 'Labels' => $labels]);
         return $this;
     }
 
-    /**
-     * @param $name
-     * @param array $labels
-     * @return $this
-     */
-    public function createTestFailed($name, array $labels = [])
+    public function createTestFailed(string $name, array $labels = []): self
     {
         $this->createTest([$name, TestUseCase::FAILED, 'Labels' => $labels]);
         return $this;
     }
 
-    /**
-     * @param $name
-     * @param array $labels
-     * @return $this
-     */
-    public function createTestNotRun($name, array $labels = [])
+    public function createTestNotRun(string $name, array $labels = []): self
     {
         $this->createTest([$name, TestUseCase::NOTRUN, 'Labels' => $labels]);
         return $this;
     }
 
-    /**
-     * @param $name
-     * @return UseCase
-     */
-    public function createTestTimedout($name, array $labels = [])
+    public function createTestTimedout(string $name, array $labels = []): self
     {
         $this->createTest([$name, TestUseCase::TIMEOUT, 'Labels' => $labels]);
         return $this;

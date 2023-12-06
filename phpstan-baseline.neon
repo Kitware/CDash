@@ -11762,12 +11762,12 @@ parameters:
 				#^Call to deprecated method setMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
 				https\\://github\\.com/sebastianbergmann/phpunit/pull/3687$#
 			"""
-			count: 3
+			count: 2
 			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:any\\(\\)\\.$#"
-			count: 8
+			count: 4
 			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
@@ -11786,92 +11786,12 @@ parameters:
 			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:createServiceContainerForTesting\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:getEndpointResponse\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:getMockActionableBuild\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:getMockBuild\\(\\) has invalid return type PHPUnit_Framework_MockObject_MockObject\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:getMockBuildGroup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:getMockProject\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:getMockSite\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:getMockStmt\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:getMockTest\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:getMockUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:getMockUserProject\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:hashQuery\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:hashQuery\\(\\) has parameter \\$query with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:mockFetchCall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:mockFetchCall\\(\\) has parameter \\$query with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:mockFetchCall\\(\\) has parameter \\$records with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:prepare\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:prepare\\(\\) has parameter \\$query with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/CDashTestCase.php
 
@@ -11911,22 +11831,12 @@ parameters:
 			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function md5 expects string, \\(array\\<int, string\\>\\|string\\|null\\) given\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
 			message: "#^Property CDash\\\\Test\\\\CDashTestCase\\:\\:\\$endpoint \\(string\\) does not accept string\\|false\\.$#"
 			count: 1
 			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
 			message: "#^Property CDash\\\\Test\\\\CDashTestCase\\:\\:\\$mockPDO has no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Property CDash\\\\Test\\\\CDashTestCase\\:\\:\\$queries has no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/CDashTestCase.php
 
@@ -11952,27 +11862,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:\\$Id\\.$#"
-			count: 5
-			path: app/cdash/include/Test/CDashUseCaseTestCase.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$Id\\.$#"
-			count: 2
-			path: app/cdash/include/Test/CDashUseCaseTestCase.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$Name\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashUseCaseTestCase.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$SubProjectName\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashUseCaseTestCase.php
-
-		-
-			message: "#^Access to property \\$SubProjectName on an unknown class Build\\.$#"
-			count: 1
+			count: 3
 			path: app/cdash/include/Test/CDashUseCaseTestCase.php
 
 		-
@@ -11989,32 +11879,12 @@ parameters:
 			path: app/cdash/include/Test/CDashUseCaseTestCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\CDashUseCaseTestCase\\:\\:getCachedModelId\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashUseCaseTestCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\CDashUseCaseTestCase\\:\\:setUseCaseModelFactory\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/CDashUseCaseTestCase.php
 
 		-
 			message: "#^Only booleans are allowed in an if condition, CDash\\\\ServiceContainer given\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashUseCaseTestCase.php
-
-		-
-			message: "#^PHPDoc tag @var for variable \\$model contains unknown class Build\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashUseCaseTestCase.php
-
-		-
-			message: "#^PHPDoc tag @var with type Build is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashUseCaseTestCase.php
-
-		-
-			message: "#^Property CDash\\\\Test\\\\CDashUseCaseTestCase\\:\\:\\$model_id_cache has no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/CDashUseCaseTestCase.php
 
@@ -12029,22 +11899,12 @@ parameters:
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/BuildUseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:build\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 6
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createAction\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/BuildUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createActionElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
@@ -12069,17 +11929,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createCommand\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/BuildUseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createCommand\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/BuildUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createCommandElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
@@ -12094,17 +11944,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createFailure\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/BuildUseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createFailure\\(\\) has parameter \\$default_properties with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/BuildUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createFailureElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
@@ -12119,23 +11959,13 @@ parameters:
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createFailureLabelsElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/BuildUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createFailureLabelsElement\\(\\) has parameter \\$attributes with no type specified\\.$#"
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createFailureLabelsElement\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createFailureLabelsElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 2
-			path: app/cdash/include/Test/UseCase/BuildUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createResult\\(\\) has no return type specified\\.$#"
-			count: 1
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
@@ -12149,12 +11979,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createResultElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/BuildUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createResultElement\\(\\) has parameter \\$attributes with no type specified\\.$#"
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\:\\:createResultElement\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
@@ -12194,18 +12019,13 @@ parameters:
 			path: app/cdash/include/Test/UseCase/ConfigUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\ConfigUseCase\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/ConfigUseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\ConfigUseCase\\:\\:build\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 9
 			path: app/cdash/include/Test/UseCase/ConfigUseCase.php
 
 		-
 			message: "#^Call to an undefined method DOMNode\\:\\:setAttribute\\(\\)\\.$#"
-			count: 6
+			count: 5
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
@@ -12214,42 +12034,12 @@ parameters:
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createDefectList\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createDefectList\\(\\) has parameter \\$tests with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createDefectList\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createFailedTest\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createFailedTest\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:build\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 5
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createFailedTest\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createPassedTest\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createPassedTest\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
@@ -12259,17 +12049,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createResults\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createResults\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createResultsElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
@@ -12284,22 +12064,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTest\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTest\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTest\\(\\) has parameter \\$status with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTestElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
@@ -12314,26 +12079,6 @@ parameters:
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTestLabelsElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTestLabelsElement\\(\\) has parameter \\$t with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTestLabelsElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTestListElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTestListElement\\(\\) has parameter \\$tests with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
@@ -12341,21 +12086,6 @@ parameters:
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createTestListElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 2
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:getTitleForChecker\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:setChecker\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:setChecker\\(\\) has parameter \\$checker with no type specified\\.$#"
-			count: 1
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
@@ -12419,8 +12149,8 @@ parameters:
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\TestUseCase\\:\\:createResultsElement\\(\\) has no return type specified\\.$#"
-			count: 1
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\TestUseCase\\:\\:build\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 5
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
 		-
@@ -12435,11 +12165,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\TestUseCase\\:\\:createTest\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/TestUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\TestUseCase\\:\\:createTestElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
@@ -12459,17 +12184,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\TestUseCase\\:\\:createTestFailed\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/TestUseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\TestUseCase\\:\\:createTestNotRun\\(\\) has parameter \\$labels with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/TestUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\TestUseCase\\:\\:createTestNotRun\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
@@ -12479,27 +12194,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\TestUseCase\\:\\:createTestPassed\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/TestUseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\TestUseCase\\:\\:createTestTimedout\\(\\) has parameter \\$labels with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/TestUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\TestUseCase\\:\\:createTestTimedout\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/TestUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\TestUseCase\\:\\:setTestStatus\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/TestUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\TestUseCase\\:\\:setTestStatus\\(\\) has parameter \\$status with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
@@ -12529,18 +12224,8 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:build\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 12
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:createDirectoryElement\\(\\) has no return type specified\\.$#"
-			count: 1
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
 
 		-
@@ -12554,27 +12239,17 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:createEmail\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:createEmail\\(\\) has parameter \\$author with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:createPackage\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:createPackage\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:set\\(\\) has no return type specified\\.$#"
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:createPackage\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
+
+		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:isSequential\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
 
@@ -12589,82 +12264,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setBuildName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setBuildName\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setBuildType\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setBuildType\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setPackages\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setPackages\\(\\) has parameter \\$packages with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setPriorRevision\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setPriorRevision\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setRevision\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setRevision\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setUpdateCommand\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setUpdateCommand\\(\\) has parameter \\$command with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setUpdateReturnStatus\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setUpdateReturnStatus\\(\\) has parameter \\$status with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setUpdateType\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setUpdateType\\(\\) has parameter \\$type with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
 
@@ -12719,37 +12319,12 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createAuthor\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createAuthor\\(\\) has parameter \\$author with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createAuthor\\(\\) has parameter \\$builds with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createBuilder\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createBuilder\\(\\) should return CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\|CDash\\\\Test\\\\UseCase\\\\ConfigUseCase\\|CDash\\\\Test\\\\UseCase\\\\TestUseCase\\|CDash\\\\Test\\\\UseCase\\\\UpdateUseCase but returns CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\|CDash\\\\Test\\\\UseCase\\\\ConfigUseCase\\|CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\|CDash\\\\Test\\\\UseCase\\\\TestUseCase\\|CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\|null\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createChildElementsFromKeys\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
@@ -12769,17 +12344,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createElapsedMinutesElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createElapsedMinutesElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createLabelsElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
@@ -12804,11 +12369,6 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createSubproject\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:getAuthors\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UseCase.php
@@ -12824,38 +12384,13 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:getIdForClass\\(\\) has parameter \\$class_name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:getModel\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:getModel\\(\\) has parameter \\$tag_name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:getXmlHandler\\(\\) has parameter \\$xml with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:isSequential\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:setAuthors\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:setAuthors\\(\\) has parameter \\$authors with no value type specified in iterable type array\\.$#"
-			count: 1
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:getSiteElement\\(\\) throws checked exception DOMException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
@@ -12865,21 +12400,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:setModel\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:setModel\\(\\) has parameter \\$tag_name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:setNameInLabels\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:setNameInLabels\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
@@ -12894,27 +12414,12 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:setSiteAttribute\\(\\) has parameter \\$attribute with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:setSiteAttribute\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:setStartTime\\(\\) has parameter \\$start_time with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:setTestProperties\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:setTestProperties\\(\\) has parameter \\$test_name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
@@ -12929,12 +12434,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
-			message: "#^Parameter \\#1 \\$useCase of method CDash\\\\Test\\\\CDashUseCaseTestCase\\:\\:setUseCaseModelFactory\\(\\) expects CDash\\\\Test\\\\UseCase\\\\UseCase, CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\|CDash\\\\Test\\\\UseCase\\\\ConfigUseCase\\|CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\|CDash\\\\Test\\\\UseCase\\\\TestUseCase\\|CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\|null given\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Property CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:\\$authors has no type specified\\.$#"
+			message: "#^Property CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:\\$authors type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
@@ -12949,12 +12449,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
-			message: "#^Property CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:\\$ids has no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Property CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:\\$projectId has no type specified\\.$#"
+			message: "#^Property CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:\\$ids type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
@@ -12969,12 +12464,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
-			message: "#^Property CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:\\$subprojects has no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/UseCase/UseCase.php
-
-		-
-			message: "#^Property CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:\\$testCase has no type specified\\.$#"
+			message: "#^Property CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:\\$subprojects type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
@@ -18478,7 +17968,7 @@ parameters:
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
 
 		-
-			message: "#^Call to an undefined method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\|CDash\\\\Test\\\\UseCase\\\\ConfigUseCase\\|CDash\\\\Test\\\\UseCase\\\\TestUseCase\\|CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setChecker\\(\\)\\.$#"
+			message: "#^Call to an undefined method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:setChecker\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
 
@@ -20582,7 +20072,17 @@ parameters:
 			path: app/cdash/tests/case/CDash/Model/RepositoryTest.php
 
 		-
-			message: "#^Call to an undefined method CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\|CDash\\\\Test\\\\UseCase\\\\ConfigUseCase\\|CDash\\\\Test\\\\UseCase\\\\TestUseCase\\|CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:setChecker\\(\\)\\.$#"
+			message: "#^Call to an undefined method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createBuildFailureError\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
+
+		-
+			message: "#^Call to an undefined method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:createTestFailed\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
+
+		-
+			message: "#^Call to an undefined method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:setChecker\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
@@ -20645,6 +20145,11 @@ parameters:
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
 		-
+			message: "#^Parameter \\#1 \\$submission of class CDash\\\\Messaging\\\\Subscription\\\\UserSubscriptionBuilder constructor expects ActionableBuildInterface, AbstractHandler given\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
+
+		-
 			message: "#^Property MultipleSubprojectsEmailTest\\:\\:\\$database has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
@@ -20656,6 +20161,11 @@ parameters:
 
 		-
 			message: "#^Property MultipleSubprojectsEmailTest\\:\\:\\$db has unknown class PHPUnit_Framework_MockObject_MockObject as its type\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
+
+		-
+			message: "#^Property MultipleSubprojectsEmailTest\\:\\:\\$submission \\(ActionableBuildInterface\\) does not accept AbstractHandler\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
@@ -20858,6 +20368,11 @@ parameters:
 		-
 			message: "#^Access to property \\$status on an unknown class Test\\.$#"
 			count: 5
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
+			message: "#^Call to an undefined method AbstractHandler\\:\\:GetBuildCollection\\(\\)\\.$#"
+			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
@@ -21071,11 +20586,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
-			message: "#^PHPDoc tag @var with type CDash\\\\Test\\\\UseCase\\\\UseCase is not subtype of type CDash\\\\Test\\\\UseCase\\\\BuildUseCase\\|CDash\\\\Test\\\\UseCase\\\\ConfigUseCase\\|CDash\\\\Test\\\\UseCase\\\\TestUseCase\\|CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\.$#"
-			count: 5
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
 			message: "#^PHPDoc tag @var with type Illuminate\\\\Support\\\\Collection is not subtype of type CDash\\\\Model\\\\TestCollection\\.$#"
 			count: 4
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
@@ -21084,6 +20594,11 @@ parameters:
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, CDash\\\\Model\\\\TestCollection given\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
+			message: "#^Call to an undefined method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:setBuildName\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
