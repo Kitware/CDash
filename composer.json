@@ -29,7 +29,7 @@
     "guzzlehttp/guzzle": "7.8.0",
     "http-interop/http-factory-guzzle": "1.2.0",
     "knplabs/github-api": "3.13.0",
-    "laravel/framework": "9.52.15",
+    "laravel/framework": "10.35.0",
     "laravel/legacy-factories": "1.3.2",
     "laravel/socialite": "5.10.0",
     "laravel/ui": "4.2.3",
