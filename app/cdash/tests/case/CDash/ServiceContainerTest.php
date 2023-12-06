@@ -44,7 +44,7 @@ class ServiceContainerTest extends CDashTestCase
     {
         $mock_di = $this->getMockBuilder(DI\Container::class)
             ->disableOriginalConstructor()
-            ->setMethods(['make'])
+            ->onlyMethods(['make'])
             ->getMock();
 
         $mock_di
@@ -61,7 +61,7 @@ class ServiceContainerTest extends CDashTestCase
     {
         $mock_di = $this->getMockBuilder(DI\Container::class)
             ->disableOriginalConstructor()
-            ->setMethods(['get'])
+            ->onlyMethods(['get'])
             ->getMock();
 
         $mock_di

@@ -411,7 +411,7 @@ class PasswordTest extends TestCase
     {
         /** @var Translator|MockObject $translator */
         $translator = $this->getMockBuilder(Translator::class)
-            ->setMethods(['trans', 'transChoice', 'setLocale', 'getLocale'])
+            ->onlyMethods(['trans', 'transChoice', 'setLocale', 'getLocale'])
             ->getMockForAbstractClass();
         $validator = new Validator($translator, [], []);
         /** @var Validator|MockObject $validator */

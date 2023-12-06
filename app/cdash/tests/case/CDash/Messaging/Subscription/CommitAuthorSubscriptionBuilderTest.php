@@ -95,7 +95,7 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
     }
 
     /**
-     * @return ActionableBuildInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return ActionableBuildInterface&PHPUnit_Framework_MockObject_MockObject
      */
     public function getMockSubmission($key, $handler_class)
     {
@@ -107,25 +107,25 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
         $mock_site = $this->getMockBuilder(Site::class)
             ->getMock();
 
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $mock_build */
+        /** @var Build&PHPUnit_Framework_MockObject_MockObject $mock_build */
         $mock_build = $this->createMockBuildWithDiff(
             $this->createNew($key)
         );
 
-        /** @var BuildGroup|PHPUnit_Framework_MockObject_MockObject $mock_group */
+        /** @var BuildGroup&PHPUnit_Framework_MockObject_MockObject $mock_group */
         $mock_group = $this->getMockBuilder(BuildGroup::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isNotifyingCommitters'])
+            ->onlyMethods(['isNotifyingCommitters'])
             ->getMock();
 
         $mock_group->expects($this->any())
             ->method('isNotifyingCommitters')
             ->willReturn(true);
 
-        /** @var ActionableBuildInterface|PHPUnit_Framework_MockObject_MockObject $mock_handler */
+        /** @var ActionableBuildInterface&PHPUnit_Framework_MockObject_MockObject $mock_handler */
         $mock_handler = $this->getMockBuilder($handler_class)
             ->disableOriginalConstructor()
-            ->setMethods(['GetProject', 'GetSite', 'GetBuildCollection', 'GetCommitAuthors', 'GetBuildGroup', 'GetTopicCollectionForSubscriber'])
+            ->onlyMethods(['GetProject', 'GetSite', 'GetBuildCollection', 'GetCommitAuthors', 'GetBuildGroup', 'GetTopicCollectionForSubscriber'])
             ->getMock();
 
         $mock_handler->expects($this->any())

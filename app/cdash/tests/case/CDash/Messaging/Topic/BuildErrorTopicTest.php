@@ -171,9 +171,9 @@ class BuildErrorTopicTest extends \CDash\Test\CDashTestCase
         $sut = new BuildErrorTopic();
         $sut->setType(Build::TYPE_ERROR);
 
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build */
+        /** @var Build&PHPUnit_Framework_MockObject_MockObject $build */
         $build = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetErrorDifferences'])
+            ->onlyMethods(['GetErrorDifferences'])
             ->getMock();
 
         $build->expects($this->never())
@@ -185,7 +185,7 @@ class BuildErrorTopicTest extends \CDash\Test\CDashTestCase
         $this->assertFalse($sut->hasFixes());
 
         $build = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetErrorDifferences', 'GetPreviousBuildId'])
+            ->onlyMethods(['GetErrorDifferences', 'GetPreviousBuildId'])
             ->getMock();
 
         $build->expects($this->once())

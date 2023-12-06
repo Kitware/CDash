@@ -75,13 +75,13 @@ trait BuildDiffForTesting
 
     /**
      * @param $diff
-     * @return Build|PHPUnit_Framework_MockObject_MockObject
+     * @return Build&PHPUnit_Framework_MockObject_MockObject
      */
     protected function createMockBuildWithDiff($diff)
     {
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build */
+        /** @var Build&PHPUnit_Framework_MockObject_MockObject $build */
         $build = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetErrorDifferences', 'GetPreviousBuildId'])
+            ->onlyMethods(['GetErrorDifferences', 'GetPreviousBuildId'])
             ->getMock();
 
         $build->expects($this->any())

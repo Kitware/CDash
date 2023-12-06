@@ -69,7 +69,7 @@ class UserSubscriptionBuilderTest extends TestCase
             ->getMockForAbstractClass();
 
         $mock_project = $this->getMockBuilder(Project::class)
-            ->setMethods(['GetSubscriberCollection'])
+            ->onlyMethods(['GetSubscriberCollection'])
             ->getMock();
 
         $mock_project->expects($this->any())

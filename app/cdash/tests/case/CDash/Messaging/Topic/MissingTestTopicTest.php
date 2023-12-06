@@ -25,9 +25,9 @@ class MissingTestTopicTest extends TestCase
     {
         $sut = new MissingTestTopic();
 
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build1 */
+        /** @var Build&PHPUnit_Framework_MockObject_MockObject $build1 */
         $build1 = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetMissingTests'])
+            ->onlyMethods(['GetMissingTests'])
             ->getMock();
 
         $build1->expects($this->once())
@@ -37,9 +37,9 @@ class MissingTestTopicTest extends TestCase
 
         $this->assertFalse($sut->subscribesToBuild($build1));
 
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build2 */
+        /** @var Build&PHPUnit_Framework_MockObject_MockObject $build2 */
         $build2 = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetMissingTests'])
+            ->onlyMethods(['GetMissingTests'])
             ->getMock();
 
         $build2->expects($this->once())
@@ -84,9 +84,9 @@ class MissingTestTopicTest extends TestCase
 
         $this->assertEquals(0, $sut->getTopicCount());
 
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build2 */
+        /** @var Build&PHPUnit_Framework_MockObject_MockObject $build2 */
         $build2 = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetMissingTests'])
+            ->onlyMethods(['GetMissingTests'])
             ->getMock();
 
         $build2->expects($this->any())

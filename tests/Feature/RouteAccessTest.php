@@ -49,7 +49,7 @@ class RouteAccessTest extends TestCase
     }
 
     // A list of all routes which require the user to be logged in
-    private function protectedRoutes(): array
+    private static function protectedRoutes(): array
     {
         return [
             ['/user'],
@@ -63,7 +63,7 @@ class RouteAccessTest extends TestCase
     }
 
     // A list of admin-only routes
-    private function adminRoutes(): array
+    private static function adminRoutes(): array
     {
         return [
             ['/upgrade.php'],

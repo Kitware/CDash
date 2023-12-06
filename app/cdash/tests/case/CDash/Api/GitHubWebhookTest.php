@@ -29,7 +29,7 @@ class GitHubWebhookTest extends CDash\Test\CDashTestCase
 
         $this->mock_system = $this->getMockBuilder(System::class)
             ->disableOriginalConstructor()
-            ->setMethods(['system_exit'])
+            ->onlyMethods(['system_exit'])
             ->getMock();
         $container->set(System::class, $this->mock_system);
 

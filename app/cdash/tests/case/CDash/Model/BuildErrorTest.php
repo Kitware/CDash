@@ -24,7 +24,7 @@ class BuildErrorTest extends CDashTestCase
         $container = ServiceContainer::container();
         $this->mock_builderror = $this->getMockBuilder(BuildError::class)
             ->disableOriginalConstructor()
-            ->setMethods(['GetBuildErrorArguments'])
+            ->onlyMethods(['GetBuildErrorArguments'])
             ->getMock();
         $this->mock_project = $this->getMockBuilder(Project::class)
             ->disableOriginalConstructor()
