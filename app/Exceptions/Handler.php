@@ -72,7 +72,7 @@ class Handler extends ExceptionHandler
     /**
      * @param $request
      * @param AuthenticationException $exception
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     public function unauthenticated($request, AuthenticationException $exception)
     {
