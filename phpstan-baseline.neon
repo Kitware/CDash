@@ -3694,11 +3694,6 @@ parameters:
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Parameter \\#2 \\$contents of static method Illuminate\\\\Contracts\\\\Filesystem\\\\Filesystem\\:\\:put\\(\\) expects resource\\|string, string\\|false given\\.$#"
-			count: 2
-			path: app/Utils/UnparsedSubmissionProcessor.php
-
-		-
 			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$backupfilename has no type specified\\.$#"
 			count: 1
 			path: app/Utils/UnparsedSubmissionProcessor.php

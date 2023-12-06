@@ -3,6 +3,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Models\BuildTest;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 class MultipleLabelsForTestsTestCase extends KWWebTestCase
 {
@@ -47,10 +48,7 @@ class MultipleLabelsForTestsTestCase extends KWWebTestCase
         $this->assertTrue($this->checkLog($this->logfilename) !== false);
 
         // The build exists.
-        $results = \DB::select(
-            DB::raw("SELECT id FROM build WHERE projectid = :projectid"),
-            [':projectid' => $this->project->Id]
-        );
+        $results = DB::select("SELECT id FROM build WHERE projectid = ?", [(int) $this->project->Id]);
         $this->assertTrue(1 === count($results));
 
         // Verify that the test has multiple labels.

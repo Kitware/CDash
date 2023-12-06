@@ -2,6 +2,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 class LotsOfSubProjectsTestCase extends KWWebTestCase
 {
@@ -23,7 +24,7 @@ class LotsOfSubProjectsTestCase extends KWWebTestCase
         }
 
         // Delete all the extra labels we created.
-        \DB::table('label')->where('text', 'LIKE', 'LotsOfSubprojects%')->delete();
+        DB::table('label')->where('text', 'LIKE', 'LotsOfSubprojects%')->delete();
 
         // Delete generated XML file.
         unlink('LotsOfSubprojects_Configure.xml');
@@ -61,16 +62,11 @@ class LotsOfSubProjectsTestCase extends KWWebTestCase
         $this->assertTrue($this->checkLog($this->logfilename) !== false);
 
         // Verify 101 builds (1 parent + 100 children).
-        $results = \DB::select(
-            DB::raw('SELECT id FROM build WHERE projectid = :projectid'),
-            [':projectid' => $this->project->Id]
-        );
+        $results = DB::select('SELECT id FROM build WHERE projectid = ?', [(int) $this->project->Id]);
         $this->assertEqual(101, count($results));
 
         // Verify 100 labels.
-        $results = \DB::select(
-            DB::raw("SELECT id FROM label WHERE text LIKE 'LotsOfSubprojects%'")
-        );
+        $results = DB::select("SELECT id FROM label WHERE text LIKE 'LotsOfSubprojects%'");
         $this->assertEqual(100, count($results));
     }
 }

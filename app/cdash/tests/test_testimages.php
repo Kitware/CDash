@@ -2,6 +2,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 class TestImagesTestCase extends KWWebTestCase
 {
@@ -41,13 +42,12 @@ class TestImagesTestCase extends KWWebTestCase
         }
 
         // Verify two separate testoutput rows.
-        $results = \DB::select(
-            DB::raw("
-                SELECT outputid FROM build2test
-                JOIN build on (build2test.buildid = build.id)
-                WHERE build.projectid = :projectid"),
-            [':projectid' => $this->project->Id]
-        );
+        $results = DB::select('
+            SELECT outputid
+            FROM build2test
+            JOIN build on (build2test.buildid = build.id)
+            WHERE build.projectid = ?
+        ', [(int) $this->project->Id]);
 
         $this->assertTrue(2 === count($results));
         $outputid1 = $results[0]->outputid;
@@ -55,12 +55,14 @@ class TestImagesTestCase extends KWWebTestCase
         $this->assertTrue($outputid1 != $outputid2);
 
         // Verify that these testoutputs have separate images.
-        $image_results = \DB::select(
-            DB::raw("
-                SELECT id FROM test2image
-                WHERE outputid IN (:outputid1, :outputid2)"),
-            [':outputid1' => $outputid1, ':outputid2' => $outputid2]
-        );
+        $image_results = DB::select('
+            SELECT id
+            FROM test2image
+            WHERE outputid IN (?, ?)
+        ', [
+            $outputid1,
+            $outputid2,
+        ]);
         $this->assertTrue(2 === count($image_results));
         $image_id1 = $image_results[0]->id;
         $image_id2 = $image_results[1]->id;

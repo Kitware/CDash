@@ -2,6 +2,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 class NamedMeasurementsTestCase extends KWWebTestCase
 {
@@ -42,16 +43,15 @@ class NamedMeasurementsTestCase extends KWWebTestCase
         }
 
         // Verify both measurements were inserted separately.
-        $results = \DB::select(
-            DB::raw("
-                SELECT testmeasurement.value FROM testmeasurement
-                JOIN testoutput ON (testmeasurement.outputid = testoutput.id)
-                JOIN build2test ON (testoutput.id = build2test.outputid)
-                JOIN build ON (build2test.buildid = build.id)
-                WHERE build.projectid = :projectid
-                AND testmeasurement.name = 'archive directory'"),
-            [':projectid' => $this->project->Id]
-        );
+        $results = DB::select("
+            SELECT testmeasurement.value
+            FROM testmeasurement
+            JOIN testoutput ON (testmeasurement.outputid = testoutput.id)
+            JOIN build2test ON (testoutput.id = build2test.outputid)
+            JOIN build ON (build2test.buildid = build.id)
+            WHERE build.projectid = :projectid
+            AND testmeasurement.name = 'archive directory'
+        ", [(int) $this->project->Id]);
 
         $this->assertTrue(2 === count($results));
         $found_link1 = false;

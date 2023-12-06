@@ -3,6 +3,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Build;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 class StartTimeFromNotesTestCase extends KWWebTestCase
 {
@@ -44,10 +45,7 @@ class StartTimeFromNotesTestCase extends KWWebTestCase
         $this->assertTrue($this->checkLog($this->logfilename) !== false);
 
         // The build exists.
-        $results = \DB::select(
-            DB::raw('SELECT id FROM build WHERE projectid = :projectid'),
-            [':projectid' => $this->project->Id]
-        );
+        $results = DB::select('SELECT id FROM build WHERE projectid = ?', [(int) $this->project->Id]);
         $this->assertTrue(1 === count($results));
 
         // Verify start time & testing day.
@@ -58,14 +56,13 @@ class StartTimeFromNotesTestCase extends KWWebTestCase
         $this->assertEqual('2021-09-16 19:19:46', $build->StartTime);
 
         // Verify note was stored successfully.
-        $results = \DB::select(
-            DB::raw("
-                SELECT note.name, note.text FROM note
-                JOIN build2note ON (note.id = build2note.noteid)
-                JOIN build ON (build.id = build2note.buildid)
-                WHERE build.id = :buildid"),
-            [':buildid' => $build->Id]
-        );
+        $results = DB::select('
+            SELECT note.name, note.text
+            FROM note
+            JOIN build2note ON (note.id = build2note.noteid)
+            JOIN build ON (build.id = build2note.buildid)
+            WHERE build.id = ?
+        ', [(int) $build->Id]);
         $this->assertTrue(1 === count($results));
         $this->assertEqual("my very own note", $results[0]->name);
         $this->assertEqual("this is\nmy note\n", $results[0]->text);

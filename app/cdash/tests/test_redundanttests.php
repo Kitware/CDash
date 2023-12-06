@@ -2,6 +2,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 class RedundantTestsTestCase extends KWWebTestCase
 {
@@ -60,18 +61,12 @@ class RedundantTestsTestCase extends KWWebTestCase
         $this->assertTrue($this->checkLog($this->logfilename) !== false);
 
         // Verify one build.
-        $results = \DB::select(
-            DB::raw('SELECT id FROM build WHERE projectid = :projectid'),
-            [':projectid' => $this->project->Id]
-        );
+        $results = DB::select('SELECT id FROM build WHERE projectid = ?', [(int) $this->project->Id]);
         $this->assertTrue(1 === count($results));
         $buildid = $results[0]->id;
 
         // Verify two tests.
-        $results = \DB::select(
-            DB::raw('SELECT id FROM build2test WHERE buildid = :buildid'),
-            [':buildid' => $buildid]
-        );
+        $results = DB::select('SELECT id FROM build2test WHERE buildid = ?', [(int) $buildid]);
         $this->assertTrue(2 === count($results));
 
         // Verify expected output from 'test details' API.

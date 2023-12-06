@@ -92,12 +92,12 @@ class OutputColorTestCase extends KWWebTestCase
 
     private function getIdForTest($testname)
     {
-        $buildtestid_results = DB::select(
-            DB::raw(
-                "SELECT build2test.id FROM build2test
+        $buildtestid_results = DB::select("
+            SELECT build2test.id
+            FROM build2test
             JOIN test ON (build2test.testid = test.id)
-            WHERE test.name = '$testname'")
-        );
+            WHERE test.name = ?
+        ", [$testname]);
         $this->assertEqual(1, count($buildtestid_results));
         return $buildtestid_results[0]->id;
     }
