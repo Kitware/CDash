@@ -9,14 +9,13 @@
     <h4 v-if="cdash.backlog_length > 0">
       The oldest submission was created {{ cdash.backlog_time }}.
     </h4>
-    <div v-if="plot_data && cdash.time_chart_data" class="center-text">
-       <TimelinePlot
-         :plot-data="plot_data"
-         :title="cdash.time_chart_data.title"
-         :x-label="cdash.time_chart_data.xLabel"
-         :y-label="cdash.time_chart_data.yLabel"
-       />
-    </div>
+    <TimelinePlot v-if="plot_data && cdash.time_chart_data"
+      class="center-text"
+      :plot-data="plot_data"
+      :title="cdash.time_chart_data.title"
+      :x-label="cdash.time_chart_data.xLabel"
+      :y-label="cdash.time_chart_data.yLabel"
+    />
     <br>
     <p>
       Note: Detailed information about submission failures can be found in the CDash logs.<br>
