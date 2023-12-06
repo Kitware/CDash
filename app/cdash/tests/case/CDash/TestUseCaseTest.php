@@ -103,26 +103,26 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $build = $builds->current();
         $information = $build->GetSite()->mostRecentInformation;
 
-        $this->assertEquals($information->description, $siteInformation['Description']);
-        $this->assertEquals($information->processoris64bits, $siteInformation['Is64Bits']);
-        $this->assertEquals($information->processorvendor, $siteInformation['VendorString']);
-        $this->assertEquals($information->processorvendorid, $siteInformation['VendorID']);
-        $this->assertEquals($information->processorfamilyid, $siteInformation['FamilyID']);
-        $this->assertEquals($information->processormodelid, $siteInformation['ModelID']);
-        $this->assertEquals($information->processorcachesize, $siteInformation['ProcessorCacheSize']);
-        $this->assertEquals($information->numberlogicalcpus, $siteInformation['NumberOfLogicalCPU']);
-        $this->assertEquals($information->numberphysicalcpus, $siteInformation['NumberOfPhysicalCPU']);
-        $this->assertEquals($information->totalvirtualmemory, $siteInformation['TotalVirtualMemory']);
-        $this->assertEquals($information->totalphysicalmemory, $siteInformation['TotalPhysicalMemory']);
-        $this->assertEquals($information->logicalprocessorsperphysical, $siteInformation['LogicalProcessorsPerPhysical']);
-        $this->assertEquals($information->processorclockfrequency, $siteInformation['ProcessorClockFrequency']);
+        $this->assertEquals($siteInformation['Description'], $information->description);
+        $this->assertEquals($siteInformation['Is64Bits'], $information->processoris64bits);
+        $this->assertEquals($siteInformation['VendorString'], $information->processorvendor);
+        $this->assertEquals($siteInformation['VendorID'], $information->processorvendorid);
+        $this->assertEquals($siteInformation['FamilyID'], $information->processorfamilyid);
+        $this->assertEquals($siteInformation['ModelID'], $information->processormodelid);
+        $this->assertEquals($siteInformation['ProcessorCacheSize'], $information->processorcachesize);
+        $this->assertEquals($siteInformation['NumberOfLogicalCPU'], $information->numberlogicalcpus);
+        $this->assertEquals($siteInformation['NumberOfPhysicalCPU'], $information->numberphysicalcpus);
+        $this->assertEquals($siteInformation['TotalVirtualMemory'], $information->totalvirtualmemory);
+        $this->assertEquals($siteInformation['TotalPhysicalMemory'], $information->totalphysicalmemory);
+        $this->assertEquals($siteInformation['LogicalProcessorsPerPhysical'], $information->logicalprocessorsperphysical);
+        $this->assertEquals($siteInformation['ProcessorClockFrequency'], $information->processorclockfrequency);
 
-        $this->assertEquals($build->Information->osname, $siteInformation['OSName']);
-        $this->assertEquals($build->Information->osrelease, $siteInformation['OSRelease']);
-        $this->assertEquals($build->Information->osversion, $siteInformation['OSVersion']);
-        $this->assertEquals($build->Information->osplatform, $siteInformation['OSPlatform']);
-        $this->assertEquals($build->Information->compilername, $siteInformation['CompilerName']);
-        $this->assertEquals($build->Information->compilerversion, $siteInformation['CompilerVersion']);
+        $this->assertEquals($siteInformation['OSName'], $build->Information->osname);
+        $this->assertEquals($siteInformation['OSRelease'], $build->Information->osrelease);
+        $this->assertEquals($siteInformation['OSVersion'], $build->Information->osversion);
+        $this->assertEquals($siteInformation['OSPlatform'], $build->Information->osplatform);
+        $this->assertEquals($siteInformation['CompilerName'], $build->Information->compilername);
+        $this->assertEquals($siteInformation['CompilerVersion'], $build->Information->compilerversion);
     }
 
     public function testTestUseCaseSetsSiteProperty()
