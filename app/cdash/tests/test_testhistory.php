@@ -8,6 +8,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 class TestHistoryTestCase extends KWWebTestCase
 {
@@ -215,14 +216,15 @@ class TestHistoryTestCase extends KWWebTestCase
         $this->assertTrue($this->checkLog($this->logfilename) !== false);
 
         // Get the IDs for the five builds that we just created.
-        $builds = \DB::select(
-            DB::raw(
-                "SELECT b.id AS buildid, b2g.groupid
+        $builds = DB::select("
+            SELECT
+                b.id AS buildid,
+                b2g.groupid
             FROM build b
             JOIN build2group b2g ON (b2g.buildid = b.id)
             WHERE name='TestHistory'
-            ORDER BY b.starttime")
-        );
+            ORDER BY b.starttime
+        ");
         $this->assertEqual(5, count($builds));
         $groupid = $builds[0]->groupid;
         $buildids = [];
@@ -280,7 +282,7 @@ class TestHistoryTestCase extends KWWebTestCase
         }
 
         // Verify test graphs for our 'flaky' test.
-        $test_result = \DB::select(
+        $test_result = DB::select(
             "SELECT id FROM test WHERE name = 'flaky' AND projectid = {$this->project->Id}");
         $testid = $test_result[0]->id;
 
@@ -307,7 +309,7 @@ class TestHistoryTestCase extends KWWebTestCase
         // status graph
         $flaky_ids = [];
         foreach (range(0, 4) as $i) {
-            $flaky_ids[] = \DB::table('build2test')
+            $flaky_ids[] = DB::table('build2test')
                 ->where('buildid', '=', $buildids[$i])
                 ->where('testid', '=', $testid)
                 ->value('id');
@@ -332,12 +334,12 @@ class TestHistoryTestCase extends KWWebTestCase
         $this->assertEqual($flaky_ids[4], $jsonobj[1]['data'][2]['buildtestid']);
 
         // Verify next/previous/current for our sporadic test.
-        $test_result = \DB::select(
+        $test_result = DB::select(
             "SELECT id FROM test WHERE name = 'sporadic' AND projectid = {$this->project->Id}");
         $testid = $test_result[0]->id;
         $sporadic_ids = [];
         foreach (range(0, 4, 2) as $i) {
-            $sporadic_ids[] = \DB::table('build2test')
+            $sporadic_ids[] = DB::table('build2test')
                 ->where('buildid', '=', $buildids[$i])
                 ->where('testid', '=', $testid)
                 ->value('id');

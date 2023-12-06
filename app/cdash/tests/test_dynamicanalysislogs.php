@@ -3,6 +3,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Project;
 use CDash\Model\DynamicAnalysis;
+use Illuminate\Support\Facades\DB;
 
 class DynamicAnalysisLogsTestCase extends KWWebTestCase
 {
@@ -43,13 +44,12 @@ class DynamicAnalysisLogsTestCase extends KWWebTestCase
         }
 
         // Verify full log file was recorded.
-        $results = \DB::select(
-            DB::raw("
-                SELECT dynamicanalysis.id FROM dynamicanalysis
-                JOIN build on (dynamicanalysis.buildid = build.id)
-                WHERE build.projectid = :projectid"),
-            [':projectid' => $this->project->Id]
-        );
+        $results = DB::select("
+            SELECT dynamicanalysis.id
+            FROM dynamicanalysis
+            JOIN build on (dynamicanalysis.buildid = build.id)
+            WHERE build.projectid = ?
+        ", [(int) $this->project->Id]);
         $this->assertTrue(1 === count($results));
         $id = $results[0]->id;
         $DA = new DynamicAnalysis();
