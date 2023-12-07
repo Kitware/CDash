@@ -17,11 +17,11 @@
 namespace CDash\Model;
 
 require_once 'include/ctestparserutils.php';
-require_once 'include/repository.php';
 
 use App\Models\BuildTest;
 use App\Models\Site;
 use App\Models\Test;
+use App\Utils\RepositoryUtils;
 use App\Utils\TestingDay;
 use App\Utils\TestDiffUtil;
 use App\Models\BuildInformation;
@@ -2087,7 +2087,7 @@ class Build
         $message .= '.';
 
         // Post the PR comment & mark this build as 'notified'.
-        post_pull_request_comment($this->ProjectId, $this->PullRequest, $message, $url);
+        RepositoryUtils::post_pull_request_comment($this->ProjectId, $this->PullRequest, $message, $url);
 
         $buildToNotify->notified = true;
         $buildToNotify->save();

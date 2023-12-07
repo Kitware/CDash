@@ -15,9 +15,8 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use App\Utils\RepositoryUtils;
 use CDash\Config;
-
-require_once 'include/repository.php';
 
 use PDO;
 use App\Models\BuildError as EloquentBuildError;
@@ -132,16 +131,16 @@ class BuildError
         $marshaled = [
             'new' => (int) ($data['newstatus'] ?? -1),
             'logline' => (int) $data['logline'],
-            'cvsurl' => get_diff_url($project->Id, $project->CvsUrl, $directory, $file, $revision),
+            'cvsurl' => RepositoryUtils::get_diff_url($project->Id, $project->CvsUrl, $directory, $file, $revision),
         ];
 
         // When building without launchers, CTest truncates the source dir to
         // /.../<project-name>/.  Use this pattern to linkify compiler output.
         $source_dir = "/\.\.\./[^/]+";
         $marshaled = array_merge($marshaled, [
-            'precontext' => linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['precontext']),
-            'text' => linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['text']),
-            'postcontext' => linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['postcontext']),
+            'precontext' => RepositoryUtils::linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['precontext']),
+            'text' => RepositoryUtils::linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['text']),
+            'postcontext' => RepositoryUtils::linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['postcontext']),
             'sourcefile' => $data['sourcefile'],
             'sourceline' => $data['sourceline']]);
 

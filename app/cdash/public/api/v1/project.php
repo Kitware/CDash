@@ -19,7 +19,7 @@ namespace CDash\Api\v1\Project;
 require_once 'include/api_common.php';
 
 
-
+use App\Utils\RepositoryUtils;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 use Illuminate\Support\Facades\Auth;
@@ -134,12 +134,10 @@ function rest_post($user)
 
 function get_repo_url_example()
 {
-
-    require_once 'include/repository.php';
     $url = get_param('url');
     $type = get_param('type');
     $functionname = "get_{$type}_diff_url";
-    $example = $functionname($url, 'DIRECTORYNAME', 'FILENAME', 'REVISION');
+    $example = RepositoryUtils::$functionname($url, 'DIRECTORYNAME', 'FILENAME', 'REVISION');
     json_error_response(['example' => $example], 200);
     return true;
 }

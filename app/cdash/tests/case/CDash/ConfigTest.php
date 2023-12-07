@@ -1,6 +1,9 @@
 <?php
+
+use App\Utils\RepositoryUtils;
 use CDash\Config;
 use CDash\Test\CDashTestCase;
+use Illuminate\Support\Facades\Log;
 
 class ConfigTest extends CDashTestCase
 {
@@ -129,11 +132,9 @@ class ConfigTest extends CDashTestCase
     public function testDisablePullRequestComments()
     {
         include 'config/config.php';
-        require_once 'include/repository.php';
 
-        $config = Config::getInstance();
-        \Illuminate\Support\Facades\Log::shouldReceive('info')
+        Log::shouldReceive('info')
             ->with('pull request commenting is disabled');
-        post_pull_request_comment(1, 1, "this is a comment", config('app.url'));
+        RepositoryUtils::post_pull_request_comment(1, 1, "this is a comment", config('app.url'));
     }
 }

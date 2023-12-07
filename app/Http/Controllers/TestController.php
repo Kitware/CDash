@@ -6,6 +6,7 @@ use App\Utils\PageTimer;
 use CDash\Controller\Api\TestOverview as LegacyTestOverviewController;
 use CDash\Controller\Api\TestDetails as LegacyTestDetailsController;
 use CDash\Controller\Api\TestGraph as LegacyTestGraphController;
+use App\Utils\RepositoryUtils;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -15,8 +16,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-
-require_once 'include/repository.php';
 
 final class TestController extends AbstractProjectController
 {
@@ -387,9 +386,9 @@ final class TestController extends AbstractProjectController
                 $update_response['priorrevision'] = $status_array->priorrevision;
                 $update_response['path'] = $status_array->path;
                 $update_response['revisionurl'] =
-                    get_revision_url($this->project->Id, $status_array->revision, $status_array->priorrevision);
+                    RepositoryUtils::get_revision_url($this->project->Id, $status_array->revision, $status_array->priorrevision);
                 $update_response['revisiondiff'] =
-                    get_revision_url($this->project->Id, $status_array->priorrevision, ''); // no prior prior revision...
+                    RepositoryUtils::get_revision_url($this->project->Id, $status_array->priorrevision, ''); // no prior prior revision...
             }
             $build_response['update'] = $update_response;
 
