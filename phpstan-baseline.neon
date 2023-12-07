@@ -5491,56 +5491,6 @@ parameters:
 			path: app/cdash/app/Model/ActionableTypes.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$builderrors\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$buildwarnings\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$configureerrors\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$configurewarnings\\.$#"
-			count: 2
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$done\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$name\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$notified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$testfailed\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$testnotrun\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$testpassed\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Access to an undefined property object\\:\\:\\$difference\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -5552,11 +5502,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property object\\:\\:\\$time\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:save\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -6159,11 +6104,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$TestCollection has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Variable property access on App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 

@@ -866,8 +866,8 @@ class Build
             throw new InvalidArgumentException('Invalid field specified.');
         }
 
-        $model = EloquentBuild::find($this->Id);
-        return $model === null ? 0 : max($model->$field, 0);
+        $model = EloquentBuild::find((int) $this->Id);
+        return $model === null ? 0 : max($model->getAttribute($field), 0);
     }
 
     /** Get number of failed tests */
@@ -1177,7 +1177,7 @@ class Build
 
         // Look up the number of configure warnings for this build
         // and the previous one.
-        $nwarnings = EloquentBuild::findOrFail($this->Id)->configurewarnings;
+        $nwarnings = EloquentBuild::findOrFail((int) $this->Id)->configurewarnings;
         $npreviouswarnings = EloquentBuild::findOrFail($previousbuildid)->configurewarnings;
 
         DB::transaction(function () use ($nwarnings, $npreviouswarnings) {
@@ -1622,7 +1622,7 @@ class Build
             return $this->Name;
         }
 
-        $this->Name = EloquentBuild::findOrFail($this->Id)->name;
+        $this->Name = EloquentBuild::findOrFail((int) $this->Id)->name;
         return $this->Name;
     }
 
@@ -1715,7 +1715,7 @@ class Build
             return false;
         }
 
-        $num_errors = EloquentBuild::findOrFail($this->Id)->builderrors;
+        $num_errors = EloquentBuild::findOrFail((int) $this->Id)->builderrors;
         return self::ConvertMissingToZero($num_errors);
     }
 
@@ -1727,7 +1727,7 @@ class Build
             return false;
         }
 
-        $num_warnings = EloquentBuild::findOrFail($this->Id)->buildwarnings;
+        $num_warnings = EloquentBuild::findOrFail((int) $this->Id)->buildwarnings;
         return self::ConvertMissingToZero($num_warnings);
     }
 
@@ -1986,7 +1986,7 @@ class Build
             return (int) $this->BuildConfigure->NumberOfWarnings;
         }
 
-        $num_warnings = EloquentBuild::findOrFail($this->Id)->configurewarnings;
+        $num_warnings = EloquentBuild::findOrFail((int) $this->Id)->configurewarnings;
         return self::ConvertMissingToZero($num_warnings);
     }
 
@@ -2027,7 +2027,7 @@ class Build
             return (int) $this->BuildConfigure->NumberOfErrors;
         }
 
-        $num_errors = EloquentBuild::findOrFail($this->Id)->configureerrors;
+        $num_errors = EloquentBuild::findOrFail((int) $this->Id)->configureerrors;
         return self::ConvertMissingToZero($num_errors);
     }
 
@@ -2073,7 +2073,7 @@ class Build
         }
 
         // Return early if this build already posted a comment on this PR.
-        $buildToNotify = EloquentBuild::findOrFail($idToNotify);
+        $buildToNotify = EloquentBuild::findOrFail((int) $idToNotify);
         if ($buildToNotify->notified) {
             return;
         }
@@ -2159,7 +2159,7 @@ class Build
             return $this->Done;
         }
 
-        $this->Done = EloquentBuild::findOrFail($this->Id)->done;
+        $this->Done = EloquentBuild::findOrFail((int) $this->Id)->done;
         return $this->Done;
     }
 
