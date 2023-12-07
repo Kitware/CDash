@@ -594,7 +594,7 @@ class Build
                 return false;
             }
 
-            if ($this->isParentBuild()) {
+            if ($this->IsParentBuild()) {
                 $failures = $this->GetFailuresForChildren($fetchStyle);
             } else {
                 $buildFailure = new BuildFailure();

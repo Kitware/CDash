@@ -5543,11 +5543,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Call to method CDash\\\\Model\\\\Build\\:\\:IsParentBuild\\(\\) with incorrect case\\: isParentBuild$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Cannot access offset 'builderrorsnegative' on array\\{builderrorspositive\\: int, builderrorsnegative\\: int, buildwarningspositive\\: int, buildwarningsnegative\\: int, configureerrors\\: int, configurewarnings\\: int, testpassedpositive\\: int, testpassednegative\\: int, \\.\\.\\.\\}\\|false\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
