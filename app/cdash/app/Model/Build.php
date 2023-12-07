@@ -2784,6 +2784,9 @@ class Build
                 ];
             } else {
                 $diff = $this->GetErrorDifferences();
+                if ($diff === false) {
+                    abort(500, 'Error calculating error diffs');
+                }
                 $this->ErrorDifferences = [
                     'BuildWarning' => [
                         'new' => $diff['buildwarningspositive'],
