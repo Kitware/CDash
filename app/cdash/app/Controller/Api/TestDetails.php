@@ -254,7 +254,7 @@ class TestDetails extends BuildTestApi
                 $test_response['environment'] = $row['value'];
                 continue;
             } elseif ($row['type'] == 'text/preformatted') {
-                $preformatted_measurement = ['name' => $row['name'], 'value' => $row['value']];
+                $preformatted_measurement = ['name' => $row['name'], 'value' => base64_decode($row['value'])];
                 $preformatted_measurements[] = $preformatted_measurement;
                 continue;
             }
