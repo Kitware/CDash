@@ -236,7 +236,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                 if ($this->StartTimeStamp > 0 && $this->EndTimeStamp > 0) {
                     // Update test duration in the Build table.
                     $duration = $this->EndTimeStamp - $this->StartTimeStamp;
-                    $build->UpdateTestDuration($duration, !$all_at_once);
+                    $build->UpdateTestDuration((int) $duration, !$all_at_once);
                     if ($all_at_once && !$parent_duration_set) {
                         $parent_build = $factory->create(Build::class);
                         $parent_build->Id = $build->GetParentId();

@@ -538,7 +538,7 @@ class Build
      * Return the errors that have been resolved from this build.
      * @todo This doesn't support getting resolved build errors across parent builds.
      **/
-    public function GetResolvedBuildErrors(int $type)
+    public function GetResolvedBuildErrors(int $type): \PDOStatement|false
     {
         // This returns an empty result if there was no previous build
         $stmt = $this->PDO->prepare(
@@ -645,7 +645,7 @@ class Build
      * but NOT this build.
      * @todo This doesn't support getting resolved build failures across parent builds.
      **/
-    public function GetResolvedBuildFailures(int $type)
+    public function GetResolvedBuildFailures(int $type): \PDOStatement
     {
         $currentFailuresQuery =
             'SELECT bf.detailsid FROM buildfailure AS bf
@@ -1374,7 +1374,7 @@ class Build
     }
 
     /** Compute the user statistics */
-    public function ComputeUpdateStatistics()
+    public function ComputeUpdateStatistics(): bool
     {
         if (!$this->Id) {
             add_log('Id is not set', 'Build::ComputeUpdateStatistics', LOG_ERR,
@@ -1952,7 +1952,7 @@ class Build
     }
 
     /** Update the testing numbers for our parent build. */
-    private function UpdateParentTestNumbers($newFailed, $newNotRun, $newPassed): void
+    private function UpdateParentTestNumbers(int $newFailed, int $newNotRun, int $newPassed): void
     {
         if ($this->ParentId < 1) {
             return;
@@ -2064,7 +2064,7 @@ class Build
         $this->PullRequest = $pr;
     }
 
-    private function NotifyPullRequest($message, $url)
+    private function NotifyPullRequest(string $message, string $url): void
     {
         // Figure out if we should notify this build or its parent.
         $idToNotify = $this->Id;
@@ -2091,7 +2091,7 @@ class Build
         $buildToNotify->save();
     }
 
-    private function UpdateDuration(string $field, $duration, bool $update_parent = true): void
+    private function UpdateDuration(string $field, int $duration, bool $update_parent = true): void
     {
         if ($duration === 0) {
             return;
@@ -2120,17 +2120,17 @@ class Build
         }, 5);
     }
 
-    public function SetConfigureDuration($duration, bool $update_parent = true): void
+    public function SetConfigureDuration(int $duration, bool $update_parent = true): void
     {
         $this->UpdateDuration('configure', $duration, $update_parent);
     }
 
-    public function UpdateBuildDuration($duration, bool $update_parent = true): void
+    public function UpdateBuildDuration(int $duration, bool $update_parent = true): void
     {
         $this->UpdateDuration('build', $duration, $update_parent);
     }
 
-    public function UpdateTestDuration($duration, bool $update_parent = true): void
+    public function UpdateTestDuration(int $duration, bool $update_parent = true): void
     {
         $this->UpdateDuration('test', $duration, $update_parent);
     }
@@ -2305,7 +2305,7 @@ class Build
     /**
      * Return a SubProject build for a particular parent if it exists.
      */
-    public static function GetSubProjectBuild($parentid, $subprojectid): self|null
+    public static function GetSubProjectBuild(int $parentid, int $subprojectid): self|null
     {
         $pdo = Database::getInstance()->getPdo();
         $stmt = $pdo->prepare(
