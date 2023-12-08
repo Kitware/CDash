@@ -5518,7 +5518,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 31
+			count: 30
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -5534,7 +5534,7 @@ parameters:
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -5543,32 +5543,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Cannot access property \\$id on App\\\\Models\\\\Build\\|null\\.$#"
-			count: 2
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Cannot access property \\$name on App\\\\Models\\\\Test\\|null\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access property \\$timemean on App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\|null\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access property \\$timestatus on App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\|null\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access property \\$timestd on App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\|null\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot call method save\\(\\) on App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\|null\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -5633,11 +5608,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:count\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:exists\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -5663,12 +5633,27 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddUpdateStatistics\\(\\) has parameter \\$author with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddUpdateStatistics\\(\\) has parameter \\$checkindate with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddUpdateStatistics\\(\\) has parameter \\$email with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddUpdateStatistics\\(\\) has parameter \\$errordiff with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddUpdateStatistics\\(\\) has parameter \\$testdiff with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -5828,11 +5813,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:PropertyFilter\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:PropertyFilter\\(\\) has parameter \\$rows with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -5883,17 +5863,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Only booleans are allowed in &&, string\\|false given on the right side\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Only booleans are allowed in a negated boolean, int\\|null given\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -5945,16 +5915,6 @@ parameters:
 		-
 			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
 			count: 7
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Parameter \\#2 \\$property of function property_exists expects string, \\(int\\|string\\) given\\.$#"
-			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-

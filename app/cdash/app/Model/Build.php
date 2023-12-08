@@ -611,6 +611,8 @@ class Build
 
     /**
      * Apply filter to rows
+     *
+     * @param array<string,mixed> $filters
      */
     protected function PropertyFilter(array $rows, array $filters): array
     {
@@ -1353,8 +1355,8 @@ class Build
                 $timemean = $testtime;
             }
 
-            $buildtest = \App\Models\BuildTest::find($buildtestid);
-            $buildtest->timestatus = $timestatus;
+            $buildtest = BuildTest::findOrFail((int) $buildtestid);
+            $buildtest->timestatus = (int) $timestatus;
 
             $buildtest->timemean = $timemean;
             $buildtest->timestd = $timestd;
@@ -1774,7 +1776,7 @@ class Build
             'stamp' => $this->Stamp,
         ]);
 
-        return $builds->count() > 0 ? $builds->first()->id : 0;
+        return $builds->first()->id ?? 0;
     }
 
     /** Create a new build as a parent of $this and sets $this->ParentId.
@@ -2307,18 +2309,19 @@ class Build
      */
     public static function GetSubProjectBuild(int $parentid, int $subprojectid): self|null
     {
-        $pdo = Database::getInstance()->getPdo();
-        $stmt = $pdo->prepare(
-            'SELECT b.id FROM build b
+        $row = DB::select('
+            SELECT b.id
+            FROM build b
             JOIN subproject2build sp2b ON (sp2b.buildid = b.id)
-            WHERE b.parentid = ? AND sp2b.subprojectid = ?');
-        pdo_execute($stmt, [$parentid, $subprojectid]);
-        $row = $stmt->fetch();
+            WHERE
+                b.parentid = ?
+                AND sp2b.subprojectid = ?
+        ', [$parentid, $subprojectid])[0] ?? [];
         if (!$row) {
             return null;
         }
         $build = new Build();
-        $build->Id = $row['id'];
+        $build->Id = $row->id;
         $build->FillFromId($build->Id);
         return $build;
     }
@@ -2369,7 +2372,7 @@ class Build
     private static function GetIdFromUuid($uuid): int|null
     {
         $model = EloquentBuild::where('uuid', $uuid);
-        return $model->count() > 0 ? $model->first()->id : null;
+        return $model->first()?->id;
     }
 
     /**
@@ -2614,7 +2617,7 @@ class Build
 
                     if ($hasAuthor === false
                         && $hasCommitter === false
-                        && filter_var($row['author'], FILTER_VALIDATE_EMAIL)
+                        && filter_var($row['author'], FILTER_VALIDATE_EMAIL) !== false
                     ) {
                         $authors[] = $row['author'];
                     }
