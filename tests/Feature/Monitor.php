@@ -99,30 +99,39 @@ class Monitor extends TestCase
         // Verify expected API response.
         // This includes verifying that we use the classic color palette by default.
         $response = $this->actingAs($this->admin_user)->getJson('/api/monitor');
+        $response->assertJsonStructure([
+            'backlog_length',
+            'backlog_time',
+            'time_chart_data' => [
+                "data" => [
+                    [
+                        "name",
+                        "color",
+                        "values",
+                    ],
+                    [
+                        "name",
+                        "color",
+                        "values",
+                    ],
+                ],
+                "title",
+                "xLabel",
+                "yLabel",
+            ],
+            'log_directory',
+        ]);
         $response->assertJsonFragment([
             'backlog_length' => 1,
             'backlog_time' => 'just now',
         ]);
-        $response_json = $response->json();
-        $this::assertTrue(array_key_exists('time_chart_data', $response_json));
-        $this::assertTrue(array_key_exists('data', $response_json['time_chart_data']));
-        $this::assertTrue(array_key_exists('title', $response_json['time_chart_data']));
-        $this::assertTrue(array_key_exists('xLabel', $response_json['time_chart_data']));
-        $this::assertTrue(array_key_exists('yLabel', $response_json['time_chart_data']));
 
-        $data = $response_json['time_chart_data']['data'];
-        $this::assertEquals(2, count($data));
+        $data = $response['time_chart_data']['data'];
 
-        $this::assertTrue(array_key_exists('name', $data[0]));
-        $this::assertTrue(array_key_exists('color', $data[0]));
-        $this::assertTrue(array_key_exists('values', $data[0]));
         $this::assertEquals('Success', $data[0]['name']);
         $this::assertEquals(ClassicPalette::Success->value, $data[0]['color']);
         $this::assertEquals(1, end($data[0]['values'])[1]);
 
-        $this::assertTrue(array_key_exists('name', $data[1]));
-        $this::assertTrue(array_key_exists('color', $data[1]));
-        $this::assertTrue(array_key_exists('values', $data[1]));
         $this::assertEquals('Fail', $data[1]['name']);
         $this::assertEquals(ClassicPalette::Failure->value, $data[1]['color']);
         $this::assertEquals(1, end($data[1]['values'])[1]);

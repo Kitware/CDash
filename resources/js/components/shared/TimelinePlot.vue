@@ -475,7 +475,7 @@ div .timeline-tooltip {
   background-color: white;
   border: solid;
   border-width: 1px;
-  border-radius: 3px;
-  padding: 5px;
+  border-radius: 0.4em;
+  padding: 0.4em;
 }
 </style>
