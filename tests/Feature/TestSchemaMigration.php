@@ -174,7 +174,7 @@ class TestSchemaMigration extends TestCase
             '--force' => true]);
 
         // Verify results.
-        $this::assertEquals(DB::table('test')->count(), 3);
+        $this::assertEquals(3, DB::table('test')->count());
         $expected_tests = [
             [
                 'name' => 'a test',
@@ -193,7 +193,7 @@ class TestSchemaMigration extends TestCase
             $this->assertDatabaseHas('test', $expected_test);
         }
 
-        $this::assertEquals(DB::table('testoutput')->count(), 4);
+        $this::assertEquals(4, DB::table('testoutput')->count());
         $expected_testoutputs = [
             [
                 'crc32' => 123,
@@ -219,7 +219,7 @@ class TestSchemaMigration extends TestCase
         }
 
         foreach (['build2test', 'label2test', 'test2image', 'testmeasurement'] as $table) {
-            $this::assertEquals(DB::table($table)->count(), 4);
+            $this::assertEquals(4, DB::table($table)->count());
             $this->assertDatabaseHas($table, ['outputid' => 1]);
             $this->assertDatabaseHas($table, ['outputid' => 2]);
             $this->assertDatabaseHas($table, ['outputid' => 3]);
