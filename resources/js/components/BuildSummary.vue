@@ -573,8 +573,8 @@
         History
       </div>
       <a
-        id="toggle_history_graph"
-        @click="toggleHistoryGraph()"
+        id="toggle_history_table"
+        @click="toggleHistoryTable()"
       >
         Show Build History
       </a>
@@ -588,13 +588,13 @@
       </a>
       <br>
 
-      <div>
+      <div v-if="showHistoryTable">
         <img
-          v-show="showHistoryGraph && graphLoading"
+          v-if="tableLoading"
           :src="$baseURL + '/img/loading.gif'"
         >
         <table
-          v-show="showHistoryGraph && !graphLoading"
+          v-if="!tableLoading && cdash.buildhistory"
           id="historyGraph"
           width="100%"
           border="0"
@@ -761,14 +761,11 @@
       </a>
       <div style="text-align: center;">
         <img
-          v-show="showTimeGraph && graphLoading"
+          v-if="showTimeGraph && !timeGraphData"
+
           :src="$baseURL + '/img/loading.gif'"
         >
-        <div
-          v-show="showTimeGraph"
-          id="buildtimegrapholder"
-          class="graph_holder"
-        />
+        <p v-if="showTimeGraph && timeGraphData">Displaying build time graph!</p>
       </div>
 
       <img
@@ -783,14 +780,10 @@
       </a>
       <div style="text-align: center;">
         <img
-          v-show="showErrorGraph && graphLoading"
+          v-show="showErrorGraph && !errorGraphData"
           :src="$baseURL + '/img/loading.gif'"
         >
-        <div
-          v-show="showErrorGraph"
-          id="builderrorsgrapholder"
-          class="graph_holder"
-        />
+        <p v-show="showErrorGraph">Displaying build error graph!</p>
       </div>
 
       <img
@@ -805,14 +798,10 @@
       </a>
       <div style="text-align: center;">
         <img
-          v-show="showWarningGraph && graphLoading"
+          v-show="showWarningGraph && !warningGraphData"
           :src="$baseURL + '/img/loading.gif'"
         >
-        <div
-          v-show="showWarningGraph"
-          id="buildwarningsgrapholder"
-          class="graph_holder"
-        />
+        <p v-show="showWarningGraph">Displaying build warning graph!</p>
       </div>
 
       <img
@@ -827,14 +816,10 @@
       </a>
       <div style="text-align: center;">
         <img
-          v-show="showTestGraph && graphLoading"
+          v-show="showTestGraph && !testGraphData"
           :src="$baseURL + '/img/loading.gif'"
         >
-        <div
-          v-show="showTestGraph"
-          id="buildtestsfailedgrapholder"
-          class="graph_holder"
-        />
+        <p v-show="showTestGraph">Displaying build test graph!</p>
       </div>
       <br>
 
@@ -1069,23 +1054,19 @@ export default {
       errored: false,
 
       // Booleans controlling whether a section should be displayed or not.
-      showErrorGraph: false,
-      showHistoryGraph: false,
-      showTestGraph: false,
+      showHistoryTable: false,
       showTimeGraph: false,
+      showErrorGraph: false,
       showWarningGraph: false,
+      showTestGraph: false,
       showNote: false,
 
       // Graph data.
-      graphLoading: false,
-      graphLoaded: false,
-      graphData: [],
-      graphRendered: {
-        'time': false,
-        'errors': false,
-        'warnings': false,
-        'tests': false
-      },
+      tableLoading: true,
+      timeGraphData: {},
+      errorGraphData: {},
+      warningGraphData: {},
+      testGraphData: {},
     }
   },
 
@@ -1093,20 +1074,21 @@ export default {
     this.buildid = window.location.pathname.split("/").pop();
     var endpoint_path = '/api/v1/buildSummary.php?buildid=' + this.buildid;
     ApiLoader.loadPageData(this, endpoint_path);
+    this.loadBuildData();
   },
 
   methods: {
-    postSetup: function (response) {
+    postSetup: function () {
+      console.log("runnning postSetup!!!");
       this.cdash.noteStatus = "0";
+      console.log(this.timeGraphData);
+      console.log(this.errorGraphData);
+      console.log(this.warningGraphData);
+      console.log(this.testGraphData);
     },
 
-    toggleHistoryGraph: function () {
-      this.showHistoryGraph = !this.showHistoryGraph;
-      this.loadGraphData();
-    },
-
-    loadGraphData: function(graphType) {
-      this.graphLoading = true;
+    loadBuildData: function() {
+      this.tableLoading = true;
       this.$axios
         .get('/api/v1/getPreviousBuilds.php?buildid=' + this.buildid)
         .then(response => {
@@ -1140,166 +1122,105 @@ export default {
             history_build['starttime'] = build['starttime'];
             this.cdash.buildhistory.push(history_build);
           }
-          this.graphLoaded = true;
-          if (graphType) {
-            // Render the graph that triggered this call.
-            this.renderGraph(graphType);
-          }
         })
-        .finally(() => this.graphLoading = false)
+        .finally(() => {
+          this.tableLoading = false;
+          this.preparePlotData();
+        })
     },
 
-    renderGraph: function (graphType) {
-      if (this.graphRendered[graphType]) {
-        // Already rendered, abort early.
-        return;
-      }
-
-      // Options shared by all four graphs.
-      var data, element, label;
-      var options = {
-        lines: {show: true},
-        points: {show: true},
-        xaxis: {
-          mode: "time",
-          timeformat: "%Y/%m/%d %H:%M",
-          timeBase: "milliseconds",
-        },
-        grid: {
-          backgroundColor: "#fffaff",
-          clickable: true,
-          hoverable: true,
-          hoverFill: '#444',
-          hoverRadius: 4
-        },
-        selection: {mode: "x"},
-      };
-
-      switch (graphType) {
-      case 'time':
-        options['colors'] = ["#41A317"];
-        options['yaxis'] = {
-          tickFormatter: function (v, axis) {
-            return v.toFixed(axis.tickDecimals) + " mins"}
+    preparePlotData: function() {
+      // perform data marshalling before sending data to the d3 plot template
+      console.log(this);
+      console.log(this.cdash);
+      console.log(this.cdash.buildids);
+      const buildTimeValues = [];
+      const errorsValues = [];
+      const warningsValues = [];
+      const testFailValues = [];
+      const generatePt = (d,j) => {
+        return {
+          x: new Date(d[j][0]*1000),
+          y: d[j][1],
+          url: this.$baseURL + "/build/" + this.cdash.buildids[d[j][0]],
         };
-        data = this.cdash.buildtimes;
-        element = "#buildtimegrapholder";
-        label = "Build Time";
-        break;
-      case 'errors':
-        options['colors'] = ["#FF0000"];
-        options['yaxis'] = {minTickSize: 1};
-        data = this.cdash.builderrors;
-        element = "#builderrorsgrapholder";
-        label = "# errors";
-        break;
-      case 'warnings':
-        options['colors'] = ["#FDD017"];
-        options['yaxis'] = {minTickSize: 1};
-        data = this.cdash.buildwarnings;
-        element = "#buildwarningsgrapholder";
-        label = "# warnings";
-        break;
-      case 'tests':
-        options['colors'] = ["#0000FF"];
-        options['yaxis'] = {minTickSize: 1};
-        data = this.cdash.testfailed;
-        element = "#buildtestsfailedgrapholder";
-        label = "# tests failed";
-        break;
-      default:
-        return;
+      };
+      for (let i = 0; i < this.cdash.buildids.length; i++) {
+        buildTimeValues.push(generatePt(this.cdash.buildtimes, i));
+        errorsValues.push(generatePt(this.cdash.builderrors, i));
+        warningsValues.push(generatePt(this.cdash.buildwarnings, i));
+        testFailValues.push(generatePt(this.cdash.testfailed, i));
       }
-
-      // Render the graph.
-      var plot = $.plot($(element), [{label: label, data: data}],
-        options);
-
-      $(element).bind("selected", function (event, area) {
-        // Set axis range to highlighted section and redraw plot.
-        var axes = plot.getAxes(),
-          xaxis = axes.xaxis.options;
-        xaxis.min = area.x1;
-        xaxis.max = area.x2;
-        plot.clearSelection();
-        plot.setupGrid();
-        plot.draw();
-      });
-
-      var vm = this;
-      $(element).bind("plotclick", function (e, pos, item) {
-        if (item) {
-          plot.highlight(item.series, item.datapoint);
-          var buildid = vm.cdash.buildids[item.datapoint[0]];
-          window.location = vm.$baseURL + "/build/" + buildid;
-        }
-      });
-
-      $(element).bind('dblclick', function(event) {
-        // Set axis range to null.  This makes all data points visible.
-        var axes = plot.getAxes(),
-          xaxis = axes.xaxis.options,
-          yaxis = axes.yaxis.options;
-        xaxis.min = null;
-        xaxis.max = null;
-        yaxis.min = null;
-        yaxis.max = null;
-
-        // Redraw the plot.
-        plot.setupGrid();
-        plot.draw();
-      });
-
-      this.graphRendered[graphType] = true;
+      this.timeGraphData = {
+        data: [
+          {
+            color: "#41A317",
+            name: "Build Duration",
+            values: buildTimeValues,
+          },
+        ],
+        title: "Build Duration Over Time",
+        xlabel: "Date",
+        ylabel: "Time (mins)",
+      };
+      this.errorGraphData = {
+        data: [
+          {
+            color: "#FF0000",
+            name: "Build Errors",
+            values: errorsValues,
+          },
+        ],
+        title: "Build Errors Over Time",
+        xlabel: "Date",
+        ylabel: "# errors",
+      };
+      this.warningGraphData = {
+        data: [
+          {
+            color: "#FDD017",
+            name: "Build Warnings",
+            values: warningsValues,
+          },
+        ],
+        title: "Build Warnings Over Time",
+        xlabel: "Date",
+        ylabel: "# warnings",
+      };
+      this.testGraphData = {
+        data: [
+          {
+            color: "#0000FF",
+            name: "Test Failures",
+            values: testFailValues,
+          },
+        ],
+        title: "Failed Tests Over Time",
+        xlabel: "Date",
+        ylabel: "# tests failed",
+      };
     },
 
     // Show/hide our various history graphs.
+    toggleHistoryTable: function () {
+      this.showHistoryTable = !this.showHistoryTable;
+      this.loadBuildData();
+    },
+
     toggleTimeGraph: function() {
       this.showTimeGraph = !this.showTimeGraph;
-      // Use a 1 ms timeout before loading graph data.
-      // This gives the holder div a chance to become visible before the graph
-      // is drawn.  Otherwise flot has trouble drawing the graph with the
-      // correct dimensions.
-      setTimeout(function () {
-        if (!this.graphLoaded) {
-          this.loadGraphData('time');
-        } else {
-          this.renderGraph('time');
-        }
-      }.bind(this), 1);
     },
 
     toggleErrorGraph: function() {
       this.showErrorGraph = !this.showErrorGraph;
-      setTimeout(function () {
-        if (!this.graphLoaded) {
-          this.loadGraphData('errors');
-        } else {
-          this.renderGraph('errors');
-        }
-      }.bind(this), 1);
     },
 
     toggleWarningGraph: function() {
       this.showWarningGraph = !this.showWarningGraph;
-      setTimeout(function () {
-        if (!this.graphLoaded) {
-          this.loadGraphData('warnings');
-        } else {
-          this.renderGraph('warnings');
-        }
-      }.bind(this), 1);
     },
 
     toggleTestGraph: function() {
       this.showTestGraph = !this.showTestGraph;
-      setTimeout(function () {
-        if (!this.graphLoaded) {
-          this.loadGraphData('tests');
-        } else {
-          this.renderGraph('tests');
-        }
-      }.bind(this), 1);
     },
 
     toggleNote: function() {
