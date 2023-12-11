@@ -85,7 +85,6 @@ class MigrateConfig extends Command
         if (file_exists($config_dir . 'config.local.php')) {
             include $config_dir . 'config.local.php';
         }
-        include $cdash_app_dir . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'version.php';
         foreach (get_defined_vars() as $key => $value) {
             if (strpos($key, 'CDASH_') === 0) {
                 $legacy_defaults[$key] = $value;
@@ -122,7 +121,6 @@ class MigrateConfig extends Command
         if (file_exists($config_dir . 'config.local.php')) {
             include $config_dir . 'config.local.php';
         }
-        include $cdash_app_dir . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'version.php';
         foreach (get_defined_vars() as $key => $value) {
             if ($key == 'OAUTH2_PROVIDERS') {
                 foreach ($value as $k => $v) {

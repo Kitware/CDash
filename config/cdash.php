@@ -5,7 +5,6 @@ $cdash = realpath(app_path($cdash_directory_name));
 // read in all of our cdash config files
 if ($cdash) {
     include_once $cdash . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
-    include_once $cdash . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'version.php';
 }
 
 $unlimited_projects = json_decode(env('UNLIMITED_PROJECTS', ''), true);

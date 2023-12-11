@@ -180,9 +180,6 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 /** Main function to parse the incoming xml from ctest */
 function ctest_parse($filehandle, $projectid, $expected_md5 = '')
 {
-
-    include 'include/version.php';
-
     // Check if this is a new style PUT submission.
     try {
         $handler = parse_put_submission($filehandle, $projectid, $expected_md5);

@@ -16,7 +16,6 @@ use PDO;
 
 require_once 'include/api_common.php';
 require_once 'include/ctestparser.php';
-require_once 'include/version.php';
 require_once 'include/upgrade_functions.php';
 
 final class AdminController extends AbstractController
@@ -696,22 +695,16 @@ final class AdminController extends AbstractController
      */
     public static function setVersion(): string
     {
-        $config = Config::getInstance();
-
-        $major = $config->get('CDASH_VERSION_MAJOR');
-        $minor = $config->get('CDASH_VERSION_MINOR');
-        $patch = $config->get('CDASH_VERSION_PATCH');
+        $version = explode('.', config('cdash.version'));
 
         $stmt = DB::select('SELECT major FROM version');
-        $version = [$major, $minor, $patch];
-
         if (count($stmt) === 0) {
             DB::insert('INSERT INTO version (major, minor, patch) VALUES (?, ?, ?)', $version);
         } else {
             DB::update('UPDATE version SET major=?, minor=?, patch=?', $version);
         }
 
-        return "$major.$minor.$patch";
+        return config('cdash.version');
     }
 
     public function install(): View

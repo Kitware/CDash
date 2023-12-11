@@ -312,7 +312,7 @@ parameters:
 				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
 				09/04/2023  Use config\\(\\) instead\\.$#
 			"""
-			count: 12
+			count: 9
 			path: app/Http/Controllers/AdminController.php
 
 		-
