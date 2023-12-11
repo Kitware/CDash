@@ -59,9 +59,9 @@ class TestUseCaseTest extends CDashUseCaseTestCase
 
     public function testTestUseCaseReturnsTestingHandler()
     {
+        /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST);
         $sut->createSite(['Name' => 'Site.Name']);
-        /** @var ActionableBuildInterface $handler */
         $handler = $sut->build();
         $this->assertInstanceOf(\TestingHandler::class, $handler);
     }
@@ -95,6 +95,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
             'Description' => 'Linux builds on livonia',
         ];
 
+        /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST)
             ->createSite($siteInformation);
         $handler = $sut->build();
@@ -144,7 +145,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
 
     public function testTestUseCaseCreatesSubproject()
     {
-        /** @var UseCase $sut */
+        /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST);
         $sut->createSite(['Name' => 'Site.Name'])
             ->createSubproject('NOX', ['Non-linear', 'Transient', 'Optimization'])
@@ -165,9 +166,9 @@ class TestUseCaseTest extends CDashUseCaseTestCase
 
     public function testTestUseCaseCreatesTestPassed()
     {
+        /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST);
 
-        /** @var UseCase $sut */
         $sut
             ->setProjectId($this->projectid)
             ->createSite(['Name' => 'Site.Name'])
@@ -190,9 +191,9 @@ class TestUseCaseTest extends CDashUseCaseTestCase
 
     public function testTestUseCaseCreatesTestFailed()
     {
+        /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST);
 
-        /** @var UseCase $sut */
         $sut
             ->setProjectId($this->projectid)
             ->createSite(['Name' => 'Site.Name'])
@@ -215,9 +216,9 @@ class TestUseCaseTest extends CDashUseCaseTestCase
 
     public function testTestUseCaseCreatesTestTimeout()
     {
+        /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST);
 
-        /** @var UseCase $sut */
         $sut
             ->setProjectId($this->projectid)
             ->createSite(['Name' => 'Site.Name'])
@@ -240,9 +241,9 @@ class TestUseCaseTest extends CDashUseCaseTestCase
 
     public function testTestUseCaseCreatesTestNotRun()
     {
+        /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST);
 
-        /** @var UseCase $sut */
         $sut
             ->setProjectId($this->projectid)
             ->createSite(['Name' => 'Site.Name'])
@@ -265,9 +266,9 @@ class TestUseCaseTest extends CDashUseCaseTestCase
 
     public function testTestUseCaseCreatesMultisubprojectTestXMLFile()
     {
+        /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST);
 
-        /** @var TestUseCase $sut */
         $sut
             ->setProjectId($this->projectid)
             ->createSite([

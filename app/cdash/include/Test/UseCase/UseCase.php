@@ -6,6 +6,8 @@ use CDash\Test\CDashUseCaseTestCase;
 use DOMDocument;
 use DOMElement;
 use DOMText;
+use Exception;
+use InvalidArgumentException;
 
 abstract class UseCase
 {
@@ -22,17 +24,16 @@ abstract class UseCase
     public const EXPERIMENTAL = 'Experimental';
 
     private $faker;
-    private $ids;
-    protected $subprojects = [];
+    private array $ids = [];
+    private array $subprojects = [];
     protected $properties = [];
-    protected $projectId = 321;
+    protected int $projectId = 321;
     protected $startTime;
     protected $endTime;
 
-    protected $authors = [];
-    protected $testCase;
+    protected array $authors = [];
 
-    abstract public function build();
+    abstract public function build(): AbstractHandler;
 
     public function __construct($name, array $properties = [])
     {
@@ -42,59 +43,29 @@ abstract class UseCase
         $this->setEndTime(time()+1);
     }
 
-    /**
-     * @param CDashUseCaseTestCase $testCase
-     * @param $type
-     * @return TestUseCase|ConfigUseCase|UpdateUseCase|BuildUseCase
-     */
-    public static function createBuilder(CDashUseCaseTestCase $testCase, $type)
+    public static function createBuilder(CDashUseCaseTestCase $testCase, $type): TestUseCase|ConfigUseCase|UpdateUseCase|BuildUseCase|DynamicAnalysisUseCase
     {
-        switch ($type) {
-            case self::TEST:
-                $useCase = new TestUseCase();
-                break;
-            case self::CONFIG:
-                $useCase = new ConfigUseCase();
-                break;
-            case self::UPDATE:
-                $useCase = new UpdateUseCase();
-                break;
-            case self::BUILD:
-                $useCase = new BuildUseCase();
-                break;
-            case self::DYNAMIC_ANALYSIS:
-                $useCase = new DynamicAnalysisUseCase();
-                break;
-            default:
-                $useCase = null;
-        }
+        $useCase = match ($type) {
+            self::TEST => new TestUseCase(),
+            self::CONFIG => new ConfigUseCase(),
+            self::UPDATE => new UpdateUseCase(),
+            self::BUILD => new BuildUseCase(),
+            self::DYNAMIC_ANALYSIS => new DynamicAnalysisUseCase(),
+            default => throw new InvalidArgumentException('Invalid UseCase type.'),
+        };
         $testCase->setUseCaseModelFactory($useCase);
         return $useCase;
     }
 
-    /**
-     * @param $start_time
-     * @return self
-     */
-    public function setStartTime($start_time)
+    public function setStartTime($start_time): self
     {
         $this->startTime = $start_time;
         return $this;
     }
 
-    /**
-     * @param $end_time
-     * @return self
-     */
-    public function setEndTime($end_time)
+    public function setEndTime($end_time): self
     {
         $this->endTime = $end_time;
-        return $this;
-    }
-
-    public function setAuthors(array $authors)
-    {
-        $this->authors = $authors;
         return $this;
     }
 
@@ -106,7 +77,7 @@ abstract class UseCase
         return [];
     }
 
-    public function createAuthor($author, array $builds = [])
+    public function createAuthor(string $author, array $builds = []): self
     {
         $builds = empty($builds) ? ['all'] : $builds;
         foreach ($builds as $build) {
@@ -118,37 +89,25 @@ abstract class UseCase
         return $this;
     }
 
-    /**
-     * @param $class_name
-     * @return mixed
-     */
-    public function getIdForClass($class_name)
+    public function getIdForClass(string $class_name): int
     {
         if (!isset($this->ids[$class_name])) {
             $this->ids[$class_name] = 0;
         }
-        return ++$this->ids[$class_name];
+        return (int) ++$this->ids[$class_name];
     }
 
-    /**
-     * @param $projectId
-     * @return $this
-     */
-    public function setProjectId($projectId)
+    public function setProjectId($projectId): self
     {
-        $this->projectId = $projectId;
+        $this->projectId = (int) $projectId;
         return $this;
     }
 
     /**
      * Sets a site attribute, BuildStamp, for example. Because there is only one site per
      * submission, all work is performed only on the first entry of the array.
-     *
-     * @param $attribute
-     * @param $value
-     * @return $this
      */
-    public function setSiteAttribute($attribute, $value)
+    public function setSiteAttribute(string $attribute, mixed $value): self
     {
         if (!isset($this->properties['Site'][0])) {
             $this->properties['Site'][0] = [];
@@ -157,12 +116,7 @@ abstract class UseCase
         return $this;
     }
 
-    /**
-     * @param $tag_name
-     * @param array $properties
-     * @return $this
-     */
-    public function setModel($tag_name, array $properties)
+    public function setModel(string $tag_name, array $properties): self
     {
         if (!isset($this->properties[$tag_name])) {
             $this->properties[$tag_name] = [];
@@ -173,7 +127,7 @@ abstract class UseCase
         return $this;
     }
 
-    public function getModel($tag_name)
+    public function getModel(string $tag_name)
     {
         $model = [];
         if (isset($this->properties[$tag_name])) {
@@ -182,22 +136,13 @@ abstract class UseCase
         return $model;
     }
 
-    /**
-     * @param array $properties
-     * @return $this
-     */
-    public function createSite(array $properties)
+    public function createSite(array $properties): self
     {
         $this->setModel('Site', $properties);
         return $this;
     }
 
-    /**
-     * @param $name
-     * @param array $labels
-     * @return $this
-     */
-    public function createSubproject($name, array $labels = [])
+    public function createSubproject(string $name, array $labels = []): self
     {
         if (empty($labels)) {
             $labels[] = $name;
@@ -207,12 +152,7 @@ abstract class UseCase
         return $this;
     }
 
-    /**
-     * @param AbstractHandler $handler
-     * @param $xml
-     * @return AbstractHandler
-     */
-    public function getXmlHandler(AbstractHandler $handler, $xml)
+    public function getXmlHandler(AbstractHandler $handler, string $xml): AbstractHandler
     {
         $parser = xml_parser_create();
         xml_set_element_handler(
@@ -221,19 +161,14 @@ abstract class UseCase
             [$handler, 'endElement']
         );
         xml_set_character_data_handler($parser, [$handler, 'text']);
-        xml_parse($parser, $xml, false);
+        xml_parse($parser, $xml);
         return $handler;
     }
 
-    /**
-     * @param DOMDocument $document
-     * @return DOMElement
-     * @throws \Exception
-     */
-    protected function getSiteElement(DOMDocument $document)
+    protected function getSiteElement(DOMDocument $document): DOMElement
     {
         if (!isset($this->properties['Site'])) {
-            throw new \Exception('Site properties not initialized');
+            throw new Exception('Site properties not initialized');
         }
 
         /** @var DOMElement $site $site */
@@ -243,9 +178,12 @@ abstract class UseCase
         }
 
         if (empty($site->getAttribute('name'))) {
-            throw new \Exception('Name attribute required for Site');
+            throw new Exception('Name attribute required for Site');
         }
 
+        /**
+         * @var string $name
+         */
         foreach ($this->subprojects as $name => $labels) {
             /** @var DOMElement $subproject */
             $subproject = $site->appendChild(new DOMElement('Subproject'));
@@ -255,11 +193,7 @@ abstract class UseCase
         return $site;
     }
 
-    /**
-     * @param DOMElement $parent
-     * @param array $label_names
-     */
-    protected function createLabelsElement(DOMElement $parent, array $label_names)
+    protected function createLabelsElement(DOMElement $parent, array $label_names): void
     {
         foreach ($label_names as $name) {
             /** @var DOMElement $label */
@@ -268,7 +202,7 @@ abstract class UseCase
         }
     }
 
-    protected function createElapsedMinutesElement(DOMElement $parent)
+    protected function createElapsedMinutesElement(DOMElement $parent): void
     {
         $elapsed = 0;
         if ($this->startTime && $this->endTime) {
@@ -279,12 +213,7 @@ abstract class UseCase
         $node->appendChild(new DOMText($elapsed));
     }
 
-    /**
-     * @param $test_name
-     * @param array $properties
-     * @return $this
-     */
-    public function setTestProperties($test_name, array $properties)
+    public function setTestProperties(string $test_name, array $properties): self
     {
         foreach ($this->properties['Test'] as &$test) {
             if ($test['Name'] === $test_name) {
@@ -294,47 +223,22 @@ abstract class UseCase
         return $this;
     }
 
-    /**
-     * @param string $command
-     * @return $this
-     */
-    public function setConfigureCommand($command)
+    public function setConfigureCommand(string $command): self
     {
         $this->properties['Config']['command'] = $command;
         return $this;
     }
 
-    /**
-     * @param int $status
-     * @return $this
-     */
-    public function setConfigureStatus($status)
+    public function setConfigureStatus(int $status): self
     {
         $this->properties['Config']['status'] = $status;
         return $this;
     }
 
-    /**
-     * @param string $log
-     * @return $this
-     */
-    public function setConfigureLog($log)
+    public function setConfigureLog(string $log): self
     {
         $this->properties['Config']['log'] = $log;
         return $this;
-    }
-
-    /**
-     * Checks if an array is associative, sequential or a mixture of both. Will return true
-     * only if all array keys are ints.
-     *
-     * @param array $array
-     * @return bool
-     * @ref https://gist.github.com/Thinkscape/1965669
-     */
-    public function isSequential(array $array)
-    {
-        return $array === array_values($array);
     }
 
     public function getFaker()
@@ -345,7 +249,7 @@ abstract class UseCase
         return $this->faker;
     }
 
-    public function createChildElementsFromKeys(DOMElement $parent, array $attributes, $keys = [])
+    public function createChildElementsFromKeys(DOMElement $parent, array $attributes, $keys = []): void
     {
         $subset = array_filter(
             $attributes,
@@ -366,9 +270,9 @@ abstract class UseCase
         }
     }
 
-    protected function setNameInLabels($name, array &$properties)
+    protected function setNameInLabels(string $name, array &$properties): void
     {
-        if ($name) {
+        if ($name !== '') {
             if (isset($properties['Labels']) && is_array($properties['Labels'])) {
                 $properties['Labels'][] = $name;
             } else {

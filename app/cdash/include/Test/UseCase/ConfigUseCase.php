@@ -13,7 +13,7 @@ class ConfigUseCase extends UseCase
         parent::__construct('Config', $properties);
     }
 
-    public function build()
+    public function build(): \AbstractHandler
     {
         $xml = new DOMDocument('1.0', 'UTF-8');
         $startDateTimeText = date('M d H:i T', $this->startTime);
@@ -58,6 +58,9 @@ class ConfigUseCase extends UseCase
         $endTestTime->appendChild(new DOMText($this->endTime));
 
         $xml_str = $xml->saveXML($xml);
+        if ($xml_str === false) {
+            throw new \Exception('Invalid XML.');
+        }
         $handler = new ConfigureHandler($this->projectId);
         return $this->getXmlHandler($handler, $xml_str);
     }

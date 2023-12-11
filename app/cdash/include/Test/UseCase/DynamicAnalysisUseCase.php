@@ -39,11 +39,7 @@ class DynamicAnalysisUseCase extends UseCase
         $this->checker = '/usr/bin/valgrind';
     }
 
-    /**
-     * @return \AbstractHandler
-     * @throws \Exception
-     */
-    public function build()
+    public function build(): \AbstractHandler
     {
         $xml = new DOMDocument('1.0', 'UTF-8');
         $startDateTimeText = date('M d H:i T', $this->startTime);
@@ -77,16 +73,19 @@ class DynamicAnalysisUseCase extends UseCase
         $this->createElapsedMinutesElement($analysis);
 
         $xml_str = $xml->saveXML($xml);
+        if ($xml_str === false) {
+            throw new \Exception('Invalid XML.');
+        }
         $handler = new DynamicAnalysisHandler($this->projectId);
         return $this->getXmlHandler($handler, $xml_str);
     }
 
-    public function getTitleForChecker()
+    private function getTitleForChecker(): string
     {
         return ucfirst(strtolower(pathinfo($this->checker, PATHINFO_BASENAME)));
     }
 
-    public function createTestListElement(DOMElement $parent, array $tests)
+    protected function createTestListElement(DOMElement $parent, array $tests): void
     {
         $testList = $parent->appendChild(new DOMElement('TestList'));
         foreach ($tests as $t) {
@@ -95,7 +94,7 @@ class DynamicAnalysisUseCase extends UseCase
         }
     }
 
-    public function createTestElement(DOMElement $parent, array $t)
+    protected function createTestElement(DOMElement $parent, array $t): void
     {
         $test = $parent->appendChild(new DOMElement('Test'));
         $test->setAttribute('Status', $t['Status']);
@@ -115,7 +114,7 @@ class DynamicAnalysisUseCase extends UseCase
         }
     }
 
-    public function createResultsElement(DOMElement $parent, array $t)
+    protected function createResultsElement(DOMElement $parent, array $t): void
     {
         $results = $parent->appendChild(new DOMElement('Results'));
         foreach ($t['Results'] as $result) {
@@ -125,49 +124,15 @@ class DynamicAnalysisUseCase extends UseCase
         }
     }
 
-    /**
-     * @param DOMElement $parent
-     * @param $t
-     * TODO: This is identical to BuildUseCase::createFailureLabelsElement, DRY, refactor both
-     */
-    public function createTestLabelsElement(DOMElement $parent, array $t)
-    {
-        if (isset($t['Labels'])) {
-            $labels = $parent->appendChild(new DOMElement('Labels'));
-            foreach ($t['Labels'] as $lbl) {
-                $label = $labels->appendChild(new DOMElement('Label'));
-                $label->appendChild(new DOMText($lbl));
-            }
-        }
-    }
-
-    public function createDefectList(DOMElement $parent, array $tests)
-    {
-        $defectList = $parent->appendChild(new DOMElement('DefectList'));
-        $defects = [];
-
-        foreach ($tests as $test) {
-            foreach ($test['Results'] as $result) {
-                $defects[] = $result['type'];
-            }
-        }
-
-        $defects = array_unique($defects);
-        foreach ($defects as $defect) {
-            $node = $defectList->appendChild(new DOMElement('Defect'));
-            $node->setAttribute('Type', $defect);
-        }
-    }
-
-    public function setChecker($checker)
+    public function setChecker(string $checker): self
     {
         $this->checker = $checker;
         return $this;
     }
 
-    public function createFailedTest($name = null, array $properties = [])
+    public function createFailedTest(string $name, array $properties = []): self
     {
-        if ($name) {
+        if ($name !== '') {
             $properties['Name'] = $name;
         }
 
@@ -175,9 +140,9 @@ class DynamicAnalysisUseCase extends UseCase
         return $this;
     }
 
-    public function createPassedTest($name = null, array $properties = [])
+    public function createPassedTest(string $name, array $properties = []): self
     {
-        if ($name) {
+        if ($name !== '') {
             $properties['Name'] = $name;
         }
 
@@ -185,7 +150,7 @@ class DynamicAnalysisUseCase extends UseCase
         return $this;
     }
 
-    public function createTest($status, array $properties)
+    protected function createTest(string $status, array $properties): self
     {
         $faker = $this->getFaker();
         $properties['Status'] = $status;
@@ -217,7 +182,7 @@ class DynamicAnalysisUseCase extends UseCase
         return $this;
     }
 
-    public function createResults(array &$properties)
+    private function createResults(array &$properties): void
     {
         if (!isset($properties['Results'])) {
             $properties['Results'] = [];
