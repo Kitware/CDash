@@ -15,7 +15,7 @@
 =========================================================================*/
 require_once 'xml_handlers/NonSaxHandler.php';
 
-use App\Services\TestCreator;
+use App\Utils\TestCreator;
 
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;

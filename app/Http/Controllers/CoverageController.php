@@ -2,8 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Services\PageTimer;
-use App\Services\TestingDay;
+use App\Utils\PageTimer;
+use App\Utils\TestingDay;
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
@@ -918,8 +918,8 @@ final class CoverageController extends AbstractBuildController
         $SQLsearchTerm = '';
         $SQLsearchTermParams = [];
         if (isset($_GET['sSearch']) && $_GET['sSearch'] != '') {
-            $SQLsearchTerm = " AND cf.fullpath LIKE CONCAT('%', ?, '%')";
-            $SQLsearchTermParams[] = htmlspecialchars($_GET['sSearch']);
+            $SQLsearchTerm = " AND cf.fullpath LIKE ?";
+            $SQLsearchTermParams[] = '%' . htmlspecialchars($_GET['sSearch']) . '%';
         }
 
         $SQLDisplayAuthors = '';

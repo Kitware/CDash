@@ -22,8 +22,8 @@ require_once 'include/repository.php';
 use App\Models\BuildTest;
 use App\Models\Site;
 use App\Models\Test;
-use App\Services\TestingDay;
-use App\Services\TestDiffService;
+use App\Utils\TestingDay;
+use App\Utils\TestDiffUtil;
 use App\Models\BuildInformation;
 
 use CDash\Collection\BuildEmailCollection;
@@ -1235,7 +1235,7 @@ class Build
 
         // Record test differences from the previous build.
         // (+/- number of tests that failed, etc.)
-        TestDiffService::computeDifferences($this);
+        TestDiffUtil::computeDifferences($this);
 
         $project_stmt = $this->PDO->prepare(
             'SELECT testtimestd, testtimestdthreshold, testtimemaxstatus

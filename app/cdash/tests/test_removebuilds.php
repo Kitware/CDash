@@ -6,8 +6,8 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Models\TestMeasurement;
-use App\Services\TestCreator;
-use App\Services\NoteCreator;
+use App\Utils\TestCreator;
+use App\Utils\NoteCreator;
 
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;

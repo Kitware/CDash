@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-namespace App\Services;
+namespace App\Utils;
 
 use App\Models\BuildTest;
 use App\Models\TestImage;

@@ -501,12 +501,12 @@ parameters:
 			path: app/Http/Controllers/AuthTokenController.php
 
 		-
-			message: "#^Parameter \\#1 \\$user_id of static method App\\\\Services\\\\AuthTokenService\\:\\:generateToken\\(\\) expects int, int\\|string\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$user_id of static method App\\\\Utils\\\\AuthTokenUtil\\:\\:generateToken\\(\\) expects int, int\\|string\\|null given\\.$#"
 			count: 1
 			path: app/Http/Controllers/AuthTokenController.php
 
 		-
-			message: "#^Parameter \\#2 \\$expected_user_id of static method App\\\\Services\\\\AuthTokenService\\:\\:deleteToken\\(\\) expects int, int\\|string\\|null given\\.$#"
+			message: "#^Parameter \\#2 \\$expected_user_id of static method App\\\\Utils\\\\AuthTokenUtil\\:\\:deleteToken\\(\\) expects int, int\\|string\\|null given\\.$#"
 			count: 1
 			path: app/Http/Controllers/AuthTokenController.php
 
@@ -1233,6 +1233,11 @@ parameters:
 			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:edit\\(\\) has parameter \\$project_id with no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/EditProjectController.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
+			count: 2
+			path: app/Http/Controllers/ExpectedBuildController.php
 
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
@@ -2843,7 +2848,7 @@ parameters:
 			path: app/Http/Middleware/VerifyCsrfToken.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$backupFileName\\.$#"
+			message: "#^Access to an undefined property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$backupFileName\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
@@ -3383,32 +3388,32 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
-			path: app/Services/AuthTokenService.php
+			path: app/Utils/AuthTokenUtil.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\AuthToken\\>\\:\\:leftJoin\\(\\)\\.$#"
 			count: 3
-			path: app/Services/AuthTokenService.php
+			path: app/Utils/AuthTokenUtil.php
 
 		-
 			message: "#^Implicit array creation is not allowed \\- variable \\$params does not exist\\.$#"
 			count: 1
-			path: app/Services/AuthTokenService.php
+			path: app/Utils/AuthTokenUtil.php
 
 		-
 			message: "#^Only booleans are allowed in an if condition, int\\|false given\\.$#"
 			count: 1
-			path: app/Services/AuthTokenService.php
+			path: app/Utils/AuthTokenUtil.php
 
 		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, \\(int\\|string\\) given\\.$#"
 			count: 1
-			path: app/Services/AuthTokenService.php
+			path: app/Utils/AuthTokenUtil.php
 
 		-
 			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, float\\|int given\\.$#"
 			count: 1
-			path: app/Services/AuthTokenService.php
+			path: app/Utils/AuthTokenUtil.php
 
 		-
 			message: """
@@ -3416,362 +3421,357 @@ parameters:
 				04/01/2023$#
 			"""
 			count: 2
-			path: app/Services/NoteCreator.php
+			path: app/Utils/NoteCreator.php
 
 		-
-			message: "#^Method App\\\\Services\\\\NoteCreator\\:\\:computeCrc32\\(\\) has no return type specified\\.$#"
+			message: "#^Method App\\\\Utils\\\\NoteCreator\\:\\:computeCrc32\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/Services/NoteCreator.php
+			path: app/Utils/NoteCreator.php
 
 		-
-			message: "#^Method App\\\\Services\\\\NoteCreator\\:\\:create\\(\\) has no return type specified\\.$#"
+			message: "#^Method App\\\\Utils\\\\NoteCreator\\:\\:create\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/Services/NoteCreator.php
+			path: app/Utils/NoteCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\NoteCreator\\:\\:\\$buildid has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\NoteCreator\\:\\:\\$buildid has no type specified\\.$#"
 			count: 1
-			path: app/Services/NoteCreator.php
+			path: app/Utils/NoteCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\NoteCreator\\:\\:\\$crc32 has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\NoteCreator\\:\\:\\$crc32 has no type specified\\.$#"
 			count: 1
-			path: app/Services/NoteCreator.php
+			path: app/Utils/NoteCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\NoteCreator\\:\\:\\$name has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\NoteCreator\\:\\:\\$name has no type specified\\.$#"
 			count: 1
-			path: app/Services/NoteCreator.php
+			path: app/Utils/NoteCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\NoteCreator\\:\\:\\$text has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\NoteCreator\\:\\:\\$text has no type specified\\.$#"
 			count: 1
-			path: app/Services/NoteCreator.php
+			path: app/Utils/NoteCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\NoteCreator\\:\\:\\$time has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\NoteCreator\\:\\:\\$time has no type specified\\.$#"
 			count: 1
-			path: app/Services/NoteCreator.php
+			path: app/Utils/NoteCreator.php
 
 		-
-			message: "#^Class App\\\\Services\\\\PageTimer has an uninitialized property \\$duration\\. Give it default value or assign it in the constructor\\.$#"
+			message: "#^Class App\\\\Utils\\\\PageTimer has an uninitialized property \\$duration\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
-			path: app/Services/PageTimer.php
+			path: app/Utils/PageTimer.php
 
 		-
-			message: "#^Method App\\\\Services\\\\PageTimer\\:\\:end\\(\\) has no return type specified\\.$#"
+			message: "#^Method App\\\\Utils\\\\PageTimer\\:\\:end\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/Services/PageTimer.php
+			path: app/Utils/PageTimer.php
 
 		-
-			message: "#^Method App\\\\Services\\\\PageTimer\\:\\:end\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Method App\\\\Utils\\\\PageTimer\\:\\:end\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
-			path: app/Services/PageTimer.php
+			path: app/Utils/PageTimer.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 3
-			path: app/Services/ProjectPermissions.php
+			path: app/Utils/ProjectPermissions.php
 
 		-
 			message: "#^Access to an undefined property App\\\\Models\\\\BuildTest\\:\\:\\$measurements\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
 			message: "#^Call to function base64_decode\\(\\) requires parameter \\#2 to be set\\.$#"
 			count: 2
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
-			message: "#^Method App\\\\Services\\\\TestCreator\\:\\:saveImage\\(\\) has parameter \\$outputid with no type specified\\.$#"
+			message: "#^Method App\\\\Utils\\\\TestCreator\\:\\:saveImage\\(\\) has parameter \\$outputid with no type specified\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
 			message: "#^Only booleans are allowed in an elseif condition, mixed given\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
 			message: "#^Only booleans are allowed in an if condition, array given\\.$#"
 			count: 2
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
 			message: "#^Parameter \\#1 \\$image of function imagegif expects GdImage, GdImage\\|false given\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
 			message: "#^Parameter \\#1 \\$image of function imagejpeg expects GdImage, GdImage\\|false given\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
 			message: "#^Parameter \\#1 \\$image of function imagepng expects GdImage, GdImage\\|false given\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
 			message: "#^Parameter \\#1 \\$string of function crc32 expects string, string\\|false given\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
 			message: "#^Property App\\\\Models\\\\BuildTest\\:\\:\\$time \\(float\\) does not accept string\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\TestCreator\\:\\:\\$alreadyCompressed has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\TestCreator\\:\\:\\$alreadyCompressed has no type specified\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\TestCreator\\:\\:\\$buildTestTime has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\TestCreator\\:\\:\\$buildTestTime has no type specified\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\TestCreator\\:\\:\\$images has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\TestCreator\\:\\:\\$images has no type specified\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\TestCreator\\:\\:\\$labels has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\TestCreator\\:\\:\\$labels has no type specified\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\TestCreator\\:\\:\\$measurements has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\TestCreator\\:\\:\\$measurements has no type specified\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\TestCreator\\:\\:\\$projectid has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\TestCreator\\:\\:\\$projectid has no type specified\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\TestCreator\\:\\:\\$testCommand has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\TestCreator\\:\\:\\$testCommand has no type specified\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\TestCreator\\:\\:\\$testDetails has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\TestCreator\\:\\:\\$testDetails has no type specified\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\TestCreator\\:\\:\\$testName has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\TestCreator\\:\\:\\$testName has no type specified\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\TestCreator\\:\\:\\$testOutput has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\TestCreator\\:\\:\\$testOutput has no type specified\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\TestCreator\\:\\:\\$testPath has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\TestCreator\\:\\:\\$testPath has no type specified\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
-			message: "#^Property App\\\\Services\\\\TestCreator\\:\\:\\$testStatus has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\TestCreator\\:\\:\\$testStatus has no type specified\\.$#"
 			count: 1
-			path: app/Services/TestCreator.php
+			path: app/Utils/TestCreator.php
 
 		-
 			message: "#^Access to an undefined property object\\:\\:\\$difference_negative\\.$#"
 			count: 1
-			path: app/Services/TestDiffService.php
+			path: app/Utils/TestDiffUtil.php
 
 		-
 			message: "#^Access to an undefined property object\\:\\:\\$difference_positive\\.$#"
 			count: 1
-			path: app/Services/TestDiffService.php
+			path: app/Utils/TestDiffUtil.php
 
 		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 2
-			path: app/Services/TestDiffService.php
+			path: app/Utils/TestDiffUtil.php
 
 		-
 			message: "#^Call to function array_search\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 2
-			path: app/Services/TestDiffService.php
+			path: app/Utils/TestDiffUtil.php
 
 		-
 			message: "#^Only booleans are allowed in an if condition, object\\|null given\\.$#"
 			count: 2
-			path: app/Services/TestDiffService.php
+			path: app/Utils/TestDiffUtil.php
 
 		-
 			message: "#^Parameter \\#1 \\$array of function array_column expects array, array\\|false given\\.$#"
 			count: 2
-			path: app/Services/TestDiffService.php
+			path: app/Utils/TestDiffUtil.php
 
 		-
-			message: "#^Method App\\\\Services\\\\TestingDay\\:\\:get\\(\\) has no return type specified\\.$#"
+			message: "#^Method App\\\\Utils\\\\TestingDay\\:\\:get\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/Services/TestingDay.php
+			path: app/Utils/TestingDay.php
 
 		-
-			message: "#^Method App\\\\Services\\\\TestingDay\\:\\:get\\(\\) has parameter \\$date with no type specified\\.$#"
+			message: "#^Method App\\\\Utils\\\\TestingDay\\:\\:get\\(\\) has parameter \\$date with no type specified\\.$#"
 			count: 1
-			path: app/Services/TestingDay.php
+			path: app/Utils/TestingDay.php
 
 		-
 			message: "#^Access to an undefined property object\\:\\:\\$authenticatesubmissions\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
 			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Method App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:deserializeBuildMetadata\\(\\) has parameter \\$fp with no type specified\\.$#"
+			message: "#^Method App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:deserializeBuildMetadata\\(\\) has parameter \\$fp with no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, object\\|null given\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
 			message: "#^Only booleans are allowed in an if condition, string\\|null given\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
 			count: 2
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|null given\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Parameter \\#2 \\$contents of static method Illuminate\\\\Contracts\\\\Filesystem\\\\Filesystem\\:\\:put\\(\\) expects resource\\|string, string\\|false given\\.$#"
-			count: 2
-			path: app/Services/UnparsedSubmissionProcessor.php
-
-		-
-			message: "#^Property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$backupfilename has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$backupfilename has no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$build has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$build has no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$buildid has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$buildid has no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$buildname has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$buildname has no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$buildstamp has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$buildstamp has no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$endtime has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$endtime has no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$generator has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$generator has no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$inboxdatafilename has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$inboxdatafilename has no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$md5 has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$md5 has no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$project has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$project has no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$projectname has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$projectname has no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$sitename has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$sitename has no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$starttime has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$starttime has no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$subprojectname has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$subprojectname has no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$token has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$token has no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: "#^Property App\\\\Services\\\\UnparsedSubmissionProcessor\\:\\:\\$type has no type specified\\.$#"
+			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$type has no type specified\\.$#"
 			count: 1
-			path: app/Services/UnparsedSubmissionProcessor.php
+			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
@@ -5479,16 +5479,6 @@ parameters:
 			message: "#^Short ternary operator is not allowed\\. Use null coalesce operator if applicable or consider using long ternary\\.$#"
 			count: 1
 			path: app/cdash/app/Middleware/OAuth2.php
-
-		-
-			message: "#^Call to an undefined method League\\\\OAuth2\\\\Client\\\\Provider\\\\ResourceOwnerInterface\\:\\:getFirstName\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Middleware/OAuth2/Google.php
-
-		-
-			message: "#^Call to an undefined method League\\\\OAuth2\\\\Client\\\\Provider\\\\ResourceOwnerInterface\\:\\:getLastName\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Middleware/OAuth2/Google.php
 
 		-
 			message: "#^Method CDash\\\\Middleware\\\\OAuth2\\\\OAuth2Interface\\:\\:getEmail\\(\\) return type with generic class Illuminate\\\\Support\\\\Collection does not specify its types\\: TKey, TValue$#"
@@ -17547,153 +17537,6 @@ parameters:
 			path: app/cdash/public/api/v1/deleteSubmissionFile.php
 
 		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 3
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: """
-				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: """
-				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on PDOStatement\\|false\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_delete\\(\\) has parameter \\$buildgroupid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_delete\\(\\) has parameter \\$buildname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_delete\\(\\) has parameter \\$buildtype with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_delete\\(\\) has parameter \\$siteid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has parameter \\$buildgroupid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has parameter \\$buildname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has parameter \\$buildtype with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_get\\(\\) has parameter \\$siteid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has parameter \\$buildgroupid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has parameter \\$buildname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has parameter \\$buildtype with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\ExpectedBuild\\\\rest_post\\(\\) has parameter \\$siteid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Parameter \\#1 \\$datetime of function strtotime expects string, int\\|string\\|null given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
-			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/expectedbuild.php
-
-		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/getSubmissionFile.php
@@ -18213,16 +18056,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			message: "#^Call to an undefined method CDash\\\\Middleware\\\\OAuth2\\\\Google\\:\\:auth\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/public/auth/Google.php
-
-		-
-			message: "#^Class CDash\\\\Middleware\\\\OAuth2\\\\Google constructor invoked with 3 parameters, 0 required\\.$#"
-			count: 1
-			path: app/cdash/public/auth/Google.php
 
 		-
 			message: "#^Access to an undefined property GitHubWebhookTest\\:\\:\\$config\\.$#"
@@ -20269,16 +20102,6 @@ parameters:
 			message: "#^Property UpdateErrorTopicTest\\:\\:\\$fixed_keys has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GoogleTest.php
-
-		-
-			message: "#^Method GoogleTest\\:\\:testGetProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Middleware/OAuth2/GoogleTest.php
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEmpty\\(\\)\\.$#"

@@ -70,7 +70,7 @@ class MeasurementPositionMigration extends TestCase
             '--force' => true]);
 
         // Verify results.
-        $this::assertEquals(DB::table('measurement')->count(), 6);
+        $this::assertEquals(6, DB::table('measurement')->count());
         $expected_measurements = [
             [
                 'projectid' => $project1->Id,

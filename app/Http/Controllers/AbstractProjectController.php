@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Services\TestingDay;
+use App\Utils\TestingDay;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;

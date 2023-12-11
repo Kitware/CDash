@@ -2,6 +2,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 class QueryTestsFilterLabelsTestCase extends KWWebTestCase
 {
@@ -46,10 +47,7 @@ class QueryTestsFilterLabelsTestCase extends KWWebTestCase
         $this->assertTrue($this->checkLog($this->logfilename) !== false);
 
         // Verify two builds.
-        $results = \DB::select(
-            DB::raw('SELECT id FROM build WHERE projectid = :projectid'),
-            [':projectid' => $this->project->Id]
-        );
+        $results = DB::select('SELECT id FROM build WHERE projectid = ?', [(int) $this->project->Id]);
         $this->assertTrue(2 === count($results));
 
         // Verify that queryTests.php only returns one test when filtering by label (not two).

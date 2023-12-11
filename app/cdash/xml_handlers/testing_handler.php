@@ -4,7 +4,7 @@ require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
 use App\Models\TestMeasurement;
-use App\Services\TestCreator;
+use App\Utils\TestCreator;
 
 use CDash\Collection\BuildCollection;
 use CDash\Collection\Collection;

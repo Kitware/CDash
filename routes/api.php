@@ -56,6 +56,8 @@ Route::get('/v1/viewNotes.php', 'BuildNoteController@apiViewNotes');
 
 Route::get('/v1/timeline.php', 'TimelineController@apiTimeline');
 
+Route::match(['get', 'post', 'delete'], '/v1/expectedbuild.php', 'ExpectedBuildController@apiResponse');
+
 Route::middleware(['auth'])->group(function () {
     Route::post('/authtokens/create', 'AuthTokenController@createToken');
     Route::delete('/authtokens/delete/{token_hash}', 'AuthTokenController@deleteToken');

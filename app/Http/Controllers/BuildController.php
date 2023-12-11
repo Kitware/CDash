@@ -3,8 +3,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Build as EloquentBuild;
-use App\Services\PageTimer;
-use App\Services\TestingDay;
+use App\Utils\PageTimer;
+use App\Utils\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;

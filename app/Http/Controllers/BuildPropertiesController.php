@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\PageTimer;
+use App\Utils\PageTimer;
 use CDash\Database;
 use DateInterval;
 use DateTime;

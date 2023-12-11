@@ -14,18 +14,27 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\Middleware\OAuth2\Google;
-use Tests\TestCase;
+namespace App\Utils;
 
-class GoogleTest extends TestCase
+/**
+ * This class handles page load time calculations, reporting, and logging.
+ **/
+class PageTimer
 {
-    public function testGetProvider()
+    protected float $start;
+    protected float $end;
+    protected float $duration;
+
+    public function __construct()
     {
-        $sut = new Google();
+        $this->end = 0.0;
+        $this->start = LARAVEL_START;
+    }
 
-        $expected = \League\OAuth2\Client\Provider\Google::class;
-        $actual = $sut->getProvider();
-
-        $this->assertInstanceOf($expected, $actual);
+    public function end(&$response)
+    {
+        $this->end = microtime(true);
+        $this->duration = round($this->end - LARAVEL_START, 2);
+        $response['generationtime'] = $this->duration;
     }
 }

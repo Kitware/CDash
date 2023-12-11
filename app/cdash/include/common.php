@@ -16,7 +16,7 @@
 
 use Illuminate\Support\Facades\Auth;
 
-use App\Services\TestingDay;
+use App\Utils\TestingDay;
 
 use CDash\Config;
 use CDash\Database;

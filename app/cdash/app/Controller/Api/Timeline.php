@@ -18,7 +18,7 @@ namespace CDash\Controller\Api;
 
 use App\Enums\ClassicPalette;
 use App\Enums\HighContrastPalette;
-use App\Services\TestingDay;
+use App\Utils\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;

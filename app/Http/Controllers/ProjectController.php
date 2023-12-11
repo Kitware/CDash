@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Services\PageTimer;
+use App\Utils\PageTimer;
 use CDash\Config;
 use CDash\Model\Project;
 use CDash\Model\Repository;

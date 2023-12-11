@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\AuthToken;
-use App\Services\AuthTokenService;
+use App\Utils\AuthTokenUtil;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -25,7 +25,7 @@ final class AuthTokenController extends AbstractController
      */
     public function fetchAll(): JsonResponse
     {
-        $token_array = AuthTokenService::getAllTokens();
+        $token_array = AuthTokenUtil::getAllTokens();
         $token_map = [];
         foreach ($token_array as $token) {
             $token_map[$token['hash']] = $token;
@@ -55,7 +55,7 @@ final class AuthTokenController extends AbstractController
         }
 
         try {
-            $gen_auth_token = AuthTokenService::generateToken(
+            $gen_auth_token = AuthTokenUtil::generateToken(
                 Auth::id(),
                 $projectid,
                 $request->input('scope'),
@@ -70,7 +70,7 @@ final class AuthTokenController extends AbstractController
 
     public function deleteToken(string $token_hash): JsonResponse
     {
-        if (!AuthTokenService::deleteToken($token_hash, Auth::id())) {
+        if (!AuthTokenUtil::deleteToken($token_hash, Auth::id())) {
             return response()->json(['error' => 'Permissions error'], status: Response::HTTP_FORBIDDEN);
         }
         return response()->json('Token deleted');

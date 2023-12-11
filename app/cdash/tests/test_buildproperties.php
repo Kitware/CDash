@@ -3,7 +3,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
 
-use App\Services\TestCreator;
+use App\Utils\TestCreator;
 
 use CDash\Database;
 use CDash\Model\Build;
