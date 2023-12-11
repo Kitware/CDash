@@ -15,7 +15,6 @@ resources/js/components/ManageMeasurements.vue
 resources/js/components/ManageAuthTokens.vue
 resources/js/components/EditProject.vue
 resources/js/components/BuildUpdate.vue
-resources/js/components/BuildSummary.vue
 resources/js/components/BuildNotes.vue
 resources/js/components/BuildConfigure.vue
 resources/js/components/AllProjects.vue
