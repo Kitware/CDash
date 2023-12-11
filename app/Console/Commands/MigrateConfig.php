@@ -122,24 +122,6 @@ class MigrateConfig extends Command
             include $config_dir . 'config.local.php';
         }
         foreach (get_defined_vars() as $key => $value) {
-            if ($key == 'OAUTH2_PROVIDERS') {
-                foreach ($value as $k => $v) {
-                    $provider = strtoupper($k);
-                    if (array_key_exists('clientId', $v)) {
-                        $config["{$provider}_CLIENT_ID"] = $v['clientId'];
-                    }
-                    if (array_key_exists('clientSecret', $v)) {
-                        $config["{$provider}_CLIENT_SECRET"] = $v['clientSecret'];
-                    }
-                    if (array_key_exists('domain', $v)) {
-                        $config["{$provider}_DOMAIN"] = $v['domain'];
-                    }
-                    if (array_key_exists('clientId', $v) && array_key_exists('clientSecret', $v)) {
-                        $config["{$provider}_ENABLE"] = true;
-                    }
-                }
-            }
-
             if (strpos($key, 'CDASH_') !== 0) {
                 continue;
             }

@@ -46,20 +46,6 @@ class MigrateConfigCommand extends TestCase
             $CDASH_LOG_LEVEL = LOG_DEBUG;
             $CDASH_UNLIMITED_PROJECTS = ['Project1', 'Project2'];
             $CDASH_GOOGLE_MAP_API_KEY['cdash.org'] = 'ABC123';
-            $OAUTH2_PROVIDERS['GitHub'] = [
-                'clientId'          => 'github_client_id',
-                'clientSecret'      => 'github_client_secret'
-            ];
-            $OAUTH2_PROVIDERS['GitLab'] = [
-                'clientId'          => 'gitlab_client_id',
-                'clientSecret'      => 'gitlab_client_secret',
-                'domain'            => 'https://gitlab.kitware.com'
-            ];
-            $OAUTH2_PROVIDERS['Google'] = [
-                'clientId'          => 'google_client_id',
-                'clientSecret'      => 'google_client_secret'
-            ];
-
             EOT;
         file_put_contents($this->config_file, $config_contents);
 
