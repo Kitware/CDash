@@ -760,12 +760,19 @@
         Show Build Time Graph
       </a>
       <div style="text-align: center;">
-        <img
-          v-if="showTimeGraph && !timeGraphData"
-
-          :src="$baseURL + '/img/loading.gif'"
-        >
-        <p v-if="showTimeGraph && timeGraphData">Displaying build time graph!</p>
+        <div v-show="showTimeGraph">
+          <img
+            v-if="!timeGraphData"
+            :src="$baseURL + '/img/loading.gif'"
+          >
+          <TimelinePlot
+            v-else
+            :plot-data="timeGraphData.data"
+            :title="timeGraphData.title"
+            :x-label="timeGraphData.xlabel"
+            :y-label="timeGraphData.ylabel"
+          />
+        </div>
       </div>
 
       <img
@@ -779,11 +786,21 @@
         Show Build Errors Graph
       </a>
       <div style="text-align: center;">
-        <img
-          v-show="showErrorGraph && !errorGraphData"
-          :src="$baseURL + '/img/loading.gif'"
-        >
-        <p v-show="showErrorGraph">Displaying build error graph!</p>
+        <div v-show="showErrorGraph">
+          <img
+            v-if="!errorGraphData"
+            :src="$baseURL + '/img/loading.gif'"
+            style="text-align: center;"
+          >
+          <TimelinePlot
+            v-else
+            style="text-align: center;"
+            :plot-data="errorGraphData.data"
+            :title="errorGraphData.title"
+            :x-label="errorGraphData.xlabel"
+            :y-label="errorGraphData.ylabel"
+          />
+        </div>
       </div>
 
       <img
@@ -797,11 +814,21 @@
         Show Build Warnings Graph
       </a>
       <div style="text-align: center;">
-        <img
-          v-show="showWarningGraph && !warningGraphData"
-          :src="$baseURL + '/img/loading.gif'"
-        >
-        <p v-show="showWarningGraph">Displaying build warning graph!</p>
+        <div v-show="showWarningGraph">
+          <img
+            v-if="!warningGraphData"
+            :src="$baseURL + '/img/loading.gif'"
+            style="text-align: center;"
+          >
+          <TimelinePlot
+            v-else
+            style="text-align: center;"
+            :plot-data="warningGraphData.data"
+            :title="warningGraphData.title"
+            :x-label="warningGraphData.xlabel"
+            :y-label="warningGraphData.ylabel"
+          />
+        </div>
       </div>
 
       <img
@@ -815,11 +842,21 @@
         Show Build Tests Failed Graph
       </a>
       <div style="text-align: center;">
-        <img
-          v-show="showTestGraph && !testGraphData"
-          :src="$baseURL + '/img/loading.gif'"
-        >
-        <p v-show="showTestGraph">Displaying build test graph!</p>
+        <div v-show="showTestGraph">
+          <img
+            v-if="!testGraphData"
+            :src="$baseURL + '/img/loading.gif'"
+            style="text-align: center;"
+          >
+          <TimelinePlot
+            v-else
+            style="text-align: center;"
+            :plot-data="testGraphData.data"
+            :title="testGraphData.title"
+            :x-label="testGraphData.xlabel"
+            :y-label="testGraphData.ylabel"
+          />
+        </div>
       </div>
       <br>
 
@@ -1042,8 +1079,13 @@
 
 <script>
 import ApiLoader from './shared/ApiLoader';
+import TimelinePlot from './shared/TimelinePlot'
 export default {
   name: 'BuildSummary',
+
+  components: {
+    TimelinePlot,
+  },
 
   data () {
     return {
@@ -1080,10 +1122,6 @@ export default {
   methods: {
     postSetup: function () {
       this.cdash.noteStatus = '0';
-      console.log(this.timeGraphData);
-      console.log(this.errorGraphData);
-      console.log(this.warningGraphData);
-      console.log(this.testGraphData);
     },
 
     loadBuildData: function() {
@@ -1130,21 +1168,19 @@ export default {
 
     preparePlotData: function() {
       // perform data marshalling before sending data to the d3 plot template
-      console.log(this);
-      console.log(this.cdash);
-      console.log(this.cdash.buildids);
       const buildTimeValues = [];
       const errorsValues = [];
       const warningsValues = [];
       const testFailValues = [];
       const generatePt = (d,j) => {
         return {
-          x: new Date(d[j][0]*1000),
+          x: new Date(d[j][0]),
           y: d[j][1],
           url: `${this.$baseURL}/build/${this.cdash.buildids[d[j][0]]}`,
         };
       };
-      for (let i = 0; i < this.cdash.buildids.length; i++) {
+      const numDataPts = Object.keys(this.cdash.buildids).length;
+      for (let i = 0; i < numDataPts; i++) {
         buildTimeValues.push(generatePt(this.cdash.buildtimes, i));
         errorsValues.push(generatePt(this.cdash.builderrors, i));
         warningsValues.push(generatePt(this.cdash.buildwarnings, i));
