@@ -83,15 +83,20 @@ final class ManageUsersController extends AbstractController
     {
         $config = Config::getInstance();
 
-        $search = $_GET['search'];
-        if ($config->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER') == 1) {
-            $sql = "email=?";
-            $params = [$search];
+        $search = trim($_GET['search'] ?? '');
+        if ($search !== '') {
+            if ($config->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER') == 1) {
+                $sql = "email=?";
+                $params = [$search];
+            } else {
+                $search = '%' . $search . '%';
+                $sql = "email LIKE ? OR firstname LIKE ? OR lastname LIKE ?";
+                $params = [$search, $search, $search];
+            }
+            $users = DB::select('SELECT * FROM ' . qid('user') . ' WHERE ' . $sql, $params);
         } else {
-            $sql = "email LIKE CONCAT('%', ?, '%') OR firstname LIKE CONCAT('%', ?, '%') OR lastname LIKE CONCAT('%', ?, '%')";
-            $params = [$search, $search, $search];
+            $users = [];
         }
-        $users = DB::select('SELECT * FROM ' . qid('user') . ' WHERE ' . $sql, $params);
 
         return view('admin.find-users')
             ->with('users', $users)

@@ -512,10 +512,10 @@ final class ManageProjectRolesController extends AbstractProjectController
             $sql = 'email=?';
             $params[] = $search;
         } else {
-            $sql = "(email LIKE CONCAT('%', ?, '%') OR firstname LIKE CONCAT('%', ?, '%') OR lastname LIKE CONCAT('%', ?, '%'))";
-            $params[] = $search;
-            $params[] = $search;
-            $params[] = $search;
+            $sql = "(email LIKE ? OR firstname LIKE ? OR lastname LIKE ?)";
+            $params[] = '%' . $search . '%';
+            $params[] = '%' . $search . '%';
+            $params[] = '%' . $search . '%';
         }
 
         $params[] = $this->project->Id;
