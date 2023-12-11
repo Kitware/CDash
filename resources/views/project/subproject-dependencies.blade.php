@@ -26,8 +26,6 @@
     </div>
     <link href="//fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto:400,700" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('css/d3.dependencyedgebundling.css') }}" rel="stylesheet" type="text/css"/>
-
-    <script type="text/javascript" src="{{ asset('js/d3.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/d3.dependencyedgebundling.js') }}"></script>
     <script>
         var chart = d3.chart.dependencyedgebundling();
