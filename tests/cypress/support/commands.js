@@ -29,13 +29,13 @@
  */
 Cypress.Commands.add('login', (user = 'admin') => {
   cy.visit('/login');
-  cy.get('[name=email]').type(user + '@example.com');
+  cy.get('[name=email]').type(`${user}@example.com`);
   cy.get('[name=password]').type('12345');
   cy.get('[type=submit]').click();
 
   // If we get redirected back to the login page, the test users don't exist yet and should be created.
   cy.url().then((url) => {
-    if (url === Cypress.config().baseUrl + '/login') {
+    if (url === `${Cypress.config().baseUrl}/login`) {
       cy.clearCookies();
       cy.visit('/register');
 
