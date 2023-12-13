@@ -3,9 +3,6 @@ public/laravel/*
 public/build/*
 _build/*
 cypress_cache/*
-resources/js/components/shared/TextMutator.js
-resources/js/components/shared/QueryParams.js
-resources/js/components/shared/ApiLoader.js
 resources/js/components/page-header/HeaderNav.vue
 resources/js/components/page-header/HeaderMenu.vue
 resources/js/components/ViewDynamicAnalysis.vue
@@ -20,7 +17,6 @@ resources/js/components/BuildSummary.vue
 resources/js/components/BuildNotes.vue
 resources/js/components/BuildConfigure.vue
 resources/js/components/AllProjects.vue
-resources/js/app.js
 app/cdash/public/*
 public/main.js
 public/js/ui.tabs.js
