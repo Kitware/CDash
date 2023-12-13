@@ -7,8 +7,10 @@ use CDash\Database;
 use CDash\Model\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request;
 
 final class ProjectOverviewController extends AbstractProjectController
 {
@@ -757,72 +759,47 @@ final class ProjectOverviewController extends AbstractProjectController
     {
         $pageTimer = new PageTimer();
         $response = begin_JSON_response();
+        $response['backurl'] = 'user.php';
         $response['menutitle'] = 'CDash';
         $response['menusubtitle'] = 'Overview';
         $response['hidenav'] = 1;
 
-        // Make sure we have an authenticated user.
-        if (!Auth::check()) {
-            $response['requirelogin'] = 1;
-            return json_encode($response);
-        }
-
-        // Make sure a project was specified.
-        $projectid = $_GET['projectid'] ?? null;
-        if ($projectid === null) {
-            $rest_json = file_get_contents('php://input');
-            $_POST = json_decode($rest_json, true);
-            $projectid = $_POST['projectid'];
-        }
-        if (!is_numeric($projectid)) {
-            $response['error'] = "Please specify a project";
-            return json_encode($response);
-        }
-        $projectid = (int) $projectid;
-
-        $Project = new Project();
-        $Project->Id = $projectid;
-
-        if (!can_administrate_project($Project->Id)) {
-            $response['error'] = "You don't have the permissions to access this page";
-            return json_encode($response);
-        }
         // Make sure the user has admin rights to this project.
-        get_dashboard_JSON($Project->GetName(), null, $response);
+        $this->setProjectById(intval(request()->input('projectid')));
+        Gate::authorize('edit-project', $this->project);
 
-        $db = Database::getInstance();
+        get_dashboard_JSON($this->project->GetName(), null, $response);
 
         // Check if we are saving an overview layout.
-        if (isset($_POST['saveLayout'])) {
-            $inputRows = json_decode($_POST['saveLayout'], true);
+        if (Request::isMethod('post') && request()->has('saveLayout')) {
+            $inputRows = json_decode(request()->input('saveLayout'), true);
             if (!is_null($inputRows)) {
                 // Remove any old overview layout from this project.
-                DB::delete('DELETE FROM overview_components WHERE projectid=?', [intval($projectid)]);
+                DB::delete('DELETE FROM overview_components WHERE projectid=?', [intval($this->project->Id)]);
 
                 // Construct a query to insert the new layout.
                 $query = 'INSERT INTO overview_components (projectid, buildgroupid, position, type) VALUES ';
                 $params = [];
                 foreach ($inputRows as $inputRow) {
                     $query .= '(?, ?, ?, ?),';
-                    $params[] = intval($projectid);
+                    $params[] = intval($this->project->Id);
                     $params[] = intval($inputRow['id']);
                     $params[] = intval($inputRow['position']);
                     $params[] = $inputRow['type'];
                 }
 
                 $query = rtrim($query, ',');
-                $db->executePrepared($query, $params);
-                add_last_sql_error('manageOverview::saveLayout::INSERT', $projectid);
+                DB::insert($query, $params);
             }
 
             // Since this is called by AJAX we don't need to generate the JSON
             // used to render this page.
-            return;
+            return response()->json();
         }
 
         // Otherwise generate the JSON used to render this page.
         // Get the groups that are already included in the overview.
-        $query = $db->executePrepared('
+        $query = DB::select('
                      SELECT
                          bg.id,
                          bg.name,
@@ -831,17 +808,16 @@ final class ProjectOverviewController extends AbstractProjectController
                      LEFT JOIN buildgroup AS bg ON (obg.buildgroupid = bg.id)
                      WHERE obg.projectid = ?
                      ORDER BY obg.position
-                 ', [intval($projectid)]);
-
-        add_last_sql_error('manageOverview::overviewgroups', $projectid);
+                 ', [intval($this->project->Id)]);
 
         $build_response = [];
         $static_response = [];
         foreach ($query as $overviewgroup_row) {
-            $group_response = [];
-            $group_response['id'] = intval($overviewgroup_row['id']);
-            $group_response['name'] = $overviewgroup_row['name'];
-            $type = $overviewgroup_row['type'];
+            $group_response = [
+                'id' => intval($overviewgroup_row->id),
+                'name' => $overviewgroup_row->name,
+            ];
+            $type = $overviewgroup_row->type;
             switch ($type) {
                 case 'build':
                     $build_response[] = $group_response;
@@ -850,9 +826,7 @@ final class ProjectOverviewController extends AbstractProjectController
                     $static_response[] = $group_response;
                     break;
                 default:
-                    add_log("Unrecognized overview group type: '$type'",
-                        __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
-                        LOG_WARNING);
+                    Log::warning("Unrecognized overview group type: '$type'");
                     break;
             }
         }
@@ -860,7 +834,7 @@ final class ProjectOverviewController extends AbstractProjectController
         $response['staticrows'] = $static_response;
 
         // Get the buildgroups that aren't part of the overview yet.
-        $buildgroup_rows = $db->executePrepared('
+        $buildgroup_rows = DB::select('
                                SELECT
                                    bg.id,
                                    bg.name
@@ -869,19 +843,18 @@ final class ProjectOverviewController extends AbstractProjectController
                                WHERE
                                    bg.projectid=?
                                    AND oc.buildgroupid IS NULL
-                           ', [intval($projectid)]);
-        add_last_sql_error('manageOverview::buildgroups', $projectid);
+                           ', [intval($this->project->Id)]);
 
         $availablegroups_response = [];
         foreach ($buildgroup_rows as $buildgroup_row) {
-            $buildgroup_response = [];
-            $buildgroup_response['id'] = intval($buildgroup_row['id']);
-            $buildgroup_response['name'] = $buildgroup_row['name'];
-            $availablegroups_response[] = $buildgroup_response;
+            $availablegroups_response[] = [
+                'id' => intval($buildgroup_row->id),
+                'name' => $buildgroup_row->name,
+            ];
         }
         $response['availablegroups'] = $availablegroups_response;
 
         $pageTimer->end($response);
-        echo json_encode(cast_data_for_JSON($response));
+        return response()->json(cast_data_for_JSON($response));
     }
 }
