@@ -100,7 +100,6 @@ mix.scripts([
   'public/js/je_compare.js',
   'node_modules/angular/angular.min.js',
   'node_modules/angular-animate/angular-animate.min.js',
-  'node_modules/angular-clipboard/angular-clipboard.js',
   'node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
   'node_modules/angular-ui-sortable/dist/sortable.js',
   'node_modules/ansi_up/ansi_up.js',
