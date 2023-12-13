@@ -2,6 +2,7 @@ vendor/*
 public/laravel/*
 public/build/*
 _build/*
+cypress_cache/*
 resources/js/components/shared/TextMutator.js
 resources/js/components/shared/QueryParams.js
 resources/js/components/shared/ApiLoader.js
