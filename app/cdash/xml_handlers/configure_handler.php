@@ -213,7 +213,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
 
                 // Record configure duration with the build.
                 $duration = $this->EndTimeStamp - $this->StartTimeStamp;
-                $build->SetConfigureDuration($duration, !$all_at_once);
+                $build->SetConfigureDuration((int) $duration, !$all_at_once);
                 if ($all_at_once && !$parent_duration_set) {
                     $parent_build = $this->ModelFactory->create(Build::class);
                     $parent_build->Id = $build->GetParentId();
