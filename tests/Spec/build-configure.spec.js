@@ -1,8 +1,8 @@
-import { mount, config } from "@vue/test-utils";
+import { mount, config } from '@vue/test-utils';
 import axios from 'axios';
 import AxiosMockAdapter from 'axios-mock-adapter';
 import expect from 'expect';
-import BuildConfigure from "../../resources/js/components/BuildConfigure.vue";
+import BuildConfigure from '../../resources/js/components/BuildConfigure.vue';
 
 config.global.mocks['$baseURL'] = 'http://localhost';
 axios.defaults.baseURL = config.global.mocks['$baseURL'];
@@ -16,19 +16,19 @@ beforeEach(() => {
 
   apiResponse = {
     build: {
-      site: "mysite",
+      site: 'mysite',
       siteid: 1,
-      buildname: "my build",
+      buildname: 'my build',
       buildid: 2,
-      buildstarttime: "2023-08-21 12:30:48",
-      hassubprojects: 0
+      buildstarttime: '2023-08-21 12:30:48',
+      hassubprojects: 0,
     },
     configures: [{
       status: 0,
-      command: "cmake",
-      output: "-- Configuring done\n-- Generating done\n-- Build files have been written to: \/tmp\/bin\/\n",
+      command: 'cmake',
+      output: '-- Configuring done\n-- Generating done\n-- Build files have been written to: \/tmp\/bin\/\n',
       configureerrors: 0,
-      configurewarnings: 0
+      configurewarnings: 0,
     }],
   };
 
@@ -43,7 +43,7 @@ test('BuildConfigure handles API response', async () => {
   const component = mount(BuildConfigure);
   await new Promise(process.nextTick);
   expect(component.vm.loading).toBe(false);
-  var html = component.html();
+  const html = component.html();
   expect(html).toContain('mysite');
   expect(html).toContain('my build');
   expect(html).toContain('2023-08-21 12:30:48');

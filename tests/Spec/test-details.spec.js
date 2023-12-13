@@ -1,15 +1,19 @@
-import {mount, config} from "@vue/test-utils";
-import axios from 'axios'
+import {mount, config} from '@vue/test-utils';
+import axios from 'axios';
 import AxiosMockAdapter from 'axios-mock-adapter';
 import expect from 'expect';
-import TestDetails from "../../resources/js/components/TestDetails.vue";
+import TestDetails from '../../resources/js/components/TestDetails.vue';
 
-config.global.mocks['$baseURL'] = "http://localhost";
+config.global.mocks['$baseURL'] = 'http://localhost';
 axios.defaults.baseURL = config.global.mocks['$baseURL'];
 
-import $ from 'jquery'
-$.plot = function() { return null; };
-$.fn.je_compare = function() { return null; };
+import $ from 'jquery';
+$.plot = function() {
+  return null;
+};
+$.fn.je_compare = function() {
+  return null;
+};
 global.$ = $;
 
 import AnsiUp from 'ansi_up';
@@ -22,7 +26,7 @@ let axiosMockAdapter;
 let apiResponse;
 let graphData;
 
-beforeEach(function() {
+beforeEach(() => {
   axiosMockAdapter = new AxiosMockAdapter(axios);
   config.global.mocks['$axios'] = axios;
   apiResponse = {
@@ -47,7 +51,7 @@ beforeEach(function() {
       details: 'Completed (OTHER_FAULT)',
       environment: 'foo=bar',
       labels: 'label1, label2, label3',
-      output: "\u001b[32mHello world!\n\u001b[91m<script type=\"text\/javascript\">console.log(\"MALICIOUS JAVASCRIPT!!!\");<\/script>\n\u001b[0mGood bye world!\n",
+      output: '\u001b[32mHello world!\n\u001b[91m<script type="text\/javascript">console.log("MALICIOUS JAVASCRIPT!!!");<\/script>\n\u001b[0mGood bye world!\n',
       summaryLink: 'testSummary.php?project=1&name=my-test',
       status: 'Failed',
       statusColor: 'error-text',
@@ -103,7 +107,7 @@ lines`,
   ];
 });
 
-afterEach(function() {
+afterEach(() => {
   axiosMockAdapter.restore();
 });
 
@@ -114,7 +118,7 @@ it('handles API response', async () => {
   expect(component.vm.loading).toBe(false);
 
   // Verify some expected content.
-  var html = component.html();
+  const html = component.html();
   expect(html).toContain('my build');
   expect(html).toContain('my-test');
   expect(html).toContain('Completed (OTHER_FAULT)');
@@ -124,8 +128,8 @@ it('handles API response', async () => {
 lines</pre>`);
 
   // Verify colorized/escaped output.
-  const test_output = component.find("#test_output");
-  const spans = test_output.findAll("span");
+  const test_output = component.find('#test_output');
+  const spans = test_output.findAll('span');
   expect(spans.length).toBe(2);
   expect(spans.at(0).attributes('style')).toBe('color:rgb(0,187,0)');
   expect(spans.at(0).text()).toBe('Hello world!');
@@ -163,7 +167,7 @@ it('can toggle command line', async () => {
   expect(component.find('#commandline').isVisible()).toBe(false);
 
   // Toggle it on.
-  var commandlinelink = component.find('#commandlinelink')
+  const commandlinelink = component.find('#commandlinelink');
   commandlinelink.trigger('click');
   await new Promise(process.nextTick);
   expect(component.find('#commandline').isVisible()).toBe(true);
@@ -180,7 +184,7 @@ it('can toggle environment', async () => {
   expect(component.find('#environment').isVisible()).toBe(false);
 
   // Toggle it on.
-  var environmentlink = component.find('#environmentlink')
+  const environmentlink = component.find('#environmentlink');
   environmentlink.trigger('click');
   await new Promise(process.nextTick);
   expect(component.find('#environment').isVisible()).toBe(true);
@@ -230,7 +234,7 @@ it('can load the graphs by default', async () => {
   // This is an apparent side effect of the way that vue-test-utils and
   // jsdom-global work together.
   // TODO: revisit this when we upgrade to Vue 3.
-  expect(window.location.search).toBe("?graph=time");
+  expect(window.location.search).toBe('?graph=time');
   axiosMockAdapter.onGet('/api/v1/testDetails.php?buildtestid=&graph=time').reply(200, apiResponse);
   axiosMockAdapter.onGet('/api/v1/testGraph.php?testid=1&buildid=1&type=time').reply(200, graphData);
   const component = mount(TestDetails);

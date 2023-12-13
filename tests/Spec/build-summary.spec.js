@@ -1,20 +1,22 @@
-import { mount, config } from "@vue/test-utils";
-import axios from 'axios'
+import { mount, config } from '@vue/test-utils';
+import axios from 'axios';
 import AxiosMockAdapter from 'axios-mock-adapter';
 import expect from 'expect';
-import BuildSummary from "../../resources/js/components/BuildSummary.vue";
+import BuildSummary from '../../resources/js/components/BuildSummary.vue';
 
 config.global.mocks['$baseURL'] = 'http://localhost';
 axios.defaults.baseURL = config.global.mocks['$baseURL'];
 
-import $ from 'jquery'
-$.plot = function() { return null; };
-global.$ = $
+import $ from 'jquery';
+$.plot = function() {
+  return null;
+};
+global.$ = $;
 
 let apiResponse;
 let axiosMockAdapter;
 
-beforeEach(function() {
+beforeEach(() => {
   axiosMockAdapter = new AxiosMockAdapter(axios);
   config.global.mocks['$axios'] = axios;
   apiResponse = {
@@ -98,7 +100,7 @@ beforeEach(function() {
   };
 });
 
-afterEach(function() {
+afterEach(() => {
   axiosMockAdapter.restore();
 });
 
@@ -109,7 +111,7 @@ test('BuildSummary handles API response', async () => {
 
   expect(component.vm.loading).toBe(false);
   expect(component.vm.cdash.coverage).toBe(98);
-  var html = component.html();
+  const html = component.html();
   expect(html).toContain('MyProject');
   expect(html).toContain('mysite');
   expect(html).toContain('Linux');
@@ -175,7 +177,7 @@ test('BuildSummary can toggle the graphs', async () => {
   expect(component.vm.showTestGraph).toBe(false);
   expect(component.find('#buildtestsfailedgrapholder').isVisible()).toBe(false);
 
-  let graph_data = {
+  const graph_data = {
     builds: [{
       id: 1,
       nfiles: 0,
@@ -187,10 +189,10 @@ test('BuildSummary can toggle the graphs', async () => {
       timestamp: 'today',
       testfailed: 0,
       time: 0,
-    }]
+    }],
   };
   axiosMockAdapter.onGet('/api/v1/getPreviousBuilds.php?buildid=').reply(200, graph_data);
-  const history_button = component.find('#toggle_history_graph')
+  const history_button = component.find('#toggle_history_graph');
   history_button.trigger('click');
   await new Promise(process.nextTick);
 
@@ -202,7 +204,7 @@ test('BuildSummary can toggle the graphs', async () => {
   expect(component.vm.showHistoryGraph).toBe(false);
   expect(component.find('#historyGraph').isVisible()).toBe(false);
 
-  const time_button = component.find('#toggle_time_graph')
+  const time_button = component.find('#toggle_time_graph');
   time_button.trigger('click');
   await component.vm.$nextTick();
   expect(component.vm.showTimeGraph).toBe(true);
@@ -212,7 +214,7 @@ test('BuildSummary can toggle the graphs', async () => {
   expect(component.vm.showTimeGraph).toBe(false);
   expect(component.find('#buildtimegrapholder').isVisible()).toBe(false);
 
-  const error_button = component.find('#toggle_error_graph')
+  const error_button = component.find('#toggle_error_graph');
   error_button.trigger('click');
   await component.vm.$nextTick();
   expect(component.vm.showErrorGraph).toBe(true);
@@ -222,7 +224,7 @@ test('BuildSummary can toggle the graphs', async () => {
   expect(component.vm.showErrorGraph).toBe(false);
   expect(component.find('#builderrorsgrapholder').isVisible()).toBe(false);
 
-  const warning_button = component.find('#toggle_warning_graph')
+  const warning_button = component.find('#toggle_warning_graph');
   warning_button.trigger('click');
   await component.vm.$nextTick();
   expect(component.vm.showWarningGraph).toBe(true);
@@ -256,13 +258,13 @@ test('BuildSummary can add a build note', async () => {
   await component.vm.$nextTick();
   expect(component.find('#new_note_div').isVisible()).toBe(true);
 
-  var api_response = {
+  const api_response = {
     note: {
       user: 'administrator',
       date: 'now',
       status: '[note]',
       text: 'This is a note',
-    }
+    },
   };
   axiosMockAdapter.onPost('/api/v1/addUserNote.php').reply(200, api_response);
 

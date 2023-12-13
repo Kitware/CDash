@@ -81,14 +81,6 @@ public/js/cdashCoverageGraph.js
 public/js/bulletchart.js
 public/js/OptionTransfer.js
 webpack.mix.js
-tests/Spec/test-details.spec.js
-tests/Spec/page-header/header-menu.spec.js
-tests/Spec/manage-measurements.spec.js
-tests/Spec/edit-project.spec.js
-tests/Spec/build-summary.spec.js
-tests/Spec/build-notes.spec.js
-tests/Spec/build-configure.spec.js
-jest.config.js
 app/cdash/tests/js/pages/login.page.js
 app/cdash/tests/js/pages/catchConsoleErrors.page.js
 app/cdash/tests/js/e2e_tests/viewTestPagination.js

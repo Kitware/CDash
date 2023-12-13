@@ -1,20 +1,22 @@
-import { mount, config } from "@vue/test-utils";
-import axios from 'axios'
+import { mount, config } from '@vue/test-utils';
+import axios from 'axios';
 import AxiosMockAdapter from 'axios-mock-adapter';
 import expect from 'expect';
-import BuildNotes from "../../resources/js/components/BuildNotes.vue";
+import BuildNotes from '../../resources/js/components/BuildNotes.vue';
 
 config.global.mocks['$baseURL'] = 'http://localhost';
 axios.defaults.baseURL = config.global.mocks['$baseURL'];
 
-import $ from 'jquery'
-$.plot = function() { return null; };
-global.$ = $
+import $ from 'jquery';
+$.plot = function() {
+  return null;
+};
+global.$ = $;
 
 let apiResponse;
 let axiosMockAdapter;
 
-beforeEach(function() {
+beforeEach(() => {
   axiosMockAdapter = new AxiosMockAdapter(axios);
   config.global.mocks['$axios'] = axios;
   apiResponse = {
@@ -38,7 +40,7 @@ beforeEach(function() {
   };
 });
 
-afterEach(function() {
+afterEach(() => {
   axiosMockAdapter.restore();
 });
 
@@ -50,7 +52,7 @@ test('BuildNote handles API response', async () => {
   expect(component.vm.cdash.notes.length).toBe(1);
 
   // Verify some expected content.
-  var html = component.html();
+  const html = component.html();
   expect(html).toContain('my build');
   expect(html).toContain('mysite');
   expect(html).toContain('5 minutes ago');
@@ -75,7 +77,7 @@ test('BuildNote can toggle notes', async () => {
   expect(component.find('#notetext1').isVisible()).toBe(false);
 
   // Toggle a note back on.
-  var note_button = component.find('#note0')
+  const note_button = component.find('#note0');
   note_button.trigger('click');
   await new Promise(process.nextTick);
   expect(component.find('#notetext0').isVisible()).toBe(true);
