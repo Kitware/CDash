@@ -72,6 +72,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/v1/manageMeasurements.php', 'ManageMeasurementsController@apiPost');
     Route::delete('/v1/manageMeasurements.php', 'ManageMeasurementsController@apiDelete');
 
+    Route::match(['get', 'post'], '/v1/manageOverview.php', 'ProjectOverviewController@apiManageOverview');
+
     Route::middleware(['admin'])->group(function () {
         Route::get('/authtokens/all', 'AuthTokenController@fetchAll');
 
