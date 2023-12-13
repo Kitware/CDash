@@ -35,6 +35,8 @@ Route::get('/v1/filterdata.php', 'FilterController@getFilterDataArray');
 
 Route::get('/v1/viewSubProjects.php', 'SubProjectController@apiViewSubProjects');
 
+Route::get('/v1/getSubProjectDependencies.php', 'SubProjectController@apiDependenciesGraph');
+
 Route::get('/v1/viewDynamicAnalysis.php', 'DynamicAnalysisController@apiViewDynamicAnalysis');
 Route::get('/v1/viewDynamicAnalysisFile.php', 'DynamicAnalysisController@apiViewDynamicAnalysisFile');
 

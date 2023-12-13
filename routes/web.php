@@ -166,8 +166,6 @@ Route::get('/manageSubProject.php', 'SubProjectController@manageSubProject');
 
 Route::get('/viewSubProjectDependenciesGraph', 'SubProjectController@dependenciesGraph');
 Route::permanentRedirect('/viewSubProjectDependenciesGraph.php', '/viewSubProjectDependenciesGraph');
-// TODO: (williamjallen) Replace this /ajax route with an equivalent /api route
-Route::get('/ajax/getsubprojectdependencies.php', 'SubProjectController@ajaxDependenciesGraph');
 
 Route::match(['get', 'post'], '/sites/{siteid}', 'SiteController@viewSite')->whereNumber('siteid');
 Route::get('/viewSite.php', function (Request $request) {

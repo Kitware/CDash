@@ -112,8 +112,10 @@ final class SubProjectController extends AbstractProjectController
     {
         $this->setProjectByName($_GET['project'] ?? '');
 
-        return view('project.subproject-dependencies')
-            ->with('project', $this->project);
+        return view('project.subproject-dependencies')->with([
+            'project' => $this->project,
+            'date' => $_GET['date'] ?? '',
+        ]);
     }
 
     public function apiViewSubProjects(): JsonResponse
@@ -284,7 +286,7 @@ final class SubProjectController extends AbstractProjectController
         return response()->json(cast_data_for_JSON($response));
     }
 
-    public function ajaxDependenciesGraph(): JsonResponse
+    public function apiDependenciesGraph(): JsonResponse
     {
         $this->setProjectByName(htmlspecialchars($_GET['project'] ?? ''));
 
@@ -317,6 +319,8 @@ final class SubProjectController extends AbstractProjectController
             }
             $result[] = $subarray;
         }
-        return response()->json(cast_data_for_JSON($result));
+        return response()->json([
+            'dependencies' => $result,
+        ]);
     }
 }

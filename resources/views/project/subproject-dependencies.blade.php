@@ -4,5 +4,8 @@
 ])
 
 @section('main_content')
-    <subproject-dependencies></subproject-dependencies>
+    <sub-project-dependencies
+        :project-name="'{{ urlencode($project->Name) }}'"
+        :date="'{{ $date }}'"
+    />
 @endsection
