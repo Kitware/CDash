@@ -1,30 +1,67 @@
 <template>
-  <div style="top:10px; left:20px; overflow:hidden;">
-    <label style="font-size:1.2em;">
-      <b>SubProject Dependencies Graph</b>
-    </label>
-    <span style="float:right;">
-      <label for="selectedsort" style="margin-right:10px; font-size:.95em;">Sorted by:</label>
-      <select id="selectedsort" @change="apply_sorting($event)">
-        <option value="0" selected="selected">subproject name</option>
-        <option value="1">subproject id</option>
-      </select>
-    </span>
-  </div>
-  <div class="hint" style="top:20px; left:20px; font-size:0.9em; width:350px; color:#999;">
-    This circle plot captures the interrelationships among subgroups. Mouse over any of the subgroup in this graph to see incoming links (dependents) in green and the outgoing links (dependencies) in red.
-  </div>
-  <div style="text-align:center;">
-    <img v-if="graphLoading" :src="$baseURL + '/img/loading.gif'">
-    <div id="chart_placeholder"></div>
-  </div>
-  <!-- Tooltip -->
-  <div id="toolTip" class="tooltip" style="opacity:0;">
-    <div id="header1" class="header"></div>
-    <div id="dependency" style="color:#d62728;"></div>
-    <div id="dependents" style="color:#2ca02c;"></div>
-    <div class="tooltipTail"></div>
-  </div>
+  <section v-if="errored">
+    <p>{{ cdash.error }}</p>
+  </section>
+  <section v-else>
+    <div style="top:10px; left:20px; overflow:hidden;">
+      <label style="font-size:1.2em;">
+        <b>SubProject Dependencies Graph</b>
+      </label>
+      <span style="float:right;">
+        <label
+          for="selectedsort"
+          style="margin-right:10px; font-size:.95em;"
+        >
+          Sorted by:
+        </label>
+        <select
+          id="selectedsort"
+          @change="apply_sorting($event)"
+        >
+          <option
+            value="0"
+            selected="selected"
+          >
+            subproject name
+          </option>
+          <option value="1">subproject id</option>
+        </select>
+      </span>
+    </div>
+    <div class="hint">
+      This circle plot captures the interrelationships among subgroups. Mouse over any of the subgroup in this graph to see incoming links (dependents) in green and the outgoing links (dependencies) in red.
+    </div>
+    <div style="text-align:center;">
+      <img
+        v-if="graphLoading"
+        :src="$baseURL + '/img/loading.gif'"
+      >
+      <div id="chart_placeholder" />
+    </div>
+    <!-- Tooltip -->
+    <div
+      id="toolTip"
+      class="tooltip"
+      style="opacity:0;"
+    >
+      <div
+        id="header1"
+        class="header"
+      />
+      <div
+        id="dependency"
+        style="color:#d62728;"
+      />
+      <div
+        id="dependents"
+        style="color:#2ca02c;"
+      />
+      <div
+        id="tooltip-tail"
+        class="tooltipTail"
+      />
+    </div>
+  </section>
 </template>
 
 <script>
@@ -53,7 +90,7 @@ export default {
       depData: {},
       graphLoading: true,
       chart: {},
-    }
+    };
   },
 
   mounted () {
@@ -63,7 +100,7 @@ export default {
   methods: {
     postSetup(response) {
       this.depData = response.data.dependencies;
-      this.chart = DependencyEdgeBundling.initChart()
+      this.chart = DependencyEdgeBundling.initChart();
       this.plot_subdependencies();
     },
 
@@ -73,37 +110,37 @@ export default {
       vm.chart.mouseOvered(mouseOvered).mouseOuted(mouseOuted);
 
       function mouseOvered(d) {
-        var header1Text = "Name: " + d.key;
+        let header1Text = `Name: ${d.key}`;
         if (d.group !== undefined) {
-          header1Text += ", Group: " + d.group;
+          header1Text += `, Group: ${d.group}`;
         }
         $('#header1').html(header1Text);
         if (d.depends) {
-          var depends = "<p>Depends: ";
-          depends += d.depends.join(", ") + "</p>";
+          let depends = '<p>Depends: ';
+          depends += `${d.depends.join(', ')}</p>`;
           $('#dependency').html(depends);
         }
-        var dependents = "";
-        d3.selectAll('.node--source').each(function (p) {
+        let dependents = '';
+        d3.selectAll('.node--source').each((p) => {
           if (p.key) {
-            dependents += p.key + ", ";
+            dependents += `${p.key}, `;
           }
         });
 
         if (dependents) {
-          dependents = "Dependents: " + dependents.substring(0,dependents.length-2);
+          dependents = `Dependents: ${dependents.substring(0,dependents.length-2)}`;
           $('#dependents').html(dependents);
         }
-        d3.select("#toolTip").style("left", (d3.event.pageX + 40) + "px")
-          .style("top", (d3.event.pageY + 5) + "px")
-          .style("opacity", ".9");
+        d3.select('#toolTip').style('left', `${d3.event.pageX + 40}px`)
+          .style('top', `${d3.event.pageY + 5}px`)
+          .style('opacity', '.9');
       }
 
       function mouseOuted(d) {
-        $('#header1').text("");
-        $('#dependents').text("");
-        $('#dependency').text("");
-        d3.select("#toolTip").style("opacity", "0");
+        $('#header1').text('');
+        $('#dependents').text('');
+        $('#dependency').text('');
+        d3.select('#toolTip').style('opacity', '0');
       }
 
       vm.apply_sorting({ target: { value: 0 } }); // load the graph for the first time
@@ -126,7 +163,8 @@ export default {
       const selected = e.target.value;
       if (parseInt(selected) === 1) {
         vm.depData.sort(sort_by_id);
-      } else if (parseInt(selected) === 0) {
+      }
+      else if (parseInt(selected) === 0) {
         vm.depData.sort(sort_by_name);
       }
       vm.resetDepView();
@@ -148,7 +186,7 @@ export default {
         if (a.id > b.id) {
           return 1;
         }
-          return 0;
+        return 0;
       }
 
     },
@@ -262,5 +300,13 @@ div.header1{
     font-size: 12px;
     margin-bottom: 2px;
     color:black;
+}
+
+div.hint {
+  top:20px;
+  left:20px;
+  font-size:0.9em;
+  width:350px;
+  color:#999;
 }
 </style>
