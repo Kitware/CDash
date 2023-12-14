@@ -14,7 +14,7 @@ function(add_selenium_test TestName)
     ${TestName} PROPERTIES
     FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*;.*Skipped: [1-9]+.*"
   )
-endfunction(add_selenium_test)
+endfunction()
 
 add_php_test(setup_repositories)
 

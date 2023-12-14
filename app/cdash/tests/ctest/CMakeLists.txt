@@ -14,8 +14,8 @@ function(add_ctest_test TestName ProjectName Directory CDashVerifyScript)
       NAME ${TestName}_${extra_test_count}
       COMMAND ${ctest_exe} -S "${DriverScript}" -V)
     math(EXPR extra_test_count "${extra_test_count} + 1")
-  endforeach(ctest_exe ${CMAKE_CTEST_COMMAND} ${CTEST_EXTRA_EXECUTABLES})
-endfunction(add_ctest_test)
+  endforeach()
+endfunction()
 
 # function to add a new ctest based coverage test to CDash
 #
@@ -30,15 +30,15 @@ function(add_coverage_test TestName ProjectName Directory CDashVerifyScript)
   add_test(
     NAME ${TestName}
     COMMAND ${CMAKE_CTEST_COMMAND} -S "${DriverScript}" -V)
-endfunction(add_coverage_test)
+endfunction()
 
 set(CTEST_EXTRA_EXECUTABLES "" CACHE STRING "List of other CTest executables to test")
 
 if(COVERAGE_COMMAND)
   add_coverage_test(simple InsightExample simple manageCoverageTest.php)
-else(COVERAGE_COMMAND)
+else()
   add_ctest_test(simple InsightExample simple simple.php)
-endif(COVERAGE_COMMAND)
+endif()
 
 add_ctest_test(simple2 InsightExample simple2 simple2.php)
 add_ctest_test(sameImage InsightExample sameImage sameImage.php)
@@ -47,15 +47,15 @@ add_ctest_test(svnUpdates EmailProjectExample simple simple.php)
 add_ctest_test(gitUpdates PublicDashboard simple simple.php)
 
 function(add_cdash_test TestName TestDir)
-  CONFIGURE_FILE(
+  configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/${TestDir}/test.cmake.in"
     "${CDash_BINARY_DIR}/Tests/${TestDir}/test.cmake"
     @ONLY ESCAPE_QUOTES)
-  ADD_TEST(${TestName} ${CMAKE_CTEST_COMMAND}
+  add_test(${TestName} ${CMAKE_CTEST_COMMAND}
     -S "${CDash_BINARY_DIR}/Tests/${TestDir}/test.cmake" -V
     --output-log "${CDash_BINARY_DIR}/Tests/${TestDir}/output.log"
     )
-endfunction(add_cdash_test)
+endfunction()
 
 set(protocol "http")
 set(server "${CDASH_SERVER}")
@@ -64,13 +64,13 @@ set(path "/${CDASH_DIR_NAME}")
 # Give this test plenty of time to run on slower machines:
 # Use 1500 or CTEST_TEST_TIMEOUT for long test timeout value,
 # whichever is greater.
-SET(CMAKE_LONG_TEST_TIMEOUT 1500)
-IF(CTEST_TEST_TIMEOUT)
-  SET(CMAKE_LONG_TEST_TIMEOUT ${CTEST_TEST_TIMEOUT})
-ENDIF(CTEST_TEST_TIMEOUT)
-IF(CMAKE_LONG_TEST_TIMEOUT LESS 1500)
-  SET(CMAKE_LONG_TEST_TIMEOUT 1500)
-ENDIF(CMAKE_LONG_TEST_TIMEOUT LESS 1500)
+set(CMAKE_LONG_TEST_TIMEOUT 1500)
+if(CTEST_TEST_TIMEOUT)
+  set(CMAKE_LONG_TEST_TIMEOUT ${CTEST_TEST_TIMEOUT})
+endif()
+if(CMAKE_LONG_TEST_TIMEOUT LESS 1500)
+  set(CMAKE_LONG_TEST_TIMEOUT 1500)
+endif()
 
 if(CMake_SOURCE_DIR)
   #just so we don't pollute the CMake binary dir with our testing...
@@ -78,15 +78,15 @@ if(CMake_SOURCE_DIR)
   set(CMAKE_TEST_GENERATOR ${CMAKE_GENERATOR})
 
   function(add_cmake_test TestName TestDir)
-    CONFIGURE_FILE(
+    configure_file(
       "${CMake_SOURCE_DIR}/Tests/${TestDir}/test.cmake.in"
       "${CDash_BINARY_DIR}/Tests/${TestDir}/test.cmake"
       @ONLY ESCAPE_QUOTES)
-    ADD_TEST(${TestName} ${CMAKE_CTEST_COMMAND}
+    add_test(${TestName} ${CMAKE_CTEST_COMMAND}
       -S "${CDash_BINARY_DIR}/Tests/${TestDir}/test.cmake" -V
       --output-log "${CDash_BINARY_DIR}/Tests/${TestDir}/output.log"
       )
-  endfunction(add_cmake_test)
+  endfunction()
 
   macro(add_failed_submit_test name source build in out log regex)
     # Have variables named source, build and drop_method because the
@@ -160,9 +160,9 @@ add_php_test(deferredsubmissions)
 
 if(COVERAGE_COMMAND)
   add_coverage_test(simple_async InsightExample simple manageCoverageTest.php enable_async)
-else(COVERAGE_COMMAND)
+else()
   add_ctest_test(simple_async InsightExample simple simple.php enable_async)
-endif(COVERAGE_COMMAND)
+endif()
 add_ctest_test(simple2_async InsightExample simple2 simple2.php enable_async)
 
 if(CMake_SOURCE_DIR)

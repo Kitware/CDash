@@ -1,7 +1,6 @@
-cmake_minimum_required (VERSION 3.10)
-PROJECT(SameImage)
-INCLUDE(CTest)
+cmake_minimum_required(VERSION 3.25)
+project(SameImage)
+include(CTest)
 
-ADD_EXECUTABLE (sameImage sameImage.cxx)
-ADD_TEST (sameImage sameImage smile.gif smile.gif)
-#ADD_TEST (differentImage sameImage smile.gif frown.gif)
+add_executable(sameImage sameImage.cxx)
+add_test(sameImage sameImage smile.gif smile.gif)

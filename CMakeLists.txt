@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.25)
 project(CDash)
 include(CTest)
 configure_file(${CDash_SOURCE_DIR}/CTestCustom.cmake.in
@@ -27,7 +27,7 @@ else()
 endif()
 
 message("Using url: ${CDASH_TESTING_URL}")
-make_directory("${CDash_BINARY_DIR}/tmp")
+file(MAKE_DIRECTORY "${CDash_BINARY_DIR}/tmp")
 
 if(NOT DEFINED CDASH_SITE)
   site_name(CDASH_SITE)
@@ -43,16 +43,16 @@ set(laravel_testing_dir "${CDash_SOURCE_DIR}/tests")
 
 if(NOT CDASH_DB_TYPE)
   set(CDASH_DB_TYPE "mysql")
-endif(NOT CDASH_DB_TYPE)
+endif()
 
 set(CDASH_COVERAGE_DIR "${CDash_BINARY_DIR}/xdebugCoverage")
-make_directory("${CDASH_COVERAGE_DIR}")
+file(MAKE_DIRECTORY "${CDASH_COVERAGE_DIR}")
 configure_file(${testing_dir}/prepend_coverage.php.in
                ${CDash_BINARY_DIR}/prepend_coverage.php)
 
 
 # Any tests which need to perform file I/O write files here
-make_directory("/tmp/CDashTesting")
+file(MAKE_DIRECTORY "/tmp/CDashTesting")
 
 # For coverage builds on apache web servers, provide a default
 # .htaccess file, but only if explicitly asked to:
@@ -71,12 +71,12 @@ find_program(NPX_EXE NAMES npx PATHS c:/usr/bin/npx /usr/bin/npx)
 
 if(CDASH_USE_SELENIUM)
   find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php vendor/bin)
-endif(CDASH_USE_SELENIUM)
+endif()
 
 set_property(GLOBAL PROPERTY INSTALL_CDASH_COUNT "0")
 function(cdash_install)
   get_property(OLD_COUNT GLOBAL PROPERTY INSTALL_CDASH_COUNT)
-  MATH(EXPR NEW_COUNT "${OLD_COUNT}+1")
+  math(EXPR NEW_COUNT "${OLD_COUNT}+1")
   set_property(GLOBAL PROPERTY INSTALL_CDASH_COUNT "${NEW_COUNT}")
   add_test(
     NAME install_${NEW_COUNT}
@@ -86,7 +86,7 @@ function(cdash_install)
     install_${NEW_COUNT} PROPERTIES
     FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
   )
-endfunction(cdash_install)
+endfunction()
 
 # add the new tests directory
 add_subdirectory(tests)
