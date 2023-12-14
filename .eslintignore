@@ -3,9 +3,6 @@ public/laravel/*
 public/build/*
 _build/*
 cypress_cache/*
-resources/js/components/shared/TextMutator.js
-resources/js/components/shared/QueryParams.js
-resources/js/components/shared/ApiLoader.js
 resources/js/components/page-header/HeaderNav.vue
 resources/js/components/page-header/HeaderMenu.vue
 resources/js/components/ViewDynamicAnalysis.vue
@@ -20,7 +17,6 @@ resources/js/components/BuildSummary.vue
 resources/js/components/BuildNotes.vue
 resources/js/components/BuildConfigure.vue
 resources/js/components/AllProjects.vue
-resources/js/app.js
 app/cdash/public/*
 public/main.js
 public/js/ui.tabs.js
@@ -80,15 +76,6 @@ public/js/cdashFilters.js
 public/js/cdashCoverageGraph.js
 public/js/bulletchart.js
 public/js/OptionTransfer.js
-webpack.mix.js
-tests/Spec/test-details.spec.js
-tests/Spec/page-header/header-menu.spec.js
-tests/Spec/manage-measurements.spec.js
-tests/Spec/edit-project.spec.js
-tests/Spec/build-summary.spec.js
-tests/Spec/build-notes.spec.js
-tests/Spec/build-configure.spec.js
-jest.config.js
 app/cdash/tests/js/pages/login.page.js
 app/cdash/tests/js/pages/catchConsoleErrors.page.js
 app/cdash/tests/js/e2e_tests/viewTestPagination.js

@@ -4,23 +4,23 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-import * as Vue from 'vue'
+import * as Vue from 'vue';
 import axios from 'axios';
-import BuildConfigure from "./components/BuildConfigure";
-import BuildNotes from "./components/BuildNotes";
-import BuildSummary from "./components/BuildSummary";
-import BuildUpdate from "./components/BuildUpdate";
-import EditProject from "./components/EditProject";
-import UserHomepage from "./components/UserHomepage";
-import ManageAuthTokens from "./components/ManageAuthTokens.vue";
-import ManageMeasurements from "./components/ManageMeasurements";
-import Monitor from "./components/Monitor";
-import TestDetails from "./components/TestDetails";
-import HeaderNav from "./components/page-header/HeaderNav.vue";
-import HeaderMenu from "./components/page-header/HeaderMenu.vue";
-import HeaderLogo from "./components/page-header/HeaderLogo.vue";
-import ViewDynamicAnalysis from "./components/ViewDynamicAnalysis.vue";
-import AllProjects from "./components/AllProjects.vue";
+import BuildConfigure from './components/BuildConfigure';
+import BuildNotes from './components/BuildNotes';
+import BuildSummary from './components/BuildSummary';
+import BuildUpdate from './components/BuildUpdate';
+import EditProject from './components/EditProject';
+import UserHomepage from './components/UserHomepage';
+import ManageAuthTokens from './components/ManageAuthTokens.vue';
+import ManageMeasurements from './components/ManageMeasurements';
+import Monitor from './components/Monitor';
+import TestDetails from './components/TestDetails';
+import HeaderNav from './components/page-header/HeaderNav.vue';
+import HeaderMenu from './components/page-header/HeaderMenu.vue';
+import HeaderLogo from './components/page-header/HeaderLogo.vue';
+import ViewDynamicAnalysis from './components/ViewDynamicAnalysis.vue';
+import AllProjects from './components/AllProjects.vue';
 
 const cdash_components = {
   BuildConfigure,
@@ -47,17 +47,18 @@ const cdash_components = {
  */
 
 const app = Vue.createApp({
-  components:  cdash_components
+  components:  cdash_components,
 });
 
 app.config.globalProperties.$baseURL = process.env.MIX_APP_URL;
 
 axios.defaults.baseURL = process.env.MIX_APP_URL;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-let token = document.head.querySelector('meta[name="csrf-token"]');
+const token = document.head.querySelector('meta[name="csrf-token"]');
 if (token) {
   axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-} else {
+}
+else {
   console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
