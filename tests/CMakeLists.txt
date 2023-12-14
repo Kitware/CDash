@@ -9,22 +9,21 @@ function(add_vue_test TestName)
     )
 endfunction()
 
-if(DEFINED ENV{APP_URL})
-  set(APP_URL $ENV{APP_URL})
-elseif(EXISTS ${CDash_SOURCE_DIR}/.env)
-  file(STRINGS ${CDash_SOURCE_DIR}/.env env_vars)
-  foreach(var IN LISTS env_vars)
-    if(var MATCHES "^APP_URL=(.*)$")
-      set(APP_URL "${CMAKE_MATCH_1}")
-      break()
-    endif()
-  endforeach()
-else()
-  set(APP_URL "http://localhost:8080")
-endif()
-
-
 function(add_cypress_test TestName)
+  if(DEFINED ENV{APP_URL})
+    set(APP_URL $ENV{APP_URL})
+  elseif(EXISTS ${CDash_SOURCE_DIR}/.env)
+    file(STRINGS ${CDash_SOURCE_DIR}/.env env_vars)
+    foreach(var IN LISTS env_vars)
+      if(var MATCHES "^APP_URL=(.*)$")
+        set(APP_URL "${CMAKE_MATCH_1}")
+        break()
+      endif()
+    endforeach()
+  else()
+    set(APP_URL "http://localhost:8080")
+  endif()
+
   add_test(
     NAME cypress/${TestName}
     COMMAND ${NPX_EXE} cypress run
