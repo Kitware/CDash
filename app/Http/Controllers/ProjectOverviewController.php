@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Utils\PageTimer;
+use CDash\Database;
+use CDash\Model\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request;
 
 final class ProjectOverviewController extends AbstractProjectController
 {
@@ -748,5 +753,110 @@ final class ProjectOverviewController extends AbstractProjectController
     public function manageOverview(): Response
     {
         return response()->angular_view('manageOverview');
+    }
+
+    public function apiManageOverview(): JsonResponse
+    {
+        $pageTimer = new PageTimer();
+        $response = begin_JSON_response();
+        $response['backurl'] = 'user.php';
+        $response['menutitle'] = 'CDash';
+        $response['menusubtitle'] = 'Overview';
+        $response['hidenav'] = 1;
+
+        // Make sure the user has admin rights to this project.
+        $this->setProjectById(intval(request()->input('projectid')));
+        Gate::authorize('edit-project', $this->project);
+
+        get_dashboard_JSON($this->project->GetName(), null, $response);
+
+        // Check if we are saving an overview layout.
+        if (Request::isMethod('post') && request()->has('saveLayout')) {
+            $inputRows = json_decode(request()->input('saveLayout'), true);
+            if (!is_null($inputRows)) {
+                // Remove any old overview layout from this project.
+                DB::delete('DELETE FROM overview_components WHERE projectid=?', [intval($this->project->Id)]);
+
+                if (count($inputRows) > 0) {
+                    // Construct a query to insert the new layout.
+                    $query = 'INSERT INTO overview_components (projectid, buildgroupid, position, type) VALUES ';
+                    $params = [];
+                    foreach ($inputRows as $inputRow) {
+                        $query .= '(?, ?, ?, ?),';
+                        $params[] = intval($this->project->Id);
+                        $params[] = intval($inputRow['id']);
+                        $params[] = intval($inputRow['position']);
+                        $params[] = $inputRow['type'];
+                    }
+
+                    $query = rtrim($query, ',');
+                    DB::insert($query, $params);
+                }
+            }
+
+            // Since this is called by AJAX we don't need to generate the JSON
+            // used to render this page.
+            return response()->json();
+        }
+
+        // Otherwise generate the JSON used to render this page.
+        // Get the groups that are already included in the overview.
+        $query = DB::select('
+                     SELECT
+                         bg.id,
+                         bg.name,
+                         obg.type
+                     FROM overview_components AS obg
+                     LEFT JOIN buildgroup AS bg ON (obg.buildgroupid = bg.id)
+                     WHERE obg.projectid = ?
+                     ORDER BY obg.position
+                 ', [intval($this->project->Id)]);
+
+        $build_response = [];
+        $static_response = [];
+        foreach ($query as $overviewgroup_row) {
+            $group_response = [
+                'id' => intval($overviewgroup_row->id),
+                'name' => $overviewgroup_row->name,
+            ];
+            $type = $overviewgroup_row->type;
+            switch ($type) {
+                case 'build':
+                    $build_response[] = $group_response;
+                    break;
+                case 'static':
+                    $static_response[] = $group_response;
+                    break;
+                default:
+                    Log::warning("Unrecognized overview group type: '$type'");
+                    break;
+            }
+        }
+        $response['buildcolumns'] = $build_response;
+        $response['staticrows'] = $static_response;
+
+        // Get the buildgroups that aren't part of the overview yet.
+        $buildgroup_rows = DB::select('
+                               SELECT
+                                   bg.id,
+                                   bg.name
+                               FROM buildgroup AS bg
+                               LEFT JOIN overview_components AS oc ON (bg.id = oc.buildgroupid)
+                               WHERE
+                                   bg.projectid=?
+                                   AND oc.buildgroupid IS NULL
+                           ', [intval($this->project->Id)]);
+
+        $availablegroups_response = [];
+        foreach ($buildgroup_rows as $buildgroup_row) {
+            $availablegroups_response[] = [
+                'id' => intval($buildgroup_row->id),
+                'name' => $buildgroup_row->name,
+            ];
+        }
+        $response['availablegroups'] = $availablegroups_response;
+
+        $pageTimer->end($response);
+        return response()->json(cast_data_for_JSON($response));
     }
 }
