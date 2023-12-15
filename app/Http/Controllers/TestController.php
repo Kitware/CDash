@@ -5,6 +5,7 @@ use App\Models\BuildTest;
 use App\Utils\PageTimer;
 use CDash\Controller\Api\TestOverview as LegacyTestOverviewController;
 use CDash\Controller\Api\TestDetails as LegacyTestDetailsController;
+use CDash\Controller\Api\TestGraph as LegacyTestGraphController;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -16,6 +17,7 @@ use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 require_once 'include/repository.php';
+require_once 'include/api_common.php';
 
 final class TestController extends AbstractProjectController
 {
@@ -496,5 +498,32 @@ final class TestController extends AbstractProjectController
 
         $pageTimer->end($response);
         return response()->json($response);
+    }
+
+    public function apiTestGraph(): JsonResponse
+    {
+        $db = Database::getInstance();
+
+        $build = get_request_build();
+        if (is_null($build)) {
+            return;
+        }
+
+        $testid = $_GET['testid'] ?? null;
+        if (!is_numeric($testid)) {
+            abort(400, 'A valid test was not specified.');
+        }
+        $testid = (int) $testid;
+
+        $buildtest = BuildTest::where('buildid', '=', $build->Id)
+            ->where('testid', '=', $testid)
+            ->first();
+        if ($buildtest === null) {
+            abort(404, 'test not found');
+        }
+
+        $controller = new LegacyTestGraphController($db, $buildtest);
+        $response = $controller->getResponse();
+        echo json_encode(cast_data_for_JSON($response));
     }
 }
