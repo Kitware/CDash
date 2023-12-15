@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 use App\Models\BuildTest;
 use App\Utils\PageTimer;
 use CDash\Controller\Api\TestOverview as LegacyTestOverviewController;
+use CDash\Controller\Api\TestDetails as LegacyTestDetailsController;
 use CDash\Database;
+use CDash\Model\Build;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +25,32 @@ final class TestController extends AbstractProjectController
         return view('test.details')
             ->with('title', 'Test Results')
             ->with('project', $this->project);
+    }
+
+    public function apiTestDetails(): JsonResponse
+    {
+        $db = Database::getInstance();
+
+        $buildtestid = $_GET['buildtestid'];
+        if (!isset($buildtestid) || !is_numeric($buildtestid)) {
+            abort(400, 'A valid test was not specified.');
+        }
+
+        $buildtest = BuildTest::where('id', '=', $buildtestid)->first();
+        if ($buildtest === null) {
+            abort(404, 'test not found');
+        }
+
+
+        $build = new Build();
+        $build->Id = $buildtest->buildid;
+        $build->FillFromId($build->Id);
+
+        $controller = new LegacyTestDetailsController($db, $buildtest);
+        $response = $controller->getResponse();
+        if ($controller->echoResponse) {
+            echo json_encode(cast_data_for_JSON($response));
+        }
     }
 
     public function ajaxTestFailureGraph(): View
