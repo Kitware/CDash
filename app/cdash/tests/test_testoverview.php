@@ -27,7 +27,7 @@ class TestOverviewTestCase extends KWWebTestCase
         $this->get($this->url . '/api/v1/testOverview.php?project=FakeProject');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
-        if ($jsonobj['error'] !== 'Project does not exist') {
+        if ($jsonobj['error'] !== 'You do not have access to the requested project or the requested project does not exist.') {
             $this->fail('Nonexistent project error not encountered when expected');
         }
 

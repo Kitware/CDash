@@ -96,14 +96,15 @@ final class TestController extends AbstractProjectController
 
     public function apiTestOverview(): JsonResponse
     {
-        $db = Database::getInstance();
-        $project = get_project_from_request();
-        if (is_null($project)) {
-            return;
+        if (!request()->has('project')) {
+            return response()->json(['error' => 'Valid project required']);
         }
 
-        $controller = new LegacyTestOverviewController($db, $project);
-        echo json_encode(cast_data_for_JSON($controller->getResponse()));
+        $this->setProjectByName(request()->input('project'));
+
+        $db = Database::getInstance();
+        $controller = new LegacyTestOverviewController($db, $this->project);
+        return response()->json(cast_data_for_JSON($controller->getResponse()));
     }
 
     public function testSummary(): Response

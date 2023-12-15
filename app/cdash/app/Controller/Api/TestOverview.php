@@ -21,6 +21,7 @@ use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 
 require_once 'include/filterdataFunctions.php';
+require_once 'include/api_common.php';
 
 class TestOverview extends ResultsApi
 {
