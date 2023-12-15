@@ -777,19 +777,21 @@ final class ProjectOverviewController extends AbstractProjectController
                 // Remove any old overview layout from this project.
                 DB::delete('DELETE FROM overview_components WHERE projectid=?', [intval($this->project->Id)]);
 
-                // Construct a query to insert the new layout.
-                $query = 'INSERT INTO overview_components (projectid, buildgroupid, position, type) VALUES ';
-                $params = [];
-                foreach ($inputRows as $inputRow) {
-                    $query .= '(?, ?, ?, ?),';
-                    $params[] = intval($this->project->Id);
-                    $params[] = intval($inputRow['id']);
-                    $params[] = intval($inputRow['position']);
-                    $params[] = $inputRow['type'];
-                }
+                if (count($inputRows) > 0) {
+                    // Construct a query to insert the new layout.
+                    $query = 'INSERT INTO overview_components (projectid, buildgroupid, position, type) VALUES ';
+                    $params = [];
+                    foreach ($inputRows as $inputRow) {
+                        $query .= '(?, ?, ?, ?),';
+                        $params[] = intval($this->project->Id);
+                        $params[] = intval($inputRow['id']);
+                        $params[] = intval($inputRow['position']);
+                        $params[] = $inputRow['type'];
+                    }
 
-                $query = rtrim($query, ',');
-                DB::insert($query, $params);
+                    $query = rtrim($query, ',');
+                    DB::insert($query, $params);
+                }
             }
 
             // Since this is called by AJAX we don't need to generate the JSON
