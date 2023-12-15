@@ -41,7 +41,7 @@ class BuildRelationshipTestCase extends KWWebTestCase
             ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
-        $this->assertEqual($response->error, 'Valid project required');
+        $this->assertEqual($response->error, 'You do not have access to the requested project or the requested project does not exist.');
 
         // No buildid.
         $response = $client->request('GET',
@@ -49,7 +49,7 @@ class BuildRelationshipTestCase extends KWWebTestCase
             ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
-        $this->assertEqual($response->error, 'Valid buildid required');
+        $this->assertEqual($response->error, '"buildid" parameter required.');
 
         // No relatedid.
         $response = $client->request('GET',
@@ -57,7 +57,7 @@ class BuildRelationshipTestCase extends KWWebTestCase
             ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
-        $this->assertEqual($response->error, 'Valid relatedid required');
+        $this->assertEqual($response->error, '"relatedid" parameter required.');
 
         // No existing relationship.
         $response = $client->request('GET',
@@ -101,7 +101,7 @@ class BuildRelationshipTestCase extends KWWebTestCase
             ['json' => $payload, 'http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
-        $this->assertEqual($response->error, 'Valid relationship required');
+        $this->assertEqual($response->error, '"relationship" parameter required.');
 
         // Use the API to create relationships between these builds.
         $payloads = [

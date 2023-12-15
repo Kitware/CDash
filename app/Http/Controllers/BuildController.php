@@ -3,7 +3,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Build as EloquentBuild;
-use App\Utils\AuthTokenUtil;
 use App\Utils\PageTimer;
 use App\Utils\TestingDay;
 use CDash\Database;
@@ -1221,53 +1220,55 @@ final class BuildController extends AbstractBuildController
 
     public function apiRelateBuilds(): JsonResponse
     {
-        $project = get_project_from_request();
-        if (is_null($project)) {
-            return;
+        $this->setProjectByName(request()->input('project') ?? '');
+
+        if (!request()->has('buildid')) {
+            abort(400, '"buildid" parameter required.');
+        }
+        if (!request()->has('relatedid')) {
+            abort(400, '"relatedid" parameter required.');
         }
 
-        $buildid = get_param('buildid');
-        $relatedid = get_param('relatedid');
+        $buildid = (int) request()->input('buildid');
+        $relatedid = (int) request()->input('relatedid');
 
-        // Create objects from these parameters.
-        $service = ServiceContainer::getInstance();
-        /** @var Build $build */
-        $build = $service->create(Build::class);
+        $build = new Build();
         $build->Id = $buildid;
-        /** @var Build $relatedbuild */
-        $relatedbuild = $service->create(Build::class);
+        $relatedbuild = new Build();
         $relatedbuild->Id = $relatedid;
-        /** @var BuildRelationship $buildRelationship */
-        $buildRelationship = $service->create(BuildRelationship::class);
+        $buildRelationship = new BuildRelationship();
         $buildRelationship->Build = $build;
         $buildRelationship->RelatedBuild = $relatedbuild;
-        $buildRelationship->Project = $project;
+        $buildRelationship->Project = $this->project;
 
-        $request_method = $_SERVER['REQUEST_METHOD'];
-        $error_msg = '';
+        switch (request()->method()) {
+            case 'GET':
+                return $this->apiRelateBuildsGet($buildRelationship);
+            case 'POST':
+                return $this->apiRelateBuildsPost($buildRelationship);
+            case 'DELETE':
+                return $this->apiRelateBuildsDelete($buildRelationship);
+            default:
+                abort(500, "Unhandled method: " . request()->method());
+        }
     }
 
-    private function apiRelateBuildsGet(): JsonResponse
+    private function apiRelateBuildsGet(BuildRelationship $buildRelationship): JsonResponse
     {
         if ($buildRelationship->Exists()) {
             $buildRelationship->Fill();
             return response()->json($buildRelationship->marshal());
         }
-        abort(404, "No relationship exists between Builds $buildid and $relatedid");
+        abort(404, "No relationship exists between Builds {$buildRelationship->Build->Id} and {$buildRelationship->RelatedBuild->Id}");
     }
 
-    private function apiRelateBuildsPost(): JsonResponse
+    private function apiRelateBuildsPost(BuildRelationship $buildRelationship): JsonResponse
     {
-        // Check for valid authentication token if this project requires one.
-        $project->Fill();
-
-        $token_hash = AuthTokenUtil::hashToken(AuthTokenUtil::getBearerToken());
-        if ($project->AuthenticateSubmissions && !AuthTokenUtil::checkToken($token_hash, $project->Id)) {
-            return;
-        }
-
         // Create or update the relationship between these two builds.
-        $relationship = get_param('relationship');
+        if (!request()->has('relationship')) {
+            abort(400, '"relationship" parameter required.');
+        }
+        $relationship = request()->input('relationship');
         $buildRelationship->Relationship = $relationship;
         $exit_status = 200;
         if (!$buildRelationship->Exists()) {
@@ -1283,9 +1284,9 @@ final class BuildController extends AbstractBuildController
         return response()->json($buildRelationship->marshal(), $exit_status);
     }
 
-    private function apiRelateBuildsDelete(): JsonResponse
+    private function apiRelateBuildsDelete(BuildRelationship $buildRelationship): JsonResponse
     {
-        if (can_administrate_project($project->Id)) {
+        if (can_administrate_project($this->project->Id)) {
             if ($buildRelationship->Exists()) {
                 if (!$buildRelationship->Delete($error_msg)) {
                     if ($error_msg) {
@@ -1297,6 +1298,6 @@ final class BuildController extends AbstractBuildController
             }
             abort(204);
         }
-        return;
+        return response()->json();
     }
 }
