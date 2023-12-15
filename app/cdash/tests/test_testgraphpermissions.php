@@ -46,17 +46,18 @@ class TestGraphPermissionsTestCase extends KWWebTestCase
         $row = $stmt->fetch();
         $testid = $row['testid'];
 
+        $result = $this->get($this->url . "/api/v1/testGraph.php?buildid={$this->build}&testid=$testid&type=time");
         // Verify that we cannot access the graphs (because we're not logged in)
-        $response = json_decode($this->get($this->url . "/api/v1/testGraph.php?buildid={$this->build}&testid=$testid&type=time"), true);
-        if ($response['requirelogin'] != 1) {
+        $response = json_decode($result, true);
+        if ($response['error'] !== 'You do not have access to the requested project or the requested project does not exist.') {
             $this->fail("Unauthorized case #1 fails");
         }
         $response = json_decode($this->get($this->url . "/api/v1/testGraph.php?buildid={$this->build}&testid=$testid&type=status"), true);
-        if ($response['requirelogin'] != 1) {
+        if ($response['error'] !== 'You do not have access to the requested project or the requested project does not exist.') {
             $this->fail("Unauthorized case #2 fails");
         }
         $response = $this->get($this->url . "/ajax/showtestfailuregraph.php?testname=itkVectorSegmentationLevelSetFunctionTest1&projectid={$this->project}&starttime=1235350800");
-        if ($response !== 'You are not authorized to view this page.') {
+        if (str_contains($response, 'You are not authorized to view this page.')) {
             $this->fail("Unauthorized case #3 fails");
         }
 
@@ -70,8 +71,10 @@ class TestGraphPermissionsTestCase extends KWWebTestCase
         if (array_key_exists('requirelogin', $response)) {
             $this->fail("Authorized case #2 fails");
         }
+
+        // A horrible hack to make sure a real page was rendered
         $response = $this->get($this->url . "/ajax/showtestfailuregraph.php?testname=itkVectorSegmentationLevelSetFunctionTest1&projectid={$this->project}&starttime=1235350800");
-        if (strpos($response, '<br>') === false) {
+        if (!str_contains($response, '</script>')) {
             $this->fail("Authorized case #3 fails");
         }
     }

@@ -17,7 +17,6 @@ use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 require_once 'include/repository.php';
-require_once 'include/api_common.php';
 
 final class TestController extends AbstractProjectController
 {
@@ -502,20 +501,23 @@ final class TestController extends AbstractProjectController
 
     public function apiTestGraph(): JsonResponse
     {
+        if (!request()->has('buildid')) {
+            abort(400, '"buildid" parameter is required.');
+        }
+        $buildid = (int) request()->input('buildid');
+        $build = new \CDash\Model\Build();
+        $build->FillFromId($buildid);
+        Gate::authorize('view-project', $build->GetProject());
+
         $db = Database::getInstance();
 
-        $build = get_request_build();
-        if (is_null($build)) {
-            return;
-        }
-
-        $testid = $_GET['testid'] ?? null;
+        $testid = request()->input('testid');
         if (!is_numeric($testid)) {
             abort(400, 'A valid test was not specified.');
         }
         $testid = (int) $testid;
 
-        $buildtest = BuildTest::where('buildid', '=', $build->Id)
+        $buildtest = BuildTest::where('buildid', '=', $buildid)
             ->where('testid', '=', $testid)
             ->first();
         if ($buildtest === null) {
@@ -524,6 +526,6 @@ final class TestController extends AbstractProjectController
 
         $controller = new LegacyTestGraphController($db, $buildtest);
         $response = $controller->getResponse();
-        echo json_encode(cast_data_for_JSON($response));
+        return response()->json(cast_data_for_JSON($response));
     }
 }
