@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Build as EloquentBuild;
+use App\Utils\AuthTokenUtil;
 use App\Utils\PageTimer;
 use App\Utils\TestingDay;
 use CDash\Database;
@@ -26,6 +27,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 require_once 'include/repository.php';
+require_once 'include/api_common.php';
 
 final class BuildController extends AbstractBuildController
 {
@@ -1215,5 +1217,86 @@ final class BuildController extends AbstractBuildController
         return response()->json([
             'expected' => $rule->GetExpected(),
         ]);
+    }
+
+    public function apiRelateBuilds(): JsonResponse
+    {
+        $project = get_project_from_request();
+        if (is_null($project)) {
+            return;
+        }
+
+        $buildid = get_param('buildid');
+        $relatedid = get_param('relatedid');
+
+        // Create objects from these parameters.
+        $service = ServiceContainer::getInstance();
+        /** @var Build $build */
+        $build = $service->create(Build::class);
+        $build->Id = $buildid;
+        /** @var Build $relatedbuild */
+        $relatedbuild = $service->create(Build::class);
+        $relatedbuild->Id = $relatedid;
+        /** @var BuildRelationship $buildRelationship */
+        $buildRelationship = $service->create(BuildRelationship::class);
+        $buildRelationship->Build = $build;
+        $buildRelationship->RelatedBuild = $relatedbuild;
+        $buildRelationship->Project = $project;
+
+        $request_method = $_SERVER['REQUEST_METHOD'];
+        $error_msg = '';
+    }
+
+    private function apiRelateBuildsGet(): JsonResponse
+    {
+        if ($buildRelationship->Exists()) {
+            $buildRelationship->Fill();
+            return response()->json($buildRelationship->marshal());
+        }
+        abort(404, "No relationship exists between Builds $buildid and $relatedid");
+    }
+
+    private function apiRelateBuildsPost(): JsonResponse
+    {
+        // Check for valid authentication token if this project requires one.
+        $project->Fill();
+
+        $token_hash = AuthTokenUtil::hashToken(AuthTokenUtil::getBearerToken());
+        if ($project->AuthenticateSubmissions && !AuthTokenUtil::checkToken($token_hash, $project->Id)) {
+            return;
+        }
+
+        // Create or update the relationship between these two builds.
+        $relationship = get_param('relationship');
+        $buildRelationship->Relationship = $relationship;
+        $exit_status = 200;
+        if (!$buildRelationship->Exists()) {
+            $exit_status = 201;
+        }
+        if (!$buildRelationship->Save($error_msg)) {
+            if ($error_msg) {
+                abort(400, $error_msg);
+            } else {
+                abort(500, 'Error saving relationship');
+            }
+        }
+        return response()->json($buildRelationship->marshal(), $exit_status);
+    }
+
+    private function apiRelateBuildsDelete(): JsonResponse
+    {
+        if (can_administrate_project($project->Id)) {
+            if ($buildRelationship->Exists()) {
+                if (!$buildRelationship->Delete($error_msg)) {
+                    if ($error_msg) {
+                        abort(400, $error_msg);
+                    } else {
+                        abort(500, 'Error deleting relationship');
+                    }
+                }
+            }
+            abort(204);
+        }
+        return;
     }
 }
