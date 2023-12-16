@@ -1,12 +1,5 @@
 #!/bin/bash
 
-export BASH_LIB=/bash-lib
-source "$BASH_LIB/cdash.bash"
-source "$BASH_LIB/debug.bash"
-source "$BASH_LIB/misc.bash"
-source "$BASH_LIB/on_exit.bash"
-source "$BASH_LIB/tmp_dir.bash"
-
 do_install() {
     # ENSURE ROOT ADMIN USER
     root_pass="$CDASH_ROOT_ADMIN_PASS"
