@@ -23,7 +23,6 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use App\Utils\RepositoryUtils;
-use CDash\Database;
 
 class TestDetails extends BuildTestApi
 {
