@@ -31,6 +31,8 @@ Route::get('/v1/buildSummary.php', 'BuildController@apiBuildSummary');
 
 Route::match(['get', 'post', 'delete'], '/v1/relateBuilds.php', 'BuildController@apiRelateBuilds');
 
+Route::match(['get', 'post', 'delete'], '/v1/build.php', 'BuildController@restApi');
+
 Route::get('/v1/user.php', 'UserController@userPageContent');
 
 Route::get('/v1/userStatistics.php', 'UserStatisticsController@api');

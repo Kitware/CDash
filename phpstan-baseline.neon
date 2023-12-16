@@ -562,7 +562,23 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function pdo_execute\\(\\)\\:
+				v2\\.5\\.0 01/22/2018$#
+			"""
+			count: 4
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: """
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
+				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: """
+				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
@@ -702,8 +718,23 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
+			message: "#^Only numeric types are allowed in \\-, int\\|false given on the left side\\.$#"
+			count: 2
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
+			count: 2
+			path: app/Http/Controllers/BuildController.php
+
+		-
 			message: "#^Parameter \\#1 \\$haystack of function strrpos expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
 			count: 2
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 4
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -728,7 +759,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
-			count: 9
+			count: 11
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -16490,106 +16521,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$data of function hash_hmac expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 4
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: """
-				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: """
-				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_delete\\(\\) has parameter \\$build with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_get\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_get\\(\\) has parameter \\$build with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_post\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_post\\(\\) has parameter \\$build with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Function rest_put not found\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
-			count: 4
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/build.php
 
 		-
 			message: """
