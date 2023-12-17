@@ -3386,27 +3386,12 @@ parameters:
 			path: app/Rules/LdapFilterRules.php
 
 		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/Utils/AuthTokenUtil.php
-
-		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\AuthToken\\>\\:\\:leftJoin\\(\\)\\.$#"
 			count: 3
 			path: app/Utils/AuthTokenUtil.php
 
 		-
 			message: "#^Implicit array creation is not allowed \\- variable \\$params does not exist\\.$#"
-			count: 1
-			path: app/Utils/AuthTokenUtil.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, int\\|false given\\.$#"
-			count: 1
-			path: app/Utils/AuthTokenUtil.php
-
-		-
-			message: "#^Parameter \\#2 \\$string of function explode expects string, \\(int\\|string\\) given\\.$#"
 			count: 1
 			path: app/Utils/AuthTokenUtil.php
 
