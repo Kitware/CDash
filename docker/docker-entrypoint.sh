@@ -2,8 +2,10 @@
 
 set -e
 
-# If no arguments, or if the "start-website" argument was provided, start the web server
-if [ $# -eq 0 ] || [ "$1" = "start-website" ] ; then
+php artisan key:check || exit 1
+
+# If the "start-website" argument was provided, start the web server
+if [ "$1" = "start-website" ] ; then
   bash /cdash/install.sh
   /usr/sbin/apache2ctl -D FOREGROUND
 
