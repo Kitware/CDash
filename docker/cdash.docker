@@ -94,10 +94,8 @@ fi
 # Run the rest of the commands as www-data
 USER www-data
 
-WORKDIR /
-
 # Copy CDash (current folder) into /cdash
-COPY --chown=www-data:www-data . ./cdash
+COPY --chown=www-data:www-data . /cdash
 
 WORKDIR /cdash
 
@@ -128,7 +126,7 @@ ENTRYPOINT ["/bin/bash", "/cdash/docker/docker-entrypoint.sh"]
 
 FROM cdash-common AS cdash
 
-CMD ["install", "serve"]
+CMD ["start-website"]
 
 ###############################################################################
 

@@ -37,10 +37,6 @@ You may have noticed that CDash's `docker compose` configuration is [split acros
 For example, to use Postgres instead of MySQL, pass `-f docker/docker-compose.postgres.yml` instead of `-f docker/docker-compose.mysql.yml` to the `docker compose` commands mentioned in this document.
 
 ### Changing the default configuration
-You can change the following environment variables in `docker/docker-compose.yml`:
-* `CDASH_ROOT_ADMIN_EMAIL`: the email address (username) for the CDash admin user. The default email address is `root@docker.container`.
-* `CDASH_ROOT_ADMIN_PASS`: the password for the CDash admin user. The default password is `secret`.
-
 To change the default database password, modify `DB_PASSWORD` in `docker/docker-compose.mysql.yml` or `docker/docker-compose.postgres.yml`.
 
 Once you're happy with your changes, re-run `docker compose up` (with the appropriate`-f` flags) to build and run services for CDash and its database.

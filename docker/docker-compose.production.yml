@@ -15,8 +15,6 @@ services:
       dockerfile: ./docker/cdash.docker
       target: cdash-worker
     environment:
-      CDASH_ROOT_ADMIN_EMAIL: root@docker.container
-      CDASH_ROOT_ADMIN_PASS: secret
       DB_HOST: database
     deploy:
       replicas: 1
