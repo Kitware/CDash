@@ -12,7 +12,6 @@ services:
     container_name: cdash_worker
     build:
       context: ..
-      dockerfile: ./docker/cdash.docker
       target: cdash-worker
     environment:
       DB_HOST: database
