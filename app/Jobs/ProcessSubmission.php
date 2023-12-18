@@ -234,11 +234,11 @@ class ProcessSubmission implements ShouldQueue
         $tmpFilename = "{$_t}.{$ext}";
         rename($_t, $tmpFilename);
 
-        $client = new GuzzleHttp\Client();
+        $client = new \GuzzleHttp\Client();
         $response = $client->request('GET',
             config('app.url') . '/api/v1/getSubmissionFile.php',
             ['query' => ['filename' => $filename],
-                  'save_to' => $tmpFilename]);
+                  'sink' => $tmpFilename]);
 
         if ($response->getStatusCode() === 200) {
             // @todo I'm sure Guzzle can be used to return a file handle from the stream, but for now
