@@ -16,6 +16,7 @@ use CDash\Model\UserProject;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 require_once 'include/cdashmail.php';
@@ -332,52 +333,47 @@ final class UserController extends AbstractController
 
     public function edit(): View
     {
-        $xml = begin_XML_for_XSLT();
-        $xml .= '<title>CDash - My Profile</title>';
-        $xml .= '<menutitle>CDash</menutitle>';
-        $xml .= '<menusubtitle>My Profile</menusubtitle>';
-
         $userid = Auth::id();
+        // TODO: (williamjallen) Switch this to the new User model...
         $user = new \CDash\Model\User();
         $user->Id = $userid;
         $user->Fill();
 
-        $pdo = get_link_identifier()->getPdo();
+        $error_msg = '';
+        $other_msg = '';
 
-        @$updateprofile = $_POST['updateprofile'];
-        if ($updateprofile) {
-            $email = $_POST['email'];
-            if (strlen($email) < 3 || strpos($email, '@') === false) {
-                $xml .= '<error>Email should be a valid address.</error>';
+        if (isset($_POST['updateprofile'])) {
+            $email = $_POST['email'] ?? '';
+            // TODO: (williamjallen) validate email addresses using proper email validation regex
+            if (strlen($email) < 3 || !str_contains($email, '@')) {
+                $error_msg = 'Email should be a valid address.';
             } else {
                 $user->Email = $email;
-                $user->Institution = $_POST['institution'];
-                $user->LastName = $_POST['lname'];
-                $user->FirstName = $_POST['fname'];
+                $user->Institution = $_POST['institution'] ?? '';
+                $user->LastName = $_POST['lname'] ?? '';
+                $user->FirstName = $_POST['fname'] ?? '';
                 if ($user->Save()) {
-                    $xml .= '<error>Your profile has been updated.</error>';
+                    $other_msg = 'Your profile has been updated.';
                 } else {
-                    $xml .= '<error>Cannot update profile.</error>';
+                    $error_msg = 'Cannot update profile.';
                 }
             }
         }
 
         // Update the password
-        @$updatepassword = $_POST['updatepassword'];
-        if ($updatepassword) {
-            $oldpasswd = $_POST['oldpasswd'];
-            $passwd = $_POST['passwd'];
-            $passwd2 = $_POST['passwd2'];
+        if (isset($_POST['updatepassword'])) {
+            $oldpasswd = $_POST['oldpasswd'] ?? '';
+            $passwd = $_POST['passwd'] ?? '';
+            $passwd2 = $_POST['passwd2'] ?? '';
 
             $password_is_good = true;
-            $error_msg = '';
 
-            if (!password_verify($oldpasswd, $user->Password) && md5($oldpasswd) != $user->Password) {
+            if (!password_verify($oldpasswd, $user->Password) && md5($oldpasswd) !== $user->Password) {
                 $password_is_good = false;
                 $error_msg = 'Your old password is incorrect.';
             }
 
-            if ($password_is_good && $passwd != $passwd2) {
+            if ($password_is_good && $passwd !== $passwd2) {
                 $password_is_good = false;
                 $error_msg = 'Passwords do not match.';
             }
@@ -389,15 +385,16 @@ final class UserController extends AbstractController
             }
 
             if ($password_is_good && config('cdash.password.expires') > 0) {
-                $query = 'SELECT password FROM password WHERE userid=?';
+                $query = 'SELECT password FROM password WHERE userid = ?';
+                $query_params = [(int) $userid];
                 $unique_count = (int) config('cdash.password.unique');
                 if ($unique_count > 0) {
-                    $query .= " ORDER BY date DESC LIMIT $unique_count";
+                    $query .= ' ORDER BY date DESC LIMIT ?';
+                    $query_params[] = $unique_count;
                 }
-                $stmt = $pdo->prepare($query);
-                pdo_execute($stmt, [$userid]);
-                while ($row = $stmt->fetch()) {
-                    if (password_verify($passwd, $row['password'])) {
+                $query_result = DB::select($query, $query_params);
+                foreach ($query_result as $row) {
+                    if (password_verify($passwd, $row->password)) {
                         $password_is_good = false;
                         $error_msg = 'You have recently used this password.  Please select a new one.';
                         break;
@@ -420,37 +417,27 @@ final class UserController extends AbstractController
                 }
             }
 
-            if (!$password_is_good) {
-                $xml .= "<error>$error_msg</error>";
-            } else {
+            if ($password_is_good) {
                 $user->Password = password_hash($passwd, PASSWORD_DEFAULT);
                 if ($user->Save()) {
-                    $xml .= '<error>Your password has been updated.</error>';
+                    $other_msg = 'Your password has been updated.';
                     if (isset($_SESSION['cdash']['redirect'])) {
                         unset($_SESSION['cdash']['redirect']);
                         request()->session()->remove('cdash.redirect');
                     }
                 } else {
-                    $xml .= '<error>Cannot update password.</error>';
+                    $error_msg = 'Cannot update password.';
                 }
             }
         }
 
         if (request('password_expired')) {
-            $xml .= '<error>Password has expired</error>';
+            $error_msg = 'Password has expired';
         }
 
-        $xml .= '<user>';
-        $xml .= add_XML_value('id', $userid);
-        $xml .= add_XML_value('firstname', $user->FirstName);
-        $xml .= add_XML_value('lastname', $user->LastName);
-        $xml .= add_XML_value('email', $user->Email);
-        $xml .= add_XML_value('institution', $user->Institution);
-
         // Update the credentials
-        @$updatecredentials = $_POST['updatecredentials'];
-        if ($updatecredentials) {
-            $credentials = $_POST['credentials'];
+        if (isset($_POST['updatecredentials'])) {
+            $credentials = $_POST['credentials'] ?? [];
             $UserProject = new UserProject();
             $UserProject->ProjectId = 0;
             $UserProject->UserId = $userid;
@@ -459,42 +446,35 @@ final class UserController extends AbstractController
         }
 
         // List the credentials
-        // First the email one (which cannot be changed)
-        $stmt = $pdo->prepare(
-            'SELECT credential FROM user2repository
-                WHERE userid = :userid AND projectid = 0 AND credential = :credential');
-        $stmt->bindParam(':userid', $userid);
-        $stmt->bindParam(':credential', $user->Email);
-        pdo_execute($stmt);
-        $row = $stmt->fetch();
-        if (!$row) {
-            $xml .= add_XML_value('credential_0', 'Not found (you should really add it)');
-        } else {
-            $xml .= add_XML_value('credential_0', $user->Email);
+        $credentials_query = DB::select('
+            SELECT credential
+            FROM user2repository
+            WHERE
+                userid = ?
+              AND projectid = 0
+        ', [(int) $userid]);
+
+        $credentials = [];
+
+        foreach ($credentials_query as $credential) {
+            if ($credential->credential === $user->Email) {
+                // Move the email credential (which cannot be changed) to the top of the array
+                array_unshift($credentials, $credential->credential);
+            } else {
+                $credentials[] = $credential->credential;
+            }
         }
 
-        $stmt = $pdo->prepare(
-            'SELECT credential FROM user2repository
-                WHERE userid = :userid AND projectid = 0 AND credential != :credential');
-        $stmt->bindParam(':userid', $userid);
-        $stmt->bindParam(':credential', $user->Email);
-        pdo_execute($stmt);
-        $credential_num = 1;
-        while ($row = $stmt->fetch()) {
-            $xml .= add_XML_value('credential_' . $credential_num++, stripslashes($row['credential']));
+
+        if (($_GET['reason'] ?? '') === 'expired') {
+            $error_msg = 'Your password has expired. Please set a new one.';
         }
 
-        $xml .= '</user>';
-
-        if (array_key_exists('reason', $_GET) && $_GET['reason'] == 'expired') {
-            $xml .= '<error>Your password has expired.  Please set a new one.</error>';
-        }
-
-        $xml .= '</cdash>';
-
-        return $this->view('cdash', 'My Profile')
-            ->with('xsl', true)
-            ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/editUser', true));
+        return view('auth.profile')
+            ->with('user', $user)
+            ->with('error', $error_msg)
+            ->with('message', $other_msg)
+            ->with('credentials', $credentials);
     }
 
     public function recoverPassword(): View
