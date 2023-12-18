@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BuildTest;
 use App\Utils\PageTimer;
+use CDash\Controller\Api\TestOverview as LegacyTestOverviewController;
 use CDash\Database;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -91,6 +92,19 @@ final class TestController extends AbstractProjectController
     public function testOverview(): Response
     {
         return response()->angular_view('testOverview');
+    }
+
+    public function apiTestOverview(): JsonResponse
+    {
+        if (!request()->has('project')) {
+            return response()->json(['error' => 'Valid project required']);
+        }
+
+        $this->setProjectByName(request()->input('project'));
+
+        $db = Database::getInstance();
+        $controller = new LegacyTestOverviewController($db, $this->project);
+        return response()->json(cast_data_for_JSON($controller->getResponse()));
     }
 
     public function testSummary(): Response
