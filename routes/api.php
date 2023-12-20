@@ -21,6 +21,8 @@ Route::get('/v1/viewUpdate.php', 'BuildController@viewUpdatePageContent');
 
 Route::get('/v1/viewTest.php', 'ViewTestController@fetchPageContent');
 
+Route::get('/v1/testDetails.php', 'TestController@apiTestDetails');
+
 Route::get('/v1/viewBuildError.php', 'BuildController@apiViewBuildError');
 
 Route::get('/v1/viewConfigure.php', 'BuildController@apiViewConfigure');

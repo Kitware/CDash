@@ -4530,11 +4530,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
 		-
-			message: "#^Method CDash\\\\Controller\\\\Api\\\\TestDetails\\:\\:getResponse\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\TestDetails\\:\\:utf8_for_xml\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/TestDetails.php
@@ -4551,11 +4546,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Controller\\\\Api\\\\TestDetails\\:\\:\\$buildtest has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
-			message: "#^Property CDash\\\\Controller\\\\Api\\\\TestDetails\\:\\:\\$echoResponse has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
