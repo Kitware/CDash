@@ -66,60 +66,71 @@ Route::get('/displayImage.php', function (Request $request) {
     return redirect("/image/{$imgid}", 301);
 });
 
-Route::get('/build/{id}', 'BuildController@summary');
+Route::get('/builds/{id}', 'BuildController@summary');
+Route::permanentRedirect('/build/{id}', '/builds/{id}');
 Route::get('/buildSummary.php', function (Request $request) {
     $buildid = $request->query('buildid');
-    return redirect("/build/{$buildid}", 301);
+    return redirect("/builds/{$buildid}", 301);
 });
 
-Route::get('/build/{id}/configure', 'BuildController@configure');
+Route::get('/builds/{id}/configure', 'BuildController@configure');
+Route::permanentRedirect('/builds/{id}/configure', '/builds/{id}/configure');
 Route::get('/viewConfigure.php', function (Request $request) {
     $buildid = $request->query('buildid');
-    return redirect("/build/{$buildid}/configure", 301);
+    return redirect("/builds/{$buildid}/configure", 301);
 });
 
 
-Route::get('/build/{id}/update', 'BuildController@update');
+Route::get('/builds/{id}/update', 'BuildController@update');
+Route::permanentRedirect('/build/{id}/update', '/builds/{id}/update');
 Route::get('/viewUpdate.php', function (Request $request) {
     $buildid = $request->query('buildid');
-    return redirect("/build/{$buildid}/update", 301);
+    return redirect("/builds/{$buildid}/update", 301);
 });
 
-Route::get('/build/{id}/notes', 'BuildController@notes');
+Route::get('/builds/{id}/notes', 'BuildController@notes');
+Route::permanentRedirect('/build/{id}/notes', '/builds/{id}/notes');
 Route::get('/viewNotes.php', function (Request $request) {
     $buildid = $request->query('buildid');
-    return redirect("/build/{$buildid}/notes", 301);
+    return redirect("/builds/{$buildid}/notes", 301);
 });
 
-Route::get('/build/{id}/dynamic_analysis', 'DynamicAnalysisController@viewDynamicAnalysis')
+Route::get('/builds/{id}/dynamic_analysis', 'DynamicAnalysisController@viewDynamicAnalysis')
     ->whereNumber('id');
+Route::permanentRedirect('/build/{id}/dynamic_analysis', '/builds/{id}/dynamic_analysis');
 Route::get('/viewDynamicAnalysis.php', function (Request $request) {
     $buildid = $request->query('buildid');
-    return redirect("/build/{$buildid}/dynamic_analysis", 301);
+    return redirect("/builds/{$buildid}/dynamic_analysis", 301);
 });
 
-Route::get('/project/{id}/edit', 'EditProjectController@edit');
-Route::get('/project/new', 'EditProjectController@create');
+Route::get('/projects/{id}/edit', 'EditProjectController@edit');
+Route::permanentRedirect('/project/{id}/edit', '/projects/{id}/edit');
 
-Route::get('/project/{id}/testmeasurements', 'ManageMeasurementsController@show');
+Route::get('/projects/new', 'EditProjectController@create');
+Route::permanentRedirect('/project/new', '/projects/new');
 
-Route::get('/project/{id}/ctest_configuration', 'CTestConfigurationController@get')
+Route::get('/projects/{id}/testmeasurements', 'ManageMeasurementsController@show');
+Route::permanentRedirect('/project/{id}/testmeasurements', '/projects/{id}/testmeasurements');
+
+Route::get('/projects/{id}/ctest_configuration', 'CTestConfigurationController@get')
     ->whereNumber('id');
+Route::permanentRedirect('/project/{id}/ctest_configuration', '/projects/{id}/ctest_configuration');
 Route::get('/generateCTestConfig.php', function (Request $request) {
     $projectid = $request->query('projectid');
     if (!is_numeric($projectid)) {
         abort(400, 'Not a valid projectid!');
     }
-    return redirect("/project/{$projectid}/ctest_configuration", 301);
+    return redirect("/projects/{$projectid}/ctest_configuration", 301);
 });
 
-Route::get('/test/{id}', 'TestController@details');
+Route::get('/tests/{id}', 'TestController@details');
+Route::permanentRedirect('/test/{id}', '/tests/{id}');
 Route::get('/testDetails.php', function (Request $request) {
     $buildid = $request->query('build');
     $testid = $request->query('test');
     $buildtest = \App\Models\BuildTest::where('buildid', $buildid)->where('testid', $testid)->first();
     if ($buildtest !== null) {
-        return redirect("/test/{$buildtest->id}", 301);
+        return redirect("/tests/{$buildtest->id}", 301);
     }
     abort(404);
 });
