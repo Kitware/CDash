@@ -17168,11 +17168,6 @@ parameters:
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 3
-			path: app/cdash/public/api/v1/relateBuilds.php
-
-		-
 			message: "#^Call to method RetryHandler\\:\\:increment\\(\\) with incorrect case\\: Increment$#"
 			count: 1
 			path: app/cdash/public/api/v1/requeueSubmissionFile.php
