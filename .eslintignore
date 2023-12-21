@@ -8,7 +8,6 @@ resources/js/components/page-header/HeaderMenu.vue
 resources/js/components/ViewDynamicAnalysis.vue
 resources/js/components/UserHomepage.vue
 resources/js/components/TestDetails.vue
-resources/js/components/Monitor.vue
 resources/js/components/ManageMeasurements.vue
 resources/js/components/ManageAuthTokens.vue
 resources/js/components/EditProject.vue

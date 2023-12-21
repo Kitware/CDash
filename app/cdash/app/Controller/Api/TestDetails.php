@@ -16,42 +16,44 @@
 
 namespace CDash\Controller\Api;
 
-use App\Models\BuildTest;
 use App\Models\TestOutput;
 use App\Models\Project as EloquentProject;
-
-use CDash\Database;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 require_once 'include/repository.php';
 
 class TestDetails extends BuildTestApi
 {
-    public $echoResponse;
     public $buildtest;
 
-    public function __construct(Database $db, BuildTest $buildtest)
-    {
-        $this->echoResponse = true;
-        parent::__construct($db, $buildtest);
-    }
-
-    public function getResponse()
+    public function getResponse(): JsonResponse|StreamedResponse
     {
         // If we have a fileid we download it.
         if (isset($_GET['fileid']) && is_numeric($_GET['fileid'])) {
-            $stmt = $this->db->prepare(
-                "SELECT id, value, name FROM testmeasurement
-                    WHERE outputid = :outputid AND type = 'file'
-                    ORDER BY id");
-            $this->db->execute($stmt, [':outputid' => $this->buildtest->outputid]);
-            $result_array = $stmt->fetch();
-            header('Content-type: tar/gzip');
-            header('Content-Disposition: attachment; filename="' . $result_array['name'] . '.tgz"');
-            echo base64_decode($result_array['value']);
-            flush();
-            ob_flush();
-            $this->echoResponse = false;
-            return;
+            $query = DB::select("
+                SELECT
+                    id,
+                    value,
+                    name
+                FROM testmeasurement
+                WHERE
+                    outputid = ?
+                    AND type = 'file'
+                ORDER BY id
+            ", [$this->buildtest->outputid])[0];
+
+            return response()->streamDownload(
+                function () use ($query) {
+                    echo base64_decode($query->value);
+                },
+                $query->name . '.tgz',
+                [
+                    'Content-Disposition' => 'attachment',
+                    'Content-type' => 'tar/gzip',
+                ]
+            );
         }
 
         $response = begin_JSON_response();
@@ -314,7 +316,7 @@ class TestDetails extends BuildTestApi
         $test_response['preformatted_measurements'] = $preformatted_measurements;
         $response['test'] = $test_response;
         $this->pageTimer->end($response);
-        return $response;
+        return response()->json($response);
     }
 
     private function getRelatedBuildTest($which_buildtest)

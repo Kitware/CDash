@@ -9,7 +9,8 @@
     <h4 v-if="cdash.backlog_length > 0">
       The oldest submission was created {{ cdash.backlog_time }}.
     </h4>
-    <TimelinePlot v-if="plot_data && cdash.time_chart_data"
+    <TimelinePlot
+      v-if="plot_data && cdash.time_chart_data"
       class="center-text"
       :plot-data="plot_data"
       :title="cdash.time_chart_data.title"
@@ -33,7 +34,7 @@
 import ApiLoader from './shared/ApiLoader';
 import TimelinePlot from './shared/TimelinePlot';
 export default {
-  name: "SubmissionProcessingMonitor",
+  name: 'SubmissionProcessingMonitor',
 
   components: {
     TimelinePlot,
@@ -46,7 +47,7 @@ export default {
       loading: true,
       errored: false,
       plot_data: {},
-    }
+    };
   },
 
   mounted () {
@@ -65,11 +66,11 @@ export default {
           values: line.values.map((d) => {
             // converts UNIX epoch format from API to JS date object
             return { x: new Date(d[0]*1000), y: d[1] };
-          })
-        })
+          }),
+        });
       });
       this.plot_data = formatted_data;
-    }
+    },
   },
-}
+};
 </script>
