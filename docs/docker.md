@@ -22,7 +22,17 @@ docker compose -f docker/docker-compose.yml \
 
 3. Browse to http://localhost:8080.  You should see a freshly installed copy of CDash with the latest database schema.
 
-#### Running the test suite
+
+### Manually adding users
+If you choose not to use an external OAuth2 or SAML authentication provider with CDash, you may want to create users
+manually.  Use the following command to create a user from the command line:
+```bash
+docker exec --user www-data cdash bash -c "php artisan user:save --email=<email> --password=<password> --firstname=<first name> --lastname=<last name> --institution=<institution> --admin=<1/0>"
+```
+
+Once a user with administrative privileges has been created, you can use that user to create other users via the web interface.
+
+### Running the test suite
 ```bash
 docker exec -it cdash /bin/bash
 cd _build
