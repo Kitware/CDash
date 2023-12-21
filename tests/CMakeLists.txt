@@ -1,9 +1,9 @@
 function(add_vue_test TestName)
-    add_test(
-      NAME ${TestName}
-      COMMAND "node_modules/.bin/jest" "tests/${TestName}.spec.js"
-      WORKING_DIRECTORY "${CDash_SOURCE_DIR}"
-    )
+  add_test(
+    NAME ${TestName}
+    COMMAND "node_modules/.bin/jest" "tests/${TestName}.spec.js"
+    WORKING_DIRECTORY "${CDash_SOURCE_DIR}"
+  )
 endfunction()
 
 if(DEFINED ENV{APP_URL})
@@ -28,10 +28,11 @@ function(add_cypress_test TestName)
       --spec ${CDash_SOURCE_DIR}/tests/cypress/e2e/${TestName}.cy.js
       --config baseUrl=${APP_URL}
   )
+  # Cypress tries to put stuff in our home directory, which doesn't work for /var/www.
   set_tests_properties(
-      cypress/${TestName}
+    cypress/${TestName}
     PROPERTIES
-      ENVIRONMENT "HOME=/cdash;" # Cypress tries to put stuff in our home directory, which doesn't work for /var/www.
+    ENVIRONMENT "HOME=/cdash;"
   )
 endfunction()
 

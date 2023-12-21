@@ -1,29 +1,29 @@
 # function to add a new ctest based test to CDash
 function(add_ctest_test TestName ProjectName Directory CDashVerifyScript)
-  set(DriverScript
-    "${CDash_BINARY_DIR}/app/cdash/tests/ctest/ctestdriver-${TestName}.ctest")
+  set(DriverScript "${CDash_BINARY_DIR}/app/cdash/tests/ctest/ctestdriver-${TestName}.ctest")
   configure_file(
     "${testing_dir}/ctest/ctestdriver.ctest.in"
     "${DriverScript}"
     @ONLY
-    )
+  )
   add_test(
     NAME ${TestName}
-    COMMAND ${CMAKE_CTEST_COMMAND} -S "${DriverScript}" -V)
+    COMMAND ${CMAKE_CTEST_COMMAND} -S "${DriverScript}" -V
+  )
 endfunction()
 
 # function to add a new ctest based coverage test to CDash
 function(add_coverage_test TestName ProjectName Directory CDashVerifyScript)
-  set(DriverScript
-    "${CDash_BINARY_DIR}/app/cdash/tests/ctest/coveragedriver-${TestName}.ctest")
+  set(DriverScript "${CDash_BINARY_DIR}/app/cdash/tests/ctest/coveragedriver-${TestName}.ctest")
   configure_file(
     "${testing_dir}/ctest/coveragedriver.ctest.in"
     "${DriverScript}"
     @ONLY
-    )
+  )
   add_test(
     NAME ${TestName}
-    COMMAND ${CMAKE_CTEST_COMMAND} -S "${DriverScript}" -V)
+    COMMAND ${CMAKE_CTEST_COMMAND} -S "${DriverScript}" -V
+  )
 endfunction()
 
 if(COVERAGE_COMMAND)
@@ -40,10 +40,12 @@ add_ctest_test(gitUpdates PublicDashboard simple simple.php)
 
 add_test(
   NAME recoverpassword
-  COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_recoverpassword.php)
+  COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_recoverpassword.php
+)
 set_tests_properties(
   recoverpassword PROPERTIES
-  FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*")
+  FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
+)
 
 add_php_test(submitsortingdata)
 add_php_test(indexfilters)

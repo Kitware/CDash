@@ -15,14 +15,25 @@ endfunction()
 function(add_unit_test TestName)
   add_test(
     NAME ${TestName}
-    COMMAND ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${testing_dir}/phpunit.xml --bootstrap ${testing_dir}/bootstrap.php ${testing_dir}/case/${TestName}Test.php
+    COMMAND
+      ${PHP_EXE}
+      ${phpunit_extra_arg}
+      ${PHPUNIT}
+      -c ${testing_dir}/phpunit.xml
+      --bootstrap ${testing_dir}/bootstrap.php
+      ${testing_dir}/case/${TestName}Test.php
   )
 endfunction()
 
 function(add_laravel_test TestName)
   add_test(
     NAME ${TestName}
-    COMMAND ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${CDash_SOURCE_DIR}/phpunit.xml ${laravel_testing_dir}/${TestName}.php
+    COMMAND
+      ${PHP_EXE}
+      ${phpunit_extra_arg}
+      ${PHPUNIT}
+      -c ${CDash_SOURCE_DIR}/phpunit.xml
+      ${laravel_testing_dir}/${TestName}.php
   )
 endfunction()
 

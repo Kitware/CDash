@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.25)
 project(CDash)
 include(CTest)
-configure_file(${CDash_SOURCE_DIR}/CTestCustom.cmake.in
-  ${CDash_BINARY_DIR}/CTestCustom.cmake)
+configure_file(
+  ${CDash_SOURCE_DIR}/CTestCustom.cmake.in
+  ${CDash_BINARY_DIR}/CTestCustom.cmake
+)
 
 # set some cache variables that can be used
 # to configure the testing install
@@ -30,8 +32,10 @@ set(laravel_testing_dir "${CDash_SOURCE_DIR}/tests")
 
 set(CDASH_COVERAGE_DIR "${CDash_BINARY_DIR}/xdebugCoverage")
 file(MAKE_DIRECTORY "${CDASH_COVERAGE_DIR}")
-configure_file(${testing_dir}/prepend_coverage.php.in
-               ${CDash_BINARY_DIR}/prepend_coverage.php)
+configure_file(
+  ${testing_dir}/prepend_coverage.php.in
+  ${CDash_BINARY_DIR}/prepend_coverage.php
+)
 
 # Any tests which need to perform file I/O write files here
 file(MAKE_DIRECTORY "/tmp/CDashTesting")
@@ -40,11 +44,12 @@ file(MAKE_DIRECTORY "/tmp/CDashTesting")
 # .htaccess file, but only if explicitly asked to:
 option(CDASH_CONFIGURE_HTACCESS_FILE "Create .htaccess file for coverage testing?" OFF)
 if(CDASH_CONFIGURE_HTACCESS_FILE)
+  # Yes, the output of this configure_file is intentionally in the
+  # source directory
   configure_file(
     ${testing_dir}/htaccess.in
-    ${CDash_SOURCE_DIR}/app/cdash/public/.htaccess)
-    # Yes, the output of this configure_file is intentionally in the
-    # source directory
+    ${CDash_SOURCE_DIR}/app/cdash/public/.htaccess
+  )
 endif()
 
 find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php REQUIRED)
@@ -55,7 +60,8 @@ if(CDASH_USE_SELENIUM)
 endif()
 if(CDASH_USE_PROTRACTOR)
   find_program(PROTRACTOR_EXE NAMES protractor
-  PATHS ${CDash_SOURCE_DIR}/node_modules/protractor/bin REQUIRED)
+    PATHS ${CDash_SOURCE_DIR}/node_modules/protractor/bin REQUIRED
+  )
 endif()
 
 set_property(GLOBAL PROPERTY INSTALL_CDASH_COUNT "0")

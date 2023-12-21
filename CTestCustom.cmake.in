@@ -13,4 +13,4 @@ set(CTEST_CUSTOM_COVERAGE_EXCLUDE
   "[/\\\\]vendor[/\\\\]"
   "[/\\\\]append_coverage.php"
   "[/\\\\]prepend_coverage.php"
-  )
+)

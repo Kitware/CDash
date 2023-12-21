@@ -18,20 +18,31 @@ set(cfg_options
 
 # Backup .env file
 file(MAKE_DIRECTORY "${CTEST_BINARY_DIRECTORY}/env_backup/")
-configure_file("${CTEST_SOURCE_DIRECTORY}/.env" "${CTEST_BINARY_DIRECTORY}/env_backup/.env" COPYONLY)
+configure_file(
+  "${CTEST_SOURCE_DIRECTORY}/.env"
+  "${CTEST_BINARY_DIRECTORY}/env_backup/.env"
+  COPYONLY
+)
 
 # Change http://localhost:8080 to http://cdash:8080 so protractor tests can succeed.
 file(READ "${CTEST_SOURCE_DIRECTORY}/.env" _env_contents)
 string(REPLACE "localhost:8080" "cdash:8080" _env_contents "${_env_contents}")
 file(WRITE "${CTEST_SOURCE_DIRECTORY}/.env" ${_env_contents})
-execute_process(COMMAND npm run prod WORKING_DIRECTORY "${CTEST_SOURCE_DIRECTORY}")
+execute_process(
+  COMMAND npm run prod
+  WORKING_DIRECTORY "${CTEST_SOURCE_DIRECTORY}"
+)
 
 ctest_start(Continuous)
 ctest_update()
 ctest_submit(PARTS Update)
 ctest_configure(OPTIONS "${cfg_options}")
 ctest_submit(PARTS Configure)
-ctest_test(RETURN_VALUE test_status CAPTURE_CMAKE_ERROR cmake_errors STOP_ON_FAILURE)
+ctest_test(
+  RETURN_VALUE test_status
+  CAPTURE_CMAKE_ERROR cmake_errors
+  STOP_ON_FAILURE
+)
 if (NOT "${test_status}" EQUAL 0)
   message(SEND_ERROR "some tests did not pass cleanly")
 endif()
@@ -40,5 +51,9 @@ ctest_submit(PARTS Test Done)
 # Restore original .env file
 file(RENAME
   "${CTEST_BINARY_DIRECTORY}/env_backup/.env"
-  "${CTEST_SOURCE_DIRECTORY}/.env")
-execute_process(COMMAND npm run prod WORKING_DIRECTORY "${CTEST_SOURCE_DIRECTORY}")
+  "${CTEST_SOURCE_DIRECTORY}/.env"
+)
+execute_process(
+  COMMAND npm run prod
+  WORKING_DIRECTORY "${CTEST_SOURCE_DIRECTORY}"
+)

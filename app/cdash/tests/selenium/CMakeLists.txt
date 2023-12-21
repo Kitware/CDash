@@ -4,7 +4,6 @@ if(NOT BROWSER)
 endif()
 
 # function to add a new Selenium based coverage test to CDash
-#
 function(add_selenium_test TestName)
   add_test(
     NAME ${TestName}
