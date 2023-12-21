@@ -23,6 +23,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 require_once 'include/repository.php';
@@ -1298,6 +1299,165 @@ final class BuildController extends AbstractBuildController
             }
             abort(204);
         }
+        return response()->json();
+    }
+
+    public function restApi(): JsonResponse
+    {
+        $this->setBuildById((int) request()->input('buildid', -1));
+
+        switch (request()->method()) {
+            case 'GET':
+                return $this->restApiGet();
+            case 'POST':
+                Gate::authorize('edit-project', $this->project);
+                return $this->restApiPost();
+            case 'DELETE':
+                Gate::authorize('edit-project', $this->project);
+                return $this->restApiDelete();
+            default:
+                abort(500);
+        }
+    }
+
+    private function restApiGet(): JsonResponse
+    {
+        $pdo = Database::getInstance()->getPdo();
+        $response = [];
+
+        // Are we looking for what went wrong with this build?
+        if (request()->has('getproblems')) {
+            $response['hasErrors'] = false;
+            $response['hasFailingTests'] = false;
+
+            // Details about this build that will be used in SQL queries below.
+            $query_params = [
+                ':siteid'    => $this->build->SiteId,
+                ':type'      => $this->build->Type,
+                ':name'      => $this->build->Name,
+                ':projectid' => $this->build->ProjectId,
+                ':starttime' => $this->build->StartTime,
+            ];
+
+            // Prepared statement to find the oldest submission for this build.
+            // We do this here because it is potentially used multiple times below.
+            $oldest_build_stmt = $pdo->prepare(
+                'SELECT starttime FROM build
+            WHERE siteid = :siteid AND type = :type AND
+                  name = :name AND projectid = :projectid AND
+                  starttime <= :starttime
+            ORDER BY starttime ASC LIMIT 1');
+            $first_submit = null;
+
+            // Check if this build has errors.
+            $buildHasErrors = $this->build->BuildErrorCount > 0;
+            if ($buildHasErrors) {
+                $response['hasErrors'] = true;
+                // Find the last occurrence of this build that had no errors.
+                $no_errors_stmt = $pdo->prepare(
+                    'SELECT starttime FROM build
+                WHERE siteid = :siteid AND type = :type AND name = :name AND
+                      projectid = :projectid AND starttime <= :starttime AND
+                      parentid < 1 AND builderrors < 1
+                ORDER BY starttime DESC LIMIT 1');
+                pdo_execute($no_errors_stmt, $query_params);
+                $last_good_submit = $no_errors_stmt->fetchColumn();
+                if ($last_good_submit !== false) {
+                    $gmtdate = strtotime($last_good_submit . ' UTC');
+                } else {
+                    // Find the oldest submission for this build.
+                    pdo_execute($oldest_build_stmt, $query_params);
+                    $first_submit = $oldest_build_stmt->fetchColumn();
+                    $gmtdate = strtotime($first_submit . ' UTC');
+                }
+                $response['daysWithErrors'] =
+                    round((strtotime($this->build->StartTime) - $gmtdate) / (3600 * 24));
+                $response['failingSince'] = date(FMT_DATETIMETZ, $gmtdate);
+                $response['failingDate'] = substr($response['failingSince'], 0, 10);
+            }
+
+            // Check if this build has failed tests.
+            $buildHasFailingTests = $this->build->TestFailedCount > 0;
+            if ($buildHasFailingTests) {
+                $response['hasFailingTests'] = true;
+                // Find the last occurrence of this build that had no test failures.
+                $no_fails_stmt = $pdo->prepare(
+                    'SELECT starttime FROM build
+                WHERE siteid = :siteid AND type = :type AND
+                        name = :name AND projectid = :projectid AND
+                        starttime <= :starttime AND parentid < 1 AND
+                        testfailed < 1
+                ORDER BY starttime DESC LIMIT 1');
+                pdo_execute($no_fails_stmt, $query_params);
+                $last_good_submit = $no_fails_stmt->fetchColumn();
+                if ($last_good_submit !== false) {
+                    $gmtdate = strtotime($last_good_submit . ' UTC');
+                } else {
+                    // Find the oldest submission for this build.
+                    if (is_null($first_submit)) {
+                        pdo_execute($oldest_build_stmt, $query_params);
+                        $first_submit = $oldest_build_stmt->fetchColumn();
+                    }
+                    $gmtdate = strtotime($first_submit . ' UTC');
+                }
+                $response['daysWithFailingTests'] =
+                    round((strtotime($this->build->StartTime) - $gmtdate) / (3600 * 24));
+                $response['testsFailingSince'] = date(FMT_DATETIMETZ, $gmtdate);
+                $response['testsFailingDate'] =
+                    substr($response['testsFailingSince'], 0, 10);
+            }
+            return response()->json(cast_data_for_JSON($response));
+        }
+        return response()->json();
+    }
+
+    private function restApiPost(): JsonResponse
+    {
+        $buildgrouprule = new BuildGroupRule($this->build);
+
+        // Should we change whether or not this build is expected?
+        if (request()->has('expected') && request()->has('groupid')) {
+            $buildgrouprule->Expected = request()->input('expected');
+            $buildgrouprule->GroupId = request()->input('groupid');
+            $buildgrouprule->SetExpected();
+        }
+
+        // Should we move this build to a different group?
+        if (request()->has('expected') && request()->has('newgroupid')) {
+            $expected = request()->input('expected');
+            $newgroupid = request()->input('newgroupid');
+
+            // Remove the build from its previous group.
+            DB::delete('DELETE FROM build2group WHERE buildid = ?', [$this->build->Id]);
+
+            // Insert it into the new group.
+            DB::insert('
+                INSERT INTO build2group(groupid, buildid)
+                VALUES (?, ?)
+            ', [$newgroupid, $this->build->Id]);
+
+            // Mark any previous buildgroup rule as finished as of this time.
+            $now = gmdate(FMT_DATETIME);
+            $buildgrouprule->SoftDeleteExpiredRules($now);
+
+            // Create the rule for the newly assigned buildgroup.
+            $buildgrouprule->GroupId = $newgroupid;
+            $buildgrouprule->Expected = $expected;
+            $buildgrouprule->StartTime = $now;
+            $buildgrouprule->Save();
+        }
+
+        // Should we change the 'done' setting for this build?
+        if (request()->has('done')) {
+            $this->build->MarkAsDone((bool) request()->input('done'));
+        }
+        return response()->json();
+    }
+
+    private function restApiDelete(): JsonResponse
+    {
+        Log::info("Build #{$this->build->Id} removed manually.");
+        remove_build($this->build->Id);
         return response()->json();
     }
 }
