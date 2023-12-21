@@ -2,8 +2,6 @@
 FROM php:8.1-apache-bookworm AS cdash-common
 LABEL MAINTAINER="Kitware, Inc. <cdash@public.kitware.com>"
 
-ARG CDASH_DB_HOST=localhost
-
 # Designates as dev build, adds testing infrastructure, et al.
 ARG DEVELOPMENT_BUILD
 
@@ -111,7 +109,6 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
  composer install --no-interaction --no-progress --prefer-dist             \
  && mkdir _build && cd _build                                              \
  && cmake                                                                  \
-  -DCDASH_DB_HOST=$CDASH_DB_HOST                                           \
   -DCDASH_DIR_NAME=                                                        \
   -DCDASH_SERVER=localhost:8080                                            \
   -DCDASH_SELENIUM_HUB=selenium-hub                                        \

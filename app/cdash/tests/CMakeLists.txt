@@ -1,8 +1,6 @@
-set(binary_testing_dir "${CDash_BINARY_DIR}/tests")
 set(PHPUNIT "${CDash_SOURCE_DIR}/vendor/bin/phpunit")
 
 # function to add a new PHP based coverage test to CDash
-#
 function(add_php_test TestName)
   add_test(
     NAME ${TestName}
@@ -224,6 +222,9 @@ add_subdirectory(ctest)
 
 add_subdirectory(js/e2e_tests)
 
+# TODO: (sbelsk) We never enable this option. We should reimplement
+#  the useful tests in cypress, clean up the rest, and remove the
+#  references to CDASH_USE_SELENIUM and the `selenium/` directory
 if(CDASH_USE_SELENIUM)
   file(MAKE_DIRECTORY ${CDash_BINARY_DIR}/cmake.git)
   add_subdirectory(selenium)

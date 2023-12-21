@@ -1,6 +1,3 @@
-set(binary_testing_dir "${CDash_SOURCE_DIR}/tests")
-set(PHPUNIT "${CDash_SOURCE_DIR}/vendor/bin/phpunit")
-
 function(add_vue_test TestName)
     add_test(
       NAME ${TestName}
@@ -22,7 +19,6 @@ elseif(EXISTS ${CDash_SOURCE_DIR}/.env)
 else()
   set(APP_URL "http://localhost:8080")
 endif()
-
 
 function(add_cypress_test TestName)
   add_test(

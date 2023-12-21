@@ -1,5 +1,4 @@
 # function to add a new ctest based test to CDash
-#
 function(add_ctest_test TestName ProjectName Directory CDashVerifyScript)
   set(DriverScript
     "${CDash_BINARY_DIR}/app/cdash/tests/ctest/ctestdriver-${TestName}.ctest")
@@ -8,17 +7,12 @@ function(add_ctest_test TestName ProjectName Directory CDashVerifyScript)
     "${DriverScript}"
     @ONLY
     )
-  set(extra_test_count 1)
-  foreach(ctest_exe ${CMAKE_CTEST_COMMAND} ${CTEST_EXTRA_EXECUTABLES})
-    add_test(
-      NAME ${TestName}_${extra_test_count}
-      COMMAND ${ctest_exe} -S "${DriverScript}" -V)
-    math(EXPR extra_test_count "${extra_test_count} + 1")
-  endforeach()
+  add_test(
+    NAME ${TestName}
+    COMMAND ${CMAKE_CTEST_COMMAND} -S "${DriverScript}" -V)
 endfunction()
 
 # function to add a new ctest based coverage test to CDash
-#
 function(add_coverage_test TestName ProjectName Directory CDashVerifyScript)
   set(DriverScript
     "${CDash_BINARY_DIR}/app/cdash/tests/ctest/coveragedriver-${TestName}.ctest")
@@ -32,8 +26,6 @@ function(add_coverage_test TestName ProjectName Directory CDashVerifyScript)
     COMMAND ${CMAKE_CTEST_COMMAND} -S "${DriverScript}" -V)
 endfunction()
 
-set(CTEST_EXTRA_EXECUTABLES "" CACHE STRING "List of other CTest executables to test")
-
 if(COVERAGE_COMMAND)
   add_coverage_test(simple InsightExample simple manageCoverageTest.php)
 else()
@@ -45,93 +37,6 @@ add_ctest_test(sameImage InsightExample sameImage sameImage.php)
 
 add_ctest_test(svnUpdates EmailProjectExample simple simple.php)
 add_ctest_test(gitUpdates PublicDashboard simple simple.php)
-
-function(add_cdash_test TestName TestDir)
-  configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/${TestDir}/test.cmake.in"
-    "${CDash_BINARY_DIR}/Tests/${TestDir}/test.cmake"
-    @ONLY ESCAPE_QUOTES)
-  add_test(${TestName} ${CMAKE_CTEST_COMMAND}
-    -S "${CDash_BINARY_DIR}/Tests/${TestDir}/test.cmake" -V
-    --output-log "${CDash_BINARY_DIR}/Tests/${TestDir}/output.log"
-    )
-endfunction()
-
-set(protocol "http")
-set(server "${CDASH_SERVER}")
-set(path "/${CDASH_DIR_NAME}")
-
-# Give this test plenty of time to run on slower machines:
-# Use 1500 or CTEST_TEST_TIMEOUT for long test timeout value,
-# whichever is greater.
-set(CMAKE_LONG_TEST_TIMEOUT 1500)
-if(CTEST_TEST_TIMEOUT)
-  set(CMAKE_LONG_TEST_TIMEOUT ${CTEST_TEST_TIMEOUT})
-endif()
-if(CMAKE_LONG_TEST_TIMEOUT LESS 1500)
-  set(CMAKE_LONG_TEST_TIMEOUT 1500)
-endif()
-
-if(CMake_SOURCE_DIR)
-  #just so we don't pollute the CMake binary dir with our testing...
-  set(CMake_BINARY_DIR ${CDash_BINARY_DIR})
-  set(CMAKE_TEST_GENERATOR ${CMAKE_GENERATOR})
-
-  function(add_cmake_test TestName TestDir)
-    configure_file(
-      "${CMake_SOURCE_DIR}/Tests/${TestDir}/test.cmake.in"
-      "${CDash_BINARY_DIR}/Tests/${TestDir}/test.cmake"
-      @ONLY ESCAPE_QUOTES)
-    add_test(${TestName} ${CMAKE_CTEST_COMMAND}
-      -S "${CDash_BINARY_DIR}/Tests/${TestDir}/test.cmake" -V
-      --output-log "${CDash_BINARY_DIR}/Tests/${TestDir}/output.log"
-      )
-  endfunction()
-
-  macro(add_failed_submit_test name source build in out log regex)
-    # Have variables named source, build and drop_method because the
-    # configure_file call expects those variables to be defined.
-    #
-    set(source "${source}")
-    set(build "${build}")
-    configure_file("${in}" "${out}" @ONLY)
-    add_test(
-      NAME ${name}
-      COMMAND ${CMAKE_CTEST_COMMAND} -S "${out}" -V --output-log "${log}")
-    set_tests_properties(${name} PROPERTIES PASS_REGULAR_EXPRESSION "${regex}")
-  endmacro()
-
-  set(regex "(Problems when submitting via S*CP")
-  set(regex "${regex}|Error message was: ")
-  set(regex "${regex}([Cc]ould *n.t resolve host")
-  set(regex "${regex}|[Cc]ould *n.t connect to host")
-  set(regex "${regex}|The requested URL returned error")
-  set(regex "${regex}|libcurl was built with SSL disabled. https: not supported)")
-  set(regex "${regex}|Submission method .xmlrpc. not compiled into CTest")
-  set(regex "${regex}|Submission successful)")
-
-  set(ctest_coverage_labels_args "")
-
-  foreach(drop_method cp ftp http https scp xmlrpc)
-    # Cycle through these values each time through the loop:
-    if(ctest_coverage_labels_args STREQUAL "")
-      set(ctest_coverage_labels_args "LABELS Everything")
-    elseif(ctest_coverage_labels_args STREQUAL "LABELS Everything")
-      set(ctest_coverage_labels_args "LABELS 0ArgTest")
-    else()
-      set(ctest_coverage_labels_args "")
-    endif()
-
-    add_failed_submit_test(CTestTestFailedSubmit-${drop_method}
-      "${CMake_SOURCE_DIR}/Tests/CTestTest/SmallAndFast"
-      "${CMake_BINARY_DIR}/Tests/CTestTestFailedSubmits/${drop_method}"
-      "${CMake_SOURCE_DIR}/Tests/CTestTestFailedSubmits/test.cmake.in"
-      "${CMake_BINARY_DIR}/Tests/CTestTestFailedSubmits/test-${drop_method}.cmake"
-      "${CMake_BINARY_DIR}/Tests/CTestTestFailedSubmits/test-${drop_method}.log"
-      "${regex}"
-      )
-  endforeach()
-endif()
 
 add_test(
   NAME recoverpassword
@@ -145,16 +50,10 @@ add_php_test(indexfilters)
 add_php_test(timeline)
 add_laravel_test(Feature/Timeline)
 
-#add_test(
-#  NAME enable_async
-#  COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_enable_async.php
-#)
-
 add_php_test(nobackup)
 
-if (NOT CDASH_DB_TYPE STREQUAL "pgsql")
-  #add_php_test(parallelsubmissions)
-endif()
+# TODO: (sbelsk) revisit why this test fails
+#add_php_test(parallelsubmissions)
 
 add_php_test(deferredsubmissions)
 
@@ -164,26 +63,3 @@ else()
   add_ctest_test(simple_async InsightExample simple simple.php enable_async)
 endif()
 add_ctest_test(simple2_async InsightExample simple2 simple2.php enable_async)
-
-if(CMake_SOURCE_DIR)
-
-  foreach(drop_method cp ftp http https scp xmlrpc)
-    # Cycle through these values each time through the loop:
-    if(ctest_coverage_labels_args STREQUAL "")
-      set(ctest_coverage_labels_args "LABELS Everything")
-    elseif(ctest_coverage_labels_args STREQUAL "LABELS Everything")
-      set(ctest_coverage_labels_args "LABELS 0ArgTest")
-    else()
-      set(ctest_coverage_labels_args "")
-    endif()
-
-    add_failed_submit_test(CTestTestFailedSubmit-${drop_method}_async
-      "${CMake_SOURCE_DIR}/Tests/CTestTest/SmallAndFast"
-      "${CMake_BINARY_DIR}/Tests/CTestTestFailedSubmits/${drop_method}"
-      "${CMake_SOURCE_DIR}/Tests/CTestTestFailedSubmits/test.cmake.in"
-      "${CMake_BINARY_DIR}/Tests/CTestTestFailedSubmits/test-${drop_method}.cmake"
-      "${CMake_BINARY_DIR}/Tests/CTestTestFailedSubmits/test-${drop_method}.log"
-      "${regex}"
-      )
-  endforeach()
-endif()

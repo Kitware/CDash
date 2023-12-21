@@ -15,15 +15,6 @@ set(cfg_options
   "-DCDASH_SERVER=cdash:8080"
   "-DCDASH_SELENIUM_HUB=selenium-hub"
 )
-if (postgres)
-  list(APPEND cfg_options
-    "-DCDASH_DB_TYPE=pgsql"
-    "-DCDASH_DB_LOGIN=postgres"
-    "-DCDASH_DB_HOST=postgres"
-    "-DCDASH_DB_PASS=cdash4simpletest")
-else()
-  list(APPEND cfg_options "-DCDASH_DB_LOGIN=root")
-endif()
 
 # Backup .env file
 file(MAKE_DIRECTORY "${CTEST_BINARY_DIRECTORY}/env_backup/")
