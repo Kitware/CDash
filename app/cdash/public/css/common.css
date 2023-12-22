@@ -448,28 +448,24 @@ div#calendar{
 }
 
 .activity-level-none {
-    float: right;
     background: url("../../img/activity-level.png") no-repeat scroll -16px -16px transparent;
     height: 16px;
     width: 16px;
 }
 
 .activity-level-low {
-    float: right;
     background: url("../../img/activity-level.png") no-repeat scroll 0 -16px transparent;
     height: 16px;
     width: 16px;
 }
 
 .activity-level-medium {
-    float: right;
     background: url("../../img/activity-level.png") no-repeat scroll -16px 0 transparent;
     height: 16px;
     width: 16px;
 }
 
 .activity-level-high {
-    float: right;
     background: url("../../img/activity-level.png") no-repeat scroll 0 0 transparent;
     height: 16px;
     width: 16px;
@@ -1113,7 +1109,8 @@ background-color: #adcae6
  border-bottom: solid 1px #244fb1;
 }
 
-.table-heading1 td:nth-child(even) {
+.table-heading1 td:nth-child(even),
+.table-heading1 th:nth-child(even) {
   background-color:#607dc1;
 }
 

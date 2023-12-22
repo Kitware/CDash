@@ -7,88 +7,40 @@
       No Projects Found
     </h1>
 
-    <!-- Main table -->
-    <table
-      v-if="cdash.projects.length > 0"
-      id="indexTable"
-      border="0"
-      cellpadding="4"
-      cellspacing="0"
-      width="100%"
-      class="tabb striped"
+    <DataTable
+      :columns="[
+        {
+          name: 'project',
+          displayName: 'Project',
+        },
+        {
+          name: 'description',
+          displayName: 'Description',
+          expand: true,
+        },
+        {
+          name: 'activity',
+          displayName: 'Last Activity',
+        }
+      ]"
+      :rows="tableRows"
+      class="projects-table"
     >
-      <thead>
-        <tr class="table-heading1">
-          <td
-            colspan="6"
-            align="left"
-            class="nob"
-          >
-            <h3>Dashboards</h3>
-          </td>
-        </tr>
-
-        <tr class="table-heading">
-          <th
-            id="sort_0"
-            align="center"
-            width="10%"
-          >
-            <b>Project</b>
-          </th>
-          <td
-            align="center"
-            width="65%"
-          >
-            <b>Description</b>
-          </td>
-          <th
-            id="sort_2"
-            align="center"
-            class="nob"
-            width="13%"
-          >
-            <b>Last activity</b>
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr
-          v-for="project in cdash.projects"
+      <template #activity="activity" >
+        <a
+          class="builddateelapsed"
+          :href="activity.props.link + '&date=' + activity.props.lastbuilddate"
         >
-          <td align="center">
-            <a :href="project.link">
-              {{ project.name }}
-            </a>
-          </td>
-          <td align="left">
-            {{ project.description }}
-          </td>
-          <td
-            align="center"
-            class="nob"
-          >
-            <span
-              class="sorttime"
-              style="display: none;"
-            >
-              {{ project.lastbuilddatefull }}
-            </span>
-            <a
-              class="builddateelapsed"
-              :href="project.link + '&date=' + project.lastbuilddate"
-            >
-              {{ project.lastbuild_elapsed }}
-            </a>
-            <img
-              :src="$baseURL + '/img/cleardot.gif'"
-              :class="'activity-level-' + project.activity"
-            >
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          {{ activity.props.lastbuild_elapsed }}
+        </a>
+        <img
+          alt="Activity level"
+          style="margin-left: 0.5em;"
+          :src="$baseURL + '/img/cleardot.gif'"
+          :class="'activity-level-' + activity.props.activity"
+        >
+      </template>
+    </DataTable>
 
     <table
       v-if="cdash.projects.length > 0"
@@ -136,9 +88,10 @@
 <script>
 import ApiLoader from './shared/ApiLoader';
 import LoadingIndicator from "./shared/LoadingIndicator.vue";
+import DataTable from "./shared/DataTable.vue";
 export default {
   name: 'AllProjects',
-  components: {LoadingIndicator},
+  components: {DataTable, LoadingIndicator},
 
   data () {
     return {
@@ -146,6 +99,7 @@ export default {
       cdash: {},
       loading: true,
       errored: false,
+      tableRows: [],
     }
   },
 
@@ -157,5 +111,28 @@ export default {
     }
     ApiLoader.loadPageData(this, '/api/v1/viewProjects.php' + queryParams);
   },
+
+  methods: {
+    postSetup: function () {
+      this.tableRows = this.cdash.projects.map((project) => {
+        return {
+          project: {
+            value: project.name,
+            href: project.link
+          },
+          description: project.description,
+          activity: project,
+        };
+      });
+    }
+  }
 }
 </script>
+
+<style scoped>
+
+.projects-table {
+  width: 100%;
+}
+
+</style>

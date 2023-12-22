@@ -99,49 +99,49 @@
                 title="Edit subscription"
                 :href="$baseURL + '/subscribeProject.php?projectid=' + project.id + '&edit=1'"
               >
-                <font-awesome-icon icon="fa-solid fa-bell"/>
+                <font-awesome-icon icon="fa-bell"/>
               </a>
               <a
                 v-if="project.role > 0"
                 title="Claim sites"
                 :href="$baseURL + '/editSite.php?projectid=' + project.id"
               >
-                <font-awesome-icon icon="fa-solid fa-computer"/>
+                <font-awesome-icon icon="fa-computer"/>
               </a>
               <a
                 v-if="project.role > 1"
                 title="Edit project"
                 :href="$baseURL + '/project/' + project.id + '/edit'"
               >
-                <font-awesome-icon icon="fa-solid fa-pencil"/>
+                <font-awesome-icon icon="fa-pencil"/>
               </a>
               <a
                 v-if="project.role > 1"
                 title="Manage subprojects"
                 :href="$baseURL + '/manageSubProject.php?projectid=' + project.id"
               >
-                <font-awesome-icon icon="fa-solid fa-folder-tree"/>
+                <font-awesome-icon icon="fa-folder-tree"/>
               </a>
               <a
                 v-if="project.role > 1"
                 title="Manage project groups"
                 :href="$baseURL + '/manageBuildGroup.php?projectid=' + project.id"
               >
-                <font-awesome-icon icon="fa-solid fa-layer-group"/>
+                <font-awesome-icon icon="fa-layer-group"/>
               </a>
               <a
                 v-if="project.role > 1"
                 title="Manage project users"
                 :href="$baseURL + '/manageProjectRoles.php?projectid=' + project.id"
               >
-                <font-awesome-icon icon="fa-solid fa-user-pen"/>
+                <font-awesome-icon icon="fa-user-pen"/>
               </a>
               <a
                 v-if="project.role > 1"
                 title="Manage project coverage"
                 :href="$baseURL + '/manageCoverage.php?projectid=' + project.id"
               >
-                <font-awesome-icon icon="fa-solid fa-chart-line"/>
+                <font-awesome-icon icon="fa-chart-line"/>
               </a>
             </td>
             <td
