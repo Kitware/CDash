@@ -24,9 +24,12 @@ assignees: ''
 ### Additional Information
 
 <!--
+
 Add additional information here if necessary.  Helpful information includes:
 - How to reproduce the problem
+- The contents of your logs (see ./storage/logs)
 - Screenshots of a UI issue
 - Browser/OS information (if applicable)
 - Any other information which might help us track down the bug
+
 -->
