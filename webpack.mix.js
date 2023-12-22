@@ -24,11 +24,12 @@ if (fs.existsSync('.git')) {
   // to report in the footer.
   // Use current UNIX timestamp for cache busting.
   version = new Date().getTime().toString();
-} else {
+}
+else {
   // Otherwise if this is a release download, use the version from package.json.
   const config = require('./package.json');
   version = config.version;
-  fs.writeFileSync('./public/VERSION', 'v' + version);
+  fs.writeFileSync('./public/VERSION', `v${version}`);
 }
 
 // Write out version file for angular.js
@@ -36,7 +37,7 @@ const dir = 'public/build/js';
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir);
 }
-fs.writeFileSync(dir + '/version.js', "angular.module('CDash').constant('VERSION', '" + version + "');");
+fs.writeFileSync(`${dir}/version.js`, `angular.module('CDash').constant('VERSION', '${version}');`);
 
 // Webpack plugins.
 const webpack_plugins = [
@@ -47,22 +48,22 @@ const webpack_plugins = [
       test: /\.html$/,
       rules: [{
         search: /@@version/g,
-        replace: version
-      }]
+        replace: version,
+      }],
     },
     {
       dir: 'public/js',
       test: /\.js$/,
       rules: [{
         search: /@@cdash_version/g,
-        replace: version
-      }]
+        replace: version,
+      }],
     },
   ]),
 ];
 
 if (git_clone) {
-  const { GitRevisionPlugin } = require('git-revision-webpack-plugin')
+  const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
   webpack_plugins.push(new GitRevisionPlugin());
 }
 
@@ -70,21 +71,21 @@ if (git_clone) {
 mix.copy('public/views/*.html', 'public/build/views/');
 
 // Cache busting for angularjs partials.
-const glob = require("glob");
-glob.sync('public/views/partials/*.html').forEach(function(src) {
-  let dest = src.replace('.html', '_' + version + '.html');
+const glob = require('glob');
+glob.sync('public/views/partials/*.html').forEach((src) => {
+  let dest = src.replace('.html', `_${version}.html`);
   dest = dest.replace('views', 'build/views');
   mix.copy(src, dest);
 });
 
 // Version CSS files.
-mix.copy('public/css/cdash.css', 'public/build/css/cdash_' + version + '.css');
-mix.copy('public/css/colorblind.css', 'public/build/css/colorblind_' + version + '.css');
+mix.copy('public/css/cdash.css', `public/build/css/cdash_${version}.css`);
+mix.copy('public/css/colorblind.css', `public/build/css/colorblind_${version}.css`);
 mix.copy('public/css/common.css', 'public/build/css/common.css');
 mix.styles([
   'node_modules/bootstrap/dist/css/bootstrap.css',
   'node_modules/jquery-ui-dist/jquery-ui.css',
-  'node_modules/nvd3/build/nv.d3.min.css'
+  'node_modules/nvd3/build/nv.d3.min.css',
 ], 'public/build/css/3rdparty.css').version();
 mix.copy('node_modules/nvd3/build/nv.d3.min.css.map', 'public/build/css/nv.d3.min.css.map');
 
@@ -100,7 +101,6 @@ mix.scripts([
   'public/js/je_compare.js',
   'node_modules/angular/angular.min.js',
   'node_modules/angular-animate/angular-animate.min.js',
-  'node_modules/angular-clipboard/angular-clipboard.js',
   'node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
   'node_modules/angular-ui-sortable/dist/sortable.js',
   'node_modules/ansi_up/ansi_up.js',
@@ -110,7 +110,7 @@ mix.scripts([
   'node_modules/d3/d3.js',
   'node_modules/ng-file-upload/dist/ng-file-upload.js',
   'node_modules/nvd3/build/nv.d3.js',
-  'public/js/ui-bootstrap-tpls-0.14.2.min.js'
+  'public/js/ui-bootstrap-tpls-0.14.2.min.js',
 ], 'public/js/3rdparty.min.js');
 mix.copy('node_modules/nvd3/build/nv.d3.js.map', 'public/js/nv.d3.js.map');
 
@@ -125,14 +125,14 @@ mix.scripts([
   'public/js/directives/**.js',
   'public/js/filters/**.js',
   'public/js/services/**.js',
-  'public/js/controllers/**.js'
+  'public/js/controllers/**.js',
 ], 'public/js/1stparty.min.js');
 
 // Combine 1st and 3rd party into a single file.
 mix.scripts([
   'public/js/3rdparty.min.js',
   'public/js/1stparty.min.js',
-], 'public/js/CDash_' + version + '.min.js');
+], `public/js/CDash_${version}.min.js`);
 
 // Copy jquery-ui images to public/css/images/
 mix.copyDirectory('node_modules/jquery-ui-dist/images', 'public/build/css/images');

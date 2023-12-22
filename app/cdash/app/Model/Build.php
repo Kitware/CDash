@@ -538,7 +538,7 @@ class Build
      * Return the errors that have been resolved from this build.
      * @todo This doesn't support getting resolved build errors across parent builds.
      **/
-    public function GetResolvedBuildErrors(int $type)
+    public function GetResolvedBuildErrors(int $type): \PDOStatement|false
     {
         // This returns an empty result if there was no previous build
         $stmt = $this->PDO->prepare(
@@ -594,7 +594,7 @@ class Build
                 return false;
             }
 
-            if ($this->isParentBuild()) {
+            if ($this->IsParentBuild()) {
                 $failures = $this->GetFailuresForChildren($fetchStyle);
             } else {
                 $buildFailure = new BuildFailure();
@@ -611,6 +611,8 @@ class Build
 
     /**
      * Apply filter to rows
+     *
+     * @param array<string,mixed> $filters
      */
     protected function PropertyFilter(array $rows, array $filters): array
     {
@@ -645,7 +647,7 @@ class Build
      * but NOT this build.
      * @todo This doesn't support getting resolved build failures across parent builds.
      **/
-    public function GetResolvedBuildFailures(int $type)
+    public function GetResolvedBuildFailures(int $type): \PDOStatement
     {
         $currentFailuresQuery =
             'SELECT bf.detailsid FROM buildfailure AS bf
@@ -866,8 +868,8 @@ class Build
             throw new InvalidArgumentException('Invalid field specified.');
         }
 
-        $model = EloquentBuild::find($this->Id);
-        return $model === null ? 0 : max($model->$field, 0);
+        $model = EloquentBuild::find((int) $this->Id);
+        return $model === null ? 0 : max($model->getAttribute($field), 0);
     }
 
     /** Get number of failed tests */
@@ -1177,7 +1179,7 @@ class Build
 
         // Look up the number of configure warnings for this build
         // and the previous one.
-        $nwarnings = EloquentBuild::findOrFail($this->Id)->configurewarnings;
+        $nwarnings = EloquentBuild::findOrFail((int) $this->Id)->configurewarnings;
         $npreviouswarnings = EloquentBuild::findOrFail($previousbuildid)->configurewarnings;
 
         DB::transaction(function () use ($nwarnings, $npreviouswarnings) {
@@ -1353,8 +1355,8 @@ class Build
                 $timemean = $testtime;
             }
 
-            $buildtest = \App\Models\BuildTest::find($buildtestid);
-            $buildtest->timestatus = $timestatus;
+            $buildtest = BuildTest::findOrFail((int) $buildtestid);
+            $buildtest->timestatus = (int) $timestatus;
 
             $buildtest->timemean = $timemean;
             $buildtest->timestd = $timestd;
@@ -1374,7 +1376,7 @@ class Build
     }
 
     /** Compute the user statistics */
-    public function ComputeUpdateStatistics()
+    public function ComputeUpdateStatistics(): bool
     {
         if (!$this->Id) {
             add_log('Id is not set', 'Build::ComputeUpdateStatistics', LOG_ERR,
@@ -1622,7 +1624,7 @@ class Build
             return $this->Name;
         }
 
-        $this->Name = EloquentBuild::findOrFail($this->Id)->name;
+        $this->Name = EloquentBuild::findOrFail((int) $this->Id)->name;
         return $this->Name;
     }
 
@@ -1715,7 +1717,7 @@ class Build
             return false;
         }
 
-        $num_errors = EloquentBuild::findOrFail($this->Id)->builderrors;
+        $num_errors = EloquentBuild::findOrFail((int) $this->Id)->builderrors;
         return self::ConvertMissingToZero($num_errors);
     }
 
@@ -1727,7 +1729,7 @@ class Build
             return false;
         }
 
-        $num_warnings = EloquentBuild::findOrFail($this->Id)->buildwarnings;
+        $num_warnings = EloquentBuild::findOrFail((int) $this->Id)->buildwarnings;
         return self::ConvertMissingToZero($num_warnings);
     }
 
@@ -1774,7 +1776,7 @@ class Build
             'stamp' => $this->Stamp,
         ]);
 
-        return $builds->count() > 0 ? $builds->first()->id : 0;
+        return $builds->first()->id ?? 0;
     }
 
     /** Create a new build as a parent of $this and sets $this->ParentId.
@@ -1952,7 +1954,7 @@ class Build
     }
 
     /** Update the testing numbers for our parent build. */
-    private function UpdateParentTestNumbers($newFailed, $newNotRun, $newPassed): void
+    private function UpdateParentTestNumbers(int $newFailed, int $newNotRun, int $newPassed): void
     {
         if ($this->ParentId < 1) {
             return;
@@ -1986,7 +1988,7 @@ class Build
             return (int) $this->BuildConfigure->NumberOfWarnings;
         }
 
-        $num_warnings = EloquentBuild::findOrFail($this->Id)->configurewarnings;
+        $num_warnings = EloquentBuild::findOrFail((int) $this->Id)->configurewarnings;
         return self::ConvertMissingToZero($num_warnings);
     }
 
@@ -2027,7 +2029,7 @@ class Build
             return (int) $this->BuildConfigure->NumberOfErrors;
         }
 
-        $num_errors = EloquentBuild::findOrFail($this->Id)->configureerrors;
+        $num_errors = EloquentBuild::findOrFail((int) $this->Id)->configureerrors;
         return self::ConvertMissingToZero($num_errors);
     }
 
@@ -2064,7 +2066,7 @@ class Build
         $this->PullRequest = $pr;
     }
 
-    private function NotifyPullRequest($message, $url)
+    private function NotifyPullRequest(string $message, string $url): void
     {
         // Figure out if we should notify this build or its parent.
         $idToNotify = $this->Id;
@@ -2073,7 +2075,7 @@ class Build
         }
 
         // Return early if this build already posted a comment on this PR.
-        $buildToNotify = EloquentBuild::findOrFail($idToNotify);
+        $buildToNotify = EloquentBuild::findOrFail((int) $idToNotify);
         if ($buildToNotify->notified) {
             return;
         }
@@ -2091,7 +2093,7 @@ class Build
         $buildToNotify->save();
     }
 
-    private function UpdateDuration(string $field, $duration, bool $update_parent = true): void
+    private function UpdateDuration(string $field, int $duration, bool $update_parent = true): void
     {
         if ($duration === 0) {
             return;
@@ -2120,17 +2122,17 @@ class Build
         }, 5);
     }
 
-    public function SetConfigureDuration($duration, bool $update_parent = true): void
+    public function SetConfigureDuration(int $duration, bool $update_parent = true): void
     {
         $this->UpdateDuration('configure', $duration, $update_parent);
     }
 
-    public function UpdateBuildDuration($duration, bool $update_parent = true): void
+    public function UpdateBuildDuration(int $duration, bool $update_parent = true): void
     {
         $this->UpdateDuration('build', $duration, $update_parent);
     }
 
-    public function UpdateTestDuration($duration, bool $update_parent = true): void
+    public function UpdateTestDuration(int $duration, bool $update_parent = true): void
     {
         $this->UpdateDuration('test', $duration, $update_parent);
     }
@@ -2159,7 +2161,7 @@ class Build
             return $this->Done;
         }
 
-        $this->Done = EloquentBuild::findOrFail($this->Id)->done;
+        $this->Done = EloquentBuild::findOrFail((int) $this->Id)->done;
         return $this->Done;
     }
 
@@ -2305,20 +2307,21 @@ class Build
     /**
      * Return a SubProject build for a particular parent if it exists.
      */
-    public static function GetSubProjectBuild($parentid, $subprojectid): self|null
+    public static function GetSubProjectBuild(int $parentid, int $subprojectid): self|null
     {
-        $pdo = Database::getInstance()->getPdo();
-        $stmt = $pdo->prepare(
-            'SELECT b.id FROM build b
+        $row = DB::select('
+            SELECT b.id
+            FROM build b
             JOIN subproject2build sp2b ON (sp2b.buildid = b.id)
-            WHERE b.parentid = ? AND sp2b.subprojectid = ?');
-        pdo_execute($stmt, [$parentid, $subprojectid]);
-        $row = $stmt->fetch();
+            WHERE
+                b.parentid = ?
+                AND sp2b.subprojectid = ?
+        ', [$parentid, $subprojectid])[0] ?? [];
         if (!$row) {
             return null;
         }
         $build = new Build();
-        $build->Id = $row['id'];
+        $build->Id = $row->id;
         $build->FillFromId($build->Id);
         return $build;
     }
@@ -2369,7 +2372,7 @@ class Build
     private static function GetIdFromUuid($uuid): int|null
     {
         $model = EloquentBuild::where('uuid', $uuid);
-        return $model->count() > 0 ? $model->first()->id : null;
+        return $model->first()?->id;
     }
 
     /**
@@ -2614,7 +2617,7 @@ class Build
 
                     if ($hasAuthor === false
                         && $hasCommitter === false
-                        && filter_var($row['author'], FILTER_VALIDATE_EMAIL)
+                        && filter_var($row['author'], FILTER_VALIDATE_EMAIL) !== false
                     ) {
                         $authors[] = $row['author'];
                     }
@@ -2784,6 +2787,9 @@ class Build
                 ];
             } else {
                 $diff = $this->GetErrorDifferences();
+                if ($diff === false) {
+                    abort(500, 'Error calculating error diffs');
+                }
                 $this->ErrorDifferences = [
                     'BuildWarning' => [
                         'new' => $diff['buildwarningspositive'],

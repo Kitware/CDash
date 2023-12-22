@@ -28,11 +28,6 @@ if (!isset($ONLY_LOAD_DEFAULTS)) {
 $CDASH_ROOT_DIR = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);
 
-// host for Selenium testing
-$CDASH_SELENIUM_HUB='localhost';
-
-// API Key for SendGrid
-$CDASH_SENDGRID_API_KEY = null;
 // Using HTTPS protocol to access CDash
 $CDASH_USE_HTTPS = '0';
 // Name of the server running CDash.
@@ -57,10 +52,6 @@ $CDASH_GIT_COMMAND = 'git';
 $CDASH_DEFAULT_GIT_DIRECTORY = 'git';
 // Define the p4 command
 $CDASH_P4_COMMAND = 'p4';
-// Number of seconds to allow processing a single submission before resetting
-$CDASH_SUBMISSION_PROCESSING_TIME_LIMIT = '450';
-// Number of times to attempt processing a single submission before giving up
-$CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS = '5';
 
 // Settings to enable external authentication using OAuth 2.0.
 // Currently recognized providers are GitHub, GitLab, and Google.
@@ -74,13 +65,6 @@ $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS = '5';
 // the base URL for a self-hosted instance.
 //    'domain'            => 'https://my.gitlab.example'
 $OAUTH2_PROVIDERS = [];
-
-// Whether to use the AWS ElastiCache Auto Discovery feature
-$CDASH_USE_ELASTICACHE_AUTO_DISCOVERY = false;
-
-// Set to true if this copy of CDash is serving as a remote submission
-// processor hosted somewhere other than the web server.
-$CDASH_REMOTE_PROCESSOR = false;
 
 // Location of the private key that allows this CDash installation to act
 // as a GitHub App.

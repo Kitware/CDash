@@ -562,7 +562,23 @@ parameters:
 
 		-
 			message: """
+				#^Call to deprecated function pdo_execute\\(\\)\\:
+				v2\\.5\\.0 01/22/2018$#
+			"""
+			count: 4
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: """
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
+				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: """
+				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
@@ -702,8 +718,23 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
+			message: "#^Only numeric types are allowed in \\-, int\\|false given on the left side\\.$#"
+			count: 2
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
+			count: 2
+			path: app/Http/Controllers/BuildController.php
+
+		-
 			message: "#^Parameter \\#1 \\$haystack of function strrpos expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
 			count: 2
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 4
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -728,7 +759,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
-			count: 9
+			count: 11
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -4530,11 +4561,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
 		-
-			message: "#^Method CDash\\\\Controller\\\\Api\\\\TestDetails\\:\\:getResponse\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\TestDetails\\:\\:utf8_for_xml\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/TestDetails.php
@@ -4551,11 +4577,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Controller\\\\Api\\\\TestDetails\\:\\:\\$buildtest has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
-			message: "#^Property CDash\\\\Controller\\\\Api\\\\TestDetails\\:\\:\\$echoResponse has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
@@ -5491,56 +5512,6 @@ parameters:
 			path: app/cdash/app/Model/ActionableTypes.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$builderrors\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$buildwarnings\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$configureerrors\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$configurewarnings\\.$#"
-			count: 2
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$done\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$name\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$notified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$testfailed\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$testnotrun\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:\\$testpassed\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Access to an undefined property object\\:\\:\\$difference\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -5552,11 +5523,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property object\\:\\:\\$time\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:save\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -5573,7 +5539,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 31
+			count: 30
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -5589,7 +5555,7 @@ parameters:
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -5598,97 +5564,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Call to method CDash\\\\Model\\\\Build\\:\\:IsParentBuild\\(\\) with incorrect case\\: isParentBuild$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access offset 'builderrorsnegative' on array\\{builderrorspositive\\: int, builderrorsnegative\\: int, buildwarningspositive\\: int, buildwarningsnegative\\: int, configureerrors\\: int, configurewarnings\\: int, testpassedpositive\\: int, testpassednegative\\: int, \\.\\.\\.\\}\\|false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access offset 'builderrorspositive' on array\\{builderrorspositive\\: int, builderrorsnegative\\: int, buildwarningspositive\\: int, buildwarningsnegative\\: int, configureerrors\\: int, configurewarnings\\: int, testpassedpositive\\: int, testpassednegative\\: int, \\.\\.\\.\\}\\|false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access offset 'buildwarningsnegati…' on array\\{builderrorspositive\\: int, builderrorsnegative\\: int, buildwarningspositive\\: int, buildwarningsnegative\\: int, configureerrors\\: int, configurewarnings\\: int, testpassedpositive\\: int, testpassednegative\\: int, \\.\\.\\.\\}\\|false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access offset 'buildwarningspositi…' on array\\{builderrorspositive\\: int, builderrorsnegative\\: int, buildwarningspositive\\: int, buildwarningsnegative\\: int, configureerrors\\: int, configurewarnings\\: int, testpassedpositive\\: int, testpassednegative\\: int, \\.\\.\\.\\}\\|false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access offset 'configureerrors' on array\\{builderrorspositive\\: int, builderrorsnegative\\: int, buildwarningspositive\\: int, buildwarningsnegative\\: int, configureerrors\\: int, configurewarnings\\: int, testpassedpositive\\: int, testpassednegative\\: int, \\.\\.\\.\\}\\|false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access offset 'configurewarnings' on array\\{builderrorspositive\\: int, builderrorsnegative\\: int, buildwarningspositive\\: int, buildwarningsnegative\\: int, configureerrors\\: int, configurewarnings\\: int, testpassedpositive\\: int, testpassednegative\\: int, \\.\\.\\.\\}\\|false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access offset 'testfailednegative' on array\\{builderrorspositive\\: int, builderrorsnegative\\: int, buildwarningspositive\\: int, buildwarningsnegative\\: int, configureerrors\\: int, configurewarnings\\: int, testpassedpositive\\: int, testpassednegative\\: int, \\.\\.\\.\\}\\|false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access offset 'testfailedpositive' on array\\{builderrorspositive\\: int, builderrorsnegative\\: int, buildwarningspositive\\: int, buildwarningsnegative\\: int, configureerrors\\: int, configurewarnings\\: int, testpassedpositive\\: int, testpassednegative\\: int, \\.\\.\\.\\}\\|false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access offset 'testnotrunnegative' on array\\{builderrorspositive\\: int, builderrorsnegative\\: int, buildwarningspositive\\: int, buildwarningsnegative\\: int, configureerrors\\: int, configurewarnings\\: int, testpassedpositive\\: int, testpassednegative\\: int, \\.\\.\\.\\}\\|false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access offset 'testnotrunpositive' on array\\{builderrorspositive\\: int, builderrorsnegative\\: int, buildwarningspositive\\: int, buildwarningsnegative\\: int, configureerrors\\: int, configurewarnings\\: int, testpassedpositive\\: int, testpassednegative\\: int, \\.\\.\\.\\}\\|false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access offset 'testpassednegative' on array\\{builderrorspositive\\: int, builderrorsnegative\\: int, buildwarningspositive\\: int, buildwarningsnegative\\: int, configureerrors\\: int, configurewarnings\\: int, testpassedpositive\\: int, testpassednegative\\: int, \\.\\.\\.\\}\\|false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access offset 'testpassedpositive' on array\\{builderrorspositive\\: int, builderrorsnegative\\: int, buildwarningspositive\\: int, buildwarningsnegative\\: int, configureerrors\\: int, configurewarnings\\: int, testpassedpositive\\: int, testpassednegative\\: int, \\.\\.\\.\\}\\|false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access property \\$id on App\\\\Models\\\\Build\\|null\\.$#"
-			count: 2
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Cannot access property \\$name on App\\\\Models\\\\Test\\|null\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access property \\$timemean on App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\|null\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access property \\$timestatus on App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\|null\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access property \\$timestd on App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\|null\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot call method save\\(\\) on App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\|null\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -5753,11 +5629,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:count\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:exists\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -5809,11 +5680,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddUpdateStatistics\\(\\) has parameter \\$warningdiff with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:ComputeUpdateStatistics\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -5948,26 +5814,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetResolvedBuildErrors\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetResolvedBuildFailures\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetSubProjectBuild\\(\\) has parameter \\$parentid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetSubProjectBuild\\(\\) has parameter \\$subprojectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:GetTestCollection\\(\\) has invalid return type CDash\\\\Model\\\\TestCollection\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -5988,26 +5834,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:NotifyPullRequest\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:NotifyPullRequest\\(\\) has parameter \\$message with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:NotifyPullRequest\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:PropertyFilter\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:PropertyFilter\\(\\) has parameter \\$rows with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -6019,11 +5845,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:Save\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:SetConfigureDuration\\(\\) has parameter \\$duration with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -6058,52 +5879,12 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateBuildDuration\\(\\) has parameter \\$duration with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateDuration\\(\\) has parameter \\$duration with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateParentTestNumbers\\(\\) has parameter \\$newFailed with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateParentTestNumbers\\(\\) has parameter \\$newNotRun with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateParentTestNumbers\\(\\) has parameter \\$newPassed with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:UpdateTestDuration\\(\\) has parameter \\$duration with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:extract_type_from_buildstamp\\(\\) has parameter \\$buildstamp with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Only booleans are allowed in &&, string\\|false given on the right side\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Only booleans are allowed in a negated boolean, int\\|null given\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -6155,16 +5936,6 @@ parameters:
 		-
 			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
 			count: 7
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Parameter \\#2 \\$property of function property_exists expects string, \\(int\\|string\\) given\\.$#"
-			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -6249,11 +6020,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Model\\\\Build\\:\\:\\$TestCollection has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Variable property access on App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -16758,106 +16524,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 4
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: """
-				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: """
-				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_delete\\(\\) has parameter \\$build with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_get\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_get\\(\\) has parameter \\$build with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_post\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Build\\\\rest_post\\(\\) has parameter \\$build with no type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Function rest_put not found\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
-			count: 4
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/build.php
-
-		-
-			message: """
 				#^Call to deprecated function get_link_identifier\\(\\)\\:
 				04/22/2023$#
 			"""
@@ -17270,45 +16936,6 @@ parameters:
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
-			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/manageOverview.php
-
-		-
-			message: """
-				#^Call to deprecated function add_last_sql_error\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 3
-			path: app/cdash/public/api/v1/manageOverview.php
-
-		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/manageOverview.php
-
-		-
-			message: """
-				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 3
-			path: app/cdash/public/api/v1/manageOverview.php
-
-		-
-			message: "#^Magic constant __FUNCTION__ is always empty outside a function\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageOverview.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageOverview.php
-
-		-
 			message: """
 				#^Call to deprecated function json_error_response\\(\\)\\:
 				15/06/2023 Use abort\\(\\) to exit cleanly instead\\.$#
@@ -17460,11 +17087,6 @@ parameters:
 			message: "#^Variable property access on mixed\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 3
-			path: app/cdash/public/api/v1/relateBuilds.php
 
 		-
 			message: "#^Call to method RetryHandler\\:\\:increment\\(\\) with incorrect case\\: Increment$#"
@@ -25115,11 +24737,6 @@ parameters:
 			message: "#^Method InstallTestCase\\:\\:testInstall\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_install.php
-
-		-
-			message: "#^Method InstallIntoEmptyDBTestCase\\:\\:testInstallIntoEmptyDB\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_install_into_empty_db.php
 
 		-
 			message: """

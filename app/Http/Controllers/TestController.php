@@ -3,10 +3,15 @@ namespace App\Http\Controllers;
 
 use App\Models\BuildTest;
 use App\Utils\PageTimer;
+use CDash\Controller\Api\TestOverview as LegacyTestOverviewController;
+use CDash\Controller\Api\TestDetails as LegacyTestDetailsController;
 use CDash\Database;
+use CDash\Model\Build;
+use CDash\Model\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -22,6 +27,37 @@ final class TestController extends AbstractProjectController
         return view('test.details')
             ->with('title', 'Test Results')
             ->with('project', $this->project);
+    }
+
+    public function apiTestDetails(): JsonResponse|StreamedResponse
+    {
+        $buildtestid = request()->input('buildtestid');
+        if (!is_numeric($buildtestid)) {
+            abort(400, 'A valid test was not specified.');
+        }
+
+        $buildtest = BuildTest::where('id', '=', $buildtestid)->first();
+        if ($buildtest === null) {
+            // Create a dummy project object to prevent information leakage between different error cases
+            $project = new Project();
+            $project->Id = -1;
+        } else {
+            $build = new Build();
+            $build->Id = $buildtest->buildid;
+            $build->FillFromId($build->Id);
+            $project = $build->GetProject();
+        }
+
+        Gate::authorize('view-project', $project);
+
+        // This case should never occur since it should always be caught by the Gate::authorize check above.
+        // This is only here to satisfy PHPStan...
+        if ($buildtest === null) {
+            abort(500);
+        }
+
+        $controller = new LegacyTestDetailsController(Database::getInstance(), $buildtest);
+        return $controller->getResponse();
     }
 
     public function ajaxTestFailureGraph(): View
@@ -91,6 +127,19 @@ final class TestController extends AbstractProjectController
     public function testOverview(): Response
     {
         return response()->angular_view('testOverview');
+    }
+
+    public function apiTestOverview(): JsonResponse
+    {
+        if (!request()->has('project')) {
+            return response()->json(['error' => 'Valid project required']);
+        }
+
+        $this->setProjectByName(request()->input('project'));
+
+        $db = Database::getInstance();
+        $controller = new LegacyTestOverviewController($db, $this->project);
+        return response()->json(cast_data_for_JSON($controller->getResponse()));
     }
 
     public function testSummary(): Response

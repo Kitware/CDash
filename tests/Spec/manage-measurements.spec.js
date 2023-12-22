@@ -1,20 +1,20 @@
 import {mount, config, createLocalVue} from '@vue/test-utils';
-import axios from 'axios'
+import axios from 'axios';
 import AxiosMockAdapter from 'axios-mock-adapter';
-import bootstrap from 'bootstrap'
+import bootstrap from 'bootstrap';
 import expect from 'expect';
 import ManageMeasurements from '../../resources/js/components/ManageMeasurements.vue';
 
 config.global.mocks['$baseURL'] = '';
 axios.defaults.baseURL = config.global.mocks['$baseURL'];
 
-import $ from 'jquery'
-global.$ = $
+import $ from 'jquery';
+global.$ = $;
 
 let axiosMockAdapter;
 let apiResponse;
 
-beforeEach(function() {
+beforeEach(() => {
   axiosMockAdapter = new AxiosMockAdapter(axios);
   config.global.mocks['$axios'] = axios;
   apiResponse = {
@@ -33,7 +33,7 @@ beforeEach(function() {
   };
 });
 
-afterEach(function() {
+afterEach(() => {
   axiosMockAdapter.restore();
 });
 
@@ -50,7 +50,7 @@ test('ManageMeasurements can add a measurement', async () => {
   const component = mount(ManageMeasurements);
   await new Promise(process.nextTick);
 
-  var api_response = {
+  const api_response = {
     id: 2,
   };
   axiosMockAdapter.onPost('/api/v1/manageMeasurements.php').reply(200, api_response);
@@ -81,7 +81,7 @@ test('ManageMeasurements can delete a measurement', async () => {
   expect(component.vm.measurementToDelete).toBe(1);
 
   // Click confirmation button.
-  var api_response = {
+  const api_response = {
     id: 1,
   };
   axiosMockAdapter.onDelete('/api/v1/manageMeasurements.php').reply(200, api_response);

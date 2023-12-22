@@ -1,22 +1,22 @@
-import {mount, config, createLocalVue} from "@vue/test-utils";
-import axios from 'axios'
+import {mount, config, createLocalVue} from '@vue/test-utils';
+import axios from 'axios';
 import AxiosMockAdapter from 'axios-mock-adapter';
 import expect from 'expect';
-import EditProject from "../../resources/js/components/EditProject.vue";
+import EditProject from '../../resources/js/components/EditProject.vue';
 
 // const localVue = createLocalVue();
 
 config.global.mocks['$baseURL'] = '';
 axios.defaults.baseURL = config.global.mocks['$baseURL'];
 
-import $ from 'jquery'
-global.$ = $
+import $ from 'jquery';
+global.$ = $;
 
 let axiosMockAdapter;
 let newResponse;
 let editResponse;
 
-beforeEach(function() {
+beforeEach(() => {
   axiosMockAdapter = new AxiosMockAdapter(axios);
   config.global.mocks['$axios'] = axios;
   newResponse = {
@@ -30,15 +30,15 @@ beforeEach(function() {
       EmailBrokenSubmission: 1,
       EmailMaxChars: 255,
       EmailMaxItems: 5,
-      ErrorsFilter: "",
-      NightlyTime: "01:00:00 UTC",
+      ErrorsFilter: '',
+      NightlyTime: '01:00:00 UTC',
       Public: 0,
       ShowCoverageCode: 1,
       TestTimeMaxStatus: 3,
       TestTimeStd: 4,
       TestTimeStdThreshold: 1,
       UploadQuota: 1,
-      WarningsFilter: "",
+      WarningsFilter: '',
       repositories: [],
     },
     user: {
@@ -55,19 +55,19 @@ beforeEach(function() {
       AutoremoveMaxBuilds: 500,
       AutoremoveTimeframe: 60,
       CoverageThreshold: 70,
-      CvsViewerType: "github",
-      Description: "my project desc",
+      CvsViewerType: 'github',
+      Description: 'my project desc',
       DisplayLabels: 0,
       EmailBrokenSubmission: 1,
       EmailMaxChars: 255,
       EmailMaxItems: 5,
-      ErrorsFilter: "",
+      ErrorsFilter: '',
       Filled: true,
       Id: 1,
       ImageId: 0,
       MaxUploadQuota: 10,
-      Name: "MyTestingProject",
-      NightlyTime: "01:00:00 UTC",
+      Name: 'MyTestingProject',
+      NightlyTime: '01:00:00 UTC',
       Public: 1,
       ShareLabelFilters: 0,
       ShowCoverageCode: 1,
@@ -78,9 +78,9 @@ beforeEach(function() {
       TestTimeStdThreshold: 1,
       UploadQuota: 1,
       ViewSubProjectsLink: 1,
-      WarningsFilter: "",
+      WarningsFilter: '',
       blockedbuilds: [],
-      name_encoded: "MyTestingProject",
+      name_encoded: 'MyTestingProject',
       repositories: [],
     },
     user: {
@@ -90,7 +90,7 @@ beforeEach(function() {
   };
 });
 
-afterEach(function() {
+afterEach(() => {
   axiosMockAdapter.restore();
 });
 

@@ -204,11 +204,11 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                 add_build($build);
 
                 $duration = $this->EndTimeStamp - $this->StartTimeStamp;
-                $build->UpdateBuildDuration($duration, !$all_at_once);
+                $build->UpdateBuildDuration((int) $duration, !$all_at_once);
                 if ($all_at_once && !$parent_duration_set) {
                     $parent_build = new Build();
                     $parent_build->Id = $build->GetParentId();
-                    $parent_build->UpdateBuildDuration($duration, false);
+                    $parent_build->UpdateBuildDuration((int) $duration, false);
                     $parent_duration_set = true;
                 }
 
