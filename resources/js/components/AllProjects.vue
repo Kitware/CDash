@@ -1,8 +1,5 @@
 <template>
-  <section v-if="errored">
-    <p>{{ cdash.error }}</p>
-  </section>
-  <section v-else-if="!loading">
+  <loading-indicator :is-loading="loading">
     <h1
       v-if="cdash.projects.length === 0"
       class="text-info text-center"
@@ -133,13 +130,15 @@
         </td>
       </tr>
     </table>
-  </section>
+  </loading-indicator>
 </template>
 
 <script>
 import ApiLoader from './shared/ApiLoader';
+import LoadingIndicator from "./shared/LoadingIndicator.vue";
 export default {
   name: 'AllProjects',
+  components: {LoadingIndicator},
 
   data () {
     return {

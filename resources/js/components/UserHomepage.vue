@@ -1,8 +1,5 @@
 <template>
-  <section v-if="errored">
-    <p>{{ cdash.error }}</p>
-  </section>
-  <section v-else-if="!loading">
+  <loading-indicator :is-loading="loading">
     <!-- Message -->
     <table v-if="cdash.message">
       <tr>
@@ -700,13 +697,15 @@
         </tr>
       </tbody>
     </table>
-  </section>
+  </loading-indicator>
 </template>
 
 <script>
 import ApiLoader from './shared/ApiLoader';
+import LoadingIndicator from "./shared/LoadingIndicator.vue";
 export default {
   name: "UserHomepage",
+  components: {LoadingIndicator},
 
   data () {
     return {
