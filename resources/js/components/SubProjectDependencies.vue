@@ -115,7 +115,7 @@ export default {
           header1Text += `, Group: ${d.group}`;
         }
         $('#header1').html(header1Text);
-        if (d.depends) {
+        if (d.depends.length > 0) {
           let depends = '<p>Depends: ';
           depends += `${d.depends.join(', ')}</p>`;
           $('#dependency').html(depends);
