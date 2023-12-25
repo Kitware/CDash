@@ -306,6 +306,7 @@ final class SubProjectController extends AbstractProjectController
             $subarray = [
                 'name' => $subproject->name,
                 'id' => $subproject->id,
+                'depends' => [],
             ];
 
             if ($subproject->groupid > 0) {
