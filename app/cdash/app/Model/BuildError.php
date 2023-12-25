@@ -81,7 +81,7 @@ class BuildError
                  ', [
                      intval($this->BuildId),
                      $this->Type,
-                     $this->LogLine,
+                     $this->LogLine ?? 0,
                      $this->Text,
                      $this->SourceFile ?? '',
                      intval($this->SourceLine),
