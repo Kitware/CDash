@@ -164,8 +164,11 @@ Route::get('/viewSubProjects.php', 'SubProjectController@viewSubProjects');
 
 Route::get('/manageSubProject.php', 'SubProjectController@manageSubProject');
 
-Route::get('/viewSubProjectDependenciesGraph', 'SubProjectController@dependenciesGraph');
-Route::permanentRedirect('/viewSubProjectDependenciesGraph.php', '/viewSubProjectDependenciesGraph');
+Route::get('/projects/{project}/subprojects/dependencies', 'SubProjectController@dependenciesGraph');
+Route::get('/viewSubProjectDependenciesGraph.php', function (Request $request) {
+    $project = $request->string('project');
+    return redirect("/projects/{$project}/subprojects/dependencies", 301);
+});
 
 Route::match(['get', 'post'], '/sites/{siteid}', 'SiteController@viewSite')->whereNumber('siteid');
 Route::get('/viewSite.php', function (Request $request) {

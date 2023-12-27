@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Utils\PageTimer;
 use CDash\Model\SubProject;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -108,13 +108,12 @@ final class SubProjectController extends AbstractProjectController
         return response()->json(cast_data_for_JSON($response));
     }
 
-    public function dependenciesGraph(): View|RedirectResponse
+    public function dependenciesGraph(Request $request, string $project): View
     {
-        $this->setProjectByName($_GET['project'] ?? '');
+        $this->setProjectByName($project);
 
-        return view('project.subproject-dependencies')->with([
-            'project' => $this->project,
-            'date' => $_GET['date'] ?? '',
+        return $this->view('project.subproject-dependencies')->with([
+            'date' => $request->string('date'),
         ]);
     }
 
@@ -171,6 +170,7 @@ final class SubProjectController extends AbstractProjectController
             $linkparams .= "&date=$date";
         }
         $response['linkparams'] = $linkparams;
+        $response['linkdate'] = $date;
 
         // Menu definition
         $menu_response = [];

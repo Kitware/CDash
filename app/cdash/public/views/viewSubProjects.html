@@ -121,6 +121,6 @@
 
       <br/>
 
-      <a ng-href="viewSubProjectDependenciesGraph?{{cdash.linkparams}}">
+      <a ng-href="projects/{{cdash.projectname_encoded}}/subprojects/dependencies{{cdash.linkdate ? '?'+cdash.linkdate : ''}}">
         [SubProject Dependencies]
       </a>

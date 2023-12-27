@@ -3,19 +3,20 @@
     <p>{{ cdash.error }}</p>
   </section>
   <section v-else>
-    <div style="top:10px; left:20px; overflow:hidden;">
-      <label style="font-size:1.2em;">
-        <b>SubProject Dependencies Graph</b>
-      </label>
-      <span style="float:right;">
+    <div>
+      <span class="hint">
+        This circle plot captures the interrelationships among subgroups. Mouse over any of the subgroup in this graph to see incoming links (dependents) in green and the outgoing links (dependencies) in red.
+      </span>
+      <span class="dropdown">
         <label
           for="selectedsort"
-          style="margin-right:10px; font-size:.95em;"
+          class="dropdown-label"
         >
           Sorted by:
         </label>
         <select
           id="selectedsort"
+          data-cy="select-sorting-order"
           @change="apply_sorting($event)"
         >
           <option
@@ -28,34 +29,43 @@
         </select>
       </span>
     </div>
-    <div class="hint">
-      This circle plot captures the interrelationships among subgroups. Mouse over any of the subgroup in this graph to see incoming links (dependents) in green and the outgoing links (dependencies) in red.
-    </div>
-    <div style="text-align:center;">
+    <div class="text-center">
       <img
         v-if="graphLoading"
         :src="$baseURL + '/img/loading.gif'"
       >
-      <div id="chart_placeholder" />
+      <div
+        id="chart_placeholder"
+        data-cy="svg-wrapper"
+      />
     </div>
     <!-- Tooltip -->
     <div
       id="toolTip"
       class="tooltip"
-      style="opacity:0;"
+      data-cy="tooltip"
     >
       <div
         id="header1"
         class="header"
-      />
+        data-cy="tooltip-name-header"
+      >
+        Name: {{ nodeHeader }}
+      </div>
       <div
+        v-if="dependsList"
         id="dependency"
-        style="color:#d62728;"
-      />
+        class="dependency"
+      >
+        Depends: {{ dependsList }}
+      </div>
       <div
+        v-if="dependentsList"
         id="dependents"
-        style="color:#2ca02c;"
-      />
+        class="dependents"
+      >
+        Dependents: {{ dependentsList }}
+      </div>
       <div
         id="tooltip-tail"
         class="tooltipTail"
@@ -90,11 +100,14 @@ export default {
       depData: {},
       graphLoading: true,
       chart: {},
+      nodeHeader: false,
+      dependsList: false,
+      dependentsList: false,
     };
   },
 
   mounted () {
-    ApiLoader.loadPageData(this, `/api/v1/getSubProjectDependencies.php?project=${this.projectName}&date=${this.date}`);
+    ApiLoader.loadPageData(this, `/api/v1/getSubProjectDependencies.php?project=${encodeURIComponent(this.projectName)}&date=${this.date}`);
   },
 
   methods: {
@@ -110,15 +123,13 @@ export default {
       vm.chart.mouseOvered(mouseOvered).mouseOuted(mouseOuted);
 
       function mouseOvered(d) {
-        let header1Text = `Name: ${d.key}`;
+        let header1Text = d.key;
         if (d.group !== undefined) {
           header1Text += `, Group: ${d.group}`;
         }
-        $('#header1').html(header1Text);
+        vm.nodeHeader = header1Text;
         if (d.depends.length > 0) {
-          let depends = '<p>Depends: ';
-          depends += `${d.depends.join(', ')}</p>`;
-          $('#dependency').html(depends);
+          vm.dependsList = d.depends.join(', ');
         }
         let dependents = '';
         d3.selectAll('.node--source').each((p) => {
@@ -128,8 +139,7 @@ export default {
         });
 
         if (dependents) {
-          dependents = `Dependents: ${dependents.substring(0,dependents.length-2)}`;
-          $('#dependents').html(dependents);
+          vm.dependentsList = dependents.substring(0,dependents.length-2);
         }
         d3.select('#toolTip').style('left', `${d3.event.pageX + 40}px`)
           .style('top', `${d3.event.pageY + 5}px`)
@@ -138,8 +148,9 @@ export default {
 
       function mouseOuted(d) {
         $('#header1').text('');
-        $('#dependents').text('');
-        $('#dependency').text('');
+        vm.nameHeader = false;
+        vm.dependentsList = false;
+        vm.dependsList = false;
         d3.select('#toolTip').style('opacity', '0');
       }
 
@@ -248,65 +259,81 @@ export default {
 .link--target {
   stroke: #2ca02c;
 }
-
-div.tooltip {
-    position: absolute; /* reference for measurement */
-    text-align: left;
-    pointer-events: none; /* 'none' tells the mouse to ignore the rectangle */
-    background: #E0E0E0;
-    padding: 10px;
-    border: 1px solid #D5D5D5;
-    font-family: arial,helvetica,sans-serif;
-    position: absolute;
-    font-size: 1.1em;
-    color: #333;
-    padding: 10px;
-    border-radius: 3px;
-    background: rgba(255,255,255,0.9);
-    color: #000;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
-    -moz-box-shadow: 0 1px 5px rgba(0,0,0,0.4);
-    border:1px solid rgba(200,200,200,0.85);
-    z-index: 10000;
-}
 </style>
 
 <style scoped>
+div.tooltip {
+  text-align: left;
+  pointer-events: none; /* 'none' tells the mouse to ignore the rectangle */
+  font-family: arial,helvetica,sans-serif;
+  position: absolute;
+  font-size: 1.1em;
+  padding: 10px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.9);
+  color: #000;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+  border: 1px solid rgba(200,200,200,0.85);
+  z-index: 10000;
+  opacity: 0;
+}
+
 div.tooltipTail {
-    position: absolute;
-    left:-7px;
-    top: 12px;
-    width: 7px;
-    height: 13px;
-    background: url("/img/tail_white.png") 50% 0%;
+  position: absolute;
+  left: -7px;
+  top: 12px;
+  width: 7px;
+  height: 13px;
+  background: url("/img/tail_white.png") 50% 0%;
 }
 
 div.toolTipBody {
-    position:absolute;
-    height:100px;
-    width:230px;
+  position: absolute;
+  height: 100px;
+  width: 230px;
 }
 
 #toolTip .header {
-    text-align: left;
-    font-size: 14px;
-    margin-bottom: 2px;
-    color:#000;
-    font-weight: 700;
+  text-align: left;
+  font-size: 14px;
+  margin-bottom: 2px;
+  color: #000;
+  font-weight: 700;
+}
+
+div.dependency {
+  color: #d62728;
+}
+
+div.dependents {
+  color: #2ca02c;
+}
+
+p.dependency-list {
+  opacity: 0;
 }
 
 div.header1{
-    text-align: left;
-    font-size: 12px;
-    margin-bottom: 2px;
-    color:black;
+  text-align: left;
+  font-size: 12px;
+  margin-bottom: 2px;
+  color: black;
 }
 
-div.hint {
-  top:20px;
-  left:20px;
-  font-size:0.9em;
-  width:350px;
-  color:#999;
+span.hint {
+  top: 20px;
+  left: 20px;
+  font-size: 0.9em;
+  width: 350px;
+  color: #999;
+  display: inline-block;
+}
+
+span.dropdown {
+  float: right;
+}
+
+label.dropdown-label {
+  margin-right: 10px;
 }
 </style>

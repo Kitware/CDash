@@ -6,7 +6,7 @@ use Tests\TestCase;
 
 class SubProjectDependencies extends TestCase
 {
-    public function testDependenciesGraphAPI() : void
+    public function testDependenciesGraphAPI(): void
     {
         $api_route = '/api/v1/getSubProjectDependencies.php';
 
