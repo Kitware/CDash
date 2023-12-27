@@ -26747,11 +26747,6 @@ parameters:
 			path: app/cdash/tests/test_testgraphpermissions.php
 
 		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 2
-			path: app/cdash/tests/test_testgraphpermissions.php
-
-		-
 			message: "#^Method TestGraphPermissionsTestCase\\:\\:testTestGraphPermissions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_testgraphpermissions.php

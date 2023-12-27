@@ -5,6 +5,7 @@ use App\Models\BuildTest;
 use App\Utils\PageTimer;
 use CDash\Controller\Api\TestOverview as LegacyTestOverviewController;
 use CDash\Controller\Api\TestDetails as LegacyTestDetailsController;
+use CDash\Controller\Api\TestGraph as LegacyTestGraphController;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -496,5 +497,35 @@ final class TestController extends AbstractProjectController
 
         $pageTimer->end($response);
         return response()->json($response);
+    }
+
+    public function apiTestGraph(): JsonResponse
+    {
+        if (!request()->has('buildid')) {
+            abort(400, '"buildid" parameter is required.');
+        }
+        $buildid = (int) request()->input('buildid');
+        $build = new \CDash\Model\Build();
+        $build->FillFromId($buildid);
+        Gate::authorize('view-project', $build->GetProject());
+
+        $db = Database::getInstance();
+
+        $testid = request()->input('testid');
+        if (!is_numeric($testid)) {
+            abort(400, 'A valid test was not specified.');
+        }
+        $testid = (int) $testid;
+
+        $buildtest = BuildTest::where('buildid', '=', $buildid)
+            ->where('testid', '=', $testid)
+            ->first();
+        if ($buildtest === null) {
+            abort(404, 'test not found');
+        }
+
+        $controller = new LegacyTestGraphController($db, $buildtest);
+        $response = $controller->getResponse();
+        return response()->json(cast_data_for_JSON($response));
     }
 }

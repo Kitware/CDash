@@ -52,6 +52,8 @@ Route::get('/v1/getPreviousBuilds.php', 'BuildController@apiGetPreviousBuilds');
 
 Route::get('/v1/testSummary.php', 'TestController@apiTestSummary');
 
+Route::get('/v1/testGraph.php', 'TestController@apiTestGraph');
+
 Route::get('/v1/is_build_expected.php', 'BuildController@apiBuildExpected');
 
 Route::get('/v1/buildUpdateGraph.php', 'BuildController@apiBuildUpdateGraph');
