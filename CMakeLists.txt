@@ -60,7 +60,7 @@ if(CDASH_USE_SELENIUM)
 endif()
 if(CDASH_USE_PROTRACTOR)
   find_program(PROTRACTOR_EXE NAMES protractor
-    PATHS ${CDash_SOURCE_DIR}/node_modules/protractor/bin REQUIRED
+    PATHS ${CDash_SOURCE_DIR}/node_modules/protractor/bin
   )
 endif()
 
