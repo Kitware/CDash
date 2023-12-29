@@ -24932,21 +24932,6 @@ parameters:
 			path: app/cdash/tests/test_lotsofsubprojects.php
 
 		-
-			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 1
-			path: app/cdash/tests/test_managebanner.php
-
-		-
-			message: "#^Call to method WebTestCase\\:\\:setFieldByName\\(\\) with incorrect case\\: SetFieldByName$#"
-			count: 2
-			path: app/cdash/tests/test_managebanner.php
-
-		-
-			message: "#^Method ManageBannerTestCase\\:\\:testManageBannerTest\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_managebanner.php
-
-		-
 			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
