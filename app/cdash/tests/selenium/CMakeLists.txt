@@ -4,7 +4,6 @@ if(NOT BROWSER)
 endif()
 
 # function to add a new Selenium based coverage test to CDash
-#
 function(add_selenium_test TestName)
   add_test(
     NAME ${TestName}
@@ -14,7 +13,7 @@ function(add_selenium_test TestName)
     ${TestName} PROPERTIES
     FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*;.*Skipped: [1-9]+.*"
   )
-endfunction(add_selenium_test)
+endfunction()
 
 add_php_test(setup_repositories)
 

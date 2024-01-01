@@ -1,6 +1,6 @@
-cmake_minimum_required (VERSION 3.10)
-PROJECT(Simple2)
-INCLUDE(CTest)
+cmake_minimum_required(VERSION 3.25)
+project(Simple2)
+include(CTest)
 
-ADD_EXECUTABLE (simple simple.cxx)
-ADD_TEST (simple simple)
+add_executable(simple simple.cxx)
+add_test(simple simple)
