@@ -77,10 +77,10 @@ class CDashTest extends TestCase
         URL::forceRootUrl('http://localhost');
 
         $response = $this->call('GET', '/buildSummary.php', ['buildid' => '2']);
-        $response->assertRedirect('/build/2');
+        $response->assertRedirect('/builds/2');
 
         $response = $this->call('GET', '/viewConfigure.php', ['buildid' => '5']);
-        $response->assertRedirect('/build/5/configure');
+        $response->assertRedirect('/builds/5/configure');
     }
 
     public function testOverrideLoginField()
