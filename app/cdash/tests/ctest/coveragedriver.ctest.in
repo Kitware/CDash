@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.25)
 
 
 # Settings:
@@ -19,13 +19,12 @@ ctest_empty_binary_directory("${CTEST_BINARY_DIRECTORY}")
 
 #coverage stuff
 if(CTEST_C_COMPILER MATCHES "cc")
-  SET(ENV{CXXFLAGS}
-  "-g -O0 -fprofile-arcs -ftest-coverage -Wno-deprecated -W -Wall")
-  SET(ENV{CFLAGS} "-g -O0 -fprofile-arcs -ftest-coverage -W -Wall")
-  SET(ENV{LDFLAGS} "-fprofile-arcs -ftest-coverage")
-  SET(ENV{FFLAGS} "-g -O0 -fprofile-arcs -ftest-coverage -W -Wall")
+  set(ENV{CXXFLAGS} "-g -O0 -fprofile-arcs -ftest-coverage -Wno-deprecated -W -Wall")
+  set(ENV{CFLAGS} "-g -O0 -fprofile-arcs -ftest-coverage -W -Wall")
+  set(ENV{LDFLAGS} "-fprofile-arcs -ftest-coverage")
+  set(ENV{FFLAGS} "-g -O0 -fprofile-arcs -ftest-coverage -W -Wall")
 endif()
-SET(CTEST_COVERAGE_COMMAND              "@COVERAGE_COMMAND@")
+set(CTEST_COVERAGE_COMMAND              "@COVERAGE_COMMAND@")
 
 ctest_start(Experimental)
 ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
@@ -33,25 +32,23 @@ ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
 ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
 ctest_coverage(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
 ctest_submit()
-execute_process(COMMAND "@PHP_EXE@" singletest.php "@CDashVerifyScript@"
+execute_process(
+  COMMAND "@PHP_EXE@" singletest.php "@CDashVerifyScript@"
   WORKING_DIRECTORY  "@testing_dir@"
   OUTPUT_VARIABLE OUTDATA
   RESULT_VARIABLE res
-  )
+)
 
 set(EXPECTED_PASSED 1)
-string(REGEX REPLACE ".*Passes: ([0-9]+).*" "\\1"
-  PASSED "${OUTDATA}")
+string(REGEX REPLACE ".*Passes: ([0-9]+).*" "\\1" PASSED "${OUTDATA}")
 if("${PASSED}" STREQUAL "${OUTDATA}")
   set(PASSED 0)
 endif()
-string(REGEX REPLACE ".*Failures: ([0-9]+).*" "\\1"
-  FAILED "${OUTDATA}")
+string(REGEX REPLACE ".*Failures: ([0-9]+).*" "\\1" FAILED "${OUTDATA}")
 if("${FAILED}" STREQUAL "${OUTDATA}")
   set(FAILED 0)
 endif()
-string(REGEX REPLACE ".*Exceptions: ([0-9]+).*" "\\1"
-  EXCEPTIONS "${OUTDATA}")
+string(REGEX REPLACE ".*Exceptions: ([0-9]+).*" "\\1" EXCEPTIONS "${OUTDATA}")
 if("${EXCEPTIONS}" STREQUAL $"{OUTDATA}")
   set(EXCEPTIONS 0)
 endif()
@@ -65,7 +62,8 @@ if(${PASSED} LESS ${EXPECTED_PASSED})
   message(FATAL_ERROR
     "Not enough passed tests found: ${PASSED},"
     " expected ${EXPECTED_PASSED}):\n"
-    "Output from tests:\n${OUTDATA}")
+    "Output from tests:\n${OUTDATA}"
+  )
 endif()
 message("Test Passed")
 message("${OUTDATA}")

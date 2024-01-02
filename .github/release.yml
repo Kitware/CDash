@@ -1,0 +1,35 @@
+changelog:
+  exclude:
+    labels:
+      - "release notes: ignored"
+  categories:
+    - title: "New Features"
+      labels:
+        - "release notes: features"
+    - title: "Administration"
+      labels:
+        - "release notes: administration"
+    - title: "Performance"
+      labels:
+        - "release notes: performance"
+    - title: "User Experience"
+      labels:
+        - "release notes: user experience"
+    - title: "Documentation"
+      labels:
+        - "release notes: documentation"
+    - title: "Deprecations & Removals"
+      labels:
+        - "release notes: deprecated / removed"
+    - title: "Bug Fixes"
+      labels:
+        - "release notes: fixes"
+    - title: "Internals"
+      labels:
+        - "release notes: maintenance"
+    - title: "Dependencies"
+      labels:
+        - "release notes: external dependencies"
+    - title: "Other Changes"
+      labels:
+        - "*"

@@ -22,7 +22,17 @@ docker compose -f docker/docker-compose.yml \
 
 3. Browse to http://localhost:8080.  You should see a freshly installed copy of CDash with the latest database schema.
 
-#### Running the test suite
+
+### Manually adding users
+If you choose not to use an external OAuth2 or SAML authentication provider with CDash, you may want to create users
+manually.  Use the following command to create a user from the command line:
+```bash
+docker exec --user www-data cdash bash -c "php artisan user:save --email=<email> --password=<password> --firstname=<first name> --lastname=<last name> --institution=<institution> --admin=<1/0>"
+```
+
+Once a user with administrative privileges has been created, you can use that user to create other users via the web interface.
+
+### Running the test suite
 ```bash
 docker exec -it cdash /bin/bash
 cd _build
@@ -37,10 +47,6 @@ You may have noticed that CDash's `docker compose` configuration is [split acros
 For example, to use Postgres instead of MySQL, pass `-f docker/docker-compose.postgres.yml` instead of `-f docker/docker-compose.mysql.yml` to the `docker compose` commands mentioned in this document.
 
 ### Changing the default configuration
-You can change the following environment variables in `docker/docker-compose.yml`:
-* `CDASH_ROOT_ADMIN_EMAIL`: the email address (username) for the CDash admin user. The default email address is `root@docker.container`.
-* `CDASH_ROOT_ADMIN_PASS`: the password for the CDash admin user. The default password is `secret`.
-
 To change the default database password, modify `DB_PASSWORD` in `docker/docker-compose.mysql.yml` or `docker/docker-compose.postgres.yml`.
 
 Once you're happy with your changes, re-run `docker compose up` (with the appropriate`-f` flags) to build and run services for CDash and its database.

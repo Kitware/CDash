@@ -21,11 +21,17 @@ Route::get('/v1/viewUpdate.php', 'BuildController@viewUpdatePageContent');
 
 Route::get('/v1/viewTest.php', 'ViewTestController@fetchPageContent');
 
+Route::get('/v1/testDetails.php', 'TestController@apiTestDetails');
+
 Route::get('/v1/viewBuildError.php', 'BuildController@apiViewBuildError');
 
 Route::get('/v1/viewConfigure.php', 'BuildController@apiViewConfigure');
 
 Route::get('/v1/buildSummary.php', 'BuildController@apiBuildSummary');
+
+Route::match(['get', 'post', 'delete'], '/v1/relateBuilds.php', 'BuildController@apiRelateBuilds');
+
+Route::match(['get', 'post', 'delete'], '/v1/build.php', 'BuildController@restApi');
 
 Route::get('/v1/user.php', 'UserController@userPageContent');
 
@@ -46,6 +52,8 @@ Route::get('/v1/getPreviousBuilds.php', 'BuildController@apiGetPreviousBuilds');
 
 Route::get('/v1/testSummary.php', 'TestController@apiTestSummary');
 
+Route::get('/v1/testGraph.php', 'TestController@apiTestGraph');
+
 Route::get('/v1/is_build_expected.php', 'BuildController@apiBuildExpected');
 
 Route::get('/v1/buildUpdateGraph.php', 'BuildController@apiBuildUpdateGraph');
@@ -55,6 +63,8 @@ Route::get('/v1/overview.php', 'ProjectOverviewController@apiOverview');
 Route::get('/v1/viewNotes.php', 'BuildNoteController@apiViewNotes');
 
 Route::get('/v1/timeline.php', 'TimelineController@apiTimeline');
+
+Route::get('/v1/testOverview.php', 'TestController@apiTestOverview');
 
 Route::match(['get', 'post', 'delete'], '/v1/expectedbuild.php', 'ExpectedBuildController@apiResponse');
 
@@ -71,6 +81,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/v1/manageMeasurements.php', 'ManageMeasurementsController@apiGet');
     Route::post('/v1/manageMeasurements.php', 'ManageMeasurementsController@apiPost');
     Route::delete('/v1/manageMeasurements.php', 'ManageMeasurementsController@apiDelete');
+
+    Route::match(['get', 'post'], '/v1/manageOverview.php', 'ProjectOverviewController@apiManageOverview');
 
     Route::middleware(['admin'])->group(function () {
         Route::get('/authtokens/all', 'AuthTokenController@fetchAll');

@@ -1,8 +1,6 @@
-set(binary_testing_dir "${CDash_BINARY_DIR}/tests")
 set(PHPUNIT "${CDash_SOURCE_DIR}/vendor/bin/phpunit")
 
 # function to add a new PHP based coverage test to CDash
-#
 function(add_php_test TestName)
   add_test(
     NAME ${TestName}
@@ -12,30 +10,32 @@ function(add_php_test TestName)
     ${TestName} PROPERTIES
     FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
   )
-endfunction(add_php_test)
-function(add_configured_php_test TestName)
-  add_test(
-    NAME ${TestName}
-    COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${binary_testing_dir}/test_${TestName}.php
-  )
-  set_tests_properties(
-    ${TestName} PROPERTIES
-    FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
-  )
-endfunction(add_configured_php_test)
+endfunction()
+
 function(add_unit_test TestName)
   add_test(
     NAME ${TestName}
-    COMMAND ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${testing_dir}/phpunit.xml --bootstrap ${testing_dir}/bootstrap.php ${testing_dir}/case/${TestName}Test.php
+    COMMAND
+      ${PHP_EXE}
+      ${phpunit_extra_arg}
+      ${PHPUNIT}
+      -c ${testing_dir}/phpunit.xml
+      --bootstrap ${testing_dir}/bootstrap.php
+      ${testing_dir}/case/${TestName}Test.php
   )
-endfunction(add_unit_test TestName)
+endfunction()
 
 function(add_laravel_test TestName)
   add_test(
     NAME ${TestName}
-    COMMAND ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${CDash_SOURCE_DIR}/phpunit.xml ${laravel_testing_dir}/${TestName}.php
+    COMMAND
+      ${PHP_EXE}
+      ${phpunit_extra_arg}
+      ${PHPUNIT}
+      -c ${CDash_SOURCE_DIR}/phpunit.xml
+      ${laravel_testing_dir}/${TestName}.php
   )
-endfunction(add_laravel_test TestName)
+endfunction()
 
 # phpunit tests
 set(phpunit_extra_arg "")
@@ -43,29 +43,9 @@ if (CDASH_CONFIGURE_HTACCESS_FILE)
     set(phpunit_extra_arg "-d auto_prepend_file=${CMAKE_BINARY_DIR}/prepend_coverage.php")
 endif()
 
-add_test(
-  NAME php_style_check
-  COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/php-cs-fixer fix --dry-run
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-
-# Run PHPStan static analysis tool
-add_test(
-  NAME php_static_analysis
-  # Giving PHPStan 2GB of memory makes it run faster, and should be well inside the limits of the CI machines
-  COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/phpstan analyse --memory-limit=2G
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-
-# Run the JS linter
-add_test(
-  NAME eslint
-  COMMAND npm run eslint
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-
 add_laravel_test(/Unit/app/ControllerNameTest)
 
-add_php_test(install)
+cdash_install()
 add_laravel_test(/Unit/app/Validators/PasswordTest)
 add_laravel_test(/Feature/CDashTest)
 add_laravel_test(/Feature/LdapAuthWithRulesTest)
@@ -119,14 +99,13 @@ add_unit_test(/CDash/XmlHandler/TestingHandler)
 add_unit_test(/CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
-
 add_laravel_test(/Feature/TestSchemaMigration)
 add_laravel_test(/Feature/MeasurementPositionMigration)
 add_laravel_test(/Feature/RemoveMeasurementCheckboxesMigration)
 add_laravel_test(/Feature/IncreaseSiteInformationCPUColumnsSizeMigration)
-add_php_test(install_into_empty_db)
+
+cdash_install()
 add_php_test(registeruser)
-add_php_test(reinstall)
 add_php_test(compressedtest)
 add_php_test(createpublicdashboard)
 add_php_test(email)
@@ -145,7 +124,7 @@ add_php_test(committerinfo)
 add_php_test(edituser)
 add_php_test(image)
 add_php_test(displayimage)
-add_php_test(managebanner)
+add_cypress_test(banner)
 add_php_test(manageprojectroles)
 add_php_test(manageusers)
 add_php_test(projectindb)
@@ -254,6 +233,9 @@ add_subdirectory(ctest)
 
 add_subdirectory(js/e2e_tests)
 
+# TODO: (sbelsk) We never enable this option. We should reimplement
+#  the useful tests in cypress, clean up the rest, and remove the
+#  references to CDASH_USE_SELENIUM and the `selenium/` directory
 if(CDASH_USE_SELENIUM)
   file(MAKE_DIRECTORY ${CDash_BINARY_DIR}/cmake.git)
   add_subdirectory(selenium)
@@ -266,4 +248,5 @@ add_laravel_test(/Feature/AutoRemoveBuildsCommand)
 # Slow tests that need more time in CI.
 set_tests_properties(
   actualtrilinossubmission
-  PROPERTIES TIMEOUT 1800)
+  PROPERTIES TIMEOUT 1800
+)

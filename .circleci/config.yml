@@ -49,7 +49,6 @@ jobs:
       - run:
           name: Build Production Docker Images
           command: |
-              cp docker/cdash.docker Dockerfile
               DOCKER_TAG="${CIRCLE_TAG:-latest}"
               docker build -t kitware/cdash:${DOCKER_TAG} --target cdash .
               docker build -t kitware/cdash-worker:${DOCKER_TAG} --target cdash-worker .

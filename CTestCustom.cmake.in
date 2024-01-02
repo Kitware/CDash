@@ -1,6 +1,6 @@
-SET(CTEST_EXTRA_COVERAGE_GLOB "*.php")
+set(CTEST_EXTRA_COVERAGE_GLOB "*.php")
 
-SET(CTEST_CUSTOM_COVERAGE_EXCLUDE
+set(CTEST_CUSTOM_COVERAGE_EXCLUDE
   ${CTEST_CUSTOM_COVERAGE_EXCLUDE}
   "[/\\\\]config[/\\\\]"
   "[/\\\\]log[/\\\\]"
@@ -13,4 +13,4 @@ SET(CTEST_CUSTOM_COVERAGE_EXCLUDE
   "[/\\\\]vendor[/\\\\]"
   "[/\\\\]append_coverage.php"
   "[/\\\\]prepend_coverage.php"
-  )
+)
