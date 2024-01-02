@@ -228,6 +228,7 @@ add_php_test(redundanttests)
 add_php_test(configureappend)
 add_php_test(notesparsererrormessages)
 add_php_test(viewsubprojectslinkoption)
+add_laravel_test(/Feature/SubProjectDependencies)
 
 add_subdirectory(ctest)
 

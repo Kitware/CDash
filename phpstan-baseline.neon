@@ -2421,11 +2421,6 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SubProjectController\\:\\:dependenciesGraph\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
-			count: 1
-			path: app/Http/Controllers/SubProjectController.php
-
-		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 1
 			path: app/Http/Controllers/SubProjectController.php

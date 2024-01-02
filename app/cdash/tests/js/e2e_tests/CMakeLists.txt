@@ -18,6 +18,7 @@ function(add_protractor_test test_name)
 endfunction()
 
 add_cypress_test(manage-overview)
+add_cypress_test(sub-project-dependencies)
 add_protractor_test(manageBuildGroup)
 add_protractor_test(manageSubProject)
 add_protractor_test(viewBuildError)
