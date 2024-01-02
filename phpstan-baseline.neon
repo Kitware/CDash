@@ -2584,18 +2584,10 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 7
+			count: 4
 			path: app/Http/Controllers/UserController.php
 
 		-
@@ -2611,16 +2603,11 @@ parameters:
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 2
+			count: 1
 			path: app/Http/Controllers/UserController.php
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 3
-			path: app/Http/Controllers/UserController.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/Http/Controllers/UserController.php
 
@@ -2635,18 +2622,13 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
 			message: "#^Only booleans are allowed in an if condition, array\\|false given\\.$#"
 			count: 1
 			path: app/Http/Controllers/UserController.php
 
 		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 6
+			count: 3
 			path: app/Http/Controllers/UserController.php
 
 		-
@@ -2666,7 +2648,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
-			count: 7
+			count: 4
 			path: app/Http/Controllers/UserController.php
 
 		-
@@ -24159,26 +24141,6 @@ parameters:
 			message: "#^Property DynamicAnalysisSummaryTestCase\\:\\:\\$StandaloneBuildId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 1
-			path: app/cdash/tests/test_edituser.php
-
-		-
-			message: "#^Call to method WebTestCase\\:\\:setFieldByName\\(\\) with incorrect case\\: SetFieldByName$#"
-			count: 20
-			path: app/cdash/tests/test_edituser.php
-
-		-
-			message: "#^Method EditUserTestCase\\:\\:testEditUserTest\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_edituser.php
-
-		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 3
-			path: app/cdash/tests/test_edituser.php
 
 		-
 			message: """

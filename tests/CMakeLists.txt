@@ -66,3 +66,5 @@ add_vue_test(Spec/page-header/header-menu)
 add_vue_test(Spec/test-details)
 
 cdash_install()
+
+add_cypress_test(user-profile)

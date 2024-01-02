@@ -27,10 +27,10 @@
 /**
  * Log in a given user.  Current options: "admin", "user".
  */
-Cypress.Commands.add('login', (user = 'admin') => {
+Cypress.Commands.add('login', (user = 'admin', password = null) => {
   cy.visit('/login');
   cy.get('[name=email]').type(`${user}@example.com`);
-  cy.get('[name=password]').type('12345');
+  cy.get('[name=password]').type(password ?? '12345');
   cy.get('[type=submit]').click();
 
   // If we get redirected back to the login page, the test users don't exist yet and should be created.
