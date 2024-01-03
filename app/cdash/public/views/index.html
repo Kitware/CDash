@@ -6,7 +6,7 @@
           {{::banner}}
         </div>
 
-        <div id="settings" ng-click="showsettings = ! showsettings">
+        <div id="settings" data-cy="settings-dropdown" ng-click="showsettings = ! showsettings">
           <span class="glyphicon glyphicon-filter"
                 tooltip-popup-delay="1000"
                 tooltip-append-to-body="true"
@@ -27,8 +27,8 @@
             </li>
             <li>
               <a id="label_colorblind" href="" ng-click="cdash.filterdata.colorblind=!cdash.filterdata.colorblind; colorblind_toggle()">
-                <span ng-show="cdash.filterdata.colorblind == 0">Colorblind palette</span>
-                <span ng-show="cdash.filterdata.colorblind != 0">Classic palette</span>
+                <span ng-show="cdash.filterdata.colorblind == 0" data-cy="color-mode-colorblind">Colorblind palette</span>
+                <span ng-show="cdash.filterdata.colorblind != 0" data-cy="color-mode-classic">Classic palette</span>
               </a>
             </li>
             <li>
