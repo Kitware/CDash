@@ -618,7 +618,6 @@
 
     <!-- Global Administration -->
     <table
-      v-if="cdash.user_is_admin == 1"
       border="0"
       cellpadding="4"
       cellspacing="0"
@@ -633,69 +632,76 @@
         </tr>
       </thead>
       <tbody>
+        <template v-if="cdash.user_is_admin == 1">
+          <tr>
+            <td>
+              <a :href="$baseURL + '/project/new'">Create new project</a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a :href="$baseURL + '/manageProjectRoles.php'">Manage project roles</a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a :href="$baseURL + '/manageSubProject.php'">Manage subproject</a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a :href="$baseURL + '/manageBuildGroup.php'">Manage project groups</a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a :href="$baseURL + '/manageCoverage.php'">Manage project coverage</a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a :href="$baseURL + '/manageBanner.php'">Manage banner message</a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a :href="$baseURL + '/manageUsers.php'">Manage users</a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a :href="$baseURL + '/authtokens/manage'">Manage authentication tokens</a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a :href="$baseURL + '/upgrade.php'">Maintenance</a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a :href="$baseURL + '/sites'">Site Statistics</a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a :href="$baseURL + '/userStatistics.php'">User Statistics</a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a :href="$baseURL + '/removeBuilds.php'">Remove Builds</a>
+            </td>
+          </tr>
+          <tr v-if="cdash.show_monitor">
+            <td>
+              <a :href="$baseURL + '/monitor'">Monitor / Processing Statistics</a>
+            </td>
+          </tr>
+        </template>
         <tr>
           <td>
-            <a :href="$baseURL + '/project/new'">Create new project</a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a :href="$baseURL + '/manageProjectRoles.php'">Manage project roles</a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a :href="$baseURL + '/manageSubProject.php'">Manage subproject</a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a :href="$baseURL + '/manageBuildGroup.php'">Manage project groups</a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a :href="$baseURL + '/manageCoverage.php'">Manage project coverage</a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a :href="$baseURL + '/manageBanner.php'">Manage banner message</a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a :href="$baseURL + '/manageUsers.php'">Manage users</a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a :href="$baseURL + '/authtokens/manage'">Manage authentication tokens</a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a :href="$baseURL + '/upgrade.php'">Maintenance</a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a :href="$baseURL + '/sites'">Site Statistics</a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a :href="$baseURL + '/userStatistics.php'">User Statistics</a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a :href="$baseURL + '/removeBuilds.php'">Remove Builds</a>
-          </td>
-        </tr>
-        <tr v-if="cdash.show_monitor">
-          <td>
-            <a :href="$baseURL + '/monitor'">Monitor / Processing Statistics</a>
+            <a :href="$baseURL + '/profile'">My Profile</a>
           </td>
         </tr>
       </tbody>
