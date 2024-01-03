@@ -22,7 +22,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-require_once 'include/repository.php';
+use App\Utils\RepositoryUtils;
 
 class TestDetails extends BuildTestApi
 {
@@ -177,9 +177,9 @@ class TestDetails extends BuildTestApi
             $update_response['priorrevision'] = $status_array['priorrevision'];
             $update_response['path'] = $status_array['path'];
             $update_response['revisionurl'] =
-                get_revision_url($this->project->Id, $status_array['revision'], $status_array['priorrevision']);
+                RepositoryUtils::get_revision_url($this->project->Id, $status_array['revision'], $status_array['priorrevision']);
             $update_response['revisiondiff'] =
-                get_revision_url($this->project->Id, $status_array['priorrevision'], ''); // no prior revision...
+                RepositoryUtils::get_revision_url($this->project->Id, $status_array['priorrevision'], ''); // no prior revision...
         }
         $test_response['update'] = $update_response;
 

@@ -3487,6 +3487,1356 @@ parameters:
 			path: app/Utils/ProjectPermissions.php
 
 		-
+			message: "#^Binary operation \"\\-\" between string and 1 results in an error\\.$#"
+			count: 2
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 4
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: """
+				#^Call to deprecated function get_link_identifier\\(\\)\\:
+				04/22/2023$#
+			"""
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: """
+				#^Call to deprecated function pdo_execute\\(\\)\\:
+				v2\\.5\\.0 01/22/2018$#
+			"""
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: """
+				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
+				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: """
+				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
+				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Cannot access offset 'cvsurl' on array\\|false\\|null\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Cannot access offset 'cvsviewertype' on array\\|false\\|null\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 9
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 29
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_Buganizer_new_issue_link\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_Buganizer_new_issue_link\\(\\) has parameter \\$baseurl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_Buganizer_new_issue_link\\(\\) has parameter \\$body with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_Buganizer_new_issue_link\\(\\) has parameter \\$title with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_Buganizer_new_issue_link\\(\\) has parameter \\$users with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_GitHub_new_issue_link\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_GitHub_new_issue_link\\(\\) has parameter \\$baseurl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_GitHub_new_issue_link\\(\\) has parameter \\$body with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_GitHub_new_issue_link\\(\\) has parameter \\$title with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_GitHub_new_issue_link\\(\\) has parameter \\$users with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_JIRA_new_issue_link\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_JIRA_new_issue_link\\(\\) has parameter \\$baseurl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_JIRA_new_issue_link\\(\\) has parameter \\$body with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_JIRA_new_issue_link\\(\\) has parameter \\$title with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_JIRA_new_issue_link\\(\\) has parameter \\$users with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_bugtracker_new_issue_link\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_bugtracker_new_issue_link\\(\\) has parameter \\$build with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_bugtracker_new_issue_link\\(\\) has parameter \\$project with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_allura_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_allura_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_allura_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_allura_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_allura_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_allura_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_allura_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_allura_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_allura_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cgit_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cgit_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cgit_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cgit_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cgit_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cgit_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cgit_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cgit_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cgit_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cvstrac_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cvstrac_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cvstrac_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cvstrac_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cvstrac_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cvstrac_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cvstrac_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cvstrac_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_cvstrac_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_diff_url\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_fisheye_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_fisheye_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_fisheye_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_fisheye_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_fisheye_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_fisheye_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_fisheye_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_fisheye_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_fisheye_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_github_api_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_github_api_url\\(\\) has parameter \\$github_url with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_github_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_github_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_github_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_github_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_github_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_github_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_github_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_github_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_github_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitlab_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitlab_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitlab_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitlab_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitlab_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitlab_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitlab_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitlab_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitlab_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitorious_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitorious_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitorious_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitorious_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitorious_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitorious_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitorious_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitorious_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitorious_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$blobs with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$branch with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb2_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb2_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb2_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb2_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb2_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb2_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb2_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb2_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb2_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitweb_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_hgweb_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_hgweb_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_hgweb_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_hgweb_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_hgweb_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_hgweb_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_hgweb_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_hgweb_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_hgweb_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_loggerhead_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_loggerhead_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_loggerhead_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_loggerhead_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_loggerhead_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_loggerhead_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_loggerhead_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_loggerhead_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_loggerhead_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_p4web_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_p4web_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_p4web_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_p4web_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_p4web_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_p4web_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_p4web_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_p4web_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_p4web_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_phab_git_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_phab_git_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_phab_git_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_phab_git_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_phab_git_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_phab_git_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_phab_git_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_phab_git_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_phab_git_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_previous_revision\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_previous_revision\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_redmine_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_redmine_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_redmine_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_redmine_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_redmine_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_redmine_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_redmine_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_redmine_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_redmine_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_revision_url\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_source_dir\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_source_dir\\(\\) has parameter \\$file_path with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_source_dir\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_source_dir\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_stash_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_stash_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_stash_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_stash_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_stash_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_stash_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_stash_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_stash_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_stash_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_trac_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_trac_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_trac_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_trac_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_trac_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_trac_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_trac_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_trac_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_trac_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewcvs_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewcvs_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewcvs_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewcvs_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewcvs_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewcvs_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewcvs_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewcvs_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewcvs_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_1_1_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_1_1_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_1_1_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_1_1_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_1_1_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_1_1_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_1_1_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_1_1_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_1_1_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_viewvc_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_websvn_diff_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_websvn_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_websvn_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_websvn_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_websvn_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_websvn_revision_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_websvn_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_websvn_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_websvn_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:github_get_source_dir\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:github_get_source_dir\\(\\) has parameter \\$file_path with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:github_get_source_dir\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:linkify_compiler_output\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:linkify_compiler_output\\(\\) has parameter \\$compiler_output with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:linkify_compiler_output\\(\\) has parameter \\$projecturl with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:linkify_compiler_output\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:linkify_compiler_output\\(\\) has parameter \\$source_dir with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:post_github_pull_request_comment\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:post_github_pull_request_comment\\(\\) has parameter \\$cdash_url with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:post_github_pull_request_comment\\(\\) has parameter \\$comment with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:post_github_pull_request_comment\\(\\) has parameter \\$pull_request with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:post_pull_request_comment\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:post_pull_request_comment\\(\\) has parameter \\$cdash_url with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:post_pull_request_comment\\(\\) has parameter \\$comment with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:post_pull_request_comment\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:post_pull_request_comment\\(\\) has parameter \\$pull_request with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
+			count: 2
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Only booleans are allowed in an elseif condition, mixed given\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Only numeric types are allowed in \\+, int\\<0, max\\>\\|false given on the left side\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_close expects CurlHandle, CurlHandle\\|false given\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_error expects CurlHandle, CurlHandle\\|false given\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_exec expects CurlHandle, CurlHandle\\|false given\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_setopt expects CurlHandle, CurlHandle\\|false given\\.$#"
+			count: 7
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|false given\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, string\\|true given\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Parameter \\#3 \\$length of function substr expects int\\|null, int\\|false given\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, string\\|null given\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Parameter \\#3 \\$value of function curl_setopt expects array\\|string, string\\|false given\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Parameter \\#3 \\$value of function curl_setopt expects bool, int given\\.$#"
+			count: 2
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Variable static method call on App\\\\Utils\\\\RepositoryUtils\\.$#"
+			count: 5
+			path: app/Utils/RepositoryUtils.php
+
+		-
 			message: "#^Access to an undefined property App\\\\Models\\\\BuildTest\\:\\:\\$measurements\\.$#"
 			count: 1
 			path: app/Utils/TestCreator.php
@@ -6570,7 +7920,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
@@ -14355,1351 +15705,6 @@ parameters:
 			path: app/cdash/include/pdo.php
 
 		-
-			message: "#^Binary operation \"\\-\" between string and 1 results in an error\\.$#"
-			count: 2
-			path: app/cdash/include/repository.php
-
-		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 4
-			path: app/cdash/include/repository.php
-
-		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Cannot access offset 'cvsurl' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Cannot access offset 'cvsviewertype' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 9
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_Buganizer_new_issue_link\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_Buganizer_new_issue_link\\(\\) has parameter \\$baseurl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_Buganizer_new_issue_link\\(\\) has parameter \\$body with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_Buganizer_new_issue_link\\(\\) has parameter \\$title with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_Buganizer_new_issue_link\\(\\) has parameter \\$users with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_GitHub_new_issue_link\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_GitHub_new_issue_link\\(\\) has parameter \\$baseurl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_GitHub_new_issue_link\\(\\) has parameter \\$body with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_GitHub_new_issue_link\\(\\) has parameter \\$title with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_GitHub_new_issue_link\\(\\) has parameter \\$users with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_JIRA_new_issue_link\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_JIRA_new_issue_link\\(\\) has parameter \\$baseurl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_JIRA_new_issue_link\\(\\) has parameter \\$body with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_JIRA_new_issue_link\\(\\) has parameter \\$title with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_JIRA_new_issue_link\\(\\) has parameter \\$users with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_bugtracker_new_issue_link\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_bugtracker_new_issue_link\\(\\) has parameter \\$build with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function generate_bugtracker_new_issue_link\\(\\) has parameter \\$project with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_allura_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_allura_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_allura_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_allura_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_allura_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_allura_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_allura_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_allura_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_allura_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cgit_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cgit_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cgit_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cgit_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cgit_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cgit_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cgit_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cgit_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cgit_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cvstrac_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cvstrac_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cvstrac_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cvstrac_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cvstrac_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cvstrac_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cvstrac_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cvstrac_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_cvstrac_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_diff_url\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_fisheye_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_fisheye_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_fisheye_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_fisheye_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_fisheye_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_fisheye_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_fisheye_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_fisheye_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_fisheye_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_github_api_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_github_api_url\\(\\) has parameter \\$github_url with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_github_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_github_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_github_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_github_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_github_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_github_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_github_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_github_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_github_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitlab_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitlab_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitlab_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitlab_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitlab_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitlab_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitlab_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitlab_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitlab_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitorious_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitorious_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitorious_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitorious_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitorious_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitorious_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitorious_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitorious_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitorious_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitoriousish_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitoriousish_diff_url\\(\\) has parameter \\$blobs with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitoriousish_diff_url\\(\\) has parameter \\$branch with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitoriousish_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitoriousish_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitoriousish_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitoriousish_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb2_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb2_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb2_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb2_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb2_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb2_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb2_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb2_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb2_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_gitweb_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_hgweb_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_hgweb_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_hgweb_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_hgweb_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_hgweb_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_hgweb_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_hgweb_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_hgweb_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_hgweb_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_loggerhead_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_loggerhead_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_loggerhead_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_loggerhead_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_loggerhead_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_loggerhead_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_loggerhead_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_loggerhead_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_loggerhead_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_p4web_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_p4web_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_p4web_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_p4web_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_p4web_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_p4web_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_p4web_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_p4web_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_p4web_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_phab_git_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_phab_git_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_phab_git_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_phab_git_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_phab_git_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_phab_git_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_phab_git_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_phab_git_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_phab_git_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_previous_revision\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_previous_revision\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_redmine_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_redmine_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_redmine_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_redmine_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_redmine_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_redmine_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_redmine_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_redmine_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_redmine_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_revision_url\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_source_dir\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_source_dir\\(\\) has parameter \\$file_path with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_source_dir\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_source_dir\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_stash_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_stash_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_stash_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_stash_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_stash_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_stash_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_stash_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_stash_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_stash_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_trac_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_trac_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_trac_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_trac_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_trac_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_trac_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_trac_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_trac_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_trac_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewcvs_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewcvs_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewcvs_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewcvs_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewcvs_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewcvs_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewcvs_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewcvs_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewcvs_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_1_1_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_1_1_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_1_1_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_1_1_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_1_1_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_1_1_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_1_1_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_1_1_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_1_1_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_viewvc_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_websvn_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_websvn_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_websvn_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_websvn_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_websvn_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_websvn_revision_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_websvn_revision_url\\(\\) has parameter \\$priorrevision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_websvn_revision_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function get_websvn_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function github_get_source_dir\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function github_get_source_dir\\(\\) has parameter \\$file_path with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function github_get_source_dir\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function linkify_compiler_output\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function linkify_compiler_output\\(\\) has parameter \\$compiler_output with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function linkify_compiler_output\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function linkify_compiler_output\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function linkify_compiler_output\\(\\) has parameter \\$source_dir with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function post_github_pull_request_comment\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function post_github_pull_request_comment\\(\\) has parameter \\$cdash_url with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function post_github_pull_request_comment\\(\\) has parameter \\$comment with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function post_github_pull_request_comment\\(\\) has parameter \\$pull_request with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function post_pull_request_comment\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function post_pull_request_comment\\(\\) has parameter \\$cdash_url with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function post_pull_request_comment\\(\\) has parameter \\$comment with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function post_pull_request_comment\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Function post_pull_request_comment\\(\\) has parameter \\$pull_request with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 29
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
-			count: 2
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Only booleans are allowed in an elseif condition, mixed given\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Only numeric types are allowed in \\+, int\\<0, max\\>\\|false given on the left side\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Parameter \\#1 \\$handle of function curl_close expects CurlHandle, CurlHandle\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Parameter \\#1 \\$handle of function curl_error expects CurlHandle, CurlHandle\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Parameter \\#1 \\$handle of function curl_exec expects CurlHandle, CurlHandle\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Parameter \\#1 \\$handle of function curl_setopt expects CurlHandle, CurlHandle\\|false given\\.$#"
-			count: 7
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, string\\|true given\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Parameter \\#3 \\$length of function substr expects int\\|null, int\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, string\\|null given\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Parameter \\#3 \\$value of function curl_setopt expects array\\|string, string\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/repository.php
-
-		-
-			message: "#^Parameter \\#3 \\$value of function curl_setopt expects bool, int given\\.$#"
-			count: 2
-			path: app/cdash/include/repository.php
-
-		-
 			message: "#^Access to an undefined property UpdateHandler\\:\\:\\$BuildId\\.$#"
 			count: 1
 			path: app/cdash/include/sendemail.php
@@ -17051,17 +17056,17 @@ parameters:
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: "#^Trying to invoke non\\-falsy\\-string but it might not be a callable\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
 			message: "#^Variable \\$filetype might not be defined\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
 			message: "#^Variable property access on mixed\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/project.php
+
+		-
+			message: "#^Variable static method call on App\\\\Utils\\\\RepositoryUtils\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 

@@ -1,9 +1,7 @@
 <?php
 
-
-require_once 'include/repository.php';
-
 use App\Models\User;
+use App\Utils\RepositoryUtils;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
@@ -189,7 +187,7 @@ class IssueCreationTestCase extends KWWebTestCase
             $this->createProject($settings, true);
 
             // Validate issue creation link.
-            $found = generate_bugtracker_new_issue_link(
+            $found = RepositoryUtils::generate_bugtracker_new_issue_link(
                 $this->Builds['standalone'], $this->Projects['IssueCreationProject']);
             $expected = $answer_key[$tracker['name']]['Standalone'];
             if ($found !== $expected) {
@@ -206,7 +204,7 @@ class IssueCreationTestCase extends KWWebTestCase
             $this->createProject($settings, true);
 
             // Validate issue creation link.
-            $found = generate_bugtracker_new_issue_link($this->Builds['subproject'],
+            $found = RepositoryUtils::generate_bugtracker_new_issue_link($this->Builds['subproject'],
                 $this->Projects['CDash']);
             $expected = $answer_key[$tracker['name']]['SubProject'];
             if ($found !== $expected) {

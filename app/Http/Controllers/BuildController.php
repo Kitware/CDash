@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Build as EloquentBuild;
 use App\Utils\PageTimer;
+use App\Utils\RepositoryUtils;
 use App\Utils\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
@@ -26,7 +27,6 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
-require_once 'include/repository.php';
 require_once 'include/api_common.php';
 
 final class BuildController extends AbstractBuildController
@@ -425,7 +425,7 @@ final class BuildController extends AbstractBuildController
                 break;
         }
         if ($generate_issue_link) {
-            $new_issue_url = generate_bugtracker_new_issue_link($this->build, $this->project);
+            $new_issue_url = RepositoryUtils::generate_bugtracker_new_issue_link($this->build, $this->project);
             $response['bugtracker'] = $this->project->BugTrackerType;
         }
         $response['newissueurl'] = $new_issue_url;
@@ -594,9 +594,9 @@ final class BuildController extends AbstractBuildController
         $update_response['priorrevision'] = $update->PriorRevision;
         $update_response['path'] = $update->Path;
         $update_response['revisionurl'] =
-            get_revision_url($this->project->Id, $update->Revision, $update->PriorRevision);
+            RepositoryUtils::get_revision_url($this->project->Id, $update->Revision, $update->PriorRevision);
         $update_response['revisiondiff'] =
-            get_revision_url($this->project->Id, $update->PriorRevision, ''); // no prior prior revision...
+            RepositoryUtils::get_revision_url($this->project->Id, $update->PriorRevision, ''); // no prior prior revision...
         $response['update'] = $update_response;
 
         $directoryarray = [];
@@ -700,20 +700,20 @@ final class BuildController extends AbstractBuildController
             unset($file['status']);
 
             if ($status == 'UPDATED') {
-                $diff_url = get_diff_url($this->project->Id, $this->project->CvsUrl, $directory, $filename, $revision);
+                $diff_url = RepositoryUtils::get_diff_url($this->project->Id, $this->project->CvsUrl, $directory, $filename, $revision);
                 $diff_url = XMLStrFormat($diff_url);
                 $file['diffurl'] = $diff_url;
                 $this->add_file($file, $directory, $updated_files);
                 $num_updated_files++;
             } elseif ($status == 'MODIFIED') {
-                $diff_url = get_diff_url($this->project->Id, $this->project->CvsUrl, $directory, $filename);
+                $diff_url = RepositoryUtils::get_diff_url($this->project->Id, $this->project->CvsUrl, $directory, $filename);
                 $diff_url = XMLStrFormat($diff_url);
                 $file['diffurl'] = $diff_url;
                 $this->add_file($file, $directory, $modified_files);
                 $num_modified_files++;
             } else {
                 //CONFLICTED
-                $diff_url = get_diff_url($this->project->Id, $this->project->CvsUrl, $directory, $filename);
+                $diff_url = RepositoryUtils::get_diff_url($this->project->Id, $this->project->CvsUrl, $directory, $filename);
                 $diff_url = XMLStrFormat($diff_url);
                 $file['diffurl'] = $diff_url;
                 $this->add_file($file, $directory, $conflicting_files);
