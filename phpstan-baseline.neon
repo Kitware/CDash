@@ -248,15 +248,7 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 3
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 5
+			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -264,7 +256,7 @@ parameters:
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 6
+			count: 4
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -272,15 +264,7 @@ parameters:
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 13
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 3
+			count: 11
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -288,7 +272,7 @@ parameters:
 				#^Call to deprecated function pdo_num_rows\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 2
+			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -296,7 +280,7 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 43
+			count: 16
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -312,7 +296,7 @@ parameters:
 				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
 				09/04/2023  Use config\\(\\) instead\\.$#
 			"""
-			count: 9
+			count: 8
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -377,12 +361,12 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 9
+			count: 3
 			path: app/Http/Controllers/AdminController.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 4
+			count: 2
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -402,21 +386,6 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, PDOStatement\\|false given\\.$#"
-			count: 4
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Only booleans are allowed in an elseif condition, mixed given\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, int\\|false given\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
@@ -427,7 +396,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$result of function pdo_num_rows expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 2
+			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -15885,35 +15854,6 @@ parameters:
 			path: app/cdash/include/sendemail.php
 
 		-
-			message: "#^Argument of an invalid type PDOStatement\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: """
-				#^Call to deprecated function add_last_sql_error\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 12
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 21
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 2
-			path: app/cdash/include/upgrade_functions.php
-
-		-
 			message: """
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
@@ -15923,26 +15863,10 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 4
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 19
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
+			count: 9
 			path: app/cdash/include/upgrade_functions.php
 
 		-
@@ -15950,7 +15874,7 @@ parameters:
 				#^Call to deprecated function pdo_num_rows\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 4
+			count: 3
 			path: app/cdash/include/upgrade_functions.php
 
 		-
@@ -15958,50 +15882,11 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 62
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 7
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 6
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 5
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Cannot access offset 'configureduration' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Cannot access offset 'duration' on array\\|false\\|null\\.$#"
-			count: 1
+			count: 11
 			path: app/cdash/include/upgrade_functions.php
 
 		-
 			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Cannot access offset 'numfails' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
 
@@ -16012,106 +15897,6 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'timestd' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Cannot access offset 0 on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
-			count: 2
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on PDOStatement\\|false\\.$#"
-			count: 2
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function AddTableField\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function AddTableField\\(\\) has parameter \\$default with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function AddTableField\\(\\) has parameter \\$field with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function AddTableField\\(\\) has parameter \\$mySQLType with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function AddTableField\\(\\) has parameter \\$pgSqlType with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function AddTableField\\(\\) has parameter \\$table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function AddTableIndex\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function AddTableIndex\\(\\) has parameter \\$field with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function AddTableIndex\\(\\) has parameter \\$table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function AddTablePrimaryKey\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function AddTablePrimaryKey\\(\\) has parameter \\$field with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function AddTablePrimaryKey\\(\\) has parameter \\$table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function AddUniqueConstraintToDiffTables\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function AddUniqueConstraintToDiffTables\\(\\) has parameter \\$testing with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function AddUniqueConstraintToSiteTable\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function AddUniqueConstraintToSiteTable\\(\\) has parameter \\$site_table with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
 
@@ -16146,206 +15931,6 @@ parameters:
 			path: app/cdash/include/upgrade_functions.php
 
 		-
-			message: "#^Function ModifyTableField\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function ModifyTableField\\(\\) has parameter \\$autoincrement with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function ModifyTableField\\(\\) has parameter \\$default with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function ModifyTableField\\(\\) has parameter \\$field with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function ModifyTableField\\(\\) has parameter \\$mySQLType with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function ModifyTableField\\(\\) has parameter \\$notnull with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function ModifyTableField\\(\\) has parameter \\$pgSqlType with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function ModifyTableField\\(\\) has parameter \\$table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function PopulateBuild2Configure\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function PopulateBuild2Configure\\(\\) has parameter \\$b2c_table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function PopulateBuild2Configure\\(\\) has parameter \\$configure_table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function PopulateBuild2Configure\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function PopulateDynamicAnalysisSummaryTable\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function PopulateTestDuration\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function PopulateTestDuration\\(\\) has parameter \\$dst_table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function PopulateTestDuration\\(\\) has parameter \\$src_table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function RemoveTableField\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function RemoveTableField\\(\\) has parameter \\$field with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function RemoveTableField\\(\\) has parameter \\$table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function RemoveTableIndex\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function RemoveTableIndex\\(\\) has parameter \\$field with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function RemoveTableIndex\\(\\) has parameter \\$table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function RenameTableField\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function RenameTableField\\(\\) has parameter \\$default with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function RenameTableField\\(\\) has parameter \\$field with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function RenameTableField\\(\\) has parameter \\$mySQLType with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function RenameTableField\\(\\) has parameter \\$newfield with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function RenameTableField\\(\\) has parameter \\$pgSqlType with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function RenameTableField\\(\\) has parameter \\$table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function UpdateDynamicRules\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function UpgradeBuildDuration\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function UpgradeBuildDuration\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function UpgradeBuildFailureTable\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function UpgradeBuildFailureTable\\(\\) has parameter \\$from_table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function UpgradeBuildFailureTable\\(\\) has parameter \\$to_table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function UpgradeConfigureDuration\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function UpgradeConfigureErrorTable\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function UpgradeConfigureErrorTable\\(\\) has parameter \\$b2c_table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function UpgradeConfigureErrorTable\\(\\) has parameter \\$table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function UpgradeTestDuration\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
 			message: "#^Function delete_unused_rows\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
@@ -16371,83 +15956,18 @@ parameters:
 			path: app/cdash/include/upgrade_functions.php
 
 		-
-			message: "#^Function pdo_check_index_exists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function pdo_check_index_exists\\(\\) has parameter \\$columnname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function pdo_check_index_exists\\(\\) has parameter \\$tablename with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 2
-			path: app/cdash/include/upgrade_functions.php
-
-		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 18
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Only booleans are allowed in &&, array\\|false\\|null given on the left side\\.$#"
-			count: 2
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Only booleans are allowed in &&, mixed given on the left side\\.$#"
 			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, PDOStatement\\|false given\\.$#"
-			count: 7
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, array\\|false\\|null given\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, PDOStatement\\|false given\\.$#"
-			count: 3
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, int given\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, int\\|string\\|false\\|null given\\.$#"
-			count: 2
 			path: app/cdash/include/upgrade_functions.php
 
 		-
 			message: "#^Only numeric types are allowed in /, int\\|false given on the right side\\.$#"
-			count: 3
+			count: 2
 			path: app/cdash/include/upgrade_functions.php
 
 		-
 			message: "#^Parameter \\#1 \\$result of function pdo_num_rows expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 4
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
-			count: 4
+			count: 3
 			path: app/cdash/include/upgrade_functions.php
 
 		-
@@ -24069,7 +23589,7 @@ parameters:
 
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 4
+			count: 3
 			path: app/cdash/tests/test_dynamicanalysissummary.php
 
 		-
@@ -24109,11 +23629,6 @@ parameters:
 
 		-
 			message: "#^Method DynamicAnalysisSummaryTestCase\\:\\:testDynamicAnalysisSummaryGetsDeleted\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			message: "#^Method DynamicAnalysisSummaryTestCase\\:\\:testDynamicAnalysisSummaryUpgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_dynamicanalysissummary.php
 
@@ -27129,22 +26644,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_uniquediffs.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_uniquediffs.php
-
-		-
-			message: """
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -27158,11 +26657,6 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/tests/test_uniquediffs.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_uniquediffs.php
 
@@ -27198,16 +26692,6 @@ parameters:
 
 		-
 			message: "#^Method UniqueDiffsTestCase\\:\\:testUniqueDiffs\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_uniquediffs.php
-
-		-
-			message: "#^Method UniqueDiffsTestCase\\:\\:testUniqueDiffsUpgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_uniquediffs.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, PDOStatement\\|false given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_uniquediffs.php
 
@@ -27314,108 +26798,13 @@ parameters:
 			path: app/cdash/tests/test_updateonlyuserstats.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 28
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 14
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: """
-				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 8
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: """
-				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Cannot access offset 'buildduration' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Cannot access offset 'configureduration' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Cannot access offset 'numdetails' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Cannot access offset 'numfails' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Cannot access offset 'numrows' on array\\|false\\|null\\.$#"
-			count: 8
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Cannot access offset 'numsites' on array\\|false\\|null\\.$#"
-			count: 8
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Cannot access offset 'testduration' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
-			count: 2
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on PDOStatement\\|false\\.$#"
-			count: 2
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 17
+			count: 4
 			path: app/cdash/tests/test_upgrade.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 9
+			count: 1
 			path: app/cdash/tests/test_upgrade.php
 
 		-
@@ -27425,16 +26814,6 @@ parameters:
 
 		-
 			message: "#^Method UpgradeTestCase\\:\\:testAssignBuildsToDefaultGroups\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Method UpgradeTestCase\\:\\:testBuild2ConfigureUpgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Method UpgradeTestCase\\:\\:testBuildFailureDetailsUpgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_upgrade.php
 
@@ -27469,37 +26848,7 @@ parameters:
 			path: app/cdash/tests/test_upgrade.php
 
 		-
-			message: "#^Method UpgradeTestCase\\:\\:testPopulateTestDuration\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Method UpgradeTestCase\\:\\:testSiteConstraintUpgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Method UpgradeTestCase\\:\\:testUpdateDynamicRules\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
 			message: "#^Method UpgradeTestCase\\:\\:testUpgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Method UpgradeTestCase\\:\\:testUpgradeDurations\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, PDOStatement\\|false given\\.$#"
-			count: 14
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_upgrade.php
 

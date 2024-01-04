@@ -82,63 +82,6 @@ class UniqueDiffsTestCase extends KWWebTestCase
         DB::delete('DELETE FROM build WHERE id = ?', [$build->Id]);
     }
 
-    public function testUniqueDiffsUpgrade()
-    {
-        require_once 'include/upgrade_functions.php';
-
-        $pdo = get_link_identifier()->getPdo();
-        $tables = ['test_builderrordiff', 'test_configureerrordiff', 'test_testdiff'];
-
-        foreach ($tables as $table) {
-            // Create testing tables.
-            if (config('database.default') == 'pgsql') {
-                $create_query = '
-                    CREATE TABLE "' . $table . '" (
-                            "buildid" integer NOT NULL,
-                            "type" smallint NOT NULL,
-                            "difference" integer NOT NULL
-                            )';
-            } else {
-                // MySQL
-                $create_query = "
-                    CREATE TABLE `$table` (
-                            `buildid` int(11) NOT NULL,
-                            `type` tinyint(4) NOT NULL,
-                            `difference` int(11) NOT NULL,
-                            KEY `buildid` (`buildid`),
-                            KEY `type` (`type`)
-                            )";
-            }
-            if (!$pdo->query($create_query)) {
-                $this->fail("Error creating $table");
-            }
-
-            // Insert duplicate data into each.
-            $stmt = $pdo->prepare(
-                "INSERT INTO $table (buildid, type, difference)
-                VALUES (?, 0, 1)");
-            $stmt->execute([$this->BuildId]);
-            $stmt = $pdo->prepare(
-                "INSERT INTO $table (buildid, type, difference)
-                VALUES (?, 0, 2)");
-            $stmt->execute([$this->BuildId]);
-
-            // Verify duplicate was inserted successfully.
-            $this->checkRowCount($pdo, $table, 2);
-        }
-
-        // Run the upgrade function.
-        AddUniqueConstraintToDiffTables(true);
-
-        foreach ($tables as $table) {
-            // Verify that each table only has one row.
-            $this->checkRowCount($pdo, $table, 1);
-
-            // Drop the testing tables.
-            $pdo->query("DROP TABLE $table");
-        }
-    }
-
     private function checkRowCount($pdo, $table, $expected)
     {
         $stmt = $pdo->prepare(

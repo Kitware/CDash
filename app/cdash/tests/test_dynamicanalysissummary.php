@@ -14,7 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -60,25 +59,6 @@ class DynamicAnalysisSummaryTestCase extends KWWebTestCase
                 return 1;
             }
         }
-        $this->VerifySubProjectBuild();
-        $this->pass('Test passed');
-    }
-
-    public function testDynamicAnalysisSummaryUpgrade()
-    {
-        // Delete the summaries examined by this test.
-        $ids = $this->ChildIds;
-        $ids[] = $this->ParentId;
-        $ids[] = $this->StandaloneBuildId;
-        $id_arg = implode(', ', $ids);
-        DB::delete("DELETE FROM dynamicanalysissummary WHERE buildid IN ($id_arg)");
-
-        // Run the upgrade function.
-        require_once 'include/upgrade_functions.php';
-        PopulateDynamicAnalysisSummaryTable();
-
-        // Verify the summaries are still correct.
-        $this->VerifyStandaloneBuild();
         $this->VerifySubProjectBuild();
         $this->pass('Test passed');
     }
