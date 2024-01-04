@@ -113,7 +113,7 @@
   <b>This site belongs to the following projects:</b><br/>
   <xsl:for-each select="cdash/project">
   <a>
-  <xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/></xsl:attribute>
+  <xsl:attribute name="href">/index.php?project=<xsl:value-of select="name_encoded"/></xsl:attribute>
   <xsl:value-of select="name"/>
   </a>
   (<xsl:value-of select="submittime"/>)<br/>
