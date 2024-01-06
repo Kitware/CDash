@@ -98,7 +98,7 @@ describe('testSummary', () => {
 
     // navigate to current day
     cy.get('li.btncurr').find('a').click();
-    const today_str = new Date().toLocaleDateString('en-CA');
+    const today_str = new Date().toISOString().slice(0, 10);
     cy.url().should('include', `${base_url}&date=${today_str}`);
     cy.get('li.btnnext').find('a').should('not.exist');
 
