@@ -19,7 +19,6 @@ resources/js/components/AllProjects.vue
 app/cdash/public/*
 public/main.js
 public/js/ui.tabs.js
-public/js/tooltip.js
 public/js/tabNavigation.js
 public/js/services/renderTimer.js
 public/js/services/multisort.js
@@ -34,7 +33,6 @@ public/js/jquery.metadata.js
 public/js/je_compare.js
 public/js/filters/terminalColors.js
 public/js/filters/showEmptySubProjectsLast.js
-public/js/excanvas.js
 public/js/directives/timeline.js
 public/js/directives/onFinishRender.js
 public/js/directives/daterange.js
@@ -42,7 +40,6 @@ public/js/directives/convertToNumber.js
 public/js/directives/buildgroup.js
 public/js/directives/build.js
 public/js/directives/autocomplete.js
-public/js/d3.dependencyedgebundling.js
 public/js/controllers/viewTest.js
 public/js/controllers/viewSubProjects.js
 public/js/controllers/viewDynamicAnalysisFile.js
@@ -63,7 +60,6 @@ public/js/controllers/compareCoverage.js
 public/js/controllers/buildProperties.js
 public/js/cdash_angular.js
 public/js/cdashViewCoverage.js
-public/js/cdashUserLabels.js
 public/js/cdashUploadFilesSorter.js
 public/js/cdashUpgrade.js
 public/js/cdashSortable.js
@@ -74,7 +70,6 @@ public/js/cdashManageCoverageSorter.js
 public/js/cdashFilters.js
 public/js/cdashCoverageGraph.js
 public/js/bulletchart.js
-public/js/OptionTransfer.js
 app/cdash/tests/js/pages/login.page.js
 app/cdash/tests/js/pages/catchConsoleErrors.page.js
 app/cdash/tests/js/e2e_tests/viewTestPagination.js
@@ -88,11 +83,9 @@ app/cdash/tests/js/e2e_tests/remove_build.js
 app/cdash/tests/js/e2e_tests/queryTests.js
 app/cdash/tests/js/e2e_tests/multiSort.js
 app/cdash/tests/js/e2e_tests/manageSubProject.js
-app/cdash/tests/js/e2e_tests/manageOverview.js
 app/cdash/tests/js/e2e_tests/manageBuildGroup.js
 app/cdash/tests/js/e2e_tests/filterLabels.js
 app/cdash/tests/js/e2e_tests/expected_build.js
 app/cdash/tests/js/e2e_tests/done_build.js
 app/cdash/tests/js/e2e_tests/daterange.js
 app/cdash/tests/js/e2e_tests/calendar.js
-
