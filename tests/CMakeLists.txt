@@ -56,6 +56,9 @@ add_test(
   COMMAND npm run eslint
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
+set_tests_properties(eslint PROPERTIES
+  FAIL_REGULAR_EXPRESSION " \+[0-9]\+:[0-9]\+ \+warning"
+)
 
 add_vue_test(Spec/build-configure)
 add_vue_test(Spec/build-notes)
