@@ -81,7 +81,6 @@ app/cdash/tests/js/e2e_tests/viewTestPagination.js
 app/cdash/tests/js/e2e_tests/viewTest.js
 app/cdash/tests/js/e2e_tests/viewSubProjects.js
 app/cdash/tests/js/e2e_tests/viewBuildError.js
-app/cdash/tests/js/e2e_tests/testSummary.js
 app/cdash/tests/js/e2e_tests/subprojectGroupOrder.js
 app/cdash/tests/js/e2e_tests/sort_index.js
 app/cdash/tests/js/e2e_tests/remove_build.js

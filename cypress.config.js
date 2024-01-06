@@ -5,6 +5,7 @@ module.exports = defineConfig({
   screenshotsFolder: 'tests/cypress/screenshots',
   videosFolder: 'tests/cypress/videos',
   downloadsFolder: 'tests/cypress/downloads',
+  trashAssetsBeforeRuns: true,
   pageLoadTimeout: 300000,
   e2e: {
     setupNodeEvents(on, config) {

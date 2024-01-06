@@ -1,16 +1,16 @@
-      <h3>
+      <h3 data-cy="summary-header">
         Testing summary for <u>{{::cdash.testName}}</u> performed between {{::cdash.teststarttime}} and {{::cdash.testendtime}}
       </h3>
-      <h4>
+      <h4 data-cy="summary-stats">
         {{::cdash.percentagepassed}}% passed, {{::cdash.numfailed}} failed out of {{::cdash.numtotal}}.
       </h4>
 
       <!-- Failure Graph -->
-      <a ng-click="toggleGraph()" id="GraphLink">
+      <a ng-click="toggleGraph()" id="GraphLink" data-cy="toggle-plot">
         {{ showgraph ? 'Hide Test Failure Trend' : 'Show Test Failure Trend' }}
       </a>
-      <div ng-show="showgraph" id="TestFailureGraph">
-        <a ng-click="resetZoom()">Reset zoom</a>
+      <div ng-show="showgraph" id="TestFailureGraph" data-cy="plot-wrapper">
+        <a ng-click="resetZoom()" data-cy="reset-plot">Reset zoom</a>
         <div id="testfailuregraphoptions"></div>
         <div id="testfailuregraph">
           <ng-include src="graphurl"></ng-include>
@@ -21,11 +21,11 @@
       </div>
 
       <br/>
-      <a ng-href="{{::cdash.csvlink}}">Download Table as CSV File</a>
+      <a ng-href="{{::cdash.csvlink}}" data-cy="download-as-csv">Download Table as CSV File</a>
       <br/>
 
       <!-- Test Summary table -->
-      <table id="testSummaryTable" cellspacing="0" cellpadding="3" class="tabb test-table">
+      <table id="testSummaryTable" data-cy="summary-table" cellspacing="0" cellpadding="3" class="tabb test-table">
         <thead>
           <tr class="table-heading1">
             <th class="header" ng-click="updateOrderByFields('site', $event)">
