@@ -85,4 +85,3 @@ app/cdash/tests/js/e2e_tests/manageSubProject.js
 app/cdash/tests/js/e2e_tests/manageBuildGroup.js
 app/cdash/tests/js/e2e_tests/expected_build.js
 app/cdash/tests/js/e2e_tests/done_build.js
-app/cdash/tests/js/e2e_tests/daterange.js
