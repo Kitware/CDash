@@ -3,10 +3,9 @@ config.global.mocks['$baseURL'] = 'http://localhost';
 import HeaderMenu from '../../../resources/js/components/page-header/HeaderMenu.vue';
 
 import expect from 'expect';
-import moment from 'moment';
 
 let component;
-const today = moment().format('YYYY-MM-DD');
+const today = new Date().toISOString().slice(0, 10);
 const bugUrl = 'https://github.com/project/project/issues';
 const docUrl = 'https://github.com/project/project/wiki';
 const homeUrl = 'https://www.project.tld/';
