@@ -245,6 +245,7 @@ add_php_test(redundanttests)
 add_php_test(configureappend)
 add_php_test(notesparsererrormessages)
 add_php_test(viewsubprojectslinkoption)
+add_php_test(misassignedconfigure)
 
 add_subdirectory(ctest)
 
