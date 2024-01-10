@@ -448,7 +448,8 @@ final class SiteController extends AbstractController
 
         $xml = begin_XML_for_XSLT();
 
-        $projectid = (int) $_GET['project'];
+        $projectid =  (int) ($_GET['project'] ?? 0);
+
         if ($projectid > 0) {
             $project = new Project();
             $project->Id = $projectid;
@@ -466,6 +467,7 @@ final class SiteController extends AbstractController
         $xml .= '<dashboard>';
         $xml .= '<title>CDash</title>';
 
+        $xml .= add_XML_value('baseURL', config('app.url'));
         $apikey = config('cdash.google_map_api_key');
 
         $MB = 1048576;

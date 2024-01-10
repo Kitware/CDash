@@ -7,7 +7,7 @@
     <xsl:template match="/">
 
   <xsl:if test="cdash/user/sitemanager=1">
-  <a><xsl:attribute name="href">editSite.php?siteid=<xsl:value-of select="cdash/site/id"/></xsl:attribute>
+  <a><xsl:attribute name="href"><xsl:value-of select="cdash/dashboard/baseURL"/>/editSite.php?siteid=<xsl:value-of select="cdash/site/id"/></xsl:attribute>
   <xsl:if test="cdash/user/siteclaimed=0">Are you maintaining this site? [claim this site]</xsl:if><xsl:if test="cdash/user/siteclaimed=1">[edit site description]</xsl:if></a>
   <br/>
   </xsl:if>
@@ -113,7 +113,7 @@
   <b>This site belongs to the following projects:</b><br/>
   <xsl:for-each select="cdash/project">
   <a>
-  <xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/></xsl:attribute>
+  <xsl:attribute name="href"><xsl:value-of select="../dashboard/baseURL"/>/index.php?project=<xsl:value-of select="name_encoded"/></xsl:attribute>
   <xsl:value-of select="name"/>
   </a>
   (<xsl:value-of select="submittime"/>)<br/>
