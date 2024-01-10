@@ -470,6 +470,7 @@ final class SiteController extends AbstractController
         $xml .= '<dashboard>';
         $xml .= '<title>CDash</title>';
 
+        $xml .= add_XML_value('baseURL', config('app.url'));
         $apikey = config('cdash.google_map_api_key');
 
         $MB = 1048576;
