@@ -448,10 +448,7 @@ final class SiteController extends AbstractController
 
         $xml = begin_XML_for_XSLT();
 
-        $projectid = 0;
-        if(isset($_GET['project'])) {
-            $projectid = (int) $_GET['project'];
-        }
+        $projectid =  (int) ($_GET['project'] ?? 0);
 
         if ($projectid > 0) {
             $project = new Project();
