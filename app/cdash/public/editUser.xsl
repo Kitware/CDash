@@ -15,6 +15,7 @@
      <td colspan="5" id="nob"><h3>My Profile</h3></td>
  </tr>
 <form method="post" action="" name="updatprofile_form">
+<input type="hidden" name="_token"><xsl:attribute name="value"><xsl:value-of select="cdash/csrf"/></xsl:attribute></input>
 <tr class="treven">
   <td width="20%" height="2"><div align="right">First Name</div></td>
   <td  width="80%" height="2" id="nob"><input class="textbox" name="fname" size="20">
@@ -50,6 +51,7 @@
 </tr>
 </form>
 <form method="post" action="" name="updatemail_form">
+<input type="hidden" name="_token"><xsl:attribute name="value"><xsl:value-of select="cdash/csrf"/></xsl:attribute></input>
 <tr class="trodd">
     <td width="20%" height="2" ><div align="right">Current Password</div></td>
     <td width="80%" height="2" id="nob"><input class="textbox" type="password" name="oldpasswd" size="20"/></td>

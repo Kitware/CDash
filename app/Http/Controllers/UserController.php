@@ -497,6 +497,7 @@ final class UserController extends AbstractController
             $xml .= '<error>Your password has expired.  Please set a new one.</error>';
         }
 
+        $xml .= '<csrf>' . csrf_token() . '</csrf>';
         $xml .= '</cdash>';
 
         return view('cdash', [
