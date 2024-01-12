@@ -796,7 +796,7 @@ final class BuildController extends AbstractBuildController
                     'sha1sum' => $uploadFileOrURL->Sha1Sum,
                     'filename' => $uploadFileOrURL->Filename,
                     'filesize' => $uploadFileOrURL->Filesize,
-                    'filesizedisplay' => round($filesize) . ' ' . $ext
+                    'filesizedisplay' => round($filesize) . ' ' . $ext,
                 ];
             }
         }

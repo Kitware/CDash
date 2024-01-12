@@ -26,7 +26,7 @@ class UploadStorageMigration extends TestCase
         if (is_dir($old_upload_dir)) {
             DeleteDirectory($old_upload_dir);
         }
-        mkdir($old_upload_dir, 0755, true);
+        mkdir($old_upload_dir, 0o755, true);
         $old_filename = "{$old_upload_dir}/abc";
         $symlink_filename = "{$old_upload_dir}/foo.txt";
         file_put_contents($old_filename, 'I am a real file');

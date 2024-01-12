@@ -38,7 +38,7 @@ class MakeStorageDirectories extends Command
             "{$storage_path}/framework/cache/data",
             "{$storage_path}/framework/sessions",
             "{$storage_path}/framework/views",
-            "{$storage_path}/logs"
+            "{$storage_path}/logs",
         ];
 
         foreach ($dirs_to_check as $dir_to_check) {
@@ -46,7 +46,7 @@ class MakeStorageDirectories extends Command
                 echo "$dir_to_check already exists\n";
             } else {
                 echo "creating $dir_to_check\n";
-                mkdir($dir_to_check, 0755, true);
+                mkdir($dir_to_check, 0o755, true);
             }
         }
 

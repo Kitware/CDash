@@ -160,7 +160,7 @@ class UploadHandler extends AbstractHandler
 
             // Create tmp file
             $this->TmpFilename = tempnam(sys_get_temp_dir(), 'cdash_upload'); // TODO Handle error
-            chmod($this->TmpFilename, 0644);
+            chmod($this->TmpFilename, 0o644);
 
             if (empty($this->TmpFilename)) {
                 Log::error('Failed to create temporary filename');

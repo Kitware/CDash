@@ -115,7 +115,7 @@ class ConsistentTestingDayTestCase extends KWWebTestCase
         $this->createProject([
             'Id' => $this->project->Id,
             'Name' => 'ConsistentTestingDay',
-            'NightlyTime' => '22:00:00 America/Denver'
+            'NightlyTime' => '22:00:00 America/Denver',
         ], true);
 
         // Submit Upload.xml file.
