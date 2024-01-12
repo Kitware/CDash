@@ -283,7 +283,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             if (!empty($this->ErrorSubProjectName)) {
                 $this->SubProjectName = $this->ErrorSubProjectName;
-            } elseif (isset($this->Error)) {
+            } elseif (isset($this->Error) && $this->Error instanceof BuildFailure) {
                 $this->Error->AddLabel($this->Label);
             } else {
                 $this->Labels[] = $this->Label;

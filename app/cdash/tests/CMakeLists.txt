@@ -101,8 +101,10 @@ add_laravel_test(/Feature/TestSchemaMigration)
 add_laravel_test(/Feature/MeasurementPositionMigration)
 add_laravel_test(/Feature/RemoveMeasurementCheckboxesMigration)
 add_laravel_test(/Feature/IncreaseSiteInformationCPUColumnsSizeMigration)
+add_laravel_test(/Feature/UploadStorageMigration)
 
 cdash_install()
+
 add_php_test(registeruser)
 add_php_test(compressedtest)
 add_php_test(createpublicdashboard)
@@ -226,6 +228,7 @@ add_php_test(configureappend)
 add_php_test(notesparsererrormessages)
 add_php_test(viewsubprojectslinkoption)
 add_laravel_test(/Feature/SubProjectDependencies)
+add_php_test(misassignedconfigure)
 
 add_subdirectory(ctest)
 

@@ -126,7 +126,7 @@ class ProcessSubmission implements ShouldQueue
             $this->requeueSubmissionFile($build->Id);
         }
 
-        if (config('cdash.backup_timeframe') === 0) {
+        if ((int) config('cdash.backup_timeframe') === 0) {
             // We are configured not to store parsed files. Delete it now.
             $this->deleteSubmissionFile("inprogress/{$this->filename}");
         } else {

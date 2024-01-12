@@ -17,6 +17,7 @@ use CDash\Model\BuildRelationship;
 use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUserNote;
 use CDash\Model\Label;
+use CDash\Model\UploadFile;
 use CDash\ServiceContainer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -25,7 +26,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 require_once 'include/api_common.php';
 
@@ -754,48 +757,21 @@ final class BuildController extends AbstractBuildController
         }
     }
 
-    public function viewFiles(): View|RedirectResponse
+    public function files(int $build_id): View
     {
-        if (!isset($_GET['buildid'])) {
-            abort(400, 'Build id not set');
-        }
-
-        $this->setBuildById((int) $_GET['buildid']);
-
-        $Site = $this->build->GetSite();
-
-        @$date = $_GET['date'];
-        if ($date != null) {
-            $date = htmlspecialchars($date);
-        }
-
-        $xml = begin_XML_for_XSLT();
-        $xml .= get_cdash_dashboard_xml_by_name($this->project->Name, $date);
-        $xml .= add_XML_value('title', 'CDash - Uploaded files');
-        $xml .= add_XML_value('menutitle', 'CDash');
-        $xml .= add_XML_value('menusubtitle', 'Uploaded files');
-
-        $xml .= '<hostname>' . $_SERVER['SERVER_NAME'] . '</hostname>';
-        $xml .= '<date>' . date('r') . '</date>';
-        $xml .= '<backurl>index.php</backurl>';
-
-        $xml .= '<buildid>' . $this->build->Id . '</buildid>';
-        $xml .= '<buildname>' . $this->build->Name . '</buildname>';
-        $xml .= '<buildstarttime>' . $this->build->StartTime . '</buildstarttime>';
-        $xml .= '<siteid>' . $Site->id . '</siteid>';
-        $xml .= '<sitename>' . $Site->name . '</sitename>';
-
+        $this->setBuildById($build_id);
         $uploadFilesOrURLs = $this->build->GetUploadedFilesOrUrls();
 
-        foreach ($uploadFilesOrURLs as $uploadFileOrURL) {
-            if (!$uploadFileOrURL->IsUrl) {
-                $xml .= '<uploadfile>';
-                $xml .= '<id>' . $uploadFileOrURL->Id . '</id>';
-                $xml .= '<href>upload/' . $uploadFileOrURL->Sha1Sum . '/' . $uploadFileOrURL->Filename . '</href>';
-                $xml .= '<sha1sum>' . $uploadFileOrURL->Sha1Sum . '</sha1sum>';
-                $xml .= '<filename>' . $uploadFileOrURL->Filename . '</filename>';
-                $xml .= '<filesize>' . $uploadFileOrURL->Filesize . '</filesize>';
+        $urls = [];
+        $files = [];
 
+        foreach ($uploadFilesOrURLs as $uploadFileOrURL) {
+            if ($uploadFileOrURL->IsUrl) {
+                $urls[] = [
+                    'id' => (int) $uploadFileOrURL->Id,
+                    'filename' => htmlspecialchars($uploadFileOrURL->Filename),
+                ];
+            } else {
                 $filesize = $uploadFileOrURL->Filesize;
                 $ext = 'b';
                 if ($filesize > 1024) {
@@ -814,23 +790,36 @@ final class BuildController extends AbstractBuildController
                     $filesize /= 1024;
                     $ext = 'Tb';
                 }
-
-                $xml .= '<filesizedisplay>' . round($filesize) . ' ' . $ext . '</filesizedisplay>';
-                $xml .= '<isurl>' . $uploadFileOrURL->IsUrl . '</isurl>';
-                $xml .= '</uploadfile>';
-            } else {
-                $xml .= '<uploadurl>';
-                $xml .= '<id>' . $uploadFileOrURL->Id . '</id>';
-                $xml .= '<filename>' . htmlspecialchars($uploadFileOrURL->Filename) . '</filename>';
-                $xml .= '</uploadurl>';
+                $files[] = [
+                    'id' => (int) $uploadFileOrURL->Id,
+                    'href' => url("/build/{$build_id}/file/{$uploadFileOrURL->Id}"),
+                    'sha1sum' => $uploadFileOrURL->Sha1Sum,
+                    'filename' => $uploadFileOrURL->Filename,
+                    'filesize' => $uploadFileOrURL->Filesize,
+                    'filesizedisplay' => round($filesize) . ' ' . $ext
+                ];
             }
         }
 
-        $xml .= '</cdash>';
+        return view('build.files')
+            ->with('build', $this->build)
+            ->with('files', $files)
+            ->with('urls', $urls);
+    }
 
-        return $this->view('cdash', 'View Files')
-            ->with('xsl', true)
-            ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/viewFiles', true));
+    public function build_file(int $build_id, int $file_id) : StreamedResponse
+    {
+        $this->setBuildById($build_id);
+
+        // Validate that the file is associated with the build.
+        if (DB::table('build2uploadfile')->where('buildid', $build_id)->where('fileid', $file_id)->doesntExist()) {
+            abort(404, 'File not found');
+        }
+
+        $uploadFile = new UploadFile();
+        $uploadFile->Id = $file_id;
+        $uploadFile->Fill();
+        return Storage::download("upload/{$uploadFile->Sha1Sum}", $uploadFile->Filename);
     }
 
     public function ajaxBuildNote(): View

@@ -673,6 +673,7 @@ class Build
 
     public function GetConfigures(): \PDOStatement|false
     {
+        $stmt = null;
         if ($this->IsParentBuild()) {
             // Count how many separate configure rows are associated with
             // this parent build.
@@ -694,7 +695,7 @@ class Build
                     JOIN subproject sp ON sp.id = sp2b.subprojectid
                     JOIN build b ON b.id = b2c.buildid
                     WHERE b.parentid = ?');
-            } else {
+            } elseif (count($configure_rows) === 1) {
                 // One configure row is shared by all the SubProjects.
                 $stmt = $this->PDO->prepare('
                     SELECT c.*, b.configureerrors, b.configurewarnings
@@ -705,7 +706,8 @@ class Build
                 pdo_execute($stmt, [$configure_rows[0]['id']]);
                 return $stmt;
             }
-        } else {
+        }
+        if (is_null($stmt)) {
             $stmt = $this->PDO->prepare('
                 SELECT c.*, b.configureerrors, b.configurewarnings
                 FROM configure c

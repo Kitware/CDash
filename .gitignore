@@ -8,7 +8,6 @@
 /app/cdash/public/.htaccess
 /app/cdash/public/build/
 /app/cdash/public/js/nv.d3.js.map
-/app/cdash/public/upload/
 /app/cdash/AuditReport.log
 _build/
 CDash_*.min.js*

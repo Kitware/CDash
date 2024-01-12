@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="CTestTest-Linux-c++-Subprojects"
+        BuildStamp="20160728-1932-Experimental"
+        Name="livonia-linux"
+        Generator="ctest-3.6.20160726-g3e55f-dirty"
+        CompilerName=""
+        CompilerVersion=""
+        OSName="Linux"
+        Hostname="livonia-linux"
+        OSRelease="3.13.0-35-generic"
+        OSVersion="#62-Ubuntu SMP Fri Aug 15 01:58:42 UTC 2014"
+        OSPlatform="x86_64"
+        Is64Bits="1"
+        VendorString="GenuineIntel"
+        VendorID="Intel Corporation"
+        FamilyID="6"
+        ModelID="69"
+        ProcessorCacheSize="4096"
+        NumberOfLogicalCPU="4"
+        NumberOfPhysicalCPU="1"
+        TotalVirtualMemory="7627"
+        TotalPhysicalMemory="7890"
+        LogicalProcessorsPerPhysical="4"
+        ProcessorClockFrequency="756"
+        >
+        <Labels>
+                <Label>MyProductionCode</Label>
+        </Labels>
+        <Configure>
+                <StartDateTime>Jul 28 15:32 EDT</StartDateTime>
+                <StartConfigureTime>1469734334</StartConfigureTime>
+                <ConfigureCommand>"/home/betsy/cmake_build/bin/cmake" "-DCTEST_USE_LAUNCHERS=1" "-GUnix Makefiles" "/home/betsy/cmake/Tests/CTestTestSubprojects"</ConfigureCommand>
+                <Log>-- The C compiler identification is GNU 4.8.4
+-- The CXX compiler identification is GNU 4.8.4
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/betsy/cmake_build/Tests/CTestTestSubprojects
+CMake Warning: CMake is forcing CMAKE_CXX_COMPILER to "/usr/bin/c++" to match that imported from VTK.  This is required because C++ projects must use the same compiler.  If this message appears for more than one imported project, you have conflicting C++ compilers and will have to re-build one of those projects. Was set to /usr/bin/g++-4.0
+Fltk resources not found, GUI application will not respond to mouse events
+Error: example error #1
+</Log>
+                <ConfigureStatus>1</ConfigureStatus>
+                <EndDateTime>Jul 28 15:32 EDT</EndDateTime>
+                <EndConfigureTime>1469734335</EndConfigureTime>
+                <ElapsedMinutes>0</ElapsedMinutes>
+        </Configure>
+</Site>

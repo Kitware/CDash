@@ -442,7 +442,6 @@ export default {
       var vm = this;
       $("#graph_holder").bind("plotclick", function (e, pos, item) {
         if (item) {
-          plot.highlight(item.series, item.datapoint);
           var buildtestid = buildtestids[item.datapoint[0]];
           window.location = vm.$baseURL + "/test/" + buildtestid + "?graph=" + vm.graphSelection;
         }

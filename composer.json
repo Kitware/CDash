@@ -38,6 +38,7 @@
     "pear/archive_tar": "1.4.14",
     "php-di/php-di": "7.0.6",
     "ramsey/uuid": "4.7.5",
+    "shiftonelabs/laravel-sqs-fifo-queue": "3.0.1",
     "socialiteproviders/github": "4.1.0",
     "socialiteproviders/gitlab": "4.1.0",
     "socialiteproviders/google": "4.1.0"
