@@ -2840,16 +2840,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: "#^Call to method request\\(\\) on an unknown class App\\\\Jobs\\\\GuzzleHttp\\\\Client\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			message: "#^Instantiated class App\\\\Jobs\\\\GuzzleHttp\\\\Client not found\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 2
 			path: app/Jobs/ProcessSubmission.php

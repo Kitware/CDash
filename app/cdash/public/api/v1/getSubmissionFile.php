@@ -38,7 +38,7 @@ if (!config('cdash.remote_workers')) {
 }
 
 if (isset($_GET['filename'])) {
-    $filename = Storage::path('inbox') . '/' . basename($_REQUEST['filename']);
+    $filename = Storage::path('inprogress') . '/' . basename($_REQUEST['filename']);
     if (!is_readable($filename)) {
         return response('Not found', Response::HTTP_NOT_FOUND);
     } else {
