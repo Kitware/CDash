@@ -122,7 +122,7 @@ class MigrateConfig extends Command
             include $config_dir . 'config.local.php';
         }
         foreach (get_defined_vars() as $key => $value) {
-            if ($key == 'OAUTH2_PROVIDERS') {
+            if ($key === 'OAUTH2_PROVIDERS') {
                 foreach ($value as $k => $v) {
                     $provider = strtoupper($k);
                     if (array_key_exists('clientId', $v)) {

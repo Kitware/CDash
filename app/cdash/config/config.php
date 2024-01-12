@@ -53,19 +53,6 @@ $CDASH_DEFAULT_GIT_DIRECTORY = 'git';
 // Define the p4 command
 $CDASH_P4_COMMAND = 'p4';
 
-// Settings to enable external authentication using OAuth 2.0.
-// Currently recognized providers are GitHub, GitLab, and Google.
-// Example:
-// $OAUTH2_PROVIDERS['GitHub'] = [
-//    'clientId'          => {client-id},
-//    'clientSecret'      => {client-secret},
-//    'redirectUri'       => 'http://mydomain.com/CDash/auth/GitHub.php'
-//];
-// The GitLab provider takes an additional optional argument:
-// the base URL for a self-hosted instance.
-//    'domain'            => 'https://my.gitlab.example'
-$OAUTH2_PROVIDERS = [];
-
 // Location of the private key that allows this CDash installation to act
 // as a GitHub App.
 $CDASH_GITHUB_PRIVATE_KEY = dirname(__FILE__) . '/github.pem';
