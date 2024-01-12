@@ -291,7 +291,7 @@ parameters:
 				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
 				09/04/2023  Use config\\(\\) instead\\.$#
 			"""
-			count: 8
+			count: 6
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -515,11 +515,6 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			message: "#^Binary operation \"\\.\" between '\\<isurl\\>' and 0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\|null results in an error\\.$#"
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			message: "#^Call to an undefined method App\\\\Models\\\\Build\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Build\\>\\:\\:notes\\(\\)\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php
@@ -563,12 +558,12 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$id on App\\\\Models\\\\Site\\|null\\.$#"
-			count: 3
+			count: 2
 			path: app/Http/Controllers/BuildController.php
 
 		-
 			message: "#^Cannot access property \\$name on App\\\\Models\\\\Site\\|null\\.$#"
-			count: 5
+			count: 4
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -603,7 +598,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 4
+			count: 3
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -663,11 +658,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:summary\\(\\) has parameter \\$build_id with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\BuildController\\:\\:viewFiles\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
 			count: 1
 			path: app/Http/Controllers/BuildController.php
 
@@ -2698,41 +2688,6 @@ parameters:
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/Http/Middleware/CheckDatabaseConnection.php
-
-		-
-			message: "#^Cannot access offset 'name' on array\\|false\\.$#"
-			count: 1
-			path: app/Http/Middleware/CheckDirectoryPermissions.php
-
-		-
-			message: "#^Cannot access offset 'uid' on array\\|false\\.$#"
-			count: 1
-			path: app/Http/Middleware/CheckDirectoryPermissions.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Middleware\\\\CheckDirectoryPermissions\\:\\:handle\\(\\) throws checked exception UnexpectedValueException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Http/Middleware/CheckDirectoryPermissions.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, bool\\|string given\\.$#"
-			count: 1
-			path: app/Http/Middleware/CheckDirectoryPermissions.php
-
-		-
-			message: "#^PHPDoc tag @var with type DirectoryIterator is not subtype of native type RecursiveIteratorIterator\\<RecursiveDirectoryIterator\\>\\.$#"
-			count: 1
-			path: app/Http/Middleware/CheckDirectoryPermissions.php
-
-		-
-			message: "#^Property App\\\\Http\\\\Middleware\\\\CheckDirectoryPermissions\\:\\:\\$dirsToCheck has no type specified\\.$#"
-			count: 1
-			path: app/Http/Middleware/CheckDirectoryPermissions.php
-
-		-
-			message: "#^Variable \\$message might not be defined\\.$#"
-			count: 1
-			path: app/Http/Middleware/CheckDirectoryPermissions.php
 
 		-
 			message: "#^PHPDoc type array of property App\\\\Http\\\\Middleware\\\\CheckForMaintenanceMode\\:\\:\\$except is not the same as PHPDoc type array\\<int, string\\> of overridden property Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\PreventRequestsDuringMaintenance\\:\\:\\$except\\.$#"
@@ -13494,7 +13449,7 @@ parameters:
 				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
 				09/04/2023  Use config\\(\\) instead\\.$#
 			"""
-			count: 6
+			count: 4
 			path: app/cdash/include/common.php
 
 		-
@@ -16457,7 +16412,7 @@ parameters:
 				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
 				09/04/2023  Use config\\(\\) instead\\.$#
 			"""
-			count: 5
+			count: 4
 			path: app/cdash/tests/case/CDash/ConfigTest.php
 
 		-
@@ -16502,7 +16457,7 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
-			count: 11
+			count: 10
 			path: app/cdash/tests/case/CDash/ConfigTest.php
 
 		-
@@ -24067,8 +24022,8 @@ parameters:
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
-			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 1
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
+			count: 3
 			path: app/cdash/tests/test_manageprojectroles.php
 
 		-
@@ -24100,6 +24055,11 @@ parameters:
 			message: "#^Method ManageUsersTestCase\\:\\:testManageUsersTest\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_manageusers.php
+
+		-
+			message: "#^Class MisassignedConfigureTestCase has an uninitialized property \\$project\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/tests/test_misassignedconfigure.php
 
 		-
 			message: """
@@ -27686,17 +27646,12 @@ parameters:
 			path: app/cdash/xml_handlers/SubProjectDirectories_handler.php
 
 		-
-			message: "#^Access to an undefined property AbstractHandler\\:\\:\\$config\\.$#"
+			message: "#^Class AbstractHandler has an uninitialized property \\$Project\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/abstract_handler.php
 
 		-
 			message: "#^Class AbstractHandler has an uninitialized property \\$Site\\. Give it default value or assign it in the constructor\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Class stack referenced with incorrect case\\: Stack\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/abstract_handler.php
 
@@ -27931,17 +27886,7 @@ parameters:
 			path: app/cdash/xml_handlers/abstract_handler.php
 
 		-
-			message: "#^Property AbstractHandler\\:\\:\\$Project has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
 			message: "#^Property AbstractHandler\\:\\:\\$SubProjectName has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Property AbstractHandler\\:\\:\\$conifg has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/abstract_handler.php
 
@@ -29942,36 +29887,7 @@ parameters:
 			path: app/cdash/xml_handlers/update_handler.php
 
 		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 12
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 3
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
 			message: "#^Call to function base64_decode\\(\\) requires parameter \\#2 to be set\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
-			message: "#^Cannot access offset 'nightlytime' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 
@@ -30051,22 +29967,7 @@ parameters:
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
-			message: "#^Only booleans are allowed in a negated boolean, bool\\|int given\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
 			message: "#^Only booleans are allowed in a negated boolean, resource\\|false given\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, string\\|false given\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 
@@ -30106,22 +30007,17 @@ parameters:
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
-			message: "#^Parameter \\#2 \\$baseTimestamp of function strtotime expects int\\|null, \\(int\\|false\\) given\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
 			message: "#^Parameter \\#2 \\$data of function fwrite expects string, \\(array\\<int, string\\>\\|string\\) given\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
-			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, \\(int\\|false\\) given\\.$#"
+			message: "#^Parameter \\#2 \\$use_include_path of function file_get_contents expects bool, null given\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
-			message: "#^Parameter \\#2 \\$use_include_path of function file_get_contents expects bool, null given\\.$#"
+			message: "#^Parameter \\#3 \\$name of static method Illuminate\\\\Filesystem\\\\FilesystemAdapter\\:\\:putFileAs\\(\\) expects array\\|string\\|null, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 
@@ -30317,7 +30213,7 @@ parameters:
 
 		-
 			message: "#^Part \\$buildid \\(array\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
-			count: 5
+			count: 6
 			path: routes/web.php
 
 		-
