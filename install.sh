@@ -49,7 +49,6 @@ fi
 
 echo "Running migrations..."
 php artisan migrate --force
-php artisan version:set
 
 echo "Clearing caches..."
 php artisan route:cache

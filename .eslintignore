@@ -61,7 +61,6 @@ public/js/controllers/buildProperties.js
 public/js/cdash_angular.js
 public/js/cdashViewCoverage.js
 public/js/cdashUploadFilesSorter.js
-public/js/cdashUpgrade.js
 public/js/cdashSortable.js
 public/js/cdashSiteSorter.js
 public/js/cdashProjectRole.js

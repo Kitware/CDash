@@ -115,25 +115,6 @@ class UpgradeTestCase extends KWWebTestCase
         return;
     }
 
-    public function testUpgrade()
-    {
-        if (!$this->getMaintenancePage()) {
-            return 1;
-        }
-        set_time_limit(0);
-        $result = $this->clickSubmitByName('Upgrade');
-        if (!$result) {
-            $this->fail('clicking Upgrade returned false');
-        }
-        //fake the javascript calls...
-        $this->get($this->url . '/upgrade.php?upgrade-tables=1');
-        //some of these upgrades pollute the log file
-        //clear it out so that it doesn't cause subsequent tests to fail
-        $this->deleteLog($this->logfilename);
-
-        $this->pass('Passed');
-    }
-
     public function getMaintenancePage()
     {
         $this->login();
