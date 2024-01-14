@@ -19,7 +19,7 @@ endfunction()
 
 add_cypress_e2e_test(manage-overview)
 add_cypress_e2e_test(sub-project-dependencies)
-add_protractor_test(manageBuildGroup)
+add_cypress_e2e_test(manage-build-group)
 add_protractor_test(manageSubProject)
 add_protractor_test(viewBuildError)
 add_protractor_test(viewTest)
