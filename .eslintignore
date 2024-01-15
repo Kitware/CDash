@@ -80,5 +80,4 @@ app/cdash/tests/js/e2e_tests/subprojectGroupOrder.js
 app/cdash/tests/js/e2e_tests/sort_index.js
 app/cdash/tests/js/e2e_tests/remove_build.js
 app/cdash/tests/js/e2e_tests/multiSort.js
-app/cdash/tests/js/e2e_tests/manageSubProject.js
 app/cdash/tests/js/e2e_tests/done_build.js
