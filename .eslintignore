@@ -75,6 +75,5 @@ app/cdash/tests/js/pages/catchConsoleErrors.page.js
 app/cdash/tests/js/e2e_tests/viewTestPagination.js
 app/cdash/tests/js/e2e_tests/viewSubProjects.js
 app/cdash/tests/js/e2e_tests/subprojectGroupOrder.js
-app/cdash/tests/js/e2e_tests/remove_build.js
 app/cdash/tests/js/e2e_tests/multiSort.js
 app/cdash/tests/js/e2e_tests/done_build.js
