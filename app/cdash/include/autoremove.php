@@ -14,36 +14,29 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\Database;
 use Illuminate\Support\Facades\DB;
 
 /** Remove builds by their group-specific auto-remove timeframe setting */
 function removeBuildsGroupwise(int $projectid, int $maxbuilds, bool $force = false): void
 {
-
-
-
     if (!$force && !config('cdash.autoremove_builds')) {
         return;
     }
 
     @set_time_limit(0);
 
-    $db = Database::getInstance();
-    $buildgroups = $db->executePrepared('SELECT id, autoremovetimeframe FROM buildgroup WHERE projectid=?', [$projectid]);
-
     $buildids = [];
+    $buildgroups = DB::select('SELECT id, autoremovetimeframe FROM buildgroup WHERE projectid=?', [$projectid]);
     foreach ($buildgroups as $buildgroup) {
-        $days = $buildgroup['autoremovetimeframe'];
-
+        $days = (int) $buildgroup->autoremovetimeframe;
         if ($days < 2) {
             continue;
         }
-        $groupid = (int) $buildgroup['id'];
 
         $cutoff = time() - 3600 * 24 * $days;
-
         $cutoffdate = date(FMT_DATETIME, $cutoff);
+
+        $groupid = (int) $buildgroup->id;
 
         $builds = DB::select('
                       SELECT build.id AS id
@@ -69,11 +62,8 @@ function removeBuildsGroupwise(int $projectid, int $maxbuilds, bool $force = fal
 }
 
 /** Remove the first builds that are at the beginning of the queue */
-function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false, $echo = true)
+function removeFirstBuilds(int $projectid, int $days, int $maxbuilds, bool $force = false, bool $echo = true): void
 {
-
-
-
     @set_time_limit(0);
     $remove_builds = config('cdash.autoremove_builds');
 
@@ -90,22 +80,20 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false, $echo 
     $startdate = date(FMT_DATETIME, $currentdate);
 
     add_log('about to query for builds to remove', 'removeFirstBuilds');
-    $db = Database::getInstance();
-    $builds = $db->executePrepared('
-                       SELECT id
-                       FROM build
-                       WHERE
-                           parentid IN (0, -1)
-                           AND starttime<?
-                           AND projectid=?
-                       ORDER BY starttime ASC
-                       LIMIT 10
-                   ', [$startdate, intval($projectid)]);
-    add_last_sql_error('dailyupdates::removeFirstBuilds');
+    $builds = DB::select('
+                   SELECT id
+                   FROM build
+                   WHERE
+                       parentid IN (0, -1)
+                       AND starttime < ?
+                       AND projectid = ?
+                   ORDER BY starttime ASC
+                   LIMIT ?
+               ', [$startdate, intval($projectid), $maxbuilds]);
 
     $buildids = [];
-    foreach ($builds as $builds_array) {
-        $buildids[] = $builds_array['id'];
+    foreach ($builds as $build) {
+        $buildids[] = (int) $build->id;
     }
 
     $s = 'removing old buildids for projectid: ' . $projectid;
