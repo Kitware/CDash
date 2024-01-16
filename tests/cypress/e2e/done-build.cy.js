@@ -1,7 +1,19 @@
 describe('done_build', () => {
 
-  function validate_test(index_url, old_text, new_text) {
-    cy.get('a').contains(old_text).click();
+  function toggle_done(index_url, is_done_by_default) {
+    cy.login();
+    cy.visit(index_url);
+
+    // locate the folder icon and click it
+    cy.get('table').first().find('tbody').find('tr').first().find('td').eq(1).as('build_td');
+    cy.get('@build_td').find('img[name="adminoptions"]').click();
+
+    // find the 'mark as [not] done' link and click it
+    const done_text = 'mark as not done';
+    const not_done_text = 'mark as done';
+    const old_text = is_done_by_default ? done_text : not_done_text;
+    const new_text = is_done_by_default ? not_done_text : done_text;
+    cy.get('@build_td').contains('a', old_text).click();
 
     // refresh the page to make sure this build's "doneness" was changed
     cy.visit(index_url);
@@ -21,30 +33,11 @@ describe('done_build', () => {
     cy.get('@build_td').find('a').contains(new_text).should('not.exist');
   }
 
-  function toggle_done(index_url) {
-    cy.login();
-    cy.visit(index_url);
-
-    // locate the folder icon and click it
-    cy.get('table').first().find('tbody').find('tr').first().find('td').eq(1).as('build_td');
-    cy.get('@build_td').find('img[name="adminoptions"]').click();
-
-    // find the 'mark as [not] done' link and click it
-    cy.get('@build_td').find('div').last().then(link_wrapper => {
-      if (link_wrapper.find('a:contains("mark as done")').length > 0) {
-        validate_test(index_url, 'mark as done', 'mark as not done');
-      }
-      else {
-        validate_test(index_url, 'mark as not done', 'mark as done');
-      }
-    });
-  }
-
   it('toggles "done" status for normal build', () => {
-    toggle_done('index.php?project=InsightExample');
+    toggle_done('index.php?project=InsightExample', true);
   });
 
   it('toggles "done" status for parent build', () => {
-    toggle_done('index.php?project=Trilinos&date=2011-07-22');
+    toggle_done('index.php?project=Trilinos&date=2011-07-22', false);
   });
 });
