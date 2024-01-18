@@ -353,25 +353,26 @@ final class TestController extends AbstractProjectController
             $buildids[] = (int) $row->buildid;
         }
         $buildids = array_values(array_unique($buildids));
-
-        $prepared_array = Database::getInstance()->createPreparedArray(count($buildids));
-        $query = DB::select("
-            SELECT
-                b2u.buildid as buildid,
-                status,
-                revision,
-                priorrevision,
-                path
-            FROM
-                buildupdate,
-                build2update AS b2u
-            WHERE
-                b2u.updateid = buildupdate.id
-                AND b2u.buildid IN $prepared_array
-        ", $buildids);
         $status_by_buildid = [];
-        foreach ($query as $row) {
-            $status_by_buildid[(int) $row->buildid] = $row;
+        if ($buildids !== []) {
+            $prepared_array = Database::getInstance()->createPreparedArray(count($buildids));
+            $query = DB::select("
+                SELECT
+                    b2u.buildid as buildid,
+                    status,
+                    revision,
+                    priorrevision,
+                    path
+                FROM
+                    buildupdate,
+                    build2update AS b2u
+                WHERE
+                    b2u.updateid = buildupdate.id
+                    AND b2u.buildid IN $prepared_array
+            ", $buildids);
+            foreach ($query as $row) {
+                $status_by_buildid[(int) $row->buildid] = $row;
+            }
         }
 
         $builds_response = [];
