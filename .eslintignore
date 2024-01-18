@@ -72,14 +72,5 @@ public/js/cdashCoverageGraph.js
 public/js/bulletchart.js
 app/cdash/tests/js/pages/login.page.js
 app/cdash/tests/js/pages/catchConsoleErrors.page.js
-app/cdash/tests/js/e2e_tests/viewTestPagination.js
-app/cdash/tests/js/e2e_tests/viewTest.js
-app/cdash/tests/js/e2e_tests/viewSubProjects.js
-app/cdash/tests/js/e2e_tests/viewBuildError.js
 app/cdash/tests/js/e2e_tests/subprojectGroupOrder.js
-app/cdash/tests/js/e2e_tests/sort_index.js
-app/cdash/tests/js/e2e_tests/remove_build.js
 app/cdash/tests/js/e2e_tests/multiSort.js
-app/cdash/tests/js/e2e_tests/manageSubProject.js
-app/cdash/tests/js/e2e_tests/manageBuildGroup.js
-app/cdash/tests/js/e2e_tests/done_build.js

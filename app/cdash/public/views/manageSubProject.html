@@ -44,7 +44,7 @@
             </div>
 
             <!-- List the subprojects -->
-            <div ng-controller="SubProjectController" ng-repeat="subproject in cdash.subprojects | orderBy:'name' | filter_subproject_groups:cdash.filteredGroup" class="repeat-item">
+            <div ng-controller="SubProjectController" ng-repeat="subproject in cdash.subprojects | orderBy:'name' | filter_subproject_groups:cdash.filteredGroup" class="repeat-item" data-cy="subproject-item">
               <div class="row">
                 <div class="col-md-4">
                   <!-- The subproject's name & an icon to fetch more info -->
@@ -87,7 +87,7 @@
                 </div>
 
                 <div class="row repeat-item" ng-repeat="dep in details.dependencies | orderBy:'name'">
-                  <div class="col-md-5">
+                  <div class="col-md-5" data-cy="current-dependency">
                     <!-- Remove a dependency from a subproject -->
                     - {{dep.name}}
                     <span ng-click="removeDependency(dep.id, details.subprojectid)" class="glyphicon glyphicon-trash"></span>
@@ -151,7 +151,7 @@
 
             <div class="row" ng-if="cdash.groups.length > 0">
               <div class="col-md-9">
-                <table class="table table-striped">
+                <table class="table table-striped" data-cy="existing-subproject-groups">
                   <thead>
                     <tr>
                       <th>
