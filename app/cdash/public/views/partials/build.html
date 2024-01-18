@@ -55,7 +55,7 @@
 
     <a href="" style="float: left;"
        ng-if="::build.uploadfilecount > 0"
-       ng-href="viewFiles.php?buildid={{::build.id}}"
+       ng-href="build/{{::build.id}}/files"
        title="{{::build.uploadfilecount}} files uploaded with this build">
       <img src="img/package.png" alt="Files" class="icon"/>
     </a>

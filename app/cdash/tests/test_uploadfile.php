@@ -5,8 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
+use Illuminate\Support\Facades\Storage;
 
 class UploadFileTestCase extends KWWebTestCase
 {
@@ -47,14 +46,14 @@ class UploadFileTestCase extends KWWebTestCase
         }
         $this->BuildId = $query[0]['buildid'];
 
-        $content = $this->connect($this->url . "/viewFiles.php?buildid=$this->BuildId");
+        $content = $this->connect("{$this->url}/build/{$this->BuildId}/files");
         if (!$content) {
             return;
         }
 
         $this->assertClickable('http://www.kitware.com/company/about.html');
 
-        //Verify symlink and content exist on disk
+        //Verify content exists on disk
         $query = $this->db->query("SELECT id, sha1sum FROM uploadfile WHERE filename='CMakeCache.txt'");
         if (count($query) == 0) {
             $this->fail('CMakeCache.txt was not added to the uploadfile table');
@@ -62,25 +61,16 @@ class UploadFileTestCase extends KWWebTestCase
         }
         $this->FileId = $query[0]['id'];
         $this->Sha1Sum = $query[0]['sha1sum'];
-        $dirName = "{$this->config('CDASH_UPLOAD_DIRECTORY')}/{$this->Sha1Sum}";
 
-        if (!is_dir($dirName)) {
-            $this->fail("Directory $dirName was not created");
-            return;
-        }
-        $uploaded_filepath = "{$dirName}/{$this->Sha1Sum}";
+        $uploaded_filepath = Storage::path('upload') . "/{$this->Sha1Sum}";
         if (!file_exists($uploaded_filepath)) {
-            $this->fail("File contents were not written to $uploaded_filepath");
-            return;
-        }
-        if (!file_exists($dirName . '/CMakeCache.txt')) {
-            $this->fail("File symlink was not written to $dirName/CMakeCache.txt");
+            $this->fail("File was not written to $uploaded_filepath");
             return;
         }
 
         // Make sure we can download the file and its contents don't change
         // during the download.
-        $url = "{$this->url}/upload/{$this->Sha1Sum}/CMakeCache.txt";
+        $url = "{$this->url}/build/{$this->BuildId}/file/{$this->FileId}";
         $tmp_file = sys_get_temp_dir() . '/CMakeCache.txt';
 
         $client = $this->getGuzzleClient();

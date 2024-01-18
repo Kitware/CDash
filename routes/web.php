@@ -103,6 +103,14 @@ Route::get('/viewDynamicAnalysis.php', function (Request $request) {
     return redirect("/builds/{$buildid}/dynamic_analysis", 301);
 });
 
+Route::get('/build/{build_id}/files', 'BuildController@files')->whereNumber('build_id');
+Route::get('/viewFiles.php', function (Request $request) {
+    $buildid = $request->query('buildid');
+    return redirect("/build/{$buildid}/files", 301);
+});
+
+Route::get('/build/{build_id}/file/{file_id}', 'BuildController@build_file')->whereNumber('build_id')->whereNumber('file_id');
+
 Route::get('/projects/{id}/edit', 'EditProjectController@edit');
 Route::permanentRedirect('/project/{id}/edit', '/projects/{id}/edit');
 
@@ -143,7 +151,7 @@ Route::get('/manageOverview.php', 'ProjectOverviewController@manageOverview');
 Route::get('/ajax/showtestfailuregraph.php', 'TestController@ajaxTestFailureGraph');
 
 Route::match(['get', 'post'], '/projects', 'ViewProjectsController@viewAllProjects');
-Route::permanentRedirect('/viewProjects.php', '/projects');
+Route::permanentRedirect('/viewProjects.php', url('/projects'));
 
 Route::get('/viewTest.php', 'ViewTestController@viewTest');
 
@@ -188,8 +196,6 @@ Route::get('/viewSite.php', function (Request $request) {
 });
 
 Route::get('/viewMap.php', 'MapController@viewMap');
-
-Route::get('/viewFiles.php', 'BuildController@viewFiles');
 
 Route::get('/viewDynamicAnalysisFile.php', 'DynamicAnalysisController@viewDynamicAnalysisFile');
 

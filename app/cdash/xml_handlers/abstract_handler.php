@@ -19,7 +19,6 @@ require_once 'xml_handlers/CDashSubmissionHandlerInterface.php';
 require_once 'xml_handlers/sax_handler.php';
 require_once 'xml_handlers/stack.php';
 
-use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use App\Models\Site;
@@ -35,15 +34,13 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
     protected $SubProjectName;
 
     protected $ModelFactory;
-    protected $Project;
-    protected $conifg;
+    protected Project $Project;
 
     public function __construct($projectid)
     {
         $this->projectid = $projectid;
         $this->Append = false;
-        $this->stack = new Stack();
-        $this->config = Config::getInstance();
+        $this->stack = new stack();
     }
 
     protected function getParent()
@@ -137,10 +134,10 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
 
     public function GetProject()
     {
-        if (!$this->Project) {
-            $factory = $this->getModelFactory();
-            $this->Project = $factory->create(Project::class);
+        if (!isset($this->Project)) {
+            $this->Project = $this->getModelFactory()->create(Project::class);
             $this->Project->Id = $this->projectid;
+            $this->Project->Fill();
         }
         return $this->Project;
     }

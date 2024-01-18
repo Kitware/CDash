@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="Dart/Source/Server/XSL/Build.xsl <file:///Dart/Source/Server/XSL/Build.xsl> "?>
+<Site BuildName="testing_day_upload_file" BuildStamp="20231129-0400-Nightly" Name="hesperides" Generator="ctest-3.24.2">
+	<Upload>
+		<File filename="/tmp/tmp.txt">
+			<Content encoding="base64">VGhpcyBpcyBteSB1cGxvYWRlZCBmaWxlCg==</Content>
+		</File>
+	</Upload>
+</Site>

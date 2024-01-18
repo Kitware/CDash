@@ -39,8 +39,6 @@ $CDASH_CSS_FILE = 'css/cdash.css';
 $CDASH_LOG_DIRECTORY = $CDASH_ROOT_DIR . '/log';
 // Log file location. Set to false to log to the syslog.
 $CDASH_LOG_FILE = $CDASH_LOG_DIRECTORY . '/cdash.log';
-// Upload directory (absolute or relative)
-$CDASH_UPLOAD_DIRECTORY = $CDASH_ROOT_DIR . '/public/upload';
 // Request full email address to add new users
 // instead of displaying a list
 $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';

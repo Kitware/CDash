@@ -23,15 +23,13 @@ class ConfigTest extends CDashTestCase
     public function testConstruction()
     {
         // check some random values to ensure that they match that of the Config instance
-        global $CDASH_CSS_FILE,
-        $CDASH_UPLOAD_DIRECTORY;
+        global $CDASH_CSS_FILE;
 
         include 'config/config.php';
 
         $config = Config::getInstance();
 
         $this->assertEquals($CDASH_CSS_FILE, $config->get('CDASH_CSS_FILE'));
-        $this->assertEquals($CDASH_UPLOAD_DIRECTORY, $config->get('CDASH_UPLOAD_DIRECTORY'));
     }
 
     public function testGetSet()
