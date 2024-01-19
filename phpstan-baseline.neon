@@ -20675,36 +20675,6 @@ parameters:
 			path: app/cdash/tests/sameImage.php
 
 		-
-			message: "#^Call to an undefined method Example\\:\\:click\\(\\)\\.$#"
-			count: 10
-			path: app/cdash/tests/selenium/test_editsite.php
-
-		-
-			message: "#^Call to an undefined method Example\\:\\:open\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/selenium/test_editsite.php
-
-		-
-			message: "#^Call to an undefined method Example\\:\\:type\\(\\)\\.$#"
-			count: 4
-			path: app/cdash/tests/selenium/test_editsite.php
-
-		-
-			message: "#^Call to an undefined method Example\\:\\:waitForPageToLoad\\(\\)\\.$#"
-			count: 9
-			path: app/cdash/tests/selenium/test_editsite.php
-
-		-
-			message: "#^Method Example\\:\\:setUp\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/selenium/test_editsite.php
-
-		-
-			message: "#^Method Example\\:\\:testEditSite\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/selenium/test_editsite.php
-
-		-
 			message: "#^Call to an undefined method Example\\:\\:assertTrue\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/selenium/test_emailsubscription.php
