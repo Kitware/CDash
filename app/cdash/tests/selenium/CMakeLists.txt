@@ -24,8 +24,5 @@ endif()
 add_selenium_test(finduserproject)
 add_selenium_test(findusers)
 
-## Not used with the new GUI
-# add_selenium_test(buildnote)
-
 add_selenium_test(editsite)
 add_selenium_test(emailsubscription)

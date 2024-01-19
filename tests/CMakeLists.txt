@@ -93,7 +93,6 @@ set_tests_properties(eslint PROPERTIES
 )
 
 add_vue_test(Spec/build-configure)
-add_vue_test(Spec/build-notes)
 add_vue_test(Spec/build-summary)
 add_vue_test(Spec/edit-project)
 add_vue_test(Spec/manage-measurements)

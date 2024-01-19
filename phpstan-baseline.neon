@@ -20676,36 +20676,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Example\\:\\:click\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/selenium/test_buildnote.php
-
-		-
-			message: "#^Call to an undefined method Example\\:\\:mouseOver\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/selenium/test_buildnote.php
-
-		-
-			message: "#^Call to an undefined method Example\\:\\:open\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/selenium/test_buildnote.php
-
-		-
-			message: "#^Call to an undefined method Example\\:\\:waitForPageToLoad\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/selenium/test_buildnote.php
-
-		-
-			message: "#^Method Example\\:\\:setUp\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/selenium/test_buildnote.php
-
-		-
-			message: "#^Method Example\\:\\:testBuildNote\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/selenium/test_buildnote.php
-
-		-
-			message: "#^Call to an undefined method Example\\:\\:click\\(\\)\\.$#"
 			count: 10
 			path: app/cdash/tests/selenium/test_editsite.php
 
