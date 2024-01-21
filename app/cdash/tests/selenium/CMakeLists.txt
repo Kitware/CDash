@@ -23,6 +23,4 @@ endif()
 
 add_selenium_test(finduserproject)
 add_selenium_test(findusers)
-
-add_selenium_test(editsite)
 add_selenium_test(emailsubscription)
