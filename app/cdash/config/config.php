@@ -50,10 +50,3 @@ $CDASH_GIT_COMMAND = 'git';
 $CDASH_DEFAULT_GIT_DIRECTORY = 'git';
 // Define the p4 command
 $CDASH_P4_COMMAND = 'p4';
-
-// Location of the private key that allows this CDash installation to act
-// as a GitHub App.
-$CDASH_GITHUB_PRIVATE_KEY = dirname(__FILE__) . '/github.pem';
-
-// Optional secret used to secure webhooks.
-$CDASH_WEBHOOK_SECRET = null;

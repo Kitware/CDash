@@ -24,7 +24,6 @@ use Lcobucci\JWT\Encoding\ChainedFormatter;
 use Lcobucci\JWT\Signer\Key\LocalFileReference;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 
-use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
@@ -54,7 +53,6 @@ class GitHub implements RepositoryInterface
 
     private $apiClient;
     private $baseUrl;
-    private $config;
     private $db;
     private $foundConfigureErrors;
     private $foundBuildErrors;
@@ -73,8 +71,8 @@ class GitHub implements RepositoryInterface
     public function __construct(Project $project)
     {
         $this->project = $project;
-        $this->config = Config::getInstance();
-        $this->baseUrl = $this->config->getBaseUrl();
+        $this->baseUrl = config('app.url');
+
         $this->db = Database::getInstance();
 
         $this->getRepositoryInformation();
@@ -120,7 +118,7 @@ class GitHub implements RepositoryInterface
             return false;
         }
 
-        $pem = $this->config->get('CDASH_GITHUB_PRIVATE_KEY');
+        $pem = config('cdash.github_private_key');
         if (!file_exists($pem)) {
             if ($required) {
                 throw new \Exception('Could not find GitHub private key');

@@ -12,7 +12,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\Config;
 use CDash\ServiceContainer;
 use CDash\System;
 
@@ -35,8 +34,7 @@ class GitHubWebhookTest extends CDash\Test\CDashTestCase
 
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
-        $this->config = Config::getInstance();
-        $this->config->set('CDASH_WEBHOOK_SECRET', 'mock secret');
+        config(['cdash.github_webhook_secret' => 'mock secret']);
     }
 
     private function expectExit()

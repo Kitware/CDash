@@ -27,7 +27,8 @@ if (!function_exists('handle_error')) {
         json_error_response(['error' => $msg], 500);
     }
 }
-$hookSecret = \CDash\Config::getInstance()->get('CDASH_WEBHOOK_SECRET');
+
+$hookSecret = config('cdash.github_webhook_secret');
 if (!is_null($hookSecret)) {
     if (!isset($_SERVER['HTTP_X_HUB_SIGNATURE'])) {
         handle_error("HTTP header 'X-Hub-Signature' is missing.");

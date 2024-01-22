@@ -14,7 +14,6 @@
  * =========================================================================
  */
 
-use CDash\Config;
 use CDash\Lib\Repository\GitHub;
 use CDash\Model\Project;
 use Ramsey\Uuid\Uuid;
@@ -30,7 +29,7 @@ class GitHubTest extends TestCase
         $this->project = $this->getMockBuilder(Project::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->baseUrl = Config::getInstance()->getBaseUrl();
+        $this->baseUrl = config('app.url');
     }
 
     public function testSetStatus()
@@ -308,7 +307,7 @@ class GitHubTest extends TestCase
 
         $sut->setApiClient($client);
         $pem =  base_path() . "/app/cdash/tests/data/key_for_testing_only";
-        Config::getInstance()->set('CDASH_GITHUB_PRIVATE_KEY', $pem);
+        config(['cdash.github_private_key' => $pem]);
         config(['cdash.github_app_id' => 12345]);
 
         return $sut;

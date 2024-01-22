@@ -6239,14 +6239,6 @@ parameters:
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
-			message: """
-				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use url\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
 			message: "#^Call to function array_search\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
@@ -6449,11 +6441,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:\\$check has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Property CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:\\$config has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
@@ -15627,14 +15614,6 @@ parameters:
 			path: app/cdash/public/api/v1/GitHub/webhook.php
 
 		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
 			message: "#^Function handle_error\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/GitHub/webhook.php
@@ -16307,21 +16286,8 @@ parameters:
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: "#^Access to an undefined property GitHubWebhookTest\\:\\:\\$config\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Api/GitHubWebhookTest.php
-
-		-
 			message: "#^Access to an undefined property GitHubWebhookTest\\:\\:\\$mock_system\\.$#"
 			count: 2
-			path: app/cdash/tests/case/CDash/Api/GitHubWebhookTest.php
-
-		-
-			message: """
-				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
 			path: app/cdash/tests/case/CDash/Api/GitHubWebhookTest.php
 
 		-
@@ -16690,22 +16656,6 @@ parameters:
 			message: "#^Method DynamicAnalysisUseCaseTest\\:\\:testUseCaseBuildsDynamicAnalysisUseCase\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
-
-		-
-			message: """
-				#^Call to deprecated method getBaseUrl\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use url\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: """
-				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
 
 		-
 			message: """
