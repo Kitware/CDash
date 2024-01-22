@@ -186,6 +186,11 @@ return [
          */
         Laravel\Socialite\SocialiteServiceProvider::class,
         SocialiteProviders\Manager\ServiceProvider::class,
+
+        /**
+         * GraphQL Service Providers
+         */
+        \Nuwave\Lighthouse\LighthouseServiceProvider::class,
     ],
 
     /*

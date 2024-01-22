@@ -54,6 +54,7 @@ php artisan version:set
 echo "Clearing caches..."
 php artisan route:cache
 php artisan view:cache
+php artisan lighthouse:cache
 
 echo "Building the website..."
 npm run prod --stats-children

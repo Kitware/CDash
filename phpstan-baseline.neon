@@ -30341,37 +30341,7 @@ parameters:
 			path: tests/Feature/ProjectPermissions.php
 
 		-
-			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$admin_user has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
 			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$mock_system has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
-			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$normal_user has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
-			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$private_project1 has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
-			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$private_project2 has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
-			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$protected_project has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
-			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$public_project has no type specified\\.$#"
 			count: 1
 			path: tests/Feature/ProjectPermissions.php
 

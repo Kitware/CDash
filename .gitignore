@@ -43,3 +43,6 @@ yarn-error.log
 app/cdash/public/js/3rdparty.js
 public/laravel/
 public/mix-manifest.json
+_lighthouse_ide_helper.php
+programmatic-types.graphql
+schema-directives.graphql
