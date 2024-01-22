@@ -23,7 +23,6 @@ npm-debug.log
 .php_cs.cache
 .php-cs-fixer.cache
 .phpunit.result.cache
-/public/build/
 /public/hot
 public/main.js
 !/public/.htaccess
