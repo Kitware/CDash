@@ -94,7 +94,14 @@ class ProcessSubmission implements ShouldQueue
             // Requeue the file with exponential backoff.
             PendingSubmissions::IncrementForBuildId($this->buildid);
             $delay = pow(config('cdash.retry_base'), $retry_handler->Retries);
-            self::dispatch($this->filename, $this->projectid, $buildid, md5_file(Storage::path("inbox/{$this->filename}")))->delay(now()->addSeconds($delay));
+            if (config('queue.default') === 'sqs-fifo') {
+                // Special handling for sqs-fifo, which does not support per-message delays.
+                sleep(10);
+                self::dispatch($this->filename, $this->projectid, $buildid, md5_file(Storage::path("inbox/{$this->filename}")));
+            } else {
+                self::dispatch($this->filename, $this->projectid, $buildid, md5_file(Storage::path("inbox/{$this->filename}")))->delay(now()->addSeconds($delay));
+            }
+
             return true;
         }
     }
