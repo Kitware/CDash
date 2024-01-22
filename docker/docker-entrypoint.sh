@@ -6,7 +6,11 @@ php artisan key:check || exit 1
 
 # If the "start-website" argument was provided, start the web server
 if [ "$1" = "start-website" ] ; then
-  bash /cdash/install.sh
+  if [ "$DEVELOPMENT_BUILD" = "1" ]; then
+    bash /cdash/install.sh --dev
+  else
+    bash /cdash/install.sh
+  fi
 
   echo "Starting Apache..."
 
