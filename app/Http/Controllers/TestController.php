@@ -6,6 +6,7 @@ use App\Utils\PageTimer;
 use CDash\Controller\Api\TestOverview as LegacyTestOverviewController;
 use CDash\Controller\Api\TestDetails as LegacyTestDetailsController;
 use CDash\Controller\Api\TestGraph as LegacyTestGraphController;
+use CDash\Controller\Api\QueryTests as LegacyQueryTestsController;
 use App\Utils\RepositoryUtils;
 use CDash\Database;
 use CDash\Model\Build;
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+
+require_once 'include/api_common.php';
 
 final class TestController extends AbstractProjectController
 {
@@ -122,6 +125,18 @@ final class TestController extends AbstractProjectController
     public function queryTests(): Response
     {
         return response()->angular_view('queryTests');
+    }
+
+    public function apiQueryTests(): JsonResponse
+    {
+        if (!request()->has('project')) {
+            return response()->json(['error' => 'Valid project required']);
+        }
+
+        $this->setProjectByName(request()->input('project'));
+
+        $controller = new LegacyQueryTestsController(Database::getInstance(), $this->project);
+        return response()->json(cast_data_for_JSON($controller->getResponse()));
     }
 
     public function testOverview(): Response
