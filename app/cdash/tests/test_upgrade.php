@@ -78,18 +78,6 @@ class UpgradeTestCase extends KWWebTestCase
        }
      */
 
-    public function testCompressTestOutput()
-    {
-        if (!$this->getMaintenancePage()) {
-            return 1;
-        }
-        set_time_limit(0);
-        if (!$this->clickSubmitByName('CompressTestOutput')) {
-            $this->fail('clicking CompressTestOutput returned false');
-        }
-        $this->pass('Passed');
-    }
-
     public function testCleanup()
     {
         if (!$this->getMaintenancePage()) {

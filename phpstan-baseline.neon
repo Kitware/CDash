@@ -251,7 +251,7 @@ parameters:
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 4
+			count: 3
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -259,7 +259,7 @@ parameters:
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 10
+			count: 8
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -275,15 +275,7 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 15
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
+			count: 12
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -331,7 +323,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 0 on array\\|false\\|null\\.$#"
-			count: 2
+			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -26110,7 +26102,7 @@ parameters:
 
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 3
+			count: 2
 			path: app/cdash/tests/test_upgrade.php
 
 		-
@@ -26135,11 +26127,6 @@ parameters:
 
 		-
 			message: "#^Method UpgradeTestCase\\:\\:testCleanup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Method UpgradeTestCase\\:\\:testCompressTestOutput\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_upgrade.php
 
