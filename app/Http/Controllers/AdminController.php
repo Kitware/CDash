@@ -129,11 +129,6 @@ final class AdminController extends AbstractController
         $xml .= '<menutitle>CDash</menutitle>';
         $xml .= '<menusubtitle>Maintenance</menusubtitle>';
 
-        // Should be the database version not the current on
-        $version = pdo_query('SELECT major,minor FROM version');
-        $version_array = pdo_fetch_array($version);
-        $xml .= '<minversion>' . $version_array['major'] . '.' . $version_array['minor'] . '</minversion>';
-
         @$AssignBuildToDefaultGroups = $_POST['AssignBuildToDefaultGroups'];
         @$FixBuildBasedOnRule = $_POST['FixBuildBasedOnRule'];
         @$DeleteBuildsWrongDate = $_POST['DeleteBuildsWrongDate'];
@@ -141,40 +136,12 @@ final class AdminController extends AbstractController
         @$ComputeTestTiming = $_POST['ComputeTestTiming'];
         @$ComputeUpdateStatistics = $_POST['ComputeUpdateStatistics'];
 
-        @$Upgrade = $_POST['Upgrade'];
         @$Cleanup = $_POST['Cleanup'];
         @$Dependencies = $_POST['Dependencies'];
         @$Audit = $_POST['Audit'];
         @$ClearAudit = $_POST['Clear'];
 
         $configFile = $config->get('CDASH_ROOT_DIR') . "/AuditReport.log";
-
-        // When adding new tables they should be added to the SQL installation file
-        // and here as well
-        if ($Upgrade) {
-            // check if the backup directory is writable
-            if (!is_writable(Storage::path('inbox'))) {
-                $xml .= '<backupwritable>0</backupwritable>';
-            } else {
-                $xml .= '<backupwritable>1</backupwritable>';
-            }
-
-            // check if the log directory is writable
-            if ($config->get('CDASH_LOG_FILE') !== false && !is_writable($config->get('CDASH_LOG_DIRECTORY'))) {
-                $xml .= '<logwritable>0</logwritable>';
-            } else {
-                $xml .= '<logwritable>1</logwritable>';
-            }
-
-            // check if the upload directory is writable
-            if (!is_writable(Storage::path('upload'))) {
-                $xml .= '<uploadwritable>0</uploadwritable>';
-            } else {
-                $xml .= '<uploadwritable>1</uploadwritable>';
-            }
-
-            $xml .= '<upgrade>1</upgrade>';
-        }
 
         // Compress the test output
         if (isset($_POST['CompressTestOutput'])) {
@@ -366,23 +333,6 @@ final class AdminController extends AbstractController
             ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/upgrade', true));
     }
 
-    /**
-     * Set the CDash version number in the database
-     */
-    public static function setVersion(): string
-    {
-        $version = explode('.', config('cdash.version'));
-
-        $stmt = DB::select('SELECT major FROM version');
-        if (count($stmt) === 0) {
-            DB::insert('INSERT INTO version (major, minor, patch) VALUES (?, ?, ?)', $version);
-        } else {
-            DB::update('UPDATE version SET major=?, minor=?, patch=?', $version);
-        }
-
-        return config('cdash.version');
-    }
-
     public function install(): View
     {
         @set_time_limit(0);
@@ -560,7 +510,7 @@ final class AdminController extends AbstractController
                             $query = '';
                             foreach ($file_content as $sql_line) {
                                 $tsl = trim($sql_line);
-                                if (($sql_line != '') && (substr($tsl, 0, 2) != '--')) {
+                                if ($sql_line !== '' && !str_starts_with($tsl, '--')) {
                                     $query .= $sql_line;
                                     $possemicolon = strrpos($query, ';');
                                     if ($possemicolon !== false && substr_count($query, '\'', 0, $possemicolon) % 2 == 0) {
@@ -572,7 +522,7 @@ final class AdminController extends AbstractController
                                         $result = pdo_query($query);
                                         if (!$result) {
                                             $xml .= '<db_created>0</db_created>';
-                                            die(pdo_error());
+                                            abort(500, pdo_error());
                                         }
                                         $query = '';
                                     }
@@ -582,7 +532,7 @@ final class AdminController extends AbstractController
                             // Check the version of PostgreSQL
                             $result_version = pdo_query('SELECT version()');
                             $version_array = pdo_fetch_array($result_version);
-                            if (strpos(strtolower($version_array[0]), 'postgresql 9.') !== false) {
+                            if (str_contains(strtolower($version_array[0]), 'postgresql 9.')) {
                                 // For PgSQL 9.0 we need to set the bytea_output to 'escape' (it was changed to hexa)
                                 @pdo_query("ALTER DATABASE {$db_name} SET bytea_output TO 'escape'");
                             }
@@ -596,9 +546,6 @@ final class AdminController extends AbstractController
                         $user->Admin = 1;
                         $user->Save();
                         $xml .= '<db_created>1</db_created>';
-
-                        // Set the database version
-                        $this::setVersion();
                     }
                 }
             }

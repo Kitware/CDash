@@ -259,7 +259,7 @@ parameters:
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 11
+			count: 10
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -275,7 +275,7 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 16
+			count: 15
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -291,7 +291,7 @@ parameters:
 				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
 				09/04/2023  Use config\\(\\) instead\\.$#
 			"""
-			count: 6
+			count: 4
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -301,16 +301,6 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Cannot access offset 'major' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Cannot access offset 'minor' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
@@ -356,7 +346,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 3
+			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -386,7 +376,7 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 11
+			count: 10
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -26179,7 +26169,7 @@ parameters:
 
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 4
+			count: 3
 			path: app/cdash/tests/test_upgrade.php
 
 		-
@@ -26224,11 +26214,6 @@ parameters:
 
 		-
 			message: "#^Method UpgradeTestCase\\:\\:testGetVendorVersion\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Method UpgradeTestCase\\:\\:testUpgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_upgrade.php
 

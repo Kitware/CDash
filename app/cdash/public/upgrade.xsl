@@ -5,30 +5,9 @@
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
     <xsl:template match="/">
 
-<xsl:if test="cdash/upgrade=1">
- <xsl:if test="cdash/backupwritable=0">
-   <font color="#FF0000">Your backup directory is not writable, make sure that the web process can write into the directory.</font><br/>
- </xsl:if>
- <xsl:if test="cdash/logwritable=0">
-   <font color="#FF0000">Your log directory is not writable, make sure that the web process can write into the directory.</font><br/>
- </xsl:if>
- <xsl:if test="cdash/uploadwritable=0">
-   <font color="#FF0000">Your upload directory is not writable, make sure that the web process can write into the directory.</font><br/>
- </xsl:if>
- <xsl:if test="cdash/backupwritable=1">
-   <script type="text/javascript">
-     var version='<xsl:value-of select="cdash/minversion"/>';
-   </script>
-   <script src="js/cdashUpgrade.js" type="text/javascript" charset="utf-8"></script>
- </xsl:if>
-</xsl:if>
-
 <xsl:if test="string-length(cdash/alert)>0">
 <b><xsl:value-of select="cdash/alert"/></b>
 </xsl:if>
-<br/><br/>
-<b>Current CDash database schema: </b> <xsl:value-of select="cdash/minversion"/>
-<br/>
 <form name="form1" enctype="multipart/form-data" method="post" action="">
 <table border="0">
   <tr>
@@ -66,10 +45,6 @@
         <input type="submit" name="Dependencies" value="Upgrade dependencies"/>
     </td>
   </tr>
-  <tr>
-    <td><div align="right">Upgrade CDash: (this might take some time)</div></td>
-    <td><div align="left"><input type="submit" name="Upgrade" value="Upgrade CDash"/></div></td>
-  </tr>
 </table>
 </form><br/>
 
@@ -80,23 +55,6 @@
 <b>*****************</b>
 </xsl:if>
 <br/><br/>
-
-<div id="Upgrade-Tables-Status"></div>
-<div id="Upgrade-0-8-Status"></div>
-<div id="Upgrade-1-0-Status"></div>
-<div id="Upgrade-1-2-Status"></div>
-<div id="Upgrade-1-4-Status"></div>
-<div id="Upgrade-1-6-Status"></div>
-<div id="Upgrade-1-8-Status"></div>
-<div id="Upgrade-2-0-Status"></div>
-<div id="Upgrade-2-2-Status"></div>
-<div id="Upgrade-2-4-Status"></div>
-<div id="Upgrade-2-6-Status"></div>
-<div id="Upgrade-2-8-Status"></div>
-<div id="Upgrade-3-0-Status"></div>
-<br/>
-<div id="DoneStatus"></div>
-<br/>
 
     </xsl:template>
 </xsl:stylesheet>
