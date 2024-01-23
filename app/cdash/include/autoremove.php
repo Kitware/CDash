@@ -85,16 +85,12 @@ function removeFirstBuilds(int $projectid, int $days, int $maxbuilds, bool $forc
 
     Log::info('about to query for builds to remove');
 
-    $builds = Build::whereIn('parentid', [0, -1])
+    $buildids = Build::whereIn('parentid', [0, -1])
         ->where('starttime', '<', $startdate)
         ->where('projectid', '=', $projectid)
         ->orderBy('starttime')
         ->limit($maxbuilds)
-        ->get();
-    $buildids = [];
-    foreach ($builds as $build) {
-        $buildids[] = (int) $build->id;
-    }
+        ->pluck('id')->toArray();
 
     $s = 'removing old buildids for projectid: ' . $projectid;
     Log::info($s);
