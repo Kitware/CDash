@@ -8,7 +8,7 @@ CDash.controller('UserController', ["$scope", "$http", "$timeout", "apiLoader", 
       projectid: $scope.cdash.tokenscope === 'full_access'
                  || $scope.cdash.tokenscope === 'submit_only' ? -1 : $scope.cdash.tokenscope
     };
-    $http.post('/api/authtokens/create', parameters)
+    $http.post('api/authtokens/create', parameters)
       .then(function success(s) {
         const authtoken = s.data.token;
         authtoken.copied = false;
@@ -39,7 +39,7 @@ CDash.controller('UserController', ["$scope", "$http", "$timeout", "apiLoader", 
 
   $scope.revokeToken = function(authtoken) {
     $http({
-      url: `/api/authtokens/delete/${authtoken.hash}`,
+      url: `api/authtokens/delete/${authtoken.hash}`,
       method: 'DELETE',
     }).then(function success() {
       // Remove this token from our list.
