@@ -91,7 +91,7 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false, $echo 
 
     add_log('about to query for builds to remove', 'removeFirstBuilds');
     $db = Database::getInstance();
-    $builds = $db->executePrepared('
+    $builds = $db->executePrepared("
                        SELECT id
                        FROM build
                        WHERE
@@ -99,8 +99,8 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false, $echo 
                            AND starttime<?
                            AND projectid=?
                        ORDER BY starttime ASC
-                       LIMIT 10
-                   ', [$startdate, intval($projectid)]);
+                       LIMIT $maxbuilds
+                   ", [$startdate, intval($projectid)]);
     add_last_sql_error('dailyupdates::removeFirstBuilds');
 
     $buildids = array();
