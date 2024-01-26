@@ -9,9 +9,6 @@ configure_file(
 # set some cache variables that can be used
 # to configure the testing install
 set(CDASH_SERVER localhost CACHE STRING "CDash testing server")
-set(CDASH_SELENIUM_HUB "localhost" CACHE STRING "Location of selenium server")
-option(CDASH_USE_SELENIUM "Should CDash use Selenium to test ajax functionality?" OFF)
-option(CDASH_USE_PROTRACTOR "Should CDash use Protractor to test angular functionality?" ON)
 
 get_filename_component(CDASH_DIR_NAME_DEFAULT ${CDash_SOURCE_DIR} NAME)
 set(CDASH_DIR_NAME "${CDASH_DIR_NAME_DEFAULT}" CACHE STRING "URL suffix. Ie 'http://<CDASH_SERVER>/<CDASH_DIR_NAME>'")
@@ -55,14 +52,6 @@ endif()
 find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php REQUIRED)
 find_program(NPX_EXE NAMES npx PATHS c:/usr/bin/npx /usr/bin/npx REQUIRED)
 
-if(CDASH_USE_SELENIUM)
-  find_program(PHPUNIT_EXE NAMES phpunit PATHS c:/xampp/php /xampp/php vendor/bin)
-endif()
-if(CDASH_USE_PROTRACTOR)
-  find_program(PROTRACTOR_EXE NAMES protractor
-    PATHS ${CDash_SOURCE_DIR}/node_modules/protractor/bin
-  )
-endif()
 set(PHPUNIT "${CDash_SOURCE_DIR}/vendor/bin/phpunit")
 
 set_property(GLOBAL PROPERTY INSTALL_CDASH_COUNT "0")

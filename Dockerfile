@@ -109,7 +109,6 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
  && cmake                                                                  \
   -DCDASH_DIR_NAME=                                                        \
   -DCDASH_SERVER=localhost:8080                                            \
-  -DCDASH_SELENIUM_HUB=selenium-hub                                        \
   -DCTEST_UPDATE_VERSION_ONLY=1 ..                                         \
  && export CYPRESS_CACHE_FOLDER=/cdash/cypress_cache                       \
  && npm install                                                            \

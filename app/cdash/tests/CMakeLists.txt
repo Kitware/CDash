@@ -232,16 +232,6 @@ add_php_test(misassignedconfigure)
 
 add_subdirectory(ctest)
 
-add_subdirectory(js/e2e_tests)
-
-# TODO: (sbelsk) We never enable this option. We should reimplement
-#  the useful tests in cypress, clean up the rest, and remove the
-#  references to CDASH_USE_SELENIUM and the `selenium/` directory
-if(CDASH_USE_SELENIUM)
-  file(MAKE_DIRECTORY ${CDash_BINARY_DIR}/cmake.git)
-  add_subdirectory(selenium)
-endif()
-
 # Slow tests that need more time in CI.
 set_tests_properties(
   actualtrilinossubmission

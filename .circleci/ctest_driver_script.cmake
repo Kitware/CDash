@@ -13,7 +13,6 @@ ctest_empty_binary_directory("${CTEST_BINARY_DIRECTORY}")
 set(cfg_options
   "-DCDASH_DIR_NAME="
   "-DCDASH_SERVER=cdash:8080"
-  "-DCDASH_SELENIUM_HUB=selenium-hub"
 )
 
 # Backup .env file
