@@ -42,6 +42,7 @@
         <td
           v-for="column in columns"
           :class="{ shrink: !column.expand }"
+          class="table-cell"
           data-cy="data-table-cell"
         >
           <!--
@@ -239,6 +240,10 @@ export default {
 
 .full-width {
   width: 100%;
+}
+
+.table-cell {
+  overflow-wrap: anywhere;
 }
 
 </style>
