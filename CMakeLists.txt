@@ -63,6 +63,7 @@ if(CDASH_USE_PROTRACTOR)
     PATHS ${CDash_SOURCE_DIR}/node_modules/protractor/bin
   )
 endif()
+set(PHPUNIT "${CDash_SOURCE_DIR}/vendor/bin/phpunit")
 
 set_property(GLOBAL PROPERTY INSTALL_CDASH_COUNT "0")
 function(cdash_install)
@@ -85,5 +86,7 @@ add_subdirectory(tests)
 # add the old tests directory
 add_subdirectory(app/cdash/tests)
 
-# temporary workaround to make the cypress e2e tests run last
+# temporary workaround to make these tests run last
 add_subdirectory(tests/cypress/e2e)
+add_subdirectory(app/cdash/tests/autoremovebuilds)
+
