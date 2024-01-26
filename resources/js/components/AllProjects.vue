@@ -26,18 +26,18 @@
       :rows="tableRows"
       class="projects-table"
     >
-      <template #activity="activity" >
+      <template #activity="{ props }" >
         <a
           class="builddateelapsed"
-          :href="activity.props.link + '&date=' + activity.props.lastbuilddate"
+          :href="props.activity.link + '&date=' + props.activity.lastbuilddate"
         >
-          {{ activity.props.lastbuild_elapsed }}
+          {{ props.activity.lastbuild_elapsed }}
         </a>
         <img
           alt="Activity level"
           style="margin-left: 0.5em;"
           :src="$baseURL + '/img/cleardot.gif'"
-          :class="'activity-level-' + activity.props.activity"
+          :class="'activity-level-' + props.activity.activity"
         >
       </template>
     </DataTable>
@@ -121,7 +121,10 @@ export default {
             href: project.link
           },
           description: project.description,
-          activity: project,
+          activity: {
+            value: project.lastbuild_elapsed,
+            activity: project,
+          },
         };
       });
     }
