@@ -25,12 +25,13 @@ import AllProjects from './components/AllProjects.vue';
 import SubProjectDependencies from './components/SubProjectDependencies.vue';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
+import * as FA from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 
-library.add(fas, far, fab);
+FA.library.add(fas, far, fab);
+FA.config.styleDefault = 'solid';
 
 const cdash_components = {
   FontAwesomeIcon,
