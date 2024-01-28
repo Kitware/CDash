@@ -119,7 +119,7 @@ export default {
   methods: {
     revokeToken(token) {
       this.$axios
-        .delete('/api/authtokens/delete/' + token.hash)
+        .delete(this.$baseURL + '/api/authtokens/delete/' + token.hash)
         .then(() => {
           this.$delete(this.cdash.tokens, token.hash);
         })
