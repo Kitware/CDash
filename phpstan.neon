@@ -14,7 +14,6 @@ parameters:
         analyse:
             # Don't analyze these files because they cause PHPStan to crash
             - app/cdash/tests/kwtest/simpletest
-            - app/cdash/tests/selenium/cdash_selenium_test_case.php
 
     exceptions:
         uncheckedExceptionRegexes:

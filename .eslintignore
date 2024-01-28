@@ -69,6 +69,3 @@ public/js/cdashManageCoverageSorter.js
 public/js/cdashFilters.js
 public/js/cdashCoverageGraph.js
 public/js/bulletchart.js
-app/cdash/tests/js/pages/login.page.js
-app/cdash/tests/js/pages/catchConsoleErrors.page.js
-app/cdash/tests/js/e2e_tests/multiSort.js
