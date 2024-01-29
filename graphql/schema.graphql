@@ -72,6 +72,9 @@ type Project {
   homeurl: String!
 
   builds: [Build!]! @hasMany @orderBy(column: "id")
+
+  "The sites which have submitted a build to this project."
+  sites: [Site!]! @belongsToMany @orderBy(column: "id")
 }
 
 
@@ -89,5 +92,24 @@ type Build {
   "End time."
   endtime: DateTime!
 
+  "The site associated with this build."
+  site: Site! @belongsTo
+
   # TODO: Figure out project relation.  project{build{project}} currently throws an error.
+}
+
+
+"Site."
+type Site {
+  "Unique primary key."
+  id: ID!
+
+  name: String!
+
+  "IP address."
+  ip: String!
+
+  latitude: Float!
+
+  longitude: Float!
 }

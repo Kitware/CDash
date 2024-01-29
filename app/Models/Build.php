@@ -159,4 +159,12 @@ class Build extends Model
     {
         return $this->hasOneThrough(Configure::class, BuildConfigure::class, 'buildid', 'id', 'id', 'configureid');
     }
+
+    /**
+     * @return BelongsTo<Site, self>
+     */
+    public function site(): BelongsTo
+    {
+        return $this->belongsTo(Site::class, 'siteid', 'id');
+    }
 }
