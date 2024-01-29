@@ -23,6 +23,7 @@ class EventServiceProvider extends ServiceProvider
             \SocialiteProviders\GitLab\GitLabExtendSocialite::class.'@handle',
             \SocialiteProviders\GitHub\GitHubExtendSocialite::class.'@handle',
             \SocialiteProviders\Google\GoogleExtendSocialite::class.'@handle',
+            \SocialiteProviders\PingIdentity\PingIdentityExtendSocialite::class.'@handle',
         ],
     ];
 
