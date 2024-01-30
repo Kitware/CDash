@@ -13359,7 +13359,7 @@ parameters:
 				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
 				09/04/2023  Use config\\(\\) instead\\.$#
 			"""
-			count: 4
+			count: 3
 			path: app/cdash/include/common.php
 
 		-

@@ -56,7 +56,7 @@ class AppServiceProvider extends ServiceProvider
             }
 
             return response()->view('cdash', [
-                'xsl_content' => file_get_contents(base_path("app/cdash/public/build/views/$view_name.html")),
+                'xsl_content' => file_get_contents(base_path("public/build/views/$view_name.html")),
                 'xsl' => true,
                 'angular' => true,
                 'angular_controller' => $controller_name,

@@ -1200,7 +1200,7 @@ function get_css_file(): string
     $colorblind = 'css/colorblind.css';
 
     // Return cache-busting filenames if available.
-    $css_files = glob(Config::getInstance()->get('CDASH_ROOT_DIR') . '/public/build/css/*.css');
+    $css_files = glob(base_path('public/build/css/*.css'));
     foreach ($css_files as $css_file) {
         $css_file = basename($css_file);
         if (strpos($css_file, 'cdash_') !== false) {
