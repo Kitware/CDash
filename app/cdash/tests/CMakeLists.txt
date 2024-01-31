@@ -95,6 +95,7 @@ add_unit_test(/CDash/XmlHandler/TestingHandler)
 add_unit_test(/CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/ProjectTest)
+add_laravel_test(/Feature/GraphQL/SiteTest)
 
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
 add_laravel_test(/Feature/TestSchemaMigration)

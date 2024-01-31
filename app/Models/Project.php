@@ -231,4 +231,15 @@ class Project extends Model
     {
         return $this->hasMany(Test::class, 'projectid', 'id');
     }
+
+    /**
+     * Queries the sites which have submitted builds to this project.  A convenience method to
+     * get sites from all builds in aggregate form.
+     *
+     * @return BelongsToMany<Site>
+     */
+    public function sites(): BelongsToMany
+    {
+        return $this->belongsToMany(Site::class, Build::class, 'projectid', 'siteid')->distinct();
+    }
 }

@@ -3007,6 +3007,11 @@ parameters:
 			path: app/Models/BuildTest.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Site\\>\\:\\:distinct\\(\\)\\.$#"
+			count: 1
+			path: app/Models/Project.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:orWhere\\(\\)\\.$#"
 			count: 1
 			path: app/Models/Project.php
