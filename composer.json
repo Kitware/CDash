@@ -24,7 +24,7 @@
     "ext-zlib": "*",
     "24slides/laravel-saml2": "2.3.0",
     "adldap2/adldap2-laravel": "6.1.7",
-    "aws/aws-sdk-php": "3.295.4",
+    "aws/aws-sdk-php": "3.298.0",
     "doctrine/dbal": "3.7.2",
     "guzzlehttp/guzzle": "7.8.1",
     "http-interop/http-factory-guzzle": "1.2.0",
