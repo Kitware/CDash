@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "df673ae2aca304cae217825990508a6f",
+    "content-hash": "315d3a6e7e86f82d3798671187ac2326",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -10002,16 +10002,16 @@
         },
         {
             "name": "phpstan/phpstan-mockery",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-mockery.git",
-                "reference": "6aa86bd8e9c9a1be97baf0558d4a2ed1374736a6"
+                "reference": "88ae85931768efd3aaf3cce4cb9cb54c4d157d03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-mockery/zipball/6aa86bd8e9c9a1be97baf0558d4a2ed1374736a6",
-                "reference": "6aa86bd8e9c9a1be97baf0558d4a2ed1374736a6",
+                "url": "https://api.github.com/repos/phpstan/phpstan-mockery/zipball/88ae85931768efd3aaf3cce4cb9cb54c4d157d03",
+                "reference": "88ae85931768efd3aaf3cce4cb9cb54c4d157d03",
                 "shasum": ""
             },
             "require": {
@@ -10046,9 +10046,9 @@
             "description": "PHPStan Mockery extension",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-mockery/issues",
-                "source": "https://github.com/phpstan/phpstan-mockery/tree/1.1.1"
+                "source": "https://github.com/phpstan/phpstan-mockery/tree/1.1.2"
             },
-            "time": "2023-02-18T13:54:03+00:00"
+            "time": "2024-01-10T13:50:05+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
