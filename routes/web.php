@@ -27,9 +27,9 @@ Auth::routes($routeList);
 Route::match(['get', 'post'], '/install', 'AdminController@install');
 Route::permanentRedirect('/install.php', '/install');
 
-Route::get('/oauth/{service}', 'OAuthController@authenticate');
-Route::get('/oauth/callback/{service}', 'OAuthController@login')
-    ->name('oauth.callback');
+Route::get('/oauth/{service}', 'OAuthController@socialite');
+Route::get('/oauth/callback/{service}', 'OAuthController@callback');
+
 Route::post('/saml2/login', 'Auth\LoginController@saml2Login');
 
 Route::get('/auth/{service}/redirect', 'OAuthController@socialite');
