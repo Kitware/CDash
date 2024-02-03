@@ -49,7 +49,7 @@
     "ext-dom": "*",
     "ext-gd": "*",
     "ext-xdebug": "*",
-    "fakerphp/faker": "1.23.0",
+    "fakerphp/faker": "1.23.1",
     "friendsofphp/php-cs-fixer": "3.49.0",
     "larastan/larastan": "^2.7",
     "mockery/mockery": "1.6.7",
