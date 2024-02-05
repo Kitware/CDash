@@ -399,6 +399,9 @@ final class ManageProjectRolesController extends AbstractProjectController
         if ($config->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER') == 1) {
             $xml .= add_XML_value('fullemail', '1');
         }
+        if ((config('auth.project_admin_registration_form_enabled') == 1) || $current_user->admin ) {
+            $xml .= add_XML_value('canRegister', '1');
+        }
         $xml .= '</cdash>';
 
         return view('cdash', [
