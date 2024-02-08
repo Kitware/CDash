@@ -37,7 +37,7 @@ function(add_cypress_e2e_test TestName)
   set_tests_properties(
     cypress/e2e/${TestName}
     PROPERTIES
-    ENVIRONMENT "HOME=/cdash;"
+    ENVIRONMENT "HOME=${CDash_BINARY_DIR};"
   )
 endfunction()
 
@@ -56,7 +56,7 @@ function(add_cypress_component_test TestName)
   set_tests_properties(
     cypress/component/${TestName}
     PROPERTIES
-    ENVIRONMENT "HOME=/cdash;"
+    ENVIRONMENT "HOME=${CDash_BINARY_DIR};"
   )
 endfunction()
 
