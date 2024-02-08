@@ -69,8 +69,6 @@ class Timeline extends Index
         switch ($page) {
             case 'buildProperties.php':
                 return $this->chartForBuildProperties();
-            case 'index.php':
-                return $this->chartForIndex();
             case 'testOverview.php':
                 return $this->chartForTestOverview();
             case 'viewBuildGroup.php':
@@ -138,42 +136,6 @@ class Timeline extends Index
         }
 
         return $this->getTimelineChartData($stmt);
-    }
-
-    private function chartForIndex()
-    {
-        $this->defectTypes = [
-            [
-                'name' => 'builderrors',
-                'prettyname' => 'Errors',
-            ],
-            [
-                'name' => 'testfailed',
-                'prettyname' => 'Test Failures',
-            ]
-        ];
-
-        // Query for defects on expected builds only.
-        $stmt = $this->db->prepare("
-                SELECT b.id, b.starttime, b.builderrors, b.buildwarnings, b.testfailed
-                FROM build b
-                JOIN build2group b2g ON b2g.buildid = b.id
-                JOIN build2grouprule b2gr ON
-                b2g.groupid = b2gr.groupid AND b2gr.buildtype = b.type AND
-                b2gr.buildname = b.name AND b2gr.siteid = b.siteid
-                WHERE b.projectid = :projectid AND b.parentid IN (0, -1)
-                AND b2gr.expected = 1
-                ORDER BY starttime");
-        if (!pdo_execute($stmt, [':projectid' => $this->project->Id])) {
-            abort(500, 'Failed to load results');
-        }
-        $response = $this->getTimelineChartData($stmt);
-        $response['colors'] = [
-            $this->colors[self::CLEAN],
-            $this->colors[self::FAILURE],
-            $this->colors[self::ERROR]
-        ];
-        return $response;
     }
 
     private function chartForTestOverview()
