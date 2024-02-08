@@ -1592,6 +1592,11 @@ parameters:
 			path: app/Http/Controllers/MonitorController.php
 
 		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\OAuthController\\:\\:callback\\(\\) never returns Illuminate\\\\Routing\\\\Redirector so it can be removed from the return type\\.$#"
+			count: 1
+			path: app/Http/Controllers/OAuthController.php
+
+		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/Http/Controllers/ProjectController.php
@@ -27556,6 +27561,11 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
+			message: "#^Cannot access offset '' on 0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\|null\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
 			message: "#^Class BuildHandler has an uninitialized property \\$BuildInformation\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/build_handler.php
@@ -27772,6 +27782,11 @@ parameters:
 
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot access an offset on array\\|float\\|int\\|string\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/configure_handler.php
 
@@ -28156,6 +28171,11 @@ parameters:
 			path: app/cdash/xml_handlers/coverage_log_handler.php
 
 		-
+			message: "#^Cannot access an offset on array\\|float\\|int\\|string\\|false\\|null\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/coverage_log_handler.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 4
 			path: app/cdash/xml_handlers/coverage_log_handler.php
@@ -28382,6 +28402,11 @@ parameters:
 
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
+
+		-
+			message: "#^Cannot access offset mixed on 0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
