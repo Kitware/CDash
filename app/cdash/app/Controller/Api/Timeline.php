@@ -59,7 +59,6 @@ class Timeline extends Index
     {
         $this->filterdata = json_decode(request()->input('filterdata'), true);
         $page = htmlentities($this->filterdata['pageId']);
-        $this->filterSQL = generate_filterdata_sql($this->filterdata);
         $this->generateColorMap();
 
         $this->project->Fill();
@@ -164,7 +163,6 @@ class Timeline extends Index
                 b2gr.buildname = b.name AND b2gr.siteid = b.siteid
                 WHERE b.projectid = :projectid AND b.parentid IN (0, -1)
                 AND b2gr.expected = 1
-                $this->filterSQL
                 ORDER BY starttime");
         if (!pdo_execute($stmt, [':projectid' => $this->project->Id])) {
             abort(500, 'Failed to load results');
@@ -199,7 +197,6 @@ class Timeline extends Index
                 SELECT b.id, b.starttime, b.testfailed, b.testnotrun, b.testpassed
                 FROM build b
                 WHERE b.projectid = :projectid AND b.parentid IN (0, -1)
-                $this->filterSQL
                 ORDER BY starttime");
         if (!pdo_execute($stmt, [':projectid' => $this->project->Id])) {
             abort(500, 'Failed to load results');
