@@ -399,6 +399,9 @@ final class ManageProjectRolesController extends AbstractProjectController
         if ($config->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER') == 1) {
             $xml .= add_XML_value('fullemail', '1');
         }
+        if ((config('auth.project_admin_registration_form_enabled') === true) || $current_user->admin) {
+            $xml .= add_XML_value('canRegister', '1');
+        }
         $xml .= '</cdash>';
 
         return view('cdash', [
@@ -412,6 +415,10 @@ final class ManageProjectRolesController extends AbstractProjectController
     private function register_user($projectid, $email, $firstName, $lastName, $repositoryCredential)
     {
         $config = Config::getInstance();
+
+        if(config('auth.project_admin_registration_form_enabled') === false) {
+            return '<error>Users cannot be registered via this form at the current time.</error>';
+        }
 
         $UserProject = new UserProject();
         $UserProject->ProjectId = $projectid;

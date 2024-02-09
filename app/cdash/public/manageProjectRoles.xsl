@@ -103,8 +103,10 @@
             <a href="#fragment-1"><span>Current users</span></a></li>
           <li>
             <a href="#fragment-2"><span>Search for already registered users</span></a></li>
-          <li>
-            <a href="#fragment-3"><span>Register a new user</span></a></li>
+          <xsl:if test="/cdash/canRegister">
+            <li>
+              <a href="#fragment-3"><span>Register a new user</span></a></li>
+          </xsl:if>
           <li>
             <a href="#fragment-4"><span>Import users from CVS file </span></a></li>
       </ul>
@@ -230,44 +232,46 @@
             </tr>
           </table>
     </div>
-    <div id="fragment-3" class="tab_content" >
-        <div class="tab_help"></div>
-        <form  method="post">
-          <table width="800"  border="0">
-            <tr>
-                <td><div align="right">User Email:</div></td>
-            <td>
-            <input name="registeruseremail" type="text" id="registeruseremail" size="40"/>
-            </td>
-            </tr>
-            <tr>
-             <td><div align="right">First name:</div></td>
-            <td>
-            <input name="registeruserfirstname" type="text" id="registeruserfirstname" size="40"/>
-            </td>
-            </tr>
-            <tr>
-             <td><div align="right">Last name:</div></td>
-            <td>
-            <input name="registeruserlastname" type="text" id="registeruserlastname" size="40"/>
-            </td>
-            </tr>
-            <tr>
-             <td><div align="right">Repository credential:</div></td>
-            <td>
-            <input name="registeruserrepositorycredential" type="text" id="registeruserrepositorycredential" size="40"/>
-            * email address is automatically added as a credential
-            </td>
-            </tr>
-            <tr>
-            <td></td>
-            <td>
-            <input type="submit" name="registerUser" value="Register User"/>
-            </td>
-            </tr>
-          </table>
-          </form>
-    </div>
+    <xsl:if test="/cdash/canRegister">
+      <div id="fragment-3" class="tab_content" >
+          <div class="tab_help"></div>
+          <form  method="post">
+            <table width="800"  border="0">
+              <tr>
+                  <td><div align="right">User Email:</div></td>
+              <td>
+              <input name="registeruseremail" type="text" id="registeruseremail" size="40"/>
+              </td>
+              </tr>
+              <tr>
+              <td><div align="right">First name:</div></td>
+              <td>
+              <input name="registeruserfirstname" type="text" id="registeruserfirstname" size="40"/>
+              </td>
+              </tr>
+              <tr>
+              <td><div align="right">Last name:</div></td>
+              <td>
+              <input name="registeruserlastname" type="text" id="registeruserlastname" size="40"/>
+              </td>
+              </tr>
+              <tr>
+              <td><div align="right">Repository credential:</div></td>
+              <td>
+              <input name="registeruserrepositorycredential" type="text" id="registeruserrepositorycredential" size="40"/>
+              * email address is automatically added as a credential
+              </td>
+              </tr>
+              <tr>
+              <td></td>
+              <td>
+              <input type="submit" name="registerUser" value="Register User"/>
+              </td>
+              </tr>
+            </table>
+            </form>
+      </div>
+    </xsl:if>
     <div id="fragment-4" class="tab_content" >
         <div class="tab_help"></div>
           <table width="800"  border="0">
