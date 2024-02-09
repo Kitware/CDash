@@ -5808,7 +5808,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\Timeline\\:\\:\\$colors\\.$#"
-			count: 12
+			count: 9
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
@@ -5816,7 +5816,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 4
+			count: 3
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
@@ -5846,11 +5846,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\Timeline\\:\\:chartForBuildProperties\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/Timeline.php
-
-		-
-			message: "#^Method CDash\\\\Controller\\\\Api\\\\Timeline\\:\\:chartForIndex\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/Timeline.php
 
@@ -25774,21 +25769,16 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 4
-			path: app/cdash/tests/test_timeline.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 3
 			path: app/cdash/tests/test_timeline.php
 
 		-
-			message: "#^Method TimelineTestCase\\:\\:testTimeline\\(\\) has no return type specified\\.$#"
-			count: 1
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 2
 			path: app/cdash/tests/test_timeline.php
 
 		-
-			message: "#^Method TimelineTestCase\\:\\:testTimelineWithFilters\\(\\) has no return type specified\\.$#"
+			message: "#^Method TimelineTestCase\\:\\:testTimeline\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_timeline.php
 
