@@ -5589,16 +5589,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/ResultsApi.php
 
 		-
-			message: "#^Only booleans are allowed in a negated boolean, \\(float\\|int\\) given\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ResultsApi.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function array_sum expects array, array\\<string, array\\<int, string\\>\\|int\\>\\|false given\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ResultsApi.php
-
-		-
 			message: "#^Property CDash\\\\Controller\\\\Api\\\\ResultsApi\\:\\:\\$beginDate has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ResultsApi.php

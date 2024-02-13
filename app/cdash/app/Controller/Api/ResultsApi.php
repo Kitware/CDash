@@ -81,8 +81,11 @@ abstract class ResultsApi extends ProjectApi
     public function validateDateString($date)
     {
         $dt = \DateTime::createFromFormat("Y-m-d", $date);
-        if ($dt !== false && !array_sum($dt::getLastErrors())) {
-            return $date;
+        if ($dt !== false) {
+            $err = $dt::getLastErrors();
+            if ($err === false || array_sum($err) === 0) {
+                return $date;
+            }
         }
         return false;
     }
