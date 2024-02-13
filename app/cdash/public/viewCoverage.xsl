@@ -13,7 +13,7 @@
   <table width="100%">
      <tr>
         <td>
-           <table border="0" cellpadding="3" cellspacing="1" bgcolor="#0000aa">
+           <table border="0" cellpadding="3" cellspacing="1" bgcolor="#0000aa" data-cy="covg-summary-table">
               <tr>
                  <th colspan="2" class="table-heading1">Coverage Summary</th>
               </tr>
