@@ -858,7 +858,7 @@ final class BuildController extends AbstractBuildController
         $uploadFile = new UploadFile();
         $uploadFile->Id = $file_id;
         $uploadFile->Fill();
-        return response()->file(Storage::path("upload/{$uploadFile->Filename}"), [
+        return response()->file(Storage::path("upload/{$uploadFile->Sha1Sum}"), [
             "Content-Type" => "text/plain",
             "Content-Disposition" => "inline/attachment; filename={$uploadFile->Filename}",
         ]);
