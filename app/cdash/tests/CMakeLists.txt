@@ -102,6 +102,7 @@ add_laravel_test(/Feature/MeasurementPositionMigration)
 add_laravel_test(/Feature/RemoveMeasurementCheckboxesMigration)
 add_laravel_test(/Feature/IncreaseSiteInformationCPUColumnsSizeMigration)
 add_laravel_test(/Feature/UploadStorageMigration)
+add_laravel_test(/Feature/UniqueEmailsMigration)
 
 cdash_install()
 
