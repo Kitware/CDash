@@ -4,10 +4,15 @@ namespace Tests\Feature;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\MigrationTest;
 
-class UploadStorageMigration extends TestCase
+class UploadStorageMigration extends MigrationTest
 {
+    protected function tearDown() : void
+    {
+        parent::tearDown();
+    }
+
     /**
      * Test case for the migration that moves our uploaded files from 'public/'
      * to 'storage/'.
