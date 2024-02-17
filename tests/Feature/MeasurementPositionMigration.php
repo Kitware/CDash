@@ -6,10 +6,15 @@ use CDash\Model\Project;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Tests\TestCase;
+use Tests\MigrationTest;
 
-class MeasurementPositionMigration extends TestCase
+class MeasurementPositionMigration extends MigrationTest
 {
+    protected function tearDown() : void
+    {
+        parent::tearDown();
+    }
+
     /**
      * Test case for the migration that adds the `position` column to
      * the `measurement` table.

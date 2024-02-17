@@ -4,10 +4,15 @@ namespace Tests\Feature;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
-use Tests\TestCase;
+use Tests\MigrationTest;
 
-class RemoveMeasurementCheckboxesMigration extends TestCase
+class RemoveMeasurementCheckboxesMigration extends MigrationTest
 {
+    protected function tearDown() : void
+    {
+        parent::tearDown();
+    }
+
     /**
      * Test case for the migration that removes the `testpage` and `summarypage`
      * columns from the `measurement` table.
