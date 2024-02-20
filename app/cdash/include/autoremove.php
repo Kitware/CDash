@@ -83,19 +83,7 @@ function removeFirstBuilds(int $projectid, int $days, int $maxbuilds, bool $forc
     $currentdate = time() - 3600 * 24 * $days;
     $startdate = date(FMT_DATETIME, $currentdate);
 
-    add_log('about to query for builds to remove', 'removeFirstBuilds');
-    $db = Database::getInstance();
-    $builds = $db->executePrepared("
-                       SELECT id
-                       FROM build
-                       WHERE
-                           parentid IN (0, -1)
-                           AND starttime<?
-                           AND projectid=?
-                       ORDER BY starttime ASC
-                       LIMIT $maxbuilds
-                   ", [$startdate, intval($projectid)]);
-    add_last_sql_error('dailyupdates::removeFirstBuilds');
+    Log::info('about to query for builds to remove');
 
     $buildids = Build::whereIn('parentid', [0, -1])
         ->where('starttime', '<', $startdate)
