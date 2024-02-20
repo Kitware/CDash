@@ -5,10 +5,15 @@ namespace Tests\Feature;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Tests\TestCase;
+use Tests\MigrationTest;
 
-class IncreaseSiteInformationCPUColumnsSizeMigration extends TestCase
+class IncreaseSiteInformationCPUColumnsSizeMigration extends MigrationTest
 {
+    protected function tearDown() : void
+    {
+        parent::tearDown();
+    }
+
     /**
      * Test case for the migration that increases the size of the CPU columns
      * on the `siteinformation` table.

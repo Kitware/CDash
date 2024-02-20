@@ -74,7 +74,7 @@ Route::get('/buildSummary.php', function (Request $request) {
 });
 
 Route::get('/builds/{id}/configure', 'BuildController@configure');
-Route::permanentRedirect('/builds/{id}/configure', '/builds/{id}/configure');
+Route::permanentRedirect('/build/{id}/configure', '/builds/{id}/configure');
 Route::get('/viewConfigure.php', function (Request $request) {
     $buildid = $request->query('buildid');
     return redirect("/builds/{$buildid}/configure", 301);
