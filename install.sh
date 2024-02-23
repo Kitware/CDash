@@ -47,6 +47,9 @@ else
   composer install --no-dev --optimize-autoloader
 fi
 
+echo "Creating storage directories..."
+php artisan storage:mkdirs
+
 echo "Running migrations..."
 php artisan migrate --force
 
