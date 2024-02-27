@@ -24840,6 +24840,11 @@ parameters:
 			path: app/cdash/tests/test_starttimefromnotes.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:firstOrFail\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/tests/test_starttimefromupload.php
+
+		-
 			message: "#^Method SubmissionAssignBuildIdTestCase\\:\\:testSubmissionAssignBuildId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_submission_assign_buildid.php
@@ -29387,7 +29392,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 11
+			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-

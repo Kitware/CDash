@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="Dart/Source/Server/XSL/Build.xsl <file:///Dart/Source/Server/XSL/Build.xsl> "?>
+<Site BuildName="upload_starttime" BuildStamp="20240226-1850-Experimental" Name="hesperides" Generator="ctest">
+  <Upload>
+    <!-- This timestamp corresponds to: Feb 27, 2024 1:50:50 PM EST -->
+    <!-- The BuildStamp attribute in the Site element above has been purposefully modified to not match this value. -->
+    <Time>1709059850</Time>
+    <File filename="/tmp/tmp.txt">
+      <Content encoding="base64">VGhpcyBpcyBteSB1cGxvYWRlZCBmaWxlCg==</Content>
+    </File>
+  </Upload>
+</Site>
+
