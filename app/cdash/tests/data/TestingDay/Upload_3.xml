@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="testing_day_3" BuildStamp="20240226-0646-Experimental" Name="hesperides" Generator="ctest">
+	<Upload>
+		<File filename="/tmp/tmp.txt">
+			<Content encoding="base64">VGhpcyBpcyBteSB1cGxvYWRlZCBmaWxlCg==</Content>
+		</File>
+	</Upload>
+</Site>

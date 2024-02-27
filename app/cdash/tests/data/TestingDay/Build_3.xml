@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="testing_day_3"
+  BuildStamp="20240226-0646-Experimental"
+  Name="hesperides"
+  Generator="ctest"
+  >
+	<Build>
+    <StartDateTime>Feb 26 06:46</StartDateTime>
+    <StartBuildTime>1708955218</StartBuildTime>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+    <EndDateTime>Feb 26 07:26</EndDateTime>
+    <EndBuildTime>1708957608</EndBuildTime>
+    <ElapsedMinutes>39.8290843685468</ElapsedMinutes>
+	</Build>
+</Site>

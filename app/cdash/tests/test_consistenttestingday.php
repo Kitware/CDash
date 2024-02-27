@@ -5,6 +5,7 @@ use App\Services\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 class ConsistentTestingDayTestCase extends KWWebTestCase
 {
@@ -128,5 +129,23 @@ class ConsistentTestingDayTestCase extends KWWebTestCase
         $buildgroup = array_pop($jsonobj['buildgroups']);
         $this->assertEqual(1, count($buildgroup['builds']));
         $this->assertEqual('testing_day_upload_file', $buildgroup['builds'][0]['buildname']);
+
+        // Change nightly time & time zone for this project again.
+        $this->createProject([
+            'Id' => $this->project->Id,
+            'Name' => 'ConsistentTestingDay',
+            'NightlyTime' => '18:00:00 America/Denver'
+        ], true);
+
+        // Submit build files.
+        $this->submission('ConsistentTestingDay', "$dir/Build_3.xml");
+        $this->submission('ConsistentTestingDay', "$dir/Configure_3.xml");
+        $this->submission('ConsistentTestingDay', "$dir/Upload_3.xml");
+
+        // Verify the expected start and end time for this build.
+        $matching_builds = DB::table('build')->where('name', '=', 'testing_day_3')->get();
+        $this->assertEqual(1, ($matching_builds->count()));
+        $this->assertEqual('2024-02-26 13:46:58', $matching_builds[0]->starttime);
+        $this->assertEqual('2024-02-26 14:26:48', $matching_builds[0]->endtime);
     }
 }
