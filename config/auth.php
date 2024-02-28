@@ -5,6 +5,8 @@ return [
     'username_password_authentication_enabled' => env('USERNAME_PASSWORD_AUTHENTICATION_ENABLED', true),
     // Whether or not "normal" username+password authentication is enabled
     'user_registration_form_enabled' => env('USER_REGISTRATION_FORM_ENABLED', true),
+    # Whether or not a Project administrator can register a user
+    'project_admin_registration_form_enabled' => env('PROJECT_ADMIN_REGISTRATION_FORM_ENABLED', true),
 
     /*
     |--------------------------------------------------------------------------
