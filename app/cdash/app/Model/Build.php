@@ -2847,9 +2847,13 @@ class Build
             $this->Information->compilername ??= 'unknown';
             $this->Information->compilerversion ??= 'unknown';
 
-            // We can't use $this->Information->save() due to some weird Eloquent quirk
-            // related to the fact that the model was not retrieved from the DB originally...
-            BuildInformation::updateOrCreate(['buildid' => $this->Information->buildid], $this->Information->toArray());
+            DB::transaction(function () {
+                $fieldsToUpdate = $this->Information->getFillable();
+                foreach (array_keys($fieldsToUpdate, 'buildid', true) as $key) {
+                    unset($fieldsToUpdate[$key]);
+                }
+                BuildInformation::upsert($this->Information->toArray(), ['buildid'], $fieldsToUpdate);
+            }, 5);
         }
     }
 }
