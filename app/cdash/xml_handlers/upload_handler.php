@@ -21,9 +21,10 @@ use CDash\Model\Build;
 use CDash\Model\BuildInformation;
 use CDash\Model\Label;
 use CDash\Model\Project;
+use CDash\Model\UploadFile;
 use App\Models\Site;
 use App\Models\SiteInformation;
-use CDash\Model\UploadFile;
+use App\Services\TestingDay;
 
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Log;
@@ -111,16 +112,38 @@ class UploadHandler extends AbstractHandler
             // when we call UpdateBuild() below.
             //
             // For end time, we use the start of the testing day.
-            // For start time, we use the end of the testing day.
+            // For start time, we use the end of the testing day, or 'now', whichever is newer.
             // Yes, this means the build finished before it began.
             //
             // This associates the build with the correct day if it is only
             // an upload.  Otherwise we defer to the values set by the
             // other handlers.
-            $buildDate =
-                extract_date_from_buildstamp($this->Build->GetStamp());
-            [$beginningOfDay, $endOfDay] = $this->Project->ComputeTestingDayBounds($buildDate);
 
+            // Extract the datetime portion from the BuildStamp attribute in the XML file.
+            $buildDateTime =
+                extract_date_from_buildstamp($this->Build->GetStamp());
+
+            // Get the testing day corresponding to this datetime.
+            $testingDay = TestingDay::get($this->Project, $buildDateTime);
+
+            // Get the beginning and end of this testing day.
+            [$beginningOfDay, $beginningOfNextDay] = $this->Project->ComputeTestingDayBounds($testingDay);
+
+            // The last element returned by Project::ComputeTestingDayBounds()
+            // is actually the first second of the subsequent testing day.
+            // Therefore we subtract one second here.
+            $dt = new \DateTime($beginningOfNextDay, new \DateTimeZone('UTC'));
+            $dt->sub(new \DateInterval('PT1S'));
+            $endOfDayTimestamp = $dt->getTimestamp();
+
+            // If $endOfDay is in the future, use 'now' instead.
+            if ($endOfDayTimestamp > time()) {
+                $endOfDay = gmdate(FMT_DATETIME);
+            } else {
+                $endOfDay = gmdate(FMT_DATETIME, $endOfDayTimestamp);
+            }
+
+            // Set build's start and end time to be as permissive as possible.
             $this->Build->EndTime = $beginningOfDay;
             $this->Build->StartTime = $endOfDay;
             $this->Build->SubmitTime = gmdate(FMT_DATETIME);

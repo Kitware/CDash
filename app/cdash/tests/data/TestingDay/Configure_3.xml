@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Site BuildName="testing_day_3"
+  BuildStamp="20240226-0646-Experimental"
+  Name="hesperides"
+  Generator="ctest"
+  >
+  <Configure>
+    <StartDateTime>Feb 26 06:46</StartDateTime>
+    <StartConfigureTime>1708955218</StartConfigureTime>
+    <EndDateTime>Feb 26 06:46</EndDateTime>
+    <ElapsedMinutes>0.016666666666666666</ElapsedMinutes>
+    <EndConfigureTime>1708955219</EndConfigureTime>
+    <ConfigureCommand>cmake</ConfigureCommand>
+    <Log>-- Configuring done
+-- Generating done
+    </Log>
+    <ConfigureStatus>0</ConfigureStatus>
+  </Configure>
+</Site>
