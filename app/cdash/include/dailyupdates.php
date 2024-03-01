@@ -1135,7 +1135,7 @@ function addDailyChanges(int $projectid): void
 
         // Clean the backup directories.
         $timeframe = config('cdash.backup_timeframe');
-        $dirs_to_clean = ['parsed', 'failed'];
+        $dirs_to_clean = ['parsed', 'failed', 'inprogress'];
         foreach ($dirs_to_clean as $dir_to_clean) {
             $files = Storage::allFiles($dir_to_clean);
             foreach ($files as $filename) {
