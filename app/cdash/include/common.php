@@ -480,23 +480,7 @@ function remove_build($buildid)
     $db = Database::getInstance();
     $buildid_prepare_array = $db->createPreparedArray(count($buildids));
 
-    DB::delete("DELETE FROM build2group WHERE buildid IN $buildid_prepare_array", $buildids);
-    DB::delete("DELETE FROM builderror WHERE buildid IN $buildid_prepare_array", $buildids);
-    DB::delete("DELETE FROM buildemail WHERE buildid IN $buildid_prepare_array", $buildids);
-    DB::delete("DELETE FROM buildfile WHERE buildid IN $buildid_prepare_array", $buildids);
-
-    DB::delete("DELETE FROM buildinformation WHERE buildid IN $buildid_prepare_array", $buildids);
-    DB::delete("DELETE FROM builderrordiff WHERE buildid IN $buildid_prepare_array", $buildids);
-    DB::delete("DELETE FROM buildproperties WHERE buildid IN $buildid_prepare_array", $buildids);
-
-    DB::delete("DELETE FROM configureerrordiff WHERE buildid IN $buildid_prepare_array", $buildids);
-    DB::delete("DELETE FROM coveragesummarydiff WHERE buildid IN $buildid_prepare_array", $buildids);
-    DB::delete("DELETE FROM testdiff WHERE buildid IN $buildid_prepare_array", $buildids);
-    DB::delete("DELETE FROM buildtesttime WHERE buildid IN $buildid_prepare_array", $buildids);
-    DB::delete("DELETE FROM summaryemail WHERE buildid IN $buildid_prepare_array", $buildids);
-    DB::delete("DELETE FROM related_builds WHERE buildid IN $buildid_prepare_array", $buildids);
     DB::delete("DELETE FROM related_builds WHERE relatedid IN $buildid_prepare_array", $buildids);
-    DB::delete("DELETE FROM pending_submissions WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Remove the buildfailureargument
     $buildfailureids = [];
@@ -526,9 +510,6 @@ function remove_build($buildid)
         )
     ", array_merge($buildids, $buildids));
 
-    // Remove the buildfailure.
-    DB::delete("DELETE FROM buildfailure WHERE buildid IN $buildid_prepare_array", $buildids);
-
     // Delete the configure if not shared.
     $build2configure = DB::select("
                            SELECT a.configureid
@@ -553,7 +534,6 @@ function remove_build($buildid)
         DB::delete("DELETE FROM configure WHERE id IN $configureids_prepare_array", $configureids);
         DB::delete("DELETE FROM configureerror WHERE configureid IN $configureids_prepare_array", $configureids);
     }
-    DB::delete("DELETE FROM build2configure WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // coverage files are kept unless they are shared
     DB::delete("
@@ -580,11 +560,6 @@ function remove_build($buildid)
         )
     ", array_merge($buildids, $buildids));
 
-    DB::delete("DELETE FROM label2coveragefile WHERE buildid IN $buildid_prepare_array", $buildids);
-    DB::delete("DELETE FROM coverage WHERE buildid IN $buildid_prepare_array", $buildids);
-    DB::delete("DELETE FROM coveragefilelog WHERE buildid IN $buildid_prepare_array", $buildids);
-    DB::delete("DELETE FROM coveragesummary WHERE buildid IN $buildid_prepare_array", $buildids);
-
     // dynamicanalysisdefect
     $dynamicanalysis = DB::select("
                            SELECT id
@@ -602,8 +577,6 @@ function remove_build($buildid)
         DB::delete("DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid IN $dynids_prepare_array", $dynids);
         DB::delete("DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid IN $dynids_prepare_array", $dynids);
     }
-    DB::delete("DELETE FROM dynamicanalysis WHERE buildid IN $buildid_prepare_array", $buildids);
-    DB::delete("DELETE FROM dynamicanalysissummary WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Delete the note if not shared
     DB::delete("
@@ -629,8 +602,6 @@ function remove_build($buildid)
         )
     ", array_merge($buildids, $buildids));
 
-    DB::delete("DELETE FROM build2note WHERE buildid IN $buildid_prepare_array", $buildids);
-
     // Delete the update if not shared
     $build2update = DB::select("
                         SELECT a.updateid
@@ -655,7 +626,6 @@ function remove_build($buildid)
         DB::delete("DELETE FROM buildupdate WHERE id IN $updateids_prepare_array", $updateids);
         DB::delete("DELETE FROM updatefile WHERE updateid IN $updateids_prepare_array", $updateids);
     }
-    DB::delete("DELETE FROM build2update WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Delete tests and testoutputs that are not shared.
     // First find all the tests and testoutputs from builds that are about to be deleted.
@@ -744,9 +714,6 @@ function remove_build($buildid)
         }
     }
 
-    DB::delete("DELETE FROM label2test WHERE buildid IN $buildid_prepare_array", $buildids);
-    DB::delete("DELETE FROM build2test WHERE buildid IN $buildid_prepare_array", $buildids);
-
     // Delete the uploaded files if not shared
     $build2uploadfiles = DB::select("
                              SELECT a.fileid
@@ -772,13 +739,6 @@ function remove_build($buildid)
         DB::delete("DELETE FROM uploadfile WHERE id IN $fileids_prepare_array", $fileids);
         DB::delete("DELETE FROM build2uploadfile WHERE fileid IN $fileids_prepare_array", $fileids);
     }
-    DB::delete("DELETE FROM build2uploadfile WHERE buildid IN $buildid_prepare_array", $buildids);
-
-    // Delete the subproject
-    DB::delete("DELETE FROM subproject2build WHERE buildid IN $buildid_prepare_array", $buildids);
-
-    // Delete the labels
-    DB::delete("DELETE FROM label2build WHERE buildid IN $buildid_prepare_array", $buildids);
 
     // Remove any children of these builds.
     // In order to avoid making the list of builds to delete too large
