@@ -270,7 +270,7 @@
               </div>
 
               <div class="form-group">
-                <label for="dynamicBuildNameMatch">whose build name contains:</label>
+                <label for="dynamicBuildNameMatch">whose build name is:</label>
                 <input name="dynamicBuildNameMatch" type="text" ng-model="dynamicBuildNameMatch" size="12" class="form-control"/>
               </div>
 
@@ -282,7 +282,7 @@
 
             <div ng-if="dynamicSelection.rules.length > 0" name="existingdynamicrows">
               <table class="table-striped" style="width:100%;">
-                <caption class="h4">Existing Build Rows</caption>
+                <caption class="h4" style="caption-side: top;">Existing Build Rows</caption>
                 <thead>
                   <th>Group to draw builds from</th>
                   <th>Site</th>
