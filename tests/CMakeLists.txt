@@ -104,3 +104,6 @@ add_cypress_component_test(loading-indicator)
 cdash_install()
 
 add_cypress_e2e_test(user-profile)
+set_tests_properties(cypress/e2e/user-profile PROPERTIES DEPENDS install_1)
+
+add_subdirectory(cypress/e2e)
