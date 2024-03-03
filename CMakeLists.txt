@@ -74,8 +74,3 @@ add_subdirectory(tests)
 
 # add the old tests directory
 add_subdirectory(app/cdash/tests)
-
-# temporary workaround to make these tests run last
-add_subdirectory(tests/cypress/e2e)
-add_subdirectory(app/cdash/tests/autoremovebuilds)
-
