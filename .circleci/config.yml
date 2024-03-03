@@ -1,8 +1,8 @@
 version: 2.1
 jobs:
-  build:
+  build_mysql:
     environment:
-      SITENAME: "CircleCI 2.1"
+      SITENAME: "CircleCI"
     machine: true
     steps:
       - checkout
@@ -30,6 +30,12 @@ jobs:
                            -f docker/docker-compose.dev.yml \
                            -f docker/docker-compose.mysql.yml \
                            --env-file .env.dev down
+  build_postgres:
+    environment:
+      SITENAME: "CircleCI"
+    machine: true
+    steps:
+      - checkout
       - run:
           name: Postgres Build
           command: |
@@ -46,6 +52,12 @@ jobs:
             set -x
             source ~/project/docker/commands.bash
             cdash_run_and_submit_pgsql_ctest
+  build_docker:
+    environment:
+      SITENAME: "CircleCI"
+    machine: true
+    steps:
+      - checkout
       - run:
           name: Build Production Docker Images
           command: |
@@ -65,7 +77,9 @@ jobs:
 workflows:
   all-builds:
     jobs:
-      - build:
-          filters:
-            tags:
-              only: /^.*/
+      - build_mysql
+      - build_postgres
+      - build_docker:
+          requires:
+            - build_mysql
+            - build_postgres
