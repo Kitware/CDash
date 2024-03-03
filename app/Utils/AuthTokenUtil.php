@@ -108,10 +108,8 @@ class AuthTokenUtil
             return false;
         }
 
-        $project = new Project();
-        $project->Id = $project_id;
-        $project->Fill();
-        if (!Gate::forUser($user)->allows('view-project', $project)) {
+        $project = \App\Models\Project::find($project_id);
+        if ($project === null || Gate::forUser($user)->denies('view', $project)) {
             Log::error('Invalid Project');
             return false;
         }
