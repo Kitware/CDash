@@ -3150,6 +3150,16 @@ parameters:
 			path: app/Models/User.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
+			count: 2
+			path: app/Policies/ProjectPolicy.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Policies/ProjectPolicy.php
+
+		-
 			message: "#^Parameter \\#2 \\$offset of function substr expects int, int\\|false given\\.$#"
 			count: 1
 			path: app/Providers/AppServiceProvider.php
@@ -3198,16 +3208,6 @@ parameters:
 			message: "#^Property App\\\\Providers\\\\EventServiceProvider\\:\\:\\$listen type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Providers/EventServiceProvider.php
-
-		-
-			message: "#^Method App\\\\Providers\\\\RouteServiceProvider\\:\\:mapApiRoutes\\(\\) throws checked exception BadMethodCallException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
-			path: app/Providers/RouteServiceProvider.php
-
-		-
-			message: "#^Method App\\\\Providers\\\\RouteServiceProvider\\:\\:mapWebRoutes\\(\\) throws checked exception BadMethodCallException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Providers/RouteServiceProvider.php
 
 		-
 			message: "#^PHPDoc type string of property App\\\\Providers\\\\RouteServiceProvider\\:\\:\\$namespace is not the same as PHPDoc type string\\|null of overridden property Illuminate\\\\Foundation\\\\Support\\\\Providers\\\\RouteServiceProvider\\:\\:\\$namespace\\.$#"
@@ -3301,11 +3301,6 @@ parameters:
 			message: "#^Method App\\\\Utils\\\\PageTimer\\:\\:end\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/Utils/PageTimer.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 3
-			path: app/Utils/ProjectPermissions.php
 
 		-
 			message: "#^Binary operation \"\\-\" between string and 1 results in an error\\.$#"
@@ -29956,6 +29951,11 @@ parameters:
 			message: "#^Method Tests\\\\Feature\\\\CDashTest\\:\\:testRedirects\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: tests/Feature/CDashTest.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Testing\\\\TestResponse\\:\\:assertGraphQLErrorMessage\\(\\)\\.$#"
+			count: 3
+			path: tests/Feature/GraphQL/ProjectTest.php
 
 		-
 			message: "#^Call to an undefined method Mockery\\\\Expectation\\:\\:shouldReceive\\(\\)\\.$#"

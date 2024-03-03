@@ -23,6 +23,7 @@ parameters:
             - '#^RuntimeException$#'
             - '#^ReflectionException$#'
             - '#^PDOException$#'
+            - '#^BadMethodCallException$#'
 
         uncheckedExceptionClasses:
             - 'Symfony\Component\HttpKernel\Exception\HttpException'

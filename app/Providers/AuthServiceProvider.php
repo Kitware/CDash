@@ -7,7 +7,6 @@ namespace App\Providers;
 use App\Models\Test;
 use App\Models\TestImage;
 use App\Models\User;
-use App\Utils\ProjectPermissions;
 use CDash\Model\Image;
 use CDash\Model\Project;
 use Illuminate\Auth\Access\Response;
