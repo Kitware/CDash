@@ -1,9 +1,48 @@
 version: 2.1
 jobs:
-  build_mysql:
+  Build Development Images:
     environment:
-      SITENAME: "CircleCI"
-    machine: true
+      SITENAME: CircleCI
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    steps:
+      - checkout
+      - run:
+          name: Build Main Image
+          command: |
+            docker build -t kitware/cdash:testing --build-arg="DEVELOPMENT_BUILD=1" --target cdash .
+      - run:
+          name: Build Worker Image
+          command: |
+            # Should be fast, given that it can use cached layers from previous step
+            docker build -t kitware/cdash-worker:testing --build-arg="DEVELOPMENT_BUILD=1" --target cdash-worker .
+
+  Build Production Images:
+    environment:
+      SITENAME: CircleCI
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    steps:
+      - checkout
+      - run:
+          name: Build Main Image
+          command: |
+            DOCKER_TAG="${CIRCLE_TAG:-latest}"
+            docker build -t kitware/cdash:${DOCKER_TAG} --target cdash .
+      - run:
+          name: Build Worker Image
+          command: |
+            DOCKER_TAG="${CIRCLE_TAG:-latest}"
+            docker build -t kitware/cdash-worker:${DOCKER_TAG} --target cdash-worker .
+
+  Test MySQL:
+    environment:
+      SITENAME: CircleCI
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
     steps:
       - checkout
       - run:
@@ -14,26 +53,20 @@ jobs:
             docker compose -f docker/docker-compose.yml \
                            -f docker/docker-compose.dev.yml \
                            -f docker/docker-compose.mysql.yml \
-                           --env-file .env.dev up -d \
-                           --build
+                           --env-file .env.dev up -d
       - run:
           name: Test MySQL
           command: |
             set -x
             source ~/project/docker/commands.bash
             cdash_run_and_submit_mysql_ctest
-      - run:
-          name: Tear Down MySQL Build
-          command: |
-            set -x
-            docker compose -f docker/docker-compose.yml \
-                           -f docker/docker-compose.dev.yml \
-                           -f docker/docker-compose.mysql.yml \
-                           --env-file .env.dev down
-  build_postgres:
+
+  Test PostgreSQL:
     environment:
-      SITENAME: "CircleCI"
-    machine: true
+      SITENAME: CircleCI
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
     steps:
       - checkout
       - run:
@@ -44,42 +77,52 @@ jobs:
             docker compose -f docker/docker-compose.yml \
                            -f docker/docker-compose.dev.yml \
                            -f docker/docker-compose.postgres.yml \
-                           --env-file .env.dev up -d \
-                           --build
+                           --env-file .env.dev up -d
       - run:
           name: Test Postgres
           command: |
             set -x
             source ~/project/docker/commands.bash
             cdash_run_and_submit_pgsql_ctest
-  build_docker:
+
+  Publish Images:
     environment:
-      SITENAME: "CircleCI"
-    machine: true
+      SITENAME: CircleCI
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
     steps:
       - checkout
       - run:
-          name: Build Production Docker Images
-          command: |
-              DOCKER_TAG="${CIRCLE_TAG:-latest}"
-              docker build -t kitware/cdash:${DOCKER_TAG} --target cdash .
-              docker build -t kitware/cdash-worker:${DOCKER_TAG} --target cdash-worker .
-      - run:
           name: Publish Docker Images
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ] || [ -n "${CIRCLE_TAG}" ]; then
-              DOCKER_TAG="${CIRCLE_TAG:-latest}"
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
               echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
               docker push kitware/cdash:testing
-              docker push kitware/cdash:${DOCKER_TAG}
-              docker push kitware/cdash-worker:${DOCKER_TAG}
+              docker push kitware/cdash:latest
+              docker push kitware/cdash-worker:latest
             fi
+
+            if [ -n "${CIRCLE_TAG}" ]; then
+              echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+              docker push kitware/cdash:${CIRCLE_TAG}
+              docker push kitware/cdash-worker:${CIRCLE_TAG}
+            fi
+
 workflows:
   all-builds:
     jobs:
-      - build_mysql
-      - build_postgres
-      - build_docker:
+      - Build Development Images
+      - Build Production Images
+      - Test MySQL:
           requires:
-            - build_mysql
-            - build_postgres
+            - Build Development Images
+      - Test PostgreSQL:
+          requires:
+            - Build Development Images
+      - Publish Images:
+          requires:
+            - Build Production Images
+            - Test MySQL
+            - Test PostgreSQL
+
