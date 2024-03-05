@@ -4,6 +4,7 @@ namespace Tests\Feature\GraphQL;
 
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -290,5 +291,145 @@ class ProjectTest extends TestCase
                 ],
             ],
         ], true);
+    }
+
+    public function testCreateProjectNoUser(): void
+    {
+        $name = 'test-project' . Str::uuid();
+        $this->graphQL('
+            mutation CreateProject($input: CreateProjectInput!) {
+                createProject(input: $input) {
+                    id
+                    name
+                }
+            }
+        ', [
+            'input' => [
+                'name' => $name,
+                'description' => 'test',
+                'homeurl' => 'https://cdash.org',
+            ],
+        ])->assertGraphQLErrorMessage('This action is unauthorized.');
+
+        // A final check to ensure this project wasn't created anyway
+        $this->assertDatabaseMissing(Project::class, [
+            'name' => $name,
+        ]);
+    }
+
+    public function testCreateProjectUnauthorizedUser(): void
+    {
+        $name = 'test-project' . Str::uuid();
+        $this->actingAs($this->users['normal'])->graphQL('
+            mutation CreateProject($input: CreateProjectInput!) {
+                createProject(input: $input) {
+                    id
+                    name
+                }
+            }
+        ', [
+            'input' => [
+                'name' => $name,
+                'description' => 'test',
+                'homeurl' => 'https://cdash.org',
+            ],
+        ])->assertGraphQLErrorMessage('This action is unauthorized.');
+
+        // A final check to ensure this project wasn't created anyway
+        $this->assertDatabaseMissing(Project::class, [
+            'name' => $name,
+        ]);
+    }
+
+    public function testCreateProjectUserCreateProjectNoUser(): void
+    {
+        Config::set('cdash.user_create_projects', true);
+
+        $name = 'test-project' . Str::uuid();
+        $this->graphQL('
+            mutation CreateProject($input: CreateProjectInput!) {
+                createProject(input: $input) {
+                    id
+                    name
+                }
+            }
+        ', [
+            'input' => [
+                'name' => $name,
+                'description' => 'test',
+                'homeurl' => 'https://cdash.org',
+            ],
+        ])->assertGraphQLErrorMessage('This action is unauthorized.');
+
+        // A final check to ensure this project wasn't created anyway
+        $this->assertDatabaseMissing(Project::class, [
+            'name' => $name,
+        ]);
+    }
+
+    public function testCreateProjectUserCreateProject(): void
+    {
+        Config::set('cdash.user_create_projects', true);
+
+        $name = 'test-project' . Str::uuid();
+        $response = $this->actingAs($this->users['normal'])->graphQL('
+            mutation CreateProject($input: CreateProjectInput!) {
+                createProject(input: $input) {
+                    id
+                    name
+                }
+            }
+        ', [
+            'input' => [
+                'name' => $name,
+                'description' => 'test',
+                'homeurl' => 'https://cdash.org',
+            ],
+        ]);
+
+        $project = Project::where('name', $name)->firstOrFail();
+
+        $response->assertJson([
+            'data' => [
+                'createProject' => [
+                    'id' => (string) $project->id,
+                    'name' => $name,
+                ],
+            ],
+        ], true);
+
+        $project->delete();
+    }
+
+    public function testCreateProjectAdmin(): void
+    {
+        $name = 'test-project' . Str::uuid();
+        $response = $this->actingAs($this->users['admin'])->graphQL('
+            mutation CreateProject($input: CreateProjectInput!) {
+                createProject(input: $input) {
+                    id
+                    name
+                }
+            }
+        ', [
+            'input' => [
+                'name' => $name,
+                'description' => 'test',
+                'homeurl' => 'https://cdash.org',
+            ],
+        ]);
+
+        $project = Project::where('name', $name)->firstOrFail();
+
+        $response->assertJson([
+            'data' => [
+                'createProject' => [
+                    'id' => (string) $project->id,
+                    'name' => $name,
+                ],
+            ],
+        ], true);
+
+        $project->delete();
     }
 }

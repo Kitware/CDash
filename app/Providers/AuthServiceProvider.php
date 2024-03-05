@@ -7,7 +7,6 @@ namespace App\Providers;
 use App\Models\Test;
 use App\Models\TestImage;
 use App\Models\User;
-use App\Utils\ProjectPermissions;
 use CDash\Model\Image;
 use CDash\Model\Project;
 use Illuminate\Auth\Access\Response;
@@ -43,24 +42,23 @@ class AuthServiceProvider extends ServiceProvider
     private function defineGates(): void
     {
         Gate::define('view-project', function (?User $user, Project $project) {
-            if (!ProjectPermissions::canViewProject($project, $user)) {
+            $eloquent_project = \App\Models\Project::find((int) $project->Id);
+            if ($eloquent_project === null || Gate::denies('view', $eloquent_project)) {
                 return Response::denyAsNotFound('You do not have access to the requested project or the requested project does not exist.');
             }
             return Response::allow();
         });
 
         Gate::define('edit-project', function (User $user, Project $project) {
-            // First check to make sure we can see the project to begin with
-            Gate::authorize('view-project', $project);
-
-            if (!ProjectPermissions::canEditProject($project, $user)) {
+            $eloquent_project = \App\Models\Project::find((int) $project->Id);
+            if ($eloquent_project === null || Gate::denies('update', $eloquent_project)) {
                 return Response::denyWithStatus(403, 'You do not have permission to edit this project.');
             }
             return Response::allow();
         });
 
         Gate::define('create-project', function (User $user) {
-            if (!$user->admin && !boolval(config('cdash.user_create_projects'))) {
+            if (Gate::denies('create', \App\Models\Project::class)) {
                 return Response::denyWithStatus(403, 'You do not have permission to create new projects.');
             }
             return Response::allow();
