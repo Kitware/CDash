@@ -113,7 +113,10 @@ workflows:
   all-builds:
     jobs:
       - Build Development Images
-      - Build Production Images
+      - Build Production Images:
+          filters:
+            tags:
+              only: /.*/
       - Test MySQL:
           requires:
             - Build Development Images
@@ -125,4 +128,7 @@ workflows:
             - Build Production Images
             - Test MySQL
             - Test PostgreSQL
+          filters:
+            tags:
+              only: /.*/
 
