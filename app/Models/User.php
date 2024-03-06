@@ -34,15 +34,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $user;
 
-    /**
-     * @var string
-     */
     protected $table = 'user';
 
     /**
      * The attributes that are mass assignable.
-     *
-     * @var array
      */
     protected $fillable = [
         'firstname',
@@ -54,8 +49,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * The attributes that should be hidden for arrays.
-     *
-     * @var array
      */
     protected $hidden = [
         'password', 'remember_token',
