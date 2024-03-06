@@ -76,8 +76,7 @@ class UserSubscriptionBuilderTest extends TestCase
             ->method('GetSubscriberCollection')
             ->willReturn($this->getProjectSubscriberCollection());
 
-        $mock_site = $this->getMockBuilder(Site::class)
-            ->getMock();
+        $mock_site = Mockery::mock(Site::class);
 
         $mock_handler->expects($this->any())
             ->method('GetProject')
