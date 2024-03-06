@@ -11,11 +11,11 @@ jobs:
       - run:
           name: Build Main Image
           command: |
-            docker build -t kitware/cdash:testing --build-arg="DEVELOPMENT_BUILD=1" --target cdash .
+            docker build --no-cache -t kitware/cdash:testing --build-arg="DEVELOPMENT_BUILD=1" --target cdash .
       - run:
           name: Build Worker Image
           command: |
-            # Should be fast, given that it can use cached layers from previous step
+            # This should use cached layers from the previous step, so it should be fast
             docker build -t kitware/cdash-worker:testing --build-arg="DEVELOPMENT_BUILD=1" --target cdash-worker .
 
   Build Production Images:
@@ -30,12 +30,12 @@ jobs:
           name: Build Main Image
           command: |
             DOCKER_TAG="${CIRCLE_TAG:-latest}"
-            docker build -t kitware/cdash:${DOCKER_TAG} --target cdash .
+            docker build --no-cache -t kitware/cdash:${DOCKER_TAG} --target cdash .
       - run:
           name: Build Worker Image
           command: |
             DOCKER_TAG="${CIRCLE_TAG:-latest}"
-            docker build -t kitware/cdash-worker:${DOCKER_TAG} --target cdash-worker .
+            docker build --no-cache -t kitware/cdash-worker:${DOCKER_TAG} --target cdash-worker .
 
   Test MySQL:
     environment:
