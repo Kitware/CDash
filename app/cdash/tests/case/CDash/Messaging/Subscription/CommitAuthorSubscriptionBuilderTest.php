@@ -103,9 +103,7 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
         $mock_project = $this->getMockBuilder(Project::class)
             ->getMock();
 
-        /** @var Site $mock_site */
-        $mock_site = $this->getMockBuilder(Site::class)
-            ->getMock();
+        $mock_site = Mockery::mock(Site::class);
 
         /** @var Build|PHPUnit_Framework_MockObject_MockObject $mock_build */
         $mock_build = $this->createMockBuildWithDiff(
