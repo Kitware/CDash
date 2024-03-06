@@ -815,13 +815,18 @@ parameters:
 			path: app/Http/Controllers/CDash.php
 
 		-
+			message: "#^Argument of an invalid type array\\<int, mixed\\>\\|false supplied for foreach, only iterables are supported\\.$#"
+			count: 2
+			path: app/Http/Controllers/CoverageController.php
+
+		-
 			message: "#^Argument of an invalid type array\\<int\\>\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 3
 			path: app/Http/Controllers/CoverageController.php
 
 		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 9
+			count: 7
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -5073,11 +5078,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
-			message: "#^Binary operation \"\\+\" between int\\|string\\|false and 1 results in an error\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/Index.php
-
-		-
 			message: "#^Binary operation \"\\.\\=\" between list\\<string\\>\\|string and string results in an error\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/Index.php
@@ -5200,6 +5200,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\Index\\:\\:recordGenerationTime\\(\\) has parameter \\$response with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
+			message: "#^Only numeric types are allowed in \\+, int\\<0, max\\>\\|false given on the left side\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/Index.php
 
@@ -29999,17 +30004,12 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
-			count: 4
+			count: 1
 			path: tests/Feature/PasswordRotation.php
 
 		-
 			message: "#^Cannot access property \\$institution on App\\\\Models\\\\User\\|null\\.$#"
 			count: 1
-			path: tests/Feature/PasswordRotation.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of method Illuminate\\\\Foundation\\\\Testing\\\\TestCase\\:\\:actingAs\\(\\) expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, App\\\\Models\\\\User\\|null given\\.$#"
-			count: 5
 			path: tests/Feature/PasswordRotation.php
 
 		-
