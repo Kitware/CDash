@@ -10,17 +10,18 @@ jobs:
           name: MySQL Build
           command: |
             set -x
-            source ~/project/docker/commands.bash
+            source ~/project/.circleci/commands.bash
             docker compose -f docker/docker-compose.yml \
                            -f docker/docker-compose.dev.yml \
                            -f docker/docker-compose.mysql.yml \
                            --env-file .env.dev up -d \
-                           --build
+                           --build \
+                           --wait
       - run:
           name: Test MySQL
           command: |
             set -x
-            source ~/project/docker/commands.bash
+            source ~/project/.circleci/commands.bash
             cdash_run_and_submit_mysql_ctest
       - run:
           name: Tear Down MySQL Build
@@ -34,17 +35,18 @@ jobs:
           name: Postgres Build
           command: |
             set -x
-            source ~/project/docker/commands.bash
+            source ~/project/.circleci/commands.bash
             docker compose -f docker/docker-compose.yml \
                            -f docker/docker-compose.dev.yml \
                            -f docker/docker-compose.postgres.yml \
                            --env-file .env.dev up -d \
-                           --build
+                           --build \
+                           --wait
       - run:
           name: Test Postgres
           command: |
             set -x
-            source ~/project/docker/commands.bash
+            source ~/project/.circleci/commands.bash
             cdash_run_and_submit_pgsql_ctest
       - run:
           name: Build Production Docker Images
