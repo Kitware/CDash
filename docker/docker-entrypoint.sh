@@ -16,7 +16,11 @@ if [ "$1" = "start-website" ] ; then
 
   # Start Apache under the current user, in case the current user isn't www-data.  Kubernetes-based systems
   # typically run under a random user.
-  APACHE_RUN_USER=$(id -u -n) /usr/sbin/apache2ctl -D FOREGROUND
+  if [ "$BASE_IMAGE" = "debian" ] ; then
+    APACHE_RUN_USER=$(id -u -n) /usr/sbin/apache2ctl -D FOREGROUND
+  elif [ "$BASE_IMAGE" = "ubi" ]; then
+    /usr/libexec/s2i/run
+  fi
 
 # If the start-worker argument was provided, start a worker process instead
 elif [ "$1" = "start-worker" ] ; then
