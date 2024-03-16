@@ -113,7 +113,7 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
         /** @var BuildGroup|PHPUnit_Framework_MockObject_MockObject $mock_group */
         $mock_group = $this->getMockBuilder(BuildGroup::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isNotifyingCommitters'])
+            ->onlyMethods(['isNotifyingCommitters'])
             ->getMock();
 
         $mock_group->expects($this->any())
@@ -123,7 +123,7 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
         /** @var ActionableBuildInterface|PHPUnit_Framework_MockObject_MockObject $mock_handler */
         $mock_handler = $this->getMockBuilder($handler_class)
             ->disableOriginalConstructor()
-            ->setMethods(['GetProject', 'GetSite', 'GetBuildCollection', 'GetCommitAuthors', 'GetBuildGroup', 'GetTopicCollectionForSubscriber'])
+            ->onlyMethods(['GetProject', 'GetSite', 'GetBuildCollection', 'GetCommitAuthors', 'GetBuildGroup', 'GetTopicCollectionForSubscriber'])
             ->getMock();
 
         $mock_handler->expects($this->any())

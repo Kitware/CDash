@@ -297,7 +297,7 @@ class GitHubTest extends TestCase
 
         $client = $this->getMockBuilder(\Github\Client::class)
             ->disableOriginalConstructor()
-            ->setMethods(['api', 'authenticate', 'getHttpClient'])
+            ->onlyMethods(['api', 'authenticate', 'getHttpClient'])
             ->getMock();
         $client->expects($this->any())
             ->method('authenticate');

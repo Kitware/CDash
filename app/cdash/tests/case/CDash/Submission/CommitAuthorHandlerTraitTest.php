@@ -10,12 +10,12 @@ class CommitAuthorHandlerTraitTest extends TestCase
     {
         $has_errors = $this->getMockBuilder(Build::class)
             ->disableOriginalConstructor()
-            ->setMethods(['GetCommitAuthors'])
+            ->onlyMethods(['GetCommitAuthors'])
             ->getMock();
 
         $has_warnings = $this->getMockBuilder(Build::class)
             ->disableOriginalConstructor()
-            ->setMethods(['GetCommitAuthors'])
+            ->onlyMethods(['GetCommitAuthors'])
             ->getMock();
 
         $has_errors->expects($this->once())
