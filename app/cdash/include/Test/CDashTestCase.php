@@ -82,10 +82,9 @@ class CDashTestCase extends TestCase
         $mock_pdo
             ->expects($this->any())
             ->method('quote')
-            ->will($this->returnCallback(function ($arg) {
+            ->willReturnCallback(function ($arg) {
                 return "'" . $arg . "'";
-            })
-            );
+            });
 
         Database::setInstance(Database::class, $mock_pdo);
     }

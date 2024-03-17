@@ -12412,11 +12412,6 @@ parameters:
 			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:returnCallback\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:createMockFromBuilder\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Test/CDashTestCase.php
