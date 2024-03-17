@@ -41,7 +41,7 @@ class BuildTest extends CDashTestCase
         // TODO: refactor asap
         /** @var Build|PHPUnit_Framework_MockObject_MockObject $sut */
         $sut = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetErrorDifferences', 'GetPreviousBuildId'])
+            ->onlyMethods(['GetErrorDifferences', 'GetPreviousBuildId'])
             ->getMock();
         $sut->Id = 1;
         $sut->expects($this->once())

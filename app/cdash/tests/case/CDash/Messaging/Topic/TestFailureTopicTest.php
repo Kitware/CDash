@@ -320,7 +320,7 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         $diff = $this->createNew('testfailedpositive');
         $diff['testfailedpositive'] = 0;
         $build = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetErrorDifferences', 'GetPreviousBuildId', 'GetNumberOfFailedTests'])
+            ->onlyMethods(['GetErrorDifferences', 'GetPreviousBuildId', 'GetNumberOfFailedTests'])
             ->getMock();
         $build->expects($this->any())
             ->method('GetErrorDifferences')

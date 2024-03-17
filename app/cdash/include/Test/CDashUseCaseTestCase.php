@@ -28,7 +28,7 @@ class CDashUseCaseTestCase extends CDashTestCase
 
         $mockServiceContainer = $this->getMockBuilder(ServiceContainer::class)
             ->disableOriginalConstructor()
-            ->setMethods(['create'])
+            ->onlyMethods(['create'])
             ->getMock();
 
         $mockServiceContainer

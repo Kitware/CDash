@@ -27,7 +27,7 @@ class MissingTestTopicTest extends TestCase
 
         /** @var Build|PHPUnit_Framework_MockObject_MockObject $build1 */
         $build1 = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetMissingTests'])
+            ->onlyMethods(['GetMissingTests'])
             ->getMock();
 
         $build1->expects($this->once())
@@ -39,7 +39,7 @@ class MissingTestTopicTest extends TestCase
 
         /** @var Build|PHPUnit_Framework_MockObject_MockObject $build2 */
         $build2 = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetMissingTests'])
+            ->onlyMethods(['GetMissingTests'])
             ->getMock();
 
         $build2->expects($this->once())
@@ -86,7 +86,7 @@ class MissingTestTopicTest extends TestCase
 
         /** @var Build|PHPUnit_Framework_MockObject_MockObject $build2 */
         $build2 = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetMissingTests'])
+            ->onlyMethods(['GetMissingTests'])
             ->getMock();
 
         $build2->expects($this->any())
