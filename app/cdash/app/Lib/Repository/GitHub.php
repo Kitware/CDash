@@ -384,6 +384,13 @@ class GitHub implements RepositoryInterface
         }
         $output['summary'] = "[$summary]($summary_url)";
         $params['output'] = $output;
+
+        if ((bool) config('cdash.github_always_pass')) {
+            $params['completed_at'] = $now;
+            $params['status'] = 'completed';
+            $params['conclusion'] = 'success';
+        }
+
         return $params;
     }
 

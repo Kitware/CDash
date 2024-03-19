@@ -137,7 +137,22 @@ class GitHubTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testGenerateCheckPayloadFromBuildRows()
+    /**
+     * @param array<string, array<string, string>|string> $expected
+     * @param array<string, array<string, string>|string> $actual
+     */
+    private function validateCheckPayload(array $expected, array $actual) : void
+    {
+        if ((bool) config('cdash.github_always_pass')) {
+            $expected['status'] = 'completed';
+            $expected['conclusion'] = 'success';
+        }
+        unset($actual['started_at']);
+        unset($actual['completed_at']);
+        $this->assertEquals($expected, $actual);
+    }
+
+    private function validateCheckPayloadFromBuildRows() : void
     {
         $this->project->expects($this->once())
             ->method('GetRepositories')
@@ -160,8 +175,7 @@ class GitHubTest extends TestCase
         ];
         $build_rows = [];
         $actual = $sut->generateCheckPayloadFromBuildRows($build_rows, 'zzz');
-        unset($actual['started_at']);
-        $this->assertEquals($expected, $actual);
+        $this->validateCheckPayload($expected, $actual);
 
         // Pending check.
         $table_header = "Build Name | Status | Details\n";
@@ -181,8 +195,7 @@ class GitHubTest extends TestCase
         ];
         $build_rows[] = $build_row;
         $actual = $sut->generateCheckPayloadFromBuildRows($build_rows, 'zzz');
-        unset($actual['started_at']);
-        $this->assertEquals($expected, $actual);
+        $this->validateCheckPayload($expected, $actual);
 
         // Successful check.
         $expected['status'] = 'completed';
@@ -192,9 +205,7 @@ class GitHubTest extends TestCase
         $expected['output']['text'] = "$table_header\n[a]($this->baseUrl/build/99995) | :white_check_mark: | [success]($this->baseUrl/build/99995)";
         $build_rows[0]['done'] = 1;
         $actual = $sut->generateCheckPayloadFromBuildRows($build_rows, 'zzz');
-        unset($actual['started_at']);
-        unset($actual['completed_at']);
-        $this->assertEquals($expected, $actual);
+        $this->validateCheckPayload($expected, $actual);
 
         // Error check.
         $expected['conclusion'] = 'failure';
@@ -233,9 +244,19 @@ class GitHubTest extends TestCase
             'done' => 1,
         ];
         $actual = $sut->generateCheckPayloadFromBuildRows($build_rows, 'zzz');
-        unset($actual['started_at']);
-        unset($actual['completed_at']);
-        $this->assertEquals($expected, $actual);
+        $this->validateCheckPayload($expected, $actual);
+    }
+
+    public function testGenerateCheckPayloadFromBuildRows() : void
+    {
+        config(['cdash.github_always_pass' => false]);
+        $this->validateCheckPayloadFromBuildRows();
+    }
+
+    public function testGenerateAlwaysPassCheckPayloadFromBuildRows() : void
+    {
+        config(['cdash.github_always_pass' => true]);
+        $this->validateCheckPayloadFromBuildRows();
     }
 
     public function testDedupeAndSortBuildRows()
