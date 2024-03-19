@@ -34,10 +34,9 @@ function(add_cypress_e2e_test TestName)
       --config baseUrl=${APP_URL}
   )
   # Cypress tries to put stuff in our home directory, which doesn't work for /var/www.
-  set_tests_properties(
-    cypress/e2e/${TestName}
-    PROPERTIES
+  set_tests_properties(cypress/e2e/${TestName} PROPERTIES
     ENVIRONMENT "HOME=${CDash_BINARY_DIR};"
+    DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
   )
 endfunction()
 
@@ -53,10 +52,9 @@ function(add_cypress_component_test TestName)
       --config baseUrl=${APP_URL}
   )
   # Cypress tries to put stuff in our home directory, which doesn't work for /var/www.
-  set_tests_properties(
-    cypress/component/${TestName}
-    PROPERTIES
+  set_tests_properties(cypress/component/${TestName} PROPERTIES
     ENVIRONMENT "HOME=${CDash_BINARY_DIR};"
+    DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
   )
 endfunction()
 
