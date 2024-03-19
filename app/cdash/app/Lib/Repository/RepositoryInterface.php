@@ -18,5 +18,8 @@ namespace CDash\Lib\Repository;
 
 interface RepositoryInterface
 {
-    public function setStatus(array $options);
+    /**
+     * @param array<string, string> $options
+     */
+    public function setStatus(array $options) : void;
 }

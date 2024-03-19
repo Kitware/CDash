@@ -16,12 +16,14 @@
 
 use CDash\Lib\Repository\GitHub;
 use CDash\Model\Project;
+use PHPUnit\Framework\MockObject\MockObject;
 use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 
 class GitHubTest extends TestCase
 {
-    private $baseUrl;
+    private string $baseUrl;
+    /** @var Project|MockObject $project */
     private $project;
     public function setUp() : void
     {
@@ -32,7 +34,7 @@ class GitHubTest extends TestCase
         $this->baseUrl = config('app.url');
     }
 
-    public function testSetStatus()
+    public function testSetStatus() : void
     {
         $sut = $this->setupAuthentication();
         $options = [
@@ -45,9 +47,9 @@ class GitHubTest extends TestCase
         $sut->setStatus($options);
     }
 
-    public function testAuthenticateThrowsExceptionGivenNoInstallationId()
+    public function testAuthenticateThrowsExceptionGivenNoInstallationId() : void
     {
-        $this->project->expects($this->once())
+        $this->project->expects($this::once())
             ->method('GetRepositories')
             ->willReturn([]);
         $sut = new GitHub($this->project);
@@ -56,20 +58,20 @@ class GitHubTest extends TestCase
         $sut->authenticate();
     }
 
-    public function testSkipCheckPropertyIsHonored()
+    public function testSkipCheckPropertyIsHonored() : void
     {
-        $this->project->expects($this->once())
+        $this->project->expects($this::once())
             ->method('GetRepositories')
             ->willReturn([]);
         $sut = new GitHub($this->project);
 
         $build_row = ['properties' => '{ "skip checks": 1}'];
-        $this->assertNull($sut->getCheckSummaryForBuildRow($build_row));
+        $this::assertNull($sut->getCheckSummaryForBuildRow($build_row));
     }
 
-    public function testCheckSummaryForBuildRow()
+    public function testCheckSummaryForBuildRow() : void
     {
-        $this->project->expects($this->once())
+        $this->project->expects($this::once())
             ->method('GetRepositories')
             ->willReturn([]);
         $sut = new GitHub($this->project);
@@ -87,13 +89,13 @@ class GitHubTest extends TestCase
         $actual = $sut->getCheckSummaryForBuildRow($build_row);
         $link = "$this->baseUrl/build/99999/configure";
         $expected = $common . ":x: | [1 configure error]($link)";
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
 
         // Plural configure errors.
         $build_row['configureerrors'] = 2;
         $actual = $sut->getCheckSummaryForBuildRow($build_row);
         $expected = $common . ":x: | [2 configure errors]($link)";
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
         $build_row['configureerrors'] = 0;
 
         // Single build error.
@@ -101,13 +103,13 @@ class GitHubTest extends TestCase
         $link = "$this->baseUrl/viewBuildError.php?buildid=99999";
         $actual = $sut->getCheckSummaryForBuildRow($build_row);
         $expected = $common . ":x: | [1 build error]($link)";
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
 
         // Plural build errors.
         $build_row['builderrors'] = 2;
         $actual = $sut->getCheckSummaryForBuildRow($build_row);
         $expected = $common . ":x: | [2 build errors]($link)";
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
         $build_row['builderrors'] = 0;
 
         // Single test failure.
@@ -115,26 +117,26 @@ class GitHubTest extends TestCase
         $link = "$this->baseUrl/viewTest.php?buildid=99999";
         $actual = $sut->getCheckSummaryForBuildRow($build_row);
         $expected = $common . ":x: | [1 failed test]($link)";
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
 
         // Plural test failures.
         $build_row['testfailed'] = 2;
         $actual = $sut->getCheckSummaryForBuildRow($build_row);
         $expected = $common . ":x: | [2 failed tests]($link)";
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
         $build_row['testfailed'] = 0;
 
         // Pending.
         $build_row['done'] = 0;
         $actual = $sut->getCheckSummaryForBuildRow($build_row);
         $expected = $common . ":hourglass_flowing_sand: | [pending]($summary_url)";
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
 
         // Success.
         $build_row['done'] = 1;
         $actual = $sut->getCheckSummaryForBuildRow($build_row);
         $expected = $common . ":white_check_mark: | [success]($summary_url)";
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
     }
 
     /**
@@ -149,12 +151,12 @@ class GitHubTest extends TestCase
         }
         unset($actual['started_at']);
         unset($actual['completed_at']);
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
     }
 
     private function validateCheckPayloadFromBuildRows() : void
     {
-        $this->project->expects($this->once())
+        $this->project->expects($this::once())
             ->method('GetRepositories')
             ->willReturn([]);
         $this->project->Name = 'TestChecksProject';
@@ -259,9 +261,9 @@ class GitHubTest extends TestCase
         $this->validateCheckPayloadFromBuildRows();
     }
 
-    public function testDedupeAndSortBuildRows()
+    public function testDedupeAndSortBuildRows() : void
     {
-        $this->project->expects($this->once())
+        $this->project->expects($this::once())
             ->method('GetRepositories')
             ->willReturn([]);
         $sut = new GitHub($this->project);
@@ -280,10 +282,10 @@ class GitHubTest extends TestCase
             ['id' => 6, 'name' => 'b', 'starttime' => '2019-05-01 18:08:40'],
             ['id' => 1, 'name' => 'c', 'starttime' => '2019-05-01 18:08:35'],
         ];
-        $this->assertEquals($expected, $actual);
+        $this::assertEquals($expected, $actual);
     }
 
-    private function setupAuthentication()
+    private function setupAuthentication() : GitHub
     {
         $github_url = 'https://github.com/Foo/Bar';
         $repositories = [];
@@ -292,27 +294,32 @@ class GitHubTest extends TestCase
             'username' => 12345,
         ];
         $this->project->CvsUrl = $github_url;
-        $this->project->expects($this->once())
+        $this->project->expects($this::once())
             ->method('GetRepositories')
             ->willReturn($repositories);
 
         $sut = new GitHub($this->project);
 
-        $statuses = $this->getMockBuilder(\Github\Api\Apps::class)
+        $statuses = $this->getMockBuilder(\Github\Api\Repository\Statuses::class)
             ->disableOriginalConstructor()
-            ->setMethods(['create'])
+            ->onlyMethods(['create'])
             ->getMock();
-        $statuses->expects($this->any())
+        $statuses->expects($this::any())
             ->method('create')
             ->willReturn(true);
 
-        $api = $this->getMockBuilder(\Github\Api\Apps::class)
+        $apps = $this->getMockBuilder(\Github\Api\Apps::class)
             ->disableOriginalConstructor()
-            ->setMethods(['createInstallationToken', 'statuses'])
+            ->onlyMethods(['createInstallationToken'])
             ->getMock();
-        $api->expects($this->any())
+        $apps->expects($this::any())
             ->method('createInstallationToken');
-        $api->expects($this->any())
+
+        $repo = $this->getMockBuilder(\Github\Api\Repo::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['statuses'])
+            ->getMock();
+        $repo->expects($this::any())
             ->method('statuses')
             ->willReturn($statuses);
 
@@ -320,11 +327,14 @@ class GitHubTest extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['api', 'authenticate', 'getHttpClient'])
             ->getMock();
-        $client->expects($this->any())
+        $client->expects($this::any())
             ->method('authenticate');
-        $client->expects($this->any())
+        $client->expects($this::any())
             ->method('api')
-            ->willReturn($api);
+            ->willReturnMap([
+               ['apps', $apps],
+               ['repo', $repo],
+        ]);
 
         $sut->setApiClient($client);
         $pem =  base_path() . "/app/cdash/tests/data/key_for_testing_only";
@@ -334,14 +344,9 @@ class GitHubTest extends TestCase
         return $sut;
     }
 
-    public function testCreateCheck()
+    public function testCreateCheck() : void
     {
         $sut = $this->setupAuthentication();
-        $check = $this->getMockBuilder(\CDash\Lib\Repository\Check::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['create'])
-            ->getMock();
-        $sut->setCheck($check);
         $sut->createCheck(str_replace('-', '', Uuid::uuid4()->toString()));
     }
 }

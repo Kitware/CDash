@@ -6188,72 +6188,13 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Call to function array_search\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 3
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: """
-				#^Call to method file\\(\\) of deprecated class Lcobucci\\\\JWT\\\\Signer\\\\Key\\\\LocalFileReference\\:
-				please use \\{@see InMemory\\} instead$#
-			"""
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
 			message: "#^Comparison operation \"\\>\" between 0 and 0 is always false\\.$#"
 			count: 2
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 2
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: """
-				#^Fetching deprecated class constant AUTH_ACCESS_TOKEN of class Github\\\\Client\\:
-				Use the AuthMethod const$#
-			"""
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
 			message: "#^If condition is always false\\.$#"
 			count: 3
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Implicit array creation is not allowed \\- variable \\$cached_commits might not exist\\.$#"
-			count: 2
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 2
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:authenticate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:authenticate\\(\\) has parameter \\$required with no type specified\\.$#"
-			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
@@ -6282,96 +6223,6 @@ parameters:
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:compareCommits\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:createCheck\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:createCheck\\(\\) has parameter \\$head_sha with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:dedupeAndSortBuildRows\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:dedupeAndSortBuildRows\\(\\) has parameter \\$rows with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:generateCheckPayloadFromBuildRows\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:generateCheckPayloadFromBuildRows\\(\\) has parameter \\$build_rows with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:generateCheckPayloadFromBuildRows\\(\\) has parameter \\$head_sha with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:getBuildRowsForCheck\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:getBuildRowsForCheck\\(\\) has parameter \\$head_sha with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:getCheckSummaryForBuildRow\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:getCheckSummaryForBuildRow\\(\\) has parameter \\$row with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:getRepositoryInformation\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:initializeApiClient\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:setApiClient\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:setCheck\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:setStatus\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:setStatus\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 2
 			path: app/cdash/app/Lib/Repository/GitHub.php
@@ -6382,17 +6233,7 @@ parameters:
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
-			message: "#^Parameter \\$check of method CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:setCheck\\(\\) has invalid type CDash\\\\Lib\\\\Repository\\\\Check\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
 			message: "#^Property CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:\\$apiClient has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Property CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:\\$baseUrl has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
@@ -6407,69 +6248,9 @@ parameters:
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
-			message: "#^Property CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:\\$foundBuildErrors has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Property CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:\\$foundConfigureErrors has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Property CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:\\$foundTestFailures has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Property CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:\\$hash is unused\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Property CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:\\$numFailed has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Property CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:\\$numPassed has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Property CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:\\$numPending has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Property CDash\\\\Lib\\\\Repository\\\\GitHub\\:\\:\\$project has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
 			message: "#^Strict comparison using \\=\\=\\= between 0 and 0 will always evaluate to true\\.$#"
 			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Variable \\$cached_commits might not be defined\\.$#"
-			count: 2
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Variable \\$list_of_commits might not be defined\\.$#"
-			count: 4
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\RepositoryInterface\\:\\:setStatus\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/RepositoryInterface.php
-
-		-
-			message: "#^Method CDash\\\\Lib\\\\Repository\\\\RepositoryInterface\\:\\:setStatus\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Lib/Repository/RepositoryInterface.php
 
 		-
 			message: "#^Property CDash\\\\Model\\\\ActionableTypes\\:\\:\\$categories has no type specified\\.$#"
@@ -16541,94 +16322,6 @@ parameters:
 			message: "#^Method DynamicAnalysisUseCaseTest\\:\\:testUseCaseBuildsDynamicAnalysisUseCase\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
-
-		-
-			message: """
-				#^Call to deprecated method setMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/pull/3687$#
-			"""
-			count: 3
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: "#^Class CDash\\\\Lib\\\\Repository\\\\Check not found\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
-			count: 10
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:any\\(\\)\\.$#"
-			count: 5
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:once\\(\\)\\.$#"
-			count: 6
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: "#^Method GitHubTest\\:\\:setupAuthentication\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: "#^Method GitHubTest\\:\\:testAuthenticateThrowsExceptionGivenNoInstallationId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: "#^Method GitHubTest\\:\\:testCheckSummaryForBuildRow\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: "#^Method GitHubTest\\:\\:testCreateCheck\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: "#^Method GitHubTest\\:\\:testDedupeAndSortBuildRows\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: "#^Method GitHubTest\\:\\:testSetStatus\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: "#^Method GitHubTest\\:\\:testSkipCheckPropertyIsHonored\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: "#^Property GitHubTest\\:\\:\\$baseUrl has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: "#^Property GitHubTest\\:\\:\\$project has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: "#^Trying to mock an undefined method create\\(\\) on class Github\\\\Api\\\\Apps\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			message: "#^Trying to mock an undefined method statuses\\(\\) on class Github\\\\Api\\\\Apps\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
