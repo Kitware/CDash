@@ -566,8 +566,11 @@ set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS subproject
 add_php_test(starttimefromnotes)
 set_tests_properties(starttimefromnotes PROPERTIES DEPENDS dynamicanalysisdefectlongtype)
 
+add_php_test(starttimefromupload)
+set_tests_properties(starttimefromupload PROPERTIES DEPENDS starttimefromnotes)
+
 add_php_test(querytestsfilterlabels)
-set_tests_properties(querytestsfilterlabels PROPERTIES DEPENDS starttimefromnotes)
+set_tests_properties(querytestsfilterlabels PROPERTIES DEPENDS starttimefromupload)
 
 add_php_test(lotsofsubprojects)
 set_tests_properties(lotsofsubprojects PROPERTIES DEPENDS querytestsfilterlabels)

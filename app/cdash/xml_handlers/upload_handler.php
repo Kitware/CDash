@@ -26,6 +26,7 @@ use App\Models\SiteInformation;
 use CDash\Model\UploadFile;
 
 use Illuminate\Http\File;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -48,6 +49,8 @@ class UploadHandler extends AbstractHandler
     private $Base64TmpFileWriteHandle;
     private $Base64TmpFilename;
     private $Label;
+    private int $Timestamp;
+    private bool $BuildInitialized;
     protected Project $Project;
 
     /** If True, means an error happened while processing the file */
@@ -64,6 +67,8 @@ class UploadHandler extends AbstractHandler
         $this->Base64TmpFilename = '';
         $this->UploadError = false;
         $this->Project = $this->GetProject();
+        $this->Timestamp = 0;
+        $this->BuildInitialized = false;
     }
 
     /** Start element */
@@ -76,7 +81,7 @@ class UploadHandler extends AbstractHandler
             return;
         }
 
-        if ($name == 'SITE') {
+        if ($name === 'SITE') {
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
@@ -99,56 +104,11 @@ class UploadHandler extends AbstractHandler
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
             $this->Build->Information = $buildInformation;
-        } elseif ($name == 'UPLOAD') {
-            // Setting start time and end time is tricky here, since all
-            // we have is the build stamp.  The strategy we take here is:
-            // Set the start time as late as possible, and set the end time
-            // as early as possible.
-            // This way we don't override any existing values for these fields
-            // when we call UpdateBuild() below.
-            //
-            // For end time, we use the start of the testing day.
-            // For start time, we use the end of the testing day.
-            // Yes, this means the build finished before it began.
-            //
-            // This associates the build with the correct day if it is only
-            // an upload.  Otherwise we defer to the values set by the
-            // other handlers.
-            $buildDate =
-                extract_date_from_buildstamp($this->Build->GetStamp());
-            [$beginningOfDay, $endOfDay] = $this->Project->ComputeTestingDayBounds($buildDate);
-
-            $this->Build->EndTime = $beginningOfDay;
-            $this->Build->StartTime = $endOfDay;
-            $this->Build->SubmitTime = gmdate(FMT_DATETIME);
-
-            $this->Build->ProjectId = $this->projectid;
-            $this->Build->SetSubProject($this->SubProjectName);
-            $this->Build->GetIdFromName($this->SubProjectName);
-            $this->Build->RemoveIfDone();
-
-            if ($this->Label) {
-                $this->Build->AddLabel($this->Label);
-            }
-
-            // If the build doesn't exist we add it
-            if ($this->Build->Id == 0) {
-                $this->Build->Append = false;
-                $this->Build->InsertErrors = false;
-                add_build($this->Build);
-            } else {
-                if ($this->Label) {
-                    $this->Build->InsertLabelAssociations();
-                }
-
-                // Otherwise make sure that the build is up-to-date.
-                $this->Build->UpdateBuild($this->Build->Id, -1, -1);
-            }
-            $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
-        } elseif ($name == 'FILE') {
+        } elseif ($name === 'FILE') {
+            $this->initializeBuild();
             $this->UploadFile = new UploadFile();
             $this->UploadFile->Filename = $attributes['FILENAME'];
-        } elseif ($name == 'CONTENT') {
+        } elseif ($name === 'CONTENT') {
             $fileEncoding = $attributes['ENCODING'] ?? 'base64';
 
             if (strcmp($fileEncoding, 'base64') != 0) {
@@ -176,7 +136,7 @@ class UploadHandler extends AbstractHandler
                 $this->UploadError = true;
                 return;
             }
-        } elseif ($name == 'LABEL') {
+        } elseif ($name === 'LABEL') {
             $this->Label = new Label();
         }
     }
@@ -194,7 +154,7 @@ class UploadHandler extends AbstractHandler
             return;
         }
 
-        if ($name == 'FILE' && $parent == 'UPLOAD') {
+        if ($name === 'FILE' && $parent === 'UPLOAD') {
             $this->UploadFile->BuildId = $this->Build->Id;
 
             // Close base64 temporary file writing handler
@@ -243,7 +203,7 @@ class UploadHandler extends AbstractHandler
             $path_parts = pathinfo($this->UploadFile->Filename);
             $ext = $path_parts['extension'];
 
-            if ($ext == 'url') {
+            if ($ext === 'url') {
                 $this->UploadFile->IsUrl = true;
 
                 // Read content of the file
@@ -293,7 +253,7 @@ class UploadHandler extends AbstractHandler
         $parent = $this->getParent();
         $element = $this->getElement();
 
-        if ($parent == 'FILE') {
+        if ($parent === 'FILE') {
             switch ($element) {
                 case 'CONTENT':
                     // Write base64 encoded chunch to temporary file
@@ -301,8 +261,72 @@ class UploadHandler extends AbstractHandler
                     fwrite($this->Base64TmpFileWriteHandle, str_replace($charsToReplace, '', $data));
                     break;
             }
-        } elseif ($element == 'LABEL') {
+        } elseif ($parent === 'UPLOAD' && $element === 'TIME') {
+            $this->Timestamp = (int) $data;
+        } elseif ($element === 'LABEL') {
             $this->Label->SetText($data);
         }
+    }
+
+    private function initializeBuild() : void
+    {
+        if ($this->BuildInitialized) {
+            return;
+        }
+
+        if ($this->Timestamp > 0) {
+            $dateTimeString = Carbon::createFromTimestampUTC($this->Timestamp)->format(FMT_DATETIME);
+            $this->Build->EndTime = $dateTimeString;
+            $this->Build->StartTime = $dateTimeString;
+            $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+        } else {
+            // Setting start time and end time is tricky here, since all
+            // we have is the build stamp.  The strategy we take here is:
+            // Set the start time as late as possible, and set the end time
+            // as early as possible.
+            // This way we don't override any existing values for these fields
+            // when we call UpdateBuild() below.
+            //
+            // For end time, we use the start of the testing day.
+            // For start time, we use the end of the testing day.
+            // Yes, this means the build finished before it began.
+            //
+            // This associates the build with the correct day if it is only
+            // an upload.  Otherwise we defer to the values set by the
+            // other handlers.
+            $buildDate =
+                extract_date_from_buildstamp($this->Build->GetStamp());
+            [$beginningOfDay, $endOfDay] = $this->Project->ComputeTestingDayBounds($buildDate);
+
+            $this->Build->EndTime = $beginningOfDay;
+            $this->Build->StartTime = $endOfDay;
+            $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+        }
+
+        $this->Build->ProjectId = $this->projectid;
+        $this->Build->SetSubProject($this->SubProjectName);
+        $this->Build->GetIdFromName($this->SubProjectName);
+        $this->Build->RemoveIfDone();
+
+        if ($this->Label) {
+            $this->Build->AddLabel($this->Label);
+        }
+
+        // If the build doesn't exist we add it
+        if ($this->Build->Id == 0) {
+            $this->Build->Append = false;
+            $this->Build->InsertErrors = false;
+            add_build($this->Build);
+        } else {
+            if ($this->Label) {
+                $this->Build->InsertLabelAssociations();
+            }
+
+            // Otherwise make sure that the build is up-to-date.
+            $this->Build->UpdateBuild($this->Build->Id, -1, -1);
+        }
+        $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
+
+        $this->BuildInitialized = true;
     }
 }
