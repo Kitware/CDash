@@ -1,0 +1,55 @@
+name: Publish Release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  debian:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
+        name: Build ${{ github.ref_name }} image
+        with:
+          context: .
+          push: true
+          tags: "kitware/cdash:${{ github.ref_name }}"
+          target: cdash
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - uses: docker/build-push-action@v5
+        name: Build ${{ github.ref_name }} worker image
+        with:
+          context: .
+          push: true
+          tags: "kitware/cdash-worker:${{ github.ref_name }}"
+          target: cdash
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  ubi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
+        name: Build ${{ github.ref_name }} image
+        with:
+          context: .
+          push: true
+          tags: "kitware/cdash:${{ github.ref_name }}-ubi"
+          target: cdash
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - uses: docker/build-push-action@v5
+        name: Build ${{ github.ref_name }} worker image
+        with:
+          context: .
+          push: true
+          tags: "kitware/cdash-worker:${{ github.ref_name }}-ubi"
+          target: cdash
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

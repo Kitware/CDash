@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    env:
+      SITENAME: GitHub Actions
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        database: ['mysql', 'postgres']
+        base-image: ['debian', 'ubi']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build images
+        run: |
+          echo
+          BASE_IMAGE=${{matrix.base-image}} docker compose \
+              -f docker/docker-compose.yml \
+              -f docker/docker-compose.dev.yml \
+              -f "docker/docker-compose.${{matrix.database}}.yml" \
+              --env-file .env.dev up -d \
+              --build \
+              --wait
+
+      - name: Run Tests
+        run: |
+          source .github/workflows/commands.bash
+          cdash_run_and_submit_${{matrix.database}}_ctest
+
+  build-images:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        base-image: [ 'debian', 'ubi' ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
+        name: Build ${{matrix.base-image}} production image
+        with:
+          context: .
+          push: false
+          target: cdash
+          build-args: |
+            BASE_IMAGE=${{matrix.base-image}}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      # Building the worker image should be almost instantaneous due to caching of the regular image
+      - uses: docker/build-push-action@v5
+        name: Build ${{matrix.base-image}} worker image
+        with:
+          context: .
+          push: false
+          target: cdash-worker
+          build-args: |
+            BASE_IMAGE=${{matrix.base-image}}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

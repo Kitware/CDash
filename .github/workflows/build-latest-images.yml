@@ -1,0 +1,108 @@
+name: Publish Images
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  latest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
+        name: Build standard production image
+        with:
+          context: .
+          push: true
+          tags: "kitware/cdash:latest"
+          target: cdash
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  latest-ubi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
+        name: Build UBI production image
+        with:
+          context: .
+          push: true
+          tags: "kitware/cdash:latest-ubi"
+          target: cdash
+          build-args: |
+            BASE_IMAGE=ubi
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  worker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
+        name: Build standard worker image
+        with:
+          context: .
+          push: true
+          tags: "kitware/cdash-worker:latest"
+          target: cdash-worker
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  worker-ubi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
+        name: Build UBI worker image
+        with:
+          context: .
+          push: true
+          tags: "kitware/cdash-worker:latest-ubi"
+          target: cdash-worker
+          build-args: |
+            BASE_IMAGE=ubi
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
+        name: Build standard development image
+        with:
+          context: .
+          push: true
+          tags: "kitware/cdash:testing"
+          target: cdash
+          build-args: |
+            DEVELOPMENT_BUILD=1
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  testing-ubi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
+        name: Build UBI development image
+        with:
+          context: .
+          push: true
+          tags: "kitware/cdash:testing-ubi"
+          target: cdash
+          build-args: |
+            BASE_IMAGE=ubi
+            DEVELOPMENT_BUILD=1
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
