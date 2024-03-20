@@ -43,7 +43,8 @@
     "shiftonelabs/laravel-sqs-fifo-queue": "3.0.1",
     "socialiteproviders/github": "4.1.0",
     "socialiteproviders/gitlab": "4.1.0",
-    "socialiteproviders/google": "4.1.0"
+    "socialiteproviders/google": "4.1.0",
+    "socialiteproviders/pingidentity": "dev-add_pingidentity_provider"
   },
   "require-dev": {
     "ext-dom": "*",
@@ -109,5 +110,8 @@
     "post-create-project-cmd": [
       "@php artisan key:generate --ansi"
     ]
-  }
+  },
+  "repositories": [
+    { "type": "path",    "url": "./resources/providers/PingIdentity"  }
+  ]
 }
