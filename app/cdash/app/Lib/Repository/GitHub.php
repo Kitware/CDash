@@ -19,9 +19,11 @@ namespace CDash\Lib\Repository;
 use Github\Client as GitHubClient;
 use Github\HttpClient\Builder as GitHubBuilder;
 
+use Illuminate\Support\Facades\Log;
+
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
-use Lcobucci\JWT\Signer\Key\LocalFileReference;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 
 use CDash\Database;
@@ -39,28 +41,19 @@ class GitHub implements RepositoryInterface
 {
     public const BASE_URI = 'https://api.github.com';
 
-    /** @var string $installationId */
-    private $installationId;
-
-    /** @var string $owner */
-    private $owner;
-
-    /** @var string $repo */
-    private $repo;
-
-    /** @var string $hash */
-    private $hash;
-
+    private string $installationId = '';
+    private string $owner = '';
+    private string $repo = '';
     private $apiClient;
-    private $baseUrl;
+    private string $baseUrl;
     private $db;
-    private $foundConfigureErrors;
-    private $foundBuildErrors;
-    private $foundTestFailures;
-    private $numPassed;
-    private $numFailed;
-    private $numPending;
-    private $project;
+    private bool $foundConfigureErrors = false;
+    private bool $foundBuildErrors = false;
+    private bool $foundTestFailures = false;
+    private int $numPassed = 0;
+    private int $numFailed = 0;
+    private int $numPending = 0;
+    private Project $project;
 
     private $check;
 
@@ -77,7 +70,6 @@ class GitHub implements RepositoryInterface
 
         $this->getRepositoryInformation();
 
-        $installationId = '';
         $repositories = $this->project->GetRepositories();
         foreach ($repositories as $repo) {
             if (strpos($repo['url'], 'github.com') !== false) {
@@ -89,19 +81,22 @@ class GitHub implements RepositoryInterface
         $this->check = null;
     }
 
-    public function setApiClient(GitHubClient $client)
+    public function setApiClient(GitHubClient $client) : void
     {
         $this->apiClient = $client;
     }
 
-    protected function initializeApiClient()
+    protected function initializeApiClient() : void
     {
         $builder = new GitHubBuilder();
         $apiClient = new GithubClient($builder, 'machine-man-preview');
         $this->setApiClient($apiClient);
     }
 
-    public function authenticate($required = true)
+    /**
+     * Attempt to log in to the GitHub API
+     */
+    public function authenticate(bool $required = true) : bool
     {
         if (!config('cdash.use_vcs_api')) {
             return false;
@@ -111,7 +106,7 @@ class GitHub implements RepositoryInterface
             $this->initializeApiClient();
         }
 
-        if (empty($this->installationId)) {
+        if ($this->installationId === '') {
             if ($required) {
                 throw new \Exception('Unable to find installation ID for repository');
             }
@@ -137,7 +132,7 @@ class GitHub implements RepositoryInterface
 
         $config = Configuration::forSymmetricSigner(
             new Sha256(),
-            LocalFileReference::file($pem)
+            InMemory::file($pem)
         );
 
         $now = new \DateTimeImmutable();
@@ -157,7 +152,7 @@ class GitHub implements RepositoryInterface
             return false;
         }
         if ($token) {
-            $this->apiClient->authenticate($token['token'], null, GitHubClient::AUTH_ACCESS_TOKEN);
+            $this->apiClient->authenticate($token['token'], null, \Github\AuthMethod::ACCESS_TOKEN);
         }
         return true;
     }
@@ -175,9 +170,9 @@ class GitHub implements RepositoryInterface
      *
      * @see https://developer.github.com/v3/repos/statuses/ for property descriptions
      *
-     * @param array $options
+     * @param array<string, string> $options
      */
-    public function setStatus(array $options)
+    public function setStatus($options) : void
     {
         if (!$this->authenticate()) {
             return;
@@ -185,7 +180,7 @@ class GitHub implements RepositoryInterface
 
         $commitHash = $options['commit_hash'];
         $params = array_filter($options, function ($key) {
-            return in_array($key, ['state', 'context', 'description', 'target_url']);
+            return in_array($key, ['state', 'context', 'description', 'target_url'], true);
         }, ARRAY_FILTER_USE_KEY);
 
         $statuses = $this->apiClient
@@ -199,7 +194,7 @@ class GitHub implements RepositoryInterface
      *
      * @see https://developer.github.com/v3/checks/runs/#create-a-check-run
      */
-    public function createCheck($head_sha)
+    public function createCheck(string $head_sha): void
     {
         if (!$this->authenticate()) {
             return;
@@ -214,20 +209,16 @@ class GitHub implements RepositoryInterface
         try {
             $this->check->create($this->owner, $this->repo, $payload);
         } catch (\Github\Exception\RuntimeException $e) {
-            add_log("RunTimeException while trying to create the check.\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n", 'createCheck', LOG_WARNING);
+            Log::warning("RunTimeException while trying to create the check.\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n");
         }
-    }
-
-    public function setCheck(Check $check)
-    {
-        $this->check = $check;
     }
 
     /**
      * Query the database for information needed to generate a check
      * for a commit.
+     * @return array<int, array<string, int|string>>
      */
-    public function getBuildRowsForCheck($head_sha)
+    public function getBuildRowsForCheck(string $head_sha): array
     {
         $stmt = $this->db->prepare('
             SELECT b.id, b.name, b.builderrors, b.configureerrors, b.testfailed,
@@ -239,13 +230,14 @@ class GitHub implements RepositoryInterface
             WHERE bu.revision = :sha');
         $this->db->execute($stmt, [':sha' => $head_sha]);
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        $rows = $this->dedupeAndSortBuildRows($rows);
-        return $rows;
+        return $this->dedupeAndSortBuildRows($rows);
     }
 
     /**
      * Include only one row per build name: the one with the most recent start time.
      * Also sort the rows by the build name (in alphabetical order).
+     * @param array<int, array<string, int|string>> $rows
+     * @return array<int, array<string, int|string>>
      */
     public function dedupeAndSortBuildRows($rows)
     {
@@ -271,7 +263,7 @@ class GitHub implements RepositoryInterface
             $newest_starttime = -1;
             $buildid_to_keep = -1;
             foreach ($builds as $build) {
-                $starttime = strtotime($build['starttime']);
+                $starttime = strtotime((string) $build['starttime']);
                 if ($starttime > $newest_starttime) {
                     $newest_starttime = $starttime;
                     $buildid_to_keep = $build['id'];
@@ -289,14 +281,14 @@ class GitHub implements RepositoryInterface
         // included in our report.
         $output_rows = [];
         foreach ($rows as $row) {
-            if (!in_array($row['id'], $buildids_to_remove)) {
+            if (!in_array($row['id'], $buildids_to_remove, true)) {
                 $output_rows[] = $row;
             }
         }
 
         // Alphabetize this array by build name.
         usort($output_rows, function ($a, $b) {
-            return strcmp($a['name'], $b['name']);
+            return strcmp((string) $a['name'], (string) $b['name']);
         });
 
         return $output_rows;
@@ -304,8 +296,10 @@ class GitHub implements RepositoryInterface
 
     /**
      * Create a payload to make a check from an array of build data.
+     * @param array<int, array<string, int|string>> $build_rows
+     * @return array<string, array<string, string>|string>
      */
-    public function generateCheckPayloadFromBuildRows($build_rows, $head_sha)
+    public function generateCheckPayloadFromBuildRows($build_rows, string $head_sha): array
     {
         // Get information about each build performed for this commit.
         $this->numPassed = 0;
@@ -384,17 +378,25 @@ class GitHub implements RepositoryInterface
         }
         $output['summary'] = "[$summary]($summary_url)";
         $params['output'] = $output;
+
+        if ((bool) config('cdash.github_always_pass')) {
+            $params['completed_at'] = $now;
+            $params['status'] = 'completed';
+            $params['conclusion'] = 'success';
+        }
+
         return $params;
     }
 
     /**
      * Generate a check summary for a given row of build data.
+     * @param array<string, int|string> $row
      */
-    public function getCheckSummaryForBuildRow($row)
+    public function getCheckSummaryForBuildRow(array $row) : string|null
     {
         // Check properties to see if this build should be excluded
         // from the check.
-        $properties = json_decode($row['properties'], true);
+        $properties = json_decode((string) $row['properties'], true);
         if (is_array($properties) && array_key_exists('skip checks', $properties)) {
             return null;
         }
@@ -436,7 +438,7 @@ class GitHub implements RepositoryInterface
             $this->numFailed++;
             $this->foundTestFailures = true;
         } else {
-            if ($row['done'] == 1) {
+            if ((int) $row['done'] === 1) {
                 // Build completed without problems.
                 $icon = ':white_check_mark:';
                 $msg = 'success';
@@ -458,11 +460,11 @@ class GitHub implements RepositoryInterface
     /**
      * Record what changed between two commits.
      **/
-    public function compareCommits(BuildUpdate $update)
+    public function compareCommits(BuildUpdate $update) : bool
     {
         // Get current revision (head).
-        if (empty($update->Revision)) {
-            return;
+        if ($update->Revision === '') {
+            return false;
         }
         $head = $update->Revision;
 
@@ -471,13 +473,13 @@ class GitHub implements RepositoryInterface
         $build->Id = $update->BuildId;
         $previous_buildid = $build->GetPreviousBuildId();
         if ($previous_buildid < 1) {
-            return;
+            return false;
         }
         $previous_update = new BuildUpdate();
         $previous_update->BuildId = $previous_buildid;
         $previous_update->FillFromBuildId();
         if (!$previous_update->Revision) {
-            return;
+            return false;
         }
         $base = $previous_update->Revision;
 
@@ -488,7 +490,7 @@ class GitHub implements RepositoryInterface
 
         // Return early if we are configured to not use the GitHub API.
         if (!config('cdash.use_vcs_api')) {
-            return;
+            return false;
         }
 
         // Attempt to authenticate with the GitHub API.
@@ -510,7 +512,7 @@ class GitHub implements RepositoryInterface
         if (!is_array($commits) ||
                 !array_key_exists('commits', $commits) ||
                 !array_key_exists('files', $commits)) {
-            return;
+            return false;
         }
 
         // Discard merge commits.  We want to assign credit to the author who did
@@ -524,17 +526,18 @@ class GitHub implements RepositoryInterface
         // If we still have more than one commit, we'll need to perform follow-up
         // API calls to figure out which commit was likely responsible for each
         // changed file.
+        $list_of_commits = [];
         $multiple_commits = false;
         if (count($commits['commits']) > 1) {
             $multiple_commits = true;
             // Generate list of commits contained by this changeset in reverse order
             // (most recent first).
             $list_of_commits = array_reverse($commits['commits']);
-
-            // Also maintain a local cache of what files were changed by each commit.
-            // This prevents us from hitting the GitHub API more than necessary.
-            $cached_commits = [];
         }
+
+        // Maintain a local cache of what files were changed by each commit.
+        // This prevents us from hitting the GitHub API more than necessary.
+        $cached_commits = [];
 
         // Find the commit that changed each file.
         foreach ($commits['files'] as $modified_file) {
@@ -544,8 +547,8 @@ class GitHub implements RepositoryInterface
 
                 // First check our local cache.
                 foreach ($cached_commits as $sha => $files) {
-                    if (in_array($modified_file['filename'], $files)) {
-                        $idx = array_search($sha, array_column($list_of_commits, 'sha'));
+                    if (in_array($modified_file['filename'], $files, true)) {
+                        $idx = array_search($sha, array_column($list_of_commits, 'sha'), true);
                         $commit = $list_of_commits[$idx];
                         break;
                     }
@@ -559,7 +562,7 @@ class GitHub implements RepositoryInterface
                     $this->db->execute($stmt, [$modified_file['filename']]);
                     while ($row = $stmt->fetch()) {
                         foreach ($list_of_commits as $c) {
-                            if ($row['revision'] == $c['sha']) {
+                            if ($row['revision'] === $c['sha']) {
                                 $commit = $c;
                                 break;
                             }
@@ -641,31 +644,22 @@ class GitHub implements RepositoryInterface
         return true;
     }
 
-    /**
-     * @return string
-     */
-    public function getInstallationId()
+    public function getInstallationId() : string
     {
         return $this->installationId;
     }
 
-    /**
-     * @return string
-     */
-    public function getOwner()
+    public function getOwner() : string
     {
         return $this->owner;
     }
 
-    /**
-     * @return string
-     */
-    public function getRepository()
+    public function getRepository() : string
     {
         return $this->repo;
     }
 
-    protected function getRepositoryInformation()
+    protected function getRepositoryInformation() : void
     {
         $url = str_replace('//', '', $this->project->CvsUrl);
         $parts = explode('/', $url);
