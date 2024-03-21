@@ -278,6 +278,7 @@ test('BuildSummary can add a build note', async () => {
   add_note_button.trigger('click');
   await component.vm.$nextTick();
   await component.vm.$nextTick();
+  await component.vm.$nextTick();
   expect(component.vm.cdash.notes.length).toBe(1);
   expect(component.vm.cdash.notes[0].text).toBe('This is a note');
 });
