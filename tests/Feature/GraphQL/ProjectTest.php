@@ -315,6 +315,7 @@ class ProjectTest extends TestCase
                 'name' => $name,
                 'description' => 'test',
                 'homeurl' => 'https://cdash.org',
+                'visibility' => 'PUBLIC',
             ],
         ])->assertGraphQLErrorMessage('This action is unauthorized.');
 
@@ -339,6 +340,7 @@ class ProjectTest extends TestCase
                 'name' => $name,
                 'description' => 'test',
                 'homeurl' => 'https://cdash.org',
+                'visibility' => 'PUBLIC',
             ],
         ])->assertGraphQLErrorMessage('This action is unauthorized.');
 
@@ -365,6 +367,7 @@ class ProjectTest extends TestCase
                 'name' => $name,
                 'description' => 'test',
                 'homeurl' => 'https://cdash.org',
+                'visibility' => 'PUBLIC',
             ],
         ])->assertGraphQLErrorMessage('This action is unauthorized.');
 
@@ -391,6 +394,7 @@ class ProjectTest extends TestCase
                 'name' => $name,
                 'description' => 'test',
                 'homeurl' => 'https://cdash.org',
+                'visibility' => 'PUBLIC',
             ],
         ]);
 
@@ -423,6 +427,7 @@ class ProjectTest extends TestCase
                 'name' => $name,
                 'description' => 'test',
                 'homeurl' => 'https://cdash.org',
+                'visibility' => 'PUBLIC',
             ],
         ]);
 
@@ -580,6 +585,51 @@ class ProjectTest extends TestCase
                     [
                         'name' => $this->projects['private3']->name,
                         'administrators' => [],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testProjectVisibilityValue(): void
+    {
+        $this->actingAs($this->users['admin'])->graphQL('
+            query {
+                projects {
+                    name
+                    visibility
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    [
+                        'name' => $this->projects['public1']->name,
+                        'visibility' => 'PUBLIC',
+                    ],
+                    [
+                        'name' => $this->projects['public2']->name,
+                        'visibility' => 'PUBLIC',
+                    ],
+                    [
+                        'name' => $this->projects['protected1']->name,
+                        'visibility' => 'PROTECTED',
+                    ],
+                    [
+                        'name' => $this->projects['protected2']->name,
+                        'visibility' => 'PROTECTED',
+                    ],
+                    [
+                        'name' => $this->projects['private1']->name,
+                        'visibility' => 'PRIVATE',
+                    ],
+                    [
+                        'name' => $this->projects['private2']->name,
+                        'visibility' => 'PRIVATE',
+                    ],
+                    [
+                        'name' => $this->projects['private3']->name,
+                        'visibility' => 'PRIVATE',
                     ],
                 ],
             ],
