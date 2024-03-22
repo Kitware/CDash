@@ -10,7 +10,7 @@ use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
 
-class ProjectTest extends TestCase
+class ProjectTypeTest extends TestCase
 {
     use CreatesUsers;
     use CreatesProjects;
