@@ -55,7 +55,6 @@ class Project
     public $CvsUrl;
     public $DocumentationUrl;
     public $BugTrackerUrl;
-    public $BugTrackerFileUrl;
     public $BugTrackerNewIssueUrl;
     public $BugTrackerType;
     public $ImageId;
@@ -261,7 +260,6 @@ class Project
             'cvsurl' => $this->CvsUrl ?? '',
             'documentationurl' => $this->DocumentationUrl ?? '',
             'bugtrackerurl' => $this->BugTrackerUrl ?? '',
-            'bugtrackerfileurl' => $this->BugTrackerFileUrl ?? '',
             'bugtrackernewissueurl' => $this->BugTrackerNewIssueUrl ?? '',
             'bugtrackertype' => $this->BugTrackerType ?? '',
             'public' => (int) $this->Public,
@@ -353,7 +351,6 @@ class Project
             $this->CvsUrl = $project->cvsurl;
             $this->DocumentationUrl = $project->documentationurl;
             $this->BugTrackerUrl = $project->bugtrackerurl;
-            $this->BugTrackerFileUrl = $project->bugtrackerfileurl;
             $this->BugTrackerNewIssueUrl = $project->bugtrackernewissueurl;
             $this->BugTrackerType = $project->bugtrackertype;
             $this->ImageId = $project->imageid;

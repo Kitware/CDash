@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Auth;
  * @property string $homeurl
  * @property string $cvsurl
  * @property string $bugtrackerurl
- * @property string $bugtrackerfileurl
  * @property string $bugtrackernewissueurl
  * @property string $bugtrackertype
  * @property string $documentationurl
@@ -64,7 +63,6 @@ class Project extends Model
         'homeurl',
         'cvsurl',
         'bugtrackerurl',
-        'bugtrackerfileurl',
         'bugtrackernewissueurl',
         'bugtrackertype',
         'documentationurl',
