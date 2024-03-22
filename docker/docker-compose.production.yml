@@ -8,15 +8,18 @@ services:
       - "${SSL_CERTIFICATE_FILE}:/var/www/my-cert.pem"
       - "${SSL_CERTIFICATE_KEY_FILE}:/var/www/my-cert.key"
   worker:
+    env_file:
+      - ../.env
     image: kitware/cdash-worker
-    container_name: cdash_worker
     build:
       context: ..
       target: cdash-worker
     environment:
       DB_HOST: database
     deploy:
-      replicas: 1
+      replicas: ${NUM_WORKERS:-1}
+      restart_policy:
+        condition: any
     depends_on:
       cdash:
         condition: service_healthy
