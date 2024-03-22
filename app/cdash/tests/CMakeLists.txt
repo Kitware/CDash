@@ -201,8 +201,11 @@ set_tests_properties(/Feature/GraphQL/ProjectTypeTest PROPERTIES DEPENDS /CDash/
 add_laravel_test(/Feature/GraphQL/SiteTypeTest)
 set_tests_properties(/Feature/GraphQL/SiteTypeTest PROPERTIES DEPENDS /Feature/GraphQL/ProjectTypeTest)
 
+add_laravel_test(/Feature/GraphQL/BuildTypeTest)
+set_tests_properties(/Feature/GraphQL/BuildTypeTest PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
+
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
-set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
+set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
 
 add_laravel_test(/Feature/TestSchemaMigration)
 set_tests_properties(/Feature/TestSchemaMigration PROPERTIES DEPENDS /Feature/PurgeUnusedProjectsCommand)
