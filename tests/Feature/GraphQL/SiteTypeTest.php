@@ -11,7 +11,7 @@ use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesSites;
 use Tests\Traits\CreatesUsers;
 
-class SiteTest extends TestCase
+class SiteTypeTest extends TestCase
 {
     use CreatesUsers;
     use CreatesProjects;
