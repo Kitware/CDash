@@ -39,6 +39,9 @@ class ProjectTest extends TestCase
             'private3' => Project::findOrFail((int) $this->makePrivateProject()->Id),
         ];
 
+        // Wipe any existing users before creating new ones
+        User::query()->delete();
+
         $this->users = [
             'normal' => $this->makeNormalUser(),
             'admin' => $this->makeAdminUser(),
@@ -53,7 +56,11 @@ class ProjectTest extends TestCase
 
         $this->projects['public1']
             ->users()
-            ->attach($this->users['normal']->id, $user2project_data + ['role' => Project::PROJECT_USER]);
+            ->attach($this->users['normal']->id, $user2project_data + ['role' => Project::PROJECT_ADMIN]);
+
+        $this->projects['public1']
+            ->users()
+            ->attach($this->users['admin']->id, $user2project_data + ['role' => Project::PROJECT_ADMIN]);
 
         $this->projects['protected2']
             ->users()
@@ -431,5 +438,151 @@ class ProjectTest extends TestCase
         ], true);
 
         $project->delete();
+    }
+
+    public function testGetProjectAdministratorsNoUser(): void
+    {
+        $this->graphQL('
+            query {
+                projects {
+                    name
+                    administrators {
+                        id
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    [
+                        'name' => $this->projects['public1']->name,
+                        'administrators' => [
+                            [
+                                'id' => (string) $this->users['normal']->id,
+                            ],
+                            [
+                                'id' => (string) $this->users['admin']->id,
+                            ],
+                        ],
+                    ],
+                    [
+                        'name' => $this->projects['public2']->name,
+                        'administrators' => [],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testGetProjectAdministratorsAsNormalUser(): void
+    {
+        $this->actingAs($this->users['normal'])->graphQL('
+            query {
+                projects {
+                    name
+                    administrators {
+                        id
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    [
+                        'name' => $this->projects['public1']->name,
+                        'administrators' => [
+                            [
+                                'id' => (string) $this->users['normal']->id,
+                            ],
+                            [
+                                'id' => (string) $this->users['admin']->id,
+                            ],
+                        ],
+                    ],
+                    [
+                        'name' => $this->projects['public2']->name,
+                        'administrators' => [],
+                    ],
+                    [
+                        'name' => $this->projects['protected1']->name,
+                        'administrators' => [],
+                    ],
+                    [
+                        'name' => $this->projects['protected2']->name,
+                        'administrators' => [],
+                    ],
+                    [
+                        'name' => $this->projects['private1']->name,
+                        'administrators' => [],
+                    ],
+                    [
+                        'name' => $this->projects['private2']->name,
+                        'administrators' => [
+                            [
+                                'id' => (string) $this->users['normal']->id,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testGetProjectAdministratorsAsAdmin(): void
+    {
+        $this->actingAs($this->users['admin'])->graphQL('
+            query {
+                projects {
+                    name
+                    administrators {
+                        id
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    [
+                        'name' => $this->projects['public1']->name,
+                        'administrators' => [
+                            [
+                                'id' => (string) $this->users['normal']->id,
+                            ],
+                            [
+                                'id' => (string) $this->users['admin']->id,
+                            ],
+                        ],
+                    ],
+                    [
+                        'name' => $this->projects['public2']->name,
+                        'administrators' => [],
+                    ],
+                    [
+                        'name' => $this->projects['protected1']->name,
+                        'administrators' => [],
+                    ],
+                    [
+                        'name' => $this->projects['protected2']->name,
+                        'administrators' => [],
+                    ],
+                    [
+                        'name' => $this->projects['private1']->name,
+                        'administrators' => [],
+                    ],
+                    [
+                        'name' => $this->projects['private2']->name,
+                        'administrators' => [
+                            [
+                                'id' => (string) $this->users['normal']->id,
+                            ],
+                        ],
+                    ],
+                    [
+                        'name' => $this->projects['private3']->name,
+                        'administrators' => [],
+                    ],
+                ],
+            ],
+        ], true);
     }
 }

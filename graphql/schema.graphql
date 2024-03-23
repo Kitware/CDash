@@ -81,6 +81,9 @@ type Project {
 
   "The sites which have submitted a build to this project."
   sites: [Site!]! @belongsToMany @orderBy(column: "id")
+
+  "Users with the administrator role for this project."
+  administrators: [User!]! @belongsToMany @orderBy(column: "id")
 }
 
 input CreateProjectInput {
