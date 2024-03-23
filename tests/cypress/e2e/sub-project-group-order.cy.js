@@ -2,11 +2,7 @@ describe('subProjectGroupOrder', () => {
 
   it('can change the group order', () => {
     cy.login();
-    cy.visit('index.php?project=CrossSubProjectExample');
-
-    // hover over 'Settings' and click 'SubProjects'
-    cy.get('#admin').contains('a', 'SubProjects').click({ force: true });
-    cy.url().should('contain', 'manageSubProject.php?projectid=16');
+    cy.visit('manageSubProject.php?projectid=16');
 
     // navigate to the 'SubProjects Groups' tab
     cy.get('a').contains('SubProject Groups').click();
