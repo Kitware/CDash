@@ -162,9 +162,9 @@ class Project extends Model
         } elseif (!$user->admin) {
             $query->whereHas('users', function ($query2) use ($user) {
                 $query2->where('user.id', $user->id);
-                $query2->orWhere('public', self::ACCESS_PUBLIC);
-                $query2->orWhere('public', self::ACCESS_PROTECTED);
-            });
+            })
+            ->orWhere('public', self::ACCESS_PUBLIC)
+            ->orWhere('public', self::ACCESS_PROTECTED);
         }
         // Else, this is an admin user, so we shouldn't apply any filters...
     }
