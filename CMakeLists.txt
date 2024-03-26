@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.20)
 project(CDash)
 include(CTest)
 configure_file(
@@ -9,6 +9,7 @@ configure_file(
 # set some cache variables that can be used
 # to configure the testing install
 set(CDASH_SERVER localhost CACHE STRING "CDash testing server")
+set(CDASH_IMAGE "$ENV{BASE_IMAGE}" CACHE STRING "Docker image name")
 
 get_filename_component(CDASH_DIR_NAME_DEFAULT ${CDash_SOURCE_DIR} NAME)
 set(CDASH_DIR_NAME "${CDASH_DIR_NAME_DEFAULT}" CACHE STRING "URL suffix. Ie 'http://<CDASH_SERVER>/<CDASH_DIR_NAME>'")

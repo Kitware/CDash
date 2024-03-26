@@ -6,6 +6,9 @@ services:
     build:
       context: ..
       target: cdash
+      # Set the environment variable BASE_IMAGE=ubi to use RedHat UBI as base image
+      args:
+       BASE_IMAGE: ${BASE_IMAGE-debian}
     environment:
       DB_HOST: database
     healthcheck:

@@ -100,7 +100,10 @@ add_unit_test(/CDash/Database)
 set_tests_properties(/CDash/Database PROPERTIES DEPENDS /CDash/ConfigUseCase)
 
 add_unit_test(/CDash/Lib/Repository/GitHub)
-set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES DEPENDS /CDash/Database)
+set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES
+    DEPENDS /CDash/Database
+    DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
+)
 
 add_unit_test(/CDash/LinkifyCompilerOutput)
 set_tests_properties(/CDash/LinkifyCompilerOutput PROPERTIES DEPENDS /CDash/Lib/Repository/GitHub)
