@@ -22,7 +22,6 @@ class CompressedTestCase extends KWWebTestCase
             'Description' => 'Project compression example',
             'CvsUrl' => 'public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample',
             'CvsViewerType' => 'github',
-            'BugTrackerFileUrl' =>  'http://public.kitware.com/Bug/view.php?id=',
         ];
         $this->createProject($settings);
 

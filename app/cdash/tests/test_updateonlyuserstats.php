@@ -42,7 +42,6 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
             'Description' => 'CDash',
             'CvsUrl' => 'github.com/Kitware/CDash',
             'CvsViewerType' => 'github',
-            'BugTrackerFileUrl' => 'http://public.kitware.com/Bug/view.php?id=',
             'repositories' => [[
                 'url' => 'https://github.com/Kitware/CDash',
                 'branch' => 'master',

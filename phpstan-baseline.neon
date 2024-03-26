@@ -9858,11 +9858,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Property CDash\\\\Model\\\\Project\\:\\:\\$BugTrackerFileUrl has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: "#^Property CDash\\\\Model\\\\Project\\:\\:\\$BugTrackerNewIssueUrl has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
