@@ -71,6 +71,10 @@ add_test(
   COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/phpstan analyse --memory-limit=2G
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
+set_tests_properties(php_static_analysis PROPERTIES
+  # Disable PHPStan on the UBI image since lcobucci/jwt gets removed
+  DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
+)
 
 # Run the JS linter
 add_test(

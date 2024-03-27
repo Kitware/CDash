@@ -34,7 +34,7 @@ cdash_run_and_submit_ctest() {
   echo "postgres=$postgres"
   echo "ctest_driver=$ctest_driver"
 
-  docker exec cdash bash -c "/usr/bin/ctest -VV -j 4 --schedule-random -DSITENAME=\"${site}\" -DBUILDNAME=\"${branch}_${database}\" -Dpostgres=${postgres} -DCDASH_IMAGE=${CDASH_IMAGE} -S ${ctest_driver}"
+  docker exec cdash bash -c "/usr/bin/ctest -VV -j 4 --schedule-random -DSITENAME=\"${site}\" -DBUILDNAME=\"${branch}_${database}\" -Dpostgres=${postgres} -S ${ctest_driver}"
 }
 
 cdash_run_and_submit_mysql_ctest() {
