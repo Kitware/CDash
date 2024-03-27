@@ -222,7 +222,7 @@ COPY ./php.ini /etc/php.d/cdash.ini
 COPY ./docker/cdash-site.conf /etc/httpd/conf.d/cdash-site.conf
 
 # remove lcobucci/jwt due to libsodium rhel issue
-RUN composer remove "lcobucci/jwt"
+RUN composer remove "lcobucci/jwt" --ignore-platform-reqs && rm -rf vendor
 
 ###############################################################################
 # Do shared installation tasks as the root user
