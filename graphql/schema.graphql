@@ -77,6 +77,9 @@ type Project {
   "Homepage for this project."
   homeurl: String!
 
+  "Visibility."
+  visibility: ProjectVisibility! @rename(attribute: "public")
+
   builds: [Build!]! @hasMany @orderBy(column: "id")
 
   "The sites which have submitted a build to this project."
@@ -84,6 +87,17 @@ type Project {
 
   "Users with the administrator role for this project."
   administrators: [User!]! @belongsToMany @orderBy(column: "id")
+}
+
+enum ProjectVisibility {
+  "Available to all users and guests."
+  PUBLIC @enum(value: 1)
+
+  "Available to all registered users."
+  PROTECTED @enum(value: 2)
+
+  "Only available to users added to the project."
+  PRIVATE @enum(value: 0)
 }
 
 input CreateProjectInput {
@@ -95,6 +109,9 @@ input CreateProjectInput {
 
   "Project homepage"
   homeurl: String!
+
+  "Visibility."
+  visibility: ProjectVisibility! @rename(attribute: "public")
 }
 
 
