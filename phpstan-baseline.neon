@@ -6775,11 +6775,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Access to an undefined property CDash\\\\Model\\\\BuildConfigure\\:\\:\\$LabelCollection\\.$#"
-			count: 5
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
 			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
@@ -6878,6 +6873,11 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Model\\\\BuildConfigure\\:\\:\\$Id has no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/BuildConfigure.php
+
+		-
+			message: "#^Property CDash\\\\Model\\\\BuildConfigure\\:\\:\\$LabelCollection has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
 
@@ -7154,11 +7154,6 @@ parameters:
 			path: app/cdash/app/Model/BuildError.php
 
 		-
-			message: "#^Access to an undefined property CDash\\\\Model\\\\BuildErrorFilter\\:\\:\\$PDO\\.$#"
-			count: 8
-			path: app/cdash/app/Model/BuildErrorFilter.php
-
-		-
 			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildErrorFilter.php
@@ -7255,6 +7250,11 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Model\\\\BuildErrorFilter\\:\\:\\$ErrorsFilter has no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/BuildErrorFilter.php
+
+		-
+			message: "#^Property CDash\\\\Model\\\\BuildErrorFilter\\:\\:\\$PDO has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildErrorFilter.php
 
@@ -21140,11 +21140,6 @@ parameters:
 			path: app/cdash/tests/test_buildfailuredetails.php
 
 		-
-			message: "#^Access to an undefined property CDash\\\\Model\\\\Build\\:\\:\\$NightlyStartTime\\.$#"
-			count: 1
-			path: app/cdash/tests/test_buildgetdate.php
-
-		-
 			message: "#^Method BuildGetDateTestCase\\:\\:testBuildGetDate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_buildgetdate.php
@@ -27878,6 +27873,11 @@ parameters:
 			path: app/cdash/xml_handlers/done_handler.php
 
 		-
+			message: "#^Property DoneHandler\\:\\:\\$backupFileName has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/done_handler.php
+
+		-
 			message: "#^Access to an undefined property DynamicAnalysisHandler\\:\\:\\$BuildName\\.$#"
 			count: 5
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
@@ -28594,11 +28594,6 @@ parameters:
 			path: app/cdash/xml_handlers/stack.php
 
 		-
-			message: "#^Access to an undefined property TestingHandler\\:\\:\\$Labels\\.$#"
-			count: 3
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
 			message: "#^Call to an undefined method CDash\\\\Messaging\\\\Preferences\\\\NotificationPreferencesInterface\\:\\:get\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/testing_handler.php
@@ -28730,6 +28725,11 @@ parameters:
 
 		-
 			message: "#^Property TestingHandler\\:\\:\\$Label has no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
+			message: "#^Property TestingHandler\\:\\:\\$Labels has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/testing_handler.php
 

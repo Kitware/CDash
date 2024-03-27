@@ -46,7 +46,6 @@ class BuildGetDateTestCase extends KWWebTestCase
         $build->StartTime = $evening_after;
 
         $expected_date = '2009-02-24';
-        $build->NightlyStartTime = false;
         $date = $build->GetDate();
         if ($date !== $expected_date) {
             $this->fail("Evening case: expected $expected_date, found $date");
@@ -56,7 +55,6 @@ class BuildGetDateTestCase extends KWWebTestCase
         $build->GetProject()->SetNightlyTime('09:00:00 America/New_York');
         $build->StartTime = $morning_before;
         $expected_date = '2009-02-22';
-        $build->NightlyStartTime = false;
         $date = $build->GetDate();
         if ($date !== $expected_date) {
             $this->fail("Morning case: expected $expected_date, found $date");
@@ -64,7 +62,6 @@ class BuildGetDateTestCase extends KWWebTestCase
 
         $build->StartTime = $morning_after;
         $expected_date = '2009-02-23';
-        $build->NightlyStartTime= false;
         $date = $build->GetDate();
         if ($date !== $expected_date) {
             $this->fail("Morning case: expected $expected_date, found $date");

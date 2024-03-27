@@ -37,6 +37,9 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
     private $TestMeasurement;
     private $Label;
 
+    // TODO: Evaluate whether this is needed
+    private $Labels;
+
     private $TestCreator;
 
     /** @var Build[] Builds */
