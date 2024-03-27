@@ -26,7 +26,7 @@ cdash_run_and_submit_ctest() {
   site=$(cdash_site)
   branch=$(cdash_branch)
 
-  docker exec --user www-data cdash bash -c "cd /cdash && /usr/bin/git checkout ."
+  docker exec cdash bash -c "cd /cdash && /usr/bin/git checkout ."
 
   echo "site=$site"
   echo "branch=$branch"
@@ -34,7 +34,7 @@ cdash_run_and_submit_ctest() {
   echo "postgres=$postgres"
   echo "ctest_driver=$ctest_driver"
 
-  docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -j 4 --schedule-random -DSITENAME=\"${site}\" -DBUILDNAME=\"${branch}_${database}\" -Dpostgres=${postgres} -S ${ctest_driver}"
+  docker exec cdash bash -c "/usr/bin/ctest -VV -j 4 --schedule-random -DSITENAME=\"${site}\" -DBUILDNAME=\"${branch}_${database}\" -Dpostgres=${postgres} -S ${ctest_driver}"
 }
 
 cdash_run_and_submit_mysql_ctest() {
