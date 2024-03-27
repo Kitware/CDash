@@ -11,6 +11,7 @@ jobs:
   tests:
     env:
       SITENAME: GitHub Actions
+      BASE_IMAGE: ${{matrix.base-image}}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -22,8 +23,7 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       - name: Build images
         run: |
-          echo
-          BASE_IMAGE=${{matrix.base-image}} docker compose \
+          docker compose \
               -f docker/docker-compose.yml \
               -f docker/docker-compose.dev.yml \
               -f "docker/docker-compose.${{matrix.database}}.yml" \
