@@ -81,5 +81,7 @@ return [
     'unlimited_projects' => $unlimited_projects,
     'use_compression' => env('USE_COMPRESSION', true),
     'user_create_projects' => env('USER_CREATE_PROJECTS', false),
+    // Defaults to public.  Only meaningful if USER_CREATE_PROJECT=true.
+    'max_project_visibility' => env('MAX_PROJECT_VISIBILITY', 'PUBLIC'),
     'use_vcs_api' => env('USE_VCS_API', true),
 ];

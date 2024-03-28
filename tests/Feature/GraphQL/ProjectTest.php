@@ -635,4 +635,81 @@ class ProjectTest extends TestCase
             ],
         ], true);
     }
+
+    /**
+     * @return array{
+     *     array{
+     *         string,
+     *         string,
+     *         string,
+     *         bool
+     *     }
+     * }
+     */
+    public function createProjectVisibilityRules(): array
+    {
+        return [
+            ['normal', 'PUBLIC', 'PUBLIC',  true],
+            ['normal', 'PROTECTED', 'PUBLIC', true],
+            ['normal', 'PRIVATE', 'PUBLIC', true],
+            ['normal', 'PUBLIC', 'PROTECTED', false],
+            ['normal', 'PROTECTED', 'PROTECTED', true],
+            ['normal', 'PRIVATE', 'PROTECTED', true],
+            ['normal', 'PUBLIC', 'PRIVATE', false],
+            ['normal', 'PROTECTED', 'PRIVATE', false],
+            ['normal', 'PRIVATE', 'PRIVATE', true],
+            ['admin', 'PUBLIC', 'PUBLIC', true],
+            ['admin', 'PROTECTED', 'PUBLIC', true],
+            ['admin', 'PRIVATE', 'PUBLIC', true],
+            ['admin', 'PUBLIC', 'PROTECTED', true],
+            ['admin', 'PROTECTED', 'PROTECTED', true],
+            ['admin', 'PRIVATE', 'PROTECTED', true],
+            ['admin', 'PUBLIC', 'PRIVATE', true],
+            ['admin', 'PROTECTED', 'PRIVATE',  true],
+            ['admin', 'PRIVATE', 'PRIVATE',  true],
+        ];
+    }
+
+    /**
+     * @dataProvider createProjectVisibilityRules
+     */
+    public function testCreateProjectMaxVisibility(string $user, string $visibility, string $max_visibility, bool $can_create): void
+    {
+        Config::set('cdash.user_create_projects', true);
+        Config::set('cdash.max_project_visibility', $max_visibility);
+
+        $name = 'test-project' . Str::uuid();
+        $response = $this->actingAs($this->users[$user])->graphQL('
+            mutation CreateProject($input: CreateProjectInput!) {
+                createProject(input: $input) {
+                    visibility
+                }
+            }
+        ', [
+            'input' => [
+                'name' => $name,
+                'description' => 'test',
+                'homeurl' => 'https://cdash.org',
+                'visibility' => $visibility,
+            ],
+        ]);
+
+        if ($can_create) {
+            $project = Project::where('name', $name)->firstOrFail();
+            $response->assertJson([
+                'data' => [
+                    'createProject' => [
+                        'visibility' => $visibility,
+                    ],
+                ],
+            ], true);
+            $project->delete();
+        } else {
+            // A final check to ensure this project wasn't created anyway
+            $this->assertDatabaseMissing(Project::class, [
+                'name' => $name,
+            ]);
+            $response->assertGraphQLErrorMessage('Validation failed for the field [createProject].');
+        }
+    }
 }

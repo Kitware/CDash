@@ -19,11 +19,13 @@ namespace CDash\Api\v1\Project;
 require_once 'include/api_common.php';
 
 
+use App\Rules\ProjectVisibilityAllowed;
 use App\Utils\RepositoryUtils;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 // Read input parameters (if any).
 $rest_input = file_get_contents('php://input');
@@ -254,6 +256,14 @@ function populate_project($Project)
         $cvsurl = filter_var($project_settings['CvsUrl'], FILTER_SANITIZE_URL);
         $cvsurl = htmlspecialchars($cvsurl, ENT_QUOTES, 'UTF-8', false);
         $project_settings['CvsUrl'] = str_replace('&amp;', '&', $cvsurl);
+    }
+
+    if (Validator::make([
+        'visibility' => $project_settings['Public'],
+    ], [
+        'visibility' => new ProjectVisibilityAllowed(),
+    ])->fails()) {
+        abort(403, "Project visibility {$project_settings['Public']} prohibited for this instance.");
     }
 
     foreach ($project_settings as $k => $v) {

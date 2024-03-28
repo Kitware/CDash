@@ -142,6 +142,8 @@ final class ProjectController extends AbstractProjectController
 
         $response['vcsviewers'] = array_map($callback, array_keys($viewers));
 
+        $response['max_project_visibility'] = config('cdash.max_project_visibility');
+
         $pageTimer->end($response);
         return response()->json(cast_data_for_JSON($response));
     }
