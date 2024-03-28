@@ -111,7 +111,7 @@ input CreateProjectInput {
   homeurl: String!
 
   "Visibility."
-  visibility: ProjectVisibility! @rename(attribute: "public")
+  visibility: ProjectVisibility! @rename(attribute: "public") @rules(attribute: "public", apply: ["App\\Rules\\ProjectVisibilityAllowed"])
 }
 
 

@@ -371,13 +371,21 @@
                       @change="cdash.changesmade = true"
                       @focus="showHelp('public_help')"
                     >
-                      <option value="0">
+                      <option
+                        value="0"
+                      >
                         Private
                       </option>
-                      <option value="1">
+                      <option
+                        value="1"
+                        v-if="cdash.max_project_visibility === 'PUBLIC'"
+                      >
                         Public
                       </option>
-                      <option value="2">
+                      <option
+                        value="2"
+                        v-if="cdash.max_project_visibility === 'PUBLIC' || cdash.max_project_visibility === 'PROTECTED'"
+                      >
                         Protected
                       </option>
                     </select>
