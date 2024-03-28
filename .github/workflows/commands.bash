@@ -18,7 +18,7 @@ cdash_run_and_submit_ctest() {
   local site
   local branch
 
-  ctest_driver="/cdash/.circleci/ctest_driver_script.cmake"
+  ctest_driver="/cdash/.github/workflows/ctest_driver_script.cmake"
 
   database="$1" ; shift
   postgres="$1" ; shift
@@ -26,7 +26,7 @@ cdash_run_and_submit_ctest() {
   site=$(cdash_site)
   branch=$(cdash_branch)
 
-  docker exec --user www-data cdash bash -c "cd /cdash && /usr/bin/git checkout ."
+  docker exec cdash bash -c "cd /cdash && /usr/bin/git checkout ."
 
   echo "site=$site"
   echo "branch=$branch"
@@ -34,13 +34,13 @@ cdash_run_and_submit_ctest() {
   echo "postgres=$postgres"
   echo "ctest_driver=$ctest_driver"
 
-  docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -j 2 --schedule-random -DSITENAME=\"${site}\" -DBUILDNAME=\"${branch}_${database}\" -Dpostgres=${postgres} -S ${ctest_driver}"
+  docker exec cdash bash -c "/usr/bin/ctest -VV -j 4 --schedule-random -DSITENAME=\"${site}\" -DBUILDNAME=\"${branch}_${database}\" -Dpostgres=${postgres} -S ${ctest_driver}"
 }
 
 cdash_run_and_submit_mysql_ctest() {
   cdash_run_and_submit_ctest MySQL OFF
 }
 
-cdash_run_and_submit_pgsql_ctest() {
+cdash_run_and_submit_postgres_ctest() {
   cdash_run_and_submit_ctest PgSQL ON
 }
