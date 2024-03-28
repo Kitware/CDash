@@ -21,8 +21,8 @@ class BuildErrorFilter
 {
     private $ErrorsFilter;
     private $WarningsFilter;
-
     public $Project;
+    private $PDO;
 
     public function __construct(Project $project)
     {

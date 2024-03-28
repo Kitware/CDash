@@ -26,6 +26,7 @@ class DoneHandler extends AbstractHandler
     private $FinalAttempt;
     private $PendingSubmissions;
     private $Requeue;
+    public $backupFileName;
 
     public function __construct($projectID)
     {
