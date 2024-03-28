@@ -1,5 +1,10 @@
 set(CTEST_SITE "${SITENAME}")
-set(CTEST_BUILD_NAME "${BUILDNAME}")
+
+cmake_host_system_information(RESULT DISTRIB_ID QUERY DISTRIB_ID)
+cmake_host_system_information(RESULT DISTRIB_VERSION_ID QUERY DISTRIB_VERSION_ID)
+set(CTEST_BUILD_NAME "${DISTRIB_ID}-${DISTRIB_VERSION_ID}-${DATABASE}")
+message(STATUS "${CTEST_BUILD_NAME}")
+
 set(CTEST_CMAKE_GENERATOR "Unix Makefiles")
 set(CTEST_SOURCE_DIRECTORY "/cdash")
 set(CTEST_BINARY_DIRECTORY "/cdash/_build")
@@ -23,7 +28,10 @@ configure_file(
   COPYONLY
 )
 
-ctest_start(Continuous)
+if (NOT SUBMIT_TYPE)
+  set(SUBMIT_TYPE Experimental)
+endif()
+ctest_start(GROUP "${SUBMIT_TYPE}" Continuous)
 ctest_update()
 ctest_submit(PARTS Update)
 ctest_configure(OPTIONS "${cfg_options}")
