@@ -65,6 +65,9 @@ type Project {
   "Visibility."
   visibility: ProjectVisibility! @rename(attribute: "public")
 
+  "A boolean indicating whether authenticated submissions are required."
+  authenticateSubmissions: Boolean! @rename(attribute: "authenticatesubmissions")
+
   builds: [Build!]! @hasMany @orderBy(column: "id")
 
   "The sites which have submitted a build to this project."
@@ -97,6 +100,9 @@ input CreateProjectInput {
 
   "Visibility."
   visibility: ProjectVisibility! @rename(attribute: "public") @rules(attribute: "public", apply: ["App\\Rules\\ProjectVisibilityAllowed"])
+
+  "A boolean indicating whether authenticated submissions are required."
+  authenticateSubmissions: Boolean! @rename(attribute: "authenticatesubmissions") @rules(attribute: "authenticatesubmissions", apply: ["App\\Rules\\ProjectAuthenticateSubmissions"])
 }
 
 

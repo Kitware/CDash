@@ -19,6 +19,7 @@ namespace CDash\Api\v1\Project;
 require_once 'include/api_common.php';
 
 
+use App\Rules\ProjectAuthenticateSubmissions;
 use App\Rules\ProjectVisibilityAllowed;
 use App\Utils\RepositoryUtils;
 use CDash\Model\Project;
@@ -258,12 +259,15 @@ function populate_project($Project)
         $project_settings['CvsUrl'] = str_replace('&amp;', '&', $cvsurl);
     }
 
-    if (Validator::make([
+    $validator = Validator::make([
         'visibility' => $project_settings['Public'],
+        'authenticatesubmissions' => (bool) ($project_settings['AuthenticateSubmissions'] ?? false),
     ], [
         'visibility' => new ProjectVisibilityAllowed(),
-    ])->fails()) {
-        abort(403, "Project visibility {$project_settings['Public']} prohibited for this instance.");
+        'authenticatesubmissions' => new ProjectAuthenticateSubmissions(),
+    ]);
+    if ($validator->fails()) {
+        abort(403, $validator->messages());
     }
 
     foreach ($project_settings as $k => $v) {

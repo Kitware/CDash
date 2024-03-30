@@ -316,6 +316,7 @@ class ProjectTest extends TestCase
                 'description' => 'test',
                 'homeurl' => 'https://cdash.org',
                 'visibility' => 'PUBLIC',
+                'authenticateSubmissions' => false,
             ],
         ])->assertGraphQLErrorMessage('This action is unauthorized.');
 
@@ -341,6 +342,7 @@ class ProjectTest extends TestCase
                 'description' => 'test',
                 'homeurl' => 'https://cdash.org',
                 'visibility' => 'PUBLIC',
+                'authenticateSubmissions' => false,
             ],
         ])->assertGraphQLErrorMessage('This action is unauthorized.');
 
@@ -368,6 +370,7 @@ class ProjectTest extends TestCase
                 'description' => 'test',
                 'homeurl' => 'https://cdash.org',
                 'visibility' => 'PUBLIC',
+                'authenticateSubmissions' => false,
             ],
         ])->assertGraphQLErrorMessage('This action is unauthorized.');
 
@@ -395,6 +398,7 @@ class ProjectTest extends TestCase
                 'description' => 'test',
                 'homeurl' => 'https://cdash.org',
                 'visibility' => 'PUBLIC',
+                'authenticateSubmissions' => false,
             ],
         ]);
 
@@ -428,6 +432,7 @@ class ProjectTest extends TestCase
                 'description' => 'test',
                 'homeurl' => 'https://cdash.org',
                 'visibility' => 'PUBLIC',
+                'authenticateSubmissions' => false,
             ],
         ]);
 
@@ -691,6 +696,7 @@ class ProjectTest extends TestCase
                 'description' => 'test',
                 'homeurl' => 'https://cdash.org',
                 'visibility' => $visibility,
+                'authenticateSubmissions' => false,
             ],
         ]);
 
@@ -700,6 +706,79 @@ class ProjectTest extends TestCase
                 'data' => [
                     'createProject' => [
                         'visibility' => $visibility,
+                    ],
+                ],
+            ], true);
+            $project->delete();
+        } else {
+            // A final check to ensure this project wasn't created anyway
+            $this->assertDatabaseMissing(Project::class, [
+                'name' => $name,
+            ]);
+            $response->assertGraphQLErrorMessage('Validation failed for the field [createProject].');
+        }
+    }
+
+    /**
+     * @return array{
+     *     array{
+     *         string,
+     *         bool,
+     *         bool,
+     *         bool
+     *     }
+     * }
+     */
+    public function authenticatedSubmissionRules(): array
+    {
+        return [
+            ['normal', false, false,  true],
+            ['normal', true, false,  true],
+            ['normal', false, true,  false],
+            ['normal', true, true,  true],
+            // Instance admins can set any value
+            ['admin', false, false,  true],
+            ['admin', true, false,  true],
+            ['admin', false, true,  true],
+            ['admin', true, true,  true],
+        ];
+    }
+
+    /**
+     * @dataProvider authenticatedSubmissionRules
+     */
+    public function testRequireAuthenticatedSubmissions(
+        string $user,
+        bool $use_authenticated_submits,
+        bool $require_authenticated_submissions,
+        bool $result
+    ): void {
+        Config::set('cdash.user_create_projects', true);
+        Config::set('cdash.require_authenticated_submissions', $require_authenticated_submissions);
+
+        $name = 'test-project' . Str::uuid();
+        $response = $this->actingAs($this->users[$user])->graphQL('
+            mutation CreateProject($input: CreateProjectInput!) {
+                createProject(input: $input) {
+                    authenticateSubmissions
+                }
+            }
+        ', [
+            'input' => [
+                'name' => $name,
+                'description' => 'test',
+                'homeurl' => 'https://cdash.org',
+                'visibility' => 'PUBLIC',
+                'authenticateSubmissions' => $use_authenticated_submits,
+            ],
+        ]);
+
+        if ($result) {
+            $project = Project::where('name', $name)->firstOrFail();
+            $response->assertJson([
+                'data' => [
+                    'createProject' => [
+                        'authenticateSubmissions' => $use_authenticated_submits,
                     ],
                 ],
             ], true);
