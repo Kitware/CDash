@@ -28,7 +28,7 @@
     "doctrine/dbal": "3.8.3",
     "guzzlehttp/guzzle": "7.8.1",
     "http-interop/http-factory-guzzle": "1.2.0",
-    "knplabs/github-api": "3.13.0",
+    "knplabs/github-api": "3.14.1",
     "laravel/framework": "10.48.4",
     "laravel/legacy-factories": "1.4.0",
     "laravel/socialite": "5.12.1",
