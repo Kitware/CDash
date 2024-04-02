@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "88c25a4b6cb9c3d5cc3a128918a789ed",
+    "content-hash": "d4678532e8666448a7c0507deb838441",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -3106,30 +3106,29 @@
         },
         {
             "name": "mll-lab/laravel-graphiql",
-            "version": "v3.1.0",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mll-lab/laravel-graphiql.git",
-                "reference": "54d7dbe5376ab87a6ea83be11b1431d0af9e2f6c"
+                "reference": "a9c859c986ef6e96e84bab3c4bd2586933460b14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mll-lab/laravel-graphiql/zipball/54d7dbe5376ab87a6ea83be11b1431d0af9e2f6c",
-                "reference": "54d7dbe5376ab87a6ea83be11b1431d0af9e2f6c",
+                "url": "https://api.github.com/repos/mll-lab/laravel-graphiql/zipball/a9c859c986ef6e96e84bab3c4bd2586933460b14",
+                "reference": "a9c859c986ef6e96e84bab3c4bd2586933460b14",
                 "shasum": ""
             },
             "require": {
-                "illuminate/console": "^9 || ^10",
-                "illuminate/contracts": "^9 || ^10",
-                "illuminate/support": "^9 || ^10",
+                "illuminate/console": "^9 || ^10 || ^11",
+                "illuminate/contracts": "^9 || ^10 || ^11",
+                "illuminate/support": "^9 || ^10 || ^11",
                 "php": "^8"
             },
             "require-dev": {
                 "ergebnis/composer-normalize": "^2.29",
-                "laravel/lumen-framework": "^9 || ^10",
+                "larastan/larastan": "^2.5.2",
                 "mll-lab/php-cs-fixer-config": "^5",
-                "nunomaduro/larastan": "^2.5.2",
-                "orchestra/testbench": "^7.7 || ^8.8",
+                "orchestra/testbench": "^7.7 || ^8.8 || ^9",
                 "phpstan/extension-installer": "^1",
                 "phpstan/phpstan": "^1.10.15",
                 "phpstan/phpstan-mockery": "^1.1.1",
@@ -3166,9 +3165,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mll-lab/laravel-graphiql/issues",
-                "source": "https://github.com/mll-lab/laravel-graphiql/tree/v3.1.0"
+                "source": "https://github.com/mll-lab/laravel-graphiql/tree/v3.2.0"
             },
-            "time": "2023-07-04T13:58:40+00:00"
+            "time": "2024-03-01T10:59:56+00:00"
         },
         {
             "name": "monolog/monolog",

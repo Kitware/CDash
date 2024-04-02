@@ -34,7 +34,7 @@
     "laravel/socialite": "5.12.1",
     "laravel/ui": "4.4.0",
     "lcobucci/jwt": "5.2.0",
-    "mll-lab/laravel-graphiql": "3.1.0",
+    "mll-lab/laravel-graphiql": "3.2.0",
     "nuwave/lighthouse": "6.36.0",
     "nyholm/psr7": "1.8.1",
     "pear/archive_tar": "1.4.14",
