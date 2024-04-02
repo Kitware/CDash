@@ -195,8 +195,14 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
           --noplugins \
           --setopt=install_weak_deps=0 \
           php-xdebug \
-          cmake\
-          rsync; \
+          rsync \
+      #> A horrible hack to get a newer version of CMake.  As of the time of this
+      #> writing, Red Hat UBI uses CMake 3.20, while our scripts require CMake>=3.22.
+      #> This should be replaced with a more acceptable solution at a future point
+      #> in time, whenever Red Had updates the default version of CMake.
+          python-pip && \
+      pip install cmake --upgrade && \
+      dnf remove -y python-pip; \
     fi
 
 # certs, timezone, accounts
