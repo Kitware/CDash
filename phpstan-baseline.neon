@@ -142,6 +142,11 @@ parameters:
 			path: app/Console/Commands/QueueSubmissions.php
 
 		-
+			message: "#^Part \\$filename \\(list\\<string\\>\\|string\\) of encapsed string cannot be cast to string\\.$#"
+			count: 11
+			path: app/Console/Commands/QueueSubmissions.php
+
+		-
 			message: "#^Method App\\\\Console\\\\Commands\\\\RemoveUser\\:\\:handle\\(\\) should return mixed but return statement is missing\\.$#"
 			count: 1
 			path: app/Console/Commands/RemoveUser.php
@@ -559,6 +564,11 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
+			message: "#^Cannot call method fetchColumn\\(\\) on PDOStatement\\|false\\.$#"
+			count: 4
+			path: app/Http/Controllers/BuildController.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
 			path: app/Http/Controllers/BuildController.php
@@ -654,6 +664,21 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
+			message: "#^Only numeric types are allowed in \\*, \\(int\\|false\\) given on the left side\\.$#"
+			count: 2
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Only numeric types are allowed in \\-, \\(int\\|false\\) given on the left side\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Only numeric types are allowed in \\-, \\(int\\|false\\) given on the right side\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
 			message: "#^Only numeric types are allowed in \\-, int\\|false given on the left side\\.$#"
 			count: 2
 			path: app/Http/Controllers/BuildController.php
@@ -661,6 +686,11 @@ parameters:
 		-
 			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
 			count: 2
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: "#^Only numeric types are allowed in /, \\(array\\|float\\|int\\) given on the right side\\.$#"
+			count: 1
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -742,6 +772,21 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 2
+			path: app/Http/Controllers/BuildPropertiesController.php
+
+		-
+			message: "#^Cannot call method bindParam\\(\\) on PDOStatement\\|false\\.$#"
+			count: 3
+			path: app/Http/Controllers/BuildPropertiesController.php
+
+		-
+			message: "#^Cannot call method execute\\(\\) on PDOStatement\\|false\\.$#"
+			count: 2
+			path: app/Http/Controllers/BuildPropertiesController.php
+
+		-
+			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
+			count: 1
 			path: app/Http/Controllers/BuildPropertiesController.php
 
 		-
@@ -942,11 +987,6 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:apiCompareCoverage_create_subproject\\(\\) should return array\\<string, mixed\\> but returns array\\<int\\|string, mixed\\>\\.$#"
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:apiCompareCoverage_get_coverage\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 2
 			path: app/Http/Controllers/CoverageController.php
@@ -1037,32 +1077,32 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Offset 'branchcoveragemetric' might not exist on array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: \\(float\\|int\\), covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: numeric\\-string, branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: numeric\\-string, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: 0, covered\\: 0, locuntested\\: 0, loctested\\: 0, branchesuntested\\: 0, branchestested\\: 0, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\.$#"
+			message: "#^Offset 'branchcoveragemetric' might not exist on array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: \\(float\\|int\\), covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: numeric\\-string, branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: numeric\\-string, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: 0, covered\\: 0, locuntested\\: 0, loctested\\: 0, branchesuntested\\: 0, branchestested\\: 0, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Offset 'branchcoveragemetric' might not exist on array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: \\(float\\|int\\), covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: numeric\\-string, branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: numeric\\-string, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\.$#"
+			message: "#^Offset 'branchcoveragemetric' might not exist on array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: \\(float\\|int\\), covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: numeric\\-string, branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: numeric\\-string, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Offset 'branchcoveragemetric' might not exist on array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\.$#"
+			message: "#^Offset 'branchcoveragemetric' might not exist on array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Offset 'branchpercentcovera…' might not exist on array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: \\(float\\|int\\), covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: numeric\\-string, branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: numeric\\-string, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: 0, covered\\: 0, locuntested\\: 0, loctested\\: 0, branchesuntested\\: 0, branchestested\\: 0, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\.$#"
+			message: "#^Offset 'branchpercentcovera…' might not exist on array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: \\(float\\|int\\), covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: numeric\\-string, branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: numeric\\-string, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: 0, covered\\: 0, locuntested\\: 0, loctested\\: 0, branchesuntested\\: 0, branchestested\\: 0, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\.$#"
 			count: 2
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Offset 'functionstested' might not exist on array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: \\(float\\|int\\), covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: numeric\\-string, branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: numeric\\-string, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\.$#"
+			message: "#^Offset 'functionstested' might not exist on array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: \\(float\\|int\\), covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: numeric\\-string, branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: numeric\\-string, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Offset 'functionsuntested' might not exist on array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: \\(float\\|int\\), covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: numeric\\-string, branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: numeric\\-string, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\.$#"
+			message: "#^Offset 'functionsuntested' might not exist on array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: \\(float\\|int\\), covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: \\(float\\|int\\), branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: 0, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{branchcoveragemetric\\: numeric\\-string, branchestested\\: \\(float\\|int\\), branchesuntested\\: \\(float\\|int\\), branchpercentcoverage\\: numeric\\-string, coveragemetric\\: numeric\\-string, covered\\: 1, directory\\: 1, fileid\\: 0, \\.\\.\\.\\}\\|array\\{filename\\: string, fullpath\\: mixed, fileid\\: mixed, locuntested\\: mixed, loctested\\: mixed, covered\\: 1, branchesuntested\\: mixed, branchestested\\: mixed, \\.\\.\\.\\}\\.$#"
 			count: 2
 			path: app/Http/Controllers/CoverageController.php
 
@@ -1087,6 +1127,11 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
+			message: "#^Only numeric types are allowed in \\+, \\(array\\|float\\|int\\) given on the left side\\.$#"
+			count: 2
+			path: app/Http/Controllers/CoverageController.php
+
+		-
 			message: "#^Only numeric types are allowed in \\+, int\\<0, max\\>\\|false given on the left side\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
@@ -1099,6 +1144,16 @@ parameters:
 		-
 			message: "#^Only numeric types are allowed in \\-, int\\<0, max\\>\\|false given on the left side\\.$#"
 			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			message: "#^Only numeric types are allowed in /, \\(array\\|float\\|int\\) given on the right side\\.$#"
+			count: 2
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			message: "#^Only numeric types are allowed in /, \\(array\\|float\\|int\\<1, max\\>\\) given on the right side\\.$#"
+			count: 5
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1205,6 +1260,11 @@ parameters:
 			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:edit\\(\\) has parameter \\$project_id with no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/EditProjectController.php
+
+		-
+			message: "#^Only numeric types are allowed in \\-, \\(int\\|false\\) given on the right side\\.$#"
+			count: 1
+			path: app/Http/Controllers/ExpectedBuildController.php
 
 		-
 			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
@@ -1877,13 +1937,13 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
-			message: "#^Offset 'locuntested' might not exist on \\(array\\{\\}&mixed\\)\\|array\\{loctested\\: \\(float\\|int\\), locuntested\\?\\: \\(array\\|float\\|int\\)\\}\\.$#"
-			count: 2
+			message: "#^Offset 'locuntested' might not exist on array\\{loctested\\: \\(float\\|int\\), locuntested\\?\\: \\(array\\|float\\|int\\)\\}\\.$#"
+			count: 1
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
-			message: "#^Offset 'locuntested' might not exist on array\\{loctested\\: \\(float\\|int\\), locuntested\\?\\: \\(array\\|float\\|int\\)\\}\\.$#"
-			count: 1
+			message: "#^Offset 'locuntested' might not exist on array\\{\\}\\|array\\{loctested\\: \\(float\\|int\\), locuntested\\?\\: \\(array\\|float\\|int\\)\\}\\.$#"
+			count: 2
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
@@ -1903,6 +1963,21 @@ parameters:
 
 		-
 			message: "#^Only numeric types are allowed in \\*, int\\|null given on the right side\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
+			message: "#^Only numeric types are allowed in \\+, \\(array\\|float\\|int\\) given on the left side\\.$#"
+			count: 8
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
+			message: "#^Only numeric types are allowed in \\-, \\(int\\|false\\) given on the left side\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
+			message: "#^Only numeric types are allowed in /, \\(array\\|float\\|int\\) given on the left side\\.$#"
 			count: 1
 			path: app/Http/Controllers/ProjectOverviewController.php
 
@@ -2518,6 +2593,16 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
+			message: "#^Cannot call method bindParam\\(\\) on PDOStatement\\|false\\.$#"
+			count: 3
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
+			count: 4
+			path: app/Http/Controllers/UserController.php
+
+		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/Http/Controllers/UserController.php
@@ -2609,6 +2694,21 @@ parameters:
 		-
 			message: "#^Cannot access property \\$full_name on App\\\\Models\\\\User\\|null\\.$#"
 			count: 1
+			path: app/Http/Controllers/UserStatisticsController.php
+
+		-
+			message: "#^Cannot call method bindParam\\(\\) on PDOStatement\\|false\\.$#"
+			count: 3
+			path: app/Http/Controllers/UserStatisticsController.php
+
+		-
+			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
+			count: 1
+			path: app/Http/Controllers/UserStatisticsController.php
+
+		-
+			message: "#^Only numeric types are allowed in \\+, \\(array\\|float\\|int\\) given on the left side\\.$#"
+			count: 8
 			path: app/Http/Controllers/UserStatisticsController.php
 
 		-
@@ -3339,6 +3439,11 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'cvsviewertype' on array\\|false\\|null\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
@@ -4853,6 +4958,11 @@ parameters:
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
+			message: "#^Part \\$filename \\(list\\<string\\>\\|string\\) of encapsed string cannot be cast to string\\.$#"
+			count: 1
+			path: app/Utils/UnparsedSubmissionProcessor.php
+
+		-
 			message: "#^Property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$backupfilename has no type specified\\.$#"
 			count: 1
 			path: app/Utils/UnparsedSubmissionProcessor.php
@@ -5204,6 +5314,11 @@ parameters:
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
+			message: "#^Only numeric types are allowed in \\+, \\(int\\|string\\) given on the left side\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
 			message: "#^Only numeric types are allowed in \\+, int\\<0, max\\>\\|false given on the left side\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/Index.php
@@ -5211,6 +5326,16 @@ parameters:
 		-
 			message: "#^Only numeric types are allowed in \\+, int\\|false given on the right side\\.$#"
 			count: 1
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
+			message: "#^Only numeric types are allowed in \\-, \\(int\\|false\\) given on the left side\\.$#"
+			count: 2
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
+			message: "#^Only numeric types are allowed in \\-, \\(int\\|false\\) given on the right side\\.$#"
+			count: 2
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
@@ -5719,6 +5844,11 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestGraph.php
 
 		-
+			message: "#^Only numeric types are allowed in \\*, \\(int\\|false\\) given on the left side\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/TestGraph.php
+
+		-
 			message: "#^Property CDash\\\\Controller\\\\Api\\\\TestGraph\\:\\:\\$buildtest has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/TestGraph.php
@@ -5916,6 +6046,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:getVisibleProjects\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewProjects.php
+
+		-
+			message: "#^Only numeric types are allowed in \\-, \\(int\\|false\\) given on the right side\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 
@@ -8122,6 +8257,11 @@ parameters:
 			path: app/cdash/app/Model/BuildUserNote.php
 
 		-
+			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
+			count: 1
+			path: app/cdash/app/Model/BuildUserNote.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\BuildUserNote\\:\\:Insert\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildUserNote.php
@@ -8366,6 +8506,21 @@ parameters:
 		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 2
+			path: app/cdash/app/Model/CoverageFile.php
+
+		-
+			message: "#^Only numeric types are allowed in \\+, \\(array\\|float\\|int\\) given on the left side\\.$#"
+			count: 1
+			path: app/cdash/app/Model/CoverageFile.php
+
+		-
+			message: "#^Only numeric types are allowed in /, \\(array\\|float\\|int\\) given on the right side\\.$#"
+			count: 2
+			path: app/cdash/app/Model/CoverageFile.php
+
+		-
+			message: "#^Only numeric types are allowed in /, \\(array\\|float\\|int\\<1, max\\>\\) given on the right side\\.$#"
+			count: 1
 			path: app/cdash/app/Model/CoverageFile.php
 
 		-
@@ -9818,6 +9973,11 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
+			message: "#^Only numeric types are allowed in \\-, \\(int\\|false\\) given on the right side\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
 			message: "#^Only numeric types are allowed in \\-, float\\|int\\|false given on the left side\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -10807,6 +10967,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$filename of function file_exists expects string, string\\|false given\\.$#"
+			count: 1
+			path: app/cdash/bootstrap/cdash_autoload.php
+
+		-
+			message: "#^Part \\$filenames \\(list\\<string\\>\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
 			count: 1
 			path: app/cdash/bootstrap/cdash_autoload.php
 
@@ -13149,6 +13314,16 @@ parameters:
 
 		-
 			message: "#^Cannot call method bindParam\\(\\) on PDOStatement\\|false\\.$#"
+			count: 3
+			path: app/cdash/include/common.php
+
+		-
+			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: "#^Cannot call method fetchColumn\\(\\) on PDOStatement\\|false\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -13583,6 +13758,11 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			message: "#^Only numeric types are allowed in /, \\(array\\|float\\|int\\<1, max\\>\\) given on the right side\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
 			message: "#^Parameter \\#1 \\$array of function reset expects array\\|object, array\\<int, string\\>\\|false given\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -13871,6 +14051,21 @@ parameters:
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 2
+			path: app/cdash/include/ctestparserutils.php
+
+		-
+			message: "#^Cannot call method bindParam\\(\\) on PDOStatement\\|false\\.$#"
+			count: 2
+			path: app/cdash/include/ctestparserutils.php
+
+		-
+			message: "#^Cannot call method bindValue\\(\\) on PDOStatement\\|false\\.$#"
+			count: 20
+			path: app/cdash/include/ctestparserutils.php
+
+		-
+			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
+			count: 6
 			path: app/cdash/include/ctestparserutils.php
 
 		-
@@ -15464,6 +15659,16 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/computeClassifier.php
+
+		-
+			message: "#^Only numeric types are allowed in /, \\(array\\|float\\|int\\) given on the left side\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/computeClassifier.php
+
+		-
+			message: "#^Only numeric types are allowed in /, \\(array\\|float\\|int\\) given on the right side\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
@@ -19347,6 +19552,16 @@ parameters:
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			message: "#^Cannot call method execute\\(\\) on PDOStatement\\|false\\.$#"
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -23354,13 +23569,28 @@ parameters:
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
+			message: "#^Cannot call method bindParam\\(\\) on PDOStatement\\|false\\.$#"
+			count: 2
+			path: app/cdash/tests/test_multiplesubprojects.php
+
+		-
+			message: "#^Cannot call method execute\\(\\) on PDOStatement\\|false\\.$#"
+			count: 2
+			path: app/cdash/tests/test_multiplesubprojects.php
+
+		-
 			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
 			count: 2
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
+			message: "#^Cannot call method fetchAll\\(\\) on PDOStatement\\|false\\.$#"
+			count: 1
+			path: app/cdash/tests/test_multiplesubprojects.php
+
+		-
 			message: "#^Cannot call method fetchColumn\\(\\) on PDOStatement\\|false\\.$#"
-			count: 3
+			count: 4
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
@@ -23556,6 +23786,16 @@ parameters:
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
+			count: 1
+			path: app/cdash/tests/test_nobackup.php
+
+		-
+			message: "#^Cannot call method execute\\(\\) on PDOStatement\\|false\\.$#"
+			count: 1
+			path: app/cdash/tests/test_nobackup.php
+
+		-
+			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
 			count: 1
 			path: app/cdash/tests/test_nobackup.php
 
@@ -25420,6 +25660,16 @@ parameters:
 			path: app/cdash/tests/test_updateonlyuserstats.php
 
 		-
+			message: "#^Cannot call method execute\\(\\) on PDOStatement\\|false\\.$#"
+			count: 1
+			path: app/cdash/tests/test_updateonlyuserstats.php
+
+		-
+			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
+			count: 1
+			path: app/cdash/tests/test_updateonlyuserstats.php
+
+		-
 			message: "#^Method UpdateOnlyUserStatsTestCase\\:\\:testCleanup\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_updateonlyuserstats.php
@@ -25608,7 +25858,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
-			count: 1
+			count: 3
 			path: app/cdash/tests/test_viewdynamicanalysisfile.php
 
 		-
@@ -25786,6 +26036,11 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 2
+			path: app/cdash/xml_handlers/BazelJSON_handler.php
+
+		-
+			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
+			count: 1
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
