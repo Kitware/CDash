@@ -29726,7 +29726,7 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Testing\\\\TestResponse\\:\\:assertGraphQLErrorMessage\\(\\)\\.$#"
-			count: 3
+			count: 4
 			path: tests/Feature/GraphQL/ProjectTest.php
 
 		-
