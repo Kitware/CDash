@@ -29,7 +29,7 @@
                     <input class="textbox" name="email" size="40" value="{{ old('email') }}">
                     @if ($errors->has('email'))
                         <div>
-                        <span class="invalid-feedback" role="alert">
+                        <span class="invalid-feedback d-block" role="alert">
                             <strong>{{ $errors->first('email') }}</strong>
                         </span>
                         </div>
@@ -45,7 +45,7 @@
 					<input class="textbox" type="checkbox" name="remember" id="remember" {{old('remember') ? 'checked' : ''}}> Remember Me
 					@if ($errors->has('password'))
 						<div>
-							<span class="invalid-feedback" role="alert">
+							<span class="invalid-feedback d-block" role="alert">
 								<strong>{{ $errors->first('password') }}</strong>
 							</span>
 						</div>
