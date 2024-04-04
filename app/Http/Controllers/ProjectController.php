@@ -92,7 +92,7 @@ final class ProjectController extends AbstractProjectController
             }
         } else {
             // Initialize some variables for project creation.
-            $project_response['AuthenticateSubmissions'] = 0;
+            $project_response['AuthenticateSubmissions'] = (bool) config('cdash.require_authenticated_submissions') ? 1 : 0;
             $project_response['Public'] = Project::ACCESS_PRIVATE;
             $project_response['AutoremoveMaxBuilds'] = 500;
             $project_response['AutoremoveTimeframe'] = 60;
