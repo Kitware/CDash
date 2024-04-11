@@ -2842,11 +2842,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: "#^Call to method RetryHandler\\:\\:increment\\(\\) with incorrect case\\: Increment$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 2
 			path: app/Jobs/ProcessSubmission.php
