@@ -19,6 +19,7 @@ namespace CDash\Api\v1\RequeueSubmissionFile;
 use App\Jobs\ProcessSubmission;
 use CDash\Model\PendingSubmissions;
 
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -38,7 +39,11 @@ if (!config('cdash.remote_workers')) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_REQUEST['filename']) && isset($_REQUEST['buildid']) && isset($_REQUEST['projectid'])) {
-    $filename = $_REQUEST['filename'];
+    try {
+        $filename = decrypt($_REQUEST['filename']);
+    } catch (DecryptException $e) {
+        return response('This feature is disabled', Response::HTTP_CONFLICT);
+    }
     $buildid = $_REQUEST['buildid'];
     $projectid = $_REQUEST['projectid'];
     if (!Storage::exists("inprogress/{$filename}")) {
