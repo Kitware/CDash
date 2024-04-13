@@ -494,8 +494,7 @@ final class UserController extends AbstractController
                 // Create a new password
                 $password = generate_password(10);
 
-                $currentURI = $config->getBaseUrl();
-                $url = $currentURI . '/user';
+                $url = url('/user');
 
                 $text = "Hello,\n\n You have asked to recover your password for CDash.\n\n";
                 $text .= 'Your new password is: ' . $password . "\n";

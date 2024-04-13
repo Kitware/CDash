@@ -14,7 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\Config;
 
 class SubProjectTestCase extends KWWebTestCase
 {
@@ -56,7 +55,7 @@ class SubProjectTestCase extends KWWebTestCase
         if (!$this->submission('SubProjectExample', $file)) {
             return;
         }
-        $url = Config::getInstance()->getBaseUrl();
+        $url = url('/');
         $expected = [
             'simpletest@localhost',
             'FAILED (w=21): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly',
@@ -98,7 +97,7 @@ class SubProjectTestCase extends KWWebTestCase
         if (!$this->submission('SubProjectExample', $file)) {
             return;
         }
-        $url = Config::getInstance()->getBaseUrl();
+        $url = url('/');
         $expected = [
             'nox-noemail@noemail',
             'FAILED (t=1): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly',

@@ -259,7 +259,7 @@ final class CoverageController extends AbstractBuildController
                     $messagePlainText .= 'Details on the submission can be found at ';
 
                     $config = Config::getInstance();
-                    $messagePlainText .= $config->getBaseUrl();
+                    $messagePlainText .= url('/');
                     $messagePlainText .= "\n\n";
                     $serverName = $config->get('CDASH_SERVER_NAME');
                     if (strlen($serverName) == 0) {

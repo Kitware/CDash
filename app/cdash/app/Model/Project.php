@@ -1288,8 +1288,7 @@ class Project
 
         // Perform the "daily update" step asychronously here via cURL.
         if (config('cdash.daily_updates') === true) {
-            $baseUrl = Config::getInstance()->getBaseUrl();
-            self::curlRequest("{$baseUrl}/ajax/dailyupdatescurl.php?projectid={$this->Id}");
+            self::curlRequest(url('/ajax/dailyupdatescurl.php') . "?projectid={$this->Id}");
         }
 
         $max_builds = (int) config('cdash.builds_per_project');

@@ -1,7 +1,6 @@
 <?php
 namespace CDash\Messaging\Subscription;
 
-use CDash\Config;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
@@ -142,14 +141,12 @@ class Subscription implements SubscriptionInterface
     {
         if (!$this->summary) {
             $project = $this->project;
-            $config = Config::getInstance();
-            $baseUrl = $config->getBaseUrl();
             $summary = [];
             $topics = $this->subscriber->getTopics();
             $summary['topics'] = [];
             $summary['build_group'] = $this->buildGroup->GetName();
             $summary['project_name'] = $project->GetName();
-            $summary['project_url'] = "{$baseUrl}/index.php?project={$project->Name}";
+            $summary['project_url'] = url("/index.php") . "?project={$project->Name}";
             $summary['site_name'] = $this->site->name;
             $summary['build_name'] = '';
             $summary['build_subproject_names'] = [];
@@ -203,7 +200,7 @@ class Subscription implements SubscriptionInterface
 
                     if (is_null($summary['build_summary_url'])) {
                         $id = (int) $summary['build_parent_id'] ?: $build->Id;
-                        $summary['build_summary_url'] = "{$baseUrl}/build/{$id}";
+                        $summary['build_summary_url'] = url("/build/{$id}");
                     }
                 }
             }

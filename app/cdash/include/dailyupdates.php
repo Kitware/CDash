@@ -738,7 +738,6 @@ function get_repository_commits(int $projectid, $dates): array
 function sendEmailExpectedBuilds($projectid, $currentstarttime): void
 {
     $config = Config::getInstance();
-    $currentURI = $config->getBaseUrl();
 
     $db = Database::getInstance();
 
@@ -832,7 +831,7 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime): void
             $missingTitle = 'CDash [' . $projectname . '] - Missing Build for ' . $sitename;
             $missingSummary = 'The following expected build(s) for the project ' . $projectname . " didn't submit yesterday:\n";
             $missingSummary .= '* ' . $sitename . ' - ' . $buildname . ' (' . $builtype . ")\n";
-            $missingSummary .= "\n" . $currentURI . '/index.php?project=' . urlencode($projectname) . "\n";
+            $missingSummary .= "\n" . url('/index.php') . '?project=' . urlencode($projectname) . "\n";
             $missingSummary .= "\n-CDash on " . $serverName . "\n";
 
             if (cdashmail($recipients, $missingTitle, $missingSummary)) {
@@ -848,7 +847,7 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime): void
     // Send a summary email to the project administrator or users who want to receive notification
     // of missing builds
     if ($missingbuilds == 1) {
-        $summary .= "\n" . $currentURI . '/index.php?project=' . urlencode($projectname) . "\n";
+        $summary .= "\n" . url('/index.php') . '?project=' . urlencode($projectname) . "\n";
         $summary .= "\n-CDash on " . $serverName . "\n";
 
         $title = 'CDash [' . $projectname . '] - Missing Builds';

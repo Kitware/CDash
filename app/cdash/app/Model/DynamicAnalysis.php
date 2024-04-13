@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use CDash\Config;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
 
@@ -336,9 +335,6 @@ class DynamicAnalysis
     /** Returns a self referencing URI for the current DynamicAnalysis. */
     public function GetUrlForSelf(): string
     {
-        $config = Config::getInstance();
-        $base_url = $config->getBaseUrl();
-
-        return "{$base_url}/viewDynamicAnalysisFile.php?id={$this->Id}";
+        return url('/viewDynamicAnalysisFile.php') . "?id={$this->Id}";
     }
 }
