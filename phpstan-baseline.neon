@@ -6506,7 +6506,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 20
+			count: 19
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -27444,11 +27444,6 @@ parameters:
 
 		-
 			message: "#^Property BuildHandler\\:\\:\\$BuildGroup is unused\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Property BuildHandler\\:\\:\\$BuildLog has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/build_handler.php
 
