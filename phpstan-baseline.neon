@@ -29727,7 +29727,7 @@ parameters:
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Testing\\\\TestResponse\\:\\:assertGraphQLErrorMessage\\(\\)\\.$#"
 			count: 5
-			path: tests/Feature/GraphQL/ProjectTest.php
+			path: tests/Feature/GraphQL/ProjectTypeTest.php
 
 		-
 			message: "#^Call to an undefined method Mockery\\\\Expectation\\:\\:shouldReceive\\(\\)\\.$#"
