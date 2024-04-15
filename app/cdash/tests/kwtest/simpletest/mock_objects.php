@@ -729,7 +729,7 @@ class SimpleMock
     {
         if ($this->is_strict && !method_exists($this, $method)) {
             trigger_error(
-                "Cannot $task as no ${method}() in class " . get_class($this),
+                "Cannot $task as no {$method}() in class " . get_class($this),
                 E_USER_ERROR);
         }
     }

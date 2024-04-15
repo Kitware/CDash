@@ -18,6 +18,7 @@ namespace CDash\Api\v1\DeleteSubmissionFile;
 
 require_once 'include/ctestparser.php';
 
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -38,7 +39,11 @@ if (!config('cdash.remote_workers')) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_REQUEST['filename'])) {
-    $filename = $_REQUEST['filename'];
+    try {
+        $filename = decrypt($_REQUEST['filename']);
+    } catch (DecryptException $e) {
+        return response('This feature is disabled', Response::HTTP_CONFLICT);
+    }
     if (!Storage::exists($filename)) {
         return response('File not found', Response::HTTP_NOT_FOUND);
     }
@@ -51,7 +56,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_REQUEST['filename'])) {
         }
     } elseif (isset($_REQUEST['dest'])) {
         // Rename the file.
-        $dest = $_REQUEST['dest'];
+        try {
+            $dest = decrypt($_REQUEST['dest']);
+        } catch (DecryptException $e) {
+            return response('This feature is disabled', Response::HTTP_CONFLICT);
+        }
         if (Storage::move($filename, $dest)) {
             return response('OK', Response::HTTP_OK);
         } else {

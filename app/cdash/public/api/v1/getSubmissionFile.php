@@ -16,6 +16,7 @@
 
 namespace CDash\Api\v1\GetSubmissionFile;
 
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -38,7 +39,12 @@ if (!config('cdash.remote_workers')) {
 }
 
 if (isset($_GET['filename'])) {
-    $filename = Storage::path('inprogress') . '/' . basename($_REQUEST['filename']);
+    try {
+        $input_filename = decrypt($_REQUEST['filename']);
+    } catch (DecryptException $e) {
+        return response('This feature is disabled', Response::HTTP_CONFLICT);
+    }
+    $filename = Storage::path('inprogress') . '/' . basename($input_filename);
     if (!is_readable($filename)) {
         return response('Not found', Response::HTTP_NOT_FOUND);
     } else {

@@ -51,9 +51,11 @@ class ProcessSubmission implements ShouldQueue
     private function renameSubmissionFile($src, $dst): bool
     {
         if (config('cdash.remote_workers')) {
-            $url = config('app.url') . '/api/v1/deleteSubmissionFile.php';
+            $url = url('/api/v1/deleteSubmissionFile.php');
             $client = new \GuzzleHttp\Client();
-            $response = $client->request('DELETE', $url, ['query' => ['filename' => $src, 'dest' => $dst]]);
+            $response = $client->request('DELETE', $url, [
+                'query'   => ['filename' => encrypt($src), 'dest' => encrypt($dst)],
+            ]);
             return $response->getStatusCode() === 200;
         } else {
             return Storage::move($src, $dst);
@@ -63,9 +65,11 @@ class ProcessSubmission implements ShouldQueue
     private function deleteSubmissionFile($filename): bool
     {
         if (config('cdash.remote_workers')) {
-            $url = config('app.url') . '/api/v1/deleteSubmissionFile.php';
+            $url = url('/api/v1/deleteSubmissionFile.php');
             $client = new \GuzzleHttp\Client();
-            $response = $client->request('DELETE', $url, ['query' => ['filename' => $filename]]);
+            $response = $client->request('DELETE', $url, [
+                'query' => ['filename' => encrypt($filename)],
+            ]);
             return $response->getStatusCode() === 200;
         } else {
             return Storage::delete($filename);
@@ -75,18 +79,20 @@ class ProcessSubmission implements ShouldQueue
     private function requeueSubmissionFile($buildid): bool
     {
         if (config('cdash.remote_workers')) {
-            $url = config('app.url') . '/api/v1/requeueSubmissionFile.php';
+            $url = url('/api/v1/requeueSubmissionFile.php');
             $client = new \GuzzleHttp\Client();
-            $response = $client->request('POST', $url, ['query' => [
-                    'filename' => $this->filename,
+            $response = $client->request('POST', $url, [
+                'query' => [
+                    'filename' => encrypt($this->filename),
                     'buildid' => $buildid,
                     'projectid' => $this->projectid,
-                ]]);
+                ],
+            ]);
             return $response->getStatusCode() == 200;
         } else {
             // Increment retry count.
             $retry_handler = new \RetryHandler(Storage::path("inprogress/{$this->filename}"));
-            $retry_handler->Increment();
+            $retry_handler->increment();
 
             // Move file back to inbox.
             Storage::move("inprogress/{$this->filename}", "inbox/{$this->filename}");
@@ -242,10 +248,11 @@ class ProcessSubmission implements ShouldQueue
         rename($_t, $tmpFilename);
 
         $client = new \GuzzleHttp\Client();
-        $response = $client->request('GET',
-            config('app.url') . '/api/v1/getSubmissionFile.php',
-            ['query' => ['filename' => $filename],
-                  'sink' => $tmpFilename]);
+        $url = url('/api/v1/getSubmissionFile.php');
+        $response = $client->request('GET', $url, [
+            'query' => ['filename' => encrypt($filename)],
+            'sink' => $tmpFilename,
+        ]);
 
         if ($response->getStatusCode() === 200) {
             // @todo I'm sure Guzzle can be used to return a file handle from the stream, but for now

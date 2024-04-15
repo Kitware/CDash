@@ -602,5 +602,8 @@ set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS viewsubp
 add_php_test(misassignedconfigure)
 set_tests_properties(misassignedconfigure PROPERTIES DEPENDS /Feature/SubProjectDependencies)
 
+add_laravel_test(/Feature/RemoteWorkers)
+set_tests_properties(/Feature/RemoteWorkers PROPERTIES DEPENDS install_3)
+
 add_subdirectory(ctest)
 add_subdirectory(autoremovebuilds)
