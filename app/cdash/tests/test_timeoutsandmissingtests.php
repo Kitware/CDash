@@ -1,5 +1,4 @@
 <?php
-use CDash\Config;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -44,7 +43,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
             $this->fail('Errors in log after submit');
         }
 
-        $url = Config::getInstance()->getBaseUrl();
+        $url = url('/');
         $expected = [
             'simpletest@localhost',
             'FAILED (m=3): EmailProjectExample - Win32-MSVC2009 - Nightly',
@@ -104,7 +103,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
             $this->fail('failed to submit test data');
             return;
         }
-        $url = Config::getInstance()->getBaseUrl();
+        $url = url('/');
         $expected = [
             'simpletest@localhost',
             'FAILED (t=2): EmailProjectExample - OSX-SIERRA-10.12.1 - Nightly',

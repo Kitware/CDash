@@ -16,7 +16,6 @@
 namespace CDash\Model;
 
 use App\Utils\RepositoryUtils;
-use CDash\Config;
 use CDash\Database;
 use PDO;
 
@@ -330,8 +329,6 @@ class BuildFailure
     /** Returns a self referencing URI for a the current BuildFailure. */
     public function GetUrlForSelf(): string
     {
-        $config = Config::getInstance();
-        $url = $config->getBaseUrl();
-        return "{$url}/viewBuildError.php?type={$this->Type}&buildid={$this->BuildId}";
+        return url('/viewBuildError.php') . "?type={$this->Type}&buildid={$this->BuildId}";
     }
 }

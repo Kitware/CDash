@@ -29,6 +29,7 @@ use CDash\Model\Subscriber;
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\UseCase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 
 class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
 {
@@ -54,7 +55,6 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         // set $CDASH_SERVER_NAME.
         $config = Config::getInstance();
         $config->set('CDASH_SERVER_NAME', 'open.cdash.org');
-
 
         // deal with timezone stuff
         self::$tz = date_default_timezone_get();
@@ -109,6 +109,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
 
         $this->createApplication();
         config(['app.url' => 'http://open.cdash.org']);
+        URL::forceRootUrl('http://open.cdash.org');
 
         if (self::$projectid === -1) {
             self::$projectid = DB::table('project')->insertGetId([
@@ -452,7 +453,7 @@ Build Time: {$datetime}
 Type: Experimental
 Total Dynamic analysis tests failing or not run: 1
 
-*Dynamic analysis tests failing or not run* 
+*Dynamic analysis tests failing or not run* " . /* Join is needed to preserve trailing space */"
 experimentalFail (http://open.cdash.org/viewDynamicAnalysisFile.php?id=1)
 
 -CDash on open.cdash.org

@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use CDash\Config;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
 use PDO;
@@ -432,7 +431,6 @@ class BuildUpdate
      */
     public function GetUrlForSelf(): string
     {
-        $config = Config::getInstance();
-        return "{$config->getBaseUrl()}/build/{$this->BuildId}/update";
+        return url("/build/{$this->BuildId}/update");
     }
 }

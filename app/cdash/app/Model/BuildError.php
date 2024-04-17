@@ -16,7 +16,6 @@
 namespace CDash\Model;
 
 use App\Utils\RepositoryUtils;
-use CDash\Config;
 
 use PDO;
 use App\Models\BuildError as EloquentBuildError;
@@ -157,8 +156,6 @@ class BuildError
      */
     public function GetUrlForSelf(): string
     {
-        $config = Config::getInstance();
-        $url = $config->getBaseUrl();
-        return "{$url}/viewBuildError.php?type={$this->Type}&buildid={$this->BuildId}";
+        return url('/viewBuildError.php') . "?type={$this->Type}&buildid={$this->BuildId}";
     }
 }

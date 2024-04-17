@@ -4,7 +4,6 @@ use App\Enums\TestDiffType;
 use App\Models\Site;
 use App\Models\TestDiff;
 use App\Models\User;
-use CDash\Config;
 use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
@@ -116,13 +115,13 @@ class EmailTestCase extends KWWebTestCase
             return;
         }
 
-        $config = Config::getInstance();
+        $url = url('/');
 
         $expected = [
             'DEBUG: user1@kw',
             'DEBUG: PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'Congratulations. A submission to CDash for the project EmailProjectExample has fixed warnings',
-            "{$config->getBaseUrl()}/build/",
+            "{$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
@@ -163,12 +162,12 @@ class EmailTestCase extends KWWebTestCase
         if (!$this->submission('EmailProjectExample', $file)) {
             return;
         }
-        $config = Config::getInstance();
+        $url = url('/');
         $expected = [
             'DEBUG: user1@kw',
             'DEBUG: PASSED (t=2): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'Congratulations. A submission to CDash for the project EmailProjectExample has fixed failing tests',
-            "{$config->getBaseUrl()}/build/",
+            "{$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
@@ -192,8 +191,7 @@ class EmailTestCase extends KWWebTestCase
         if (!$this->submission('EmailProjectExample', $file)) {
             return;
         }
-        $config = Config::getInstance();
-        $url = $config->getBaseUrl();
+        $url = url('/');
         $expected = [
             'simpletest@localhost',
             'FAILED (d=10): EmailProjectExample - Win32-MSVC2009 - Nightly',
@@ -250,8 +248,7 @@ class EmailTestCase extends KWWebTestCase
             return;
         }
 
-        $config = Config::getInstance();
-        $url = $config->getBaseUrl();
+        $url = url('/');
         $expected = [
             'simpletest@localhost',
             'FAILED (t=4): EmailProjectExample - Win32-MSVC2009 - Nightly',

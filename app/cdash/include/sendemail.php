@@ -132,8 +132,7 @@ function get_email_summary(int $buildid, array $errors, $errorkey, int $maxitems
     $build = new Build();
     $build->Id = $buildid;
 
-    $config = Config::getInstance();
-    $serverURI = $config->getBaseUrl();
+    $serverURI = url('/');
     $information = '';
 
     // Update information
@@ -346,9 +345,6 @@ function get_email_summary(int $buildid, array $errors, $errorkey, int $maxitems
 /** Generate the title and body for a broken build. */
 function generate_broken_build_message(array $emailtext, $Build, $Project): array|false
 {
-    $config = Config::getInstance();
-    $serverURI = $config->getBaseUrl();
-
     $preamble = 'A submission to CDash for the project ' . $Project->Name . ' has ';
     $titleerrors = '(';
 
@@ -437,8 +433,7 @@ function generate_broken_build_message(array $emailtext, $Build, $Project): arra
 
     $body = 'Details on the submission can be found at ';
 
-    $body .= $serverURI;
-    $body .= "/build/{$Build->Id}";
+    $body .= url("/build/{$Build->Id}");
     $body .= "\n\n";
 
     $body .= 'Project: ' . $Project->Name . "\n";
@@ -559,9 +554,6 @@ function send_update_email(UpdateHandler $handler, int $projectid): void
         }
 
         if (!empty($recipients)) {
-            $config = Config::getInstance();
-            $serverURI = $config->getBaseUrl();
-
             // Generate the email to send
             $subject = 'CDash [' . $Project->Name . '] - Update Errors for ' . $sitename;
 
@@ -574,7 +566,7 @@ function send_update_email(UpdateHandler $handler, int $projectid): void
 
             $body = "$sitename has encountered errors during the Update step and you have been identified as the maintainer of this site.\n\n";
             $body .= "*Update Errors*\n";
-            $body .= 'Status: ' . $update['status'] . ' (' . $serverURI . '/build/' . $buildid . "/update)\n";
+            $body .= 'Status: ' . $update['status'] . ' (' . url('/build/' . $buildid . '/update') . ")\n";
             if (cdashmail($recipients, $subject, $body)) {
                 add_log('email sent to: ' . implode(', ', $recipients), 'send_update_email');
             } else {
