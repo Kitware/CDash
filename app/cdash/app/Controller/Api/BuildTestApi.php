@@ -17,7 +17,6 @@
 namespace CDash\Controller\Api;
 
 use App\Models\BuildTest;
-use App\Models\Test;
 
 use CDash\Database;
 use CDash\Model\Build;
@@ -29,7 +28,6 @@ use CDash\Model\Build;
 abstract class BuildTestApi extends BuildApi
 {
     public $buildtest;
-    public $test;
     public $testHistoryQuery;
     public $testHistoryQueryExtraColumns;
     public $testHistoryQueryExtraJoins;
@@ -41,7 +39,6 @@ abstract class BuildTestApi extends BuildApi
     public function __construct(Database $db, BuildTest $buildtest)
     {
         $this->buildtest = $buildtest;
-        $this->test = Test::where('id', '=', $this->buildtest->testid)->first();
 
         $build = new Build();
         $build->Id = $this->buildtest->buildid;
@@ -62,7 +59,7 @@ abstract class BuildTestApi extends BuildApi
             ':projectid' => $this->project->Id,
             ':type' => $this->build->Type,
             ':buildname' => $this->build->Name,
-            ':testname' => $this->test->name,
+            ':testname' => $this->buildtest->testname,
         ];
     }
 
@@ -77,7 +74,7 @@ abstract class BuildTestApi extends BuildApi
             AND b.projectid = :projectid
             AND b.type = :type
             AND b.name = :buildname
-            AND b2t.testid IN (SELECT id FROM test WHERE name = :testname)
+            AND b2t.testname = :testname
             $this->testHistoryQueryExtraWheres
             ORDER BY b.starttime $this->testHistoryQueryOrder
             $this->testHistoryQueryLimit";

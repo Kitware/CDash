@@ -91,7 +91,7 @@ class MissingTestTopicTest extends TestCase
 
         $build2->expects($this->any())
             ->method('GetMissingTests')
-            ->willReturn(['101' => 'TestA', '303' => 'TestC']);
+            ->willReturn(['TestA', 'TestC']);
         $build2->Id = '2';
 
         $this->assertTrue($sut->subscribesToBuild($build2));
@@ -106,12 +106,10 @@ class MissingTestTopicTest extends TestCase
         $a = $collection->get('TestA');
         $c = $collection->get('TestC');
 
-        $this->assertEquals('101', $a->test->id);
-        $this->assertEquals('TestA', $a->test->name);
+        $this->assertEquals('TestA', $a->testname);
         $this->assertEquals('2', $a->buildid);
 
-        $this->assertEquals('303', $c->test->id);
-        $this->assertEquals('TestC', $c->test->name);
+        $this->assertEquals('TestC', $c->testname);
         $this->assertEquals('2', $c->buildid);
 
         $this->assertEquals(2, $sut->getTopicCount());

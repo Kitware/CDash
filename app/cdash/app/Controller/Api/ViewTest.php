@@ -247,10 +247,9 @@ class ViewTest extends BuildApi
         }
 
         $sql = "
-            SELECT bt.status, bt.newstatus, bt.timestatus, t.id, bt.time, bt.buildid, bt.details,
-                   bt.id AS buildtestid, t.name $label_sql $parentBuildFieldSql
+            SELECT bt.status, bt.newstatus, bt.timestatus, bt.time, bt.buildid, bt.details,
+                   bt.id AS buildtestid, bt.testname $label_sql $parentBuildFieldSql
                        FROM build2test AS bt
-                       LEFT JOIN test AS t ON (t.id=bt.testid)
                        $parentBuildJoinSql
                        $labeljoin_sql
                        WHERE $parentBuildWhere $status $this->filterSQL $limitnew $groupby_sql
@@ -325,14 +324,14 @@ class ViewTest extends BuildApi
         $etestquery = null;
         if ($this->numExtraMeasurements > 0) {
             $etestquery = $this->db->prepare(
-                "SELECT build2test.id, test.projectid, build2test.buildid,
-                    build2test.status, build2test.timestatus, test.name, testmeasurement.name,
+                "SELECT build2test.id, build.projectid, build2test.buildid,
+                    build2test.status, build2test.timestatus, build2test.testname, testmeasurement.name,
                     testmeasurement.value, build.starttime,
-                    build2test.time FROM test
-                    JOIN build2test ON (build2test.testid = test.id)
+                    build2test.time
+                    FROM build2test
                     JOIN build ON (build.id = build2test.buildid)
                     JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
-                    JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
+                    JOIN measurement ON (build.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
                     WHERE build.$buildid_field = :buildid
                     $onlydelta_extra
                     $status_clause
@@ -418,7 +417,7 @@ class ViewTest extends BuildApi
 
         if ($numMissing > 0) {
             foreach ($this->build->MissingTests as $name) {
-                $marshaledTest = buildtest::marshalMissing($name, $buildid, $this->build->ProjectId, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus, $testdate);
+                $marshaledTest = BuildTest::marshalMissing($name, $buildid, $this->build->ProjectId, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus, $testdate);
                 array_unshift($tests, $marshaledTest);
             }
         }
@@ -443,16 +442,10 @@ class ViewTest extends BuildApi
     {
         $retval = [];
 
-        // STRAIGHT_JOIN is a MySQL specific enhancement.
-        $join_type = 'INNER JOIN';
-        if (config('database.default') === 'mysql') {
-            $join_type = 'STRAIGHT_JOIN';
-        }
-
         $history_query = "
-            SELECT DISTINCT status FROM build2test AS b2t
-            $join_type test AS t ON (t.id = b2t.testid)
-            WHERE b2t.buildid IN ($previous_buildids) AND t.name = :testname";
+            SELECT DISTINCT status
+            FROM build2test AS b2t
+            WHERE b2t.buildid IN ($previous_buildids) AND b2t.testname = :testname";
         $history_stmt = $this->db->prepare($history_query);
         $this->db->execute($history_stmt, [':testname' => $testname]);
         $statuses = [];
@@ -501,12 +494,11 @@ class ViewTest extends BuildApi
             SELECT DISTINCT b2t.status FROM build AS b
             $join_type build2group AS b2g ON (b.id = b2g.buildid)
             $join_type build2test AS b2t ON (b.id = b2t.buildid)
-            $join_type test AS t ON (b2t.testid = t.id)
             WHERE b2g.groupid = :groupid
             AND b.projectid = :projectid
             AND b.starttime >= :begin
             AND b.starttime < :end
-            AND t.name = :testname";
+            AND b2t.testname = :testname";
         $params = [
             ':groupid' => $groupid,
             ':projectid' => $projectid,
@@ -628,7 +620,7 @@ class ViewTest extends BuildApi
         // Store named measurements in an array
         if (!is_null($etestquery)) {
             while ($row = $etestquery->fetch()) {
-                $etest[$row['id']][$row['name']] = $row['value'];
+                $etest[$row['id']][$row['testname']] = $row['value'];
             }
         }
 
@@ -647,7 +639,7 @@ class ViewTest extends BuildApi
 
         while ($row = $stmt->fetch()) {
             $csv_row = [];
-            $csv_row[] = $row['name'];
+            $csv_row[] = $row['testname'];
             $csv_row[] = $row['time'];
             $csv_row[] = $row['details'];
 

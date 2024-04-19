@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Config;
  * @property int $timestatus
  * @property int $newstatus
  * @property string $details
- * @property int $testid
+ * @property string $testname
  *
  * @mixin Builder<BuildTest>
  */
@@ -32,6 +32,14 @@ class BuildTest extends Model
 
     protected $table = 'build2test';
     protected $labels = null;
+
+    // TODO: Put these in an enum somewhere
+    public const FAILED = 'failed';
+    public const PASSED = 'passed';
+    public const OTHER_FAULT = 'OTHER_FAULT';
+    public const TIMEOUT = 'Timeout';
+    public const NOTRUN = 'notrun';
+    public const DISABLED = 'Disabled';
 
     protected $attributes = [
         'timemean' => 0.0,
@@ -47,18 +55,7 @@ class BuildTest extends Model
         'timestd' => 'float',
         'timestatus' => 'integer',
         'newstatus' => 'integer',
-        'testid' => 'integer',
     ];
-
-    /**
-     * Get the test record for this buildtest.
-     *
-     * @return BelongsTo<Test, self>
-     */
-    public function test(): BelongsTo
-    {
-        return $this->belongsTo('App\Models\Test', 'testid');
-    }
 
     /**
      * @return BelongsTo<Build, self>
@@ -124,7 +121,7 @@ class BuildTest extends Model
     public static function marshalMissing($name, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate): array
     {
         $data = [];
-        $data['name'] = $name;
+        $data['testname'] = $name;
         $data['status'] = 'missing';
         $data['id'] = '';
         $data['buildtestid'] = '';
@@ -162,16 +159,15 @@ class BuildTest extends Model
             $marshaledStatus = ['Not Run', 'disabled-test'];
         }
         $marshaledData = [
-            'id' => $data['id'],
             'buildid' => $buildid,
             'buildtestid' => $data['buildtestid'],
             'status' => $marshaledStatus[0],
             'statusclass' => $marshaledStatus[1],
-            'name' => $data['name'],
+            'name' => $data['testname'],
             'execTime' => time_difference($data['time'], true, '', true),
             'execTimeFull' => floatval($data['time']),
             'details' => $data['details'],
-            'summaryLink' => "testSummary.php?project=$projectid&name=" . urlencode($data['name']) . "&date=$testdate",
+            'summaryLink' => "testSummary.php?project=$projectid&name=" . urlencode($data['testname']) . "&date=$testdate",
             'summary' => 'Summary', /* Default value later replaced by AJAX */
             'detailsLink' => "test/{$data['buildtestid']}",
         ];
@@ -193,7 +189,7 @@ class BuildTest extends Model
             }
         }
 
-        if (config('database.default') == 'pgsql' && $marshaledData['id']) {
+        if (config('database.default') == 'pgsql' && $marshaledData['buildtestid']) {
             $buildtest = BuildTest::where('id', '=', $data['buildtestid'])->first();
             if ($buildtest) {
                 $marshaledData['labels'] = $buildtest->getLabels()->keys()->all();

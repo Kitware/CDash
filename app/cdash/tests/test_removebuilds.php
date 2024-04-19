@@ -411,11 +411,8 @@ class RemoveBuildsTestCase extends KWWebTestCase
             $this->verify_get_rows('dynamicanalysis', 'id', 'buildid', '=', $build->Id, 1);
         $this->verify('dynamicanalysisdefect', 'dynamicanalysisid', '=', $dynamicanalysisid, 1);
 
-        $testids =
-            $this->verify_get_rows('build2test', 'testid', 'buildid', '=', $build->Id, 2);
         $outputids =
             $this->verify_get_rows('build2test', 'outputid', 'buildid', '=', $build->Id, 2);
-        $this->verify('test', 'id', 'IN', $testids, 2);
         $this->verify('testmeasurement', 'outputid', 'IN', $outputids, 2);
         $imgids = $this->verify_get_rows('test2image', 'imgid', 'outputid', 'IN', $outputids, 2);
         $this->verify('image', 'id', 'IN', $imgids, 2);
@@ -481,7 +478,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('note', 'id', 'IN', $noteids, 1, true);
         $this->verify('summaryemail', 'buildid', '=', $build->Id, 0, true);
         $this->verify('subproject2build', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('test', 'id', 'IN', $testids, 1, true);
         $this->verify('test2image', 'outputid', 'IN', $outputids, 1, true);
         $this->verify('testdiff', 'buildid', '=', $build->Id, 0, true);
         $this->verify('testmeasurement', 'outputid', 'IN', $outputids, 1, true);

@@ -206,7 +206,7 @@ it('can toggle the graphs', async () => {
   expect(component.vm.showgraph).toBe(false);
   expect(component.find('#graph_holder').isVisible()).toBe(false);
 
-  axiosMockAdapter.onGet('/api/v1/testGraph.php?testid=1&buildid=1&type=time').reply(200, graphData);
+  axiosMockAdapter.onGet('/api/v1/testGraph.php?testname=my-test&buildid=1&type=time').reply(200, graphData);
   const graph_selector = component.find('#GraphSelection');
   graph_selector.findAll('option').at(1).setSelected();
   graph_selector.trigger('change');
@@ -226,7 +226,7 @@ it('can toggle the graphs', async () => {
 
   const json_link = component.find('a[href*="testGraph.php"]');
   expect(json_link.isVisible()).toBe(true);
-  expect(json_link.attributes('href')).toMatch('/api/v1/testGraph.php?testid=1&buildid=1&type=time');
+  expect(json_link.attributes('href')).toMatch('/api/v1/testGraph.php?testname=my-test&buildid=1&type=time');
 });
 
 it('can load the graphs by default', async () => {
@@ -236,7 +236,7 @@ it('can load the graphs by default', async () => {
   // TODO: revisit this when we upgrade to Vue 3.
   expect(window.location.search).toBe('?graph=time');
   axiosMockAdapter.onGet('/api/v1/testDetails.php?buildtestid=&graph=time').reply(200, apiResponse);
-  axiosMockAdapter.onGet('/api/v1/testGraph.php?testid=1&buildid=1&type=time').reply(200, graphData);
+  axiosMockAdapter.onGet('/api/v1/testGraph.php?testname=my-test&buildid=1&type=time').reply(200, graphData);
   const component = mount(TestDetails);
   await new Promise(process.nextTick);
   expect(component.vm.showgraph).toBe(true);

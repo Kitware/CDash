@@ -20,7 +20,6 @@ require_once 'include/ctestparserutils.php';
 
 use App\Models\BuildTest;
 use App\Models\Site;
-use App\Models\Test;
 use App\Utils\RepositoryUtils;
 use App\Utils\TestingDay;
 use App\Utils\TestDiffUtil;
@@ -930,7 +929,7 @@ class Build
             if (!$this->Id) {
                 add_log('BuildId is not set', 'Build::GetMissingTests', LOG_ERR,
                     $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
-                return $this->MissingTests;
+                return [];
             }
 
             $previous_build_tests = [];
@@ -938,23 +937,18 @@ class Build
 
             $previous_build = $this->GetPreviousBuildId();
 
-            $sql = "SELECT DISTINCT B.id, B.name FROM build2test A
-                LEFT JOIN test B
-                  ON A.testid=B.id
-                WHERE A.buildid=?
-                ORDER BY B.name
+            $sql = "SELECT DISTINCT testname
+                FROM build2test
+                WHERE buildid=?
+                ORDER BY testname
              ";
 
-            $query = $this->PDO->prepare($sql);
-
-            pdo_execute($query, [$previous_build]);
-            foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
-                $previous_build_tests[$test->id] = $test->name;
+            foreach (DB::select($sql, [$previous_build]) as $test) {
+                $previous_build_tests[] = $test->testname;
             }
 
-            pdo_execute($query, [$this->Id]);
-            foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
-                $current_build_tests[$test->id] = $test->name;
+            foreach (DB::select($sql, [$this->Id]) as $test) {
+                $current_build_tests[] = $test->testname;
             }
             $this->MissingTests = array_diff($previous_build_tests, $current_build_tests);
         }
@@ -992,12 +986,11 @@ class Build
         }
 
         $sql = "
-            SELECT t.name, b2t.id AS buildtestid, b2t.details
-            FROM test t
-            JOIN build2test b2t ON t.id = b2t.testid
+            SELECT b2t.testname AS name, b2t.id AS buildtestid, b2t.details
+            FROM build2test b2t
             WHERE b2t.buildid = :buildid
             AND $criteria
-            ORDER BY t.id
+            ORDER BY b2t.testname
             $limit_clause";
 
         $query = $this->PDO->prepare($sql);
@@ -1262,9 +1255,8 @@ class Build
 
         // Get the tests performed by the previous build.
         $previous_tests_stmt = $this->PDO->prepare(
-            'SELECT b2t.id AS buildtestid, b2t.testid, t.name
+            'SELECT b2t.id AS buildtestid, b2t.testname
             FROM build2test b2t
-            JOIN test t ON t.id = b2t.testid
             WHERE b2t.buildid = ?');
         if (!pdo_execute($previous_tests_stmt, [$previousbuildid])) {
             return false;
@@ -1274,17 +1266,15 @@ class Build
         while ($row = $previous_tests_stmt->fetch()) {
             $test = [];
             $test['buildtestid'] = $row['buildtestid'];
-            $test['id'] = $row['testid'];
-            $test['name'] = $row['name'];
+            $test['name'] = $row['testname'];
             $testarray[] = $test;
         }
 
         // Loop through the tests performed by this build.
         $tests_stmt = $this->PDO->prepare(
-            'SELECT b2t.id AS buildtestid, b2t.time, b2t.testid, t.name,
+            'SELECT b2t.id AS buildtestid, b2t.time, b2t.testname,
                     b2t.status, b2t.timestatus
             FROM build2test b2t
-            JOIN test t ON b2t.testid = t.id
             WHERE b2t.buildid = ?');
         if (!pdo_execute($tests_stmt, [$this->Id])) {
             return false;
@@ -1293,7 +1283,7 @@ class Build
             $testtime = $row['time'];
             $buildtestid = $row['buildtestid'];
             $teststatus = $row['status'];
-            $testname = $row['name'];
+            $testname = $row['testname'];
             $previousbuildtestid = 0;
 
             foreach ($testarray as $test) {
@@ -2353,7 +2343,7 @@ class Build
      */
     public function AddTest(BuildTest $buildtest): self
     {
-        $this->TestCollection->put($buildtest->test->name, $buildtest);
+        $this->TestCollection->put($buildtest->testname, $buildtest);
         return $this;
     }
 
@@ -2747,15 +2737,15 @@ class Build
                     return $count;
                 }, 0);
                 $passed = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test['status'] === Test::PASSED ? 1 : 0;
+                    $count += $test['status'] === BuildTest::PASSED ? 1 : 0;
                     return $count;
                 }, 0);
                 $failed = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test['status'] === Test::FAILED ? 1 : 0;
+                    $count += $test['status'] === BuildTest::FAILED ? 1 : 0;
                     return $count;
                 }, 0);
                 $notrun = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test['status'] === Test::NOTRUN ? 1 : 0;
+                    $count += $test['status'] === BuildTest::NOTRUN ? 1 : 0;
                     return $count;
                 }, 0);
 

@@ -2480,11 +2480,6 @@ parameters:
 			path: app/Http/Controllers/SubscribeProjectController.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\BuildTest\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\BuildTest\\>\\:\\:\\$test\\.$#"
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
 			message: """
 				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
@@ -2494,11 +2489,6 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'c' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
-			message: "#^Cannot access property \\$projectid on App\\\\Models\\\\Test\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/TestController.php
 
@@ -3219,11 +3209,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$offset of function substr expects int, int\\|false given\\.$#"
 			count: 1
 			path: app/Providers/AppServiceProvider.php
-
-		-
-			message: "#^Cannot access property \\$test on App\\\\Models\\\\TestOutput\\|null\\.$#"
-			count: 1
-			path: app/Providers/AuthServiceProvider.php
 
 		-
 			message: "#^PHPDoc type array of property App\\\\Providers\\\\AuthServiceProvider\\:\\:\\$policies is not the same as PHPDoc type array\\<class\\-string, class\\-string\\> of overridden property Illuminate\\\\Foundation\\\\Support\\\\Providers\\\\AuthServiceProvider\\:\\:\\$policies\\.$#"
@@ -4739,11 +4724,6 @@ parameters:
 			path: app/Utils/TestCreator.php
 
 		-
-			message: "#^Only booleans are allowed in an if condition, array given\\.$#"
-			count: 2
-			path: app/Utils/TestCreator.php
-
-		-
 			message: "#^Parameter \\#1 \\$image of function imagegif expects GdImage, GdImage\\|false given\\.$#"
 			count: 1
 			path: app/Utils/TestCreator.php
@@ -5105,11 +5085,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Controller\\\\Api\\\\BuildTestApi\\:\\:\\$buildtest has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/BuildTestApi.php
-
-		-
-			message: "#^Property CDash\\\\Controller\\\\Api\\\\BuildTestApi\\:\\:\\$test has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/BuildTestApi.php
 
@@ -6391,7 +6366,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 30
+			count: 28
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -6412,11 +6387,6 @@ parameters:
 
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Cannot access property \\$name on App\\\\Models\\\\Test\\|null\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -11980,11 +11950,6 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
 
 		-
-			message: "#^Property App\\\\Models\\\\BuildTest\\:\\:\\$test is not writable\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
-
-		-
 			message: "#^Property CDash\\\\Messaging\\\\Topic\\\\MissingTestTopic\\:\\:\\$collection \\(CDash\\\\Messaging\\\\Topic\\\\Illuminate\\\\Support\\\\Collection\\) does not accept Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\), mixed\\>\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
@@ -12008,16 +11973,6 @@ parameters:
 			message: "#^Return type \\(void\\) of method CDash\\\\Messaging\\\\Topic\\\\MissingTestTopic\\:\\:setTopicData\\(\\) should be compatible with return type \\(\\$this\\(CDash\\\\Messaging\\\\Topic\\\\TopicInterface\\)\\) of method CDash\\\\Messaging\\\\Topic\\\\TopicInterface\\:\\:setTopicData\\(\\)$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Test\\:\\:\\$status\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Models\\\\Test\\:\\:getLabels\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
 
 		-
 			message: "#^Call to an undefined method CDash\\\\Messaging\\\\Preferences\\\\NotificationPreferencesInterface\\:\\:get\\(\\)\\.$#"
@@ -12075,12 +12030,12 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
 
 		-
-			message: "#^Parameter \\#2 \\$item \\(App\\\\Models\\\\Test\\) of method CDash\\\\Messaging\\\\Topic\\\\TestFailureTopic\\:\\:itemHasTopicSubject\\(\\) should be contravariant with parameter \\$item \\(mixed\\) of method CDash\\\\Messaging\\\\Topic\\\\Topic\\:\\:itemHasTopicSubject\\(\\)$#"
+			message: "#^Parameter \\#2 \\$item \\(App\\\\Models\\\\BuildTest\\) of method CDash\\\\Messaging\\\\Topic\\\\TestFailureTopic\\:\\:itemHasTopicSubject\\(\\) should be contravariant with parameter \\$item \\(mixed\\) of method CDash\\\\Messaging\\\\Topic\\\\Topic\\:\\:itemHasTopicSubject\\(\\)$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
 
 		-
-			message: "#^Parameter \\#2 \\$item \\(App\\\\Models\\\\Test\\) of method CDash\\\\Messaging\\\\Topic\\\\TestFailureTopic\\:\\:itemHasTopicSubject\\(\\) should be contravariant with parameter \\$item \\(mixed\\) of method CDash\\\\Messaging\\\\Topic\\\\TopicInterface\\:\\:itemHasTopicSubject\\(\\)$#"
+			message: "#^Parameter \\#2 \\$item \\(App\\\\Models\\\\BuildTest\\) of method CDash\\\\Messaging\\\\Topic\\\\TestFailureTopic\\:\\:itemHasTopicSubject\\(\\) should be contravariant with parameter \\$item \\(mixed\\) of method CDash\\\\Messaging\\\\Topic\\\\TopicInterface\\:\\:itemHasTopicSubject\\(\\)$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
 
@@ -13242,7 +13197,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 9
+			count: 8
 			path: app/cdash/include/common.php
 
 		-
@@ -17301,7 +17256,7 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
-			count: 10
+			count: 8
 			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
 
 		-
@@ -17522,16 +17477,6 @@ parameters:
 		-
 			message: "#^PHPDoc tag @var with type CDash\\\\Model\\\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$item of method CDash\\\\Messaging\\\\Topic\\\\TestFailureTopic\\:\\:itemHasTopicSubject\\(\\) expects App\\\\Models\\\\Test, App\\\\Models\\\\BuildTest given\\.$#"
-			count: 5
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: "#^Property App\\\\Models\\\\BuildTest\\:\\:\\$test is not writable\\.$#"
-			count: 11
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
 		-
@@ -23247,7 +23192,7 @@ parameters:
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
-			message: "#^Variable \\$selected_test_id might not be defined\\.$#"
+			message: "#^Variable \\$selected_test_name might not be defined\\.$#"
 			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
 

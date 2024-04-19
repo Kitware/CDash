@@ -2,6 +2,6 @@
 $buildid = $items->first()->buildid;
 $url = url('/viewTest.php') . "?buildid={$buildid}";
 ?>
-@foreach($items as $missing_tests)
-{{ $missing_tests->test->name }} ({!! $url !!})
+@foreach($items as $missing_test)
+{{ $missing_test->testname }} ({!! $url !!})
 @endforeach

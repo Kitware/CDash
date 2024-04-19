@@ -338,19 +338,19 @@ final class BuildController extends AbstractBuildController
         $test_response['nwarnings'] = $nwarnings;
 
         $test_response['npassed'] = (int) DB::select("
-            SELECT count(testid) AS c
+            SELECT count(1) AS c
             FROM build2test
             WHERE buildid=? AND status='passed'
         ", [$this->build->Id])[0]->c;
 
         $test_response['nnotrun'] = (int) DB::select("
-            SELECT count(testid) AS c
+            SELECT count(1) AS c
             FROM build2test
             WHERE buildid=? AND status='notrun'
         ", [$this->build->Id])[0]->c;
 
         $test_response['nfailed'] = (int) DB::select("
-            SELECT count(testid) AS c
+            SELECT count(1) AS c
             FROM build2test
             WHERE buildid=? AND status='failed'
         ", [$this->build->Id])[0]->c;

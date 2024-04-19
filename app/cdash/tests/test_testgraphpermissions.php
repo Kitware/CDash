@@ -40,19 +40,19 @@ class TestGraphPermissionsTestCase extends KWWebTestCase
     {
         $db = \CDash\Database::getInstance();
 
-        // Get testid
-        $stmt = $db->prepare("SELECT testid FROM build2test WHERE buildid=?");
+        // Get testname
+        $stmt = $db->prepare("SELECT testname FROM build2test WHERE buildid=?");
         $stmt->execute([$this->build]);
         $row = $stmt->fetch();
-        $testid = $row['testid'];
+        $testname = $row['testname'];
 
-        $result = $this->get($this->url . "/api/v1/testGraph.php?buildid={$this->build}&testid=$testid&type=time");
+        $result = $this->get($this->url . "/api/v1/testGraph.php?buildid={$this->build}&testname=$testname&type=time");
         // Verify that we cannot access the graphs (because we're not logged in)
         $response = json_decode($result, true);
         if ($response['error'] !== 'You do not have access to the requested project or the requested project does not exist.') {
             $this->fail("Unauthorized case #1 fails");
         }
-        $response = json_decode($this->get($this->url . "/api/v1/testGraph.php?buildid={$this->build}&testid=$testid&type=status"), true);
+        $response = json_decode($this->get($this->url . "/api/v1/testGraph.php?buildid={$this->build}&testname=$testname&type=status"), true);
         if ($response['error'] !== 'You do not have access to the requested project or the requested project does not exist.') {
             $this->fail("Unauthorized case #2 fails");
         }
@@ -63,11 +63,11 @@ class TestGraphPermissionsTestCase extends KWWebTestCase
 
         // Login and make sure we can see the graphs now.
         $this->login();
-        $response = json_decode($this->get($this->url . "/api/v1/testGraph.php?buildid={$this->build}&testid=$testid&type=time"), true);
+        $response = json_decode($this->get($this->url . "/api/v1/testGraph.php?buildid={$this->build}&testname=$testname&type=time"), true);
         if (array_key_exists('requirelogin', $response)) {
             $this->fail("Authorized case #1 fails");
         }
-        $response = json_decode($this->get($this->url . "/api/v1/testGraph.php?buildid={$this->build}&testid=$testid&type=status"), true);
+        $response = json_decode($this->get($this->url . "/api/v1/testGraph.php?buildid={$this->build}&testname=$testname&type=status"), true);
         if (array_key_exists('requirelogin', $response)) {
             $this->fail("Authorized case #2 fails");
         }

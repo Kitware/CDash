@@ -335,7 +335,7 @@ export default {
         }
       }
 
-      var testid = this.cdash.test.id;
+      const testname = this.cdash.test.test;
       var buildid = this.cdash.test.buildid;
       var measurementname = this.graphSelection;
       if (this.graphSelection === "") {
@@ -347,7 +347,7 @@ export default {
       this.showgraph = true;
 
       var graph_type = '';
-      var endpoint_path = '/api/v1/testGraph.php?testid=' + testid + '&buildid=' + buildid;
+      var endpoint_path = '/api/v1/testGraph.php?testname=' + testname + '&buildid=' + buildid;
       switch (this.graphSelection) {
       case "status":
         graph_type = 'status';

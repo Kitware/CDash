@@ -123,9 +123,8 @@ class TestOverview extends ResultsApi
 
         // Main query: find all the requested tests.
         $stmt = $this->db->prepare(
-            "SELECT t.name, b2t.details, b2t.status, b2t.time $sp_select FROM build b
+            "SELECT b2t.testname, b2t.details, b2t.status, b2t.time $sp_select FROM build b
                 JOIN build2test b2t ON (b2t.buildid=b.id)
-                JOIN test t ON (t.id=b2t.testid)
                 $group_join
                 $sp_join
                 WHERE b.projectid = :projectid AND b.parentid != -1 AND $group_clause
@@ -148,7 +147,7 @@ class TestOverview extends ResultsApi
                 continue;
             }
 
-            $test_name = $row['name'];
+            $test_name = $row['testname'];
             if (!array_key_exists($test_name, $all_tests)) {
                 $test = [];
                 $test['name'] = $test_name;

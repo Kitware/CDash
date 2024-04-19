@@ -71,12 +71,11 @@ class TestDetails extends BuildTestApi
 
         $stmt = $this->db->prepare(
             'SELECT * FROM build2test b2t
-                JOIN test t ON t.id = b2t.testid
                 JOIN testoutput ON testoutput.id = b2t.outputid
                 WHERE b2t.id = :buildtestid');
         $this->db->execute($stmt, [':buildtestid' => $this->buildtest->id]);
         $testRow = $stmt->fetch();
-        $testName = $testRow['name'];
+        $testName = $testRow['testname'];
         $outputid = $testRow['outputid'];
 
         $menu = [];
@@ -120,7 +119,6 @@ class TestDetails extends BuildTestApi
         $summaryLink = "testSummary.php?project={$this->project->Id}&name={$testName}&date={$this->date}";
 
         $test_response = [];
-        $test_response['id'] = $this->test->id;
         $test_response['buildid'] = $this->build->Id;
         $test_response['build'] = $this->build->Name;
         $test_response['buildstarttime'] = date(FMT_DATETIMESTD, strtotime($this->build->StartTime . ' UTC'));

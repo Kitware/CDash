@@ -359,7 +359,7 @@ class QueryTests extends ResultsApi
                         build2test.time,
                         build2test.timestatus,
                         site.name AS sitename,
-                        test.name AS testname,
+                        build2test.testname AS testname,
                         (
                             SELECT $text_concat
                             FROM
@@ -367,14 +367,13 @@ class QueryTests extends ResultsApi
                                 label2test
                             WHERE
                                 label.id=label2test.labelid
-                                AND label2test.outputid=test.id
+                                AND label2test.outputid=build2test.outputid
                                 AND label2test.buildid=b.id
                         ) AS labelstring
                         $output_select
                     FROM build AS b
                     JOIN build2test ON (b.id = build2test.buildid)
                     JOIN site ON (b.siteid = site.id)
-                    JOIN test ON (test.id = build2test.testid)
                     $filter_joins
                     $output_joins
                     WHERE
@@ -382,7 +381,7 @@ class QueryTests extends ResultsApi
                         $parent_clause
                         $date_clause
                         $this->filterSQL
-                    ORDER BY build2test.status, test.name
+                    ORDER BY build2test.status, build2test.testname
                     $this->limitSQL
                 ", $query_params);
 

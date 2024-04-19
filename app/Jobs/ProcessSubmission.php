@@ -15,6 +15,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 use UpdateHandler;
@@ -163,7 +164,7 @@ class ProcessSubmission implements ShouldQueue
      */
     public function failed(\Throwable $exception) : void
     {
-        \Log::warning("Failed to process {$this->filename} with message: {$exception->getMessage()}");
+        Log::warning("Failed to process {$this->filename} with message: {$exception}");
         $this->renameSubmissionFile("inprogress/{$this->filename}", "failed/{$this->filename}");
     }
 

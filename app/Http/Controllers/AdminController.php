@@ -194,7 +194,6 @@ final class AdminController extends AbstractController
             delete_unused_rows('dailyupdate', 'projectid', 'project');
             delete_unused_rows('subproject', 'projectid', 'project');
             delete_unused_rows('coveragefilepriority', 'projectid', 'project');
-            delete_unused_rows('test', 'projectid', 'project');
             delete_unused_rows('user2project', 'projectid', 'project');
             delete_unused_rows('userstatistics', 'projectid', 'project');
 

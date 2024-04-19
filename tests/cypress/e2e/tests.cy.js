@@ -121,7 +121,7 @@ describe('the test page', () => {
     // check export as JSON (clicking this just opens the API response in a new tab)
     cy.contains('a', 'View Graph Data as JSON')
       .invoke('attr', 'href')
-      .should('match', /api\/v1\/testGraph.php\?testid=[0-9]+&buildid=[0-9]+&type=time/);
+      .should('match', /api\/v1\/testGraph.php\?testname=nap&buildid=[0-9]+&type=time/);
 
     // do the same for the Failing/Passing graph
     cy.get('@dropdown').contains('option', 'Test Time').should('be.selected');
@@ -129,7 +129,7 @@ describe('the test page', () => {
     cy.get('#graph_holder').find('canvas').should('exist');
     cy.contains('a', 'View Graph Data as JSON')
       .invoke('attr', 'href')
-      .should('match', /api\/v1\/testGraph.php\?testid=[0-9]+&buildid=[0-9]+&type=status/);
+      .should('match', /api\/v1\/testGraph.php\?testname=nap&buildid=[0-9]+&type=status/);
 
     // toggle back to hide the graph
     cy.get('@dropdown').select('Select...');

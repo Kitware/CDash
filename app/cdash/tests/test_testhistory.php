@@ -282,12 +282,9 @@ class TestHistoryTestCase extends KWWebTestCase
         }
 
         // Verify test graphs for our 'flaky' test.
-        $test_result = DB::select(
-            "SELECT id FROM test WHERE name = 'flaky' AND projectid = {$this->project->Id}");
-        $testid = $test_result[0]->id;
 
         // test graph
-        $this->get("{$this->url}/api/v1/testGraph.php?testid={$testid}&buildid={$buildids[4]}&type=time");
+        $this->get("{$this->url}/api/v1/testGraph.php?testname=flaky&buildid={$buildids[4]}&type=time");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         // Execution time
@@ -311,12 +308,12 @@ class TestHistoryTestCase extends KWWebTestCase
         foreach (range(0, 4) as $i) {
             $flaky_ids[] = DB::table('build2test')
                 ->where('buildid', '=', $buildids[$i])
-                ->where('testid', '=', $testid)
+                ->where('testname', '=', 'flaky')
                 ->value('id');
         }
         $this->assertEqual(5, count($flaky_ids));
 
-        $this->get("{$this->url}/api/v1/testGraph.php?testid={$testid}&buildid={$buildids[4]}&type=status");
+        $this->get("{$this->url}/api/v1/testGraph.php?testname=flaky&buildid={$buildids[4]}&type=status");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
 
@@ -334,14 +331,11 @@ class TestHistoryTestCase extends KWWebTestCase
         $this->assertEqual($flaky_ids[4], $jsonobj[1]['data'][2]['buildtestid']);
 
         // Verify next/previous/current for our sporadic test.
-        $test_result = DB::select(
-            "SELECT id FROM test WHERE name = 'sporadic' AND projectid = {$this->project->Id}");
-        $testid = $test_result[0]->id;
         $sporadic_ids = [];
         foreach (range(0, 4, 2) as $i) {
             $sporadic_ids[] = DB::table('build2test')
                 ->where('buildid', '=', $buildids[$i])
-                ->where('testid', '=', $testid)
+                ->where('testname', '=', 'sporadic')
                 ->value('id');
         }
         $this->assertEqual(3, count($sporadic_ids));

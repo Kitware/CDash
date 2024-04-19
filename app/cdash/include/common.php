@@ -630,38 +630,14 @@ function remove_build($buildid)
     // Delete tests and testoutputs that are not shared.
     // First find all the tests and testoutputs from builds that are about to be deleted.
     $b2t_result = DB::select("
-                      SELECT testid, outputid
+                      SELECT DISTINCT outputid
                       FROM build2test
                       WHERE buildid IN $buildid_prepare_array
                   ", $buildids);
 
-    $all_testids = [];
     $all_outputids = [];
     foreach ($b2t_result as $b2t_row) {
-        $all_testids[] = intval($b2t_row->testid);
         $all_outputids[] = intval($b2t_row->outputid);
-    }
-    $all_testids = array_unique($all_testids);
-    $all_outputids = array_unique($all_outputids);
-
-    if (!empty($all_testids)) {
-        // Next identify tests from this list that should be preserved
-        // because they are shared with builds that are not about to be deleted.
-        DB::delete("
-            DELETE FROM test
-            WHERE
-                id IN (
-                    SELECT testid
-                    FROM build2test
-                    WHERE buildid IN $buildid_prepare_array
-                )
-                AND id NOT IN (
-                    SELECT testid
-                    FROM build2test
-                    WHERE
-                        buildid NOT IN $buildid_prepare_array
-                )
-        ", array_merge($buildids, $buildids));
     }
 
     // Delete un-shared testoutput rows.

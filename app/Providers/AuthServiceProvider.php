@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Models\Test;
 use App\Models\TestImage;
 use App\Models\User;
 use CDash\Model\Image;
@@ -64,12 +63,6 @@ class AuthServiceProvider extends ServiceProvider
             return Response::allow();
         });
 
-        Gate::define('view-test', function (?User $user, Test $test) {
-            $project = new Project();
-            $project->Id = $test->projectid;
-            return Gate::allows('view-project', $project);
-        });
-
         Gate::define('view-image', function (?User $user, Image $image) {
             // Make sure the current user has access to at least one project with this image as the project icon
             $projects_with_img = DB::select('SELECT id AS projectid FROM project WHERE imageid=?', [$image->Id]);
@@ -84,8 +77,15 @@ class AuthServiceProvider extends ServiceProvider
             // Make sure the current user has access to a test result with this image
             $outputs_with_image = TestImage::where('imgid', '=', $image->Id)->get();
             foreach ($outputs_with_image as $output) {
-                if (Gate::allows('view-test', $output->testOutput->test)) {
-                    return true;
+                $buildtests = $output->testOutput?->buildTests;
+                if ($buildtests === null) {
+                    continue;
+                }
+                foreach ($buildtests as $buildtest) {
+                    $project = $buildtest->build?->project;
+                    if ($project !== null && Gate::allows('view', $project)) {
+                        return true;
+                    }
                 }
             }
 

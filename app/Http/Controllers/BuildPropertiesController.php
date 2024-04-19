@@ -251,9 +251,8 @@ final class BuildPropertiesController extends AbstractBuildController
                 $valid_defect = true;
                 $prettyname = 'Test Failure';
                 $sql =
-                    "SELECT t.name AS descr, b.id AS buildid
-                    FROM test t
-                    JOIN build2test b2t ON b2t.testid = t.id
+                    "SELECT b2t.testname AS descr, b.id AS buildid
+                    FROM build2test b2t
                     JOIN build b ON b.id = b2t.buildid
                     WHERE b2t.status = 'failed' AND
                     b.id IN $placeholder_str";

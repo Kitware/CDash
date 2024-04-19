@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__).'/cdash_test_case.php';
 
 
@@ -33,15 +35,14 @@ class TruncateOutputTestCase extends KWWebTestCase
     public function testTruncateOutput()
     {
         // Verify that some previously submitted data was truncated as expected.
-        $buildtests = \DB::select(
+        $buildtests = DB::select(
             "SELECT build2test.id FROM build2test
             JOIN build ON (build.id = build2test.buildid)
-            JOIN test ON (test.id = build2test.testid)
             JOIN project ON (project.id = build.projectid)
             WHERE build.name = 'Win32-MSVC2009' AND
                   build.stamp = '20090223-0100-Nightly' AND
                   project.name = 'EmailProjectExample' AND
-                  test.name = 'curl'");
+                  build2test.testname = 'curl'");
         $buildtestid = $buildtests[0]->id;
         $this->get($this->url . "/api/v1/testDetails.php?buildtestid={$buildtestid}");
         $content = $this->getBrowser()->getContent();

@@ -211,7 +211,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             $proc_time = $test['procTimeFull'];
             $this->validate_test($test_name, $num_procs, $proc_time, 'viewTest.php');
             if ($first && $num_procs) {
-                $selected_test_id = $test['id'];
+                $selected_test_name = $test['name'];
                 $selected_nprocs =  $num_procs;
                 $first = false;
             }
@@ -311,7 +311,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         }
 
         // Verify that our test graphs correctly report Processors.
-        $this->get($this->url .  "/api/v1/testGraph.php?testid={$selected_test_id}&buildid={$this->BuildId}&measurementname=Processors&type=measurement");
+        $this->get($this->url .  "/api/v1/testGraph.php?testname={$selected_test_name}&buildid={$this->BuildId}&measurementname=Processors&type=measurement");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $this->assertTrue($jsonobj[0]['data'][0]['y']  == $selected_nprocs);
