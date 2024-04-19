@@ -45,8 +45,6 @@ return [
     ],
 
     'pingidentity' => [
-        'environment_id' => env('PINGIDENTITY_ENVIRONMENT_ID'),
-        'app_id' => env('PINGIDENTITY_APP_ID'),
         'client_id' => env('PINGIDENTITY_CLIENT_ID'),
         'client_secret' => env('PINGIDENTITY_CLIENT_SECRET'),
         'redirect' => env('PINGIDENTITY_REDIRECT_URI'),

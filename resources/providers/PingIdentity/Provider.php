@@ -54,16 +54,6 @@ class Provider extends AbstractProvider
         ]);
     }
 
-    protected function getAppId(): string
-    {
-        return $this->getConfig('app_id');
-    }
-
-    protected function getEnvironmentId(): string
-    {
-        return $this->getConfig('environment_id');
-    }
-
     protected function getInstanceUri(): string
     {
         return $this->getConfig('instance_uri', 'https://auth.pingone.com/');
@@ -88,6 +78,6 @@ class Provider extends AbstractProvider
      */
     public static function additionalConfigKeys() : array
     {
-        return ['instance_uri', 'environment_id', 'app_id'];
+        return ['instance_uri'];
     }
 }
