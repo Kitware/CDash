@@ -93,6 +93,19 @@ Begin by [creating OAuth2 credentials for your Google project](https://developer
 | GOOGLE_CLIENT_SECRET | The client secret from your Google OAuth2 credentials. | '' |
 | GOOGLE_AUTO_REGISTER_NEW_USERS | Whether to automatically register a new user or provide them the Registration form | false
 
+###### PingIdentity
+
+Begin by [creating OAuth2 client in your PingIdentity console](https://docs.pingidentity.com/r/en-us/solution-guides/mzt1663945300370). Then fill out the following `.env` variables:
+
+| Variable | Description | Default |
+| -------- |------------ | ------- |
+| PINGIDENTITY_ENABLE | Whether or not to use Google as an OAuth2 provider. | false |
+| PINGIDENTITY_CLIENT_ID | The client ID from your Google OAuth2 credentials. | '' |
+| PINGIDENTITY_CLIENT_SECRET | The client secret from your Google OAuth2 credentials. | '' |
+| PINGIDENTITY_DOMAIN | The GitLab server to authenticate against. | https://auth.pingone.com/ |
+| PINGIDENTITY_REDIRECT_URI | The callback URL for the CDash instance:  <CDashURL>/auth/pingidentity/callback. | '' |
+| PINGIDENTITY_AUTO_REGISTER_NEW_USERS | Whether to automatically register a new user or provide them the Registration form | false
+
 ## SAML2
 
 To configure CDash to authenticate against a SAML2 identity provider, you need to call `php artisan saml2:create-tenant` from the root of your CDash clone. For more details about the arguments that this Artisan command accepts, please run `php artisan saml2:create-tenant --help` or view the [upstream documentation](https://github.com/24Slides/laravel-saml2/#step-2-create-a-tenant).
