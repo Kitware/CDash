@@ -13,7 +13,11 @@ class Provider extends AbstractProvider
     /**
      * {@inheritdoc}
      */
-    protected $scopes = ['email', 'family_name', 'given_name'];
+    protected $scopes = [
+        'openid',
+        'profile',
+        'email'
+    ];
 
     /**
      * {@inheritdoc}
@@ -25,7 +29,9 @@ class Provider extends AbstractProvider
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase($this->getInstanceUri().'/as/authorization.oauth2/'.$this->buildAuthArguments(), $state);
+	$auth_url = $this->buildAuthUrlFromBase($this->getInstanceUri().'/as/authorization.oauth2', $state);
+	$auth_url .= "&acr_values=Single_Factor&prompt=login";
+	return $auth_url;
     }
 
     /**
@@ -33,9 +39,8 @@ class Provider extends AbstractProvider
      */
     protected function getTokenUrl()
     {
-        return $this->buildAuthUrlFromBase($this->getInstanceUri().'/as/token.oauth2/'.$this->buildTokenArguments(), "");
+	return $this->getInstanceUri() . '/as/token.oauth2?acr_values=Single_Factor&prompt=login';
     }
-
 
     /**
      * {@inheritdoc}
@@ -43,23 +48,11 @@ class Provider extends AbstractProvider
     protected function mapUserToObject(array $user)
     {
         return (new User())->setRaw($user)->map([
-            'id'       => $user['id'],
-            'nickname' => $user['nickname'],
-            'name'     => $user['name'],
+            'nickname' => $user['name'],
+            'name'     => $user['given_name'] . " " . $user['family_name'],
             'email'    => $user['email'],
         ]);
     }
-
-    protected function buildAuthArguments(): string
-    {
-        return "?response_type=code&client_id=".$this->getAppId()."&redirect_uri=".$this->getConfig('redirect')."&scope=".join(" ", $this->scopes)."&acr_values=Single_Factor&prompt=login";
-    }
-
-    protected function buildTokenArguments(): string
-    {
-        return "?response_type=code&client_id=".$this->getAppId()."&redirect_uri=".$this->getConfig('redirect')."&scope=".join(" ", $this->scopes)."&acr_values=Single_Factor&prompt=login";
-    }
-
 
     protected function getAppId(): string
     {
@@ -81,9 +74,9 @@ class Provider extends AbstractProvider
      */
     protected function getUserByToken($token): array
     {
-        $response = $this->getHttpClient()->get($this->getTokenUrl(), [
+        $response = $this->getHttpClient()->get($this->getInstanceUri() . '/idp/userinfo.openid', [
             RequestOptions::HEADERS => [
-                'Authorization' => 'Bearer '.$token,
+                'Authorization' => "Bearer $token",
             ],
         ]);
 
