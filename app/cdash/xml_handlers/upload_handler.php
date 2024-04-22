@@ -121,10 +121,8 @@ class UploadHandler extends AbstractHandler
             }
 
             // Create tmp file
-            $this->TmpFilename = tempnam(sys_get_temp_dir(), 'cdash_upload'); // TODO Handle error
-            chmod($this->TmpFilename, 0o644);
-
-            if (empty($this->TmpFilename)) {
+            $this->TmpFilename = tempnam(storage_path('app/tmp'), 'cdash_upload');
+            if ($this->TmpFilename === false) {
                 Log::error('Failed to create temporary filename');
                 $this->UploadError = true;
                 return;
@@ -167,16 +165,6 @@ class UploadHandler extends AbstractHandler
             // Note: Using stream_filter_append/stream_copy_to_stream is more efficient but
             // return an "invalid byte sequence" on windows
             $rhandle = fopen($this->Base64TmpFilename, 'r');
-
-            // Create tmp file
-            $this->TmpFilename = tempnam(sys_get_temp_dir(), 'cdash_upload');
-            if ($this->TmpFilename === false) {
-                Log::error('Failed to create temporary filename');
-                $this->UploadError = true;
-                return;
-            }
-            chmod($this->TmpFilename, 0o644);
-
             $whandle = fopen($this->TmpFilename, 'w+');
             $chunksize = 4096;
             while (!feof($rhandle)) {
