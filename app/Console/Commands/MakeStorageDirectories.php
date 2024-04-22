@@ -34,6 +34,7 @@ class MakeStorageDirectories extends Command
             "{$storage_path}/app/inprogress",
             "{$storage_path}/app/parsed",
             "{$storage_path}/app/public",
+            "{$storage_path}/app/tmp",
             "{$storage_path}/app/upload",
             "{$storage_path}/framework/cache/data",
             "{$storage_path}/framework/sessions",

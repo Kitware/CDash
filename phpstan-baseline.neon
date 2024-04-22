@@ -29139,7 +29139,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 3
+			count: 2
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
@@ -29218,11 +29218,6 @@ parameters:
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
-			message: "#^Parameter \\#1 \\$filename of function chmod expects string, string\\|false given\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
 			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
 			count: 2
 			path: app/cdash/xml_handlers/upload_handler.php
@@ -29259,11 +29254,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$use_include_path of function file_get_contents expects bool, null given\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
-			message: "#^Parameter \\#3 \\$name of static method Illuminate\\\\Filesystem\\\\FilesystemAdapter\\:\\:putFileAs\\(\\) expects array\\|string\\|null, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 

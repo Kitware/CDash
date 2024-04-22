@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
@@ -42,5 +43,27 @@ class RemoteWorkers extends TestCase
         $response->assertConflict();
         self::assertTrue(Storage::exists('inbox/delete_me'));
         Storage::delete('inbox/delete_me');
+    }
+
+    public function testStoreUploadedFile() : void
+    {
+        Storage::fake('upload');
+        $file = UploadedFile::fake()->image('my_upload.jpg');
+
+        // Unencrypted case.
+        $response = $this->post('/api/v1/store_upload', [
+            'sha1sum' => 'asdf',
+            'file' => $file,
+        ]);
+        $response->assertConflict();
+        $response->assertSeeText('This feature is disabled');
+
+        // Encrypted but sha mismatch.
+        $response = $this->post('/api/v1/store_upload', [
+            'sha1sum' => encrypt('asdf'),
+            'file' => $file,
+        ]);
+        $response->assertBadRequest();
+        $response->assertSeeText('Uploaded file does not match expected sha1sum');
     }
 }

@@ -27,8 +27,10 @@ use CDash\Model\UploadFile;
 
 use Illuminate\Http\File;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 /**
  * For each uploaded file the following steps occur:
@@ -119,10 +121,8 @@ class UploadHandler extends AbstractHandler
             }
 
             // Create tmp file
-            $this->TmpFilename = tempnam(sys_get_temp_dir(), 'cdash_upload'); // TODO Handle error
-            chmod($this->TmpFilename, 0o644);
-
-            if (empty($this->TmpFilename)) {
+            $this->TmpFilename = tempnam(storage_path('app/tmp'), 'cdash_upload');
+            if ($this->TmpFilename === false) {
                 Log::error('Failed to create temporary filename');
                 $this->UploadError = true;
                 return;
@@ -141,8 +141,8 @@ class UploadHandler extends AbstractHandler
         }
     }
 
-    /** Function endElement
-     * @throws \Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException
+    /**
+     * Function endElement
      */
     public function endElement($parser, $name)
     {
@@ -212,15 +212,46 @@ class UploadHandler extends AbstractHandler
             } else {
                 $this->UploadFile->IsUrl = false;
 
-                // Store the file if we don't already have it.
-                $upload_filepath = "upload/{$this->UploadFile->Sha1Sum}";
-                if (!Storage::exists($upload_filepath)) {
-                    $result = Storage::putFileAs('upload', new File($this->TmpFilename), $this->UploadFile->Sha1Sum);
-                    if ($result === false) {
-                        Log::error("Failed to store {$this->TmpFilename} as {$upload_filepath}");
-                        $this->UploadError = true;
+                if ((bool) config('cdash.remote_workers')) {
+                    // Make an API request to store this file.
+                    $encrypted_sha1sum = encrypt($this->UploadFile->Sha1Sum);
+                    $fp_to_upload = fopen($this->TmpFilename, 'r');
+                    if ($fp_to_upload === false) {
+                        Log::error("Failed to open temporary file {$this->TmpFilename} for upload");
                         cdash_unlink($this->TmpFilename);
+                        $this->UploadError = true;
                         return;
+                    }
+                    $response = Http::attach(
+                        'attachment', $fp_to_upload, (string) $this->UploadFile->Sha1Sum
+                    )->post(url('/api/v1/store_upload'), [
+                        'sha1sum' => $encrypted_sha1sum,
+                    ]);
+                    fclose($fp_to_upload);
+                    if (!$response->successful()) {
+                        Log::error('Error uploading file via API: ' .  $response->status() . ' ' . $response->body());
+                        cdash_unlink($this->TmpFilename);
+                        $this->UploadError = true;
+                        return;
+                    }
+                } else {
+                    // Store the file if we don't already have it.
+                    $uploadFilepath = "upload/{$this->UploadFile->Sha1Sum}";
+                    if (!Storage::exists($uploadFilepath)) {
+                        try {
+                            $fileToUpload = new File($this->TmpFilename);
+                        } catch (FileNotFoundException $e) {
+                            Log::error("Could not find file {$this->TmpFilename} to upload");
+                            cdash_unlink($this->TmpFilename);
+                            $this->UploadError = true;
+                            return;
+                        }
+                        if (Storage::putFileAs('upload', $fileToUpload, (string) $this->UploadFile->Sha1Sum) === false) {
+                            Log::error("Failed to store {$this->TmpFilename} as {$uploadFilepath}");
+                            cdash_unlink($this->TmpFilename);
+                            $this->UploadError = true;
+                            return;
+                        }
                     }
                 }
             }
