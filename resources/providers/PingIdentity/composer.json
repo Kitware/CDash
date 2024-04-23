@@ -1,6 +1,7 @@
 {
     "name": "socialiteproviders/pingidentity",
     "description": "PingIdentity OAuth2 Provider for Laravel Socialite",
+    "version": "1.0.0",
     "license": "MIT",
     "keywords": [
         "pingidentity",

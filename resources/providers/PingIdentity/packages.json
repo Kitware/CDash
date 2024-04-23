@@ -1,7 +1,7 @@
 {
     "packages": {
         "socialiteproviders/pingidentity": {
-            "0.0.1": { @composer.json }
+            "1.0.0": { @composer.json }
         }
     }
 }

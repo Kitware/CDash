@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "347ba350a023d41a968631da3027e68a",
+    "content-hash": "e1ee9ae9d651f4cc7a39a50be4d15205",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -5812,11 +5812,11 @@
         },
         {
             "name": "socialiteproviders/pingidentity",
-            "version": "dev-add_pingidentity_provider",
+            "version": "1.0.0",
             "dist": {
                 "type": "path",
                 "url": "./resources/providers/PingIdentity",
-                "reference": "4f1039dd4314cd916f07b27bcade5990d9fe0e93"
+                "reference": "0a443112ff93624cc97000e995a6538ec4ecbd69"
             },
             "require": {
                 "ext-json": "*",
@@ -11644,5 +11644,5 @@
         "ext-gd": "*",
         "ext-xdebug": "*"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
