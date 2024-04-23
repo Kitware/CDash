@@ -112,6 +112,9 @@
     ]
   },
   "repositories": [
-    { "type": "path",    "url": "./resources/providers/PingIdentity"  }
+    {
+      "type": "path",
+      "url": "./resources/providers/PingIdentity"
+    }
   ]
 }

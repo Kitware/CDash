@@ -29443,16 +29443,6 @@ parameters:
 			path: database/migrations/2023_04_16_204249_project_name_regex.php
 
 		-
-			message: "#^Method SocialiteProviders\\\\PingIdentity\\\\Provider\\:\\:additionalConfigKeys\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: resources/providers/PingIdentity/Provider.php
-
-		-
-			message: "#^Method SocialiteProviders\\\\PingIdentity\\\\Provider\\:\\:getUserByToken\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: resources/providers/PingIdentity/Provider.php
-
-		-
 			message: "#^Method SocialiteProviders\\\\PingIdentity\\\\Provider\\:\\:mapUserToObject\\(\\) has parameter \\$user with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: resources/providers/PingIdentity/Provider.php

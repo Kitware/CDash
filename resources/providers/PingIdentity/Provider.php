@@ -11,7 +11,9 @@ class Provider extends AbstractProvider
     public const IDENTIFIER = 'PINGIDENTITY';
 
     /**
-     * {@inheritdoc}
+     * The scopes being requested.
+     *
+     * @var array
      */
     protected $scopes = [
         'openid',
@@ -20,30 +22,33 @@ class Provider extends AbstractProvider
     ];
 
     /**
-     * {@inheritdoc}
-     */
-    protected $scopeSeparator = ' ';
-
-    /**
-     * {@inheritdoc}
+     * Get the authentication URL for the provider.
+     *
+     * @param  string  $state
+     * @return string
      */
     protected function getAuthUrl($state)
     {
-	$auth_url = $this->buildAuthUrlFromBase($this->getInstanceUri().'/as/authorization.oauth2', $state);
-	$auth_url .= "&acr_values=Single_Factor&prompt=login";
-	return $auth_url;
+        $auth_url = $this->buildAuthUrlFromBase($this->getInstanceUri().'/as/authorization.oauth2', $state);
+        $auth_url .= "&acr_values=Single_Factor&prompt=login";
+        return $auth_url;
     }
 
     /**
-     * {@inheritdoc}
+     * Get the token URL for the provider.
+     *
+     * @return string
      */
     protected function getTokenUrl()
     {
-	return $this->getInstanceUri() . '/as/token.oauth2?acr_values=Single_Factor&prompt=login';
+        return $this->getInstanceUri() . '/as/token.oauth2?acr_values=Single_Factor&prompt=login';
     }
 
     /**
-     * {@inheritdoc}
+     * Map the raw user array to a Socialite User instance.
+     *
+     * @param  array  $user
+     * @return \Laravel\Socialite\Two\User
      */
     protected function mapUserToObject(array $user)
     {
@@ -54,13 +59,21 @@ class Provider extends AbstractProvider
         ]);
     }
 
+    /**
+     * Get the Instance URL for the provider.
+     *
+     * @return string
+     */
     protected function getInstanceUri(): string
     {
         return $this->getConfig('instance_uri', 'https://auth.pingone.com/');
     }
 
     /**
-     * {@inheritdoc}
+     * Get the raw user for the given access token.
+     *
+     * @param  string  $token
+     * @return array<string>
      */
     protected function getUserByToken($token): array
     {
@@ -74,7 +87,8 @@ class Provider extends AbstractProvider
     }
 
     /**
-     * {@inheritdoc}
+     * Additional configuration key values that may be set
+     * @return array<string>
      */
     public static function additionalConfigKeys() : array
     {
