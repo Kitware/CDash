@@ -21,6 +21,8 @@ class Provider extends AbstractProvider
         'email',
     ];
 
+    protected $scopeSeparator = ' ';
+
     /**
      * Get the authentication URL for the provider.
      *
