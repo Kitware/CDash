@@ -13,6 +13,7 @@ use Mockery;
 use Slides\Saml2\Events\SignedIn as Saml2SignedInEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
+use Laravel\Socialite\Facades\Socialite;
 
 class LoginAndRegistration extends TestCase
 {
@@ -248,6 +249,45 @@ class LoginAndRegistration extends TestCase
         $user->delete();
 
         Mockery::close();
+    }
+
+    public function testPingIdentity() : void
+    {
+        // Verify that the PingIdentity button doesn't appear by default.
+        $response = $this->get('/login');
+        $response->assertDontSeeText('PingIdentity');
+
+        // Enable PingIdentity, verify the button appears.
+        config(['services.pingidentity.enable' => true]);
+        $response = $this->get('/login');
+        $response->assertSeeText('PingIdentity');
+    }
+
+    /**
+     * Test PingIdentity authentication
+     */
+    public function testPingIdentityProvider() : void
+    {
+        // Stolen from: https://laracasts.com/discuss/channels/testing/testing-laravel-socialite-callback
+        $abstractUser = Mockery::mock('Laravel\Socialite\Two\User');
+        $abstractUser->shouldReceive('getId')
+        ->andReturn(1234567890)
+        ->shouldReceive('getEmail')
+        ->andReturn('cdash@test.com')
+        ->shouldReceive('getNickname')
+        ->andReturn('Pseudo')
+        ->shouldReceive('getName')
+        ->andReturn('Arlette Laguiller')
+        ->shouldReceive('getAvatar')
+        ->andReturn('https://en.gravatar.com/userimage');
+
+        $provider = Mockery::mock('Laravel\Socialite\PingIdentity\Provider');
+        $provider->shouldReceive('user')->andReturn($abstractUser);
+
+        Socialite::shouldReceive('driver')->with('pingidentity')->andReturn($provider);
+
+        $response = $this->get("auth/pingidentity/callback");
+        $response->assertRedirect("/register?fname=Arlette&lname=Laguiller&email=cdash%40test.com");
     }
 
     public function testRegisterUserWhenDisabled() : void

@@ -1,0 +1,27 @@
+{
+    "name": "socialiteproviders/pingidentity",
+    "description": "PingIdentity OAuth2 Provider for Laravel Socialite",
+    "version": "1.0.0",
+    "license": "MIT",
+    "keywords": [
+        "pingidentity",
+        "laravel",
+        "oauth",
+        "provider",
+        "socialite"
+    ],
+    "authors": [
+        {
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "ext-json": "*",
+        "socialiteproviders/manager": "^4.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "SocialiteProviders\\PingIdentity\\": ""
+        }
+    }
+}

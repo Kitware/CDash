@@ -44,6 +44,17 @@ return [
         'display_name' => "Google",
     ],
 
+    'pingidentity' => [
+        'client_id' => env('PINGIDENTITY_CLIENT_ID'),
+        'client_secret' => env('PINGIDENTITY_CLIENT_SECRET'),
+        'redirect' => env('PINGIDENTITY_REDIRECT_URI'),
+        'instance_uri' => env('PINGIDENTITY_DOMAIN'),
+        'enable' => env('PINGIDENTITY_ENABLE', false),
+        'autoregister' => env('PINGIDENTITY_AUTO_REGISTER_NEW_USERS', false),
+        'oauth' => true,
+        'display_name' => "PingIdentity",
+    ],
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),
