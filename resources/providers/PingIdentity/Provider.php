@@ -18,16 +18,15 @@ class Provider extends AbstractProvider
     protected $scopes = [
         'openid',
         'profile',
-        'email'
+        'email',
     ];
 
     /**
      * Get the authentication URL for the provider.
      *
-     * @param  string  $state
-     * @return string
+     * @param string $state
      */
-    protected function getAuthUrl($state)
+    protected function getAuthUrl($state): string
     {
         $auth_url = $this->buildAuthUrlFromBase($this->getInstanceUri().'/as/authorization.oauth2', $state);
         $auth_url .= "&acr_values=Single_Factor&prompt=login";
@@ -36,21 +35,16 @@ class Provider extends AbstractProvider
 
     /**
      * Get the token URL for the provider.
-     *
-     * @return string
      */
-    protected function getTokenUrl()
+    protected function getTokenUrl(): string
     {
         return $this->getInstanceUri() . '/as/token.oauth2?acr_values=Single_Factor&prompt=login';
     }
 
     /**
      * Map the raw user array to a Socialite User instance.
-     *
-     * @param  array  $user
-     * @return \Laravel\Socialite\Two\User
      */
-    protected function mapUserToObject(array $user)
+    protected function mapUserToObject(array $user): \Laravel\Socialite\Two\User
     {
         return (new User())->setRaw($user)->map([
             'nickname' => $user['name'],
@@ -61,8 +55,6 @@ class Provider extends AbstractProvider
 
     /**
      * Get the Instance URL for the provider.
-     *
-     * @return string
      */
     protected function getInstanceUri(): string
     {
@@ -72,7 +64,7 @@ class Provider extends AbstractProvider
     /**
      * Get the raw user for the given access token.
      *
-     * @param  string  $token
+     * @param  string $token
      * @return array<string>
      */
     protected function getUserByToken($token): array
@@ -90,7 +82,7 @@ class Provider extends AbstractProvider
      * Additional configuration key values that may be set
      * @return array<string>
      */
-    public static function additionalConfigKeys() : array
+    public static function additionalConfigKeys(): array
     {
         return ['instance_uri'];
     }
