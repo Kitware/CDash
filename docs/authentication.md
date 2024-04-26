@@ -57,7 +57,9 @@ Here's a description of the `.env` variables involved in the LDAP authentication
 
 ## OAuth2
 
-CDash currently supports OAuth2 login for GitHub, GitLab, and Google accounts.
+CDash currently supports OAuth2 login for GitHub, GitLab, and Google accounts.  As of CDash 3.3, CDash uses the [Socialite](https://laravel.com/docs/11.x/socialite) plugin to provide this functionality.
+
+The CDash instance will automatically populate the callback URI for Socialite's providers.  It will take the form of `<cdash_URL>/auth/<provider>/callback`.  The previous OAuth framework enforced a different structure for the callback with the format of  `/oauth/callback/<provider>`.  Both instances of the callback will be properly handled in CDash 3.3 and later.
 
 ###### GitHub
 
@@ -103,7 +105,6 @@ Begin by [creating OAuth2 client in your PingIdentity console](https://docs.ping
 | PINGIDENTITY_CLIENT_ID | The client ID from your Google OAuth2 credentials. | '' |
 | PINGIDENTITY_CLIENT_SECRET | The client secret from your Google OAuth2 credentials. | '' |
 | PINGIDENTITY_DOMAIN | The GitLab server to authenticate against. | https://auth.pingone.com/ |
-| PINGIDENTITY_REDIRECT_URI | The callback URL for the CDash instance:  <CDashURL>/auth/pingidentity/callback. | '' |
 | PINGIDENTITY_AUTO_REGISTER_NEW_USERS | Whether to automatically register a new user or provide them the Registration form | false
 
 ## SAML2
