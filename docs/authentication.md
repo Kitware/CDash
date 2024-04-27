@@ -30,11 +30,8 @@ Here is a sample `.env` configuration that allows CDash to authenticate against 
 ```
 CDASH_AUTHENTICATION_PROVIDER=ldap
 LDAP_PROVIDER=openldap
-LDAP_HOSTS=localhost
-LDAP_BASE_DN="dc=example,dc=com"
-LDAP_USERNAME="cn=admin,dc=example,dc=com"
-LDAP_PASSWORD=<your LDAP admin pass>
-LDAP_BIND_USERS_BY=dn
+LDAP_HOSTS=ldap
+LDAP_BASE_DN="dc=example,dc=org"
 LDAP_LOGGING=true
 ```
 
