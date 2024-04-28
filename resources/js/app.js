@@ -63,9 +63,9 @@ const app = Vue.createApp({
   components:  cdash_components,
 });
 
-app.config.globalProperties.$baseURL = process.env.MIX_APP_URL;
+app.config.globalProperties.$baseURL = $('#app').attr('data-app-url');
 
-axios.defaults.baseURL = process.env.MIX_APP_URL;
+axios.defaults.baseURL = app.config.globalProperties.$baseURL;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 const token = document.head.querySelector('meta[name="csrf-token"]');
 if (token) {
