@@ -303,6 +303,8 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
         cp /cdash/.env.dev /cdash/.env; \
     fi
 
+RUN npm run prod --stats-children
+
 # Make sure the build args are set in the ENV for reference in docker-entrypoint.sh
 ENV DEVELOPMENT_BUILD=$DEVELOPMENT_BUILD
 ENV BASE_IMAGE=$BASE_IMAGE

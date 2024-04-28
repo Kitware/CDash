@@ -1,16 +1,23 @@
 #!/bin/bash
 
-if [[ "$1" == "--dev" ]]; then
-  DEVELOPMENT=true
-else
-  DEVELOPMENT=false
-fi
+DEVELOPMENT=false
+INITIAL_DOCKER_INSTALL=false
+
+for ARG in "$@"; do
+  shift
+  if [[ "$ARG" == "--dev" ]]; then
+    DEVELOPMENT=true
+  fi
+  if [[ "$ARG" == "--initial-docker-install" ]]; then
+    INITIAL_DOCKER_INSTALL=true
+  fi
+done
 
 echo "=================================================================================";
 if $DEVELOPMENT; then
   echo "Beginning development CDash installation..."
 else
-  echo "Configuring production CDash installation..."
+  echo "Beginning production CDash installation..."
 fi
 
 error_handler() {
@@ -38,13 +45,17 @@ pushd "/cdash" > /dev/null
 echo "Enabling maintenance mode..."
 php artisan down --render="maintenance" --refresh=5
 
-echo "Updating vendor dependencies..."
-if $DEVELOPMENT; then
-  npm install
-  composer install
+if $INITIAL_DOCKER_INSTALL; then
+  echo "Skipping vendor installation..."
 else
-  npm install --omit=dev
-  composer install --no-dev --optimize-autoloader
+  echo "Updating vendor dependencies..."
+    if $DEVELOPMENT; then
+      npm install
+      composer install
+    else
+      npm install --omit=dev
+      composer install --no-dev --optimize-autoloader
+    fi
 fi
 
 echo "Creating storage directories..."
@@ -58,8 +69,12 @@ php artisan route:cache
 php artisan view:cache
 php artisan lighthouse:cache
 
-echo "Building the website..."
-npm run prod --stats-children
+if $INITIAL_DOCKER_INSTALL; then
+  echo "Skipping website build..."
+else
+  echo "Building the website..."
+    npm run prod --stats-children
+fi
 
 echo "Bringing CDash back online..."
 php artisan up
