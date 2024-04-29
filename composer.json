@@ -39,7 +39,7 @@
     "nyholm/psr7": "1.8.1",
     "pear/archive_tar": "1.5.0",
     "php-di/php-di": "7.0.6",
-    "ramsey/uuid": "4.7.5",
+    "ramsey/uuid": "4.7.6",
     "shiftonelabs/laravel-sqs-fifo-queue": "3.0.1",
     "socialiteproviders/github": "4.1.0",
     "socialiteproviders/gitlab": "4.1.0",
