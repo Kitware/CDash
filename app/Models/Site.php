@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @property int $id
@@ -16,8 +18,8 @@ use Illuminate\Support\Facades\DB;
  * @property string $ip
  * @property string $latitude
  * @property string $longitude
- * @property int $outoforder
- * @property SiteInformation $mostRecentInformation
+ * @property boolean $outoforder
+ * @property SiteInformation|null $mostRecentInformation
  *
  * @mixin Builder<Site>
  */
@@ -35,6 +37,10 @@ class Site extends Model
         'outoforder',
     ];
 
+    protected $casts = [
+        'outoforder' => 'boolean',
+    ];
+
     /**
      * @return HasMany<SiteInformation>
      */
@@ -44,13 +50,18 @@ class Site extends Model
     }
 
     /**
-     * Get the most recent information available
+     * Get the most recent information available.  If a date is provided, get the
+     * most recent information available as of that date.
      *
      * @return HasOne<SiteInformation>
      */
-    public function mostRecentInformation(): HasOne
+    public function mostRecentInformation(?Carbon $date = null): HasOne
     {
-        return $this->hasOne(SiteInformation::class, 'siteid')->ofMany('timestamp', 'max');
+        return $this->information()
+            ->one()
+            ->ofMany(['timestamp' => 'max'], function (Builder $query) use ($date) {
+                $query->where('timestamp', '<=', $date ?? Carbon::maxValue());
+            });
     }
 
     public function save(array $options = []): bool
@@ -68,8 +79,8 @@ class Site extends Model
 
         try {
             return parent::save($options);
-        } catch (QueryException $e) {
-            \Log::warning("Failed to save Site {$this->name}");
+        } catch (QueryException) {
+            Log::warning("Failed to save Site {$this->name}");
             return false;
         }
     }

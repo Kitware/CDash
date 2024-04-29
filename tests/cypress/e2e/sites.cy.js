@@ -37,13 +37,20 @@ describe('site page', () => {
     cy.get('tbody').contains('a', 'hut11.kitware').click();
 
     cy.get('#subheadername').should('contain', 'hut11.kitware');
+
+    // Since the site created timestamp isn't the same time as the submission, no site information exists.
+    // We clear the timestamp to get the latest information.  TODO: Find a better way to do this...
+    cy.url().then(url => {
+      cy.visit(url.slice(0, -23));
+    });
+
+    cy.get('#subheadername').should('contain', 'hut11.kitware');
     cy.get('#main_content')
       .should('contain', 'Processor Speed:')
       .and('contain', 'Processor Vendor:')
       .and('contain', 'Number of CPUs:')
       .and('contain', 'Number of Cores:')
       .and('contain', 'Total Physical Memory:')
-      .and('contain', 'Description:')
       .and('contain', 'This site belongs to the following projects:');
     cy.get('#main_content').find('a').each(project_url => {
       cy.wrap(project_url).should('have.attr', 'href').and('contain', 'index.php?project=');

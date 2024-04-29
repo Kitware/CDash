@@ -8,6 +8,7 @@ use App\Utils\TestingDay;
 use CDash\Database;
 use CDash\Model\Project;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -122,7 +123,7 @@ final class SiteController extends AbstractController
         }
 
         @$claimsite = $_POST['claimsite'];
-        @$claimsiteid = $_POST['claimsiteid'];
+        $claimsiteid = intval($_POST['claimsiteid'] ?? -1);
         if ($claimsite) {
             self::add_site2user(intval($claimsiteid), intval($userid));
         }
@@ -141,75 +142,83 @@ final class SiteController extends AbstractController
         }
 
         if ($updatesite || $geolocation) {
-            $site_name = $_POST['site_name'];
-            $site_description = $_POST['site_description'];
-            $site_processoris64bits = $_POST['site_processoris64bits'];
-            $site_processorvendor = $_POST['site_processorvendor'];
-            $site_processorvendorid = $_POST['site_processorvendorid'];
-            $site_processorfamilyid = $_POST['site_processorfamilyid'];
-            $site_processormodelid = $_POST['site_processormodelid'];
-            $site_processorcachesize = $_POST['site_processorcachesize'];
-            $site_numberlogicalcpus = $_POST['site_numberlogicalcpus'];
-            $site_numberphysicalcpus = $_POST['site_numberphysicalcpus'];
-            $site_totalvirtualmemory = $_POST['site_totalvirtualmemory'];
-            $site_totalphysicalmemory = $_POST['site_totalphysicalmemory'];
-            $site_logicalprocessorsperphysical = $_POST['site_logicalprocessorsperphysical'];
-            $site_processorclockfrequency = $_POST['site_processorclockfrequency'];
+            $site_name = request()->string('site_name');
+            $site_description = request()->post('site_description');
+            $site_processoris64bits = request()->post('site_processoris64bits');
+            $site_processorvendor = request()->post('site_processorvendor');
+            $site_processorvendorid = request()->post('site_processorvendorid');
+            $site_processorfamilyid = request()->post('site_processorfamilyid');
+            $site_processormodelid = request()->post('site_processormodelid');
+            $site_processorcachesize = request()->post('site_processorcachesize');
+            $site_numberlogicalcpus = request()->post('site_numberlogicalcpus');
+            $site_numberphysicalcpus = request()->post('site_numberphysicalcpus');
+            $site_totalvirtualmemory = request()->post('site_totalvirtualmemory');
+            $site_totalphysicalmemory = request()->post('site_totalphysicalmemory');
+            $site_logicalprocessorsperphysical = request()->post('site_logicalprocessorsperphysical');
+            $site_processorclockfrequency = request()->post('site_processorclockfrequency');
             $site_ip = $_POST['site_ip'];
             $site_longitude = $_POST['site_longitude'];
             $site_latitude = $_POST['site_latitude'];
 
             if (isset($_POST['outoforder'])) {
-                $outoforder = 1;
+                $outoforder = true;
             } else {
-                $outoforder = 0;
-            }
-
-            if (isset($_POST['newdescription_revision'])) {
-                $newdescription_revision = 1;
-            } else {
-                $newdescription_revision = 0;
+                $outoforder = false;
             }
         }
 
         if ($updatesite) {
-            self::update_site($claimsiteid, $site_name,
-                $site_processoris64bits,
-                $site_processorvendor,
-                $site_processorvendorid,
-                $site_processorfamilyid,
-                $site_processormodelid,
-                $site_processorcachesize,
-                $site_numberlogicalcpus,
-                $site_numberphysicalcpus,
-                $site_totalvirtualmemory,
-                $site_totalphysicalmemory,
-                $site_logicalprocessorsperphysical,
-                $site_processorclockfrequency,
-                $site_description,
-                $site_ip, $site_latitude,
-                $site_longitude, !$newdescription_revision,
-                $outoforder);
+            self::update_site(
+                $claimsiteid,
+                $site_name,
+                [
+                    'processoris64bits' => $site_processoris64bits,
+                    'processorvendor' => $site_processorvendor,
+                    'processorvendorid' => $site_processorvendorid,
+                    'processorfamilyid' => $site_processorfamilyid,
+                    'processormodelid' => $site_processormodelid,
+                    'processorcachesize' => $site_processorcachesize,
+                    'numberlogicalcpus' => $site_numberlogicalcpus,
+                    'numberphysicalcpus' => $site_numberphysicalcpus,
+                    'totalvirtualmemory' => $site_totalvirtualmemory,
+                    'totalphysicalmemory' => $site_totalphysicalmemory,
+                    'logicalprocessorsperphysical' => $site_logicalprocessorsperphysical,
+                    'processorclockfrequency' => $site_processorclockfrequency,
+                    'description' => $site_description,
+                ],
+                $site_ip,
+                $site_latitude,
+                $site_longitude,
+                $outoforder
+            );
         }
 
         // If we should retrieve the geolocation
         if ($geolocation) {
             $location = get_geolocation($site_ip);
-            self::update_site($claimsiteid, $site_name,
-                $site_processoris64bits,
-                $site_processorvendor,
-                $site_processorvendorid,
-                $site_processorfamilyid,
-                $site_processormodelid,
-                $site_processorcachesize,
-                $site_numberlogicalcpus,
-                $site_numberphysicalcpus,
-                $site_totalvirtualmemory,
-                $site_totalphysicalmemory,
-                $site_logicalprocessorsperphysical,
-                $site_processorclockfrequency,
-                $site_description, $site_ip, $location['latitude'], $location['longitude'],
-                false, $outoforder);
+            self::update_site(
+                $claimsiteid,
+                $site_name,
+                [
+                    'processoris64bits' => $site_processoris64bits,
+                    'processorvendor' => $site_processorvendor,
+                    'processorvendorid' => $site_processorvendorid,
+                    'processorfamilyid' => $site_processorfamilyid,
+                    'processormodelid' => $site_processormodelid,
+                    'processorcachesize' => $site_processorcachesize,
+                    'numberlogicalcpus' => $site_numberlogicalcpus,
+                    'numberphysicalcpus' => $site_numberphysicalcpus,
+                    'totalvirtualmemory' => $site_totalvirtualmemory,
+                    'totalphysicalmemory' => $site_totalphysicalmemory,
+                    'logicalprocessorsperphysical' => $site_logicalprocessorsperphysical,
+                    'processorclockfrequency' => $site_processorclockfrequency,
+                    'description' => $site_description,
+                ],
+                $site_ip,
+                $location['latitude'],
+                $location['longitude'],
+                $outoforder
+            );
         }
 
         // If we have a projectid that means we should list all the sites
@@ -258,89 +267,29 @@ final class SiteController extends AbstractController
         // If we have a siteid we look if the user has claimed the site or not
         $siteid = $_GET['siteid'] ?? null;
         if ($siteid !== null) {
-            $siteid = (int) $siteid;
-        }
-        if ($siteid !== null) {
             $xml .= '<user>';
             $xml .= '<site>';
-            $site_array = $db->executePreparedSingleRow('SELECT * FROM site WHERE id=?', [$siteid]);
+            $site = Site::findOrFail((int) $siteid);
 
-            $siteinformation_array = [];
-            $siteinformation_array['description'] = 'NA';
-            $siteinformation_array['processoris64bits'] = 'NA';
-            $siteinformation_array['processorvendor'] = 'NA';
-            $siteinformation_array['processorvendorid'] = 'NA';
-            $siteinformation_array['processorfamilyid'] = 'NA';
-            $siteinformation_array['processormodelid'] = 'NA';
-            $siteinformation_array['processorcachesize'] = 'NA';
-            $siteinformation_array['numberlogicalcpus'] = 'NA';
-            $siteinformation_array['numberphysicalcpus'] = 'NA';
-            $siteinformation_array['totalvirtualmemory'] = 'NA';
-            $siteinformation_array['totalphysicalmemory'] = 'NA';
-            $siteinformation_array['logicalprocessorsperphysical'] = 'NA';
-            $siteinformation_array['processorclockfrequency'] = 'NA';
-
-            // Get the last information about the size
-            $query = $db->executePreparedSingleRow('
-                         SELECT *
-                         FROM siteinformation
-                         WHERE siteid=?
-                         ORDER BY timestamp DESC
-                         LIMIT 1
-                     ', [$siteid]);
-            if (!empty($query)) {
-                $siteinformation_array = $query;
-                if ($siteinformation_array['processoris64bits'] == -1) {
-                    $siteinformation_array['processoris64bits'] = 'NA';
-                }
-                if ($siteinformation_array['processorfamilyid'] == -1) {
-                    $siteinformation_array['processorfamilyid'] = 'NA';
-                }
-                if ($siteinformation_array['processormodelid'] == -1) {
-                    $siteinformation_array['processormodelid'] = 'NA';
-                }
-                if ($siteinformation_array['processorcachesize'] == -1) {
-                    $siteinformation_array['processorcachesize'] = 'NA';
-                }
-                if ($siteinformation_array['numberlogicalcpus'] == -1) {
-                    $siteinformation_array['numberlogicalcpus'] = 'NA';
-                }
-                if ($siteinformation_array['numberphysicalcpus'] == -1) {
-                    $siteinformation_array['numberphysicalcpus'] = 'NA';
-                }
-                if ($siteinformation_array['totalvirtualmemory'] == -1) {
-                    $siteinformation_array['totalvirtualmemory'] = 'NA';
-                }
-                if ($siteinformation_array['totalphysicalmemory'] == -1) {
-                    $siteinformation_array['totalphysicalmemory'] = 'NA';
-                }
-                if ($siteinformation_array['logicalprocessorsperphysical'] == -1) {
-                    $siteinformation_array['logicalprocessorsperphysical'] = 'NA';
-                }
-                if ($siteinformation_array['processorclockfrequency'] == -1) {
-                    $siteinformation_array['processorclockfrequency'] = 'NA';
-                }
-            }
-
-            $xml .= add_XML_value('id', $siteid);
-            $xml .= add_XML_value('name', $site_array['name']);
-            $xml .= add_XML_value('description', stripslashes($siteinformation_array['description']));
-            $xml .= add_XML_value('processoris64bits', $siteinformation_array['processoris64bits']);
-            $xml .= add_XML_value('processorvendor', $siteinformation_array['processorvendor']);
-            $xml .= add_XML_value('processorvendorid', $siteinformation_array['processorvendorid']);
-            $xml .= add_XML_value('processorfamilyid', $siteinformation_array['processorfamilyid']);
-            $xml .= add_XML_value('processormodelid', $siteinformation_array['processormodelid']);
-            $xml .= add_XML_value('processorcachesize', $siteinformation_array['processorcachesize']);
-            $xml .= add_XML_value('numberlogicalcpus', $siteinformation_array['numberlogicalcpus']);
-            $xml .= add_XML_value('numberphysicalcpus', $siteinformation_array['numberphysicalcpus']);
-            $xml .= add_XML_value('totalvirtualmemory', $siteinformation_array['totalvirtualmemory']);
-            $xml .= add_XML_value('totalphysicalmemory', $siteinformation_array['totalphysicalmemory']);
-            $xml .= add_XML_value('logicalprocessorsperphysical', $siteinformation_array['logicalprocessorsperphysical']);
-            $xml .= add_XML_value('processorclockfrequency', $siteinformation_array['processorclockfrequency']);
-            $xml .= add_XML_value('ip', $site_array['ip']);
-            $xml .= add_XML_value('latitude', $site_array['latitude']);
-            $xml .= add_XML_value('longitude', $site_array['longitude']);
-            $xml .= add_XML_value('outoforder', $site_array['outoforder']);
+            $xml .= add_XML_value('id', $site->id);
+            $xml .= add_XML_value('name', $site->name);
+            $xml .= add_XML_value('description', stripslashes($site->mostRecentInformation->description ?? ''));
+            $xml .= add_XML_value('processoris64bits', $site->mostRecentInformation?->processoris64bits);
+            $xml .= add_XML_value('processorvendor', $site->mostRecentInformation?->processorvendor);
+            $xml .= add_XML_value('processorvendorid', $site->mostRecentInformation?->processorvendorid);
+            $xml .= add_XML_value('processorfamilyid', $site->mostRecentInformation?->processorfamilyid);
+            $xml .= add_XML_value('processormodelid', $site->mostRecentInformation?->processormodelid);
+            $xml .= add_XML_value('processorcachesize', $site->mostRecentInformation?->processorcachesize);
+            $xml .= add_XML_value('numberlogicalcpus', $site->mostRecentInformation?->numberlogicalcpus);
+            $xml .= add_XML_value('numberphysicalcpus', $site->mostRecentInformation?->numberphysicalcpus);
+            $xml .= add_XML_value('totalvirtualmemory', $site->mostRecentInformation?->totalvirtualmemory);
+            $xml .= add_XML_value('totalphysicalmemory', $site->mostRecentInformation?->totalphysicalmemory);
+            $xml .= add_XML_value('logicalprocessorsperphysical', $site->mostRecentInformation?->logicalprocessorsperphysical);
+            $xml .= add_XML_value('processorclockfrequency', $site->mostRecentInformation?->processorclockfrequency);
+            $xml .= add_XML_value('ip', $site->ip);
+            $xml .= add_XML_value('latitude', $site->latitude);
+            $xml .= add_XML_value('longitude', $site->longitude);
+            $xml .= add_XML_value('outoforder', $site->outoforder);
             $xml .= '</site>';
 
             $user2site = $db->executePreparedSingleRow('
@@ -375,76 +324,19 @@ final class SiteController extends AbstractController
     {
         $db = Database::getInstance();
 
-        $site_array = $db->executePreparedSingleRow("SELECT * FROM site WHERE id=?", [$siteid]);
-        $sitename = $site_array['name'];
+        $site = Site::findOrFail($siteid);
 
         $currenttime = $_GET['currenttime'] ?? null;
         if ($currenttime !== null) {
             $currenttime = (int) $currenttime;
+
+            // Current timestamp is the beginning of the dashboard and we want the end
+            $currenttimestamp = Carbon::createFromTimestamp($currenttime + 3600 * 24);
+        } else {
+            $currenttimestamp = Carbon::maxValue();
         }
 
-        $siteinformation_array = [
-            'description' => 'NA',
-            'processoris64bits' => 'NA',
-            'processorvendor' => 'NA',
-            'processorvendorid' => 'NA',
-            'processorfamilyid' => 'NA',
-            'processormodelid' => 'NA',
-            'processorcachesize' => 'NA',
-            'numberlogicalcpus' => 'NA',
-            'numberphysicalcpus' => 'NA',
-            'totalvirtualmemory' => 'NA',
-            'totalphysicalmemory' => 'NA',
-            'logicalprocessorsperphysical' => 'NA',
-            'processorclockfrequency' => 'NA',
-        ];
-
-        // Current timestamp is the beginning of the dashboard and we want the end
-        $currenttimestamp = gmdate(FMT_DATETIME, $currenttime + 3600 * 24);
-
-        $query = $db->executePrepared("
-                     SELECT *
-                     FROM siteinformation
-                     WHERE
-                         siteid=?
-                         AND timestamp<=?
-                     ORDER BY timestamp DESC
-                     LIMIT 1
-                 ", [$siteid, $currenttimestamp]);
-
-        if (count($query) > 0) {
-            $siteinformation_array = $query[0];
-            if ($siteinformation_array['processoris64bits'] == -1) {
-                $siteinformation_array['processoris64bits'] = 'NA';
-            }
-            if ($siteinformation_array['processorfamilyid'] == -1) {
-                $siteinformation_array['processorfamilyid'] = 'NA';
-            }
-            if ($siteinformation_array['processormodelid'] == -1) {
-                $siteinformation_array['processormodelid'] = 'NA';
-            }
-            if ($siteinformation_array['processorcachesize'] == -1) {
-                $siteinformation_array['processorcachesize'] = 'NA';
-            }
-            if ($siteinformation_array['numberlogicalcpus'] == -1) {
-                $siteinformation_array['numberlogicalcpus'] = 'NA';
-            }
-            if ($siteinformation_array['numberphysicalcpus'] == -1) {
-                $siteinformation_array['numberphysicalcpus'] = 'NA';
-            }
-            if ($siteinformation_array['totalvirtualmemory'] == -1) {
-                $siteinformation_array['totalvirtualmemory'] = 'NA';
-            }
-            if ($siteinformation_array['totalphysicalmemory'] == -1) {
-                $siteinformation_array['totalphysicalmemory'] = 'NA';
-            }
-            if ($siteinformation_array['logicalprocessorsperphysical'] == -1) {
-                $siteinformation_array['logicalprocessorsperphysical'] = 'NA';
-            }
-            if ($siteinformation_array['processorclockfrequency'] == -1) {
-                $siteinformation_array['processorclockfrequency'] = 'NA';
-            }
-        }
+        $siteinformation = $site->mostRecentInformation($currenttimestamp)->first();
 
         $xml = begin_XML_for_XSLT();
 
@@ -459,10 +351,11 @@ final class SiteController extends AbstractController
             $xml .= '&#38;date=' . $date;
             $xml .= '</backurl>';
         } else {
+            $project = null;
             $xml .= '<backurl>index.php</backurl>';
         }
-        $xml .= "<title>CDash - $sitename</title>";
-        $xml .= "<menusubtitle>$sitename</menusubtitle>";
+        $xml .= "<title>CDash - {$site->name}</title>";
+        $xml .= "<menusubtitle>{$site->name}</menusubtitle>";
 
         $xml .= '<dashboard>';
         $xml .= '<title>CDash</title>';
@@ -472,53 +365,53 @@ final class SiteController extends AbstractController
 
         $MB = 1048576;
 
-        $total_virtual_memory = 0;
-        if (is_numeric($siteinformation_array['totalvirtualmemory'])) {
-            $total_virtual_memory = $siteinformation_array['totalvirtualmemory'] * $MB;
+        $total_virtual_memory = $siteinformation?->totalvirtualmemory;
+        if ($total_virtual_memory !== null) {
+            $total_virtual_memory = getByteValueWithExtension($total_virtual_memory * $MB) . 'iB';
         }
 
-        $total_physical_memory = 0;
-        if (is_numeric($siteinformation_array['totalphysicalmemory'])) {
-            $total_physical_memory = $siteinformation_array['totalphysicalmemory'] * $MB;
+        $total_physical_memory = $siteinformation?->totalphysicalmemory;
+        if ($total_physical_memory !== null) {
+            $total_physical_memory = getByteValueWithExtension($total_physical_memory * $MB) . 'iB';
         }
 
-        $processor_clock_frequency = 0;
-        if (is_numeric($siteinformation_array['processorclockfrequency'])) {
-            $processor_clock_frequency = $siteinformation_array['processorclockfrequency'] * 10**6;
+        $processor_clock_frequency = $siteinformation?->processorclockfrequency;
+        if ($processor_clock_frequency !== null) {
+            $processor_clock_frequency = getByteValueWithExtension($processor_clock_frequency * 10**6, 1000) . 'Hz';
         }
 
         $xml .= add_XML_value('googlemapkey', $apikey);
         $xml .= '</dashboard>';
         $xml .= '<site>';
-        $xml .= add_XML_value('id', $site_array['id']);
-        $xml .= add_XML_value('name', $site_array['name']);
-        $xml .= add_XML_value('description', stripslashes($siteinformation_array['description']));
-        $xml .= add_XML_value('processoris64bits', $siteinformation_array['processoris64bits']);
-        $xml .= add_XML_value('processorvendor', $siteinformation_array['processorvendor']);
-        $xml .= add_XML_value('processorvendorid', $siteinformation_array['processorvendorid']);
-        $xml .= add_XML_value('processorfamilyid', $siteinformation_array['processorfamilyid']);
-        $xml .= add_XML_value('processormodelid', $siteinformation_array['processormodelid']);
-        $xml .= add_XML_value('processorcachesize', $siteinformation_array['processorcachesize']);
-        $xml .= add_XML_value('numberlogicalcpus', $siteinformation_array['numberlogicalcpus']);
-        $xml .= add_XML_value('numberphysicalcpus', $siteinformation_array['numberphysicalcpus']);
-        $xml .= add_XML_value('totalvirtualmemory', getByteValueWithExtension($total_virtual_memory) . 'iB');
-        $xml .= add_XML_value('totalphysicalmemory', getByteValueWithExtension($total_physical_memory) . 'iB');
-        $xml .= add_XML_value('logicalprocessorsperphysical', $siteinformation_array['logicalprocessorsperphysical']);
-        $xml .= add_XML_value('processorclockfrequency', getByteValueWithExtension($processor_clock_frequency, 1000) . 'Hz');
-        $xml .= add_XML_value('outoforder', $site_array['outoforder']);
-        if ($projectid > 0 && $project->ShowIPAddresses) {
-            $xml .= add_XML_value('ip', $site_array['ip']);
-            $xml .= add_XML_value('latitude', $site_array['latitude']);
-            $xml .= add_XML_value('longitude', $site_array['longitude']);
+        $xml .= add_XML_value('id', $site->id);
+        $xml .= add_XML_value('name', $site->name);
+        $xml .= add_XML_value('description', stripslashes($siteinformation->description ?? ''));
+        $xml .= add_XML_value('processoris64bits', $siteinformation?->processoris64bits);
+        $xml .= add_XML_value('processorvendor', $siteinformation?->processorvendor);
+        $xml .= add_XML_value('processorvendorid', $siteinformation?->processorvendorid);
+        $xml .= add_XML_value('processorfamilyid', $siteinformation?->processorfamilyid);
+        $xml .= add_XML_value('processormodelid', $siteinformation?->processormodelid);
+        $xml .= add_XML_value('processorcachesize', $siteinformation?->processorcachesize);
+        $xml .= add_XML_value('numberlogicalcpus', $siteinformation?->numberlogicalcpus);
+        $xml .= add_XML_value('numberphysicalcpus', $siteinformation?->numberphysicalcpus);
+        $xml .= add_XML_value('totalvirtualmemory', $total_virtual_memory);
+        $xml .= add_XML_value('totalphysicalmemory', $total_physical_memory);
+        $xml .= add_XML_value('logicalprocessorsperphysical', $siteinformation?->logicalprocessorsperphysical);
+        $xml .= add_XML_value('processorclockfrequency', $processor_clock_frequency);
+        $xml .= add_XML_value('outoforder', $site->outoforder);
+        if ($project !== null && $project->ShowIPAddresses) {
+            $xml .= add_XML_value('ip', $site->ip);
+            $xml .= add_XML_value('latitude', $site->latitude);
+            $xml .= add_XML_value('longitude', $site->longitude);
         }
         $xml .= '</site>';
 
         // List the claimers of the site
         $siteclaimer = $db->executePrepared("
-                           SELECT firstname, lastname, email
-                           FROM user, site2user
+                           SELECT u.firstname, u.lastname, u.email
+                           FROM " . qid('user') . " as u, site2user
                            WHERE
-                               user.id=site2user.userid
+                               u.id=site2user.userid
                                AND site2user.siteid=?
                            ORDER BY firstname
                        ", [$siteid]);
@@ -544,8 +437,8 @@ final class SiteController extends AbstractController
                             GROUP BY projectid
                         ', [$siteid]);
 
-        foreach ($site2project as $site) {
-            $projectid = $site['projectid'];
+        foreach ($site2project as $project_site) {
+            $projectid = $project_site['projectid'];
 
             $project = new Project();
             $project->Id = $projectid;
@@ -553,7 +446,7 @@ final class SiteController extends AbstractController
             if (Gate::allows('view-project', $project)) {
                 $xml .= '<project>';
                 $xml .= add_XML_value('id', $projectid);
-                $xml .= add_XML_value('submittime', $site['maxtime']);
+                $xml .= add_XML_value('submittime', $project_site['maxtime']);
                 $xml .= add_XML_value('name', $project->Name);
                 $xml .= add_XML_value('name_encoded', urlencode($project->Name));
                 $xml .= '</project>';
@@ -649,7 +542,7 @@ final class SiteController extends AbstractController
 
         $xml .= '</cdash>';
 
-        return $this->view('cdash', $sitename)
+        return $this->view('cdash', $site->name)
             ->with('xsl', true)
             ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/viewSite', true));
     }
@@ -676,59 +569,21 @@ final class SiteController extends AbstractController
 
     /**
      * Update a site
+     *
+     * @param array<string,mixed> $information
      */
     private static function update_site(
-        $siteid,
-        $name,
-        $processoris64bits,
-        $processorvendor,
-        $processorvendorid,
-        $processorfamilyid,
-        $processormodelid,
-        $processorcachesize,
-        $numberlogicalcpus,
-        $numberphysicalcpus,
-        $totalvirtualmemory,
-        $totalphysicalmemory,
-        $logicalprocessorsperphysical,
-        $processorclockfrequency,
-        $description,
+        int $siteid,
+        string $name,
+        array $information,
         $ip,
         $latitude,
         $longitude,
-        $nonewrevision = false,
-        $outoforder = 0): void
-    {
-        // Security checks
-        if (!is_numeric($siteid)) {
-            return;
-        }
-        $siteid = (int) $siteid;
-
-        $db = Database::getInstance();
-
-        // TODO: (williamjallen) Refactor this to eliminate the messy usage of the $$ operator below
-        $latitude = pdo_real_escape_string($latitude);
-        $longitude = pdo_real_escape_string($longitude);
-        $outoforder = pdo_real_escape_string($outoforder);
-        $ip = pdo_real_escape_string($ip);
-        $name = pdo_real_escape_string($name);
-        $processoris64bits = pdo_real_escape_string($processoris64bits);
-        $processorvendor = pdo_real_escape_string($processorvendor);
-        $processorvendorid = pdo_real_escape_string($processorvendorid);
-        $processorfamilyid = pdo_real_escape_string($processorfamilyid);
-        $processormodelid = pdo_real_escape_string($processormodelid);
-        $processorcachesize = pdo_real_escape_string($processorcachesize);
-        $numberlogicalcpus = pdo_real_escape_string($numberlogicalcpus);
-        $numberphysicalcpus = pdo_real_escape_string($numberphysicalcpus);
-        $totalvirtualmemory = round(pdo_real_escape_string($totalvirtualmemory));
-        $totalphysicalmemory = round(pdo_real_escape_string($totalphysicalmemory));
-        $logicalprocessorsperphysical = round(pdo_real_escape_string($logicalprocessorsperphysical));
-        $processorclockfrequency = round(pdo_real_escape_string($processorclockfrequency));
-        $description = pdo_real_escape_string($description);
-
+        bool $outoforder = false
+    ): void {
         // Update the basic information first
-        Site::findOrFail($siteid)->where([
+        $site = Site::findOrFail($siteid);
+        $site->updateOrFail([
             'name' => $name,
             'ip' => $ip,
             'latitude' => $latitude,
@@ -736,118 +591,7 @@ final class SiteController extends AbstractController
             'outoforder' => $outoforder,
         ]);
 
-        add_last_sql_error('update_site');
-
-        $names = [];
-        $names[] = 'processoris64bits';
-        $names[] = 'processorvendor';
-        $names[] = 'processorvendorid';
-        $names[] = 'processorfamilyid';
-        $names[] = 'processormodelid';
-        $names[] = 'processorcachesize';
-        $names[] = 'numberlogicalcpus';
-        $names[] = 'numberphysicalcpus';
-        $names[] = 'totalvirtualmemory';
-        $names[] = 'totalphysicalmemory';
-        $names[] = 'logicalprocessorsperphysical';
-        $names[] = 'processorclockfrequency';
-        $names[] = 'description';
-
-        // Check that we have a valid input
-        $isinputvalid = 0;
-        foreach ($names as $name) {
-            if ($$name != 'NA' && strlen($$name) > 0) {
-                $isinputvalid = 1;
-                break;
-            }
-        }
-
-        if (!$isinputvalid) {
-            return;
-        }
-
-        // Check if we have valuable information and the siteinformation doesn't exist
-        $newrevision2 = false;
-        $query = $db->executePreparedSingleRow('
-                         SELECT *
-                         FROM siteinformation
-                         WHERE siteid=?
-                         ORDER BY timestamp DESC
-                         LIMIT 1
-                     ', [$siteid]);
-        if (empty($query)) {
-            $noinformation = 1;
-            foreach ($names as $name) {
-                if ($$name != 'NA' && strlen($$name) > 0) {
-                    $nonewrevision = false;
-                    $newrevision2 = true;
-                    $noinformation = 0;
-                    break;
-                }
-            }
-            if ($noinformation) {
-                return; // we have nothing to add
-            }
-        } else {
-            // Check if the information are different from what we have in the database, then that means
-            // the system has been upgraded and we need to create a new revision
-            foreach ($names as $name) {
-                if ($$name != 'NA' && $query[$name] != $$name && strlen($$name) > 0) {
-                    // Take care of rounding issues
-                    if (is_numeric($$name)) {
-                        if (round($$name) != $query[$name]) {
-                            $newrevision2 = true;
-                            break;
-                        }
-                    } else {
-                        $newrevision2 = true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        if ($newrevision2 && !$nonewrevision) {
-            $now = gmdate(FMT_DATETIME);
-            $sql = 'INSERT INTO siteinformation(siteid,timestamp';
-            foreach ($names as $name) {
-                if ($$name != 'NA' && strlen($$name) > 0) {
-                    $sql .= ", $name";
-                }
-            }
-
-            $prepared_values = [$siteid, $now];
-            $sql .= ') VALUES(?, ?';
-            foreach ($names as $name) {
-                if ($$name != 'NA' && strlen($$name) > 0) {
-                    $sql .= ', ?';
-                    $prepared_values[] = $$name;
-                }
-            }
-            $sql .= ')';
-            $db->executePrepared($sql, $prepared_values);
-            add_last_sql_error('update_site', $sql);
-        } else {
-            $sql = 'UPDATE siteinformation SET ';
-            $prepared_values = [];
-            $i = 0;
-            foreach ($names as $name) {
-                if ($$name != 'NA' && strlen($$name) > 0) {
-                    if ($i > 0) {
-                        $sql .= ',';
-                    }
-                    $sql .= " $name=?";
-                    $prepared_values[] = $$name;
-                    $i++;
-                }
-            }
-
-            $sql .= " WHERE siteid=? AND timestamp=?";
-            $prepared_values[] = $siteid;
-            $prepared_values[] = $query['timestamp'];
-
-            $db->executePrepared($sql, $prepared_values);
-            add_last_sql_error('update_site', $sql);
-        }
+        // Create a new information row if something has changed since the most recent update
+        $site->mostRecentInformation()->firstOrCreate($information);
     }
 }
