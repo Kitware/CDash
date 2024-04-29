@@ -31,7 +31,7 @@
     "knplabs/github-api": "3.14.1",
     "laravel/framework": "10.48.9",
     "laravel/legacy-factories": "1.4.0",
-    "laravel/socialite": "5.12.1",
+    "laravel/socialite": "5.13.1",
     "laravel/ui": "4.5.1",
     "lcobucci/jwt": "5.3.0",
     "mll-lab/laravel-graphiql": "3.2.1",
