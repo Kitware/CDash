@@ -77,7 +77,7 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
             WHERE buildname     = :buildname AND
                   parentgroupid = :parentgroupid AND
                   siteid        = 0');
-        foreach (['%bar%', '%baz%'] as $match) {
+        foreach (['bar', 'baz'] as $match) {
             $query_params = [
                 ':buildname'     => $match,
                 ':parentgroupid' => $this->ParentGroupId,
@@ -124,7 +124,7 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
         // Verify that these rules were created.
         foreach ($build_rules as $build_rule) {
             $query_params = [
-                ':buildname'     => "%{$build_rule['match']}%",
+                ':buildname'     => "{$build_rule['match']}",
                 ':parentgroupid' => $build_rule['parentgroupid'],
             ];
             $this->PDO->execute($stmt, $query_params);

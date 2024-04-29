@@ -342,9 +342,7 @@ function rest_put($projectid)
             $new_rule = new BuildGroupRule();
             $new_rule->GroupId = $buildgroupid;
             $new_rule->ProjectId = $projectid;
-            $new_rule->BuildName =
-                isset($new_rule_request['match']) ?
-                convert_wildcards($new_rule_request['match']) : '';
+            $new_rule->BuildName = $new_rule_request['match'] ?? '';
             $parentgroupid = $new_rule_request['parentgroupid'];
             if ($parentgroupid > 0) {
                 $new_rule->ParentGroupId = $parentgroupid;
