@@ -4,27 +4,27 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "001947720ec0b6d57e4d74a8d0a0ea83",
+    "content-hash": "1e0f0bdd46d722d4efb76a5f6599d294",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
-            "version": "2.3.0",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/24Slides/laravel-saml2.git",
-                "reference": "e96f4a27067efce984ffe26dfe1233d36ea5427d"
+                "reference": "85dadba29a54f624c29d06b9a2ba0f00186cf665"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/24Slides/laravel-saml2/zipball/e96f4a27067efce984ffe26dfe1233d36ea5427d",
-                "reference": "e96f4a27067efce984ffe26dfe1233d36ea5427d",
+                "url": "https://api.github.com/repos/24Slides/laravel-saml2/zipball/85dadba29a54f624c29d06b9a2ba0f00186cf665",
+                "reference": "85dadba29a54f624c29d06b9a2ba0f00186cf665",
                 "shasum": ""
             },
             "require": {
                 "ext-openssl": "*",
-                "illuminate/console": "~5.5|^6.0|^7.0|^8.0|^9.0|^10.0",
-                "illuminate/database": "~5.5|^6.0|^7.0|^8.0|^9.0|^10.0",
-                "illuminate/support": "~5.4|^6.0|^7.0|^8.0|^9.0|^10.0",
+                "illuminate/console": "~5.5|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
+                "illuminate/database": "~5.5|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
+                "illuminate/support": "~5.4|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
                 "onelogin/php-saml": "^3.0|^4.0",
                 "php": ">=7.1",
                 "ramsey/uuid": "^3.8|^4.0"
@@ -77,9 +77,9 @@
             ],
             "support": {
                 "issues": "https://github.com/24Slides/laravel-saml2/issues",
-                "source": "https://github.com/24Slides/laravel-saml2/tree/2.3.0"
+                "source": "https://github.com/24Slides/laravel-saml2/tree/2.4.0"
             },
-            "time": "2023-11-26T10:59:23+00:00"
+            "time": "2024-04-13T12:57:36+00:00"
         },
         {
             "name": "adldap2/adldap2",
