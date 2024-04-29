@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6aa70b195f5b06a214d7a60f08345565",
+    "content-hash": "001947720ec0b6d57e4d74a8d0a0ea83",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -10024,16 +10024,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.66",
+            "version": "1.10.67",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "94779c987e4ebd620025d9e5fdd23323903950bd"
+                "reference": "16ddbe776f10da6a95ebd25de7c1dbed397dc493"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/94779c987e4ebd620025d9e5fdd23323903950bd",
-                "reference": "94779c987e4ebd620025d9e5fdd23323903950bd",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/16ddbe776f10da6a95ebd25de7c1dbed397dc493",
+                "reference": "16ddbe776f10da6a95ebd25de7c1dbed397dc493",
                 "shasum": ""
             },
             "require": {
@@ -10076,13 +10076,9 @@
                 {
                     "url": "https://github.com/phpstan",
                     "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/phpstan/phpstan",
-                    "type": "tidelift"
                 }
             ],
-            "time": "2024-03-28T16:17:31+00:00"
+            "time": "2024-04-16T07:22:02+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
