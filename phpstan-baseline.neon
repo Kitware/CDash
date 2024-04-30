@@ -3126,11 +3126,6 @@ parameters:
 			path: app/Models/Site.php
 
 		-
-			message: "#^Method App\\\\Models\\\\Site\\:\\:save\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/Models/Site.php
-
-		-
 			message: "#^Property App\\\\Models\\\\SiteInformation\\:\\:\\$description \\(string\\) does not accept int\\|string\\.$#"
 			count: 1
 			path: app/Models/SiteInformation.php
