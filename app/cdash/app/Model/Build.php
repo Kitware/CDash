@@ -37,8 +37,8 @@ use App\Models\Build as EloquentBuild;
 
 class Build
 {
-    public const TYPE_ERROR = 0;
-    public const TYPE_WARN = 1;
+    public const TYPE_ERROR = EloquentBuild::TYPE_ERROR;
+    public const TYPE_WARN = EloquentBuild::TYPE_WARN;
     public const STATUS_NEW = 1;
 
     public const PARENT_BUILD = -1;

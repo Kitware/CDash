@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\GraphQL;
 
+use App\Models\Build;
 use App\Models\Project;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -126,5 +127,308 @@ class BuildTypeTest extends TestCase
                 ],
             ],
         ], true);
+    }
+
+    public function testNoWarningsOrErrorsReturnsEmptyArray(): void
+    {
+        $this->project->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->graphQL('
+            query project($id: ID) {
+                project(id: $id) {
+                    builds {
+                        edges {
+                            node {
+                                name
+                                warnings {
+                                    edges {
+                                        node {
+                                            text
+                                        }
+                                    }
+                                }
+                                errors {
+                                    edges {
+                                        node {
+                                            text
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $this->project->id,
+        ])->assertJson([
+            'data' => [
+                'project' => [
+                    'builds' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'build1',
+                                    'warnings' => [
+                                        'edges' => [],
+                                    ],
+                                    'errors' => [
+                                        'edges' => [],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testBasicWarningFields(): void
+    {
+        $build = $this->project->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+        $build->warnings()->create([
+            'type' => Build::TYPE_WARN,
+            'logline' => 5,
+            'text' => 'def',
+            'sourcefile' => '/a/b/c',
+            'sourceline' => 7,
+            'precontext' => 'ghi',
+            'postcontext' => 'jlk',
+        ]);
+
+        $this->graphQL('
+            query project($id: ID) {
+                project(id: $id) {
+                    builds {
+                        edges {
+                            node {
+                                name
+                                warnings {
+                                    edges {
+                                        node {
+                                            logLine
+                                            text
+                                            sourceFile
+                                            sourceLine
+                                            preContext
+                                            postContext
+                                        }
+                                    }
+                                }
+                                errors {
+                                    edges {
+                                        node {
+                                            text
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $this->project->id,
+        ])->assertJson([
+            'data' => [
+                'project' => [
+                    'builds' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'build1',
+                                    'warnings' => [
+                                        'edges' => [
+                                            [
+                                                'node' => [
+                                                    'logLine' => 5,
+                                                    'text' => 'def',
+                                                    'sourceFile' => '/a/b/c',
+                                                    'sourceLine' => 7,
+                                                    'preContext' => 'ghi',
+                                                    'postContext' => 'jlk',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    'errors' => [
+                                        'edges' => [],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testBasicErrorFields(): void
+    {
+        $build = $this->project->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+        $build->warnings()->create([
+            'type' => Build::TYPE_ERROR,
+            'logline' => 5,
+            'text' => 'def',
+            'sourcefile' => '/a/b/c',
+            'sourceline' => 7,
+            'precontext' => 'ghi',
+            'postcontext' => 'jlk',
+        ]);
+
+        $this->graphQL('
+            query project($id: ID) {
+                project(id: $id) {
+                    builds {
+                        edges {
+                            node {
+                                name
+                                warnings {
+                                    edges {
+                                        node {
+                                            text
+                                        }
+                                    }
+                                }
+                                errors {
+                                    edges {
+                                        node {
+                                            logLine
+                                            text
+                                            sourceFile
+                                            sourceLine
+                                            preContext
+                                            postContext
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $this->project->id,
+        ])->assertJson([
+            'data' => [
+                'project' => [
+                    'builds' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'build1',
+                                    'warnings' => [
+                                        'edges' => [],
+                                    ],
+                                    'errors' => [
+                                        'edges' => [
+                                            [
+                                                'node' => [
+                                                    'logLine' => 5,
+                                                    'text' => 'def',
+                                                    'sourceFile' => '/a/b/c',
+                                                    'sourceLine' => 7,
+                                                    'preContext' => 'ghi',
+                                                    'postContext' => 'jlk',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testMultipleWarningsAndErrors(): void
+    {
+        $build = $this->project->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $warnings = [];
+        $errors = [];
+        for ($i = 0; $i < 10; $i++) {
+            $warning = [
+                'text' => Str::uuid()->toString(),
+            ];
+            $error = [
+                'text' => Str::uuid()->toString(),
+            ];
+
+            $build->warnings()->create(array_merge($warning, ['type' => Build::TYPE_WARN]));
+            $build->errors()->create(array_merge($error, ['type' => Build::TYPE_ERROR]));
+
+            $warnings[] = [
+                'node' => $warning,
+            ];
+            $errors[] = [
+                'node' => $error,
+            ];
+        }
+
+        $this->graphQL('
+            query project($id: ID) {
+                project(id: $id) {
+                    builds {
+                        edges {
+                            node {
+                                name
+                                warnings {
+                                    edges {
+                                        node {
+                                            text
+                                        }
+                                    }
+                                }
+                                errors {
+                                    edges {
+                                        node {
+                                            text
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $this->project->id,
+        ])->assertJson([
+            'data' => [
+                'project' => [
+                    'builds' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'build1',
+                                    'warnings' => [
+                                        'edges' => array_reverse($warnings),
+                                    ],
+                                    'errors' => [
+                                        'edges' => array_reverse($errors),
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
     }
 }

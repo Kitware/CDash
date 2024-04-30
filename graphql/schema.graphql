@@ -176,7 +176,43 @@ type Build {
   "The site associated with this build."
   site: Site! @belongsTo
 
+  "A list of errors submitted for this build."
+  errors: [BuildError!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+
+  "A list of warnings submitted for this build."
+  warnings: [BuildError!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+
   # TODO: Figure out project relation.  project{build{project}} currently throws an error.
+}
+
+
+type BuildError {
+  logLine: Int! @rename(attribute: "logline")
+
+  text: String!
+
+  sourceFile: String! @rename(attribute: "sourcefile")
+
+  sourceLine: Int! @rename(attribute: "sourceline")
+
+  preContext: String @rename(attribute: "precontext")
+
+  postContext: String @rename(attribute: "postcontext")
+}
+
+
+type BuildWarning {
+  logLine: Int! @rename(attribute: "logline")
+
+  text: String!
+
+  sourceFile: String! @rename(attribute: "sourcefile")
+
+  sourceLine: Int! @rename(attribute: "sourceline")
+
+  preContext: String @rename(attribute: "precontext")
+
+  postContext: String @rename(attribute: "postcontext")
 }
 
 
