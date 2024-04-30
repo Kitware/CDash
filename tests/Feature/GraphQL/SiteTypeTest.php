@@ -95,9 +95,17 @@ class SiteTypeTest extends TestCase
         $this->graphQL('
             query {
                 projects {
-                    builds {
-                        site {
-                            name
+                    edges {
+                        node {
+                            builds {
+                                edges {
+                                    node {
+                                        site {
+                                            name
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -105,11 +113,19 @@ class SiteTypeTest extends TestCase
         ')->assertJson([
             'data' => [
                 'projects' => [
-                    [
-                        'builds' => [
-                            [
-                                'site' => [
-                                    'name' => $this->sites['site1']->name,
+                    'edges' => [
+                        [
+                            'node' => [
+                                'builds' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'site' => [
+                                                    'name' => $this->sites['site1']->name,
+                                                ],
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
@@ -169,23 +185,41 @@ class SiteTypeTest extends TestCase
         $this->graphQL('
             query {
                 projects {
-                    name
-                    sites {
-                        name
+                    edges {
+                        node {
+                            name
+                            sites {
+                                edges {
+                                    node {
+                                        name
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         ')->assertJson([
             'data' => [
                 'projects' => [
-                    [
-                        'name' => $this->projects['public1']->name,
-                        'sites' => [
-                            [
-                                'name' => $this->sites['public_submission']->name,
-                            ],
-                            [
-                                'name' => $this->sites['public_private_submission']->name,
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'sites' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'name' => $this->sites['public_submission']->name,
+                                            ],
+                                        ],
+                                        [
+                                            'node' => [
+                                                'name' => $this->sites['public_private_submission']->name,
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
                     ],
@@ -196,23 +230,41 @@ class SiteTypeTest extends TestCase
         $this->actingAs($this->users['normal'])->graphQL('
             query {
                 projects {
-                    name
-                    sites {
-                        name
+                    edges {
+                        node {
+                            name
+                            sites {
+                                edges {
+                                    node {
+                                        name
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         ')->assertJson([
             'data' => [
                 'projects' => [
-                    [
-                        'name' => $this->projects['public1']->name,
-                        'sites' => [
-                            [
-                                'name' => $this->sites['public_submission']->name,
-                            ],
-                            [
-                                'name' => $this->sites['public_private_submission']->name,
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'sites' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'name' => $this->sites['public_submission']->name,
+                                            ],
+                                        ],
+                                        [
+                                            'node' => [
+                                                'name' => $this->sites['public_private_submission']->name,
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
                     ],
@@ -223,34 +275,60 @@ class SiteTypeTest extends TestCase
         $this->actingAs($this->users['admin'])->graphQL('
             query {
                 projects {
-                    name
-                    sites {
-                        name
+                    edges {
+                        node {
+                            name
+                            sites {
+                                edges {
+                                    node {
+                                        name
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         ')->assertJson([
             'data' => [
                 'projects' => [
-                    [
-                        'name' => $this->projects['public1']->name,
-                        'sites' => [
-                            [
-                                'name' => $this->sites['public_submission']->name,
-                            ],
-                            [
-                                'name' => $this->sites['public_private_submission']->name,
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'sites' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'name' => $this->sites['public_submission']->name,
+                                            ],
+                                        ],
+                                        [
+                                            'node' => [
+                                                'name' => $this->sites['public_private_submission']->name,
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
-                    ],
-                    [
-                        'name' => $this->projects['private1']->name,
-                        'sites' => [
-                            [
-                                'name' => $this->sites['private_submission']->name,
-                            ],
-                            [
-                                'name' => $this->sites['public_private_submission']->name,
+                        [
+                            'node' => [
+                                'name' => $this->projects['private1']->name,
+                                'sites' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'name' => $this->sites['private_submission']->name,
+                                            ],
+                                        ],
+                                        [
+                                            'node' => [
+                                                'name' => $this->sites['public_private_submission']->name,
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
                     ],
