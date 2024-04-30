@@ -27,7 +27,13 @@ final class OAuthController extends AbstractController
 
     public function callback(string $service): RedirectResponse|Redirector
     {
-        $authUser = Socialite::driver($service)->user();
+        // Try/Catch to prevent 500  error when access is denied at provider
+        try {
+            $authUser = Socialite::driver($service)->user();
+        } catch (\Exception $e) {
+            return redirect("/login");
+        };
+
         $email =  $authUser->getEmail();
         [$fname, $lname] = explode(" ", $authUser->getName() ?? '');
 
