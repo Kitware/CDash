@@ -63,26 +63,30 @@ class BuildTypeTest extends TestCase
             query project($id: ID) {
                 project(id: $id) {
                     builds {
-                        stamp
-                        name
-                        buildType
-                        generator
-                        startTime
-                        endTime
-                        submissionTime
-                        command
-                        configureErrorsCount
-                        configureWarningsCount
-                        configureDuration
-                        buildErrorsCount
-                        buildWarningsCount
-                        buildDuration
-                        notRunTestsCount
-                        failedTestsCount
-                        passedTestsCount
-                        timeStatusFailedTestsCount
-                        testDuration
-                        uuid
+                        edges {
+                            node {
+                                stamp
+                                name
+                                buildType
+                                generator
+                                startTime
+                                endTime
+                                submissionTime
+                                command
+                                configureErrorsCount
+                                configureWarningsCount
+                                configureDuration
+                                buildErrorsCount
+                                buildWarningsCount
+                                buildDuration
+                                notRunTestsCount
+                                failedTestsCount
+                                passedTestsCount
+                                timeStatusFailedTestsCount
+                                testDuration
+                                uuid
+                            }
+                        }
                     }
                 }
             }
@@ -92,27 +96,31 @@ class BuildTypeTest extends TestCase
             'data' => [
                 'project' => [
                     'builds' => [
-                        [
-                            'stamp' => 'abcdefg',
-                            'name' => 'build1',
-                            'buildType' => 'Continuous',
-                            'generator' => 'ctest-2.9.20091218',
-                            'startTime' => '2011-07-22 15:11:41',
-                            'endTime' => '2011-07-22 15:29:30',
-                            'submissionTime' => '2024-03-21 20:30:51',
-                            'command' => 'foo bar',
-                            'configureErrorsCount' => 1,
-                            'configureWarningsCount' => 2,
-                            'configureDuration' => 10,
-                            'buildErrorsCount' => 3,
-                            'buildWarningsCount' => 4,
-                            'buildDuration' => 20,
-                            'notRunTestsCount' => 5,
-                            'failedTestsCount' => 6,
-                            'passedTestsCount' => 7,
-                            'timeStatusFailedTestsCount' => 8,
-                            'testDuration' => 30,
-                            'uuid' => $uuid,
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'stamp' => 'abcdefg',
+                                    'name' => 'build1',
+                                    'buildType' => 'Continuous',
+                                    'generator' => 'ctest-2.9.20091218',
+                                    'startTime' => '2011-07-22 15:11:41',
+                                    'endTime' => '2011-07-22 15:29:30',
+                                    'submissionTime' => '2024-03-21 20:30:51',
+                                    'command' => 'foo bar',
+                                    'configureErrorsCount' => 1,
+                                    'configureWarningsCount' => 2,
+                                    'configureDuration' => 10,
+                                    'buildErrorsCount' => 3,
+                                    'buildWarningsCount' => 4,
+                                    'buildDuration' => 20,
+                                    'notRunTestsCount' => 5,
+                                    'failedTestsCount' => 6,
+                                    'passedTestsCount' => 7,
+                                    'timeStatusFailedTestsCount' => 8,
+                                    'testDuration' => 30,
+                                    'uuid' => $uuid,
+                                ],
+                            ],
                         ],
                     ],
                 ],

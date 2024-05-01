@@ -178,12 +178,16 @@ class ProjectTypeTest extends TestCase
     {
         $expected_json_response = [
             'data' => [
-                'projects' => [],
+                'projects' => [
+                    'edges' => [],
+                ],
             ],
         ];
         foreach ($allowable_projects as $project_name) {
-            $expected_json_response['data']['projects'][] = [
-                'name' => $this->projects[$project_name]->name,
+            $expected_json_response['data']['projects']['edges'][] = [
+                'node' => [
+                    'name' => $this->projects[$project_name]->name,
+                ],
             ];
         }
 
@@ -191,7 +195,11 @@ class ProjectTypeTest extends TestCase
             ->graphQL('
                 query {
                     projects {
-                        name
+                        edges {
+                            node {
+                                name
+                            }
+                        }
                     }
                 }
             ')->assertJson($expected_json_response, true);
@@ -261,37 +269,65 @@ class ProjectTypeTest extends TestCase
         $this->graphQL('
             query {
                 projects {
-                    name
-                    builds {
-                        name
+                    edges {
+                        node {
+                            name
+                            builds {
+                                edges {
+                                    node {
+                                        name
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         ')->assertJson([
             'data' => [
                 'projects' => [
-                    [
-                        'name' => $this->projects['public1']->name,
-                        'builds' => [
-                            [
-                                'name' => 'build1',
-                            ],
-                            [
-                                'name' => 'build2',
-                            ],
-                            [
-                                'name' => 'build3',
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'builds' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'name' => 'build1',
+                                            ],
+                                        ],
+                                        [
+                                            'node' => [
+                                                'name' => 'build2',
+                                            ],
+                                        ],
+                                        [
+                                            'node' => [
+                                                'name' => 'build3',
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
-                    ],
-                    [
-                        'name' => $this->projects['public2']->name,
-                        'builds' => [
-                            [
-                                'name' => 'build4',
-                            ],
-                            [
-                                'name' => 'build5',
+                        [
+                            'node' => [
+                                'name' => $this->projects['public2']->name,
+                                'builds' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'name' => 'build4',
+                                            ],
+                                        ],
+                                        [
+                                            'node' => [
+                                                'name' => 'build5',
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
                     ],
@@ -455,29 +491,49 @@ class ProjectTypeTest extends TestCase
         $this->graphQL('
             query {
                 projects {
-                    name
-                    administrators {
-                        id
+                    edges {
+                        node {
+                            name
+                            administrators {
+                                edges {
+                                    node {
+                                        id
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         ')->assertJson([
             'data' => [
                 'projects' => [
-                    [
-                        'name' => $this->projects['public1']->name,
-                        'administrators' => [
-                            [
-                                'id' => (string) $this->users['normal']->id,
-                            ],
-                            [
-                                'id' => (string) $this->users['admin']->id,
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'administrators' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'id' => (string) $this->users['normal']->id,
+                                            ],
+                                        ],
+                                        [
+                                            'node' => [
+                                                'id' => (string) $this->users['admin']->id,
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
-                    ],
-                    [
-                        'name' => $this->projects['public2']->name,
-                        'administrators' => [],
+                        [
+                            'node' => [
+                                'name' => $this->projects['public2']->name,
+                                'administrators' => [],
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -489,47 +545,79 @@ class ProjectTypeTest extends TestCase
         $this->actingAs($this->users['normal'])->graphQL('
             query {
                 projects {
-                    name
-                    administrators {
-                        id
+                    edges {
+                        node {
+                            name
+                            administrators {
+                                edges {
+                                    node {
+                                        id
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         ')->assertJson([
             'data' => [
                 'projects' => [
-                    [
-                        'name' => $this->projects['public1']->name,
-                        'administrators' => [
-                            [
-                                'id' => (string) $this->users['normal']->id,
-                            ],
-                            [
-                                'id' => (string) $this->users['admin']->id,
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'administrators' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'id' => (string) $this->users['normal']->id,
+                                            ],
+                                        ],
+                                        [
+                                            'node' => [
+                                                'id' => (string) $this->users['admin']->id,
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
-                    ],
-                    [
-                        'name' => $this->projects['public2']->name,
-                        'administrators' => [],
-                    ],
-                    [
-                        'name' => $this->projects['protected1']->name,
-                        'administrators' => [],
-                    ],
-                    [
-                        'name' => $this->projects['protected2']->name,
-                        'administrators' => [],
-                    ],
-                    [
-                        'name' => $this->projects['private1']->name,
-                        'administrators' => [],
-                    ],
-                    [
-                        'name' => $this->projects['private2']->name,
-                        'administrators' => [
-                            [
-                                'id' => (string) $this->users['normal']->id,
+                        [
+                            'node' => [
+                                'name' => $this->projects['public2']->name,
+                                'administrators' => [],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['protected1']->name,
+                                'administrators' => [],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['protected2']->name,
+                                'administrators' => [],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['private1']->name,
+                                'administrators' => [],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['private2']->name,
+                                'administrators' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'id' => (string) $this->users['normal']->id,
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
                     ],
@@ -543,53 +631,87 @@ class ProjectTypeTest extends TestCase
         $this->actingAs($this->users['admin'])->graphQL('
             query {
                 projects {
-                    name
-                    administrators {
-                        id
+                    edges {
+                        node {
+                            name
+                            administrators {
+                                edges {
+                                    node {
+                                        id
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         ')->assertJson([
             'data' => [
                 'projects' => [
-                    [
-                        'name' => $this->projects['public1']->name,
-                        'administrators' => [
-                            [
-                                'id' => (string) $this->users['normal']->id,
-                            ],
-                            [
-                                'id' => (string) $this->users['admin']->id,
-                            ],
-                        ],
-                    ],
-                    [
-                        'name' => $this->projects['public2']->name,
-                        'administrators' => [],
-                    ],
-                    [
-                        'name' => $this->projects['protected1']->name,
-                        'administrators' => [],
-                    ],
-                    [
-                        'name' => $this->projects['protected2']->name,
-                        'administrators' => [],
-                    ],
-                    [
-                        'name' => $this->projects['private1']->name,
-                        'administrators' => [],
-                    ],
-                    [
-                        'name' => $this->projects['private2']->name,
-                        'administrators' => [
-                            [
-                                'id' => (string) $this->users['normal']->id,
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'administrators' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'id' => (string) $this->users['normal']->id,
+                                            ],
+                                        ],
+                                        [
+                                            'node' => [
+                                                'id' => (string) $this->users['admin']->id,
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
-                    ],
-                    [
-                        'name' => $this->projects['private3']->name,
-                        'administrators' => [],
+                        [
+                            'node' => [
+                                'name' => $this->projects['public2']->name,
+                                'administrators' => [],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['protected1']->name,
+                                'administrators' => [],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['protected2']->name,
+                                'administrators' => [],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['private1']->name,
+                                'administrators' => [],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['private2']->name,
+                                'administrators' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'id' => (string) $this->users['normal']->id,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['private3']->name,
+                                'administrators' => [],
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -601,40 +723,60 @@ class ProjectTypeTest extends TestCase
         $this->actingAs($this->users['admin'])->graphQL('
             query {
                 projects {
-                    name
-                    visibility
+                    edges {
+                        node {
+                            name
+                            visibility
+                        }
+                    }
                 }
             }
         ')->assertJson([
             'data' => [
                 'projects' => [
-                    [
-                        'name' => $this->projects['public1']->name,
-                        'visibility' => 'PUBLIC',
-                    ],
-                    [
-                        'name' => $this->projects['public2']->name,
-                        'visibility' => 'PUBLIC',
-                    ],
-                    [
-                        'name' => $this->projects['protected1']->name,
-                        'visibility' => 'PROTECTED',
-                    ],
-                    [
-                        'name' => $this->projects['protected2']->name,
-                        'visibility' => 'PROTECTED',
-                    ],
-                    [
-                        'name' => $this->projects['private1']->name,
-                        'visibility' => 'PRIVATE',
-                    ],
-                    [
-                        'name' => $this->projects['private2']->name,
-                        'visibility' => 'PRIVATE',
-                    ],
-                    [
-                        'name' => $this->projects['private3']->name,
-                        'visibility' => 'PRIVATE',
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'visibility' => 'PUBLIC',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['public2']->name,
+                                'visibility' => 'PUBLIC',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['protected1']->name,
+                                'visibility' => 'PROTECTED',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['protected2']->name,
+                                'visibility' => 'PROTECTED',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['private1']->name,
+                                'visibility' => 'PRIVATE',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['private2']->name,
+                                'visibility' => 'PRIVATE',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['private3']->name,
+                                'visibility' => 'PRIVATE',
+                            ],
+                        ],
                     ],
                 ],
             ],
