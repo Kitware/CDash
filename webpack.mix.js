@@ -64,7 +64,9 @@ const webpack_plugins = [
 
 if (git_clone) {
   const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
-  webpack_plugins.push(new GitRevisionPlugin());
+  webpack_plugins.push(new GitRevisionPlugin({
+    lightweightTags: true,
+  }));
 }
 
 // Copy angularjs files to build directory.
