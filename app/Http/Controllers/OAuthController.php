@@ -31,6 +31,7 @@ final class OAuthController extends AbstractController
         try {
             $authUser = Socialite::driver($service)->user();
         } catch (\Exception $e) {
+            Log::error("Problem logging in with $service.  Error was ". $e->getMessage());
             return redirect("/login");
         };
 
