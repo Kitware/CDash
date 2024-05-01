@@ -16,7 +16,7 @@ type Query {
   "List the projects available to the current user."
   projects(
     id: ID @in
-  ): [Project!]! @all(scopes: ["forUser"]) @orderBy(column: "id")
+  ): [Project!]! @paginate(scopes: ["forUser"], type: CONNECTION) @orderBy(column: "id")
 }
 
 
@@ -68,13 +68,13 @@ type Project {
   "A boolean indicating whether authenticated submissions are required."
   authenticateSubmissions: Boolean! @rename(attribute: "authenticatesubmissions")
 
-  builds: [Build!]! @hasMany @orderBy(column: "id")
+  builds: [Build!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
 
   "The sites which have submitted a build to this project."
-  sites: [Site!]! @belongsToMany @orderBy(column: "id")
+  sites: [Site!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
 
   "Users with the administrator role for this project."
-  administrators: [User!]! @belongsToMany @orderBy(column: "id")
+  administrators: [User!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
 }
 
 enum ProjectVisibility {
