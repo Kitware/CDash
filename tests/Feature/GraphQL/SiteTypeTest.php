@@ -5,6 +5,7 @@ namespace Tests\Feature\GraphQL;
 use App\Models\Project;
 use App\Models\Site;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -325,6 +326,565 @@ class SiteTypeTest extends TestCase
                                         [
                                             'node' => [
                                                 'name' => $this->sites['public_private_submission']->name,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    /**
+     * Insert and retrieve each site information value.
+     */
+    public function testBasicSiteInformationRelationship(): void
+    {
+        $this->sites['site1'] = $this->makeSite([
+            'name' => 'site1',
+        ]);
+
+        $this->sites['site1']->information()->create([
+            'processoris64bits' => true,
+            'processorvendor' => 'GenuineIntel',
+            'processorvendorid' => 'Intel Corporation',
+            'processorfamilyid' => 6,
+            'processormodelid' => 7,
+            'processorcachesize' => 123,
+            'numberlogicalcpus' => 4,
+            'numberphysicalcpus' => 2,
+            'totalvirtualmemory' => 2048,
+            'totalphysicalmemory' => 15,
+            'logicalprocessorsperphysical' => 3,
+            'processorclockfrequency' => 2672,
+            'description' => 'site 1 description',
+        ]);
+
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid(),
+            'siteid' => $this->sites['site1']->id,
+        ]);
+
+        $this->graphQL('
+            query {
+                projects {
+                    edges {
+                        node {
+                            name
+                            sites {
+                                edges {
+                                    node {
+                                        name
+                                        information {
+                                            edges {
+                                                node {
+                                                    processorIs64Bits
+                                                    processorVendor
+                                                    processorVendorId
+                                                    processorFamilyId
+                                                    processorModelId
+                                                    processorCacheSize
+                                                    numberLogicalCpus
+                                                    numberPhysicalCpus
+                                                    totalVirtualMemory
+                                                    totalPhysicalMemory
+                                                    logicalProcessorsPerPhysical
+                                                    processorClockFrequency
+                                                    description
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'sites' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'name' => $this->sites['site1']->name,
+                                                'information' => [
+                                                    'edges' => [
+                                                        [
+                                                            'node' => [
+                                                                'processorIs64Bits' => true,
+                                                                'processorVendor' => 'GenuineIntel',
+                                                                'processorVendorId' => 'Intel Corporation',
+                                                                'processorFamilyId' => 6,
+                                                                'processorModelId' => 7,
+                                                                'processorCacheSize' => 123,
+                                                                'numberLogicalCpus' => 4,
+                                                                'numberPhysicalCpus' => 2,
+                                                                'totalVirtualMemory' => 2048,
+                                                                'totalPhysicalMemory' => 15,
+                                                                'logicalProcessorsPerPhysical' => 3,
+                                                                'processorClockFrequency' => 2672,
+                                                                'description' => 'site 1 description',
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    /**
+     * @return array{
+     *     array{
+     *         array<string,mixed>
+     *     }
+     * }
+     */
+    public function nullabilityTestCases(): array
+    {
+        return [
+            [['processoris64bits' => true]],
+            [['processorvendor' => 'GenuineIntel']],
+            [['processorvendord' => 'Intel Corporation']],
+            [['processorfamilyid' => 6]],
+            [['processormodelid' => 7]],
+            [['processorcachesize' => 123]],
+            [['numberlogicalcpus' => 4]],
+            [['numberphysicalcpus' => 2]],
+            [['totalvirtualmemory' => 2048]],
+            [['totalphysicalmemory' => 15]],
+            [['logicalprocessorsperphysical' => 3]],
+            [['processorclockfrequency' => 2672]],
+            [['description' => 'site 1 description']],
+        ];
+    }
+
+    /**
+     * @param array<string,mixed> $params
+     *
+     * @dataProvider nullabilityTestCases
+     */
+    public function testSiteInformationColumnNullability(array $params): void
+    {
+        $this->sites['site1'] = $this->makeSite([
+            'name' => 'site1',
+        ]);
+
+        $this->sites['site1']->information()->create($params);
+
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid(),
+            'siteid' => $this->sites['site1']->id,
+        ]);
+
+        $this->graphQL('
+            query {
+                projects {
+                    edges {
+                        node {
+                            name
+                            sites {
+                                edges {
+                                    node {
+                                        name
+                                        information {
+                                            edges {
+                                                node {
+                                                    processorIs64Bits
+                                                    processorVendor
+                                                    processorVendorId
+                                                    processorFamilyId
+                                                    processorModelId
+                                                    processorCacheSize
+                                                    numberLogicalCpus
+                                                    numberPhysicalCpus
+                                                    totalVirtualMemory
+                                                    totalPhysicalMemory
+                                                    logicalProcessorsPerPhysical
+                                                    processorClockFrequency
+                                                    description
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'sites' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'name' => $this->sites['site1']->name,
+                                                'information' => [
+                                                    'edges' => [
+                                                        [
+                                                            'node' => [
+                                                                'processorIs64Bits' => $params['processoris64bits'] ?? null,
+                                                                'processorVendor' => $params['processorvendor'] ?? null,
+                                                                'processorVendorId' => $params['processorvendorid'] ?? null,
+                                                                'processorFamilyId' => $params['processorfamilyid'] ?? null,
+                                                                'processorModelId' => $params['processormodelid'] ?? null,
+                                                                'processorCacheSize' => $params['processorcachesize'] ?? null,
+                                                                'numberLogicalCpus' => $params['numberlogicalcpus'] ?? null,
+                                                                'numberPhysicalCpus' => $params['numberphysicalcpus'] ?? null,
+                                                                'totalVirtualMemory' => $params['totalvirtualmemory'] ?? null,
+                                                                'totalPhysicalMemory' => $params['totalphysicalmemory'] ?? null,
+                                                                'logicalProcessorsPerPhysical' => $params['logicalprocessorsperphysical'] ?? null,
+                                                                'processorClockFrequency' => $params['processorclockfrequency'] ?? null,
+                                                                'description' => $params['description'] ?? null,
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testSiteInformationTimestampDefault(): void
+    {
+        $this->sites['site1'] = $this->makeSite([
+            'name' => 'site1',
+        ]);
+
+        $this->sites['site1']->information()->create();
+
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid(),
+            'siteid' => $this->sites['site1']->id,
+        ]);
+
+        $result = $this->graphQL('
+            query {
+                projects {
+                    edges {
+                        node {
+                            sites {
+                                edges {
+                                    node {
+                                        information {
+                                            edges {
+                                                node {
+                                                    timestamp
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ');
+
+        // Assert that the resulting timestamp is correct +- one minute to account for
+        // delay between creation and query, as well as any clock drift between the
+        // database and web servers.
+        $result_timestamp = $result['data']['projects']['edges'][0]['node']['sites']['edges'][0]['node']['information']['edges'][0]['node']['timestamp'];
+        self::assertGreaterThan(Carbon::now('UTC')->subMinute(), $result_timestamp);
+        self::assertLessThan(Carbon::now('UTC')->addMinute(), $result_timestamp);
+    }
+
+    public function testMultipleSiteInformation(): void
+    {
+        $this->sites['site1'] = $this->makeSite([
+            'name' => 'site1',
+        ]);
+
+        $this->sites['site1']->information()->createMany([
+            [
+                'description' => 'site 1 information 1',
+            ],
+            [
+                'description' => 'site 1 information 2',
+            ],
+            [
+                'description' => 'site 1 information 3',
+            ],
+        ]);
+
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid(),
+            'siteid' => $this->sites['site1']->id,
+        ]);
+
+        $this->graphQL('
+            query {
+                projects {
+                    edges {
+                        node {
+                            name
+                            sites {
+                                edges {
+                                    node {
+                                        name
+                                        information {
+                                            edges {
+                                                node {
+                                                    description
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'sites' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'name' => $this->sites['site1']->name,
+                                                'information' => [
+                                                    'edges' => [
+                                                        [
+                                                            'node' => [
+                                                                'description' => 'site 1 information 1',
+                                                            ],
+                                                        ],
+                                                        [
+                                                            'node' => [
+                                                                'description' => 'site 1 information 2',
+                                                            ],
+                                                        ],
+                                                        [
+                                                            'node' => [
+                                                                'description' => 'site 1 information 3',
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testNoSiteInformationReturnsEmptyArray(): void
+    {
+        $this->sites['site1'] = $this->makeSite([
+            'name' => 'site1',
+        ]);
+
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid(),
+            'siteid' => $this->sites['site1']->id,
+        ]);
+
+        $this->graphQL('
+            query {
+                projects {
+                    edges {
+                        node {
+                            name
+                            sites {
+                                edges {
+                                    node {
+                                        name
+                                        information {
+                                            edges {
+                                                node {
+                                                    description
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'sites' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'name' => $this->sites['site1']->name,
+                                                'information' => [
+                                                    'edges' => [],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testMostRecentSiteInformation(): void
+    {
+        $this->sites['site1'] = $this->makeSite([
+            'name' => 'site1',
+        ]);
+
+        // We want to be explicit about creating these in order, so we can't use createMany
+        $this->sites['site1']->information()->create(['description' => 'site 1 information 1']);
+        $this->sites['site1']->information()->create(['description' => 'site 1 information 2']);
+        $this->sites['site1']->information()->create(['description' => 'site 1 information 3']);
+
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid(),
+            'siteid' => $this->sites['site1']->id,
+        ]);
+
+        $this->graphQL('
+            query {
+                projects {
+                    edges {
+                        node {
+                            name
+                            sites {
+                                edges {
+                                    node {
+                                        name
+                                        mostRecentInformation {
+                                            description
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'sites' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'name' => $this->sites['site1']->name,
+                                                'mostRecentInformation' => [
+                                                    'description' => 'site 1 information 3',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testMostRecentSiteInformationReturnsNull(): void
+    {
+        $this->sites['site1'] = $this->makeSite([
+            'name' => 'site1',
+        ]);
+
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid(),
+            'siteid' => $this->sites['site1']->id,
+        ]);
+
+        $this->graphQL('
+            query {
+                projects {
+                    edges {
+                        node {
+                            name
+                            sites {
+                                edges {
+                                    node {
+                                        name
+                                        mostRecentInformation {
+                                            description
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'sites' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'name' => $this->sites['site1']->name,
+                                                'mostRecentInformation' => null,
                                             ],
                                         ],
                                     ],

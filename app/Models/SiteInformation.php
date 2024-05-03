@@ -8,19 +8,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $timestamp
- * @property int $processoris64bits
- * @property string $processorvendor
- * @property string $processorvendorid
- * @property int $processorfamilyid
- * @property int $processormodelid
- * @property int $processorcachesize
- * @property int $numberlogicalcpus
- * @property int $numberphysicalcpus
- * @property int $totalvirtualmemory
- * @property int $totalphysicalmemory
- * @property int $logicalprocessorsperphysical
- * @property int $processorclockfrequency
- * @property string $description
+ * @property boolean|null $processoris64bits
+ * @property string|null $processorvendor
+ * @property string|null $processorvendorid
+ * @property int|null $processorfamilyid
+ * @property int|null $processormodelid
+ * @property int|null $processorcachesize
+ * @property int|null $numberlogicalcpus
+ * @property int|null $numberphysicalcpus
+ * @property int|null $totalvirtualmemory
+ * @property int|null $totalphysicalmemory
+ * @property int|null $logicalprocessorsperphysical
+ * @property int|null $processorclockfrequency
+ * @property string|null $description
  * @property int $siteid
  *
  * @mixin Builder<SiteInformation>
@@ -46,7 +46,20 @@ class SiteInformation extends Model
         'logicalprocessorsperphysical',
         'processorclockfrequency',
         'description',
-        'siteid',
+    ];
+
+    protected $casts = [
+        'timestamp' => 'datetime',
+        'processoris64bits' => 'boolean',
+        'processorfamilyid' => 'int',
+        'processormodelid' => 'int',
+        'processorcachesize' => 'int',
+        'numberlogicalcpus' => 'int',
+        'numberphysicalcpus' => 'int',
+        'totalvirtualmemory' => 'int',
+        'totalphysicalmemory' => 'int',
+        'logicalprocessorsperphysical' => 'int',
+        'processorclockfrequency' => 'int',
     ];
 
     /**
@@ -61,16 +74,16 @@ class SiteInformation extends Model
     {
         switch ($tag) {
             case 'DESCRIPTION':
-                $this->description = $value;
+                $this->description = (string) $value;
                 break;
             case 'IS64BITS':
-                $this->processoris64bits = (int) $value;
+                $this->processoris64bits = (bool) $value;
                 break;
             case 'VENDORSTRING':
-                $this->processorvendor = $value;
+                $this->processorvendor = (string) $value;
                 break;
             case 'VENDORID':
-                $this->processorvendorid = $value;
+                $this->processorvendorid = (string) $value;
                 break;
             case 'FAMILYID':
                 $this->processorfamilyid = (int) $value;

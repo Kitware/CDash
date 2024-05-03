@@ -193,4 +193,44 @@ type Site {
   latitude: Float!
 
   longitude: Float!
+
+  "Every edit of this site's information."
+  information: [SiteInformation!]! @hasMany(type: CONNECTION) @orderBy(column: "timestamp")
+
+  "The most recent information we have about this site."
+  # TODO: Figure out how to support the date parameter. Perhaps it would be better to use a scope instead.
+  mostRecentInformation: SiteInformation @hasOne
+}
+
+
+"Details about a site at a given point in time."
+type SiteInformation {
+  "Creation timestamp."
+  timestamp: DateTime!
+
+  processorIs64Bits: Boolean @rename(attribute: "processoris64bits")
+
+  processorVendor: String @rename(attribute: "processorvendor")
+
+  processorVendorId: String @rename(attribute: "processorvendorid")
+
+  processorFamilyId: Int @rename(attribute: "processorfamilyid")
+
+  processorModelId: Int @rename(attribute: "processormodelid")
+
+  processorCacheSize: Int @rename(attribute: "processorcachesize")
+
+  numberLogicalCpus: Int @rename(attribute: "numberlogicalcpus")
+
+  numberPhysicalCpus: Int @rename(attribute: "numberphysicalcpus")
+
+  totalVirtualMemory: Int @rename(attribute: "totalvirtualmemory")
+
+  totalPhysicalMemory: Int @rename(attribute: "totalphysicalmemory")
+
+  logicalProcessorsPerPhysical: Int @rename(attribute: "logicalprocessorsperphysical")
+
+  processorClockFrequency: Int @rename(attribute: "processorclockfrequency")
+
+  description: String
 }

@@ -1995,18 +1995,10 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 14
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: """
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 8
+			count: 7
 			path: app/Http/Controllers/SiteController.php
 
 		-
@@ -2014,7 +2006,7 @@ parameters:
 				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 6
+			count: 3
 			path: app/Http/Controllers/SiteController.php
 
 		-
@@ -2023,37 +2015,7 @@ parameters:
 			path: app/Http/Controllers/SiteController.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Cannot access offset 'ip' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Cannot access offset 'latitude' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Cannot access offset 'longitude' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/Http/Controllers/SiteController.php
-
-		-
 			message: "#^Cannot access offset 'name' on array\\|false\\|null\\.$#"
-			count: 4
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Cannot access offset 'outoforder' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Cannot access offset 0 on array\\|false\\.$#"
 			count: 1
 			path: app/Http/Controllers/SiteController.php
 
@@ -2064,7 +2026,12 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 3
+			count: 2
+			path: app/Http/Controllers/SiteController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasOne\\<App\\\\Models\\\\SiteInformation\\>\\:\\:first\\(\\)\\.$#"
+			count: 1
 			path: app/Http/Controllers/SiteController.php
 
 		-
@@ -2074,16 +2041,11 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 22
+			count: 2
 			path: app/Http/Controllers/SiteController.php
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:siteStatistics\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$description with no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/SiteController.php
 
@@ -2098,93 +2060,13 @@ parameters:
 			path: app/Http/Controllers/SiteController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$logicalprocessorsperphysical with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$longitude with no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/SiteController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$nonewrevision with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$numberlogicalcpus with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$numberphysicalcpus with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$outoforder with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$processorcachesize with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$processorclockfrequency with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$processorfamilyid with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$processoris64bits with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$processormodelid with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$processorvendor with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$processorvendorid with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$siteid with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$totalphysicalmemory with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:update_site\\(\\) has parameter \\$totalvirtualmemory with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
 			message: "#^Only booleans are allowed in a negated boolean, int given\\.$#"
-			count: 2
+			count: 1
 			path: app/Http/Controllers/SiteController.php
 
 		-
@@ -2203,28 +2085,8 @@ parameters:
 			path: app/Http/Controllers/SiteController.php
 
 		-
-			message: "#^Only numeric types are allowed in \\+, int\\|null given on the left side\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Parameter \\#1 \\$num of function round expects float\\|int, string given\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|false given\\.$#"
-			count: 3
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Variable \\$newdescription_revision might not be defined\\.$#"
-			count: 1
+			count: 2
 			path: app/Http/Controllers/SiteController.php
 
 		-
@@ -3124,21 +2986,6 @@ parameters:
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Models/Site.php
-
-		-
-			message: "#^Property App\\\\Models\\\\SiteInformation\\:\\:\\$description \\(string\\) does not accept int\\|string\\.$#"
-			count: 1
-			path: app/Models/SiteInformation.php
-
-		-
-			message: "#^Property App\\\\Models\\\\SiteInformation\\:\\:\\$processorvendor \\(string\\) does not accept int\\|string\\.$#"
-			count: 1
-			path: app/Models/SiteInformation.php
-
-		-
-			message: "#^Property App\\\\Models\\\\SiteInformation\\:\\:\\$processorvendorid \\(string\\) does not accept int\\|string\\.$#"
-			count: 1
-			path: app/Models/SiteInformation.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\SubProject\\>\\:\\:orWhere\\(\\)\\.$#"

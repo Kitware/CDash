@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use Illuminate\Support\Carbon;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class ProjectWebPageTestCase extends KWWebTestCase
@@ -189,7 +191,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $buildgroup = array_pop($jsonobj['buildgroups']);
         $siteid = $buildgroup['builds'][0]['siteid'];
 
-        $content = $this->connect($this->url . "/sites/$siteid?project=4&currenttime=1235354400");
+        $content = $this->connect($this->url . "/sites/$siteid?project=4&currenttime=" . Carbon::now()->getTimestamp());
         if (!$content) {
             return;
         } elseif (!$this->findString($content, '<b>Total Physical Memory: </b>15MiB<br />')) {
