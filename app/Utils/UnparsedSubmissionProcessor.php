@@ -83,7 +83,7 @@ class UnparsedSubmissionProcessor
         // Thus function will throw an exception if invalid data provided
         $this->parseBuildMetadata();
 
-        if ($this->checkDatabaseConnection()) {
+        if ($this->checkDatabaseConnection() && !app()->isDownForMaintenance()) {
             return $this->initializeBuild();
         }
 
@@ -215,7 +215,7 @@ class UnparsedSubmissionProcessor
         $this->parseDataFileParameters();
         $ext = pathinfo($this->backupfilename, PATHINFO_EXTENSION);
 
-        $db_up = $this->checkDatabaseConnection();
+        $db_up = $this->checkDatabaseConnection() && !app()->isDownForMaintenance();
         if ($db_up) {
             if (!is_numeric($this->buildid) || $this->buildid < 1) {
                 abort(Response::HTTP_NOT_FOUND, 'Build not found');
