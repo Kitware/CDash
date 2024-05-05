@@ -30,7 +30,7 @@ class Provider extends AbstractProvider
      */
     protected function getAuthUrl($state): string
     {
-        $auth_url = $this->buildAuthUrlFromBase($this->getInstanceUri().'/as/authorization.oauth2', $state);
+        $auth_url = $this->buildAuthUrlFromBase($this->getInstanceUri().$this->getAuthEndpoint(), $state);
         $auth_url .= "&acr_values=Single_Factor&prompt=login";
         return $auth_url;
     }
@@ -40,7 +40,7 @@ class Provider extends AbstractProvider
      */
     protected function getTokenUrl(): string
     {
-        return $this->getInstanceUri() . '/as/token.oauth2?acr_values=Single_Factor&prompt=login';
+        return $this->getInstanceUri() . $this->getTokenEndpoint() . '?acr_values=Single_Factor&prompt=login';
     }
 
     /**
@@ -53,6 +53,32 @@ class Provider extends AbstractProvider
             'name'     => $user['given_name'] . " " . $user['family_name'],
             'email'    => $user['email'],
         ]);
+    }
+
+    /**
+     * Get the URL fragment that represents the auth endpoint for the provider.
+     */
+    protected function getAuthEndpoint(): string
+    {
+        return $this->getConfig('auth_endpoint');
+    }
+
+
+    /**
+     * GGet the URL fragment that represents the token endpoint for the provider.
+     */
+    protected function getTokenEndpoint(): string
+    {
+        return $this->getConfig('token_endpoint');
+    }
+
+
+    /**
+     * Get the URL fragment that represents the user endpoint for the provider.
+     */
+    protected function getUserEndpoint(): string
+    {
+        return $this->getConfig('user_endpoint');
     }
 
     /**
@@ -71,7 +97,7 @@ class Provider extends AbstractProvider
      */
     protected function getUserByToken($token): array
     {
-        $response = $this->getHttpClient()->get($this->getInstanceUri() . '/idp/userinfo.openid', [
+        $response = $this->getHttpClient()->get($this->getInstanceUri() . $this->getUserEndpoint(), [
             RequestOptions::HEADERS => [
                 'Authorization' => "Bearer $token",
             ],
@@ -86,6 +112,6 @@ class Provider extends AbstractProvider
      */
     public static function additionalConfigKeys(): array
     {
-        return ['instance_uri'];
+        return ['instance_uri', 'auth_endpoint', 'token_endpoint', 'user_endpoint'];
     }
 }

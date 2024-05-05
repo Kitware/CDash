@@ -101,10 +101,13 @@ Begin by [creating OAuth2 client in your PingIdentity console](https://docs.ping
 
 | Variable | Description | Default |
 | -------- |------------ | ------- |
-| PINGIDENTITY_ENABLE | Whether or not to use Google as an OAuth2 provider. | false |
-| PINGIDENTITY_CLIENT_ID | The client ID from your Google OAuth2 credentials. | '' |
-| PINGIDENTITY_CLIENT_SECRET | The client secret from your Google OAuth2 credentials. | '' |
-| PINGIDENTITY_DOMAIN | The GitLab server to authenticate against. | https://auth.pingone.com/ |
+| PINGIDENTITY_ENABLE | Whether or not to use PingIdentity as an OAuth2 provider. | false |
+| PINGIDENTITY_CLIENT_ID | The client ID from your PingIdentity OAuth2 credentials. | '' |
+| PINGIDENTITY_CLIENT_SECRET | The client secret from your PingIdentity OAuth2 credentials. | '' |
+| PINGIDENTITY_DOMAIN | The PingIdentity server to authenticate against. | https://auth.pingone.com |
+| PINGIDENTITY_AUTH_ENDPOINT |  The URL fragment to the endpoint to ask for Authorization | '/as/authorization.oauth2' |
+| PINGIDENTITY_TOKEN_ENDPOINT | The URL fragment to the endpoint to ask for the Token | '/as/token.oauth2' |
+| PINGIDENTITY_USER_ENDPOINT | The URL fragment to the endpoint to ask for the user's information with the token | '/idp/userinfo.openid' |
 | PINGIDENTITY_AUTO_REGISTER_NEW_USERS | Whether to automatically register a new user or provide them the Registration form | false
 
 ## SAML2

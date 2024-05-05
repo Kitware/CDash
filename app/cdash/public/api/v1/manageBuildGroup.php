@@ -171,7 +171,7 @@ foreach ($buildgroups as $buildgroup) {
             $rule_response['match'] = $match;
 
             $siteid = $rule->SiteId;
-            if (empty($siteid)) {
+            if ((int) $siteid === 0) {
                 $rule_response['sitename'] = 'Any';
                 $rule_response['siteid'] = 0;
             } else {
@@ -185,7 +185,7 @@ foreach ($buildgroups as $buildgroup) {
                     }
                 }
                 if (!$found) {
-                    $site = Site::find($siteid);
+                    $site = Site::findOrFail((int) $siteid);
                     $rule_response['sitename'] = $site->name;
                 }
             }
