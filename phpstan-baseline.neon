@@ -3078,26 +3078,6 @@ parameters:
 			path: app/Providers/AuthServiceProvider.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$password\\.$#"
-			count: 1
-			path: app/Providers/CDashDatabaseUserProvider.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:save\\(\\)\\.$#"
-			count: 1
-			path: app/Providers/CDashDatabaseUserProvider.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/Providers/CDashDatabaseUserProvider.php
-
-		-
-			message: "#^Method App\\\\Providers\\\\CDashDatabaseUserProvider\\:\\:validateCredentials\\(\\) has parameter \\$credentials with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/Providers/CDashDatabaseUserProvider.php
-
-		-
 			message: "#^PHPDoc type array of property App\\\\Providers\\\\EventServiceProvider\\:\\:\\$listen is not the same as PHPDoc type array\\<string, array\\<int, string\\>\\> of overridden property Illuminate\\\\Foundation\\\\Support\\\\Providers\\\\EventServiceProvider\\:\\:\\$listen\\.$#"
 			count: 1
 			path: app/Providers/EventServiceProvider.php
@@ -23970,26 +23950,6 @@ parameters:
 			message: "#^Property RegisterUserTestCase\\:\\:\\$project is unused\\.$#"
 			count: 1
 			path: app/cdash/tests/test_registeruser.php
-
-		-
-			message: "#^Cannot access property \\$password on App\\\\Models\\\\User\\|null\\.$#"
-			count: 3
-			path: app/cdash/tests/test_rehashpassword.php
-
-		-
-			message: "#^Cannot call method save\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: app/cdash/tests/test_rehashpassword.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/tests/test_rehashpassword.php
-
-		-
-			message: "#^Method RehashPasswordTestCase\\:\\:testSubscribeProjectShowsLabels\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_rehashpassword.php
 
 		-
 			message: """
