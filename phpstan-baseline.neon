@@ -10434,7 +10434,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 9
+			count: 2
 			path: app/cdash/app/Model/User.php
 
 		-
@@ -10451,17 +10451,37 @@ parameters:
 			path: app/cdash/app/Model/User.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Password\\>\\:\\:offset\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/User.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Password\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/User.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/User.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Password\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/User.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Password\\>\\:\\:insert\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Model/User.php
+
+		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/app/Model/User.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 2
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\User\\:\\:GetIdFromName\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/User.php
 
@@ -25434,16 +25454,6 @@ parameters:
 			message: "#^Property UploadFileTestCase\\:\\:\\$Sha1Sum has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_uploadfile.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/tests/test_user.php
-
-		-
-			message: "#^Method UserTestCase\\:\\:testUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_user.php
 
 		-
 			message: """
