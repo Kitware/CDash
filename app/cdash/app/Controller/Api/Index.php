@@ -681,6 +681,7 @@ class Index extends ResultsApi
             $buildplatform = 'windows';
         } elseif (strtolower(substr($build_array['osname'], 0, 8)) === 'mac os x'
                 || strtolower(substr($build_array['osname'], 0, 5)) === 'macos'
+                || strtolower(substr($build_array['osname'], 0, 6)) === 'darwin'
         ) {
             $buildplatform = 'mac';
         } elseif (strtolower(substr($build_array['osname'], 0, 5)) === 'linux'
