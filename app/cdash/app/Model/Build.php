@@ -2839,20 +2839,8 @@ class Build
                 return;
             }
 
-            // Default values so we don't violate the non-null constraint if data is missing...
-            $this->Information->osname ??= '';
-            $this->Information->osplatform ??= '';
-            $this->Information->osrelease ??= '';
-            $this->Information->osversion ??= '';
-            $this->Information->compilername ??= 'unknown';
-            $this->Information->compilerversion ??= 'unknown';
-
             DB::transaction(function () {
-                $fieldsToUpdate = $this->Information->getFillable();
-                foreach (array_keys($fieldsToUpdate, 'buildid', true) as $key) {
-                    unset($fieldsToUpdate[$key]);
-                }
-                BuildInformation::upsert($this->Information->toArray(), ['buildid'], $fieldsToUpdate);
+                BuildInformation::upsert($this->Information->toArray(), ['buildid']);
             }, 5);
         }
     }
