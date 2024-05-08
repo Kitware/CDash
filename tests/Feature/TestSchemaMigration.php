@@ -21,6 +21,9 @@ class TestSchemaMigration extends TestCase
 
         // Rollback some migrations to drop the relevant tables.
         Artisan::call('migrate:rollback', [
+            '--path' => 'database/migrations/2024_04_17_183212_remove_test_table.php',
+            '--force' => true]);
+        Artisan::call('migrate:rollback', [
             '--path' => 'database/migrations/2020_02_17_112005_reformat_test_data.php',
             '--force' => true]);
         Artisan::call('migrate:rollback', [

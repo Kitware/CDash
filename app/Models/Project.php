@@ -223,14 +223,6 @@ class Project extends Model
     }
 
     /**
-     * @return HasMany<Test>
-     */
-    public function tests(): HasMany
-    {
-        return $this->hasMany(Test::class, 'projectid', 'id');
-    }
-
-    /**
      * Queries the sites which have submitted builds to this project.  A convenience method to
      * get sites from all builds in aggregate form.
      *

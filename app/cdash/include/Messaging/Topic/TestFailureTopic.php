@@ -16,9 +16,8 @@
 
 namespace CDash\Messaging\Topic;
 
+use App\Models\BuildTest;
 use Illuminate\Support\Collection;
-
-use App\Models\Test;
 
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
@@ -127,12 +126,12 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
      * topic's TestCollection.
      *
      * @param Build $build
-     * @param Test $item
+     * @param BuildTest $item
      * @return boolean
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
-        return $item->status === Test::FAILED;
+        return $item->status === BuildTest::FAILED;
     }
 
     /**
@@ -164,7 +163,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
     {
         $collection = $this->getTopicCollection();
         $buildtests = $build->GetTestCollection();
-        /** @var Test $buildtest */
+        /** @var BuildTest $buildtest */
         foreach ($buildtests as $test_name => $buildtest) {
             if ($this->itemHasTopicSubject($build, $buildtest)) {
                 $testLabels = $buildtest->getLabels();

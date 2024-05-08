@@ -15,7 +15,6 @@
  */
 
 use App\Models\BuildTest;
-use App\Models\Test;
 
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
@@ -51,27 +50,25 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
     {
         $sut = new TestFailureTopic();
         $build = new Build();
-        $test = new Test();
         $buildTest = new BuildTest();
-        $buildTest->test = $test;
 
         $build->AddTest($buildTest);
 
         $this->assertFalse($sut->itemHasTopicSubject($build, $buildTest));
 
-        $buildTest->status = Test::PASSED;
+        $buildTest->status = BuildTest::PASSED;
 
         $this->assertFalse($sut->itemHasTopicSubject($build, $buildTest));
 
-        $buildTest->status = Test::NOTRUN;
+        $buildTest->status = BuildTest::NOTRUN;
 
         $this->assertFalse($sut->itemHasTopicSubject($build, $buildTest));
 
-        $buildTest->details = Test::DISABLED;
+        $buildTest->details = BuildTest::DISABLED;
 
         $this->assertFalse($sut->itemHasTopicSubject($build, $buildTest));
 
-        $buildTest->status = Test::FAILED;
+        $buildTest->status = BuildTest::FAILED;
 
         $this->assertTrue($sut->itemHasTopicSubject($build, $buildTest));
     }
@@ -82,29 +79,21 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         $build = new Build();
 
         $passed = new BuildTest();
-        $passed->status = Test::PASSED;
-        $test1 = new Test();
-        $test1->name = 'Passed';
-        $passed->test = $test1;
+        $passed->status = BuildTest::PASSED;
+        $passed->testname = 'Passed';
 
         $failed = new BuildTest();
-        $failed->status = Test::FAILED;
-        $test2 = new Test();
-        $test2->name = 'Failed';
-        $failed->test = $test2;
+        $failed->status = BuildTest::FAILED;
+        $failed->testname = 'Failed';
 
         $notrun = new BuildTest();
-        $notrun->status = Test::NOTRUN;
-        $test3 = new Test();
-        $test3->name = 'NotRun';
-        $notrun->test = $test3;
+        $notrun->status = BuildTest::NOTRUN;
+        $notrun->testname = 'NotRun';
 
         $disabled = new BuildTest();
-        $disabled->status = Test::NOTRUN;
-        $disabled->details = Test::DISABLED;
-        $test4 = new Test();
-        $test4->name = 'Disabled';
-        $disabled->test = $test4;
+        $disabled->status = BuildTest::NOTRUN;
+        $disabled->details = BuildTest::DISABLED;
+        $disabled->testname = 'Disabled';
 
         $build
             ->AddTest($passed)
@@ -192,32 +181,26 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         // Create a test that has a label we're searching for but has passed, does not get added
         $labelForOne = new Label();
         $labelForOne->Text = 'One';
-        $test1 = new Test();
-        $test1->name = 'TestOne';
         $buildTestOne = new BuildTest();
-        $buildTestOne->status = Test::PASSED;
+        $buildTestOne->status = BuildTest::PASSED;
         $buildTestOne->addLabel($labelForOne);
-        $buildTestOne->test = $test1;
+        $buildTestOne->testname = 'TestOne';
 
         // Create a test that has failed but does not have a label we're searching for
         $labelForTwo = new Label();
         $labelForTwo->Text = 'Two';
-        $test2 = new Test();
-        $test2->name = 'TestTwo';
         $buildTestTwo = new BuildTest();
-        $buildTestTwo->status = Test::FAILED;
+        $buildTestTwo->status = BuildTest::FAILED;
         $buildTestTwo->addLabel($labelForTwo);
-        $buildTestTwo->test = $test2;
+        $buildTestTwo->testname = 'TestTwo';
 
         // Create a test that has failed and has a label that we're searching for
         $labelForThree = new Label();
         $labelForThree->Text = 'Three';
-        $test3 = new Test();
-        $test3->name = 'TestThree';
         $buildTestThree = new BuildTest();
-        $buildTestThree->status = Test::FAILED;
+        $buildTestThree->status = BuildTest::FAILED;
         $buildTestThree->addLabel($labelForThree);
-        $buildTestThree->test = $test3;
+        $buildTestThree->testname = 'TestThree';
 
         $build
             ->AddTest($buildTestOne)
@@ -240,7 +223,7 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         $sut->setTopicDataWithLabels($build, $lblCollection);
 
         $this->assertEquals(1, $collection->count());
-        $this->assertTrue($collection->has($test3->name));
+        $this->assertTrue($collection->has($buildTestThree->testname));
     }
 
     public function testGetLabelsFromBuild()
@@ -251,32 +234,26 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         // Create a test that has a label we're searching for but has passed, does not get added
         $labelForOne = new Label();
         $labelForOne->Text = 'One';
-        $test1 = new Test();
-        $test1->name = 'TestOne';
         $buildTestOne = new BuildTest();
-        $buildTestOne->status = Test::PASSED;
+        $buildTestOne->status = BuildTest::PASSED;
         $buildTestOne->addLabel($labelForOne);
-        $buildTestOne->test = $test1;
+        $buildTestOne->testname = 'TestOne';
 
         // Create a test that has failed but does not have a label we're searching for
         $labelForTwo = new Label();
         $labelForTwo->Text = 'Two';
-        $test2 = new Test();
-        $test2->name = 'TestTwo';
         $buildTestTwo = new BuildTest();
-        $buildTestTwo->status = Test::FAILED;
+        $buildTestTwo->status = BuildTest::FAILED;
         $buildTestTwo->addLabel($labelForTwo);
-        $buildTestTwo->test = $test2;
+        $buildTestTwo->testname = 'TestTwo';
 
         // Create a test that is not run and has a label that we're searching for
         $labelForThree = new Label();
         $labelForThree->Text = 'Three';
-        $test3 = new Test();
-        $test3->name = 'TestThree';
         $buildTestThree = new BuildTest();
-        $buildTestThree->status = Test::NOTRUN;
+        $buildTestThree->status = BuildTest::NOTRUN;
         $buildTestThree->addLabel($labelForThree);
-        $buildTestThree->test = $test3;
+        $buildTestThree->testname = 'TestThree';
 
         $collection = $sut->getLabelsFromBuild($build);
         $this->assertEquals(0, $collection->count());

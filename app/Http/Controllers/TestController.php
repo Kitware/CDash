@@ -25,8 +25,14 @@ final class TestController extends AbstractProjectController
     // Render the test details page.
     public function details($buildtest_id = null)
     {
-        $buildtest = BuildTest::findOrFail($buildtest_id);
-        $this->setProjectById($buildtest->test->projectid);
+        $buildtest = BuildTest::findOrFail((int) $buildtest_id);
+        $projectid = $buildtest->build?->projectid;
+
+        if ($projectid === null) {
+            abort(500, "Unable to find build associated with test $buildtest->id.");
+        }
+
+        $this->setProjectById($projectid);
         return view('test.details')
             ->with('title', 'Test Results')
             ->with('project', $this->project);
@@ -95,11 +101,7 @@ final class TestController extends AbstractProjectController
                               build.projectid = ?
                               AND build.starttime >= ?
                               AND build.starttime < ?
-                              AND build2test.testid IN (
-                                  SELECT id
-                                  FROM test
-                                  WHERE name = ?
-                              )
+                              AND build2test.testname = ?
                               AND (
                                   build2test.status <> 'passed'
                                   OR build2test.timestatus <> 0
@@ -206,19 +208,18 @@ final class TestController extends AbstractProjectController
         // Count how many extra test measurements we have.
         $getcolumnnumber = DB::select('
             SELECT testmeasurement.name
-            FROM test
-            JOIN build2test ON (build2test.testid = test.id)
+            FROM build2test
             JOIN build ON (build.id = build2test.buildid)
             JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
             JOIN measurement ON (
-                test.projectid=measurement.projectid
+                build.projectid=measurement.projectid
                 AND testmeasurement.name=measurement.name
             )
             WHERE
-                test.name=?
+                build2test.testname=?
                 AND build.starttime>=?
                 AND build.starttime<?
-                AND test.projectid=?
+                AND build.projectid=?
             GROUP by testmeasurement.name
         ', [$testName, $beginning_UTCDate, $end_UTCDate, intval($this->project->Id)]);
 
@@ -247,29 +248,27 @@ final class TestController extends AbstractProjectController
         if ($columncount > 0) {
             $etestquery = DB::select('
                 SELECT
-                    test.id,
-                    test.projectid,
+                    build.projectid,
                     build2test.buildid,
                     build2test.status,
                     build2test.timestatus,
-                    test.name,
+                    build2test.testname AS name,
                     testmeasurement.name,
                     testmeasurement.value,
                     build.starttime,
                     build2test.time
-                FROM test
-                JOIN build2test ON (build2test.testid = test.id)
+                FROM build2test
                 JOIN build ON (build.id = build2test.buildid)
                 JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
                 JOIN measurement ON (
-                    test.projectid = measurement.projectid
+                    build.projectid = measurement.projectid
                     AND testmeasurement.name = measurement.name
                 )
                 WHERE
-                    test.name=?
+                    build2test.testname=?
                     AND build.starttime >= ?
                     AND build.starttime < ?
-                    AND test.projectid = ?
+                    AND build.projectid = ?
                 ORDER BY
                     build2test.buildid,
                     testmeasurement.name
@@ -285,12 +284,11 @@ final class TestController extends AbstractProjectController
                 b2t.status,
                 b2t.time,
                 s.name AS sitename
-            FROM test AS t
-            LEFT JOIN build2test AS b2t ON (t.id = b2t.testid)
+            FROM build2test AS b2t
             LEFT JOIN build AS b ON (b.id = b2t.buildid)
             LEFT JOIN site AS s ON (s.id = b.siteid)
             WHERE
-                t.name = ?
+                b2t.testname = ?
                 AND b.projectid = ?
                 AND b.starttime BETWEEN ? AND ?
         ', [$testName, intval($this->project->Id), $beginning_UTCDate, $end_UTCDate]);
@@ -463,29 +461,27 @@ final class TestController extends AbstractProjectController
         if ($columncount > 0) {
             $etestquery = DB::select('
                 SELECT
-                    test.id,
-                    test.projectid,
+                    build.projectid,
                     build2test.buildid,
                     build2test.status,
                     build2test.timestatus,
-                    test.name,
+                    build2test.testname,
                     testmeasurement.name,
                     testmeasurement.value,
                     build.starttime,
                     build2test.time
-                FROM test
-                JOIN build2test ON (build2test.testid = test.id)
+                FROM build2test
                 JOIN build ON (build.id = build2test.buildid)
                 JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
                 JOIN measurement ON (
-                    test.projectid = measurement.projectid
+                    build.projectid = measurement.projectid
                     AND testmeasurement.name = measurement.name
                 )
                 WHERE
-                    test.name=?
+                    build2test.testname = ?
                     AND build.starttime >= ?
                     AND build.starttime < ?
-                    AND test.projectid = ?
+                    AND build.projectid = ?
                 ORDER BY
                     build2test.buildid,
                     testmeasurement.name
@@ -539,14 +535,10 @@ final class TestController extends AbstractProjectController
 
         $db = Database::getInstance();
 
-        $testid = request()->input('testid');
-        if (!is_numeric($testid)) {
-            abort(400, 'A valid test was not specified.');
-        }
-        $testid = (int) $testid;
+        $testname = request()->input('testname');
 
         $buildtest = BuildTest::where('buildid', '=', $buildid)
-            ->where('testid', '=', $testid)
+            ->where('testname', '=', $testname)
             ->first();
         if ($buildtest === null) {
             abort(404, 'test not found');

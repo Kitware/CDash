@@ -168,35 +168,32 @@ class TestCreator
      **/
     public function create(Build $build): void
     {
-        // Raw SQL makes this a bit faster than TestOutput:firstOrCreate.
-        $test_exists_results = DB::select(
-            'SELECT id FROM test WHERE projectid=? AND name=?',
-            [$this->projectid, $this->testName]);
-        if ($test_exists_results) {
-            $testid = $test_exists_results[0]->id;
-        } else {
-            DB::insert('INSERT INTO test (projectid, name) VALUES (:projectid, :name)', [
-                ':projectid' => $this->projectid,
-                ':name'      => $this->testName,
-            ]);
-            $testid = DB::getPdo()->lastInsertId();
-        }
+        $crc32 = $this->computeCrc32();
+
+        // TODO: Convert this to Eloquent
+        $outputid = DB::select('
+            SELECT testoutput.id AS id
+            FROM build
+            INNER JOIN build2test ON build2test.buildid = build.id
+            INNER JOIN testoutput ON testoutput.id = build2test.outputid
+            WHERE
+                build.projectid = ?
+                AND testoutput.crc32 = ?
+            LIMIT 1 -- There should theoretically only be at most one unique ID...
+        ', [
+            $this->projectid,
+            $crc32,
+        ]);
 
         // testoutput
-        $crc32 = $this->computeCrc32();
-        // As above, raw SQL for performance improvement.
-        $output_exists_results = DB::select(
-            'SELECT id FROM testoutput WHERE crc32=? AND testid=?',
-            [$crc32, $testid]);
-        if ($output_exists_results) {
-            $outputid = $output_exists_results[0]->id;
+        if (count($outputid) > 0) {
+            $outputid = $outputid[0]->id;
         } else {
             $this->compressOutput();
             DB::insert(
-                'INSERT INTO testoutput (testid, path, command, output, crc32)
-                VALUES (:testid, :path, :command, :output, :crc32)',
-                [':testid'  => $testid,
-                 ':path'    => $this->testPath,
+                'INSERT INTO testoutput (path, command, output, crc32)
+                VALUES (:path, :command, :output, :crc32)',
+                [':path'    => $this->testPath,
                  ':command' => $this->testCommand,
                  ':output'  => $this->testOutput,
                  ':crc32'   => $crc32]);
@@ -217,12 +214,11 @@ class TestCreator
         // build2test
         $buildtest = new BuildTest;
         $buildtest->buildid = $build->Id;
-        $buildtest->testid = $testid;
         $buildtest->outputid = $outputid;
         $buildtest->status = $this->testStatus;
         $buildtest->details = $this->testDetails;
-        // TODO: remove cast to string after we upgrade to Laravel 6.x.
         $buildtest->time = "$this->buildTestTime";
+        $buildtest->testname = $this->testName;
 
         // Note: the newstatus column is currently handled in
         // ctestparserutils::compute_test_difference. This gets updated when we call

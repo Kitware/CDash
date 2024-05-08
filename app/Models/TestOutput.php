@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -13,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $path
  * @property string $command
  * @property mixed $output  # binary data
- * @property int $testid
  *
  * @mixin Builder<TestOutput>
  */
@@ -24,7 +22,6 @@ class TestOutput extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'testid',
         'path',
         'command',
         'output',
@@ -34,17 +31,14 @@ class TestOutput extends Model
     protected $casts = [
         'id' => 'integer',
         'crc32' => 'integer',
-        'testid' => 'integer',
     ];
 
     /**
-     * Get the test record for this output.
-     *
-     * @return BelongsTo<Test, self>
+     * @return HasMany<BuildTest>
      */
-    public function test(): BelongsTo
+    public function buildTests(): HasMany
     {
-        return $this->belongsTo('App\Models\Test', 'testid');
+        return $this->hasMany(BuildTest::class, 'outputid');
     }
 
     /**

@@ -49,10 +49,10 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT b2t.id FROM test t
-            JOIN build2test b2t on b2t.testid = t.id
+            'SELECT b2t.id
+            FROM build2test b2t
             JOIN build b on b.id = b2t.buildid
-            WHERE b.id = ? AND t.name = ?');
+            WHERE b.id = ? AND b2t.testname = ?');
         pdo_execute($test_stmt, [$buildid, '//main:hello-good']);
         $buildtestid = $test_stmt->fetchColumn();
 
@@ -279,10 +279,10 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT b2t.id FROM test t
-            JOIN build2test b2t on b2t.testid = t.id
+            'SELECT b2t.id
+            FROM build2test b2t
             JOIN build b on b.id = b2t.buildid
-            WHERE b.id = ? AND t.name = ?');
+            WHERE b.id = ? AND b2t.testname = ?');
         pdo_execute($test_stmt, [$buildid, '//drake/bindings:pydrake_common_install_test']);
         $buildtestid = $test_stmt->fetchColumn();
 
@@ -335,10 +335,10 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT b2t.id FROM test t
-            JOIN build2test b2t on b2t.testid = t.id
+            'SELECT b2t.id
+            FROM build2test b2t
             JOIN build b on b.id = b2t.buildid
-            WHERE b.id = ? AND t.name = ?');
+            WHERE b.id = ? AND b2t.testname = ?');
         pdo_execute($test_stmt, [$buildid, '//drake/bindings:pydrake_common_install_test']);
         $buildtestid = $test_stmt->fetchColumn();
 
@@ -509,10 +509,10 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT b2t.id FROM test t
-            JOIN build2test b2t on b2t.testid = t.id
+            'SELECT b2t.id
+            FROM build2test b2t
             JOIN build b on b.id = b2t.buildid
-            WHERE b.id = ? AND t.name = ?');
+            WHERE b.id = ? AND b2t.testname = ?');
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_lanes_test']);
         $buildtestid = $test_stmt->fetchColumn();
 
@@ -565,10 +565,10 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT b2t.id FROM test t
-            JOIN build2test b2t on b2t.testid = t.id
+            'SELECT b2t.id
+            FROM build2test b2t
             JOIN build b on b.id = b2t.buildid
-            WHERE b.id = ? AND t.name = ?');
+            WHERE b.id = ? AND b2t.testname = ?');
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_builder_test']);
         $buildtestid = $test_stmt->fetchColumn();
 
@@ -597,10 +597,10 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup another specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT b2t.id FROM test t
-            JOIN build2test b2t on b2t.testid = t.id
+            'SELECT b2t.id
+            FROM build2test b2t
             JOIN build b on b.id = b2t.buildid
-            WHERE b.id = ? AND t.name = ?');
+            WHERE b.id = ? AND b2t.testname = ?');
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_lanes_test']);
         $buildtestid = $test_stmt->fetchColumn();
 
@@ -661,10 +661,10 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT b2t.id FROM test t
-            JOIN build2test b2t on b2t.testid = t.id
+            'SELECT b2t.id
+            FROM build2test b2t
             JOIN build b on b.id = b2t.buildid
-            WHERE b.id = ? AND t.name = ?');
+            WHERE b.id = ? AND b2t.testname = ?');
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_lanes_test']);
         $buildtestid = $test_stmt->fetchColumn();
 

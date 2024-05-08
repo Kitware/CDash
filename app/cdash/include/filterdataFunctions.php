@@ -447,7 +447,7 @@ class QueryTestsPhpFilters extends DefaultFilters
                 break;
 
             case 'testname': {
-                $sql_field = 'test.name';
+                $sql_field = 'build2test.testname';
             }
                 break;
 
@@ -609,7 +609,7 @@ class ViewTestPhpFilters extends DefaultFilters
                 break;
 
             case 'testname': {
-                $sql_field = 't.name';
+                $sql_field = 'bt.testname';
             }
                 break;
 
@@ -698,7 +698,7 @@ class TestOverviewPhpFilters extends DefaultFilters
                 $sql_field = 'sp.name';
                 break;
             case 'testname':
-                $sql_field = 't.name';
+                $sql_field = 'b2t.testname';
                 break;
             default:
                 trigger_error("unknown field: $field", E_USER_WARNING);

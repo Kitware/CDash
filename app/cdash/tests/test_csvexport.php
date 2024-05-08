@@ -21,8 +21,7 @@ class ExportToCSVTestCase extends KWWebTestCase
         $stmt = $pdo->prepare("
             SELECT b.id FROM build b
             JOIN build2test b2t ON b2t.buildid=b.id
-            JOIN test t ON t.id=b2t.testid
-            WHERE b.name='Win32-MSVC2009' AND t.name='curl'");
+            WHERE b.name='Win32-MSVC2009' AND b2t.testname='curl'");
         $stmt->execute();
         $row = $stmt->fetch();
         $buildid = $row['id'];

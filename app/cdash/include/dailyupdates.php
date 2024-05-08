@@ -1101,7 +1101,7 @@ function addDailyChanges(int $projectid): void
 
                 // Find if the build has any test failings
                 if ($project->EmailTestTimingChanged) {
-                    $sql = "SELECT count(testid) AS c
+                    $sql = "SELECT count(1) AS c
                             FROM build2test
                             WHERE
                                 buildid=?
@@ -1111,7 +1111,7 @@ function addDailyChanges(int $projectid): void
                                 )";
                     $params = [$buildid, intval($project->TestTimeMaxStatus)];
                 } else {
-                    $sql = "SELECT count(testid) AS c
+                    $sql = "SELECT count(1) AS c
                             FROM build2test
                             WHERE
                                 buildid=?
