@@ -88,8 +88,7 @@ mix.styles([
   'node_modules/bootstrap/dist/css/bootstrap.css',
   'node_modules/jquery-ui-dist/jquery-ui.css',
   'node_modules/nvd3/build/nv.d3.min.css',
-], 'public/build/css/3rdparty.css').version();
-mix.copy('node_modules/nvd3/build/nv.d3.min.css.map', 'public/build/css/nv.d3.min.css.map');
+], 'public/build/css/3rdparty.css').sourceMaps(true, 'source-map').version();
 
 // Concatenate and minify 3rd party javascript.
 mix.scripts([
@@ -113,8 +112,7 @@ mix.scripts([
   'node_modules/ng-file-upload/dist/ng-file-upload.js',
   'node_modules/nvd3/build/nv.d3.js',
   'public/js/ui-bootstrap-tpls-0.14.2.min.js',
-], 'public/js/3rdparty.min.js');
-mix.copy('node_modules/nvd3/build/nv.d3.js.map', 'public/js/nv.d3.js.map');
+], 'public/js/3rdparty.min.js').sourceMaps(true, 'source-map');
 
 // Concatenate and minify 1st party javascript.
 mix.scripts([
@@ -128,23 +126,30 @@ mix.scripts([
   'public/js/filters/**.js',
   'public/js/services/**.js',
   'public/js/controllers/**.js',
-], 'public/js/1stparty.min.js');
+], 'public/js/1stparty.min.js').sourceMaps(true, 'source-map');
 
 // Combine 1st and 3rd party into a single file.
 mix.scripts([
   'public/js/3rdparty.min.js',
   'public/js/1stparty.min.js',
-], `public/js/CDash_${version}.min.js`);
+], `public/js/CDash_${version}.min.js`).sourceMaps(true, 'source-map');
 
 // Copy jquery-ui images to public/css/images/
 mix.copyDirectory('node_modules/jquery-ui-dist/images', 'public/build/css/images');
 
 // Boilerplate.
-mix.js('resources/js/app.js', 'public/laravel/js').vue().version();
-mix.sass('resources/sass/app.scss', 'public/laravel/css').version();
+mix.js('resources/js/app.js', 'public/laravel/js')
+  .sourceMaps(true, 'source-map')
+  .vue()
+  .version();
+
+mix.sass('resources/sass/app.scss', 'public/laravel/css')
+  .sourceMaps(true, 'source-map')
+  .version();
 
 // Added this line to get mocha testing working with versioning.
-mix.copy('resources/js/app.js', 'public/main.js');
+mix.copy('resources/js/app.js', 'public/main.js')
+  .sourceMaps(true, 'source-map');
 
 mix.webpackConfig({
   plugins: webpack_plugins,
