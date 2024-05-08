@@ -67,7 +67,10 @@
     <div ng-if="cdash.requirelogin == 1" ng-include="'login'"></div>
     <div ng-if="cdash.requirelogin != 1" id="app">
 @else
-    <div id="app">
+    <div
+        id="app"
+        data-app-url="{{ url('/') }}"
+    >
 @endif
         @section('header')
             @include('components.header')
@@ -88,8 +91,6 @@
         @section('footer')
             @include('components.footer')
         @show
-
-        @yield('post_content_script')
     </div>
 </body>
 </html>

@@ -7,9 +7,9 @@ php artisan key:check || exit 1
 # If the "start-website" argument was provided, start the web server
 if [ "$1" = "start-website" ] ; then
   if [ "$DEVELOPMENT_BUILD" = "1" ]; then
-    bash /cdash/install.sh --dev
+    bash /cdash/install.sh --dev --initial-docker-install
   else
-    bash /cdash/install.sh
+    bash /cdash/install.sh --initial-docker-install
   fi
 
   echo "Starting Apache..."
