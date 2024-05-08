@@ -52,7 +52,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
     private BuildInformation $BuildInformation;
     private $BuildCommand;
     private $BuildGroup;
-    private $BuildLog;
     private $Labels;
     // Map SubProjects to Labels
     private $SubProjects;
@@ -68,7 +67,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
         parent::__construct($projectid);
         $this->Builds = [];
         $this->BuildCommand = '';
-        $this->BuildLog = '';
         $this->Labels = [];
         $this->SubProjects = [];
         $project = new Project();
@@ -196,7 +194,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                 }
                 $build->Append = $this->Append;
                 $build->Command = $this->BuildCommand;
-                $build->Log .= $this->BuildLog;
 
                 foreach ($this->Labels as $label) {
                     $build->AddLabel($label);
@@ -305,9 +302,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                     break;
                 case 'BUILDCOMMAND':
                     $this->BuildCommand = htmlspecialchars_decode($data);
-                    break;
-                case 'LOG':
-                    $this->BuildLog .= htmlspecialchars_decode($data);
                     break;
             }
         } elseif ($parent == 'ACTION') {

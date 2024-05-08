@@ -24,7 +24,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon $endtime
  * @property Carbon $submittime
  * @property string $command
- * @property string $log
  * @property int $configureerrors
  * @property int $configurewarnings
  * @property int $configureduration
@@ -63,7 +62,6 @@ class Build extends Model
         'endtime',
         'submittime',
         'command',
-        'log',
         'configureerrors',
         'configurewarnings',
         'configureduration',

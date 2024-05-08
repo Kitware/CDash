@@ -57,7 +57,6 @@ class Build
     public string $EndTime = '1980-01-01 00:00:00';
     public string $SubmitTime = '1980-01-01 00:00:00';
     public string $Command = '';
-    public string $Log = '';
     public BuildInformation $Information;
     public int $BuildErrorCount;
     public int $TestFailedCount;
@@ -1903,16 +1902,7 @@ class Build
             }
 
             if ($build->parentid !== -1) {
-                // If this is not a parent build, check if its log or command
-                // has changed.
-                if ($this->Log !== '' && $this->Log !== $build->log) {
-                    if (!empty($build->log)) {
-                        $log = $build->log . " " . $this->Log;
-                    } else {
-                        $log = $this->Log;
-                    }
-                    $fields_to_update['log'] = $log;
-                }
+                // If this is not a parent build, check if its command has changed.
                 if ($this->Command !== '' && $this->Command !== $build->command) {
                     if (!empty($build->command)) {
                         $command = $build->command . "; " . $this->Command;
@@ -2429,7 +2419,6 @@ class Build
                     'endtime'        => $this->EndTime,
                     'submittime'     => $this->SubmitTime,
                     'command'        => $this->Command,
-                    'log'            => $this->Log,
                     'builderrors'    => $nbuilderrors,
                     'buildwarnings'  => $nbuildwarnings,
                     'parentid'       => $this->ParentId,
