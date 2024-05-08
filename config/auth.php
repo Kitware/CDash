@@ -49,7 +49,7 @@ return [
 
         'api' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => env('CDASH_AUTHENTICATION_PROVIDER', 'users'),
         ],
     ],
 
@@ -66,13 +66,13 @@ return [
     | sources which represent each model / table. These sources may then
     | be assigned to any extra authentication guards you have defined.
     |
-    | Supported: "database", "cdash"
+    | Supported: "database", "eloquent"
     |
     */
 
     'providers' => [
         'users' => [
-            'driver' => 'cdash',
+            'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
 

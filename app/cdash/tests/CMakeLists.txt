@@ -533,11 +533,8 @@ set_tests_properties(commitauthornotification PROPERTIES DEPENDS putdynamicbuild
 add_php_test(subscribeprojectshowlabels)
 set_tests_properties(subscribeprojectshowlabels PROPERTIES DEPENDS commitauthornotification)
 
-add_php_test(rehashpassword)
-set_tests_properties(rehashpassword PROPERTIES DEPENDS subscribeprojectshowlabels)
-
 add_php_test(consistenttestingday)
-set_tests_properties(consistenttestingday PROPERTIES DEPENDS rehashpassword)
+set_tests_properties(consistenttestingday PROPERTIES DEPENDS subscribeprojectshowlabels)
 
 add_php_test(numericupdate)
 set_tests_properties(numericupdate PROPERTIES DEPENDS consistenttestingday)
