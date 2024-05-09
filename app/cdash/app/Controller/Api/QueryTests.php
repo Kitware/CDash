@@ -367,7 +367,7 @@ class QueryTests extends ResultsApi
                                 label2test
                             WHERE
                                 label.id=label2test.labelid
-                                AND label2test.outputid=test.id
+                                AND label2test.outputid=build2test.outputid
                                 AND label2test.buildid=b.id
                         ) AS labelstring
                         $output_select
