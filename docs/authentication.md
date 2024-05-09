@@ -25,31 +25,32 @@ You can add your own custom content to the login page by writing a
 
 ## LDAP
 
-Here is a sample `.env` configuration that allows CDash to authenticate against an LDAP server running on localhost for the `example.com` domain.
+Here is a sample `.env` configuration that allows CDash to authenticate against an LDAP server running on localhost for the `example.org` domain.
 
 ```
+LDAP_USERNAME=cn=admin,dc=example,dc=org
+LDAP_PASSWORD=password
 CDASH_AUTHENTICATION_PROVIDER=ldap
 LDAP_PROVIDER=openldap
-LDAP_HOSTS=ldap
+LDAP_HOST=ldap
 LDAP_BASE_DN="dc=example,dc=org"
 LDAP_LOGGING=true
+LDAP_LOCATE_USERS_BY=uid
 ```
 
 Here's a description of the `.env` variables involved in the LDAP authentication process.
 | Variable | Description | Default |
 | -------- |------------ | ------- |
 | CDASH_AUTHENTICATION_PROVIDER | Set this to `ldap` to enable CDash's LDAP authentication support. | users |
-| LDAP_BASE_DN | The base distinguished name you'd like to perform query operations on. | dc=corp,dc=acme,dc=org |
+| LDAP_BASE_DN | The base distinguished name you'd like to perform query operations on. | dc=local,dc=com |
 | LDAP_BIND_USERS_BY | The LDAP users attribute used for authentication | distinguishedname |
-| LDAP_EMAIL_ATTRIBUTE | The LDAP users attribute containing their email address | mail |
 | LDAP_FILTERS_ON | Additional LDAP query filters to restrict authorized user list. For example, to restrict users to a specific Active Directory group: `(memberOf=cn=myRescrictedGroup,cn=Users,dc=example,dc=com)` | false |
-| LDAP_GUID | The LDAP attribute name that contains your users object GUID. | '' |
-| LDAP_HOSTS | A space-separated list of LDAP servers (IP addresses or host names). | corp-dc1.corp.acme.org corp-dc2.corp.acme.org |
+| LDAP_HOST | The IP address or host name of your LDAP server. | 127.0.0.1 |
 | LDAP_LOCATE_USERS_BY | The LDAP users attribute used to locate your users. | mail |
 | LDAP_LOGGING | Whether or not to log LDAP activities. Useful for debugging. | true |
-| LDAP_PASSWORD | Password for account that can query and run operations on your LDAP server(s). | '' |
-| LDAP_PROVIDER | The type of LDAP server you are connecting to. Valid values are activedirectory, openldap, and freeipa. | openldap |
 | LDAP_USERNAME | Username for account that can query and run operations on your LDAP server(s). | '' |
+| LDAP_PASSWORD | Password for account that can query and run operations on your LDAP server(s). | '' |
+| LDAP_PROVIDER | The type of LDAP server you are connecting to. Valid values are activedirectory and openldap. | openldap |
 | LOGIN_FIELD | The label on the "user" field for the Login form ("Email" by default).  Change this if you're authenticating against something other than an email address in LDAP. | Email |
 
 ## OAuth2

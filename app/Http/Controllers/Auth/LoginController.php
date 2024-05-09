@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
+use LdapRecord\Laravel\Auth\ListensForLdapBindFailure;
 use Symfony\Component\HttpFoundation\Response;
 
 final class LoginController extends AbstractController
@@ -26,7 +27,10 @@ final class LoginController extends AbstractController
 
     use AuthenticatesUsers {
         login as traitLogin;
+        credentials as traitCredentials;
     }
+
+    use ListensForLdapBindFailure;
 
     /**
      * Where to redirect users after login.
@@ -43,6 +47,8 @@ final class LoginController extends AbstractController
         $this->middleware('guest')->except('logout');
         $this->maxAttempts = config('cdash.login.max_attempts', 5);
         $this->decayMinutes = config('cdash.login.lockout.duration', 1);
+
+        $this->listenForLdapBindFailure();
     }
 
     /**
@@ -61,6 +67,18 @@ final class LoginController extends AbstractController
         return $this->traitLogin($request);
     }
 
+    public function credentials(Request $request)
+    {
+        if (env('CDASH_AUTHENTICATION_PROVIDER', 'users') === 'ldap') {
+            return [
+                env('LDAP_LOCATE_USERS_BY', 'mail') => $request->post('email'),
+                'password' => $request->post('password'),
+                'fallback' => $this->traitCredentials($request),
+            ];
+        } else {
+            return $this->traitCredentials($request);
+        }
+    }
 
     /**
      * Get the failed login response instance.
@@ -88,7 +106,7 @@ final class LoginController extends AbstractController
 
     public function redirectTo(): string
     {
-        return  session('url.intended') ?? '/';
+        return session('url.intended') ?? '/';
     }
 
     public static function saml2Login() : Response|RedirectResponse

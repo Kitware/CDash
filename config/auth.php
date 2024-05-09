@@ -66,7 +66,7 @@ return [
     | sources which represent each model / table. These sources may then
     | be assigned to any extra authentication guards you have defined.
     |
-    | Supported: "database", "eloquent"
+    | Supported: "eloquent", "ldap"
     |
     */
 
@@ -78,13 +78,22 @@ return [
 
         'ldap' => [
             'driver' => 'ldap',
-            'model' => App\Models\User::class,
+            # Only openldap is tested
+            'model' => env('LDAP_PROVIDER', 'openldap') === 'activedirectory' ?
+                \LdapRecord\Models\ActiveDirectory\User::class : \LdapRecord\Models\OpenLDAP\User::class,
+            'rules' => [],
+            'scopes' => [],
+            'database' => [
+                'model' => App\Models\User::class,
+                'sync_passwords' => false,
+                'sync_attributes' => [
+                    'email' => env('LDAP_LOCATE_USERS_BY', 'mail'),
+                ],
+                'sync_existing' => [
+                    'email' => env('LDAP_LOCATE_USERS_BY', 'mail'),
+                ],
+            ],
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
