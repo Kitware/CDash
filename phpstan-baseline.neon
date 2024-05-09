@@ -2830,6 +2830,11 @@ parameters:
 			path: app/Listeners/ConfiguredSendEmailVerificationNotification.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\BasicBuildAlert\\>\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Models/Build.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Models/BuildTest.php
@@ -6969,7 +6974,7 @@ parameters:
 			path: app/cdash/app/Model/BuildError.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BuildError\\>\\:\\:orderBy\\(\\)\\.$#"
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BasicBuildAlert\\>\\:\\:orderBy\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildError.php
 

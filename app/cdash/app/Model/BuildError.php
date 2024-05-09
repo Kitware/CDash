@@ -18,7 +18,7 @@ namespace CDash\Model;
 use App\Utils\RepositoryUtils;
 
 use PDO;
-use App\Models\BuildError as EloquentBuildError;
+use App\Models\BasicBuildAlert;
 
 /** BuildError */
 class BuildError
@@ -54,7 +54,7 @@ class BuildError
             $crc32 = crc32($this->Text . $this->SourceFile . $this->SourceLine); // some warnings can be on the same line
         }
 
-        EloquentBuildError::create([
+        BasicBuildAlert::create([
             'buildid' => (int) $this->BuildId,
             'type' => $this->Type,
             'logline' => intval($this->LogLine),
@@ -79,7 +79,7 @@ class BuildError
             return false;
         }
 
-        $result = EloquentBuildError::where('buildid', $this->BuildId)
+        $result = BasicBuildAlert::where('buildid', $this->BuildId)
             ->orderBy('logline')
             ->get();
 

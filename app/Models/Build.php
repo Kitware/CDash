@@ -46,6 +46,9 @@ use Illuminate\Support\Carbon;
  */
 class Build extends Model
 {
+    public const TYPE_ERROR = 0;
+    public const TYPE_WARN = 1;
+
     protected $table = 'build';
 
     public $timestamps = false;
@@ -164,5 +167,31 @@ class Build extends Model
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class, 'siteid', 'id');
+    }
+
+    /**
+     * @return HasMany<BasicBuildAlert>
+     */
+    public function basicAlerts(): HasMany
+    {
+        return $this->hasMany(BasicBuildAlert::class, 'buildid');
+    }
+
+    /**
+     * @return HasMany<BasicBuildAlert>
+     */
+    public function basicErrors(): HasMany
+    {
+        return $this->basicAlerts()
+            ->where('type', self::TYPE_ERROR);
+    }
+
+    /**
+     * @return HasMany<BasicBuildAlert>
+     */
+    public function basicWarnings(): HasMany
+    {
+        return $this->basicAlerts()
+            ->where('type', self::TYPE_WARN);
     }
 }
