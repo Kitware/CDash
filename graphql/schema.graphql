@@ -176,32 +176,30 @@ type Build {
   "The site associated with this build."
   site: Site! @belongsTo
 
-  "A list of errors submitted for this build."
-  errors: [BuildError!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+  # TODO: Make an "errors" field which returns the union of basic and rich errors
+  """
+  A list of "basic" errors submitted for this build.
+  """
+  basicErrors: [BasicBuildAlert!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 
-  "A list of warnings submitted for this build."
-  warnings: [BuildError!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+  # TODO: Make a "warnings" field which returns the union of basic and rich warnings
+  """
+  A list of "basic" warnings submitted for this build.
+  """
+  basicWarnings: [BasicBuildAlert!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 
   # TODO: Figure out project relation.  project{build{project}} currently throws an error.
 }
 
 
-type BuildError {
-  logLine: Int! @rename(attribute: "logline")
+"""
+"Basic" alerts are warnings or errors scraped from the build log, as opposed to "rich" alerts which
+come from CTest launchers.  A given build should either have all "basic" alerts or all "rich" alerts.
+Users should take both types into account when querying the alerts for a given build.
 
-  text: String!
-
-  sourceFile: String! @rename(attribute: "sourcefile")
-
-  sourceLine: Int! @rename(attribute: "sourceline")
-
-  preContext: String @rename(attribute: "precontext")
-
-  postContext: String @rename(attribute: "postcontext")
-}
-
-
-type BuildWarning {
+https://cmake.org/cmake/help/latest/manual/ctest.1.html#ctest-build-step
+"""
+type BasicBuildAlert {
   logLine: Int! @rename(attribute: "logline")
 
   text: String!

@@ -174,18 +174,26 @@ class Build extends Model
     /**
      * @return HasMany<BasicBuildAlert>
      */
-    public function errors(): HasMany
+    public function basicAlerts(): HasMany
     {
-        return $this->hasMany(BasicBuildAlert::class, 'buildid')
+        return $this->hasMany(BasicBuildAlert::class, 'buildid');
+    }
+
+    /**
+     * @return HasMany<BasicBuildAlert>
+     */
+    public function basicErrors(): HasMany
+    {
+        return $this->basicAlerts()
             ->where('type', self::TYPE_ERROR);
     }
 
     /**
      * @return HasMany<BasicBuildAlert>
      */
-    public function warnings(): HasMany
+    public function basicWarnings(): HasMany
     {
-        return $this->hasMany(BasicBuildAlert::class, 'buildid')
+        return $this->basicAlerts()
             ->where('type', self::TYPE_WARN);
     }
 }

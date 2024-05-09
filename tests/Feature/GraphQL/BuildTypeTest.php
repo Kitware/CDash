@@ -129,7 +129,7 @@ class BuildTypeTest extends TestCase
         ], true);
     }
 
-    public function testNoWarningsOrErrorsReturnsEmptyArray(): void
+    public function testNoBasicWarningsOrBasicErrorsReturnsEmptyArray(): void
     {
         $this->project->builds()->create([
             'name' => 'build1',
@@ -143,14 +143,14 @@ class BuildTypeTest extends TestCase
                         edges {
                             node {
                                 name
-                                warnings {
+                                basicWarnings {
                                     edges {
                                         node {
                                             text
                                         }
                                     }
                                 }
-                                errors {
+                                basicErrors {
                                     edges {
                                         node {
                                             text
@@ -172,10 +172,10 @@ class BuildTypeTest extends TestCase
                             [
                                 'node' => [
                                     'name' => 'build1',
-                                    'warnings' => [
+                                    'basicWarnings' => [
                                         'edges' => [],
                                     ],
-                                    'errors' => [
+                                    'basicErrors' => [
                                         'edges' => [],
                                     ],
                                 ],
@@ -193,7 +193,7 @@ class BuildTypeTest extends TestCase
             'name' => 'build1',
             'uuid' => Str::uuid()->toString(),
         ]);
-        $build->warnings()->create([
+        $build->basicAlerts()->create([
             'type' => Build::TYPE_WARN,
             'logline' => 5,
             'text' => 'def',
@@ -210,7 +210,7 @@ class BuildTypeTest extends TestCase
                         edges {
                             node {
                                 name
-                                warnings {
+                                basicWarnings {
                                     edges {
                                         node {
                                             logLine
@@ -222,7 +222,7 @@ class BuildTypeTest extends TestCase
                                         }
                                     }
                                 }
-                                errors {
+                                basicErrors {
                                     edges {
                                         node {
                                             text
@@ -244,7 +244,7 @@ class BuildTypeTest extends TestCase
                             [
                                 'node' => [
                                     'name' => 'build1',
-                                    'warnings' => [
+                                    'basicWarnings' => [
                                         'edges' => [
                                             [
                                                 'node' => [
@@ -258,7 +258,7 @@ class BuildTypeTest extends TestCase
                                             ],
                                         ],
                                     ],
-                                    'errors' => [
+                                    'basicErrors' => [
                                         'edges' => [],
                                     ],
                                 ],
@@ -276,7 +276,7 @@ class BuildTypeTest extends TestCase
             'name' => 'build1',
             'uuid' => Str::uuid()->toString(),
         ]);
-        $build->warnings()->create([
+        $build->basicAlerts()->create([
             'type' => Build::TYPE_ERROR,
             'logline' => 5,
             'text' => 'def',
@@ -293,14 +293,14 @@ class BuildTypeTest extends TestCase
                         edges {
                             node {
                                 name
-                                warnings {
+                                basicWarnings {
                                     edges {
                                         node {
                                             text
                                         }
                                     }
                                 }
-                                errors {
+                                basicErrors {
                                     edges {
                                         node {
                                             logLine
@@ -327,10 +327,10 @@ class BuildTypeTest extends TestCase
                             [
                                 'node' => [
                                     'name' => 'build1',
-                                    'warnings' => [
+                                    'basicWarnings' => [
                                         'edges' => [],
                                     ],
-                                    'errors' => [
+                                    'basicErrors' => [
                                         'edges' => [
                                             [
                                                 'node' => [
@@ -353,7 +353,7 @@ class BuildTypeTest extends TestCase
         ]);
     }
 
-    public function testMultipleWarningsAndErrors(): void
+    public function testMultipleBasicWarningsAndBasicErrors(): void
     {
         $build = $this->project->builds()->create([
             'name' => 'build1',
@@ -370,8 +370,8 @@ class BuildTypeTest extends TestCase
                 'text' => Str::uuid()->toString(),
             ];
 
-            $build->warnings()->create(array_merge($warning, ['type' => Build::TYPE_WARN]));
-            $build->errors()->create(array_merge($error, ['type' => Build::TYPE_ERROR]));
+            $build->basicAlerts()->create(array_merge($warning, ['type' => Build::TYPE_WARN]));
+            $build->basicAlerts()->create(array_merge($error, ['type' => Build::TYPE_ERROR]));
 
             $warnings[] = [
                 'node' => $warning,
@@ -388,14 +388,14 @@ class BuildTypeTest extends TestCase
                         edges {
                             node {
                                 name
-                                warnings {
+                                basicWarnings {
                                     edges {
                                         node {
                                             text
                                         }
                                     }
                                 }
-                                errors {
+                                basicErrors {
                                     edges {
                                         node {
                                             text
@@ -417,10 +417,10 @@ class BuildTypeTest extends TestCase
                             [
                                 'node' => [
                                     'name' => 'build1',
-                                    'warnings' => [
+                                    'basicWarnings' => [
                                         'edges' => array_reverse($warnings),
                                     ],
-                                    'errors' => [
+                                    'basicErrors' => [
                                         'edges' => array_reverse($errors),
                                     ],
                                 ],
