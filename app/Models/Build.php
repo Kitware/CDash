@@ -172,20 +172,20 @@ class Build extends Model
     }
 
     /**
-     * @return HasMany<BuildError>
+     * @return HasMany<BasicBuildAlert>
      */
     public function errors(): HasMany
     {
-        return $this->hasMany(BuildError::class, 'buildid')
+        return $this->hasMany(BasicBuildAlert::class, 'buildid')
             ->where('type', self::TYPE_ERROR);
     }
 
     /**
-     * @return HasMany<BuildError>
+     * @return HasMany<BasicBuildAlert>
      */
     public function warnings(): HasMany
     {
-        return $this->hasMany(BuildError::class, 'buildid')
+        return $this->hasMany(BasicBuildAlert::class, 'buildid')
             ->where('type', self::TYPE_WARN);
     }
 }

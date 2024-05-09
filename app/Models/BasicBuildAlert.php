@@ -19,9 +19,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $crc32
  * @property boolean $newstatus
  *
- * @mixin Builder<BuildError>
+ * @mixin Builder<BasicBuildAlert>
  */
-class BuildError extends Model
+class BasicBuildAlert extends Model
 {
     protected $table = 'builderror';
 
