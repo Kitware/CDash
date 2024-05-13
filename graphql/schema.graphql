@@ -72,6 +72,12 @@ type Project {
     filters: _ @filter(inputType: "BuildFilterInput")
   ): [Build!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
 
+  """
+  The most recent build submitted to this server.  Note: this is determined by
+  submission time, not build start time.
+  """
+  mostRecentBuild: Build @hasOne
+
   "The sites which have submitted a build to this project."
   sites(
     filters: _ @filter(inputType: "SiteFilterInput")

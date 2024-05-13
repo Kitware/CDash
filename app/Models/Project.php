@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Auth;
@@ -214,6 +215,16 @@ class Project extends Model
                 $query->where('parentid', 0)
                     ->orWhere('parentid', -1);
             });
+    }
+
+    /**
+     * @return HasOne<Build>
+     */
+    public function mostRecentBuild(): HasOne
+    {
+        return $this->builds()
+            ->one()
+            ->ofMany(['submittime' => 'max']);
     }
 
     /**
