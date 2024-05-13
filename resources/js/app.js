@@ -5,7 +5,14 @@
  */
 
 import * as Vue from 'vue';
+
 import axios from 'axios';
+
+import { ApolloClient, InMemoryCache } from '@apollo/client/core';
+import { createApolloProvider } from '@vue/apollo-option';
+import VueApolloComponents from '@vue/apollo-components';
+import { relayStylePagination } from '@apollo/client/utilities';
+import { DefaultApolloClient } from '@vue/apollo-composable';
 
 import BuildConfigure from './components/BuildConfigure';
 import BuildNotes from './components/BuildNotes';
@@ -76,6 +83,27 @@ else {
 }
 
 app.config.globalProperties.$axios = axios;
+
+const apolloClient = new ApolloClient({
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          projects: relayStylePagination(),
+        },
+      },
+    },
+  }),
+  uri: `${app.config.globalProperties.$baseURL}/graphql`,
+});
+
+const apolloProvider = createApolloProvider({
+  defaultClient: apolloClient,
+});
+
+app.use(apolloProvider);
+app.use(VueApolloComponents);
+app.provide(DefaultApolloClient, apolloClient);
 
 window.Vue = Vue;
 app.mount('#app');
