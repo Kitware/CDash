@@ -198,8 +198,10 @@ final class CoverageController extends AbstractBuildController
                             $xml .= add_XML_value('warning', '*File not found for: ' . $file);
                         } else {
                             foreach ($authors as $author) {
-                                $User = new User;
-                                $CoverageFile2User->UserId = $User->GetIdFromName($author);
+                                $User = User::where('firstname', $author)
+                                    ->orWhere('lastname', $author)
+                                    ->first();
+                                $CoverageFile2User->UserId = $User->id ?? false;
                                 if ($CoverageFile2User->UserId === false) {
                                     $xml .= add_XML_value('warning', '*User not found for: ' . $author);
                                 } else {

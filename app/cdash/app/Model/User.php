@@ -15,8 +15,9 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use App\Models\Password;
 use CDash\Database;
-use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 
 class User
 {
@@ -28,7 +29,7 @@ class User
     public $Institution;
     public $Admin;
     private $Filled;
-    public $TableName;
+    private $TableName;
     private $PDO;
     private $Credentials;
     private $LabelCollection;
@@ -50,7 +51,7 @@ class User
     }
 
     /** Return if a user exists */
-    public function Exists(): bool
+    private function Exists(): bool
     {
         if (!$this->Id) {
             // If no id is set check if a user with this email address exists.
@@ -67,20 +68,14 @@ class User
             return false;
         }
 
-        $stmt = $this->PDO->prepare(
-            "SELECT COUNT(*) FROM $this->TableName WHERE id = :id OR
-            (firstname = :firstname AND lastname = :lastname)");
-        $stmt->bindParam(':id', $this->Id);
-        $stmt->bindParam(':firstname', $this->FirstName);
-        $stmt->bindParam(':lastname', $this->LastName);
-        pdo_execute($stmt);
-        if ($stmt->fetchColumn() > 0) {
-            return true;
-        }
-        return false;
+        return \App\Models\User::where('id', (int) $this->Id)
+            ->orWhere([
+                ['firstname', $this->FirstName],
+                ['lastname', $this->LastName],
+            ])->exists();
     }
 
-    // Save the user in the database
+    /** Save the user in the database */
     public function Save()
     {
         if (empty($this->Admin)) {
@@ -113,72 +108,42 @@ class User
         } else {
             // insert
 
-            $id = '';
-            $idvalue = '';
             if ($this->Id) {
-                $id = 'id, ';
-                $idvalue = ':id, ';
+                throw new InvalidArgumentException('Id set before user insert operation.');
             }
 
             $stmt = $this->PDO->prepare(
                 "INSERT INTO $this->TableName
-                ($id email, password, firstname, lastname, institution, admin)
-                VALUES ($idvalue :email, :password, :firstname, :lastname, :institution, :admin)");
+                (email, password, firstname, lastname, institution, admin)
+                VALUES (:email, :password, :firstname, :lastname, :institution, :admin)");
             $stmt->bindParam(':email', $this->Email);
             $stmt->bindParam(':password', $this->Password);
             $stmt->bindParam(':firstname', $this->FirstName);
             $stmt->bindParam(':lastname', $this->LastName);
             $stmt->bindParam(':institution', $this->Institution);
             $stmt->bindParam(':admin', $this->Admin);
-            if ($this->Id) {
-                $stmt->bindParam(':id', $this->Id);
-            }
 
             if (!pdo_execute($stmt)) {
                 return false;
             }
 
-            if (!$this->Id) {
-                $this->Id = pdo_insert_id('user');
-            }
+            $this->Id = pdo_insert_id('user');
             $this->RecordPassword();
         }
         return true;
     }
 
-    /** Get the password */
+    /** Get the password.  Assumes the user exists. */
     private function GetPassword(): string|false
     {
         if (!$this->Id) {
             return false;
         }
 
-        $stmt = $this->PDO->prepare(
-            "SELECT password FROM $this->TableName WHERE id = ?");
-        pdo_execute($stmt, [$this->Id]);
-        $row = $stmt->fetch();
-        return $row['password'];
+        return \App\Models\User::findOrFail((int) $this->Id)->password;
     }
 
-    /** Get the user id from the name */
-    public function GetIdFromName($name): int|false
-    {
-        $stmt = $this->PDO->prepare(
-            "SELECT id FROM $this->TableName
-            WHERE firstname = :name OR lastname = :name");
-        $stmt->bindParam(':name', $name);
-        if (!pdo_execute($stmt)) {
-            return false;
-        }
-
-        $row = $stmt->fetch();
-        if (!$row) {
-            return false;
-        }
-        return intval($row['id']);
-    }
-
-    /** Load this user's details from the datbase. */
+    /** Load this user's details from the database. */
     public function Fill(): bool
     {
         if (!$this->Id) {
@@ -189,26 +154,18 @@ class User
             return false;
         }
 
-        $stmt = $this->PDO->prepare(
-            "SELECT email, password, firstname, lastname, institution, admin
-            FROM $this->TableName WHERE id = ?");
-        if (!pdo_execute($stmt, [$this->Id])) {
-            return false;
-        }
-        $row = $stmt->fetch();
-        if (!$row || !array_key_exists('password', $row)) {
+        $model = \App\Models\User::find((int) $this->Id);
+
+        if ($model === null) {
             return false;
         }
 
-        $this->Email = $row['email'];
-        $this->Password = $row['password'];
-        $this->FirstName = $row['firstname'];
-        $this->LastName = $row['lastname'];
-        $this->Institution = $row['institution'];
-        $this->Admin = 0;
-        if ($row['admin'] == 1) {
-            $this->Admin = 1;
-        }
+        $this->Email = $model->email;
+        $this->Password = $model->password;
+        $this->FirstName = $model->firstname;
+        $this->LastName = $model->lastname;
+        $this->Institution = $model->institution;
+        $this->Admin = $model->admin ? 1 : 0;
 
         $this->Filled = true;
         return true;
@@ -223,38 +180,32 @@ class User
             return;
         }
 
-        $now = gmdate(FMT_DATETIME);
-        // Insert a row in the password table for this new password.
-        $stmt = $this->PDO->prepare(
-            'INSERT INTO password(userid, password, date)
-            VALUES (:userid, :password, :date)');
-        $stmt->bindParam(':userid', $this->Id);
-        $stmt->bindParam(':password', $this->Password);
-        $stmt->bindParam(':date', $now);
-        pdo_execute($stmt);
+        $user_passwords = \App\Models\User::findOrFail((int) $this->Id)->passwords();
+        $user_passwords->insert([
+            'userid' => (int) $this->Id,
+            'password' => $this->Password,
+        ]);
+
 
         $unique_password_limit = config('cdash.password.unique');
         if ($unique_password_limit > 0) {
             // Delete old records for this user if they have more than
             // our limit.
             // Check if there are too many old passwords for this user.
-            $stmt = $this->PDO->prepare(
-                'SELECT COUNT(*) AS numrows FROM password WHERE userid = ?');
-            pdo_execute($stmt, [$this->Id]);
-            $num_rows = $stmt->fetchColumn();
-            if ($num_rows > $unique_password_limit) {
+            if ($user_passwords->count() > $unique_password_limit) {
                 // If so, get the cut-off date so we can delete the rest.
-                $offset = $unique_password_limit - 1;
-                $stmt = $this->PDO->prepare(
-                    "SELECT date FROM password
-                    WHERE userid = ?
-                    ORDER BY date DESC
-                    LIMIT 1 OFFSET $offset");
-                pdo_execute($stmt, [$this->Id]);
-                $row = $stmt->fetch();
-                $cutoff = $row['date'];
+                // TODO: This could be simplified into a single query.
+                $cutoff = Password::where('userid', (int) $this->Id)
+                    ->orderBy('date', 'desc')
+                    ->offset((int) $unique_password_limit - 1)
+                    ->firstOrFail()
+                    ->date;
+
                 // Then delete the ones that are too old
-                DB::delete('DELETE FROM password WHERE userid = ? AND date < ?', [$this->Id, $cutoff]);
+                Password::where([
+                    ['userid', '=', (int) $this->Id],
+                    ['date', '<', $cutoff],
+                ])->delete();
             }
         }
     }

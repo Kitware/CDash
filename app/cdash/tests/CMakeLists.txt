@@ -317,11 +317,8 @@ set_tests_properties(testoverview PROPERTIES DEPENDS testenv)
 add_php_test(userstatistics)
 set_tests_properties(userstatistics PROPERTIES DEPENDS testoverview)
 
-add_php_test(user)
-set_tests_properties(user PROPERTIES DEPENDS userstatistics)
-
 add_php_test(viewconfigure)
-set_tests_properties(viewconfigure PROPERTIES DEPENDS user)
+set_tests_properties(viewconfigure PROPERTIES DEPENDS testoverview)
 
 add_php_test(viewdynamicanalysis)
 set_tests_properties(viewdynamicanalysis PROPERTIES DEPENDS viewconfigure)
