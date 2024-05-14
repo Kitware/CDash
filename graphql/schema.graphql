@@ -15,7 +15,7 @@ type Query {
 
   "List the projects available to the current user."
   projects(
-    id: ID @in
+    filters: _ @filter(inputType: "ProjectFilterInput")
   ): [Project!]! @paginate(scopes: ["forUser"], type: CONNECTION) @orderBy(column: "id")
 }
 
@@ -103,6 +103,12 @@ input CreateProjectInput {
 
   "A boolean indicating whether authenticated submissions are required."
   authenticateSubmissions: Boolean! @rename(attribute: "authenticatesubmissions") @rules(attribute: "authenticatesubmissions", apply: ["App\\Rules\\ProjectAuthenticateSubmissions"])
+}
+
+input ProjectFilterInput {
+  id: ID
+  name: String
+  visibility: ProjectVisibility @rename(attribute: "public")
 }
 
 
