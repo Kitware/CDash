@@ -35,7 +35,7 @@ LDAP_PROVIDER=openldap
 LDAP_HOST=ldap
 LDAP_BASE_DN="dc=example,dc=org"
 LDAP_LOGGING=true
-LDAP_LOCATE_USERS_BY=uid
+LDAP_LOCATE_USERS_BY=mail
 ```
 
 Here's a description of the `.env` variables involved in the LDAP authentication process.
