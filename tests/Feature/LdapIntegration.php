@@ -5,6 +5,9 @@ namespace Tests\Feature;
 use App\Models\User;
 use Tests\TestCase;
 
+/**
+ * Tests in this file connect to a live LDAP server running in the development environment.
+ */
 class LdapIntegration extends TestCase
 {
     protected function setUp() : void
@@ -37,9 +40,6 @@ class LdapIntegration extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * Connects to a live LDAP server running in the development environment.
-     */
     public function testLiveLdapLogin(): void
     {
         User::where('email', 'ldapuser01')->delete();
@@ -58,5 +58,43 @@ class LdapIntegration extends TestCase
 
         // Ensure the user was actually created in the database, and then clean it up
         User::where(['email' => 'ldapuser01'])->firstOrFail()->delete();
+    }
+
+    public function testLiveLdapLoginWithFilters(): void
+    {
+        User::where('email', 'ldapuser01')->delete();
+        User::where('email', 'ldapuser02')->delete();
+
+        // Make sure we can log in with both users
+        $this->post('/login', [
+            'email' => 'ldapuser01',
+            'password' => 'password1',
+        ])->assertRedirect('/');
+        $this->get('/logout')->assertRedirect('/');
+        $this->post('/login', [
+            'email' => 'ldapuser02',
+            'password' => 'password2',
+        ])->assertRedirect('/');
+        $this->get('/logout')->assertRedirect('/');
+
+        User::where(['email' => 'ldapuser01'])->firstOrFail()->delete();
+        User::where(['email' => 'ldapuser02'])->firstOrFail()->delete();
+
+        putenv('LDAP_FILTERS_ON=cn=ldapuser01');
+        $this->post('/login', [
+            'email' => 'ldapuser01',
+            'password' => 'password1',
+        ])->assertRedirect('/');
+        $this->get('/logout')->assertRedirect('/');
+        $this->post('/login', [
+            'email' => 'ldapuser02',
+            'password' => 'password2',
+        ])->assertUnauthorized();
+
+        // "Delete" the env variable
+        putenv('LDAP_FILTERS_ON');
+
+        User::where(['email' => 'ldapuser01'])->firstOrFail()->delete();
+        self::assertCount(0, User::where(['email' => 'ldapuser02'])->get());
     }
 }

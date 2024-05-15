@@ -81,7 +81,9 @@ return [
             # Only openldap is tested
             'model' => env('LDAP_PROVIDER', 'openldap') === 'activedirectory' ?
                 \LdapRecord\Models\ActiveDirectory\User::class : \LdapRecord\Models\OpenLDAP\User::class,
-            'rules' => [],
+            'rules' => [
+                \App\Ldap\Rules\FilterRules::class,
+            ],
             'scopes' => [],
             'database' => [
                 'model' => App\Models\User::class,
