@@ -3083,16 +3083,6 @@ parameters:
 			path: app/Providers/ViewServiceProvider.php
 
 		-
-			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 1
-			path: app/Rules/LdapFilterRules.php
-
-		-
-			message: "#^Parameter \\#1 \\$dn of method Adldap\\\\Connections\\\\ConnectionInterface\\:\\:search\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: app/Rules/LdapFilterRules.php
-
-		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\AuthToken\\>\\:\\:leftJoin\\(\\)\\.$#"
 			count: 3
 			path: app/Utils/AuthTokenUtil.php
@@ -29287,26 +29277,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Mockery\\\\Expectation\\:\\:shouldReceive\\(\\)\\.$#"
-			count: 3
-			path: tests/Feature/LdapAuthWithRulesTest.php
-
-		-
-			message: "#^Method Tests\\\\Feature\\\\LdapAuthWithRulesTest\\:\\:testLdapAuthentication\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: tests/Feature/LdapAuthWithRulesTest.php
-
-		-
-			message: "#^Method Tests\\\\Feature\\\\LdapAuthWithRulesTest\\:\\:testLdapAuthenticationRulesGivenDnDoesNotMatch\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: tests/Feature/LdapAuthWithRulesTest.php
-
-		-
-			message: "#^Method Tests\\\\Feature\\\\LdapAuthWithRulesTest\\:\\:testLdapAuthenticationRulesGivenDnMatch\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: tests/Feature/LdapAuthWithRulesTest.php
-
-		-
-			message: "#^Call to an undefined method Mockery\\\\Expectation\\:\\:shouldReceive\\(\\)\\.$#"
 			count: 1
 			path: tests/Feature/LoginAndRegistration.php
 
@@ -29354,21 +29324,6 @@ parameters:
 			message: "#^Property Tests\\\\Feature\\\\MigrateConfigCommand\\:\\:\\$test_file has no type specified\\.$#"
 			count: 1
 			path: tests/Feature/MigrateConfigCommand.php
-
-		-
-			message: "#^Call to an undefined method Mockery\\\\Expectation\\:\\:shouldReceive\\(\\)\\.$#"
-			count: 1
-			path: tests/Feature/OpenLdapAuthWithOverrides.php
-
-		-
-			message: "#^Method Tests\\\\Feature\\\\OpenLdapAuthWithOverrides\\:\\:testLdapAuthenticationCustomLocater\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: tests/Feature/OpenLdapAuthWithOverrides.php
-
-		-
-			message: "#^Method Tests\\\\Feature\\\\OpenLdapAuthWithOverrides\\:\\:testOpenLdapUnmodifiedGuid\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: tests/Feature/OpenLdapAuthWithOverrides.php
 
 		-
 			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
@@ -29449,21 +29404,6 @@ parameters:
 			message: "#^Property Tests\\\\Feature\\\\UserCommand\\:\\:\\$user has no type specified\\.$#"
 			count: 1
 			path: tests/Feature/UserCommand.php
-
-		-
-			message: "#^Method Tests\\\\LdapTest\\:\\:makeLdapUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: tests/LdapTest.php
-
-		-
-			message: "#^Method Tests\\\\LdapTest\\:\\:makeLdapUser\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: tests/LdapTest.php
-
-		-
-			message: "#^Method Tests\\\\LdapTest\\:\\:makeLdapUser\\(\\) throws checked exception Adldap\\\\AdldapException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: tests/LdapTest.php
 
 		-
 			message: "#^Parameter \\#1 \\$objectOrClass of class ReflectionClass constructor expects class\\-string\\<T of object\\>\\|T of object, array\\<int, string\\>\\|string given\\.$#"

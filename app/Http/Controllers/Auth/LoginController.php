@@ -67,11 +67,14 @@ final class LoginController extends AbstractController
         return $this->traitLogin($request);
     }
 
-    public function credentials(Request $request)
+    /**
+     * @return array<string, mixed>
+     */
+    public function credentials(Request $request): array
     {
         if (env('CDASH_AUTHENTICATION_PROVIDER', 'users') === 'ldap') {
             return [
-                env('LDAP_LOCATE_USERS_BY', 'mail') => $request->post('email'),
+                (string) env('LDAP_LOCATE_USERS_BY', 'mail') => $request->post('email'),
                 'password' => $request->post('password'),
                 'fallback' => $this->traitCredentials($request),
             ];
