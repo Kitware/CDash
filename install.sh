@@ -39,8 +39,9 @@ exit 1
 
 trap error_handler ERR
 
-# Temporarily change to /cdash
-pushd "/cdash" > /dev/null
+# Temporarily change to the root of the CDash source tree.
+SCRIPT_DIR=$(dirname "$0")
+pushd "$SCRIPT_DIR" > /dev/null
 
 echo "Enabling maintenance mode..."
 php artisan down --render="maintenance" --refresh=5
