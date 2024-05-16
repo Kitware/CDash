@@ -68,7 +68,9 @@ type Project {
   "A boolean indicating whether authenticated submissions are required."
   authenticateSubmissions: Boolean! @rename(attribute: "authenticatesubmissions")
 
-  builds: [Build!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
+  builds(
+    filters: _ @filter(inputType: "BuildFilterInput")
+  ): [Build!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
 
   "The sites which have submitted a build to this project."
   sites: [Site!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
@@ -195,6 +197,16 @@ type Build {
   basicWarnings: [BasicBuildAlert!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 
   # TODO: Figure out project relation.  project{build{project}} currently throws an error.
+}
+
+input BuildFilterInput {
+  id: ID
+  name: String
+  startTime: DateTime @rename(attribute: "starttime")
+  endTime: DateTime @rename(attribute: "endtime")
+  submissionTime: DateTime @rename(attribute: "submittime")
+  stamp: String
+  uuid: String
 }
 
 
