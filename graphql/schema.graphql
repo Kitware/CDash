@@ -73,7 +73,9 @@ type Project {
   ): [Build!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
 
   "The sites which have submitted a build to this project."
-  sites: [Site!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
+  sites(
+    filters: _ @filter(inputType: "SiteFilterInput")
+  ): [Site!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
 
   "Users with the administrator role for this project."
   administrators: [User!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
@@ -252,6 +254,14 @@ type Site {
   "The most recent information we have about this site."
   # TODO: Figure out how to support the date parameter. Perhaps it would be better to use a scope instead.
   mostRecentInformation: SiteInformation @hasOne
+}
+
+input SiteFilterInput {
+  id: ID
+  name: String
+  ip: String
+  latitude: Float
+  longitude: Float
 }
 
 
