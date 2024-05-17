@@ -412,11 +412,15 @@ foreach ($build_rows as $build_array) {
         if ((int) $build_array['loctesteddiff'] > 0) {
             $loctesteddiff = (int) $build_array['loctesteddiff'];
             $locuntesteddiff = (int) $build_array['locuntesteddiff'];
-            @$previouspercent =
-                round(($loctested - $loctesteddiff) /
-                    ($loctested - $loctesteddiff +
-                        $locuntested - $locuntesteddiff)
-                    * 100, 2);
+            try {
+                $previouspercent =
+                    round(($loctested - $loctesteddiff) /
+                        ($loctested - $loctesteddiff +
+                            $locuntested - $locuntesteddiff)
+                        * 100, 2);
+            } catch (\DivisionByZeroError $e) {
+                $previouspercent = 0;
+            }
             $percentdiff = round($percent - $previouspercent, 2);
             $coverage_response['percentagediff'] = $percentdiff;
             $coverage_response['locuntesteddiff'] = $locuntesteddiff;
