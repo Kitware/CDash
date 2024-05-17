@@ -30,13 +30,6 @@ Please see that file for a full list of configuration options.
 | DB_USERNAME | The database user used by CDash | root |
 | DB_PASSWORD | The password of CDash's database user | secret |
 
-It is required that your `.env` file has a `APP_URL` entry, and that the following line
-appears somewhere further down in the file:
-
-```
-MIX_APP_URL="${APP_URL}"
-```
-
 ## Email
 
 | Variable  | Description | Default |
