@@ -51,7 +51,3 @@ file(RENAME
   "${CTEST_BINARY_DIRECTORY}/env_backup/.env"
   "${CTEST_SOURCE_DIRECTORY}/.env"
 )
-execute_process(
-  COMMAND npm run prod
-  WORKING_DIRECTORY "${CTEST_SOURCE_DIRECTORY}"
-)
