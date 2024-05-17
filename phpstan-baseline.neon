@@ -222,6 +222,36 @@ parameters:
 			path: app/Exceptions/Handler.php
 
 		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\:\\:getModel\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\|Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:orWhere\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\|Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\|Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:whereNested\\(\\)\\.$#"
+			count: 2
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
+			message: "#^Method App\\\\GraphQL\\\\Directives\\\\FilterDirective\\:\\:applyFilters\\(\\) has parameter \\$builder with generic class Illuminate\\\\Database\\\\Eloquent\\\\Builder but does not specify its types\\: TModelClass$#"
+			count: 1
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
+			message: "#^Method App\\\\GraphQL\\\\Directives\\\\FilterDirective\\:\\:applyFilters\\(\\) has parameter \\$builder with generic class Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation but does not specify its types\\: TRelatedModel$#"
+			count: 1
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
 			message: "#^Class App\\\\Http\\\\Controllers\\\\AbstractBuildController has an uninitialized property \\$build\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/Http/Controllers/AbstractBuildController.php

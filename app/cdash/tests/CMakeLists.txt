@@ -195,8 +195,11 @@ set_tests_properties(/CDash/XmlHandler/TestingHandler PROPERTIES DEPENDS /CDash/
 add_unit_test(/CDash/XmlHandler/UpdateHandler)
 set_tests_properties(/CDash/XmlHandler/UpdateHandler PROPERTIES DEPENDS /CDash/XmlHandler/TestingHandler)
 
+add_laravel_test(/Feature/GraphQL/FilterTest)
+set_tests_properties(/Feature/GraphQL/FilterTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 add_laravel_test(/Feature/GraphQL/ProjectTypeTest)
-set_tests_properties(/Feature/GraphQL/ProjectTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_tests_properties(/Feature/GraphQL/ProjectTypeTest PROPERTIES DEPENDS /Feature/GraphQL/FilterTest)
 
 add_laravel_test(/Feature/GraphQL/SiteTypeTest)
 set_tests_properties(/Feature/GraphQL/SiteTypeTest PROPERTIES DEPENDS /Feature/GraphQL/ProjectTypeTest)
