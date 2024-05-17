@@ -30,7 +30,7 @@ jobs:
           context: .
           push: true
           tags: "kitware/cdash-worker:${{ github.ref_name }}"
-          target: cdash
+          target: cdash-worker
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -58,6 +58,6 @@ jobs:
           context: .
           push: true
           tags: "kitware/cdash-worker:${{ github.ref_name }}-ubi"
-          target: cdash
+          target: cdash-worker
           cache-from: type=gha
           cache-to: type=gha,mode=max
