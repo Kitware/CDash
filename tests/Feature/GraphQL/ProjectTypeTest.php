@@ -933,4 +933,45 @@ class ProjectTypeTest extends TestCase
             $response->assertGraphQLErrorMessage('Validation failed for the field [createProject].');
         }
     }
+
+    /**
+     * This test isn't intended to be a complete test of the GraphQL filtering
+     * capability, but rather a quick smoke check to verify that the most basic
+     * filters work for the projects relation, and that extra information is not leaked.
+     */
+    public function testBasicProjectFiltering(): void
+    {
+        $this->actingAs($this->users['normal'])->graphQL('
+            query {
+                projects(filters: {
+                    eq: {
+                        visibility: PRIVATE
+                    }
+                }) {
+                    edges {
+                        node {
+                            name
+                        }
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['private1']->name,
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['private2']->name,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
 }

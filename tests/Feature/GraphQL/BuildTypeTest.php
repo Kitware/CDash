@@ -431,4 +431,63 @@ class BuildTypeTest extends TestCase
             ],
         ]);
     }
+
+    /**
+     * This test isn't intended to be a complete test of the GraphQL filtering
+     * capability, but rather a quick smoke check to verify that the most basic
+     * filters work for the builds relation, and that extra information is not leaked.
+     */
+    public function testBasicBuildFiltering(): void
+    {
+        for ($i = 0; $i < 4; $i++) {
+            $this->project->builds()->create([
+                'name' => "build{$i}",
+                'uuid' => Str::uuid()->toString(),
+            ]);
+        }
+
+        $this->graphQL('
+            query {
+                projects {
+                    edges {
+                        node {
+                            name
+                            builds(filters: {
+                                eq: {
+                                    name: "build2"
+                                }
+                            }) {
+                                edges {
+                                    node {
+                                        name
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->project->name,
+                                'builds' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'name' => 'build2',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
 }

@@ -896,4 +896,105 @@ class SiteTypeTest extends TestCase
             ],
         ], true);
     }
+
+    /**
+     * This test isn't intended to be a complete test of the GraphQL filtering
+     * capability, but rather a quick smoke check to verify that the most basic
+     * filters work for the sites relation, and that extra information is not leaked.
+     */
+    public function testBasicBuildFiltering(): void
+    {
+        $this->sites['site1'] = $this->makeSite();
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid(),
+            'siteid' => $this->sites['site1']->id,
+        ]);
+
+        $this->sites['site2'] = $this->makeSite();
+        $this->projects['public1']->builds()->create([
+            'name' => 'build2',
+            'uuid' => Str::uuid(),
+            'siteid' => $this->sites['site2']->id,
+        ]);
+        $this->projects['private1']->builds()->create([
+            'name' => 'build3',
+            'uuid' => Str::uuid(),
+            'siteid' => $this->sites['site2']->id,
+        ]);
+
+        $this->sites['site3'] = $this->makeSite();
+        $this->projects['private1']->builds()->create([
+            'name' => 'build4',
+            'uuid' => Str::uuid(),
+            'siteid' => $this->sites['site3']->id,
+        ]);
+
+        $this->actingAs($this->users['normal'])->graphQL("
+            query {
+                projects {
+                    edges {
+                        node {
+                            name
+                            sites(filters: {
+                                any: [
+                                    {
+                                        eq: {
+                                            name: \"{$this->sites['site1']->name}\"
+                                        }
+                                    },
+                                    {
+                                        eq: {
+                                            name: \"{$this->sites['site3']->name}\"
+                                        }
+                                    }
+                                ]
+                            }) {
+                                edges {
+                                    node {
+                                        name
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ")->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'sites' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'name' => $this->sites['site1']->name,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['private1']->name,
+                                'sites' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'name' => $this->sites['site3']->name,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
 }

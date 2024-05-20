@@ -15,7 +15,7 @@ type Query {
 
   "List the projects available to the current user."
   projects(
-    id: ID @in
+    filters: _ @filter(inputType: "ProjectFilterInput")
   ): [Project!]! @paginate(scopes: ["forUser"], type: CONNECTION) @orderBy(column: "id")
 }
 
@@ -68,10 +68,14 @@ type Project {
   "A boolean indicating whether authenticated submissions are required."
   authenticateSubmissions: Boolean! @rename(attribute: "authenticatesubmissions")
 
-  builds: [Build!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
+  builds(
+    filters: _ @filter(inputType: "BuildFilterInput")
+  ): [Build!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
 
   "The sites which have submitted a build to this project."
-  sites: [Site!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
+  sites(
+    filters: _ @filter(inputType: "SiteFilterInput")
+  ): [Site!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
 
   "Users with the administrator role for this project."
   administrators: [User!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
@@ -103,6 +107,12 @@ input CreateProjectInput {
 
   "A boolean indicating whether authenticated submissions are required."
   authenticateSubmissions: Boolean! @rename(attribute: "authenticatesubmissions") @rules(attribute: "authenticatesubmissions", apply: ["App\\Rules\\ProjectAuthenticateSubmissions"])
+}
+
+input ProjectFilterInput {
+  id: ID
+  name: String
+  visibility: ProjectVisibility @rename(attribute: "public")
 }
 
 
@@ -191,6 +201,16 @@ type Build {
   # TODO: Figure out project relation.  project{build{project}} currently throws an error.
 }
 
+input BuildFilterInput {
+  id: ID
+  name: String
+  startTime: DateTime @rename(attribute: "starttime")
+  endTime: DateTime @rename(attribute: "endtime")
+  submissionTime: DateTime @rename(attribute: "submittime")
+  stamp: String
+  uuid: String
+}
+
 
 """
 "Basic" alerts are warnings or errors scraped from the build log, as opposed to "rich" alerts which
@@ -234,6 +254,14 @@ type Site {
   "The most recent information we have about this site."
   # TODO: Figure out how to support the date parameter. Perhaps it would be better to use a scope instead.
   mostRecentInformation: SiteInformation @hasOne
+}
+
+input SiteFilterInput {
+  id: ID
+  name: String
+  ip: String
+  latitude: Float
+  longitude: Float
 }
 
 
