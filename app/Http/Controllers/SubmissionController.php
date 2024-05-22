@@ -100,7 +100,10 @@ final class SubmissionController extends AbstractProjectController
         // Check if we can connect to the database before proceeding any further.
         try {
             DB::connection()->getPdo();
-        } catch (\Exception $e) {
+            if (app()->isDownForMaintenance()) {
+                throw new Exception();
+            }
+        } catch (\Exception) {
             // Write a marker file so we know to process these files when the DB comes back up.
             if (!Storage::exists("DB_WAS_DOWN")) {
                 Storage::put("DB_WAS_DOWN", "");

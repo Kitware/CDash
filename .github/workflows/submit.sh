@@ -19,6 +19,14 @@ echo "database=$database"
 echo "ctest_driver=$ctest_driver"
 echo "submit_type=$submit_type"
 
+# Wait for migrations to finish running by checking for maintenance mode to be lifted
+docker exec cdash bash -c "\
+  until [ ! -f /cdash/storage/framework/down ]; \
+  do \
+    sleep 1; \
+  done \
+"
+
 # Suppress any uncommitted changes left after the image build
 docker exec cdash bash -c "cd /cdash && /usr/bin/git checkout ."
 
