@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use LdapRecord\Laravel\Auth\LdapAuthenticatable;
+use LdapRecord\Laravel\Auth\AuthenticatesWithLdap;
 
 /**
  * All of these methods are accessed through reflection.  Only the ones currently necessary are
@@ -28,9 +30,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  *
  * @mixin Builder<User>
  */
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, LdapAuthenticatable
 {
-    use Notifiable;
+    use Notifiable, AuthenticatesWithLdap;
 
     protected $user;
 
@@ -57,6 +59,16 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'admin' => 'boolean',
     ];
+
+    public function getLdapDomainColumn(): string
+    {
+        return 'ldapdomain';
+    }
+
+    public function getLdapGuidColumn(): string
+    {
+        return 'ldapguid';
+    }
 
     /**
      * @return HasMany<Password>

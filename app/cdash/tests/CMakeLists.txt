@@ -48,23 +48,20 @@ set_tests_properties(install_2 PROPERTIES DEPENDS cypress/e2e/user-profile)
 
 add_laravel_test(/Unit/app/Validators/PasswordTest)
 
+add_laravel_test(/Feature/LdapIntegration)
+set_tests_properties(/Feature/LdapIntegration PROPERTIES DEPENDS install_2)
+
 add_laravel_test(/Feature/CDashTest)
 set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_2)
 
-add_laravel_test(/Feature/LdapAuthWithRulesTest)
-set_tests_properties(/Feature/LdapAuthWithRulesTest PROPERTIES DEPENDS /Feature/CDashTest)
-
 add_laravel_test(/Feature/LoginAndRegistration)
-set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /Feature/LdapAuthWithRulesTest)
+set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /Feature/CDashTest)
 
 add_laravel_test(/Feature/Monitor)
 set_tests_properties(/Feature/Monitor PROPERTIES DEPENDS /Feature/LoginAndRegistration)
 
-add_laravel_test(/Feature/OpenLdapAuthWithOverrides)
-set_tests_properties(/Feature/OpenLdapAuthWithOverrides PROPERTIES DEPENDS /Feature/Monitor)
-
 add_laravel_test(/Feature/MigrateConfigCommand)
-set_tests_properties(/Feature/MigrateConfigCommand PROPERTIES DEPENDS /Feature/OpenLdapAuthWithOverrides)
+set_tests_properties(/Feature/MigrateConfigCommand PROPERTIES DEPENDS /Feature/Monitor)
 
 add_laravel_test(/Feature/PasswordRotation)
 set_tests_properties(/Feature/PasswordRotation PROPERTIES DEPENDS /Feature/MigrateConfigCommand)
