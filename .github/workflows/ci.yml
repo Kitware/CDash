@@ -38,7 +38,7 @@ jobs:
         run: |
           if [ "${{github.event_name}}" == "pull_request" ]; then
             BUILD_GROUP="Pull Requests";
-          elif [ "${{github.event_name}}" == "workflow_dispatch" ]; then
+          elif [ "${{github.event_name}}" == "merge_group" ]; then
             BUILD_GROUP="Merge Queue";
           elif [[ "${GITHUB_REF}" =~ "/master" ]] ; then
             BUILD_GROUP="Master";
