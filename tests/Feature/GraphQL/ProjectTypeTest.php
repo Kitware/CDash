@@ -974,4 +974,60 @@ class ProjectTypeTest extends TestCase
             ],
         ], true);
     }
+
+    public function testMostRecentBuild(): void
+    {
+        // Add a few builds
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'submittime' => '2009-02-23 10:07:03',
+            'uuid' => Str::uuid(),
+        ]);
+        $this->projects['public1']->builds()->create([
+            'name' => 'build2',
+            'submittime' => '2010-02-23 11:07:03',
+            'uuid' => Str::uuid(),
+        ]);
+        $this->projects['public1']->builds()->create([
+            'name' => 'build3',
+            'submittime' => '2009-02-23 11:07:03',
+            'uuid' => Str::uuid(),
+        ]);
+
+        $this->graphQL('
+            query {
+                projects {
+                    edges {
+                        node {
+                            name
+                            mostRecentBuild {
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'mostRecentBuild' => [
+                                    'name' => 'build2',
+                                ],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['public2']->name,
+                                'mostRecentBuild' => null,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
 }
