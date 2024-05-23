@@ -50,6 +50,8 @@ jobs:
           push: true
           tags: "kitware/cdash:${{ github.ref_name }}-ubi"
           target: cdash
+          build-args: |
+            BASE_IMAGE=ubi
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - uses: docker/build-push-action@v5
@@ -59,5 +61,7 @@ jobs:
           push: true
           tags: "kitware/cdash-worker:${{ github.ref_name }}-ubi"
           target: cdash-worker
+          build-args: |
+            BASE_IMAGE=ubi
           cache-from: type=gha
           cache-to: type=gha,mode=max
