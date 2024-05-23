@@ -33,6 +33,7 @@
         :rows="formatProjectResults(result.projects.edges)"
         :full-width="true"
         class="projects-table"
+        data-cy="all-projects"
       >
         <template #last_submission="{ props: { project } }" >
           <a
