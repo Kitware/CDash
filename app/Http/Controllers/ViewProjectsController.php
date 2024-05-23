@@ -13,6 +13,16 @@ final class ViewProjectsController extends AbstractController
 {
     public function viewAllProjects(): View|RedirectResponse
     {
+        return $this->viewProjects(true);
+    }
+
+    public function viewActiveProjects(): View|RedirectResponse
+    {
+        return $this->viewProjects();
+    }
+
+    private function viewProjects(bool $all = false): View|RedirectResponse
+    {
         $num_public_projects = (int) DB::select('
                                      SELECT COUNT(*) AS c FROM project WHERE public=?
                                  ', [Project::ACCESS_PUBLIC])[0]->c;
@@ -22,7 +32,8 @@ final class ViewProjectsController extends AbstractController
             return $this->redirectToLogin();
         }
 
-        return $this->view("project.view-all-projects");
+        return $this->view("project.view-all-projects")
+            ->with('show_all', $all);
     }
 
     public function fetchPageContent(): JsonResponse

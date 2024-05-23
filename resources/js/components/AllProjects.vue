@@ -1,141 +1,187 @@
 <template>
-  <loading-indicator :is-loading="loading">
+  <loading-indicator :is-loading="!result">
     <h1
-      v-if="cdash.projects.length === 0"
+      v-if="result.projects.edges.length === 0"
       class="text-info text-center"
     >
       No Projects Found
     </h1>
 
-    <DataTable
-      :columns="[
-        {
-          name: 'project',
-          displayName: 'Project',
-        },
-        {
-          name: 'description',
-          displayName: 'Description',
-          expand: true,
-        },
-        {
-          name: 'activity',
-          displayName: 'Last Activity',
-        }
-      ]"
-      :rows="tableRows"
-      class="projects-table"
-    >
-      <template #activity="{ props }" >
-        <a
-          class="builddateelapsed"
-          :href="props.activity.link + '&date=' + props.activity.lastbuilddate"
-        >
-          {{ props.activity.lastbuild_elapsed }}
-        </a>
-        <img
-          alt="Activity level"
-          style="margin-left: 0.5em;"
-          :src="$baseURL + '/img/cleardot.gif'"
-          :class="'activity-level-' + props.activity.activity"
-        >
-      </template>
-    </DataTable>
+    <div v-else-if="error">Unable to load projects!</div>
 
-    <table
-      v-if="cdash.projects.length > 0"
-      width="100%"
-      cellspacing="0"
-      cellpadding="0"
-    >
-      <tr>
-        <td
-          height="1"
-          colspan="14"
-          align="left"
-          bgcolor="#888888"
-        />
-      </tr>
-      <tr>
-        <td
-          height="1"
-          colspan="14"
-          align="right"
-        >
-          <div
-            v-if="cdash.showoldtoggle"
-            id="showold"
+    <div v-else>
+      <DataTable
+        :columns="[
+          {
+            name: 'project',
+            displayName: 'Project',
+          },
+          {
+            name: 'description',
+            displayName: 'Description',
+            expand: true,
+          },
+          {
+            name: 'last_submission',
+            displayName: 'Last Submission',
+          },
+          {
+            name: 'activity',
+            displayName: 'Activity',
+          }
+        ]"
+        :rows="formatProjectResults(result.projects.edges)"
+        :full-width="true"
+        class="projects-table"
+      >
+        <template #last_submission="{ props: { project } }" >
+          <a
+            v-if="project.mostRecentBuild"
+            :href="$baseURL + '/index.php?project=' + project.name + '&date=' + DateTime.fromSQL(project.mostRecentBuild.startTime).toSQLDate()"
           >
-            <a
-              v-show="!cdash.allprojects"
-              :href="$baseURL + '/projects?allprojects=1'"
-            >
-              Show all {{ cdash.nprojects }} projects
-            </a>
-            <a
-              v-show="cdash.allprojects"
-              :href="$baseURL + '/projects'"
-            >
-              Hide old projects
-            </a>
-          </div>
-        </td>
-      </tr>
-    </table>
+            {{ DateTime.fromSQL(project.mostRecentBuild.startTime, { zone: 'UTC' }).toRelative() }}
+          </a>
+          <span v-else>never</span>
+        </template>
+        <template #activity="{ props: { activity_level } }">
+          <img
+            alt="Activity level"
+            :src="$baseURL + '/img/cleardot.gif'"
+            :class="'activity-level-' + activity_level"
+          >
+        </template>
+      </DataTable>
+      <div
+        v-if="result.projects.edges.length > 0"
+        style="float: right;"
+      >
+        <a
+          v-if="show_all"
+          :href="$baseURL + '/projects'"
+        >Show Active Projects</a>
+        <a
+          v-else
+          :href="$baseURL + '/projects/all'"
+        >Show All Projects</a>
+      </div>
+    </div>
   </loading-indicator>
 </template>
 
 <script>
-import ApiLoader from './shared/ApiLoader';
+
 import LoadingIndicator from "./shared/LoadingIndicator.vue";
 import DataTable from "./shared/DataTable.vue";
+import gql from "graphql-tag";
+import { useQuery } from "@vue/apollo-composable";
+import { DateTime } from "luxon";
+
 export default {
   name: 'AllProjects',
-  components: {DataTable, LoadingIndicator},
-
-  data () {
-    return {
-      // API results.
-      cdash: {},
-      loading: true,
-      errored: false,
-      tableRows: [],
+  computed: {
+    DateTime() {
+      return DateTime
     }
   },
 
-  mounted () {
-    let queryParams = '';
-    const allprojects = (new URL(location.href)).searchParams.get('allprojects');
-    if (allprojects) {
-      queryParams = '?allprojects=1';
-    }
-    ApiLoader.loadPageData(this, '/api/v1/viewProjects.php' + queryParams);
+  components: {
+    DataTable,
+    LoadingIndicator,
+  },
+
+  props: {
+    show_all: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  setup() {
+    const { result, loading, error, onResult, fetchMore } = useQuery(gql`
+      query($after: String) {
+        projects(after: $after) {
+          edges {
+            node {
+              id
+              name
+              description
+              mostRecentBuild {
+                startTime
+              }
+              builds(filters: {
+                gt: {
+                  submissionTime: "${DateTime.now().minus({days: 7}).toFormat('y-M-d H:m:ss')}"
+                }
+              }) {
+                pageInfo {
+                  total
+                }
+              }
+            }
+          }
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+          }
+        }
+      }
+    `);
+
+    onResult(async queryResult => {
+      if (queryResult.data && queryResult.data.projects.pageInfo.hasNextPage) {
+        fetchMore({
+          variables: {
+            after: queryResult.data.projects.pageInfo.endCursor,
+          },
+        });
+      }
+    })
+
+    return {
+      result,
+      loading,
+      error,
+    };
   },
 
   methods: {
-    postSetup: function () {
-      this.tableRows = this.cdash.projects.map((project) => {
-        return {
-          project: {
-            value: project.name,
-            href: project.link
-          },
-          description: project.description,
-          activity: {
-            value: project.lastbuild_elapsed,
-            activity: project,
-          },
-        };
-      });
+    formatProjectResults: function (project_edges) {
+      return project_edges
+        .filter((project) => this.show_all ? true : project.node.builds.pageInfo.total > 0)
+        .map((project) => {
+          const num_builds_in_last_week = project.node.builds.pageInfo.total;
+
+          let activity_level;
+          if (num_builds_in_last_week >= 70) {
+            activity_level = 'high';
+          } else if (num_builds_in_last_week >= 20) {
+            activity_level = 'medium';
+          } else if (num_builds_in_last_week > 0) {
+            activity_level = 'low';
+          } else {
+            activity_level = 'none';
+          }
+
+          return {
+            project: {
+              value: project.node.id,
+              text: project.node.name,
+              href: `${this.$baseURL}/index.php?project=${project.node.name}`,
+            },
+            description: project.node.description,
+            last_submission: {
+              value: project.node.mostRecentBuild?.startTime ?? '',
+              project: project.node,
+            },
+            activity: {
+              value: num_builds_in_last_week,
+              activity_level: activity_level,
+            },
+          };
+        });
     }
   }
 }
 </script>
-
-<style scoped>
-
-.projects-table {
-  width: 100%;
-}
-
-</style>

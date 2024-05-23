@@ -218,13 +218,18 @@ class Project extends Model
     }
 
     /**
+     * TODO: Share code with builds().  As of Laravel 10, aggregates added to hasMany relations
+     *       with conditional clauses are unsupported/broken.  A reusable scope may be a better approach.
+     *
      * @return HasOne<Build>
      */
     public function mostRecentBuild(): HasOne
     {
-        return $this->builds()
-            ->one()
-            ->ofMany(['submittime' => 'max']);
+        return $this->hasOne(Build::class, 'projectid', 'id')
+            ->ofMany(['submittime' => 'max'], function (Builder $query) {
+                $query->where('parentid', 0)
+                    ->orWhere('parentid', -1);
+            });
     }
 
     /**
