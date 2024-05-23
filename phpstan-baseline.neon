@@ -2585,6 +2585,14 @@ parameters:
 			path: app/Http/Controllers/UserStatisticsController.php
 
 		-
+			message: """
+				#^Instantiation of deprecated class CDash\\\\Controller\\\\Api\\\\ViewProjects\\:
+				05/23/2024 This endpoint is deprecated in favor of the GraphQL API and will eventually be removed\\.$#
+			"""
+			count: 1
+			path: app/Http/Controllers/ViewProjectsController.php
+
+		-
 			message: "#^Parameter \\#2 \\$build of class CDash\\\\Controller\\\\Api\\\\ViewTest constructor expects CDash\\\\Model\\\\Build, CDash\\\\Model\\\\Build\\|null given\\.$#"
 			count: 1
 			path: app/Http/Controllers/ViewTestController.php
@@ -5806,14 +5814,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:\\$pageTimer\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 

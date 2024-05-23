@@ -24,9 +24,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 /**
- * TODO: (williamjallen) move all of this logic over to app/Http/Controllers/ViewProjectsController.php
- *
  * API controller for viewProjects.php.
+ *
+ * @deprecated 05/23/2024 This endpoint is deprecated in favor of the GraphQL API and will eventually be removed.
  **/
 class ViewProjects extends \CDash\Controller\Api
 {
@@ -46,6 +46,7 @@ class ViewProjects extends \CDash\Controller\Api
     public function getResponse()
     {
         $response = begin_JSON_response();
+        $response['deprectated'] = 'This endpoint is deprecated and will eventually be removed.';
 
         $global_banner = Banner::find(0);
         if ($global_banner !== null && strlen($global_banner->text) > 0) {
