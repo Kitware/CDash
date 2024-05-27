@@ -4,8 +4,23 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property string $hash
+ * @property int $userid
+ * @property Carbon $created
+ * @property Carbon $expires
+ * @property string $description
+ * @property int $projectid
+ * @property string $scope
+ *
+ * @method static Builder<AuthToken> expired()
+ *
+ * @mixin Builder<AuthToken>
+ */
 class AuthToken extends Model
 {
     public const SCOPE_FULL_ACCESS = 'full_access';
@@ -31,4 +46,19 @@ class AuthToken extends Model
         'projectid',
         'scope',
     ];
+
+    protected $casts = [
+        'userid' => 'integer',
+        'created' => 'datetime',
+        'expires' => 'datetime',
+        'projectid' => 'integer',
+    ];
+
+    /**
+     * @param Builder<AuthToken> $query
+     */
+    public function scopeExpired(Builder $query): void
+    {
+        $query->where('expires', '<', Carbon::now());
+    }
 }

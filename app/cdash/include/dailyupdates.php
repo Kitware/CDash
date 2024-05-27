@@ -1136,9 +1136,6 @@ function addDailyChanges(int $projectid): void
             }
         }
 
-        // Delete expired authentication tokens.
-        DB::delete('DELETE FROM authtoken WHERE expires < NOW()');
-
         // Delete expired buildgroups and rules.
         $current_date = gmdate(FMT_DATETIME);
         $datetime = new \DateTime();
