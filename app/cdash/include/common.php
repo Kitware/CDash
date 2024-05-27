@@ -480,8 +480,6 @@ function remove_build($buildid)
     $db = Database::getInstance();
     $buildid_prepare_array = $db->createPreparedArray(count($buildids));
 
-    DB::delete("DELETE FROM related_builds WHERE relatedid IN $buildid_prepare_array", $buildids);
-
     // Remove the buildfailureargument
     $buildfailureids = [];
     $buildfailure = DB::select("SELECT id FROM buildfailure WHERE buildid IN $buildid_prepare_array", $buildids);
