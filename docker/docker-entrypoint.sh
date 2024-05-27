@@ -9,7 +9,13 @@ php artisan key:check || exit 1
 
 # If the "start-website" argument was provided, start the web server
 if [ "$1" = "start-website" ] ; then
-   echo "Starting Apache..."
+  echo "Starting background jobs..."
+  # Output will show up in the logs, but the system will not crash if the schedule process fails.
+  # In the future, it would be better to do this with a dedicated container which starts on a schedule.
+  # Bare metal systems should use cron instead (using cron in Docker is problematic).
+  php artisan schedule:work & # & puts the task in the background.
+
+  echo "Starting Apache..."
 
   # Start Apache under the current user, in case the current user isn't www-data.  Kubernetes-based systems
   # typically run under a random user.  We start Apache before running the install scripts so the system can
