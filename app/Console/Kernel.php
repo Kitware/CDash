@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\PruneJobs;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -28,7 +29,13 @@ class Kernel extends ConsoleKernel
         $cdash_app_dir = realpath(app_path($cdash_directory_name));
         $output_filename = $cdash_app_dir . "/AuditReport.log";
 
-        $schedule->command('dependencies:audit')->everySixHours()->sendOutputTo($output_filename);
+        $schedule->command('dependencies:audit')
+            ->everySixHours()
+            ->sendOutputTo($output_filename);
+
+        $schedule->job(new PruneJobs())
+            ->hourly()
+            ->withoutOverlapping();
     }
 
     /**

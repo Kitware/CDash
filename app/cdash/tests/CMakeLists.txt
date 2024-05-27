@@ -54,6 +54,9 @@ set_tests_properties(/Feature/LdapIntegration PROPERTIES DEPENDS install_2)
 add_laravel_test(/Feature/CDashTest)
 set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_2)
 
+add_laravel_test(/Feature/Jobs/PruneJobsTest)
+set_tests_properties(/Feature/Jobs/PruneJobsTest PROPERTIES DEPENDS install_2)
+
 add_laravel_test(/Feature/LoginAndRegistration)
 set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /Feature/CDashTest)
 
