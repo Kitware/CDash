@@ -16,3 +16,11 @@ updates:
       - dependencies
       - "release notes: external dependencies"
     open-pull-requests-limit: 100
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels:
+      - dependencies
+      - "release notes: external dependencies"
+    open-pull-requests-limit: 100
