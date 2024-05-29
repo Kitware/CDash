@@ -394,13 +394,6 @@ final class AdminController extends AbstractController
             $xml .= '<backupwritable>1</backupwritable>';
         }
 
-        // check if the log directory is writable
-        if ($config->get('CDASH_LOG_FILE') !== false && !is_writable($config->get('CDASH_LOG_DIRECTORY'))) {
-            $xml .= '<logwritable>0</logwritable>';
-        } else {
-            $xml .= '<logwritable>1</logwritable>';
-        }
-
         // check if the upload directory is writable
         if (!is_writable(Storage::path('upload'))) {
             $xml .= '<uploadwritable>0</uploadwritable>';
