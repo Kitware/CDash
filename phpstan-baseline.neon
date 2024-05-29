@@ -866,14 +866,6 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			message: "#^Cannot access offset 'branchestested' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
@@ -945,7 +937,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 60
+			count: 59
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -9461,14 +9453,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use url\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: """
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -10687,11 +10671,6 @@ parameters:
 			message: "#^Part \\$filenames \\(list\\<string\\>\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
 			count: 1
 			path: app/cdash/bootstrap/cdash_autoload.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
 
 		-
 			message: "#^Method CDash\\\\Config\\:\\:get\\(\\) has no return type specified\\.$#"
@@ -13868,14 +13847,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use url\\(\\) instead\\.$#
-			"""
-			count: 2
-			path: app/cdash/include/dailyupdates.php
-
-		-
-			message: """
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -14850,14 +14821,6 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 2
-			path: app/cdash/include/sendemail.php
-
-		-
-			message: """
-				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use url\\(\\) instead\\.$#
-			"""
-			count: 1
 			path: app/cdash/include/sendemail.php
 
 		-
@@ -15885,14 +15848,6 @@ parameters:
 				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
 				09/04/2023  Use config\\(\\) instead\\.$#
 			"""
-			count: 3
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: """
-				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use url\\(\\) instead\\.$#
-			"""
 			count: 2
 			path: app/cdash/tests/case/CDash/ConfigTest.php
 
@@ -15901,12 +15856,12 @@ parameters:
 				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
 				09/04/2023  Use config\\(\\) instead\\.$#
 			"""
-			count: 5
+			count: 2
 			path: app/cdash/tests/case/CDash/ConfigTest.php
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
-			count: 4
+			count: 2
 			path: app/cdash/tests/case/CDash/ConfigTest.php
 
 		-
@@ -15931,11 +15886,6 @@ parameters:
 
 		-
 			message: "#^Method ConfigTest\\:\\:testGetInstance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: "#^Method ConfigTest\\:\\:testGetServer\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/ConfigTest.php
 
@@ -17893,14 +17843,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:setChecker\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			message: """
-				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
 			count: 1
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 

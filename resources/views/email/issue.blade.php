@@ -2,12 +2,10 @@
 use CDash\Messaging\Preferences\NotificationPreferences;
 use CDash\Messaging\Subscription\Subscription;
 use CDash\Messaging\Notification\NotifyOn;
-use CDash\Config;
 
 /* @var \CDash\Messaging\Subscription\Subscription $subscription */
 $descriptions = $subscription->getTopicDescriptions(CASE_LOWER);
 $summary = $subscription->getBuildSummary();
-$config = Config::getInstance();
 $last = array_pop($descriptions);
 $description = implode(', ', $descriptions);
 /** @var NotificationPreferences $preferences */
@@ -66,5 +64,5 @@ $project = $subscription->getProject();
 @include("email.issue.{$reference}", ['items' => $items, 'maxChars' => $project->EmailMaxChars])
 <?php echo PHP_EOL; ?>
 @endforeach
--CDash on {{ $config->getServer() }}
+-CDash
 

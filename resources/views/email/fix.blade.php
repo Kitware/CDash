@@ -1,5 +1,4 @@
 <?php
-$config = \CDash\Config::getInstance();
 /* @var \CDash\Messaging\Subscription\Subscription $subscription */
 $summary = $subscription->getBuildSummary();
 $collection = $subscription->getTopicCollection();
@@ -52,5 +51,5 @@ Test failures fixed: {{ $fixes['TestFailure']['failed']['fixed'] }}
 Tests not run fixed: {{ $fixes['TestFailure']['notrun']['fixed'] }}
 @endif
 
--CDash on {{ $config->getServer() }}
+-CDash
 

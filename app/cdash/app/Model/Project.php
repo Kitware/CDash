@@ -1054,9 +1054,8 @@ class Project
             $emailtitle = 'CDash [' . $projectname . '] - Administration ';
             $emailbody = 'Object: ' . $subject . "\n";
             $emailbody .= $body . "\n";
-            $serverName = $config->getServer();
 
-            $emailbody .= "\n-CDash on " . $serverName . "\n";
+            $emailbody .= "\n-CDash\n";
 
             if (cdashmail($recipients, $emailtitle, $emailbody)) {
                 add_log('email sent to: ' . implode(', ', $recipients), 'SendEmailToAdmin');

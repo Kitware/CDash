@@ -40,26 +40,6 @@ class ConfigTest extends CDashTestCase
         $config->set('THIS_IS_NOT_A_THING', null);
     }
 
-    public function testGetServer()
-    {
-        $config = Config::getInstance();
-        $backup = $config->get('CDASH_SERVER_NAME');
-        $_SERVER['SERVER_NAME'] = 'this.is.my.server';
-
-        $expected = 'a.server';
-        $config->set('CDASH_SERVER_NAME', $expected);
-        $actual = $config->getServer();
-
-        $this->assertEquals($expected, $actual);
-
-        $config->set('CDASH_SERVER_NAME', '');
-        $actual = $config->getServer();
-
-        $this->assertEquals($_SERVER['SERVER_NAME'], $actual);
-
-        $config->set('CDASH_SERVER_NAME', $backup);
-    }
-
     public function testDisablePullRequestComments()
     {
         include 'config/config.php';

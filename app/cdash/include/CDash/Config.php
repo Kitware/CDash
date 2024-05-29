@@ -28,20 +28,4 @@ class Config extends Singleton
     {
         $this->_config[$name] = $value;
     }
-
-    /**
-     * @deprecated 09/04/2023  Use url() instead.
-     */
-    public function getServer(): string
-    {
-        $server = $this->get('CDASH_SERVER_NAME');
-        if (empty($server)) {
-            if (isset($_SERVER['SERVER_NAME'])) {
-                $server = $_SERVER['SERVER_NAME'];
-            } else {
-                $server = 'localhost';
-            }
-        }
-        return $server;
-    }
 }

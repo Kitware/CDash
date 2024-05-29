@@ -484,9 +484,8 @@ function generate_broken_build_message(array $emailtext, $Build, $Project): arra
     }
 
     $config = Config::getInstance();
-    $serverName = $config->getServer();
 
-    $footer = "\n-CDash on " . $serverName . "\n";
+    $footer = "\n-CDash\n";
     return ['title' => $title, 'preamble' => $preamble, 'body' => $body,
             'footer' => $footer];
 }

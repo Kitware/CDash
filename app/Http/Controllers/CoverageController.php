@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Utils\PageTimer;
 use App\Utils\TestingDay;
-use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Coverage;
@@ -260,15 +259,10 @@ final class CoverageController extends AbstractBuildController
 
                     $messagePlainText .= 'Details on the submission can be found at ';
 
-                    $config = Config::getInstance();
                     $messagePlainText .= url('/');
                     $messagePlainText .= "\n\n";
-                    $serverName = $config->get('CDASH_SERVER_NAME');
-                    if (strlen($serverName) == 0) {
-                        $serverName = $_SERVER['SERVER_NAME'];
-                    }
 
-                    $messagePlainText .= "\n-CDash on " . $serverName . "\n";
+                    $messagePlainText .= "\n-CDash\n";
 
                     // Send the email
                     $title = 'CDash [' . $Project->GetName() . '] - Low Coverage';

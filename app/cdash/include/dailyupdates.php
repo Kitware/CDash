@@ -735,8 +735,6 @@ function get_repository_commits(int $projectid, $dates): array
 /** Send email if expected build from last day have not been submitting */
 function sendEmailExpectedBuilds($projectid, $currentstarttime): void
 {
-    $config = Config::getInstance();
-
     $db = Database::getInstance();
 
     $currentEndUTCTime = gmdate(FMT_DATETIME, $currentstarttime);
@@ -801,8 +799,6 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime): void
     $summary = 'The following expected build(s) for the project *' . $projectname . "* didn't submit yesterday:\n";
     $missingbuilds = 0;
 
-    $serverName = $config->getServer();
-
     foreach ($build2grouprule as $build2grouprule_array) {
         $builtype = $build2grouprule_array['buildtype'];
         $buildname = $build2grouprule_array['buildname'];
@@ -830,7 +826,7 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime): void
             $missingSummary = 'The following expected build(s) for the project ' . $projectname . " didn't submit yesterday:\n";
             $missingSummary .= '* ' . $sitename . ' - ' . $buildname . ' (' . $builtype . ")\n";
             $missingSummary .= "\n" . url('/index.php') . '?project=' . urlencode($projectname) . "\n";
-            $missingSummary .= "\n-CDash on " . $serverName . "\n";
+            $missingSummary .= "\n-CDash\n";
 
             if (cdashmail($recipients, $missingTitle, $missingSummary)) {
                 add_log('email sent to: ' . implode(', ', $recipients), 'sendEmailExpectedBuilds');
@@ -846,7 +842,7 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime): void
     // of missing builds
     if ($missingbuilds == 1) {
         $summary .= "\n" . url('/index.php') . '?project=' . urlencode($projectname) . "\n";
-        $summary .= "\n-CDash on " . $serverName . "\n";
+        $summary .= "\n-CDash\n";
 
         $title = 'CDash [' . $projectname . '] - Missing Builds';
 
@@ -900,7 +896,6 @@ function cleanUserTemp(): void
 /** Send an email to administrator of the project for users who are not registered */
 function sendEmailUnregisteredUsers(int $projectid, $cvsauthors): void
 {
-    $config = Config::getInstance();
     $unregisteredusers = [];
     foreach ($cvsauthors as $author) {
         if ($author == 'Local User') {
@@ -938,7 +933,6 @@ function sendEmailUnregisteredUsers(int $projectid, $cvsauthors): void
         // Send the email
         if (!empty($recipients)) {
             $projectname = get_project_name($projectid);
-            $serverName = $config->getServer();
 
             $title = 'CDash [' . $projectname . '] - Unregistered users';
             $body = 'The following users are checking in code but are not registered for the project ' . $projectname . ":\n";
@@ -947,13 +941,12 @@ function sendEmailUnregisteredUsers(int $projectid, $cvsauthors): void
                 $body .= '* ' . $unreg . "\n";
             }
             $body .= "\n You should register these users to your project. They are currently not receiving any emails from CDash.\n";
-            $body .= "\n-CDash on " . $serverName . "\n";
+            $body .= "\n-CDash\n";
 
             add_log($title . ' : ' . $body . ' : ' . implode(', ', $recipients), 'sendEmailUnregisteredUsers');
 
             if (cdashmail($recipients, $title, $body)) {
                 add_log('email sent to: ' . implode(', ', $recipients), 'sendEmailUnregisteredUsers');
-                return;
             } else {
                 add_log('cannot send email to: ' . implode(', ', $recipients), 'sendEmailUnregisteredUsers');
             }

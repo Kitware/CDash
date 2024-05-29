@@ -25,9 +25,6 @@ include_once dirname(__FILE__) . '/../bootstrap/cdash_autoload.php';
 $CDASH_ROOT_DIR = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);
 
-// Name of the server running CDash.
-// Leave empty to use current name and default port.
-$CDASH_SERVER_NAME = '';
 // CSS file
 $CDASH_CSS_FILE = 'css/cdash.css';
 // Request full email address to add new users

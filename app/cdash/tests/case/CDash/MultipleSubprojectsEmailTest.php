@@ -15,7 +15,6 @@
  */
 
 use CDash\Collection\SubscriberCollection;
-use CDash\Config;
 use CDash\Database;
 use CDash\Messaging\Notification\Email\EmailBuilder;
 use CDash\Messaging\Notification\Email\EmailNotificationFactory;
@@ -50,11 +49,6 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
     public static function setUpBeforeClass() : void
     {
         parent::setUpBeforeClass();
-
-
-        // set $CDASH_SERVER_NAME.
-        $config = Config::getInstance();
-        $config->set('CDASH_SERVER_NAME', 'open.cdash.org');
 
         // deal with timezone stuff
         self::$tz = date_default_timezone_get();
@@ -456,7 +450,7 @@ Total Dynamic analysis tests failing or not run: 1
 *Dynamic analysis tests failing or not run* " . /* Join is needed to preserve trailing space */"
 experimentalFail (http://open.cdash.org/viewDynamicAnalysisFile.php?id=1)
 
--CDash on open.cdash.org
+-CDash
 
 ";
         $actual = "{$notification}";
