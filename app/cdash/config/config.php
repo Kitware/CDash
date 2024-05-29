@@ -42,5 +42,3 @@ $CDASH_DEFAULT_IP_LOCATIONS = array();
 
 // The default git directory where the bare repositories should be created
 $CDASH_DEFAULT_GIT_DIRECTORY = 'git';
-// Define the p4 command
-$CDASH_P4_COMMAND = 'p4';
