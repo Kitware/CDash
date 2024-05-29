@@ -67,8 +67,8 @@ To set up a CDash production instance using docker compose, follow these steps:
 * `cp .env.example .env`
 * Edit `.env` and modify the following lines:
   - `APP_URL=https://<my-cdash-url>`
-  - `SSL_CERTIFICATE_FILE=</path/to/certs/my-cert.pem>`
-  - `SSL_CERTIFICATE_KEY_FILE=</path/to/certs/my-cert.key>`
+  - `SSL_CERTIFICATE_FILE=</path/to/certs/cdash.pem>`
+  - `SSL_CERTIFICATE_KEY_FILE=</path/to/certs/cdash.key>`
   - `NUM_WORKERS=<desired number of queue worker replicas, defaults to 1>`
 * For postgres only, edit `docker/docker-compose.postgres.yml` and uncomment the `worker` section.
 * Run this command to start your CDash containers:

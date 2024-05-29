@@ -97,10 +97,6 @@ RUN mkdir -p /var/www/.npm && \
 
 # Copy Apache site-available config files into the image.
 COPY ./docker/cdash-site.conf /etc/apache2/sites-available/cdash-site.conf
-COPY ./docker/cdash-site-ssl.conf /etc/apache2/sites-available/cdash-site-ssl.conf
-
-# Change apache config to listen on port 8080 instead of port 80
-RUN sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
 
 # Remove default site, add cdash-site, enable mod_rewrite, enable php
 RUN a2dissite 000-default && \
@@ -111,8 +107,7 @@ RUN a2dissite 000-default && \
 # Enable https site if we're not doing a development build.
 RUN if [ "$DEVELOPMENT_BUILD" != '1' ]; then \
     a2enmod ssl && \
-    a2enmod socache_shmcb && \
-    a2ensite cdash-site-ssl; \
+    a2enmod socache_shmcb; \
 fi
 
 # Assign www-data ownership of apache2 configuration files

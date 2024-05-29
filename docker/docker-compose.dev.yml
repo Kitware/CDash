@@ -2,7 +2,7 @@ services:
   cdash:
     image: kitware/cdash:testing
     ports:
-      - 8080:8080
+      - 8080:80
     build:
       args:
         DEVELOPMENT_BUILD: 1
