@@ -39,6 +39,3 @@ $CDASH_CSS_FILE = 'css/cdash.css';
 // instead of displaying a list
 $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';
 $CDASH_DEFAULT_IP_LOCATIONS = array();
-
-// The default git directory where the bare repositories should be created
-$CDASH_DEFAULT_GIT_DIRECTORY = 'git';

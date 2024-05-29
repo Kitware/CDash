@@ -343,14 +343,13 @@ function get_p4_repository_commits($root, $branch, $dates): array
 /** Get the GIT repository commits */
 function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision): array
 {
-    $config = Config::getInstance();
     $commits = [];
 
-    $gitlocaldirectory = $config->get('CDASH_DEFAULT_GIT_DIRECTORY');
+    $gitlocaldirectory = 'git';
 
     // Check that the default git directory exists and is writable
     if (empty($gitlocaldirectory) || !is_writable($gitlocaldirectory)) {
-        add_log('CDASH_DEFAULT_GIT_DIRECTORY is not set in config or not writable.', 'get_git_repository_commits');
+        add_log('git directory is not writable.', 'get_git_repository_commits');
         $results['commits'] = $commits;
         return $results;
     }
