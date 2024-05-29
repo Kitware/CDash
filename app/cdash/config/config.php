@@ -40,8 +40,6 @@ $CDASH_CSS_FILE = 'css/cdash.css';
 $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';
 $CDASH_DEFAULT_IP_LOCATIONS = array();
 
-// Define the git command
-$CDASH_GIT_COMMAND = 'git';
 // The default git directory where the bare repositories should be created
 $CDASH_DEFAULT_GIT_DIRECTORY = 'git';
 // Define the p4 command

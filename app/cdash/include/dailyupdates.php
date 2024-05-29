@@ -346,7 +346,6 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
     $config = Config::getInstance();
     $commits = [];
 
-    $gitcommand = $config->get('CDASH_GIT_COMMAND');
     $gitlocaldirectory = $config->get('CDASH_DEFAULT_GIT_DIRECTORY');
 
     // Check that the default git directory exists and is writable
@@ -363,12 +362,12 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
     // If the current directory doesn't exist we create it
     if (!file_exists($gitdir)) {
         // If the bare repository doesn't exist we clone it
-        $command = 'cd "' . $gitlocaldirectory . '" && "' . $gitcommand . '" clone --bare ' . $gitroot . ' ' . $gitdirectory;
+        $command = 'cd "' . $gitlocaldirectory . '" && "' . 'git' . '" clone --bare ' . $gitroot . ' ' . $gitdirectory;
         $raw_output = `$command`;
     }
 
     // Update the current bare repository
-    $command = '"' . $gitcommand . '" --git-dir="' . $gitdir . '" fetch ' . $gitroot;
+    $command = '"' . 'git' . '" --git-dir="' . $gitdir . '" fetch ' . $gitroot;
     if ($branch != '') {
         $command .= ' +' . $branch . ':' . $branch;
     }
@@ -380,20 +379,20 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
         $branch = 'FETCH_HEAD';
     }
 
-    $command = '"' . $gitcommand . '" --git-dir="' . $gitdir . '" rev-parse ' . $branch;
+    $command = '"' . 'git' . '" --git-dir="' . $gitdir . '" rev-parse ' . $branch;
     $currentrevision = `$command`;
     $results['currentrevision'] = trim($currentrevision);
 
     // Find the previous day version
     if ($previousrevision != '') {
         // Compare with the fetch head for now
-        $command = '"' . $gitcommand . '" --git-dir="' . $gitdir . '" whatchanged ' . $previousrevision . '..' . $currentrevision . ' --pretty=medium ' . $branch;
+        $command = '"' . 'git' . '" --git-dir="' . $gitdir . '" whatchanged ' . $previousrevision . '..' . $currentrevision . ' --pretty=medium ' . $branch;
     } else {
         $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1'] + 1) . ' GMT';
         $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . ' GMT';
 
         // Compare with the fetch head for now
-        $command = '"' . $gitcommand . '" --git-dir="' . $gitdir . '" whatchanged --since="' . $fromtime . '" --until="' . $totime . '" --pretty=medium ' . $branch;
+        $command = '"' . 'git' . '" --git-dir="' . $gitdir . '" whatchanged --since="' . $fromtime . '" --until="' . $totime . '" --pretty=medium ' . $branch;
     }
 
     $raw_output = `$command`;
