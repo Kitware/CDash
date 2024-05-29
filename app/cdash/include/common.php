@@ -1142,10 +1142,7 @@ function get_css_file(): string
 
 function begin_XML_for_XSLT(): string
 {
-    $config = CDash\Config::getInstance();
-
     $css_file = get_css_file();
-    $config->set('CDASH_CSS_FILE', $css_file);
 
     $xml = '<?xml version="1.0" encoding="UTF-8"?><cdash>';
     $xml .= add_XML_value('cssfile', $css_file);

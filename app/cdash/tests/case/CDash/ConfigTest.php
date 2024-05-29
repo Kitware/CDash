@@ -20,18 +20,6 @@ class ConfigTest extends CDashTestCase
         $this->assertSame($instances[Config::class], $config);
     }
 
-    public function testConstruction()
-    {
-        // check some random values to ensure that they match that of the Config instance
-        global $CDASH_CSS_FILE;
-
-        include 'config/config.php';
-
-        $config = Config::getInstance();
-
-        $this->assertEquals($CDASH_CSS_FILE, $config->get('CDASH_CSS_FILE'));
-    }
-
     public function testGetSet()
     {
         $config = Config::getInstance();
