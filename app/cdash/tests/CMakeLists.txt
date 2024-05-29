@@ -66,11 +66,8 @@ set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /Feature/C
 add_laravel_test(/Feature/Monitor)
 set_tests_properties(/Feature/Monitor PROPERTIES DEPENDS /Feature/LoginAndRegistration)
 
-add_laravel_test(/Feature/MigrateConfigCommand)
-set_tests_properties(/Feature/MigrateConfigCommand PROPERTIES DEPENDS /Feature/Monitor)
-
 add_laravel_test(/Feature/PasswordRotation)
-set_tests_properties(/Feature/PasswordRotation PROPERTIES DEPENDS /Feature/MigrateConfigCommand)
+set_tests_properties(/Feature/PasswordRotation PROPERTIES DEPENDS /Feature/Monitor)
 
 add_laravel_test(/Feature/ProjectPermissions)
 set_tests_properties(/Feature/ProjectPermissions PROPERTIES DEPENDS /Feature/PasswordRotation)

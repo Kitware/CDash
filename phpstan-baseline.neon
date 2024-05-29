@@ -47,61 +47,6 @@ parameters:
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Method App\\\\Console\\\\Commands\\\\MigrateConfig\\:\\:handle\\(\\) should return mixed but return statement is missing\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, resource\\|false given\\.$#"
-			count: 2
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, string\\|false given\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^PHPDoc type string of property App\\\\Console\\\\Commands\\\\MigrateConfig\\:\\:\\$description is not the same as PHPDoc type string\\|null of overridden property Illuminate\\\\Console\\\\Command\\:\\:\\$description\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, \\(int\\|string\\) given\\.$#"
-			count: 2
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
-			count: 2
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fgets expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fwrite expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, \\(int\\|string\\) given\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
 			message: "#^Method App\\\\Console\\\\Commands\\\\QueueSubmissions\\:\\:handle\\(\\) should return mixed but return statement is missing\\.$#"
 			count: 1
 			path: app/Console/Commands/QueueSubmissions.php
@@ -318,7 +263,7 @@ parameters:
 				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
 				09/04/2023  Use config\\(\\) instead\\.$#
 			"""
-			count: 4
+			count: 2
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -13923,14 +13868,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 3
-			path: app/cdash/include/dailyupdates.php
-
-		-
-			message: """
 				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
 				09/04/2023  Use url\\(\\) instead\\.$#
 			"""
@@ -14252,6 +14189,11 @@ parameters:
 
 		-
 			message: "#^Variable \\$commit might not be defined\\.$#"
+			count: 1
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: "#^Variable \\$gitlocaldirectory in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: app/cdash/include/dailyupdates.php
 
@@ -21147,7 +21089,7 @@ parameters:
 			path: app/cdash/tests/test_buildmodel.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_buildmodel.php
 
@@ -29305,26 +29247,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$user of method Illuminate\\\\Foundation\\\\Testing\\\\TestCase\\:\\:assertAuthenticatedAs\\(\\) expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, App\\\\Models\\\\User\\|null given\\.$#"
 			count: 3
 			path: tests/Feature/LoginAndRegistration.php
-
-		-
-			message: "#^Parameter \\#2 \\$haystack of static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertStringContainsString\\(\\) expects string, string\\|false given\\.$#"
-			count: 23
-			path: tests/Feature/MigrateConfigCommand.php
-
-		-
-			message: "#^Parameter \\#2 \\$haystack of static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertStringNotContainsString\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: tests/Feature/MigrateConfigCommand.php
-
-		-
-			message: "#^Property Tests\\\\Feature\\\\MigrateConfigCommand\\:\\:\\$config_file has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/MigrateConfigCommand.php
-
-		-
-			message: "#^Property Tests\\\\Feature\\\\MigrateConfigCommand\\:\\:\\$test_file has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/MigrateConfigCommand.php
 
 		-
 			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"

@@ -20,10 +20,7 @@
 // This file is 'config.php', in the directory 'config', in the root.
 // Therefore, the root of the CDash source tree on the web server is:
 
-if (!isset($ONLY_LOAD_DEFAULTS)) {
-    @include_once dirname(__DIR__) . '/vendor/autoload.php';
-    include_once dirname(__FILE__) . '/../bootstrap/cdash_autoload.php';
-}
+include_once dirname(__FILE__) . '/../bootstrap/cdash_autoload.php';
 
 $CDASH_ROOT_DIR = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);
