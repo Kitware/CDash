@@ -24,7 +24,3 @@ include_once dirname(__FILE__) . '/../bootstrap/cdash_autoload.php';
 
 $CDASH_ROOT_DIR = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);
-
-// Request full email address to add new users
-// instead of displaying a list
-$CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';

@@ -1361,21 +1361,13 @@ parameters:
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 2
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 5
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 2
+			count: 1
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
@@ -1469,14 +1461,6 @@ parameters:
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 2
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
 			message: "#^Cannot access property \\$admin on App\\\\Models\\\\User\\|null\\.$#"
 			count: 2
 			path: app/Http/Controllers/ManageUsersController.php
@@ -1494,11 +1478,6 @@ parameters:
 		-
 			message: "#^Cannot call method save\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
 			count: 2
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
 			path: app/Http/Controllers/ManageUsersController.php
 
 		-

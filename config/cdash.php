@@ -85,4 +85,5 @@ return [
     'max_project_visibility' => env('MAX_PROJECT_VISIBILITY', 'PUBLIC'),
     'require_authenticated_submissions' => env('REQUIRE_AUTHENTICATED_SUBMISSIONS', false),
     'use_vcs_api' => env('USE_VCS_API', true),
+    'require_full_email_when_adding_user' => env('REQUIRE_FULL_EMAIL_WHEN_ADDING_USER', false),
 ];

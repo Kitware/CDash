@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use CDash\Config;
 use CDash\Database;
 use CDash\Model\Project;
 use App\Models\Project as EloquentProject;
@@ -395,8 +394,7 @@ final class ManageProjectRolesController extends AbstractProjectController
             }
         }
 
-        $config = Config::getInstance();
-        if ($config->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER') == 1) {
+        if ((bool) config('require_full_email_when_adding_user')) {
             $xml .= add_XML_value('fullemail', '1');
         }
         if ((config('auth.project_admin_registration_form_enabled') === true) || $current_user->admin) {
@@ -511,7 +509,7 @@ final class ManageProjectRolesController extends AbstractProjectController
 
         $search = $_GET['search'] ?? '';
         $params = [];
-        if (intval(Config::getInstance()->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER')) === 1) {
+        if ((bool) config('require_full_email_when_adding_user')) {
             $sql = 'email=?';
             $params[] = $search;
         } else {
