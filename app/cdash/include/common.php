@@ -424,16 +424,6 @@ function get_geolocation($ip)
     ) {
         $location['latitude'] = $lat;
         $location['longitude'] = $long;
-    } else {
-        // Check if we have a list of default locations
-
-        foreach ($config->get('CDASH_DEFAULT_IP_LOCATIONS') as $defaultlocation) {
-            $defaultip = $defaultlocation['IP'];
-            if (preg_match('#^' . strtr(preg_quote($defaultip, '#'), ['\*' => '.*', '\?' => '.']) . '$#i', $ip)) {
-                $location['latitude'] = $defaultlocation['latitude'];
-                $location['longitude'] = $defaultlocation['longitude'];
-            }
-        }
     }
     return $location;
 }

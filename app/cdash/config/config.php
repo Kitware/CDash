@@ -30,4 +30,3 @@ $CDASH_CSS_FILE = 'css/cdash.css';
 // Request full email address to add new users
 // instead of displaying a list
 $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';
-$CDASH_DEFAULT_IP_LOCATIONS = array();
