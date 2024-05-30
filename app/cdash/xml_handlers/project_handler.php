@@ -23,7 +23,7 @@ use CDash\Model\LabelEmail;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
 use CDash\Model\UserProject;
-use CDash\Database;
+use Illuminate\Support\Facades\DB;
 
 class ProjectHandler extends AbstractHandler
 {
@@ -117,15 +117,13 @@ class ProjectHandler extends AbstractHandler
                     $dependencyids = $subproject->GetDependencies();
                     $removeids = array_diff($dependencyids, $this->Dependencies[$subproject->GetId()]);
 
-                    $db = Database::getInstance();
-
                     foreach ($removeids as $removeid) {
                         if (array_key_exists($removeid, $this->SubProjects)) {
                             $subproject->RemoveDependency(intval($removeid));
                         } else {
                             // TODO: (williamjallen) Rewrite this loop to not make repetitive queries
-                            $dep = $db->executePreparedSingleRow('SELECT name FROM subproject WHERE id=?', [intval($removeid)]);
-                            $dep = !empty($dep) && array_key_exists('name', $dep) ? $dep['name'] : intval($removeid);
+                            $dep = DB::select('SELECT name FROM subproject WHERE id=?', [intval($removeid)])[0] ?? [];
+                            $dep = $dep !== [] ? $dep->name : intval($removeid);
                             add_log(
                                 "Not removing dependency $dep($removeid) from " .
                                 $subproject->GetName() .

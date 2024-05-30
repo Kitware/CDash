@@ -16,12 +16,12 @@
 require_once 'xml_handlers/NonSaxHandler.php';
 
 use CDash\Config;
-use \CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class JavaJSONTarHandler extends NonSaxHandler
@@ -107,19 +107,15 @@ class JavaJSONTarHandler extends NonSaxHandler
             return;
         }
 
-        $db = Database::getInstance();
-
         foreach ($jsonDecoded as $row) {
-            if (!array_key_exists('package', $row) ||
-                !array_key_exists('subproject', $row)
-            ) {
+            if (!array_key_exists('package', $row) || !array_key_exists('subproject', $row)) {
                 return;
             }
             $packageName = $row['package'];
             $subprojectName = $row['subproject'];
 
             // get the buildid that corresponds to this subproject.
-            $buildid_result = $db->executePreparedSingleRow('
+            $buildid_result = DB::select('
                                   SELECT buildid
                                   FROM subproject2build AS sp2b
                                   INNER JOIN subproject AS sp ON (sp.id = sp2b.subprojectid)
@@ -127,19 +123,16 @@ class JavaJSONTarHandler extends NonSaxHandler
                                   WHERE
                                       sp.name = ?
                                       AND b.parentid=?
-                     ', [$subprojectName, $this->Build->GetParentId()]);
+                     ', [$subprojectName, $this->Build->GetParentId()])[0] ?? [];
 
             // If we found a different buildid, create a new CoverageSummary.
-            if ($buildid_result && array_key_exists('buildid', $buildid_result) &&
-                $buildid_result['buildid'] != $this->Build->Id
-            ) {
+            if ($buildid_result !== [] && (int) $buildid_result->buildid !== (int) $this->Build->Id) {
                 $coverageSummary = new CoverageSummary();
-                $coverageSummary->BuildId = $buildid_result['buildid'];
+                $coverageSummary->BuildId = $buildid_result->buildid;
                 $this->CoverageSummaries[$packageName] = $coverageSummary;
             } else {
                 // Otherwise, just associate this package with our default.
-                $this->CoverageSummaries[$packageName] =
-          &$this->CoverageSummaries['default'];
+                $this->CoverageSummaries[$packageName] = &$this->CoverageSummaries['default'];
             }
         }
     }
