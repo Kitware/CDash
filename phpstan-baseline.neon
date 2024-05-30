@@ -15766,11 +15766,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/ConfigTest.php
 
 		-
-			message: "#^Method ConfigTest\\:\\:testDisablePullRequestComments\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
 			message: "#^Method ConfigTest\\:\\:testGetInstance\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/ConfigTest.php
@@ -15971,6 +15966,11 @@ parameters:
 			message: "#^Method DynamicAnalysisUseCaseTest\\:\\:testUseCaseBuildsDynamicAnalysisUseCase\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
+
+		-
+			message: "#^Method GitHubTest\\:\\:testDisablePullRequestComments\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"

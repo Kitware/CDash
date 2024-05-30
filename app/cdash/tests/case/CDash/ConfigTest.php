@@ -1,9 +1,7 @@
 <?php
 
-use App\Utils\RepositoryUtils;
 use CDash\Config;
 use CDash\Test\CDashTestCase;
-use Illuminate\Support\Facades\Log;
 
 class ConfigTest extends CDashTestCase
 {
@@ -26,12 +24,5 @@ class ConfigTest extends CDashTestCase
         $config->set('THIS_IS_NOT_A_THING', 'ABCDEFGH');
         $this->assertEquals('ABCDEFGH', $config->get('THIS_IS_NOT_A_THING'));
         $config->set('THIS_IS_NOT_A_THING', null);
-    }
-
-    public function testDisablePullRequestComments()
-    {
-        Log::shouldReceive('info')
-            ->with('pull request commenting is disabled');
-        RepositoryUtils::post_pull_request_comment(1, 1, "this is a comment", config('app.url'));
     }
 }
