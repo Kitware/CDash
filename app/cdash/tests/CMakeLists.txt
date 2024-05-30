@@ -90,11 +90,8 @@ set_tests_properties(/CDash/Api/GitHubWebhook PROPERTIES DEPENDS /PHPUnitTest)
 add_unit_test(/CDash/BuildUseCase)
 set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /CDash/Api/GitHubWebhook)
 
-add_unit_test(/CDash/Config)
-set_tests_properties(/CDash/Config PROPERTIES DEPENDS /CDash/BuildUseCase)
-
 add_unit_test(/CDash/ConfigUseCase)
-set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/Config)
+set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/BuildUseCase)
 
 add_unit_test(/CDash/Database)
 set_tests_properties(/CDash/Database PROPERTIES DEPENDS /CDash/ConfigUseCase)

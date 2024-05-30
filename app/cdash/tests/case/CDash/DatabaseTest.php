@@ -1,7 +1,6 @@
 <?php
 
 use CDash\Database;
-use CDash\Config;
 use CDash\Test\CDashTestCase;
 
 class DatabaseTest extends CDashTestCase
@@ -12,7 +11,6 @@ class DatabaseTest extends CDashTestCase
 
     public static function tearDownAfterClass() : void
     {
-        Config::setInstance(Config::class, null);
         Database::setInstance(Database::class, null);
         parent::tearDownAfterClass();
     }

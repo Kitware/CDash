@@ -10623,44 +10623,6 @@ parameters:
 			path: app/cdash/bootstrap/cdash_autoload.php
 
 		-
-			message: """
-				#^Call to method getInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
-				05/29/2024  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/config/di.php
-
-		-
-			message: "#^Method CDash\\\\Config\\:\\:get\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
-			message: "#^Method CDash\\\\Config\\:\\:get\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
-			message: "#^Method CDash\\\\Config\\:\\:set\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
-			message: "#^Method CDash\\\\Config\\:\\:set\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
-			message: "#^Method CDash\\\\Config\\:\\:set\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
-			message: "#^Property CDash\\\\Config\\:\\:\\$_config type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
 			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Database.php
@@ -15719,63 +15681,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
 
 		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: """
-				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 2
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: """
-				#^Call to method getInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
-				05/29/2024  Use config\\(\\) instead\\.$#
-			"""
-			count: 2
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: """
-				#^Fetching class constant class of deprecated class CDash\\\\Config\\:
-				05/29/2024  Use config\\(\\) instead\\.$#
-			"""
-			count: 2
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: "#^Method ConfigTest\\:\\:testGetInstance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: "#^Method ConfigTest\\:\\:testGetSet\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
@@ -15857,14 +15762,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
 
 		-
-			message: """
-				#^Call to method setInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
-				05/29/2024  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
 			count: 3
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
@@ -15886,14 +15783,6 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:once\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
-			message: """
-				#^Fetching class constant class of deprecated class CDash\\\\Config\\:
-				05/29/2024  Use config\\(\\) instead\\.$#
-			"""
 			count: 1
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
 
