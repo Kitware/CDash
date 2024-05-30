@@ -16,7 +16,6 @@
 require_once 'xml_handlers/NonSaxHandler.php';
 
 use CDash\Config;
-use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
@@ -147,21 +146,20 @@ class JSCoverTarHandler extends NonSaxHandler
                 $coverageFile->FullPath = trim($path);
                 // Get the ID for this coverage file, or create a new empty one
                 //if it doesn't already exist.
-                $db = Database::getInstance();
-                $coveragefile_array = $db->executePrepared('
+                $coveragefile_array = DB::select('
                                           SELECT id
                                           FROM coveragefile
                                           WHERE fullpath=? AND file IS NULL
                                       ', [$path]);
-                if (count($coveragefile_array) == 0) {
+                if (count($coveragefile_array) === 0) {
                     DB::insert('INSERT INTO coveragefile (fullpath) VALUES (?)', [$path]);
-                    $coveragefile_array = $db->executePrepared('
+                    $coveragefile_array = DB::select('
                                               SELECT id
                                               FROM coveragefile
                                               WHERE fullpath=? AND file IS NULL
                                           ', [$path]);
                 }
-                $coverageFile->Id = $coveragefile_array[0]['id'];
+                $coverageFile->Id = $coveragefile_array[0]?->id;
 
                 $coverage = new Coverage();
                 $coverage->CoverageFile = $coverageFile;
