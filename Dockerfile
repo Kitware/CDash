@@ -205,6 +205,9 @@ RUN chmod -R g=u,o-w /etc/pki/ca-trust/extracted /etc/pki/ca-trust/source/anchor
 	  update-ca-trust enable && \
 	  update-ca-trust extract
 
+# Reconfigure httpd to listen on port 80 instead of port 8080
+RUN sed -i 's/Listen 0.0.0.0 8080/Listen 0.0.0.0 80/g' /etc/httpd/conf/httpd.conf
+
 RUN mkdir /var/log/apache2 && \
     chown 1001:1001 /var/log/apache2
 
