@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use CDash\Config;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -90,13 +89,10 @@ class Site extends Model
         global $PHP_ERROR_SUBMISSION_ID;
         $submission_id = $PHP_ERROR_SUBMISSION_ID;
 
-        $config = Config::getInstance();
         // In the async case, look up the IP recorded when the file was
         // originally submitted...
         if ($submission_id) {
             $this->ip = DB::select('SELECT ip FROM submission2ip WHERE submissionid = ?', [$submission_id])[0]->ip;
-        } elseif ($config->get('CDASH_REMOTE_ADDR')) {
-            $this->ip = $config->get('CDASH_REMOTE_ADDR');
         } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
             $this->ip = $_SERVER['REMOTE_ADDR'];
         } else {

@@ -2908,22 +2908,6 @@ parameters:
 			path: app/Models/Project.php
 
 		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 2
-			path: app/Models/Site.php
-
-		-
-			message: """
-				#^Call to method getInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
-				05/29/2024  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/Models/Site.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Models/Site.php
@@ -13465,22 +13449,6 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 3
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 2
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: """
-				#^Call to method getInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
-				05/29/2024  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
 			path: app/cdash/include/ctestparser.php
 
 		-
