@@ -9,6 +9,7 @@ use App\Models\User;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use InvalidArgumentException;
@@ -242,7 +243,7 @@ class AuthTokenUtil
      */
     public static function isTokenExpired(AuthToken $auth_token): bool
     {
-        if (strtotime($auth_token['expires']) < time()) {
+        if ($auth_token['expires'] < Carbon::now()) {
             $auth_token->delete();
             return true;
         }
