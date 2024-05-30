@@ -53,7 +53,6 @@ class KWWebTestCase extends WebTestCase
     public $url = null;
     public $db = null;
     public $logfilename = null;
-    public $configfilename = null;
 
     private $config;
     protected $app;
@@ -68,7 +67,6 @@ class KWWebTestCase extends WebTestCase
         parent::__construct();
 
         $config = Config::getInstance();
-        $this->configfilename = "{$config->get('CDASH_ROOT_DIR')}/../../.env";
         $this->config = $config;
 
         // Create the application on construct so that we have access to app() (container)

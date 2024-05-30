@@ -24,8 +24,7 @@ class ServiceContainer extends Singleton
 
     protected function __construct()
     {
-        $config = Config::getInstance();
-        $definitions = "{$config->get('CDASH_ROOT_DIR')}/config/di.php";
+        $definitions = __DIR__ . "/../../config/di.php";
         $builder = new ContainerBuilder();
         $builder->addDefinitions($definitions);
         $this->container = $builder->build();

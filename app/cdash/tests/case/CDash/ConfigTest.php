@@ -30,8 +30,6 @@ class ConfigTest extends CDashTestCase
 
     public function testDisablePullRequestComments()
     {
-        include 'config/config.php';
-
         Log::shouldReceive('info')
             ->with('pull request commenting is disabled');
         RepositoryUtils::post_pull_request_comment(1, 1, "this is a comment", config('app.url'));

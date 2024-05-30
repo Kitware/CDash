@@ -4,7 +4,8 @@ $cdash = realpath(app_path($cdash_directory_name));
 
 // read in all of our cdash config files
 if ($cdash) {
-    include_once $cdash . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
+    set_include_path(base_path('/app/cdash'));
+    include_once 'bootstrap/cdash_autoload.php';
 }
 
 $unlimited_projects = json_decode(env('UNLIMITED_PROJECTS', ''), true);

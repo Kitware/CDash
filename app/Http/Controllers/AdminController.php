@@ -3,7 +3,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Validators\Password;
-use CDash\Config;
 use CDash\Model\Project;
 use Exception;
 use Illuminate\Http\RedirectResponse;
@@ -121,8 +120,6 @@ final class AdminController extends AbstractController
 
     public function upgrade()
     {
-        $config = Config::getInstance();
-
         @set_time_limit(0);
 
         $xml = begin_XML_for_XSLT();
@@ -141,7 +138,7 @@ final class AdminController extends AbstractController
         @$Audit = $_POST['Audit'];
         @$ClearAudit = $_POST['Clear'];
 
-        $configFile = $config->get('CDASH_ROOT_DIR') . "/AuditReport.log";
+        $configFile = base_path('/app/cdash/AuditReport.log');
 
         // Compute the testtime
         if ($ComputeTestTiming) {
@@ -323,8 +320,6 @@ final class AdminController extends AbstractController
                 ->with('xsl_content', '<font color="#FF0000">Your PHP installation does not support XSL. Please install the XSL extension.</font>');
         }
 
-        $config = Config::getInstance();
-
         if (config('app.env') === 'production') {
             return $this->view('cdash', 'Installation')
                 ->with('xsl', true)
@@ -472,7 +467,7 @@ final class AdminController extends AbstractController
 
                         // If we are with PostGreSQL we need to add some extra functions
                         if ($db_type == 'pgsql') {
-                            $sqlfile = $config->get('CDASH_ROOT_DIR') . '/sql/pgsql/cdash.ext.sql';
+                            $sqlfile = base_path('/app/cdash/sql/pgsql/cdash.ext.sql');
 
                             // Create the language. PgSQL has no way to know if the language already
                             // exists

@@ -259,14 +259,6 @@ parameters:
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 2
-			path: app/Http/Controllers/AdminController.php
-
-		-
 			message: "#^Cannot access offset 'groupid' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
@@ -10737,14 +10729,6 @@ parameters:
 			path: app/cdash/include/CDash/Database.php
 
 		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/include/CDash/ServiceContainer.php
-
-		-
 			message: "#^Method CDash\\\\ServiceContainer\\:\\:create\\(\\) has parameter \\$class_name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/ServiceContainer.php
@@ -11961,14 +11945,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: """
 				#^Call to deprecated method setMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
 				https\\://github\\.com/sebastianbergmann/phpunit/pull/3687$#
 			"""
@@ -12016,11 +11992,6 @@ parameters:
 			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
-			message: "#^Only booleans are allowed in a negated boolean, string\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
 			message: "#^Only booleans are allowed in an if condition, CDash\\\\Database given\\.$#"
 			count: 1
 			path: app/cdash/include/Test/CDashTestCase.php
@@ -12032,11 +12003,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Property CDash\\\\Test\\\\CDashTestCase\\:\\:\\$endpoint \\(string\\) does not accept string\\|false\\.$#"
 			count: 1
 			path: app/cdash/include/Test/CDashTestCase.php
 
@@ -19026,7 +18992,7 @@ parameters:
 				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
 				09/04/2023  Use config\\(\\) instead\\.$#
 			"""
-			count: 2
+			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
@@ -19463,22 +19429,22 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:872\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:870\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:872\\:\\:getSent\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:870\\:\\:getSent\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:872\\:\\:isError\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:870\\:\\:isError\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:872\\:\\:read\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:870\\:\\:read\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -19648,11 +19614,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property KWWebTestCase\\:\\:\\$configfilename has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: "#^Property KWWebTestCase\\:\\:\\$ctest_submission has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -19673,12 +19634,12 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:872\\:\\:\\$read has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:870\\:\\:\\$read has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:872\\:\\:\\$response has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:870\\:\\:\\$response has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 

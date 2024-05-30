@@ -14,7 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(dirname(dirname(dirname(__DIR__)))) . '/config/config.php';
 require_once 'include/api_common.php';
 
 use CDash\Model\Repository;

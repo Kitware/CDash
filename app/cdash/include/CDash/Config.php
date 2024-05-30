@@ -7,7 +7,6 @@ class Config extends Singleton
 
     protected function __construct()
     {
-        include 'config/config.php';
         $this->_config = get_defined_vars();
     }
 
