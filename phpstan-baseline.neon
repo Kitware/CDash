@@ -15983,47 +15983,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/LinkifyCompilerOutputTest.php
 
 		-
-			message: """
-				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
-
-		-
-			message: """
-				#^Call to method getInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
-				05/29/2024  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
-
-		-
-			message: "#^Call to method send\\(\\) on an unknown class CDash\\\\Messaging\\\\Messenger\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
-
-		-
-			message: "#^Instantiated class CDash\\\\Messaging\\\\Messenger not found\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
-
-		-
-			message: "#^Method MessengerTest\\:\\:testSend\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
-
-		-
-			message: "#^PHPDoc tag @var for variable \\$parser contains unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
-
-		-
-			message: "#^PHPDoc tag @var with type AbstractHandler&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
-
-		-
 			message: "#^Access to property \\$Id on an unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
 			count: 2
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
