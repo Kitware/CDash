@@ -2916,6 +2916,14 @@ parameters:
 			path: app/Models/Site.php
 
 		-
+			message: """
+				#^Call to method getInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
+				05/29/2024  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/Models/Site.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Models/Site.php
@@ -5726,6 +5734,14 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 
 		-
+			message: """
+				#^Call to method getInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
+				05/29/2024  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewProjects.php
+
+		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 2
 			path: app/cdash/app/Controller/Api/ViewProjects.php
@@ -5803,11 +5819,6 @@ parameters:
 		-
 			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:\\$build\\.$#"
 			count: 16
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:\\$config\\.$#"
-			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
@@ -10644,6 +10655,14 @@ parameters:
 			path: app/cdash/bootstrap/cdash_autoload.php
 
 		-
+			message: """
+				#^Call to method getInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
+				05/29/2024  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/config/di.php
+
+		-
 			message: "#^Method CDash\\\\Config\\:\\:get\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Config.php
@@ -12736,11 +12755,6 @@ parameters:
 			path: app/cdash/include/autoremove.php
 
 		-
-			message: "#^Anonymous function has an unused use \\$config\\.$#"
-			count: 1
-			path: app/cdash/include/cdashmail.php
-
-		-
 			message: "#^Anonymous function has an unused use \\$headers\\.$#"
 			count: 1
 			path: app/cdash/include/cdashmail.php
@@ -12885,6 +12899,14 @@ parameters:
 
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: """
+				#^Call to method getInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
+				05/29/2024  Use config\\(\\) instead\\.$#
+			"""
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -13498,6 +13520,14 @@ parameters:
 				09/04/2023  Use config\\(\\) instead\\.$#
 			"""
 			count: 2
+			path: app/cdash/include/ctestparser.php
+
+		-
+			message: """
+				#^Call to method getInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
+				05/29/2024  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
 			path: app/cdash/include/ctestparser.php
 
 		-
@@ -15784,6 +15814,14 @@ parameters:
 			path: app/cdash/tests/case/CDash/ConfigTest.php
 
 		-
+			message: """
+				#^Call to method getInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
+				05/29/2024  Use config\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/tests/case/CDash/ConfigTest.php
+
+		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/ConfigTest.php
@@ -15796,6 +15834,14 @@ parameters:
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\)\\.$#"
 			count: 1
+			path: app/cdash/tests/case/CDash/ConfigTest.php
+
+		-
+			message: """
+				#^Fetching class constant class of deprecated class CDash\\\\Config\\:
+				05/29/2024  Use config\\(\\) instead\\.$#
+			"""
+			count: 2
 			path: app/cdash/tests/case/CDash/ConfigTest.php
 
 		-
@@ -15895,6 +15941,14 @@ parameters:
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
 
 		-
+			message: """
+				#^Call to method setInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
+				05/29/2024  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/case/CDash/DatabaseTest.php
+
+		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
 			count: 3
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
@@ -15916,6 +15970,14 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:once\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/DatabaseTest.php
+
+		-
+			message: """
+				#^Fetching class constant class of deprecated class CDash\\\\Config\\:
+				05/29/2024  Use config\\(\\) instead\\.$#
+			"""
 			count: 1
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
 
@@ -16003,6 +16065,14 @@ parameters:
 			message: """
 				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
 				09/04/2023  Use config\\(\\) instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
+
+		-
+			message: """
+				#^Call to method getInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
+				05/29/2024  Use config\\(\\) instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
@@ -19004,6 +19074,14 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
+			message: """
+				#^Call to method getInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
+				05/29/2024  Use config\\(\\) instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
 			message: "#^Cannot call method execute\\(\\) on PDOStatement\\|false\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -19429,22 +19507,22 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:870\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:869\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:870\\:\\:getSent\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:869\\:\\:getSent\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:870\\:\\:isError\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:869\\:\\:isError\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:870\\:\\:read\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:869\\:\\:read\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -19634,12 +19712,12 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:870\\:\\:\\$read has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:869\\:\\:\\$read has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:870\\:\\:\\$response has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:869\\:\\:\\$response has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 

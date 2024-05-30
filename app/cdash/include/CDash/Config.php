@@ -1,6 +1,9 @@
 <?php
 namespace CDash;
 
+/**
+ * @deprecated 05/29/2024  Use config() instead.
+ */
 class Config extends Singleton
 {
     private array $_config;

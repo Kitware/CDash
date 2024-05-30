@@ -22,7 +22,6 @@
 
 require_once 'include/cdashmail.php';
 
-use CDash\Config;
 use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
@@ -265,7 +264,6 @@ function get_cvs_repository_commits($cvsroot, $dates): array
 /** Get the Perforce repository commits */
 function get_p4_repository_commits($root, $branch, $dates): array
 {
-    $config = Config::getInstance();
     $commits = [];
     $users = [];
 

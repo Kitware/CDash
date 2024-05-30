@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use CDash\Config;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -81,8 +80,6 @@ final class ManageUsersController extends AbstractController
 
     public function ajaxFindUsers(): View
     {
-        $config = Config::getInstance();
-
         $search = trim($_GET['search'] ?? '');
         if ($search !== '') {
             if ((bool) config('require_full_email_when_adding_user')) {

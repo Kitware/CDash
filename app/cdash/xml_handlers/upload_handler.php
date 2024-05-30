@@ -16,7 +16,6 @@
 
 require_once 'xml_handlers/abstract_handler.php';
 
-use CDash\Config;
 use CDash\Model\Build;
 use App\Models\BuildInformation;
 use CDash\Model\Label;
@@ -77,7 +76,6 @@ class UploadHandler extends AbstractHandler
     public function startElement($parser, $name, $attributes)
     {
         parent::startElement($parser, $name, $attributes);
-        $config = Config::getInstance();
 
         if ($this->UploadError) {
             return;
@@ -148,7 +146,6 @@ class UploadHandler extends AbstractHandler
     {
         $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
-        $config = Config::getInstance();
 
         if ($this->UploadError) {
             return;

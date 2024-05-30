@@ -19,7 +19,6 @@ require_once 'include/cdashmail.php';
 
 use CDash\Collection\SubscriberCollection;
 
-use CDash\Config;
 use CDash\Database;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
@@ -1031,8 +1030,6 @@ class Project
         if (!$this->Filled) {
             $this->Fill();
         }
-
-        $config = Config::getInstance();
 
         if (intval($this->EmailAdministrator) === 0) {
             return true;

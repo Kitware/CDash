@@ -379,8 +379,6 @@ function get_geolocation($ip)
     $lat = '';
     $long = '';
 
-    $config = Config::getInstance();
-
     if (config('cdash.geolocate_ip_addresses')) {
         // Ask hostip.info for geolocation
         $url = 'http://api.hostip.info/get_html.php?ip=' . $ip . '&position=true';
@@ -758,7 +756,6 @@ function delete_rows_chunked(string $query, array $ids): void
  */
 function unlink_uploaded_file($fileid)
 {
-    $config = Config::getInstance();
     $pdo = get_link_identifier()->getPdo();
     $stmt = $pdo->prepare(
         'SELECT sha1sum, filename, filesize FROM uploadfile

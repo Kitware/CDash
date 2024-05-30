@@ -136,7 +136,6 @@ class KWWebTestCase extends WebTestCase
     {
         //echo "stopCodeCoverage called...\n";
         if (extension_loaded('xdebug')) {
-            $config = Config::getInstance();
             $data = xdebug_get_code_coverage();
             xdebug_stop_code_coverage();
             //echo "xdebug_stop_code_coverage called...\n";

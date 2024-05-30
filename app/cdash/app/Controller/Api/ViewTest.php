@@ -19,7 +19,6 @@ namespace CDash\Controller\Api;
 use App\Models\BuildTest;
 use App\Models\Project as EloquentProject;
 
-use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use App\Models\BuildInformation;
@@ -38,7 +37,6 @@ class ViewTest extends BuildApi
     {
         parent::__construct($db, $build);
         $this->JSONEncodeResponse = true;
-        $this->config = Config::getInstance();
         $this->project->Fill();
 
         $this->extraMeasurements = [];

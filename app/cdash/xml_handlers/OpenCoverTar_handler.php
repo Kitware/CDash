@@ -16,7 +16,6 @@
 
 require_once 'xml_handlers/abstract_handler.php';
 
-use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
@@ -139,8 +138,6 @@ class OpenCoverTarHandler extends AbstractHandler
     **/
     public function Parse($filename)
     {
-        $config = Config::getInstance();
-
         // Create a new directory where we can extract our tarball.
         $dirName = Storage::path('parsed') . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_FILENAME);
         mkdir($dirName);
