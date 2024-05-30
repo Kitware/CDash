@@ -5726,29 +5726,13 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 
 		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: """
-				#^Call to method getInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
-				05/29/2024  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 2
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 4
+			count: 3
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 
 		-

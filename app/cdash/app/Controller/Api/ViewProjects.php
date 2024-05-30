@@ -16,7 +16,6 @@
 namespace CDash\Controller\Api;
 
 use App\Models\User;
-use CDash\Config;
 use CDash\Database;
 use App\Models\Banner;
 use CDash\Model\Project;
@@ -63,9 +62,6 @@ class ViewProjects extends \CDash\Controller\Api
         $response['title'] = 'Projects';
         $response['subtitle'] = 'Projects';
         $response['googletracker'] = config('cdash.default_google_analytics');
-        if (Config::getInstance()->get('CDASH_NO_REGISTRATION') == 1) {
-            $response['noregister'] = 1;
-        }
 
         $response['showoldtoggle'] = true;
         $this->activeProjectDays = (int) config('cdash.active_project_days');
