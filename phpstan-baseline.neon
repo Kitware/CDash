@@ -19019,14 +19019,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: """
-				#^Call to method getInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
-				05/29/2024  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: "#^Cannot call method execute\\(\\) on PDOStatement\\|false\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -19148,16 +19140,6 @@ parameters:
 
 		-
 			message: "#^Method KWWebTestCase\\:\\:check_submission_result\\(\\) has parameter \\$result with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method KWWebTestCase\\:\\:config\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method KWWebTestCase\\:\\:config\\(\\) has parameter \\$var_name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -19452,22 +19434,22 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:865\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:865\\:\\:getSent\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:getSent\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:865\\:\\:isError\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:isError\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:865\\:\\:read\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:read\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -19632,11 +19614,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property KWWebTestCase\\:\\:\\$config has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: "#^Property KWWebTestCase\\:\\:\\$ctest_submission has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -19657,12 +19634,12 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:865\\:\\:\\$read has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:\\$read has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:865\\:\\:\\$response has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:\\$response has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 

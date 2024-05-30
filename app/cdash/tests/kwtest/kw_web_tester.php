@@ -24,7 +24,6 @@ if (!defined('LARAVEL_START')) {
 }
 
 use App\Models\User;
-use CDash\Config;
 use CDash\Model\Project;
 use App\Http\Kernel;
 use Illuminate\Http\Request;
@@ -54,7 +53,6 @@ class KWWebTestCase extends WebTestCase
     public $db = null;
     public $logfilename = null;
 
-    private $config;
     protected $app;
     protected $actingAs = [];
     protected $ctest_submission = null;
@@ -65,9 +63,6 @@ class KWWebTestCase extends WebTestCase
     public function __construct()
     {
         parent::__construct();
-
-        $config = Config::getInstance();
-        $this->config = $config;
 
         // Create the application on construct so that we have access to app() (container)
         $this->app = $this->createApplication();
@@ -88,11 +83,6 @@ class KWWebTestCase extends WebTestCase
     {
         $this->actingAs = [];
         return new CDashControllerBrowser($this);
-    }
-
-    public function config($var_name)
-    {
-        return $this->config->get($var_name);
     }
 
     public function setUp()
