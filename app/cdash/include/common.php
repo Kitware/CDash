@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Utils\TestingDay;
 
-use CDash\Config;
 use CDash\Database;
 use CDash\ServiceContainer;
 use CDash\Model\Build;
@@ -82,22 +81,12 @@ function xslt_process(XSLTProcessor $xsltproc,
  */
 function generate_XSLT($xml, string $pageName, bool $return_html = false): string
 {
-    $config = Config::getInstance();
-
     $xh = new XSLTProcessor();
 
     $arguments = [
         '/_xml' => $xml,
     ];
 
-    if (!empty($config->get('CDASH_DEBUG_XML'))) {
-        $tmp = preg_replace("#<[A-Za-z0-9\-_.]{1,250}>#", "\\0\n", $xml);
-        $tmp = preg_replace("#</[A-Za-z0-9\-_.]{1,250}>#", "\n\\0\n", $tmp);
-        $inF = fopen($config->get('CDASH_DEBUG_XML'), 'w');
-        fwrite($inF, $tmp);
-        fclose($inF);
-        unset($inF);
-    }
     $xslpage = $pageName . '.xsl';
 
     $html = xslt_process($xh, 'arg:/_xml', $xslpage, null, $arguments);

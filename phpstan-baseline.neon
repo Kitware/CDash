@@ -12859,14 +12859,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 2
-			path: app/cdash/include/common.php
-
-		-
-			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -12883,14 +12875,6 @@ parameters:
 
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: """
-				#^Call to method getInstance\\(\\) of deprecated class CDash\\\\Singleton\\:
-				05/29/2024  Use config\\(\\) instead\\.$#
-			"""
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -12931,7 +12915,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 8
+			count: 7
 			path: app/cdash/include/common.php
 
 		-
@@ -13405,27 +13389,12 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fwrite expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|false given\\.$#"
 			count: 2
 			path: app/cdash/include/common.php
 
 		-
 			message: "#^Parameter \\#2 \\$baseTimestamp of function strtotime expects int\\|null, int\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of function fwrite expects string, array\\<int, string\\>\\|string\\|null given\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -13441,7 +13410,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, \\(array\\<int, string\\>\\|string\\|null\\) given\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/include/common.php
 
 		-
