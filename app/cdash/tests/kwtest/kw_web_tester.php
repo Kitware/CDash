@@ -343,10 +343,6 @@ class KWWebTestCase extends WebTestCase
             return false;
         }
 
-        if (Config::getInstance()->get('CDASH_BERNARD_SUBMISSION')) {
-            sleep(1);
-        }
-
         if ($this->findString($result, 'error') ||
             $this->findString($result, 'Warning') ||
             $this->findString($result, 'Notice')
