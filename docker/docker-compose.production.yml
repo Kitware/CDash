@@ -3,7 +3,7 @@ services:
     env_file:
       - ../.env
     ports:
-      - 443:80
+      - 443:8080
     volumes:
       - "${SSL_CERTIFICATE_FILE}:/var/www/cdash.pem"
       - "${SSL_CERTIFICATE_KEY_FILE}:/var/www/cdash.key"

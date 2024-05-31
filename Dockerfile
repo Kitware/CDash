@@ -98,6 +98,9 @@ RUN mkdir -p /var/www/.npm && \
 # Copy Apache site-available config files into the image.
 COPY ./docker/cdash-site.conf /etc/apache2/sites-available/cdash-site.conf
 
+# Change apache config to listen on port 8080 instead of port 80
+RUN sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
+
 # Remove default site, add cdash-site, enable mod_rewrite, enable php
 RUN a2dissite 000-default && \
     a2ensite cdash-site && \
@@ -204,9 +207,6 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
 RUN chmod -R g=u,o-w /etc/pki/ca-trust/extracted /etc/pki/ca-trust/source/anchors && \
 	  update-ca-trust enable && \
 	  update-ca-trust extract
-
-# Reconfigure httpd to listen on port 80 instead of port 8080
-RUN sed -i 's/Listen 0.0.0.0 8080/Listen 0.0.0.0 80/g' /etc/httpd/conf/httpd.conf
 
 RUN mkdir /var/log/apache2 && \
     chown 1001:1001 /var/log/apache2
