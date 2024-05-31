@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Utils\TestingDay;
 
-use CDash\Config;
 use CDash\Database;
 use CDash\ServiceContainer;
 use CDash\Model\Build;
@@ -82,22 +81,12 @@ function xslt_process(XSLTProcessor $xsltproc,
  */
 function generate_XSLT($xml, string $pageName, bool $return_html = false): string
 {
-    $config = Config::getInstance();
-
     $xh = new XSLTProcessor();
 
     $arguments = [
         '/_xml' => $xml,
     ];
 
-    if (!empty($config->get('CDASH_DEBUG_XML'))) {
-        $tmp = preg_replace("#<[A-Za-z0-9\-_.]{1,250}>#", "\\0\n", $xml);
-        $tmp = preg_replace("#</[A-Za-z0-9\-_.]{1,250}>#", "\n\\0\n", $tmp);
-        $inF = fopen($config->get('CDASH_DEBUG_XML'), 'w');
-        fwrite($inF, $tmp);
-        fclose($inF);
-        unset($inF);
-    }
     $xslpage = $pageName . '.xsl';
 
     $html = xslt_process($xh, 'arg:/_xml', $xslpage, null, $arguments);
@@ -379,8 +368,6 @@ function get_geolocation($ip)
     $lat = '';
     $long = '';
 
-    $config = Config::getInstance();
-
     if (config('cdash.geolocate_ip_addresses')) {
         // Ask hostip.info for geolocation
         $url = 'http://api.hostip.info/get_html.php?ip=' . $ip . '&position=true';
@@ -424,16 +411,6 @@ function get_geolocation($ip)
     ) {
         $location['latitude'] = $lat;
         $location['longitude'] = $long;
-    } else {
-        // Check if we have a list of default locations
-
-        foreach ($config->get('CDASH_DEFAULT_IP_LOCATIONS') as $defaultlocation) {
-            $defaultip = $defaultlocation['IP'];
-            if (preg_match('#^' . strtr(preg_quote($defaultip, '#'), ['\*' => '.*', '\?' => '.']) . '$#i', $ip)) {
-                $location['latitude'] = $defaultlocation['latitude'];
-                $location['longitude'] = $defaultlocation['longitude'];
-            }
-        }
     }
     return $location;
 }
@@ -768,7 +745,6 @@ function delete_rows_chunked(string $query, array $ids): void
  */
 function unlink_uploaded_file($fileid)
 {
-    $config = Config::getInstance();
     $pdo = get_link_identifier()->getPdo();
     $stmt = $pdo->prepare(
         'SELECT sha1sum, filename, filesize FROM uploadfile
@@ -1152,10 +1128,7 @@ function get_css_file(): string
 
 function begin_XML_for_XSLT(): string
 {
-    $config = CDash\Config::getInstance();
-
     $css_file = get_css_file();
-    $config->set('CDASH_CSS_FILE', $css_file);
 
     $xml = '<?xml version="1.0" encoding="UTF-8"?><cdash>';
     $xml .= add_XML_value('cssfile', $css_file);

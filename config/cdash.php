@@ -4,7 +4,8 @@ $cdash = realpath(app_path($cdash_directory_name));
 
 // read in all of our cdash config files
 if ($cdash) {
-    include_once $cdash . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
+    set_include_path(base_path('/app/cdash'));
+    include_once 'bootstrap/cdash_autoload.php';
 }
 
 $unlimited_projects = json_decode(env('UNLIMITED_PROJECTS', ''), true);
@@ -85,4 +86,5 @@ return [
     'max_project_visibility' => env('MAX_PROJECT_VISIBILITY', 'PUBLIC'),
     'require_authenticated_submissions' => env('REQUIRE_AUTHENTICATED_SUBMISSIONS', false),
     'use_vcs_api' => env('USE_VCS_API', true),
+    'require_full_email_when_adding_user' => env('REQUIRE_FULL_EMAIL_WHEN_ADDING_USER', false),
 ];

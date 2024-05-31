@@ -14,8 +14,10 @@
  * =========================================================================
  */
 
+use App\Utils\RepositoryUtils;
 use CDash\Lib\Repository\GitHub;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\Log;
 use PHPUnit\Framework\MockObject\MockObject;
 use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
@@ -348,5 +350,12 @@ class GitHubTest extends TestCase
     {
         $sut = $this->setupAuthentication();
         $sut->createCheck(str_replace('-', '', Uuid::uuid4()->toString()));
+    }
+
+    public function testDisablePullRequestComments()
+    {
+        Log::shouldReceive('info')
+            ->with('pull request commenting is disabled');
+        RepositoryUtils::post_pull_request_comment(1, 1, "this is a comment", config('app.url'));
     }
 }

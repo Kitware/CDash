@@ -22,7 +22,6 @@
 
 require_once 'include/cdashmail.php';
 
-use CDash\Config;
 use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
@@ -265,14 +264,13 @@ function get_cvs_repository_commits($cvsroot, $dates): array
 /** Get the Perforce repository commits */
 function get_p4_repository_commits($root, $branch, $dates): array
 {
-    $config = Config::getInstance();
     $commits = [];
     $users = [];
 
     // Add the command line specified by the user in the "Repository" field
     // of the project settings "Repository" tab and set the message language
     // to be English
-    $p4command = '"' . $config->get('CDASH_P4_COMMAND') . '" ' . $root . ' -L en';
+    $p4command = '"p4" ' . $root . ' -L en';
 
     // Perforce needs the dates separated with / and not with -
     $fromtime = str_replace('-', '/', gmdate(FMT_DATETIMESTD, $dates['nightly-1'] + 1));
@@ -343,15 +341,13 @@ function get_p4_repository_commits($root, $branch, $dates): array
 /** Get the GIT repository commits */
 function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision): array
 {
-    $config = Config::getInstance();
     $commits = [];
 
-    $gitcommand = $config->get('CDASH_GIT_COMMAND');
-    $gitlocaldirectory = $config->get('CDASH_DEFAULT_GIT_DIRECTORY');
+    $gitlocaldirectory = 'git';
 
     // Check that the default git directory exists and is writable
     if (empty($gitlocaldirectory) || !is_writable($gitlocaldirectory)) {
-        add_log('CDASH_DEFAULT_GIT_DIRECTORY is not set in config or not writable.', 'get_git_repository_commits');
+        add_log('git directory is not writable.', 'get_git_repository_commits');
         $results['commits'] = $commits;
         return $results;
     }
@@ -363,12 +359,12 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
     // If the current directory doesn't exist we create it
     if (!file_exists($gitdir)) {
         // If the bare repository doesn't exist we clone it
-        $command = 'cd "' . $gitlocaldirectory . '" && "' . $gitcommand . '" clone --bare ' . $gitroot . ' ' . $gitdirectory;
+        $command = 'cd "' . $gitlocaldirectory . '" && "' . 'git' . '" clone --bare ' . $gitroot . ' ' . $gitdirectory;
         $raw_output = `$command`;
     }
 
     // Update the current bare repository
-    $command = '"' . $gitcommand . '" --git-dir="' . $gitdir . '" fetch ' . $gitroot;
+    $command = '"' . 'git' . '" --git-dir="' . $gitdir . '" fetch ' . $gitroot;
     if ($branch != '') {
         $command .= ' +' . $branch . ':' . $branch;
     }
@@ -380,20 +376,20 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
         $branch = 'FETCH_HEAD';
     }
 
-    $command = '"' . $gitcommand . '" --git-dir="' . $gitdir . '" rev-parse ' . $branch;
+    $command = '"' . 'git' . '" --git-dir="' . $gitdir . '" rev-parse ' . $branch;
     $currentrevision = `$command`;
     $results['currentrevision'] = trim($currentrevision);
 
     // Find the previous day version
     if ($previousrevision != '') {
         // Compare with the fetch head for now
-        $command = '"' . $gitcommand . '" --git-dir="' . $gitdir . '" whatchanged ' . $previousrevision . '..' . $currentrevision . ' --pretty=medium ' . $branch;
+        $command = '"' . 'git' . '" --git-dir="' . $gitdir . '" whatchanged ' . $previousrevision . '..' . $currentrevision . ' --pretty=medium ' . $branch;
     } else {
         $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1'] + 1) . ' GMT';
         $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . ' GMT';
 
         // Compare with the fetch head for now
-        $command = '"' . $gitcommand . '" --git-dir="' . $gitdir . '" whatchanged --since="' . $fromtime . '" --until="' . $totime . '" --pretty=medium ' . $branch;
+        $command = '"' . 'git' . '" --git-dir="' . $gitdir . '" whatchanged --since="' . $fromtime . '" --until="' . $totime . '" --pretty=medium ' . $branch;
     }
 
     $raw_output = `$command`;
@@ -737,8 +733,6 @@ function get_repository_commits(int $projectid, $dates): array
 /** Send email if expected build from last day have not been submitting */
 function sendEmailExpectedBuilds($projectid, $currentstarttime): void
 {
-    $config = Config::getInstance();
-
     $db = Database::getInstance();
 
     $currentEndUTCTime = gmdate(FMT_DATETIME, $currentstarttime);
@@ -803,8 +797,6 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime): void
     $summary = 'The following expected build(s) for the project *' . $projectname . "* didn't submit yesterday:\n";
     $missingbuilds = 0;
 
-    $serverName = $config->getServer();
-
     foreach ($build2grouprule as $build2grouprule_array) {
         $builtype = $build2grouprule_array['buildtype'];
         $buildname = $build2grouprule_array['buildname'];
@@ -832,7 +824,7 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime): void
             $missingSummary = 'The following expected build(s) for the project ' . $projectname . " didn't submit yesterday:\n";
             $missingSummary .= '* ' . $sitename . ' - ' . $buildname . ' (' . $builtype . ")\n";
             $missingSummary .= "\n" . url('/index.php') . '?project=' . urlencode($projectname) . "\n";
-            $missingSummary .= "\n-CDash on " . $serverName . "\n";
+            $missingSummary .= "\n-CDash\n";
 
             if (cdashmail($recipients, $missingTitle, $missingSummary)) {
                 add_log('email sent to: ' . implode(', ', $recipients), 'sendEmailExpectedBuilds');
@@ -848,7 +840,7 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime): void
     // of missing builds
     if ($missingbuilds == 1) {
         $summary .= "\n" . url('/index.php') . '?project=' . urlencode($projectname) . "\n";
-        $summary .= "\n-CDash on " . $serverName . "\n";
+        $summary .= "\n-CDash\n";
 
         $title = 'CDash [' . $projectname . '] - Missing Builds';
 
@@ -902,7 +894,6 @@ function cleanUserTemp(): void
 /** Send an email to administrator of the project for users who are not registered */
 function sendEmailUnregisteredUsers(int $projectid, $cvsauthors): void
 {
-    $config = Config::getInstance();
     $unregisteredusers = [];
     foreach ($cvsauthors as $author) {
         if ($author == 'Local User') {
@@ -940,7 +931,6 @@ function sendEmailUnregisteredUsers(int $projectid, $cvsauthors): void
         // Send the email
         if (!empty($recipients)) {
             $projectname = get_project_name($projectid);
-            $serverName = $config->getServer();
 
             $title = 'CDash [' . $projectname . '] - Unregistered users';
             $body = 'The following users are checking in code but are not registered for the project ' . $projectname . ":\n";
@@ -949,13 +939,12 @@ function sendEmailUnregisteredUsers(int $projectid, $cvsauthors): void
                 $body .= '* ' . $unreg . "\n";
             }
             $body .= "\n You should register these users to your project. They are currently not receiving any emails from CDash.\n";
-            $body .= "\n-CDash on " . $serverName . "\n";
+            $body .= "\n-CDash\n";
 
             add_log($title . ' : ' . $body . ' : ' . implode(', ', $recipients), 'sendEmailUnregisteredUsers');
 
             if (cdashmail($recipients, $title, $body)) {
                 add_log('email sent to: ' . implode(', ', $recipients), 'sendEmailUnregisteredUsers');
-                return;
             } else {
                 add_log('cannot send email to: ' . implode(', ', $recipients), 'sendEmailUnregisteredUsers');
             }

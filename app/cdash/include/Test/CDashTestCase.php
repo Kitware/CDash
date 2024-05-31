@@ -13,7 +13,6 @@
 =========================================================================*/
 namespace CDash\Test;
 
-use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\ServiceContainer;
@@ -106,10 +105,8 @@ class CDashTestCase extends TestCase
 
     protected function setEndpoint($endpoint)
     {
-        $config = Config::getInstance();
-        $root = $config->get('CDASH_ROOT_DIR');
-        $this->endpoint = realpath("{$root}/public/api/v1/{$endpoint}.php");
-        if (!$this->endpoint) {
+        $this->endpoint = base_path("/app/cdash/public/api/v1/{$endpoint}.php");
+        if (!file_exists($this->endpoint)) {
             throw new \Exception('Endpoint does not exist');
         }
     }

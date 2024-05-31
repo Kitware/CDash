@@ -19,7 +19,6 @@ require_once 'include/cdashmail.php';
 
 use CDash\Collection\SubscriberCollection;
 
-use CDash\Config;
 use CDash\Database;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
@@ -1032,8 +1031,6 @@ class Project
             $this->Fill();
         }
 
-        $config = Config::getInstance();
-
         if (intval($this->EmailAdministrator) === 0) {
             return true;
         }
@@ -1054,9 +1051,8 @@ class Project
             $emailtitle = 'CDash [' . $projectname . '] - Administration ';
             $emailbody = 'Object: ' . $subject . "\n";
             $emailbody .= $body . "\n";
-            $serverName = $config->getServer();
 
-            $emailbody .= "\n-CDash on " . $serverName . "\n";
+            $emailbody .= "\n-CDash\n";
 
             if (cdashmail($recipients, $emailtitle, $emailbody)) {
                 add_log('email sent to: ' . implode(', ', $recipients), 'SendEmailToAdmin');

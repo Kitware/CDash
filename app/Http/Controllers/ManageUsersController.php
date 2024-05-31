@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use CDash\Config;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -76,16 +75,14 @@ final class ManageUsersController extends AbstractController
             ->with('warning', $warning)
             ->with('error', $error)
             ->with('search', $_POST['search'] ?? '')
-            ->with('fullemail', Config::getInstance()->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER'));
+            ->with('fullemail', boolval(config('require_full_email_when_adding_user')) ? 1 : 0);
     }
 
     public function ajaxFindUsers(): View
     {
-        $config = Config::getInstance();
-
         $search = trim($_GET['search'] ?? '');
         if ($search !== '') {
-            if ($config->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER') == 1) {
+            if ((bool) config('require_full_email_when_adding_user')) {
                 $sql = "email=?";
                 $params = [$search];
             } else {

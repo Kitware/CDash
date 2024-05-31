@@ -5,7 +5,6 @@ use App\Models\User;
 use App\Utils\AuthTokenUtil;
 use App\Utils\PageTimer;
 use App\Validators\Password;
-use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
@@ -30,7 +29,6 @@ final class UserController extends AbstractController
 
     public function userPageContent(): JsonResponse
     {
-        $config = Config::getInstance();
         $response = [];
         if (!Auth::check()) {
             $response['requirelogin'] = 1;
@@ -479,8 +477,6 @@ final class UserController extends AbstractController
 
     public function recoverPassword(): View
     {
-        $config = Config::getInstance();
-
         $message = '';
         $warning = '';
         if (isset($_POST['recover'])) {

@@ -47,61 +47,6 @@ parameters:
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Method App\\\\Console\\\\Commands\\\\MigrateConfig\\:\\:handle\\(\\) should return mixed but return statement is missing\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, resource\\|false given\\.$#"
-			count: 2
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, string\\|false given\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^PHPDoc type string of property App\\\\Console\\\\Commands\\\\MigrateConfig\\:\\:\\$description is not the same as PHPDoc type string\\|null of overridden property Illuminate\\\\Console\\\\Command\\:\\:\\$description\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, \\(int\\|string\\) given\\.$#"
-			count: 2
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
-			count: 2
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fgets expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fwrite expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, \\(int\\|string\\) given\\.$#"
-			count: 1
-			path: app/Console/Commands/MigrateConfig.php
-
-		-
 			message: "#^Method App\\\\Console\\\\Commands\\\\QueueSubmissions\\:\\:handle\\(\\) should return mixed but return statement is missing\\.$#"
 			count: 1
 			path: app/Console/Commands/QueueSubmissions.php
@@ -311,14 +256,6 @@ parameters:
 				04/01/2023$#
 			"""
 			count: 12
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 4
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -921,14 +858,6 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			message: "#^Cannot access offset 'branchestested' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
@@ -1000,7 +929,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 60
+			count: 59
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1424,21 +1353,13 @@ parameters:
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 2
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 5
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 2
+			count: 1
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
@@ -1532,14 +1453,6 @@ parameters:
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 2
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
 			message: "#^Cannot access property \\$admin on App\\\\Models\\\\User\\|null\\.$#"
 			count: 2
 			path: app/Http/Controllers/ManageUsersController.php
@@ -1557,11 +1470,6 @@ parameters:
 		-
 			message: "#^Cannot call method save\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
 			count: 2
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
 			path: app/Http/Controllers/ManageUsersController.php
 
 		-
@@ -2998,14 +2906,6 @@ parameters:
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
 			count: 3
 			path: app/Models/Project.php
-
-		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 2
-			path: app/Models/Site.php
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
@@ -5810,21 +5710,13 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 
 		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 2
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 4
+			count: 3
 			path: app/cdash/app/Controller/Api/ViewProjects.php
 
 		-
@@ -5895,11 +5787,6 @@ parameters:
 		-
 			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:\\$build\\.$#"
 			count: 16
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:\\$config\\.$#"
-			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
@@ -9516,14 +9403,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use url\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: """
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -10744,41 +10623,6 @@ parameters:
 			path: app/cdash/bootstrap/cdash_autoload.php
 
 		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
-			message: "#^Method CDash\\\\Config\\:\\:get\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
-			message: "#^Method CDash\\\\Config\\:\\:get\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
-			message: "#^Method CDash\\\\Config\\:\\:set\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
-			message: "#^Method CDash\\\\Config\\:\\:set\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
-			message: "#^Method CDash\\\\Config\\:\\:set\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
-			message: "#^Property CDash\\\\Config\\:\\:\\$_config type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Config.php
-
-		-
 			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Database.php
@@ -10832,14 +10676,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
 			count: 2
 			path: app/cdash/include/CDash/Database.php
-
-		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/include/CDash/ServiceContainer.php
 
 		-
 			message: "#^Method CDash\\\\ServiceContainer\\:\\:create\\(\\) has parameter \\$class_name with no type specified\\.$#"
@@ -12058,14 +11894,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: """
 				#^Call to deprecated method setMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
 				https\\://github\\.com/sebastianbergmann/phpunit/pull/3687$#
 			"""
@@ -12113,11 +11941,6 @@ parameters:
 			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
-			message: "#^Only booleans are allowed in a negated boolean, string\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
 			message: "#^Only booleans are allowed in an if condition, CDash\\\\Database given\\.$#"
 			count: 1
 			path: app/cdash/include/Test/CDashTestCase.php
@@ -12129,11 +11952,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Property CDash\\\\Test\\\\CDashTestCase\\:\\:\\$endpoint \\(string\\) does not accept string\\|false\\.$#"
 			count: 1
 			path: app/cdash/include/Test/CDashTestCase.php
 
@@ -12867,11 +12685,6 @@ parameters:
 			path: app/cdash/include/autoremove.php
 
 		-
-			message: "#^Anonymous function has an unused use \\$config\\.$#"
-			count: 1
-			path: app/cdash/include/cdashmail.php
-
-		-
 			message: "#^Anonymous function has an unused use \\$headers\\.$#"
 			count: 1
 			path: app/cdash/include/cdashmail.php
@@ -12992,14 +12805,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 3
-			path: app/cdash/include/common.php
-
-		-
-			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -13010,14 +12815,6 @@ parameters:
 			message: """
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: """
-				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/include/common.php
@@ -13064,7 +12861,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 8
+			count: 7
 			path: app/cdash/include/common.php
 
 		-
@@ -13453,11 +13250,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Only booleans are allowed in an if condition, int\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Only booleans are allowed in an if condition, int\\|string\\|null given\\.$#"
 			count: 2
 			path: app/cdash/include/common.php
@@ -13543,27 +13335,12 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fwrite expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|false given\\.$#"
 			count: 2
 			path: app/cdash/include/common.php
 
 		-
 			message: "#^Parameter \\#2 \\$baseTimestamp of function strtotime expects int\\|null, int\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of function fwrite expects string, array\\<int, string\\>\\|string\\|null given\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -13579,7 +13356,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, \\(array\\<int, string\\>\\|string\\|null\\) given\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/include/common.php
 
 		-
@@ -13634,14 +13411,6 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 3
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 2
 			path: app/cdash/include/ctestparser.php
 
 		-
@@ -13919,22 +13688,6 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 8
-			path: app/cdash/include/dailyupdates.php
-
-		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 3
-			path: app/cdash/include/dailyupdates.php
-
-		-
-			message: """
-				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use url\\(\\) instead\\.$#
-			"""
-			count: 2
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -14256,6 +14009,11 @@ parameters:
 			path: app/cdash/include/dailyupdates.php
 
 		-
+			message: "#^Variable \\$gitlocaldirectory in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 1
+			path: app/cdash/include/dailyupdates.php
+
+		-
 			message: "#^Access to an undefined property DefaultFilters\\:\\:\\$TextConcat\\.$#"
 			count: 2
 			path: app/cdash/include/filterdataFunctions.php
@@ -14320,14 +14078,6 @@ parameters:
 				04/01/2023$#
 			"""
 			count: 5
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
@@ -14908,14 +14658,6 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 2
-			path: app/cdash/include/sendemail.php
-
-		-
-			message: """
-				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use url\\(\\) instead\\.$#
-			"""
-			count: 1
 			path: app/cdash/include/sendemail.php
 
 		-
@@ -15939,70 +15681,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
 
 		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 3
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: """
-				#^Call to deprecated method getServer\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use url\\(\\) instead\\.$#
-			"""
-			count: 2
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: """
-				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 5
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
-			count: 4
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: "#^Method ConfigTest\\:\\:testConstruction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: "#^Method ConfigTest\\:\\:testDisablePullRequestComments\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: "#^Method ConfigTest\\:\\:testGetInstance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: "#^Method ConfigTest\\:\\:testGetServer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
-			message: "#^Method ConfigTest\\:\\:testGetSet\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigTest.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
@@ -16179,6 +15857,11 @@ parameters:
 			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
 
 		-
+			message: "#^Method GitHubTest\\:\\:testDisablePullRequestComments\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
+
+		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/LinkifyCompilerOutputTest.php
@@ -16187,39 +15870,6 @@ parameters:
 			message: "#^Method LinkifyCompilerOutputTest\\:\\:testLinkifyCompilerOutput\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/LinkifyCompilerOutputTest.php
-
-		-
-			message: """
-				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
-
-		-
-			message: "#^Call to method send\\(\\) on an unknown class CDash\\\\Messaging\\\\Messenger\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
-
-		-
-			message: "#^Instantiated class CDash\\\\Messaging\\\\Messenger not found\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
-
-		-
-			message: "#^Method MessengerTest\\:\\:testSend\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
-
-		-
-			message: "#^PHPDoc tag @var for variable \\$parser contains unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
-
-		-
-			message: "#^PHPDoc tag @var with type AbstractHandler&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/MessengerTest.php
 
 		-
 			message: "#^Access to property \\$Id on an unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
@@ -17955,14 +17605,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
 		-
-			message: """
-				#^Call to deprecated method set\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\)\\.$#"
 			count: 4
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
@@ -19186,14 +18828,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method get\\(\\) of class CDash\\\\Config\\:
-				09/04/2023  Use config\\(\\) instead\\.$#
-			"""
-			count: 2
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -19322,16 +18956,6 @@ parameters:
 
 		-
 			message: "#^Method KWWebTestCase\\:\\:check_submission_result\\(\\) has parameter \\$result with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method KWWebTestCase\\:\\:config\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method KWWebTestCase\\:\\:config\\(\\) has parameter \\$var_name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -19626,22 +19250,22 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:872\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:872\\:\\:getSent\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:getSent\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:872\\:\\:isError\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:isError\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:872\\:\\:read\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:read\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -19806,16 +19430,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property KWWebTestCase\\:\\:\\$config has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Property KWWebTestCase\\:\\:\\$configfilename has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: "#^Property KWWebTestCase\\:\\:\\$ctest_submission has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -19836,12 +19450,12 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:872\\:\\:\\$read has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:\\$read has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:872\\:\\:\\$response has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:\\$response has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -21147,7 +20761,7 @@ parameters:
 			path: app/cdash/tests/test_buildmodel.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_buildmodel.php
 
@@ -29305,26 +28919,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$user of method Illuminate\\\\Foundation\\\\Testing\\\\TestCase\\:\\:assertAuthenticatedAs\\(\\) expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, App\\\\Models\\\\User\\|null given\\.$#"
 			count: 3
 			path: tests/Feature/LoginAndRegistration.php
-
-		-
-			message: "#^Parameter \\#2 \\$haystack of static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertStringContainsString\\(\\) expects string, string\\|false given\\.$#"
-			count: 23
-			path: tests/Feature/MigrateConfigCommand.php
-
-		-
-			message: "#^Parameter \\#2 \\$haystack of static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertStringNotContainsString\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: tests/Feature/MigrateConfigCommand.php
-
-		-
-			message: "#^Property Tests\\\\Feature\\\\MigrateConfigCommand\\:\\:\\$config_file has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/MigrateConfigCommand.php
-
-		-
-			message: "#^Property Tests\\\\Feature\\\\MigrateConfigCommand\\:\\:\\$test_file has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/MigrateConfigCommand.php
 
 		-
 			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"

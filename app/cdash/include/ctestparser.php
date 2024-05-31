@@ -29,7 +29,6 @@ require_once 'xml_handlers/testing_junit_handler.php';
 require_once 'xml_handlers/update_handler.php';
 require_once 'xml_handlers/upload_handler.php';
 
-use CDash\Config;
 use CDash\Database;
 use App\Models\BuildFile;
 use CDash\Model\Project;
@@ -193,10 +192,7 @@ function ctest_parse($filehandle, $projectid, $expected_md5 = '')
 
     // Try to get the IP of the build.
     $ip = null;
-    $config = Config::getInstance();
-    if ($config->get('CDASH_REMOTE_ADDR')) {
-        $ip = $config->get('CDASH_REMOTE_ADDR');
-    } elseif (array_key_exists('REMOTE_ADDR', $_SERVER)) {
+    if (array_key_exists('REMOTE_ADDR', $_SERVER)) {
         $ip = $_SERVER['REMOTE_ADDR'];
     }
 

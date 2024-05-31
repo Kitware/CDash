@@ -17,7 +17,6 @@
 require_once 'include/cdashmail.php';
 
 use App\Models\Configure;
-use CDash\Config;
 use CDash\Database;
 use CDash\Messaging\Notification\Email\EmailBuilder;
 use CDash\Messaging\Notification\Email\EmailNotificationFactory;
@@ -483,10 +482,7 @@ function generate_broken_build_message(array $emailtext, $Build, $Project): arra
         $body .= $summary;
     }
 
-    $config = Config::getInstance();
-    $serverName = $config->getServer();
-
-    $footer = "\n-CDash on " . $serverName . "\n";
+    $footer = "\n-CDash\n";
     return ['title' => $title, 'preamble' => $preamble, 'body' => $body,
             'footer' => $footer];
 }

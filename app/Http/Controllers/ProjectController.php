@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Utils\PageTimer;
-use CDash\Config;
 use CDash\Model\Project;
 use CDash\Model\Repository;
 use CDash\Model\UserProject;
@@ -18,7 +17,6 @@ final class ProjectController extends AbstractProjectController
     public function apiCreateProject(): JsonResponse
     {
         $pageTimer = new PageTimer();
-        $config = Config::getInstance();
 
         if (isset($_GET['projectid'])) {
             // We're editing a project if a projectid was specified

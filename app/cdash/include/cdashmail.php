@@ -14,12 +14,10 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\Config;
 use Illuminate\Support\Facades\Mail;
 
 function cdashmail($to, $subject, $body, $headers = false)
 {
-    $config = Config::getInstance();
     if (empty($to)) {
         add_log('Cannot send email. Recipient is not set.', 'cdashmail', LOG_ERR);
         return false;
@@ -32,7 +30,7 @@ function cdashmail($to, $subject, $body, $headers = false)
         return true;
     }
 
-    Mail::raw($body, function ($message) use ($config, $to, $subject, $headers) {
+    Mail::raw($body, function ($message) use ($to, $subject, $headers) {
         $to = is_array($to) ? $to : [$to];
         try {
             /** @var Illuminate\Mail\Message $message */
