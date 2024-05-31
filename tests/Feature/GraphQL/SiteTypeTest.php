@@ -617,7 +617,7 @@ class SiteTypeTest extends TestCase
         // Assert that the resulting timestamp is correct +- one minute to account for
         // delay between creation and query, as well as any clock drift between the
         // database and web servers.
-        $result_timestamp = $result['data']['projects']['edges'][0]['node']['sites']['edges'][0]['node']['information']['edges'][0]['node']['timestamp'];
+        $result_timestamp = Carbon::parse($result['data']['projects']['edges'][0]['node']['sites']['edges'][0]['node']['information']['edges'][0]['node']['timestamp']);
         self::assertGreaterThan(Carbon::now('UTC')->subMinute(), $result_timestamp);
         self::assertLessThan(Carbon::now('UTC')->addMinute(), $result_timestamp);
     }
