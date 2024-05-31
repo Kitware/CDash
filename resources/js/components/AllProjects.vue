@@ -38,9 +38,9 @@
         <template #last_submission="{ props: { project } }" >
           <a
             v-if="project.mostRecentBuild"
-            :href="$baseURL + '/index.php?project=' + project.name + '&date=' + DateTime.fromSQL(project.mostRecentBuild.startTime).toSQLDate()"
+            :href="$baseURL + '/index.php?project=' + project.name + '&date=' + DateTime.fromISO(project.mostRecentBuild.startTime).toISODate()"
           >
-            {{ DateTime.fromSQL(project.mostRecentBuild.startTime, { zone: 'UTC' }).toRelative() }}
+            {{ DateTime.fromISO(project.mostRecentBuild.startTime).toRelative() }}
           </a>
           <span v-else>never</span>
         </template>
@@ -111,7 +111,7 @@ export default {
               }
               builds(filters: {
                 gt: {
-                  submissionTime: "${DateTime.now().minus({days: 7}).toFormat('y-M-d H:m:ss')}"
+                  submissionTime: "${DateTime.now().minus({days: 7}).startOf('second').toISO({suppressMilliseconds: true})}"
                 }
               }) {
                 pageInfo {
