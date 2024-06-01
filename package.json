@@ -32,7 +32,7 @@
     "axios": "^1.6",
     "bootstrap": "^4.6.2",
     "d3": "^3.5.17",
-    "daisyui": "^4.9.0",
+    "daisyui": "^4.11.1",
     "del": "^6.1.1",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.24.0",
