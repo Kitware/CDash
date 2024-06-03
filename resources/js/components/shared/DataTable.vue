@@ -58,7 +58,7 @@
               v-if="Object.hasOwn(row[column.name], 'href')"
               :href="row[column.name].href"
             >
-              {{ row[column.name].value }}
+              {{ row[column.name].text }}
             </a>
             <!-- If this is a text value, just display it. -->
             <template v-else>
@@ -136,7 +136,8 @@ export default {
      *
      * Use metadata objects of the following form to specify links:
      *   {
-     *       value: String
+     *       value: ?String  # The value to sort by (will sort by text if no value provided)
+     *       text: String
      *       href: String
      *   }
      *

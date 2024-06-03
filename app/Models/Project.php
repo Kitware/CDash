@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Auth;
@@ -211,6 +212,21 @@ class Project extends Model
     {
         return $this->hasMany(Build::class, 'projectid', 'id')
             ->where(function ($query) {
+                $query->where('parentid', 0)
+                    ->orWhere('parentid', -1);
+            });
+    }
+
+    /**
+     * TODO: Share code with builds().  As of Laravel 10, aggregates added to hasMany relations
+     *       with conditional clauses are unsupported/broken.  A reusable scope may be a better approach.
+     *
+     * @return HasOne<Build>
+     */
+    public function mostRecentBuild(): HasOne
+    {
+        return $this->hasOne(Build::class, 'projectid', 'id')
+            ->ofMany(['submittime' => 'max'], function (Builder $query) {
                 $query->where('parentid', 0)
                     ->orWhere('parentid', -1);
             });
