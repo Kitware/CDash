@@ -46,7 +46,7 @@ class ViewProjects extends \CDash\Controller\Api
     public function getResponse()
     {
         $response = begin_JSON_response();
-        $response['deprectated'] = 'This endpoint is deprecated and will eventually be removed.';
+        $response['deprecated'] = 'This endpoint is deprecated and will eventually be removed.';
 
         $global_banner = Banner::find(0);
         if ($global_banner !== null && strlen($global_banner->text) > 0) {
