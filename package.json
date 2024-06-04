@@ -45,7 +45,7 @@
     "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
     "jquery": "^3.7",
-    "jquery-ui-dist": "^1.13.1",
+    "jquery-ui-dist": "^1.13.3",
     "jquery.cookie": "^1.4.1",
     "laravel-mix": "^6.0.49",
     "luxon": "^3.4.4",
