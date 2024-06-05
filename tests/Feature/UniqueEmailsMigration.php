@@ -33,8 +33,8 @@ class UniqueEmailsMigration extends MigrationTest
             '--force' => true]);
 
         // Create two users with the same email address.
-        $user1 = $this->makeNormalUser();
-        $user2 = $this->makeNormalUser();
+        $user1 = $this->makeNormalUser('Jane', 'Smith', 'jane@smith');
+        $user2 = $this->makeNormalUser('Jane', 'Smith', 'jane@smith');
 
         // Verify that they both exist and have different ids.
         self::assertIsNumeric($user1->id);
