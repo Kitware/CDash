@@ -24,10 +24,10 @@ class LotsOfSubProjectsTestCase extends KWWebTestCase
         }
 
         // Delete all the extra labels we created.
-        DB::table('label')->where('text', 'LIKE', 'LotsOfSubprojects%')->delete();
+        DB::table('label')->where('text', 'LIKE', 'LotsOfSubProjects%')->delete();
 
         // Delete generated XML file.
-        unlink('LotsOfSubprojects_Configure.xml');
+        unlink('LotsOfSubProjects_Configure.xml');
     }
 
     public function testLotsOfSubProjects()
@@ -66,7 +66,7 @@ class LotsOfSubProjectsTestCase extends KWWebTestCase
         $this->assertEqual(101, count($results));
 
         // Verify 100 labels.
-        $results = DB::select("SELECT id FROM label WHERE text LIKE 'LotsOfSubprojects%'");
+        $results = DB::select("SELECT id FROM label WHERE text LIKE 'LotsOfSubProjects%'");
         $this->assertEqual(100, count($results));
     }
 }
