@@ -23544,21 +23544,6 @@ parameters:
 			path: app/cdash/tests/test_redundanttests.php
 
 		-
-			message: "#^Method RegisterUserTestCase\\:\\:testRegisterUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_registeruser.php
-
-		-
-			message: "#^Property RegisterUserTestCase\\:\\:\\$project has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_registeruser.php
-
-		-
-			message: "#^Property RegisterUserTestCase\\:\\:\\$project is unused\\.$#"
-			count: 1
-			path: app/cdash/tests/test_registeruser.php
-
-		-
 			message: """
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#

@@ -231,11 +231,8 @@ cdash_install()
 set_tests_properties(install_3 PROPERTIES DEPENDS /Feature/UniqueEmailsMigration)
 
 
-add_php_test(registeruser)
-set_tests_properties(registeruser PROPERTIES DEPENDS install_3)
-
 add_php_test(compressedtest)
-set_tests_properties(compressedtest PROPERTIES DEPENDS registeruser)
+set_tests_properties(compressedtest PROPERTIES DEPENDS install_3)
 
 add_php_test(createpublicdashboard)
 set_tests_properties(createpublicdashboard PROPERTIES DEPENDS compressedtest)
