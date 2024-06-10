@@ -7,6 +7,7 @@ function(add_php_test TestName)
   set_tests_properties(
     ${TestName} PROPERTIES
     FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
+    PASS_REGULAR_EXPRESSION ".*OK.*"
   )
 endfunction()
 
