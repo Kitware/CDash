@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
@@ -64,6 +65,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         URL::forceRootUrl(Config::get('app.url'));
+
+        Model::preventSilentlyDiscardingAttributes(!$this->app->isProduction());
     }
 
     /**

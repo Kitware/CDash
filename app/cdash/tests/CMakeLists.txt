@@ -43,6 +43,8 @@ endif()
 
 add_laravel_test(/Unit/app/ControllerNameTest)
 
+add_laravel_test(/Unit/app/FillableAttributesTest)
+
 cdash_install()
 set_tests_properties(install_2 PROPERTIES DEPENDS cypress/e2e/user-profile)
 

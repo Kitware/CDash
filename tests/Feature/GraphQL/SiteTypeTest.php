@@ -462,7 +462,7 @@ class SiteTypeTest extends TestCase
         return [
             [['processoris64bits' => true]],
             [['processorvendor' => 'GenuineIntel']],
-            [['processorvendord' => 'Intel Corporation']],
+            [['processorvendorid' => 'Intel Corporation']],
             [['processorfamilyid' => 6]],
             [['processormodelid' => 7]],
             [['processorcachesize' => 123]],
