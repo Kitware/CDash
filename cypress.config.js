@@ -9,6 +9,7 @@ module.exports = defineConfig({
   downloadsFolder: 'tests/cypress/downloads',
   trashAssetsBeforeRuns: true,
   pageLoadTimeout: 300000,
+  defaultCommandTimeout: 30000,
   retries: 2,
   e2e: {
     setupNodeEvents(on, config) {
