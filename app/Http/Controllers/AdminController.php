@@ -465,46 +465,6 @@ final class AdminController extends AbstractController
                     if ($db_created) {
                         Artisan::call('migrate --force');
 
-                        // If we are with PostGreSQL we need to add some extra functions
-                        if ($db_type == 'pgsql') {
-                            $sqlfile = base_path('/app/cdash/sql/pgsql/cdash.ext.sql');
-
-                            // Create the language. PgSQL has no way to know if the language already
-                            // exists
-                            @pdo_query('CREATE LANGUAGE plpgsql');
-
-                            $file_content = file($sqlfile);
-                            $query = '';
-                            foreach ($file_content as $sql_line) {
-                                $tsl = trim($sql_line);
-                                if ($sql_line !== '' && !str_starts_with($tsl, '--')) {
-                                    $query .= $sql_line;
-                                    $possemicolon = strrpos($query, ';');
-                                    if ($possemicolon !== false && substr_count($query, '\'', 0, $possemicolon) % 2 == 0) {
-                                        // We need to remove only the last semicolon
-                                        $pos = strrpos($query, ';');
-                                        if ($pos !== false) {
-                                            $query = substr($query, 0, $pos) . substr($query, $pos + 1);
-                                        }
-                                        $result = pdo_query($query);
-                                        if (!$result) {
-                                            $xml .= '<db_created>0</db_created>';
-                                            abort(500, pdo_error());
-                                        }
-                                        $query = '';
-                                    }
-                                }
-                            }
-
-                            // Check the version of PostgreSQL
-                            $result_version = pdo_query('SELECT version()');
-                            $version_array = pdo_fetch_array($result_version);
-                            if (str_contains(strtolower($version_array[0]), 'postgresql 9.')) {
-                                // For PgSQL 9.0 we need to set the bytea_output to 'escape' (it was changed to hexa)
-                                @pdo_query("ALTER DATABASE {$db_name} SET bytea_output TO 'escape'");
-                            }
-                        }
-
                         $user = new \CDash\Model\User();
                         $user->Email = $admin_email;
                         $user->Password = password_hash($admin_password, PASSWORD_DEFAULT);

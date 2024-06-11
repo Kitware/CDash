@@ -222,16 +222,11 @@ parameters:
 			path: app/Http/Controllers/AbstractProjectController.php
 
 		-
-			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
 			message: """
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 3
+			count: 2
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -239,7 +234,7 @@ parameters:
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 8
+			count: 7
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -255,7 +250,7 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 12
+			count: 8
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -294,11 +289,6 @@ parameters:
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^Cannot access offset 0 on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
@@ -314,11 +304,6 @@ parameters:
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 2
-			path: app/Http/Controllers/AdminController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:removeBuilds\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
@@ -330,11 +315,6 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in &&, mixed given on the left side\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, PDOStatement\\|false given\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
