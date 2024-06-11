@@ -17,14 +17,6 @@
 use CDash\Database;
 
 /**
- * @deprecated 04/22/2023
- */
-function get_link_identifier(): Database
-{
-    return Database::getInstance();
-}
-
-/**
  * Get the last pdo error or empty string in the case of no error.
  *
  * @deprecated 04/01/2023
