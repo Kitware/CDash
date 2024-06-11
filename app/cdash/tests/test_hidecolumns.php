@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -90,9 +92,9 @@ class HideColumnsTestCase extends KWWebTestCase
         }
 
         // Remove the build that we just created.
-        $buildid_results = pdo_single_row_query(
-            "SELECT id FROM build WHERE name='HideColumns'");
-        $buildid = $buildid_results['id'];
+        $buildid_results = DB::select(
+            "SELECT id FROM build WHERE name='HideColumns'")[0];
+        $buildid = $buildid_results->id;
         remove_build($buildid);
         return $retval;
     }

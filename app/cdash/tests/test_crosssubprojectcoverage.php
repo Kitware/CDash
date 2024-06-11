@@ -13,6 +13,9 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -197,21 +200,21 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
         $success = true;
 
         // Get parentid.
-        $row = pdo_single_row_query(
+        $row = DB::select(
             "SELECT id FROM build
                 WHERE name = 'Aggregate Coverage' AND
                 parentid=-1 AND
                 projectid=
-                (SELECT id FROM project WHERE name='CrossSubProjectExample')");
-        $parentid = $row['id'];
+                (SELECT id FROM project WHERE name='CrossSubProjectExample')")[0];
+        $parentid = $row->id;
         if (empty($parentid) || $parentid < 1) {
             $this->fail('No aggregate parentid found when expected');
             return false;
         }
 
         // Verify parent results.
-        $row = pdo_single_row_query("
-                SELECT * from coveragesummary WHERE buildid='$parentid'");
+        $row = collect(DB::select("
+                SELECT * from coveragesummary WHERE buildid='$parentid'")[0])->toArray();
         $success &= $this->checkCoverage($row, 25, 10, 'aggregate parent');
 
         // Verify child results.

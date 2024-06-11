@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -328,11 +330,11 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             return false;
         }
 
-        $num_files_row = pdo_single_row_query(
+        $num_files_row = DB::select(
             "SELECT COUNT(1) AS numfiles
                 FROM coveragefilelog
-                WHERE buildid='$buildid'");
-        $num_files_covered = $num_files_row['numfiles'];
+                WHERE buildid='$buildid'")[0];
+        $num_files_covered = $num_files_row->numfiles;
         if ($num_files_covered != 2) {
             $this->fail("Expected 2 files covered, found $num_files_covered");
             return false;

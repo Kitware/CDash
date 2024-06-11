@@ -50,15 +50,11 @@ class RemoveBuildsTestCase extends KWWebTestCase
 
     public function testBuildRemovalWorksAsExpected()
     {
-
-
-
-
         $time = gmdate(FMT_DATETIME);
 
         // Find an existing site.
-        $row = pdo_single_row_query('SELECT id FROM site LIMIT 1');
-        $siteid = $row['id'];
+        $row = DB::select('SELECT id FROM site LIMIT 1')[0];
+        $siteid = $row->id;
 
         // Label
         $label = new Label();

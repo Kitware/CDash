@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -110,8 +112,8 @@ class BuildDetailsTestCase extends KWWebTestCase
             return 1;
         }
 
-        $buildId = pdo_single_row_query("SELECT id FROM build WHERE name = 'BuildDetails-Linux-g++-4.1-LesionSizingSandbox_Debug'");
-        $json = $this->get("{$this->url}/api/v1/viewTest.php?buildid={$buildId['id']}");
+        $buildId = DB::select("SELECT id FROM build WHERE name = 'BuildDetails-Linux-g++-4.1-LesionSizingSandbox_Debug'")[0];
+        $json = $this->get("{$this->url}/api/v1/viewTest.php?buildid={$buildId->id}");
         $actualResponse = json_decode($json);
         $expectedResponse = json_decode(
             file_get_contents($this->testDataDir . '/' . 'InsightExperimentalExample_Expected.json'));
@@ -123,7 +125,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         $this->assertEqual($actualResponse->numNotRun, $expectedResponse->numNotRun);
         $this->assertEqual($actualResponse->numTimeFailed, $expectedResponse->numTimeFailed);
 
-        remove_build($buildId['id']);
+        remove_build($buildId->id);
     }
 
     public function testViewTestReturnsProperFormatForParentBuilds()
@@ -134,9 +136,9 @@ class BuildDetailsTestCase extends KWWebTestCase
             return 1;
         }
 
-        $buildId = pdo_single_row_query("SELECT id FROM build WHERE name = 'BuildDetails-Linux-g++-4.1-LesionSizingSandbox_Debug-has-subbuild' AND parentid=-1");
+        $buildId = DB::select("SELECT id FROM build WHERE name = 'BuildDetails-Linux-g++-4.1-LesionSizingSandbox_Debug-has-subbuild' AND parentid=-1")[0];
 
-        $response = json_decode($this->get($this->url . '/api/v1/viewTest.php?buildid=' . $buildId['id']));
+        $response = json_decode($this->get($this->url . '/api/v1/viewTest.php?buildid=' . $buildId->id));
 
         $this->assertTrue($response->parentBuild);
 
@@ -145,6 +147,6 @@ class BuildDetailsTestCase extends KWWebTestCase
             $this->assertTrue($test->subprojectname == 'some-subproject');
         }
 
-        remove_build($buildId['id']);
+        remove_build($buildId->id);
     }
 }

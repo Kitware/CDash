@@ -15,6 +15,8 @@
 =========================================================================*/
 
 
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -84,12 +86,12 @@ class DynamicAnalysisSummaryTestCase extends KWWebTestCase
     {
         // Verify the expected number of defects.
         // Get the ID of this build.
-        $row = pdo_single_row_query("
+        $row = DB::select("
                 SELECT b.id, das.numdefects FROM build AS b
                 INNER JOIN dynamicanalysissummary AS das ON (das.buildid=b.id)
-                WHERE name = 'Linux-g++-4.1-LesionSizingSandbox_Debug'");
-        $this->StandaloneBuildId = $row['id'];
-        $numdefects = $row['numdefects'];
+                WHERE name = 'Linux-g++-4.1-LesionSizingSandbox_Debug'")[0];
+        $this->StandaloneBuildId = $row->id;
+        $numdefects = $row->numdefects;
         if ($numdefects != 225) {
             $this->fail("Expected 225, found $numdefects\n");
         }

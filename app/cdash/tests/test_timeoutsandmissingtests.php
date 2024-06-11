@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -24,8 +26,8 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
           LIMIT 1
          ";
 
-        $query = pdo_single_row_query($sql);
-        return $query['id'];
+        $query = DB::select($sql)[0];
+        return $query->id;
     }
 
     public function testMissingTestsSummarizedInEmail()

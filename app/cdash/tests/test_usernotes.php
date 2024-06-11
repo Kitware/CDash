@@ -15,7 +15,7 @@ class UserNotesAPICase extends KWWebTestCase
     public function testAddNoteRequiresAuth(): void
     {
         // Change the Trilinos project to a private project
-        $id = pdo_single_row_query("SELECT id FROM project WHERE name='TrilinosDriver'")['id'];
+        $id = DB::select("SELECT id FROM project WHERE name='TrilinosDriver'")[0]->id;
         $project = new Project();
         $project->Id = $id;
         $project->Fill();

@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -157,15 +159,12 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         }
 
         // Make sure that the parent builds link to each other correctly.
-        $result = pdo_single_row_query(
-            "SELECT parentid FROM build WHERE id=$first_buildid");
-        $first_parentid = $result['parentid'];
-        $result = pdo_single_row_query(
-            "SELECT parentid FROM build WHERE id=$second_buildid");
-        $second_parentid = $result['parentid'];
-        $result = pdo_single_row_query(
-            "SELECT parentid FROM build WHERE id=$third_buildid");
-        $third_parentid = $result['parentid'];
+        $result = DB::select("SELECT parentid FROM build WHERE id=$first_buildid")[0];
+        $first_parentid = $result->parentid;
+        $result = DB::select("SELECT parentid FROM build WHERE id=$second_buildid")[0];
+        $second_parentid = $result->parentid;
+        $result = DB::select("SELECT parentid FROM build WHERE id=$third_buildid")[0];
+        $third_parentid = $result->parentid;
 
         $this->get($this->url . "/api/v1/index.php?project=Trilinos&parentid=$first_parentid");
         $content = $this->getBrowser()->getContent();
