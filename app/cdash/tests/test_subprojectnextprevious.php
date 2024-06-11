@@ -40,22 +40,22 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         }
 
         // Get the ids for the three subsequent builds of Didasko.
-        $result = pdo_query("
+        $result = DB::select("
                 SELECT b.id FROM build AS b
                 LEFT JOIN subproject2build AS sp2b ON sp2b.buildid=b.id
                 LEFT JOIN subproject AS sp ON sp.id = sp2b.subprojectid
                 WHERE sp.name = 'Didasko'
                 ORDER BY b.starttime");
 
-        $num_rows = pdo_num_rows($result);
+        $num_rows = count($result);
         if ($num_rows !== 3) {
             $this->fail("Expected 3 rows, found $num_rows");
             return 1;
         }
 
         $buildids = [];
-        while ($row = pdo_fetch_array($result)) {
-            $buildids[] = $row['id'];
+        foreach ($result as $row) {
+            $buildids[] = $row->id;
         }
         $first_buildid = $buildids[0];
         $second_buildid = $buildids[1];

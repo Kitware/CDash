@@ -56,14 +56,8 @@ class ReplaceBuildTestCase extends KWWebTestCase
         }
 
         // Make sure the first build doesn't exist anymore.
-        if (!$query = pdo_query(
-            "SELECT * FROM build WHERE id=$first_buildid")
-        ) {
-            $error_msg = 'SELECT query returned false';
-            echo "$error_msg\n";
-            $success = false;
-        }
-        $num_rows = pdo_num_rows($query);
+        $query = DB::select("SELECT * FROM build WHERE id=$first_buildid");
+        $num_rows = count($query);
         if ($num_rows !== 0) {
             $error_msg = "Expected 0 rows, found $num_rows";
             echo "$error_msg\n";

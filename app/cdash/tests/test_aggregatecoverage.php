@@ -16,6 +16,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -91,8 +93,8 @@ class AggregateCoverageTestCase extends KWWebTestCase
         $query = "SELECT buildid, fileid FROM coverage AS c
             INNER JOIN coveragefile AS cf ON (cf.id=c.fileid)
             WHERE cf.fullpath='./diff.cxx'";
-        $result = pdo_query($query);
-        $num_rows = pdo_num_rows($result);
+        $result = DB::select($query);
+        $num_rows = count($result);
         if ($num_rows != 3) {
             $this->fail("Expected 3 rows, found $num_rows");
             return 1;
@@ -100,17 +102,17 @@ class AggregateCoverageTestCase extends KWWebTestCase
         $debug_fileid = 0;
         $release_fileid = 0;
         $aggregate_fileid = 0;
-        while ($row = pdo_fetch_array($result)) {
-            $buildid = $row['buildid'];
+        foreach ($result as $row) {
+            $buildid = $row->buildid;
             switch ($buildid) {
                 case $debug_buildid:
-                    $debug_fileid = $row['fileid'];
+                    $debug_fileid = $row->fileid;
                     break;
                 case $release_buildid:
-                    $release_fileid = $row['fileid'];
+                    $release_fileid = $row->fileid;
                     break;
                 case $aggregate_buildid:
-                    $aggregate_fileid = $row['fileid'];
+                    $aggregate_fileid = $row->fileid;
                     break;
                 default:
                     $this->fail("Unexpected buildid $buildid");

@@ -213,12 +213,11 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
         }
 
         // Verify parent results.
-        $row = collect(DB::select("
-                SELECT * from coveragesummary WHERE buildid='$parentid'")[0])->toArray();
+        $row = DB::select("SELECT * from coveragesummary WHERE buildid='$parentid'")[0];
         $success &= $this->checkCoverage($row, 25, 10, 'aggregate parent');
 
         // Verify child results.
-        $result = pdo_query("
+        $result = DB::select("
                 SELECT cs.loctested, cs.locuntested, spg.name
                 FROM build AS b
                 INNER JOIN coveragesummary AS cs ON (b.id=cs.buildid)
@@ -226,13 +225,13 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
                 INNER JOIN subproject AS sp ON (sp2b.subprojectid=sp.id)
                 INNER JOIN subprojectgroup AS spg ON (sp.groupid=spg.id)
                 WHERE parentid='$parentid'");
-        $num_builds = pdo_num_rows($result);
-        if ($num_builds != 3) {
+        $num_builds = count($result);
+        if ($num_builds !== 3) {
             $this->fail("Expected 3 aggregate children, found $num_builds");
             return false;
         }
-        while ($row = pdo_fetch_array($result)) {
-            $group_name = $row['name'];
+        foreach ($result as $row) {
+            $group_name = $row->name;
             switch ($group_name) {
                 case 'Third Party':
                     $success &=
@@ -253,9 +252,9 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
         return $success;
     }
 
-    public function checkCoverage($coverage, $expected_loctested,
-        $expected_locuntested, $name)
+    public function checkCoverage($coverage, $expected_loctested, $expected_locuntested, $name)
     {
+        $coverage = collect($coverage)->toArray();
         if ($coverage['loctested'] != $expected_loctested) {
             $this->fail("Expected $name loctested to be $expected_loctested, found " . $coverage['loctested']);
             return false;

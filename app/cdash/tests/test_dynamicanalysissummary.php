@@ -71,12 +71,12 @@ class DynamicAnalysisSummaryTestCase extends KWWebTestCase
         remove_build($this->ParentId);
 
         // Verify that the dynamicanalysisssummary rows got deleted.
-        $result = pdo_query("
+        $result = DB::select("
                 SELECT b.id, b.parentid, das.numdefects FROM build AS b
                 INNER JOIN dynamicanalysissummary AS das ON (das.buildid=b.id)
                 WHERE b.name = 'cross_subproject_DA_example'");
-        $num_builds = pdo_num_rows($result);
-        if ($num_builds != 0) {
+        $num_builds = count($result);
+        if ($num_builds !== 0) {
             $this->fail("Expected 0 builds after deletion, found $num_builds");
         }
         $this->pass('Test passed');
@@ -99,28 +99,28 @@ class DynamicAnalysisSummaryTestCase extends KWWebTestCase
 
     public function VerifySubProjectBuild()
     {
-        $result = pdo_query("
+        $result = DB::select("
                 SELECT b.id, b.parentid, das.numdefects FROM build AS b
                 INNER JOIN dynamicanalysissummary AS das ON (das.buildid=b.id)
                 WHERE b.name = 'cross_subproject_DA_example'");
-        $num_builds = pdo_num_rows($result);
-        if ($num_builds != 4) {
+        $num_builds = count($result);
+        if ($num_builds !== 4) {
             $this->fail("Expected 4 builds, found $num_builds");
         }
 
         $this->ParentId = 0;
-        while ($row = pdo_fetch_array($result)) {
-            $numdefects = $row['numdefects'];
-            if ($row['parentid'] == -1) {
+        foreach ($result as $row) {
+            $numdefects = (int) $row->numdefects;
+            if ((int) $row->parentid === -1) {
                 // Parent case.
-                $this->ParentId = $row['id'];
-                if ($numdefects != 3) {
+                $this->ParentId = $row->id;
+                if ($numdefects !== 3) {
                     $this->fail("Expected 3 defects for parent, found $numdefects");
                 }
             } else {
                 // Child case.
-                $this->ChildIds[] = $row['id'];
-                if ($numdefects != 1) {
+                $this->ChildIds[] = $row->id;
+                if ($numdefects !== 1) {
                     $this->fail("Expected 1 defect for child, found $numdefects");
                 }
             }
