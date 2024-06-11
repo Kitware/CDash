@@ -5,7 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
+use CDash\Database;
 
 class NoBackupTestCase extends KWWebTestCase
 {
@@ -70,7 +70,7 @@ class NoBackupTestCase extends KWWebTestCase
         }
 
         // Make sure they were both parsed correctly.
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = Database::getInstance()->getPdo();
         $stmt = $pdo->prepare(
             'SELECT b.builderrors, cs.loctested FROM build b
                 JOIN coveragesummary cs ON (cs.buildid=b.id)

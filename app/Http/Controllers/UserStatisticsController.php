@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Utils\PageTimer;
+use CDash\Database;
 use Illuminate\Http\JsonResponse;
 
 final class UserStatisticsController extends AbstractProjectController
@@ -58,7 +59,7 @@ final class UserStatisticsController extends AbstractProjectController
         $end_UTCDate = gmdate(FMT_DATETIME, $timestamp);
 
         // Lookup stats for this time period.
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = Database::getInstance()->getPdo();
         $stmt = $pdo->prepare(
             'SELECT * FROM userstatistics
         WHERE checkindate<:end AND checkindate>=:beginning

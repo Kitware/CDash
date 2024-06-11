@@ -32,7 +32,7 @@ function get_link_identifier(): Database
  */
 function pdo_error(): string
 {
-    $error_info = get_link_identifier()->getPdo()->errorInfo();
+    $error_info = Database::getInstance()->getPdo()->errorInfo();
     if (isset($error_info[2]) && $error_info[0] !== '00000') {
         if (config('app.env') === 'production') {
             return 'SQL error encountered, query hidden.';
@@ -68,7 +68,7 @@ function pdo_insert_id(string $table_name): string|false
     if (config('database.default') === 'pgsql') {
         $seq = $table_name . '_id_seq';
     }
-    return get_link_identifier()->getPdo()->lastInsertId($seq);
+    return Database::getInstance()->getPdo()->lastInsertId($seq);
 }
 
 /**
@@ -89,7 +89,7 @@ function pdo_query(string $query): PDOStatement|false
  */
 function pdo_real_escape_string(mixed $unescaped_string): string
 {
-    $str = get_link_identifier()->getPdo()->quote($unescaped_string ?? '');
+    $str = Database::getInstance()->getPdo()->quote($unescaped_string ?? '');
     return substr($str, 1, strlen($str) - 2); // remove enclosing quotes
 }
 

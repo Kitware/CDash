@@ -5,6 +5,7 @@ use App\Utils\RepositoryUtils;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
+use CDash\Database;
 
 class IssueCreationTestCase extends KWWebTestCase
 {
@@ -17,7 +18,7 @@ class IssueCreationTestCase extends KWWebTestCase
         parent::__construct();
         $this->Builds = [];
         $this->Projects = [];
-        $this->PDO = get_link_identifier()->getPdo();
+        $this->PDO = Database::getInstance()->getPdo();
     }
 
     public function __destruct()

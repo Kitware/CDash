@@ -23,6 +23,7 @@ use CDash\Model\BuildError;
 use CDash\Model\BuildErrorFilter;
 use CDash\Model\Project;
 use App\Models\Project as EloquentProject;
+use CDash\Database;
 
 class BazelJSONHandler extends NonSaxHandler
 {
@@ -87,7 +88,7 @@ class BazelJSONHandler extends NonSaxHandler
 
         $this->BuildErrorFilter = new BuildErrorFilter($this->Project);
 
-        $this->PDO = get_link_identifier()->getPdo();
+        $this->PDO = Database::getInstance()->getPdo();
     }
 
     /**
@@ -763,7 +764,7 @@ class BazelJSONHandler extends NonSaxHandler
      */
     private static function GetSubProjectForPath(string $filepath, int $projectid): string
     {
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = Database::getInstance()->getPdo();
         // Get all the subprojects for this project that have a path defined.
         // Sort by longest paths first.
         $stmt = $pdo->prepare(

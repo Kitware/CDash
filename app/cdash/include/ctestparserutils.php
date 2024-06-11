@@ -2,6 +2,7 @@
 
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
+use CDash\Database;
 
 /** Add a new build */
 function add_build(Build $build)
@@ -47,7 +48,7 @@ function extract_date_from_buildstamp($buildstamp)
  *  for the previous and current build */
 function compute_error_difference($buildid, $previousbuildid, $warning)
 {
-    $pdo = get_link_identifier()->getPdo();
+    $pdo = Database::getInstance()->getPdo();
     // Look at the difference positive and negative test errors
     $stmt = $pdo->prepare(
         'UPDATE builderror SET newstatus=1

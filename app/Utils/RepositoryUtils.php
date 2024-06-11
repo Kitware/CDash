@@ -871,7 +871,7 @@ class RepositoryUtils
         $subproject_name = $build->GetSubProjectName();
         if ($subproject_name) {
             // Get users to notify for this SubProject.
-            $pdo = get_link_identifier()->getPdo();
+            $pdo = Database::getInstance()->getPdo();
             $user_table = qid('user');
             $stmt = $pdo->prepare(
                 "SELECT email FROM $user_table

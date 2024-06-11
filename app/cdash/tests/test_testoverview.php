@@ -5,6 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use CDash\Database;
 
 class TestOverviewTestCase extends KWWebTestCase
 {
@@ -52,7 +53,7 @@ class TestOverviewTestCase extends KWWebTestCase
         }
 
         // Find the buildgroup id for Trilinos Experimental builds.
-        $PDO = get_link_identifier()->getPdo();
+        $PDO = Database::getInstance()->getPdo();
         $stmt = $PDO->query(
             "SELECT id FROM buildgroup WHERE name = 'Experimental' AND projectid = (SELECT id FROM project WHERE name = 'Trilinos')");
         $groupid = $stmt->fetchColumn();

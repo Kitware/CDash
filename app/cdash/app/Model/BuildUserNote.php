@@ -84,7 +84,6 @@ class BuildUserNote
     // Get JSON representation of this object.
     public function marshal()
     {
-        $pdo = get_link_identifier()->getPdo();
         $marshaledNote = [];
 
         $user = User::find($this->UserId);
