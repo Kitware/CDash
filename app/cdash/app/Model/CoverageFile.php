@@ -152,12 +152,10 @@ class CoverageFile
             } else {
                 // If we still haven't found an existing fileid
                 // we insert one here.
-                $stmt = $this->PDO->prepare(
-                    'INSERT INTO coveragefile (fullpath, crc32)
-                        VALUES (:fullpath, 0)');
-                $stmt->bindParam(':fullpath', $this->FullPath);
-                pdo_execute($stmt);
-                $this->Id = pdo_insert_id('coveragefile');
+                $this->Id = DB::table('coveragefile')->insertGetId([
+                    'fullpath' => $this->FullPath,
+                    'crc32' => 0,
+                ]);
             }
 
             $stmt = $this->PDO->prepare(

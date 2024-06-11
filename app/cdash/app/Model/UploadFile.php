@@ -16,6 +16,7 @@
 namespace CDash\Model;
 
 use CDash\Database;
+use Illuminate\Support\Facades\DB;
 
 class UploadFile
 {
@@ -73,16 +74,13 @@ class UploadFile
 
         if (empty($filequery)) {
             // Insert the file into the database
-            $query = $db->executePrepared('
-                         INSERT INTO uploadfile (filename, filesize, sha1sum, isurl)
-                         VALUES (?, ?, ?, ?)
-                     ', [$filename, intval($this->Filesize), $this->Sha1Sum, $this->IsUrl]);
-
-            if ($query === false) {
-                add_last_sql_error('Uploadfile::Insert', 0, $this->BuildId);
-                return false;
-            }
-            $this->Id = pdo_insert_id('uploadfile');
+            $this->Id = DB::table('uploadfile')
+                ->insertGetId([
+                    'filename' => $filename,
+                    'filesize' => intval($this->Filesize),
+                    'sha1sum' => $this->Sha1Sum,
+                    'isurl' => $this->IsUrl,
+                ]);
         } else {
             $this->Id = $filequery['id'];
         }

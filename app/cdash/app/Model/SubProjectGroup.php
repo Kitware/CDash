@@ -354,7 +354,7 @@ class SubProjectGroup
             }
 
             if ($this->Id < 1) {
-                $this->Id = intval(pdo_insert_id('subprojectgroup'));
+                $this->Id = DB::getPdo()->lastInsertId();
             }
         }
 

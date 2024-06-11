@@ -17,7 +17,9 @@ namespace CDash\Model;
 
 use App\Models\Password;
 use CDash\Database;
+use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
+use \App\Models\User as EloquentUser;
 
 class User
 {
@@ -112,22 +114,15 @@ class User
                 throw new InvalidArgumentException('Id set before user insert operation.');
             }
 
-            $stmt = $this->PDO->prepare(
-                "INSERT INTO $this->TableName
-                (email, password, firstname, lastname, institution, admin)
-                VALUES (:email, :password, :firstname, :lastname, :institution, :admin)");
-            $stmt->bindParam(':email', $this->Email);
-            $stmt->bindParam(':password', $this->Password);
-            $stmt->bindParam(':firstname', $this->FirstName);
-            $stmt->bindParam(':lastname', $this->LastName);
-            $stmt->bindParam(':institution', $this->Institution);
-            $stmt->bindParam(':admin', $this->Admin);
-
-            if (!pdo_execute($stmt)) {
-                return false;
-            }
-
-            $this->Id = pdo_insert_id('user');
+            $this->Id = DB::table('user')
+                ->insertGetId([
+                    'email' => $this->Email,
+                    'password' => $this->Password,
+                    'firstname' => $this->FirstName,
+                    'lastname' => $this->LastName,
+                    'institution' => $this->Institution,
+                    'admin' => $this->Admin,
+                ]);
             $this->RecordPassword();
         }
         return true;

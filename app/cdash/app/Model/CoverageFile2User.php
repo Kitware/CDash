@@ -76,15 +76,11 @@ class CoverageFile2User
             $db = Database::getInstance();
 
             if ($this->FileId == 0) {
-                $insert_result = $db->executePrepared('
-                                     INSERT INTO coveragefilepriority (projectid, fullpath, priority)
-                                     VALUES (?, ?, 0)
-                                 ', [intval($this->ProjectId), $this->FullPath]);
-                if ($insert_result === false) {
-                    add_last_sql_error('CoverageFile2User:Insert');
-                    return false;
-                }
-                $this->FileId = intval(pdo_insert_id('coveragefilepriority'));
+                $this->FileId = DB::table('coveragefilepriority')->insertGetId([
+                    'projectid' => $this->ProjectId,
+                    'fullpath' => $this->FullPath,
+                    'priority' => 0,
+                ]);
             }
 
             // Find the new position
