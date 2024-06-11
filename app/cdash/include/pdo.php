@@ -72,28 +72,6 @@ function pdo_insert_id(string $table_name): string|false
 }
 
 /**
- * Emulate mysql_num_rows with PDO.
- * Do not use for select queries.
- *
- * @deprecated 04/01/2023
- * @param PDOStatement $result
- */
-function pdo_num_rows($result): int|false
-{
-    if (!$result) {
-        return false;
-    } else {
-        // The documentation here: http://us.php.net/manual/en/pdostatement.rowcount.php
-        // suggests that rowCount may be inappropriate for using on SELECT
-        // queries. It is the equivalent of the mysql_affected_rows function
-        // not the mysql_num_rows function. This seems like it might be a bug
-        // waiting to be reported. This can be fixed by running a COUNT(*) with
-        // the same predicates as the SELECT. TODO.
-        return $result->rowCount();
-    }
-}
-
-/**
  * Emulate mysql_query with PDO.
  *
  * @deprecated 04/01/2023
