@@ -17,39 +17,6 @@
 use CDash\Database;
 
 /**
- * pdo_single_row_query returns a single row. Useful for SELECT
- * queries that are expected to return 0 or 1 rows.
- *
- * @deprecated 04/01/2023
- */
-function pdo_single_row_query($qry): array|null|false
-{
-    $result = pdo_query($qry);
-    if (false === $result) {
-        add_log('error: pdo_query failed: ' . pdo_error(),
-            'pdo_single_row_query', LOG_ERR);
-        return [];
-    }
-
-    $num_rows = pdo_num_rows($result);
-    if (0 !== $num_rows && 1 !== $num_rows) {
-        add_log('error: at most 1 row should be returned, not ' . $num_rows,
-            'pdo_single_row_query', LOG_ERR);
-        add_log('warning: returning the first row anyway even though result ' .
-            'contains ' . $num_rows . ' rows',
-            'pdo_single_row_query', LOG_WARNING);
-    }
-
-    $row = pdo_fetch_array($result);
-
-    if ($result instanceof \PDOStatement && !$result->closeCursor()) {
-        return false;
-    }
-
-    return $row;
-}
-
-/**
  * @deprecated 04/22/2023
  */
 function get_link_identifier(): Database
