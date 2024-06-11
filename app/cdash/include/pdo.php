@@ -160,17 +160,3 @@ function pdo_execute(PDOStatement $stmt, array|null $input_parameters=null): boo
     $db = Database::getInstance();
     return $db->execute($stmt, $input_parameters);
 }
-
-function pdo_get_vendor_version()
-{
-    $version = get_link_identifier()->getPdo()->query('SELECT version()')->fetchColumn();
-
-    if (config('database.default') === 'pgsql') {
-        // Postgress returns version string similar to:
-        //   PostgreSQL 9.6.1 on x86_64-apple-darwin16.1.0, compiled by Apple LLVM version 8.0.0 (clang-800.0.42.1), 64-bit
-        $build = explode(" ", $version);
-        $version = $build[1];
-    }
-
-    return $version;
-}
