@@ -19,7 +19,6 @@ use App\Models\Password;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
-use \App\Models\User as EloquentUser;
 
 class User
 {

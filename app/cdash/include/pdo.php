@@ -50,20 +50,6 @@ function pdo_fetch_array(PDOStatement|false $result, int $result_type = PDO::FET
 }
 
 /**
- * Emulate mysql_insert_id using PDO
- *
- * @deprecated 04/01/2023
- */
-function pdo_insert_id(string $table_name): string|false
-{
-    $seq = '';
-    if (config('database.default') === 'pgsql') {
-        $seq = $table_name . '_id_seq';
-    }
-    return Database::getInstance()->getPdo()->lastInsertId($seq);
-}
-
-/**
  * Emulate mysql_query with PDO.
  *
  * @deprecated 04/01/2023
