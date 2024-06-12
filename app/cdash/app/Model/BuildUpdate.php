@@ -17,6 +17,7 @@ namespace CDash\Model;
 
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use PDO;
 
 class BuildUpdate
@@ -404,8 +405,7 @@ class BuildUpdate
         $stmt = $this->PDO->prepare(
             "SELECT uf.* FROM updatefile uf
             JOIN build2update b2u ON uf.updateid = b2u.updateid
-            WHERE b2u.buildid = ?
-            ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename))))");
+            WHERE b2u.buildid = ?");
         pdo_execute($stmt, [$this->BuildId]);
         while ($row = $stmt->fetch()) {
             $file = new BuildUpdateFile();
@@ -422,6 +422,10 @@ class BuildUpdate
             $file->UpdateId = $row['updateid'];
             $this->AddFile($file);
         }
+
+        usort($this->Files, function ($file1, $file2) {
+            return Str::afterLast('/', $file1->Filename) <=> Str::afterLast('/', $file2->Filename);
+        });
 
         return true;
     }
