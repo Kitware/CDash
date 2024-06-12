@@ -24,9 +24,7 @@ class ServiceContainer extends Singleton
 
     protected function __construct()
     {
-        $definitions = __DIR__ . "/../../config/di.php";
         $builder = new ContainerBuilder();
-        $builder->addDefinitions($definitions);
         $this->container = $builder->build();
     }
 

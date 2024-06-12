@@ -85,11 +85,11 @@ set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /Feature/RouteAcce
 add_unit_test(/PHPUnitTest)
 set_tests_properties(/PHPUnitTest PROPERTIES DEPENDS /Feature/SlowPageTest)
 
-add_unit_test(/CDash/Api/GitHubWebhook)
-set_tests_properties(/CDash/Api/GitHubWebhook PROPERTIES DEPENDS /PHPUnitTest)
+add_laravel_test(/Feature/GitHubWebhook)
+set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /PHPUnitTest)
 
 add_unit_test(/CDash/BuildUseCase)
-set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /CDash/Api/GitHubWebhook)
+set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /Feature/GitHubWebhook)
 
 add_unit_test(/CDash/ConfigUseCase)
 set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/BuildUseCase)
