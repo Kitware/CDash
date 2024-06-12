@@ -7,11 +7,6 @@ services:
     volumes:
       - "${SSL_CERTIFICATE_FILE}:/var/www/cdash.pem"
       - "${SSL_CERTIFICATE_KEY_FILE}:/var/www/cdash.key"
-    healthcheck:
-      test: curl -k -s -o /dev/null -w "%{http_code}" https://cdash:8080/ping | grep 200 > /dev/null
-      interval: 5s
-      timeout: 10s
-      retries: 20
   worker:
     env_file:
       - ../.env
