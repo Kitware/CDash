@@ -21,6 +21,7 @@ use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
 use CDash\System;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
@@ -63,13 +64,10 @@ function can_access_project($projectid): bool
 
     $logged_in = Auth::check();
     if ($logged_in) {
-        $response = ['error' => 'You do not have permission to access this page.'];
-        json_error_response($response, 403);
+        abort(403, 'You do not have permission to access this page.');
     } else {
-        $response = ['requirelogin' => 1];
-        json_error_response($response, 401);
+        throw new AuthenticationException();
     }
-    return false;
 }
 
 // Return true if this user has administrative access to this project.
@@ -80,15 +78,12 @@ function can_administrate_project($projectid)
     $project = new Project();
     $project->Id = $projectid;
     if (!$project->Exists()) {
-        json_error_response(['error' => 'Valid project ID required'], 404);
-        return false;
+        abort(404, 'Valid project ID required');
     }
 
     // Make sure the user is logged in.
     if (!Auth::check()) {
-        $response = ['requirelogin' => 1];
-        json_error_response($response, 401);
-        return false;
+        throw new AuthenticationException();
     }
 
     // Check if the user has the necessary permissions.
@@ -96,8 +91,7 @@ function can_administrate_project($projectid)
         return true;
     }
 
-    $response = ['error' => 'You do not have permission to access this page.'];
-    json_error_response($response, 403);
+    abort(403, 'You do not have permission to access this page.');
 }
 
 /**
@@ -110,8 +104,7 @@ function get_param($name, $required = true)
 {
     $value = $_REQUEST[$name] ?? null;
     if ($required && !$value) {
-        json_error_response(['error' => "Valid $name required"]);
-        return null;
+        abort(400, "Valid $name required");
     }
     return pdo_real_escape_string($value);
 }
@@ -124,8 +117,7 @@ function get_int_param($name, $required = true)
     }
 
     if ($required && !is_numeric($value)) {
-        json_error_response(['error' => "Valid $name required"]);
-        return null;
+        abort(400, "Valid $name required");
     }
     return (int)$value;
 }
@@ -161,8 +153,7 @@ function get_project_from_request()
 function just_get_project_from_request()
 {
     if (!isset($_REQUEST['project'])) {
-        json_error_response(['error' => 'Valid project required']);
-        return null;
+        abort(400, 'Valid project required');
     }
     $projectname = $_REQUEST['project'];
     $projectid = get_project_id($projectname);
@@ -170,8 +161,7 @@ function just_get_project_from_request()
     $Project = $service->get(Project::class);
     $Project->Id = $projectid;
     if (!$Project->Exists()) {
-        json_error_response(['error' => 'Project does not exist']);
-        return null;
+        abort(404, 'Project does not exist');
     }
     return $Project;
 }
@@ -193,9 +183,7 @@ function get_request_build($required = true)
     $build->Id = $id;
 
     if ($required && !$build->Exists()) {
-        $response = ['error' => 'This build does not exist. Maybe it has been deleted.'];
-        json_error_response($response, 400);
-        return null;
+        abort(400, 'This build does not exist. Maybe it has been deleted.');
     }
 
     if ($id) {
@@ -203,20 +191,4 @@ function get_request_build($required = true)
     }
 
     return can_access_project($build->ProjectId) ? $build : null;
-}
-
-/**
- * Issues JSON response then exits
- *
- * @param $response
- * @param int $code
- * @deprecated 15/06/2023 Use abort() to exit cleanly instead.
- */
-function json_error_response($response, $code = 400)
-{
-    $service = ServiceContainer::getInstance();
-    $system = $service->get(System::class);
-    http_response_code($code);
-    echo json_encode($response);
-    $system->system_exit();
 }

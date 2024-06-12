@@ -12598,14 +12598,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function json_error_response\\(\\)\\:
-				15/06/2023 Use abort\\(\\) to exit cleanly instead\\.$#
-			"""
-			count: 10
-			path: app/cdash/include/api_common.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
 				04/01/2023$#
 			"""
@@ -12649,21 +12641,6 @@ parameters:
 
 		-
 			message: "#^Function get_param\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: "#^Function get_param\\(\\) should return string but returns null\\.$#"
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: "#^Function json_error_response\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: "#^Function json_error_response\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/api_common.php
 
@@ -14924,14 +14901,6 @@ parameters:
 			path: app/cdash/public/api/v1/GitHub/webhook.php
 
 		-
-			message: """
-				#^Call to deprecated function json_error_response\\(\\)\\:
-				15/06/2023 Use abort\\(\\) to exit cleanly instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
 			message: "#^Function handle_error\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/GitHub/webhook.php
@@ -15375,14 +15344,6 @@ parameters:
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
-			message: """
-				#^Call to deprecated function json_error_response\\(\\)\\:
-				15/06/2023 Use abort\\(\\) to exit cleanly instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with string\\|false will always evaluate to false\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
@@ -15439,11 +15400,6 @@ parameters:
 
 		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\rest_get\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\rest_get\\(\\) has parameter \\$user with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
