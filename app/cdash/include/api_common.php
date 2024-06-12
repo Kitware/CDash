@@ -20,7 +20,6 @@
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
-use CDash\System;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;

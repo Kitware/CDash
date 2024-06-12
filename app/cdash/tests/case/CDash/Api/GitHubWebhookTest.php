@@ -12,9 +12,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\ServiceContainer;
-use CDash\System;
-
 /**
  * @runTestsInSeparateProcesses
  */
@@ -24,30 +21,14 @@ class GitHubWebhookTest extends CDash\Test\CDashTestCase
     {
         parent::setUp();
         $this->setEndpoint('GitHub/webhook');
-        $container = ServiceContainer::container();
-
-        $this->mock_system = $this->getMockBuilder(System::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['system_exit'])
-            ->getMock();
-        $container->set(System::class, $this->mock_system);
 
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
         config(['cdash.github_webhook_secret' => 'mock secret']);
     }
 
-    private function expectExit()
-    {
-        $this->mock_system
-             ->expects($this->once())
-             ->method('system_exit')
-             ->willThrowException(new Exception('Exit!'));
-    }
-
     public function testWebhookWithoutRequiredSignature()
     {
-        $this->expectExit();
         $actual = $this->getEndpointResponse();
         $expected = new stdClass();
         $expected->error = "HTTP header 'X-Hub-Signature' is missing.";
@@ -56,7 +37,6 @@ class GitHubWebhookTest extends CDash\Test\CDashTestCase
 
     public function testWebhookWithUnsupportedAlgorithm()
     {
-        $this->expectExit();
         $_SERVER['HTTP_X_HUB_SIGNATURE'] = 'zzz=foo';
         $actual = $this->getEndpointResponse();
         $expected = new stdClass();
@@ -66,7 +46,6 @@ class GitHubWebhookTest extends CDash\Test\CDashTestCase
 
     public function testWebhookWithWrongSignature()
     {
-        $this->expectExit();
         $_SERVER['HTTP_X_HUB_SIGNATURE'] = 'sha1=wrong secret';
         $actual = $this->getEndpointResponse();
         $expected = new stdClass();
