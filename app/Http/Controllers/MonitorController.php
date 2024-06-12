@@ -15,7 +15,7 @@ final class MonitorController extends AbstractController
 {
     public function monitor(): View
     {
-        return view('admin.monitor');
+        return $this->view('admin.monitor');
     }
 
     /**

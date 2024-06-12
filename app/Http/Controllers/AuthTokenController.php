@@ -16,7 +16,7 @@ final class AuthTokenController extends AbstractController
 {
     public function manage(): View
     {
-        return view('admin.manage-authtokens');
+        return $this->view('admin.manage-authtokens');
     }
 
     /**

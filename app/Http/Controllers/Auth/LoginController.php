@@ -33,11 +33,6 @@ final class LoginController extends AbstractController
     use ListensForLdapBindFailure;
 
     /**
-     * Where to redirect users after login.
-     */
-    protected string $redirectTo = '/';
-
-    /**
      * Create a new controller instance.
      *
      * @return void

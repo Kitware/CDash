@@ -69,7 +69,7 @@ final class ManageBannerController extends AbstractController
             }
         }
 
-        return view('admin.banner')
+        return $this->view('admin.banner')
             ->with('project', $project)
             ->with('available_projects', $available_projects)
             ->with('banner', $banner);

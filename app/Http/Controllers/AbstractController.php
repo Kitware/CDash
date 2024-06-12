@@ -7,7 +7,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Request;
 use Illuminate\View\View;
 
 abstract class AbstractController extends BaseController
@@ -19,6 +18,8 @@ abstract class AbstractController extends BaseController
      */
     protected function view(string $view, string $title = ''): View
     {
+        session()->put('url.intended', request()->getRequestUri());
+
         $result = view($view)->with('js_version', self::getJsVersion());
 
         if ($title !== '') {
@@ -53,7 +54,7 @@ abstract class AbstractController extends BaseController
 
     protected function redirectToLogin(): RedirectResponse
     {
-        session(['url.intended' => Request::getRequestUri()]);
+        session(['url.intended' => request()->getRequestUri()]);
         return redirect()->route('login');
     }
 }

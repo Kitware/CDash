@@ -525,7 +525,7 @@ final class BuildController extends AbstractBuildController
             ];
         }
 
-        return view('build.overview')
+        return $this->view('build.overview')
             ->with('project', $this->project)
             ->with('selected_group', $selected_group)
             ->with('sourcefiles', $sourcefiles)
@@ -801,7 +801,7 @@ final class BuildController extends AbstractBuildController
             }
         }
 
-        return view('build.files')
+        return $this->view('build.files')
             ->with('build', $this->build)
             ->with('files', $files)
             ->with('urls', $urls);
@@ -837,7 +837,7 @@ final class BuildController extends AbstractBuildController
             $note->user = $user;
         }
 
-        return view('build.note')
+        return $this->view('build.note')
             ->with('notes', $notes);
     }
 

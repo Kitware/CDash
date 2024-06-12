@@ -106,7 +106,7 @@ final class AdminController extends AbstractController
             $alert = 'Removed ' . count($builds) . ' builds.';
         }
 
-        return view('admin.remove-builds')
+        return $this->view('admin.remove-builds')
             ->with('alert', $alert)
             ->with('selected_projectid', $projectid)
             ->with('available_projects', $available_projects)

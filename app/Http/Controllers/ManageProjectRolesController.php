@@ -46,10 +46,9 @@ final class ManageProjectRolesController extends AbstractProjectController
         }
 
         if (!$current_user->admin && $role <= 1) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => "You don't have the permissions to access this page!",
-            ]);
+            return $this->view('cdash')
+                ->with('xsl', true)
+                ->with('xsl_content', "You don't have the permissions to access this page!");
         }
 
         $xml = begin_XML_for_XSLT();
@@ -402,12 +401,10 @@ final class ManageProjectRolesController extends AbstractProjectController
         }
         $xml .= '</cdash>';
 
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/manageProjectRoles', true),
-            'project' => $project,
-            'title' => 'Project Roles',
-        ]);
+        return $this->view('cdash', 'Project Roles')
+            ->with('xsl', true)
+            ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/manageProjectRoles', true))
+            ->with('project', $project);
     }
 
     private function register_user($projectid, $email, $firstName, $lastName, $repositoryCredential)
@@ -531,7 +528,7 @@ final class ManageProjectRolesController extends AbstractProjectController
                               WHERE projectid=?
                           )
                  ', $params);
-        return view('admin.ajax-find-user-project')
+        return $this->view('admin.ajax-find-user-project')
             ->with('users', $users);
     }
 }
