@@ -2991,6 +2991,11 @@ parameters:
 			path: app/Policies/ProjectPolicy.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Foundation\\\\Application\\:\\:isProduction\\(\\)\\.$#"
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
 			message: "#^Parameter \\#2 \\$offset of function substr expects int, int\\|false given\\.$#"
 			count: 1
 			path: app/Providers/AppServiceProvider.php
