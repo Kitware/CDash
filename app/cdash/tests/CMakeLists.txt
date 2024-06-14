@@ -308,11 +308,8 @@ set_tests_properties(querytests PROPERTIES DEPENDS projectmodel)
 add_php_test(sitestatistics)
 set_tests_properties(sitestatistics PROPERTIES DEPENDS querytests)
 
-add_php_test(testenv)
-set_tests_properties(testenv PROPERTIES DEPENDS sitestatistics)
-
 add_php_test(testoverview)
-set_tests_properties(testoverview PROPERTIES DEPENDS testenv)
+set_tests_properties(testoverview PROPERTIES DEPENDS sitestatistics)
 
 add_php_test(userstatistics)
 set_tests_properties(userstatistics PROPERTIES DEPENDS testoverview)
