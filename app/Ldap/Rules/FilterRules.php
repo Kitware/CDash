@@ -20,10 +20,8 @@ class FilterRules implements Rule
             return true;
         }
 
-        return count($user->getConnection()
-            ->query()
-            ->setDn($user->getDn())
-            ->rawFilter($filter)
-            ->get(['dn', 'cn'])) > 0;
+        return $user->groups()
+            ->recursive()
+            ->exists(\LdapRecord\Models\Entry::find($filter));
     }
 }
