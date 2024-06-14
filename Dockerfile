@@ -97,7 +97,6 @@ RUN mkdir -p /var/www/.npm && \
 
 # Copy Apache site-available config files into the image.
 COPY ./docker/cdash-site.conf /etc/apache2/sites-available/cdash-site.conf
-COPY ./docker/cdash-site-ssl.conf /etc/apache2/sites-available/cdash-site-ssl.conf
 
 # Change apache config to listen on port 8080 instead of port 80
 RUN sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
@@ -111,8 +110,7 @@ RUN a2dissite 000-default && \
 # Enable https site if we're not doing a development build.
 RUN if [ "$DEVELOPMENT_BUILD" != '1' ]; then \
     a2enmod ssl && \
-    a2enmod socache_shmcb && \
-    a2ensite cdash-site-ssl; \
+    a2enmod socache_shmcb; \
 fi
 
 # Assign www-data ownership of apache2 configuration files
@@ -316,6 +314,7 @@ ENTRYPOINT ["/bin/bash", "/cdash/docker/docker-entrypoint.sh"]
 ###############################################################################
 
 FROM cdash-non-root-intermediate AS cdash
+HEALTHCHECK --interval=5s --timeout=1s CMD ["/bin/bash", "/cdash/docker/healthcheck.sh"]
 CMD ["start-website"]
 
 ###############################################################################

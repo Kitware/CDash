@@ -11,11 +11,6 @@ services:
        BASE_IMAGE: ${BASE_IMAGE-debian}
     environment:
       DB_HOST: database
-    healthcheck:
-      test: curl -s -o /dev/null -w "%{http_code}" http://cdash:8080/ping | grep 200 > /dev/null
-      interval: 5s
-      timeout: 10s
-      retries: 20
     depends_on:
       database:
         condition: service_healthy
