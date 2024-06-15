@@ -19,6 +19,7 @@ jobs:
         name: Build ${{ github.ref_name }} image
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: "kitware/cdash:${{ github.ref_name }}"
           target: cdash
@@ -28,6 +29,7 @@ jobs:
         name: Build ${{ github.ref_name }} worker image
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: "kitware/cdash-worker:${{ github.ref_name }}"
           target: cdash-worker
@@ -47,6 +49,7 @@ jobs:
         name: Build ${{ github.ref_name }} image
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: "kitware/cdash:${{ github.ref_name }}-ubi"
           target: cdash
@@ -58,6 +61,7 @@ jobs:
         name: Build ${{ github.ref_name }} worker image
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: "kitware/cdash-worker:${{ github.ref_name }}-ubi"
           target: cdash-worker

@@ -20,6 +20,7 @@ jobs:
         name: Build standard production image
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: "kitware/cdash:latest"
           target: cdash
@@ -39,6 +40,7 @@ jobs:
         name: Build UBI production image
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: "kitware/cdash:latest-ubi"
           target: cdash
@@ -60,6 +62,7 @@ jobs:
         name: Build standard worker image
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: "kitware/cdash-worker:latest"
           target: cdash-worker
@@ -79,6 +82,7 @@ jobs:
         name: Build UBI worker image
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: "kitware/cdash-worker:latest-ubi"
           target: cdash-worker
@@ -100,6 +104,7 @@ jobs:
         name: Build standard development image
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: "kitware/cdash:testing"
           target: cdash
@@ -121,6 +126,7 @@ jobs:
         name: Build UBI development image
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: "kitware/cdash:testing-ubi"
           target: cdash
