@@ -25,6 +25,8 @@ use LdapRecord\Laravel\Auth\AuthenticatesWithLdap;
  * @property string $email
  * @property string $password
  * @property string $institution
+ * @property string $ldapdomain
+ * @property string $ldapguid
  *
  * @property Password $currentPassword
  *

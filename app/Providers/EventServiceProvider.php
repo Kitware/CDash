@@ -25,6 +25,9 @@ class EventServiceProvider extends ServiceProvider
             \SocialiteProviders\Google\GoogleExtendSocialite::class.'@handle',
             \SocialiteProviders\PingIdentity\PingIdentityExtendSocialite::class.'@handle',
         ],
+        \Illuminate\Auth\Events\Login::class=>[
+            \App\Listeners\SuccessfulLdapAuthListener::class,
+        ],
     ];
 
     /**
