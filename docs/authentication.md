@@ -44,7 +44,7 @@ Here's a description of the `.env` variables involved in the LDAP authentication
 | CDASH_AUTHENTICATION_PROVIDER | Set this to `ldap` to enable CDash's LDAP authentication support. | users |
 | LDAP_BASE_DN | The base distinguished name you'd like to perform query operations on. | dc=local,dc=com |
 | LDAP_BIND_USERS_BY | The LDAP users attribute used for authentication | distinguishedname |
-| LDAP_FILTERS_ON | Additional LDAP query filters to restrict authorized user list. For example, to restrict users to a specific Active Directory group: `(memberOf=cn=myRescrictedGroup,cn=Users,dc=example,dc=com)` | false |
+| LDAP_FILTERS_ON | Additional LDAP query filters to restrict authorized user list. For example, to restrict users to a specific Active Directory group: `cn=myRescrictedGroup,dc=example,dc=com` | false |
 | LDAP_HOST | The IP address or host name of your LDAP server. | 127.0.0.1 |
 | LDAP_LOCATE_USERS_BY | The LDAP users attribute used to locate your users. | mail |
 | LDAP_LOGGING | Whether or not to log LDAP activities. Useful for debugging. | true |
