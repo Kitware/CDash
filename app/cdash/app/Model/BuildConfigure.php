@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use Illuminate\Support\Facades\DB;
 use PDO;
 use CDash\Database;
 use App\Models\Configure as EloquentConfigure;
@@ -207,7 +208,7 @@ class BuildConfigure
             try {
                 if ($stmt->execute()) {
                     $new_configure_inserted = true;
-                    $this->Id = pdo_insert_id('configure');
+                    $this->Id = DB::getPdo()->lastInsertId();
                 } else {
                     $error_info = $stmt->errorInfo();
                     $error = $error_info[2];

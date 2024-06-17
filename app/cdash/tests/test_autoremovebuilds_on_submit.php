@@ -10,6 +10,7 @@ use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -57,9 +58,6 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
 
         /** @var \CDash\Database $db */
         $db = Database::getInstance();
-
-        /** @var PDO $pdo */
-        $pdo = $db->getPdo();
 
         $result = $db->query("SELECT id FROM project WHERE name = 'EmailProjectExample'");
         $projectid = $result->fetchColumn();
@@ -129,19 +127,11 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         // in order for the process to be done
         sleep(10); // seconds
 
-        $sql = "SELECT id FROM build WHERE projectid=:id AND stamp=:stamp";
+        $sql = "SELECT id FROM build WHERE projectid=? AND stamp=?";
 
-        $stmt = $db->prepare($sql);
-        $stmt->bindValue(':id', $projectid);
-        $stmt->bindValue(':stamp', '20090223-0100-Nightly');
+        $results = DB::select($sql, [$projectid, '20090223-0100-Nightly']);
 
-        // Check that the first test is gone
-        if (!$stmt->execute()) {
-            $this->fail('pdo_query returned false');
-            return 1;
-        }
-
-        if (pdo_num_rows($stmt) > 0) {
+        if (count($results) > 0) {
             $this->fail('Auto remove build on submit failed');
             return 1;
         }

@@ -18,6 +18,7 @@ namespace CDash\Api\v1\BuildGroup;
 
 require_once 'include/api_common.php';
 
+use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
@@ -38,7 +39,7 @@ if (!can_administrate_project($projectid)) {
     return;
 }
 
-$pdo = get_link_identifier()->getPdo();
+$pdo = Database::getInstance()->getPdo();
 
 // Route based on what type of request this is.
 $method = $_SERVER['REQUEST_METHOD'];

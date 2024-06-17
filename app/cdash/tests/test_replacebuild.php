@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -30,10 +32,9 @@ class ReplaceBuildTestCase extends KWWebTestCase
         }
 
         // Verify details about the build that we just created.
-        $row = pdo_single_row_query(
-            "SELECT id, generator FROM build WHERE name='ReplaceBuild'");
-        $first_buildid = $row['id'];
-        $first_generator = $row['generator'];
+        $row = DB::select("SELECT id, generator FROM build WHERE name='ReplaceBuild'")[0];
+        $first_buildid = $row->id;
+        $first_generator = $row->generator;
         if ($first_generator !== 'ctest-3.0') {
             $error_msg = "Expected 'ctest-3.0', found '$first_generator'";
             echo "$error_msg\n";
@@ -55,14 +56,8 @@ class ReplaceBuildTestCase extends KWWebTestCase
         }
 
         // Make sure the first build doesn't exist anymore.
-        if (!$query = pdo_query(
-            "SELECT * FROM build WHERE id=$first_buildid")
-        ) {
-            $error_msg = 'SELECT query returned false';
-            echo "$error_msg\n";
-            $success = false;
-        }
-        $num_rows = pdo_num_rows($query);
+        $query = DB::select("SELECT * FROM build WHERE id=$first_buildid");
+        $num_rows = count($query);
         if ($num_rows !== 0) {
             $error_msg = "Expected 0 rows, found $num_rows";
             echo "$error_msg\n";
@@ -71,10 +66,9 @@ class ReplaceBuildTestCase extends KWWebTestCase
         }
 
         // Verify the replacement build.
-        $row = pdo_single_row_query(
-            "SELECT id, generator FROM build WHERE name='ReplaceBuild'");
-        $second_buildid = $row['id'];
-        $second_generator = $row['generator'];
+        $row = DB::select("SELECT id, generator FROM build WHERE name='ReplaceBuild'")[0];
+        $second_buildid = $row->id;
+        $second_generator = $row->generator;
         if ($second_generator !== 'ctest-3.1') {
             $error_msg = "Expected 'ctest-3.1', found '$second_generator'";
             echo "$error_msg\n";

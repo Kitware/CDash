@@ -229,7 +229,7 @@ class DynamicAnalysis
         }
 
         if (!$this->Id) {
-            $this->Id = intval(pdo_insert_id('dynamicanalysis'));
+            $this->Id = DB::getPdo()->lastInsertId();
         }
 
         // Add the defects

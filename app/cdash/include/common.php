@@ -745,7 +745,7 @@ function delete_rows_chunked(string $query, array $ids): void
  */
 function unlink_uploaded_file($fileid)
 {
-    $pdo = get_link_identifier()->getPdo();
+    $pdo = Database::getInstance()->getPdo();
     $stmt = $pdo->prepare(
         'SELECT sha1sum, filename, filesize FROM uploadfile
         WHERE id = ? AND isurl = 0');

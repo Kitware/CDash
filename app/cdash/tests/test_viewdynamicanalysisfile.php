@@ -7,6 +7,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Build;
 use CDash\Model\DynamicAnalysis;
+use CDash\Database;
 
 class ViewDynamicAnalysisFileTestCase extends KWWebTestCase
 {
@@ -25,7 +26,7 @@ class ViewDynamicAnalysisFileTestCase extends KWWebTestCase
     public function testNextPrevious()
     {
         // Get id of existing build.
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = Database::getInstance()->getPdo();
         $stmt = $pdo->query(
             "SELECT id FROM build
             WHERE name = 'Linux-g++-4.1-LesionSizingSandbox_Debug'");

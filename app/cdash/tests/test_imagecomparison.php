@@ -5,8 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
+use CDash\Database;
 use CDash\Model\Image;
 
 class ImageComparisonTestCase extends KWWebTestCase
@@ -28,7 +27,7 @@ class ImageComparisonTestCase extends KWWebTestCase
         }
 
         // Get the images created by this test.
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = Database::getInstance()->getPdo();
         $stmt = $pdo->query(
             "SELECT b.id AS buildid, i.id AS imgid FROM build b
             JOIN build2test b2t ON (b2t.buildid=b.id)

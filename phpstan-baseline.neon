@@ -234,15 +234,7 @@ parameters:
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 7
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_num_rows\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
+			count: 6
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -250,12 +242,7 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 8
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Cannot access offset 'groupid' on array\\|false\\|null\\.$#"
-			count: 1
+			count: 6
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -321,11 +308,6 @@ parameters:
 		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 10
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Parameter \\#1 \\$result of function pdo_num_rows expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -2415,14 +2397,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
@@ -3094,14 +3068,6 @@ parameters:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
 			"""
 			count: 4
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
 			path: app/Utils/RepositoryUtils.php
 
 		-
@@ -6590,14 +6556,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -7063,7 +7021,7 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 5
+			count: 2
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
@@ -7084,18 +7042,10 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 3
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			message: """
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 4
+			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
@@ -7868,14 +7818,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
@@ -7887,7 +7829,7 @@ parameters:
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 3
+			count: 2
 			path: app/cdash/app/Model/BuildUserNote.php
 
 		-
@@ -8058,15 +8000,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 13
-			path: app/cdash/app/Model/CoverageFile.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
+			count: 12
 			path: app/cdash/app/Model/CoverageFile.php
 
 		-
@@ -8212,15 +8146,7 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 10
-			path: app/cdash/app/Model/CoverageFile2User.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
+			count: 9
 			path: app/cdash/app/Model/CoverageFile2User.php
 
 		-
@@ -8228,7 +8154,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 8
+			count: 7
 			path: app/cdash/app/Model/CoverageFile2User.php
 
 		-
@@ -8672,14 +8598,6 @@ parameters:
 				v2\\.5\\.0 01/22/2018$#
 			"""
 			count: 2
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
 			path: app/cdash/app/Model/DynamicAnalysis.php
 
 		-
@@ -10079,14 +9997,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/SubProjectGroup.php
-
-		-
-			message: """
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -10117,6 +10027,11 @@ parameters:
 			path: app/cdash/app/Model/SubProjectGroup.php
 
 		-
+			message: "#^Method CDash\\\\Model\\\\SubProjectGroup\\:\\:Save\\(\\) throws checked exception TypeError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubProjectGroup.php
+
+		-
 			message: "#^Offset 'c' might not exist on array\\|null\\.$#"
 			count: 2
 			path: app/cdash/app/Model/SubProjectGroup.php
@@ -10124,6 +10039,11 @@ parameters:
 		-
 			message: "#^Only booleans are allowed in an if condition, int given\\.$#"
 			count: 3
+			path: app/cdash/app/Model/SubProjectGroup.php
+
+		-
+			message: "#^Property CDash\\\\Model\\\\SubProjectGroup\\:\\:\\$Id \\(int\\) does not accept string\\|false\\.$#"
+			count: 1
 			path: app/cdash/app/Model/SubProjectGroup.php
 
 		-
@@ -10201,7 +10121,7 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 3
+			count: 2
 			path: app/cdash/app/Model/UploadFile.php
 
 		-
@@ -10214,18 +10134,10 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/UploadFile.php
-
-		-
-			message: """
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/UploadFile.php
 
 		-
@@ -10275,14 +10187,6 @@ parameters:
 			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 2
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
 			"""
 			count: 1
 			path: app/cdash/app/Model/User.php
@@ -10611,11 +10515,6 @@ parameters:
 			path: app/cdash/bootstrap/cdash_autoload.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Database.php
-
-		-
 			message: "#^Cannot call method fetchAll\\(\\) on PDOStatement\\|false\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Database.php
@@ -10652,11 +10551,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Database\\:\\:prepare\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/Database.php
-
-		-
-			message: "#^Parameter \\#1 \\$result of function pdo_num_rows expects PDOStatement, PDOStatement\\|false given\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/Database.php
 
@@ -12753,14 +12647,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
@@ -13513,14 +13399,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
@@ -13653,14 +13531,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function pdo_insert_id\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/include/dailyupdates.php
-
-		-
-			message: """
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -13672,7 +13542,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 10
+			count: 9
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -14554,63 +14424,12 @@ parameters:
 			path: app/cdash/include/log.php
 
 		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on PDOStatement\\|false\\.$#"
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
 			message: "#^Function pdo_execute\\(\\) has parameter \\$input_parameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/pdo.php
 
 		-
 			message: "#^Function pdo_fetch_array\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
-			message: "#^Function pdo_get_vendor_version\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
-			message: "#^Function pdo_single_row_query\\(\\) has parameter \\$qry with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
-			message: "#^Function pdo_single_row_query\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
-			message: "#^Instanceof between PDOStatement and PDOStatement will always evaluate to true\\.$#"
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, PDOStatement given\\.$#"
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
-			message: "#^Parameter \\#2 \\$string of function explode expects string, int\\|string\\|false\\|null given\\.$#"
 			count: 1
 			path: app/cdash/include/pdo.php
 
@@ -14791,15 +14610,7 @@ parameters:
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 9
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_num_rows\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 3
+			count: 6
 			path: app/cdash/include/upgrade_functions.php
 
 		-
@@ -14807,12 +14618,7 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 11
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
-			count: 1
+			count: 8
 			path: app/cdash/include/upgrade_functions.php
 
 		-
@@ -14822,6 +14628,11 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'timestd' on array\\|false\\|null\\.$#"
+			count: 1
+			path: app/cdash/include/upgrade_functions.php
+
+		-
+			message: "#^Cannot access property \\$id on array\\.$#"
 			count: 1
 			path: app/cdash/include/upgrade_functions.php
 
@@ -14886,16 +14697,6 @@ parameters:
 			path: app/cdash/include/upgrade_functions.php
 
 		-
-			message: "#^Only numeric types are allowed in /, int\\|false given on the right side\\.$#"
-			count: 2
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Parameter \\#1 \\$result of function pdo_num_rows expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 3
-			path: app/cdash/include/upgrade_functions.php
-
-		-
 			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
 			count: 2
 			path: app/cdash/include/upgrade_functions.php
@@ -14940,14 +14741,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$data of function hash_hmac expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
 			message: """
@@ -18813,14 +18606,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -19626,30 +19411,6 @@ parameters:
 			path: app/cdash/tests/test_actualtrilinossubmission.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_aggregatecoverage.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_num_rows\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_aggregatecoverage.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_aggregatecoverage.php
-
-		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 1
 			path: app/cdash/tests/test_aggregatecoverage.php
@@ -19701,11 +19462,6 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, int\\|true given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_aggregatecoverage.php
-
-		-
-			message: "#^Parameter \\#1 \\$result of function pdo_num_rows expects PDOStatement, PDOStatement\\|false given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_aggregatecoverage.php
 
@@ -19857,14 +19613,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property App\\\\Models\\\\AuthToken\\:\\:\\$Hash\\.$#"
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
 
@@ -20074,26 +19822,10 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function pdo_num_rows\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: """
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 4
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
@@ -20106,7 +19838,7 @@ parameters:
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 7
+			count: 6
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
@@ -20120,16 +19852,6 @@ parameters:
 		-
 			message: "#^Cannot access offset 0 on array\\|false\\|null\\.$#"
 			count: 2
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: "#^Cannot call method bindValue\\(\\) on PDOStatement\\|false\\.$#"
-			count: 2
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: "#^Cannot call method execute\\(\\) on PDOStatement\\|false\\.$#"
-			count: 1
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
@@ -20163,11 +19885,6 @@ parameters:
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
-			message: "#^Parameter \\#1 \\$result of function pdo_num_rows expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
 			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
 			count: 4
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
@@ -20181,14 +19898,6 @@ parameters:
 			message: "#^Property AutoRemoveBuildsOnSubmitTestCase\\:\\:\\$config_file has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_bazeljson.php
 
 		-
 			message: """
@@ -20308,14 +20017,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_branchcoverage.php
-
-		-
-			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -20329,7 +20030,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 3
+			count: 1
 			path: app/cdash/tests/test_branchcoverage.php
 
 		-
@@ -20359,11 +20060,6 @@ parameters:
 
 		-
 			message: "#^Method BranchCoverageTestCase\\:\\:verifyResults\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_branchcoverage.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, array\\|false\\|null given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_branchcoverage.php
 
@@ -20475,19 +20171,6 @@ parameters:
 			path: app/cdash/tests/test_builddetails.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 2
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
-			count: 4
-			path: app/cdash/tests/test_builddetails.php
-
-		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_builddetails.php
@@ -20574,26 +20257,8 @@ parameters:
 			path: app/cdash/tests/test_buildfailuredetails.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 3
-			path: app/cdash/tests/test_buildfailuredetails.php
-
-		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 1
-			path: app/cdash/tests/test_buildfailuredetails.php
-
-		-
-			message: "#^Cannot access offset 'numfails' on array\\|false\\|null\\.$#"
-			count: 6
-			path: app/cdash/tests/test_buildfailuredetails.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 9
 			path: app/cdash/tests/test_buildfailuredetails.php
 
 		-
@@ -21224,45 +20889,8 @@ parameters:
 			path: app/cdash/tests/test_createpublicdashboard.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_crosssubprojectcoverage.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_num_rows\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_crosssubprojectcoverage.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_crosssubprojectcoverage.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 2
-			path: app/cdash/tests/test_crosssubprojectcoverage.php
-
-		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 2
-			path: app/cdash/tests/test_crosssubprojectcoverage.php
-
-		-
-			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
-			count: 1
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
 		-
@@ -21271,8 +20899,13 @@ parameters:
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
 		-
+			message: "#^Foreach overwrites \\$row with its value variable\\.$#"
+			count: 1
+			path: app/cdash/tests/test_crosssubprojectcoverage.php
+
+		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 6
+			count: 5
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
 		-
@@ -21371,12 +21004,17 @@ parameters:
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
 		-
-			message: "#^Parameter \\#1 \\$result of function pdo_num_rows expects PDOStatement, PDOStatement\\|false given\\.$#"
+			message: "#^Property CoverageAcrossSubProjectsTestCase\\:\\:\\$DataDir has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
 		-
-			message: "#^Property CoverageAcrossSubProjectsTestCase\\:\\:\\$DataDir has no type specified\\.$#"
+			message: "#^Unable to resolve the template type TKey in call to function collect$#"
+			count: 1
+			path: app/cdash/tests/test_crosssubprojectcoverage.php
+
+		-
+			message: "#^Unable to resolve the template type TValue in call to function collect$#"
 			count: 1
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
@@ -21550,14 +21188,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_disabledtests.php
-
-		-
-			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -21688,59 +21318,12 @@ parameters:
 			path: app/cdash/tests/test_dynamicanalysislogs.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_num_rows\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 2
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 2
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 3
 			path: app/cdash/tests/test_dynamicanalysissummary.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			message: "#^Cannot access offset 'numdefects' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 5
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_dynamicanalysissummary.php
 
@@ -21767,11 +21350,6 @@ parameters:
 		-
 			message: "#^Method DynamicAnalysisSummaryTestCase\\:\\:testSubProjectDynamicAnalysisSummary\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			message: "#^Parameter \\#1 \\$result of function pdo_num_rows expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 2
 			path: app/cdash/tests/test_dynamicanalysissummary.php
 
 		-
@@ -22030,21 +21608,8 @@ parameters:
 			path: app/cdash/tests/test_expiredbuildrules.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 2
-			path: app/cdash/tests/test_externallinksfromtests.php
-
-		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 1
-			path: app/cdash/tests/test_externallinksfromtests.php
-
-		-
-			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
-			count: 2
 			path: app/cdash/tests/test_externallinksfromtests.php
 
 		-
@@ -22101,14 +21666,6 @@ parameters:
 			message: "#^Method FilterBlocksTestCase\\:\\:verifyTwoHutBuilds\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_filterblocks.php
-
-		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_filterbuilderrors.php
 
 		-
 			message: """
@@ -22181,20 +21738,7 @@ parameters:
 			path: app/cdash/tests/test_filtertestlabels.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_hidecolumns.php
-
-		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 1
-			path: app/cdash/tests/test_hidecolumns.php
-
-		-
-			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_hidecolumns.php
 
@@ -22242,14 +21786,6 @@ parameters:
 			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: app/cdash/tests/test_image.php
-
-		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_imagecomparison.php
 
 		-
 			message: """
@@ -22341,14 +21877,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_issuecreation.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
@@ -22412,14 +21940,6 @@ parameters:
 			message: "#^Method JSCoverCoverageTestCase\\:\\:testJSCoverCoverage\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_jscovercoverage.php
-
-		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_junithandler.php
 
 		-
 			message: """
@@ -22783,14 +22303,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 5
-			path: app/cdash/tests/test_multiplesubprojects.php
-
-		-
-			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -23014,14 +22526,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_nobackup.php
-
-		-
-			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -23059,20 +22563,7 @@ parameters:
 			path: app/cdash/tests/test_nobackup.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_notesapi.php
-
-		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 1
-			path: app/cdash/tests/test_notesapi.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/cdash/tests/test_notesapi.php
 
@@ -23205,14 +22696,6 @@ parameters:
 			message: "#^Property PasswordComplexityTestCase\\:\\:\\$validator has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_passwordcomplexity.php
-
-		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_pdoexecutelogserrors.php
 
 		-
 			message: """
@@ -23530,48 +23013,14 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 2
-			path: app/cdash/tests/test_removebuilds.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_num_rows\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 3
-			path: app/cdash/tests/test_removebuilds.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 10
-			path: app/cdash/tests/test_removebuilds.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
+			count: 7
 			path: app/cdash/tests/test_removebuilds.php
 
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 1
-			path: app/cdash/tests/test_removebuilds.php
-
-		-
-			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/tests/test_removebuilds.php
-
-		-
-			message: "#^Cannot access offset mixed on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_removebuilds.php
 
@@ -23691,11 +23140,6 @@ parameters:
 			path: app/cdash/tests/test_removebuilds.php
 
 		-
-			message: "#^Parameter \\#1 \\$result of function pdo_num_rows expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 3
-			path: app/cdash/tests/test_removebuilds.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function base64_encode expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_removebuilds.php
@@ -23711,42 +23155,21 @@ parameters:
 			path: app/cdash/tests/test_removebuilds.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_num_rows\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_replacebuild.php
+			message: "#^Variable property access on mixed\\.$#"
+			count: 2
+			path: app/cdash/tests/test_removebuilds.php
 
 		-
 			message: """
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 2
-			path: app/cdash/tests/test_replacebuild.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_replacebuild.php
 
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 1
-			path: app/cdash/tests/test_replacebuild.php
-
-		-
-			message: "#^Cannot access offset 'generator' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/cdash/tests/test_replacebuild.php
-
-		-
-			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
-			count: 2
 			path: app/cdash/tests/test_replacebuild.php
 
 		-
@@ -23756,11 +23179,6 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, PDOStatement\\|false given\\.$#"
-			count: 2
-			path: app/cdash/tests/test_replacebuild.php
-
-		-
-			message: "#^Parameter \\#1 \\$result of function pdo_num_rows expects PDOStatement, PDOStatement\\|false given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_replacebuild.php
 
@@ -23799,15 +23217,7 @@ parameters:
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 6
-			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_num_rows\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 4
+			count: 2
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
@@ -23815,15 +23225,7 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 8
-			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
+			count: 4
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
@@ -23832,17 +23234,7 @@ parameters:
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
-			message: "#^Cannot access offset 'filename' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
 			message: "#^Cannot access offset 'loctested' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
-			message: "#^Cannot access offset 'nfiles' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_sequenceindependence.php
 
@@ -23852,23 +23244,8 @@ parameters:
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
-			message: "#^Cannot access offset 'numfiles' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
-			message: "#^Cannot access offset 'starttime' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
-			message: "#^Cannot access offset 'time' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 23
+			count: 7
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
@@ -23943,7 +23320,7 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, PDOStatement\\|false given\\.$#"
-			count: 7
+			count: 3
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
@@ -24095,54 +23472,12 @@ parameters:
 			path: app/cdash/tests/test_subprojectemail.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_num_rows\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 3
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 1
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
-			message: "#^Cannot access offset 'parentid' on array\\|false\\|null\\.$#"
-			count: 3
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
 			message: "#^Method SubProjectNextPreviousTestCase\\:\\:testSubProjectNextPrevious\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
-			message: "#^Parameter \\#1 \\$result of function pdo_num_rows expects PDOStatement, PDOStatement\\|false given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
@@ -24328,14 +23663,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_testoverview.php
-
-		-
-			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -24461,21 +23788,8 @@ parameters:
 			path: app/cdash/tests/test_timeline.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_timeoutsandmissingtests.php
-
-		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 2
-			path: app/cdash/tests/test_timeoutsandmissingtests.php
-
-		-
-			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
-			count: 1
 			path: app/cdash/tests/test_timeoutsandmissingtests.php
 
 		-
@@ -24608,19 +23922,6 @@ parameters:
 			message: "#^Variable \\$build might not be defined\\.$#"
 			count: 4
 			path: app/cdash/tests/test_timesummary.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 2
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
-			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/cdash/tests/test_truncateoutput.php
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
@@ -24768,14 +24069,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
@@ -24868,11 +24161,6 @@ parameters:
 			path: app/cdash/tests/test_upgrade.php
 
 		-
-			message: "#^Method UpgradeTestCase\\:\\:testGetVendorVersion\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
 			message: "#^Property UpgradeTestCase\\:\\:\\$PDO has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_upgrade.php
@@ -24913,19 +24201,6 @@ parameters:
 			path: app/cdash/tests/test_uploadfile.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_single_row_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_usernotes.php
-
-		-
-			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/tests/test_usernotes.php
-
-		-
 			message: "#^Method UserStatisticsTestCase\\:\\:testUserStatistics\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_userstatistics.php
@@ -24949,14 +24224,6 @@ parameters:
 			message: "#^Method ViewDynamicAnalysisTestCase\\:\\:testViewDynamicAnalysis\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_viewdynamicanalysis.php
-
-		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_viewdynamicanalysisfile.php
 
 		-
 			message: """
@@ -25128,14 +24395,6 @@ parameters:
 			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 2
-			path: app/cdash/xml_handlers/BazelJSON_handler.php
-
-		-
-			message: """
-				#^Call to deprecated function get_link_identifier\\(\\)\\:
-				04/22/2023$#
 			"""
 			count: 2
 			path: app/cdash/xml_handlers/BazelJSON_handler.php

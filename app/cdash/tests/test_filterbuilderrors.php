@@ -5,8 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
+use CDash\Database;
 use CDash\Model\Project;
 
 class FilterBuildErrorsTestCase extends KWWebTestCase
@@ -16,7 +15,7 @@ class FilterBuildErrorsTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->PDO = get_link_identifier()->getPdo();
+        $this->PDO = Database::getInstance()->getPdo();
     }
 
     public function testFilterBuildErrors()

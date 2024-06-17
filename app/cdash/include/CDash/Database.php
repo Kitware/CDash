@@ -127,11 +127,10 @@ class Database extends Singleton
         $stmt = $this->prepare($sql);
         $this->execute($stmt, $params);
 
-        $num_rows = pdo_num_rows($stmt);
-        if ($num_rows === false) {
+        if ($stmt === false) {
             return false;
         }
-        if ($num_rows === 0) {
+        if ($stmt->rowCount() === 0) {
             return [];
         }
         return $stmt->fetch();

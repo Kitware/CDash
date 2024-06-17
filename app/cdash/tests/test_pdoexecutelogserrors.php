@@ -5,6 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use CDash\Database;
 
 class PdoExecuteLogsErrorsTestCase extends KWWebTestCase
 {
@@ -15,7 +16,7 @@ class PdoExecuteLogsErrorsTestCase extends KWWebTestCase
 
     public function testPdoExecuteLogsErrors()
     {
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = Database::getInstance()->getPdo();
         $stmt = $pdo->prepare('SELECT notarealcolumn FROM build');
         pdo_execute($stmt);
 

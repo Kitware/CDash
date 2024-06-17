@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -38,22 +40,22 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         }
 
         // Get the ids for the three subsequent builds of Didasko.
-        $result = pdo_query("
+        $result = DB::select("
                 SELECT b.id FROM build AS b
                 LEFT JOIN subproject2build AS sp2b ON sp2b.buildid=b.id
                 LEFT JOIN subproject AS sp ON sp.id = sp2b.subprojectid
                 WHERE sp.name = 'Didasko'
                 ORDER BY b.starttime");
 
-        $num_rows = pdo_num_rows($result);
+        $num_rows = count($result);
         if ($num_rows !== 3) {
             $this->fail("Expected 3 rows, found $num_rows");
             return 1;
         }
 
         $buildids = [];
-        while ($row = pdo_fetch_array($result)) {
-            $buildids[] = $row['id'];
+        foreach ($result as $row) {
+            $buildids[] = $row->id;
         }
         $first_buildid = $buildids[0];
         $second_buildid = $buildids[1];
@@ -157,15 +159,12 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         }
 
         // Make sure that the parent builds link to each other correctly.
-        $result = pdo_single_row_query(
-            "SELECT parentid FROM build WHERE id=$first_buildid");
-        $first_parentid = $result['parentid'];
-        $result = pdo_single_row_query(
-            "SELECT parentid FROM build WHERE id=$second_buildid");
-        $second_parentid = $result['parentid'];
-        $result = pdo_single_row_query(
-            "SELECT parentid FROM build WHERE id=$third_buildid");
-        $third_parentid = $result['parentid'];
+        $result = DB::select("SELECT parentid FROM build WHERE id=$first_buildid")[0];
+        $first_parentid = $result->parentid;
+        $result = DB::select("SELECT parentid FROM build WHERE id=$second_buildid")[0];
+        $second_parentid = $result->parentid;
+        $result = DB::select("SELECT parentid FROM build WHERE id=$third_buildid")[0];
+        $third_parentid = $result->parentid;
 
         $this->get($this->url . "/api/v1/index.php?project=Trilinos&parentid=$first_parentid");
         $content = $this->getBrowser()->getContent();

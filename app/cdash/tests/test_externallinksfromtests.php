@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -25,13 +27,13 @@ class ExternalLinksFromTestsTestCase extends KWWebTestCase
         }
 
         // Get the IDs for the build and test that we just created.
-        $result = pdo_single_row_query(
-            "SELECT id FROM build WHERE name = 'test_output_link'");
-        $buildid = $result['id'];
+        $result = DB::select(
+            "SELECT id FROM build WHERE name = 'test_output_link'")[0];
+        $buildid = $result->id;
 
-        $result = pdo_single_row_query(
-            "SELECT id FROM build2test WHERE buildid=$buildid");
-        $buildtestid = $result['id'];
+        $result = DB::select(
+            "SELECT id FROM build2test WHERE buildid=$buildid")[0];
+        $buildtestid = $result->id;
 
         // Use the API to verify that our external link was parsed properly.
         $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");

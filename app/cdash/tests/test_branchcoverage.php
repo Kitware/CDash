@@ -9,6 +9,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
+use Illuminate\Support\Facades\DB;
 
 class BranchCoverageTestCase extends KWWebTestCase
 {
@@ -120,12 +121,12 @@ class BranchCoverageTestCase extends KWWebTestCase
             return 1;
         }
         // Look up the ID of one of the coverage files that we just submitted.
-        $fileid_result = $this->db->query("
+        $fileid_result = DB::select("
             SELECT c.fileid FROM coverage AS c
             INNER JOIN coveragefile AS cf ON c.fileid=cf.id
             WHERE buildid=$this->buildid
             AND cf.fullpath = './MathFunctions/mysqrt.cxx'");
-        $fileid = $fileid_result[0]['fileid'];
+        $fileid = $fileid_result[0]->fileid;
 
         // Make sure branch coverage is being displayed properly.
         $content = $this->get($this->url . "/viewCoverageFile.php?buildid=$this->buildid&fileid=$fileid");
@@ -135,15 +136,15 @@ class BranchCoverageTestCase extends KWWebTestCase
         }
 
         // Make sure our uncovered results also made it into the database.
-        $row = pdo_single_row_query(
+        $row = DB::select(
             "SELECT loctested, locuntested FROM coverage
             INNER JOIN coveragefile ON (coverage.fileid=coveragefile.id)
-            WHERE coveragefile.fullpath LIKE '%uncovered1.cxx%'");
-        if (!$row || !array_key_exists('loctested', $row)) {
+            WHERE coveragefile.fullpath LIKE '%uncovered1.cxx%'")[0] ?? [];
+        if ($row === []) {
             $this->fail("Expected 1 result for uncovered file, found 0");
             return 1;
         }
-        if ($row['loctested'] != 0 || $row['locuntested'] != 1) {
+        if ((int) $row->loctested !== 0 || (int) $row->locuntested !== 1) {
             $this->fail("Uncovered results differ from expectation");
             return 1;
         }

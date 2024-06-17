@@ -40,25 +40,25 @@ function ComputeTestTiming($days = 4)
         $now = gmdate(FMT_DATETIME, time() - 3600 * 24 * $days);
 
         // Find the builds
-        $builds = pdo_query("SELECT starttime,siteid,name,type,id
+        $builds = DB::select("SELECT starttime,siteid,name,type,id
                 FROM build
                 WHERE build.projectid='$projectid' AND build.starttime>'$now'
                 ORDER BY build.starttime ASC");
 
-        $total = pdo_num_rows($builds);
+        $total = count($builds);
         echo pdo_error();
 
         $i = 0;
         $previousperc = 0;
-        while ($build_array = pdo_fetch_array($builds)) {
-            $buildid = $build_array['id'];
-            $buildname = $build_array['name'];
-            $buildtype = $build_array['type'];
-            $starttime = $build_array['starttime'];
-            $siteid = $build_array['siteid'];
+        foreach ($builds as $build) {
+            $buildid = $build->id;
+            $buildname = $build->name;
+            $buildtype = $build->type;
+            $starttime = $build->starttime;
+            $siteid = $build->siteid;
 
             // Find the previous build
-            $previousbuild = pdo_query("SELECT id FROM build
+            $previousbuild = DB::select("SELECT id FROM build
                     WHERE build.siteid='$siteid'
                     AND build.type='$buildtype' AND build.name='$buildname'
                     AND build.projectid='$projectid'
@@ -69,10 +69,9 @@ function ComputeTestTiming($days = 4)
             echo pdo_error();
 
             // If we have one
-            if (pdo_num_rows($previousbuild) > 0) {
+            if (count($previousbuild) > 0) {
                 // Loop through the tests
-                $previousbuild_array = pdo_fetch_array($previousbuild);
-                $previousbuildid = $previousbuild_array ['id'];
+                $previousbuildid = $previousbuild->id;
 
                 $tests = pdo_query("SELECT build2test.time,build2test.testid,test.name
                         FROM build2test,test WHERE build2test.buildid='$buildid'
@@ -193,19 +192,19 @@ function ComputeUpdateStatistics($days = 4)
         $now = gmdate(FMT_DATETIME, time() - 3600 * 24 * $days);
 
         // Find the builds
-        $builds = pdo_query("SELECT starttime,siteid,name,type,id
+        $builds = DB::select("SELECT starttime,siteid,name,type,id
                 FROM build
                 WHERE build.projectid='$projectid' AND build.starttime>'$now'
                 ORDER BY build.starttime ASC");
 
-        $total = pdo_num_rows($builds);
+        $total = count($builds);
         echo pdo_error();
 
         $i = 0;
         $previousperc = 0;
-        while ($build_array = pdo_fetch_array($builds)) {
+        foreach ($builds as $build) {
             $Build = new Build();
-            $Build->Id = $build_array['id'];
+            $Build->Id = $build->id;
             $Build->ProjectId = $projectid;
             $Build->ComputeUpdateStatistics();
 

@@ -1,8 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
+use CDash\Database;
 use CDash\Model\Project;
 
 class JUnitHandlerTestCase extends KWWebTestCase
@@ -13,7 +12,7 @@ class JUnitHandlerTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->PDO = get_link_identifier()->getPdo();
+        $this->PDO = Database::getInstance()->getPdo();
         $this->Project = null;
     }
 

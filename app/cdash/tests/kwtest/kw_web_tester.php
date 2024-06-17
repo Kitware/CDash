@@ -302,7 +302,7 @@ class KWWebTestCase extends WebTestCase
 
     public function userExists($email)
     {
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = CDash\Database::getInstance()->getPdo();
         $user_table = qid('user');
         $stmt = $pdo->prepare("SELECT id FROM $user_table WHERE email = ?");
         $stmt->execute([$email]);

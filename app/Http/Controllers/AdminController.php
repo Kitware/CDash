@@ -271,15 +271,14 @@ final class AdminController extends AbstractController
                 $projectid = $build_array['projectid'];
                 $submittime = $build_array['submittime'];
 
-                $build2grouprule = pdo_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
+                $build2grouprule = DB::select("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
                                     WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
                                     AND (b2g.groupid=bg.id AND bg.projectid='$projectid')
                                     AND '$submittime'>b2g.starttime AND ('$submittime'<b2g.endtime OR b2g.endtime='1980-01-01 00:00:00')");
                 echo pdo_error();
-                if (pdo_num_rows($build2grouprule) > 0) {
-                    $build2grouprule_array = pdo_fetch_array($build2grouprule);
-                    $groupid = $build2grouprule_array['groupid'];
-                    pdo_query("UPDATE build2group SET groupid='$groupid' WHERE buildid='$buildid'");
+                if (count($build2grouprule) > 0) {
+                    $groupid = $build2grouprule[0]->groupid;
+                    DB::update("UPDATE build2group SET groupid='$groupid' WHERE buildid='$buildid'");
                 }
             }
         }

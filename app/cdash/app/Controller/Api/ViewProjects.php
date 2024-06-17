@@ -55,11 +55,6 @@ class ViewProjects extends \CDash\Controller\Api
         $response['hostname'] = $_SERVER['SERVER_NAME'];
         $response['date'] = date('r');
 
-        // Check if the database is up to date.
-        if ($this->db->query('SELECT authenticatesubmissions FROM project LIMIT 1') === false) {
-            $response['upgradewarning'] = 1;
-        }
-
         $response['title'] = 'Projects';
         $response['subtitle'] = 'Projects';
         $response['googletracker'] = config('cdash.default_google_analytics');

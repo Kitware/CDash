@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -207,90 +209,82 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             configureduration, builderrors, buildwarnings, buildduration, testnotrun,
             testfailed, testpassed
             FROM build WHERE name='Linux-g++-4.1-LesionSizingSandbox_Debug'";
-        $build_result = pdo_query($build_query);
-        if (!$build_result) {
-            $this->fail('build query returned false');
-            return false;
-        }
+        $build_result = DB::select($build_query);
 
         // Make sure we only found one matching result.
-        $num_builds = pdo_num_rows($build_result);
-        if ($num_builds != 1) {
+        $num_builds = count($build_result);
+        if ($num_builds !== 1) {
             $this->fail("Expected 1 build, found $num_builds");
             return false;
         }
 
         // Verify the result from the build table.
-        $build_row = pdo_fetch_array($build_result);
-        if ($build_row['starttime'] != '2009-02-23 07:10:37') {
-            $this->fail("Expected starttime to be '2009-02-23 07:10:37', found " . $build_row['starttime']);
+        $build_row = $build_result[0];
+        if ($build_row->starttime !== '2009-02-23 07:10:37') {
+            $this->fail("Expected starttime to be '2009-02-23 07:10:37', found " . $build_row->starttime);
             return false;
         }
-        if ($build_row['endtime'] != '2009-02-23 12:32:22') {
-            $this->fail("Expected endtime to be '2009-02-23 12:32:22', found " . $build_row['endtime']);
+        if ($build_row->endtime !== '2009-02-23 12:32:22') {
+            $this->fail("Expected endtime to be '2009-02-23 12:32:22', found " . $build_row->endtime);
             return false;
         }
-        if ($build_row['configureerrors'] != 0) {
-            $this->fail('Expected configureerrors to be 0, found ' . $build_row['configureerrors']);
+        if ((int) $build_row->configureerrors !== 0) {
+            $this->fail('Expected configureerrors to be 0, found ' . $build_row->configureerrors);
             return false;
         }
-        if ($build_row['configurewarnings'] != 0) {
-            $this->fail('Expected configurewarnings to be 0, found ' . $build_row['configurewarnings']);
+        if ((int) $build_row->configurewarnings !== 0) {
+            $this->fail('Expected configurewarnings to be 0, found ' . $build_row->configurewarnings);
             return false;
         }
-        if ($build_row['configureduration'] != 0.00) {
-            $this->fail('Expected configureduration to be 0.00, found ' . $build_row['configureduration']);
+        if ($build_row->configureduration != 0.00) {
+            $this->fail('Expected configureduration to be 0.00, found ' . $build_row->configureduration);
             return false;
         }
-        if ($build_row['builderrors'] != 0) {
-            $this->fail('Expected builderrors to be 0, found ' . $build_row['builderrors']);
+        if ((int) $build_row->builderrors !== 0) {
+            $this->fail('Expected builderrors to be 0, found ' . $build_row->builderrors);
             return false;
         }
-        if ($build_row['buildwarnings'] != 3) {
-            $this->fail('Expected buildwarnings to be 3, found ' . $build_row['buildwarnings']);
+        if ((int) $build_row->buildwarnings !== 3) {
+            $this->fail('Expected buildwarnings to be 3, found ' . $build_row->buildwarnings);
             return false;
         }
-        if ($build_row['buildduration'] != 3103) {
-            $this->fail('Expected buildduration to be 3103, found ' . $build_row['buildduration']);
+        if ((int) $build_row->buildduration !== 3103) {
+            $this->fail('Expected buildduration to be 3103, found ' . $build_row->buildduration);
             return false;
         }
-        if ($build_row['testnotrun'] != 1) {
-            $this->fail('Expected testnotrun to be 1, found ' . $build_row['testnotrun']);
+        if ((int) $build_row->testnotrun !== 1) {
+            $this->fail('Expected testnotrun to be 1, found ' . $build_row->testnotrun);
             return false;
         }
-        if ($build_row['testfailed'] != 5) {
-            $this->fail('Expected testfailed to be 5, found ' . $build_row['testfailed']);
+        if ((int) $build_row->testfailed !== 5) {
+            $this->fail('Expected testfailed to be 5, found ' . $build_row->testfailed);
             return false;
         }
-        if ($build_row['testpassed'] != 46) {
-            $this->fail('Expected testpassed to be 46, found ' . $build_row['testpassed']);
+        if ((int) $build_row->testpassed !== 46) {
+            $this->fail('Expected testpassed to be 46, found ' . $build_row->testpassed);
             return false;
         }
 
         // Verify note.
-        $buildid = $build_row['id'];
+        $buildid = $build_row->id;
         $note_query = "
             SELECT b2n.time, n.name
             FROM build2note AS b2n
             INNER JOIN note AS n ON (n.id=b2n.noteid)
             WHERE b2n.buildid=$buildid";
-        $note_result = pdo_query($note_query);
-        if (!$note_result) {
-            $this->fail('note query returned false');
-            return false;
-        }
-        $num_notes = pdo_num_rows($note_result);
-        if ($num_notes != 1) {
+        $note_result = DB::select($note_query);
+        $num_notes = count($note_result);
+        if ($num_notes !== 1) {
             $this->fail("Expected 1 note, found $num_notes");
             return false;
         }
-        $note_row = pdo_fetch_array($note_result);
-        if ($note_row['time'] != '2009-02-23 12:32:00') {
-            $this->fail("Expected note time to be '2009-02-23 12:32:00', found " . $note_row['time']);
+        $note_row = $note_result[0];
+        if ($note_row->time !== '2009-02-23 12:32:00') {
+            $this->fail("Expected note time to be '2009-02-23 12:32:00', found " . $note_row->time);
             return false;
         }
-        if ($note_row['name'] != '/home/ibanez/src/Work/Luis/DashboardScripts/camelot_itk_lesion_sizing_sandbox_debug_gcc41.cmake') {
-            $this->fail("Expected note name to be '/home/ibanez/src/Work/Luis/DashboardScripts/camelot_itk_lesion_sizing_sandbox_debug_gcc41.cmake', found " . $note_row['name']);
+        if ($note_row->name != '/home/ibanez/src/Work/Luis/DashboardScripts/camelot_itk_lesion_sizing_sandbox_debug_gcc41.cmake') {
+            $this->fail("Expected note name to be '/home/ibanez/src/Work/Luis/DashboardScripts/camelot_itk_lesion_sizing_sandbox_debug_gcc41.cmake', found " . $note_row->name);
             return false;
         }
 
@@ -328,11 +322,11 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             return false;
         }
 
-        $num_files_row = pdo_single_row_query(
+        $num_files_row = DB::select(
             "SELECT COUNT(1) AS numfiles
                 FROM coveragefilelog
-                WHERE buildid='$buildid'");
-        $num_files_covered = $num_files_row['numfiles'];
+                WHERE buildid='$buildid'")[0];
+        $num_files_covered = $num_files_row->numfiles;
         if ($num_files_covered != 2) {
             $this->fail("Expected 2 files covered, found $num_files_covered");
             return false;
@@ -344,19 +338,19 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             FROM buildupdate AS bu
             INNER JOIN build2update AS b2u ON (b2u.updateid=bu.id)
             WHERE b2u.buildid='$buildid'";
-        $update_result = pdo_query($update_query);
-        if (!$update_result) {
+        $update_result = DB::select($update_query);
+        if ($update_result === []) {
             $this->fail('update query returned false');
             return false;
         }
-        $num_updates = pdo_num_rows($update_result);
-        if ($num_updates != 1) {
+        $num_updates = count($update_result);
+        if ($num_updates !== 1) {
             $this->fail("Expected 1 update, found $num_updates");
             return false;
         }
-        $update_row = pdo_fetch_array($update_result);
-        if ($update_row['nfiles'] != 0) {
-            $this->fail('Expected number of update files to be 0, found ' . $update_row['nfiles']);
+        $update_row = $update_result[0];
+        if ((int) $update_row->nfiles !== 0) {
+            $this->fail('Expected number of update files to be 0, found ' . $update_row->nfiles);
             return false;
         }
 
@@ -366,19 +360,19 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             FROM uploadfile AS uf
             INNER JOIN build2uploadfile AS b2uf ON (b2uf.fileid=uf.id)
             WHERE b2uf.buildid='$buildid'";
-        $upload_result = pdo_query($upload_query);
-        if (!$upload_result) {
+        $upload_result = DB::select($upload_query);
+        if ($upload_result === []) {
             $this->fail('upload query returned false');
             return false;
         }
-        $num_uploads = pdo_num_rows($upload_result);
+        $num_uploads = count($upload_result);
         if ($num_uploads != 1) {
             $this->fail("Expected 1 upload, found $num_uploads");
             return false;
         }
-        $upload_row = pdo_fetch_array($upload_result);
-        if ($upload_row['filename'] != 'tmp.txt') {
-            $this->fail("Expected uploaded file to be named 'tmp.txt', found " . $upload_row['filename']);
+        $upload_row = $upload_result[0];
+        if ($upload_row->filename !== 'tmp.txt') {
+            $this->fail("Expected uploaded file to be named 'tmp.txt', found " . $upload_row->filename);
             return false;
         }
         return true;

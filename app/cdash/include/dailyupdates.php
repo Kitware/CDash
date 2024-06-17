@@ -976,11 +976,14 @@ function addDailyChanges(int $projectid): void
     if (intval($query['c']) === 0) {
         $cvsauthors = [];
 
-        $db->executePrepared("
-            INSERT INTO dailyupdate (projectid, date, command, type, status)
-            VALUES (?, ?,'NA','NA','0')
-        ", [$projectid, $date]);
-        $updateid = intval(pdo_insert_id('dailyupdate'));
+        $updateid = DB::table('dailyupdate')
+            ->insertGetId([
+                'projectid' => $projectid,
+                'date' => $date,
+                'command' => 'NA',
+                'type' => 'NA',
+                'status' => '0',
+            ]);
         $dates = get_related_dates($project->NightlyTime, $date);
         $commits = get_repository_commits($projectid, $dates);
 

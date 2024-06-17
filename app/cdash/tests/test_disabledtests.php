@@ -5,7 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
+use CDash\Database;
 
 class DisabledTestsTestCase extends KWWebTestCase
 {
@@ -26,7 +26,7 @@ class DisabledTestsTestCase extends KWWebTestCase
         }
 
         // Find the buildid we just created.
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = Database::getInstance()->getPdo();
         $stmt = $pdo->query("SELECT id FROM build WHERE name = 'test_disabled'");
         $row = $stmt->fetch();
         $buildid = $row['id'];

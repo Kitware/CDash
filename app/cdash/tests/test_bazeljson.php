@@ -1,9 +1,8 @@
 <?php
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
 use CDash\Model\Project;
+use CDash\Database;
 
 class BazelJSONTestCase extends KWWebTestCase
 {
@@ -12,7 +11,7 @@ class BazelJSONTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->PDO = get_link_identifier()->getPdo();
+        $this->PDO = Database::getInstance()->getPdo();
     }
 
     public function testBazelJSON()

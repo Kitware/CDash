@@ -50,15 +50,11 @@ class RemoveBuildsTestCase extends KWWebTestCase
 
     public function testBuildRemovalWorksAsExpected()
     {
-
-
-
-
         $time = gmdate(FMT_DATETIME);
 
         // Find an existing site.
-        $row = pdo_single_row_query('SELECT id FROM site LIMIT 1');
-        $siteid = $row['id'];
+        $row = DB::select('SELECT id FROM site LIMIT 1')[0];
+        $siteid = $row->id;
 
         // Label
         $label = new Label();
@@ -491,7 +487,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         if ($deleted) {
             $delete_msg = 'after deletion';
         }
-        $num_rows = pdo_num_rows(pdo_query("SELECT $field FROM $table WHERE $field $compare $value"));
+        $num_rows = count(DB::select("SELECT $field FROM $table WHERE $field $compare $value"));
         if ($num_rows !== $expected) {
             $this->fail("Expected $expected for $table $delete_msg, found $num_rows");
         }
@@ -500,34 +496,33 @@ class RemoveBuildsTestCase extends KWWebTestCase
     public function verify_get_columns($table, $columns, $field, $compare, $value, $expected)
     {
         $col_arg = implode(',', $columns);
-        $result = pdo_query("SELECT $col_arg FROM $table WHERE $field $compare $value");
-        $num_rows = pdo_num_rows($result);
+        $result = DB::select("SELECT $col_arg FROM $table WHERE $field $compare $value");
+        $num_rows = count($result);
         if ($num_rows !== $expected) {
             $this->fail("Expected $expected for $table, found $num_rows");
         }
-        $row = pdo_fetch_array($result);
+        $row = $result[0];
         $retval = [];
         foreach ($columns as $c) {
-            $retval[] = $row[$c];
+            $retval[] = $row->$c;
         }
         return $retval;
     }
 
     public function verify_get_rows($table, $column, $field, $compare, $value, $expected)
     {
-        $result = pdo_query("SELECT $column FROM $table WHERE $field $compare $value");
-        $num_rows = pdo_num_rows($result);
+        $result = DB::select("SELECT $column FROM $table WHERE $field $compare $value");
+        $num_rows = count($result);
         if ($num_rows !== $expected) {
             $this->fail("Expected $expected for $table, found $num_rows");
         }
         $arr = [];
-        while ($row = pdo_fetch_array($result)) {
-            $arr[] = $row[$column];
+        foreach ($result as $row) {
+            $arr[] = $row->$column;
         }
         if (count($arr) === 1) {
             return $arr[0];
         }
-        $retval = '(' . implode(',', $arr) . ')';
-        return $retval;
+        return '(' . implode(',', $arr) . ')';
     }
 }

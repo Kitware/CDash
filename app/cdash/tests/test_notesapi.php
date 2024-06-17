@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -22,14 +24,14 @@ class NotesAPICase extends KWWebTestCase
         // Find the smallest buildid that has more than one note.
         // This was 13 at the time this test was written, but things
         // like this have a habit of changing.
-        $buildid_result = pdo_single_row_query(
+        $buildid_result = DB::select(
             'SELECT buildid, COUNT(1) FROM build2note
-       GROUP BY buildid HAVING COUNT(1) > 1 ORDER BY buildid LIMIT 1');
-        if (empty($buildid_result)) {
+       GROUP BY buildid HAVING COUNT(1) > 1 ORDER BY buildid LIMIT 1')[0] ?? [];
+        if ($buildid_result === []) {
             $this->fail('No build found with multiple notes');
             return 1;
         }
-        $buildid = $buildid_result['buildid'];
+        $buildid = $buildid_result->buildid;
 
         // Use the API to get the notes for this build.
         $this->get($this->url . "/api/v1/viewNotes.php?buildid=$buildid");

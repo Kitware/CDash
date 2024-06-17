@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use Illuminate\Support\Facades\DB;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
@@ -48,20 +50,20 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
       FROM buildfailure AS bf
       LEFT JOIN build AS b ON (b.id=bf.buildid)
       WHERE b.name='test_buildfailure'";
-        $count_results = pdo_single_row_query($count_query);
-        if ($count_results['numfails'] != 4) {
+        $count_results = DB::select($count_query)[0];
+        if ((int) $count_results->numfails !== 4) {
             $this->fail(
-                'Expected 4 buildfailures, found ' . $count_results['numfails']);
+                'Expected 4 buildfailures, found ' . $count_results->numfails);
             return 1;
         }
-        if ($count_results['numbuilds'] != 2) {
+        if ((int) $count_results->numbuilds !== 2) {
             $this->fail(
-                'Expected 2 builds, found ' . $count_results['numbuilds']);
+                'Expected 2 builds, found ' . $count_results->numbuilds);
             return 1;
         }
-        if ($count_results['numdetails'] != 2) {
+        if ((int) $count_results->numdetails !== 2) {
             $this->fail(
-                'Expected 2 buildfailuredetails, found ' . $count_results['numdetails']);
+                'Expected 2 buildfailuredetails, found ' . $count_results->numdetails);
             return 1;
         }
 
@@ -69,20 +71,20 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
         remove_build($buildids[0]);
 
         // Verify 2 buildfailures, 1 build, and 2 details.
-        $count_results = pdo_single_row_query($count_query);
-        if ($count_results['numfails'] != 2) {
+        $count_results = DB::select($count_query)[0];
+        if ((int) $count_results->numfails !== 2) {
             $this->fail(
-                'Expected 2 buildfailures, found ' . $count_results['numfails']);
+                'Expected 2 buildfailures, found ' . $count_results->numfails);
             return 1;
         }
-        if ($count_results['numbuilds'] != 1) {
+        if ((int) $count_results->numbuilds !== 1) {
             $this->fail(
-                'Expected 1 build, found ' . $count_results['numbuilds']);
+                'Expected 1 build, found ' . $count_results->numbuilds);
             return 1;
         }
-        if ($count_results['numdetails'] != 2) {
+        if ((int) $count_results->numdetails !== 2) {
             $this->fail(
-                'Expected 2 buildfailuredetails, found ' . $count_results['numdetails']);
+                'Expected 2 buildfailuredetails, found ' . $count_results->numdetails);
             return 1;
         }
 
@@ -90,20 +92,20 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
         remove_build($buildids[1]);
 
         // Verify that the rest of our data is now gone.
-        $count_results = pdo_single_row_query($count_query);
-        if ($count_results['numfails'] != 0) {
+        $count_results = DB::select($count_query)[0];
+        if ((int) $count_results->numfails !== 0) {
             $this->fail(
-                'Expected 0 buildfailures, found ' . $count_results['numfails']);
+                'Expected 0 buildfailures, found ' . $count_results->numfails);
             return 1;
         }
-        if ($count_results['numbuilds'] != 0) {
+        if ((int) $count_results->numbuilds !== 0) {
             $this->fail(
-                'Expected 0 builds, found ' . $count_results['numbuilds']);
+                'Expected 0 builds, found ' . $count_results->numbuilds);
             return 1;
         }
-        if ($count_results['numdetails'] != 0) {
+        if ((int) $count_results->numdetails !== 0) {
             $this->fail(
-                'Expected 0 buildfailuredetails, found ' . $count_results['numdetails']);
+                'Expected 0 buildfailuredetails, found ' . $count_results->numdetails);
             return 1;
         }
 

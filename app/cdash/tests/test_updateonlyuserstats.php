@@ -15,8 +15,7 @@
 =========================================================================*/
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
+use CDash\Database;
 use App\Models\User;
 use CDash\Model\UserProject;
 
@@ -158,7 +157,7 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
         }
 
         // Delete builds.
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = Database::getInstance()->getPdo();
         $stmt = $pdo->prepare(
             "SELECT id FROM build WHERE name='GithubUserStats'");
         $stmt->execute();

@@ -5,7 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
+use CDash\Database;
 
 class MultipleSubprojectsTestCase extends KWWebTestCase
 {
@@ -32,7 +32,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $this->restoreState();
         }
 
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = Database::getInstance()->getPdo();
         $sql = "SELECT id FROM project WHERE name='SubProjectExample'";
         $stmt = $pdo->query($sql, PDO::FETCH_COLUMN, 0);
         $this->projectId = $stmt->fetchColumn();
@@ -102,7 +102,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         }
 
         // Get the buildids that we just created so we can delete it later.
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = Database::getInstance()->getPdo();
         $build_results = $pdo->query(
             "SELECT id, buildduration, configureduration FROM build
             WHERE name='CTestTest-Linux-c++-Subprojects'");
@@ -146,7 +146,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
     private function setEmailPreference($status, $chars)
     {
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = Database::getInstance()->getPdo();
 
         $sql = "
             SELECT
@@ -187,7 +187,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
     private function restoreEmailPreference()
     {
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = Database::getInstance()->getPdo();
 
         if ($this->summaryEmail) {
             $sql = "
@@ -242,8 +242,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         // Get the buildids that we just created so we can delete it later.
         $this->submitBuild();
 
-        $pdo = get_link_identifier()->getPdo();
-        $parentid = null;
+        $pdo = Database::getInstance()->getPdo();
 
         $subprojects = ["MyThirdPartyDependency", "MyExperimentalFeature", "MyProductionCode", "EmptySubproject"];
 

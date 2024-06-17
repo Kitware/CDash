@@ -1,13 +1,12 @@
 <?php
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
 use App\Models\AuthToken;
 use App\Utils\AuthTokenUtil;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 use Illuminate\Support\Facades\DB;
+use CDash\Database;
 
 class AuthTokenTestCase extends KWWebTestCase
 {
@@ -23,7 +22,7 @@ class AuthTokenTestCase extends KWWebTestCase
     {
         parent::__construct();
         $this->Hash = '';
-        $this->PDO = get_link_identifier()->getPdo();
+        $this->PDO = Database::getInstance()->getPdo();
         $this->PostBuildId = 0;
         $this->Project = null;
         $this->Token = '';

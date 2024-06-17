@@ -17,6 +17,7 @@ namespace CDash\Model;
 
 use App\Utils\RepositoryUtils;
 use CDash\Database;
+use Illuminate\Support\Facades\DB;
 use PDO;
 
 /** BuildFailure */
@@ -102,53 +103,28 @@ class BuildFailure
         if ($detailsResult && array_key_exists('id', $detailsResult)) {
             $detailsId = intval($detailsResult['id']);
         } else {
-            $query = $db->executePrepared('
-                         INSERT INTO buildfailuredetails (
-                             type,
-                             stdoutput,
-                             stderror,
-                             exitcondition,
-                             language,
-                             targetname,
-                             outputfile,
-                             outputtype,
-                             crc32
-                         )
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                     ', [
-                         intval($this->Type),
-                         $stdOutput,
-                         $stdError,
-                         $exitCondition,
-                         $language,
-                         $targetName,
-                         $outputFile,
-                         $outputType,
-                         $crc32,
-                     ]);
-            if ($query === false) {
-                add_last_sql_error('BuildFailure InsertDetails', 0, $this->BuildId);
-            }
-            $detailsId = intval(pdo_insert_id('buildfailuredetails'));
+            $detailsId = DB::table('buildfailuredetails')
+                ->insertGetId([
+                    'type' => intval($this->Type),
+                    'stdoutput' => $stdOutput,
+                    'stderror' => $stdError,
+                    'exitcondition' => $exitCondition,
+                    'language' => $language,
+                    'targetname' => $targetName,
+                    'outputfile' => $outputFile,
+                    'outputtype' => $outputType,
+                    'crc32' => $crc32,
+                ]);
         }
 
-        // Insert the buildfailure.
-        $query = $db->executePrepared('
-                     INSERT INTO buildfailure (
-                         buildid,
-                         detailsid,
-                         workingdirectory,
-                         sourcefile,
-                         newstatus
-                     )
-                     VALUES (?, ?, ?, ?, 0)
-                 ', [intval($this->BuildId), $detailsId, $workingDirectory, $sourceFile]);
-        if ($query === false) {
-            add_last_sql_error('BuildFailure Insert', 0, $this->BuildId);
-            return false;
-        }
-
-        $id = pdo_insert_id('buildfailure');
+        $id = DB::table('buildfailure')
+            ->insertGetId([
+                'buildid' => intval($this->BuildId),
+                'detailsid' => $detailsId,
+                'workingdirectory' => $workingDirectory,
+                'sourcefile' => $sourceFile,
+                'newstatus' => 0,
+            ]);
 
         // Insert the arguments
         $argumentids = [];
@@ -169,16 +145,9 @@ class BuildFailure
             if (!empty($query)) {
                 $argumentids[] = intval($query['id']);
             } else {
-                // insert the argument
-                $query = $db->executePrepared('
-                             INSERT INTO buildfailureargument (argument) VALUES (?)
-                         ', [$argumentescaped]);
-                if ($query === false) {
-                    add_last_sql_error('BuildFailure Insert', 0, $this->BuildId);
-                    return false;
-                }
-
-                $argumentids[] = intval(pdo_insert_id('buildfailureargument'));
+                $argumentids[] = DB::table('buildfailureargument')->insertGetId([
+                    'argument' => $argumentescaped,
+                ]);
             }
         }
 
