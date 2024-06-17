@@ -66,7 +66,6 @@ echo "Running migrations..."
 php artisan migrate --force
 
 echo "Clearing caches..."
-php artisan route:cache
 php artisan view:cache
 php artisan lighthouse:cache
 
