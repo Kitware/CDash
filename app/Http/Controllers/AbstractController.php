@@ -18,7 +18,7 @@ abstract class AbstractController extends BaseController
      */
     protected function view(string $view, string $title = ''): View
     {
-        session()->put('url.intended', request()->getRequestUri());
+        session()->put('url.intended', url()->full());
 
         $result = view($view)->with('js_version', self::getJsVersion());
 
@@ -54,7 +54,7 @@ abstract class AbstractController extends BaseController
 
     protected function redirectToLogin(): RedirectResponse
     {
-        session(['url.intended' => request()->getRequestUri()]);
+        session(['url.intended' => url()->full()]);
         return redirect()->route('login');
     }
 }

@@ -202,6 +202,11 @@ parameters:
 			path: app/Http/Controllers/AbstractBuildController.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\UrlGenerator\\:\\:full\\(\\)\\.$#"
+			count: 2
+			path: app/Http/Controllers/AbstractController.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\AbstractController\\:\\:getCDashVersion\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: app/Http/Controllers/AbstractController.php
@@ -2972,6 +2977,11 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Foundation\\\\Application\\:\\:isProduction\\(\\)\\.$#"
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\UrlGenerator\\:\\:full\\(\\)\\.$#"
 			count: 1
 			path: app/Providers/AppServiceProvider.php
 

@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
         // This allows us to do response()->angular_view(<view_name>).
         Response::macro('angular_view', function (string $view_name) {
             // A hack to ensure that redirects work properly after being redirected to the login page
-            session(['url.intended' => request()->getRequestUri()]);
+            session(['url.intended' => url()->full()]);
 
             $controller_name = '';
             $path = request()->path() === '/' ? 'index.php' : request()->path();
