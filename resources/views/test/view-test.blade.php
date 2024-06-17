@@ -13,7 +13,7 @@
     @verbatim
         <h3>Testing started on {{::cdash.build.testtime}}</h3>
 
-        <table ng-if="::!cdash.parentBuild" class="tabb striped">
+        <table class="tabb striped">
             <thead>
                 <tr class="table-heading1">
                     <th colspan="2" class="header">System Information</th>
