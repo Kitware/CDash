@@ -28,9 +28,6 @@ class CDashTestCase extends TestCase
     /** @var  Database $originalDatabase*/
     private $originalDatabase;
 
-    /** @var String $endpoint */
-    private $endpoint;
-
     public static function tearDownAfterClass() : void
     {
         ServiceContainer::setInstance(ServiceContainer::class, null);
@@ -101,32 +98,5 @@ class CDashTestCase extends TestCase
     protected function getMockBuild()
     {
         return $this->createMockFromBuilder(Build::class);
-    }
-
-    protected function setEndpoint($endpoint)
-    {
-        $this->endpoint = base_path("/app/cdash/public/api/v1/{$endpoint}.php");
-        if (!file_exists($this->endpoint)) {
-            throw new \Exception('Endpoint does not exist');
-        }
-    }
-    protected function getEndpointResponse()
-    {
-        $response = null;
-
-        ob_start();
-        if ($this->endpoint) {
-            try {
-                require $this->endpoint;
-            } catch (\Exception $exception) {
-                //
-            }
-            $response = ob_get_contents();
-            ob_end_clean();
-        } else {
-            throw new \Exception('Endpoint not set');
-        }
-
-        return json_decode($response);
     }
 }

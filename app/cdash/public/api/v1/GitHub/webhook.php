@@ -23,7 +23,7 @@ if (!function_exists('handle_error')) {
     function handle_error($msg)
     {
         add_log($msg, 'GitHub webhook', LOG_WARNING);
-        json_error_response(['error' => $msg], 500);
+        abort(500, $msg);
     }
 }
 

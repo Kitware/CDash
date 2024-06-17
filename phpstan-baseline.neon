@@ -10635,11 +10635,6 @@ parameters:
 			path: app/cdash/include/CDash/Singleton.php
 
 		-
-			message: "#^Method CDash\\\\System\\:\\:system_exit\\(\\) has parameter \\$exit_message with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/CDash/System.php
-
-		-
 			message: "#^Method CDash\\\\Collection\\\\BuildCollection\\:\\:add\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Collection/BuildCollection.php
@@ -11798,11 +11793,6 @@ parameters:
 			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:getEndpointResponse\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
 			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:getMockBuild\\(\\) has invalid return type PHPUnit_Framework_MockObject_MockObject\\.$#"
 			count: 1
 			path: app/cdash/include/Test/CDashTestCase.php
@@ -11813,27 +11803,7 @@ parameters:
 			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:setEndpoint\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Method CDash\\\\Test\\\\CDashTestCase\\:\\:setEndpoint\\(\\) has parameter \\$endpoint with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
 			message: "#^Only booleans are allowed in an if condition, CDash\\\\Database given\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, string given\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/include/Test/CDashTestCase.php
 
@@ -12472,14 +12442,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function json_error_response\\(\\)\\:
-				15/06/2023 Use abort\\(\\) to exit cleanly instead\\.$#
-			"""
-			count: 10
-			path: app/cdash/include/api_common.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
 				04/01/2023$#
 			"""
@@ -12497,12 +12459,22 @@ parameters:
 			path: app/cdash/include/api_common.php
 
 		-
+			message: "#^Function can_access_project\\(\\) throws checked exception Illuminate\\\\Auth\\\\AuthenticationException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/include/api_common.php
+
+		-
 			message: "#^Function can_administrate_project\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/api_common.php
 
 		-
 			message: "#^Function can_administrate_project\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/api_common.php
+
+		-
+			message: "#^Function can_administrate_project\\(\\) throws checked exception Illuminate\\\\Auth\\\\AuthenticationException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/api_common.php
 
@@ -12523,21 +12495,6 @@ parameters:
 
 		-
 			message: "#^Function get_param\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: "#^Function get_param\\(\\) should return string but returns null\\.$#"
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: "#^Function json_error_response\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: "#^Function json_error_response\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/api_common.php
 
@@ -14710,14 +14667,6 @@ parameters:
 			path: app/cdash/public/api/v1/GitHub/webhook.php
 
 		-
-			message: """
-				#^Call to deprecated function json_error_response\\(\\)\\:
-				15/06/2023 Use abort\\(\\) to exit cleanly instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
 			message: "#^Function handle_error\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/GitHub/webhook.php
@@ -15153,14 +15102,6 @@ parameters:
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
-			message: """
-				#^Call to deprecated function json_error_response\\(\\)\\:
-				15/06/2023 Use abort\\(\\) to exit cleanly instead\\.$#
-			"""
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with string\\|false will always evaluate to false\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
@@ -15217,11 +15158,6 @@ parameters:
 
 		-
 			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\rest_get\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\rest_get\\(\\) has parameter \\$user with no type specified\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
@@ -15385,51 +15321,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			message: "#^Access to an undefined property GitHubWebhookTest\\:\\:\\$mock_system\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/Api/GitHubWebhookTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
-			count: 3
-			path: app/cdash/tests/case/CDash/Api/GitHubWebhookTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Api/GitHubWebhookTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:once\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Api/GitHubWebhookTest.php
-
-		-
-			message: "#^Method GitHubWebhookTest\\:\\:expectExit\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Api/GitHubWebhookTest.php
-
-		-
-			message: "#^Method GitHubWebhookTest\\:\\:testWebhookWithCorrectSignature\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Api/GitHubWebhookTest.php
-
-		-
-			message: "#^Method GitHubWebhookTest\\:\\:testWebhookWithUnsupportedAlgorithm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Api/GitHubWebhookTest.php
-
-		-
-			message: "#^Method GitHubWebhookTest\\:\\:testWebhookWithWrongSignature\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Api/GitHubWebhookTest.php
-
-		-
-			message: "#^Method GitHubWebhookTest\\:\\:testWebhookWithoutRequiredSignature\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Api/GitHubWebhookTest.php
 
 		-
 			message: "#^Call to an undefined method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:setBuildCommand\\(\\)\\.$#"
@@ -28058,6 +27949,16 @@ parameters:
 			path: tests/Feature/CDashTest.php
 
 		-
+			message: "#^Method Tests\\\\Feature\\\\GitHubWebhook\\:\\:testWebhookWithCorrectSignature\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: tests/Feature/GitHubWebhook.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GitHubWebhook\\:\\:testWebhookWithWrongSignature\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: tests/Feature/GitHubWebhook.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Testing\\\\TestResponse\\:\\:assertGraphQLErrorMessage\\(\\)\\.$#"
 			count: 5
 			path: tests/Feature/GraphQL/ProjectTypeTest.php
@@ -28111,11 +28012,6 @@ parameters:
 			message: "#^Property Tests\\\\Feature\\\\PasswordRotation\\:\\:\\$user has no type specified\\.$#"
 			count: 1
 			path: tests/Feature/PasswordRotation.php
-
-		-
-			message: "#^Property Tests\\\\Feature\\\\ProjectPermissions\\:\\:\\$mock_system has no type specified\\.$#"
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
 
 		-
 			message: "#^Class Tests\\\\Feature\\\\PurgeUnusedProjectsCommand has an uninitialized property \\$project1\\. Give it default value or assign it in the constructor\\.$#"

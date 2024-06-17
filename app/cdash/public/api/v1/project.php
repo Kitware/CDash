@@ -55,8 +55,7 @@ switch ($method) {
         break;
     case 'GET':
     default:
-        rest_get($user);
-        break;
+        return rest_get();
 }
 
 /** Handle DELETE requests */
@@ -141,12 +140,11 @@ function get_repo_url_example()
     $type = get_param('type');
     $functionname = "get_{$type}_diff_url";
     $example = RepositoryUtils::$functionname($url, 'DIRECTORYNAME', 'FILENAME', 'REVISION');
-    json_error_response(['example' => $example], 200);
-    return true;
+    return response()->json(['example' => $example]);
 }
 
 /** Handle GET requests */
-function rest_get($user)
+function rest_get()
 {
     // Repository URL examples?
     if (isset($_REQUEST['vcsexample'])) {

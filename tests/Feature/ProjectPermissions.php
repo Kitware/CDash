@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use App\Models\User;
 use CDash\Model\Project;
-use CDash\ServiceContainer;
-use CDash\System;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
 use Tests\TestCase;
@@ -23,7 +21,6 @@ class ProjectPermissions extends TestCase
     protected Project $private_project2;
     protected User $normal_user;
     protected User $admin_user;
-    protected $mock_system;
 
     protected function setUp(): void
     {
@@ -36,13 +33,6 @@ class ProjectPermissions extends TestCase
 
         $this->normal_user = $this->makeNormalUser();
         $this->admin_user = $this->makeAdminUser();
-
-        $container = ServiceContainer::container();
-        $this->mock_system = $this->getMockBuilder(System::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['system_exit'])
-            ->getMock();
-        $container->set(System::class, $this->mock_system);
     }
 
     protected function tearDown(): void
