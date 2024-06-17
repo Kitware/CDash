@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Site">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="Subproject">
+            <xs:complexType>
+              <xs:sequence minOccurs="0">
+                <xs:element name="Label" type="xs:string" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xs:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Labels">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Label" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Build">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:choice maxOccurs="unbounded">
+                  <xs:element name="Labels">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="Label" type="xs:string" />
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="StartDateTime" type="xs:string" />
+                  <xs:element name="StartBuildTime" type="xs:unsignedInt" />
+                  <xs:element name="BuildCommand" type="xs:string" />
+                  <xs:element name="Error">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="BuildLogLine" type="xs:int" />
+                        <xs:element name="Text" type="xs:string" />
+                        <xs:element name="SourceFile" type="xs:string" minOccurs="0" />
+                        <xs:element name="SourceLineNumber" type="xs:int" minOccurs="0" />
+                        <xs:element name="PreContext" type="xs:string" />
+                        <xs:element name="PostContext" type="xs:string" />
+                        <xs:element name="RepeatCount" type="xs:int" />
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="Warning">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="BuildLogLine" type="xs:unsignedInt" />
+                        <xs:element name="Text" type="xs:string" />
+                        <xs:element name="SourceFile" type="xs:string" minOccurs="0" />
+                        <xs:element name="SourceLineNumber" type="xs:unsignedInt" minOccurs="0" />
+                        <xs:element name="PreContext" type="xs:string" />
+                        <xs:element name="PostContext" type="xs:string" />
+                        <xs:element name="RepeatCount" type="xs:unsignedInt" />
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="Failure">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:choice maxOccurs="unbounded">
+                          <xs:element name="Action">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="TargetName" type="xs:string" minOccurs="0" />
+                                <xs:element name="Language" type="xs:string" minOccurs="0" />
+                                <xs:element name="SourceFile" type="xs:string" minOccurs="0" />
+                                <xs:element name="OutputFile" type="xs:string" minOccurs="0" />
+                                <xs:element name="OutputType" type="xs:string" minOccurs="0" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="Command">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="WorkingDirectory" type="xs:string" minOccurs="0" />
+                                <xs:element name="Argument" type="xs:string" maxOccurs="unbounded" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="Result">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:choice maxOccurs="unbounded">
+                                  <xs:element name="StdOut" type="xs:string" />
+                                  <xs:element name="StdErr" type="xs:string" />
+                                  <xs:element name="ExitCondition" type="xs:string" />
+                                </xs:choice>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="Labels" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="Label" type="xs:string" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:choice>
+                      </xs:sequence>
+                      <xs:attribute name="type" type="xs:string" use="required" />
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="Log">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                          <xs:attribute name="Encoding" type="xs:string" use="required" />
+                          <xs:attribute name="Compression" type="xs:string" use="required" />
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="EndDateTime" type="xs:string" />
+                  <xs:element name="EndBuildTime" type="xs:unsignedInt" />
+                  <xs:element name="ElapsedMinutes" type="xs:decimal" />
+                </xs:choice>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="BuildName" type="xs:string" use="required" />
+      <xs:attribute name="BuildStamp" type="xs:string" use="required" />
+      <xs:attribute name="Name" type="xs:string" use="required" />
+      <xs:attribute name="Generator" type="xs:string" />
+      <xs:attribute name="Append" type="xs:boolean" />
+      <xs:attribute name="CompilerName" type="xs:string" />
+      <xs:attribute name="CompilerVersion" type="xs:string" />
+      <xs:attribute name="OSName" type="xs:string" />
+      <xs:attribute name="Hostname" type="xs:string" />
+      <xs:attribute name="OSRelease" type="xs:string" />
+      <xs:attribute name="OSVersion" type="xs:string" />
+      <xs:attribute name="OSPlatform" type="xs:string" />
+      <xs:attribute name="Is64Bits" type="xs:short" />
+      <xs:attribute name="VendorString" type="xs:string" />
+      <xs:attribute name="VendorID" type="xs:string" />
+      <xs:attribute name="FamilyID" type="xs:int" />
+      <xs:attribute name="ModelID" type="xs:int" />
+      <xs:attribute name="ProcessorCacheSize" type="xs:int" />
+      <xs:attribute name="NumberOfLogicalCPU" type="xs:int" />
+      <xs:attribute name="NumberOfPhysicalCPU" type="xs:int" />
+      <xs:attribute name="TotalVirtualMemory" type="xs:int" />
+      <xs:attribute name="TotalPhysicalMemory" type="xs:int" />
+      <xs:attribute name="LogicalProcessorsPerPhysical" type="xs:int" />
+      <xs:attribute name="ProcessorClockFrequency" type="xs:decimal" />
+      <xs:attribute name="ChangeId" type="xs:string" />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
