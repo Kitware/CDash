@@ -1079,13 +1079,13 @@ function get_filterdata_from_request($page_id = '')
             ];
             for ($j = 1; $j <= $subfiltercount; ++$j) {
                 $filter['filters'][] = parse_filter_from_request(
-                    "field{$i}field{$j}", "field{$i}compare${j}",
+                    "field{$i}field{$j}", "field{$i}compare{$j}",
                     "field{$i}value{$j}", $filterdata);
             }
             $filters[] = $filter;
         } else {
             $filters[] = parse_filter_from_request(
-                "field{$i}", "compare${i}", "value{$i}", $filterdata);
+                "field{$i}", "compare{$i}", "value{$i}", $filterdata);
         }
     }
 
