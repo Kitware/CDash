@@ -468,7 +468,7 @@ final class UserController extends AbstractController
             $error_msg = 'Your password has expired. Please set a new one.';
         }
 
-        return view('auth.profile')
+        return $this->view('auth.profile')
             ->with('user', $user)
             ->with('error', $error_msg)
             ->with('message', $other_msg)

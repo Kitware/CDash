@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
@@ -40,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
         // This allows us to do response()->angular_view(<view_name>).
         Response::macro('angular_view', function (string $view_name) {
             // A hack to ensure that redirects work properly after being redirected to the login page
-            session(['url.intended' => Request::getRequestUri()]);
+            session(['url.intended' => url()->full()]);
 
             $controller_name = '';
             $path = request()->path() === '/' ? 'index.php' : request()->path();

@@ -71,7 +71,7 @@ final class ManageUsersController extends AbstractController
         }
 
 
-        return view('admin.manage-users')
+        return $this->view('admin.manage-users')
             ->with('warning', $warning)
             ->with('error', $error)
             ->with('search', $_POST['search'] ?? '')
@@ -95,7 +95,7 @@ final class ManageUsersController extends AbstractController
             $users = [];
         }
 
-        return view('admin.find-users')
+        return $this->view('admin.find-users')
             ->with('users', $users)
             ->with('search', $search);
     }

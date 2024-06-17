@@ -33,7 +33,7 @@ final class TestController extends AbstractProjectController
         }
 
         $this->setProjectById($projectid);
-        return view('test.details')
+        return $this->view('test.details')
             ->with('title', 'Test Results')
             ->with('project', $this->project);
     }
@@ -120,7 +120,7 @@ final class TestController extends AbstractProjectController
         }
         $tarray = array_reverse($tarray);
 
-        return view('test.ajax-test-failure-graph')
+        return $this->view('test.ajax-test-failure-graph')
             ->with('tarray', $tarray);
     }
 

@@ -46,10 +46,9 @@ final class CoverageController extends AbstractBuildController
         $userid = Auth::id();
         // Checks
         if (!isset($userid) || !is_numeric($userid)) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => 'Not a valid userid!',
-            ]);
+            return $this->view('cdash')
+                ->with('xsl', true)
+                ->with('xsl_content', 'Not a valid userid!');
         }
 
         $xml = begin_XML_for_XSLT();
@@ -79,10 +78,9 @@ final class CoverageController extends AbstractBuildController
         $User = Auth::user();
         $Project->Id = $projectid;
         if (!Gate::allows('edit-project', $Project)) {
-            return view('cdash', [
-                'xsl' => true,
-                'xsl_content' => "You don't have the permissions to access this page",
-            ]);
+            return $this->view('cdash')
+                ->with('xsl', true)
+                ->with('xsl_content', "You don't have the permissions to access this page");
         }
 
         $sql = 'SELECT id,name FROM project';
@@ -364,12 +362,10 @@ final class CoverageController extends AbstractBuildController
         }
         $xml .= '</cdash>';
 
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, base_path() . '/app/cdash/public/manageCoverage', true),
-            'project' => $Project,
-            'title' => 'Manage Coverage',
-        ]);
+        return $this->view('cdash', 'Manage Coverage')
+            ->with('xsl', true)
+            ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/manageCoverage', true))
+            ->with('project', $Project);
     }
 
     /**
@@ -720,12 +716,9 @@ final class CoverageController extends AbstractBuildController
 
         // We first have to change to this directory so XSL knows how to find sub-templates to include.
         chdir(base_path() . '/app/cdash/public');
-        return view('cdash', [
-            'xsl' => true,
-            'xsl_content' => generate_XSLT($xml, 'viewCoverage', true),
-            'project' => $this->project,
-            'title' => 'Coverage',
-        ]);
+        return $this->view('cdash', 'Coverage')
+            ->with('xsl', true)
+            ->with('xsl_content', generate_XSLT($xml, 'viewCoverage', true));
     }
 
     public function viewCoverageFile(): View
