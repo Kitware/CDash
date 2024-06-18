@@ -147,7 +147,7 @@
       <xs:attribute name="TotalVirtualMemory" type="xs:int" />
       <xs:attribute name="TotalPhysicalMemory" type="xs:int" />
       <xs:attribute name="LogicalProcessorsPerPhysical" type="xs:int" />
-      <xs:attribute name="ProcessorClockFrequency" type="xs:decimal" />
+      <xs:attribute name="ProcessorClockFrequency" type="xs:float" />
       <xs:attribute name="ChangeId" type="xs:string" />
     </xs:complexType>
   </xs:element>
