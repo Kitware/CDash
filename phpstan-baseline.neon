@@ -25321,56 +25321,6 @@ parameters:
 			path: app/cdash/xml_handlers/abstract_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:endPrefixMapping\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:endPrefixMapping\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:endPrefixMapping\\(\\) has parameter \\$prefix with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:endPrefixMapping\\(\\) has parameter \\$user_data with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:externalEntity\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:externalEntity\\(\\) has parameter \\$base with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:externalEntity\\(\\) has parameter \\$open_entity_name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:externalEntity\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:externalEntity\\(\\) has parameter \\$public_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:externalEntity\\(\\) has parameter \\$system_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
 			message: "#^Method AbstractHandler\\:\\:getBuildName\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/abstract_handler.php
@@ -25416,56 +25366,6 @@ parameters:
 			path: app/cdash/xml_handlers/abstract_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:processingInstruction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:processingInstruction\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:processingInstruction\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:processingInstruction\\(\\) has parameter \\$target with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:skippedEntity\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:skippedEntity\\(\\) has parameter \\$base with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:skippedEntity\\(\\) has parameter \\$open_entity_name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:skippedEntity\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:skippedEntity\\(\\) has parameter \\$public_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:skippedEntity\\(\\) has parameter \\$system_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
 			message: "#^Method AbstractHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/abstract_handler.php
@@ -25482,31 +25382,6 @@ parameters:
 
 		-
 			message: "#^Method AbstractHandler\\:\\:startElement\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:startPrefixMapping\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:startPrefixMapping\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:startPrefixMapping\\(\\) has parameter \\$prefix with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:startPrefixMapping\\(\\) has parameter \\$uri with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:startPrefixMapping\\(\\) has parameter \\$user_data with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/abstract_handler.php
 
@@ -26859,106 +26734,6 @@ parameters:
 			path: app/cdash/xml_handlers/sax_handler.php
 
 		-
-			message: "#^Method SaxHandler\\:\\:endPrefixMapping\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:endPrefixMapping\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:endPrefixMapping\\(\\) has parameter \\$prefix with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:endPrefixMapping\\(\\) has parameter \\$user_data with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:externalEntity\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:externalEntity\\(\\) has parameter \\$base with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:externalEntity\\(\\) has parameter \\$open_entity_name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:externalEntity\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:externalEntity\\(\\) has parameter \\$public_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:externalEntity\\(\\) has parameter \\$system_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:processingInstruction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:processingInstruction\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:processingInstruction\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:processingInstruction\\(\\) has parameter \\$target with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:skippedEntity\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:skippedEntity\\(\\) has parameter \\$base with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:skippedEntity\\(\\) has parameter \\$open_entity_name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:skippedEntity\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:skippedEntity\\(\\) has parameter \\$public_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:skippedEntity\\(\\) has parameter \\$system_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
 			message: "#^Method SaxHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/sax_handler.php
@@ -26975,31 +26750,6 @@ parameters:
 
 		-
 			message: "#^Method SaxHandler\\:\\:startElement\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startPrefixMapping\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startPrefixMapping\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startPrefixMapping\\(\\) has parameter \\$prefix with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startPrefixMapping\\(\\) has parameter \\$uri with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startPrefixMapping\\(\\) has parameter \\$user_data with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/sax_handler.php
 
