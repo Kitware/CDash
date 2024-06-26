@@ -14,21 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
   =========================================================================*/
 
-require_once 'xml_handlers/build_handler.php';
-require_once 'xml_handlers/configure_handler.php';
-require_once 'xml_handlers/coverage_handler.php';
-require_once 'xml_handlers/coverage_junit_handler.php';
-require_once 'xml_handlers/coverage_log_handler.php';
-require_once 'xml_handlers/done_handler.php';
-require_once 'xml_handlers/dynamic_analysis_handler.php';
-require_once 'xml_handlers/note_handler.php';
-require_once 'xml_handlers/project_handler.php';
-require_once 'xml_handlers/retry_handler.php';
-require_once 'xml_handlers/testing_handler.php';
-require_once 'xml_handlers/testing_junit_handler.php';
-require_once 'xml_handlers/update_handler.php';
-require_once 'xml_handlers/upload_handler.php';
-
 use CDash\Database;
 use App\Models\BuildFile;
 use CDash\Model\Project;

@@ -26981,167 +26981,167 @@ parameters:
 		-
 			message: "#^Access to an undefined property TestingJUnitHandler\\:\\:\\$TestCreator\\.$#"
 			count: 8
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 4
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 21
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:createBuild\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:endElement\\(\\) has parameter \\$parser with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:startElement\\(\\) has parameter \\$attributes with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:startElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:startElement\\(\\) has parameter \\$parser with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:text\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:text\\(\\) has parameter \\$data with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Only numeric types are allowed in \\+, int\\|false given on the left side\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Only numeric types are allowed in \\+, int\\|false given on the right side\\.$#"
 			count: 3
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Parameter \\#1 \\$hour of function mktime expects int, string given\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Parameter \\#2 \\$minute of function mktime expects int\\|null, string given\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Parameter \\#4 \\$month of function mktime expects int\\|null, string given\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Parameter \\#5 \\$day of function mktime expects int\\|null, string given\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Parameter \\#6 \\$year of function mktime expects int\\|null, string given\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$BuildAdded has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$EndTimeStamp has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$Group has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$HasSiteTag has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$NumberTestsFailed has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$NumberTestsNotRun has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$NumberTestsPassed has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$StartTimeStamp has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$TestProperties has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$TotalTestDuration has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$UpdateEndTime has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Call to an undefined method CDash\\\\Messaging\\\\Preferences\\\\NotificationPreferencesInterface\\:\\:get\\(\\)\\.$#"
