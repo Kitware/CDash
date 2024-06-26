@@ -14,14 +14,12 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
-
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Repository;
 
-class DoneHandler extends AbstractHandler
+class DoneHandler extends AbstractXmlHandler
 {
     private $FinalAttempt;
     private $PendingSubmissions;

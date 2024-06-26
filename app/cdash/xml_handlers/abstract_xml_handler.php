@@ -22,7 +22,7 @@ use CDash\Model\Build;
 use CDash\Model\Project;
 use App\Models\Site;
 
-abstract class AbstractHandler implements CDashSubmissionHandlerInterface
+abstract class AbstractXmlHandler implements CDashSubmissionHandlerInterface
 {
     protected $stack;
     protected $projectid;

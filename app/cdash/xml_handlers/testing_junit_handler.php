@@ -14,16 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
-
 use App\Utils\TestCreator;
-
 use CDash\Model\Build;
 use App\Models\BuildInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
 
-class TestingJUnitHandler extends AbstractHandler
+class TestingJUnitHandler extends AbstractXmlHandler
 {
     private $StartTimeStamp;
     private $EndTimeStamp;

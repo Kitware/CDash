@@ -5,6 +5,7 @@ use DOMDocument;
 use DOMElement;
 use DOMText;
 use TestingHandler;
+use AbstractXmlHandler;
 
 class TestUseCase extends UseCase
 {
@@ -19,7 +20,7 @@ class TestUseCase extends UseCase
         parent::__construct('Test', $properties);
     }
 
-    public function build(): \AbstractHandler
+    public function build(): AbstractXmlHandler
     {
         $xml = new DOMDocument('1.0', 'UTF-8');
         $startDateTimeText = date('M d H:i T', $this->startTime);

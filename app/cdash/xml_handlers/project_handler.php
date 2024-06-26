@@ -14,10 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
-
 use App\Models\User;
-
 use CDash\Model\Label;
 use CDash\Model\LabelEmail;
 use CDash\Model\Project;
@@ -25,7 +22,7 @@ use CDash\Model\SubProject;
 use CDash\Model\UserProject;
 use Illuminate\Support\Facades\DB;
 
-class ProjectHandler extends AbstractHandler
+class ProjectHandler extends AbstractXmlHandler
 {
     private $SubProject;
     private $SubProjectPosition;

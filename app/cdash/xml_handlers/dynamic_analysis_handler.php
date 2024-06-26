@@ -13,7 +13,6 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
 use CDash\Collection\BuildCollection;
@@ -34,7 +33,7 @@ use App\Models\SiteInformation;
 use App\Models\BuildInformation;
 use CDash\Model\SubscriberInterface;
 
-class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildInterface
+class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBuildInterface
 {
     private $StartTimeStamp;
     private $EndTimeStamp;

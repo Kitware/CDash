@@ -14,7 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 require_once 'include/Submission/CommitAuthorHandlerTrait.php';
 require_once 'include/Submission/CommitAuthorHandlerInterface.php';
@@ -40,7 +39,7 @@ use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
 use CDash\Submission\CommitAuthorHandlerTrait;
 
-class BuildHandler extends AbstractHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
+class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
 {
     use CommitAuthorHandlerTrait;
 

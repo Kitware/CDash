@@ -14,16 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
-
 use App\Utils\NoteCreator;
-
 use CDash\Model\Build;
 use App\Models\BuildInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
 
-class NoteHandler extends AbstractHandler
+class NoteHandler extends AbstractXmlHandler
 {
     private $AdjustStartTime;
     private $NoteCreator;

@@ -14,7 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
 use CDash\Collection\BuildCollection;
@@ -37,7 +36,7 @@ use CDash\Submission\CommitAuthorHandlerInterface;
 
 /** Write the updates in one block
  *  In case of a lot of updates this might take up some memory */
-class UpdateHandler extends AbstractHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
+class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
 {
     private $StartTimeStamp;
     private $EndTimeStamp;
