@@ -14,7 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
 use CDash\Collection\Collection;
@@ -34,7 +33,7 @@ use App\Models\SiteInformation;
 use CDash\Collection\BuildCollection;
 use CDash\Model\SubscriberInterface;
 
-class ConfigureHandler extends AbstractHandler implements ActionableBuildInterface
+class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInterface
 {
     private $StartTimeStamp;
     private $EndTimeStamp;

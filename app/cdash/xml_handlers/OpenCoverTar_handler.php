@@ -14,8 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
-
 use CDash\Model\Build;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
@@ -23,7 +21,7 @@ use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 use Illuminate\Support\Facades\Storage;
 
-class OpenCoverTarHandler extends AbstractHandler
+class OpenCoverTarHandler extends AbstractXmlHandler
 {
     protected $Build;
     protected $CoverageSummaries;

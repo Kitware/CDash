@@ -1,7 +1,7 @@
 <?php
 namespace CDash\Test\UseCase;
 
-use AbstractHandler;
+use AbstractXmlHandler;
 use CDash\Test\CDashUseCaseTestCase;
 use DOMDocument;
 use DOMElement;
@@ -33,7 +33,7 @@ abstract class UseCase
 
     protected array $authors = [];
 
-    abstract public function build(): AbstractHandler;
+    abstract public function build(): AbstractXmlHandler;
 
     public function __construct($name, array $properties = [])
     {
@@ -152,7 +152,7 @@ abstract class UseCase
         return $this;
     }
 
-    public function getXmlHandler(AbstractHandler $handler, string $xml): AbstractHandler
+    public function getXmlHandler(AbstractXmlHandler $handler, string $xml): AbstractXmlHandler
     {
         $parser = xml_parser_create();
         xml_set_element_handler(

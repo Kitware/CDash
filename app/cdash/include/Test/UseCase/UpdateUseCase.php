@@ -1,6 +1,8 @@
 <?php
 namespace CDash\Test\UseCase;
 
+use AbstractXmlHandler;
+
 class UpdateUseCase extends UseCase
 {
     public const TYPE = 'Update';
@@ -16,7 +18,7 @@ class UpdateUseCase extends UseCase
         $this->generator = 'ctest-2.8.4.20110707-g0eecf';
     }
 
-    public function build(): \AbstractHandler
+    public function build(): AbstractXmlHandler
     {
         $prop = $this->properties[self::UPDATE];
 

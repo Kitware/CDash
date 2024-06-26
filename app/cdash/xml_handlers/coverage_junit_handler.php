@@ -14,8 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
-
 use CDash\Model\Build;
 use App\Models\BuildInformation;
 use CDash\Model\Coverage;
@@ -25,7 +23,7 @@ use CDash\Model\Label;
 use App\Models\Site;
 use App\Models\SiteInformation;
 
-class CoverageJUnitHandler extends AbstractHandler
+class CoverageJUnitHandler extends AbstractXmlHandler
 {
     private $StartTimeStamp;
     private $EndTimeStamp;

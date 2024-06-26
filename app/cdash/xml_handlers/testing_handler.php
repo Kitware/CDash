@@ -1,6 +1,5 @@
 <?php
 
-require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
 use App\Models\TestMeasurement;
@@ -27,7 +26,7 @@ use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
 use CDash\Submission\CommitAuthorHandlerTrait;
 
-class TestingHandler extends AbstractHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
+class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
 {
     use CommitAuthorHandlerTrait;
 

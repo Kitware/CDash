@@ -5,6 +5,7 @@ use DOMDocument;
 use DOMElement;
 use DOMText;
 use ConfigureHandler;
+use AbstractXmlHandler;
 
 class ConfigUseCase extends UseCase
 {
@@ -13,7 +14,7 @@ class ConfigUseCase extends UseCase
         parent::__construct('Config', $properties);
     }
 
-    public function build(): \AbstractHandler
+    public function build(): AbstractXmlHandler
     {
         $xml = new DOMDocument('1.0', 'UTF-8');
         $startDateTimeText = date('M d H:i T', $this->startTime);
