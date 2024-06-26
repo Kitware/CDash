@@ -16,14 +16,13 @@
 
 require_once 'include/ctestparserutils.php';
 require_once 'xml_handlers/CDashSubmissionHandlerInterface.php';
-require_once 'xml_handlers/sax_handler.php';
 require_once 'xml_handlers/stack.php';
 
 use CDash\Model\Build;
 use CDash\Model\Project;
 use App\Models\Site;
 
-abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInterface
+abstract class AbstractHandler implements CDashSubmissionHandlerInterface
 {
     protected $stack;
     protected $projectid;
@@ -70,6 +69,8 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
     {
         $this->stack->pop();
     }
+
+    abstract public function text($parser, $data);
 
     public function getSiteName()
     {

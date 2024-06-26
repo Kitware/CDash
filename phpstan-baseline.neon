@@ -25386,6 +25386,21 @@ parameters:
 			path: app/cdash/xml_handlers/abstract_handler.php
 
 		-
+			message: "#^Method AbstractHandler\\:\\:text\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/abstract_handler.php
+
+		-
+			message: "#^Method AbstractHandler\\:\\:text\\(\\) has parameter \\$data with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/abstract_handler.php
+
+		-
+			message: "#^Method AbstractHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/abstract_handler.php
+
+		-
 			message: "#^Property AbstractHandler\\:\\:\\$Append has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/abstract_handler.php
@@ -26717,56 +26732,6 @@ parameters:
 			message: "#^Property RetryHandler\\:\\:\\$FileName has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/retry_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:endElement\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startElement\\(\\) has parameter \\$attributes with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startElement\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startElement\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:text\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:text\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
