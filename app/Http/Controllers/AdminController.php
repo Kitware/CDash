@@ -10,7 +10,6 @@ use Illuminate\View\View;
 
 require_once 'include/api_common.php';
 require_once 'include/ctestparser.php';
-require_once 'include/upgrade_functions.php';
 
 final class AdminController extends AbstractController
 {
@@ -113,6 +112,209 @@ final class AdminController extends AbstractController
             ->with('yearTo', $yearTo);
     }
 
+    /** Compute the timing for test
+     *  For each test we compare with the previous build and if the percentage time
+     *  is more than the project.testtimepercent we increas test.timestatus by one.
+     *  We also store the test.reftime which is the time of the test passing
+     *
+     *  If test.timestatus is more than project.testtimewindow we reset
+     *  the test.timestatus to zero and we set the test.reftime to the previous build time.
+     */
+    private static function ComputeTestTiming($days = 4): void
+    {
+        // Loop through the projects
+        $project = pdo_query('SELECT id,testtimestd,testtimestdthreshold FROM project');
+        $weight = 0.3;
+
+        while ($project_array = pdo_fetch_array($project)) {
+            $projectid = $project_array['id'];
+            $testtimestd = $project_array['testtimestd'];
+            $projecttimestdthreshold = $project_array['testtimestdthreshold'];
+
+            // only test a couple of days
+            $now = gmdate(FMT_DATETIME, time() - 3600 * 24 * $days);
+
+            // Find the builds
+            $builds = DB::select("SELECT starttime,siteid,name,type,id
+                FROM build
+                WHERE build.projectid='$projectid' AND build.starttime>'$now'
+                ORDER BY build.starttime ASC");
+
+            $total = count($builds);
+            echo pdo_error();
+
+            $i = 0;
+            $previousperc = 0;
+            foreach ($builds as $build) {
+                $buildid = $build->id;
+                $buildname = $build->name;
+                $buildtype = $build->type;
+                $starttime = $build->starttime;
+                $siteid = $build->siteid;
+
+                // Find the previous build
+                $previousbuild = DB::select("SELECT id FROM build
+                    WHERE build.siteid='$siteid'
+                    AND build.type='$buildtype' AND build.name='$buildname'
+                    AND build.projectid='$projectid'
+                    AND build.starttime<'$starttime'
+                    AND build.starttime>'$now'
+                    ORDER BY build.starttime DESC LIMIT 1");
+
+                echo pdo_error();
+
+                // If we have one
+                if (count($previousbuild) > 0) {
+                    // Loop through the tests
+                    $previousbuildid = $previousbuild->id;
+
+                    $tests = pdo_query("SELECT build2test.time,build2test.testid,test.name
+                        FROM build2test,test WHERE build2test.buildid='$buildid'
+                        AND build2test.testid=test.id
+                        ");
+                    echo pdo_error();
+
+                    flush();
+                    ob_flush();
+
+                    // Find the previous test
+                    $previoustest = pdo_query("SELECT build2test.testid,test.name FROM build2test,test
+                        WHERE build2test.buildid='$previousbuildid'
+                        AND test.id=build2test.testid
+                        ");
+                    echo pdo_error();
+
+                    $testarray = [];
+                    while ($test_array = pdo_fetch_array($previoustest)) {
+                        $test = [];
+                        $test['id'] = $test_array['testid'];
+                        $test['name'] = $test_array['name'];
+                        $testarray[] = $test;
+                    }
+
+                    while ($test_array = pdo_fetch_array($tests)) {
+                        $testtime = $test_array['time'];
+                        $testid = $test_array['testid'];
+                        $testname = $test_array['name'];
+
+                        $previoustestid = 0;
+
+                        foreach ($testarray as $test) {
+                            if ($test['name'] == $testname) {
+                                $previoustestid = $test['id'];
+                                break;
+                            }
+                        }
+
+                        if ($previoustestid > 0) {
+                            $previoustest = pdo_query("SELECT timemean,timestd FROM build2test
+                                WHERE buildid='$previousbuildid'
+                                AND build2test.testid='$previoustestid'
+                                ");
+
+                            $previoustest_array = pdo_fetch_array($previoustest);
+                            $previoustimemean = $previoustest_array['timemean'];
+                            $previoustimestd = $previoustest_array['timestd'];
+
+                            // Check the current status
+                            if ($previoustimestd < $projecttimestdthreshold) {
+                                $previoustimestd = $projecttimestdthreshold;
+                            }
+
+                            // Update the mean and std
+                            $timemean = (1 - $weight) * $previoustimemean + $weight * $testtime;
+                            $timestd = sqrt((1 - $weight) * $previoustimestd * $previoustimestd + $weight * ($testtime - $timemean) * ($testtime - $timemean));
+
+                            // Check the current status
+                            if ($testtime > $previoustimemean + $testtimestd * $previoustimestd) {
+                                // only do positive std
+
+                                $timestatus = 1; // flag
+                            } else {
+                                $timestatus = 0;
+                            }
+                        } else {
+                            // the test doesn't exist
+
+                            $timestd = 0;
+                            $timestatus = 0;
+                            $timemean = $testtime;
+                        }
+
+                        pdo_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus'
+                            WHERE buildid='$buildid' AND testid='$testid'");
+                    }
+                } else {
+                    // this is the first build
+
+                    $timestd = 0;
+                    $timestatus = 0;
+
+                    // Loop throught the tests
+                    $tests = pdo_query("SELECT time,testid FROM build2test WHERE buildid='$buildid'");
+                    while ($test_array = pdo_fetch_array($tests)) {
+                        $timemean = $test_array['time'];
+                        $testid = $test_array['testid'];
+
+                        pdo_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus'
+                            WHERE buildid='$buildid' AND testid='$testid'");
+                    }
+                } // loop through the tests
+
+                // Progress bar
+                $perc = ($i / $total) * 100;
+                if ($perc - $previousperc > 5) {
+                    echo round($perc, 3) . '% done.<br>';
+                    flush();
+                    ob_flush();
+                    $previousperc = $perc;
+                }
+                $i++;
+            }
+        }
+    }
+
+    private static function ComputeUpdateStatistics($days = 4): void
+    {
+        // Loop through the projects
+        $project = pdo_query('SELECT id FROM project');
+
+        while ($project_array = pdo_fetch_array($project)) {
+            $projectid = $project_array['id'];
+
+            // only test a couple of days
+            $now = gmdate(FMT_DATETIME, time() - 3600 * 24 * $days);
+
+            // Find the builds
+            $builds = DB::select("SELECT starttime,siteid,name,type,id
+                FROM build
+                WHERE build.projectid='$projectid' AND build.starttime>'$now'
+                ORDER BY build.starttime ASC");
+
+            $total = count($builds);
+            echo pdo_error();
+
+            $i = 0;
+            $previousperc = 0;
+            foreach ($builds as $build) {
+                $Build = new Build();
+                $Build->Id = $build->id;
+                $Build->ProjectId = $projectid;
+                $Build->ComputeUpdateStatistics();
+
+                // Progress bar
+                $perc = ($i / $total) * 100;
+                if ($perc - $previousperc > 5) {
+                    echo round($perc, 3) . '% done.<br>';
+                    flush();
+                    ob_flush();
+                    $previousperc = $perc;
+                }
+                $i++;
+            }
+        }
+    }
+
     public function upgrade()
     {
         @set_time_limit(0);
@@ -139,7 +341,7 @@ final class AdminController extends AbstractController
         if ($ComputeTestTiming) {
             $TestTimingDays = (int) ($_POST['TestTimingDays'] ?? 0);
             if ($TestTimingDays > 0) {
-                ComputeTestTiming($TestTimingDays);
+                self::ComputeTestTiming($TestTimingDays);
                 $xml .= add_XML_value('alert', 'Timing for tests has been computed successfully.');
             } else {
                 $xml .= add_XML_value('alert', 'Wrong number of days.');
@@ -150,7 +352,7 @@ final class AdminController extends AbstractController
         if ($ComputeUpdateStatistics) {
             $UpdateStatisticsDays = (int) ($_POST['UpdateStatisticsDays'] ?? 0);
             if ($UpdateStatisticsDays > 0) {
-                ComputeUpdateStatistics($UpdateStatisticsDays);
+                self::ComputeUpdateStatistics($UpdateStatisticsDays);
                 $xml .= add_XML_value('alert', 'User statistics has been computed successfully.');
             } else {
                 $xml .= add_XML_value('alert', 'Wrong number of days.');
@@ -177,52 +379,52 @@ final class AdminController extends AbstractController
 
         /* Cleanup the database */
         if ($Cleanup) {
-            delete_unused_rows('banner', 'projectid', 'project');
-            delete_unused_rows('blockbuild', 'projectid', 'project');
-            delete_unused_rows('build', 'projectid', 'project');
-            delete_unused_rows('buildgroup', 'projectid', 'project');
-            delete_unused_rows('labelemail', 'projectid', 'project');
-            delete_unused_rows('project2repositories', 'projectid', 'project');
-            delete_unused_rows('dailyupdate', 'projectid', 'project');
-            delete_unused_rows('subproject', 'projectid', 'project');
-            delete_unused_rows('coveragefilepriority', 'projectid', 'project');
-            delete_unused_rows('user2project', 'projectid', 'project');
-            delete_unused_rows('userstatistics', 'projectid', 'project');
+            self::delete_unused_rows('banner', 'projectid', 'project');
+            self::delete_unused_rows('blockbuild', 'projectid', 'project');
+            self::delete_unused_rows('build', 'projectid', 'project');
+            self::delete_unused_rows('buildgroup', 'projectid', 'project');
+            self::delete_unused_rows('labelemail', 'projectid', 'project');
+            self::delete_unused_rows('project2repositories', 'projectid', 'project');
+            self::delete_unused_rows('dailyupdate', 'projectid', 'project');
+            self::delete_unused_rows('subproject', 'projectid', 'project');
+            self::delete_unused_rows('coveragefilepriority', 'projectid', 'project');
+            self::delete_unused_rows('user2project', 'projectid', 'project');
+            self::delete_unused_rows('userstatistics', 'projectid', 'project');
 
-            delete_unused_rows('build2configure', 'buildid', 'build');
-            delete_unused_rows('build2note', 'buildid', 'build');
-            delete_unused_rows('build2test', 'buildid', 'build');
-            delete_unused_rows('buildemail', 'buildid', 'build');
-            delete_unused_rows('builderror', 'buildid', 'build');
-            delete_unused_rows('builderrordiff', 'buildid', 'build');
-            delete_unused_rows('buildfailure', 'buildid', 'build');
-            delete_unused_rows('buildinformation', 'buildid', 'build');
-            delete_unused_rows('buildnote', 'buildid', 'build');
-            delete_unused_rows('buildtesttime', 'buildid', 'build');
-            delete_unused_rows('configure', 'id', 'build2configure', 'configureid');
-            delete_unused_rows('configureerror', 'configureid', 'configure');
-            delete_unused_rows('configureerrordiff', 'buildid', 'build');
-            delete_unused_rows('coverage', 'buildid', 'build');
-            delete_unused_rows('coveragefilelog', 'buildid', 'build');
-            delete_unused_rows('coveragesummary', 'buildid', 'build');
-            delete_unused_rows('coveragesummarydiff', 'buildid', 'build');
-            delete_unused_rows('dynamicanalysis', 'buildid', 'build');
-            delete_unused_rows('label2build', 'buildid', 'build');
-            delete_unused_rows('subproject2build', 'buildid', 'build');
-            delete_unused_rows('summaryemail', 'buildid', 'build');
-            delete_unused_rows('testdiff', 'buildid', 'build');
+            self::delete_unused_rows('build2configure', 'buildid', 'build');
+            self::delete_unused_rows('build2note', 'buildid', 'build');
+            self::delete_unused_rows('build2test', 'buildid', 'build');
+            self::delete_unused_rows('buildemail', 'buildid', 'build');
+            self::delete_unused_rows('builderror', 'buildid', 'build');
+            self::delete_unused_rows('builderrordiff', 'buildid', 'build');
+            self::delete_unused_rows('buildfailure', 'buildid', 'build');
+            self::delete_unused_rows('buildinformation', 'buildid', 'build');
+            self::delete_unused_rows('buildnote', 'buildid', 'build');
+            self::delete_unused_rows('buildtesttime', 'buildid', 'build');
+            self::delete_unused_rows('configure', 'id', 'build2configure', 'configureid');
+            self::delete_unused_rows('configureerror', 'configureid', 'configure');
+            self::delete_unused_rows('configureerrordiff', 'buildid', 'build');
+            self::delete_unused_rows('coverage', 'buildid', 'build');
+            self::delete_unused_rows('coveragefilelog', 'buildid', 'build');
+            self::delete_unused_rows('coveragesummary', 'buildid', 'build');
+            self::delete_unused_rows('coveragesummarydiff', 'buildid', 'build');
+            self::delete_unused_rows('dynamicanalysis', 'buildid', 'build');
+            self::delete_unused_rows('label2build', 'buildid', 'build');
+            self::delete_unused_rows('subproject2build', 'buildid', 'build');
+            self::delete_unused_rows('summaryemail', 'buildid', 'build');
+            self::delete_unused_rows('testdiff', 'buildid', 'build');
 
-            delete_unused_rows('dynamicanalysisdefect', 'dynamicanalysisid', 'dynamicanalysis');
-            delete_unused_rows('subproject2subproject', 'subprojectid', 'subproject');
+            self::delete_unused_rows('dynamicanalysisdefect', 'dynamicanalysisid', 'dynamicanalysis');
+            self::delete_unused_rows('subproject2subproject', 'subprojectid', 'subproject');
 
-            delete_unused_rows('dailyupdatefile', 'dailyupdateid', 'dailyupdate');
-            delete_unused_rows('coveragefile', 'id', 'coverage', 'fileid');
-            delete_unused_rows('coveragefile2user', 'fileid', 'coveragefile');
+            self::delete_unused_rows('dailyupdatefile', 'dailyupdateid', 'dailyupdate');
+            self::delete_unused_rows('coveragefile', 'id', 'coverage', 'fileid');
+            self::delete_unused_rows('coveragefile2user', 'fileid', 'coveragefile');
 
-            delete_unused_rows('dailyupdatefile', 'dailyupdateid', 'dailyupdate');
-            delete_unused_rows('test2image', 'outputid', 'testoutput');
-            delete_unused_rows('testmeasurement', 'outputid', 'testoutput');
-            delete_unused_rows('label2test', 'outputid', 'testoutput');
+            self::delete_unused_rows('dailyupdatefile', 'dailyupdateid', 'dailyupdate');
+            self::delete_unused_rows('test2image', 'outputid', 'testoutput');
+            self::delete_unused_rows('testmeasurement', 'outputid', 'testoutput');
+            self::delete_unused_rows('label2test', 'outputid', 'testoutput');
 
             $xml .= add_XML_value('alert', 'Database cleanup complete.');
         }
@@ -306,5 +508,12 @@ final class AdminController extends AbstractController
     public function userStatistics(): \Illuminate\Http\Response
     {
         return response()->angular_view('userStatistics');
+    }
+
+    /** Delete unused rows */
+    private static function delete_unused_rows($table, $field, $targettable, $selectfield = 'id'): void
+    {
+        DB::delete("DELETE FROM $table WHERE $field NOT IN (SELECT $selectfield AS $field FROM $targettable)");
+        echo pdo_error();
     }
 }
