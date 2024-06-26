@@ -21,14 +21,4 @@ interface SaxHandler
     public function endElement($parser, $name);
 
     public function text($parser, $data);
-
-    public function processingInstruction($parser, $target, $data);
-
-    public function externalEntity($parser, $open_entity_name, $base, $system_id, $public_id);
-
-    public function skippedEntity($parser, $open_entity_name, $base, $system_id, $public_id);
-
-    public function startPrefixMapping($parser, $user_data, $prefix, $uri);
-
-    public function endPrefixMapping($parser, $user_data, $prefix);
 }

@@ -71,26 +71,6 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
         $this->stack->pop();
     }
 
-    public function processingInstruction($parser, $target, $data)
-    {
-    }
-
-    public function externalEntity($parser, $open_entity_name, $base, $system_id, $public_id)
-    {
-    }
-
-    public function skippedEntity($parser, $open_entity_name, $base, $system_id, $public_id)
-    {
-    }
-
-    public function startPrefixMapping($parser, $user_data, $prefix, $uri)
-    {
-    }
-
-    public function endPrefixMapping($parser, $user_data, $prefix)
-    {
-    }
-
     public function getSiteName()
     {
         return $this->Site->name;
