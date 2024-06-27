@@ -45,7 +45,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
         $this->ParseCSFiles = true;
     }
 
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
         /**
@@ -60,10 +60,13 @@ class OpenCoverTarHandler extends AbstractXmlHandler
         }
     }
 
-    // No usage of endElement
-    public function endElement($parser, $name)
+    /**
+     * No usage of endElement
+     */
+    public function endElement($parser, $name): void
     {
     }
+
     /**
      *  Removes the current module, and assumes all that is left is a
      *  subdirectory and the file name, append '.cs' to get the file path

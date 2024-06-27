@@ -45,7 +45,7 @@ class CoverageLogHandler extends AbstractXmlHandler
     }
 
     /** Start element */
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
         if ($name == 'SITE') {
@@ -72,7 +72,7 @@ class CoverageLogHandler extends AbstractXmlHandler
     }
 
     /** End Element */
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         parent::endElement($parser, $name);
 

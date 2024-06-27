@@ -69,7 +69,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         $this->BuildErrorFilter = new BuildErrorFilter($project);
     }
 
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
         $factory = $this->getModelFactory();
@@ -160,7 +160,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         }
     }
 
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);

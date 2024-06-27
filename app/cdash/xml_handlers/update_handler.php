@@ -50,7 +50,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
     }
 
     /** Start element */
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
         $factory = $this->getModelFactory();
@@ -71,7 +71,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
     }
 
     /** End element */
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         parent::endElement($parser, $name);
         if ($name == 'SITE') {
