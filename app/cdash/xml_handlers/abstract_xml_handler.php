@@ -15,20 +15,16 @@
 =========================================================================*/
 
 require_once 'include/ctestparserutils.php';
-require_once 'xml_handlers/CDashSubmissionHandlerInterface.php';
 require_once 'xml_handlers/stack.php';
 
-use CDash\Model\Build;
 use CDash\Model\Project;
 use App\Models\Site;
 
-abstract class AbstractXmlHandler implements CDashSubmissionHandlerInterface
+abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 {
     private Stack $stack;
     protected $projectid;
     protected bool $Append = false;
-    /** @var  Build $Build */
-    protected $Build;
     protected Site $Site;
     protected $SubProjectName;
 
@@ -94,11 +90,6 @@ abstract class AbstractXmlHandler implements CDashSubmissionHandlerInterface
     public function getSubProjectName()
     {
         return $this->Build->SubProjectName;
-    }
-
-    public function getBuilds()
-    {
-        return [$this->Build];
     }
 
     protected function getModelFactory(): \CDash\ServiceContainer

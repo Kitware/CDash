@@ -374,7 +374,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
     /**
      * @return Build[]
      */
-    public function getBuilds()
+    public function getBuilds(): array
     {
         return array_values($this->Builds);
     }

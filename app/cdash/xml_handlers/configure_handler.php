@@ -310,7 +310,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
      * @return Build[]
      * @deprecated use GetBuildCollection
      */
-    public function getBuilds()
+    public function getBuilds(): array
     {
         return array_values($this->Builds);
     }
