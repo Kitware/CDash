@@ -35,7 +35,7 @@ class DoneHandler extends AbstractXmlHandler
         $this->Requeue = false;
     }
 
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
         if ($name == 'DONE' && array_key_exists('RETRIES', $attributes) &&
@@ -45,7 +45,7 @@ class DoneHandler extends AbstractXmlHandler
         }
     }
 
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         parent::endElement($parser, $name);
         if ($name == 'DONE') {
@@ -99,7 +99,7 @@ class DoneHandler extends AbstractXmlHandler
         }
     }
 
-    public function getSiteName()
+    public function getSiteName(): string
     {
         return $this->Build->GetSite()->name;
     }

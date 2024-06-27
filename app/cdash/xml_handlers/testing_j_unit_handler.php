@@ -62,7 +62,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
     }
 
     /** Start Element */
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
         $parent = $this->getParent(); // should be before endElement
@@ -183,7 +183,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
     }
 
     /** End Element */
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         parent::endElement($parser, $name);
         if ($name == 'FAILURE' || $name == 'ERROR') {

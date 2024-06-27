@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-class stack
+class Stack
 {
     private $stack = [];
 

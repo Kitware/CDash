@@ -60,7 +60,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
         $this->getModelFactory();
     }
 
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
 
@@ -118,7 +118,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
         }
     }
 
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         $parent = $this->getParent();
 

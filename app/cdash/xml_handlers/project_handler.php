@@ -50,7 +50,7 @@ class ProjectHandler extends AbstractXmlHandler
     }
 
     /** startElement function */
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
 
@@ -97,7 +97,7 @@ class ProjectHandler extends AbstractXmlHandler
     }
 
     /** endElement function */
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         parent::endElement($parser, $name);
 

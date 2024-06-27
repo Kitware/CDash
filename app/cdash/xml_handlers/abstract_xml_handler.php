@@ -24,9 +24,9 @@ use App\Models\Site;
 
 abstract class AbstractXmlHandler implements CDashSubmissionHandlerInterface
 {
-    protected $stack;
+    private Stack $stack;
     protected $projectid;
-    protected $Append;
+    protected bool $Append = false;
     /** @var  Build $Build */
     protected $Build;
     protected Site $Site;
@@ -38,8 +38,7 @@ abstract class AbstractXmlHandler implements CDashSubmissionHandlerInterface
     public function __construct($projectid)
     {
         $this->projectid = $projectid;
-        $this->Append = false;
-        $this->stack = new stack();
+        $this->stack = new Stack();
     }
 
     protected function getParent()
@@ -52,7 +51,7 @@ abstract class AbstractXmlHandler implements CDashSubmissionHandlerInterface
         return $this->stack->top();
     }
 
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         $this->stack->push($name);
 
@@ -65,19 +64,19 @@ abstract class AbstractXmlHandler implements CDashSubmissionHandlerInterface
         }
     }
 
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         $this->stack->pop();
     }
 
     abstract public function text($parser, $data);
 
-    public function getSiteName()
+    public function getSiteName(): string
     {
         return $this->Site->name;
     }
 
-    public function getSiteId()
+    public function getSiteId(): int
     {
         return $this->Site->id;
     }
@@ -102,10 +101,7 @@ abstract class AbstractXmlHandler implements CDashSubmissionHandlerInterface
         return [$this->Build];
     }
 
-    /**
-     * @return \CDash\ServiceContainer
-     */
-    protected function getModelFactory()
+    protected function getModelFactory(): \CDash\ServiceContainer
     {
         if (!$this->ModelFactory) {
             $this->ModelFactory = \CDash\ServiceContainer::getInstance();
