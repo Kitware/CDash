@@ -15,10 +15,10 @@
 =========================================================================*/
 
 require_once 'include/ctestparserutils.php';
-require_once 'xml_handlers/stack.php';
 
-use CDash\Model\Project;
 use App\Models\Site;
+use App\Utils\Stack;
+use CDash\Model\Project;
 
 abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 {
