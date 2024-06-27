@@ -386,7 +386,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
     /**
      * @return Build[]
      */
-    public function getBuilds()
+    public function getBuilds(): array
     {
         return array_values($this->Builds);
     }

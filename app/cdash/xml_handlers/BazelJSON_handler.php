@@ -13,7 +13,6 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-require_once 'xml_handlers/NonSaxHandler.php';
 
 use App\Utils\TestCreator;
 
@@ -25,7 +24,7 @@ use CDash\Model\Project;
 use App\Models\Project as EloquentProject;
 use CDash\Database;
 
-class BazelJSONHandler extends NonSaxHandler
+class BazelJSONHandler extends AbstractSubmissionHandler
 {
     private $BuildId;
     private $Builds;
@@ -739,7 +738,10 @@ class BazelJSONHandler extends NonSaxHandler
         return false;
     }
 
-    public function getBuilds()
+    /**
+     * @return Build[]
+     */
+    public function getBuilds(): array
     {
         return array_values($this->Builds);
     }

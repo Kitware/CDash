@@ -14,12 +14,11 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/NonSaxHandler.php';
 use CDash\Model\Build;
 use CDash\Model\BuildProperties;
 use CDash\ServiceContainer;
 
-class BuildPropertiesJSONHandler extends NonSaxHandler
+class BuildPropertiesJSONHandler extends AbstractSubmissionHandler
 {
     public function __construct($buildid)
     {

@@ -308,7 +308,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
     /**
      * @return Build[]
      */
-    public function getBuilds()
+    public function getBuilds(): array
     {
         return array_values($this->Builds);
     }
