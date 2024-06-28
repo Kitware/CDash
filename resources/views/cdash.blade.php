@@ -10,11 +10,12 @@
     lang="{{ str_replace('_', '-', app()->getLocale()) }}"
     @if(isset($angular) && $angular === true)
         ng-app="CDash"
+        ng-controller="HeadController"
         ng-strict-di
         ng-cloak
     @endif
 >
-<head @if(isset($angular) && $angular === true) ng-controller="HeadController" @endif>
+<head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="robots" content="noindex,nofollow"/>
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
