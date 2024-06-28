@@ -108,7 +108,9 @@ final class SubmissionController extends AbstractProjectController
             if (!Storage::exists("DB_WAS_DOWN")) {
                 Storage::put("DB_WAS_DOWN", "");
             }
-            abort(Response::HTTP_SERVICE_UNAVAILABLE, 'Cannot connect to the database.');
+            $statusarray['status'] = 'OK';
+            $statusarray['message'] = 'Database is unavailable.';
+            return self::displayXMLReturnStatus($statusarray);
         }
 
         // We can't use the usual $this->setProjectByName() function here because the auth token we have might not allow
