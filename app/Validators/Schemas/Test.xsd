@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="common.xsd" />
+  <xs:complexType name="NamedMeasurementType">
+    <xs:sequence>
+      <xs:element name="Value" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="type" type="xs:string" use="required" />
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="encoding" type="xs:string" use="optional" />
+    <xs:attribute name="compression" type="xs:string" use="optional" />
+    <xs:attribute name="filename" type="xs:string" use="optional" />
+  </xs:complexType>
+
+  <xs:element name="Site">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Subproject" type="SubprojectType" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Labels" type="LabelsType" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Testing">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="StartDateTime" type="xs:string" minOccurs="0" />
+              <xs:element name="StartTestTime" type="xs:string" minOccurs="0" />
+              <xs:element name="TestList" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Test" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Test" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Name" type="xs:string" />
+                    <xs:element name="Path" type="xs:string" />
+                    <xs:element name="FullName" type="xs:string" />
+                    <xs:element name="FullCommandLine" type="xs:string" />
+                    <xs:element name="Results">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="NamedMeasurement" type="NamedMeasurementType" />
+                            <xs:element name="Measurement">
+                              <xs:complexType>
+                                <xs:sequence>
+                                  <xs:element name="Value">
+                                    <xs:complexType>
+                                      <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                          <xs:attribute name="encoding" type="xs:string" use="optional" />
+                                          <xs:attribute name="compression" type="xs:string" use="optional" />
+                                        </xs:extension>
+                                      </xs:simpleContent>
+                                    </xs:complexType>
+                                  </xs:element>
+                                </xs:sequence>
+                              </xs:complexType>
+                            </xs:element>
+                          </xs:choice>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="NamedMeasurement" type="NamedMeasurementType" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:element name="Labels" type="LabelsType" minOccurs="0" />
+                  </xs:sequence>
+                  <xs:attribute name="Status" type="xs:string" use="required" />
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="EndDateTime" type="xs:string" minOccurs="0" />
+              <xs:element name="EndTestTime" type="xs:string" minOccurs="0"/>
+              <xs:element name="ElapsedMinutes" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attributeGroup ref="SiteAttrs" />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
