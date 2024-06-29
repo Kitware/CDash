@@ -13,12 +13,12 @@
               <xs:element name="StartTestTime" type="xs:string" />
               <xs:element name="TestList">
                 <xs:complexType>
-                  <xs:sequence>
+                  <xs:sequence minOccurs="0">
                     <xs:element name="Test" type="xs:string" maxOccurs="unbounded" />
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
-              <xs:element name="Test" maxOccurs="unbounded">
+              <xs:element name="Test" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:sequence>
                     <xs:element name="Name" type="xs:string" />
@@ -48,7 +48,7 @@
               </xs:element>
               <xs:element name="DefectList">
                 <xs:complexType>
-                  <xs:sequence>
+                  <xs:sequence minOccurs="0">
                     <xs:element name="Defect" maxOccurs="unbounded">
                       <xs:complexType>
                         <!-- required attribute 'type' or 'Type', but we can't enforce it in xml v1.0 -->
