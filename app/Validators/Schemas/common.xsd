@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:attributeGroup name="SiteAttrs">
+    <xs:attribute name="BuildName" type="xs:string" use="required" />
+    <xs:attribute name="BuildStamp" type="xs:string" use="required" />
+    <xs:attribute name="Name" type="xs:string" use="required" />
+    <xs:attribute name="Generator" type="xs:string" />
+    <xs:attribute name="Append" type="xs:boolean" />
+    <xs:attribute name="CompilerName" type="xs:string" />
+    <xs:attribute name="CompilerVersion" type="xs:string" />
+    <xs:attribute name="OSName" type="xs:string" />
+    <xs:attribute name="Hostname" type="xs:string" />
+    <xs:attribute name="OSRelease" type="xs:string" />
+    <xs:attribute name="OSVersion" type="xs:string" />
+    <xs:attribute name="OSPlatform" type="xs:string" />
+    <xs:attribute name="Is64Bits" type="xs:short" />
+    <xs:attribute name="VendorString" type="xs:string" />
+    <xs:attribute name="VendorID" type="xs:string" />
+    <xs:attribute name="FamilyID" type="xs:int" />
+    <xs:attribute name="ModelID" type="xs:int" />
+    <xs:attribute name="ProcessorCacheSize" type="xs:int" />
+    <xs:attribute name="NumberOfLogicalCPU" type="xs:int" />
+    <xs:attribute name="NumberOfPhysicalCPU" type="xs:int" />
+    <xs:attribute name="TotalVirtualMemory" type="xs:int" />
+    <xs:attribute name="TotalPhysicalMemory" type="xs:int" />
+    <xs:attribute name="LogicalProcessorsPerPhysical" type="xs:int" />
+    <xs:attribute name="ProcessorClockFrequency" type="xs:float" />
+    <xs:attribute name="ChangeId" type="xs:string" />
+  </xs:attributeGroup>
+
+  <xs:complexType name="LabelsType">
+    <xs:sequence>
+      <xs:element name="Label" type="xs:string" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SubprojectType">
+    <xs:sequence minOccurs="0">
+      <xs:element name="Label" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="LogType" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <!-- wildcard to account for formatted text, e.g., boldface -->
+      <xs:any processContents="lax" />
+    </xs:sequence>
+    <xs:attribute name="compression" type="xs:string" use="optional" />
+    <xs:attribute name="Compression" type="xs:string" use="optional" />
+    <xs:attribute name="encoding" type="xs:string" use="optional" />
+    <xs:attribute name="Encoding" type="xs:string" use="optional" />
+  </xs:complexType>
+</xs:schema>
