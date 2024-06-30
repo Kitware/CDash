@@ -15,7 +15,10 @@
  */
 namespace CDash\Collection;
 
-abstract class Collection implements CollectionInterface
+use Countable;
+use Iterator;
+
+abstract class Collection implements Iterator, Countable
 {
     /** @var int $position */
     protected $position;

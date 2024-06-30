@@ -84,7 +84,7 @@ class DynamicAnalysisTopic extends Topic implements Decoratable
     }
 
     /**
-     * @return \CDash\Collection\CollectionInterface|DynamicAnalysisCollection
+     * @return DynamicAnalysisCollection
      */
     public function getTopicCollection()
     {

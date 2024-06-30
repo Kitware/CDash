@@ -82,7 +82,7 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
     }
 
     /**
-     * @return BuildErrorCollection|\CDash\Collection\CollectionInterface
+     * @return BuildErrorCollection
      */
     public function getTopicCollection()
     {
