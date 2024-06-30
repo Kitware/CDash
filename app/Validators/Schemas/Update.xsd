@@ -9,6 +9,37 @@
     </xs:simpleContent>
   </xs:complexType>
 
+  <xs:complexType name="UpdatedType">
+    <xs:sequence>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="File" type="FileType" />
+        <xs:element name="Directory" type="xs:string" />
+        <xs:element name="FullName" type="xs:string" />
+        <xs:element name="CheckinDate" type="xs:string" />
+        <xs:element name="Author" type="xs:string" />
+        <xs:element name="Email" type="xs:string" />
+        <xs:element name="Committer" type="xs:string" />
+        <xs:element name="CommitterEmail" type="xs:string" />
+        <xs:element name="CommitDate" type="xs:string"/>
+        <xs:element name="Log" type="LogType" />
+        <xs:element name="Revision" type="xs:string" />
+        <xs:element name="PriorRevision" type="xs:string" />
+        <xs:element name="Revisions">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Revision" type="xs:string" />
+              <xs:element name="PreviousRevision" type="xs:string" />
+              <xs:element name="Author" type="xs:string" />
+              <xs:element name="Date" type="xs:string" />
+              <xs:element name="Comment" type="xs:string" />
+              <xs:element name="Email" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:element name="Update">
     <xs:complexType>
       <xs:sequence>
@@ -28,38 +59,11 @@
             <xs:complexType>
               <xs:sequence>
                 <xs:element name="Name" type="xs:string" />
-                <xs:element name="Updated" maxOccurs="unbounded">
-                  <xs:complexType>
-                    <xs:sequence>
-                      <xs:choice maxOccurs="unbounded">
-                        <xs:element name="File" type="FileType" />
-                        <xs:element name="Directory" type="xs:string" />
-                        <xs:element name="FullName" type="xs:string" />
-                        <xs:element name="CheckinDate" type="xs:string" />
-                        <xs:element name="Author" type="xs:string" />
-                        <xs:element name="Email" type="xs:string" />
-                        <xs:element name="Committer" type="xs:string" />
-                        <xs:element name="CommitterEmail" type="xs:string" />
-                        <xs:element name="CommitDate" type="xs:string"/>
-                        <xs:element name="Log" type="LogType" />
-                        <xs:element name="Revision" type="xs:string" />
-                        <xs:element name="PriorRevision" type="xs:string" />
-                        <xs:element name="Revisions">
-                          <xs:complexType>
-                            <xs:sequence>
-                              <xs:element name="Revision" type="xs:string" />
-                              <xs:element name="PreviousRevision" type="xs:string" />
-                              <xs:element name="Author" type="xs:string" />
-                              <xs:element name="Date" type="xs:string" />
-                              <xs:element name="Comment" type="xs:string" />
-                              <xs:element name="Email" type="xs:string" />
-                            </xs:sequence>
-                          </xs:complexType>
-                        </xs:element>
-                      </xs:choice>
-                    </xs:sequence>
-                  </xs:complexType>
-                </xs:element>
+                <xs:choice maxOccurs="unbounded" >
+                  <xs:element name="Updated" type="UpdatedType"/>
+                  <xs:element name="Modified" type="UpdatedType"/>
+                  <xs:element name="Conflicting" type="UpdatedType"/>
+                </xs:choice>
               </xs:sequence>
             </xs:complexType>
           </xs:element>
