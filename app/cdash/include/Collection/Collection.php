@@ -20,24 +20,15 @@ use Iterator;
 
 abstract class Collection implements Iterator, Countable
 {
-    /** @var int $position */
-    protected $position;
-    /** @var array $collection */
-    protected $collection;
-    /** @var array $keys */
-    protected $keys;
+    protected int $position = 0;
+    /** @var array<mixed> $collection */
+    protected array $collection = [];
+    /** @var array<mixed> $keys */
+    protected array $keys = [];
 
-    /**
-     * Collection constructor.
-     * @param array $collection
-     */
-    public function __construct($collection = [])
+    public function __construct()
     {
-        $this->position = 0;
-        $this->collection = $collection;
-        $this->keys = array_keys($collection);
     }
-
 
     /**
      * Return the current element
@@ -106,9 +97,6 @@ abstract class Collection implements Iterator, Countable
         $this->position = 0;
     }
 
-    /**
-     * TODO: Watch this in a debugger when integration testing
-     */
     public function addItem($item, $name = null): self
     {
         $ptr = count($this->collection);
@@ -119,14 +107,6 @@ abstract class Collection implements Iterator, Countable
         }
         $this->collection[$key] = $item;
         return $this;
-    }
-
-    /**
-     * Returns true if the collection has items, and false if not.
-     */
-    public function hasItems(): bool
-    {
-        return count($this->collection) > 0;
     }
 
     /**
@@ -143,20 +123,12 @@ abstract class Collection implements Iterator, Countable
         return count($this->collection);
     }
 
-    /**
-     * @param $key
-     * @return bool
-     */
-    public function has($key)
+    public function has(mixed $key): bool
     {
         return in_array($key, array_keys($this->collection));
     }
 
-    /**
-     * @param $key
-     * @return mixed
-     */
-    public function get($key)
+    public function get(mixed $key): mixed
     {
         if ($this->has($key)) {
             return $this->collection[$key];
@@ -164,30 +136,12 @@ abstract class Collection implements Iterator, Countable
         return null;
     }
 
-    /**
-     * @param $key
-     * @return mixed
-     */
-    public function remove($key)
-    {
-        $item = null;
-        if ($this->has($key)) {
-            $item = $this->collection[$key];
-            unset($this->collection[$key], $this->keys[array_search($key, $this->keys)]);
-        }
-        return $item;
-    }
-
     public function toArray(): array
     {
         return array_values($this->collection);
     }
 
-    /**
-     * @param int $size
-     * @return Collection
-     */
-    public function first($size = 1)
+    public function first(int $size = 1): self
     {
         $self = new static;
         $collectionSize = $this->count();

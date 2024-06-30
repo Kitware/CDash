@@ -35,12 +35,12 @@ class DynamicAnalysisHandlerTest extends TestCase
         $collection = $sut->GetTopicCollectionForSubscriber($subscriber);
 
         $this->assertInstanceOf(TopicCollection::class, $collection);
-        $this->assertFalse($collection->hasItems());
+        self::assertCount(0, $collection);
 
         $preferences->set(NotifyOn::DYNAMIC_ANALYSIS, true);
 
         $collection = $sut->GetTopicCollectionForSubscriber($subscriber);
-        $this->assertCount(1, $collection);
+        self::assertCount(1, $collection);
         $this->assertTrue($collection->has(Topic::DYNAMIC_ANALYSIS));
     }
 
@@ -49,7 +49,7 @@ class DynamicAnalysisHandlerTest extends TestCase
         $sut = new DynamicAnalysisHandler(0, 0);
         $builders = $sut->GetSubscriptionBuilderCollection();
 
-        $this->assertCount(1, $builders);
+        self::assertCount(1, $builders);
         $this->assertTrue($builders->has(UserSubscriptionBuilder::class));
     }
 }

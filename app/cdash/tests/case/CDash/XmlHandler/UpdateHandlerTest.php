@@ -62,13 +62,13 @@ class UpdateHandlerTest extends CDashTestCase
         $collection = $sut->GetTopicCollectionForSubscriber($subscriber);
 
         $this->assertInstanceOf(TopicCollection::class, $collection);
-        $this->assertFalse($collection->hasItems());
+        self::assertCount(0, $collection);
 
         $preferences->set(NotifyOn::UPDATE_ERROR, true);
 
         $collection = $sut->GetTopicCollectionForSubscriber($subscriber);
 
-        $this->assertCount(1, $collection);
+        self::assertCount(1, $collection);
         $this->assertTrue($collection->has(Topic::UPDATE_ERROR));
     }
 
@@ -77,7 +77,7 @@ class UpdateHandlerTest extends CDashTestCase
         $sut = new UpdateHandler(0, 0);
         $collection = $sut->GetSubscriptionBuilderCollection();
 
-        $this->assertCount(2, $collection);
+        self::assertCount(2, $collection);
         $this->assertTrue($collection->has(UserSubscriptionBuilder::class));
         $this->assertTrue($collection->has(CommitAuthorSubscriptionBuilder::class));
     }

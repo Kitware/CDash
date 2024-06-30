@@ -42,13 +42,13 @@ class TestingHandlerTest extends TestCase
         $collection = $sut->GetTopicCollectionForSubscriber($subscriber);
 
         $this->assertInstanceOf(TopicCollection::class, $collection);
-        $this->assertFalse($collection->hasItems());
+        self::assertCount(0, $collection);
 
         $preferences->set(NotifyOn::TEST_FAILURE, true);
 
         $collection = $sut->GetTopicCollectionForSubscriber($subscriber);
 
-        $this->assertCount(2, $collection);
+        self::assertCount(2, $collection);
         $this->assertTrue($collection->has(Topic::TEST_FAILURE));
         $this->assertTrue($collection->has(Topic::TEST_MISSING));
     }
@@ -58,7 +58,7 @@ class TestingHandlerTest extends TestCase
         $sut = new TestingHandler(0, 0);
         $collection = $sut->GetSubscriptionBuilderCollection();
 
-        $this->assertCount(2, $collection);
+        self::assertCount(2, $collection);
         $this->assertTrue($collection->has(UserSubscriptionBuilder::class));
         $this->assertTrue($collection->has(CommitAuthorSubscriptionBuilder::class));
     }

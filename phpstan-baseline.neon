@@ -10650,22 +10650,12 @@ parameters:
 			path: app/cdash/include/Collection/BuildErrorCollection.php
 
 		-
-			message: "#^Call to function array_search\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/Collection.php
-
-		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 3
 			path: app/cdash/include/Collection/Collection.php
 
 		-
 			message: "#^Class CDash\\\\Collection\\\\Collection implements generic interface Iterator but does not specify its types\\: TKey, TValue$#"
-			count: 1
-			path: app/cdash/include/Collection/Collection.php
-
-		-
-			message: "#^Method CDash\\\\Collection\\\\Collection\\:\\:__construct\\(\\) has parameter \\$collection with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Collection/Collection.php
 
@@ -10680,32 +10670,7 @@ parameters:
 			path: app/cdash/include/Collection/Collection.php
 
 		-
-			message: "#^Method CDash\\\\Collection\\\\Collection\\:\\:get\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/Collection.php
-
-		-
-			message: "#^Method CDash\\\\Collection\\\\Collection\\:\\:has\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/Collection.php
-
-		-
-			message: "#^Method CDash\\\\Collection\\\\Collection\\:\\:remove\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/Collection.php
-
-		-
 			message: "#^Method CDash\\\\Collection\\\\Collection\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/Collection.php
-
-		-
-			message: "#^Property CDash\\\\Collection\\\\Collection\\:\\:\\$collection type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/Collection.php
-
-		-
-			message: "#^Property CDash\\\\Collection\\\\Collection\\:\\:\\$keys type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Collection/Collection.php
 
@@ -11421,11 +11386,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Messaging\\\\Topic\\\\LabeledTopic\\:\\:\\$decoratedSubscribes has no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Topic/LabeledTopic.php
-
-		-
-			message: "#^Property CDash\\\\Messaging\\\\Topic\\\\LabeledTopic\\:\\:\\$topicCollection has no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/LabeledTopic.php
 
@@ -17067,11 +17027,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Model/BuildTest.php
 
 		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Model/BuildTest.php
@@ -17742,11 +17697,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
 
 		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
 			count: 2
 			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
@@ -17777,16 +17727,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
 
 		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
@@ -17809,16 +17749,6 @@ parameters:
 		-
 			message: "#^Class DynamicAnalysisHandler constructor invoked with 2 parameters, 1 required\\.$#"
 			count: 2
-			path: app/cdash/tests/case/CDash/XmlHandler/DynamicAnalysisHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/XmlHandler/DynamicAnalysisHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\)\\.$#"
-			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/DynamicAnalysisHandlerTest.php
 
 		-
@@ -17849,16 +17779,6 @@ parameters:
 		-
 			message: "#^Class TestingHandler constructor invoked with 2 parameters, 1 required\\.$#"
 			count: 3
-			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\)\\.$#"
-			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
 
 		-
@@ -17894,16 +17814,6 @@ parameters:
 		-
 			message: "#^Class UpdateHandler constructor invoked with 2 parameters, 1 required\\.$#"
 			count: 4
-			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\)\\.$#"
-			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
 
 		-
