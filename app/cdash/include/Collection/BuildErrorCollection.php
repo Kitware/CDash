@@ -27,7 +27,7 @@ class BuildErrorCollection extends Collection
      */
     public function add($error)
     {
-        parent::addItem($error);
+        $this->addItem($error);
         return $this;
     }
 }

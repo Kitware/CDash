@@ -2,13 +2,9 @@
 namespace CDash\Messaging\Topic;
 
 use CDash\Model\Build;
-use CDash\Collection\CollectionCollection;
 
 class LabeledTopic extends Topic
 {
-    /** @var  CollectionCollection $labeledCollection */
-    protected $topicCollection;
-
     private $decoratedSubscribes;
 
     /**

@@ -2,7 +2,7 @@
 namespace CDash\Messaging\Subscription;
 
 use CDash\Messaging\FactoryInterface;
-use CDash\Collection\CollectionInterface;
+use CDash\Collection\Collection;
 use CDash\Messaging\Notification\NotificationCollection;
 
 /**
@@ -33,12 +33,7 @@ abstract class SubscriptionNotificationBuilder implements SubscriptionNotificati
      */
     protected $subscriptions;
 
-    /**
-     * NotificationBuilderInterface constructor.
-     * @param FactoryInterface $factory
-     * @param CollectionInterface $collection
-     */
-    public function __construct(FactoryInterface $factory, CollectionInterface $collection)
+    public function __construct(FactoryInterface $factory, Collection $collection)
     {
         $this->factory = $factory;
         $this->notifications = $collection;

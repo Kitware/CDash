@@ -69,7 +69,7 @@ class Subscriber implements SubscriberInterface
     {
         $topics = $this->getTopics();
         $collection = $submission->GetTopicCollectionForSubscriber($this);
-        if ($collection->hasItems()) {
+        if (count($collection) > 0) {
             $builds = $submission->GetBuildCollection();
             $buildGroup = $submission->GetBuildGroup();
 

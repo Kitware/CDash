@@ -25,7 +25,7 @@ class BuildCollection extends Collection
     public function add(Build $build)
     {
         $name = $build->SubProjectName ? $build->SubProjectName : $build->Name;
-        parent::addItem($build, $name);
+        $this->addItem($build, $name);
         return $this;
     }
 }

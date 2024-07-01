@@ -22,7 +22,7 @@ class DynamicAnalysisCollection extends Collection
 {
     public function add(DynamicAnalysis $analysis)
     {
-        parent::addItem($analysis, $analysis->Name);
+        $this->addItem($analysis, $analysis->Name);
         return $this;
     }
 }

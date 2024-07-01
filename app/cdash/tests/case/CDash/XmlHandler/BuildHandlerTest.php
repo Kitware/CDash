@@ -42,7 +42,7 @@ class BuildHandlerTest extends TestCase
 
         // Given the preferences the collection should be empty
         $this->assertInstanceOf(TopicCollection::class, $collection);
-        $this->assertFalse($collection->hasItems());
+        self::assertCount(0, $collection);
 
         $preferences->set(NotifyOn::BUILD_ERROR, true);
         $collection = $sut->GetTopicCollectionForSubscriber($subscriber);
