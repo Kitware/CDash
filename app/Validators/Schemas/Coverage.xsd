@@ -14,14 +14,14 @@
               <xs:element name="File" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:sequence>
-                    <xs:element name="LOCTested" type="xs:unsignedInt" />
-                    <xs:element name="LOCUnTested" type="xs:unsignedInt" />
+                    <xs:element name="LOCTested" type="xs:unsignedInt" minOccurs="0" />
+                    <xs:element name="LOCUnTested" type="xs:unsignedInt" minOccurs="0" />
                     <xs:element name="BranchesTested" type="xs:unsignedInt" minOccurs="0" />
                     <xs:element name="BranchedUnTested" type="xs:unsignedInt" minOccurs="0" />
                     <xs:element name="FunctionsTested" type="xs:unsignedInt" minOccurs="0" />
                     <xs:element name="FunctionsUnTested" type="xs:unsignedInt" minOccurs="0" />
-                    <xs:element name="PercentCoverage" type="xs:decimal" />
-                    <xs:element name="CoverageMetric" type="xs:decimal" />
+                    <xs:element name="PercentCoverage" type="xs:decimal" minOccurs="0" />
+                    <xs:element name="CoverageMetric" type="xs:decimal" minOccurs="0" />
                     <xs:element name="Labels" type="LabelsType" minOccurs="0" maxOccurs="unbounded" />
                   </xs:sequence>
                   <xs:attribute name="Name" type="xs:string" use="optional" />
