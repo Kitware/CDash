@@ -15,7 +15,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - uses: docker/build-push-action@v5
+      - uses: docker/build-push-action@v6
         name: Build ${{ github.ref_name }} image
         with:
           context: .
@@ -25,7 +25,7 @@ jobs:
           target: cdash
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      - uses: docker/build-push-action@v5
+      - uses: docker/build-push-action@v6
         name: Build ${{ github.ref_name }} worker image
         with:
           context: .
@@ -45,7 +45,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - uses: docker/build-push-action@v5
+      - uses: docker/build-push-action@v6
         name: Build ${{ github.ref_name }} image
         with:
           context: .
@@ -57,7 +57,7 @@ jobs:
             BASE_IMAGE=ubi
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      - uses: docker/build-push-action@v5
+      - uses: docker/build-push-action@v6
         name: Build ${{ github.ref_name }} worker image
         with:
           context: .
