@@ -227,11 +227,21 @@ parameters:
 			path: app/Http/Controllers/AbstractProjectController.php
 
 		-
+			message: "#^Access to property \\$Id on an unknown class App\\\\Http\\\\Controllers\\\\Build\\.$#"
+			count: 2
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Access to property \\$ProjectId on an unknown class App\\\\Http\\\\Controllers\\\\Build\\.$#"
+			count: 2
+			path: app/Http/Controllers/AdminController.php
+
+		-
 			message: """
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 1
+			count: 7
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -239,7 +249,7 @@ parameters:
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 6
+			count: 12
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -247,7 +257,12 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 6
+			count: 14
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Call to method ComputeUpdateStatistics\\(\\) on an unknown class App\\\\Http\\\\Controllers\\\\Build\\.$#"
+			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -276,7 +291,22 @@ parameters:
 			path: app/Http/Controllers/AdminController.php
 
 		-
+			message: "#^Cannot access offset 'timemean' on array\\|false\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Cannot access offset 'timestd' on array\\|false\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
 			message: "#^Cannot access offset 'type' on array\\|false\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Cannot access property \\$id on array\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
@@ -287,6 +317,56 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Instantiated class App\\\\Http\\\\Controllers\\\\Build not found\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:ComputeTestTiming\\(\\) has parameter \\$days with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:ComputeTestTiming\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:ComputeUpdateStatistics\\(\\) has parameter \\$days with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:ComputeUpdateStatistics\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:delete_unused_rows\\(\\) has parameter \\$field with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:delete_unused_rows\\(\\) has parameter \\$selectfield with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:delete_unused_rows\\(\\) has parameter \\$table with no type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:delete_unused_rows\\(\\) has parameter \\$targettable with no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
@@ -313,6 +393,11 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, \\(int\\|false\\) given\\.$#"
 			count: 3
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
+			count: 2
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -14553,110 +14638,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
 			count: 1
 			path: app/cdash/include/sendemail.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_error\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 6
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 6
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 8
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Cannot access offset 'timemean' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Cannot access offset 'timestd' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Cannot access property \\$id on array\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function ComputeTestTiming\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function ComputeTestTiming\\(\\) has parameter \\$days with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function ComputeTestTiming\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function ComputeUpdateStatistics\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function ComputeUpdateStatistics\\(\\) has parameter \\$days with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function ComputeUpdateStatistics\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function delete_unused_rows\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function delete_unused_rows\\(\\) has parameter \\$field with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function delete_unused_rows\\(\\) has parameter \\$selectfield with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function delete_unused_rows\\(\\) has parameter \\$table with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Function delete_unused_rows\\(\\) has parameter \\$targettable with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/include/upgrade_functions.php
-
-		-
-			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
-			count: 2
-			path: app/cdash/include/upgrade_functions.php
 
 		-
 			message: """
