@@ -14,16 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
-
 use App\Utils\TestCreator;
-
 use CDash\Model\Build;
 use App\Models\BuildInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
 
-class TestingJUnitHandler extends AbstractHandler
+class TestingJUnitHandler extends AbstractXmlHandler
 {
     private $StartTimeStamp;
     private $EndTimeStamp;
@@ -65,7 +62,7 @@ class TestingJUnitHandler extends AbstractHandler
     }
 
     /** Start Element */
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
         $parent = $this->getParent(); // should be before endElement
@@ -186,7 +183,7 @@ class TestingJUnitHandler extends AbstractHandler
     }
 
     /** End Element */
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         parent::endElement($parser, $name);
         if ($name == 'FAILURE' || $name == 'ERROR') {

@@ -45,7 +45,7 @@ Steps to build a collection of notifications:
 ```php
 $subscriptions = new SubscriptionsCollection();
 
-// $handler is a AbstractHandler implementing ActionableBuildInterface
+// $handler is a AbstractXmlHandler implementing ActionableBuildInterface
 // (e.g. BuildHandler, or UpdateHandler, etc.)
 
 // A collection of subscription builders is necessary because there are various

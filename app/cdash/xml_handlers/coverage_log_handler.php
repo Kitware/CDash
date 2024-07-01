@@ -14,8 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
-
 use CDash\Model\Build;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
@@ -23,7 +21,7 @@ use CDash\Model\Project;
 use App\Models\Site;
 use CDash\Model\SubProject;
 
-class CoverageLogHandler extends AbstractHandler
+class CoverageLogHandler extends AbstractXmlHandler
 {
     private $StartTimeStamp;
     private $EndTimeStamp;
@@ -47,7 +45,7 @@ class CoverageLogHandler extends AbstractHandler
     }
 
     /** Start element */
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
         if ($name == 'SITE') {
@@ -74,7 +72,7 @@ class CoverageLogHandler extends AbstractHandler
     }
 
     /** End Element */
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         parent::endElement($parser, $name);
 

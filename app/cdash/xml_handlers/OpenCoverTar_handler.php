@@ -14,8 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
-
 use CDash\Model\Build;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
@@ -23,7 +21,7 @@ use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 use Illuminate\Support\Facades\Storage;
 
-class OpenCoverTarHandler extends AbstractHandler
+class OpenCoverTarHandler extends AbstractXmlHandler
 {
     protected $Build;
     protected $CoverageSummaries;
@@ -47,7 +45,7 @@ class OpenCoverTarHandler extends AbstractHandler
         $this->ParseCSFiles = true;
     }
 
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
         /**
@@ -62,10 +60,13 @@ class OpenCoverTarHandler extends AbstractHandler
         }
     }
 
-    // No usage of endElement
-    public function endElement($parser, $name)
+    /**
+     * No usage of endElement
+     */
+    public function endElement($parser, $name): void
     {
     }
+
     /**
      *  Removes the current module, and assumes all that is left is a
      *  subdirectory and the file name, append '.cs' to get the file path

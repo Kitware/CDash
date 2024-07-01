@@ -14,8 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
-
 use CDash\Model\Build;
 use App\Models\BuildInformation;
 use CDash\Model\Coverage;
@@ -27,7 +25,7 @@ use App\Models\Site;
 use App\Models\SiteInformation;
 use CDash\Model\SubProject;
 
-class CoverageHandler extends AbstractHandler
+class CoverageHandler extends AbstractXmlHandler
 {
     private $StartTimeStamp;
     private $EndTimeStamp;
@@ -52,7 +50,7 @@ class CoverageHandler extends AbstractHandler
     }
 
     /** startElement */
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
         if ($name == 'SITE') {
@@ -94,7 +92,7 @@ class CoverageHandler extends AbstractHandler
     } // start element
 
     /** End element */
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         parent::endElement($parser, $name);
         if ($name == 'SITE') {

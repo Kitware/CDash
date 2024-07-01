@@ -21,6 +21,7 @@ use DOMElement;
 use DOMNode;
 use DOMText;
 use DynamicAnalysisHandler;
+use AbstractXmlHandler;
 
 class DynamicAnalysisUseCase extends UseCase
 {
@@ -39,7 +40,7 @@ class DynamicAnalysisUseCase extends UseCase
         $this->checker = '/usr/bin/valgrind';
     }
 
-    public function build(): \AbstractHandler
+    public function build(): AbstractXmlHandler
     {
         $xml = new DOMDocument('1.0', 'UTF-8');
         $startDateTimeText = date('M d H:i T', $this->startTime);

@@ -13,8 +13,6 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-require_once 'xml_handlers/abstract_handler.php';
-require_once 'xml_handlers/actionable_build_interface.php';
 
 use CDash\Collection\BuildCollection;
 use CDash\Collection\Collection;
@@ -34,7 +32,7 @@ use App\Models\SiteInformation;
 use App\Models\BuildInformation;
 use CDash\Model\SubscriberInterface;
 
-class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildInterface
+class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBuildInterface
 {
     private $StartTimeStamp;
     private $EndTimeStamp;
@@ -62,7 +60,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
     }
 
     /** Start element */
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
         $factory = $this->getModelFactory();
@@ -128,7 +126,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
     }
 
     /** Function endElement */
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
@@ -310,7 +308,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
     /**
      * @return Build[]
      */
-    public function getBuilds()
+    public function getBuilds(): array
     {
         return array_values($this->Builds);
     }

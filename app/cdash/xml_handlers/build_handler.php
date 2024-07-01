@@ -14,11 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
-require_once 'xml_handlers/actionable_build_interface.php';
-require_once 'include/Submission/CommitAuthorHandlerTrait.php';
-require_once 'include/Submission/CommitAuthorHandlerInterface.php';
-
 use CDash\Collection\BuildCollection;
 use CDash\Collection\Collection;
 use CDash\Collection\SubscriptionBuilderCollection;
@@ -40,7 +35,7 @@ use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
 use CDash\Submission\CommitAuthorHandlerTrait;
 
-class BuildHandler extends AbstractHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
+class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
 {
     use CommitAuthorHandlerTrait;
 
@@ -74,7 +69,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
         $this->BuildErrorFilter = new BuildErrorFilter($project);
     }
 
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
         $factory = $this->getModelFactory();
@@ -165,7 +160,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
         }
     }
 
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
@@ -391,7 +386,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
     /**
      * @return Build[]
      */
-    public function getBuilds()
+    public function getBuilds(): array
     {
         return array_values($this->Builds);
     }

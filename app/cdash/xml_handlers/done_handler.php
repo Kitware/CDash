@@ -14,14 +14,12 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
-
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Repository;
 
-class DoneHandler extends AbstractHandler
+class DoneHandler extends AbstractXmlHandler
 {
     private $FinalAttempt;
     private $PendingSubmissions;
@@ -37,7 +35,7 @@ class DoneHandler extends AbstractHandler
         $this->Requeue = false;
     }
 
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
         if ($name == 'DONE' && array_key_exists('RETRIES', $attributes) &&
@@ -47,7 +45,7 @@ class DoneHandler extends AbstractHandler
         }
     }
 
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         parent::endElement($parser, $name);
         if ($name == 'DONE') {
@@ -101,7 +99,7 @@ class DoneHandler extends AbstractHandler
         }
     }
 
-    public function getSiteName()
+    public function getSiteName(): string
     {
         return $this->Build->GetSite()->name;
     }
