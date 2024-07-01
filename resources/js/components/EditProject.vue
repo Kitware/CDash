@@ -420,6 +420,26 @@
                   </td>
                 </tr>
 
+                <tr v-if="cdash.ldap_enabled">
+                  <td />
+                  <td>
+                    <div align="right">
+                      <strong>LDAP Group:</strong>
+                    </div>
+                  </td>
+                  <td>
+                    <input
+                      id="ldapFilter"
+                      v-model="cdash.project.LdapFilter"
+                      name="ldapFilter"
+                      type="text"
+                      size="50"
+                      @change="cdash.changesmade = true"
+                      @focus="clearHelp()"
+                    >
+                  </td>
+                </tr>
+
                 <tr>
                   <!-- Checkbox to enable/disable the "Authenticated Submissions"
                        feature for this project -->

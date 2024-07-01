@@ -2,16 +2,21 @@
 
 namespace Tests\Feature;
 
+use App\Models\Project;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use LdapRecord\Models\OpenLDAP\Group;
 use LdapRecord\Models\OpenLDAP\User;
 use Tests\TestCase;
+use Tests\Traits\CreatesProjects;
 
 /**
  * Tests in this file connect to a live LDAP server running in the development environment.
  */
 class LdapIntegration extends TestCase
 {
+    use CreatesProjects;
+
     protected Group $group_1;
     protected Group $group_2;
 
@@ -19,6 +24,11 @@ class LdapIntegration extends TestCase
      * @var array<string,User>
      */
     protected array $users;
+
+    /**
+     * @var array<string,Project>
+     */
+    protected array $projects;
 
     /**
      * @throws \LdapRecord\LdapRecordException
@@ -106,6 +116,15 @@ class LdapIntegration extends TestCase
         ]);
         $this->group_1->members()->attach($this->users['groups_1_and_2_2']);
         $this->group_2->members()->attach($this->users['groups_1_and_2_2']);
+
+        // Create a pair of projects which are restricted to specific LDAP groups
+        $this->projects['only_group_1'] = Project::findOrFail((int) $this->makePrivateProject()->Id);
+        $this->projects['only_group_1']->ldapfilter = "cn={$this->group_1->getAttribute('cn')[0]},dc=example,dc=org";
+        $this->projects['only_group_1']->save();
+
+        $this->projects['only_group_2'] = Project::findOrFail((int) $this->makePrivateProject()->Id);
+        $this->projects['only_group_2']->ldapfilter = "cn={$this->group_2->getAttribute('cn')[0]},dc=example,dc=org";
+        $this->projects['only_group_2']->save();
     }
 
     /**
@@ -133,13 +152,12 @@ class LdapIntegration extends TestCase
         }
         $this->users = [];
 
-        parent::tearDown();
-    }
+        foreach ($this->projects as $key => $project) {
+            $project->delete();
+        }
+        $this->projects = [];
 
-    public function testLdapConnection(): void
-    {
-        $this->artisan('ldap:test')
-            ->assertSuccessful();
+        parent::tearDown();
     }
 
     public function testLdapLogin(): void
@@ -162,7 +180,7 @@ class LdapIntegration extends TestCase
         \App\Models\User::where(['email' => $user->getAttribute('uid')[0]])->firstOrFail()->delete();
     }
 
-    public function testLdapLoginWithFilters(): void
+    public function testLoginWithFilters(): void
     {
         $user_group_1 = $this->users['group_1_only_1'];
         $user_group_2 = $this->users['group_2_only_1'];
@@ -220,5 +238,149 @@ class LdapIntegration extends TestCase
 
         // "Delete" the env variable
         putenv('LDAP_FILTERS_ON');
+    }
+
+    public function testArtisanSyncsProjectMembership(): void
+    {
+        // Create the user in the database
+        $this->post('/login', [
+            'email' => $this->users['group_1_only_1']->getAttribute('uid')[0],
+            'password' => $this->users['group_1_only_1']->getAttribute('userpassword')[0],
+        ])->assertRedirect('/');
+
+        $user = \App\Models\User::where(['email' => $this->users['group_1_only_1']->getAttribute('uid')[0]])->firstOrFail();
+
+        // A brief sanity check...
+        self::assertNotContains($user->email, $this->projects['only_group_2']->users()->pluck('email'));
+
+        // Use a project which didn't have this user as a member when the initial login occurred
+        $this->projects['only_group_2']->ldapfilter = "cn={$this->group_1->getAttribute('cn')[0]},dc=example,dc=org";
+        $this->projects['only_group_2']->save();
+        $this->artisan('ldap:sync_projects');
+        self::assertContains($user->email, $this->projects['only_group_2']->users()->pluck('email'));
+
+        // Change the group, and verify that the user was removed from the project
+        $this->projects['only_group_2']->ldapfilter = "cn={$this->group_2->getAttribute('cn')[0]},dc=example,dc=org";
+        $this->projects['only_group_2']->save();
+        $this->artisan('ldap:sync_projects');
+        self::assertNotContains($user->email, $this->projects['only_group_2']->users()->pluck('email'));
+    }
+
+    protected function projectAccessAssertions(string $user, string $project, bool $should_access): void
+    {
+        $user = \App\Models\User::where(['email' => $this->users[$user]->getAttribute('uid')[0]])->firstOrFail();
+        $project = $this->projects[$project];
+
+        $result = $this->actingAs($user)->graphQL('
+            query project($id: ID) {
+                project(id: $id) {
+                    name
+                }
+            }
+        ', [
+            'id' => $project->id,
+        ]);
+
+        if ($should_access) {
+            $result->assertJson([
+                'data' => [
+                    'project' => [
+                        'name' => $project->name,
+                    ],
+                ],
+            ], true);
+        } else {
+            $result->assertJson([
+                'data' => [
+                    'project' => null,
+                ],
+            ], true);
+        }
+
+        $this->get('/logout')->assertRedirect('/');
+    }
+
+    protected function assertCanAccessProject(string $user, string $project): void
+    {
+        $this->projectAccessAssertions($user, $project, true);
+    }
+
+    protected function assertCannotAccessProject(string $user, string $project): void
+    {
+        $this->projectAccessAssertions($user, $project, false);
+    }
+
+    public function testGroupBasedProjectMembership(): void
+    {
+        // Make sure the users exist in the database
+        $this->post('/login', [
+            'email' => $this->users['group_1_only_1']->getAttribute('uid')[0],
+            'password' => $this->users['group_1_only_1']->getAttribute('userpassword')[0],
+        ])->assertRedirect('/');
+        $this->get('/logout')->assertRedirect('/');
+
+        $this->post('/login', [
+            'email' => $this->users['group_2_only_1']->getAttribute('uid')[0],
+            'password' => $this->users['group_2_only_1']->getAttribute('userpassword')[0],
+        ])->assertRedirect('/');
+        $this->get('/logout')->assertRedirect('/');
+
+        $this->post('/login', [
+            'email' => $this->users['groups_1_and_2_1']->getAttribute('uid')[0],
+            'password' => $this->users['groups_1_and_2_1']->getAttribute('userpassword')[0],
+        ])->assertRedirect('/');
+        $this->get('/logout')->assertRedirect('/');
+
+        $this->artisan('ldap:sync_projects');
+
+        // Test basic membership controls
+        $this->assertCanAccessProject('group_1_only_1', 'only_group_1');
+        $this->assertCannotAccessProject('group_1_only_1', 'only_group_2');
+        $this->assertCannotAccessProject('group_2_only_1', 'only_group_1');
+        $this->assertCanAccessProject('group_2_only_1', 'only_group_2');
+        $this->assertCanAccessProject('groups_1_and_2_1', 'only_group_1');
+        $this->assertCanAccessProject('groups_1_and_2_1', 'only_group_2');
+
+        // Make sure the membership is removed when the LDAP group rule is changed
+        $this->projects['only_group_2']->ldapfilter = "cn={$this->group_1->getAttribute('cn')[0]},dc=example,dc=org";
+        $this->projects['only_group_2']->save();
+
+        $this->artisan('ldap:sync_projects');
+
+        $this->assertCanAccessProject('group_1_only_1', 'only_group_1');
+        $this->assertCanAccessProject('group_1_only_1', 'only_group_2');
+        $this->assertCannotAccessProject('group_2_only_1', 'only_group_1');
+        $this->assertCannotAccessProject('group_2_only_1', 'only_group_2');
+        $this->assertCanAccessProject('groups_1_and_2_1', 'only_group_1');
+        $this->assertCanAccessProject('groups_1_and_2_1', 'only_group_2');
+    }
+
+    public function testSyncsGroupsUponLogin(): void
+    {
+        $this->post('/login', [
+            'email' => $this->users['group_1_only_1']->getAttribute('uid')[0],
+            'password' => $this->users['group_1_only_1']->getAttribute('userpassword')[0],
+        ])->assertRedirect('/');
+
+        // The user and associated project membership links were created by logging in
+        $this->assertCanAccessProject('group_1_only_1', 'only_group_1');
+
+        // Basic sanity check...
+        $this->assertCannotAccessProject('group_1_only_1', 'only_group_2');
+
+        $this->projects['only_group_2']->ldapfilter = "cn={$this->group_1->getAttribute('cn')[0]},dc=example,dc=org";
+        $this->projects['only_group_2']->save();
+
+        // Still can't access the project because the link hasn't been created yet
+        $this->assertCannotAccessProject('group_1_only_1', 'only_group_2');
+
+        // Logging in should reset the links
+        $this->post('/login', [
+            'email' => $this->users['group_1_only_1']->getAttribute('uid')[0],
+            'password' => $this->users['group_1_only_1']->getAttribute('userpassword')[0],
+        ])->assertRedirect('/');
+
+        $this->assertCanAccessProject('group_1_only_1', 'only_group_1');
+        $this->assertCanAccessProject('group_1_only_1', 'only_group_2');
     }
 }

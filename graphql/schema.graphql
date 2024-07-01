@@ -68,6 +68,9 @@ type Project {
   "A boolean indicating whether authenticated submissions are required."
   authenticateSubmissions: Boolean! @rename(attribute: "authenticatesubmissions")
 
+  "A LDAP group users must be a member of to access the project."
+  ldapFilter: String @rename(attribute: "ldapfilter")
+
   builds(
     filters: _ @filter(inputType: "BuildFilterInput")
   ): [Build!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
@@ -113,6 +116,9 @@ input CreateProjectInput {
 
   "A boolean indicating whether authenticated submissions are required."
   authenticateSubmissions: Boolean! @rename(attribute: "authenticatesubmissions") @rules(attribute: "authenticatesubmissions", apply: ["App\\Rules\\ProjectAuthenticateSubmissions"])
+
+  "A LDAP group users must be a member of to access the project."
+  ldapFilter: String @rename(attribute: "ldapfilter")
 }
 
 input ProjectFilterInput {

@@ -87,6 +87,7 @@ class Project
     public $UploadQuota;
     public $WarningsFilter;
     public $ErrorsFilter;
+    public ?string $LdapFilter = null;
     /** @var Database $PDO */
     private $PDO;
 
@@ -288,6 +289,7 @@ class Project
             'emailmaxitems' => (int) $this->EmailMaxItems,
             'emailmaxchars' => (int) $this->EmailMaxChars,
             'imageid' => $this->ImageId ?? 0,
+            'ldapfilter' => $this->LdapFilter,
         ]);
         $project->save();
         $this->Id = $project->id;
@@ -379,6 +381,7 @@ class Project
             $this->TestTimeMaxStatus = $project->testtimemaxstatus;
             $this->EmailMaxItems = $project->emailmaxitems;
             $this->EmailMaxChars = $project->emailmaxchars;
+            $this->LdapFilter = $project->ldapfilter;
         }
 
         // Check if we have filters
