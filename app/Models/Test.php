@@ -25,9 +25,9 @@ use Illuminate\Support\Facades\Config;
  * @property string $details
  * @property string $testname
  *
- * @mixin Builder<BuildTest>
+ * @mixin Builder<Test>
  */
-class BuildTest extends Model
+class Test extends Model
 {
     public $timestamps = false;
 
@@ -199,7 +199,7 @@ class BuildTest extends Model
         }
 
         if (config('database.default') == 'pgsql' && $marshaledData['buildtestid']) {
-            $buildtest = BuildTest::where('id', '=', $data['buildtestid'])->first();
+            $buildtest = Test::where('id', '=', $data['buildtestid'])->first();
             if ($buildtest) {
                 $marshaledData['labels'] = $buildtest->getLabels()->keys()->all();
             }

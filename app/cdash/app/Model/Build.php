@@ -18,7 +18,7 @@ namespace CDash\Model;
 
 require_once 'include/ctestparserutils.php';
 
-use App\Models\BuildTest;
+use App\Models\Test;
 use App\Models\Site;
 use App\Utils\RepositoryUtils;
 use App\Utils\TestingDay;
@@ -1346,7 +1346,7 @@ class Build
                 $timemean = $testtime;
             }
 
-            $buildtest = BuildTest::findOrFail((int) $buildtestid);
+            $buildtest = Test::findOrFail((int) $buildtestid);
             $buildtest->timestatus = (int) $timestatus;
 
             $buildtest->timemean = $timemean;
@@ -2331,7 +2331,7 @@ class Build
     /**
      * Given a $buildtest, this method adds a BuildTest to the current Build's TestCollection.
      */
-    public function AddTest(BuildTest $buildtest): self
+    public function AddTest(Test $buildtest): self
     {
         $this->TestCollection->put($buildtest->testname, $buildtest);
         return $this;
@@ -2726,15 +2726,15 @@ class Build
                     return $count;
                 }, 0);
                 $passed = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test['status'] === BuildTest::PASSED ? 1 : 0;
+                    $count += $test['status'] === Test::PASSED ? 1 : 0;
                     return $count;
                 }, 0);
                 $failed = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test['status'] === BuildTest::FAILED ? 1 : 0;
+                    $count += $test['status'] === Test::FAILED ? 1 : 0;
                     return $count;
                 }, 0);
                 $notrun = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test['status'] === BuildTest::NOTRUN ? 1 : 0;
+                    $count += $test['status'] === Test::NOTRUN ? 1 : 0;
                     return $count;
                 }, 0);
 

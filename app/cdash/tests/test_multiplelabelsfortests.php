@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-use App\Models\BuildTest;
+use App\Models\Test;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
 
@@ -53,7 +53,7 @@ class MultipleLabelsForTestsTestCase extends KWWebTestCase
 
         // Verify that the test has multiple labels.
         $buildid = $results[0]->id;
-        $buildtest = BuildTest::where('buildid', '=', $buildid)->first();
+        $buildtest = Test::where('buildid', '=', $buildid)->first();
         $this->assertTrue(3 === count($buildtest->getLabels()));
 
         // Verify that these labels are correctly returned by the testDetails API.
