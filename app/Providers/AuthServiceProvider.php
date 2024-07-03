@@ -72,7 +72,7 @@ class AuthServiceProvider extends ServiceProvider
             // Make sure the current user has access to a test result with this image
             $outputs_with_image = TestImage::where('imgid', '=', $image->Id)->get();
             foreach ($outputs_with_image as $output) {
-                $buildtests = $output->testOutput?->buildTests;
+                $buildtests = $output->testOutput?->tests;
                 if ($buildtests === null) {
                     continue;
                 }

@@ -36,7 +36,7 @@ class TestOutput extends Model
     /**
      * @return HasMany<Test>
      */
-    public function buildTests(): HasMany
+    public function tests(): HasMany
     {
         return $this->hasMany(Test::class, 'outputid');
     }

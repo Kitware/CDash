@@ -198,6 +198,11 @@ type Build {
   "The site associated with this build."
   site: Site! @belongsTo
 
+  "Test results associated with this build."
+  tests(
+    filters: _ @filter(inputType: "TestFilterInput")
+  ): [Test!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+
   # TODO: Make an "errors" field which returns the union of basic and rich errors
   """
   A list of "basic" errors submitted for this build.
@@ -221,6 +226,35 @@ input BuildFilterInput {
   submissionTime: DateTimeTz @rename(attribute: "submittime")
   stamp: String
   uuid: String
+}
+
+
+"Test."
+type Test {
+  "Unique primary key."
+  id: ID!
+
+  name: String! @rename(attribute: "testname")
+
+  status: TestStatus!
+}
+
+enum TestStatus {
+  PASSED @enum(value: "passed")
+
+  FAILED @enum(value: "failed")
+
+  TIMEOUT @enum(value: "Timeout")
+
+  NOT_RUN @enum(value: "notrun")
+
+  DISABLED @enum(value: "Disabled")
+}
+
+input TestFilterInput {
+  id: ID
+  name: String
+  status: TestStatus
 }
 
 

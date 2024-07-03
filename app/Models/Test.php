@@ -37,7 +37,6 @@ class Test extends Model
     // TODO: Put these in an enum somewhere
     public const FAILED = 'failed';
     public const PASSED = 'passed';
-    public const OTHER_FAULT = 'OTHER_FAULT';
     public const TIMEOUT = 'Timeout';
     public const NOTRUN = 'notrun';
     public const DISABLED = 'Disabled';
@@ -45,6 +44,19 @@ class Test extends Model
     protected $attributes = [
         'timemean' => 0.0,
         'timestd' => 0.0,
+    ];
+
+    protected $fillable = [
+        'buildid',
+        'outputid',
+        'status',
+        'time',
+        'timemean',
+        'timestd',
+        'timestatus',
+        'newstatus',
+        'details',
+        'testname',
     ];
 
     protected $casts = [
