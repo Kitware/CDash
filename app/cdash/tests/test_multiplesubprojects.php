@@ -532,7 +532,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             }
             $index += 1;
             if ($build['position'] !== $index) {
-                $this->fail("Expected {$index} but found ${build['position']} for {$label} position");
+                $this->fail("Expected {$index} but found {$build['position']} for {$label} position");
             }
 
             $this->verifyBuild($expected_builds[$label], $build, $label);
@@ -816,7 +816,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             }
             $index += 1;
             if ($build['position'] !== $index) {
-                $this->fail("Expected {$index} but found ${build['position']} for {$label} position");
+                $this->fail("Expected {$index} but found {$build['position']} for {$label} position");
             }
         }
     }
