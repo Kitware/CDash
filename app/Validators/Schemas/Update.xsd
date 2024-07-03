@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="common.xsd" />
+  <xs:complexType name="FileType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Directory" type="xs:string" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="UpdatedType">
+    <xs:sequence>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="File" type="FileType" />
+        <xs:element name="Directory" type="xs:string" />
+        <xs:element name="FullName" type="xs:string" />
+        <xs:element name="CheckinDate" type="xs:string" />
+        <xs:element name="Author" type="xs:string" />
+        <xs:element name="Email" type="xs:string" />
+        <xs:element name="Committer" type="xs:string" />
+        <xs:element name="CommitterEmail" type="xs:string" />
+        <xs:element name="CommitDate" type="xs:string"/>
+        <xs:element name="Log" type="LogType" />
+        <xs:element name="Revision" type="xs:string" />
+        <xs:element name="PriorRevision" type="xs:string" />
+        <xs:element name="Revisions">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Revision" type="xs:string" />
+              <xs:element name="PreviousRevision" type="xs:string" />
+              <xs:element name="Author" type="xs:string" />
+              <xs:element name="Date" type="xs:string" />
+              <xs:element name="Comment" type="xs:string" />
+              <xs:element name="Email" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="Update">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="Site" type="xs:string" />
+          <xs:element name="BuildName" type="xs:string" />
+          <xs:element name="BuildStamp" type="xs:string" />
+          <xs:element name="StartDateTime" type="xs:string" />
+          <xs:element name="StartTime" type="xs:unsignedInt" />
+          <xs:element name="UpdateCommand" type="xs:string" />
+          <xs:element name="UpdateType" type="xs:string" />
+          <xs:element name="ChangeId" type="xs:unsignedShort" />
+          <xs:element name="Revision" type="xs:string" />
+          <xs:element name="PriorRevision" type="xs:string" />
+          <xs:element name="Path" type="xs:string" />
+          <xs:element name="Directory" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Name" type="xs:string" />
+                <xs:choice maxOccurs="unbounded" >
+                  <xs:element name="Updated" type="UpdatedType"/>
+                  <xs:element name="Modified" type="UpdatedType"/>
+                  <xs:element name="Conflicting" type="UpdatedType"/>
+                </xs:choice>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Author">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Name" type="xs:string" />
+                <xs:element name="File" type="FileType" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="EndDateTime" type="xs:string" />
+          <xs:element name="EndTime" type="xs:unsignedInt" />
+          <xs:element name="ElapsedMinutes" type="xs:decimal" />
+          <xs:element name="UpdateReturnStatus" type="xs:string" />
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="mode" type="xs:string" use="required" />
+      <xs:attribute name="Generator" type="xs:string" use="required" />
+      <xs:attribute name="Append" type="xs:string" use="optional" />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
