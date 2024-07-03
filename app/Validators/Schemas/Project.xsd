@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Project">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="SubProject" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="Path" type="xs:string"/>
+                <xs:element name="Dependency">
+                  <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" use="required" />
+                    <xs:attribute name="type" type="xs:string" use="optional" />
+                  </xs:complexType>
+                </xs:element>
+                <xs:element name="EmailAddresses">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="Email" maxOccurs="unbounded">
+                        <xs:complexType>
+                          <xs:attribute name="address" type="xs:string" use="required" />
+                        </xs:complexType>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required" />
+            <xs:attribute name="group" type="xs:string" use="optional" />
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
