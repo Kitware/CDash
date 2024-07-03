@@ -1,6 +1,6 @@
 {
   "name": "cdash",
-  "version": "3.5.0",
+  "version": "3.5.0-rc1",
   "description": "Continuous integration dashboard.",
   "repository": "https://github.com/Kitware/CDash",
   "license": "BSD-3-Clause",
