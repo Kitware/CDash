@@ -4410,6 +4410,11 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
+			message: "#^Offset 1 might not exist on array\\{0\\?\\: string, 1\\?\\: string\\}\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 2
 			path: app/Utils/RepositoryUtils.php
@@ -18900,6 +18905,11 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
+			message: "#^Offset 1 on array\\{string, string\\} in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
 			message: "#^Only booleans are allowed in &&, int\\|false given on the right side\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -19145,6 +19155,16 @@ parameters:
 
 		-
 			message: "#^Method ManageCoverageTestCase\\:\\:testManageCoverageTest\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/manageCoverageTest.php
+
+		-
+			message: "#^Offset 1 might not exist on array\\{0\\?\\: string, 1\\?\\: string, 2\\?\\: string\\}\\.$#"
+			count: 1
+			path: app/cdash/tests/manageCoverageTest.php
+
+		-
+			message: "#^Offset 2 might not exist on array\\{0\\?\\: string, 1\\?\\: string, 2\\?\\: string\\}\\.$#"
 			count: 1
 			path: app/cdash/tests/manageCoverageTest.php
 
@@ -22053,6 +22073,11 @@ parameters:
 			path: app/cdash/tests/test_manageprojectroles.php
 
 		-
+			message: "#^Offset 1 might not exist on array\\{0\\?\\: string, 1\\?\\: string\\}\\.$#"
+			count: 1
+			path: app/cdash/tests/test_manageprojectroles.php
+
+		-
 			message: "#^Property ManageProjectRolesTestCase\\:\\:\\$projectid has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_manageprojectroles.php
@@ -24414,6 +24439,11 @@ parameters:
 
 		-
 			message: "#^Method BazelJSONHandler\\:\\:getBuilds\\(\\) has invalid return type Build\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/BazelJSON_handler.php
+
+		-
+			message: "#^Offset 1 might not exist on array\\{0\\?\\: string, 1\\?\\: string, 2\\?\\: string, 3\\?\\: string\\}\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
