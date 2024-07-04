@@ -19,6 +19,7 @@ use App\Models\BuildFile;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Utils\SubmissionUtils;
 
 class CDashParseException extends RuntimeException
 {
@@ -103,27 +104,13 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     $include_file = 'xml_handlers/' . $buildfile->type . '_handler.php';
     $valid_types = [
         'BazelJSON',
-        'build',
         'BuildPropertiesJSON',
-        'configure',
-        'coverage',
-        'coverage_junit',
-        'coverage_log',
-        'done',
-        'dynamic_analysis',
         'GcovTar',
         'JavaJSONTar',
         'JSCoverTar',
-        'note',
         'OpenCoverTar',
-        'project',
         'retry',
-        'sax',
         'SubProjectDirectories',
-        'testing',
-        'testing_junit',
-        'update',
-        'upload',
     ];
     if (stream_resolve_include_path($include_file) === false || !in_array($buildfile->type, $valid_types, true)) {
         Log::error("Project: $projectid.  No handler include file for {$buildfile->type} (tried $include_file)");
@@ -182,54 +169,12 @@ function ctest_parse($filehandle, $projectid, $expected_md5 = '')
     }
 
     // Figure out what type of XML file this is.
-    $handler = null;
-    $file = '';
-    while (is_null($handler) && !feof($filehandle)) {
-        $content = fread($filehandle, 8192);
-        if (str_contains($content, '<Update')) {
-            // Should be first otherwise confused with Build
-            $handler = new UpdateHandler($projectid);
-            $file = 'Update';
-        } elseif (str_contains($content, '<Build')) {
-            $handler = new BuildHandler($projectid);
-            $file = 'Build';
-        } elseif (str_contains($content, '<Configure')) {
-            $handler = new ConfigureHandler($projectid);
-            $file = 'Configure';
-        } elseif (str_contains($content, '<Testing')) {
-            $handler = new TestingHandler($projectid);
-            $file = 'Test';
-        } elseif (str_contains($content, '<CoverageLog')) {
-            // Should be before coverage
+    $xml_info = SubmissionUtils::get_xml_type($filehandle);
+    $filehandle = $xml_info['file_handle'];
+    $handler_ref = $xml_info['xml_handler'];
+    $file = $xml_info['xml_type'];
 
-            $handler = new CoverageLogHandler($projectid);
-            $file = 'CoverageLog';
-        } elseif (str_contains($content, '<Coverage')) {
-            $handler = new CoverageHandler($projectid);
-            $file = 'Coverage';
-        } elseif (str_contains($content, '<report')) {
-            $handler = new CoverageJUnitHandler($projectid);
-            $file = 'Coverage';
-        } elseif (str_contains($content, '<Notes')) {
-            $handler = new NoteHandler($projectid);
-            $file = 'Notes';
-        } elseif (str_contains($content, '<DynamicAnalysis')) {
-            $handler = new DynamicAnalysisHandler($projectid);
-            $file = 'DynamicAnalysis';
-        } elseif (str_contains($content, '<Project')) {
-            $handler = new ProjectHandler($projectid);
-            $file = 'Project';
-        } elseif (str_contains($content, '<Upload')) {
-            $handler = new UploadHandler($projectid);
-            $file = 'Upload';
-        } elseif (str_contains($content, '<testsuite')) {
-            $handler = new TestingJUnitHandler($projectid);
-            $file = 'Test';
-        } elseif (str_contains($content, '<Done')) {
-            $handler = new DoneHandler($projectid);
-            $file = 'Done';
-        }
-    }
+    $handler = isset($handler_ref) ? new $handler_ref($projectid) : null;
 
     rewind($filehandle);
     $content = fread($filehandle, 8192);

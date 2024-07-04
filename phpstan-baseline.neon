@@ -13296,7 +13296,7 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Access to an undefined property BuildHandler\\|ConfigureHandler\\|CoverageHandler\\|CoverageJUnitHandler\\|CoverageLogHandler\\|DoneHandler\\|DynamicAnalysisHandler\\|NoteHandler\\|ProjectHandler\\|TestingHandler\\|TestingJUnitHandler\\|UpdateHandler\\|UploadHandler\\:\\:\\$backupFileName\\.$#"
+			message: "#^Access to an undefined property BazelJSONHandler\\|BuildPropertiesJSONHandler\\|GCovTarHandler\\|JavaJSONTarHandler\\|JSCoverTarHandler\\|OpenCoverTarHandler\\|RetryHandler\\|SubProjectDirectoriesHandler\\:\\:\\$backupFileName\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparser.php
 
@@ -13306,7 +13306,27 @@ parameters:
 			path: app/cdash/include/ctestparser.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:Parse\\(\\)\\.$#"
+			message: "#^Call to an undefined method BazelJSONHandler\\|BuildPropertiesJSONHandler\\|GCovTarHandler\\|JavaJSONTarHandler\\|JSCoverTarHandler\\|OpenCoverTarHandler\\|RetryHandler\\|SubProjectDirectoriesHandler\\:\\:Parse\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/include/ctestparser.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:getBuildName\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/include/ctestparser.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:getBuildStamp\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/include/ctestparser.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:getSiteName\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/include/ctestparser.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:getSubProjectName\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparser.php
 
@@ -13332,6 +13352,16 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 3
+			path: app/cdash/include/ctestparser.php
+
+		-
+			message: "#^Class GCovTarHandler referenced with incorrect case\\: GcovTarHandler\\.$#"
+			count: 1
+			path: app/cdash/include/ctestparser.php
+
+		-
+			message: "#^Class RetryHandler referenced with incorrect case\\: retryHandler\\.$#"
+			count: 1
 			path: app/cdash/include/ctestparser.php
 
 		-
@@ -13435,13 +13465,23 @@ parameters:
 			path: app/cdash/include/ctestparser.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, string\\|false given\\.$#"
-			count: 13
+			message: "#^Parameter \\#2 \\$data of function xml_parse expects string, string\\|false given\\.$#"
+			count: 2
 			path: app/cdash/include/ctestparser.php
 
 		-
-			message: "#^Parameter \\#2 \\$data of function xml_parse expects string, string\\|false given\\.$#"
-			count: 2
+			message: "#^Parameter \\#2 \\$handler of function xml_set_character_data_handler expects callable\\(\\)\\: mixed, array\\{object, 'text'\\} given\\.$#"
+			count: 1
+			path: app/cdash/include/ctestparser.php
+
+		-
+			message: "#^Parameter \\#2 \\$start_handler of function xml_set_element_handler expects callable\\(\\)\\: mixed, array\\{object, 'startElement'\\} given\\.$#"
+			count: 1
+			path: app/cdash/include/ctestparser.php
+
+		-
+			message: "#^Parameter \\#3 \\$end_handler of function xml_set_element_handler expects callable\\(\\)\\: mixed, array\\{object, 'endElement'\\} given\\.$#"
+			count: 1
 			path: app/cdash/include/ctestparser.php
 
 		-
