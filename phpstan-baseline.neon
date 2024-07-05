@@ -24438,11 +24438,6 @@ parameters:
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
-			message: "#^Method BazelJSONHandler\\:\\:getBuilds\\(\\) has invalid return type Build\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/BazelJSON_handler.php
-
-		-
 			message: "#^Offset 1 might not exist on array\\{0\\?\\: string, 1\\?\\: string, 2\\?\\: string, 3\\?\\: string\\}\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
@@ -24619,11 +24614,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BuildPropertiesJSON_handler.php
-
-		-
-			message: "#^Method CDashSubmissionHandlerInterface\\:\\:getBuilds\\(\\) has invalid return type Build\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/CDashSubmissionHandlerInterface.php
 
 		-
 			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
@@ -24975,16 +24965,6 @@ parameters:
 			path: app/cdash/xml_handlers/JavaJSONTar_handler.php
 
 		-
-			message: "#^Method NonSaxHandler\\:\\:getBuilds\\(\\) has invalid return type Build\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/NonSaxHandler.php
-
-		-
-			message: "#^Property NonSaxHandler\\:\\:\\$Build has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/NonSaxHandler.php
-
-		-
 			message: "#^Access to an undefined property OpenCoverTarHandler\\:\\:\\$CoverageFileLogs\\.$#"
 			count: 5
 			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
@@ -25316,16 +25296,6 @@ parameters:
 			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractXmlHandler\\:\\:getBuilds\\(\\) has invalid return type Build\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_xml_handler.php
-
-		-
-			message: "#^Method AbstractXmlHandler\\:\\:getBuilds\\(\\) should return array\\<Build\\> but returns array\\<int, CDash\\\\Model\\\\Build\\>\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_xml_handler.php
-
-		-
 			message: "#^Method AbstractXmlHandler\\:\\:getElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/abstract_xml_handler.php
@@ -25581,16 +25551,6 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
-			message: "#^Return type \\(array\\<CDash\\\\Model\\\\Build\\>\\) of method BuildHandler\\:\\:getBuilds\\(\\) should be covariant with return type \\(array\\<Build\\>\\) of method AbstractXmlHandler\\:\\:getBuilds\\(\\)$#"
-			count: 1
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Return type \\(array\\<CDash\\\\Model\\\\Build\\>\\) of method BuildHandler\\:\\:getBuilds\\(\\) should be covariant with return type \\(array\\<Build\\>\\) of method CDashSubmissionHandlerInterface\\:\\:getBuilds\\(\\)$#"
-			count: 1
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
 			message: "#^Variable property access on mixed\\.$#"
 			count: 12
 			path: app/cdash/xml_handlers/build_handler.php
@@ -25747,16 +25707,6 @@ parameters:
 
 		-
 			message: "#^Property ConfigureHandler\\:\\:\\$SubProjects has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Return type \\(array\\<CDash\\\\Model\\\\Build\\>\\) of method ConfigureHandler\\:\\:getBuilds\\(\\) should be covariant with return type \\(array\\<Build\\>\\) of method AbstractXmlHandler\\:\\:getBuilds\\(\\)$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Return type \\(array\\<CDash\\\\Model\\\\Build\\>\\) of method ConfigureHandler\\:\\:getBuilds\\(\\) should be covariant with return type \\(array\\<Build\\>\\) of method CDashSubmissionHandlerInterface\\:\\:getBuilds\\(\\)$#"
 			count: 1
 			path: app/cdash/xml_handlers/configure_handler.php
 
@@ -26321,16 +26271,6 @@ parameters:
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
-			message: "#^Return type \\(array\\<CDash\\\\Model\\\\Build\\>\\) of method DynamicAnalysisHandler\\:\\:getBuilds\\(\\) should be covariant with return type \\(array\\<Build\\>\\) of method AbstractXmlHandler\\:\\:getBuilds\\(\\)$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Return type \\(array\\<CDash\\\\Model\\\\Build\\>\\) of method DynamicAnalysisHandler\\:\\:getBuilds\\(\\) should be covariant with return type \\(array\\<Build\\>\\) of method CDashSubmissionHandlerInterface\\:\\:getBuilds\\(\\)$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
 			message: "#^Access to an undefined property NoteHandler\\:\\:\\$Timestamp\\.$#"
 			count: 6
 			path: app/cdash/xml_handlers/note_handler.php
@@ -26774,16 +26714,6 @@ parameters:
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
-			message: "#^Return type \\(array\\<CDash\\\\Model\\\\Build\\>\\) of method TestingHandler\\:\\:getBuilds\\(\\) should be covariant with return type \\(array\\<Build\\>\\) of method AbstractXmlHandler\\:\\:getBuilds\\(\\)$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
-			message: "#^Return type \\(array\\<CDash\\\\Model\\\\Build\\>\\) of method TestingHandler\\:\\:getBuilds\\(\\) should be covariant with return type \\(array\\<Build\\>\\) of method CDashSubmissionHandlerInterface\\:\\:getBuilds\\(\\)$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
 			message: "#^Access to an undefined property TestingJUnitHandler\\:\\:\\$TestCreator\\.$#"
 			count: 8
 			path: app/cdash/xml_handlers/testing_j_unit_handler.php
@@ -26975,11 +26905,6 @@ parameters:
 
 		-
 			message: "#^Method UpdateHandler\\:\\:endElement\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/update_handler.php
-
-		-
-			message: "#^Method UpdateHandler\\:\\:getActionableBuilds\\(\\) should return array\\<CDash\\\\Model\\\\Build\\> but returns array\\<Build\\>\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/update_handler.php
 
