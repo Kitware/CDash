@@ -314,7 +314,6 @@ ENTRYPOINT ["/bin/bash", "/cdash/docker/docker-entrypoint.sh"]
 ###############################################################################
 
 FROM cdash-non-root-intermediate AS cdash
-HEALTHCHECK --interval=5s --timeout=1s CMD ["/bin/bash", "/cdash/docker/healthcheck.sh"]
 CMD ["start-website"]
 
 ###############################################################################
