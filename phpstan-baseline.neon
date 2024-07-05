@@ -17318,7 +17318,7 @@ parameters:
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$submission of class CDash\\\\Messaging\\\\Subscription\\\\UserSubscriptionBuilder constructor expects ActionableBuildInterface, AbstractHandler given\\.$#"
+			message: "#^Parameter \\#1 \\$submission of class CDash\\\\Messaging\\\\Subscription\\\\UserSubscriptionBuilder constructor expects ActionableBuildInterface, AbstractXmlHandler given\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
@@ -17338,7 +17338,7 @@ parameters:
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
 		-
-			message: "#^Property MultipleSubprojectsEmailTest\\:\\:\\$submission \\(ActionableBuildInterface\\) does not accept AbstractHandler\\.$#"
+			message: "#^Property MultipleSubprojectsEmailTest\\:\\:\\$submission \\(ActionableBuildInterface\\) does not accept AbstractXmlHandler\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
@@ -17528,7 +17528,7 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
-			message: "#^Call to an undefined method AbstractHandler\\:\\:GetBuildCollection\\(\\)\\.$#"
+			message: "#^Call to an undefined method AbstractXmlHandler\\:\\:GetBuildCollection\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
@@ -24438,11 +24438,6 @@ parameters:
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
-			message: "#^Method BazelJSONHandler\\:\\:getBuilds\\(\\) has invalid return type Build\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/BazelJSON_handler.php
-
-		-
 			message: "#^Offset 1 might not exist on array\\{0\\?\\: string, 1\\?\\: string, 2\\?\\: string, 3\\?\\: string\\}\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
@@ -24619,11 +24614,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BuildPropertiesJSON_handler.php
-
-		-
-			message: "#^Method CDashSubmissionHandlerInterface\\:\\:getBuilds\\(\\) has invalid return type Build\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/CDashSubmissionHandlerInterface.php
 
 		-
 			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
@@ -24975,16 +24965,6 @@ parameters:
 			path: app/cdash/xml_handlers/JavaJSONTar_handler.php
 
 		-
-			message: "#^Method NonSaxHandler\\:\\:getBuilds\\(\\) has invalid return type Build\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/NonSaxHandler.php
-
-		-
-			message: "#^Property NonSaxHandler\\:\\:\\$Build has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/NonSaxHandler.php
-
-		-
 			message: "#^Access to an undefined property OpenCoverTarHandler\\:\\:\\$CoverageFileLogs\\.$#"
 			count: 5
 			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
@@ -25058,7 +25038,7 @@ parameters:
 			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:__construct\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			message: "#^Method AbstractXmlHandler\\:\\:__construct\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
 
@@ -25094,11 +25074,6 @@ parameters:
 
 		-
 			message: "#^Method OpenCoverTarHandler\\:\\:__construct\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
-
-		-
-			message: "#^Method OpenCoverTarHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
 
@@ -25144,11 +25119,6 @@ parameters:
 
 		-
 			message: "#^Method OpenCoverTarHandler\\:\\:readSourceFile\\(\\) has parameter \\$fileinfo with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
-
-		-
-			message: "#^Method OpenCoverTarHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
 
@@ -25281,259 +25251,109 @@ parameters:
 			path: app/cdash/xml_handlers/SubProjectDirectories_handler.php
 
 		-
-			message: "#^Class AbstractHandler has an uninitialized property \\$Project\\. Give it default value or assign it in the constructor\\.$#"
+			message: "#^Class AbstractXmlHandler has an uninitialized property \\$Project\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Class AbstractHandler has an uninitialized property \\$Site\\. Give it default value or assign it in the constructor\\.$#"
+			message: "#^Class AbstractXmlHandler has an uninitialized property \\$Site\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 2
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:GetProject\\(\\) has no return type specified\\.$#"
+			message: "#^Method AbstractXmlHandler\\:\\:GetProject\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:__construct\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			message: "#^Method AbstractXmlHandler\\:\\:__construct\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
+			message: "#^Method AbstractXmlHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
+			message: "#^Method AbstractXmlHandler\\:\\:endElement\\(\\) has parameter \\$parser with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:endElement\\(\\) has parameter \\$parser with no type specified\\.$#"
+			message: "#^Method AbstractXmlHandler\\:\\:getBuildName\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:endPrefixMapping\\(\\) has no return type specified\\.$#"
+			message: "#^Method AbstractXmlHandler\\:\\:getBuildStamp\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:endPrefixMapping\\(\\) has parameter \\$parser with no type specified\\.$#"
+			message: "#^Method AbstractXmlHandler\\:\\:getElement\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:endPrefixMapping\\(\\) has parameter \\$prefix with no type specified\\.$#"
+			message: "#^Method AbstractXmlHandler\\:\\:getParent\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:endPrefixMapping\\(\\) has parameter \\$user_data with no type specified\\.$#"
+			message: "#^Method AbstractXmlHandler\\:\\:getSubProjectName\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:externalEntity\\(\\) has no return type specified\\.$#"
+			message: "#^Method AbstractXmlHandler\\:\\:startElement\\(\\) has parameter \\$attributes with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:externalEntity\\(\\) has parameter \\$base with no type specified\\.$#"
+			message: "#^Method AbstractXmlHandler\\:\\:startElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:externalEntity\\(\\) has parameter \\$open_entity_name with no type specified\\.$#"
+			message: "#^Method AbstractXmlHandler\\:\\:startElement\\(\\) has parameter \\$parser with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:externalEntity\\(\\) has parameter \\$parser with no type specified\\.$#"
+			message: "#^Method AbstractXmlHandler\\:\\:text\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:externalEntity\\(\\) has parameter \\$public_id with no type specified\\.$#"
+			message: "#^Method AbstractXmlHandler\\:\\:text\\(\\) has parameter \\$data with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:externalEntity\\(\\) has parameter \\$system_id with no type specified\\.$#"
+			message: "#^Method AbstractXmlHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:getBuildName\\(\\) has no return type specified\\.$#"
+			message: "#^Property AbstractXmlHandler\\:\\:\\$ModelFactory has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:getBuildStamp\\(\\) has no return type specified\\.$#"
+			message: "#^Property AbstractXmlHandler\\:\\:\\$SubProjectName has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractHandler\\:\\:getBuilds\\(\\) has invalid return type Build\\.$#"
+			message: "#^Property AbstractXmlHandler\\:\\:\\$projectid has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:getBuilds\\(\\) should return array\\<Build\\> but returns array\\<int, CDash\\\\Model\\\\Build\\>\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:getElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:getParent\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:getSiteId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:getSiteName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:getSubProjectName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:processingInstruction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:processingInstruction\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:processingInstruction\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:processingInstruction\\(\\) has parameter \\$target with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:skippedEntity\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:skippedEntity\\(\\) has parameter \\$base with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:skippedEntity\\(\\) has parameter \\$open_entity_name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:skippedEntity\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:skippedEntity\\(\\) has parameter \\$public_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:skippedEntity\\(\\) has parameter \\$system_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:startElement\\(\\) has parameter \\$attributes with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:startElement\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:startElement\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:startPrefixMapping\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:startPrefixMapping\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:startPrefixMapping\\(\\) has parameter \\$prefix with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:startPrefixMapping\\(\\) has parameter \\$uri with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Method AbstractHandler\\:\\:startPrefixMapping\\(\\) has parameter \\$user_data with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Property AbstractHandler\\:\\:\\$Append has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Property AbstractHandler\\:\\:\\$ModelFactory has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Property AbstractHandler\\:\\:\\$SubProjectName has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Property AbstractHandler\\:\\:\\$projectid has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
-
-		-
-			message: "#^Property AbstractHandler\\:\\:\\$stack has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_handler.php
+			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
 			message: "#^Call to an undefined method object\\:\\:AddLabel\\(\\)\\.$#"
@@ -25576,11 +25396,6 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
-			message: "#^Method BuildHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
 			message: "#^Method BuildHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/build_handler.php
@@ -25612,11 +25427,6 @@ parameters:
 
 		-
 			message: "#^Method BuildHandler\\:\\:removeSuppressedWarnings\\(\\) has parameter \\$input with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Method BuildHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/build_handler.php
 
@@ -25741,16 +25551,6 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
-			message: "#^Return type \\(array\\<CDash\\\\Model\\\\Build\\>\\) of method BuildHandler\\:\\:getBuilds\\(\\) should be covariant with return type \\(array\\<Build\\>\\) of method AbstractHandler\\:\\:getBuilds\\(\\)$#"
-			count: 1
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Return type \\(array\\<CDash\\\\Model\\\\Build\\>\\) of method BuildHandler\\:\\:getBuilds\\(\\) should be covariant with return type \\(array\\<Build\\>\\) of method CDashSubmissionHandlerInterface\\:\\:getBuilds\\(\\)$#"
-			count: 1
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
 			message: "#^Variable property access on mixed\\.$#"
 			count: 12
 			path: app/cdash/xml_handlers/build_handler.php
@@ -25796,11 +25596,6 @@ parameters:
 			path: app/cdash/xml_handlers/configure_handler.php
 
 		-
-			message: "#^Method ConfigureHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
 			message: "#^Method ConfigureHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/configure_handler.php
@@ -25822,11 +25617,6 @@ parameters:
 
 		-
 			message: "#^Method ConfigureHandler\\:\\:getSubProjectName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Method ConfigureHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/configure_handler.php
 
@@ -25921,16 +25711,6 @@ parameters:
 			path: app/cdash/xml_handlers/configure_handler.php
 
 		-
-			message: "#^Return type \\(array\\<CDash\\\\Model\\\\Build\\>\\) of method ConfigureHandler\\:\\:getBuilds\\(\\) should be covariant with return type \\(array\\<Build\\>\\) of method AbstractHandler\\:\\:getBuilds\\(\\)$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Return type \\(array\\<CDash\\\\Model\\\\Build\\>\\) of method ConfigureHandler\\:\\:getBuilds\\(\\) should be covariant with return type \\(array\\<Build\\>\\) of method CDashSubmissionHandlerInterface\\:\\:getBuilds\\(\\)$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
 			message: "#^Variable \\$build might not be defined\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/configure_handler.php
@@ -25961,22 +25741,12 @@ parameters:
 			path: app/cdash/xml_handlers/coverage_handler.php
 
 		-
-			message: "#^Method CoverageHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/coverage_handler.php
-
-		-
 			message: "#^Method CoverageHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/coverage_handler.php
 
 		-
 			message: "#^Method CoverageHandler\\:\\:endElement\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/coverage_handler.php
-
-		-
-			message: "#^Method CoverageHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/coverage_handler.php
 
@@ -26061,22 +25831,12 @@ parameters:
 			path: app/cdash/xml_handlers/coverage_junit_handler.php
 
 		-
-			message: "#^Method CoverageJUnitHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/coverage_junit_handler.php
-
-		-
 			message: "#^Method CoverageJUnitHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/coverage_junit_handler.php
 
 		-
 			message: "#^Method CoverageJUnitHandler\\:\\:endElement\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/coverage_junit_handler.php
-
-		-
-			message: "#^Method CoverageJUnitHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/coverage_junit_handler.php
 
@@ -26176,22 +25936,12 @@ parameters:
 			path: app/cdash/xml_handlers/coverage_log_handler.php
 
 		-
-			message: "#^Method CoverageLogHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/coverage_log_handler.php
-
-		-
 			message: "#^Method CoverageLogHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/coverage_log_handler.php
 
 		-
 			message: "#^Method CoverageLogHandler\\:\\:endElement\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/coverage_log_handler.php
-
-		-
-			message: "#^Method CoverageLogHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/coverage_log_handler.php
 
@@ -26281,11 +26031,6 @@ parameters:
 			path: app/cdash/xml_handlers/done_handler.php
 
 		-
-			message: "#^Method DoneHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/done_handler.php
-
-		-
 			message: "#^Method DoneHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/done_handler.php
@@ -26296,17 +26041,7 @@ parameters:
 			path: app/cdash/xml_handlers/done_handler.php
 
 		-
-			message: "#^Method DoneHandler\\:\\:getSiteName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/done_handler.php
-
-		-
 			message: "#^Method DoneHandler\\:\\:shouldRequeue\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/done_handler.php
-
-		-
-			message: "#^Method DoneHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/done_handler.php
 
@@ -26431,11 +26166,6 @@ parameters:
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
-			message: "#^Method DynamicAnalysisHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
 			message: "#^Method DynamicAnalysisHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
@@ -26457,11 +26187,6 @@ parameters:
 
 		-
 			message: "#^Method DynamicAnalysisHandler\\:\\:getSubProjectName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Method DynamicAnalysisHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
@@ -26546,16 +26271,6 @@ parameters:
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
-			message: "#^Return type \\(array\\<CDash\\\\Model\\\\Build\\>\\) of method DynamicAnalysisHandler\\:\\:getBuilds\\(\\) should be covariant with return type \\(array\\<Build\\>\\) of method AbstractHandler\\:\\:getBuilds\\(\\)$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Return type \\(array\\<CDash\\\\Model\\\\Build\\>\\) of method DynamicAnalysisHandler\\:\\:getBuilds\\(\\) should be covariant with return type \\(array\\<Build\\>\\) of method CDashSubmissionHandlerInterface\\:\\:getBuilds\\(\\)$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
 			message: "#^Access to an undefined property NoteHandler\\:\\:\\$Timestamp\\.$#"
 			count: 6
 			path: app/cdash/xml_handlers/note_handler.php
@@ -26581,11 +26296,6 @@ parameters:
 			path: app/cdash/xml_handlers/note_handler.php
 
 		-
-			message: "#^Method NoteHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/note_handler.php
-
-		-
 			message: "#^Method NoteHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/note_handler.php
@@ -26607,11 +26317,6 @@ parameters:
 
 		-
 			message: "#^Method NoteHandler\\:\\:getTimestampFromDateTimeElement\\(\\) has parameter \\$str with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/note_handler.php
-
-		-
-			message: "#^Method NoteHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/note_handler.php
 
@@ -26714,22 +26419,12 @@ parameters:
 			path: app/cdash/xml_handlers/project_handler.php
 
 		-
-			message: "#^Method ProjectHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/project_handler.php
-
-		-
 			message: "#^Method ProjectHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/project_handler.php
 
 		-
 			message: "#^Method ProjectHandler\\:\\:endElement\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/project_handler.php
-
-		-
-			message: "#^Method ProjectHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/project_handler.php
 
@@ -26844,231 +26539,6 @@ parameters:
 			path: app/cdash/xml_handlers/retry_handler.php
 
 		-
-			message: "#^Method SaxHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:endElement\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:endPrefixMapping\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:endPrefixMapping\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:endPrefixMapping\\(\\) has parameter \\$prefix with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:endPrefixMapping\\(\\) has parameter \\$user_data with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:externalEntity\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:externalEntity\\(\\) has parameter \\$base with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:externalEntity\\(\\) has parameter \\$open_entity_name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:externalEntity\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:externalEntity\\(\\) has parameter \\$public_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:externalEntity\\(\\) has parameter \\$system_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:processingInstruction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:processingInstruction\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:processingInstruction\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:processingInstruction\\(\\) has parameter \\$target with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:skippedEntity\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:skippedEntity\\(\\) has parameter \\$base with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:skippedEntity\\(\\) has parameter \\$open_entity_name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:skippedEntity\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:skippedEntity\\(\\) has parameter \\$public_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:skippedEntity\\(\\) has parameter \\$system_id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startElement\\(\\) has parameter \\$attributes with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startElement\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startElement\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startPrefixMapping\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startPrefixMapping\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startPrefixMapping\\(\\) has parameter \\$prefix with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startPrefixMapping\\(\\) has parameter \\$uri with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:startPrefixMapping\\(\\) has parameter \\$user_data with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:text\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:text\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Method SaxHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/sax_handler.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/stack.php
-
-		-
-			message: "#^Method stack\\:\\:at\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/stack.php
-
-		-
-			message: "#^Method stack\\:\\:at\\(\\) has parameter \\$index with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/stack.php
-
-		-
-			message: "#^Method stack\\:\\:isEmpty\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/stack.php
-
-		-
-			message: "#^Method stack\\:\\:pop\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/stack.php
-
-		-
-			message: "#^Method stack\\:\\:push\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/stack.php
-
-		-
-			message: "#^Method stack\\:\\:push\\(\\) has parameter \\$e with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/stack.php
-
-		-
-			message: "#^Method stack\\:\\:size\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/stack.php
-
-		-
-			message: "#^Method stack\\:\\:top\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/stack.php
-
-		-
-			message: "#^Property stack\\:\\:\\$stack has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/stack.php
-
-		-
 			message: "#^Call to an undefined method CDash\\\\Messaging\\\\Preferences\\\\NotificationPreferencesInterface\\:\\:get\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/testing_handler.php
@@ -27109,11 +26579,6 @@ parameters:
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
-			message: "#^Method TestingHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
 			message: "#^Method TestingHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/testing_handler.php
@@ -27135,11 +26600,6 @@ parameters:
 
 		-
 			message: "#^Method TestingHandler\\:\\:getSubProjectName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
-			message: "#^Method TestingHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/testing_handler.php
 
@@ -27254,179 +26714,159 @@ parameters:
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
-			message: "#^Return type \\(array\\<CDash\\\\Model\\\\Build\\>\\) of method TestingHandler\\:\\:getBuilds\\(\\) should be covariant with return type \\(array\\<Build\\>\\) of method AbstractHandler\\:\\:getBuilds\\(\\)$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
-			message: "#^Return type \\(array\\<CDash\\\\Model\\\\Build\\>\\) of method TestingHandler\\:\\:getBuilds\\(\\) should be covariant with return type \\(array\\<Build\\>\\) of method CDashSubmissionHandlerInterface\\:\\:getBuilds\\(\\)$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
 			message: "#^Access to an undefined property TestingJUnitHandler\\:\\:\\$TestCreator\\.$#"
 			count: 8
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 4
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 21
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:createBuild\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
-
-		-
-			message: "#^Method TestingJUnitHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:endElement\\(\\) has parameter \\$parser with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
-
-		-
-			message: "#^Method TestingJUnitHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:startElement\\(\\) has parameter \\$attributes with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:startElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:startElement\\(\\) has parameter \\$parser with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:text\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:text\\(\\) has parameter \\$data with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Method TestingJUnitHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Only numeric types are allowed in \\+, int\\|false given on the left side\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Only numeric types are allowed in \\+, int\\|false given on the right side\\.$#"
 			count: 3
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Parameter \\#1 \\$hour of function mktime expects int, string given\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Parameter \\#2 \\$minute of function mktime expects int\\|null, string given\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Parameter \\#4 \\$month of function mktime expects int\\|null, string given\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Parameter \\#5 \\$day of function mktime expects int\\|null, string given\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Parameter \\#6 \\$year of function mktime expects int\\|null, string given\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$BuildAdded has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$EndTimeStamp has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$Group has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$HasSiteTag has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$NumberTestsFailed has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$NumberTestsNotRun has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$NumberTestsPassed has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$StartTimeStamp has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$TestProperties has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$TotalTestDuration has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Property TestingJUnitHandler\\:\\:\\$UpdateEndTime has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/testing_junit_handler.php
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
 			message: "#^Call to an undefined method CDash\\\\Messaging\\\\Preferences\\\\NotificationPreferencesInterface\\:\\:get\\(\\)\\.$#"
@@ -27459,27 +26899,12 @@ parameters:
 			path: app/cdash/xml_handlers/update_handler.php
 
 		-
-			message: "#^Method UpdateHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/update_handler.php
-
-		-
 			message: "#^Method UpdateHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/update_handler.php
 
 		-
 			message: "#^Method UpdateHandler\\:\\:endElement\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/update_handler.php
-
-		-
-			message: "#^Method UpdateHandler\\:\\:getActionableBuilds\\(\\) should return array\\<CDash\\\\Model\\\\Build\\> but returns array\\<Build\\>\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/update_handler.php
-
-		-
-			message: "#^Method UpdateHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/update_handler.php
 
@@ -27559,22 +26984,12 @@ parameters:
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
-			message: "#^Method UploadHandler\\:\\:endElement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
 			message: "#^Method UploadHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
 			message: "#^Method UploadHandler\\:\\:endElement\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
-			message: "#^Method UploadHandler\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 

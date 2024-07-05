@@ -1,11 +1,7 @@
 <?php
 
-require_once 'xml_handlers/abstract_handler.php';
-require_once 'xml_handlers/actionable_build_interface.php';
-
 use App\Models\TestMeasurement;
 use App\Utils\TestCreator;
-
 use CDash\Collection\BuildCollection;
 use CDash\Collection\Collection;
 use CDash\Collection\SubscriptionBuilderCollection;
@@ -27,7 +23,7 @@ use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
 use CDash\Submission\CommitAuthorHandlerTrait;
 
-class TestingHandler extends AbstractHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
+class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
 {
     use CommitAuthorHandlerTrait;
 
@@ -74,7 +70,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
     }
 
     /** Start Element */
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
         $parent = $this->getParent(); // should be before endElement
@@ -146,7 +142,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
     }
 
     /** End Element */
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
@@ -378,7 +374,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
     /**
      * @return Build[]
      */
-    public function getBuilds()
+    public function getBuilds(): array
     {
         return array_values($this->Builds);
     }

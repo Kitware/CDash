@@ -14,8 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
-
 use CDash\Model\Build;
 use App\Models\BuildInformation;
 use CDash\Model\Label;
@@ -43,7 +41,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
  *
  * As a first step, CTest could provide the SHA1 so that extra processing are avoided.
  */
-class UploadHandler extends AbstractHandler
+class UploadHandler extends AbstractXmlHandler
 {
     private $UploadFile;
     private $TmpFilename;
@@ -73,7 +71,7 @@ class UploadHandler extends AbstractHandler
     }
 
     /** Start element */
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
 
@@ -142,7 +140,7 @@ class UploadHandler extends AbstractHandler
     /**
      * Function endElement
      */
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);

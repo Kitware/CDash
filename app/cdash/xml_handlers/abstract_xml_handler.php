@@ -15,21 +15,16 @@
 =========================================================================*/
 
 require_once 'include/ctestparserutils.php';
-require_once 'xml_handlers/CDashSubmissionHandlerInterface.php';
-require_once 'xml_handlers/sax_handler.php';
-require_once 'xml_handlers/stack.php';
 
-use CDash\Model\Build;
-use CDash\Model\Project;
 use App\Models\Site;
+use App\Utils\Stack;
+use CDash\Model\Project;
 
-abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInterface
+abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 {
-    protected $stack;
+    private Stack $stack;
     protected $projectid;
-    protected $Append;
-    /** @var  Build $Build */
-    protected $Build;
+    protected bool $Append = false;
     protected Site $Site;
     protected $SubProjectName;
 
@@ -39,8 +34,7 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
     public function __construct($projectid)
     {
         $this->projectid = $projectid;
-        $this->Append = false;
-        $this->stack = new stack();
+        $this->stack = new Stack();
     }
 
     protected function getParent()
@@ -53,7 +47,7 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
         return $this->stack->top();
     }
 
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         $this->stack->push($name);
 
@@ -66,37 +60,19 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
         }
     }
 
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         $this->stack->pop();
     }
 
-    public function processingInstruction($parser, $target, $data)
-    {
-    }
+    abstract public function text($parser, $data);
 
-    public function externalEntity($parser, $open_entity_name, $base, $system_id, $public_id)
-    {
-    }
-
-    public function skippedEntity($parser, $open_entity_name, $base, $system_id, $public_id)
-    {
-    }
-
-    public function startPrefixMapping($parser, $user_data, $prefix, $uri)
-    {
-    }
-
-    public function endPrefixMapping($parser, $user_data, $prefix)
-    {
-    }
-
-    public function getSiteName()
+    public function getSiteName(): string
     {
         return $this->Site->name;
     }
 
-    public function getSiteId()
+    public function getSiteId(): int
     {
         return $this->Site->id;
     }
@@ -116,15 +92,7 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
         return $this->Build->SubProjectName;
     }
 
-    public function getBuilds()
-    {
-        return [$this->Build];
-    }
-
-    /**
-     * @return \CDash\ServiceContainer
-     */
-    protected function getModelFactory()
+    protected function getModelFactory(): \CDash\ServiceContainer
     {
         if (!$this->ModelFactory) {
             $this->ModelFactory = \CDash\ServiceContainer::getInstance();

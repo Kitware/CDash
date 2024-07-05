@@ -14,12 +14,10 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/NonSaxHandler.php';
-
 use CDash\Model\Build;
 use CDash\Model\SubProject;
 
-class SubProjectDirectoriesHandler extends NonSaxHandler
+class SubProjectDirectoriesHandler extends AbstractSubmissionHandler
 {
     private $ProjectId;
     private $SubProjectOrder;

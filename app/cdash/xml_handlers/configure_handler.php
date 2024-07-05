@@ -14,9 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'xml_handlers/abstract_handler.php';
-require_once 'xml_handlers/actionable_build_interface.php';
-
 use CDash\Collection\Collection;
 use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Notification\NotifyOn;
@@ -34,7 +31,7 @@ use App\Models\SiteInformation;
 use CDash\Collection\BuildCollection;
 use CDash\Model\SubscriberInterface;
 
-class ConfigureHandler extends AbstractHandler implements ActionableBuildInterface
+class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInterface
 {
     private $StartTimeStamp;
     private $EndTimeStamp;
@@ -63,7 +60,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
         $this->getModelFactory();
     }
 
-    public function startElement($parser, $name, $attributes)
+    public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
 
@@ -121,7 +118,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
         }
     }
 
-    public function endElement($parser, $name)
+    public function endElement($parser, $name): void
     {
         $parent = $this->getParent();
 
@@ -313,7 +310,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
      * @return Build[]
      * @deprecated use GetBuildCollection
      */
-    public function getBuilds()
+    public function getBuilds(): array
     {
         return array_values($this->Builds);
     }

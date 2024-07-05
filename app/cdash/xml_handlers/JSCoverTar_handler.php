@@ -13,7 +13,6 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-require_once 'xml_handlers/NonSaxHandler.php';
 
 use CDash\Model\Build;
 use CDash\Model\Coverage;
@@ -23,7 +22,7 @@ use CDash\Model\CoverageSummary;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class JSCoverTarHandler extends NonSaxHandler
+class JSCoverTarHandler extends AbstractSubmissionHandler
 {
     private $CoverageSummaries;
 
