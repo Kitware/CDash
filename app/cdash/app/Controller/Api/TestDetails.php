@@ -39,10 +39,10 @@ class TestDetails extends BuildTestApi
                     name
                 FROM testmeasurement
                 WHERE
-                    outputid = ?
+                    testid = ?
                     AND type = 'file'
                 ORDER BY id
-            ", [$this->buildtest->outputid])[0];
+            ", [$this->buildtest->id])[0];
 
             return response()->streamDownload(
                 function () use ($query) {
@@ -69,14 +69,19 @@ class TestDetails extends BuildTestApi
         $project_response['showtesttime'] = $this->project->ShowTestTime;
         $response['project'] = $project_response;
 
-        $stmt = $this->db->prepare(
-            'SELECT * FROM build2test b2t
-                JOIN testoutput ON testoutput.id = b2t.outputid
-                WHERE b2t.id = :buildtestid');
+        $stmt = $this->db->prepare('
+            SELECT
+                *,
+                b2t.id as testid
+            FROM build2test b2t
+            JOIN testoutput ON (testoutput.id = b2t.outputid)
+            WHERE b2t.id = :buildtestid
+        ');
         $this->db->execute($stmt, [':buildtestid' => $this->buildtest->id]);
         $testRow = $stmt->fetch();
         $testName = $testRow['testname'];
         $outputid = $testRow['outputid'];
+        $testid = $testRow['testid'];
 
         $menu = [];
         $menu['back'] = "viewTest.php?buildid={$this->build->Id}";
@@ -242,9 +247,9 @@ class TestDetails extends BuildTestApi
         $measurements_response = [];
         $stmt = $this->db->prepare(
             'SELECT name, type, value FROM testmeasurement
-                WHERE outputid = :outputid
+                WHERE testid = :testid
                 ORDER BY id');
-        $this->db->execute($stmt, [':outputid' => $outputid]);
+        $this->db->execute($stmt, [':testid' => $testid]);
         $fileid = 1;
         $test_response['environment'] = '';
         $preformatted_measurements = [];

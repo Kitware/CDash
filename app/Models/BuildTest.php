@@ -7,6 +7,7 @@ use CDash\Model\Label;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -71,6 +72,14 @@ class BuildTest extends Model
     public function testOutput(): BelongsTo
     {
         return $this->belongsTo('App\Models\TestOutput', 'outputid');
+    }
+
+    /**
+     * @return HasMany<TestMeasurement>
+     */
+    public function testMeasurements(): HasMany
+    {
+        return $this->hasMany(TestMeasurement::class, 'testid');
     }
 
     /**

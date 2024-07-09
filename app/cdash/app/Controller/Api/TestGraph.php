@@ -76,7 +76,7 @@ class TestGraph extends BuildTestApi
                     'data' => [],
                 ];
                 $this->testHistoryQueryExtraColumns = ', tm.value';
-                $this->testHistoryQueryExtraJoins = 'JOIN testmeasurement tm ON (b2t.outputid = tm.outputid)';
+                $this->testHistoryQueryExtraJoins = 'JOIN testmeasurement tm ON (b2t.id = tm.testid)';
                 $this->testHistoryQueryExtraWheres = 'AND tm.name = :measurementname';
                 $this->testHistoryQueryParams[':measurementname'] = $measurement_name;
                 break;

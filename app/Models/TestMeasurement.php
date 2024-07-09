@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
- * @property int $outputid
+ * @property int $testid
  * @property string $name
  * @property string $type
  * @property string $value
@@ -21,7 +21,7 @@ class TestMeasurement extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'outputid',
+        'testid',
         'name',
         'type',
         'value',
@@ -29,6 +29,6 @@ class TestMeasurement extends Model
 
     protected $casts = [
         'id' => 'integer',
-        'outputid' => 'integer',
+        'testid' => 'integer',
     ];
 }

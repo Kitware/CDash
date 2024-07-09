@@ -199,12 +199,6 @@ class TestCreator
                  ':crc32'   => $crc32]);
             $outputid = DB::getPdo()->lastInsertId();
 
-            // testmeasurement
-            foreach ($this->measurements as $measurement) {
-                $measurement->outputid = $outputid;
-                $measurement->save();
-            }
-
             // test2image
             foreach ($this->images as $image) {
                 $this->saveImage($image, $outputid);
@@ -224,6 +218,11 @@ class TestCreator
         // ctestparserutils::compute_test_difference. This gets updated when we call
         // Build::ComputeTestTiming.
         $buildtest->save();
+
+        foreach ($this->measurements as $measurement) {
+            $measurement->testid = $buildtest->id;
+            $measurement->save();
+        }
 
         // Give measurements to the buildtest model so we can properly calculate
         // proctime later on.
