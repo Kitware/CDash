@@ -8,6 +8,6 @@ class PHPUnitTestTest extends CDashTestCase
     public function testAutoloaderAutoloadsModel()
     {
         $this->assertTrue(class_exists(Project::class));
-        $this->assertFalse(class_exists('GCovTarHandler'));
+        $this->assertFalse(class_exists('GcovTarHandler'));
     }
 }

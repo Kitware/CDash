@@ -109,7 +109,6 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
         'JavaJSONTar',
         'JSCoverTar',
         'OpenCoverTar',
-        'retry',
         'SubProjectDirectories',
     ];
     if (stream_resolve_include_path($include_file) === false || !in_array($buildfile->type, $valid_types, true)) {
