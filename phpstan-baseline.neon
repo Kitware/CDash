@@ -13296,17 +13296,12 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Access to an undefined property BazelJSONHandler\\|BuildPropertiesJSONHandler\\|GCovTarHandler\\|JavaJSONTarHandler\\|JSCoverTarHandler\\|OpenCoverTarHandler\\|RetryHandler\\|SubProjectDirectoriesHandler\\:\\:\\$backupFileName\\.$#"
+			message: "#^Access to an undefined property BazelJSONHandler\\|BuildPropertiesJSONHandler\\|GcovTarHandler\\|JavaJSONTarHandler\\|JSCoverTarHandler\\|OpenCoverTarHandler\\|SubProjectDirectoriesHandler\\:\\:\\$backupFileName\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparser.php
 
 		-
 			message: "#^Access to an undefined property object\\:\\:\\$backupFileName\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Call to an undefined method BazelJSONHandler\\|BuildPropertiesJSONHandler\\|GCovTarHandler\\|JavaJSONTarHandler\\|JSCoverTarHandler\\|OpenCoverTarHandler\\|RetryHandler\\|SubProjectDirectoriesHandler\\:\\:Parse\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparser.php
 
@@ -13352,16 +13347,6 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 3
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Class GCovTarHandler referenced with incorrect case\\: GcovTarHandler\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Class RetryHandler referenced with incorrect case\\: retryHandler\\.$#"
-			count: 1
 			path: app/cdash/include/ctestparser.php
 
 		-
@@ -24699,57 +24684,57 @@ parameters:
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Method GCovTarHandler\\:\\:Parse\\(\\) has no return type specified\\.$#"
+			message: "#^Method GcovTarHandler\\:\\:Parse\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Method GCovTarHandler\\:\\:Parse\\(\\) has parameter \\$filename with no type specified\\.$#"
+			message: "#^Method GcovTarHandler\\:\\:Parse\\(\\) has parameter \\$filename with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Method GCovTarHandler\\:\\:Parse\\(\\) throws checked exception UnexpectedValueException but it's missing from the PHPDoc @throws tag\\.$#"
+			message: "#^Method GcovTarHandler\\:\\:Parse\\(\\) throws checked exception UnexpectedValueException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 2
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Method GCovTarHandler\\:\\:ParseGcovFile\\(\\) has no return type specified\\.$#"
+			message: "#^Method GcovTarHandler\\:\\:ParseGcovFile\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Method GCovTarHandler\\:\\:ParseGcovFile\\(\\) has parameter \\$fileinfo with no type specified\\.$#"
+			message: "#^Method GcovTarHandler\\:\\:ParseGcovFile\\(\\) has parameter \\$fileinfo with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Method GCovTarHandler\\:\\:ParseLabelsFile\\(\\) has no return type specified\\.$#"
+			message: "#^Method GcovTarHandler\\:\\:ParseLabelsFile\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Method GCovTarHandler\\:\\:ParseLabelsFile\\(\\) has parameter \\$fileinfo with no type specified\\.$#"
+			message: "#^Method GcovTarHandler\\:\\:ParseLabelsFile\\(\\) has parameter \\$fileinfo with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Method GCovTarHandler\\:\\:ParseUncoveredSourceFile\\(\\) has no return type specified\\.$#"
+			message: "#^Method GcovTarHandler\\:\\:ParseUncoveredSourceFile\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Method GCovTarHandler\\:\\:ParseUncoveredSourceFile\\(\\) has parameter \\$fileinfo with no type specified\\.$#"
+			message: "#^Method GcovTarHandler\\:\\:ParseUncoveredSourceFile\\(\\) has parameter \\$fileinfo with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Method GCovTarHandler\\:\\:ParseUncoveredSourceFile\\(\\) has parameter \\$path with no type specified\\.$#"
+			message: "#^Method GcovTarHandler\\:\\:ParseUncoveredSourceFile\\(\\) has parameter \\$path with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Method GCovTarHandler\\:\\:__construct\\(\\) has parameter \\$buildid with no type specified\\.$#"
+			message: "#^Method GcovTarHandler\\:\\:__construct\\(\\) has parameter \\$buildid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
@@ -24799,47 +24784,47 @@ parameters:
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Property GCovTarHandler\\:\\:\\$AggregateBuildId has no type specified\\.$#"
+			message: "#^Property GcovTarHandler\\:\\:\\$AggregateBuildId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Property GCovTarHandler\\:\\:\\$BinaryDirectory has no type specified\\.$#"
+			message: "#^Property GcovTarHandler\\:\\:\\$BinaryDirectory has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Property GCovTarHandler\\:\\:\\$CoverageSummary has no type specified\\.$#"
+			message: "#^Property GcovTarHandler\\:\\:\\$CoverageSummary has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Property GCovTarHandler\\:\\:\\$Labels has no type specified\\.$#"
+			message: "#^Property GcovTarHandler\\:\\:\\$Labels has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Property GCovTarHandler\\:\\:\\$PreviousAggregateParentId has no type specified\\.$#"
+			message: "#^Property GcovTarHandler\\:\\:\\$PreviousAggregateParentId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Property GCovTarHandler\\:\\:\\$ProjectId has no type specified\\.$#"
+			message: "#^Property GcovTarHandler\\:\\:\\$ProjectId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Property GCovTarHandler\\:\\:\\$SourceDirectory has no type specified\\.$#"
+			message: "#^Property GcovTarHandler\\:\\:\\$SourceDirectory has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Property GCovTarHandler\\:\\:\\$SubProjectPath has no type specified\\.$#"
+			message: "#^Property GcovTarHandler\\:\\:\\$SubProjectPath has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Property GCovTarHandler\\:\\:\\$SubProjectSummaries has no type specified\\.$#"
+			message: "#^Property GcovTarHandler\\:\\:\\$SubProjectSummaries has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
