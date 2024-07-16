@@ -3201,7 +3201,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 29
+			count: 26
 			path: app/Utils/RepositoryUtils.php
 
 		-
@@ -3651,41 +3651,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitorious_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$blobs with no type specified\\.$#"
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$branch with no type specified\\.$#"
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
