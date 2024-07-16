@@ -9,6 +9,7 @@ use CDash\Model\UserProject;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use RuntimeException;
 
@@ -452,7 +453,7 @@ final class ManageProjectRolesController extends AbstractProjectController
 
         // Register the user
         // Create a new password
-        $pass = generate_password(10);
+        $pass = Str::password(10);
         $passwordHash = password_hash($pass, PASSWORD_DEFAULT);
 
         $user = new User();

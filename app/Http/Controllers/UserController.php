@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 require_once 'include/cdashmail.php';
@@ -488,7 +489,7 @@ final class UserController extends AbstractController
                 $message = 'A confirmation message has been sent to your inbox.';
             } else {
                 // Create a new password
-                $password = generate_password(10);
+                $password = Str::password(10);
 
                 $url = url('/user');
 
