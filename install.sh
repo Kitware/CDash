@@ -62,6 +62,9 @@ fi
 echo "Creating storage directories..."
 php artisan storage:mkdirs
 
+echo "Waiting for database to come online..."
+until php artisan db:monitor ; do sleep 1; done
+
 echo "Running migrations..."
 php artisan migrate --force
 
