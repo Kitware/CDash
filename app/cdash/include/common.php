@@ -759,27 +759,6 @@ function unlink_uploaded_file($fileid)
 }
 
 /**
- * Recursive version of rmdir()
- */
-function rmdirr($dir): void
-{
-    if (is_dir($dir)) {
-        $objects = scandir($dir);
-        foreach ($objects as $object) {
-            if ($object != '.' && $object != '..') {
-                if (is_dir($dir . '/' . $object)) {
-                    rmdirr($dir . '/' . $object);
-                } else {
-                    cdash_unlink($dir . '/' . $object);
-                }
-            }
-        }
-        reset($objects);
-        rmdir($dir);
-    }
-}
-
-/**
  * Get year from formatted date
  */
 function date2year(string $date): string
