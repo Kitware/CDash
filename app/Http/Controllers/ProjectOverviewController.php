@@ -38,7 +38,7 @@ final class ProjectOverviewController extends AbstractProjectController
 
         // begin JSON response that is used to render this page
         $response = begin_JSON_response();
-        get_dashboard_JSON_by_name($this->project->Name, $date, $response);
+        get_dashboard_JSON($this->project->Name, $date, $response);
         $response['title'] = "{$this->project->Name} - Overview";
         $response['showcalendar'] = 1;
 

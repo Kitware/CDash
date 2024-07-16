@@ -212,7 +212,7 @@ class QueryTests extends ResultsApi
             $this->determineDateRange($response);
         }
 
-        get_dashboard_JSON_by_name($this->project->Name, $this->date, $response);
+        get_dashboard_JSON($this->project->Name, $this->date, $response);
 
         [$previousdate, $currentstarttime, $nextdate] =
             get_dates($this->date, $this->project->NightlyTime);

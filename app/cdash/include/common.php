@@ -1219,15 +1219,6 @@ function get_dashboard_JSON($projectname, $date, &$response)
     $response['user']['id'] = $userid;
 }
 
-/**
- * TODO: (williamjallen) Eliminate one of these functions. There is no reason
- *       to have both get_dashboard_JSON_by_name() and get_dashboard_JSON().
- */
-function get_dashboard_JSON_by_name($projectname, $date, &$response)
-{
-    get_dashboard_JSON($projectname, $date, $response);
-}
-
 function get_labels_JSON_from_query_results(string $query, ?array $query_params, array &$response): void
 {
     $db = Database::getInstance();

@@ -183,7 +183,7 @@ final class TestController extends AbstractProjectController
         $response = begin_JSON_response();
         $response['showcalendar'] = 1;
         $response['title'] = "{$this->project->Name} - Test Summary";
-        get_dashboard_JSON_by_name($this->project->Name, $date, $response);
+        get_dashboard_JSON($this->project->Name, $date, $response);
         $response['testName'] = $testName;
 
         [$previousdate, $currentstarttime, $nextdate, $today] = get_dates($date, $this->project->NightlyTime);
