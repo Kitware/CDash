@@ -910,46 +910,6 @@ function qnum($num)
 }
 
 /**
- * Return the list of site maintainers for a given project
- */
-function find_site_maintainers(int $projectid): array
-{
-    $db = Database::getInstance();
-
-    // Get the registered user first
-    $site2user = $db->executePrepared('
-                     SELECT site2user.userid
-                     FROM site2user, user2project
-                     WHERE
-                         site2user.userid=user2project.userid
-                         AND user2project.projectid=?
-                     ', [$projectid]);
-
-    $userids = [];
-    foreach ($site2user as $site2user_array) {
-        $userids[] = intval($site2user_array['userid']);
-    }
-
-    // Then we list all the users that have been submitting in the past 48 hours
-    $submittime_UTCDate = gmdate(FMT_DATETIME, time() - 3600 * 48);
-
-    $site2project = $db->executePrepared('
-                        SELECT DISTINCT userid
-                        FROM site2user
-                        WHERE siteid IN (
-                            SELECT siteid
-                            FROM build
-                            WHERE
-                                projectid=?
-                                 AND submittime>?
-                        )', [$projectid, $submittime_UTCDate]);
-    foreach ($site2project as $site2project_array) {
-        $userids[] = intval($site2project_array['userid']);
-    }
-    return array_unique($userids);
-}
-
-/**
  * Return the byte value with proper extension
  */
 function getByteValueWithExtension($value, $base = 1024): string

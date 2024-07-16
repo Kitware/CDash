@@ -87,7 +87,7 @@ final class ManageProjectRolesController extends AbstractProjectController
             if (strlen($emailMaintainers) < 50) {
                 $xml .= '<error>The email should be more than 50 characters.</error>';
             } else {
-                $maintainerids = find_site_maintainers(intval($projectid));
+                $maintainerids = self::find_site_maintainers(intval($projectid));
                 $email = '';
                 foreach ($maintainerids as $maintainerid) {
                     if (strlen($email) > 0) {
@@ -405,6 +405,46 @@ final class ManageProjectRolesController extends AbstractProjectController
             ->with('xsl', true)
             ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/manageProjectRoles', true))
             ->with('project', $project);
+    }
+
+    /**
+     * Return the list of site maintainers for a given project
+     */
+    private static function find_site_maintainers(int $projectid): array
+    {
+        $db = Database::getInstance();
+
+        // Get the registered user first
+        $site2user = $db->executePrepared('
+                     SELECT site2user.userid
+                     FROM site2user, user2project
+                     WHERE
+                         site2user.userid=user2project.userid
+                         AND user2project.projectid=?
+                     ', [$projectid]);
+
+        $userids = [];
+        foreach ($site2user as $site2user_array) {
+            $userids[] = intval($site2user_array['userid']);
+        }
+
+        // Then we list all the users that have been submitting in the past 48 hours
+        $submittime_UTCDate = gmdate(FMT_DATETIME, time() - 3600 * 48);
+
+        $site2project = $db->executePrepared('
+                            SELECT DISTINCT userid
+                            FROM site2user
+                            WHERE siteid IN (
+                                SELECT siteid
+                                FROM build
+                                WHERE
+                                    projectid=?
+                                     AND submittime>?
+                            )', [$projectid, $submittime_UTCDate]);
+        foreach ($site2project as $site2project_array) {
+            $userids[] = intval($site2project_array['userid']);
+        }
+        return array_unique($userids);
     }
 
     private function register_user($projectid, $email, $firstName, $lastName, $repositoryCredential)
