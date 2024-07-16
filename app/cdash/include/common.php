@@ -305,29 +305,6 @@ function add_last_sql_error($functionname, $projectid = 0, $buildid = 0, $resour
 }
 
 /**
- * Get the build id from stamp, name and buildname
- */
-function get_build_id(string $buildname, string $stamp, int $projectid, string $sitename): int
-{
-    $db = Database::getInstance();
-    $build = $db->executePreparedSingleRow('
-                 SELECT build.id AS id
-                 FROM build, site
-                 WHERE
-                     build.name=?
-                     AND build.stamp=?
-                     AND build.projectid=?
-                     AND build.siteid=site.id
-                     AND site.name=?
-                 ORDER BY build.id DESC
-             ', [$buildname, $stamp, $projectid, $sitename]);
-    if (!empty($build)) {
-        return intval($build['id']);
-    }
-    return -1;
-}
-
-/**
  * Get the project id from the project name
  */
 function get_project_id($projectname): int
