@@ -3,7 +3,7 @@ namespace CDash\Messaging\Topic;
 
 use CDash\Model\Build;
 use CDash\Collection\BuildCollection;
-use CDash\Collection\CollectionInterface;
+use CDash\Collection\Collection;
 use CDash\Model\SubscriberInterface;
 
 abstract class Topic implements TopicInterface
@@ -114,7 +114,7 @@ abstract class Topic implements TopicInterface
     }
 
     /**
-     * @return CollectionInterface
+     * @return Collection
      */
     public function getTopicCollection()
     {

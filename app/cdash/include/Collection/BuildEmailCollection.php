@@ -30,7 +30,7 @@ class BuildEmailCollection extends Collection
         if (in_array($email, $this->keys)) {
             array_push($this->collection[$email], $buildEmail);
         } else {
-            parent::addItem([$buildEmail], $email);
+            $this->addItem([$buildEmail], $email);
         }
         return $this;
     }

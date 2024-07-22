@@ -25,7 +25,7 @@ class ConfigureCollection extends Collection
      */
     public function add(BuildConfigure $configure)
     {
-        parent::addItem($configure, 'Configure');
+        $this->addItem($configure, 'Configure');
         return $this;
     }
 }

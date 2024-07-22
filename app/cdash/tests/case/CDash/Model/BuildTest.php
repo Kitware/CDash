@@ -31,7 +31,7 @@ class BuildTest extends CDashTestCase
 
         $collection = $sut->GetBuildEmailCollection();
 
-        $this->assertFalse($collection->hasItems());
+        self::assertCount(0, $collection);
         $this->assertInstanceOf(BuildEmailCollection::class, $collection);
     }
 

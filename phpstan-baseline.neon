@@ -10730,17 +10730,7 @@ parameters:
 			path: app/cdash/include/Collection/BuildCollection.php
 
 		-
-			message: "#^Parameter \\#2 \\$name of method CDash\\\\Collection\\\\Collection\\:\\:addItem\\(\\) expects null, mixed given\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/BuildCollection.php
-
-		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/BuildEmailCollection.php
-
-		-
-			message: "#^Parameter \\#2 \\$name of method CDash\\\\Collection\\\\Collection\\:\\:addItem\\(\\) expects null, int given\\.$#"
 			count: 1
 			path: app/cdash/include/Collection/BuildEmailCollection.php
 
@@ -10750,17 +10740,12 @@ parameters:
 			path: app/cdash/include/Collection/BuildErrorCollection.php
 
 		-
-			message: "#^Call to function array_search\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/Collection.php
-
-		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 3
 			path: app/cdash/include/Collection/Collection.php
 
 		-
-			message: "#^Method CDash\\\\Collection\\\\Collection\\:\\:__construct\\(\\) has parameter \\$collection with no value type specified in iterable type array\\.$#"
+			message: "#^Class CDash\\\\Collection\\\\Collection implements generic interface Iterator but does not specify its types\\: TKey, TValue$#"
 			count: 1
 			path: app/cdash/include/Collection/Collection.php
 
@@ -10770,17 +10755,7 @@ parameters:
 			path: app/cdash/include/Collection/Collection.php
 
 		-
-			message: "#^Method CDash\\\\Collection\\\\Collection\\:\\:get\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/Collection.php
-
-		-
-			message: "#^Method CDash\\\\Collection\\\\Collection\\:\\:has\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/Collection.php
-
-		-
-			message: "#^Method CDash\\\\Collection\\\\Collection\\:\\:remove\\(\\) has parameter \\$key with no type specified\\.$#"
+			message: "#^Method CDash\\\\Collection\\\\Collection\\:\\:addItem\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Collection/Collection.php
 
@@ -10790,59 +10765,9 @@ parameters:
 			path: app/cdash/include/Collection/Collection.php
 
 		-
-			message: "#^Property CDash\\\\Collection\\\\Collection\\:\\:\\$collection type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/Collection.php
-
-		-
-			message: "#^Property CDash\\\\Collection\\\\Collection\\:\\:\\$keys type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/Collection.php
-
-		-
 			message: "#^Unsafe usage of new static\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/include/Collection/Collection.php
-
-		-
-			message: "#^Parameter \\#2 \\$name of method CDash\\\\Collection\\\\Collection\\:\\:addItem\\(\\) expects null, class\\-string\\<CDash\\\\Collection\\\\CollectionInterface\\> given\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/CollectionCollection.php
-
-		-
-			message: "#^Interface CDash\\\\Collection\\\\CollectionInterface extends generic interface Iterator but does not specify its types\\: TKey, TValue$#"
-			count: 1
-			path: app/cdash/include/Collection/CollectionInterface.php
-
-		-
-			message: "#^Method CDash\\\\Collection\\\\CollectionInterface\\:\\:addItem\\(\\) has parameter \\$item with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/CollectionInterface.php
-
-		-
-			message: "#^Method CDash\\\\Collection\\\\CollectionInterface\\:\\:get\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/CollectionInterface.php
-
-		-
-			message: "#^Method CDash\\\\Collection\\\\CollectionInterface\\:\\:has\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/CollectionInterface.php
-
-		-
-			message: "#^Method CDash\\\\Collection\\\\CollectionInterface\\:\\:remove\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/CollectionInterface.php
-
-		-
-			message: "#^Method CDash\\\\Collection\\\\CollectionInterface\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/CollectionInterface.php
-
-		-
-			message: "#^Parameter \\#2 \\$name of method CDash\\\\Collection\\\\Collection\\:\\:addItem\\(\\) expects null, string given\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/ConfigureCollection.php
 
 		-
 			message: "#^Method CDash\\\\Collection\\\\DynamicAnalysisCollection\\:\\:add\\(\\) has no return type specified\\.$#"
@@ -10855,17 +10780,7 @@ parameters:
 			path: app/cdash/include/Collection/SubscriberCollection.php
 
 		-
-			message: "#^Parameter \\#2 \\$name of method CDash\\\\Collection\\\\Collection\\:\\:addItem\\(\\) expects null, string given\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/SubscriberCollection.php
-
-		-
 			message: "#^Method CDash\\\\Collection\\\\SubscriptionBuilderCollection\\:\\:add\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Collection/SubscriptionBuilderCollection.php
-
-		-
-			message: "#^Parameter \\#2 \\$name of method CDash\\\\Collection\\\\Collection\\:\\:addItem\\(\\) expects null, class\\-string\\<CDash\\\\Messaging\\\\Subscription\\\\SubscriptionBuilderInterface\\> given\\.$#"
 			count: 1
 			path: app/cdash/include/Collection/SubscriptionBuilderCollection.php
 
@@ -11305,17 +11220,12 @@ parameters:
 			path: app/cdash/include/Messaging/Subscription/SubscriptionCollection.php
 
 		-
-			message: "#^Parameter \\#2 \\$name of method CDash\\\\Collection\\\\Collection\\:\\:addItem\\(\\) expects null, string given\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Subscription/SubscriptionCollection.php
-
-		-
 			message: "#^Method CDash\\\\Messaging\\\\Subscription\\\\SubscriptionFactory\\:\\:create\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Subscription/SubscriptionFactory.php
 
 		-
-			message: "#^Property CDash\\\\Messaging\\\\Subscription\\\\SubscriptionNotificationBuilder\\:\\:\\$notifications \\(CDash\\\\Messaging\\\\Notification\\\\NotificationCollection\\) does not accept CDash\\\\Collection\\\\CollectionInterface\\.$#"
+			message: "#^Property CDash\\\\Messaging\\\\Subscription\\\\SubscriptionNotificationBuilder\\:\\:\\$notifications \\(CDash\\\\Messaging\\\\Notification\\\\NotificationCollection\\) does not accept CDash\\\\Collection\\\\Collection\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Subscription/SubscriptionNotificationBuilder.php
 
@@ -11328,11 +11238,6 @@ parameters:
 			message: "#^Method CDash\\\\Messaging\\\\Topic\\\\AuthoredTopic\\:\\:getTemplate\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/AuthoredTopic.php
-
-		-
-			message: "#^Call to an undefined method CDash\\\\Collection\\\\CollectionInterface\\:\\:add\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Topic/BuildErrorTopic.php
 
 		-
 			message: "#^Call to an undefined method CDash\\\\Messaging\\\\Preferences\\\\NotificationPreferencesInterface\\:\\:get\\(\\)\\.$#"
@@ -11415,7 +11320,7 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/BuildErrorTopic.php
 
 		-
-			message: "#^Call to an undefined method CDash\\\\Collection\\\\CollectionInterface\\:\\:add\\(\\)\\.$#"
+			message: "#^Call to an undefined method CDash\\\\Collection\\\\Collection\\:\\:add\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/ConfigureTopic.php
 
@@ -11450,19 +11355,9 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/ConfigureTopic.php
 
 		-
-			message: "#^Parameter \\#2 \\$name of method CDash\\\\Collection\\\\CollectionInterface\\:\\:addItem\\(\\) expects null, string given\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Topic/ConfigureTopic.php
-
-		-
 			message: "#^Property CDash\\\\Messaging\\\\Topic\\\\ConfigureTopic\\:\\:\\$collection has no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/ConfigureTopic.php
-
-		-
-			message: "#^Call to an undefined method CDash\\\\Collection\\\\CollectionInterface\\:\\:add\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Topic/DynamicAnalysisTopic.php
 
 		-
 			message: "#^Call to an undefined method CDash\\\\Messaging\\\\Preferences\\\\NotificationPreferencesInterface\\:\\:get\\(\\)\\.$#"
@@ -11585,11 +11480,6 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/LabeledTopic.php
 
 		-
-			message: "#^Property CDash\\\\Messaging\\\\Topic\\\\LabeledTopic\\:\\:\\$topicCollection has no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Topic/LabeledTopic.php
-
-		-
 			message: "#^Return type \\(CDash\\\\Messaging\\\\Topic\\\\Topic\\|void\\) of method CDash\\\\Messaging\\\\Topic\\\\LabeledTopic\\:\\:setTopicData\\(\\) should be covariant with return type \\(\\$this\\(CDash\\\\Messaging\\\\Topic\\\\Topic\\)\\) of method CDash\\\\Messaging\\\\Topic\\\\Topic\\:\\:setTopicData\\(\\)$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/LabeledTopic.php
@@ -11630,7 +11520,7 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
 
 		-
-			message: "#^Return type \\(CDash\\\\Messaging\\\\Topic\\\\Illuminate\\\\Support\\\\Collection\\) of method CDash\\\\Messaging\\\\Topic\\\\MissingTestTopic\\:\\:getTopicCollection\\(\\) should be covariant with return type \\(CDash\\\\Collection\\\\CollectionInterface\\) of method CDash\\\\Messaging\\\\Topic\\\\Topic\\:\\:getTopicCollection\\(\\)$#"
+			message: "#^Return type \\(CDash\\\\Messaging\\\\Topic\\\\Illuminate\\\\Support\\\\Collection\\) of method CDash\\\\Messaging\\\\Topic\\\\MissingTestTopic\\:\\:getTopicCollection\\(\\) should be covariant with return type \\(CDash\\\\Collection\\\\Collection\\) of method CDash\\\\Messaging\\\\Topic\\\\Topic\\:\\:getTopicCollection\\(\\)$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
 
@@ -11725,7 +11615,7 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
 
 		-
-			message: "#^Return type \\(Illuminate\\\\Support\\\\Collection\\) of method CDash\\\\Messaging\\\\Topic\\\\TestFailureTopic\\:\\:getTopicCollection\\(\\) should be covariant with return type \\(CDash\\\\Collection\\\\CollectionInterface\\) of method CDash\\\\Messaging\\\\Topic\\\\Topic\\:\\:getTopicCollection\\(\\)$#"
+			message: "#^Return type \\(Illuminate\\\\Support\\\\Collection\\) of method CDash\\\\Messaging\\\\Topic\\\\TestFailureTopic\\:\\:getTopicCollection\\(\\) should be compatible with return type \\(CDash\\\\Collection\\\\Collection\\) of method CDash\\\\Messaging\\\\Topic\\\\Topic\\:\\:getTopicCollection\\(\\)$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
 
@@ -11755,7 +11645,7 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/Topic.php
 
 		-
-			message: "#^Method CDash\\\\Messaging\\\\Topic\\\\Topic\\:\\:getTopicCollection\\(\\) should return CDash\\\\Collection\\\\CollectionInterface but return statement is missing\\.$#"
+			message: "#^Method CDash\\\\Messaging\\\\Topic\\\\Topic\\:\\:getTopicCollection\\(\\) should return CDash\\\\Collection\\\\Collection but return statement is missing\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/Topic.php
 
@@ -17143,11 +17033,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Model/BuildTest.php
 
 		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Model/BuildTest.php
@@ -17818,11 +17703,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
 
 		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
 			count: 2
 			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
@@ -17853,16 +17733,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
 
 		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
@@ -17885,16 +17755,6 @@ parameters:
 		-
 			message: "#^Class DynamicAnalysisHandler constructor invoked with 2 parameters, 1 required\\.$#"
 			count: 2
-			path: app/cdash/tests/case/CDash/XmlHandler/DynamicAnalysisHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/XmlHandler/DynamicAnalysisHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\)\\.$#"
-			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/DynamicAnalysisHandlerTest.php
 
 		-
@@ -17925,16 +17785,6 @@ parameters:
 		-
 			message: "#^Class TestingHandler constructor invoked with 2 parameters, 1 required\\.$#"
 			count: 3
-			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\)\\.$#"
-			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
 
 		-
@@ -17970,16 +17820,6 @@ parameters:
 		-
 			message: "#^Class UpdateHandler constructor invoked with 2 parameters, 1 required\\.$#"
 			count: 4
-			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\)\\.$#"
-			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
 
 		-
@@ -26237,11 +26077,6 @@ parameters:
 
 		-
 			message: "#^Method DynamicAnalysisHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Parameter \\#2 \\$name of method CDash\\\\Collection\\\\Collection\\:\\:addItem\\(\\) expects null, mixed given\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
