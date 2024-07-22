@@ -4,6 +4,7 @@ namespace Tests\Feature\GraphQL;
 
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
@@ -325,5 +326,104 @@ class FilterTest extends TestCase
             'public4',
             'private1',
         ]);
+    }
+
+    public function testFilterCyclicQueries(): void
+    {
+        $build1uuid = Str::uuid()->toString();
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => $build1uuid,
+        ]);
+        $build2uuid = Str::uuid()->toString();
+        $this->projects['public1']->builds()->create([
+            'name' => 'build2',
+            'uuid' => $build2uuid,
+        ]);
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            query {
+                projects(first: 1) {
+                    edges {
+                        node {
+                            name
+                            builds(filters: {
+                                eq: {
+                                    name: "build1"
+                                }
+                            }) {
+                                edges {
+                                    node {
+                                        name
+                                        uuid
+                                        project {
+                                            name
+                                            builds {
+                                                edges {
+                                                    node {
+                                                        name
+                                                        uuid
+                                                        project {
+                                                            name
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => 'public1',
+                                'builds' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'name' => 'build1',
+                                                'uuid' => $build1uuid,
+                                                'project' => [
+                                                    'name' => 'public1',
+                                                    'builds' => [
+                                                        'edges' => [
+                                                            [
+                                                                'node' => [
+                                                                    'name' => 'build1',
+                                                                    'uuid' => $build1uuid,
+                                                                    'project' => [
+                                                                        'name' => 'public1',
+                                                                    ],
+                                                                ],
+                                                            ],
+                                                            [
+                                                                'node' => [
+                                                                    'name' => 'build2',
+                                                                    'uuid' => $build2uuid,
+                                                                    'project' => [
+                                                                        'name' => 'public1',
+                                                                    ],
+                                                                ],
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
     }
 }

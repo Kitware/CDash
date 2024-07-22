@@ -210,7 +210,7 @@ type Build {
   """
   basicWarnings: [BasicBuildAlert!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 
-  # TODO: Figure out project relation.  project{build{project}} currently throws an error.
+  project: Project! @belongsTo
 }
 
 input BuildFilterInput {
