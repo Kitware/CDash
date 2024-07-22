@@ -1090,17 +1090,6 @@ function getByteValueWithExtension($value, $base = 1024): string
     return round($value, 2) . $valueext;
 }
 
-function generate_password(int $length): string
-{
-    $keychars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    $max = strlen($keychars) - 1;
-    $key = '';
-    for ($i = 0; $i < $length; $i++) {
-        $key .= substr($keychars, random_int(0, $max), 1);
-    }
-    return $key;
-}
-
 /**
  * Check if user has specified a preference for color scheme.
  */

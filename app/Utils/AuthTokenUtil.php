@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +31,7 @@ class AuthTokenUtil
     public static function generateToken(int $user_id, int $project_id, string $scope, string $description): array
     {
         // 86 characters generates more than 512 bits of entropy (and is thus limited by the entropy of the hash)
-        $token = generate_password(86);
+        $token = Str::password(86, true, true, false);
         $params['hash'] = hash('sha512', $token);
 
         $params['userid'] = $user_id;

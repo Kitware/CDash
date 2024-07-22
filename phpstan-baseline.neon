@@ -12901,11 +12901,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function generate_password\\(\\) throws checked exception Random\\\\RandomException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function getByteValueWithExtension\\(\\) has parameter \\$base with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php

@@ -3,8 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-
-require_once 'include/common.php';
+use Illuminate\Support\Str;
 
 class CheckKey extends Command
 {
@@ -41,7 +40,7 @@ class CheckKey extends Command
             echo "Error: APP_KEY environment variable is not set.  You can use the following randomly generated key:" . PHP_EOL;
             // Print a new key to the screen.  Note: we can't use Artisan's key:generate command if there is no .env,
             // so we generate a random key ourselves.
-            echo generate_password(32) . PHP_EOL;
+            echo Str::password(32, true, true, false) . PHP_EOL;
             return 1;
         } else {
             return 0;
