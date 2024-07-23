@@ -1416,7 +1416,10 @@ function create_aggregate_build($build, $siteid=null): Build
     return $aggregate_build;
 }
 
-function extract_tar_archive_tar($filename, $dirName): bool
+/**
+ * Extract a tarball to a given directory.
+ */
+function extract_tar(string $filename, string $dirName): bool
 {
     try {
         $tar = new Archive_Tar($filename);
@@ -1425,25 +1428,8 @@ function extract_tar_archive_tar($filename, $dirName): bool
         });
         return $tar->extract($dirName);
     } catch (PEAR_Exception $e) {
-        add_log($e->getMessage(), 'extract_tar_archive_tar', LOG_ERR);
+        report($e);
         return false;
-    }
-}
-
-function extract_tar(string $filename, string $dirName): bool|null
-{
-    if (class_exists('PharData')) {
-        try {
-            $phar = new PharData($filename);
-            $phar->extractTo($dirName);
-        } catch (Exception $e) {
-            add_log($e->getMessage(), 'extract_tar', LOG_ERR);
-            return false;
-        }
-
-        return true;
-    } else {
-        return extract_tar_archive_tar($filename, $dirName);
     }
 }
 
