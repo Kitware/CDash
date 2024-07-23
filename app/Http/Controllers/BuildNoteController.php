@@ -25,7 +25,7 @@ final class BuildNoteController extends AbstractBuildController
 
         $date = TestingDay::get($this->project, $this->build->StartTime);
 
-        get_dashboard_JSON_by_name($this->project->Name, $date, $response);
+        get_dashboard_JSON($this->project->Name, $date, $response);
 
         // Menu
         $menu = [];

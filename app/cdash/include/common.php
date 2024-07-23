@@ -305,29 +305,6 @@ function add_last_sql_error($functionname, $projectid = 0, $buildid = 0, $resour
 }
 
 /**
- * Get the build id from stamp, name and buildname
- */
-function get_build_id(string $buildname, string $stamp, int $projectid, string $sitename): int
-{
-    $db = Database::getInstance();
-    $build = $db->executePreparedSingleRow('
-                 SELECT build.id AS id
-                 FROM build, site
-                 WHERE
-                     build.name=?
-                     AND build.stamp=?
-                     AND build.projectid=?
-                     AND build.siteid=site.id
-                     AND site.name=?
-                 ORDER BY build.id DESC
-             ', [$buildname, $stamp, $projectid, $sitename]);
-    if (!empty($build)) {
-        return intval($build['id']);
-    }
-    return -1;
-}
-
-/**
  * Get the project id from the project name
  */
 function get_project_id($projectname): int
@@ -782,27 +759,6 @@ function unlink_uploaded_file($fileid)
 }
 
 /**
- * Recursive version of rmdir()
- */
-function rmdirr($dir): void
-{
-    if (is_dir($dir)) {
-        $objects = scandir($dir);
-        foreach ($objects as $object) {
-            if ($object != '.' && $object != '..') {
-                if (is_dir($dir . '/' . $object)) {
-                    rmdirr($dir . '/' . $object);
-                } else {
-                    cdash_unlink($dir . '/' . $object);
-                }
-            }
-        }
-        reset($objects);
-        rmdir($dir);
-    }
-}
-
-/**
  * Get year from formatted date
  */
 function date2year(string $date): string
@@ -913,79 +869,6 @@ function make_cdash_url(string $url): string
     return $url;
 }
 
-function get_cdash_dashboard_xml_by_name(string $projectname, $date): string
-{
-    $projectid = get_project_id($projectname);
-    if ($projectid === -1) {
-        return '';
-    }
-
-    $default = [
-        'cvsurl' => 'unknown',
-        'bugtrackerurl' => 'unknown',
-        'documentationurl' => 'unknown',
-        'googletracker' => 'unknonw',
-        'name' => $projectname,
-        'nightlytime' => '00:00:00',
-    ];
-
-    $db = Database::getInstance();
-
-    $sql = "SELECT * FROM project WHERE id=:id";
-    $stmt = $db->prepare($sql);
-    $stmt->bindParam(':id', $projectid);
-    $db->execute($stmt);
-    $result = $stmt ? $stmt->fetch() : [];
-
-    $project_array = array_merge($default, $result);
-
-    [$previousdate, $currentstarttime, $nextdate] = get_dates($date, $project_array['nightlytime']);
-
-    $xml = '<dashboard>
-  <datetime>' . date('l, F d Y H:i:s', time()) . '</datetime>
-  <date>' . $date . '</date>
-  <unixtimestamp>' . $currentstarttime . '</unixtimestamp>
-  <startdate>' . date('l, F d Y H:i:s', $currentstarttime) . '</startdate>
-  <svn>' . make_cdash_url(htmlentities($project_array['cvsurl'])) . '</svn>
-  <bugtracker>' . make_cdash_url(htmlentities($project_array['bugtrackerurl'])) . '</bugtracker>
-  <googletracker>' . htmlentities($project_array['googletracker']) . '</googletracker>
-  <documentation>' . make_cdash_url(htmlentities($project_array['documentationurl'])) . '</documentation>
-  <projectid>' . $projectid . '</projectid>
-  <projectname>' . $project_array['name'] . '</projectname>
-  <projectname_encoded>' . urlencode($project_array['name']) . '</projectname_encoded>
-  <projectpublic>' . $project_array['public'] . '</projectpublic>
-  <previousdate>' . $previousdate . '</previousdate>
-  <nextdate>' . $nextdate . '</nextdate>';
-
-    if (empty($project_array['homeurl'])) {
-        $xml .= '<home>index.php?project=' . urlencode($project_array['name']) . '</home>';
-    } else {
-        $xml .= '<home>' . make_cdash_url(htmlentities($project_array['homeurl'])) . '</home>';
-    }
-
-    $xml .= '</dashboard>';
-
-    if (Auth::check()) {
-        $user = Auth::user();
-        $xml .= '<user>';
-        $xml .= add_XML_value('id', $user->id);
-
-        // Is the user super administrator?
-        $xml .= add_XML_value('admin', $user->admin);
-
-        // Is the user administrator of the project
-
-        $userproject = new UserProject();
-        $userproject->UserId = $user->id;
-        $userproject->ProjectId = $projectid;
-        $userproject->FillFromUserId();
-        $xml .= add_XML_value('projectrole', $userproject->Role);
-
-        $xml .= '</user>';
-    }
-    return $xml;
-}
-
 /**
  * Quote SQL identifier
  */
@@ -1024,46 +907,6 @@ function qnum($num)
     } else {
         return $num;
     }
-}
-
-/**
- * Return the list of site maintainers for a given project
- */
-function find_site_maintainers(int $projectid): array
-{
-    $db = Database::getInstance();
-
-    // Get the registered user first
-    $site2user = $db->executePrepared('
-                     SELECT site2user.userid
-                     FROM site2user, user2project
-                     WHERE
-                         site2user.userid=user2project.userid
-                         AND user2project.projectid=?
-                     ', [$projectid]);
-
-    $userids = [];
-    foreach ($site2user as $site2user_array) {
-        $userids[] = intval($site2user_array['userid']);
-    }
-
-    // Then we list all the users that have been submitting in the past 48 hours
-    $submittime_UTCDate = gmdate(FMT_DATETIME, time() - 3600 * 48);
-
-    $site2project = $db->executePrepared('
-                        SELECT DISTINCT userid
-                        FROM site2user
-                        WHERE siteid IN (
-                            SELECT siteid
-                            FROM build
-                            WHERE
-                                projectid=?
-                                 AND submittime>?
-                        )', [$projectid, $submittime_UTCDate]);
-    foreach ($site2project as $site2project_array) {
-        $userids[] = intval($site2project_array['userid']);
-    }
-    return array_unique($userids);
 }
 
 /**
@@ -1206,15 +1049,6 @@ function get_dashboard_JSON($projectname, $date, &$response)
         }
     }
     $response['user']['id'] = $userid;
-}
-
-/**
- * TODO: (williamjallen) Eliminate one of these functions. There is no reason
- *       to have both get_dashboard_JSON_by_name() and get_dashboard_JSON().
- */
-function get_dashboard_JSON_by_name($projectname, $date, &$response)
-{
-    get_dashboard_JSON($projectname, $date, $response);
 }
 
 function get_labels_JSON_from_query_results(string $query, ?array $query_params, array &$response): void

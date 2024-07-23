@@ -29,6 +29,7 @@ use CDash\Model\BuildGroup;
 use CDash\Model\BuildUpdate;
 use CDash\Model\DynamicAnalysis;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 /** Check for errors for a given build. Return false if no errors */
 function check_email_errors(int $buildid, bool $checktesttimeingchanged, int $testtimemaxstatus, bool $checkpreviouserrors): array
@@ -509,7 +510,18 @@ function send_update_email(UpdateHandler $handler, int $projectid): void
         $name = $handler->getBuildName();
         $stamp = $handler->getBuildStamp();
         $sitename = $handler->getSiteName();
-        $buildid = get_build_id($name, $stamp, $projectid, $sitename);
+
+        $buildid = intval(DB::select('
+            SELECT build.id AS id
+            FROM build, site
+            WHERE
+                build.name=?
+                AND build.stamp=?
+                AND build.projectid=?
+                AND build.siteid=site.id
+                AND site.name=?
+            ORDER BY build.id DESC
+        ', [$name, $stamp, $projectid, $sitename])[0]->id ?? -1);
     }
 
     if ($buildid < 0) {

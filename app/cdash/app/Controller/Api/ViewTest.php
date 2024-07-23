@@ -56,7 +56,7 @@ class ViewTest extends BuildApi
         $response = begin_JSON_response();
         $response['title'] = "{$this->project->Name} - Tests";
         $response['groupid'] = $this->build->GroupId;
-        get_dashboard_JSON_by_name($this->project->Name, $this->date, $response);
+        get_dashboard_JSON($this->project->Name, $this->date, $response);
 
         // Filters
         $filterdata = get_filterdata_from_request();
