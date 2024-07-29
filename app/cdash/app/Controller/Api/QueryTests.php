@@ -385,17 +385,17 @@ class QueryTests extends ResultsApi
                     $this->limitSQL
                 ", $query_params);
 
-        $outputids = [];
+        $testids = [];
         foreach ($rows as $row) {
-            $outputids[] = (int) $row->outputid;
+            $testids[] = (int) $row->buildtestid;
         }
 
-        $outputid_to_testmeasurements = [];
-        foreach (TestMeasurement::whereIn('outputid', $outputids)->get() as $testmeasurement) {
-            if (!isset($outputid_to_testmeasurements[$testmeasurement->outputid])) {
-                $outputid_to_testmeasurements[$testmeasurement->outputid] = [];
+        $testid_to_testmeasurements = [];
+        foreach (TestMeasurement::whereIn('testid', $testids)->get() as $testmeasurement) {
+            if (!isset($testid_to_testmeasurements[$testmeasurement->testid])) {
+                $testid_to_testmeasurements[$testmeasurement->testid] = [];
             }
-            $outputid_to_testmeasurements[$testmeasurement->outputid][] = $testmeasurement;
+            $testid_to_testmeasurements[$testmeasurement->testid][] = $testmeasurement;
         }
 
         // Rows of test data to be displayed to the user.
@@ -462,7 +462,7 @@ class QueryTests extends ResultsApi
             }
 
             if ($this->hasProcessors || $this->numExtraMeasurements > 0) {
-                $this->addExtraMeasurements($test, $outputid_to_testmeasurements[(int) $row->outputid] ?? []);
+                $this->addExtraMeasurements($test, $testid_to_testmeasurements[(int) $row->buildtestid] ?? []);
             }
 
             $tests[] = $test;

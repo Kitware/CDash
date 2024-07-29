@@ -210,7 +210,7 @@ final class TestController extends AbstractProjectController
             SELECT testmeasurement.name
             FROM build2test
             JOIN build ON (build.id = build2test.buildid)
-            JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
+            JOIN testmeasurement ON (build2test.id = testmeasurement.testid)
             JOIN measurement ON (
                 build.projectid=measurement.projectid
                 AND testmeasurement.name=measurement.name
@@ -259,7 +259,7 @@ final class TestController extends AbstractProjectController
                     build2test.time
                 FROM build2test
                 JOIN build ON (build.id = build2test.buildid)
-                JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
+                JOIN testmeasurement ON (build2test.id = testmeasurement.testid)
                 JOIN measurement ON (
                     build.projectid = measurement.projectid
                     AND testmeasurement.name = measurement.name
@@ -472,7 +472,7 @@ final class TestController extends AbstractProjectController
                     build2test.time
                 FROM build2test
                 JOIN build ON (build.id = build2test.buildid)
-                JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
+                JOIN testmeasurement ON (build2test.id = testmeasurement.testid)
                 JOIN measurement ON (
                     build.projectid = measurement.projectid
                     AND testmeasurement.name = measurement.name

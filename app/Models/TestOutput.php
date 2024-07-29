@@ -42,14 +42,6 @@ class TestOutput extends Model
     }
 
     /**
-     * @return HasMany<TestMeasurement>
-     */
-    public function testMeasurements(): HasMany
-    {
-        return $this->hasMany(TestMeasurement::class, 'outputid');
-    }
-
-    /**
      * Returns uncompressed test output.
      */
     public static function DecompressOutput($output)

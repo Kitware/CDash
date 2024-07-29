@@ -409,7 +409,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
 
         $outputids =
             $this->verify_get_rows('build2test', 'outputid', 'buildid', '=', $build->Id, 2);
-        $this->verify('testmeasurement', 'outputid', 'IN', $outputids, 2);
         $imgids = $this->verify_get_rows('test2image', 'imgid', 'outputid', 'IN', $outputids, 2);
         $this->verify('image', 'id', 'IN', $imgids, 2);
 
@@ -476,7 +475,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('subproject2build', 'buildid', '=', $build->Id, 0, true);
         $this->verify('test2image', 'outputid', 'IN', $outputids, 1, true);
         $this->verify('testdiff', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('testmeasurement', 'outputid', 'IN', $outputids, 1, true);
         $this->verify('updatefile', 'updateid', '=', $updateid, 1, true);
         $this->verify('uploadfile', 'id', 'IN', $uploadfileids, 1, true);
     }

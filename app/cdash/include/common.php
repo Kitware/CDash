@@ -612,7 +612,6 @@ function remove_build($buildid)
         // Use array_diff to get the list of tests that should be deleted.
         $testoutputs_to_delete = array_diff($all_outputids, $testoutputs_to_save);
         if (!empty($testoutputs_to_delete)) {
-            delete_rows_chunked('DELETE FROM testmeasurement WHERE outputid IN ', $testoutputs_to_delete);
             delete_rows_chunked('DELETE FROM testoutput WHERE id IN ', $testoutputs_to_delete);
 
             $testoutputs_to_delete_prepare_array = $db->createPreparedArray(count($testoutputs_to_delete));

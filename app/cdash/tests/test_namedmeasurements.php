@@ -46,8 +46,7 @@ class NamedMeasurementsTestCase extends KWWebTestCase
         $results = DB::select("
             SELECT testmeasurement.value
             FROM testmeasurement
-            JOIN testoutput ON (testmeasurement.outputid = testoutput.id)
-            JOIN build2test ON (testoutput.id = build2test.outputid)
+            JOIN build2test ON (testmeasurement.testid = build2test.id)
             JOIN build ON (build2test.buildid = build.id)
             WHERE build.projectid = :projectid
             AND testmeasurement.name = 'archive directory'
