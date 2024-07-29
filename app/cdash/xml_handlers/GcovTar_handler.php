@@ -291,7 +291,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
             if (count($fields) > 2) {
                 // Separate out delimited values from this line.
                 $timesHit = trim($fields[0]);
-                $lineNumber = trim($fields[1]);
+                $lineNumber = (int) trim($fields[1]);
                 $sourceLine = rtrim($fields[2]);
 
                 //check for duplicate line output

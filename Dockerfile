@@ -143,22 +143,11 @@ ENV TZ=UTC \
 
 USER 0
 
-# core pkg update & epel enable (https://docs.fedoraproject.org/en-US/epel/)
-RUN dnf upgrade -y \
-        --refresh \
-        --nodocs \
-        --noplugins \
-        --setopt=install_weak_deps=0 \
-        && \
-    dnf reinstall -y \
-        --refresh \
-        --nodocs \
-        --noplugins \
-        --setopt=install_weak_deps=0 \
-        tzdata \
-        && \
-    rpm --import https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-9 && \
-    rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+# Install Composer
+RUN TEMPFILE=$(mktemp) && \
+    curl -o "$TEMPFILE" "https://getcomposer.org/installer" && \
+    php < "$TEMPFILE" && \
+    mv composer.phar /usr/local/bin/composer
 
 # install dependencies
 RUN dnf install -y \
@@ -176,7 +165,6 @@ RUN dnf install -y \
       unzip \
       zip \
       #> cdash
-      composer-2.* \
       php-bcmath \
       php-fpm \
       php-gd \

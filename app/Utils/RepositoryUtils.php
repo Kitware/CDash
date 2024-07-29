@@ -357,23 +357,6 @@ class RepositoryUtils
         return make_cdash_url($diff_url);
     }
 
-    /** Return the Gitorious/GitHub diff URL */
-    public static function get_gitoriousish_diff_url($projecturl, $directory, $file, $revision, $blobs, $branch = 'master')
-    {
-        if ($revision != '') {
-            $diff_url = $projecturl . '/commit/' . $revision;
-        } elseif ($file != '') {
-            $diff_url = $projecturl . '/' . $blobs . '/' . $branch . '/';
-            if ($directory != '') {
-                $diff_url .= $directory . '/';
-            }
-            $diff_url .= $file;
-        } else {
-            return '';
-        }
-        return make_cdash_url($diff_url);
-    }
-
     /** Return the Stash diff URL */
     public static function get_stash_diff_url($projecturl, $directory, $file, $revision)
     {
@@ -388,8 +371,18 @@ class RepositoryUtils
     /** Return the Gitorious diff URL */
     public static function get_gitorious_diff_url($projecturl, $directory, $file, $revision)
     {
-        // Gitorious uses 'blobs' or 'trees' (plural)
-        return self::get_gitoriousish_diff_url($projecturl, $directory, $file, $revision, 'blobs');
+        if ($revision !== '') {
+            $diff_url = $projecturl . '/commit/' . $revision;
+        } elseif ($file !== '') {
+            $diff_url = $projecturl . '/blobs/master/';
+            if ($directory !== '') {
+                $diff_url .= $directory . '/';
+            }
+            $diff_url .= $file;
+        } else {
+            return '';
+        }
+        return make_cdash_url($diff_url);
     }
 
     /** Return the source directory for a source file */
@@ -449,8 +442,20 @@ class RepositoryUtils
     /** Return the GitLab diff URL */
     public static function get_gitlab_diff_url($projecturl, $directory, $file, $revision)
     {
-        // GitLab uses 'blob' or 'tree' (singular, no s)
-        return self::get_gitoriousish_diff_url($projecturl, $directory, $file, $revision, 'blob');
+        // Since GitLab supports arbitrarily nested groups, there is a `/-/`
+        // component to start per-project resources.
+        if ($revision !== '') {
+            $diff_url = $projecturl . '/-/commit/' . $revision;
+        } elseif ($file !== '') {
+            $diff_url = $projecturl . '/-/blob/master/';
+            if ($directory !== '') {
+                $diff_url .= $directory . '/';
+            }
+            $diff_url .= $file;
+        } else {
+            return '';
+        }
+        return make_cdash_url($diff_url);
     }
 
     /** Return the cgit diff URL */
