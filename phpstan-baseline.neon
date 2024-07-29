@@ -3252,7 +3252,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 29
+			count: 26
 			path: app/Utils/RepositoryUtils.php
 
 		-
@@ -3702,41 +3702,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitorious_revision_url\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$blobs with no type specified\\.$#"
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$branch with no type specified\\.$#"
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$directory with no type specified\\.$#"
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$projecturl with no type specified\\.$#"
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_gitoriousish_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
@@ -12625,7 +12590,7 @@ parameters:
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
 			"""
-			count: 3
+			count: 1
 			path: app/cdash/include/common.php
 
 		-
@@ -12787,21 +12752,6 @@ parameters:
 
 		-
 			message: "#^Function delete_rows_chunked\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function extract_tar\\(\\) never returns null so it can be removed from the return type\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function extract_tar_archive_tar\\(\\) has parameter \\$dirName with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function extract_tar_archive_tar\\(\\) has parameter \\$filename with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -24456,20 +24406,15 @@ parameters:
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Binary operation \"\\-\" between 0\\|string and 1 results in an error\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/GcovTar_handler.php
-
-		-
-			message: "#^Binary operation \"\\-\" between string and 1 results in an error\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/GcovTar_handler.php
-
-		-
 			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
 			"""
+			count: 1
+			path: app/cdash/xml_handlers/GcovTar_handler.php
+
+		-
+			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
