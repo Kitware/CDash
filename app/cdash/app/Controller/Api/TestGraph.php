@@ -16,7 +16,7 @@
 
 namespace CDash\Controller\Api;
 
-use App\Models\BuildTest;
+use App\Models\Test;
 use CDash\Database;
 
 require_once 'include/api_common.php';
@@ -27,7 +27,7 @@ class TestGraph extends BuildTestApi
     public $buildtest;
     public $validTypes;
 
-    public function __construct(Database $db, BuildTest $buildtest)
+    public function __construct(Database $db, Test $buildtest)
     {
         $this->echoResponse = true;
         $this->validTypes = ['time', 'status', 'measurement'];

@@ -25,9 +25,9 @@ use Illuminate\Support\Facades\Config;
  * @property string $details
  * @property string $testname
  *
- * @mixin Builder<BuildTest>
+ * @mixin Builder<Test>
  */
-class BuildTest extends Model
+class Test extends Model
 {
     public $timestamps = false;
 
@@ -37,7 +37,6 @@ class BuildTest extends Model
     // TODO: Put these in an enum somewhere
     public const FAILED = 'failed';
     public const PASSED = 'passed';
-    public const OTHER_FAULT = 'OTHER_FAULT';
     public const TIMEOUT = 'Timeout';
     public const NOTRUN = 'notrun';
     public const DISABLED = 'Disabled';
@@ -45,6 +44,19 @@ class BuildTest extends Model
     protected $attributes = [
         'timemean' => 0.0,
         'timestd' => 0.0,
+    ];
+
+    protected $fillable = [
+        'buildid',
+        'outputid',
+        'status',
+        'time',
+        'timemean',
+        'timestd',
+        'timestatus',
+        'newstatus',
+        'details',
+        'testname',
     ];
 
     protected $casts = [
@@ -199,7 +211,7 @@ class BuildTest extends Model
         }
 
         if (config('database.default') == 'pgsql' && $marshaledData['buildtestid']) {
-            $buildtest = BuildTest::where('id', '=', $data['buildtestid'])->first();
+            $buildtest = Test::where('id', '=', $data['buildtestid'])->first();
             if ($buildtest) {
                 $marshaledData['labels'] = $buildtest->getLabels()->keys()->all();
             }

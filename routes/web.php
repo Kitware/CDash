@@ -133,7 +133,7 @@ Route::permanentRedirect('/test/{id}', url('/tests/{id}'));
 Route::get('/testDetails.php', function (Request $request) {
     $buildid = $request->query('build');
     $testid = $request->query('test');
-    $buildtest = \App\Models\BuildTest::where('buildid', $buildid)->where('testid', $testid)->first();
+    $buildtest = \App\Models\Test::where('buildid', $buildid)->where('testid', $testid)->first();
     if ($buildtest !== null) {
         return redirect("/tests/{$buildtest->id}", 301);
     }

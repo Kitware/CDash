@@ -16,7 +16,7 @@
 
 namespace CDash\Controller\Api;
 
-use App\Models\BuildTest;
+use App\Models\Test;
 
 use CDash\Database;
 use CDash\Model\Build;
@@ -36,7 +36,7 @@ abstract class BuildTestApi extends BuildApi
     public $testHistoryQueryOrder;
     public $testHistoryQueryParams;
 
-    public function __construct(Database $db, BuildTest $buildtest)
+    public function __construct(Database $db, Test $buildtest)
     {
         $this->buildtest = $buildtest;
 

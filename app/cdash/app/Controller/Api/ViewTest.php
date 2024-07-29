@@ -16,7 +16,7 @@
 
 namespace CDash\Controller\Api;
 
-use App\Models\BuildTest;
+use App\Models\Test;
 use App\Models\Project as EloquentProject;
 
 use CDash\Database;
@@ -378,7 +378,7 @@ class ViewTest extends BuildApi
 
         // Generate a response for each test found.
         while ($row = $stmt->fetch()) {
-            $marshaledTest = BuildTest::marshal($row, $row['buildid'], $this->build->ProjectId, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus, $testdate);
+            $marshaledTest = Test::marshal($row, $row['buildid'], $this->build->ProjectId, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus, $testdate);
 
             if ($marshaledTest['status'] == 'Passed') {
                 $numPassed++;
@@ -415,7 +415,7 @@ class ViewTest extends BuildApi
 
         if ($numMissing > 0) {
             foreach ($this->build->MissingTests as $name) {
-                $marshaledTest = BuildTest::marshalMissing($name, $buildid, $this->build->ProjectId, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus, $testdate);
+                $marshaledTest = Test::marshalMissing($name, $buildid, $this->build->ProjectId, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus, $testdate);
                 array_unshift($tests, $marshaledTest);
             }
         }

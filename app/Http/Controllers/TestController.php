@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\BuildTest;
+use App\Models\Test;
 use App\Utils\PageTimer;
 use CDash\Controller\Api\TestOverview as LegacyTestOverviewController;
 use CDash\Controller\Api\TestDetails as LegacyTestDetailsController;
@@ -25,7 +25,7 @@ final class TestController extends AbstractProjectController
     // Render the test details page.
     public function details($buildtest_id = null)
     {
-        $buildtest = BuildTest::findOrFail((int) $buildtest_id);
+        $buildtest = Test::findOrFail((int) $buildtest_id);
         $projectid = $buildtest->build?->projectid;
 
         if ($projectid === null) {
@@ -45,7 +45,7 @@ final class TestController extends AbstractProjectController
             abort(400, 'A valid test was not specified.');
         }
 
-        $buildtest = BuildTest::where('id', '=', $buildtestid)->first();
+        $buildtest = Test::where('id', '=', $buildtestid)->first();
         if ($buildtest === null) {
             // Create a dummy project object to prevent information leakage between different error cases
             $project = new Project();
@@ -537,7 +537,7 @@ final class TestController extends AbstractProjectController
 
         $testname = request()->input('testname');
 
-        $buildtest = BuildTest::where('buildid', '=', $buildid)
+        $buildtest = Test::where('buildid', '=', $buildid)
             ->where('testname', '=', $testname)
             ->first();
         if ($buildtest === null) {

@@ -146,11 +146,11 @@ class Build extends Model
     }
 
     /**
-     * @return HasMany<BuildTest>
+     * @return HasMany<Test>
      */
-    public function buildtests(): HasMany
+    public function tests(): HasMany
     {
-        return $this->hasMany(BuildTest::class, 'buildid');
+        return $this->hasMany(Test::class, 'buildid');
     }
 
     /**

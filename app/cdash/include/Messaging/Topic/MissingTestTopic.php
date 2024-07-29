@@ -16,7 +16,7 @@
 
 namespace CDash\Messaging\Topic;
 
-use App\Models\BuildTest;
+use App\Models\Test;
 
 use CDash\Model\Build;
 
@@ -50,7 +50,7 @@ class MissingTestTopic extends Topic
         // GetMissingTests currently returns array
         $rows = $build->GetMissingTests();
         foreach ($rows as $id => $name) {
-            $buildTest = new BuildTest();
+            $buildTest = new Test();
             $buildTest->buildid = $build->Id;
             $buildTest->testname = $name;
             $collection->put($name, $buildTest);

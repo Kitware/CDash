@@ -16,7 +16,7 @@
 
 namespace App\Utils;
 
-use App\Models\BuildTest;
+use App\Models\Test;
 use App\Models\TestImage;
 
 use CDash\Model\Build;
@@ -206,7 +206,7 @@ class TestCreator
         }
 
         // build2test
-        $buildtest = new BuildTest;
+        $buildtest = new Test;
         $buildtest->buildid = $build->Id;
         $buildtest->outputid = $outputid;
         $buildtest->status = $this->testStatus;
