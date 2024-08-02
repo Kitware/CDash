@@ -26,7 +26,7 @@
     "aws/aws-sdk-php": "3.315.2",
     "directorytree/ldaprecord-laravel": "3.3.3",
     "doctrine/dbal": "3.8.6",
-    "guzzlehttp/guzzle": "7.8.1",
+    "guzzlehttp/guzzle": "7.9.2",
     "http-interop/http-factory-guzzle": "1.2.0",
     "knplabs/github-api": "3.14.1",
     "laravel/framework": "10.48.14",
