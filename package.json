@@ -39,7 +39,7 @@
     "daisyui": "^4.12.10",
     "del": "^6.1.1",
     "eslint": "^8.57.0",
-    "eslint-plugin-vue": "^9.26.0",
+    "eslint-plugin-vue": "^9.27.0",
     "flot": "^4.2.6",
     "git-revision-webpack-plugin": "^5.0.0",
     "graphql": "^16.9.0",
