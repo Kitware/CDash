@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "472979bc74574a067d35cfba42d0ef5a",
+    "content-hash": "053870ffc98a6633d1fcfc2790515913",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -3752,16 +3752,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v6.39.0",
+            "version": "v6.42.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "29b99f7dae3fe3a65e4a7f7951603da072ad023e"
+                "reference": "c09194823252738ee41f00af7ebe5bbeb65e6c8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/29b99f7dae3fe3a65e4a7f7951603da072ad023e",
-                "reference": "29b99f7dae3fe3a65e4a7f7951603da072ad023e",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/c09194823252738ee41f00af7ebe5bbeb65e6c8c",
+                "reference": "c09194823252738ee41f00af7ebe5bbeb65e6c8c",
                 "shasum": ""
             },
             "require": {
@@ -3874,15 +3874,11 @@
                     "type": "github"
                 },
                 {
-                    "url": "https://issuehunt.io/r/nuwave/lighthouse",
-                    "type": "issuehunt"
-                },
-                {
                     "url": "https://www.patreon.com/lighthouse_php",
                     "type": "patreon"
                 }
             ],
-            "time": "2024-07-02T08:10:31+00:00"
+            "time": "2024-07-25T09:49:22+00:00"
         },
         {
             "name": "nyholm/psr7",
