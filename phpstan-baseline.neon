@@ -33,7 +33,7 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Console\\\\Commands\\\\AutoRemoveBuilds\\:\\:handle\\(\\) should return mixed but return statement is missing\\.$#"
-			count: 1
+			count: 2
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
@@ -879,6 +879,16 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
+			message: "#^Binary operation \"\\+\" between \\(array\\|float\\|int\\) and 10 results in an error\\.$#"
+			count: 2
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and \\(array\\|float\\|int\\) results in an error\\.$#"
+			count: 4
+			path: app/Http/Controllers/CoverageController.php
+
+		-
 			message: """
 				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
@@ -1679,6 +1689,16 @@ parameters:
 		-
 			message: "#^Access to an undefined property object\\:\\:\\$numdefects\\.$#"
 			count: 2
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
+			message: "#^Binary operation \"\\+\\=\" between \\(array\\|float\\|int\\) and int results in an error\\.$#"
+			count: 2
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
+			message: "#^Binary operation \"/\" between \\(array\\|float\\|int\\) and int\\<min, \\-1\\>\\|int\\<1, max\\> results in an error\\.$#"
+			count: 1
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
@@ -4426,7 +4446,7 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: "#^Offset 1 might not exist on array\\{0\\?\\: string, 1\\?\\: string\\}\\.$#"
+			message: "#^Offset 1 might not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string\\}\\.$#"
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
@@ -4942,6 +4962,11 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
+			message: "#^Binary operation \"\\+\" between \\(int\\|string\\) and 1 results in an error\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/Index.php
 
@@ -8100,6 +8125,11 @@ parameters:
 			message: "#^Property CDash\\\\Model\\\\Coverage\\:\\:\\$LocUntested has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Coverage.php
+
+		-
+			message: "#^Binary operation \"\\+\" between \\(array\\|float\\|int\\) and 10 results in an error\\.$#"
+			count: 1
+			path: app/cdash/app/Model/CoverageFile.php
 
 		-
 			message: """
@@ -13116,6 +13146,16 @@ parameters:
 			path: app/cdash/include/ctestparser.php
 
 		-
+			message: "#^Binary operation \"\\.\" between \\(list\\<string\\>\\|string\\|null\\) and '_' results in an error\\.$#"
+			count: 2
+			path: app/cdash/include/ctestparser.php
+
+		-
+			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and \\(list\\<string\\>\\|string\\|null\\) results in an error\\.$#"
+			count: 2
+			path: app/cdash/include/ctestparser.php
+
+		-
 			message: "#^Call to an undefined method object\\:\\:getBuildName\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparser.php
@@ -13649,7 +13689,7 @@ parameters:
 			path: app/cdash/include/dailyupdates.php
 
 		-
-			message: "#^Offset 'comment' might not exist on array\\{\\}\\|array\\{author\\?\\: string, comment\\?\\: string, directory\\?\\: string, email\\?\\: string, filename\\?\\: string, priorrevision\\?\\: '', revision\\?\\: string, time\\?\\: string\\}\\.$#"
+			message: "#^Offset 'comment' might not exist on array\\{\\}\\|array\\{author\\?\\: string, comment\\?\\: string, directory\\?\\: string, email\\?\\: string, filename\\?\\: string, priorrevision\\?\\: '', revision\\?\\: numeric\\-string, time\\?\\: string\\}\\.$#"
 			count: 1
 			path: app/cdash/include/dailyupdates.php
 
@@ -13664,7 +13704,7 @@ parameters:
 			path: app/cdash/include/dailyupdates.php
 
 		-
-			message: "#^Offset 'revision' might not exist on array\\{author\\?\\: string, comment\\?\\: string, directory\\: string, email\\?\\: string, filename\\: string, priorrevision\\?\\: '', revision\\?\\: string, time\\?\\: string\\}\\.$#"
+			message: "#^Offset 'revision' might not exist on array\\{author\\?\\: string, comment\\?\\: string, directory\\: string, email\\?\\: string, filename\\: string, priorrevision\\?\\: '', revision\\?\\: numeric\\-string, time\\?\\: string\\}\\.$#"
 			count: 1
 			path: app/cdash/include/dailyupdates.php
 
@@ -14585,6 +14625,11 @@ parameters:
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 4
 			path: app/cdash/public/api/v1/buildgroup.php
+
+		-
+			message: "#^Binary operation \"/\" between \\(array\\|float\\|int\\) and \\(array\\|float\\|int\\) results in an error\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
 			message: """
@@ -18690,7 +18735,7 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Offset 1 on array\\{string, string\\} in isset\\(\\) always exists and is not nullable\\.$#"
+			message: "#^Offset 1 on array\\{string, numeric\\-string\\} in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -18944,12 +18989,12 @@ parameters:
 			path: app/cdash/tests/manageCoverageTest.php
 
 		-
-			message: "#^Offset 1 might not exist on array\\{0\\?\\: string, 1\\?\\: string, 2\\?\\: string\\}\\.$#"
+			message: "#^Offset 1 might not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string, 2\\?\\: numeric\\-string\\}\\.$#"
 			count: 1
 			path: app/cdash/tests/manageCoverageTest.php
 
 		-
-			message: "#^Offset 2 might not exist on array\\{0\\?\\: string, 1\\?\\: string, 2\\?\\: string\\}\\.$#"
+			message: "#^Offset 2 might not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string, 2\\?\\: numeric\\-string\\}\\.$#"
 			count: 1
 			path: app/cdash/tests/manageCoverageTest.php
 
@@ -21858,7 +21903,7 @@ parameters:
 			path: app/cdash/tests/test_manageprojectroles.php
 
 		-
-			message: "#^Offset 1 might not exist on array\\{0\\?\\: string, 1\\?\\: string\\}\\.$#"
+			message: "#^Offset 1 might not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string\\}\\.$#"
 			count: 1
 			path: app/cdash/tests/test_manageprojectroles.php
 
