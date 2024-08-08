@@ -128,7 +128,7 @@ class ProjectPermissions extends TestCase
         // Verify that she cannot access PrivateProject2.
         $_GET['project'] = $this->private_project2->Name;
         $response = $this->actingAs($this->normal_user)->get('/api/v1/index.php');
-        $response->assertJson(['error' => 'You do not have permission to access this page.']);
+        $response->assertJson(['error' => 'You do not have access to the requested project or the requested project does not exist.']);
 
         // Verify that viewProjects.php lists public, protected, and private1, but not private2.
         $_GET['project'] = '';

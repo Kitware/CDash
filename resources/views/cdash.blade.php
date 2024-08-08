@@ -82,6 +82,11 @@
                 ng-if="!loading"
             @endif
         >
+
+            @if(isset($angular) && $angular === true)
+                <div ng-if="cdash.error">@{{cdash.error}}</div>
+            @endif
+
             @hasSection('main_content')
                 @yield('main_content')
             @elseif(isset($xsl) && $xsl === true)
