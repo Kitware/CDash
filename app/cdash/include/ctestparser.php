@@ -20,6 +20,7 @@ use CDash\Model\Project;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Utils\SubmissionUtils;
+use App\Exceptions\CDashXMLValidationException;
 
 class CDashParseException extends RuntimeException
 {
@@ -155,7 +156,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, int|null 
 }
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($filehandle, $projectid, $expected_md5 = '', int|null $buildid=null): AbstractSubmissionHandler|false
+function ctest_parse($filehandle, string $filename, $projectid, $expected_md5 = '', int|null $buildid=null): AbstractSubmissionHandler|false
 {
     // Check if this is a new style PUT submission.
     try {
@@ -178,10 +179,30 @@ function ctest_parse($filehandle, $projectid, $expected_md5 = '', int|null $buil
     $Project->Id = $projectid;
 
     // Figure out what type of XML file this is.
-    $xml_info = SubmissionUtils::get_xml_type($filehandle);
+    try {
+        $xml_info = SubmissionUtils::get_xml_type($filehandle, $filename);
+    } catch (CDashXMLValidationException $e) {
+        foreach ($e->getDecodedMessage() as $error) {
+            Log::error($error);
+        }
+        return false;
+    }
     $filehandle = $xml_info['file_handle'];
     $handler_ref = $xml_info['xml_handler'];
     $file = $xml_info['xml_type'];
+    $schema_file = $xml_info['xml_schema'];
+
+    // Ensure the XML file is valid if the XML type has a schema defined
+    if (isset($schema_file)) {
+        try {
+            SubmissionUtils::validate_xml($filename, $schema_file);
+        } catch (CDashXMLValidationException $e) {
+            foreach ($e->getDecodedMessage() as $error) {
+                Log::error($error);
+            }
+            return false;
+        }
+    }
 
     $handler = isset($handler_ref) ? new $handler_ref($Project) : null;
 
