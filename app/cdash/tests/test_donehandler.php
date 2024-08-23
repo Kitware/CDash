@@ -40,6 +40,9 @@ class DoneHandlerTestCase extends KWWebTestCase
 
         $this->performTest(true);
 
+        // Verify that we didn't leave any files behind in the inbox directory.
+        $this->assertEqual(count(Storage::files('inbox')), 0);
+
         file_put_contents($this->ConfigFile, $this->Original);
     }
 
