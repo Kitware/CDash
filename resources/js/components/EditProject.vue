@@ -424,7 +424,7 @@
                   <td />
                   <td>
                     <div align="right">
-                      <strong>LDAP Group:</strong>
+                      <strong>LDAP Filter:</strong>
                     </div>
                   </td>
                   <td>
