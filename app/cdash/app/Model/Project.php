@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Project as EloquentProject;
 use App\Models\User;
+use App\Utils\DatabaseCleanupUtils;
 use RuntimeException;
 
 /** Main project class */
@@ -1304,8 +1305,7 @@ class Project
 
         // Remove old builds.
         $num_to_remove = $num_builds - $max_builds;
-        require_once 'include/autoremove.php';
-        removeFirstBuilds($this->Id, -1, $num_to_remove, true, false);
+        DatabaseCleanupUtils::removeFirstBuilds($this->Id, -1, $num_to_remove, true, false);
 
         Log::info("Too many builds for $this->Name");
         return true;

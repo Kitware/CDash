@@ -3151,6 +3151,16 @@ parameters:
 			path: app/Utils/AuthTokenUtil.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:limit\\(\\)\\.$#"
+			count: 1
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
 			message: "#^Call to an undefined method LdapRecord\\\\Models\\\\Model\\:\\:groups\\(\\)\\.$#"
 			count: 1
 			path: app/Utils/LdapUtils.php
@@ -12538,16 +12548,6 @@ parameters:
 			message: "#^Only booleans are allowed in an if condition, int given\\.$#"
 			count: 1
 			path: app/cdash/include/api_common.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:limit\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/include/autoremove.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:orderBy\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/include/autoremove.php
 
 		-
 			message: "#^Anonymous function has an unused use \\$headers\\.$#"

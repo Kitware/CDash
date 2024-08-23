@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 use Illuminate\Console\Command;
-
-require_once 'include/autoremove.php';
 
 class AutoRemoveBuilds extends Command
 {
@@ -69,13 +68,13 @@ class AutoRemoveBuilds extends Command
 
             $db->execute($stmt, $args);
             while ($project_array = $stmt->fetch()) {
-                removeFirstBuilds(
+                DatabaseCleanupUtils::removeFirstBuilds(
                     $project_array['id'],
                     $project_array['autoremovetimeframe'],
                     (int) $project_array['autoremovemaxbuilds'],
                     true // force the autoremove
                 );
-                removeBuildsGroupwise(
+                DatabaseCleanupUtils::removeBuildsGroupwise(
                     (int) $project_array['id'],
                     (int) $project_array['autoremovemaxbuilds'],
                     true // force the autoremove
