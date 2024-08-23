@@ -30,6 +30,7 @@ class ProcessSubmission implements ShouldQueue
     public int $timeout;
 
     public $filename;
+    public string $localFilename = '';
     public $projectid;
     public $buildid;
     public $expected_md5;
@@ -89,6 +90,9 @@ class ProcessSubmission implements ShouldQueue
                     'projectid' => $this->projectid,
                 ],
             ]);
+            if ($this->localFilename !== '') {
+                unlink($this->localFilename);
+            }
             return $response->getStatusCode() == 200;
         } else {
             // Increment retry count.
@@ -148,6 +152,10 @@ class ProcessSubmission implements ShouldQueue
             $this->renameSubmissionFile("inprogress/{$this->filename}", "parsed/{$handler->backupFileName}");
         }
 
+        if ((bool) config('cdash.remote_workers') && $this->localFilename !== '') {
+            unlink($this->localFilename);
+        }
+
         unset($handler);
         $handler = null;
 
@@ -166,6 +174,10 @@ class ProcessSubmission implements ShouldQueue
     {
         Log::warning("Failed to process {$this->filename} with message: {$exception}");
         $this->renameSubmissionFile("inprogress/{$this->filename}", "failed/{$this->filename}");
+
+        if ((bool) config('cdash.remote_workers') && $this->localFilename !== '') {
+            unlink($this->localFilename);
+        }
     }
 
     /**
@@ -245,20 +257,20 @@ class ProcessSubmission implements ShouldQueue
     {
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
         $_t = tempnam(Storage::path('inbox'), 'cdash-submission-');
-        $tmpFilename = "{$_t}.{$ext}";
-        rename($_t, $tmpFilename);
+        $this->localFilename = "{$_t}.{$ext}";
+        rename($_t, $this->localFilename);
 
         $client = new \GuzzleHttp\Client();
         $url = url('/api/v1/getSubmissionFile.php');
         $response = $client->request('GET', $url, [
             'query' => ['filename' => encrypt($filename)],
-            'sink' => $tmpFilename,
+            'sink' => $this->localFilename,
         ]);
 
         if ($response->getStatusCode() === 200) {
             // @todo I'm sure Guzzle can be used to return a file handle from the stream, but for now
             // I'm just creating a temporary file with the output
-            return fopen($tmpFilename, 'r');
+            return fopen($this->localFilename, 'r');
         } else {
             // Log the status code and requested filename.
             // (404 status means it's already been processed).
@@ -270,10 +282,10 @@ class ProcessSubmission implements ShouldQueue
 
     private function getSubmissionFileHandle($filename)
     {
-        if (Storage::exists($filename)) {
-            return fopen(Storage::path($filename), 'r');
-        } elseif (is_string($filename) && config('cdash.remote_workers')) {
+        if ((bool) config('cdash.remote_workers') && is_string($filename)) {
             return $this->getRemoteSubmissionFileHandle($filename);
+        } elseif (Storage::exists($filename)) {
+            return fopen(Storage::path($filename), 'r');
         } else {
             \Log::error('Failed to get a file handle for submission (was type ' . gettype($filename) . ')');
             return false;
