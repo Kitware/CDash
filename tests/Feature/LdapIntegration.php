@@ -17,9 +17,6 @@ class LdapIntegration extends TestCase
 {
     use CreatesProjects;
 
-    protected Group $group_1;
-    protected Group $group_2;
-
     /**
      * @var array<string,User>
      */
@@ -40,90 +37,71 @@ class LdapIntegration extends TestCase
         putenv('LDAP_PASSWORD=password');
         putenv('CDASH_AUTHENTICATION_PROVIDER=ldap');
         putenv('LDAP_PROVIDER=openldap');
-        putenv('LDAP_HOST=ldap');
+        putenv('LDAP_HOSTS=ldap');
         putenv('LDAP_BASE_DN="dc=example,dc=org"');
         putenv('LDAP_LOGGING=true');
         putenv('LDAP_LOCATE_USERS_BY=uid');
 
         parent::setUp();
 
-        // Create two groups
-        $this->group_1 = Group::create([
-            'cn' => 'cdash_users_1_' . Str::uuid()->toString(),
-            'uniqueMember' => 'ou=users,dc=example,dc=org',
-        ]);
-
-        $this->group_2 = Group::create([
-            'cn' => 'cdash_users_2_' . Str::uuid()->toString(),
-            'uniqueMember' => 'ou=users,dc=example,dc=org',
-        ]);
-
         // Create a pair of users which are only in group 1
         $this->users['group_1_only_1'] = User::create([
-            'uid' => Str::uuid()->toString(),
+            'uid' => 'group_1_' . Str::uuid()->toString(),
             'cn' => Str::uuid()->toString(),
             'userpassword' => Str::uuid()->toString(),
             'objectclass' => 'inetOrgPerson',
             'sn' => Str::uuid()->toString(),
         ]);
-        $this->group_1->members()->attach($this->users['group_1_only_1']);
 
         $this->users['group_1_only_2'] = User::create([
-            'uid' => Str::uuid()->toString(),
+            'uid' => 'group_1_' . Str::uuid()->toString(),
             'cn' => Str::uuid()->toString(),
             'userpassword' => Str::uuid()->toString(),
             'objectclass' => 'inetOrgPerson',
             'sn' => Str::uuid()->toString(),
         ]);
-        $this->group_1->members()->attach($this->users['group_1_only_2']);
 
         // Create a pair of users which are only in group 2
         $this->users['group_2_only_1'] = User::create([
-            'uid' => Str::uuid()->toString(),
+            'uid' => 'group_2_' . Str::uuid()->toString(),
             'cn' => Str::uuid()->toString(),
             'userpassword' => Str::uuid()->toString(),
             'objectclass' => 'inetOrgPerson',
             'sn' => Str::uuid()->toString(),
         ]);
-        $this->group_2->members()->attach($this->users['group_2_only_1']);
 
         $this->users['group_2_only_2'] = User::create([
-            'uid' => Str::uuid()->toString(),
+            'uid' => 'group_2_' . Str::uuid()->toString(),
             'cn' => Str::uuid()->toString(),
             'userpassword' => Str::uuid()->toString(),
             'objectclass' => 'inetOrgPerson',
             'sn' => Str::uuid()->toString(),
         ]);
-        $this->group_2->members()->attach($this->users['group_2_only_2']);
 
         // Create a pair of users which are in both groups
         $this->users['groups_1_and_2_1'] = User::create([
-            'uid' => Str::uuid()->toString(),
+            'uid' => 'group_1_group_2_' . Str::uuid()->toString(),
             'cn' => Str::uuid()->toString(),
             'userpassword' => Str::uuid()->toString(),
             'objectclass' => 'inetOrgPerson',
             'sn' => Str::uuid()->toString(),
         ]);
-        $this->group_1->members()->attach($this->users['groups_1_and_2_1']);
-        $this->group_2->members()->attach($this->users['groups_1_and_2_1']);
 
         $this->users['groups_1_and_2_2'] = User::create([
-            'uid' => Str::uuid()->toString(),
+            'uid' => 'group_1_group_2_' . Str::uuid()->toString(),
             'cn' => Str::uuid()->toString(),
             'userpassword' => Str::uuid()->toString(),
             'objectclass' => 'inetOrgPerson',
             'sn' => Str::uuid()->toString(),
         ]);
-        $this->group_1->members()->attach($this->users['groups_1_and_2_2']);
-        $this->group_2->members()->attach($this->users['groups_1_and_2_2']);
 
         // Create a pair of projects which are restricted to specific LDAP groups
         $this->projects['only_group_1'] = Project::findOrFail((int) $this->makePrivateProject()->Id);
-        $this->projects['only_group_1']->ldapfilter = "cn={$this->group_1->getAttribute('cn')[0]},dc=example,dc=org";
+        $this->projects['only_group_1']->ldapfilter = "(uid=*group_1*)";
         $this->projects['only_group_1']->save();
 
         $this->projects['only_group_2'] = Project::findOrFail((int) $this->makePrivateProject()->Id);
-        $this->projects['only_group_2']->ldapfilter = "cn={$this->group_2->getAttribute('cn')[0]},dc=example,dc=org";
+        $this->projects['only_group_2']->ldapfilter = "(uid=*group_2*)";
         $this->projects['only_group_2']->save();
     }
 
@@ -139,13 +117,10 @@ class LdapIntegration extends TestCase
         putenv('LDAP_PASSWORD');
         putenv('CDASH_AUTHENTICATION_PROVIDER');
         putenv('LDAP_PROVIDER');
-        putenv('LDAP_HOST');
+        putenv('LDAP_HOSTS');
         putenv('LDAP_BASE_DN');
         putenv('LDAP_LOGGING');
         putenv('LDAP_LOCATE_USERS_BY');
-
-        $this->group_1->delete(true);
-        $this->group_2->delete(true);
 
         foreach ($this->users as $key => $user) {
             $user->delete(true);
@@ -214,7 +189,7 @@ class LdapIntegration extends TestCase
         \App\Models\User::where(['email' => $user_all_groups->getAttribute('uid')[0]])->firstOrFail()->delete();
 
         // Restrict login to members of group 1 only
-        putenv("LDAP_FILTERS_ON=cn={$this->group_1->getAttribute('cn')[0]},dc=example,dc=org");
+        putenv("LDAP_FILTERS_ON=(uid=*group_1*)");
         $this->post('/login', [
             'email' => $user_group_1->getAttribute('uid')[0],
             'password' => $user_group_1->getAttribute('userpassword')[0],
@@ -236,6 +211,31 @@ class LdapIntegration extends TestCase
         self::assertCount(0, User::where(['email' => $user_group_2->getAttribute('uid')[0]])->get());
         \App\Models\User::where(['email' => $user_all_groups->getAttribute('uid')[0]])->firstOrFail()->delete();
 
+        // Restrict login to both groups
+        putenv("LDAP_FILTERS_ON=(|(uid=*group_1*)(uid=*group_2*))");
+
+        $this->post('/login', [
+            'email' => $user_group_1->getAttribute('uid')[0],
+            'password' => $user_group_1->getAttribute('userpassword')[0],
+        ])->assertRedirect('/');
+        $this->get('/logout')->assertRedirect('/');
+
+        $this->post('/login', [
+            'email' => $user_group_2->getAttribute('uid')[0],
+            'password' => $user_group_2->getAttribute('userpassword')[0],
+        ])->assertRedirect('/');
+        $this->get('/logout')->assertRedirect('/');
+
+        $this->post('/login', [
+            'email' => $user_all_groups->getAttribute('uid')[0],
+            'password' => $user_all_groups->getAttribute('userpassword')[0],
+        ])->assertRedirect('/');
+        $this->get('/logout')->assertRedirect('/');
+
+        \App\Models\User::where(['email' => $user_group_1->getAttribute('uid')[0]])->firstOrFail()->delete();
+        \App\Models\User::where(['email' => $user_group_2->getAttribute('uid')[0]])->firstOrFail()->delete();
+        \App\Models\User::where(['email' => $user_all_groups->getAttribute('uid')[0]])->firstOrFail()->delete();
+
         // "Delete" the env variable
         putenv('LDAP_FILTERS_ON');
     }
@@ -254,13 +254,13 @@ class LdapIntegration extends TestCase
         self::assertNotContains($user->email, $this->projects['only_group_2']->users()->pluck('email'));
 
         // Use a project which didn't have this user as a member when the initial login occurred
-        $this->projects['only_group_2']->ldapfilter = "cn={$this->group_1->getAttribute('cn')[0]},dc=example,dc=org";
+        $this->projects['only_group_2']->ldapfilter = "(uid=*group_1*)";
         $this->projects['only_group_2']->save();
         $this->artisan('ldap:sync_projects');
         self::assertContains($user->email, $this->projects['only_group_2']->users()->pluck('email'));
 
         // Change the group, and verify that the user was removed from the project
-        $this->projects['only_group_2']->ldapfilter = "cn={$this->group_2->getAttribute('cn')[0]},dc=example,dc=org";
+        $this->projects['only_group_2']->ldapfilter = "(uid=*group_2*)";
         $this->projects['only_group_2']->save();
         $this->artisan('ldap:sync_projects');
         self::assertNotContains($user->email, $this->projects['only_group_2']->users()->pluck('email'));
@@ -342,7 +342,7 @@ class LdapIntegration extends TestCase
         $this->assertCanAccessProject('groups_1_and_2_1', 'only_group_2');
 
         // Make sure the membership is removed when the LDAP group rule is changed
-        $this->projects['only_group_2']->ldapfilter = "cn={$this->group_1->getAttribute('cn')[0]},dc=example,dc=org";
+        $this->projects['only_group_2']->ldapfilter = "(uid=*group_1*)";
         $this->projects['only_group_2']->save();
 
         $this->artisan('ldap:sync_projects');
@@ -368,7 +368,7 @@ class LdapIntegration extends TestCase
         // Basic sanity check...
         $this->assertCannotAccessProject('group_1_only_1', 'only_group_2');
 
-        $this->projects['only_group_2']->ldapfilter = "cn={$this->group_1->getAttribute('cn')[0]},dc=example,dc=org";
+        $this->projects['only_group_2']->ldapfilter = "(uid=*group_1*)";
         $this->projects['only_group_2']->save();
 
         // Still can't access the project because the link hasn't been created yet

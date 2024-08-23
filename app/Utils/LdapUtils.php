@@ -12,14 +12,6 @@ class LdapUtils
 {
     public static function syncUser(User $user): void
     {
-        if ($user->ldapguid === null) {
-            $ldap_user = null;
-        } elseif (env('LDAP_PROVIDER', 'openldap') === 'activedirectory') {
-            $ldap_user = \LdapRecord\Models\ActiveDirectory\User::findByGuid($user->ldapguid);
-        } else {
-            $ldap_user = \LdapRecord\Models\OpenLDAP\User::findByGuid($user->ldapguid);
-        }
-
         $projects = Project::with('users')->get();
 
         foreach ($projects as $project) {
@@ -27,9 +19,13 @@ class LdapUtils
                 continue;
             }
 
-            $matches_ldap_filter = $ldap_user !== null && $ldap_user->groups()
-                ->recursive()
-                ->exists(\LdapRecord\Models\Entry::find($project->ldapfilter));
+            if ($user->ldapguid === null) {
+                $matches_ldap_filter  = false;
+            } elseif (env('LDAP_PROVIDER', 'openldap') === 'activedirectory') {
+                $matches_ldap_filter = \LdapRecord\Models\ActiveDirectory\User::rawFilter($project->ldapfilter)->findByGuid($user->ldapguid) instanceof \LdapRecord\Models\ActiveDirectory\User;
+            } else {
+                $matches_ldap_filter = \LdapRecord\Models\OpenLDAP\User::rawFilter($project->ldapfilter)->findByGuid($user->ldapguid) instanceof \LdapRecord\Models\OpenLDAP\User;
+            }
 
             $relationship_already_exists = $project->users->contains($user);
 
