@@ -539,12 +539,11 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
             // Adding tests to ensure that labels associated with subprojects and tests were saved
             $sql = "
-                SELECT text
+                SELECT label.text
                 FROM label2test
-                     JOIN label
-                ON
-                  id=labelid
-                WHERE buildid=:buildid;
+                INNER JOIN label ON label.id=label2test.labelid
+                INNER JOIN build2test ON build2test.id = label2test.testid
+                WHERE build2test.buildid=:buildid;
             ";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':buildid', $build['id'], PDO::PARAM_INT);

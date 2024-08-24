@@ -975,9 +975,10 @@ class Project
                              AND build.starttime>?
                       ) UNION (
                           SELECT labelid AS id
-                          FROM label2test, build
+                          FROM label2test, build, build2test
                           WHERE
-                              label2test.buildid=build.id
+                              build2test.buildid=build.id
+                              AND build2test.id=label2test.testid
                               AND build.projectid=?
                               AND build.starttime>?
                       ) UNION (

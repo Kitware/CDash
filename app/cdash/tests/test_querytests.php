@@ -53,26 +53,23 @@ class QueryTestsTestCase extends KWWebTestCase
         // Make sure cases with more than one label are handled appropriately.
         $query_result = DB::select("
                             SELECT
-                                t.id AS outputid,
-                                l2t.buildid AS buildid
+                                l2t.testid AS testid
                             FROM
                                 label l,
-                                label2test l2t,
-                                testoutput t
+                                label2test l2t
                             WHERE
                                 l.id = l2t.labelid
-                                AND l2t.outputid = t.id
                                 AND l.text = 'Claps'
                             LIMIT 1
                         ")[0];
         DB::insert("INSERT INTO label (text) VALUES ('TestLabel')");
         $labelid = (int) DB::select("SELECT id FROM label WHERE text = 'TestLabel'")[0]->id;
-        DB::insert('INSERT INTO label2test (labelid, buildid, outputid) VALUES (?, ?, ?)', [$labelid, $query_result->buildid, $query_result->outputid]);
+        DB::insert('INSERT INTO label2test (labelid, testid) VALUES (?, ?)', [$labelid, $query_result->testid]);
         $this->get($this->url . '/api/v1/queryTests.php?project=Trilinos&filtercount=1&showfilters=1&field1=label&compare1=63&value1=Claps');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $this->assertEqual($jsonobj['builds'][0]['labels'], 'Claps, TestLabel');
-        DB::insert('DELETE FROM label2test WHERE labelid = ? AND buildid = ? AND outputid = ?', [$labelid, $query_result->buildid, $query_result->outputid]);
+        DB::insert('DELETE FROM label2test WHERE labelid = ? AND testid = ?', [$labelid, $query_result->testid]);
         DB::delete("DELETE FROM label WHERE text = 'TestLabel'");
 
 

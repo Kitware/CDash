@@ -423,7 +423,6 @@ final class AdminController extends AbstractController
 
             self::delete_unused_rows('dailyupdatefile', 'dailyupdateid', 'dailyupdate');
             self::delete_unused_rows('test2image', 'outputid', 'testoutput');
-            self::delete_unused_rows('label2test', 'outputid', 'testoutput');
 
             $xml .= add_XML_value('alert', 'Database cleanup complete.');
         }

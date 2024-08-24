@@ -7,6 +7,7 @@ use CDash\Model\Label;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Config;
 
@@ -32,6 +33,10 @@ class Test extends Model
     public $timestamps = false;
 
     protected $table = 'build2test';
+
+    /**
+     * @deprecated 08/24/2024  This member variable is deprecated.  Use the labels() Eloquent relationship instead.
+     */
     protected $labels = null;
 
     // TODO: Put these in an enum somewhere
@@ -95,6 +100,14 @@ class Test extends Model
     }
 
     /**
+     * @return BelongsToMany<\App\Models\Label>
+     */
+    public function labels(): BelongsToMany
+    {
+        return $this->belongsToMany(\App\Models\Label::class, 'label2test', 'testid', 'labelid');
+    }
+
+    /**
      * Add a label to this buildtest.
      **/
     public function addLabel(Label $label): void
@@ -107,20 +120,17 @@ class Test extends Model
 
     /**
      * Get the collection of labels for this buildtest.
+     *
+     * @deprecated 08/24/2024  The legacy Label class is deprecated.  Use the labels() Eloquent relationship instead.
      **/
     public function getLabels()
     {
         if (is_null($this->labels)) {
             $this->labels = collect();
-            $testlabel_models = TestLabel::where([
-                ['buildid', '=', $this->buildid],
-                ['outputid', '=', $this->outputid],
-            ])->get();
-            foreach ($testlabel_models as $testlabel_model) {
+            foreach ($this->labels()->get() as $eloquent_label) {
                 $label = new Label();
-                $label->Id = $testlabel_model->labelid;
-                $text = $label->GetText();
-                $this->labels->put($text, $label);
+                $label->Id = $eloquent_label->id;
+                $this->labels->put($eloquent_label->text, $label);
             }
         }
         return $this->labels;
@@ -210,10 +220,10 @@ class Test extends Model
             }
         }
 
-        if (config('database.default') == 'pgsql' && $marshaledData['buildtestid']) {
-            $buildtest = Test::where('id', '=', $data['buildtestid'])->first();
-            if ($buildtest) {
-                $marshaledData['labels'] = $buildtest->getLabels()->keys()->all();
+        if ($marshaledData['buildtestid'] ?? false) {
+            $test = Test::find((int) $data['buildtestid']);
+            if ($test !== null) {
+                $marshaledData['labels'] = $test->labels()->get(['text']);
             }
         } else {
             if (!empty($data['labels'])) {

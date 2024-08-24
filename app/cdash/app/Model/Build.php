@@ -1634,9 +1634,12 @@ class Build
 
         if (empty($labelarray) || isset($labelarray['test']['errors'])) {
             $sql .=
-                ' OR label.id IN
-                    (SELECT labelid AS id FROM label2test
-                     WHERE label2test.buildid = :buildid)';
+                ' OR label.id IN (
+                    SELECT labelid AS id
+                    FROM label2test
+                    INNER JOIN build2test ON build2test.id = label2test.testid
+                    WHERE build2test.buildid = :buildid
+                )';
         }
         if (empty($labelarray) || isset($labelarray['coverage']['errors'])) {
             $sql .=

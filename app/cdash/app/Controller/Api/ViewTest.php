@@ -226,7 +226,7 @@ class ViewTest extends BuildApi
         $groupby_sql = '';
         if ($this->project->DisplayLabels && config('database.default') != 'pgsql') {
             $labeljoin_sql = '
-                LEFT JOIN label2test AS l2t ON (l2t.outputid=bt.outputid)
+                LEFT JOIN label2test AS l2t ON (l2t.testid=bt.id)
                 LEFT JOIN label AS l ON (l.id=l2t.labelid)';
             $label_sql = ", GROUP_CONCAT(DISTINCT l.text SEPARATOR ', ') AS labels";
             $groupby_sql = ' GROUP BY bt.id';
@@ -392,7 +392,7 @@ class ViewTest extends BuildApi
                 $numTimeFailed++;
             }
 
-            $labels_found = (config('database.default') != 'pgsql' && !empty($marshaledTest['labels']));
+            $labels_found = !empty($marshaledTest['labels']);
 
             $marshaledTest['measurements'] = $test_measurements[$marshaledTest['buildtestid']];
             if ($response['hasprocessors']) {
