@@ -20,8 +20,14 @@ class FilterRules implements Rule
             return true;
         }
 
-        return $user->groups()
-            ->recursive()
-            ->exists(\LdapRecord\Models\Entry::find($filter));
+        if (!($model instanceof \App\Models\User)) {
+            return false;
+        }
+
+        if (env('LDAP_PROVIDER', 'openldap') === 'activedirectory') {
+            return \LdapRecord\Models\ActiveDirectory\User::rawFilter($filter)->findByGuid($model->ldapguid) instanceof \LdapRecord\Models\ActiveDirectory\User;
+        } else {
+            return  \LdapRecord\Models\OpenLDAP\User::rawFilter($filter)->findByGuid($model->ldapguid) instanceof \LdapRecord\Models\OpenLDAP\User;
+        }
     }
 }
