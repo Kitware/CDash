@@ -63,7 +63,8 @@ function can_access_project($projectid): bool
 
     $logged_in = Auth::check();
     if ($logged_in) {
-        abort(403, 'You do not have permission to access this page.');
+        Gate::authorize('view-project', $project);
+        return false;
     } else {
         throw new AuthenticationException();
     }
