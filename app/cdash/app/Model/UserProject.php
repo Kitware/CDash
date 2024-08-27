@@ -166,45 +166,6 @@ class UserProject
         return true;
     }
 
-    /**
-     * Get the users of the project
-     *
-     * @return array<int>|false
-     */
-    public function GetUsers(int $role = -1): array|false
-    {
-        if (!$this->ProjectId) {
-            abort(500, 'UserProject GetUsers(): ProjectId not set');
-        }
-
-        $db = Database::getInstance();
-
-        $sql = '';
-        $params = [];
-        if ($role != -1) {
-            $sql = ' AND role=?';
-            $params[] = $role;
-        }
-
-        $project = $db->executePrepared("
-                       SELECT userid
-                       FROM user2project
-                       WHERE
-                           projectid=?
-                           $sql
-                   ", array_merge([$this->ProjectId], $params));
-        if ($project === false) {
-            add_last_sql_error('UserProject GetUsers');
-            return false;
-        }
-
-        $userids = [];
-        foreach ($project as $project_array) {
-            $userids[] = intval($project_array['userid']);
-        }
-        return $userids;
-    }
-
     /** Update the credentials for a project */
     public function UpdateCredentials(array $credentials): bool
     {

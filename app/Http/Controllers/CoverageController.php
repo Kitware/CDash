@@ -347,14 +347,11 @@ final class CoverageController extends AbstractBuildController
             }
 
             // List all the users of the project
-            $UserProject = new UserProject();
-            $UserProject->ProjectId = $Project->Id;
-            $userIds = $UserProject->GetUsers();
-            foreach ($userIds as $userid) {
-                $User = User::find($userid);
+            $eloquent_project = \App\Models\Project::findOrFail($Project->Id);
+            foreach ($eloquent_project->users()->get() as $user) {
                 $xml .= '<user>';
-                $xml .= add_XML_value('id', $userid);
-                $xml .= add_XML_value('name', $User !== null ? $User->full_name : 1);
+                $xml .= add_XML_value('id', $user->id);
+                $xml .= add_XML_value('name', $User !== null ? $user->full_name : 1);
                 $xml .= '</user>';
             }
 

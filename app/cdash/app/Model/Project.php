@@ -33,7 +33,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Project as EloquentProject;
-use App\Models\User;
 use App\Utils\DatabaseCleanupUtils;
 use RuntimeException;
 
@@ -1040,18 +1039,10 @@ class Project
             return true;
         }
 
-        // Find the site maintainers
-        $UserProject = new UserProject();
-        $UserProject->ProjectId = $this->Id;
+        $project = \App\Models\Project::findOrFail((int) $this->Id);
+        $recipients = $project->administrators()->get()->pluck('email')->toArray();
 
-        $userids = $UserProject->GetUsers(2); // administrators
-        $recipients = [];
-        // TODO: Simplify this loop
-        foreach ($userids as $userid) {
-            $recipients[] = User::findOrFail($userid)->email;
-        }
-
-        if (!empty($recipients)) {
+        if (count($recipients) > 0) {
             $projectname = $this->Name;
             $emailtitle = 'CDash [' . $projectname . '] - Administration ';
             $emailbody = 'Object: ' . $subject . "\n";
