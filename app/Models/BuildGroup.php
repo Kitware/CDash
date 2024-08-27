@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -58,5 +59,13 @@ class BuildGroup extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class, 'id', 'projectid');
+    }
+
+    /**
+     * @return BelongsToMany<Build>
+     */
+    public function builds(): BelongsToMany
+    {
+        return $this->belongsToMany(Build::class, 'build2group', 'buildid', 'groupid');
     }
 }

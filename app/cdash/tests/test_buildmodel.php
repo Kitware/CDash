@@ -11,6 +11,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 use CDash\Model\Build;
 use CDash\Model\BuildError;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class BuildModelTestCase extends KWWebTestCase
 {
@@ -29,7 +30,15 @@ class BuildModelTestCase extends KWWebTestCase
         $this->testDataFiles = ['build1.xml', 'build2.xml', 'build3.xml', 'build4.xml',
                                      'build5.xml', 'configure1.xml'];
 
-        DB::insert("INSERT INTO project (name) VALUES ('BuildModel')");
+        $project = \App\Models\Project::create([
+            'name' => 'BuildModel',
+        ]);
+
+        DB::table('buildgroup')->insertOrIgnore([
+            'id' => 0,
+            'projectid' => $project->id,
+            'description' => 'MultipleSubprojectsEmailTest-' . Str::uuid()->toString(),
+        ]);
 
         foreach ($this->testDataFiles as $testDataFile) {
             if (!$this->submission('BuildModel', $this->testDataDir . '/' . $testDataFile)) {

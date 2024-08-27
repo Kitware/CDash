@@ -29,6 +29,7 @@ use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\UseCase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
 class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
 {
@@ -118,6 +119,13 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
                     'uuid' => 'TestBuild' . $i,
                 ]);
             }
+
+            // Do the same for build groups
+            DB::table('buildgroup')->insertOrIgnore([
+                'id' => 0,
+                'projectid' => self::$projectid,
+                'description' => 'MultipleSubprojectsEmailTest-' . Str::uuid()->toString(),
+            ]);
         }
     }
 
