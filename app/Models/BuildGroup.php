@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -67,5 +68,16 @@ class BuildGroup extends Model
     public function builds(): BelongsToMany
     {
         return $this->belongsToMany(Build::class, 'build2group', 'buildid', 'groupid');
+    }
+
+    /**
+     * All the positions this group has ever been in.  Most users probably want to use a scoped
+     * version of this relationship instead.
+     *
+     * @return HasMany<BuildGroupPosition>
+     */
+    public function positions(): HasMany
+    {
+        return $this->hasMany(BuildGroupPosition::class, 'buildgroupid');
     }
 }
