@@ -22,7 +22,6 @@ use CDash\Database;
 use CDash\ServiceContainer;
 use CDash\Model\Build;
 use CDash\Model\Project;
-use CDash\Model\UserProject;
 use App\Models\Site;
 use Illuminate\Support\Facades\DB;
 
@@ -1036,13 +1035,8 @@ function get_dashboard_JSON($projectname, $date, &$response)
 
     $userid = Auth::id();
     if ($userid) {
-        /** @var UserProject $user_project */
-        $user_project = $service->create(UserProject::class);
-        $user_project->UserId = $userid;
-        $user_project->ProjectId = $project->Id;
-        $user_project->FillFromUserId();
-
-        $response['projectrole'] = $user_project->Role;
+        $project = \App\Models\Project::findOrFail((int) $project->Id);
+        $response['projectrole'] = $project->users()->withPivot('role')->find((int) $userid)->role ?? 0;
         if ($response['projectrole'] > Project::SITE_MAINTAINER) {
             $response['user']['admin'] = 1;
         }

@@ -102,12 +102,9 @@ class IssueCreationTestCase extends KWWebTestCase
 
         // Verify that administrative access to this project was not overwritten
         // by the Project.xml handler.
-        $userproject = new UserProject();
-        $userproject->UserId = $userid;
-        $userproject->ProjectId = $this->Projects['CDash']->Id;
-        $userproject->FillFromUserId();
-        if ($userproject->Role != 2) {
-            $this->fail("Expected userproject role to be 2, found $userproject->Role");
+        $project = \App\Models\Project::findOrFail((int) $this->Projects['CDash']->Id);
+        if ($project->administrators()->find($userid) === null) {
+            $this->fail("Expected role to be an administrator");
         }
 
         // Submit subproject XML file.

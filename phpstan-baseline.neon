@@ -12587,6 +12587,11 @@ parameters:
 			path: app/cdash/include/cdashmail.php
 
 		-
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$role\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
 			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -21589,11 +21594,6 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: app/cdash/tests/test_issuecreation.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_issuecreation.php
 

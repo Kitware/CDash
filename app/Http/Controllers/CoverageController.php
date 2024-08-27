@@ -427,11 +427,10 @@ final class CoverageController extends AbstractBuildController
 
             // Is the user administrator of the project
 
-            $userproject = new UserProject();
-            $userproject->UserId = $user->id;
-            $userproject->ProjectId = $projectid;
-            $userproject->FillFromUserId();
-            $xml .= add_XML_value('projectrole', $userproject->Role);
+            $project = \App\Models\Project::find($projectid);
+            $role = $project !== null ? $project->users()->withPivot('role')->find((int) ($user->id ?? -1))->role ?? 0 : -1;
+
+            $xml .= add_XML_value('projectrole', $role);
 
             $xml .= '</user>';
         }
