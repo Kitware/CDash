@@ -1015,10 +1015,7 @@ class Index extends ResultsApi
                                          b2t.status,
                                          b2t.newstatus
                                      FROM build2test AS b2t
-                                     INNER JOIN label2test AS l2t ON (
-                                         l2t.outputid=b2t.outputid
-                                         AND l2t.buildid=b2t.buildid
-                                     )
+                                     INNER JOIN label2test AS l2t ON l2t.testid = b2t.id
                                      WHERE
                                          b2t.buildid = ?
                                          AND l2t.labelid IN $placeholders

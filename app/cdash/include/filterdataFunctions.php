@@ -427,7 +427,7 @@ class QueryTestsPhpFilters extends DefaultFilters
                 break;
 
             case 'label': {
-                $sql_field = "(SELECT $this->TextConcat FROM label, label2test WHERE label2test.outputid = build2test.outputid AND label2test.labelid = label.id AND label2test.buildid = b.id)";
+                $sql_field = "(SELECT $this->TextConcat FROM label, label2test WHERE label2test.testid = build2test.id AND label2test.labelid = label.id)";
             }
                 break;
 
@@ -593,7 +593,7 @@ class ViewTestPhpFilters extends DefaultFilters
                 break;
 
             case 'label': {
-                $sql_field = "(SELECT $this->TextConcat FROM label, label2test WHERE label.id=label2test.labelid AND label2test.outputid=bt.outputid)";
+                $sql_field = "(SELECT $this->TextConcat FROM label, label2test WHERE label.id=label2test.labelid AND label2test.testid=bt.id)";
             }
                 break;
 

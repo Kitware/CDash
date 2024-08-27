@@ -2911,13 +2911,21 @@ parameters:
 			path: app/Models/SubProject.php
 
 		-
+			message: """
+				#^Access to deprecated property \\$labels of class App\\\\Models\\\\Test\\:
+				08/24/2024  This member variable is deprecated\\.  Use the labels\\(\\) Eloquent relationship instead\\.$#
+			"""
+			count: 3
+			path: app/Models/Test.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Models/Test.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 2
+			count: 1
 			path: app/Models/Test.php
 
 		-
@@ -3002,11 +3010,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Models\\\\Test\\:\\:marshalStatus\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, App\\\\Models\\\\Test\\|null given\\.$#"
 			count: 1
 			path: app/Models/Test.php
 
@@ -5914,7 +5917,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 8
+			count: 7
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
@@ -9175,11 +9178,6 @@ parameters:
 			path: app/cdash/app/Model/Label.php
 
 		-
-			message: "#^Property CDash\\\\Model\\\\Label\\:\\:\\$TestId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Label.php
-
-		-
 			message: "#^Variable property access on mixed\\.$#"
 			count: 2
 			path: app/cdash/app/Model/Label.php
@@ -11578,6 +11576,14 @@ parameters:
 		-
 			message: "#^Call to an undefined method CDash\\\\Messaging\\\\Preferences\\\\NotificationPreferencesInterface\\:\\:get\\(\\)\\.$#"
 			count: 3
+			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
+
+		-
+			message: """
+				#^Call to deprecated method getLabels\\(\\) of class App\\\\Models\\\\Test\\:
+				08/24/2024  The legacy Label class is deprecated\\.  Use the labels\\(\\) Eloquent relationship instead\\.$#
+			"""
+			count: 1
 			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
 
 		-

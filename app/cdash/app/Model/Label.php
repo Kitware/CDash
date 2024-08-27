@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use App\Models\Test;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Label as EloquentLabel;
@@ -30,8 +31,7 @@ class Label
     public $CoverageFileId;
     public int $CoverageFileBuildId = 0;
     public $DynamicAnalysisId;
-    public $TestId;
-    public int $TestBuildId = 0;
+    public ?Test $Test = null;
 
     public function SetText(?string $text): void
     {
@@ -135,7 +135,7 @@ class Label
 
         $this->InsertAssociation('label2dynamicanalysis', 'dynamicanalysisid', intval($this->DynamicAnalysisId));
 
-        $this->InsertAssociation('label2test', 'buildid', $this->TestBuildId, 'outputid', intval($this->TestId));
+        $this->Test?->labels()->syncWithoutDetaching([$this->Id]);
 
         // TODO: Implement this:
         //
