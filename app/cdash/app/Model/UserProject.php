@@ -47,36 +47,6 @@ class UserProject
         $this->PDO = Database::getInstance()->getPdo();
     }
 
-    /**
-     * TODO: this is a non-static method on UserProject, pls mv asap
-     */
-    public static function GetProjectsForUser(User $user): array
-    {
-        /** @var \PDO $pdo */
-        $pdo = Database::getInstance()->getPdo();
-        $sql = 'SELECT id, name FROM project';
-        if (!$user->admin) {
-            $sql .= "
-                WHERE id IN (
-                    SELECT projectid AS id
-                    FROM user2project
-                    WHERE userid=:userid
-                      AND role > 0
-                )
-            ";
-        }
-        $sql .= ' ORDER BY name ASC';
-
-        /** @var \PDOStatement $stmt */
-        $stmt = $pdo->prepare($sql);
-        if (!$user->admin) {
-            $stmt->bindParam(':userid', $id);
-        }
-        $stmt->execute();
-        $projects = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        return is_array($projects) ? $projects : [];
-    }
-
     /** Return if a project exists */
     public function Exists(): bool
     {

@@ -1682,7 +1682,20 @@ parameters:
 			path: app/Http/Controllers/OAuthController.php
 
 		-
+			message: """
+				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
+				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/Http/Controllers/ProjectController.php
+
+		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProjectController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\ProjectController\\:\\:GetProjectsForUser\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Http/Controllers/ProjectController.php
 
@@ -10475,7 +10488,7 @@ parameters:
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/UserProject.php
 
 		-
@@ -10495,11 +10508,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\UserProject\\:\\:GetProjects\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/UserProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\UserProject\\:\\:GetProjectsForUser\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/UserProject.php
 

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Utils\PageTimer;
+use CDash\Database;
 use CDash\Model\Project;
 use CDash\Model\Repository;
-use CDash\Model\UserProject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -64,7 +65,7 @@ final class ProjectController extends AbstractProjectController
             return $project;
         };
 
-        $response['availableprojects'] = array_map($callback, UserProject::GetProjectsForUser($User));
+        $response['availableprojects'] = array_map($callback, self::GetProjectsForUser($User));
 
         $project_response = [];
         if ($this->project->Exists()) {
@@ -153,5 +154,32 @@ final class ProjectController extends AbstractProjectController
         require_once 'include/dailyupdates.php';
 
         addDailyChanges(intval($_GET['projectid']));
+    }
+
+    private static function GetProjectsForUser(User $user): array
+    {
+        /** @var \PDO $pdo */
+        $pdo = Database::getInstance()->getPdo();
+        $sql = 'SELECT id, name FROM project';
+        if (!$user->admin) {
+            $sql .= "
+                WHERE id IN (
+                    SELECT projectid AS id
+                    FROM user2project
+                    WHERE userid=:userid
+                      AND role > 0
+                )
+            ";
+        }
+        $sql .= ' ORDER BY name ASC';
+
+        /** @var \PDOStatement $stmt */
+        $stmt = $pdo->prepare($sql);
+        if (!$user->admin) {
+            $stmt->bindParam(':userid', $id);
+        }
+        $stmt->execute();
+        $projects = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return is_array($projects) ? $projects : [];
     }
 }
