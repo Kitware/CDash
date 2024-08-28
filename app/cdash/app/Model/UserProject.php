@@ -31,10 +31,6 @@ class UserProject
     public $ProjectId;
     private $PDO;
 
-    public const NORMAL_USER = 0;
-    public const SITE_MAINTAINER = 1;
-    public const PROJECT_ADMIN = 2;
-
     public function __construct()
     {
         $this->Role = 0;

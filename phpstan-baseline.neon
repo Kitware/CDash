@@ -864,6 +864,11 @@ parameters:
 			path: app/Http/Controllers/CDash.php
 
 		-
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$role\\.$#"
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
 			message: "#^Argument of an invalid type array\\<int, mixed\\>\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 2
 			path: app/Http/Controllers/CoverageController.php
@@ -962,7 +967,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
-			count: 2
+			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -14907,11 +14912,6 @@ parameters:
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
-			message: "#^Call to function is_numeric\\(\\) with int\\<min, \\-1\\>\\|int\\<1, max\\> will always evaluate to true\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
 			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/manageBuildGroup.php
@@ -14947,17 +14947,7 @@ parameters:
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
-			message: "#^Only booleans are allowed in &&, int\\|null given on the left side\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
 			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			message: "#^Variable \\$user2project might not be defined\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 

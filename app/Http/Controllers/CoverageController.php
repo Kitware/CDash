@@ -13,7 +13,6 @@ use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 use App\Models\Project as EloquentProject;
 use CDash\Model\Project;
-use CDash\Model\UserProject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
@@ -427,7 +426,7 @@ final class CoverageController extends AbstractBuildController
 
             // Is the user administrator of the project
 
-            $project = \App\Models\Project::find($projectid);
+            $project = \App\Models\Project::find((int) $projectid);
             $role = $project !== null ? $project->users()->withPivot('role')->find((int) ($user->id ?? -1))->role ?? 0 : -1;
 
             $xml .= add_XML_value('projectrole', $role);
