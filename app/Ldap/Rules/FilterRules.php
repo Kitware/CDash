@@ -24,10 +24,11 @@ class FilterRules implements Rule
             return false;
         }
 
-        if (env('LDAP_PROVIDER', 'openldap') === 'activedirectory') {
-            return \LdapRecord\Models\ActiveDirectory\User::rawFilter($filter)->findByGuid($model->ldapguid) instanceof \LdapRecord\Models\ActiveDirectory\User;
-        } else {
-            return  \LdapRecord\Models\OpenLDAP\User::rawFilter($filter)->findByGuid($model->ldapguid) instanceof \LdapRecord\Models\OpenLDAP\User;
-        }
+        return match (env('LDAP_PROVIDER', 'openldap')) {
+            'openldap' => \LdapRecord\Models\OpenLDAP\User::rawFilter($filter)->findByGuid($model->ldapguid) instanceof \LdapRecord\Models\OpenLDAP\User,
+            'activedirectory' => \LdapRecord\Models\ActiveDirectory\User::rawFilter($filter)->findByGuid($model->ldapguid) instanceof \LdapRecord\Models\ActiveDirectory\User,
+            'freeipa' => \LdapRecord\Models\FreeIPA\User::rawFilter($filter)->findByGuid($model->ldapguid) instanceof \LdapRecord\Models\FreeIPA\User,
+            default => false, // this case should never happen
+        };
     }
 }
