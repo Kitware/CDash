@@ -48,7 +48,7 @@ class UserNotesAPICase extends KWWebTestCase
         $project->Public = 1;
         $project->Save();
 
-        DB::delete("DELETE FROM buildnote WHERE note='{$expected}'");
+        DB::delete("DELETE FROM comments WHERE text='{$expected}'");
     }
 
     public function testAddNoteRequiresBuildId(): void

@@ -305,7 +305,7 @@ class Index extends ResultsApi
             tstatusfailed_diff.difference_positive AS countteststimestatusfaileddiffp,
             tstatusfailed_diff.difference_negative AS countteststimestatusfaileddiffn,
             (SELECT count(buildid) FROM build2note WHERE buildid=b.id)  AS countnotes,
-            (SELECT count(buildid) FROM buildnote WHERE buildid=b.id) AS countbuildnotes,
+            (SELECT count(buildid) FROM comments WHERE buildid=b.id) AS countcomments,
             $userupdatesql
                 s.name AS sitename,
             s.outoforder AS siteoutoforder,
@@ -736,7 +736,7 @@ class Index extends ResultsApi
         $build_response['id'] = (int) $build_array['id'];
         $build_response['done'] = $build_array['done'];
 
-        $build_response['buildnotes'] = $build_array['countbuildnotes'];
+        $build_response['buildnotes'] = $build_array['countcomments'];
         $build_response['notes'] = $build_array['countnotes'];
 
         // Figure out how many labels to report for this build.
