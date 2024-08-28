@@ -2919,97 +2919,7 @@ parameters:
 			path: app/Models/Test.php
 
 		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
 			message: "#^Method App\\\\Models\\\\Test\\:\\:getLabels\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Method App\\\\Models\\\\Test\\:\\:marshal\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Method App\\\\Models\\\\Test\\:\\:marshal\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Method App\\\\Models\\\\Test\\:\\:marshal\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Method App\\\\Models\\\\Test\\:\\:marshal\\(\\) has parameter \\$projectshowtesttime with no type specified\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Method App\\\\Models\\\\Test\\:\\:marshal\\(\\) has parameter \\$testdate with no type specified\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Method App\\\\Models\\\\Test\\:\\:marshal\\(\\) has parameter \\$testtimemaxstatus with no type specified\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Method App\\\\Models\\\\Test\\:\\:marshal\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Method App\\\\Models\\\\Test\\:\\:marshalMissing\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Method App\\\\Models\\\\Test\\:\\:marshalMissing\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Method App\\\\Models\\\\Test\\:\\:marshalMissing\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Method App\\\\Models\\\\Test\\:\\:marshalMissing\\(\\) has parameter \\$projectshowtesttime with no type specified\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Method App\\\\Models\\\\Test\\:\\:marshalMissing\\(\\) has parameter \\$testdate with no type specified\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Method App\\\\Models\\\\Test\\:\\:marshalMissing\\(\\) has parameter \\$testtimemaxstatus with no type specified\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Method App\\\\Models\\\\Test\\:\\:marshalMissing\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Method App\\\\Models\\\\Test\\:\\:marshalStatus\\(\\) has parameter \\$status with no type specified\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Method App\\\\Models\\\\Test\\:\\:marshalStatus\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Models/Test.php
 
@@ -5902,7 +5812,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 5
+			count: 6
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
@@ -5922,7 +5832,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 9
+			count: 10
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
@@ -6007,6 +5917,86 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:loadTestDetails\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:marshal\\(\\) has parameter \\$buildid with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:marshal\\(\\) has parameter \\$data with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:marshal\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:marshal\\(\\) has parameter \\$projectshowtesttime with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:marshal\\(\\) has parameter \\$testdate with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:marshal\\(\\) has parameter \\$testtimemaxstatus with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:marshal\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:marshalMissing\\(\\) has parameter \\$buildid with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:marshalMissing\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:marshalMissing\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:marshalMissing\\(\\) has parameter \\$projectshowtesttime with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:marshalMissing\\(\\) has parameter \\$testdate with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:marshalMissing\\(\\) has parameter \\$testtimemaxstatus with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:marshalMissing\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:marshalStatus\\(\\) has parameter \\$status with no type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:marshalStatus\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
