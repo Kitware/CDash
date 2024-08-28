@@ -20,7 +20,9 @@ return new class extends Migration {
         }
 
         Schema::table('build2group', function (Blueprint $table) {
+            $table->dropForeign(['buildid']); // Drop the foreign key so we can drop the primary key (MySQL is particular about this)
             $table->dropPrimary();
+            $table->foreign('buildid')->references('id')->on('build')->cascadeOnDelete();
             $table->unique(['buildid', 'groupid']);
             $table->unique(['groupid', 'buildid']);
             $table->foreign('groupid')->references('id')->on('buildgroup')->cascadeOnDelete();
