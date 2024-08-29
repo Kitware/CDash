@@ -9610,11 +9610,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetBlockedBuilds\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetBuildGroups\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php

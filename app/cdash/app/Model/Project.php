@@ -589,26 +589,6 @@ class Project
         return $buildgroups;
     }
 
-    /** Get the list of block builds */
-    public function GetBlockedBuilds(): array
-    {
-        $site = DB::select('
-                    SELECT
-                        id,
-                        buildname,
-                        sitename,
-                        ipaddress
-                    FROM blockbuild
-                    WHERE projectid=?
-                ', [(int) $this->Id]);
-
-        $sites = [];
-        foreach ($site as $site_array) {
-            $sites[] = (array) $site_array;
-        }
-        return $sites;
-    }
-
     /** Get the Name of the project */
     public function GetName(): string|false
     {
