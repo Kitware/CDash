@@ -6,8 +6,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
-
-
+use App\Utils\SubmissionUtils;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
@@ -122,10 +121,10 @@ class BuildGroupRuleTestCase extends KWWebTestCase
         $build2 = clone $build1;
 
         $build1->ProjectId = 1;
-        $build1->Id = add_build($build1);
+        $build1->Id = SubmissionUtils::add_build($build1);
 
         $build2->ProjectId = 2;
-        $build2->Id = add_build($build2);
+        $build2->Id = SubmissionUtils::add_build($build2);
 
         // Login as admin.
         $client = $this->getGuzzleClient();

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\TestMeasurement;
+use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\Collection;
@@ -356,7 +357,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         if ($build->Id == 0) {
             $build->Append = $this->Append;
             $build->InsertErrors = false;
-            add_build($build);
+            SubmissionUtils::add_build($build);
         } else {
             // Otherwise make sure that the build is up-to-date.
             $build->UpdateBuild($build->Id, -1, -1);

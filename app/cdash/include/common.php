@@ -14,6 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Utils\SubmissionUtils;
 use Illuminate\Support\Facades\Auth;
 
 use App\Utils\TestingDay;
@@ -1216,8 +1217,6 @@ function get_aggregate_build(Build $build): Build
 
 function create_aggregate_build($build, $siteid=null): Build
 {
-    require_once 'include/ctestparserutils.php';
-
     if (is_null($siteid)) {
         $siteid = get_server_siteid();
     }
@@ -1234,7 +1233,7 @@ function create_aggregate_build($build, $siteid=null): Build
     $aggregate_build->SubmitTime = gmdate(FMT_DATETIME);
     $aggregate_build->SetSubProject($build->GetSubProjectName());
     $aggregate_build->InsertErrors = false;
-    add_build($aggregate_build);
+    SubmissionUtils::add_build($aggregate_build);
     return $aggregate_build;
 }
 

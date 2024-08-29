@@ -14,8 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'include/ctestparserutils.php';
-
 use App\Models\Site;
 use App\Utils\Stack;
 use CDash\Model\Project;

@@ -14,6 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Utils\SubmissionUtils;
 use CDash\Model\Build;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
@@ -222,7 +223,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
                 $siblingBuild->StartTime = $this->Build->StartTime;
                 $siblingBuild->EndTime = $this->Build->EndTime;
                 $siblingBuild->SubmitTime = gmdate(FMT_DATETIME);
-                add_build($siblingBuild, 0);
+                SubmissionUtils::add_build($siblingBuild);
             }
             $buildid = $siblingBuild->Id;
             $coverageFileLog->Build = $siblingBuild;

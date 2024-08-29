@@ -14,6 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Utils\SubmissionUtils;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\Collection;
 use CDash\Collection\SubscriptionBuilderCollection;
@@ -283,7 +284,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
         // If the build doesn't exist we add it
         if ($build->Id == 0) {
             $build->InsertErrors = false;
-            add_build($build);
+            SubmissionUtils::add_build($build);
         } else {
             // Otherwise make sure that the build is up-to-date.
             $build->UpdateBuild($build->Id, -1, -1);

@@ -6,8 +6,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
-
-
+use App\Utils\SubmissionUtils;
 use CDash\Database;
 use CDash\Model\Build;
 
@@ -80,15 +79,15 @@ class BuildRelationshipTestCase extends KWWebTestCase
         $build2 = clone $build1;
         $build3 = clone $build1;
 
-        $build1->Id = add_build($build1);
+        $build1->Id = SubmissionUtils::add_build($build1);
 
         $build2->SetStamp('20180809-1811-Experimental');
         $build2->StartTime = gmdate(FMT_DATETIME, $start_time + 60);
-        $build2->Id = add_build($build2);
+        $build2->Id = SubmissionUtils::add_build($build2);
 
         $build3->SetStamp('20180809-1812-Experimental');
         $build3->StartTime = gmdate(FMT_DATETIME, $start_time + 120);
-        $build3->Id = add_build($build3);
+        $build3->Id = SubmissionUtils::add_build($build3);
 
         // Exercise no relationship specified error message.
         $payload = [

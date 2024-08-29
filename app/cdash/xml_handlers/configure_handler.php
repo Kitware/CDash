@@ -14,6 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Utils\SubmissionUtils;
 use CDash\Collection\Collection;
 use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Notification\NotifyOn;
@@ -161,7 +162,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
                 $build->RemoveIfDone();
                 if ($build->Id == 0) {
                     // If the build doesn't exist we add it
-                    add_build($build);
+                    SubmissionUtils::add_build($build);
                 } else {
                     // Otherwise we make sure that it's up-to-date.
                     $build->UpdateBuild($build->Id, -1, -1);
