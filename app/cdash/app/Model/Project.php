@@ -294,7 +294,12 @@ class Project
         $project->save();
         $this->Id = $project->id;
 
-        return $this->UpdateBuildFilters();
+        $buildErrorFilter = new BuildErrorFilter($this);
+        if ($buildErrorFilter->GetErrorsFilter() != $this->ErrorsFilter ||
+            $buildErrorFilter->GetWarningsFilter() != $this->WarningsFilter) {
+            return $buildErrorFilter->AddOrUpdateFilters($this->WarningsFilter, $this->ErrorsFilter);
+        }
+        return true;
     }
 
     public function GetIdByName()
@@ -1329,17 +1334,6 @@ class Project
         }
 
         return $collection;
-    }
-
-    /** Modify the build error/warning filters for this project if necessary. */
-    public function UpdateBuildFilters(): bool
-    {
-        $buildErrorFilter = new BuildErrorFilter($this);
-        if ($buildErrorFilter->GetErrorsFilter() != $this->ErrorsFilter ||
-                $buildErrorFilter->GetWarningsFilter() != $this->WarningsFilter) {
-            return $buildErrorFilter->AddOrUpdateFilters($this->WarningsFilter, $this->ErrorsFilter);
-        }
-        return true;
     }
 
     /**
