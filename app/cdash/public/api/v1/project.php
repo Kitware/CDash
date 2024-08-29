@@ -210,14 +210,14 @@ function create_project(&$response, $user)
     }
 
     // Make sure that a project with this name does not already exist.
-    $Project = new Project();
-    if ($Project->ExistsByName($Name)) {
+    if (\App\Models\Project::where('name', $Name)->exists()) {
         $response['error'] = "Project '$Name' already exists.";
         http_response_code(400);
         return;
     }
 
     // Create the project.
+    $Project = new Project();
     $Project->Name = $Name;
     populate_project($Project);
     $Project->InitialSetup();

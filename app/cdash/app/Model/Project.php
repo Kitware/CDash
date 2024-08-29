@@ -314,15 +314,6 @@ class Project
         return false;
     }
 
-    /** Return true if the project exists */
-    public function ExistsByName(string $name): bool
-    {
-        // TODO: (williamjallen) Side effects are almost always a bad thing.  Get rid of this...
-        $this->Name = $name;
-
-        return EloquentProject::where('name', $this->Name)->exists();
-    }
-
     /** Get the logo id */
     private function GetLogoId(): int
     {

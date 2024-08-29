@@ -9520,11 +9520,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\BlockedBuild\\>\\:\\:findOrFail\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -14870,6 +14865,11 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 3
+			path: app/cdash/public/api/v1/project.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
