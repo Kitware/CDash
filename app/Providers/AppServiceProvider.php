@@ -2,6 +2,14 @@
 
 namespace App\Providers;
 
+define('FMT_TIME', 'H:i:s');  // time
+define('FMT_DATE', 'Y-m-d');  // date
+define('FMT_DATETIMESTD', 'Y-m-d H:i:s');  // date and time standard
+define('FMT_DATETIME', 'Y-m-d\TH:i:s');  // date and time
+define('FMT_DATETIMETZ', 'Y-m-d\TH:i:s T');  // date and time with time zone
+define('FMT_DATETIMEMS', 'Y-m-d\TH:i:s.u');  // date and time with milliseconds
+define('FMT_DATETIMEDISPLAY', 'M d, Y - H:i T');  // date and time standard
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
@@ -13,7 +21,6 @@ use Illuminate\Support\Str;
 
 require_once 'include/common.php';
 require_once 'include/pdo.php';
-require_once 'include/defines.php';
 
 class AppServiceProvider extends ServiceProvider
 {
