@@ -22,8 +22,8 @@ use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use App\Models\Site;
-use CDash\Model\UserProject;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 $pageTimer = new PageTimer();
 $response = [];
@@ -60,18 +60,7 @@ if (!isset($projectid)) {
 
 @$show = $_GET['show'];
 
-if ($projectid && is_numeric($projectid)) {
-    $user2project = new UserProject();
-    $user2project->UserId = $userid;
-    $user2project->ProjectId = $projectid;
-    $user2project->FillFromUserId();
-}
-
-if (!$user->admin && $user2project->Role <= 1) {
-    $response['error'] = "You don't have the permissions to access this page";
-    echo json_encode($response);
-    return;
-}
+Gate::authorize('update', \App\Models\Project::find((int) $projectid) ?? new \App\Models\Project());
 
 // List the available projects that this user has admin rights to.
 $sql = 'SELECT id,name FROM project';

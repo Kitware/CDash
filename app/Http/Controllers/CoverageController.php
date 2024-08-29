@@ -13,7 +13,6 @@ use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 use App\Models\Project as EloquentProject;
 use CDash\Model\Project;
-use CDash\Model\UserProject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
@@ -347,14 +346,11 @@ final class CoverageController extends AbstractBuildController
             }
 
             // List all the users of the project
-            $UserProject = new UserProject();
-            $UserProject->ProjectId = $Project->Id;
-            $userIds = $UserProject->GetUsers();
-            foreach ($userIds as $userid) {
-                $User = User::find($userid);
+            $eloquent_project = \App\Models\Project::findOrFail($Project->Id);
+            foreach ($eloquent_project->users()->get() as $user) {
                 $xml .= '<user>';
-                $xml .= add_XML_value('id', $userid);
-                $xml .= add_XML_value('name', $User !== null ? $User->full_name : 1);
+                $xml .= add_XML_value('id', $user->id);
+                $xml .= add_XML_value('name', $User !== null ? $user->full_name : 1);
                 $xml .= '</user>';
             }
 
@@ -430,11 +426,10 @@ final class CoverageController extends AbstractBuildController
 
             // Is the user administrator of the project
 
-            $userproject = new UserProject();
-            $userproject->UserId = $user->id;
-            $userproject->ProjectId = $projectid;
-            $userproject->FillFromUserId();
-            $xml .= add_XML_value('projectrole', $userproject->Role);
+            $project = \App\Models\Project::find((int) $projectid);
+            $role = $project !== null ? $project->users()->withPivot('role')->find((int) ($user->id ?? -1))->role ?? 0 : -1;
+
+            $xml .= add_XML_value('projectrole', $role);
 
             $xml .= '</user>';
         }

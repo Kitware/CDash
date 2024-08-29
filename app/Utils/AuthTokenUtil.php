@@ -7,7 +7,6 @@ namespace App\Utils;
 use App\Models\AuthToken;
 use App\Models\User;
 use CDash\Model\Project;
-use CDash\Model\UserProject;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
@@ -168,13 +167,11 @@ class AuthTokenUtil
                     // 2. A project administrator
                     // 3. A system administrator
 
-                    $user2project = new UserProject();
-                    $user2project->UserId = $user->id;
-                    $user2project->ProjectId = $auth_token['projectid'];
-                    $user2project->FillFromUserId();
+                    $project = \App\Models\Project::findOrFail((int) $auth_token['projectid']);
+
                     if (
                         $expected_user_id !== $auth_token['userid']
-                        && $user2project->Role !== UserProject::PROJECT_ADMIN
+                        && $project->administrators()->find($user->id) === null
                         && !$user->admin
                     ) {
                         return false;

@@ -31,10 +31,6 @@ class UserProject
     public $ProjectId;
     private $PDO;
 
-    public const NORMAL_USER = 0;
-    public const SITE_MAINTAINER = 1;
-    public const PROJECT_ADMIN = 2;
-
     public function __construct()
     {
         $this->Role = 0;
@@ -45,36 +41,6 @@ class UserProject
         $this->EmailMissingSites = 0;
         $this->EmailSuccess = 0;
         $this->PDO = Database::getInstance()->getPdo();
-    }
-
-    /**
-     * TODO: this is a non-static method on UserProject, pls mv asap
-     */
-    public static function GetProjectsForUser(User $user): array
-    {
-        /** @var \PDO $pdo */
-        $pdo = Database::getInstance()->getPdo();
-        $sql = 'SELECT id, name FROM project';
-        if (!$user->admin) {
-            $sql .= "
-                WHERE id IN (
-                    SELECT projectid AS id
-                    FROM user2project
-                    WHERE userid=:userid
-                      AND role > 0
-                )
-            ";
-        }
-        $sql .= ' ORDER BY name ASC';
-
-        /** @var \PDOStatement $stmt */
-        $stmt = $pdo->prepare($sql);
-        if (!$user->admin) {
-            $stmt->bindParam(':userid', $id);
-        }
-        $stmt->execute();
-        $projects = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        return is_array($projects) ? $projects : [];
     }
 
     /** Return if a project exists */
@@ -164,45 +130,6 @@ class UserProject
             }
         }
         return true;
-    }
-
-    /**
-     * Get the users of the project
-     *
-     * @return array<int>|false
-     */
-    public function GetUsers(int $role = -1): array|false
-    {
-        if (!$this->ProjectId) {
-            abort(500, 'UserProject GetUsers(): ProjectId not set');
-        }
-
-        $db = Database::getInstance();
-
-        $sql = '';
-        $params = [];
-        if ($role != -1) {
-            $sql = ' AND role=?';
-            $params[] = $role;
-        }
-
-        $project = $db->executePrepared("
-                       SELECT userid
-                       FROM user2project
-                       WHERE
-                           projectid=?
-                           $sql
-                   ", array_merge([$this->ProjectId], $params));
-        if ($project === false) {
-            add_last_sql_error('UserProject GetUsers');
-            return false;
-        }
-
-        $userids = [];
-        foreach ($project as $project_array) {
-            $userids[] = intval($project_array['userid']);
-        }
-        return $userids;
     }
 
     /** Update the credentials for a project */

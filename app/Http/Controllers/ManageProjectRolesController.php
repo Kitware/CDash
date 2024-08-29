@@ -9,6 +9,7 @@ use CDash\Model\UserProject;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use RuntimeException;
@@ -27,30 +28,18 @@ final class ManageProjectRolesController extends AbstractProjectController
         /** @var User $current_user */
         $current_user = Auth::user();
 
-        @$projectid = $_GET['projectid'];
+        // If the projectid is not set and there is only one project we go directly to the page
+        if (!isset($_GET['projectid']) && EloquentProject::count() === 1) {
+            $eloquent_project = EloquentProject::all()->firstOrFail();
+        } else {
+            $eloquent_project = EloquentProject::find((int) ($_GET['projectid'] ?? -1)) ?? new \App\Models\Project();
+        }
+
+        $projectid = $eloquent_project->id;
+
+        Gate::authorize('update', $eloquent_project);
 
         $project = new Project();
-
-        // If the projectid is not set and there is only one project we go directly to the page
-        if (!isset($projectid) && EloquentProject::count() === 1) {
-            $projectid = EloquentProject::all()->firstOrFail()->id;
-        }
-        $projectid = intval($projectid);
-
-        $role = 0;
-        if ($projectid > 0) {
-            $current_user_project = new UserProject();
-            $current_user_project->ProjectId = $projectid;
-            $current_user_project->UserId = Auth::id();
-            $current_user_project->FillFromUserId();
-            $role = $current_user_project->Role;
-        }
-
-        if (!$current_user->admin && $role <= 1) {
-            return $this->view('cdash')
-                ->with('xsl', true)
-                ->with('xsl_content', "You don't have the permissions to access this page!");
-        }
 
         $xml = begin_XML_for_XSLT();
         $xml .= '<menutitle>CDash</menutitle>';
