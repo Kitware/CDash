@@ -58,16 +58,18 @@ class LimitedBuildsTestCase extends KWWebTestCase
             'cdash.unlimited_projects' => ['Unlimited'],
         ]);
 
+        $project = \App\Models\Project::findOrFail((int) $this->Projects[0]->Id);
+
         // Submit two builds to the 'Limited' project.
         // The second submission will cause the first build to get deleted.
         $this->submitBuild(1, 'Limited');
-        $this->assertEqual($this->Projects[0]->GetNumberOfBuilds(), 1);
+        $this->assertEqual($project->refresh()->builds()->count(), 1);
 
         $this->get_build_stmt->execute([$this->Projects[0]->Id]);
         $buildid1 = $this->get_build_stmt->fetchColumn();
 
         $this->submitBuild(2, 'Limited');
-        $this->assertEqual($this->Projects[0]->GetNumberOfBuilds(), 1);
+        $this->assertEqual($project->refresh()->builds()->count(), 1);
 
         $this->get_build_stmt->execute([$this->Projects[0]->Id]);
         $buildid2 = $this->get_build_stmt->fetchColumn();
@@ -93,7 +95,8 @@ class LimitedBuildsTestCase extends KWWebTestCase
         $this->submitBuild(2, 'Unlimited');
 
         // Verify that they both exist.
-        $this->assertEqual($this->Projects[1]->GetNumberOfBuilds(), 2);
+        $project = \App\Models\Project::findOrFail((int) $this->Projects[1]->Id);
+        $this->assertEqual($project->refresh()->builds()->count(), 2);
     }
 
     public function __destruct()

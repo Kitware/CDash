@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-use CDash\Model\Project;
+use App\Models\Project;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class PurgeUnusedProjects extends Command
 {
@@ -39,23 +38,9 @@ class PurgeUnusedProjects extends Command
      */
     public function handle()
     {
-        set_time_limit(0);
-
-        $result = DB::select('SELECT id FROM project');
-        $all_project_ids = [];
-        foreach ($result as $row) {
-            $all_project_ids[] = (int) $row->id;
-        }
-
-        foreach ($all_project_ids as $projectid) {
-            $project = new Project();
-            $project->Id = $projectid;
-            $project->Fill();
-
-            if ($project->GetNumberOfBuilds() === 0) {
-                echo 'Deleting project: ' . $project->Name . PHP_EOL;
-                $project->Delete();
-            }
+        foreach (Project::doesntHave('builds')->get() as $project) {
+            echo 'Deleting project: ' . $project->name . PHP_EOL;
+            $project->delete();
         }
     }
 }

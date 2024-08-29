@@ -699,27 +699,6 @@ class Project
         return date(FMT_DATETIMESTD, strtotime($starttime . 'UTC'));
     }
 
-    /** Get the number of builds given a date range */
-    public function GetNumberOfBuilds(string|null $startUTCdate = null, string|null $endUTCdate = null): int
-    {
-        if (!$this->Id) {
-            throw new RuntimeException('ID not set for project');
-        }
-
-        if ($startUTCdate !== null) {
-            $startUTCdate = Carbon::parse($startUTCdate);
-        }
-
-        if ($endUTCdate !== null) {
-            $endUTCdate = Carbon::parse($endUTCdate);
-        }
-
-        return EloquentProject::findOrFail((int) $this->Id)
-            ->builds()
-            ->betweenDates($startUTCdate, $endUTCdate)
-            ->count();
-    }
-
     /** Get the number of builds given per day */
     public function GetBuildsDailyAverage(string $startUTCdate, string $endUTCdate): int
     {
@@ -744,7 +723,10 @@ class Project
         $first_build = $project[0]->starttime;
         $nb_days = strtotime($endUTCdate) - strtotime($first_build);
         $nb_days = intval($nb_days / 86400) + 1;
-        $nbuilds = $this->GetNumberOfBuilds($startUTCdate, $endUTCdate);
+        $nbuilds = EloquentProject::findOrFail((int) $this->Id)
+            ->builds()
+            ->betweenDates(Carbon::parse($startUTCdate), Carbon::parse($endUTCdate))
+            ->count();
         return $nbuilds / $nb_days;
     }
 
@@ -1288,7 +1270,8 @@ class Project
             return false;
         }
 
-        $num_builds = $this->GetNumberOfBuilds();
+        $project = \App\Models\Project::findOrFail((int) $this->Id);
+        $num_builds = $project->builds()->count();
 
         // The +1 here is to account for the build we're currently inserting.
         if ($num_builds < ($max_builds + 1)) {
