@@ -79,8 +79,12 @@ return [
         'ldap' => [
             'driver' => 'ldap',
             # Only openldap is tested
-            'model' => env('LDAP_PROVIDER', 'openldap') === 'activedirectory' ?
-                \LdapRecord\Models\ActiveDirectory\User::class : \LdapRecord\Models\OpenLDAP\User::class,
+            'model' => match (env('LDAP_PROVIDER', 'openldap')) {
+                'openldap' => \LdapRecord\Models\OpenLDAP\User::class,
+                'activedirectory' => \LdapRecord\Models\ActiveDirectory\User::class,
+                'freeipa' => \LdapRecord\Models\FreeIPA\User::class,
+                default => false, // this case should never happen
+            },
             'rules' => [
                 \App\Ldap\Rules\FilterRules::class,
             ],

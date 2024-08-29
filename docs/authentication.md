@@ -50,7 +50,7 @@ Here's a description of the `.env` variables involved in the LDAP authentication
 | LDAP_LOGGING | Whether or not to log LDAP activities. Useful for debugging. | true |
 | LDAP_USERNAME | Username for account that can query and run operations on your LDAP server(s). | '' |
 | LDAP_PASSWORD | Password for account that can query and run operations on your LDAP server(s). | '' |
-| LDAP_PROVIDER | The type of LDAP server you are connecting to. Valid values are activedirectory and openldap. | openldap |
+| LDAP_PROVIDER | The type of LDAP server you are connecting to. Valid values are openldap, activedirectory, and freeipa. | openldap |
 | LOGIN_FIELD | The label on the "user" field for the Login form ("Email" by default).  Change this if you're authenticating against something other than an email address in LDAP. | Email |
 
 ## OAuth2

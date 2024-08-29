@@ -20,11 +20,14 @@ class LdapUtils
             }
 
             if ($user->ldapguid === null) {
-                $matches_ldap_filter  = false;
-            } elseif (env('LDAP_PROVIDER', 'openldap') === 'activedirectory') {
-                $matches_ldap_filter = \LdapRecord\Models\ActiveDirectory\User::rawFilter($project->ldapfilter)->findByGuid($user->ldapguid) instanceof \LdapRecord\Models\ActiveDirectory\User;
+                $matches_ldap_filter = false;
             } else {
-                $matches_ldap_filter = \LdapRecord\Models\OpenLDAP\User::rawFilter($project->ldapfilter)->findByGuid($user->ldapguid) instanceof \LdapRecord\Models\OpenLDAP\User;
+                $matches_ldap_filter = match (env('LDAP_PROVIDER', 'openldap')) {
+                    'openldap' => \LdapRecord\Models\OpenLDAP\User::rawFilter($project->ldapfilter)->findByGuid($user->ldapguid) instanceof \LdapRecord\Models\OpenLDAP\User,
+                    'activedirectory' => \LdapRecord\Models\ActiveDirectory\User::rawFilter($project->ldapfilter)->findByGuid($user->ldapguid) instanceof \LdapRecord\Models\ActiveDirectory\User,
+                    'freeipa' => \LdapRecord\Models\FreeIPA\User::rawFilter($project->ldapfilter)->findByGuid($user->ldapguid) instanceof \LdapRecord\Models\FreeIPA\User,
+                    default => false, // this case should never happen
+                };
             }
 
             $relationship_already_exists = $project->users->contains($user);
