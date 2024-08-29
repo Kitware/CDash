@@ -6,7 +6,6 @@ namespace App\Utils;
 
 use CDash\Database;
 use CDash\Model\Project;
-use CDash\ServiceContainer;
 use Illuminate\Support\Facades\Log;
 
 class RepositoryUtils
@@ -392,8 +391,7 @@ class RepositoryUtils
             return;
         }
 
-        $service = ServiceContainer::getInstance();
-        $project = $service->get(Project::class);
+        $project = new Project();
         $project->Id = $projectid;
         $project->Fill();
         $cvsviewertype = strtolower($project->CvsViewerType);
@@ -508,8 +506,7 @@ class RepositoryUtils
             return;
         }
 
-        $service = ServiceContainer::getInstance();
-        $project = $service->get(Project::class);
+        $project = new Project();
         $project->Id = $projectid;
         $project->Fill();
 

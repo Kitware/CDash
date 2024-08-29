@@ -23,7 +23,6 @@ use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
-use CDash\ServiceContainer;
 
 require_once 'include/api_common.php';
 require_once 'include/filterdataFunctions.php';
@@ -176,8 +175,7 @@ class Timeline extends Index
     private function chartForBuildGroup()
     {
         $groupname = urldecode(get_param('buildgroup'));
-        $service = ServiceContainer::getInstance();
-        $buildgroup = $service->create(BuildGroup::class);
+        $buildgroup = new BuildGroup();
         $buildgroup->SetProjectId($this->project->Id);
         $buildgroup->SetName($groupname);
         if (!$buildgroup->Exists()) {

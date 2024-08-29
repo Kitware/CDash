@@ -20,11 +20,6 @@ use CDash\Test\CDashTestCase;
 
 class BuildTest extends CDashTestCase
 {
-    public function setUp(): void
-    {
-        $this->setDatabaseMocked();
-    }
-
     public function testGetDiffWithPreviousBuild()
     {
         $sut = new Build();

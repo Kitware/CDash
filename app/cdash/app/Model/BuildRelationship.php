@@ -16,7 +16,6 @@
 namespace CDash\Model;
 
 use CDash\Database;
-use CDash\ServiceContainer;
 
 /** BuildRelationship class */
 class BuildRelationship
@@ -27,7 +26,6 @@ class BuildRelationship
     public $Relationship;
     private $Filled;
     private $PDO;
-    private $Service;
 
     public function __construct()
     {
@@ -37,7 +35,6 @@ class BuildRelationship
         $this->Relationship = '';
         $this->Filled = false;
         $this->PDO = Database::getInstance();
-        $this->Service = ServiceContainer::getInstance();
     }
 
     /** Return true if a relationship already exists between these two builds */

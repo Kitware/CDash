@@ -14,7 +14,6 @@
 
 use CDash\Model\BuildErrorFilter;
 use CDash\Model\Project;
-use CDash\ServiceContainer;
 use CDash\Test\CDashTestCase;
 
 class BuildErrorFilterTest extends CDashTestCase
@@ -22,18 +21,11 @@ class BuildErrorFilterTest extends CDashTestCase
     public function setUp() : void
     {
         $this->setDatabaseMocked();
-        $this->service = ServiceContainer::getInstance();
-        $container = ServiceContainer::container();
 
-        $this->mock_project = $this->getMockBuilder(Project::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->mock_project = new Project();
         $this->mock_project->Id = 1;
-        $container->set(Project::class, $this->mock_project);
 
-        $this->sut = $container->make(
-            BuildErrorFilter::class,
-            ['project' => $this->mock_project]);
+        $this->sut = new BuildErrorFilter($this->mock_project);
     }
 
     public function testExists()

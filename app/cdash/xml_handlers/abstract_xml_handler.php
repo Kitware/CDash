@@ -25,8 +25,6 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
     protected bool $Append = false;
     protected Site $Site;
     protected $SubProjectName;
-
-    protected $ModelFactory;
     protected Project $Project;
 
     public function __construct($projectid)
@@ -90,18 +88,10 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
         return $this->Build->SubProjectName;
     }
 
-    protected function getModelFactory(): \CDash\ServiceContainer
-    {
-        if (!$this->ModelFactory) {
-            $this->ModelFactory = \CDash\ServiceContainer::getInstance();
-        }
-        return $this->ModelFactory;
-    }
-
     public function GetProject()
     {
         if (!isset($this->Project)) {
-            $this->Project = $this->getModelFactory()->create(Project::class);
+            $this->Project = new Project();
             $this->Project->Id = $this->projectid;
             $this->Project->Fill();
         }

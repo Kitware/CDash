@@ -73,7 +73,6 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
     public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
-        $factory = $this->getModelFactory();
 
         if ($name == 'SITE') {
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
@@ -114,7 +113,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 $this->SubProjects[$this->SubProjectName] = [];
             }
             if (!array_key_exists($this->SubProjectName, $this->Builds)) {
-                $build = $factory->create(Build::class);
+                $build = new Build();
                 if (!empty($this->PullRequest)) {
                     $build->SetPullRequest($this->PullRequest);
                 }
@@ -128,7 +127,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         } elseif ($name == 'BUILD') {
             if (empty($this->Builds)) {
                 // No subprojects
-                $build = $factory->create(Build::class);
+                $build = new Build();
                 if (!empty($this->PullRequest)) {
                     $build->SetPullRequest($this->PullRequest);
                 }
@@ -140,15 +139,15 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 $this->Builds[''] = $build;
             }
         } elseif ($name == 'WARNING') {
-            $this->Error = $factory->create(BuildError::class);
+            $this->Error = new BuildError();
             $this->Error->Type = 1;
             $this->ErrorSubProjectName = "";
         } elseif ($name == 'ERROR') {
-            $this->Error = $factory->create(BuildError::class);
+            $this->Error = new BuildError();
             $this->Error->Type = 0;
             $this->ErrorSubProjectName = "";
         } elseif ($name == 'FAILURE') {
-            $this->Error = $factory->create(BuildFailure::class);
+            $this->Error = new BuildFailure();
             $this->Error->Type = 0;
             if ($attributes['TYPE'] == 'Error') {
                 $this->Error->Type = 0;
@@ -157,7 +156,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             }
             $this->ErrorSubProjectName = "";
         } elseif ($name == 'LABEL') {
-            $this->Label = $factory->create(Label::class);
+            $this->Label = new Label();
         }
     }
 
@@ -165,7 +164,6 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
     {
         $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
-        $factory = $this->getModelFactory();
 
         if ($name == 'BUILD') {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
@@ -264,7 +262,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                         }
                     }
                     if (!$hasLabel) {
-                        $label = $factory->create(Label::class);
+                        $label = new Label();
                         $label->SetText($this->SubProjectName);
                         $this->Error->AddLabel($label);
                     }
@@ -406,9 +404,8 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
      */
     public function GetBuildCollection()
     {
-        $factory = $this->getModelFactory();
         /** @var BuildCollection $collection */
-        $collection = $factory->create(BuildCollection::class);
+        $collection = new BuildCollection();
         foreach ($this->Builds as $key => $build) {
             if (is_numeric($key)) {
                 $collection->add($build);
@@ -453,8 +450,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
 
     public function GetBuildGroup()
     {
-        $factory = $this->getModelFactory();
-        $buildGroup = $factory->create(BuildGroup::class);
+        $buildGroup = new BuildGroup();
         foreach ($this->Builds as $build) {
             $buildGroup->SetId($build->GroupId);
             break;
