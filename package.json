@@ -24,7 +24,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@vue/apollo-components": "^4.0.0",
-    "@vue/apollo-composable": "^4.0.2",
+    "@vue/apollo-composable": "^4.2.1",
     "@vue/apollo-option": "^4.0.0",
     "angular": "^1.8.0",
     "angular-animate": "^1.4.7",
