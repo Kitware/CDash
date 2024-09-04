@@ -202,4 +202,12 @@ class Build extends Model
     {
         return $this->hasMany(Comment::class, 'buildid');
     }
+
+    /**
+     * @return BelongsToMany<BuildGroup>
+     */
+    public function buildGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(BuildGroup::class, 'build2group', 'groupid', 'buildid');
+    }
 }
