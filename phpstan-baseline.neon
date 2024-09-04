@@ -1980,8 +1980,13 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
-			message: "#^Offset 'loctested' might not exist on array\\{\\}\\|array\\{loctested\\?\\: \\(array\\|float\\|int\\), locuntested\\?\\: \\(array\\|float\\|int\\)\\}\\.$#"
+			message: "#^Offset 'loctested' might not exist on array\\{\\}\\|array\\{loctested\\: \\(array\\|float\\|int\\), locuntested\\?\\: \\(array\\|float\\|int\\)\\}\\.$#"
 			count: 6
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
+			message: "#^Offset 'locuntested' might not exist on array\\{loctested\\: \\(array\\|float\\|int\\), locuntested\\?\\: \\(array\\|float\\|int\\)\\}\\.$#"
+			count: 2
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
@@ -1990,12 +1995,7 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
-			message: "#^Offset 'locuntested' might not exist on array\\{\\}\\|array\\{loctested\\: \\(float\\|int\\), locuntested\\?\\: \\(array\\|float\\|int\\)\\}\\.$#"
-			count: 2
-			path: app/Http/Controllers/ProjectOverviewController.php
-
-		-
-			message: "#^Offset 'locuntested' might not exist on array\\{\\}\\|array\\{loctested\\?\\: \\(array\\|float\\|int\\), locuntested\\?\\: \\(array\\|float\\|int\\)\\}\\.$#"
+			message: "#^Offset 'locuntested' might not exist on array\\{\\}\\|array\\{loctested\\: \\(array\\|float\\|int\\), locuntested\\?\\: \\(array\\|float\\|int\\)\\}\\.$#"
 			count: 2
 			path: app/Http/Controllers/ProjectOverviewController.php
 
@@ -2889,6 +2889,11 @@ parameters:
 			path: app/Models/Build.php
 
 		-
+			message: "#^PHPDoc tag @method for method App\\\\Models\\\\Build\\:\\:betweenDates\\(\\) return type contains generic class Illuminate\\\\Database\\\\Eloquent\\\\Builder but does not specify its types\\: TModelClass$#"
+			count: 1
+			path: app/Models/Build.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Site\\>\\:\\:distinct\\(\\)\\.$#"
 			count: 1
 			path: app/Models/Project.php
@@ -2911,6 +2916,11 @@ parameters:
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
 			count: 3
+			path: app/Models/Project.php
+
+		-
+			message: "#^PHPDoc tag @method for method App\\\\Models\\\\Project\\:\\:forUser\\(\\) return type contains generic class Illuminate\\\\Database\\\\Eloquent\\\\Builder but does not specify its types\\: TModelClass$#"
+			count: 1
 			path: app/Models/Project.php
 
 		-
