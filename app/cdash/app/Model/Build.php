@@ -471,8 +471,7 @@ class Build
                 $which_build_criteria
                 LIMIT 1");
 
-            foreach (array_merge($values_to_bind, $extra_values_to_bind)
-                     as $parameter => $value) {
+            foreach (array_merge($values_to_bind, $extra_values_to_bind) as $parameter => $value) {
                 $stmt->bindValue($parameter, $value);
             }
             $stmt->bindValue(':parentid', $this->GetParentId());
@@ -517,8 +516,7 @@ class Build
             $which_build_criteria
             LIMIT 1");
 
-        foreach (array_merge($values_to_bind, $extra_values_to_bind)
-                 as $parameter => $value) {
+        foreach (array_merge($values_to_bind, $extra_values_to_bind) as $parameter => $value) {
             $stmt->bindValue($parameter, $value);
         }
         if (!pdo_execute($stmt)) {

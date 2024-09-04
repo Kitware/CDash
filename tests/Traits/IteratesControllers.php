@@ -22,7 +22,7 @@ trait IteratesControllers
         $dir_iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(base_path('app/Http/Controllers')));
         $file_iterator = new RegexIterator($dir_iterator, '/.*\.php/', RegexIterator::GET_MATCH);
         $files = [];
-        foreach($file_iterator as $file) {
+        foreach ($file_iterator as $file) {
             $files = array_merge($files, $file);
         }
 
