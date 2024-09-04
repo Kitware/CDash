@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\User;
 use App\Models\Build as EloquentBuild;
 use App\Utils\PageTimer;
@@ -15,7 +16,6 @@ use CDash\Model\BuildGroupRule;
 use App\Models\BuildInformation;
 use CDash\Model\BuildRelationship;
 use CDash\Model\BuildUpdate;
-use CDash\Model\BuildUserNote;
 use CDash\Model\Label;
 use CDash\Model\UploadFile;
 use CDash\ServiceContainer;
@@ -123,11 +123,23 @@ final class BuildController extends AbstractBuildController
         }
 
         // Notes added by users.
+        $eloquent_build = \App\Models\Build::with(['comments', 'comments.user'])->findOrFail((int) $this->build->Id);
         $notes_response = [];
-        $notes = BuildUserNote::getNotesForBuild($this->build->Id);
-        foreach ($notes as $note) {
-            $note_response = $note->marshal();
-            $notes_response[] = $note_response;
+        /**
+         * @var Comment $comment
+         */
+        foreach ($eloquent_build->comments()->with('user')->get() as $comment) {
+            $notes_response[] = [
+                'user' => $comment->user?->full_name,
+                'date' => $comment->timestamp->toString(),
+                'status' => match ($comment->status) {
+                    Comment::STATUS_NORMAL => '[note]',
+                    Comment::STATUS_FIX_IN_PROGRESS => '[fix in progress]',
+                    Comment::STATUS_FIXED => '[fixed]',
+                    default => '[unknown]',
+                },
+                'text' => $comment->text,
+            ];
         }
         $response['notes'] = $notes_response;
 
@@ -830,7 +842,7 @@ final class BuildController extends AbstractBuildController
         $this->setBuildById(intval($_GET['buildid'] ?? -1));
         Gate::authorize('edit-project', $this->project);
 
-        $notes = DB::select('SELECT * FROM buildnote WHERE buildid=? ORDER BY timestamp ASC', [$this->build->Id]);
+        $notes = DB::select('SELECT * FROM comments WHERE buildid=? ORDER BY timestamp ASC', [$this->build->Id]);
         foreach ($notes as $note) {
             /** @var User $user */
             $user = User::where('id', intval($note->userid))->first();

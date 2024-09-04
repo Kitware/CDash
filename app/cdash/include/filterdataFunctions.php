@@ -256,7 +256,7 @@ class IndexPhpFilters extends DefaultFilters
                 break;
 
             case 'hasusernotes': {
-                $sql_field = '(SELECT COUNT(*) FROM buildnote WHERE buildid=b.id)';
+                $sql_field = '(SELECT COUNT(*) FROM comments WHERE buildid=b.id)';
             }
                 break;
 

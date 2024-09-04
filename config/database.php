@@ -96,4 +96,14 @@ return [
     */
 
     'migrations' => 'migrations',
+
+    /**
+     * See this issue for information about why this is necessary:
+     * - https://github.com/laravel/framework/issues/16526
+     */
+    'dbal' => [
+        'types' => [
+            'timestamp' => \Illuminate\Database\DBAL\TimestampType::class,
+        ],
+    ],
 ];

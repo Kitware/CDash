@@ -275,11 +275,8 @@ set_tests_properties(buildgrouprule PROPERTIES DEPENDS buildconfigure)
 add_php_test(buildoverview)
 set_tests_properties(buildoverview PROPERTIES DEPENDS buildgrouprule)
 
-add_php_test(buildusernote)
-set_tests_properties(buildusernote PROPERTIES DEPENDS buildoverview)
-
 add_php_test(committerinfo)
-set_tests_properties(committerinfo PROPERTIES DEPENDS buildusernote)
+set_tests_properties(committerinfo PROPERTIES DEPENDS buildoverview)
 
 add_php_test(image)
 set_tests_properties(image PROPERTIES DEPENDS committerinfo)

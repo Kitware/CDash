@@ -583,6 +583,11 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Comment\\>\\:\\:with\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
 			count: 3
 			path: app/Http/Controllers/BuildController.php
@@ -7944,100 +7949,6 @@ parameters:
 			message: "#^Property CDash\\\\Model\\\\BuildUpdateFile\\:\\:\\$UpdateId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 5
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 2
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 2
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: "#^Cannot access property \\$full_name on App\\\\Models\\\\User\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\User\\>\\|null\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildUserNote\\:\\:Insert\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildUserNote\\:\\:getNotesForBuild\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildUserNote\\:\\:getNotesForBuild\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildUserNote\\:\\:marshal\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildUserNote\\:\\:\\$BuildId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildUserNote\\:\\:\\$Note has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildUserNote\\:\\:\\$PDO has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildUserNote\\:\\:\\$Status has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildUserNote\\:\\:\\$TimeStamp has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUserNote.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\BuildUserNote\\:\\:\\$UserId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildUserNote.php
 
 		-
 			message: """
@@ -20292,16 +20203,6 @@ parameters:
 			message: "#^Property BuildRelationshipTestCase\\:\\:\\$PDO has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_buildrelationship.php
-
-		-
-			message: "#^Method BuildUserNoteTestCase\\:\\:testBuildUserNote\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_buildusernote.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
-			count: 2
-			path: app/cdash/tests/test_buildusernote.php
 
 		-
 			message: """

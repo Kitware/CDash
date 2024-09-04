@@ -194,4 +194,12 @@ class Build extends Model
         return $this->basicAlerts()
             ->where('type', self::TYPE_WARN);
     }
+
+    /**
+     * @return HasMany<Comment>
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'buildid');
+    }
 }

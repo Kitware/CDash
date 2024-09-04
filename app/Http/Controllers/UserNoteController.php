@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use CDash\Model\BuildUserNote;
+use App\Models\Comment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,20 +19,33 @@ final class UserNoteController extends AbstractBuildController
             abort(400, 'No note specified');
         }
 
-        // Add the note.
-        $userNote = new BuildUserNote();
-        $userNote->BuildId = $this->build->Id;
-        $userNote->UserId = Auth::id();
-        $userNote->Note = request()->post('AddNote');
-        $userNote->Status = request()->post('Status');
-        $userNote->TimeStamp = gmdate(FMT_DATETIME);
-
-        if (!$userNote->Insert()) {
-            abort(400, 'Error adding note');
+        if (request()->post('Status') < 0 || request()->post('Status') > 2) {
+            abort(400, 'Invalid status');
         }
 
+        $eloquent_build = \App\Models\Build::findOrFail((int) $this->build->Id);
+
+        /**
+         * @var Comment $comment
+         */
+        $comment = $eloquent_build->comments()->create([
+            'userid' => Auth::id(),
+            'text' => request()->post('AddNote'),
+            'status' => request()->post('Status'),
+        ])->refresh();
+
         $response = [];
-        $response['note'] = $userNote->marshal();
+        $response['note'] = [
+            'user' => $comment->user?->full_name,
+            'date' => $comment->timestamp->toString(),
+            'status' => match ($comment->status) {
+                Comment::STATUS_NORMAL => '[note]',
+                Comment::STATUS_FIX_IN_PROGRESS => '[fix in progress]',
+                Comment::STATUS_FIXED => '[fixed]',
+                default => '[unknown]',
+            },
+            'text' => $comment->text,
+        ];
         return response()->json(cast_data_for_JSON($response));
     }
 }
