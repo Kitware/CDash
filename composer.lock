@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5246f95853a623b1b8f7ec8138575316",
+    "content-hash": "bca4896cf8f1c9669b233529623ea5c8",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -10166,16 +10166,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.11.9",
+            "version": "1.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "e370bcddadaede0c1716338b262346f40d296f82"
+                "reference": "d8ed7fffa66de1db0d2972267d8ed1d8fa0fe5a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e370bcddadaede0c1716338b262346f40d296f82",
-                "reference": "e370bcddadaede0c1716338b262346f40d296f82",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d8ed7fffa66de1db0d2972267d8ed1d8fa0fe5a2",
+                "reference": "d8ed7fffa66de1db0d2972267d8ed1d8fa0fe5a2",
                 "shasum": ""
             },
             "require": {
@@ -10220,7 +10220,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-08-01T16:25:18+00:00"
+            "time": "2024-09-03T19:55:22+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
