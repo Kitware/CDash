@@ -439,7 +439,7 @@ final class ManageProjectRolesController extends AbstractProjectController
 
     private function register_user($projectid, $email, $firstName, $lastName, $repositoryCredential)
     {
-        if(config('auth.project_admin_registration_form_enabled') === false) {
+        if (config('auth.project_admin_registration_form_enabled') === false) {
             return '<error>Users cannot be registered via this form at the current time.</error>';
         }
 
