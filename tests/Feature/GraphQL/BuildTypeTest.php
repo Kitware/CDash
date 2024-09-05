@@ -20,7 +20,7 @@ class BuildTypeTest extends TestCase
     {
         parent::setUp();
 
-        $this->project = Project::findOrFail((int) $this->makePublicProject()->Id);
+        $this->project = $this->makePublicProject();
     }
 
     protected function tearDown(): void

@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use App\Models\User;
-use CDash\Model\Project;
+use App\Models\Project;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
 use Tests\TestCase;
@@ -37,10 +37,10 @@ class ProjectPermissions extends TestCase
 
     protected function tearDown(): void
     {
-        $this->public_project->Delete();
-        $this->protected_project->Delete();
-        $this->private_project1->Delete();
-        $this->private_project2->Delete();
+        $this->public_project->delete();
+        $this->protected_project->delete();
+        $this->private_project1->delete();
+        $this->private_project2->delete();
         $this->normal_user->delete();
         $this->admin_user->delete();
 
@@ -58,10 +58,10 @@ class ProjectPermissions extends TestCase
         $missing_project_response = $this->get('/api/v2/projects/9999999')->json();
 
         // Verify that we can access the public project.
-        $_GET['project'] = $this->public_project->Name;
+        $_GET['project'] = $this->public_project->name;
         $response = $this->get('/api/v1/index.php');
         $response->assertJson([
-            'projectname' => $this->public_project->Name,
+            'projectname' => $this->public_project->name,
             'public' => Project::ACCESS_PUBLIC,
         ]);
 
@@ -73,43 +73,43 @@ class ProjectPermissions extends TestCase
         $response->assertJson([
             'nprojects' => 1,
             'projects' => [
-                ['name' => $this->public_project->Name],
+                ['name' => $this->public_project->name],
             ],
         ]);
 
         // Verify that we cannot access the protected project or the private projects.
-        $_GET['project'] = $this->protected_project->Name;
+        $_GET['project'] = $this->protected_project->name;
         $response = $this->get('/api/v1/index.php');
         $response->assertJson(['requirelogin' => 1]);
-        $_GET['project'] = $this->private_project1->Name;
+        $_GET['project'] = $this->private_project1->name;
         $response = $this->get('/api/v1/index.php');
         $response->assertJson(['requirelogin' => 1]);
-        $_GET['project'] = $this->private_project2->Name;
+        $_GET['project'] = $this->private_project2->name;
         $response = $this->get('/api/v1/index.php');
         $response->assertJson(['requirelogin' => 1]);
 
         // Verify that we can still access the public project when logged in
         // as this user.
-        $_GET['project'] = $this->public_project->Name;
+        $_GET['project'] = $this->public_project->name;
         $response = $this->actingAs($this->normal_user)->get('/api/v1/index.php');
         $response->assertJson([
-            'projectname' => $this->public_project->Name,
+            'projectname' => $this->public_project->name,
             'public' => Project::ACCESS_PUBLIC,
         ]);
 
         // Verify that we can access the protected project when logged in
         // as this user.
-        $_GET['project'] = $this->protected_project->Name;
+        $_GET['project'] = $this->protected_project->name;
         $response = $this->actingAs($this->normal_user)->get('/api/v1/index.php');
         $response->assertJson([
-            'projectname' => $this->protected_project->Name,
+            'projectname' => $this->protected_project->name,
             'public' => Project::ACCESS_PROTECTED,
         ]);
 
         // Add the user to PrivateProject1.
         DB::table('user2project')->insert([
             'userid' => $this->normal_user->id,
-            'projectid' => $this->private_project1->Id,
+            'projectid' => $this->private_project1->id,
             'role' => 0,
             'emailtype' => 0,
             'emailcategory' => 0,
@@ -118,15 +118,15 @@ class ProjectPermissions extends TestCase
         ]);
 
         // Verify that she can access it.
-        $_GET['project'] = $this->private_project1->Name;
+        $_GET['project'] = $this->private_project1->name;
         $response = $this->actingAs($this->normal_user)->get('/api/v1/index.php');
         $response->assertJson([
-            'projectname' => $this->private_project1->Name,
+            'projectname' => $this->private_project1->name,
             'public' => Project::ACCESS_PRIVATE,
         ]);
 
         // Verify that she cannot access PrivateProject2.
-        $_GET['project'] = $this->private_project2->Name;
+        $_GET['project'] = $this->private_project2->name;
         $response = $this->actingAs($this->normal_user)->get('/api/v1/index.php');
         $response->assertJson(['error' => 'You do not have access to the requested project or the requested project does not exist.']);
 
@@ -138,35 +138,35 @@ class ProjectPermissions extends TestCase
         $response->assertJson([
             'nprojects' => 3,
             'projects' => [
-                ['name' => $this->private_project1->Name],
-                ['name' => $this->protected_project->Name],
-                ['name' => $this->public_project->Name],
+                ['name' => $this->private_project1->name],
+                ['name' => $this->protected_project->name],
+                ['name' => $this->public_project->name],
             ],
         ]);
 
         // Verify that they can access all 4 projects.
-        $_GET['project'] = $this->public_project->Name;
+        $_GET['project'] = $this->public_project->name;
         $response = $this->actingAs($this->admin_user)->get('/api/v1/index.php');
         $response->assertJson([
-            'projectname' => $this->public_project->Name,
+            'projectname' => $this->public_project->name,
             'public' => Project::ACCESS_PUBLIC,
         ]);
-        $_GET['project'] = $this->protected_project->Name;
+        $_GET['project'] = $this->protected_project->name;
         $response = $this->actingAs($this->admin_user)->get('/api/v1/index.php');
         $response->assertJson([
-            'projectname' => $this->protected_project->Name,
+            'projectname' => $this->protected_project->name,
             'public' => Project::ACCESS_PROTECTED,
         ]);
-        $_GET['project'] = $this->private_project1->Name;
+        $_GET['project'] = $this->private_project1->name;
         $response = $this->actingAs($this->admin_user)->get('/api/v1/index.php');
         $response->assertJson([
-            'projectname' => $this->private_project1->Name,
+            'projectname' => $this->private_project1->name,
             'public' => Project::ACCESS_PRIVATE,
         ]);
-        $_GET['project'] = $this->private_project2->Name;
+        $_GET['project'] = $this->private_project2->name;
         $response = $this->actingAs($this->admin_user)->get('/api/v1/index.php');
         $response->assertJson([
-            'projectname' => $this->private_project2->Name,
+            'projectname' => $this->private_project2->name,
             'public' => Project::ACCESS_PRIVATE,
         ]);
 
@@ -178,9 +178,9 @@ class ProjectPermissions extends TestCase
         $response = $this->actingAs($this->admin_user)->get('/api/v1/viewProjects.php');
         $response->assertJsonPath('nprojects', 4);
         $response->assertJsonCount(4, 'projects');
-        $response->assertJsonFragment(['name' => $this->private_project1->Name]);
-        $response->assertJsonFragment(['name' => $this->private_project2->Name]);
-        $response->assertJsonFragment(['name' => $this->protected_project->Name]);
-        $response->assertJsonFragment(['name' => $this->public_project->Name]);
+        $response->assertJsonFragment(['name' => $this->private_project1->name]);
+        $response->assertJsonFragment(['name' => $this->private_project2->name]);
+        $response->assertJsonFragment(['name' => $this->protected_project->name]);
+        $response->assertJsonFragment(['name' => $this->public_project->name]);
     }
 }

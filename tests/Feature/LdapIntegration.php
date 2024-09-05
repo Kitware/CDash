@@ -96,11 +96,11 @@ class LdapIntegration extends TestCase
         ]);
 
         // Create a pair of projects which are restricted to specific LDAP groups
-        $this->projects['only_group_1'] = Project::findOrFail((int) $this->makePrivateProject()->Id);
+        $this->projects['only_group_1'] = $this->makePrivateProject();
         $this->projects['only_group_1']->ldapfilter = "(uid=*group_1*)";
         $this->projects['only_group_1']->save();
 
-        $this->projects['only_group_2'] = Project::findOrFail((int) $this->makePrivateProject()->Id);
+        $this->projects['only_group_2'] =$this->makePrivateProject();
         $this->projects['only_group_2']->ldapfilter = "(uid=*group_2*)";
         $this->projects['only_group_2']->save();
     }

@@ -38,8 +38,8 @@ class SiteTypeTest extends TestCase
         parent::setUp();
 
         $this->projects = [
-            'public1' => Project::findOrFail((int) $this->makePublicProject()->Id),
-            'private1' => Project::findOrFail((int) $this->makePrivateProject()->Id),
+            'public1' => $this->makePublicProject(),
+            'private1' => $this->makePrivateProject(),
         ];
 
         $this->users = [

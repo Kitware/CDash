@@ -28,15 +28,15 @@ class FilterTest extends TestCase
     {
         parent::setUp();
 
-        $this->projects['public1'] = Project::findOrFail((int) $this->makePublicProject('public1')->Id);
-        $this->projects['public2'] = Project::findOrFail((int) $this->makePublicProject('public2')->Id);
-        $this->projects['public4'] = Project::findOrFail((int) $this->makePublicProject('public4')->Id); // Out of order to check DB ordering
-        $this->projects['public3'] = Project::findOrFail((int) $this->makePublicProject('public3')->Id);
-        $this->projects['public5'] = Project::findOrFail((int) $this->makePublicProject('public5')->Id);
+        $this->projects['public1'] = $this->makePublicProject('public1');
+        $this->projects['public2'] = $this->makePublicProject('public2');
+        $this->projects['public4'] = $this->makePublicProject('public4'); // Out of order to check DB ordering
+        $this->projects['public3'] = $this->makePublicProject('public3');
+        $this->projects['public5'] = $this->makePublicProject('public5');
 
         // A couple private projects so we can check visibility (enum) filtering
-        $this->projects['private1'] = Project::findOrFail((int) $this->makePrivateProject('private1')->Id);
-        $this->projects['private2'] = Project::findOrFail((int) $this->makePrivateProject('private2')->Id);
+        $this->projects['private1'] = $this->makePrivateProject('private1');
+        $this->projects['private2'] = $this->makePrivateProject('private2');
 
         // Wipe any existing users before creating new ones
         User::query()->delete();

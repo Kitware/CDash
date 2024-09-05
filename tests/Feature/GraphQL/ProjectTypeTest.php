@@ -30,13 +30,13 @@ class ProjectTypeTest extends TestCase
         parent::setUp();
 
         $this->projects = [
-            'public1' => Project::findOrFail((int) $this->makePublicProject()->Id),
-            'public2' => Project::findOrFail((int) $this->makePublicProject()->Id),
-            'protected1' => Project::findOrFail((int) $this->makeProtectedProject()->Id),
-            'protected2' => Project::findOrFail((int) $this->makeProtectedProject()->Id),
-            'private1' => Project::findOrFail((int) $this->makePrivateProject()->Id),
-            'private2' => Project::findOrFail((int) $this->makePrivateProject()->Id),
-            'private3' => Project::findOrFail((int) $this->makePrivateProject()->Id),
+            'public1' => $this->makePublicProject(),
+            'public2' => $this->makePublicProject(),
+            'protected1' => $this->makeProtectedProject(),
+            'protected2' => $this->makeProtectedProject(),
+            'private1' => $this->makePrivateProject(),
+            'private2' => $this->makePrivateProject(),
+            'private3' => $this->makePrivateProject(),
         ];
 
         // Wipe any existing users before creating new ones

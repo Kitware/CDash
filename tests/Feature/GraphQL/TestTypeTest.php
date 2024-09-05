@@ -24,7 +24,7 @@ class TestTypeTest extends TestCase
     {
         parent::setUp();
 
-        $this->project = Project::findOrFail((int) $this->makePublicProject()->Id);
+        $this->project = $this->makePublicProject();
 
         // A common test output to share among all of our tests
         $this->test_output = TestOutput::create([

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use CDash\Model\Project;
+use App\Models\Project;
 use Illuminate\Support\Facades\URL;
 use App\Models\User;
 use LogicException;
@@ -43,7 +43,7 @@ class RouteAccessTest extends TestCase
     {
         $this->normal_user->delete();
         $this->admin_user->delete();
-        $this->public_project->Delete();
+        $this->public_project->delete();
 
         parent::tearDown();
     }
