@@ -15,18 +15,21 @@ class BuildTypeTest extends TestCase
     use CreatesProjects;
 
     private Project $project;
+    private Project $project2;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->project = $this->makePublicProject();
+        $this->project2 = $this->makePublicProject();
     }
 
     protected function tearDown(): void
     {
         // Deleting the project will delete all corresponding builds
         $this->project->delete();
+        $this->project2->delete();
 
         parent::tearDown();
     }
@@ -489,5 +492,51 @@ class BuildTypeTest extends TestCase
                 ],
             ],
         ], true);
+    }
+
+    public function testTopLevelBuildField(): void
+    {
+        $build1 = $this->project->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $build2 = $this->project2->builds()->create([
+            'name' => 'build2',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    id
+                    name
+                }
+            }
+        ', [
+            'id' => $build1->id,
+        ])->assertJson([
+            'data' => [
+                'build' => [
+                    'id' => $build1->id,
+                    'name' => 'build1',
+                ],
+            ],
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    id
+                    name
+                }
+            }
+        ', [
+            'id' => $build2->id,
+        ])->assertJson([
+            'data' => [
+                'build' => null,
+            ],
+        ]);
     }
 }

@@ -17,6 +17,12 @@ type Query {
   projects(
     filters: _ @filter(inputType: "ProjectFilterInput")
   ): [Project!]! @paginate(scopes: ["forUser"], type: CONNECTION) @orderBy(column: "id")
+
+  "Find a single build by ID."
+  build(
+    "Search by primary key."
+    id: ID @eq
+  ): Build @find @canResolved(ability: "view")
 }
 
 
