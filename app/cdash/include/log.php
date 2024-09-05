@@ -14,10 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'include/defines.php';
-
-
-
 use Illuminate\Support\Facades\Log;
 use \Psr\Log\LogLevel;
 
