@@ -4472,6 +4472,112 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
+			message: """
+				#^Call to deprecated function pdo_execute\\(\\)\\:
+				v2\\.5\\.0 01/22/2018$#
+			"""
+			count: 9
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: """
+				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
+				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
+			count: 2
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Cannot call method bindParam\\(\\) on PDOStatement\\|false\\.$#"
+			count: 2
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Cannot call method bindValue\\(\\) on PDOStatement\\|false\\.$#"
+			count: 20
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
+			count: 6
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 4
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\SubmissionUtils\\:\\:add_build\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\SubmissionUtils\\:\\:compute_error_difference\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\SubmissionUtils\\:\\:compute_error_difference\\(\\) has parameter \\$buildid with no type specified\\.$#"
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\SubmissionUtils\\:\\:compute_error_difference\\(\\) has parameter \\$previousbuildid with no type specified\\.$#"
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\SubmissionUtils\\:\\:compute_error_difference\\(\\) has parameter \\$warning with no type specified\\.$#"
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\SubmissionUtils\\:\\:extract_date_from_buildstamp\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\SubmissionUtils\\:\\:extract_date_from_buildstamp\\(\\) has parameter \\$buildstamp with no type specified\\.$#"
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
+			count: 2
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Only numeric types are allowed in \\+, int\\<0, max\\>\\|false given on the left side\\.$#"
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
+			count: 9
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Parameter \\#3 \\$length of function substr expects int\\|null, int\\<0, max\\>\\|false given\\.$#"
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
 			message: "#^Access to an undefined property App\\\\Models\\\\Test\\:\\:\\$measurements\\.$#"
 			count: 1
 			path: app/Utils/TestCreator.php
@@ -13228,112 +13334,6 @@ parameters:
 			message: "#^Parameter \\#3 \\$end_handler of function xml_set_element_handler expects callable\\(\\)\\: mixed, array\\{object, 'endElement'\\} given\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparser.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 9
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 2
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Cannot call method bindParam\\(\\) on PDOStatement\\|false\\.$#"
-			count: 2
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Cannot call method bindValue\\(\\) on PDOStatement\\|false\\.$#"
-			count: 20
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
-			count: 6
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Function add_build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Function compute_error_difference\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Function compute_error_difference\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Function compute_error_difference\\(\\) has parameter \\$previousbuildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Function compute_error_difference\\(\\) has parameter \\$warning with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Function extract_date_from_buildstamp\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Function extract_date_from_buildstamp\\(\\) has parameter \\$buildstamp with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 4
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 2
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Only numeric types are allowed in \\+, int\\<0, max\\>\\|false given on the left side\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
-			count: 9
-			path: app/cdash/include/ctestparserutils.php
-
-		-
-			message: "#^Parameter \\#3 \\$length of function substr expects int\\|null, int\\<0, max\\>\\|false given\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparserutils.php
 
 		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
@@ -24349,11 +24349,6 @@ parameters:
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Function add_build invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/GcovTar_handler.php
-
-		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
@@ -25431,11 +25426,6 @@ parameters:
 			path: app/cdash/xml_handlers/coverage_handler.php
 
 		-
-			message: "#^Function add_build invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/coverage_handler.php
-
-		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 12
 			path: app/cdash/xml_handlers/coverage_handler.php
@@ -25623,11 +25613,6 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 4
-			path: app/cdash/xml_handlers/coverage_log_handler.php
-
-		-
-			message: "#^Function add_build invoked with 2 parameters, 1 required\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/coverage_log_handler.php
 
 		-

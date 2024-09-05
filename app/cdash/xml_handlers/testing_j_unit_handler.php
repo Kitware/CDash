@@ -14,6 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
 use CDash\Model\Build;
 use App\Models\BuildInformation;
@@ -255,7 +256,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
                 $stamp = date('Ymd-Hi', $this->StartTimeStamp) . "-$this->Group";
                 $this->Build->SetStamp($stamp);
             }
-            add_build($this->Build);
+            SubmissionUtils::add_build($this->Build);
             $this->UpdateEndTime = true;
         } else {
             // Otherwise make sure that the build is up-to-date.

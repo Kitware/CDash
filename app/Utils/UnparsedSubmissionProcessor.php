@@ -196,7 +196,7 @@ class UnparsedSubmissionProcessor
 
         // If not, add a new one.
         if ($buildid === 0) {
-            $buildid = add_build($this->build);
+            $buildid = SubmissionUtils::add_build($this->build);
         }
 
         // Returns the OK submission

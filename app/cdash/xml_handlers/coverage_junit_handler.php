@@ -14,6 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Utils\SubmissionUtils;
 use CDash\Model\Build;
 use App\Models\BuildInformation;
 use CDash\Model\Coverage;
@@ -130,7 +131,7 @@ class CoverageJUnitHandler extends AbstractXmlHandler
                 $this->Build->SubmitTime = gmdate(FMT_DATETIME);
                 $this->Build->SetSubProject($this->SubProjectName);
                 $this->Build->InsertErrors = false;
-                add_build($this->Build);
+                SubmissionUtils::add_build($this->Build);
             } else {
                 // Otherwise make sure that it's up-to-date.
                 $this->Build->UpdateBuild($this->Build->Id, -1, -1);

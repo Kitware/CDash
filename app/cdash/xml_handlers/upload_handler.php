@@ -14,6 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Utils\SubmissionUtils;
 use CDash\Model\Build;
 use App\Models\BuildInformation;
 use CDash\Model\Label;
@@ -320,8 +321,7 @@ class UploadHandler extends AbstractXmlHandler
             // This associates the build with the correct day if it is only
             // an upload.  Otherwise we defer to the values set by the
             // other handlers.
-            $buildDate =
-                extract_date_from_buildstamp($this->Build->GetStamp());
+            $buildDate = SubmissionUtils::extract_date_from_buildstamp($this->Build->GetStamp());
             [$beginningOfDay, $endOfDay] = $this->Project->ComputeTestingDayBounds($buildDate);
 
             $this->Build->EndTime = $beginningOfDay;
@@ -342,7 +342,7 @@ class UploadHandler extends AbstractXmlHandler
         if ($this->Build->Id == 0) {
             $this->Build->Append = false;
             $this->Build->InsertErrors = false;
-            add_build($this->Build);
+            SubmissionUtils::add_build($this->Build);
         } else {
             if ($this->Label) {
                 $this->Build->InsertLabelAssociations();

@@ -14,6 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Utils\SubmissionUtils;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\Collection;
 use CDash\Collection\SubscriptionBuilderCollection;
@@ -193,7 +194,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 foreach ($this->Labels as $label) {
                     $build->AddLabel($label);
                 }
-                add_build($build);
+                SubmissionUtils::add_build($build);
 
                 $duration = $this->EndTimeStamp - $this->StartTimeStamp;
                 $build->UpdateBuildDuration((int) $duration, !$all_at_once);

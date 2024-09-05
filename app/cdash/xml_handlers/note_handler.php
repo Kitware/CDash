@@ -15,6 +15,7 @@
 =========================================================================*/
 
 use App\Utils\NoteCreator;
+use App\Utils\SubmissionUtils;
 use CDash\Model\Build;
 use App\Models\BuildInformation;
 use App\Models\Site;
@@ -99,7 +100,7 @@ class NoteHandler extends AbstractXmlHandler
                 $this->Build->EndTime = $this->NoteCreator->time;
                 $this->Build->SubmitTime = gmdate(FMT_DATETIME);
                 $this->Build->InsertErrors = false;
-                add_build($this->Build);
+                SubmissionUtils::add_build($this->Build);
             }
 
             if (!$this->Build->Id) {

@@ -16,11 +16,10 @@
 
 namespace CDash\Model;
 
-require_once 'include/ctestparserutils.php';
-
 use App\Models\Test;
 use App\Models\Site;
 use App\Utils\RepositoryUtils;
+use App\Utils\SubmissionUtils;
 use App\Utils\TestingDay;
 use App\Utils\TestDiffUtil;
 use App\Models\BuildInformation;
@@ -1147,8 +1146,8 @@ class Build
         if ($previousbuildid === 0) {
             return true;
         }
-        compute_error_difference($this->Id, $previousbuildid, 0); // errors
-        compute_error_difference($this->Id, $previousbuildid, 1); // warnings
+        SubmissionUtils::compute_error_difference($this->Id, $previousbuildid, 0); // errors
+        SubmissionUtils::compute_error_difference($this->Id, $previousbuildid, 1); // warnings
 
         return true;
     }

@@ -14,6 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
 
 use CDash\Model\Build;
@@ -542,7 +543,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                         $child_build = $this->InitializeSubProjectBuild($subproject_name);
                         if (!is_null($child_build)) {
                             $child_build->InsertErrors = false;
-                            add_build($child_build);
+                            SubmissionUtils::add_build($child_build);
                             $buildid = $child_build->Id;
                         }
                     }
