@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="dummy_build_name"
+  BuildStamp="dummy_stamp"
+  Name="dummy_name"
+>
+  <Configure>
+    <ConfigureCommand>"cmake" "/foo/bar/src"</ConfigureCommand>
+    <!-- missing Log element here -->
+    <ConfigureStatus>0</ConfigureStatus>
+    <ElapsedMinutes>0</ElapsedMinutes>
+  </Configure>
+</Site>

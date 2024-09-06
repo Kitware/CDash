@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="dummy_build_name"
+  BuildStamp=""
+  Name=""
+  >
+  <Foo baz="qux">
+    <Bar>Hello World</Bar>
+  </Foo>
+</Site>
