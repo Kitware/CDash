@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="dummy_build_name"
+  BuildStamp="dummy_stamp"
+  Name="dummy_name"
+  >
+  <Build>
+    <StartDateTime>Aug 13 09:24 EDT</StartDateTime>
+    <StartBuildTime>1439472247</StartBuildTime>
+    <BuildCommand>/opt/cmake/bin/cmake --build . --config "Debug" -- -i</BuildCommand>
+    <Failure type="Error">
+      <Action>
+        <TargetName>foo</TargetName>
+        <Language>C++</Language>
+        <OutputFile>foo</OutputFile>
+        <OutputType>executable</OutputType>
+      </Action>
+      <Command>
+        <WorkingDirectory>/foo/bar/bin</WorkingDirectory>
+        <Argument>/usr/local/bin/c++</Argument>
+        <Argument>CMakeFiles/foo.dir/foo.cxx.o</Argument>
+        <Argument>-o</Argument>
+        <Argument>foo</Argument>
+      </Command>
+      <Result>
+        <StdOut/>
+                <StdErr>c++: error: CMakeFiles/foo.dir/foo.cxx.o: No such file or directory</StdErr>
+        <ExitCondition>1</ExitCondition>
+      </Result>
+    </Failure>
+    <Log Encoding="base64" Compression="bin/gzip"/>
+    <EndDateTime>Sep 1 09:24 EDT</EndDateTime>
+    <ElapsedMinutes>0</ElapsedMinutes>
+  </Build>
+</Site>
