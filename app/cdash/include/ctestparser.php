@@ -197,15 +197,15 @@ function ctest_parse($filehandle, string $filename, $projectid, $expected_md5 = 
     $file = $xml_info['xml_type'];
     $schema_file = $xml_info['xml_schema'];
 
-    // Ensure the XML file is valid if the XML type has a schema defined
-    if (isset($schema_file)) {
+    // If validation is enabled and if this file has a corresponding schema, validate it
+    if (((bool) config('cdash.validate_xml_submissions')) === true && isset($schema_file)) {
         try {
             SubmissionUtils::validate_xml($filename, $schema_file);
         } catch (CDashXMLValidationException $e) {
             foreach ($e->getDecodedMessage() as $error) {
-                Log::error($error);
+                Log::error("Validating $filename: ".$error);
             }
-            return false;
+            abort(400, "Xml validation failed: rejected file $filename");
         }
     }
 
