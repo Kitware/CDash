@@ -36,7 +36,14 @@ final class OAuthController extends AbstractController
         };
 
         $email =  $authUser->getEmail();
-        [$fname, $lname] = explode(" ", $authUser->getName() ?? '');
+        $name = $authUser->getName() ?? '';
+
+        // Check if name has space.  Avoid issue where username = "Real" name
+        if (str_contains($name, " ")) {
+            [$fname, $lname] = explode(" ", $name);
+        } else {
+            [$fname, $lname] = [$name, ""];
+        }
 
         // TODO: What if, for whatever reason, there is more than one user found?
         $user = User::firstWhere('email', $email);

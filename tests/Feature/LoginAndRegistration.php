@@ -290,6 +290,31 @@ class LoginAndRegistration extends TestCase
         $response->assertRedirect("/register?fname=Arlette&lname=Laguiller&email=cdash%40test.com");
     }
 
+    public function testNoFullNamePingIdentityProvider() : void
+    {
+        // Stolen from: https://laracasts.com/discuss/channels/testing/testing-laravel-socialite-callback
+        $abstractUser = Mockery::mock('Laravel\Socialite\Two\User');
+        $abstractUser->shouldReceive('getId')
+        ->andReturn(1234567890)
+        ->shouldReceive('getEmail')
+        ->andReturn('cdash@test.com')
+        ->shouldReceive('getNickname')
+        ->andReturn('Pseudo')
+        ->shouldReceive('getName')
+        ->andReturn('Pseudo')
+        ->shouldReceive('getAvatar')
+        ->andReturn('https://en.gravatar.com/userimage');
+
+        $provider = Mockery::mock('Laravel\Socialite\PingIdentity\Provider');
+        $provider->shouldReceive('user')->andReturn($abstractUser);
+
+        Socialite::shouldReceive('driver')->with('pingidentity')->andReturn($provider);
+
+        $response = $this->get("auth/pingidentity/callback");
+        $response->assertRedirect("/register?fname=Pseudo&lname=&email=cdash%40test.com");
+    }
+
+
     public function testRegisterUserWhenDisabled() : void
     {
         // Create a user by sending proper data

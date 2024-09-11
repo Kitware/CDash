@@ -27071,12 +27071,12 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Mockery\\\\Expectation\\:\\:shouldReceive\\(\\)\\.$#"
-			count: 1
+			count: 2
 			path: tests/Feature/LoginAndRegistration.php
 
 		-
 			message: "#^Call to method shouldReceive\\(\\) on an unknown class Laravel\\\\Socialite\\\\PingIdentity\\\\Provider\\.$#"
-			count: 1
+			count: 2
 			path: tests/Feature/LoginAndRegistration.php
 
 		-
