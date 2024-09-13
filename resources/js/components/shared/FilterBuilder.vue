@@ -1,19 +1,44 @@
 <template>
-  <div>
+  <div class="tw-flex tw-flex-col tw-w-full tw-gap-1">
+    <div
+      class="table-heading1 tw-font-bold"
+      style="font-size: 14px; padding: 3px 15px;"
+    >
+      Filters
+    </div>
     <filter-group
       :type="filterType"
       :primary-record-name="primaryRecordName"
       :initial-filters="initialFilters"
       @changeFilters="filters => $emit('changeFilters', filters)"
     />
+    <div class="tw-flex tw-flex-row tw-w-full tw-gap-1">
+      <a
+        role="button"
+        class="tw-btn tw-btn-xs"
+        :href="executeQueryLink"
+      >
+        <font-awesome-icon icon="fa-play" /> Show
+      </a>
+      <a
+        role="button"
+        class="tw-btn tw-btn-xs"
+        :href="$baseURL + '/graphql/explorer'"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <font-awesome-icon icon="fa-terminal" /> GraphQL
+      </a>
+    </div>
   </div>
 </template>
 
 <script>
 import FilterGroup from './FilterGroup.vue';
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
 export default {
-  components: { FilterGroup },
+  components: { FilterGroup, FontAwesomeIcon },
 
   props: {
     /**
@@ -44,6 +69,19 @@ export default {
         };
       },
     },
+
+    /**
+     * A link provided by the parent, presumably containing information this component has provided about
+     * its current value.
+     */
+    executeQueryLink: {
+      type: URL,
+      required: true,
+    },
   },
+
+  emits: [
+    'changeFilters',
+  ],
 };
 </script>

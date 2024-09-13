@@ -114,6 +114,11 @@ export default {
     },
   },
 
+  emits: [
+    'changeFilters',
+    'delete',
+  ],
+
   setup(props) {
     const { result, error } = useQuery(gql`
       query {
