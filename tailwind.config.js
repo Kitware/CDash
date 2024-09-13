@@ -15,5 +15,6 @@ module.exports = {
     logs: false,
     darkTheme: 'light',
   },
+  prefix: 'tw-',
 };
 

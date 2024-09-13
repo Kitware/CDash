@@ -1,8 +1,8 @@
 <template>
   <loading-indicator :is-loading="!result">
-    <div class="flex flex-row w-full gap-1">
+    <div class="tw-flex tw-flex-row tw-w-full tw-gap-1">
       <button
-        class="btn btn-xs"
+        class="tw-btn tw-btn-xs"
         @click="$emit('delete')"
       >
         <font-awesome-icon icon="fa-trash" />
@@ -10,7 +10,7 @@
       <!-- Field chooser -->
       <select
         v-model="selectedField"
-        class="select select-xs select-bordered shrink"
+        class="tw-select tw-select-xs tw-select-bordered tw-shrink"
       >
         <option
           v-for="field in result.typeInformation.inputFields"
@@ -23,7 +23,7 @@
       <select
         v-if="selectedField !== ''"
         v-model="selectedOperator"
-        class="select select-xs select-bordered shrink"
+        class="tw-select tw-select-xs tw-select-bordered tw-shrink"
       >
         <option
           v-for="operator in operators"
@@ -38,13 +38,13 @@
           v-if="selectedType.name === 'ID' || selectedType.name === 'Int' || selectedType.name === 'Float'"
           v-model="selectedValue"
           type="number"
-          class="input input-xs input-bordered shrink"
+          class="tw-input tw-input-xs tw-input-bordered tw-shrink"
         >
         <input
           v-else-if="selectedType.name === 'String'"
           v-model="selectedValue"
           type="text"
-          class="input input-xs input-bordered w-full"
+          class="tw-input tw-input-xs tw-input-bordered tw-w-full"
         >
         <span v-else-if="selectedType.name === 'Boolean'">
           <!-- TODO: Implement -->
@@ -57,7 +57,7 @@
       <select
         v-else-if="selectedType.kind === 'ENUM'"
         v-model="selectedValue"
-        class="select select-xs select-bordered shrink"
+        class="tw-select tw-select-xs tw-select-bordered tw-shrink"
       >
         <option
           v-for="option in selectedType.enumValues"

@@ -1,8 +1,8 @@
 <template>
   <loading-indicator :is-loading="!result">
-    <div class="flex w-full">
-      <div class="divider divider-horizontal" />
-      <div class="flex flex-col w-full gap-1">
+    <div class="tw-flex tw-w-full">
+      <div class="tw-divider tw-divider-horizontal" />
+      <div class="tw-flex tw-flex-col tw-w-full tw-gap-1">
         <div>
           <template v-if="primaryRecordName === ''">
             and
@@ -11,7 +11,7 @@
             Show all {{ primaryRecordName }} where
           </template>
           <select
-            class="select select-xs select-bordered shrink"
+            class="tw-select tw-select-xs tw-select-bordered tw-shrink"
             @change="event => changeCombineType(event.target.value)"
           >
             <option
@@ -47,21 +47,21 @@
             @changeFilters="newEntry => changeRow(newEntry, index)"
           />
         </div>
-        <div class="flex flex-row w-full gap-1">
+        <div class="tw-flex tw-flex-row tw-w-full tw-gap-1">
           <button
-            class="btn btn-xs"
+            class="tw-btn tw-btn-xs"
             @click="addFilter"
           >
             <font-awesome-icon icon="fa-plus" /> Add Filter
           </button>
           <button
-            class="btn btn-xs"
+            class="tw-btn tw-btn-xs"
             @click="addGroup"
           >
             <font-awesome-icon icon="fa-bars-staggered" /> Add Group
           </button>
           <button
-            class="btn btn-xs"
+            class="tw-btn tw-btn-xs"
             @click="$emit('delete')"
           >
             <font-awesome-icon icon="fa-trash" /> Delete
