@@ -6,7 +6,7 @@
       <div class="pad4">
         <!-- Filters -->
         <div id="labelshowfilters">
-          <a id="label_showfilters" ng-click="showfilters_toggle()">
+          <a class="cdash-link" id="label_showfilters" ng-click="showfilters_toggle()">
             <span ng-show="showfilters == 0">Show Filters</span>
             <span ng-show="showfilters != 0">Hide Filters</span>
           </a>
@@ -104,7 +104,7 @@
                 {{::test.subproject}}
               </td>
               <td>
-                <a ng-href="{{::test.link}}">
+                <a class="cdash-link" ng-href="{{::test.link}}">
                   {{::test.name}}
                 </a>
               </td>

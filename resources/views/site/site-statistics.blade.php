@@ -15,7 +15,7 @@
                 <tr>
                     <td>
                         <b>
-                            <a href="{{ url('/sites/' . $site->siteid) }}">
+                            <a class="cdash-link" href="{{ url('/sites/' . $site->siteid) }}">
                                 {{ $site->sitename }}
                             </a>
                         </b>

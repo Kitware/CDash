@@ -159,7 +159,7 @@
   <br/>
 
   <div id="labelshowfilters">
-  <a id="label_showfilters" href="javascript:filters_toggle();">
+  <a class="cdash-link" id="label_showfilters" href="javascript:filters_toggle();">
   <xsl:if test="cdash/filterdata/showfilters = 0">Show Filters<xsl:if test="cdash/filtercount > 0"> (<xsl:value-of select="cdash/filtercount"/>)</xsl:if></xsl:if>
   <xsl:if test="cdash/filterdata/showfilters != 0">Hide Filters</xsl:if>
   </a>

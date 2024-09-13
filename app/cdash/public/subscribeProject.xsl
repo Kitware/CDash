@@ -48,15 +48,15 @@
   <div id="wizard">
       <ul>
           <li>
-            <a href="#fragment-1"><span>Select your role in this project</span></a></li>
+            <a class="cdash-link" href="#fragment-1"><span>Select your role in this project</span></a></li>
           <li>
-            <a href="#fragment-2"><span>Repository Credential</span></a></li>
+            <a class="cdash-link" href="#fragment-2"><span>Repository Credential</span></a></li>
           <li>
-            <a href="#fragment-3"><span>Email Notifications</span></a></li>
+            <a class="cdash-link"href="#fragment-3"><span>Email Notifications</span></a></li>
           <li>
-            <a href="#fragment-4"><span>Email Category</span></a></li>
+            <a class="cdash-link" href="#fragment-4"><span>Email Category</span></a></li>
           <li>
-            <a href="#fragment-5"><span>Email Labels</span></a></li>
+            <a class="cdash-link" href="#fragment-5"><span>Email Labels</span></a></li>
       </ul>
     <div id="fragment-1" class="tab_content" >
       <div class="tab_help"></div>

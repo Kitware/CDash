@@ -15,7 +15,7 @@
         <tr>
           <td align="left">
             <b>Site: </b>
-            <a :href="$baseURL + '/sites/' + cdash.build.siteid">
+            <a class="cdash-link" :href="$baseURL + '/sites/' + cdash.build.siteid">
               {{ cdash.build.site }}
             </a>
           </td>
@@ -23,7 +23,7 @@
         <tr>
           <td align="left">
             <b>Build: </b>
-            <a :href="$baseURL + '/build/' + buildid">
+            <a class="cdash-link" :href="$baseURL + '/build/' + buildid">
               {{ cdash.build.buildname }}
             </a>
           </td>
@@ -96,7 +96,7 @@
               {{ configure.configurewarnings }}
             </td>
             <td>
-              <a :click="configure.show = !configure.show">
+              <a class="cdash-link" :click="configure.show = !configure.show">
                 <span v-show="!configure.show">View</span>
                 <span v-show="configure.show">Hide</span>
               </a>
@@ -111,7 +111,7 @@
                 <tr>
                   <td align="left">
                     <b>Site: </b>
-                    <a :href="$baseURL + '/sites/' + cdash.build.siteid">
+                    <a class="cdash-link" :href="$baseURL + '/sites/' + cdash.build.siteid">
                       {{ cdash.build.site }}
                     </a>
                   </td>

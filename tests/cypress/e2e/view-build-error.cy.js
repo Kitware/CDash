@@ -82,7 +82,7 @@ describe('viewBuildError', () => {
     const green_text = 'Hello world!';
     cy.get('@error_snippet').eq(0).should('have.css', 'color', 'rgb(0, 187, 0)').and('contain', green_text);
 
-    const red_text = 'Visit our website: <a href="https://www.kitware.com/">Kitware</a>';
+    const red_text = 'Visit our website: <a class="cdash-link" href="https://www.kitware.com/">Kitware</a>';
     cy.get('@error_snippet').eq(1).should('have.css', 'color', 'rgb(255, 85, 85)').and('contain', red_text);
   });
 });

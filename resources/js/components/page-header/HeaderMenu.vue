@@ -2,28 +2,28 @@
   <nav id="headermenu">
     <ul id="navigation">
       <li v-if="hasProject">
-        <a :href="indexUrl">Dashboard</a>
+        <a class="cdash-link" :href="indexUrl">Dashboard</a>
         <ul>
           <li v-if="showSubProjects">
-            <a :href="subProjectsUrl">SubProjects</a>
+            <a class="cdash-link" :href="subProjectsUrl">SubProjects</a>
           </li>
           <li>
-            <a :href="overviewUrl">Overview</a>
+            <a class="cdash-link" :href="overviewUrl">Overview</a>
           </li>
           <li>
-            <a :href="buildsUrl">Builds</a>
+            <a class="cdash-link" :href="buildsUrl">Builds</a>
           </li>
           <li>
-            <a :href="testsUrl">Tests</a>
+            <a class="cdash-link" :href="testsUrl">Tests</a>
           </li>
           <li>
-            <a :href="testQueryUrl">Tests Query</a>
+            <a class="cdash-link" :href="testQueryUrl">Tests Query</a>
           </li>
           <li>
-            <a :href="statisticsUrl">Statistics</a>
+            <a class="cdash-link" :href="statisticsUrl">Statistics</a>
           </li>
           <li class="endsubmenu">
-            <a :href="sitesUrl">Sites</a>
+            <a class="cdash-link" :href="sitesUrl">Sites</a>
           </li>
         </ul>
       </li>
@@ -31,7 +31,7 @@
         v-if="showBack"
         id="Back"
       >
-        <a :href="backUrl">Up</a>
+        <a class="cdash-link" :href="backUrl">Up</a>
       </li>
       <li v-if="showCalendar">
         <a
@@ -51,22 +51,22 @@
         >Project</a>
         <ul>
           <li>
-            <a :href="homeUrl">Home</a>
+            <a class="cdash-link" :href="homeUrl">Home</a>
           </li>
           <li>
-            <a :href="docUrl">Documentation</a>
+            <a class="cdash-link" :href="docUrl">Documentation</a>
           </li>
           <li>
-            <a :href="vcsUrl">Repository</a>
+            <a class="cdash-link" :href="vcsUrl">Repository</a>
           </li>
           <li :class="{ endsubmenu: !showSubscribe }">
-            <a :href="bugUrl">Bug Tracker</a>
+            <a class="cdash-link" :href="bugUrl">Bug Tracker</a>
           </li>
           <li
             v-if="showSubscribe"
             class="endsubmenu"
           >
-            <a :href="subscribeUrl">Subscribe</a>
+            <a class="cdash-link" :href="subscribeUrl">Subscribe</a>
           </li>
         </ul>
       </li>
@@ -74,31 +74,31 @@
         v-if="showAdmin"
         id="admin"
       >
-        <a href="#">Settings</a>
+        <a class="cdash-link" href="#">Settings</a>
         <ul>
           <li>
-            <a :href="projectSettingsUrl">Project</a>
+            <a class="cdash-link" :href="projectSettingsUrl">Project</a>
           </li>
           <li>
-            <a :href="userSettingsUrl">Users</a>
+            <a class="cdash-link" :href="userSettingsUrl">Users</a>
           </li>
           <li>
-            <a :href="groupSettingsUrl">Groups</a>
+            <a class="cdash-link" :href="groupSettingsUrl">Groups</a>
           </li>
           <li>
-            <a :href="coverageSettingsUrl">Coverage</a>
+            <a class="cdash-link" :href="coverageSettingsUrl">Coverage</a>
           </li>
           <li>
-            <a :href="bannerSettingsUrl">Banner</a>
+            <a class="cdash-link" :href="bannerSettingsUrl">Banner</a>
           </li>
           <li>
-            <a :href="measurementSettingsUrl">Measurements</a>
+            <a class="cdash-link" :href="measurementSettingsUrl">Measurements</a>
           </li>
           <li>
-            <a :href="subProjectSettingsUrl">SubProjects</a>
+            <a class="cdash-link" :href="subProjectSettingsUrl">SubProjects</a>
           </li>
           <li class="endsubmenu">
-            <a :href="overviewSettingsUrl">Overview</a>
+            <a class="cdash-link" :href="overviewSettingsUrl">Overview</a>
           </li>
         </ul>
       </li>

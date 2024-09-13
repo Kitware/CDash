@@ -1,10 +1,10 @@
 <h3 class="buildgroupname">
-  <a href="#" class="grouptrigger"
+  <a href="#" class="grouptrigger cdash-link"
      ng-click="jumpToAnchor(buildgroup.linkname)">
     {{::buildgroup.name}}
   </a>
   <span class="buildnums" align="right">{{::buildgroup.numbuildslabel}}</span>
-  <a class="grouplink"
+  <a class="grouplink cdash-link"
      ng-href="viewBuildGroup.php?project={{::cdash.projectname_encoded}}&buildgroup={{::buildgroup.linkname}}&date={{::cdash.date}}&{{::cdash.filterurl}}">[view timeline]</a>
 </h3>
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="project_{{::cdash.projectid}}_{{::buildgroup.id}}">

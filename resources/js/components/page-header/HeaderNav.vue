@@ -7,7 +7,7 @@
       id="header-nav-previous-btn"
       :class="previousClass"
     >
-      <a :href="previous">
+      <a class="cdash-link" :href="previous">
         <svg
           id="i-chevron-left"
           xmlns="http://www.w3.org/2000/svg"
@@ -29,13 +29,13 @@
       id="header-nav-current-btn"
       :class="currentClass"
     >
-      <a :href="current">LATEST</a>
+      <a class="cdash-link" :href="current">LATEST</a>
     </li>
     <li
       id="header-nav-next-btn"
       :class="nextClass"
     >
-      <a :href="next">
+      <a class="cdash-link" :href="next">
         NEXT
         <svg
           id="i-chevron-right"

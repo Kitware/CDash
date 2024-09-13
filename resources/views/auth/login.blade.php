@@ -60,7 +60,7 @@
 				</div>
 				<div class="col-auto text-right">
 					@if (Route::has('password.request'))
-						<a href="recoverPassword.php">Forgot your password?</a>
+						<a class="cdash-link" href="recoverPassword.php">Forgot your password?</a>
 					@endif
 				</div>
 			</div>
@@ -82,7 +82,7 @@
                 @endif
                 @foreach($socialiteCollection as $key => $config)
                     @if ($config['enable'])
-                        <a href="/auth/{{ $key }}/redirect">
+                        <a class="cdash-link" href="/auth/{{ $key }}/redirect">
                             <button>
                                 <img class="paddr" src="img/{{ $key }}_signin.png" title="Log in with your {{ $key }} account" style="height:40px"/>
                                 {{ $config['display_name']}}
@@ -92,7 +92,7 @@
                 @endforeach
                 @foreach($oauthCollection as $key => $config)
                     @if ($config['enable'])
-                        <a href="/oauth/{{ $key }}">
+                        <a class="cdash-link" href="/oauth/{{ $key }}">
                             <img class="paddr" src="img/{{ $key }}_signin.png" title="Log in with your {{ $key }} account"/>
                         </a>
                     @endif

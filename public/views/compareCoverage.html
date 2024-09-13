@@ -1,6 +1,6 @@
       <!-- Filters -->
       <div id="labelshowfilters">
-        <a id="label_showfilters" ng-click="showfilters_toggle()">
+        <a class="cdash-link" id="label_showfilters" ng-click="showfilters_toggle()">
           <span ng-show="showfilters == 0">Show Filters</span>
           <span ng-show="showfilters != 0">Hide Filters</span>
         </a>
@@ -49,7 +49,7 @@
             </td>
 
             <td align="center" ng-repeat="build in cdash.builds" ng-class="{'normal': group[build.key] >= group.thresholdgreen, 'warning': group[build.key] < group.thresholdgreen && group[build.key] >= group.thresholdyellow, 'error': group[build.key] < group.thresholdyellow}">
-              <a ng-if="group[build.key] >= 0"> {{group[build.key]}}% </a>
+              <a class="cdash-link"ng-if="group[build.key] >= 0"> {{group[build.key]}}% </a>
             </td>
 
           </tr>
@@ -60,10 +60,10 @@
             </td>
 
             <td align="center" ng-repeat="build in cdash.builds" ng-class="{'normal': coverage[build.key] >= group.thresholdgreen, 'warning': coverage[build.key] < group.thresholdgreen && coverage[build.key] >= group.thresholdyellow, 'error': coverage[build.key] < group.thresholdyellow}">
-              <a ng-if="coverage[build.key] >= 0 && build.key != 'aggregate'" ng-href="viewCoverage.php?buildid={{coverage[build.key +'id']}}">
+              <a class="cdash-link" ng-if="coverage[build.key] >= 0 && build.key != 'aggregate'" ng-href="viewCoverage.php?buildid={{coverage[build.key +'id']}}">
                 {{coverage[build.key]}}%
               </a>
-               <a ng-if="coverage[build.key] >= 0 && build.key == 'aggregate'">
+               <a class="cdash-link" ng-if="coverage[build.key] >= 0 && build.key == 'aggregate'">
                 {{coverage[build.key]}}%
               </a>
               <sub ng-if="coverage[build.key+'percentagediff'] > 0">+{{coverage[build.key+'percentagediff']}}%</sub>
@@ -81,10 +81,10 @@
             </td>
 
             <td align="center" ng-repeat="build in cdash.builds" ng-class="{'normal': coverage[build.key] >= cdash.thresholdgreen, 'warning': coverage[build.key] < cdash.thresholdgreen && coverage[build.key] >= cdash.thresholdyellow, 'error': coverage[build.key] < cdash.thresholdyellow}">
-              <a ng-if="coverage[build.key] >= 0 && build.key != 'aggregate'" ng-href="viewCoverage.php?buildid={{coverage[build.key+'id']}}">
+              <a class="cdash-link" ng-if="coverage[build.key] >= 0 && build.key != 'aggregate'" ng-href="viewCoverage.php?buildid={{coverage[build.key+'id']}}">
                 {{coverage[build.key]}}%
               </a>
-               <a ng-if="coverage[build.key] >= 0 && build.key == 'aggregate'">
+               <a class="cdash-link" ng-if="coverage[build.key] >= 0 && build.key == 'aggregate'">
                 {{coverage[build.key]}}%
               </a>
               <sub ng-if="coverage[build.key+'percentagediff'] > 0">+{{coverage[build.key+'percentagediff']}}%</sub>

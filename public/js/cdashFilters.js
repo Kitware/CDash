@@ -318,7 +318,7 @@ function filters_create_hyperlink()
 
   s = s + collapse_str;
 
-  $("#div_filtersAsUrl").html("<a href=\"" + s + "\">" + s + "</a>");
+  $("#div_filtersAsUrl").html("<a class=\"cdash-link\" href=\"" + s + "\">" + s + "</a>");
 }
 
 

@@ -4,7 +4,7 @@
 
 @section('main_content')
     <b>Site:</b> {{ $build->GetSite()->name }}<br />
-    <b>Build name:</b> <a href="{{ $build->GetBuildSummaryUrl() }}">{{ $build->Name }}</a><br />
+    <b>Build name:</b> <a class="cdash-link" href="{{ $build->GetBuildSummaryUrl() }}">{{ $build->Name }}</a><br />
     <b>Build start time:</b> {{ $build->StartTime }}<br />
 
     <h3>URLs or Files submitted with this build</h3>
@@ -19,7 +19,7 @@
             @foreach($urls as $url)
                 <tr>
                     <td>
-                        <a href="{{ $url['filename'] }}">{{ $url['filename'] }}</a>
+                        <a class="cdash-link" href="{{ $url['filename'] }}">{{ $url['filename'] }}</a>
                     </td>
                 </tr>
             @endforeach
@@ -39,7 +39,7 @@
             @foreach($files as $file)
                 <tr>
                     <td>
-                        <a href="{{ $file['href'] }}">
+                        <a class="cdash-link" href="{{ $file['href'] }}">
                             <img src="{{ url('/img/package.png') }}" alt="Files" border="0"/> {{ $file['filename'] }}
                         </a>
                     </td>

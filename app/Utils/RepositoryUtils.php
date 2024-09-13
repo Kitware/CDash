@@ -712,7 +712,7 @@ class RepositoryUtils
         if (strpos($projecturl, '//') === false) {
             $projecturl = '//' . $projecturl;
         }
-        $repo_link = "<a href='$projecturl/blob/$revision";
+        $repo_link = "<a class='cdash-link' href='$projecturl/blob/$revision";
         $pattern = "&$source_dir\/*([a-zA-Z0-9_\.\-\\/]+):(\d+)&";
         $replacement = "$repo_link/$1#L$2'>$1:$2</a>";
 

@@ -29,14 +29,14 @@ body {
   font-size: 11px;
 }
 
-a:link,a:visited,a:active{
+.cdash-link a:link, .cdash-link a:visited, .cdash-link a:active{
  font-size:14px;
  color:#3B5998; /* 4A4A4A */
  font-weight: normal;
  text-decoration: none;
 }
 
-a:hover{
+.cdash-link a:hover{
  /* color:#000000; */
  text-decoration: underline;
 }

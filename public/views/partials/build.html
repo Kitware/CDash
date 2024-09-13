@@ -1,17 +1,18 @@
 <!-- For child view, display the label(s) as a link to the build summary -->
 <td ng-if="::cdash.childview == 1" align="left" class="paddt" colspan="2">
-  <a ng-href="build/{{::build.id}}">
+  <a class="cdash-link" ng-href="build/{{::build.id}}">
     {{::build.label}}
   </a>
 
   <!-- Icon for build errors / test failing -->
-  <a ng-if="::build.compilation.error > 0 || build.test.fail > 0" href=""
+  <a class="cdash-link" ng-if="::build.compilation.error > 0 || build.test.fail > 0" href=""
      ng-click="toggleBuildProblems(build)">
     <img src="img/Info.png" alt="info" class="icon"></img>
   </a>
 
   <!-- Link to notes specific to this subproject build -->
-  <a title="View notes"
+  <a class="cdash-link"
+     title="View notes"
      name="notesLink"
      ng-if="::build.notes > 0"
      ng-href="build/{{::build.id}}/notes">
@@ -21,7 +22,7 @@
 
 <!-- Otherwise, show build name & site on the row. -->
 <td ng-if="::cdash.childview != 1" align="left" class="paddt">
-  <a ng-href="sites/{{::build.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">{{::build.site}}</a>
+  <a class="cdash-link" ng-href="sites/{{::build.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">{{::build.site}}</a>
   <img ng-if="::build.siteoutoforder == 1" border="0" src="img/flag.png" title="flag"></img>
 </td>
 
@@ -31,12 +32,12 @@
   </div>
 
   <div ng-if="::build.id" style="float: left; margin: 0px 4px;">
-    <a class="buildinfo" alt="generator"
+    <a class="buildinfo cdash-link" alt="generator"
        ng-if="::build.numchildren == 0"
        ng-href="build/{{::build.id}}">
       {{::build.buildname}}
     </a>
-    <a class="buildinfo" alt="generator"
+    <a class="buildinfo cdash-link" alt="generator"
        ng-if="::build.numchildren > 0"
        ng-href="{{::build.multiplebuildshyperlink}}">
       {{::build.buildname}}
@@ -46,14 +47,16 @@
   <div ng-if="::!build.id" style="float: left; margin: 0px 4px;">{{::build.buildname}}</div>
 
   <div style="float:left;">
-    <a title="View notes"
+    <a class="cdash-link"
+       title="View notes"
        name="notesLink"
        ng-if="::build.notes > 0"
        ng-href="build/{{::build.id}}/notes">
       <img src="img/document.png" alt="Notes" class="icon"/>
     </a>
 
-    <a href="" style="float: left;"
+    <a class="cdash-link"
+       href="" style="float: left;"
        ng-if="::build.uploadfilecount > 0"
        ng-href="build/{{::build.id}}/files"
        title="{{::build.uploadfilecount}} files uploaded with this build">
@@ -61,21 +64,23 @@
     </a>
 
     <!-- If the build has errors or test failing -->
-    <a href="" style="float: left;"
+    <a class="cdash-link"
+       href="" style="float: left;"
        ng-if="::build.compilation.error > 0 || build.test.fail > 0"
        ng-click="toggleBuildProblems(build)">
       <img src="img/Info.png" alt="info" class="icon"></img>
     </a>
 
     <!-- If the build is expected and missing -->
-    <a href="" style="float: left;"
+    <a class="cdash-link"
+       href="" style="float: left;"
        ng-if="::build.expectedandmissing == 1"
        ng-click="toggleExpectedInfo(build)">
       <img src="img/Info.png" alt="info" class="icon"></img>
     </a>
 
     <!-- Display the note icon -->
-    <a name="Build Notes" id="buildnote_{{::build.id}}"
+    <a class="cdash-link" name="Build Notes" id="buildnote_{{::build.id}}"
        ng-if="::build.buildnotes > 0"
        ng-href="ajax/buildnote.php?buildid={{::build.id}}">
       <img src="img/note.png" alt="note" class="icon"></img>
@@ -83,7 +88,7 @@
 
     <div style="float: left;" ng-if="::cdash.user.admin == 1">
       <!-- Display folder icon to edit this build for administrative users -->
-      <a href="" ng-click="toggleAdminOptions(build)">
+      <a class="cdash-link" href="" ng-click="toggleAdminOptions(build)">
         <img name="adminoptions" src="img/folder.png" class="icon"/>
       </a>
       <img src="img/loading.gif" ng-if="build.loading == 1"/>
@@ -99,7 +104,7 @@
             <font size="2">
               Build has been failing since
               <b>
-                <a ng-href="index.php?project={{::cdash.projectname}}&date={{::build.failingDate}}">
+                <a class="cdash-link" ng-href="index.php?project={{::cdash.projectname}}&date={{::build.failingDate}}">
                   {{::build.failingSince}}
                 </a>
                 (<ng-pluralize count="::build.daysWithErrors"
@@ -116,7 +121,7 @@
             <font size="2">
               Tests have been failing since
               <b>
-                <a ng-href="index.php?project={{::cdash.projectname}}&date={{::build.testsFailingDate}}">
+                <a class="cdash-link" ng-href="index.php?project={{::cdash.projectname}}&date={{::build.testsFailingDate}}">
                   {{::build.testsFailingSince}}
                 </a>
                 (<ng-pluralize count="::build.daysWithFailingTests"
@@ -145,7 +150,7 @@
               <span ng-if="::build.lastSubmission != -1">
                 This build has not submitted since
                   <b>
-                    <a ng-href="index.php?project={{::cdash.projectname}}&date={{::build.lastSubmissionDate}}">
+                    <a class="cdash-link" ng-href="index.php?project={{::cdash.projectname}}&date={{::build.lastSubmissionDate}}">
                       {{::build.lastSubmission}}
                     </a>
                 (<ng-pluralize count="::build.daysSinceLastBuild"
@@ -170,10 +175,10 @@
             <b>{{::group.name}}</b>:
           </td>
           <td ng-if="::group.name == buildgroup.name" colspan="2">
-            <a ng-if="build.expected == 0" href="" ng-click="toggleExpected(build, group.id)">
+            <a class="cdash-link" ng-if="build.expected == 0" href="" ng-click="toggleExpected(build, group.id)">
               [mark as expected]
             </a>
-            <a ng-if="build.expected == 1 || build.expectedandmissing == 1" href="" ng-click="toggleExpected(build, group.id)">
+            <a class="cdash-link" ng-if="build.expected == 1 || build.expectedandmissing == 1" href="" ng-click="toggleExpected(build, group.id)">
               [mark as non expected]
             </a>
           </td>
@@ -181,12 +186,12 @@
             <input type="checkbox" ng-model="build.expected" ng-true-value="'1'" ng-false-value="'0'"> expected</input>
           </td>
           <td ng-if="::group.name != buildgroup.name" class="nob">
-            <a href="" ng-click="moveToGroup(build, group.id)"> [move to group] </a>
+            <a class="cdash-link" href="" ng-click="moveToGroup(build, group.id)"> [move to group] </a>
           </td>
         </tr>
         <tr>
           <td colspan="3" class="nob">
-            <a href="" ng-click="showModal(build)"> [remove this build] </a>
+            <a class="cdash-link" href="" ng-click="showModal(build)"> [remove this build] </a>
           </td>
         </tr>
       </table>
@@ -195,10 +200,10 @@
            tooltip-append-to-body="true"
            uib-tooltip="Done builds will be overwritten if a new one is submitted with the same site, build name, and timestamp."
       >
-        <a ng-if="build.done == 0" href="" ng-click="toggleDone(build)">
+        <a class="cdash-link" ng-if="build.done == 0" href="" ng-click="toggleDone(build)">
           [mark as done]
         </a>
-        <a ng-if="build.done == 1" href="" ng-click="toggleDone(build)">
+        <a class="cdash-link" ng-if="build.done == 1" href="" ng-click="toggleDone(build)">
           [mark as not done]
         </a>
       </div>
@@ -207,7 +212,7 @@
 
   <!-- changeid link/icon -->
   <div ng-if="::build.changelink">
-    <a target="_blank" ng-href="{{::build.changelink}}">
+    <a class="cdash-link" target="_blank" ng-href="{{::build.changelink}}">
       <img class="smallicon" ng-src="{{::build.changeicon}}"/>
     </a>
   </div>
@@ -220,7 +225,7 @@
                 build.update.warning == 1 ? 'warning' : 'normal'))">
   <div ng-if="::build.hasupdate">
     <img ng-if="::build.userupdates > 0" src="img/yellowled.png" height="10px" alt="star" title="I checked in some code for this build!"/>
-    <a ng-href="build/{{::build.id}}/update">
+    <a class="cdash-link" ng-href="build/{{::build.id}}/update">
       {{::build.update.files}}
     </a>
   </div>
@@ -235,7 +240,7 @@
 
 <td ng-if="::buildgroup.hasconfiguredata" align="center" ng-class="::{'error': build.configure.error > 0, 'normal': build.configure.error == 0}">
   <div ng-if="::build.hasconfigure">
-    <a ng-href="build/{{::build.id}}/configure">
+    <a class="cdash-link" ng-href="build/{{::build.id}}/configure">
       {{::build.configure.error}}
     </a>
   </div>
@@ -243,7 +248,7 @@
 
 <td ng-if="::buildgroup.hasconfiguredata" align="center" ng-class="::{'warning': build.configure.warning > 0, 'normal': build.configure.warning == 0}">
   <div ng-if="::build.hasconfigure">
-    <a ng-href="build/{{::build.id}}/configure">
+    <a class="cdash-link" ng-href="build/{{::build.id}}/configure">
       {{::build.configure.warning}}
     </a>
     <sub ng-if="::build.configure.warningdiff > 0">+{{::build.configure.warningdiff}}</sub>
@@ -261,14 +266,14 @@
 <td ng-if="::buildgroup.hascompilationdata" align="center" ng-class="::{'error': build.compilation.error > 0, 'normal': build.compilation.error == 0}">
   <div ng-if="::build.hascompilation"
        ng-class="::{'valuewithsub': build.compilation.nerrordiffp > 0 || build.compilation.nerrordiffn > 0}">
-    <a ng-href="viewBuildError.php?buildid={{::build.id}}">
+    <a class="cdash-link" ng-href="viewBuildError.php?buildid={{::build.id}}">
       {{::build.compilation.error}}
     </a>
-    <a ng-if="::build.compilation.nerrordiffp > 0" class="sup" ng-href="viewBuildError.php?onlydeltap&buildid={{::build.id}}">
+    <a ng-if="::build.compilation.nerrordiffp > 0" class="sup cdash-link" ng-href="viewBuildError.php?onlydeltap&buildid={{::build.id}}">
       +{{::build.compilation.nerrordiffp}}
     </a>
 
-    <a ng-if="::build.compilation.nerrordiffn > 0" ng-href="viewBuildError.php?onlydeltan&buildid={{::build.id}}">
+    <a class="cdash-link" ng-if="::build.compilation.nerrordiffn > 0" ng-href="viewBuildError.php?onlydeltan&buildid={{::build.id}}">
       <span class="sub">-{{::build.compilation.nerrordiffn}}</span>
     </a>
   </div>
@@ -277,14 +282,14 @@
 <td ng-if="::buildgroup.hascompilationdata" align="center" ng-class="::{'warning': build.compilation.warning > 0, 'normal': build.compilation.warning == 0}">
   <div ng-if="::build.hascompilation"
        ng-class="::{'valuewithsub': build.compilation.nwarningdiffp > 0 || build.compilation.nwarningdiffn > 0}">
-    <a ng-href="viewBuildError.php?type=1&buildid={{::build.id}}">
+    <a class="cdash-link" ng-href="viewBuildError.php?type=1&buildid={{::build.id}}">
       {{::build.compilation.warning}}
     </a>
 
-    <a ng-if="::build.compilation.nwarningdiffp > 0" class="sup" ng-href="viewBuildError.php?type=1&onlydeltap&buildid={{::build.id}}">
+    <a ng-if="::build.compilation.nwarningdiffp > 0" class="sup cdash-link" ng-href="viewBuildError.php?type=1&onlydeltap&buildid={{::build.id}}">
       +{{::build.compilation.nwarningdiffp}}
     </a>
-    <a ng-if="::build.compilation.nwarningdiffn > 0" ng-href="viewBuildError.php?type=1&onlydeltan&buildid={{::build.id}}">
+    <a class="cdash-link" ng-if="::build.compilation.nwarningdiffn > 0" ng-href="viewBuildError.php?type=1&onlydeltan&buildid={{::build.id}}">
       <span class="sub">-{{::build.compilation.nwarningdiffn}}</span>
     </a>
   </div>
@@ -300,10 +305,10 @@
 <td ng-if="::buildgroup.hastestdata" align="center" ng-class="::{'warning': build.test.notrun > 0, 'normal': build.test.notrun == 0}">
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.test.nnotrundiffp > 0 || build.test.nnotrundiffn > 0}">
-    <a ng-href="viewTest.php?onlynotrun&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
+    <a class="cdash-link" ng-href="viewTest.php?onlynotrun&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
       {{::build.test.notrun}}
     </a>
-    <a ng-if="::build.test.nnotrundiffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
+    <a ng-if="::build.test.nnotrundiffp > 0" class="sup cdash-link" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
       +{{::build.test.nnotrundiffp}}
     </a>
     <span ng-if="::build.test.nnotrundiffn > 0" class="sub">-{{::build.test.nnotrundiffn}}</span>
@@ -313,10 +318,10 @@
 <td ng-if="::buildgroup.hastestdata" align="center" ng-class="::{'error': build.test.fail > 0, 'normal': build.test.fail < 1}">
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.test.nfaildiffp > 0 || build.test.nfaildiffn > 0}">
-    <a ng-href="viewTest.php?onlyfailed&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
+    <a class="cdash-link" ng-href="viewTest.php?onlyfailed&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
       {{::build.test.fail}}
     </a>
-    <a ng-if="::build.test.nfaildiffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
+    <a ng-if="::build.test.nfaildiffp > 0" class="sup cdash-link" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
       +{{::build.test.nfaildiffp}}
     </a>
     <span ng-if="::build.test.nfaildiffn > 0" class="sub">
@@ -328,10 +333,10 @@
 <td ng-if="::buildgroup.hastestdata" align="center" ng-class="::{'normal': build.test.pass > -1}">
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.test.npassdiffp > 0 || build.test.npassdiffn > 0}">
-    <a ng-href="viewTest.php?onlypassed&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
+    <a class="cdash-link" ng-href="viewTest.php?onlypassed&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
       {{::build.test.pass}}
     </a>
-    <a ng-if="::build.test.npassdiffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
+    <a ng-if="::build.test.npassdiffp > 0" class="sup cdash-link" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
       +{{::build.test.npassdiffp}}
     </a>
 
@@ -347,10 +352,10 @@
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.build.test.ntimediffp > 0 || build.test.ntimediffn > 0}">
     <div ng-if="::build.test.timestatus > 0">
-      <a ng-href="viewTest.php?onlytimestatus&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
+      <a class="cdash-link" ng-href="viewTest.php?onlytimestatus&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
         {{::build.test.timestatus}}
       </a>
-      <a ng-if="::build.test.ntimediffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
+      <a ng-if="::build.test.ntimediffp > 0" class="sup cdash-link" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
         +{{::build.test.ntimediffp}}
       </a>
       <span ng-if="::build.test.ntimediffn > 0" class="sub">
@@ -360,7 +365,7 @@
 
     <span ng-if="::build.test.timestatus">
       {{::build.test.time}}
-      <a ng-if="::build.test.ntimediffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{::buildid}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
+      <a ng-if="::build.test.ntimediffp > 0" class="sup cdash-link" ng-href="viewTest.php?onlydelta&buildid={{::buildid}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
         +{{::build.test.ntimediffp}}
       </a>
       <span ng-if="::build.test.ntimediffn > 0" class="sub">
