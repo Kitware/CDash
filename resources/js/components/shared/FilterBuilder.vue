@@ -18,7 +18,7 @@
         class="tw-btn tw-btn-xs"
         :href="executeQueryLink"
       >
-        <font-awesome-icon icon="fa-play" /> Show
+        <font-awesome-icon icon="fa-magnifying-glass" /> Apply
       </a>
       <a
         role="button"
@@ -75,7 +75,7 @@ export default {
      * its current value.
      */
     executeQueryLink: {
-      type: URL,
+      type: String,
       required: true,
     },
   },

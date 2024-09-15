@@ -4,5 +4,5 @@
 ])
 
 @section('main_content')
-    <build-tests-page buildid="{{ $build->Id }}"></build-tests-page>
+    <build-tests-page :build-id="{{ $build->Id }}" :initial-filters="@js($filters)"></build-tests-page>
 @endsection

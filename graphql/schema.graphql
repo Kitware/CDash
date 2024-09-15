@@ -265,7 +265,7 @@ enum TestStatus {
 
 input TestFilterInput {
   id: ID
-  name: String
+  name: String @rename(attribute: "testname")
   status: TestStatus
 }
 
