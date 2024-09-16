@@ -41,7 +41,7 @@
       >
         <td
           v-for="column in columns"
-          :class="{ shrink: !column.expand }"
+          :class="(row[column.name]?.classes ?? []).concat(column.expand ? [] : ['shrink'])"
           class="table-cell"
           data-cy="data-table-cell"
         >
@@ -139,9 +139,10 @@ export default {
      *       value: ?String  # The value to sort by (will sort by text if no value provided)
      *       text: String
      *       href: String
+     *       classes: ?[String]  # A optional list of classes to be applied to the <td> element
      *   }
      *
-     * Custom metadata objects can be use to provide props to custom templates passed via slots.
+     * Custom metadata objects can be used to provide props to custom templates passed via slots.
      *
      * A "value" key is required in the metadata object.  The associated value will be used for sorting.
      * In the case of a pure text item, the object will be sorted by text value.

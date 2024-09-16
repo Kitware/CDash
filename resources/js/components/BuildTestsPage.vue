@@ -114,10 +114,56 @@ export default {
     formattedTestRows() {
       return this.build.tests.edges?.map(edge => {
         return {
-          name: edge.node.name,
-          status: edge.node.status,
+          name: {
+            value: edge.node.name,
+            text: edge.node.name,
+            href: `${this.$baseURL}/tests/${edge.node.id}`,
+          },
+          status: {
+            // TODO: An integer value could be provided to provide better sorting in the future
+            value: edge.node.status,
+            text: this.humanReadableTestStatus(edge.node.status),
+            href: `${this.$baseURL}/tests/${edge.node.id}`,
+            classes: [this.testStatusToColorClass(edge.node.status)],
+          },
         };
       });
+    },
+  },
+
+  methods: {
+    testStatusToColorClass(status) {
+      switch (status) {
+      case 'PASSED':
+        return 'normal';
+      case 'FAILED':
+        return 'error';
+      case 'NOT_RUN':
+        return 'warning';
+      case 'TIMEOUT':
+        return 'error';
+      case 'DISABLED':
+        return '';
+      default:
+        return '';
+      }
+    },
+
+    humanReadableTestStatus(status) {
+      switch (status) {
+      case 'PASSED':
+        return 'Passed';
+      case 'FAILED':
+        return 'Failed';
+      case 'NOT_RUN':
+        return 'Not Run';
+      case 'TIMEOUT':
+        return 'Timeout';
+      case 'DISABLED':
+        return 'Disabled';
+      default:
+        return status;
+      }
     },
   },
 };
