@@ -7,6 +7,7 @@
       alt="The page is loading."
     >
   </div>
+  <!-- eslint-disable-next-line vue/no-multiple-template-root -->
   <slot v-else />
 </template>
 
