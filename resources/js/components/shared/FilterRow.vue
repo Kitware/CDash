@@ -5,7 +5,7 @@
         class="tw-btn tw-btn-xs"
         @click="$emit('delete')"
       >
-        <font-awesome-icon icon="fa-trash" />
+        <font-awesome-icon icon="fa-trash" /> Delete
       </button>
       <!-- Field chooser -->
       <select

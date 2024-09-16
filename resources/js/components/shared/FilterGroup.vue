@@ -64,7 +64,7 @@
             class="tw-btn tw-btn-xs"
             @click="$emit('delete')"
           >
-            <font-awesome-icon icon="fa-trash" /> Delete
+            <font-awesome-icon icon="fa-trash" /> Delete Group
           </button>
         </div>
       </div>

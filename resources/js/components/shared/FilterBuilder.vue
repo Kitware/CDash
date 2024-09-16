@@ -2,9 +2,9 @@
   <div class="tw-flex tw-flex-col tw-w-full tw-gap-1">
     <div
       class="table-heading1 tw-font-bold"
-      style="font-size: 14px; padding: 3px 15px;"
+      style="font-size: 16px; padding: 6px;"
     >
-      Filters
+      <font-awesome-icon icon="fa-filter" /> Filters
     </div>
     <filter-group
       :type="filterType"
