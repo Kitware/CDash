@@ -94,6 +94,11 @@ const apolloClient = new ApolloClient({
           projects: relayStylePagination(),
         },
       },
+      Build: {
+        fields: {
+          tests: relayStylePagination(),
+        },
+      },
     },
   }),
   uri: `${app.config.globalProperties.$baseURL}/graphql`,

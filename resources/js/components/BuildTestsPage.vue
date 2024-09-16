@@ -7,7 +7,7 @@
       :execute-query-link="executeQueryLink"
       @changeFilters="filters => changedFilters = filters"
     />
-    <loading-indicator :is-loading="$apollo.loading">
+    <loading-indicator :is-loading="!build">
       <data-table
         :columns="[
           {
@@ -32,7 +32,6 @@
 
 import DataTable from './shared/DataTable.vue';
 import gql from 'graphql-tag';
-import { useQuery } from '@vue/apollo-composable';
 import FilterBuilder from './shared/FilterBuilder.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 
@@ -64,7 +63,7 @@ export default {
       query: gql`
         query($buildid: ID, $filters: BuildTestsFiltersMultiFilterInput, $after: String) {
           build(id: $buildid) {
-            tests(filters: $filters, after: $after) {
+            tests(filters: $filters, after: $after, first: 100) {
               edges {
                 node {
                   id
@@ -88,6 +87,15 @@ export default {
           filters: this.initialFilters,
           after: '',
         };
+      },
+      result({data}) {
+        if (data && data.build.tests.pageInfo.hasNextPage) {
+          this.$apollo.queries.build.fetchMore({
+            variables: {
+              after: data.build.tests.pageInfo.endCursor,
+            },
+          });
+        }
       },
     },
   },
