@@ -294,7 +294,12 @@ class Project
         $project->save();
         $this->Id = $project->id;
 
-        return $this->UpdateBuildFilters();
+        $buildErrorFilter = new BuildErrorFilter($this);
+        if ($buildErrorFilter->GetErrorsFilter() != $this->ErrorsFilter ||
+            $buildErrorFilter->GetWarningsFilter() != $this->WarningsFilter) {
+            return $buildErrorFilter->AddOrUpdateFilters($this->WarningsFilter, $this->ErrorsFilter);
+        }
+        return true;
     }
 
     public function GetIdByName()
@@ -312,15 +317,6 @@ class Project
             return true;
         }
         return false;
-    }
-
-    /** Return true if the project exists */
-    public function ExistsByName(string $name): bool
-    {
-        // TODO: (williamjallen) Side effects are almost always a bad thing.  Get rid of this...
-        $this->Name = $name;
-
-        return EloquentProject::where('name', $this->Name)->exists();
     }
 
     /** Get the logo id */
@@ -456,94 +452,6 @@ class Project
         return $image->Id;
     }
 
-    /** Add CVS/SVN repositories */
-    public function AddRepositories($repositories, $usernames, $passwords, $branches)
-    {
-        // First we update/delete any registered repositories
-        $currentRepository = 0;
-        $repositories_query = $this->PDO->executePrepared('
-                                  SELECT repositoryid
-                                  FROM project2repositories
-                                  WHERE projectid=?
-                                  ORDER BY repositoryid
-                              ', [intval($this->Id)]);
-
-        foreach ($repositories_query as $repository_array) {
-            $repositoryid = intval($repository_array['repositoryid']);
-            if (!isset($repositories[$currentRepository]) || strlen($repositories[$currentRepository]) === 0) {
-                // TODO: (wiliamjallen) This should be done with one query
-                $query = DB::select('
-                             SELECT COUNT(*) AS c
-                             FROM project2repositories
-                             WHERE repositoryid=?
-                         ', [$repositoryid]);
-                if ((int) $query[0]->c === 1) {
-                    DB::delete('DELETE FROM repositories WHERE id=?', [$repositoryid]);
-                }
-                DB::delete('
-                    DELETE FROM project2repositories
-                    WHERE projectid=? AND repositoryid=?
-                ', [(int) $this->Id, $repositoryid]);
-            } else {
-                // If the repository is not shared by any other project we update
-                $count_array = DB::select('
-                                   SELECT count(*) as c
-                                   FROM project2repositories
-                                   WHERE repositoryid=?
-                               ', [$repositoryid]);
-                if ((int) $count_array[0]->c === 1) {
-                    DB::table('repositories')->where('id', $repositoryid)->update([
-                        'url' => $repositories[$currentRepository],
-                        'username' => $usernames[$currentRepository],
-                        'password' => $passwords[$currentRepository],
-                        'branch' => $branches[$currentRepository],
-                    ]);
-                } else {
-                    // Otherwise we remove it from the current project and add it to the queue to be created
-                    DB::delete('
-                        DELETE FROM project2repositories
-                        WHERE projectid=? AND repositoryid=?
-                    ', [intval($this->Id), $repositoryid]);
-
-                    $repositories[] = $repositories[$currentRepository];
-                    $usernames[] = $usernames[$currentRepository];
-                    $passwords[] = $passwords[$currentRepository];
-                    $branches[] = $branches[$currentRepository];
-                }
-            }
-            $currentRepository++;
-        }
-
-        //  Then we add new repositories
-        for ($i = $currentRepository; $i < count($repositories); $i++) {
-            $url = $repositories[$i];
-            $username = $usernames[$i];
-            $password = $passwords[$i];
-            $branch = $branches[$i];
-            if (strlen($url) === 0) {
-                continue;
-            }
-
-            // Insert into repositories if not any
-            $repositories_query = DB::select('SELECT id FROM repositories WHERE url=?', [$url]);
-
-            if ($repositories_query === []) {
-                $repositoryid = DB::table('repositories')->insertGetId([
-                    'url' => $url,
-                    'username' => $username,
-                    'password' => $password,
-                    'branch' => $branch,
-                ]);
-            } else {
-                $repositoryid = intval($repositories['id']);
-            }
-            DB::table('project2repositories')->insert([
-                'projectid' => (int) $this->Id,
-                'repositoryid' => $repositoryid,
-            ]);
-        }
-    }
-
     /** Get the repositories */
     public function GetRepositories(): array
     {
@@ -587,26 +495,6 @@ class Project
             $buildgroups[] = $buildgroup;
         }
         return $buildgroups;
-    }
-
-    /** Get the list of block builds */
-    public function GetBlockedBuilds(): array
-    {
-        $site = DB::select('
-                    SELECT
-                        id,
-                        buildname,
-                        sitename,
-                        ipaddress
-                    FROM blockbuild
-                    WHERE projectid=?
-                ', [(int) $this->Id]);
-
-        $sites = [];
-        foreach ($site as $site_array) {
-            $sites[] = (array) $site_array;
-        }
-        return $sites;
     }
 
     /** Get the Name of the project */
@@ -699,27 +587,6 @@ class Project
         return date(FMT_DATETIMESTD, strtotime($starttime . 'UTC'));
     }
 
-    /** Get the number of builds given a date range */
-    public function GetNumberOfBuilds(string|null $startUTCdate = null, string|null $endUTCdate = null): int
-    {
-        if (!$this->Id) {
-            throw new RuntimeException('ID not set for project');
-        }
-
-        if ($startUTCdate !== null) {
-            $startUTCdate = Carbon::parse($startUTCdate);
-        }
-
-        if ($endUTCdate !== null) {
-            $endUTCdate = Carbon::parse($endUTCdate);
-        }
-
-        return EloquentProject::findOrFail((int) $this->Id)
-            ->builds()
-            ->betweenDates($startUTCdate, $endUTCdate)
-            ->count();
-    }
-
     /** Get the number of builds given per day */
     public function GetBuildsDailyAverage(string $startUTCdate, string $endUTCdate): int
     {
@@ -744,7 +611,10 @@ class Project
         $first_build = $project[0]->starttime;
         $nb_days = strtotime($endUTCdate) - strtotime($first_build);
         $nb_days = intval($nb_days / 86400) + 1;
-        $nbuilds = $this->GetNumberOfBuilds($startUTCdate, $endUTCdate);
+        $nbuilds = EloquentProject::findOrFail((int) $this->Id)
+            ->builds()
+            ->betweenDates(Carbon::parse($startUTCdate), Carbon::parse($endUTCdate))
+            ->count();
         return $nbuilds / $nb_days;
     }
 
@@ -1288,7 +1158,8 @@ class Project
             return false;
         }
 
-        $num_builds = $this->GetNumberOfBuilds();
+        $project = \App\Models\Project::findOrFail((int) $this->Id);
+        $num_builds = $project->builds()->count();
 
         // The +1 here is to account for the build we're currently inserting.
         if ($num_builds < ($max_builds + 1)) {
@@ -1375,17 +1246,6 @@ class Project
         }
 
         return $collection;
-    }
-
-    /** Modify the build error/warning filters for this project if necessary. */
-    public function UpdateBuildFilters(): bool
-    {
-        $buildErrorFilter = new BuildErrorFilter($this);
-        if ($buildErrorFilter->GetErrorsFilter() != $this->ErrorsFilter ||
-                $buildErrorFilter->GetWarningsFilter() != $this->WarningsFilter) {
-            return $buildErrorFilter->AddOrUpdateFilters($this->WarningsFilter, $this->ErrorsFilter);
-        }
-        return true;
     }
 
     /**

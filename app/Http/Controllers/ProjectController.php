@@ -11,6 +11,7 @@ use CDash\Model\Project;
 use CDash\Model\Repository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 final class ProjectController extends AbstractProjectController
@@ -72,11 +73,21 @@ final class ProjectController extends AbstractProjectController
             $project_response = $this->project->ConvertToJSON();
 
             // Get the spam list
-            $spambuilds = $this->project->GetBlockedBuilds();
+            $blocked_sites = DB::select('
+                SELECT
+                    id,
+                    buildname,
+                    sitename,
+                    ipaddress
+                FROM blockbuild
+                WHERE projectid=?
+            ', [(int) $this->project->Id]);
+
             $blocked_builds = [];
-            foreach ($spambuilds as $spambuild) {
-                $blocked_builds[] = $spambuild;
+            foreach ($blocked_sites as $site_array) {
+                $blocked_builds[] = (array) $site_array;
             }
+
             $project_response['blockedbuilds'] = $blocked_builds;
 
             $repositories = $this->project->GetRepositories();

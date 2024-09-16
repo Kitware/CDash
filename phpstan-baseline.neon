@@ -2500,6 +2500,11 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/Http/Controllers/UserController.php
@@ -9436,11 +9441,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: "#^Call to an undefined method App\\\\Models\\\\Project\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Project\\>\\:\\:fill\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -9456,14 +9456,6 @@ parameters:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
 			"""
 			count: 2
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: """
-				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -9515,11 +9507,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\BlockedBuild\\>\\:\\:findOrFail\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -9531,7 +9518,7 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:count\\(\\)\\.$#"
-			count: 1
+			count: 2
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -9570,42 +9557,12 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:AddRepositories\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:AddRepositories\\(\\) has parameter \\$branches with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:AddRepositories\\(\\) has parameter \\$passwords with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:AddRepositories\\(\\) has parameter \\$repositories with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:AddRepositories\\(\\) has parameter \\$usernames with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Project\\:\\:ComputeTestingDayBounds\\(\\) has parameter \\$date with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
 		-
 			message: "#^Method CDash\\\\Model\\\\Project\\:\\:FindByName\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Project\\:\\:GetBlockedBuilds\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -14870,6 +14827,31 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 3
+			path: app/cdash/public/api/v1/project.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/project.php
+
+		-
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\addRepositoriesToProject\\(\\) has parameter \\$branches with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/project.php
+
+		-
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\addRepositoriesToProject\\(\\) has parameter \\$passwords with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/project.php
+
+		-
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\addRepositoriesToProject\\(\\) has parameter \\$repositories with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/public/api/v1/project.php
+
+		-
+			message: "#^Function CDash\\\\Api\\\\v1\\\\Project\\\\addRepositoriesToProject\\(\\) has parameter \\$usernames with no value type specified in iterable type array\\.$#"
+			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
@@ -21557,6 +21539,11 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
+			path: app/cdash/tests/test_limitedbuilds.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:count\\(\\)\\.$#"
+			count: 3
 			path: app/cdash/tests/test_limitedbuilds.php
 
 		-
