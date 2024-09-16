@@ -237,6 +237,12 @@ type Test {
   name: String! @rename(attribute: "testname")
 
   status: TestStatus!
+
+  """
+  Test measurements for this test, sorted in descending order so newer results
+  appear first when using paginated queries.
+  """
+  testMeasurements: [TestMeasurement!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 }
 
 enum TestStatus {
@@ -255,6 +261,32 @@ input TestFilterInput {
   id: ID
   name: String
   status: TestStatus
+}
+
+
+"Test Measurement."
+type TestMeasurement {
+  "Unique primary key."
+  id: ID!
+
+  """
+  Example: "Exit Value"
+  """
+  name: String!
+
+  """
+  Example: "text/string", "numeric/double", "text/preformatted", etc
+  """
+  type: String!
+
+  """
+  The value for this measurement.  Even though some values may be numeric, all
+  values are returned as strings.  There is no guarantee that the type field
+  will match the actual type of the value field.
+
+  Example: "5"
+  """
+  value: String!
 }
 
 
