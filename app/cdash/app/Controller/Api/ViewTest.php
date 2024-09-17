@@ -757,7 +757,7 @@ class ViewTest extends BuildApi
         if ($marshaledData['buildtestid'] ?? false) {
             $test = Test::find((int) $data['buildtestid']);
             if ($test !== null) {
-                $marshaledData['labels'] = $test->labels()->get(['text']);
+                $marshaledData['labels'] = $test->labels()->pluck('text');
             }
         } else {
             if (!empty($data['labels'])) {
