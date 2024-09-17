@@ -19,19 +19,57 @@ return new class extends Migration {
                     ->nullable(); // Temporarily make the column nullable
             });
 
-            if (config('database.default') === 'pgsql') {
-                DB::update('
-                    UPDATE build2test
-                    SET testname = test.name
-                    FROM test
-                    WHERE test.id = build2test.testid
-                ');
-            } else {
-                DB::update('
-                    UPDATE build2test, test
-                    SET build2test.testname = test.name
-                    WHERE test.id = build2test.testid
-                ');
+            $this->print('Migrate testname to build2test table');
+            $done = false;
+            $num_done = 0;
+            $next_report = 10;
+            $start = DB::table('build2test')->min('id');
+            $max = DB::table('build2test')->max('id');
+            $total = $max - $start;
+            if ($total < 1) {
+                if (DB::table('build2test')->count() > 0) {
+                    $error_msg = "Could not determine min & max id for build2test table.\n";
+                    $error_msg .= "Manually set \$start and \$max and rerun the migration\n";
+                    throw new Exception($error_msg);
+                } else {
+                    $done = true;
+                }
+            }
+            while (!$done) {
+                $end = $start + 4999;
+                if (config('database.default') === 'pgsql') {
+                    DB::update("
+                        UPDATE build2test
+                        SET testname = test.name
+                        FROM test
+                        WHERE build2test.testid = test.id AND
+                              build2test.id BETWEEN $start AND $end");
+                } else {
+                    DB::update("
+                        UPDATE build2test
+                        INNER JOIN test ON build2test.testid = test.id
+                        SET build2test.testname = test.name
+                            WHERE build2test.id BETWEEN $start AND $end");
+                }
+                $num_done += 5000;
+                if ($end >= $max) {
+                    $done = true;
+                } else {
+                    usleep(1);
+                    $start += 5000;
+                    // Calculate percentage inserted.
+
+                    // Just here to make PHPStan happy.  This case should never happen.
+                    if ($total === 0) {
+                        continue;
+                    }
+
+                    $percent = round(($num_done / $total) * 100, -1);
+                    if ($percent > $next_report) {
+                        $this->print("{$percent}%");
+                        $next_report = $percent + 10;
+                    }
+                }
             }
 
             $num_b2t_rows_deleted = DB::delete('DELETE FROM build2test WHERE testname IS NULL');
@@ -77,6 +115,11 @@ return new class extends Migration {
         } else {
             echo "Error: Unable to run migration because test table does not exist!";
         }
+    }
+
+    public function print(string $msg): void
+    {
+        echo date('[Y-m-d H:i:s] ') . $msg . PHP_EOL;
     }
 
     /**
