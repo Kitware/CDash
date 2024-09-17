@@ -5,7 +5,6 @@ use App\Utils\PageTimer;
 use App\Utils\TestingDay;
 use CDash\Model\DynamicAnalysis;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -17,9 +16,9 @@ final class DynamicAnalysisController extends AbstractBuildController
         return $this->view('dynamicanalysis.dynamic-analysis');
     }
 
-    public function viewDynamicAnalysisFile(): Response
+    public function viewDynamicAnalysisFile(): View
     {
-        return response()->angular_view('viewDynamicAnalysisFile');
+        return $this->angular_view('viewDynamicAnalysisFile');
     }
 
     public function apiViewDynamicAnalysis(): JsonResponse

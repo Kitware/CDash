@@ -198,7 +198,7 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\UrlGenerator\\:\\:full\\(\\)\\.$#"
-			count: 2
+			count: 3
 			path: app/Http/Controllers/AbstractController.php
 
 		-
@@ -208,6 +208,11 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, int\\|false given\\.$#"
+			count: 1
+			path: app/Http/Controllers/AbstractController.php
+
+		-
+			message: "#^Parameter \\#2 \\$offset of function substr expects int, int\\|false given\\.$#"
 			count: 1
 			path: app/Http/Controllers/AbstractController.php
 
@@ -307,11 +312,6 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
@@ -585,11 +585,6 @@ parameters:
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Comment\\>\\:\\:with\\(\\)\\.$#"
 			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
-			count: 3
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -991,11 +986,6 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			message: "#^Foreach overwrites \\$userid with its value variable\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
@@ -1296,11 +1286,6 @@ parameters:
 			path: app/Http/Controllers/DynamicAnalysisController.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/DynamicAnalysisController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\EditProjectController\\:\\:create\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/EditProjectController.php
@@ -1329,11 +1314,6 @@ parameters:
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 1
 			path: app/Http/Controllers/FilterController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/IndexController.php
 
 		-
 			message: "#^Only booleans are allowed in a ternary operator condition, mixed given\\.$#"
@@ -1741,11 +1721,6 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 2
-			path: app/Http/Controllers/ProjectOverviewController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
 			count: 2
 			path: app/Http/Controllers/ProjectOverviewController.php
 
@@ -2317,11 +2292,6 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
-			count: 2
-			path: app/Http/Controllers/SubProjectController.php
-
-		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 1
 			path: app/Http/Controllers/SubProjectController.php
@@ -2421,11 +2391,6 @@ parameters:
 		-
 			message: "#^Cannot access offset 'c' on array\\|false\\|null\\.$#"
 			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\ResponseFactory\\:\\:angular_view\\(\\)\\.$#"
-			count: 3
 			path: app/Http/Controllers/TestController.php
 
 		-
@@ -3033,16 +2998,6 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Foundation\\\\Application\\:\\:isProduction\\(\\)\\.$#"
-			count: 1
-			path: app/Providers/AppServiceProvider.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\UrlGenerator\\:\\:full\\(\\)\\.$#"
-			count: 1
-			path: app/Providers/AppServiceProvider.php
-
-		-
-			message: "#^Parameter \\#2 \\$offset of function substr expects int, int\\|false given\\.$#"
 			count: 1
 			path: app/Providers/AppServiceProvider.php
 

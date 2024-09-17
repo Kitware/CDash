@@ -1006,19 +1006,19 @@ final class BuildController extends AbstractBuildController
         return response()->json(cast_data_for_JSON($response));
     }
 
-    public function manageBuildGroup(): Response
+    public function manageBuildGroup(): View
     {
-        return response()->angular_view('manageBuildGroup');
+        return $this->angular_view('manageBuildGroup');
     }
 
-    public function viewBuildError(): Response
+    public function viewBuildError(): View
     {
-        return response()->angular_view('viewBuildError');
+        return $this->angular_view('viewBuildError');
     }
 
-    public function viewBuildGroup(): Response
+    public function viewBuildGroup(): View
     {
-        return response()->angular_view('index');
+        return $this->angular_view('index');
     }
 
     /**

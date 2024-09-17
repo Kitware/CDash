@@ -11,12 +11,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
+use Illuminate\View\View;
 
 final class ProjectOverviewController extends AbstractProjectController
 {
-    public function overview(): Response
+    public function overview(): View
     {
-        return response()->angular_view('overview');
+        return $this->angular_view('overview');
     }
 
     public function apiOverview(): JsonResponse
@@ -750,9 +751,9 @@ final class ProjectOverviewController extends AbstractProjectController
         return json_encode($chart_data);
     }
 
-    public function manageOverview(): Response
+    public function manageOverview(): View
     {
-        return response()->angular_view('manageOverview');
+        return $this->angular_view('manageOverview');
     }
 
     public function apiManageOverview(): JsonResponse

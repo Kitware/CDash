@@ -8,7 +8,6 @@ use App\Utils\PageTimer;
 use CDash\Model\SubProject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,14 +16,14 @@ use Illuminate\View\View;
 
 final class SubProjectController extends AbstractProjectController
 {
-    public function viewSubProjects(): Response
+    public function viewSubProjects(): View
     {
-        return response()->angular_view('viewSubProjects');
+        return $this->angular_view('viewSubProjects');
     }
 
-    public function manageSubProject(): Response
+    public function manageSubProject(): View
     {
-        return response()->angular_view('manageSubProject');
+        return $this->angular_view('manageSubProject');
     }
 
 

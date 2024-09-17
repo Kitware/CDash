@@ -25,14 +25,14 @@ require_once 'include/filterdataFunctions.php';
 
 final class CoverageController extends AbstractBuildController
 {
-    public function compareCoverage(): Response|RedirectResponse
+    public function compareCoverage(): View|RedirectResponse
     {
         // If the project name is not set we display the table of projects.
         if (!isset($_GET['project'])) {
             return redirect('projects');
         }
 
-        return response()->angular_view('compareCoverage');
+        return $this->angular_view('compareCoverage');
     }
 
     /**
