@@ -22,7 +22,7 @@ class BuildTypeTest extends TestCase
         parent::setUp();
 
         $this->project = $this->makePublicProject();
-        $this->project2 = $this->makePublicProject();
+        $this->project2 = $this->makePrivateProject();
     }
 
     protected function tearDown(): void
