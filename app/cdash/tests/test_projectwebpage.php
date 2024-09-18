@@ -115,7 +115,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $url = null;
         foreach ($jsonobj['aaData'] as $row) {
             if (strpos($row[0], 'itkCannyEdgesDistanceAdvectionFieldFeatureGenerator.h') !== false) {
-                $url = substr($row[0], 9, 43);
+                $url = substr($row[0], 28, 43);
             }
         }
         if ($url === null) {
