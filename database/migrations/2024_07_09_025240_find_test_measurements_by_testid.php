@@ -13,7 +13,8 @@ return new class extends Migration {
     {
         Schema::table('testmeasurement', function (Blueprint $table) {
             $table->unsignedInteger('testid')
-                ->nullable(); // Temporarily make the column nullable
+                ->nullable() // Temporarily make the column nullable
+                ->change();
         });
 
         DB::insert('
