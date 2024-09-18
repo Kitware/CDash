@@ -2,11 +2,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
+use Illuminate\View\View;
 
 final class IndexController extends AbstractController
 {
-    public function showIndexPage(): Response|RedirectResponse
+    public function showIndexPage(): View|RedirectResponse
     {
         if (!isset($_GET['project'])) {
             $default_project = config('cdash.default_project');
@@ -14,6 +14,6 @@ final class IndexController extends AbstractController
             return redirect($url);
         }
 
-        return response()->angular_view('index');
+        return $this->angular_view('index');
     }
 }

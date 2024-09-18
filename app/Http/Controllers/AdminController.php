@@ -502,9 +502,9 @@ final class AdminController extends AbstractController
             ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/upgrade', true));
     }
 
-    public function userStatistics(): \Illuminate\Http\Response
+    public function userStatistics(): View
     {
-        return response()->angular_view('userStatistics');
+        return $this->angular_view('userStatistics');
     }
 
     /** Delete unused rows */

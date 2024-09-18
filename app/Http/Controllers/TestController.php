@@ -124,9 +124,9 @@ final class TestController extends AbstractProjectController
             ->with('tarray', $tarray);
     }
 
-    public function queryTests(): Response
+    public function queryTests(): View
     {
-        return response()->angular_view('queryTests');
+        return $this->angular_view('queryTests');
     }
 
     public function apiQueryTests(): JsonResponse
@@ -141,9 +141,9 @@ final class TestController extends AbstractProjectController
         return response()->json(cast_data_for_JSON($controller->getResponse()));
     }
 
-    public function testOverview(): Response
+    public function testOverview(): View
     {
-        return response()->angular_view('testOverview');
+        return $this->angular_view('testOverview');
     }
 
     public function apiTestOverview(): JsonResponse
@@ -159,9 +159,9 @@ final class TestController extends AbstractProjectController
         return response()->json(cast_data_for_JSON($controller->getResponse()));
     }
 
-    public function testSummary(): Response
+    public function testSummary(): View
     {
-        return response()->angular_view('testSummary');
+        return $this->angular_view('testSummary');
     }
 
     public function apiTestSummary(): JsonResponse|StreamedResponse
