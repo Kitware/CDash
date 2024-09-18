@@ -57,8 +57,6 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
         $this->EndTimeStamp = 0;
         // Only complain about errors & warnings once.
         $this->Notified = false;
-        // Instantiate model factory.
-        $this->getModelFactory();
     }
 
     public function startElement($parser, $name, $attributes): void
@@ -109,13 +107,13 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
                 $this->Builds[$this->SubProjectName] = $build;
             }
         } elseif ($name == 'CONFIGURE') {
-            $this->Configure = $this->ModelFactory->create(BuildConfigure::class);
+            $this->Configure = new BuildConfigure();
             if (empty($this->Builds)) {
                 // No subprojects
                 $this->Builds[] = $this->CreateBuild();
             }
         } elseif ($name == 'LABEL') {
-            $this->Label = $this->ModelFactory->create(Label::class);
+            $this->Label = new Label();
         }
     }
 
@@ -170,7 +168,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
                     // Honor the Append flag if this build already existed.
                     if ($this->Append) {
                         // Get existing log & status from the database.
-                        $existing_config = $this->ModelFactory->create(BuildConfigure::class);
+                        $existing_config = new BuildConfigure();
                         $existing_config->BuildId = $build->Id;
                         if ($existing_config->Exists()) {
                             $existing_config_results = $existing_config->GetConfigureForBuild();
@@ -213,7 +211,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
                 $duration = $this->EndTimeStamp - $this->StartTimeStamp;
                 $build->SetConfigureDuration((int) $duration, !$all_at_once);
                 if ($all_at_once && !$parent_duration_set) {
-                    $parent_build = $this->ModelFactory->create(Build::class);
+                    $parent_build = new Build();
                     $parent_build->Id = $build->GetParentId();
                     $parent_build->SetConfigureDuration($duration, false);
                     $parent_duration_set = true;
@@ -274,7 +272,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
         } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
             $this->SubProjects[$this->SubProjectName][] =  $data;
             $build = $this->Builds[$this->SubProjectName];
-            $label = $this->ModelFactory->create(Label::class);
+            $label = new Label();
             $label->Text = $data;
             $build->AddLabel($label);
         } elseif ($parent == 'LABELS' && $element == 'LABEL') {
@@ -331,7 +329,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
     public function GetBuildCollection()
     {
         /** @var BuildCollection $collection */
-        $collection = $this->ModelFactory->create(BuildCollection::class);
+        $collection = new BuildCollection();
         foreach ($this->Builds as $build) {
             $collection->add($build);
         }
@@ -365,7 +363,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
 
     public function GetBuildGroup()
     {
-        $buildGroup = $this->ModelFactory->create(BuildGroup::class);
+        $buildGroup = new BuildGroup();
         foreach ($this->Builds as $build) {
             $buildGroup->SetId($build->GroupId);
             break;
@@ -375,7 +373,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
 
     protected function CreateBuild()
     {
-        $build = $this->ModelFactory->create(Build::class);
+        $build = new Build();
         $build->SiteId = $this->Site->id;
         $build->Name = $this->BuildName;
         $build->SetStamp($this->BuildStamp);

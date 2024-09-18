@@ -16,14 +16,12 @@
 
 use CDash\Model\Build;
 use CDash\Model\BuildProperties;
-use CDash\ServiceContainer;
 
 class BuildPropertiesJSONHandler extends AbstractSubmissionHandler
 {
     public function __construct($buildid)
     {
-        $service = ServiceContainer::getInstance();
-        $this->Build = $service->get(Build::class);
+        $this->Build = new Build();
         $this->Build->Id = $buildid;
         $this->Build->FillFromId($this->Build->Id);
     }

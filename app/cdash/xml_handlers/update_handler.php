@@ -46,25 +46,23 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
     public function __construct($projectID)
     {
         parent::__construct($projectID);
-        $factory = $this->getModelFactory();
-        $this->Build = $factory->create(Build::class);
+        $this->Build = new Build();
     }
 
     /** Start element */
     public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
-        $factory = $this->getModelFactory();
         if ($name == 'UPDATE') {
-            $this->Build = $factory->create(Build::class);
-            $this->Update = $factory->create(BuildUpdate::class);
+            $this->Build = new Build();
+            $this->Update = new BuildUpdate();
 
             if (isset($attributes['GENERATOR'])) {
                 $this->Build->Generator = $attributes['GENERATOR'];
             }
             $this->Update->Append = $this->Append;
         } elseif ($name == 'UPDATED' || $name == 'CONFLICTING' || $name == 'MODIFIED') {
-            $this->UpdateFile = $factory->create(BuildUpdateFile::class);
+            $this->UpdateFile = new BuildUpdateFile();
             $this->UpdateFile->Status = $name;
         } elseif ($name == 'UPDATERETURNSTATUS') {
             $this->Update->Status = '';
@@ -237,9 +235,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
      */
     public function GetBuildCollection()
     {
-        $factory = $this->getModelFactory();
-        /** @var BuildCollection $collection */
-        $collection = $factory->create(BuildCollection::class);
+        $collection = new BuildCollection();
         $collection->add($this->Build);
         return $collection;
     }
@@ -277,8 +273,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
 
     public function GetBuildGroup()
     {
-        $factory = $this->getModelFactory();
-        $buildGroup = $factory->create(BuildGroup::class);
+        $buildGroup = new BuildGroup();
         $buildGroup->SetId($this->Build->GroupId);
         return $buildGroup;
     }

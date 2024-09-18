@@ -18,7 +18,6 @@ use CDash\Model\BuildRelationship;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Label;
 use CDash\Model\UploadFile;
-use CDash\ServiceContainer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
@@ -862,8 +861,6 @@ final class BuildController extends AbstractBuildController
         }
         $this->setBuildById((int) $_GET['buildid']);
 
-        $service = ServiceContainer::getInstance();
-
         $response = begin_JSON_response();
         $response['title'] = $this->project->Name;
 
@@ -895,7 +892,7 @@ final class BuildController extends AbstractBuildController
         ];
 
         // Update
-        $update = $service->get(BuildUpdate::class);
+        $update = new BuildUpdate();
         $update->BuildId = $this->build->Id;
         $build_update = $update->GetUpdateForBuild();
         if (is_array($build_update)) {
@@ -908,8 +905,7 @@ final class BuildController extends AbstractBuildController
         // Build
         $response['build'] = Build::MarshalResponseArray($this->build, $extra_build_fields);
 
-        $builderror = $service->get(BuildError::class);
-        $buildfailure = $service->get(BuildFailure::class);
+        $buildfailure = new BuildFailure();
 
         // Set the error
         if ($type === 0) {
@@ -981,8 +977,7 @@ final class BuildController extends AbstractBuildController
                 $failure = BuildFailure::marshal($fail, $this->project, $revision, true, $buildfailure);
 
                 if ($this->project->DisplayLabels) {
-                    /** @var Label $label */
-                    $label = $service->get(Label::class);
+                    $label = new Label();
                     $label->BuildFailureId = $fail['id'];
                     $rows = $label->GetTextFromBuildFailure();
                     if ($rows && count($rows) > 0) {

@@ -75,10 +75,9 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
     {
         parent::startElement($parser, $name, $attributes);
         $parent = $this->getParent(); // should be before endElement
-        $factory = $this->getModelFactory();
 
         if ($name == 'SITE') {
-            $this->Project = $factory->create(Project::class);
+            $this->Project = new Project();
             $this->Project->Id = $this->projectid;
 
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
@@ -125,7 +124,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
             $this->TestSubProjectName = '';
             $this->Labels = [];
         } elseif ($name == 'NAMEDMEASUREMENT' && array_key_exists('TYPE', $attributes)) {
-            $this->TestMeasurement = $factory->create(TestMeasurement::class);
+            $this->TestMeasurement = new TestMeasurement();
 
             if ($attributes['TYPE'] == 'file') {
                 $this->TestMeasurement->name = $attributes['FILENAME'];
@@ -138,7 +137,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                 $this->TestCreator->alreadyCompressed = true;
             }
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
-            $this->Label = $factory->create(Label::class);
+            $this->Label = new Label();
         }
     }
 
@@ -147,7 +146,6 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
     {
         $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
-        $factory = $this->getModelFactory();
 
         if ($name == 'TEST' && $parent == 'TESTING') {
             // By now, will either have one subproject for the entire file
@@ -199,7 +197,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
 
                 // If it's an image we add it as an image
                 if (strpos($this->TestMeasurement->type, 'image') !== false) {
-                    $image = $factory->create(Image::class);
+                    $image = new Image();
                     $image->Extension = $this->TestMeasurement->type;
                     $image->Data = $this->TestMeasurement->value;
                     $image->Name = $this->TestMeasurement->name;
@@ -238,7 +236,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                     $duration = $this->EndTimeStamp - $this->StartTimeStamp;
                     $build->UpdateTestDuration((int) $duration, !$all_at_once);
                     if ($all_at_once && !$parent_duration_set) {
-                        $parent_build = $factory->create(Build::class);
+                        $parent_build = new Build();
                         $parent_build->Id = $build->GetParentId();
                         $parent_build->UpdateTestDuration($duration, false);
                         $parent_duration_set = true;
@@ -327,9 +325,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         if (!array_key_exists($this->SubProjectName, $this->NumberTestsPassed)) {
             $this->NumberTestsPassed[$this->SubProjectName] = 0;
         }
-        $factory = $this->getModelFactory();
-        /** @var Build $build */
-        $build = $factory->create(Build::class);
+        $build = new Build();
         $build->SetSite($this->Site);
 
         if (!empty($this->PullRequest)) {
@@ -394,9 +390,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
      */
     public function GetBuildCollection()
     {
-        $factory = $this->getModelFactory();
-        /** @var BuildCollection $collection */
-        $collection = $factory->create(BuildCollection::class);
+        $collection = new BuildCollection();
         foreach ($this->Builds as $build) {
             $collection->add($build);
         }
@@ -434,8 +428,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
      */
     public function GetBuildGroup()
     {
-        $factory = $this->getModelFactory();
-        $buildGroup = $factory->create(BuildGroup::class);
+        $buildGroup = new BuildGroup();
         foreach ($this->Builds as $build) {
             // TODO: this used to work:
             // $buildGroup->SetId($build->GroupId);

@@ -22,6 +22,7 @@ class DynamicAnalysisSummary
 {
     public $BuildId;
     public $Checker;
+    public $Empty;
     private $NumDefects;
     private $PDO;
 

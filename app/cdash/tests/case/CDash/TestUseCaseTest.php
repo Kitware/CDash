@@ -143,27 +143,6 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testTestUseCaseCreatesSubproject()
-    {
-        /** @var TestUseCase $sut */
-        $sut = UseCase::createBuilder($this, UseCase::TEST);
-        $sut->createSite(['Name' => 'Site.Name'])
-            ->createSubproject('NOX', ['Non-linear', 'Transient', 'Optimization'])
-            ->createSubproject('Teuchos', ['Linear']);
-
-        /** @var TestingHandler $handler */
-        $handler = $sut->build();
-
-        /** @var BuildCollection $builds */
-        $builds = $handler->GetBuildCollection();
-
-        $this->assertInstanceOf(BuildCollection::class, $builds);
-        $this->assertTrue($builds->has('NOX'));
-        $this->assertTrue($builds->has('Teuchos'));
-        $this->assertInstanceOf(Build::class, $builds->get('NOX'));
-        $this->assertInstanceOf(Build::class, $builds->get('Teuchos'));
-    }
-
     public function testTestUseCaseCreatesTestPassed()
     {
         /** @var TestUseCase $sut */

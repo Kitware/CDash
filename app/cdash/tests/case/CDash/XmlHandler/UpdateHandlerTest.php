@@ -20,9 +20,7 @@ use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
-use CDash\Model\Build;
 use CDash\Model\Subscriber;
-use CDash\ServiceContainer;
 use CDash\Submission\CommitAuthorHandlerInterface;
 use CDash\Test\CDashTestCase;
 
@@ -32,24 +30,6 @@ class UpdateHandlerTest extends CDashTestCase
     {
         $sut = new UpdateHandler(0, 0);
         $this->assertInstanceOf(CommitAuthorHandlerInterface::class, $sut);
-    }
-
-    public function testGetCommitAuthors()
-    {
-        $build = $this->getMockBuilder(Build::class)
-            ->onlyMethods(['GetCommitAuthors'])
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $build->expects($this->once())
-            ->method('GetCommitAuthors');
-
-        ServiceContainer::container()->set(Build::class, function () use ($build) {
-            return $build;
-        });
-
-        $sut = new UpdateHandler(0, 0);
-        $sut->GetCommitAuthors();
     }
 
     public function testGetBuildTopic()

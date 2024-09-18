@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Utils\TestingDay;
 
 use CDash\Database;
-use CDash\ServiceContainer;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use App\Models\Site;
@@ -309,8 +308,7 @@ function add_last_sql_error($functionname, $projectid = 0, $buildid = 0, $resour
  */
 function get_project_id($projectname): int
 {
-    $service = ServiceContainer::getInstance();
-    $project = $service->get(Project::class);
+    $project = new Project();
     $project->Name = $projectname;
     if ($project->GetIdByName()) {
         return intval($project->Id);
@@ -991,10 +989,7 @@ function begin_JSON_response(): array
  */
 function get_dashboard_JSON($projectname, $date, &$response)
 {
-    $service = ServiceContainer::getInstance();
-
-    /** @var Project $project */
-    $project = $service->create(Project::class);
+    $project = new Project();
     $project->FindByName($projectname);
 
     $project_array = [];

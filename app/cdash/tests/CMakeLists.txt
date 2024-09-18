@@ -90,14 +90,8 @@ set_tests_properties(/PHPUnitTest PROPERTIES DEPENDS /Feature/SlowPageTest)
 add_laravel_test(/Feature/GitHubWebhook)
 set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /PHPUnitTest)
 
-add_unit_test(/CDash/BuildUseCase)
-set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /Feature/GitHubWebhook)
-
-add_unit_test(/CDash/ConfigUseCase)
-set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/BuildUseCase)
-
 add_unit_test(/CDash/Database)
-set_tests_properties(/CDash/Database PROPERTIES DEPENDS /CDash/ConfigUseCase)
+set_tests_properties(/CDash/Database PROPERTIES DEPENDS /Feature/GitHubWebhook)
 
 add_unit_test(/CDash/Lib/Repository/GitHub)
 set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES
@@ -144,17 +138,11 @@ set_tests_properties(/CDash/Messaging/Topic/TopicDecorator PROPERTIES DEPENDS /C
 add_unit_test(/CDash/Messaging/Topic/UpdateErrorTopic)
 set_tests_properties(/CDash/Messaging/Topic/UpdateErrorTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/TopicDecorator)
 
-add_unit_test(/CDash/Model/BuildError)
-set_tests_properties(/CDash/Model/BuildError PROPERTIES DEPENDS /CDash/Messaging/Topic/UpdateErrorTopic)
-
 add_unit_test(/CDash/Model/BuildErrorFilter)
-set_tests_properties(/CDash/Model/BuildErrorFilter PROPERTIES DEPENDS /CDash/Model/BuildError)
-
-add_unit_test(/CDash/Model/BuildFailure)
-set_tests_properties(/CDash/Model/BuildFailure PROPERTIES DEPENDS /CDash/Model/BuildErrorFilter)
+set_tests_properties(/CDash/Model/BuildErrorFilter PROPERTIES DEPENDS /CDash/Messaging/Topic/UpdateErrorTopic)
 
 add_unit_test(/CDash/Model/BuildRelationship)
-set_tests_properties(/CDash/Model/BuildRelationship PROPERTIES DEPENDS /CDash/Model/BuildFailure)
+set_tests_properties(/CDash/Model/BuildRelationship PROPERTIES DEPENDS /CDash/Model/BuildErrorFilter)
 
 add_unit_test(/CDash/Model/Repository)
 set_tests_properties(/CDash/Model/Repository PROPERTIES DEPENDS /CDash/Model/BuildRelationship)
