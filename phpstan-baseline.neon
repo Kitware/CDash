@@ -5915,6 +5915,11 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Label\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
