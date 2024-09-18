@@ -52,9 +52,7 @@ export default {
 
     initialFilters: {
       type: Object,
-      default() {
-        return {};
-      },
+      required: true,
     },
   },
 
@@ -102,7 +100,7 @@ export default {
 
   data() {
     return {
-      changedFilters: [],
+      changedFilters: JSON.parse(JSON.stringify(this.initialFilters)),
     };
   },
 
