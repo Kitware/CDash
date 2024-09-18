@@ -52,7 +52,7 @@
           <li>
             <a class="cdash-link" href="#fragment-2"><span>Repository Credential</span></a></li>
           <li>
-            <a class="cdash-link"href="#fragment-3"><span>Email Notifications</span></a></li>
+            <a class="cdash-link" href="#fragment-3"><span>Email Notifications</span></a></li>
           <li>
             <a class="cdash-link" href="#fragment-4"><span>Email Category</span></a></li>
           <li>
