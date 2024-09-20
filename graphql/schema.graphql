@@ -76,6 +76,13 @@ type Project {
   ): [Build!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
 
   """
+  An efficient way to get the number of builds matching a given filter.
+  """
+  buildCount(
+    filters: _ @filter(inputType: "BuildFilterInput")
+  ): Int! @count(relation: "builds")
+
+  """
   The most recent build submitted to this server.  Note: this is determined by
   submission time, not build start time.
   """
