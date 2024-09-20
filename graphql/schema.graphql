@@ -216,6 +216,8 @@ type Build {
   basicWarnings: [BasicBuildAlert!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 
   project: Project! @belongsTo
+
+  notes: [Note!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 }
 
 input BuildFilterInput {
@@ -373,4 +375,23 @@ type SiteInformation {
   processorClockFrequency: Int @rename(attribute: "processorclockfrequency")
 
   description: String
+}
+
+
+"""
+Note.
+"""
+type Note {
+  "Unique primary key."
+  id: ID!
+
+  name: String!
+
+  text: String!
+}
+
+input NoteFilterInput {
+  id: ID
+  name: String
+  text: String
 }
