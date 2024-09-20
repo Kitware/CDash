@@ -398,6 +398,7 @@ final class AdminController extends AbstractController
             self::delete_unused_rows('builderror', 'buildid', 'build');
             self::delete_unused_rows('builderrordiff', 'buildid', 'build');
             self::delete_unused_rows('buildfailure', 'buildid', 'build');
+            self::delete_unused_rows('buildfailuredetails', 'id', 'buildfailure', 'detailsid');
             self::delete_unused_rows('buildinformation', 'buildid', 'build');
             self::delete_unused_rows('buildtesttime', 'buildid', 'build');
             self::delete_unused_rows('configure', 'id', 'build2configure', 'configureid');
