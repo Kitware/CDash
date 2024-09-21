@@ -25,13 +25,17 @@ return new class extends Migration {
         $this->add_constraint('label2buildfailure', 'buildfailureid', 'buildfailure', 'id');
 
         $this->add_constraint('label2dynamicanalysis', 'labelid', 'label', 'id');
+        Schema::table('label2dynamicanalysis', function (Blueprint $table) {
+            $table->integer('dynamicanalysisid')->nullable(false)->change();
+        });
         $this->add_constraint('label2dynamicanalysis', 'dynamicanalysisid', 'dynamicanalysis', 'id');
 
         $this->add_constraint('label2update', 'labelid', 'label', 'id');
-        $this->add_constraint('label2update', 'updateid', 'buildupdate', 'id');
         Schema::table('label2update', function (Blueprint $table) {
+            $table->integer('updateid')->nullable(false)->change();
             $table->unique(['updateid', 'labelid']);
         });
+        $this->add_constraint('label2update', 'updateid', 'buildupdate', 'id');
 
         $this->add_constraint('labelemail', 'labelid', 'label', 'id');
         Schema::table('labelemail', function (Blueprint $table) {
@@ -44,8 +48,8 @@ return new class extends Migration {
         });
 
         $this->add_constraint('label2coveragefile', 'labelid', 'label', 'id');
-        $this->add_constraint('label2coveragefile', 'coveragefileid', 'coveragefile', 'id');
         Schema::table('label2coveragefile', function (Blueprint $table) {
+            $table->integer('coveragefileid')->nullable(false)->change();
             // Note: primary key index with columns (labelid, buildid, coveragefileid) already exists
             $table->unique(['labelid', 'coveragefileid', 'buildid']);
             $table->unique(['buildid', 'labelid', 'coveragefileid']);
@@ -53,6 +57,7 @@ return new class extends Migration {
             $table->unique(['coveragefileid', 'buildid', 'labelid']);
             $table->unique(['coveragefileid', 'labelid', 'buildid']);
         });
+        $this->add_constraint('label2coveragefile', 'coveragefileid', 'coveragefile', 'id');
     }
 
     /**
