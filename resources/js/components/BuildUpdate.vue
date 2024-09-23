@@ -8,7 +8,7 @@
     </div>
     <div v-else>
       <h4 v-if="cdash.build.site">
-        Files changed on <a :href="$baseURL + '/sites/' + cdash.build.siteid">{{ cdash.build.site }}</a>
+        Files changed on <a class="cdash-link" :href="$baseURL + '/sites/' + cdash.build.siteid">{{ cdash.build.site }}</a>
         ({{ cdash.build.buildname }}) as of {{ cdash.build.buildtime }}
       </h4>
 
@@ -40,7 +40,7 @@
         </tt>
       </div>
 
-      <a @click="toggleGraph()">
+      <a class="cdash-link" @click="toggleGraph()">
         <span v-text="showGraph ? 'Hide Activity Graph' : 'Show Activity Graph'" />
       </a>
       <div v-if="graphLoading">

@@ -1,15 +1,14 @@
 <template>
-  <div>
-    <div v-if="isLoading">
-      <img
-        v-if="initialDelayComplete"
-        :src="$baseURL + '/img/loading.gif'"
-        class="loading-indicator"
-        alt="The page is loading."
-      >
-    </div>
-    <slot v-else />
+  <div v-if="isLoading">
+    <img
+      v-if="initialDelayComplete"
+      :src="$baseURL + '/img/loading.gif'"
+      class="loading-indicator"
+      alt="The page is loading."
+    >
   </div>
+  <!-- eslint-disable-next-line vue/no-multiple-template-root -->
+  <slot v-else />
 </template>
 
 <script>

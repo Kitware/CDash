@@ -14,31 +14,31 @@
                 uib-tooltip="More display options"></span>
           <ul ng-show="showsettings">
             <li>
-              <a id="label_advancedview" ng-click="toggleAdvancedView()">
+              <a class="cdash-link" id="label_advancedview" ng-click="toggleAdvancedView()">
                 <span ng-if="::cdash.advancedview == 0">Advanced View</span>
                 <span ng-if="::cdash.advancedview != 0">Simple View</span>
               </a>
             </li>
             <li>
-              <a class="autorefresh" ng-click="toggleAutoRefresh()">
+              <a class="autorefresh cdash-link" ng-click="toggleAutoRefresh()">
                 <span ng-if="::!autoRefresh">Auto-refresh</span>
                 <span ng-if="::autoRefresh">Stop auto-refresh</span>
               </a>
             </li>
             <li>
-              <a id="label_colorblind" href="" ng-click="cdash.filterdata.colorblind=!cdash.filterdata.colorblind; colorblind_toggle()">
+              <a class="cdash-link" id="label_colorblind" href="" ng-click="cdash.filterdata.colorblind=!cdash.filterdata.colorblind; colorblind_toggle()">
                 <span ng-show="cdash.filterdata.colorblind == 0" data-cy="color-mode-colorblind">Colorblind palette</span>
                 <span ng-show="cdash.filterdata.colorblind != 0" data-cy="color-mode-classic">Classic palette</span>
               </a>
             </li>
             <li>
-              <a id="label_showfilters" ng-click="showfilters_toggle()">
+              <a class="cdash-link" id="label_showfilters" ng-click="showfilters_toggle()">
                 <span ng-show="showfilters == 0">Show Filters</span>
                 <span ng-show="showfilters != 0">Hide Filters</span>
               </a>
             </li>
             <li>
-              <a href="http://public.kitware.com/Wiki/CDash:Documentation" class="helptrigger" target="_blank">
+              <a href="http://public.kitware.com/Wiki/CDash:Documentation" class="helptrigger cdash-link" target="_blank">
                 Help
               </a>
             </li>
@@ -60,7 +60,7 @@
         <tr>
           <td height="25" align="left">
             Testing data for this project can be found at:
-            <a ng-href="{{::cdash.testingdataurl}}">{{::cdash.testingdataurl}}</a>
+            <a class="cdash-link" ng-href="{{::cdash.testingdataurl}}">{{::cdash.testingdataurl}}</a>
           </td>
         </tr>
       </table>
@@ -70,7 +70,7 @@
         <br/>
         <div id="site" align="left">
           <b>Site</b>:
-          <a ng-href="sites/{{::cdash.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
+          <a class="cdash-link" ng-href="sites/{{::cdash.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
             {{::cdash.site}}
           </a>
           <img ng-if="::cdash.siteoutoforder == 1" src="img/flag.png" title="flag"/>
@@ -79,19 +79,21 @@
         <div id="buildname" align="left">
           <b>Build Name</b>: {{::cdash.buildname}}
           <img ng-if="::cdash.buildplatform" class="icon" alt="platform" ng-src="img/platform_{{::cdash.buildplatform}}.png"/>
-          <a title="View notes"
+          <a class="cdash-link"
+             title="View notes"
              ng-if="::cdash.parenthasnotes"
              ng-href="build/{{::cdash.parentid}}/notes">
             <img src="img/document.png" alt="Notes" class="icon"/>
           </a>
 
-          <a ng-if="::cdash.uploadfilecount > 0"
+          <a class="cdash-link"
+             ng-if="::cdash.uploadfilecount > 0"
              ng-href="build/{{::cdash.parentid}}/files"
              title="{{::cdash.uploadfilecount}} files uploaded with this build">
             <img src="img/package.png" alt="Files" class="icon"/>
           </a>
 
-          <a ng-if="::cdash.changelink" target="_blank" ng-href="{{::cdash.changelink}}">
+          <a class="cdash-link" ng-if="::cdash.changelink" target="_blank" ng-href="{{::cdash.changelink}}">
             <img class="smallicon" ng-src="{{::cdash.changeicon}}"/>
           </a>
         </div>
@@ -157,17 +159,17 @@
       <!-- Coverage -->
       <div class="buildgroup"
            ng-if="::cdash.coverages.length > 0 || cdash.coveragegroups.length > 0">
-        <a id="Coverage"></a>
+        <a class="cdash-link" id="Coverage"></a>
         <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="coveragetable">
           <thead>
             <tr class="table-heading2">
               <td colspan="1" class="nob">
                 <h3>
-                  <a href="#" class="grouptrigger"
+                  <a href="#" class="grouptrigger cdash-link"
                      ng-click="jumpToAnchor('Coverage')">
                     Coverage
                   </a>
-                <a ng-if="::cdash.comparecoverage == 1" href="compareCoverage.php?project={{::cdash.projectname}}&date={{::cdash.date}}">Compare Coverage</a></h3>
+                <a class="cdash-link" ng-if="::cdash.comparecoverage == 1" href="compareCoverage.php?project={{::cdash.projectname}}&date={{::cdash.date}}">Compare Coverage</a></h3>
               </td>
               <td colspan="6" align="right" class="nob">
               </td>
@@ -261,7 +263,7 @@
               </td>
 
               <td align="center" ng-class="::{'normal': coverage.percentage >= group.thresholdgreen, 'warning': coverage.percentage < group.thresholdgreen && coverage.percentage >= group.thresholdyellow, 'error': coverage.percentage < group.thresholdyellow}">
-                <a ng-href="viewCoverage.php?buildid={{::coverage.buildid}}">
+                <a class="cdash-link" ng-href="viewCoverage.php?buildid={{::coverage.buildid}}">
                   {{::coverage.percentage}}%
                 </a>
                 <sub ng-if="::coverage.percentagediff > 0">+{{::coverage.percentagediff}}%</sub>
@@ -292,13 +294,13 @@
           <tbody ng-if="::!cdash.coveragegroups || cdash.coveragegroups.length == 0" id="coveragebody">
             <tr class="child_row" ng-repeat="coverage in cdash.coverages |orderBy:sortCoverage.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
               <td ng-if="::cdash.childview != 1" align="left" class="paddt">
-                <a ng-href="sites/{{::coverage.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
+                <a class="cdash-link" ng-href="sites/{{::coverage.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
                   {{::coverage.site}}
                 </a>
               </td>
 
               <td ng-if="::cdash.childview != 1" align="left" class="paddt">
-                <a ng-href="build/{{::coverage.buildid}}">
+                <a class="cdash-link" ng-href="build/{{::coverage.buildid}}">
                   {{::coverage.buildname}}
                 </a>
               </td>
@@ -308,10 +310,10 @@
               </td>
 
               <td align="center" ng-class="::{'normal': coverage.percentage >= cdash.thresholdgreen, 'warning': coverage.percentage < cdash.thresholdgreen && coverage.percentage >= cdash.thresholdyellow, 'error': coverage.percentage < cdash.thresholdyellow}">
-                <a ng-if="::coverage.childlink" ng-href="{{::coverage.childlink}}">
+                <a class="cdash-link" ng-if="::coverage.childlink" ng-href="{{::coverage.childlink}}">
                   {{::coverage.percentage}}%
                 </a>
-                <a ng-if="::!coverage.childlink" ng-href="viewCoverage.php?buildid={{::coverage.buildid}}">
+                <a class="cdash-link" ng-if="::!coverage.childlink" ng-href="viewCoverage.php?buildid={{::coverage.buildid}}">
                   {{::coverage.percentage}}%
                 </a>
                 <sub ng-if="::coverage.percentagediff > 0">+{{::coverage.percentagediff}}%</sub>
@@ -347,13 +349,13 @@
       <!-- Dynamic analysis -->
       <div class="buildgroup"
            ng-if="::cdash.dynamicanalyses.length > 0">
-        <a id="DynamicAnalysis"></a>
+        <a class="cdash-link" id="DynamicAnalysis"></a>
         <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="dynamicanalysistable">
           <thead>
             <tr class="table-heading3">
               <td colspan="1" class="nob">
                 <h3>
-                  <a href="#" class="grouptrigger"
+                  <a href="#" class="grouptrigger cdash-link"
                      ng-click="jumpToAnchor('DynamicAnalysis')">
                     Dynamic Analysis
                   </a>
@@ -413,25 +415,25 @@
               </td>
 
               <td ng-if="::cdash.childview != 1" class="paddt" align="left">
-                <a ng-href="sites/{{::da.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
+                <a class="cdash-link" ng-href="sites/{{::da.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
                   {{::da.site}}
                 </a>
               </td>
 
               <td ng-if="::cdash.childview != 1" class="paddt" align="left">
-                <a ng-href="build/{{::da.buildid}}">
+                <a class="cdash-link" ng-href="build/{{::da.buildid}}">
                   {{::da.buildname}}
                 </a>
               </td>
 
-              <td class="paddt" class="center-text">{{::da.checker}}</td>
+              <td class="center-text paddt cdash0link">{{::da.checker}}</td>
 
               <td class="paddt" align="center"
                   ng-class="::{'error': da.defectcount > 0, 'normal': da.defectcount < 1}">
-                <a ng-if="::da.childlink" ng-href="{{::da.childlink}}">
+                <a class="cdash-link" ng-if="::da.childlink" ng-href="{{::da.childlink}}">
                   {{::da.defectcount}}
                 </a>
-                <a ng-if="::!da.childlink" ng-href="build/{{::da.buildid}}/dynamic_analysis">
+                <a class="cdash-link" ng-if="::!da.childlink" ng-href="build/{{::da.buildid}}/dynamic_analysis">
                   {{::da.defectcount}}
                 </a>
               </td>

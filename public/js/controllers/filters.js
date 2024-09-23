@@ -300,7 +300,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
 
   $scope.displayHyperlink = function() {
     var url = this.createHyperlink();
-    $("#div_filtersAsUrl").html("<a href=\"" + url + "\">" + url + "</a>");
+    $("#div_filtersAsUrl").html("<a class=\"cdash-link\" href=\"" + url + "\">" + url + "</a>");
   };
 
   $scope.createHyperlink = function() {

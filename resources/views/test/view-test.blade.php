@@ -25,7 +25,7 @@
                         <b>Site Name:</b>
                     </td>
                     <td>
-                        <a ng-href="sites/{{::cdash.build.siteid}}"
+                        <a class="cdash-link" ng-href="sites/{{::cdash.build.siteid}}"
                            ng-click="cancelAjax()">{{::cdash.build.site}}</a>
                     </td>
                 </tr>
@@ -35,7 +35,7 @@
                         <b>Build Name:</b>
                     </td>
                     <td>
-                        <a ng-href="build/{{::cdash.build.buildid}}"
+                        <a class="cdash-link" ng-href="build/{{::cdash.build.buildid}}"
                            ng-click="cancelAjax()">{{::cdash.build.buildname}}</a>
                     </td>
                 </tr>
@@ -118,7 +118,7 @@
 
         <!-- Filters -->
         <div id="labelshowfilters">
-            <a id="label_showfilters" ng-click="showfilters_toggle()">
+            <a class="cdash-link" id="label_showfilters" ng-click="showfilters_toggle()">
                 <span ng-show="showfilters == 0">Show Filters</span>
                 <span ng-show="showfilters != 0">Hide Filters</span>
             </a>
@@ -232,7 +232,7 @@
 
                 <tr ng-repeat="test in pagination.filteredTests" ng-class-odd="'odd'" ng-class-even="'even'">
                     <td ng-if="::cdash.parentBuild" align="left">
-                        <a ng-href="viewTest.php?buildid={{::test.buildid}}">{{::test.subprojectname}}</a>
+                        <a class="cdash-link" ng-href="viewTest.php?buildid={{::test.buildid}}">{{::test.subprojectname}}</a>
                     </td>
 
                     <td>
@@ -240,18 +240,18 @@
                              src="img/flaggreen.gif" title="flag"/>
                         <img ng-if="::test.new == 1 && !(test.timestatus == 'Passed' && test.status == 'Passed')"
                              src="img/flag.png" title="flag"/>
-                        <a ng-href="{{::test.detailsLink}}"
+                        <a class="cdash-link" ng-href="{{::test.detailsLink}}"
                            ng-click="cancelAjax()">{{::test.name}}</a>
                     </td>
 
                     <td align="center" ng-class="::test.statusclass">
-                        <a ng-href="{{::test.detailsLink}}"
+                        <a class="cdash-link" ng-href="{{::test.detailsLink}}"
                            ng-click="cancelAjax()">{{::test.status}}</a>
                     </td>
 
                     <td ng-if="::cdash.project.showtesttime == 1"
                         align="center" ng-class="::test.timestatusclass">
-                        <a ng-href="{{::test.detailsLink}}?graph=time"
+                        <a class="cdash-link" ng-href="{{::test.detailsLink}}?graph=time"
                            ng-click="cancelAjax()">{{::test.timestatus}}</a>
                     </td>
 
@@ -278,7 +278,7 @@
                     </td>
 
                     <td align="center" ng-class="test.summaryclass">
-                        <a ng-href="{{test.summaryLink}}"
+                        <a class="cdash-link" ng-href="{{test.summaryLink}}"
                            ng-click="cancelAjax()">{{test.summary}}</a>
                     </td>
                     <td ng-repeat="measurement in ::test.measurements track by $index">
@@ -309,7 +309,7 @@
             </div>
 
             <br/>
-            <a ng-href="{{::cdash.csvlink}}">Download Table as CSV File</a>
+            <a class="cdash-link" ng-href="{{::cdash.csvlink}}">Download Table as CSV File</a>
         </div>
     @endverbatim
 @endsection

@@ -100,15 +100,15 @@
    <div id="wizard">
       <ul>
           <li>
-            <a href="#fragment-1"><span>Current users</span></a></li>
+            <a class="cdash-link" href="#fragment-1"><span>Current users</span></a></li>
           <li>
-            <a href="#fragment-2"><span>Search for already registered users</span></a></li>
+            <a class="cdash-link" href="#fragment-2"><span>Search for already registered users</span></a></li>
           <xsl:if test="/cdash/canRegister">
             <li>
-              <a href="#fragment-3"><span>Register a new user</span></a></li>
+              <a class="cdash-link" href="#fragment-3"><span>Register a new user</span></a></li>
           </xsl:if>
           <li>
-            <a href="#fragment-4"><span>Import users from CVS file </span></a></li>
+            <a class="cdash-link" href="#fragment-4"><span>Import users from CVS file </span></a></li>
       </ul>
     <div id="fragment-1" class="tab_content" >
         <div class="tab_help"></div>

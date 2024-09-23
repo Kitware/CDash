@@ -11,13 +11,13 @@
       <br>
       <br>
       Click here to access the
-      <a :href="$baseURL + '/index.php?project=' + cdash.project.name_encoded">CDash project page</a>
+      <a class="cdash-link" :href="$baseURL + '/index.php?project=' + cdash.project.name_encoded">CDash project page</a>
       <br>
       Click here to
-      <a :href="$baseURL + '/project/' + cdash.project.Id + '/edit'">edit the project</a>
+      <a class="cdash-link" :href="$baseURL + '/project/' + cdash.project.Id + '/edit'">edit the project</a>
       <br>
       Click here to
-      <a :href="$baseURL + '/project/' + cdash.project.Id + '/ctest_configuration'">download the CTest configuration file</a>
+      <a class="cdash-link" :href="$baseURL + '/project/' + cdash.project.Id + '/ctest_configuration'">download the CTest configuration file</a>
       <br>
     </div>
     <div v-else>
@@ -59,14 +59,14 @@
               class="nav-item"
               @click="setTabByName('Info');"
             >
-              <a href="#Info" class="nav-link" :class="{ active: activeTab === 'Info' }">Information</a>
+              <a href="#Info" class="nav-link cdash-link" :class="{ active: activeTab === 'Info' }">Information</a>
             </li>
 
             <li
               class="nav-item"
               @click="setTabByName('Logo');"
             >
-              <a href="#Logo" class="nav-link" :class="{ active: activeTab === 'Logo', disabled: cdash.tabs.Logo.disabled }">Logo</a>
+              <a href="#Logo" class="nav-link cdash-link" :class="{ active: activeTab === 'Logo', disabled: cdash.tabs.Logo.disabled }">Logo</a>
             </li>
 
             <li
@@ -74,21 +74,21 @@
               class="nav-item"
               @click="setTabByName('Repos');"
             >
-              <a href="#Repos" class="nav-link" :class="{ active: activeTab === 'Repos', disabled: cdash.tabs.Repos.disabled }">Repository</a>
+              <a href="#Repos" class="nav-link cdash-link" :class="{ active: activeTab === 'Repos', disabled: cdash.tabs.Repos.disabled }">Repository</a>
             </li>
 
             <li
               class="nav-item"
               @click="setTabByName('Testing');"
             >
-              <a href="#Testing" class="nav-link" :class="{ active: activeTab === 'Testing', disabled: cdash.tabs.Testing.disabled }">Testing</a>
+              <a href="#Testing" class="nav-link cdash-link" :class="{ active: activeTab === 'Testing', disabled: cdash.tabs.Testing.disabled }">Testing</a>
             </li>
 
             <li
               class="nav-item"
               @click="setTabByName('Email');"
             >
-              <a href="#Email" class="nav-link" :class="{ active: activeTab === 'Email', disabled: cdash.tabs.Email.disabled }">Email</a>
+              <a href="#Email" class="nav-link cdash-link" :class="{ active: activeTab === 'Email', disabled: cdash.tabs.Email.disabled }">Email</a>
             </li>
 
             <li
@@ -96,14 +96,14 @@
               class="nav-item"
               @click="setTabByName('Spam');"
             >
-              <a href="#Spam" class="nav-link" :class="{ active: activeTab === 'Spam' }">Spam</a>
+              <a href="#Spam" class="nav-link cdash-link" :class="{ active: activeTab === 'Spam' }">Spam</a>
             </li>
 
             <li
               class="nav-item"
               @click="setTabByName('Misc');"
             >
-              <a href="#Misc" class="nav-link" :class="{ active: activeTab === 'Misc', disabled: cdash.tabs.Misc.disabled }">Miscellaneous</a>
+              <a href="#Misc" class="nav-link cdash-link" :class="{ active: activeTab === 'Misc', disabled: cdash.tabs.Misc.disabled }">Miscellaneous</a>
             </li>
           </ul>
 
@@ -1619,7 +1619,7 @@
                     </div>
                   </td>
                   <td>
-                    <a :href="$baseURL + '/project/' + cdash.project.Id + '/ctest_configuration'">
+                    <a class="cdash-link" :href="$baseURL + '/project/' + cdash.project.Id + '/ctest_configuration'">
                       CTestConfig.cmake
                     </a>
                     <a

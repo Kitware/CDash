@@ -16,7 +16,7 @@ function showcoveragegraph_click(buildid,zoomout)
   $("#graph").fadeIn('slow');
   $("#graph").html("fetching...<img src=img/loading.gif></img>");
   $("#grapholder").attr("style","width:800px;height:400px;");
-  $("#graphoptions").html("<a href=javascript:showcoveragegraph_click("+buildid+",true)>Zoom out</a>");
+  $("#graphoptions").html("<a class=\"cdash-link\" href=javascript:showcoveragegraph_click("+buildid+",true)>Zoom out</a>");
 
   $("#graph").load("ajax/showcoveragegraph.php?buildid="+buildid,{},function(){$("#grapholder").fadeIn('slow');
 $("#graphoptions").show();

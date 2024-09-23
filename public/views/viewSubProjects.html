@@ -41,10 +41,10 @@
         <tr class="treven">
 
           <td align="center">
-            <a ng-href="index.php?{{cdash.linkparams}}">
+            <a class="cdash-link" ng-href="index.php?{{cdash.linkparams}}">
               {{cdash.projectname}}
             </a>
-            <a ng-href="index.php?{{cdash.linkparams}}&showfilters=1">
+            <a class="cdash-link" ng-href="index.php?{{cdash.linkparams}}&showfilters=1">
               <img border="0" src="img/filter.gif"/>
             </a>
           </td>
@@ -121,6 +121,6 @@
 
       <br/>
 
-      <a ng-href="projects/{{cdash.projectname_encoded}}/subprojects/dependencies{{cdash.linkdate ? '?'+cdash.linkdate : ''}}">
+      <a class="cdash-link" ng-href="projects/{{cdash.projectname_encoded}}/subprojects/dependencies{{cdash.linkdate ? '?'+cdash.linkdate : ''}}">
         [SubProject Dependencies]
       </a>

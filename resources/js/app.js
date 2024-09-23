@@ -30,6 +30,7 @@ import HeaderLogo from './components/page-header/HeaderLogo.vue';
 import ViewDynamicAnalysis from './components/ViewDynamicAnalysis.vue';
 import AllProjects from './components/AllProjects.vue';
 import SubProjectDependencies from './components/SubProjectDependencies.vue';
+import BuildTestsPage from './components/BuildTestsPage.vue';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import * as FA from '@fortawesome/fontawesome-svg-core';
@@ -58,6 +59,7 @@ const cdash_components = {
   ViewDynamicAnalysis,
   AllProjects,
   SubProjectDependencies,
+  BuildTestsPage,
 };
 
 /**
@@ -90,6 +92,11 @@ const apolloClient = new ApolloClient({
       Query: {
         fields: {
           projects: relayStylePagination(),
+        },
+      },
+      Build: {
+        fields: {
+          tests: relayStylePagination(),
         },
       },
     },

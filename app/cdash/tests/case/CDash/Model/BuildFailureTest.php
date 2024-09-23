@@ -68,7 +68,7 @@ class BuildFailureTest extends CDashTestCase
             'workingdirectory' => '/projects/foo/bin',
             'exitcondition'    => '2',
             'stdoutput'        => '',
-            'stderror'         => "foo/src/main.cpp: In function `int main(int, char**)`:\n<a href='https://github.com/FooCo/foo/blob/12/src/main.cpp#L2'>src/main.cpp:2</a>:3: error: `asdf` was not declared in this scope\n   asdf = 0;",
+            'stderror'         => "foo/src/main.cpp: In function `int main(int, char**)`:\n<a class='cdash-link' href='https://github.com/FooCo/foo/blob/12/src/main.cpp#L2'>src/main.cpp:2</a>:3: error: `asdf` was not declared in this scope\n   asdf = 0;",
             'cvsurl' => 'https://github.com/FooCo/foo/blob/12/src/main.cpp',
         ];
         $this->assertEquals($expected, $marshaled);

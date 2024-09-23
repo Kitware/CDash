@@ -88,7 +88,7 @@
             class="table-heading"
           >
             <td align="center">
-              <a :href="$baseURL + '/index.php?project=' + project.name_encoded">{{ project.name }}</a>
+              <a class="cdash-link" :href="$baseURL + '/index.php?project=' + project.name_encoded">{{ project.name }}</a>
             </td>
             <td
               align="center"
@@ -209,7 +209,7 @@
               v-for="project in cdash.claimedsiteprojects"
               align="center"
             >
-              <a :href="$baseURL + '/index.php?project=' + project.name_encoded">
+              <a class="cdash-link" :href="$baseURL + '/index.php?project=' + project.name_encoded">
                 {{ project.name }}
               </a>
             </td>
@@ -219,7 +219,7 @@
             v-for="site in cdash.claimedsites"
           >
             <td align="center">
-              <a :href="$baseURL + '/editSite.php?siteid=' + site.id">
+              <a class="cdash-link" :href="$baseURL + '/editSite.php?siteid=' + site.id">
                 {{ site.name }}
               </a>
               <img
@@ -380,10 +380,10 @@
         <tbody>
           <tr v-for="project in cdash.publicprojects">
             <td align="center">
-              <a :href="$baseURL + '/index.php?project=' + project.name">{{ project.name }}</a>
+              <a class="cdash-link" :href="$baseURL + '/index.php?project=' + project.name">{{ project.name }}</a>
             </td>
             <td>
-              <a :href="$baseURL + '/subscribeProject.php?projectid=' + project.id">
+              <a class="cdash-link" :href="$baseURL + '/subscribeProject.php?projectid=' + project.id">
                 Subscribe to this project
               </a>
             </td>
@@ -578,7 +578,7 @@
           </tr>
           <tr class="trodd">
             <td id="nob">
-              <a href="project/new">Start a new project</a>
+              <a class="cdash-link" href="project/new">Start a new project</a>
             </td>
           </tr>
         </tbody>
@@ -605,73 +605,73 @@
         <template v-if="cdash.user_is_admin == 1">
           <tr>
             <td>
-              <a :href="$baseURL + '/project/new'">Create new project</a>
+              <a class="cdash-link" :href="$baseURL + '/project/new'">Create new project</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a :href="$baseURL + '/manageProjectRoles.php'">Manage project roles</a>
+              <a class="cdash-link" :href="$baseURL + '/manageProjectRoles.php'">Manage project roles</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a :href="$baseURL + '/manageSubProject.php'">Manage subproject</a>
+              <a class="cdash-link" :href="$baseURL + '/manageSubProject.php'">Manage subproject</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a :href="$baseURL + '/manageBuildGroup.php'">Manage project groups</a>
+              <a class="cdash-link" :href="$baseURL + '/manageBuildGroup.php'">Manage project groups</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a :href="$baseURL + '/manageCoverage.php'">Manage project coverage</a>
+              <a class="cdash-link" :href="$baseURL + '/manageCoverage.php'">Manage project coverage</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a :href="$baseURL + '/manageBanner.php'">Manage banner message</a>
+              <a class="cdash-link" :href="$baseURL + '/manageBanner.php'">Manage banner message</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a :href="$baseURL + '/manageUsers.php'">Manage users</a>
+              <a class="cdash-link" :href="$baseURL + '/manageUsers.php'">Manage users</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a :href="$baseURL + '/authtokens/manage'">Manage authentication tokens</a>
+              <a class="cdash-link" :href="$baseURL + '/authtokens/manage'">Manage authentication tokens</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a :href="$baseURL + '/upgrade.php'">Maintenance</a>
+              <a class="cdash-link" :href="$baseURL + '/upgrade.php'">Maintenance</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a :href="$baseURL + '/sites'">Site Statistics</a>
+              <a class="cdash-link" :href="$baseURL + '/sites'">Site Statistics</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a :href="$baseURL + '/userStatistics.php'">User Statistics</a>
+              <a class="cdash-link" :href="$baseURL + '/userStatistics.php'">User Statistics</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a :href="$baseURL + '/removeBuilds.php'">Remove Builds</a>
+              <a class="cdash-link" :href="$baseURL + '/removeBuilds.php'">Remove Builds</a>
             </td>
           </tr>
           <tr v-if="cdash.show_monitor">
             <td>
-              <a :href="$baseURL + '/monitor'">Monitor / Processing Statistics</a>
+              <a class="cdash-link" :href="$baseURL + '/monitor'">Monitor / Processing Statistics</a>
             </td>
           </tr>
         </template>
         <tr>
           <td>
-            <a :href="$baseURL + '/profile'">My Profile</a>
+            <a class="cdash-link" :href="$baseURL + '/profile'">My Profile</a>
           </td>
         </tr>
       </tbody>

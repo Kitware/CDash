@@ -3,23 +3,23 @@
 
 <div id="footer" class="clearfix ng-scope">
     <div id="kitwarelogo">
-        <a href="https://www.kitware.com">
+        <a class="cdash-link" href="https://www.kitware.com">
             <img src="{{ asset('img/kitware_logo_footer.svg') }}" alt="logo" height="30">
         </a>
     </div>
 
     <div id="footerlinks" class="clearfix">
-        <a href="https://www.cdash.org" class="footerlogo">
+        <a href="https://www.cdash.org" class="footerlogo cdash-link">
             <img src="{{ asset('img/cdash_logo_full.svg?rev=2023-05-31') }}" height="30" alt="CDash logo">
         </a>
         <span id="footertext" class="pull-right">
-            CDash {{ $cdash_version }} ©&nbsp; <a href="https://www.kitware.com">Kitware</a>
-            | <a href="https://github.com/Kitware/CDash/issues" target="_blank">Report problems</a>
+            CDash {{ $cdash_version }} ©&nbsp; <a class="cdash-link" href="https://www.kitware.com">Kitware</a>
+            | <a class="cdash-link" href="https://github.com/Kitware/CDash/issues" target="_blank">Report problems</a>
 
             @if(isset($angular) && $angular === true)
-                | <a ng-href="@{{cdash.endpoint}}">View as JSON</a>
+                | <a class="cdash-link" ng-href="@{{cdash.endpoint}}">View as JSON</a>
             @elseif(isset($vue) && $vue === true)
-                | <a id="api-endpoint">View as JSON</a> {{-- Will be filled by Vue --}}
+                | <a class="cdash-link" id="api-endpoint">View as JSON</a> {{-- Will be filled by Vue --}}
             @endif
 
             @if(isset($angular) && $angular === true)

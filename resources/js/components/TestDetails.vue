@@ -124,14 +124,14 @@
             {{ file.name }}
           </th>
           <td>
-            <a :href="$baseURL + '/api/v1/testDetails.php?buildtestid=' + buildtestid+ '&fileid=' + file.fileid">
+            <a class="cdash-link" :href="$baseURL + '/api/v1/testDetails.php?buildtestid=' + buildtestid+ '&fileid=' + file.fileid">
               <img :src="$baseURL + '/img/package.png'">
             </a>
           </td>
         </tr>
         <tr v-for="link in links">
           <td>
-            <a :href="link.value">{{ link.name }}</a>
+            <a class="cdash-link" :href="link.value">{{ link.name }}</a>
           </td>
         </tr>
       </table>

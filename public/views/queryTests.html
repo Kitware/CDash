@@ -2,11 +2,11 @@
 
 <!-- Filters -->
 <div id="labelshowfilters">
-  <a id="label_showfilters" ng-click="showfilters_toggle()">
+  <a class="cdash-link" id="label_showfilters" ng-click="showfilters_toggle()">
     <span ng-show="showfilters == 0">Show Filters</span>
     <span ng-show="showfilters != 0">Hide Filters</span>
   </a>
-  <a ng-if="::cdash.filterontestoutput"
+  <a class="cdash-link" ng-if="::cdash.filterontestoutput"
      ng-click="toggleShowMatchingOutput()">
     <span ng-show="!cdash.showmatchingoutput">Show Matching Output</span>
     <span ng-show="cdash.showmatchingoutput">Hide Matching Output</span>
@@ -111,11 +111,11 @@
       ng-class-odd="'odd'"
       ng-class-even="'even'">
     <td>
-      <a href="{{build.siteLink}}">{{build.site}}</a>
+      <a class="cdash-link" href="{{build.siteLink}}">{{build.site}}</a>
     </td>
 
     <td>
-      <a href="{{build.buildSummaryLink}}">{{build.buildName}}</a>
+      <a class="cdash-link" href="{{build.buildSummaryLink}}">{{build.buildName}}</a>
     </td>
 
     <td>
@@ -123,11 +123,11 @@
     </td>
 
     <td align="center" ng-class="build.statusclass">
-      <a href="{{build.testDetailsLink}}">{{build.status}}</a>
+      <a class="cdash-link" href="{{build.testDetailsLink}}">{{build.status}}</a>
     </td>
 
     <td ng-if="cdash.project.showtesttime == 1" align="center" ng-class="build.timestatusclass">
-      <a href="{{build.testDetailsLink}}">{{build.timestatus}}</a>
+      <a class="cdash-link" href="{{build.testDetailsLink}}">{{build.timestatus}}</a>
     </td>
 
     <td>
