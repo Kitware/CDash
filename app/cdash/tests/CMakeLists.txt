@@ -213,8 +213,11 @@ set_tests_properties(/Feature/GraphQL/TestTypeTest PROPERTIES DEPENDS /Feature/G
 add_laravel_test(/Feature/GraphQL/TestMeasurementTypeTest)
 set_tests_properties(/Feature/GraphQL/TestMeasurementTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
 
+add_laravel_test(/Feature/GraphQL/NoteTypeTest)
+set_tests_properties(/Feature/GraphQL/NoteTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
+
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
-set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES DEPENDS "/Feature/GraphQL/TestTypeTest;/Feature/GraphQL/TestMeasurementTypeTest")
+set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES DEPENDS "/Feature/GraphQL/TestTypeTest;/Feature/GraphQL/TestMeasurementTypeTest;/Feature/GraphQL/NoteTypeTest")
 
 add_laravel_test(/Feature/TestSchemaMigration)
 set_tests_properties(/Feature/TestSchemaMigration PROPERTIES DEPENDS /Feature/PurgeUnusedProjectsCommand)
