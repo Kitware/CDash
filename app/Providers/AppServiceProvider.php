@@ -36,11 +36,6 @@ class AppServiceProvider extends ServiceProvider
             Schema::defaultStringLength(191);
         }
 
-        // Serve content over https in production mode.
-        if (config('app.env') === 'production') {
-            URL::forceScheme('https');
-        }
-
         URL::forceRootUrl(Config::get('app.url'));
 
         Model::preventSilentlyDiscardingAttributes(!$this->app->isProduction());
