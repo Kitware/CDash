@@ -109,15 +109,11 @@ export default {
               mostRecentBuild {
                 startTime
               }
-              builds(filters: {
+              buildCount(filters: {
                 gt: {
                   submissionTime: "${DateTime.now().minus({days: 7}).startOf('second').toISO({suppressMilliseconds: true})}"
                 }
-              }) {
-                pageInfo {
-                  total
-                }
-              }
+              })
             }
           }
           pageInfo {
@@ -150,9 +146,9 @@ export default {
   methods: {
     formatProjectResults: function (project_edges) {
       return project_edges
-        .filter((project) => this.show_all ? true : project.node.builds.pageInfo.total > 0)
+        .filter((project) => this.show_all ? true : project.node.buildCount > 0)
         .map((project) => {
-          const num_builds_in_last_week = project.node.builds.pageInfo.total;
+          const num_builds_in_last_week = project.node.buildCount;
 
           let activity_level;
           if (num_builds_in_last_week >= 70) {

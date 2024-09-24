@@ -1030,4 +1030,134 @@ class ProjectTypeTest extends TestCase
             ],
         ], true);
     }
+
+    public function testBuildCountFieldWithNoFilters(): void
+    {
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'submittime' => '2009-02-23 10:07:03',
+            'uuid' => Str::uuid(),
+        ]);
+        $this->projects['public1']->builds()->create([
+            'name' => 'build2',
+            'submittime' => '2010-02-23 11:07:03',
+            'uuid' => Str::uuid(),
+        ]);
+        $this->projects['public1']->builds()->create([
+            'name' => 'build3',
+            'submittime' => '2009-02-23 11:07:03',
+            'uuid' => Str::uuid(),
+        ]);
+
+        $this->projects['public2']->builds()->create([
+            'name' => 'build4',
+            'submittime' => '2009-02-23 11:07:03',
+            'uuid' => Str::uuid(),
+        ]);
+
+        $this->projects['private1']->builds()->create([
+            'name' => 'build5',
+            'submittime' => '2009-02-23 11:07:03',
+            'uuid' => Str::uuid(),
+        ]);
+
+        $this->graphQL('
+            query {
+                projects {
+                    edges {
+                        node {
+                            name
+                            buildCount
+                        }
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'buildCount' => 3,
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['public2']->name,
+                                'buildCount' => 1,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testBuildCountFieldWithFilters(): void
+    {
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'submittime' => '2009-02-23 10:07:03',
+            'uuid' => Str::uuid(),
+        ]);
+        $this->projects['public1']->builds()->create([
+            'name' => 'build2',
+            'submittime' => '2010-02-23 11:07:03',
+            'uuid' => Str::uuid(),
+        ]);
+        $this->projects['public1']->builds()->create([
+            'name' => 'build3',
+            'submittime' => '2009-02-23 11:07:03',
+            'uuid' => Str::uuid(),
+        ]);
+
+        $this->projects['public2']->builds()->create([
+            'name' => 'build4',
+            'submittime' => '2009-02-23 11:07:03',
+            'uuid' => Str::uuid(),
+        ]);
+
+        $this->projects['private1']->builds()->create([
+            'name' => 'build5',
+            'submittime' => '2009-02-23 11:07:03',
+            'uuid' => Str::uuid(),
+        ]);
+
+        $this->graphQL('
+            query {
+                projects {
+                    edges {
+                        node {
+                            name
+                            buildCount(filters: {
+                                gt: {
+                                    submissionTime: "2010-01-01T00:00:00+00:00"
+                                }
+                            })
+                        }
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'buildCount' => 1,
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['public2']->name,
+                                'buildCount' => 0,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
 }
