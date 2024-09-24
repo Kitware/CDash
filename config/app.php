@@ -188,7 +188,7 @@ return [
         /**
          * GraphQL Service Providers
          */
-        \Nuwave\Lighthouse\LighthouseServiceProvider::class,
+        App\Providers\GraphQLServiceProvider::class,
     ],
 
     /*
