@@ -43,6 +43,10 @@ trap error_handler ERR
 SCRIPT_DIR=$(dirname "$0")
 pushd "$SCRIPT_DIR" > /dev/null
 
+# This has to happen before we enable maintenance mode because maintenance mode expects these directories to exist.
+echo "Creating storage directories..."
+php artisan storage:mkdirs
+
 echo "Enabling maintenance mode..."
 php artisan down --render="maintenance" --refresh=5
 
@@ -58,9 +62,6 @@ else
       composer install --no-dev --optimize-autoloader
     fi
 fi
-
-echo "Creating storage directories..."
-php artisan storage:mkdirs
 
 echo "Waiting for database to come online..."
 until php artisan db:monitor ; do sleep 1; done
