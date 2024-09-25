@@ -55,6 +55,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
     private $Generator;
     private $PullRequest;
     private $BuildErrorFilter;
+    public static string $schema_file = "/app/Validators/Schemas/Build.xsd";
 
     public function __construct(Project $project)
     {
