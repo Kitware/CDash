@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Utils\SubmissionUtils;
+use CDash\Model\Project;
 use Illuminate\Console\Command;
 use App\Exceptions\CDashXMLValidationException;
 
@@ -45,7 +46,7 @@ class ValidateXml extends Command
             }
 
             try {
-                $xml_schema = SubmissionUtils::get_xml_type($xml_file_handle, $input_xml_file)['xml_schema'];
+                $xml_info = SubmissionUtils::get_xml_type($xml_file_handle, $input_xml_file);
             } catch (CDashXMLValidationException $e) {
                 foreach ($e->getDecodedMessage() as $error) {
                     $this->error($error);
@@ -55,8 +56,16 @@ class ValidateXml extends Command
             } finally {
                 fclose($xml_file_handle);
             }
+            $file = $xml_info['xml_type'];
+            // Create fake project object to allow usage of handlers
+            $project = new Project();
+            $project->Id=0;
 
-            if (!isset($xml_schema)) {
+            // If validation is enabled and if this file has a corresponding schema, validate it
+
+            $handler = new $xml_info['xml_handler']($project);
+ 
+            if (!isset($handler->schema_file)) {
                 $this->warn("WARNING: Skipped input file '{$input_xml_file}' as validation"
                                ." of this file format is currently not supported.");
                 $has_skipped = true;
@@ -65,7 +74,7 @@ class ValidateXml extends Command
 
             // run the validator and collect errors if there are any
             try {
-                SubmissionUtils::validate_xml($input_xml_file, $xml_schema);
+                $handler->validate_xml($input_xml_file);
             } catch (CDashXMLValidationException $e) {
                 foreach ($e->getDecodedMessage() as $error) {
                     $this->error($error);

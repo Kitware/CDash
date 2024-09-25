@@ -26,6 +26,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
 {
     use CommitAuthorHandlerTrait;
 
+    public string  $schema_file = "/app/Validators/Schemas/Test.xsd";
     private $StartTimeStamp;
     private $EndTimeStamp;
 
