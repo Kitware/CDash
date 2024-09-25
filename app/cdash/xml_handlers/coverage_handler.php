@@ -35,6 +35,7 @@ class CoverageHandler extends AbstractXmlHandler
     private $CoverageFile;
     private $CoverageSummaries;
     private $Label;
+    public static string $schema_file = "/app/Validators/Schemas/Coverage.xsd";
 
     /** Constructor */
     public function __construct(Project $project)

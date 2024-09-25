@@ -31,6 +31,7 @@ class ProjectHandler extends AbstractXmlHandler
     private $CurrentDependencies; // The dependencies of the current SubProject.
     private $Emails; // Email addresses associated with the current SubProject.
     private $ProjectNameMatches;
+    public static string $schema_file = "/app/Validators/Schemas/Project.xsd";
 
     /** Constructor */
     public function __construct(Project $project)

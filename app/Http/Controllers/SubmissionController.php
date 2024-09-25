@@ -6,6 +6,8 @@ use App\Jobs\ProcessSubmission;
 use App\Models\Site;
 use App\Utils\AuthTokenUtil;
 use App\Utils\UnparsedSubmissionProcessor;
+use App\Utils\SubmissionUtils;
+use App\Exceptions\XMLValidationException;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
@@ -53,6 +55,9 @@ final class SubmissionController extends AbstractProjectController
         }
     }
 
+    /**
+     * @throws XMLValidationException
+     **/
     private function submitProcess(): Response
     {
         @set_time_limit(0);
@@ -128,6 +133,41 @@ final class SubmissionController extends AbstractProjectController
         } elseif (intval($this->project->Id) < 1) {
             abort(Response::HTTP_NOT_FOUND, 'The requested project does not exist.');
         }
+
+        // Figure out what type of XML file this is.
+        $stored_filename  = "inbox/".$filename;
+        try {
+            $xml_info = SubmissionUtils::get_xml_type(fopen(Storage::path($stored_filename), 'r'), $stored_filename);
+        } catch (XMLValidationException $e) {
+            foreach ($e->getDecodedMessage() as $error) {
+                Log::error($error);
+            }
+            abort(Response::HTTP_NOT_FOUND, 'Unable to determine the Type of the submission file.');
+        }
+        $filehandle = $xml_info['file_handle'];
+        $handler_ref = $xml_info['xml_handler'];
+        $file = $xml_info['xml_type'];
+
+        // If validation is enabled and if this file has a corresponding schema, validate it
+
+        if (isset($handler_ref::$schema_file) && !file_exists(base_path().$handler_ref::$schema_file)) {
+            throw new XMLValidationException(["ERROR: Could not find schema file '{$handler_ref::$schema_file}'"
+                                                  ." to validate input file: '{$filename}'"]);
+        } else {
+            try {
+                $handler_ref::validate_xml(storage_path("app/".$stored_filename));
+            } catch (XMLValidationException $e) {
+                $errorlist = '';
+                foreach ($e->getDecodedMessage() as $error) {
+                    Log::error("Validating $filename: ".$error);
+                    $errorlist = $errorlist."\n\r".$error;
+                }
+                if ((bool) config('cdash.validate_xml_submissions') === true) {
+                    abort(400, "Xml validation failed: rejected file $filename: $errorlist");
+                }
+            }
+        }
+
 
         // Check if CTest provided us enough info to assign a buildid.
         $pendingSubmissions = new PendingSubmissions();
