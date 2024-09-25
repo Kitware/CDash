@@ -195,7 +195,7 @@ function ctest_parse($filehandle, string $filename, $projectid, $expected_md5 = 
     // If validation is enabled and if this file has a corresponding schema, validate it
     if (((bool) config('cdash.validate_xml_submissions')) === true && isset($schema_file)) {
         try {
-            SubmissionUtils::validate_xml($filename, $schema_file);
+            SubmissionUtils::validate_xml(storage_path("app/".$filename), $schema_file);
         } catch (CDashXMLValidationException $e) {
             foreach ($e->getDecodedMessage() as $error) {
                 Log::error("Validating $filename: ".$error);
