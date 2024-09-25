@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Exceptions\CDashXMLValidationException;
+use App\Exceptions\XMLValidationException;
 use App\Utils\SubmissionUtils;
-use DOMDocument;
 use Illuminate\Console\Command;
 
 class ValidateXml extends Command
@@ -46,8 +45,8 @@ class ValidateXml extends Command
             }
 
             try {
-                $xml_schema = SubmissionUtils::get_xml_type($xml_file_handle, $input_xml_file)['xml_schema'];
-            } catch (CDashXMLValidationException $e) {
+                $xml_info = SubmissionUtils::get_xml_type($xml_file_handle, $input_xml_file);
+            } catch (XMLValidationException $e) {
                 foreach ($e->getDecodedMessage() as $error) {
                     $this->error($error);
                 }
@@ -56,18 +55,21 @@ class ValidateXml extends Command
             } finally {
                 fclose($xml_file_handle);
             }
+            $file = $xml_info['xml_type'];
 
-            if (!isset($xml_schema)) {
+            // If validation is enabled and if this file has a corresponding schema, validate it
+            if (null === $xml_info['xml_handler']::$schema_file) {
                 $this->warn("WARNING: Skipped input file '{$input_xml_file}' as validation"
-                               ." of this file format is currently not supported.");
+                               ." of this file format is currently not supported. Validator was"
+                               ."{$xml_info['xml_handler']::$schema_file}");
                 $has_skipped = true;
                 continue;
             }
 
             // run the validator and collect errors if there are any
             try {
-                SubmissionUtils::validate_xml($input_xml_file, $xml_schema);
-            } catch (CDashXMLValidationException $e) {
+                $xml_info['xml_handler']::validate_xml($input_xml_file);
+            } catch (XMLValidationException $e) {
                 foreach ($e->getDecodedMessage() as $error) {
                     $this->error($error);
                 }

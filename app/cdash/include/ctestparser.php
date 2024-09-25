@@ -24,7 +24,6 @@ use CDash\Model\Project;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-
 class CDashParseException extends RuntimeException
 {
 }
@@ -159,6 +158,9 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, ?int $bui
 }
 
 /** Main function to parse the incoming xml from ctest */
+/**
+ * @throws App\Exceptions\XMLValidationException
+ **/
 function ctest_parse($filehandle, string $filename, $projectid, $expected_md5 = '', int|null $buildid=null): AbstractSubmissionHandler|false
 {
     // Check if this is a new style PUT submission.
@@ -184,31 +186,10 @@ function ctest_parse($filehandle, string $filename, $projectid, $expected_md5 = 
     $Project->Id = $projectid;
 
     // Figure out what type of XML file this is.
-    try {
-        $xml_info = SubmissionUtils::get_xml_type($filehandle, $filename);
-    } catch (CDashXMLValidationException $e) {
-        foreach ($e->getDecodedMessage() as $error) {
-            Log::error($error);
-        }
-        return false;
-    }
+    $xml_info = SubmissionUtils::get_xml_type($filehandle, $filename);
     $filehandle = $xml_info['file_handle'];
     $handler_ref = $xml_info['xml_handler'];
     $file = $xml_info['xml_type'];
-    $schema_file = $xml_info['xml_schema'];
-
-    // If validation is enabled and if this file has a corresponding schema, validate it
-    if (((bool) config('cdash.validate_xml_submissions')) === true && isset($schema_file)) {
-        try {
-            SubmissionUtils::validate_xml($filename, $schema_file);
-        } catch (CDashXMLValidationException $e) {
-            foreach ($e->getDecodedMessage() as $error) {
-                Log::error("Validating $filename: ".$error);
-            }
-            abort(400, "Xml validation failed: rejected file $filename");
-        }
-    }
-
     $handler = isset($handler_ref) ? new $handler_ref($Project) : null;
 
     rewind($filehandle);
