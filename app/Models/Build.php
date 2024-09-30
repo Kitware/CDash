@@ -210,4 +210,12 @@ class Build extends Model
     {
         return $this->belongsToMany(BuildGroup::class, 'build2group', 'groupid', 'buildid');
     }
+
+    /**
+     * @return HasMany<BuildMeasurement>
+     */
+    public function measurements(): HasMany
+    {
+        return $this->hasMany(BuildMeasurement::class, 'buildid');
+    }
 }

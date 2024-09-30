@@ -231,6 +231,10 @@ type Build {
   project: Project! @belongsTo
 
   notes: [Note!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+
+  measurements(
+    filters: _ @filter(inputType: "BuildMeasurementFilterInput")
+  ): [BuildMeasurement!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 }
 
 input BuildFilterInput {
@@ -302,6 +306,36 @@ type TestMeasurement {
   Example: "5"
   """
   value: String!
+}
+
+
+"Build Measurement."
+type BuildMeasurement {
+  "Unique primary key."
+  id: ID!
+
+  name: String!
+
+  source: String!
+
+  type: BuildMeasurementType!
+
+  """
+  The value for this measurement.  Even though some values may be numeric, all
+  values are returned as strings.
+
+  Example: "5"
+  """
+  value: String!
+}
+
+
+input BuildMeasurementFilterInput {
+  id: ID
+  name: String
+  source: String
+  type: BuildMeasurementType
+  value: String
 }
 
 
