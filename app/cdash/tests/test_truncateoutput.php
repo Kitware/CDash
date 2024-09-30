@@ -4,6 +4,7 @@
 // relative to the top of the CDash source tree
 //
 use App\Utils\DatabaseCleanupUtils;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__).'/cdash_test_case.php';
@@ -104,6 +105,7 @@ class TruncateOutputTestCase extends KWWebTestCase
     {
         if ($this->BuildId > 0) {
             DatabaseCleanupUtils::removeBuild($this->BuildId);
+            Artisan::call('db:cleanup');
             $this->BuildId = 0;
         }
     }

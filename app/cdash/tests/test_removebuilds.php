@@ -28,6 +28,7 @@ use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\Image;
 use CDash\Model\Label;
 use CDash\Model\UploadFile;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
 class RemoveBuildsTestCase extends KWWebTestCase
@@ -435,6 +436,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
 
         // Remove the build.
         DatabaseCleanupUtils::removeBuild($build->Id);
+        Artisan::call('db:cleanup');
 
         // Check that everything was deleted properly.
         $this->verify('build', 'id', '=', $build->Id, 0, true);

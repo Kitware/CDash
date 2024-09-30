@@ -33,5 +33,6 @@ class CleanupDatabase implements ShouldQueue
         }
 
         Artisan::call('build:remove all');
+        Artisan::call('db:cleanup');
     }
 }
