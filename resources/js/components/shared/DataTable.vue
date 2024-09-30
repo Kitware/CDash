@@ -60,7 +60,11 @@
             >
               {{ row[column.name].text }}
             </a>
-            <!-- If this is a text value, just display it. -->
+            <!-- If there's a text attribute, display only the text. -->
+            <template v-else-if="Object.hasOwn(row[column.name], 'text')">
+              {{ row[column.name].text }}
+            </template>
+            <!-- If this is a pure text value, just display it. -->
             <template v-else>
               {{ row[column.name] }}
             </template>
