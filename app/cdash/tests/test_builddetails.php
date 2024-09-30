@@ -3,6 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
@@ -41,7 +42,7 @@ class BuildDetailsTestCase extends KWWebTestCase
     public function __destruct()
     {
         foreach ($this->builds as $build) {
-            remove_build($build['id']);
+            DatabaseCleanupUtils::removeBuild($build['id']);
         }
     }
 
@@ -125,7 +126,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         $this->assertEqual($actualResponse->numNotRun, $expectedResponse->numNotRun);
         $this->assertEqual($actualResponse->numTimeFailed, $expectedResponse->numTimeFailed);
 
-        remove_build($buildId->id);
+        DatabaseCleanupUtils::removeBuild($buildId->id);
     }
 
     public function testViewTestReturnsProperFormatForParentBuilds()
@@ -147,6 +148,6 @@ class BuildDetailsTestCase extends KWWebTestCase
             $this->assertTrue($test->subprojectname == 'some-subproject');
         }
 
-        remove_build($buildId->id);
+        DatabaseCleanupUtils::removeBuild($buildId->id);
     }
 }

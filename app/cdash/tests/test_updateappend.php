@@ -5,7 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
+use App\Utils\DatabaseCleanupUtils;
 
 class UppdateAppendTestCase extends KWWebTestCase
 {
@@ -46,7 +46,7 @@ class UppdateAppendTestCase extends KWWebTestCase
 
         if (count($buildids) != 1) {
             foreach ($buildids as $id) {
-                remove_build($id);
+                DatabaseCleanupUtils::removeBuild($id);
             }
             $this->fail('Expected 1 build, found ' . count($buildids));
             return 1;
@@ -114,7 +114,7 @@ class UppdateAppendTestCase extends KWWebTestCase
         }
 
         // Delete the build
-        remove_build($buildid);
+        DatabaseCleanupUtils::removeBuild($buildid);
 
         if ($success) {
             $this->pass('Test passed');

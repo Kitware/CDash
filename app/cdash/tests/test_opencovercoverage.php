@@ -5,7 +5,7 @@
 //
 require_once(dirname(__FILE__).'/cdash_test_case.php');
 
-
+use App\Utils\DatabaseCleanupUtils;
 
 class OpenCoverCoverageTestCase extends KWWebTestCase
 {
@@ -17,7 +17,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
     }
     public function tearDown()
     {
-        remove_build($this->buildId);
+        DatabaseCleanupUtils::removeBuild($this->buildId);
     }
     public function testOpenCoverCoverage()
     {

@@ -1,6 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Project;
 use CDash\Database;
 
@@ -78,8 +79,8 @@ class BazelJSONTestCase extends KWWebTestCase
         $this->assertTrue($testdiff_stmt->fetchColumn() === false);
 
         // Cleanup.
-        remove_build($buildid);
-        remove_build($buildid2);
+        DatabaseCleanupUtils::removeBuild($buildid);
+        DatabaseCleanupUtils::removeBuild($buildid2);
     }
 
     public function testFilterBazelJSON()
@@ -130,7 +131,7 @@ class BazelJSONTestCase extends KWWebTestCase
         }
 
         // Cleanup.
-        remove_build($buildid);
+        DatabaseCleanupUtils::removeBuild($buildid);
         $project->Delete();
     }
 
@@ -297,7 +298,7 @@ class BazelJSONTestCase extends KWWebTestCase
         }
 
         // Cleanup.
-        remove_build($buildid);
+        DatabaseCleanupUtils::removeBuild($buildid);
     }
 
     public function testBazelTimeout()
@@ -353,7 +354,7 @@ class BazelJSONTestCase extends KWWebTestCase
         }
 
         // Cleanup.
-        remove_build($buildid);
+        DatabaseCleanupUtils::removeBuild($buildid);
     }
 
     public function testBazelConfigure()
@@ -389,7 +390,7 @@ class BazelJSONTestCase extends KWWebTestCase
         }
 
         // Cleanup.
-        remove_build($buildid);
+        DatabaseCleanupUtils::removeBuild($buildid);
     }
 
     public function testBazelDuplicateTests()
@@ -425,7 +426,7 @@ class BazelJSONTestCase extends KWWebTestCase
         }
 
         // Cleanup.
-        remove_build($buildid);
+        DatabaseCleanupUtils::removeBuild($buildid);
     }
 
     public function testMultipleLineError()
@@ -470,7 +471,7 @@ class BazelJSONTestCase extends KWWebTestCase
         }
 
         // Cleanup.
-        remove_build($buildid);
+        DatabaseCleanupUtils::removeBuild($buildid);
     }
 
     public function testShardTest()
@@ -526,7 +527,7 @@ class BazelJSONTestCase extends KWWebTestCase
         }
 
         // Cleanup.
-        remove_build($buildid);
+        DatabaseCleanupUtils::removeBuild($buildid);
     }
 
     public function testShardTestFailures()
@@ -622,7 +623,7 @@ class BazelJSONTestCase extends KWWebTestCase
         }
 
         // Cleanup.
-        remove_build($buildid);
+        DatabaseCleanupUtils::removeBuild($buildid);
     }
 
     public function testShardTestTimeout()
@@ -709,7 +710,7 @@ class BazelJSONTestCase extends KWWebTestCase
         }
 
         // Cleanup.
-        remove_build($buildid);
+        DatabaseCleanupUtils::removeBuild($buildid);
     }
 
     private function submit_data($project_name, $upload_type, $md5, $file_path,
