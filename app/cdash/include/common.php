@@ -689,14 +689,19 @@ function remove_build($buildid)
 }
 
 /**
- * Call remove_build() in batches of 100.
+ * Call remove_build() in batches.
  */
 function remove_build_chunked($buildid): void
 {
     if (!is_array($buildid)) {
         remove_build($buildid);
     }
-    foreach (array_chunk($buildid, 100) as $chunk) {
+
+    $batch_size = (int) config('cdash.autoremove_builds_batch_size');
+    if ($batch_size < 1) {
+        $batch_size = 1;
+    }
+    foreach (array_chunk($buildid, $batch_size) as $chunk) {
         remove_build($chunk);
     }
 }
