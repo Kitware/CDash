@@ -16,6 +16,14 @@
             expand: true,
           },
           {
+            name: 'time',
+            displayName: 'Time',
+          },
+          {
+            name: 'details',
+            displayName: 'Details',
+          },
+          {
             name: 'status',
             displayName: 'Status',
           },
@@ -67,6 +75,8 @@ export default {
                   id
                   name
                   status
+                  details
+                  runningTime
                 }
               }
               pageInfo {
@@ -117,6 +127,11 @@ export default {
             text: edge.node.name,
             href: `${this.$baseURL}/tests/${edge.node.id}`,
           },
+          time: {
+            value: edge.node.runningTime,
+            text: `${edge.node.runningTime}s`,
+          },
+          details: edge.node.details,
           status: {
             // TODO: An integer value could be provided to provide better sorting in the future
             value: edge.node.status,
