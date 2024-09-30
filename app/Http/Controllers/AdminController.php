@@ -331,7 +331,6 @@ final class AdminController extends AbstractController
         @$ComputeTestTiming = $_POST['ComputeTestTiming'];
         @$ComputeUpdateStatistics = $_POST['ComputeUpdateStatistics'];
 
-        @$Cleanup = $_POST['Cleanup'];
         @$Dependencies = $_POST['Dependencies'];
         @$Audit = $_POST['Audit'];
         @$ClearAudit = $_POST['Clear'];
@@ -375,14 +374,6 @@ final class AdminController extends AbstractController
 
         if ($ClearAudit && file_exists($configFile)) {
             unlink($configFile);
-        }
-
-
-        /* Cleanup the database */
-        if ($Cleanup) {
-            Artisan::call('db:cleanup');
-
-            $xml .= add_XML_value('alert', 'Database cleanup complete.');
         }
 
         /* Check the builds with wrong date */
