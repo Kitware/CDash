@@ -55,6 +55,7 @@ RUN apt-get update && \
         pdo_mysql \
         pdo_pgsql \
         xsl \
+        opcache \
         && \
     wget -q -O checksum https://composer.github.io/installer.sha384sum && \
     wget -q -O composer-setup.php https://getcomposer.org/installer && \
@@ -171,7 +172,8 @@ RUN dnf install -y \
       php-ldap \
       php-mbstring \
       php-mysqlnd \
-      php-pdo
+      php-pdo \
+      php-opcache
 
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
       dnf install -y \
