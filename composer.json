@@ -54,7 +54,7 @@
     "friendsofphp/php-cs-fixer": "3.64.0",
     "larastan/larastan": "^2.7",
     "mockery/mockery": "1.6.12",
-    "phpstan/extension-installer": "1.4.2",
+    "phpstan/extension-installer": "1.4.3",
     "phpstan/phpstan": "1.12.1",
     "phpstan/phpstan-deprecation-rules": "1.2.0",
     "phpstan/phpstan-mockery": "1.1.3",
