@@ -106,7 +106,7 @@ function generate_XSLT($xml, string $pageName, bool $return_html = false): strin
 function XMLStrFormat(string $str): string
 {
     if (mb_detect_encoding($str, 'UTF-8', true) === false) {
-        $str = utf8_encode($str);
+        $str = mb_convert_encoding($str, 'UTF-8');
     }
     $str = str_replace('&', '&amp;', $str);
     $str = str_replace('<', '&lt;', $str);
@@ -1137,7 +1137,7 @@ function cast_data_for_JSON($value)
         if (function_exists('mb_detect_encoding') &&
             mb_detect_encoding($value, 'UTF-8', true) === false
         ) {
-            $value = utf8_encode($value);
+            $value = mb_convert_encoding($value, 'UTF-8');
         }
     }
     return $value;
