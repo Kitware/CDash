@@ -204,7 +204,7 @@ class ProcessSubmission implements ShouldQueue
         }
 
         // Parse the XML file
-        $handler = ctest_parse($filehandle, $projectid, $expected_md5);
+        $handler = ctest_parse($filehandle, $projectid, $expected_md5, $buildid);
         fclose($filehandle);
         unset($filehandle);
 
