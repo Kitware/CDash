@@ -22,7 +22,7 @@ class CleanupDatabase extends Command
      */
     public function handle(): void
     {
-        self::delete_unused_rows('banner', 'projectid', 'project');
+        DB::delete("DELETE FROM banner WHERE projectid != 0 AND projectid NOT IN (SELECT id FROM project)");
         self::delete_unused_rows('build', 'projectid', 'project');
         self::delete_unused_rows('dailyupdate', 'projectid', 'project');
 
