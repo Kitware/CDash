@@ -76,7 +76,7 @@ final class CoverageController extends AbstractBuildController
         /** @var User $User */
         $User = Auth::user();
         $Project->Id = $projectid;
-        if (!Gate::allows('edit-project', $Project)) {
+        if ($projectid > 0 && !Gate::allows('edit-project', $Project)) {
             return $this->view('cdash')
                 ->with('xsl', true)
                 ->with('xsl_content', "You don't have the permissions to access this page");
