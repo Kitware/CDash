@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
  * Removes builds that have expired according to per-project and
  * per-buildgroup settings.
  */
-class CleanupDatabase implements ShouldQueue
+class PruneBuilds implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -33,6 +33,5 @@ class CleanupDatabase implements ShouldQueue
         }
 
         Artisan::call('build:remove all');
-        Artisan::call('db:cleanup');
     }
 }
