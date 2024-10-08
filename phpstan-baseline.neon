@@ -47,6 +47,11 @@ parameters:
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
+			message: "#^Variable property access on mixed\\.$#"
+			count: 1
+			path: app/Console/Commands/CleanupDatabase.php
+
+		-
 			message: "#^Method App\\\\Console\\\\Commands\\\\QueueSubmissions\\:\\:handle\\(\\) should return mixed but return statement is missing\\.$#"
 			count: 1
 			path: app/Console/Commands/QueueSubmissions.php
@@ -3027,6 +3032,11 @@ parameters:
 			path: app/Utils/AuthTokenUtil.php
 
 		-
+			message: "#^Argument of an invalid type array\\<int\\>\\|int supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Utils/DatabaseCleanupUtils.php
@@ -3038,11 +3048,6 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:orderBy\\(\\)\\.$#"
-			count: 1
-			path: app/Utils/DatabaseCleanupUtils.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function array_chunk expects array, array\\<int\\>\\|int given\\.$#"
 			count: 1
 			path: app/Utils/DatabaseCleanupUtils.php
 
