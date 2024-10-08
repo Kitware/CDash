@@ -27,19 +27,19 @@ class Kernel extends ConsoleKernel
             ->everySixHours()
             ->sendOutputTo($output_filename);
 
-        $schedule->job(new PruneAuthTokens())
+        $schedule->job(new PruneAuthTokens(), 'low')
             ->hourly()
             ->withoutOverlapping();
 
-        $schedule->job(new PruneBuilds())
+        $schedule->job(new PruneBuilds(), 'low')
             ->hourly()
             ->withoutOverlapping();
 
-        $schedule->job(new PruneDatabase())
+        $schedule->job(new PruneDatabase(), 'low')
             ->dailyAt('03:00')
             ->withoutOverlapping();
 
-        $schedule->job(new PruneJobs())
+        $schedule->job(new PruneJobs(), 'low')
             ->hourly()
             ->withoutOverlapping();
 
