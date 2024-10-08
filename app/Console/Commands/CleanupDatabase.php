@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use CDash\Database;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +16,7 @@ class CleanupDatabase extends Command
     /**
      * The console command description.
      */
-    protected $description = 'Delete orphaned records from the CDash database';
+    protected $description = 'Prune unused records from the CDash database';
 
     /**
      * Execute the console command.
@@ -44,9 +45,26 @@ class CleanupDatabase extends Command
         self::delete_unused_rows('image', 'id', 'test2image', 'imgid');
     }
 
-    /** Delete unused rows */
+    /** Delete unused rows in batches */
     private static function delete_unused_rows(string $table, string $field, string $targettable, string $selectfield = 'id'): void
     {
-        DB::delete("DELETE FROM $table WHERE $field NOT IN (SELECT $selectfield AS $field FROM $targettable)");
+        $done = false;
+        while (!$done) {
+            $records_to_delete = DB::select(
+                "SELECT $field FROM $table
+                WHERE $field NOT IN
+                    (SELECT $selectfield AS $field FROM $targettable) LIMIT 10");
+            $ids_to_delete = [];
+            foreach ($records_to_delete as $record_to_delete) {
+                $ids_to_delete[] = intval($record_to_delete->$field);
+            }
+
+            if (count($ids_to_delete) === 0) {
+                $done = true;
+            } else {
+                $prepared_array = Database::getInstance()->createPreparedArray(count($ids_to_delete));
+                DB::delete("DELETE FROM $table WHERE $field IN $prepared_array", $ids_to_delete);
+            }
+        }
     }
 }
