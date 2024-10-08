@@ -48,7 +48,6 @@ return [
     ],
     'active_project_days' => env('ACTIVE_PROJECT_DAYS', 7),
     'autoremove_builds' => env('AUTOREMOVE_BUILDS', true),
-    'autoremove_builds_batch_size' => env('AUTOREMOVE_BUILDS_BATCH_SIZE', 10),
     'backup_timeframe' => env('BACKUP_TIMEFRAME', 48),
     'builds_per_project' => env('BUILDS_PER_PROJECT', 0),
     'coverage_dir' => env('CDASH_COVERAGE_DIR', '/cdash/_build/xdebugCoverage'),

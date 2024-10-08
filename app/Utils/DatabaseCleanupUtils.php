@@ -150,21 +150,16 @@ class DatabaseCleanupUtils
     }
 
     /**
-     * Call removeBuild() in batches.
-     * @param array<int>|int $buildid
+     * Call removeBuild() one at a time.
+     * @param array<int>|int $buildids
      */
-    public static function removeBuildChunked($buildid): void
+    public static function removeBuildChunked($buildids): void
     {
-        if (!is_array($buildid)) {
+        if (!is_array($buildids)) {
+            self::removeBuild($buildids);
+        }
+        foreach ($buildids as $buildid) {
             self::removeBuild($buildid);
-        }
-
-        $batch_size = (int) config('cdash.autoremove_builds_batch_size');
-        if ($batch_size < 1) {
-            $batch_size = 1;
-        }
-        foreach (array_chunk($buildid, $batch_size) as $chunk) {
-            self::removeBuild($chunk);
             usleep(1);
         }
     }
