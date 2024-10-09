@@ -35,21 +35,21 @@
       <!-- Value field -->
       <template v-if="selectedType.kind === 'SCALAR'">
         <input
-          v-if="selectedType.name === 'ID' || selectedType.name === 'Int' || selectedType.name === 'Float'"
+          v-if="typeCategory(selectedType.name) === 'NUMBER'"
           v-model="selectedValue"
           type="number"
           class="tw-input tw-input-xs tw-input-bordered tw-shrink"
         >
         <input
-          v-else-if="selectedType.name === 'String'"
+          v-else-if="typeCategory(selectedType.name) === 'STRING'"
           v-model="selectedValue"
           type="text"
           class="tw-input tw-input-xs tw-input-bordered tw-w-full"
         >
-        <span v-else-if="selectedType.name === 'Boolean'">
+        <span v-else-if="typeCategory(selectedType.name) === 'BOOLEAN'">
           <!-- TODO: Implement -->
         </span>
-        <span v-else-if="selectedType.name === 'DateTimeTz'">
+        <span v-else-if="typeCategory(selectedType.name) === 'DATE'">
           <!-- TODO: Implement -->
         </span>
         <span v-else>ERROR: Unknown type</span>
@@ -237,6 +237,32 @@ export default {
           [this.selectedField]: this.selectedValue,
         },
       });
+    },
+
+    /**
+     * Accepts a GraphQL type and returns the type of field to display
+     *
+     * Valid return values: STRING, NUMBER, DATE, BOOLEAN
+     */
+    typeCategory(typename) {
+      switch (typename) {
+      case 'ID':
+        return 'NUMBER';
+      case 'Integer':
+        return 'NUMBER';
+      case 'Float':
+        return 'NUMBER';
+      case 'NonNegativeSeconds':
+        return 'NUMBER';
+      case 'String':
+        return 'STRING';
+      case 'DateTimeTz':
+        return 'DATE';
+      case 'Boolean':
+        return 'BOOLEAN';
+      default:
+        return 'UNKNOWN';
+      }
     },
   },
 };
