@@ -225,7 +225,8 @@ export default {
      * Converts a GraphQL field to a human-readable equivalent
      */
     humanReadableField(field) {
-      return field;
+      const result = field.replace(/([A-Z])/g, ' $1');
+      return result.charAt(0).toUpperCase() + result.slice(1);
     },
 
     /**
