@@ -125,6 +125,35 @@ describe('Data table component tests', () => {
     cy.get('@table-row-2').eq(1).should('contain', 'Data value 5');
   });
 
+  it('Handles text with value without link', () => {
+    cy.mount(DataTable, {
+      props: {
+        columns: [
+          {
+            displayName: 'Test',
+            name: 'test',
+          },
+        ],
+        rows: [
+          {
+            test: {
+              text: 'text1',
+              value: 'value1',
+            },
+          },
+        ],
+        sortable: false,
+      },
+    });
+
+    cy.get('[data-cy="data-table"]')
+      .find('[data-cy="data-table-row"]')
+      .first()
+      .find('[data-cy="data-table-cell"]')
+      .first()
+      .should('have.text', 'text1');
+  });
+
   it('Handles links', () => {
     cy.mount(DataTable, {
       props: {

@@ -1,6 +1,10 @@
 "A datetime and timezone string in ISO 8601 format `Y-m-dTH:i:sP`, e.g. `2020-04-20T13:53:12+02:00`."
 scalar DateTimeTz @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTimeTz")
 
+# It would be better to replace this with a "Duration" scalar type in the future.
+"A non-negative decimal number of seconds."
+scalar NonNegativeSeconds @scalar(class: "App\\GraphQL\\Scalars\\NonNegativeSeconds")
+
 
 "Indicates what fields are available at the top level of a query operation."
 type Query {
@@ -257,6 +261,10 @@ type Test {
 
   status: TestStatus!
 
+  runningTime: NonNegativeSeconds! @rename(attribute: "time")
+
+  details: String!
+
   """
   Test measurements for this test, sorted in descending order so newer results
   appear first when using paginated queries.
@@ -280,6 +288,8 @@ input TestFilterInput {
   id: ID
   name: String @rename(attribute: "testname")
   status: TestStatus
+  runningTime: NonNegativeSeconds @rename(attribute: "time")
+  details: String
 }
 
 

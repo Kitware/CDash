@@ -56,6 +56,8 @@ class TestTypeTest extends TestCase
         ])->tests()->create([
             'testname' => 'test1',
             'status' => 'failed',
+            'details' => 'details text',
+            'time' => 1.2,
             'outputid' => $this->test_output->id,
         ]);
 
@@ -71,6 +73,8 @@ class TestTypeTest extends TestCase
                                         node {
                                             name
                                             status
+                                            details
+                                            runningTime
                                         }
                                     }
                                 }
@@ -95,6 +99,8 @@ class TestTypeTest extends TestCase
                                                 'node' => [
                                                     'name' => 'test1',
                                                     'status' => 'FAILED',
+                                                    'details' => 'details text',
+                                                    'runningTime' => 1.2,
                                                 ],
                                             ],
                                         ],
