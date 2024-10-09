@@ -12,7 +12,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('testmeasurement', function (Blueprint $table) {
-            $table->unsignedInteger('testid')
+            $table->foreignId('testid')
                 ->nullable(); // Temporarily make the column nullable
         });
 
@@ -45,7 +45,7 @@ return new class extends Migration {
         ');
 
         Schema::table('testmeasurement', function (Blueprint $table) {
-            $table->unsignedInteger('testid')
+            $table->foreignId('testid')
                 ->nullable(false) // Add a not-null constraint
                 ->index()
                 ->change();
@@ -60,7 +60,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('testmeasurement', function (Blueprint $table) {
-            $table->unsignedInteger('testid')
+            $table->foreignId('testid')
                 ->nullable()
                 ->change();
 
