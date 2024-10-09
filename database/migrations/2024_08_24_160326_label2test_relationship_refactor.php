@@ -19,22 +19,35 @@ return new class extends Migration {
         });
 
         if (config('database.default') === 'pgsql') {
-            DB::update('
-                UPDATE label2test
-                SET testid = build2test.id
-                FROM build2test
-                WHERE
-                    build2test.buildid = label2test.buildid
-                    AND build2test.outputid = label2test.outputid
-            ');
+            $count = (int) DB::select('SELECT count(1) AS c FROM build')[0]->c;
+
+            // Execute at most 10k batches of buildwise updates
+            for ($i = 0; $i < ceil($count / 10000); $i++) {
+                DB::update('
+                    UPDATE label2test
+                    SET testid = build2test.id
+                    FROM build2test
+                    WHERE
+                        build2test.buildid = label2test.buildid
+                        AND build2test.outputid = label2test.outputid
+                        AND label2test.testid IS NULL
+                        AND build2test.buildid % ? = 0
+                ', [$i]);
+            }
         } else {
-            DB::update('
-                UPDATE label2test, build2test
-                SET label2test.testid = build2test.id
-                WHERE
-                    build2test.buildid = label2test.buildid
-                    AND build2test.outputid = label2test.outputid
-            ');
+            // MySQL is a bit more finicky about large transactions, so update in batches of 100
+            $rows_changed = 1;
+            while ($rows_changed > 0) {
+                $rows_changed = DB::update('
+                    UPDATE label2test, build2test
+                    SET label2test.testid = build2test.id
+                    WHERE
+                        build2test.buildid = label2test.buildid
+                        AND build2test.outputid = label2test.outputid
+                        AND label2test.testid IS NULL
+                    LIMIT 100
+                ');
+            }
         }
 
         $rows_deleted = DB::delete('DELETE FROM label2test WHERE testid IS NULL');
