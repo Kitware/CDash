@@ -202,6 +202,11 @@ parameters:
 			path: app/Http/Controllers/AbstractController.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Session\\\\Store\\:\\:put\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/AbstractController.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\AbstractController\\:\\:getCDashVersion\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: app/Http/Controllers/AbstractController.php
@@ -2525,7 +2530,7 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			message: "#^Strict comparison using \\=\\=\\= between mixed and 'subscribedtoproject' will always evaluate to false\\.$#"
+			message: "#^Strict comparison using \\=\\=\\= between mixed~'subscribedtoproject' and 'subscribedtoproject' will always evaluate to false\\.$#"
 			count: 1
 			path: app/Http/Controllers/UserController.php
 
@@ -4372,22 +4377,22 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: "#^Parameter \\#1 \\$handle of function curl_close expects CurlHandle, CurlHandle\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$handle of function curl_close expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: "#^Parameter \\#1 \\$handle of function curl_error expects CurlHandle, CurlHandle\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$handle of function curl_error expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: "#^Parameter \\#1 \\$handle of function curl_exec expects CurlHandle, CurlHandle\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$handle of function curl_exec expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: "#^Parameter \\#1 \\$handle of function curl_setopt expects CurlHandle, CurlHandle\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$handle of function curl_setopt expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
 			count: 7
 			path: app/Utils/RepositoryUtils.php
 
@@ -9597,6 +9602,21 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
+			message: "#^Parameter \\#1 \\$handle of function curl_close expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_exec expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_setopt expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
+			count: 6
+			path: app/cdash/app/Model/Project.php
+
+		-
 			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, \\(float\\|int\\) given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -12994,6 +13014,21 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			message: "#^Parameter \\#1 \\$handle of function curl_close expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_exec expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_setopt expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
+			count: 2
+			path: app/cdash/include/common.php
+
+		-
 			message: "#^Parameter \\#1 \\$haystack of function stripos expects string, float\\|int\\|string given\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -13516,7 +13551,7 @@ parameters:
 			path: app/cdash/include/dailyupdates.php
 
 		-
-			message: "#^Offset 'comment' might not exist on array\\{\\}\\|array\\{author\\?\\: string, comment\\?\\: string, directory\\?\\: string, email\\?\\: string, filename\\?\\: string, priorrevision\\?\\: '', revision\\?\\: numeric\\-string, time\\?\\: string\\}\\.$#"
+			message: "#^Offset 'comment' might not exist on array\\{\\}\\|array\\{author\\?\\: string, comment\\?\\: string, directory\\?\\: string, email\\?\\: string, filename\\?\\: mixed, priorrevision\\?\\: '', revision\\?\\: numeric\\-string, time\\?\\: string\\}\\.$#"
 			count: 1
 			path: app/cdash/include/dailyupdates.php
 
@@ -13526,12 +13561,12 @@ parameters:
 			path: app/cdash/include/dailyupdates.php
 
 		-
-			message: "#^Offset 'revision' might not exist on array\\{author\\?\\: string, comment\\?\\: string, directory\\: string, email\\?\\: string, filename\\: non\\-empty\\-string, priorrevision\\?\\: '', revision\\?\\: string, time\\?\\: string\\}\\.$#"
+			message: "#^Offset 'revision' might not exist on array\\{author\\?\\: string, comment\\?\\: string, directory\\: string, email\\?\\: string, filename\\: mixed, priorrevision\\?\\: '', revision\\?\\: numeric\\-string, time\\?\\: string\\}\\.$#"
 			count: 1
 			path: app/cdash/include/dailyupdates.php
 
 		-
-			message: "#^Offset 'revision' might not exist on array\\{author\\?\\: string, comment\\?\\: string, directory\\: string, email\\?\\: string, filename\\: string, priorrevision\\?\\: '', revision\\?\\: numeric\\-string, time\\?\\: string\\}\\.$#"
+			message: "#^Offset 'revision' might not exist on array\\{author\\?\\: string, comment\\?\\: string, directory\\: string, email\\?\\: string, filename\\: non\\-empty\\-string, priorrevision\\?\\: '', revision\\?\\: string, time\\?\\: string\\}\\.$#"
 			count: 1
 			path: app/cdash/include/dailyupdates.php
 
@@ -14194,7 +14229,7 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 6
+			count: 2
 			path: app/cdash/include/sendemail.php
 
 		-
@@ -18617,22 +18652,22 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Parameter \\#1 \\$handle of function curl_close expects CurlHandle, CurlHandle\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$handle of function curl_close expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Parameter \\#1 \\$handle of function curl_exec expects CurlHandle, CurlHandle\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$handle of function curl_exec expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Parameter \\#1 \\$handle of function curl_getinfo expects CurlHandle, CurlHandle\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$handle of function curl_getinfo expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Parameter \\#1 \\$handle of function curl_setopt expects CurlHandle, CurlHandle\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$handle of function curl_setopt expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
 			count: 7
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -19277,6 +19312,21 @@ parameters:
 			path: app/cdash/tests/test_authtoken.php
 
 		-
+			message: "#^Parameter \\#1 \\$handle of function curl_close expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
+			count: 1
+			path: app/cdash/tests/test_authtoken.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_exec expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
+			count: 1
+			path: app/cdash/tests/test_authtoken.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_setopt expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
+			count: 5
+			path: app/cdash/tests/test_authtoken.php
+
+		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool\\|string given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
@@ -19605,6 +19655,21 @@ parameters:
 		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 1
+			path: app/cdash/tests/test_branchcoverage.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_close expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
+			count: 1
+			path: app/cdash/tests/test_branchcoverage.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_exec expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
+			count: 1
+			path: app/cdash/tests/test_branchcoverage.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_setopt expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
+			count: 5
 			path: app/cdash/tests/test_branchcoverage.php
 
 		-
