@@ -350,8 +350,11 @@ set_tests_properties(uploadfile PROPERTIES DEPENDS projectxmlsequence)
 add_php_test(actualbranchcoverage)
 set_tests_properties(actualbranchcoverage PROPERTIES DEPENDS uploadfile)
 
+add_php_test(unparsedsubmissionshonorbuildid)
+set_tests_properties(unparsedsubmissionshonorbuildid PROPERTIES DEPENDS actualbranchcoverage)
+
 add_php_test(multicoverage)
-set_tests_properties(multicoverage PROPERTIES DEPENDS actualbranchcoverage)
+set_tests_properties(multicoverage PROPERTIES DEPENDS unparsedsubmissionshonorbuildid)
 
 add_php_test(javajsoncoverage)
 set_tests_properties(javajsoncoverage PROPERTIES DEPENDS multicoverage)
