@@ -4,9 +4,10 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/ctestparser.php';
 
 
+use App\Models\Site;
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
-use App\Models\Site;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 
@@ -106,6 +107,6 @@ class DoneHandlerTestCase extends KWWebTestCase
         $this->assertTrue(strpos($contents, "Done retries=\"5\"") !== false);
 
         unlink($tmpfname);
-        remove_build($build->Id);
+        DatabaseCleanupUtils::removeBuild($build->Id);
     }
 }

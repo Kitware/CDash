@@ -5,9 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
-
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
@@ -90,7 +88,7 @@ class BuildConfigureTestCase extends KWWebTestCase
             "SELECT id FROM build WHERE name = 'configure_warning_diff'");
         $this->PDO->execute($stmt);
         while ($row = $stmt->fetch()) {
-            remove_build($row['id']);
+            DatabaseCleanupUtils::removeBuild($row['id']);
         }
 
         // Make two consecutive builds.

@@ -17,6 +17,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Database;
 use App\Models\User;
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\UserProject;
 
 class UpdateOnlyUserStatsTestCase extends KWWebTestCase
@@ -162,7 +163,7 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
             "SELECT id FROM build WHERE name='GithubUserStats'");
         $stmt->execute();
         while ($row = $stmt->fetch()) {
-            remove_build($row['id']);
+            DatabaseCleanupUtils::removeBuild($row['id']);
         }
 
         // Delete project.

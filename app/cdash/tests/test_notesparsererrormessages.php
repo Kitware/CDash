@@ -38,12 +38,9 @@ class NotesParserErrorMessagesTestCase extends KWWebTestCase
 
         $this->submission('NotesParserErrorMessages', "{$test_dir}/NoName.xml");
         $expected = [
-            'about to query for builds to remove',
-            'removing old buildids for projectid:',
-            'removing old buildids for projectid:',
             'Note missing name for build',
         ];
-        $this->assertLogContains($expected, 5);
+        $this->assertLogContains($expected, 2);
         $this->deleteLog($this->logfilename);
 
         $this->submission('NotesParserErrorMessages', "{$test_dir}/NoText.xml");

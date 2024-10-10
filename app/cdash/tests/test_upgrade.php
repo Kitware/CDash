@@ -76,18 +76,6 @@ class UpgradeTestCase extends KWWebTestCase
        }
      */
 
-    public function testCleanup()
-    {
-        if (!$this->getMaintenancePage()) {
-            return 1;
-        }
-        set_time_limit(0);
-        if (!$this->clickSubmitByName('Cleanup')) {
-            $this->fail('clicking Cleanup returned false');
-        }
-        $this->assertText('Database cleanup complete.');
-    }
-
     public function getMaintenancePage()
     {
         $this->login();
