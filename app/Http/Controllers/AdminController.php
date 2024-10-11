@@ -326,8 +326,6 @@ final class AdminController extends AbstractController
 
         @$AssignBuildToDefaultGroups = $_POST['AssignBuildToDefaultGroups'];
         @$FixBuildBasedOnRule = $_POST['FixBuildBasedOnRule'];
-        @$DeleteBuildsWrongDate = $_POST['DeleteBuildsWrongDate'];
-        @$CheckBuildsWrongDate = $_POST['CheckBuildsWrongDate'];
         @$ComputeTestTiming = $_POST['ComputeTestTiming'];
         @$ComputeUpdateStatistics = $_POST['ComputeUpdateStatistics'];
 
@@ -374,31 +372,6 @@ final class AdminController extends AbstractController
 
         if ($ClearAudit && file_exists($configFile)) {
             unlink($configFile);
-        }
-
-        /* Check the builds with wrong date */
-        if ($CheckBuildsWrongDate) {
-            $currentdate = time() + 3600 * 24 * 3; // or 3 days away from now
-            $forwarddate = date(FMT_DATETIME, $currentdate);
-
-            $builds = pdo_query("SELECT id,name,starttime FROM build WHERE starttime<'1975-12-31 23:59:59' OR starttime>'$forwarddate'");
-            while ($builds_array = pdo_fetch_array($builds)) {
-                echo $builds_array['name'] . '-' . $builds_array['starttime'] . '<br>';
-            }
-        }
-
-        /* Delete the builds with wrong date */
-        if ($DeleteBuildsWrongDate) {
-            $currentdate = time() + 3600 * 24 * 3; // or 3 days away from now
-            $forwarddate = date(FMT_DATETIME, $currentdate);
-
-            $builds = pdo_query(
-                "SELECT id FROM build WHERE parentid IN (0, -1) AND
-          starttime<'1975-12-31 23:59:59' OR starttime>'$forwarddate'");
-            while ($builds_array = pdo_fetch_array($builds)) {
-                $buildid = $builds_array['id'];
-                DatabaseCleanupUtils::removeBuild($buildid);
-            }
         }
 
         if ($FixBuildBasedOnRule) {

@@ -36,20 +36,6 @@ class UpgradeTestCase extends KWWebTestCase
         }
     }
 
-    public function testCheckAndDeleteBuildsWrongDate()
-    {
-        if (!$this->getMaintenancePage()) {
-            return 1;
-        }
-        if (!$this->clickSubmitByName('CheckBuildsWrongDate')) {
-            $this->fail('clicking CheckBuildsWrongDate returned false');
-        }
-        if (!$this->clickSubmitByName('DeleteBuildsWrongDate')) {
-            $this->fail('clicking DeleteBuildsWrongDate returned false');
-        }
-        $this->pass('Passed');
-    }
-
     public function testComputeTestTiming()
     {
         if (!$this->getMaintenancePage()) {
