@@ -24,7 +24,6 @@ class CleanupDatabase extends Command
     public function handle(): void
     {
         DB::delete("DELETE FROM banner WHERE projectid != 0 AND projectid NOT IN (SELECT id FROM project)");
-        self::delete_unused_rows('build', 'projectid', 'project');
         self::delete_unused_rows('dailyupdate', 'projectid', 'project');
 
         self::delete_unused_rows('buildfailuredetails', 'id', 'buildfailure', 'detailsid');
