@@ -39,11 +39,14 @@ export default {
         if (document.getElementById('api-endpoint')) {
           document.getElementById('api-endpoint')?.setAttribute('href', vm.cdash.endpoint);
         }
+        if (document.getElementById('api-endpoint-container')) {
+          document.getElementById('api-endpoint-container').style.display = 'inline';
+        }
         if (document.getElementById('generation-time')) {
           document.getElementById('generation-time').textContent = vm.cdash.generationtime;
         }
         if (document.getElementById('testing-day') && vm.cdash.nightlytime !== undefined) {
-          document.getElementById('testing-day').textContent = `Current Testing Day ${vm.cdash.currentdate} | Started at ${vm.cdash.nightlytime}`;
+          document.getElementById('testing-day').textContent = `| Testing day ${vm.cdash.currentdate} started at ${vm.cdash.nightlytime}`;
         }
 
         // Let other components know that data has been loaded from the API.
