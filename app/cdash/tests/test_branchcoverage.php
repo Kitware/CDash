@@ -50,7 +50,7 @@ class BranchCoverageTestCase extends KWWebTestCase
         $this->deleteLog($this->logfilename);
     }
 
-    protected function postSubmit($token=null, $stamp='')
+    protected function postSubmit($token=null, string $stamp='')
     {
         if ($stamp === '') {
             $stamp = '20150128-1436-Experimental';

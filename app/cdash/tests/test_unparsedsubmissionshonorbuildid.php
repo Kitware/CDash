@@ -19,7 +19,7 @@ class UnparsedSubmissionsHonorBuildIdTestCase extends BranchCoverageTestCase
         $this->buildid = 0;
     }
 
-    public function testBranchCoverage()
+    public function testBranchCoverage(): void
     {
         $this->clearPriorBranchCoverageResults();
 
