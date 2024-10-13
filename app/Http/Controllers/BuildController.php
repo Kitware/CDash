@@ -13,7 +13,6 @@ use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroupRule;
-use App\Models\BuildInformation;
 use CDash\Model\BuildRelationship;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Label;
@@ -171,9 +170,9 @@ final class BuildController extends AbstractBuildController
 
         // Find the OS and compiler information
         if ($this->build->GetParentId() > 0) {
-            $buildinfo = BuildInformation::findOrNew($this->build->GetParentId());
+            $buildinfo = EloquentBuild::findOrNew($this->build->GetParentId());
         } else {
-            $buildinfo = BuildInformation::findOrNew($this->build->Id);
+            $buildinfo = EloquentBuild::findOrNew((int) $this->build->Id);
         }
         $build_response['osname'] = $buildinfo->osname;
         $build_response['osplatform'] = $buildinfo->osplatform;

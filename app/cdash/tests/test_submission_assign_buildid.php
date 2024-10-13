@@ -3,7 +3,6 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
 use CDash\Model\Build;
-use App\Models\BuildInformation;
 
 class SubmissionAssignBuildIdTestCase extends KWWebTestCase
 {
@@ -31,14 +30,12 @@ class SubmissionAssignBuildIdTestCase extends KWWebTestCase
         $this->assertEqual('2018-09-18 14:27:08', $build->EndTime);
         $this->assertEqual('ctest-3.13.0', $build->Generator);
 
-        // Make sure a buildinformation row was created too.
-        $buildinformation = BuildInformation::findOrFail((int) $buildid);
-        $this->assertEqual('Linux', $buildinformation->osname);
-        $this->assertEqual('x86_64', $buildinformation->osplatform);
-        $this->assertEqual('4.4.0', $buildinformation->osrelease);
-        $this->assertEqual('#166', $buildinformation->osversion);
-        $this->assertEqual('gcc', $buildinformation->compilername);
-        $this->assertEqual('5.5.0', $buildinformation->compilerversion);
+        $this->assertEqual('Linux', $build->OSName);
+        $this->assertEqual('x86_64', $build->OSPlatform);
+        $this->assertEqual('4.4.0', $build->OSRelease);
+        $this->assertEqual('#166', $build->OSVersion);
+        $this->assertEqual('gcc', $build->CompilerName);
+        $this->assertEqual('5.5.0', $build->CompilerVersion);
 
         remove_build($buildid);
     }

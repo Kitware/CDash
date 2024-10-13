@@ -24,7 +24,6 @@ use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildGroup;
-use App\Models\BuildInformation;
 use CDash\Model\Label;
 use App\Models\Site;
 use App\Models\SiteInformation;
@@ -37,7 +36,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
     private $StartTimeStamp;
     private $EndTimeStamp;
     private $Builds;
-    private BuildInformation $BuildInformation;
+    private array $BuildInformation;
     // Map SubProjects to Labels
     private $SubProjects;
     private $Configure;
@@ -70,7 +69,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
             $this->Site = Site::firstOrCreate(['name' => $sitename], ['name' => $sitename]);
 
             $siteInformation = new SiteInformation;
-            $this->BuildInformation = new BuildInformation();
+            $this->BuildInformation = [];
             $this->BuildName = "";
             $this->BuildStamp = "";
             $this->SubProjectName = "";
@@ -89,7 +88,26 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
                     $this->PullRequest = $value;
                 } else {
                     $siteInformation->SetValue($key, $value);
-                    $this->BuildInformation->SetValue($key, $value);
+                    switch ($key) {
+                        case 'OSNAME':
+                            $this->BuildInformation['osname'] = $value;
+                            break;
+                        case 'OSRELEASE':
+                            $this->BuildInformation['osrelease'] = $value;
+                            break;
+                        case 'OSVERSION':
+                            $this->BuildInformation['osversion'] = $value;
+                            break;
+                        case 'OSPLATFORM':
+                            $this->BuildInformation['osplatform'] = $value;
+                            break;
+                        case 'COMPILERNAME':
+                            $this->BuildInformation['compilername'] = $value;
+                            break;
+                        case 'COMPILERVERSION':
+                            $this->BuildInformation['compilerversion'] = $value;
+                            break;
+                    }
                 }
             }
 
@@ -380,7 +398,12 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
         $build->Name = $this->BuildName;
         $build->SetStamp($this->BuildStamp);
         $build->Generator = $this->Generator;
-        $build->Information = $this->BuildInformation;
+        $build->OSName = $this->BuildInformation['osname'] ?? null;
+        $build->OSRelease = $this->BuildInformation['osrelease'] ?? null;
+        $build->OSVersion = $this->BuildInformation['osversion'] ?? null;
+        $build->OSPlatform = $this->BuildInformation['osplatform'] ?? null;
+        $build->CompilerName = $this->BuildInformation['compilername'] ?? null;
+        $build->CompilerVersion = $this->BuildInformation['compilerversion'] ?? null;
         return $build;
     }
 }

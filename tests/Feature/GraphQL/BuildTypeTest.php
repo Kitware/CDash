@@ -61,6 +61,12 @@ class BuildTypeTest extends TestCase
             'testtimestatusfailed' => 8,
             'testduration' => 30,
             'uuid' => $uuid,
+            'osname' => 'Windows',
+            'osplatform' => 'x86',
+            'osrelease' => 'Vista',
+            'osversion' => '(Build 7600)',
+            'compilername' => 'abc',
+            'compilerversion' => '1.2.3',
         ]);
 
         $this->graphQL('
@@ -89,6 +95,12 @@ class BuildTypeTest extends TestCase
                                 timeStatusFailedTestsCount
                                 testDuration
                                 uuid
+                                operatingSystemName
+                                operatingSystemPlatform
+                                operatingSystemRelease
+                                operatingSystemVersion
+                                compilerName
+                                compilerVersion
                             }
                         }
                     }
@@ -123,6 +135,12 @@ class BuildTypeTest extends TestCase
                                     'timeStatusFailedTestsCount' => 8,
                                     'testDuration' => 30,
                                     'uuid' => $uuid,
+                                    'operatingSystemName' => 'Windows',
+                                    'operatingSystemPlatform' => 'x86',
+                                    'operatingSystemRelease' => 'Vista',
+                                    'operatingSystemVersion' => '(Build 7600)',
+                                    'compilerName' => 'abc',
+                                    'compilerVersion' => '1.2.3',
                                 ],
                             ],
                         ],

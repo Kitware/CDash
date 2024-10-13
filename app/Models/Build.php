@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
@@ -39,6 +38,12 @@ use Illuminate\Support\Carbon;
  * @property bool $done
  * @property string $uuid
  * @property string $changeid
+ * @property string $osname
+ * @property string $osplatform
+ * @property string $osrelease
+ * @property string $osversion
+ * @property string $compilername
+ * @property string $compilerversion
  *
  * @method static Builder betweenDates(?Carbon $starttime, ?Carbon $endtime)
  *
@@ -80,6 +85,12 @@ class Build extends Model
         'done',
         'uuid',
         'changeid',
+        'osname',
+        'osplatform',
+        'osrelease',
+        'osversion',
+        'compilername',
+        'compilerversion',
     ];
 
     protected $casts = [
@@ -103,14 +114,6 @@ class Build extends Model
         'notified' => 'boolean',
         'done' => 'boolean',
     ];
-
-    /**
-     * @return HasOne<BuildInformation>
-     */
-    public function information(): HasOne
-    {
-        return $this->hasOne(BuildInformation::class, 'buildid');
-    }
 
     /**
      * @return BelongsToMany<Note>

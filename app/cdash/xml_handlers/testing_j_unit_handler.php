@@ -17,7 +17,6 @@
 use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
 use CDash\Model\Build;
-use App\Models\BuildInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
 
@@ -74,12 +73,30 @@ class TestingJUnitHandler extends AbstractXmlHandler
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
             $siteInformation = new SiteInformation();
-            $buildInformation = new BuildInformation();
 
             // Fill in the attribute
             foreach ($attributes as $key => $value) {
                 $siteInformation->SetValue($key, $value);
-                $buildInformation->SetValue($key, $value);
+                switch ($key) {
+                    case 'OSNAME':
+                        $this->Build->OSName = $value;
+                        break;
+                    case 'OSRELEASE':
+                        $this->Build->OSRelease = $value;
+                        break;
+                    case 'OSVERSION':
+                        $this->Build->OSVersion = $value;
+                        break;
+                    case 'OSPLATFORM':
+                        $this->Build->OSPlatform = $value;
+                        break;
+                    case 'COMPILERNAME':
+                        $this->Build->CompilerName = $value;
+                        break;
+                    case 'COMPILERVERSION':
+                        $this->Build->CompilerVersion = $value;
+                        break;
+                }
             }
 
             $this->Site->mostRecentInformation()->save($siteInformation);
@@ -92,7 +109,6 @@ class TestingJUnitHandler extends AbstractXmlHandler
 
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
-            $this->Build->Information = $buildInformation;
         } elseif ($name == 'FAILURE' || $name == 'ERROR') {
             $this->TestCreator->testDetails = $attributes['TYPE'];
         } elseif ($name == 'PROPERTY' && $parent == 'PROPERTIES') {
@@ -100,16 +116,16 @@ class TestingJUnitHandler extends AbstractXmlHandler
             if ($this->HasSiteTag == false) {
                 switch ($attributes['NAME']) {
                     case 'os.name':
-                        $this->Build->Information->osname = $attributes['VALUE'];
+                        $this->Build->OSName = $attributes['VALUE'];
                         break;
                     case 'os.version':
-                        $this->Build->Information->osversion = $attributes['VALUE'];
+                        $this->Build->OSVersion = $attributes['VALUE'];
                         break;
                     case 'java.vm.name':
-                        $this->Build->Information->compilername = $attributes['VALUE'];
+                        $this->Build->CompilerName = $attributes['VALUE'];
                         break;
                     case 'java.vm.version':
-                        $this->Build->Information->compilerversion = $attributes['VALUE'];
+                        $this->Build->CompilerVersion = $attributes['VALUE'];
                         break;
                     case 'hostname':
                         if (empty($this->Site->name)) {
@@ -159,7 +175,6 @@ class TestingJUnitHandler extends AbstractXmlHandler
                     $this->Build->SiteId = $this->Site->id;
                 }
 
-                $this->Build->Information = new BuildInformation();
                 $this->Build->Name = $attributes['NAME'];
 
                 // If the TIMESTAMP attribute is not defined we take the current timestamp.

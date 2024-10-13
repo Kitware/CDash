@@ -16,7 +16,6 @@
 
 use App\Utils\SubmissionUtils;
 use CDash\Model\Build;
-use App\Models\BuildInformation;
 use CDash\Model\Label;
 use CDash\Model\Project;
 use App\Models\Site;
@@ -85,12 +84,30 @@ class UploadHandler extends AbstractXmlHandler
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
             $siteInformation = new SiteInformation();
-            $buildInformation = new BuildInformation();
 
             // Fill in the attribute
             foreach ($attributes as $key => $value) {
                 $siteInformation->SetValue($key, $value);
-                $buildInformation->SetValue($key, $value);
+                switch ($key) {
+                    case 'OSNAME':
+                        $this->Build->OSName = $value;
+                        break;
+                    case 'OSRELEASE':
+                        $this->Build->OSRelease = $value;
+                        break;
+                    case 'OSVERSION':
+                        $this->Build->OSVersion = $value;
+                        break;
+                    case 'OSPLATFORM':
+                        $this->Build->OSPlatform = $value;
+                        break;
+                    case 'COMPILERNAME':
+                        $this->Build->CompilerName = $value;
+                        break;
+                    case 'COMPILERVERSION':
+                        $this->Build->CompilerVersion = $value;
+                        break;
+                }
             }
 
             $this->Site->mostRecentInformation()->save($siteInformation);
@@ -102,7 +119,6 @@ class UploadHandler extends AbstractXmlHandler
             }
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
-            $this->Build->Information = $buildInformation;
         } elseif ($name === 'FILE') {
             $this->initializeBuild();
             $this->UploadFile = new UploadFile();

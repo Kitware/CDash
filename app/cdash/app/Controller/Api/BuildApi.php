@@ -25,6 +25,7 @@ use CDash\Model\Build;
 abstract class BuildApi extends ResultsApi
 {
     protected $project;
+    protected $build;
 
     public function __construct(Database $db, Build $build)
     {

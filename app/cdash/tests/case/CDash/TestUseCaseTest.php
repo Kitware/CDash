@@ -117,13 +117,6 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $this->assertEquals($siteInformation['TotalPhysicalMemory'], $information?->totalphysicalmemory);
         $this->assertEquals($siteInformation['LogicalProcessorsPerPhysical'], $information?->logicalprocessorsperphysical);
         $this->assertEquals($siteInformation['ProcessorClockFrequency'], $information?->processorclockfrequency);
-
-        $this->assertEquals($siteInformation['OSName'], $build->Information->osname);
-        $this->assertEquals($siteInformation['OSRelease'], $build->Information->osrelease);
-        $this->assertEquals($siteInformation['OSVersion'], $build->Information->osversion);
-        $this->assertEquals($siteInformation['OSPlatform'], $build->Information->osplatform);
-        $this->assertEquals($siteInformation['CompilerName'], $build->Information->compilername);
-        $this->assertEquals($siteInformation['CompilerVersion'], $build->Information->compilerversion);
     }
 
     public function testTestUseCaseSetsSiteProperty()

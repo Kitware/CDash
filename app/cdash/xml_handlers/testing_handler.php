@@ -14,7 +14,6 @@ use CDash\Messaging\Topic\TestFailureTopic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
-use App\Models\BuildInformation;
 use CDash\Model\Image;
 use CDash\Model\Label;
 use CDash\Model\Project;
@@ -41,7 +40,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
 
     /** @var Build[] Builds */
     private $Builds;
-    private BuildInformation $BuildInformation;
+    private array $BuildInformation;
 
     // Map SubProjects to Labels
     private $SubProjects;
@@ -85,7 +84,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
             $siteInformation = new SiteInformation;
-            $this->BuildInformation = new BuildInformation();
+            $this->BuildInformation = [];
             $this->BuildName = "";
             $this->BuildStamp = "";
             $this->SubProjectName = "";
@@ -104,7 +103,26 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                     $this->PullRequest = $value;
                 } else {
                     $siteInformation->SetValue($key, $value);
-                    $this->BuildInformation->SetValue($key, $value);
+                    switch ($key) {
+                        case 'OSNAME':
+                            $this->BuildInformation['osname'] = $value;
+                            break;
+                        case 'OSRELEASE':
+                            $this->BuildInformation['osrelease'] = $value;
+                            break;
+                        case 'OSVERSION':
+                            $this->BuildInformation['osversion'] = $value;
+                            break;
+                        case 'OSPLATFORM':
+                            $this->BuildInformation['osplatform'] = $value;
+                            break;
+                        case 'COMPILERNAME':
+                            $this->BuildInformation['compilername'] = $value;
+                            break;
+                        case 'COMPILERVERSION':
+                            $this->BuildInformation['compilerversion'] = $value;
+                            break;
+                    }
                 }
             }
 
@@ -341,7 +359,12 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         $build->SubProjectName = $this->SubProjectName;
         $build->SetStamp($this->BuildStamp);
         $build->Generator = $this->Generator;
-        $build->Information = $this->BuildInformation;
+        $build->OSName = $this->BuildInformation['osname'] ?? null;
+        $build->OSRelease = $this->BuildInformation['osrelease'] ?? null;
+        $build->OSVersion = $this->BuildInformation['osversion'] ?? null;
+        $build->OSPlatform = $this->BuildInformation['osplatform'] ?? null;
+        $build->CompilerName = $this->BuildInformation['compilername'] ?? null;
+        $build->CompilerVersion = $this->BuildInformation['compilerversion'] ?? null;
         $build->ProjectId = $this->projectid;
         $build->SetProject($this->Project);
         $build->SubmitTime = gmdate(FMT_DATETIME);
