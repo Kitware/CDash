@@ -67,6 +67,16 @@ final class BuildController extends AbstractBuildController
             ->with('filters', $filters);
     }
 
+    public function measurements(int $build_id): View
+    {
+        $this->setBuildById($build_id);
+
+        $filters = json_decode(request()->get('filters')) ?? ['all' => []];
+
+        return $this->view('build.measurements', 'Build Measurements')
+            ->with('filters', $filters);
+    }
+
     protected function renderBuildPage(int $build_id, string $page_name, string $page_title = '')
     {
         $this->setBuildById($build_id);
