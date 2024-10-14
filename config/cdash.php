@@ -75,6 +75,7 @@ return [
     'show_last_submission' => env('SHOW_LAST_SUBMISSION', true),
     'slow_page_time' => env('SLOW_PAGE_TIME', 10),
     'token_duration' => env('TOKEN_DURATION', 15811200),
+    'validate_xml_submissions' => env('VALIDATE_XML_SUBMISSIONS', false),
     // Specify whether users are allowed to create "full access" authentication tokens
     'allow_full_access_tokens' => env('ALLOW_FULL_ACCESS_TOKENS', true),
     // Specify whether users are allowed to create "submit only" tokens which are valid for all projects
