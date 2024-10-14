@@ -62,7 +62,7 @@ function generateBackupFileName($projectname, $subprojectname, $buildname,
 }
 
 /** Function to handle new style submissions via HTTP PUT */
-function parse_put_submission($filehandler, $projectid, $expected_md5)
+function parse_put_submission($filehandler, $projectid, $expected_md5, int|null $buildid)
 {
     $db = Database::getInstance();
 
@@ -70,7 +70,11 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
         return false;
     }
 
-    $buildfile = BuildFile::where(['md5' => $expected_md5])->first();
+    if ($buildid === null) {
+        $buildfile = BuildFile::where(['md5' => $expected_md5])->first();
+    } else {
+        $buildfile = BuildFile::where(['buildid' => $buildid, 'md5' => $expected_md5])->first();
+    }
     if ($buildfile === null) {
         return false;
     }
@@ -148,11 +152,11 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 }
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($filehandle, $projectid, $expected_md5 = '')
+function ctest_parse($filehandle, $projectid, $expected_md5 = '', int|null $buildid=null)
 {
     // Check if this is a new style PUT submission.
     try {
-        $handler = parse_put_submission($filehandle, $projectid, $expected_md5);
+        $handler = parse_put_submission($filehandle, $projectid, $expected_md5, $buildid);
         if ($handler) {
             return $handler;
         }

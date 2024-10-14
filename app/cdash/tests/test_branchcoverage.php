@@ -50,14 +50,17 @@ class BranchCoverageTestCase extends KWWebTestCase
         $this->deleteLog($this->logfilename);
     }
 
-    protected function postSubmit($token=null)
+    protected function postSubmit($token=null, string $stamp='')
     {
+        if ($stamp === '') {
+            $stamp = '20150128-1436-Experimental';
+        }
         // Do the POST submission to get a pending buildid.
         $post_params = [
             'project' => $this->projectname,
             'build' => 'branch_coverage',
             'site' => 'localhost',
-            'stamp' => '20150128-1436-Experimental',
+            'stamp' => $stamp,
             'starttime' => '1422455768',
             'endtime' => '1422455768',
             'track' => 'Experimental',

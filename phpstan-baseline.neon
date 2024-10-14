@@ -23626,6 +23626,11 @@ parameters:
 			path: app/cdash/tests/test_uniquediffs.php
 
 		-
+			message: "#^Property UnparsedSubmissionsHonorBuildIdTestCase\\:\\:\\$projectname has no type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_unparsedsubmissionshonorbuildid.php
+
+		-
 			message: """
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
