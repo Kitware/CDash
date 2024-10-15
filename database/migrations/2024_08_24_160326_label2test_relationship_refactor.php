@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::table('label2test', function (Blueprint $table) {
             $table->dropPrimary();
             $table->dropUnique(['outputid', 'buildid', 'labelid']);
-            $table->unsignedInteger('testid')
+            $table->foreignId('testid')
                 ->nullable();
         });
 
@@ -58,7 +58,7 @@ return new class extends Migration {
         Schema::table('label2test', function (Blueprint $table) {
             $table->dropForeign(['buildid']);
             $table->dropColumn(['buildid', 'outputid']);
-            $table->unsignedInteger('testid')
+            $table->foreignId('testid')
                 ->nullable(false)
                 ->change();
             $table->foreign('testid')
