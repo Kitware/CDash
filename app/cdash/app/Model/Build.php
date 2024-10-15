@@ -22,7 +22,6 @@ use App\Utils\RepositoryUtils;
 use App\Utils\SubmissionUtils;
 use App\Utils\TestingDay;
 use App\Utils\TestDiffUtil;
-use App\Models\BuildInformation;
 
 use CDash\Collection\BuildEmailCollection;
 use CDash\Collection\DynamicAnalysisCollection;
@@ -55,7 +54,12 @@ class Build
     public string $EndTime = '1980-01-01 00:00:00';
     public string $SubmitTime = '1980-01-01 00:00:00';
     public string $Command = '';
-    public BuildInformation $Information;
+    public ?string $OSName = null;
+    public ?string $OSPlatform = null;
+    public ?string $OSRelease = null;
+    public ?string $OSVersion = null;
+    public ?string $CompilerName = null;
+    public ?string $CompilerVersion = null;
     public int $BuildErrorCount;
     public int $TestFailedCount;
 
@@ -360,6 +364,13 @@ class Build
         $this->Command = $model->command;
         $this->BuildErrorCount = $model->builderrors;
         $this->TestFailedCount = $model->testfailed;
+
+        $this->OSName = $model->osname;
+        $this->OSPlatform = $model->osplatform;
+        $this->OSRelease = $model->osrelease;
+        $this->OSVersion = $model->osversion;
+        $this->CompilerName = $model->compilername;
+        $this->CompilerVersion = $model->compilerversion;
 
         $subprojectid = $this->QuerySubProjectId($buildid);
         if ($subprojectid) {
@@ -1913,11 +1924,33 @@ class Build
                 $fields_to_update['generator'] = $this->Generator;
             }
 
+            if ($this->OSName !== null && $this->OSName !== $build->osname) {
+                $fields_to_update['osname'] = $this->OSName;
+            }
+
+            if ($this->OSPlatform !== null && $this->OSPlatform !== $build->osplatform) {
+                $fields_to_update['osplatform'] = $this->OSPlatform;
+            }
+
+            if ($this->OSRelease !== null && $this->OSRelease !== $build->osrelease) {
+                $fields_to_update['osrelease'] = $this->OSRelease;
+            }
+
+            if ($this->OSVersion !== null && $this->OSVersion !== $build->osversion) {
+                $fields_to_update['osversion'] = $this->OSVersion;
+            }
+
+            if ($this->CompilerName !== null && $this->CompilerName !== $build->compilername) {
+                $fields_to_update['compilername'] = $this->CompilerName;
+            }
+
+            if ($this->CompilerVersion !== null && $this->CompilerVersion !== $build->compilerversion) {
+                $fields_to_update['compilerversion'] = $this->CompilerVersion;
+            }
+
             if (!empty($fields_to_update)) {
                 $build->update($fields_to_update);
             }
-
-            $this->SaveInformation();
 
             // Also update the parent if necessary.
             if ($build->parentid > 0) {
@@ -2414,6 +2447,12 @@ class Build
                     'parentid'       => $this->ParentId,
                     'uuid'           => $this->Uuid,
                     'changeid'       => $this->PullRequest,
+                    'osname'         => $this->OSName,
+                    'osplatform'     => $this->OSPlatform,
+                    'osrelease'      => $this->OSRelease,
+                    'osversion'      => $this->OSVersion,
+                    'compilername'   => $this->CompilerName,
+                    'compilerversion' => $this->CompilerVersion,
                 ])->id;
                 $build_created = true;
                 $this->AssignToGroup();
@@ -2431,8 +2470,6 @@ class Build
                 return false;
             }
         }
-
-        $this->SaveInformation();
 
         if (!$build_created) {
             return false;
@@ -2802,25 +2839,5 @@ class Build
             }
         }
         return $this->ErrorDifferences;
-    }
-
-    private function SaveInformation(): void
-    {
-        // Save the information
-        if (isset($this->Information)) {
-            if ($this->ParentId > 0) {
-                $this->Information->buildid = $this->ParentId;
-            } else {
-                $this->Information->buildid = (int) $this->Id;
-            }
-
-            if ($this->Information->buildid < 1) {
-                return;
-            }
-
-            DB::transaction(function () {
-                BuildInformation::upsert($this->Information->toArray(), ['buildid']);
-            }, 5);
-        }
     }
 }

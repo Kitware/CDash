@@ -27,7 +27,6 @@ use CDash\Model\BuildError;
 use CDash\Model\BuildErrorFilter;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroup;
-use App\Models\BuildInformation;
 use CDash\Model\Label;
 use CDash\Model\Project;
 use App\Models\Site;
@@ -45,7 +44,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
     private $Error;
     private $Label;
     private $Builds;
-    private BuildInformation $BuildInformation;
+    private array $BuildInformation;
     private $BuildCommand;
     private $BuildGroup;
     private $Labels;
@@ -80,7 +79,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
             $siteInformation = new SiteInformation();
-            $this->BuildInformation = new BuildInformation();
+            $this->BuildInformation = [];
             $this->BuildName = "";
             $this->BuildStamp = "";
             $this->SubProjectName = "";
@@ -99,7 +98,26 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     $this->PullRequest = $value;
                 } else {
                     $siteInformation->SetValue($key, $value);
-                    $this->BuildInformation->SetValue($key, $value);
+                    switch ($key) {
+                        case 'OSNAME':
+                            $this->BuildInformation['osname'] = $value;
+                            break;
+                        case 'OSRELEASE':
+                            $this->BuildInformation['osrelease']  = $value;
+                            break;
+                        case 'OSVERSION':
+                            $this->BuildInformation['osversion']  = $value;
+                            break;
+                        case 'OSPLATFORM':
+                            $this->BuildInformation['osplatform']  = $value;
+                            break;
+                        case 'COMPILERNAME':
+                            $this->BuildInformation['compilername']  = $value;
+                            break;
+                        case 'COMPILERVERSION':
+                            $this->BuildInformation['compilerversion']  = $value;
+                            break;
+                    }
                 }
             }
 
@@ -122,7 +140,12 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 $build->Name = $this->BuildName;
                 $build->SetStamp($this->BuildStamp);
                 $build->Generator = $this->Generator;
-                $build->Information = $this->BuildInformation;
+                $build->OSName = $this->BuildInformation['osname'] ?? null;
+                $build->OSRelease = $this->BuildInformation['osrelease'] ?? null;
+                $build->OSVersion = $this->BuildInformation['osversion'] ?? null;
+                $build->OSPlatform = $this->BuildInformation['osplatform'] ?? null;
+                $build->CompilerName = $this->BuildInformation['compilername'] ?? null;
+                $build->CompilerVersion = $this->BuildInformation['compilerversion'] ?? null;
                 $this->Builds[$this->SubProjectName] = $build;
             }
         } elseif ($name == 'BUILD') {
@@ -136,7 +159,12 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 $build->Name = $this->BuildName;
                 $build->SetStamp($this->BuildStamp);
                 $build->Generator = $this->Generator;
-                $build->Information = $this->BuildInformation;
+                $build->OSName = $this->BuildInformation['osname'] ?? null;
+                $build->OSRelease = $this->BuildInformation['osrelease'] ?? null;
+                $build->OSVersion = $this->BuildInformation['osversion'] ?? null;
+                $build->OSPlatform = $this->BuildInformation['osplatform'] ?? null;
+                $build->CompilerName = $this->BuildInformation['compilername'] ?? null;
+                $build->CompilerVersion = $this->BuildInformation['compilerversion'] ?? null;
                 $this->Builds[''] = $build;
             }
         } elseif ($name == 'WARNING') {

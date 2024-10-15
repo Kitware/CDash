@@ -21,7 +21,6 @@ use App\Models\Project as EloquentProject;
 
 use CDash\Database;
 use CDash\Model\Build;
-use App\Models\BuildInformation;
 use Illuminate\Support\Facades\DB;
 
 require_once 'include/filterdataFunctions.php';
@@ -163,27 +162,25 @@ class ViewTest extends BuildApi
         ]);
 
         // Find the OS and compiler information
-        $buildinformation = BuildInformation::find($this->build->Id);
-        if ($buildinformation !== null) {
-            if ($buildinformation->osname != '') {
-                $build_response['osname'] = $buildinformation->osname;
-            }
-            if ($buildinformation->osplatform != '') {
-                $build_response['osplatform'] = $buildinformation->osplatform;
-            }
-            if ($buildinformation->osrelease != '') {
-                $build_response['osrelease'] = $buildinformation->osrelease;
-            }
-            if ($buildinformation->osversion != '') {
-                $build_response['osversion'] = $buildinformation->osversion;
-            }
-            if ($buildinformation->compilername != '') {
-                $build_response['compilername'] = $buildinformation->compilername;
-            }
-            if ($buildinformation->compilerversion != '') {
-                $build_response['compilerversion'] = $buildinformation->compilerversion;
-            }
+        if ($this->build->OSName != '') {
+            $build_response['osname'] = $this->build->OSName;
         }
+        if ($this->build->OSPlatform != '') {
+            $build_response['osplatform'] = $this->build->OSPlatform;
+        }
+        if ($this->build->OSRelease != '') {
+            $build_response['osrelease'] = $this->build->OSRelease;
+        }
+        if ($this->build->OSVersion != '') {
+            $build_response['osversion'] = $this->build->OSVersion;
+        }
+        if ($this->build->CompilerName != '') {
+            $build_response['compilername'] = $this->build->CompilerName;
+        }
+        if ($this->build->CompilerVersion != '') {
+            $build_response['compilerversion'] = $this->build->CompilerVersion;
+        }
+
         $response['build'] = $build_response;
         $response['csvlink'] = "api/v1/viewTest.php?buildid=$buildid&export=csv";
 

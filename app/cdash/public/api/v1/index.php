@@ -24,7 +24,6 @@ use CDash\Database;
 use App\Models\Banner;
 use App\Models\Project as EloquentProject;
 use CDash\Model\Build;
-use App\Models\BuildInformation;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
@@ -80,15 +79,12 @@ if (isset($_GET['parentid'])) {
     $response['starttime'] = $parent_build->StartTime;
     $response['type'] = $parent_build->Type;
 
-    // Include data about this build from the buildinformation table.
-
-    $buildinfo = BuildInformation::findOrNew($parentid);
-    $response['osname'] = $buildinfo->osname;
-    $response['osplatform'] = $buildinfo->osplatform;
-    $response['osrelease'] = $buildinfo->osrelease;
-    $response['osversion'] = $buildinfo->osversion;
-    $response['compilername'] = $buildinfo->compilername;
-    $response['compilerversion'] = $buildinfo->compilerversion;
+    $response['osname'] = $parent_build->OSName;
+    $response['osplatform'] = $parent_build->OSPlatform;
+    $response['osrelease'] = $parent_build->OSRelease;
+    $response['osversion'] = $parent_build->OSVersion;
+    $response['compilername'] = $parent_build->CompilerName;
+    $response['compilerversion'] = $parent_build->CompilerVersion;
 
     // Check if the parent build has any notes.
     $stmt = DB::select('SELECT COUNT(buildid) AS c FROM build2note WHERE buildid = ?', [$parentid])[0];

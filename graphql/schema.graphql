@@ -239,6 +239,18 @@ type Build {
   measurements(
     filters: _ @filter(inputType: "BuildMeasurementFilterInput")
   ): [BuildMeasurement!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+
+  operatingSystemName: String @rename(attribute: "osname")
+
+  operatingSystemPlatform: String @rename(attribute: "osplatform")
+
+  operatingSystemRelease: String @rename(attribute: "osrelease")
+
+  operatingSystemVersion: String @rename(attribute: "osversion")
+
+  compilerName: String @rename(attribute: "compilername")
+
+  compilerVersion: String @rename(attribute: "compilerversion")
 }
 
 input BuildFilterInput {
@@ -249,6 +261,12 @@ input BuildFilterInput {
   submissionTime: DateTimeTz @rename(attribute: "submittime")
   stamp: String
   uuid: String
+  operatingSystemName: String @rename(attribute: "osname")
+  operatingSystemPlatform: String @rename(attribute: "osplatform")
+  operatingSystemRelease: String @rename(attribute: "osrelease")
+  operatingSystemVersion: String @rename(attribute: "osversion")
+  compilerName: String @rename(attribute: "compilername")
+  compilerVersion: String @rename(attribute: "compilerversion")
 }
 
 

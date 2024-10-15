@@ -283,7 +283,7 @@ class Index extends ResultsApi
         return
             "SELECT b.id,b.siteid,b.parentid,b.done,b.changeid,b.testduration,
             bu.status AS updatestatus,
-            i.osname AS osname,
+            b.osname AS osname,
             bu.starttime AS updatestarttime,
             bu.endtime AS updateendtime,
             bu.nfiles AS countupdatefiles,
@@ -335,7 +335,6 @@ class Index extends ResultsApi
                 LEFT JOIN site AS s ON (s.id=b.siteid)
                 LEFT JOIN build2update AS b2u ON (b2u.buildid=b.id)
                 LEFT JOIN buildupdate AS bu ON (b2u.updateid=bu.id)
-                LEFT JOIN buildinformation AS i ON (i.buildid=b.id)
                 LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
                 LEFT JOIN coveragesummarydiff AS csd ON (csd.buildid=b.id)
                 LEFT JOIN dynamicanalysissummary AS das ON (das.buildid=b.id)

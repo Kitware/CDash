@@ -30,7 +30,6 @@ use CDash\Model\DynamicAnalysis;
 use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\DynamicAnalysisDefect;
 use App\Models\SiteInformation;
-use App\Models\BuildInformation;
 use CDash\Model\SubscriberInterface;
 
 class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBuildInterface
@@ -45,7 +44,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
     private $Label;
 
     private $Builds;
-    private BuildInformation $BuildInformation;
+    private array $BuildInformation;
 
     // Map SubProjects to Labels
     private $SubProjects;
@@ -71,7 +70,6 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
             $siteInformation = new SiteInformation();
-            $this->BuildInformation = new BuildInformation();
 
             // Fill in the attribute
             foreach ($attributes as $key => $value) {
@@ -85,7 +83,26 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
                     $this->PullRequest = $value;
                 } else {
                     $siteInformation->SetValue($key, $value);
-                    $this->BuildInformation->SetValue($key, $value);
+                    switch ($key) {
+                        case 'OSNAME':
+                            $this->BuildInformation['osname'] = $value;
+                            break;
+                        case 'OSRELEASE':
+                            $this->BuildInformation['osrelease'] = $value;
+                            break;
+                        case 'OSVERSION':
+                            $this->BuildInformation['osversion'] = $value;
+                            break;
+                        case 'OSPLATFORM':
+                            $this->BuildInformation['osplatform'] = $value;
+                            break;
+                        case 'COMPILERNAME':
+                            $this->BuildInformation['compilername'] = $value;
+                            break;
+                        case 'COMPILERVERSION':
+                            $this->BuildInformation['compilerversion'] = $value;
+                            break;
+                    }
                 }
             }
 
@@ -267,7 +284,12 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
 
         $build->SetStamp($this->BuildStamp);
         $build->Generator = $this->Generator;
-        $build->Information = $this->BuildInformation;
+        $build->OSName = $this->BuildInformation['osname'] ?? null;
+        $build->OSRelease = $this->BuildInformation['osrelease'] ?? null;
+        $build->OSVersion = $this->BuildInformation['osversion'] ?? null;
+        $build->OSPlatform = $this->BuildInformation['osplatform'] ?? null;
+        $build->CompilerName = $this->BuildInformation['compilername'] ?? null;
+        $build->CompilerVersion = $this->BuildInformation['compilerversion'] ?? null;
 
         $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
 

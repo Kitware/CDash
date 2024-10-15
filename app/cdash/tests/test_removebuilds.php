@@ -14,7 +14,6 @@ use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroup;
-use App\Models\BuildInformation;
 use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUpdateFile;
 use CDash\Model\Coverage;
@@ -73,9 +72,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $build->AddLabel($label);
         $buildgroup = new BuildGroup();
         $build->GroupId = $buildgroup->GetGroupIdFromRule($build);
-        $build->Information = new BuildInformation([
-            'osname' => 'Windows',
-        ]);
+        $build->OSName = 'Windows';
 
         // BuildError
         $error = new BuildError();
@@ -373,7 +370,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('buildemail', 'buildid', '=', $build->Id, 1);
         $this->verify('builderror', 'buildid', '=', $build->Id, 1);
         $this->verify('builderrordiff', 'buildid', '=', $build->Id, 1);
-        $this->verify('buildinformation', 'buildid', '=', $build->Id, 1);
         $this->verify('buildtesttime', 'buildid', '=', $build->Id, 1);
         $this->verify('configureerrordiff', 'buildid', '=', $build->Id, 1);
         $this->verify('coveragesummary', 'buildid', '=', $build->Id, 1);
@@ -450,7 +446,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('buildfailure', 'buildid', '=', $build->Id, 0, true);
         $this->verify('buildfailure2argument', 'buildfailureid', '=', $buildfailureid, 0, true);
         $this->verify('buildfailuredetails', 'id', '=', $detailsid, 1, true);
-        $this->verify('buildinformation', 'buildid', '=', $build->Id, 0, true);
         $this->verify('buildtesttime', 'buildid', '=', $build->Id, 0, true);
         $this->verify('buildupdate', 'id', '=', $updateid, 1, true);
         $this->verify('configure', 'id', '=', $configureid, 1, true);
