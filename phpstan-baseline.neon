@@ -839,7 +839,7 @@ parameters:
 			path: app/Http/Controllers/CDash.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$role\\.$#"
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$pivot\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
@@ -12466,7 +12466,7 @@ parameters:
 			path: app/cdash/include/cdashmail.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$role\\.$#"
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$pivot\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
