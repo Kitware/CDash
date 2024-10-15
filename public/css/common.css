@@ -1213,50 +1213,20 @@ background-color: #adcae6
   background-color: #e8e8e8;
   border-top: solid 1px #BBBBBB;
   margin-top:25px;
-  padding:15px 30px 23px;
+  padding: 15px;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
 }
 
-#footer a:hover{
+#footer .footer-link {
+  text-decoration: none;
+  color: initial;
+}
+
+#footer .footer-link:hover {
   text-decoration: underline;
-}
-
-#footer #kitwarelogo {
-  float: left;
-  height:26px;
-  margin-top:5px;
-}
-
-#footer #kitwarelogo a {
-  text-decoration: none;
-}
-
-#footer #kitwarelogo img {
-  height:100%;
-  width:auto;
-}
-
-#footerlinks {
-  float: right;
-  height: 32px;
-}
-
-#footerlinks a {
-  text-decoration: none;
-}
-
-#footerlinks .footerlogo {
-  margin-right:8px;
-}
-
-#footerlinks .footerlogo img {
-  height:100%;
-  width:auto;
-}
-
-#footerlinks #footertext,
-#footerlinks #footertext a {
-  font-size: 12px;
-  color: #4A4A4A;
 }
 
 /* flot legend display */
