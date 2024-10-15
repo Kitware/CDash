@@ -72,3 +72,6 @@ set_tests_properties(cypress/e2e/build-configure PROPERTIES DEPENDS cypress/e2e/
 
 add_cypress_e2e_test(all-projects)
 set_tests_properties(cypress/e2e/all-projects PROPERTIES DEPENDS cypress/e2e/build-configure)
+
+add_cypress_e2e_test(build-measurements)
+set_tests_properties(cypress/e2e/build-measurements PROPERTIES DEPENDS cypress/e2e/all-projects)

@@ -79,6 +79,8 @@ Route::get('/viewConfigure.php', function (Request $request) {
 
 Route::get('/builds/{build_id}/tests', 'BuildController@tests');
 
+Route::get('/builds/{build_id}/measurements', 'BuildController@measurements');
+
 Route::get('/builds/{id}/update', 'BuildController@update');
 Route::permanentRedirect('/build/{id}/update', url('/builds/{id}/update'));
 Route::get('/viewUpdate.php', function (Request $request) {
