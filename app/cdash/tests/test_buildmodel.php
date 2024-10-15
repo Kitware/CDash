@@ -7,7 +7,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
 
-
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
 use Illuminate\Support\Facades\DB;
@@ -63,7 +63,7 @@ class BuildModelTestCase extends KWWebTestCase
     public function __destruct()
     {
         foreach ($this->builds as $build) {
-            remove_build($build['id']);
+            DatabaseCleanupUtils::removeBuild($build['id']);
         }
     }
 
@@ -322,6 +322,6 @@ class BuildModelTestCase extends KWWebTestCase
         $build2 = new Build();
         $this->assertFalse($build2->AddBuild());
 
-        remove_build($build->Id);
+        DatabaseCleanupUtils::removeBuild($build->Id);
     }
 }

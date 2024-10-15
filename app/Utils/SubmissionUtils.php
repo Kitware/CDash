@@ -91,7 +91,7 @@ class SubmissionUtils
         if ($buildid > 0 && !$build->Append) {
             $build->Id = $buildid;
             if ($build->GetDone()) {
-                remove_build($buildid);
+                DatabaseCleanupUtils::removeBuild($buildid);
                 $build->Id = null;
             }
         }

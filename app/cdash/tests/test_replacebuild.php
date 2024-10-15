@@ -3,6 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
@@ -62,7 +63,7 @@ class ReplaceBuildTestCase extends KWWebTestCase
             $error_msg = "Expected 0 rows, found $num_rows";
             echo "$error_msg\n";
             $success = false;
-            remove_build($first_buildid);
+            DatabaseCleanupUtils::removeBuild($first_buildid);
         }
 
         // Verify the replacement build.
@@ -76,7 +77,7 @@ class ReplaceBuildTestCase extends KWWebTestCase
         }
 
         // Delete the build that we created during this test.
-        remove_build($second_buildid);
+        DatabaseCleanupUtils::removeBuild($second_buildid);
 
         if ($success) {
             $this->pass('Test passed');

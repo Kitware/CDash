@@ -3,6 +3,8 @@
 namespace App\Console;
 
 use App\Jobs\PruneAuthTokens;
+use App\Jobs\PruneBuilds;
+use App\Jobs\PruneDatabase;
 use App\Jobs\PruneJobs;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -25,11 +27,19 @@ class Kernel extends ConsoleKernel
             ->everySixHours()
             ->sendOutputTo($output_filename);
 
-        $schedule->job(new PruneJobs())
+        $schedule->job(new PruneAuthTokens(), 'low')
             ->hourly()
             ->withoutOverlapping();
 
-        $schedule->job(new PruneAuthTokens())
+        $schedule->job(new PruneBuilds(), 'low')
+            ->hourly()
+            ->withoutOverlapping();
+
+        $schedule->job(new PruneDatabase(), 'low')
+            ->dailyAt('03:00')
+            ->withoutOverlapping();
+
+        $schedule->job(new PruneJobs(), 'low')
             ->hourly()
             ->withoutOverlapping();
 
