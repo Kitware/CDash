@@ -83,6 +83,58 @@ class SiteTypeTest extends TestCase
         parent::tearDown();
     }
 
+    public function testBasicFieldAccess(): void
+    {
+        $this->sites['site1'] = $this->makeSite([
+            'name' => Str::uuid()->toString(),
+            'ip' => '8.8.8.8',
+            'latitude' => '12.3',
+            'longitude' => '3.21',
+        ]);
+
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+            'siteid' => $this->sites['site1']->id,
+        ]);
+
+        $this->graphQL('
+            query ($id: ID!) {
+                project(id: $id) {
+                    sites {
+                        edges {
+                            node {
+                                id
+                                name
+                                ip
+                                latitude
+                                longitude
+                            }
+                        }
+                    }
+                }
+            }
+        ', ['id' => $this->projects['public1']->id])->assertJson([
+            'data' => [
+                'project' => [
+                    'sites' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'id' => (string) $this->sites['site1']->id,
+                                    'name' => $this->sites['site1']->name,
+                                    'ip' => $this->sites['site1']->ip,
+                                    'latitude' => $this->sites['site1']->latitude,
+                                    'longitude' => $this->sites['site1']->longitude,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
     public function testSiteBuildRelationship(): void
     {
         $this->sites['site1'] = $this->makeSite();
