@@ -402,25 +402,14 @@ final class ManageProjectRolesController extends AbstractProjectController
      */
     private static function find_site_maintainers(int $projectid): array
     {
+        // Get all the users with the 'Site maintainer' role for this project.
+        $project = \App\Models\Project::findOrFail($projectid);
+        $userids = $project->siteMaintainers()->pluck('userid')->toArray();
+
+        // Next, get the users maintaining specific sites that have received
+        // submissions in the past 48 hours.
         $db = Database::getInstance();
-
-        // Get the registered user first
-        $site2user = $db->executePrepared('
-                     SELECT site2user.userid
-                     FROM site2user, user2project
-                     WHERE
-                         site2user.userid=user2project.userid
-                         AND user2project.projectid=?
-                     ', [$projectid]);
-
-        $userids = [];
-        foreach ($site2user as $site2user_array) {
-            $userids[] = intval($site2user_array['userid']);
-        }
-
-        // Then we list all the users that have been submitting in the past 48 hours
         $submittime_UTCDate = gmdate(FMT_DATETIME, time() - 3600 * 48);
-
         $site2project = $db->executePrepared('
                             SELECT DISTINCT userid
                             FROM site2user
