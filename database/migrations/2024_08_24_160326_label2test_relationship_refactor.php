@@ -18,10 +18,10 @@ return new class extends Migration {
                 ->nullable();
         });
 
-        if (config('database.default') === 'pgsql') {
-            $count = (int) DB::select('SELECT count(1) AS c FROM build')[0]->c;
+        $count = (int) DB::select('SELECT count(1) AS c FROM build')[0]->c;
 
-            // Execute at most 10k batches of buildwise updates
+        // Execute at most 10k batches of buildwise updates
+        if (config('database.default') === 'pgsql') {
             for ($i = 0; $i < ceil($count / 10000); $i++) {
                 DB::update('
                     UPDATE label2test
@@ -35,18 +35,16 @@ return new class extends Migration {
                 ', [$i]);
             }
         } else {
-            // MySQL is a bit more finicky about large transactions, so update in batches of 100
-            $rows_changed = 1;
-            while ($rows_changed > 0) {
-                $rows_changed = DB::update('
+            for ($i = 0; $i < ceil($count / 10000); $i++) {
+                DB::update('
                     UPDATE label2test, build2test
                     SET label2test.testid = build2test.id
                     WHERE
                         build2test.buildid = label2test.buildid
                         AND build2test.outputid = label2test.outputid
                         AND label2test.testid IS NULL
-                    LIMIT 100
-                ');
+                        AND build2test.buildid % ? = 0
+                ', [$i]);
             }
         }
 
