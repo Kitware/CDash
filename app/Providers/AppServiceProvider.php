@@ -38,6 +38,12 @@ class AppServiceProvider extends ServiceProvider
 
         URL::forceRootUrl(Config::get('app.url'));
 
+        // Work around k8s and proxy issues where Laravel automatically changes the protocol to HTTP
+        // if the incoming request is HTTP.
+        if (str_starts_with(config('app.url'), 'https://')) {
+            URL::forceScheme('https');
+        }
+
         Model::preventSilentlyDiscardingAttributes(!$this->app->isProduction());
     }
 
