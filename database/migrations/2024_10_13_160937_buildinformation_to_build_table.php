@@ -34,30 +34,18 @@ return new class extends Migration {
                 WHERE build.id = buildinformation.buildid
             ');
         } else {
-            // MySQL is a bit more finicky about large transactions, so update in batches of 100
-            $rows_changed = 1;
-            while ($rows_changed > 0) {
-                $rows_changed = DB::update('
-                    UPDATE build, buildinformation
-                    SET
-                        build.osname = buildinformation.osname,
-                        build.osplatform = buildinformation.osplatform,
-                        build.osrelease = buildinformation.osrelease,
-                        build.osversion = buildinformation.osversion,
-                        build.compilername = buildinformation.compilername,
-                        build.compilerversion = buildinformation.compilerversion
-                    WHERE build.id = buildinformation.buildid
-                    LIMIT 100
-                ');
-
-                // Delete the rows we just moved over
-                DB::delete('
-                    DELETE FROM buildinformation
-                    WHERE buildid IN (
-                        SELECT id FROM build
-                    )
-                ');
-            }
+            DB::update('
+                UPDATE build, buildinformation
+                SET
+                    build.osname = buildinformation.osname,
+                    build.osplatform = buildinformation.osplatform,
+                    build.osrelease = buildinformation.osrelease,
+                    build.osversion = buildinformation.osversion,
+                    build.compilername = buildinformation.compilername,
+                    build.compilerversion = buildinformation.compilerversion
+                WHERE
+                    build.id = buildinformation.buildid
+            ');
         }
 
         Schema::dropIfExists('buildinformation');
