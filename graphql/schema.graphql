@@ -399,9 +399,9 @@ type Site {
   "IP address."
   ip: String!
 
-  latitude: Float!
+  latitude: String!
 
-  longitude: Float!
+  longitude: String!
 
   "Every edit of this site's information."
   information: [SiteInformation!]! @hasMany(type: CONNECTION) @orderBy(column: "timestamp")
