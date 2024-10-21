@@ -72,10 +72,8 @@
     <table id="manageCoverageTable" cellspacing="0" class="tabb">
     <thead>
     <tr class="table-heading1">
-      <th id="sort_0" width="40%">Filename</th>
+      <th id="sort_0" width="80%">Filename</th>
       <th id="sort_1" width="20%">Priority</th>
-      <th id="sort_2" width="20%">Authors</th>
-      <th width="20%" class="nob" >Add author</th>
     </tr>
     </thead>
     <tbody>
@@ -99,58 +97,11 @@
       <input type="hidden" name="fullpath"><xsl:attribute name="value"><xsl:value-of select="fullpath"/></xsl:attribute></input>
       </form>
       </td>
-      <td>
-      <xsl:for-each select="author">
-      <xsl:value-of select="name"/>
-      [<a>
-      <xsl:attribute name="href">manageCoverage.php?projectid=<xsl:value-of select="/cdash/project/id"/>&amp;buildid=<xsl:value-of select="/cdash/project/buildid"/>&amp;removeuserid=<xsl:value-of select="id"/>&amp;removefileid=<xsl:value-of select="../id"/>
-      </xsl:attribute>x</a>]
-      </xsl:for-each>
-      </td>
-      <td class="nob">
-      <form name="form_add_author" method="post">
-      <xsl:attribute name="action">manageCoverage.php?projectid=<xsl:value-of select="/cdash/project/id"/>&#38;buildid=<xsl:value-of select="/cdash/project/buildid"/></xsl:attribute>
-      <select name="userSelection">
-      <option value="0">Choose author</option>
-        <xsl:for-each select="/cdash/project/user">
-        <option>
-        <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-        <xsl:if test="selected=1">
-        <xsl:attribute name="selected"></xsl:attribute>
-        </xsl:if>
-        <xsl:value-of select="name"/>
-        </option>
-        </xsl:for-each>
-        </select>
-        <input type="submit" name="addAuthor" value="Add author"/>
-        <input type="hidden" name="fullpath"><xsl:attribute name="value"><xsl:value-of select="fullpath"/></xsl:attribute></input>
-      </form>
-      </td>
     </tr>
     </xsl:for-each>
     </tbody>
     </table>
     </td>
-  </tr>
-  <tr>
-    <td><div align="right"></div></td>
-    <td><input type="submit" name="removeAuthorsSelected" value="Remove authors from selected files >>"/></td>
-  </tr>
-  <tr>
-    <td><div align="right"></div></td>
-    <td><select name="userSelectedSelection">
-      <option value="0">Choose author</option>
-        <xsl:for-each select="/cdash/project/user">
-        <option>
-        <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-        <xsl:if test="selected=1">
-        <xsl:attribute name="selected"></xsl:attribute>
-        </xsl:if>
-        <xsl:value-of select="name"/>
-        </option>
-        </xsl:for-each>
-        </select>
-        <input type="submit" name="addAuthorsSelected" value="Add author to selected files >>"/></td>
   </tr>
   <tr>
     <td><div align="right"></div></td>
@@ -163,29 +114,6 @@
       <option value="4"><xsl:if test="priority=4"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if>Urgent</option>
       </select>
       <input type="submit" name="changePrioritySelected" value="Change priority of selected files >>"/></td>
-  </tr>
-  <tr>
-    <td><div align="right"></div></td>
-    <td><input type="submit" name="sendEmail" value="Send email to authors"/></td>
-  </tr>
-  <tr>
-    <td><div align="right"></div></td>
-    <td><input type="submit" name="assignLastAuthor" value="Assign last author"/> (Assign the last person who touched the file as the author)</td>
-  </tr>
-   <tr>
-    <td><div align="right"></div></td>
-    <td><input type="submit" name="assignAllAuthors" value="Assign all authors"/> (Assign all the persons who touched the file as authors)</td>
-  </tr>
-</table>
-</form>
-
-<form name="formuploadfile" method="post" enctype="multipart/form-data">
-<xsl:attribute name="action">manageCoverage.php?projectid=<xsl:value-of select="cdash/project/id"/>&#38;buildid=<xsl:value-of select="/cdash/project/buildid"/></xsl:attribute>
-<table width="100%" border="0">
-<tr>
-    <td valign="top" width="10%"><div align="right"><b>Upload file:</b></div></td>
-    <td><div align="left">(format: filename:author1,author2)</div>
-    <input type="file" name="authorsFile"/><input type="submit" name="uploadAuthorsFile" value="Upload authors file"/> </td>
   </tr>
 </table>
 </form>
