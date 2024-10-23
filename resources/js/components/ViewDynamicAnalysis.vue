@@ -63,7 +63,10 @@
             align="center"
           >
             <td align="left">
-              <a class="cdash-link" :href="$baseURL + '/viewDynamicAnalysisFile.php?id=' + DA.id">
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/viewDynamicAnalysisFile.php?id=' + DA.id"
+              >
                 {{ DA.name }}
               </a>
             </td>
@@ -96,7 +99,7 @@
 <script>
 import ApiLoader from './shared/ApiLoader';
 export default {
-  name: "ViewDynamicAnalysis",
+  name: 'ViewDynamicAnalysis',
 
   props: {
     buildid: {
@@ -111,11 +114,11 @@ export default {
       cdash: {},
       loading: true,
       errored: false,
-    }
+    };
   },
 
   mounted () {
-    ApiLoader.loadPageData(this, '/api/v1/viewDynamicAnalysis.php?buildid=' + this.buildid);
+    ApiLoader.loadPageData(this, `/api/v1/viewDynamicAnalysis.php?buildid=${this.buildid}`);
   },
-}
+};
 </script>

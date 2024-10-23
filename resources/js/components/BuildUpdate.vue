@@ -8,7 +8,10 @@
     </div>
     <div v-else>
       <h4 v-if="cdash.build.site">
-        Files changed on <a class="cdash-link" :href="$baseURL + '/sites/' + cdash.build.siteid">{{ cdash.build.site }}</a>
+        Files changed on <a
+          class="cdash-link"
+          :href="$baseURL + '/sites/' + cdash.build.siteid"
+        >{{ cdash.build.site }}</a>
         ({{ cdash.build.buildname }}) as of {{ cdash.build.buildtime }}
       </h4>
 
@@ -40,7 +43,10 @@
         </tt>
       </div>
 
-      <a class="cdash-link" @click="toggleGraph()">
+      <a
+        class="cdash-link"
+        @click="toggleGraph()"
+      >
         <span v-text="showGraph ? 'Hide Activity Graph' : 'Show Activity Graph'" />
       </a>
       <div v-if="graphLoading">
@@ -145,7 +151,7 @@
 import ApiLoader from './shared/ApiLoader';
 
 export default {
-  name: "BuildUpdate",
+  name: 'BuildUpdate',
 
   data() {
     return {
@@ -166,14 +172,14 @@ export default {
         'time': false,
         'errors': false,
         'warnings': false,
-        'tests': false
+        'tests': false,
       },
-    }
+    };
   },
 
   mounted() {
-    this.buildid = window.location.pathname.split("/").at(-2);
-    const endpoint_path = '/api/v1/viewUpdate.php?buildid=' + this.buildid;
+    this.buildid = window.location.pathname.split('/').at(-2);
+    const endpoint_path = `/api/v1/viewUpdate.php?buildid=${this.buildid}`;
     ApiLoader.loadPageData(this, endpoint_path);
   },
 
@@ -188,12 +194,12 @@ export default {
     loadGraph: function() {
       this.graphLoading = true;
       this.$axios
-        .get('/api/v1/buildUpdateGraph.php?buildid=' + this.buildid)
+        .get(`/api/v1/buildUpdateGraph.php?buildid=${this.buildid}`)
         .then(response => {
           this.initializeGraph(response.data);
           this.graphLoaded = true;
         })
-        .finally(() => this.graphLoading = false)
+        .finally(() => this.graphLoading = false);
     },
 
     initializeGraph: function(data) {
@@ -201,35 +207,35 @@ export default {
         lines: {show: true},
         points: {show: true},
         xaxis: {
-          mode: "time",
-          timeformat: "%Y/%m/%d %H:%M",
-          timeBase: "milliseconds",
+          mode: 'time',
+          timeformat: '%Y/%m/%d %H:%M',
+          timeBase: 'milliseconds',
         },
         grid: {
-          backgroundColor: "#fffaff",
+          backgroundColor: '#fffaff',
           clickable: true,
           hoverable: true,
           hoverFill: '#444',
-          hoverRadius: 4
+          hoverRadius: 4,
         },
-        selection: {mode: "x"},
-        colors: ["#0000FF", "#dba255", "#919733"],
+        selection: {mode: 'x'},
+        colors: ['#0000FF', '#dba255', '#919733'],
       };
 
-      let plot = $.plot($("#graph_holder"), [{label: "Number of changed files", data: data.data}], options);
+      let plot = $.plot($('#graph_holder'), [{label: 'Number of changed files', data: data.data}], options);
 
-      $("#graph_holder").bind("selected", function (event, area) {
-        plot = $.plot($("#graph_holder"), [{
-          label: "Number of changed files",
-          data: data.data
+      $('#graph_holder').bind('selected', (event, area) => {
+        plot = $.plot($('#graph_holder'), [{
+          label: 'Number of changed files',
+          data: data.data,
         }], $.extend(true, {}, options, {xaxis: {min: area.x1, max: area.x2}}));
       });
 
-      let baseURL = this.$baseURL;
-      $("#graph_holder").bind("plotclick", function (e, pos, item) {
+      const baseURL = this.$baseURL;
+      $('#graph_holder').bind('plotclick', (e, pos, item) => {
         if (item) {
           plot.highlight(item.series, item.datapoint);
-          window.location = baseURL + '/build/' + data.buildids[item.datapoint[0]];
+          window.location = `${baseURL}/build/${data.buildids[item.datapoint[0]]}`;
         }
       });
     },
@@ -239,7 +245,7 @@ export default {
       console.log(this.cdash.updategroups[group_index].hidden);
     },
   },
-}
+};
 </script>
 
 <style scoped>

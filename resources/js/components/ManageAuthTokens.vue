@@ -70,7 +70,10 @@
             v-if="token.scope === 'submit_only' && token.projectname !== null && token.projectname.length > 0"
             align="center"
           >
-            Submit Only (<a class="cdash-link" :href="$baseURL + '/index.php?project=' + token.projectname">{{ token.projectname }}</a>)
+            Submit Only (<a
+              class="cdash-link"
+              :href="$baseURL + '/index.php?project=' + token.projectname"
+            >{{ token.projectname }}</a>)
           </td>
           <td
             v-else-if="token.scope === 'submit_only'"
@@ -101,7 +104,7 @@
 <script>
 import ApiLoader from './shared/ApiLoader';
 export default {
-  name: "ManageAuthTokens",
+  name: 'ManageAuthTokens',
 
   data () {
     return {
@@ -109,7 +112,7 @@ export default {
       cdash: {},
       loading: true,
       errored: false,
-    }
+    };
   },
 
   mounted () {
@@ -119,7 +122,7 @@ export default {
   methods: {
     revokeToken(token) {
       this.$axios
-        .delete('/api/authtokens/delete/' + token.hash)
+        .delete(`/api/authtokens/delete/${token.hash}`)
         .then(() => {
           this.$delete(this.cdash.tokens, token.hash);
         })
@@ -127,7 +130,7 @@ export default {
           console.log(error);
           this.errored = true;
         });
-    }
-  }
-}
+    },
+  },
+};
 </script>

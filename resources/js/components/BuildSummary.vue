@@ -9,7 +9,10 @@
     <div v-else>
       <!-- Display link to create bug tracker issue if supported. -->
       <div v-if="cdash.newissueurl">
-        <a class="cdash-link" :href="cdash.newissueurl">
+        <a
+          class="cdash-link"
+          :href="cdash.newissueurl"
+        >
           <b>Create {{ cdash.bugtracker }} issue for this build</b>
         </a>
         <br>
@@ -49,7 +52,10 @@
             <td style="white-space: nowrap;">
               {{ cdash.build.name }}
               <span v-if="cdash.build.note">
-                (<a class="cdash-link" :href="$baseURL + '/build/' + cdash.build.id + '/notes'">view notes</a>)
+                (<a
+                  class="cdash-link"
+                  :href="$baseURL + '/build/' + cdash.build.id + '/notes'"
+                >view notes</a>)
               </span>
             </td>
           </tr>
@@ -148,7 +154,10 @@
               Last submission:
             </th>
             <td>
-              <a class="cdash-link" :href="$baseURL + '/build/' + cdash.build.lastsubmitbuild">
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/build/' + cdash.build.lastsubmitbuild"
+              >
                 {{ cdash.build.lastsubmitdate }}
               </a>
             </td>
@@ -172,7 +181,10 @@
                     colspan="3"
                     class="header"
                   >
-                    <a class="cdash-link" :href="$baseURL + '/build/' + cdash.previousbuild.buildid">
+                    <a
+                      class="cdash-link"
+                      :href="$baseURL + '/build/' + cdash.previousbuild.buildid"
+                    >
                       <b>Previous Build</b>
                     </a>
                   </th>
@@ -193,7 +205,10 @@
                     :class="cdash.previousbuild.nupdateerrors > 0 ? 'error' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/update'">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/update'"
+                      >
                         {{ cdash.previousbuild.nupdateerrors }}
                       </a>
                     </b>
@@ -203,7 +218,10 @@
                     :class="cdash.previousbuild.nupdatewarnings > 0 ? 'warning' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/update'">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/update'"
+                      >
                         {{ cdash.previousbuild.nupdatewarnings }}
                       </a>
                     </b>
@@ -219,7 +237,10 @@
                     :class="cdash.previousbuild.nconfigureerrors > 0 ? 'error' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/configure'">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/configure'"
+                      >
                         {{ cdash.previousbuild.nconfigureerrors }}
                       </a>
                     </b>
@@ -229,7 +250,10 @@
                     :class="cdash.previousbuild.nconfigurewarnings > 0 ? 'warning' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/configure'">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/configure'"
+                      >
                         {{ cdash.previousbuild.nconfigurewarnings }}
                       </a>
                     </b>
@@ -245,7 +269,10 @@
                     :class="cdash.previousbuild.nerrors > 0 ? 'error' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.previousbuild.buildid">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.previousbuild.buildid"
+                      >
                         {{ cdash.previousbuild.nerrors }}
                       </a>
                     </b>
@@ -255,7 +282,10 @@
                     :class="cdash.previousbuild.nwarnings > 0 ? 'warning' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.previousbuild.buildid">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.previousbuild.buildid"
+                      >
                         {{ cdash.previousbuild.nwarnings }}
                       </a>
                     </b>
@@ -271,7 +301,10 @@
                     :class="cdash.previousbuild.ntestfailed > 0 ? 'error' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.previousbuild.buildid">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.previousbuild.buildid"
+                      >
                         {{ cdash.previousbuild.ntestfailed }}
                       </a>
                     </b>
@@ -281,7 +314,10 @@
                     :class="cdash.previousbuild.ntestnotrun > 0 ? 'warning' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.previousbuild.buildid">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.previousbuild.buildid"
+                      >
                         {{ cdash.previousbuild.ntestnotrun }}
                       </a>
                     </b>
@@ -331,7 +367,10 @@
                     :class="cdash.update.nerrors > 0 ? 'error' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/build/' + cdash.build.id + '/update'">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/build/' + cdash.build.id + '/update'"
+                      >
                         {{ cdash.update.nerrors }}
                       </a>
                     </b>
@@ -341,7 +380,10 @@
                     :class="cdash.update.nwarnings > 0 ? 'warning' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/build/' + cdash.build.id + '/update'">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/build/' + cdash.build.id + '/update'"
+                      >
                         {{ cdash.update.nwarnings }}
                       </a>
                     </b>
@@ -349,7 +391,10 @@
                 </tr>
                 <tr v-if="cdash.hasconfigure">
                   <th>
-                    <a class="cdash-link" href="#Configure">
+                    <a
+                      class="cdash-link"
+                      href="#Configure"
+                    >
                       <b>Configure</b>
                     </a>
                   </th>
@@ -358,7 +403,10 @@
                     :class="cdash.configure.nerrors > 0 ? 'error' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/build/' + cdash.build.id + '/configure'">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/build/' + cdash.build.id + '/configure'"
+                      >
                         {{ cdash.configure.nerrors }}
                       </a>
                     </b>
@@ -368,7 +416,10 @@
                     :class="cdash.configure.nwarnings > 0 ? 'warning' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/build/' + cdash.build.id + '/configure'">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/build/' + cdash.build.id + '/configure'"
+                      >
                         {{ cdash.configure.nwarnings }}
                       </a>
                     </b>
@@ -376,7 +427,10 @@
                 </tr>
                 <tr>
                   <th>
-                    <a class="cdash-link" href="#Build">
+                    <a
+                      class="cdash-link"
+                      href="#Build"
+                    >
                       <b>Build</b>
                     </a>
                   </th>
@@ -385,7 +439,10 @@
                     :class="cdash.build.nerrors > 0 ? 'error' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.build.id">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.build.id"
+                      >
                         {{ cdash.build.nerrors }}
                       </a>
                     </b>
@@ -395,7 +452,10 @@
                     :class="cdash.build.nwarnings > 0 ? 'warning' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.build.id">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.build.id"
+                      >
                         {{ cdash.build.nwarnings }}
                       </a>
                     </b>
@@ -403,7 +463,10 @@
                 </tr>
                 <tr>
                   <th>
-                    <a class="cdash-link" href="#Test">
+                    <a
+                      class="cdash-link"
+                      href="#Test"
+                    >
                       <b>Test</b>
                     </a>
                   </th>
@@ -412,7 +475,10 @@
                     :class="cdash.test.nfailed > 0 ? 'error' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.build.id">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.build.id"
+                      >
                         {{ cdash.test.nfailed }}
                       </a>
                     </b>
@@ -422,7 +488,10 @@
                     :class="cdash.test.nnotrun > 0 ? 'warning' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.build.id">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.build.id"
+                      >
                         {{ cdash.test.nnotrun }}
                       </a>
                     </b>
@@ -446,7 +515,10 @@
                     colspan="3"
                     class="header"
                   >
-                    <a class="cdash-link" :href="$baseURL + '/build/' + cdash.nextbuild.buildid">
+                    <a
+                      class="cdash-link"
+                      :href="$baseURL + '/build/' + cdash.nextbuild.buildid"
+                    >
                       <b>Next Build</b>
                     </a>
                   </th>
@@ -467,7 +539,10 @@
                     :class="cdash.nextbuild.nupdateerrors > 0 ? 'error' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/update'">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/update'"
+                      >
                         {{ cdash.nextbuild.nupdateerrors }}
                       </a>
                     </b>
@@ -477,7 +552,10 @@
                     :class="cdash.nextbuild.nupdatewarnings > 0 ? 'warning' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/update'">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/update'"
+                      >
                         {{ cdash.nextbuild.nupdatewarnings }}
                       </a>
                     </b>
@@ -493,7 +571,10 @@
                     :class="cdash.nextbuild.nconfigureerrors > 0 ? 'error' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/configure'">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/configure'"
+                      >
                         {{ cdash.nextbuild.nconfigureerrors }}
                       </a>
                     </b>
@@ -503,7 +584,10 @@
                     :class="cdash.nextbuild.nconfigurewarnings > 0 ? 'warning' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/configure'">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/configure'"
+                      >
                         {{ cdash.nextbuild.nconfigurewarnings }}
                       </a>
                     </b>
@@ -519,7 +603,10 @@
                     :class="cdash.nextbuild.nerrors > 0 ? 'error' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.nextbuild.buildid">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.nextbuild.buildid"
+                      >
                         {{ cdash.nextbuild.nerrors }}
                       </a>
                     </b>
@@ -529,7 +616,10 @@
                     :class="cdash.nextbuild.nwarnings > 0 ? 'warning' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.nextbuild.buildid">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.nextbuild.buildid"
+                      >
                         {{ cdash.nextbuild.nwarnings }}
                       </a>
                     </b>
@@ -545,7 +635,10 @@
                     :class="cdash.nextbuild.ntestfailed > 0 ? 'error' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.nextbuild.buildid">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.nextbuild.buildid"
+                      >
                         {{ cdash.nextbuild.ntestfailed }}
                       </a>
                     </b>
@@ -555,7 +648,10 @@
                     :class="cdash.nextbuild.ntestnotrun > 0 ? 'warning' : 'normal'"
                   >
                     <b>
-                      <a class="cdash-link" :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.nextbuild.buildid">
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.nextbuild.buildid"
+                      >
                         {{ cdash.nextbuild.ntestnotrun }}
                       </a>
                     </b>
@@ -632,7 +728,10 @@
               :class="{'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
             >
               <td>
-                <a class="cdash-link" :href="$baseURL + '/build/' + build.id">
+                <a
+                  class="cdash-link"
+                  :href="$baseURL + '/build/' + build.id"
+                >
                   {{ build.starttime }}
                 </a>
               </td>
@@ -847,13 +946,19 @@
           v-for="from in cdash.relationships_from"
           :key="from.relatedid"
         >
-          This build {{ from.relationship }} <a class="cdash-link" :href="$baseURL + '/build/' + from.relatedid">{{ from.name }}</a>.
+          This build {{ from.relationship }} <a
+            class="cdash-link"
+            :href="$baseURL + '/build/' + from.relatedid"
+          >{{ from.name }}</a>.
         </div>
         <div
           v-for="to in cdash.relationships_to"
           :key="to.buildid"
         >
-          <a class="cdash-link" :href="$baseURL + '/build/' + to.buildid">{{ to.name }}</a> {{ to.relationship }} this build.
+          <a
+            class="cdash-link"
+            :href="$baseURL + '/build/' + to.buildid"
+          >{{ to.name }}</a> {{ to.relationship }} this build.
         </div>
       </div>
 
@@ -1058,7 +1163,7 @@
 <script>
 import ApiLoader from './shared/ApiLoader';
 export default {
-  name: "BuildSummary",
+  name: 'BuildSummary',
 
   data () {
     return {
@@ -1084,20 +1189,20 @@ export default {
         'time': false,
         'errors': false,
         'warnings': false,
-        'tests': false
+        'tests': false,
       },
-    }
+    };
   },
 
   mounted () {
-    this.buildid = window.location.pathname.split("/").pop();
-    var endpoint_path = '/api/v1/buildSummary.php?buildid=' + this.buildid;
+    this.buildid = window.location.pathname.split('/').pop();
+    const endpoint_path = `/api/v1/buildSummary.php?buildid=${this.buildid}`;
     ApiLoader.loadPageData(this, endpoint_path);
   },
 
   methods: {
     postSetup: function (response) {
-      this.cdash.noteStatus = "0";
+      this.cdash.noteStatus = '0';
     },
 
     toggleHistoryGraph: function () {
@@ -1108,7 +1213,7 @@ export default {
     loadGraphData: function(graphType) {
       this.graphLoading = true;
       this.$axios
-        .get('/api/v1/getPreviousBuilds.php?buildid=' + this.buildid)
+        .get(`/api/v1/getPreviousBuilds.php?buildid=${this.buildid}`)
         .then(response => {
           this.cdash.buildtimes = [];
           this.cdash.builderrors = [];
@@ -1118,10 +1223,10 @@ export default {
           this.cdash.buildhistory = [];
 
           // Isolate data for each graph.
-          var builds = response.data['builds'];
-          for (var i = 0, len = builds.length; i < len; i++) {
-            var build = builds[i];
-            var t = build['timestamp'];
+          const builds = response.data['builds'];
+          for (let i = 0, len = builds.length; i < len; i++) {
+            const build = builds[i];
+            const t = build['timestamp'];
 
             this.cdash.buildtimes.push([t, build['time'] / 60]);
             this.cdash.builderrors.push([t, build['builderrors']]);
@@ -1129,7 +1234,7 @@ export default {
             this.cdash.testfailed.push([t, build['testfailed']]);
             this.cdash.buildids[t] = build['id'];
 
-            var history_build = [];
+            const history_build = [];
             history_build['id'] = build['id'];
             history_build['nfiles'] = build['nfiles'];
             history_build['configureerrors'] = build['configureerrors'];
@@ -1146,7 +1251,7 @@ export default {
             this.renderGraph(graphType);
           }
         })
-        .finally(() => this.graphLoading = false)
+        .finally(() => this.graphLoading = false);
     },
 
     renderGraph: function (graphType) {
@@ -1156,68 +1261,69 @@ export default {
       }
 
       // Options shared by all four graphs.
-      var data, element, label;
-      var options = {
+      let data, element, label;
+      const options = {
         lines: {show: true},
         points: {show: true},
         xaxis: {
-          mode: "time",
-          timeformat: "%Y/%m/%d %H:%M",
-          timeBase: "milliseconds",
+          mode: 'time',
+          timeformat: '%Y/%m/%d %H:%M',
+          timeBase: 'milliseconds',
         },
         grid: {
-          backgroundColor: "#fffaff",
+          backgroundColor: '#fffaff',
           clickable: true,
           hoverable: true,
           hoverFill: '#444',
-          hoverRadius: 4
+          hoverRadius: 4,
         },
-        selection: {mode: "x"},
+        selection: {mode: 'x'},
       };
 
       switch (graphType) {
       case 'time':
-        options['colors'] = ["#41A317"];
+        options['colors'] = ['#41A317'];
         options['yaxis'] = {
           tickFormatter: function (v, axis) {
-            return v.toFixed(axis.tickDecimals) + " mins"}
+            return `${v.toFixed(axis.tickDecimals)} mins`;
+          },
         };
         data = this.cdash.buildtimes;
-        element = "#buildtimegrapholder";
-        label = "Build Time";
+        element = '#buildtimegrapholder';
+        label = 'Build Time';
         break;
       case 'errors':
-        options['colors'] = ["#FF0000"];
+        options['colors'] = ['#FF0000'];
         options['yaxis'] = {minTickSize: 1};
         data = this.cdash.builderrors;
-        element = "#builderrorsgrapholder";
-        label = "# errors";
+        element = '#builderrorsgrapholder';
+        label = '# errors';
         break;
       case 'warnings':
-        options['colors'] = ["#FDD017"];
+        options['colors'] = ['#FDD017'];
         options['yaxis'] = {minTickSize: 1};
         data = this.cdash.buildwarnings;
-        element = "#buildwarningsgrapholder";
-        label = "# warnings";
+        element = '#buildwarningsgrapholder';
+        label = '# warnings';
         break;
       case 'tests':
-        options['colors'] = ["#0000FF"];
+        options['colors'] = ['#0000FF'];
         options['yaxis'] = {minTickSize: 1};
         data = this.cdash.testfailed;
-        element = "#buildtestsfailedgrapholder";
-        label = "# tests failed";
+        element = '#buildtestsfailedgrapholder';
+        label = '# tests failed';
         break;
       default:
         return;
       }
 
       // Render the graph.
-      var plot = $.plot($(element), [{label: label, data: data}],
+      const plot = $.plot($(element), [{label: label, data: data}],
         options);
 
-      $(element).bind("selected", function (event, area) {
+      $(element).bind('selected', (event, area) => {
         // Set axis range to highlighted section and redraw plot.
-        var axes = plot.getAxes(),
+        const axes = plot.getAxes(),
           xaxis = axes.xaxis.options;
         xaxis.min = area.x1;
         xaxis.max = area.x2;
@@ -1226,18 +1332,18 @@ export default {
         plot.draw();
       });
 
-      var vm = this;
-      $(element).bind("plotclick", function (e, pos, item) {
+      const vm = this;
+      $(element).bind('plotclick', (e, pos, item) => {
         if (item) {
           plot.highlight(item.series, item.datapoint);
-          var buildid = vm.cdash.buildids[item.datapoint[0]];
-          window.location = vm.$baseURL + "/build/" + buildid;
+          const buildid = vm.cdash.buildids[item.datapoint[0]];
+          window.location = `${vm.$baseURL}/build/${buildid}`;
         }
       });
 
-      $(element).bind('dblclick', function(event) {
+      $(element).bind('dblclick', (event) => {
         // Set axis range to null.  This makes all data points visible.
-        var axes = plot.getAxes(),
+        const axes = plot.getAxes(),
           xaxis = axes.xaxis.options,
           yaxis = axes.yaxis.options;
         xaxis.min = null;
@@ -1260,46 +1366,50 @@ export default {
       // This gives the holder div a chance to become visible before the graph
       // is drawn.  Otherwise flot has trouble drawing the graph with the
       // correct dimensions.
-      setTimeout(function () {
+      setTimeout(() => {
         if (!this.graphLoaded) {
           this.loadGraphData('time');
-        } else {
+        }
+        else {
           this.renderGraph('time');
         }
-      }.bind(this), 1);
+      }, 1);
     },
 
     toggleErrorGraph: function() {
       this.showErrorGraph = !this.showErrorGraph;
-      setTimeout(function () {
+      setTimeout(() => {
         if (!this.graphLoaded) {
           this.loadGraphData('errors');
-        } else {
+        }
+        else {
           this.renderGraph('errors');
         }
-      }.bind(this), 1);
+      }, 1);
     },
 
     toggleWarningGraph: function() {
       this.showWarningGraph = !this.showWarningGraph;
-      setTimeout(function () {
+      setTimeout(() => {
         if (!this.graphLoaded) {
           this.loadGraphData('warnings');
-        } else {
+        }
+        else {
           this.renderGraph('warnings');
         }
-      }.bind(this), 1);
+      }, 1);
     },
 
     toggleTestGraph: function() {
       this.showTestGraph = !this.showTestGraph;
-      setTimeout(function () {
+      setTimeout(() => {
         if (!this.graphLoaded) {
           this.loadGraphData('tests');
-        } else {
+        }
+        else {
           this.renderGraph('tests');
         }
-      }.bind(this), 1);
+      }, 1);
     },
 
     toggleNote: function() {
@@ -1311,7 +1421,7 @@ export default {
         .post('/api/v1/addUserNote.php', {
           buildid: this.cdash.build.id,
           Status: this.cdash.noteStatus,
-          AddNote: this.cdash.noteText
+          AddNote: this.cdash.noteText,
         })
         .then(response => {
         // Add the newly created note to our list.
@@ -1320,12 +1430,12 @@ export default {
         .catch(error => {
         // Display the error.
           this.cdash.error = error;
-          console.log(error)
+          console.log(error);
         });
     },
 
   },
-}
+};
 </script>
 
 <style scoped>

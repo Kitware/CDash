@@ -11,13 +11,22 @@
       <br>
       <br>
       Click here to access the
-      <a class="cdash-link" :href="$baseURL + '/index.php?project=' + cdash.project.name_encoded">CDash project page</a>
+      <a
+        class="cdash-link"
+        :href="$baseURL + '/index.php?project=' + cdash.project.name_encoded"
+      >CDash project page</a>
       <br>
       Click here to
-      <a class="cdash-link" :href="$baseURL + '/project/' + cdash.project.Id + '/edit'">edit the project</a>
+      <a
+        class="cdash-link"
+        :href="$baseURL + '/project/' + cdash.project.Id + '/edit'"
+      >edit the project</a>
       <br>
       Click here to
-      <a class="cdash-link" :href="$baseURL + '/project/' + cdash.project.Id + '/ctest_configuration'">download the CTest configuration file</a>
+      <a
+        class="cdash-link"
+        :href="$baseURL + '/project/' + cdash.project.Id + '/ctest_configuration'"
+      >download the CTest configuration file</a>
       <br>
     </div>
     <div v-else>
@@ -59,14 +68,22 @@
               class="nav-item"
               @click="setTabByName('Info');"
             >
-              <a href="#Info" class="nav-link cdash-link" :class="{ active: activeTab === 'Info' }">Information</a>
+              <a
+                href="#Info"
+                class="nav-link cdash-link"
+                :class="{ active: activeTab === 'Info' }"
+              >Information</a>
             </li>
 
             <li
               class="nav-item"
               @click="setTabByName('Logo');"
             >
-              <a href="#Logo" class="nav-link cdash-link" :class="{ active: activeTab === 'Logo', disabled: cdash.tabs.Logo.disabled }">Logo</a>
+              <a
+                href="#Logo"
+                class="nav-link cdash-link"
+                :class="{ active: activeTab === 'Logo', disabled: cdash.tabs.Logo.disabled }"
+              >Logo</a>
             </li>
 
             <li
@@ -74,21 +91,33 @@
               class="nav-item"
               @click="setTabByName('Repos');"
             >
-              <a href="#Repos" class="nav-link cdash-link" :class="{ active: activeTab === 'Repos', disabled: cdash.tabs.Repos.disabled }">Repository</a>
+              <a
+                href="#Repos"
+                class="nav-link cdash-link"
+                :class="{ active: activeTab === 'Repos', disabled: cdash.tabs.Repos.disabled }"
+              >Repository</a>
             </li>
 
             <li
               class="nav-item"
               @click="setTabByName('Testing');"
             >
-              <a href="#Testing" class="nav-link cdash-link" :class="{ active: activeTab === 'Testing', disabled: cdash.tabs.Testing.disabled }">Testing</a>
+              <a
+                href="#Testing"
+                class="nav-link cdash-link"
+                :class="{ active: activeTab === 'Testing', disabled: cdash.tabs.Testing.disabled }"
+              >Testing</a>
             </li>
 
             <li
               class="nav-item"
               @click="setTabByName('Email');"
             >
-              <a href="#Email" class="nav-link cdash-link" :class="{ active: activeTab === 'Email', disabled: cdash.tabs.Email.disabled }">Email</a>
+              <a
+                href="#Email"
+                class="nav-link cdash-link"
+                :class="{ active: activeTab === 'Email', disabled: cdash.tabs.Email.disabled }"
+              >Email</a>
             </li>
 
             <li
@@ -96,14 +125,22 @@
               class="nav-item"
               @click="setTabByName('Spam');"
             >
-              <a href="#Spam" class="nav-link cdash-link" :class="{ active: activeTab === 'Spam' }">Spam</a>
+              <a
+                href="#Spam"
+                class="nav-link cdash-link"
+                :class="{ active: activeTab === 'Spam' }"
+              >Spam</a>
             </li>
 
             <li
               class="nav-item"
               @click="setTabByName('Misc');"
             >
-              <a href="#Misc" class="nav-link cdash-link" :class="{ active: activeTab === 'Misc', disabled: cdash.tabs.Misc.disabled }">Miscellaneous</a>
+              <a
+                href="#Misc"
+                class="nav-link cdash-link"
+                :class="{ active: activeTab === 'Misc', disabled: cdash.tabs.Misc.disabled }"
+              >Miscellaneous</a>
             </li>
           </ul>
 
@@ -377,14 +414,14 @@
                         Private
                       </option>
                       <option
-                        value="1"
                         v-if="cdash.max_project_visibility === 'PUBLIC'"
+                        value="1"
                       >
                         Public
                       </option>
                       <option
-                        value="2"
                         v-if="cdash.max_project_visibility === 'PUBLIC' || cdash.max_project_visibility === 'PROTECTED'"
+                        value="2"
                       >
                         Protected
                       </option>
@@ -1619,7 +1656,10 @@
                     </div>
                   </td>
                   <td>
-                    <a class="cdash-link" :href="$baseURL + '/project/' + cdash.project.Id + '/ctest_configuration'">
+                    <a
+                      class="cdash-link"
+                      :href="$baseURL + '/project/' + cdash.project.Id + '/ctest_configuration'"
+                    >
                       CTestConfig.cmake
                     </a>
                     <a
@@ -2120,7 +2160,7 @@
 <script>
 import ApiLoader from './shared/ApiLoader';
 export default {
-  name: "EditProject",
+  name: 'EditProject',
   props: {
     projectid: {
       type: Number,
@@ -2135,7 +2175,7 @@ export default {
       bugtrackerexamples: {
         Buganizer: '<bug-url>/new?component=###&template=###',
         GitHub: 'https://github.com/:owner/:repo/issues/new?',
-        JIRA: '<bug-url>/secure/CreateIssueDetails!init.jspa?pid=###&issuetype=#'
+        JIRA: '<bug-url>/secure/CreateIssueDetails!init.jspa?pid=###&issuetype=#',
       },
       bugtrackertypes: [
         'Buganizer',
@@ -2168,13 +2208,13 @@ export default {
       cdash: {},
       loading: true,
       errored: false,
-    }
+    };
   },
 
   mounted () {
-    var endpoint_path = '/api/v1/createProject.php';
+    let endpoint_path = '/api/v1/createProject.php';
     if (this.projectid > 0) {
-      endpoint_path += '?projectid=' + this.projectid;
+      endpoint_path += `?projectid=${this.projectid}`;
       this.selectedProject = this.projectid;
     }
     ApiLoader.loadPageData(this, endpoint_path);
@@ -2184,8 +2224,9 @@ export default {
     postSetup: function (response) {
       this.cdash.changesmade = false;
 
-      var disableTabs = false;
+      let disableTabs = false;
 
+      // eslint-disable-next-line eqeqeq
       if (this.cdash.edit == 0) {
         disableTabs = true;
         this.cdash.submitdisabled = true;
@@ -2213,6 +2254,7 @@ export default {
           'idx': 4,
         },
       };
+      // eslint-disable-next-line eqeqeq
       if (this.cdash.edit == 1) {
         this.cdash.tabs.Spam = {
           'disabled': false,
@@ -2226,7 +2268,8 @@ export default {
           'disabled': false,
           'idx': 7,
         };
-      } else {
+      }
+      else {
         this.cdash.tabs.Misc = {
           'disabled': true,
           'idx': 5,
@@ -2234,18 +2277,19 @@ export default {
       }
 
       // Jump to tab specified by hash (if any).
-      this.setTabByName(window.location.hash.replace("#", ""));
+      this.setTabByName(window.location.hash.replace('#', ''));
 
       if (this.cdash.project.BugTrackerType && this.cdash.project.BugTrackerNewIssueUrl) {
         this.issuecreation = true;
-      } else {
+      }
+      else {
         this.issuecreation = false;
       }
     },
 
     // Show/hide help text.
     showHelp: function(id_div) {
-      $(".tab_help").html($("#"+id_div).html()).show();
+      $('.tab_help').html($(`#${id_div}`).html()).show();
     },
     clearHelp: function() {
       $('.tab_help').html('');
@@ -2253,25 +2297,27 @@ export default {
 
     // Tab navigation functions.
     nextTab: function() {
-      if(this.activeTab == 'Info' && (this.cdash.project.Name === undefined || this.cdash.project.Name == '')) {
+      // eslint-disable-next-line eqeqeq
+      if (this.activeTab === 'Info' && (this.cdash.project.Name === undefined || this.cdash.project.Name == '')) {
         alert('please specify a name for the project.');
         return false;
       }
 
-      var idx = this.cdash.tabs[this.activeTab].idx;
+      const idx = this.cdash.tabs[this.activeTab].idx;
       this.gotoTab(idx + 1);
-      if(idx == 4) {
+      // eslint-disable-next-line eqeqeq
+      if (idx == 4) {
         this.cdash.submitdisabled = false;
       }
     },
 
     previousTab: function() {
-      var idx = this.cdash.tabs[this.activeTab].idx;
+      const idx = this.cdash.tabs[this.activeTab].idx;
       this.gotoTab(idx - 1);
     },
 
     gotoTab: function(idx) {
-      for (var tabName in this.cdash.tabs) {
+      for (const tabName in this.cdash.tabs) {
         if (this.cdash.tabs[tabName].idx <= idx) {
           this.cdash.tabs[tabName].disabled = false;
         }
@@ -2285,25 +2331,26 @@ export default {
       this.clearHelp();
       if (tabName in this.cdash.tabs) {
         this.activeTab = tabName;
-      } else {
+      }
+      else {
         this.activeTab = 'Info';
       }
-      if (this.activeTab != tabName) {
-        window.location.hash = "#" + this.activeTab;
+      if (this.activeTab !== tabName) {
+        window.location.hash = `#${this.activeTab}`;
       }
     },
 
     // Create new project.
     createProject: function() {
-      var parameters = {
+      const parameters = {
         Submit: true,
-        project: this.cdash.project
+        project: this.cdash.project,
       };
 
       this.$axios
         .post('/api/v1/project.php', parameters)
         .then(response => {
-          var cdash = response.data;
+          const cdash = response.data;
           if (cdash.projectcreated && cdash.project) {
             this.cdash.projectcreated = cdash.projectcreated;
             this.cdash.project = cdash.project;
@@ -2318,14 +2365,14 @@ export default {
 
     // Update existing project.
     updateProject: function() {
-      var parameters = {
+      const parameters = {
         Update: true,
-        project: this.cdash.project
+        project: this.cdash.project,
       };
       this.$axios
         .post('/api/v1/project.php', parameters)
         .then(response => {
-          var cdash = response.data;
+          const cdash = response.data;
           if (cdash.projectupdated && cdash.project) {
             this.cdash.changesmade = false;
             this.projectupdated = true;
@@ -2345,13 +2392,13 @@ export default {
 
     setLogo: function() {
       if (this.uploadedLogo) {
-        var data = new FormData();
+        const data = new FormData();
         data.append('project', JSON.stringify(this.cdash.project));
         data.append('logo', this.uploadedLogo);
-        var config = {
+        const config = {
           headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+            'Content-Type': 'multipart/form-data',
+          },
         };
         this.$axios
           .post('/api/v1/project.php', data, config)
@@ -2360,7 +2407,7 @@ export default {
               this.previewLogo = null;
               this.uploadedLogo = null;
               // Use a decache to force the logo to refresh even if the imageid didn't change.
-              var imageid = response.data.imageid + "&decache=" + new Date().getTime();
+              const imageid = `${response.data.imageid}&decache=${new Date().getTime()}`;
               this.cdash.project.ImageId = imageid;
               this.cdash.logoid = imageid;
             }
@@ -2370,13 +2417,13 @@ export default {
 
     // Delete project.
     deleteProject: function() {
-      if (window.confirm("Are you sure you want to delete this project?")) {
-        var parameters = { project: this.cdash.project };
+      if (window.confirm('Are you sure you want to delete this project?')) {
+        const parameters = { project: this.cdash.project };
         this.$axios
           .delete('/api/v1/project.php', { data: parameters})
           .then(response => {
             // Redirect to /user
-            window.location = this.$baseURL + '/user';
+            window.location = `${this.$baseURL}/user`;
           });
       }
     },
@@ -2386,7 +2433,7 @@ export default {
       if (!this.cdash.project.CvsUrl) {
         return;
       }
-      var endpoint = this.$baseURL + '/api/v1/project.php?vcsexample=1&url=' + encodeURIComponent(this.cdash.project.CvsUrl) + '&type=' + this.cdash.project.CvsViewerType;
+      const endpoint = `${this.$baseURL}/api/v1/project.php?vcsexample=1&url=${encodeURIComponent(this.cdash.project.CvsUrl)}&type=${this.cdash.project.CvsViewerType}`;
       this.$axios
         .get(endpoint)
         .then(response => {
@@ -2400,26 +2447,26 @@ export default {
         url: '',
         branch: '',
         username: '',
-        password: ''
+        password: '',
       });
     },
 
     addBlockedBuild: function() {
-      var parameters = {
+      const parameters = {
         project: this.cdash.project,
-        AddBlockedBuild: this.spam
+        AddBlockedBuild: this.spam,
       };
       this.$axios
         .post('/api/v1/project.php', parameters)
         .then(response => {
-          var cdash = response.data;
+          const cdash = response.data;
           if (cdash.blockedid > 0) {
             this.spam.id = cdash.blockedid;
             this.cdash.project.blockedbuilds.push(this.spam);
             this.buildblocked = true;
-            setTimeout(function () {
+            setTimeout(() => {
               this.buildblocked = false;
-            }.bind(this), 2000);
+            }, 2000);
           }
         })
         .catch(function (error) {
@@ -2429,17 +2476,17 @@ export default {
     },
 
     removeBlockedBuild: function(blockedbuild) {
-      var parameters = {
+      const parameters = {
         project: this.cdash.project,
-        RemoveBlockedBuild: blockedbuild
+        RemoveBlockedBuild: blockedbuild,
       };
       this.$axios
         .post('/api/v1/project.php', parameters)
         .then(response => {
-          var cdash = response.data;
+          const cdash = response.data;
           // Find and remove this build.
-          var index = -1;
-          for(var i = 0, len = this.cdash.project.blockedbuilds.length; i < len; i++) {
+          let index = -1;
+          for (let i = 0, len = this.cdash.project.blockedbuilds.length; i < len; i++) {
             if (this.cdash.project.blockedbuilds[i].id === blockedbuild.id) {
               index = i;
               break;
@@ -2461,14 +2508,16 @@ export default {
       }
       if (!this.cdash.project.BugTrackerType in this.bugtrackerexamples) {
         this.newissuehelp = '';
-      } else {
+      }
+      else {
         this.newissuehelp = this.bugtrackerexamples[this.cdash.project.BugTrackerType];
       }
     },
 
     switchProject: function() {
+      // eslint-disable-next-line eqeqeq
       if (this.selectedProject != this.projectid) {
-        window.location = this.$baseURL + '/project/' + this.selectedProject + '/edit#Info';
+        window.location = `${this.$baseURL}/project/${this.selectedProject}/edit#Info`;
       }
     },
 
@@ -2481,19 +2530,20 @@ export default {
       const reader = new FileReader();
       reader.readAsDataURL(this.uploadedLogo);
       reader.onload = evt => {
-        let img = new Image();
+        const img = new Image();
         img.src = evt.target.result;
         img.onload = () => {
           if (img.height > 100) {
             this.logoTooLarge = true;
             this.logoHeight = img.height;
-          } else {
+          }
+          else {
             this.previewLogo = evt.target.result;
           }
-        }
+        };
       };
-    }
+    },
 
   },
-}
+};
 </script>
