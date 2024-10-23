@@ -3,7 +3,6 @@ public/laravel/*
 public/build/*
 _build/*
 cypress_cache/*
-resources/js/components/BuildNotes.vue
 resources/js/components/BuildConfigure.vue
 resources/js/components/AllProjects.vue
 app/cdash/public/*
