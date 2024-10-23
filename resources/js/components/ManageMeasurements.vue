@@ -157,9 +157,9 @@
 
 <script>
 import ApiLoader from './shared/ApiLoader';
-import draggable from 'vuedraggable'
+import draggable from 'vuedraggable';
 export default {
-  name: "ManageMeasurements",
+  name: 'ManageMeasurements',
 
   components: {
     draggable,
@@ -176,13 +176,13 @@ export default {
       newMeasurementName: '',
       newMeasurementSummaryPage: 1,
       newMeasurementTestPage: 1,
-    }
+    };
   },
 
   mounted () {
-    var path_parts = window.location.pathname.split("/");
+    const path_parts = window.location.pathname.split('/');
     this.projectid = path_parts[path_parts.length - 2];
-    var endpoint_path = '/api/v1/manageMeasurements.php?projectid=' + this.projectid;
+    const endpoint_path = `/api/v1/manageMeasurements.php?projectid=${this.projectid}`;
     ApiLoader.loadPageData(this, endpoint_path);
   },
 
@@ -190,7 +190,7 @@ export default {
     preSetup: function(response) {
       // Sort measurements by position.
       if (response.data.measurements) {
-        response.data.measurements.sort(function (a, b) {
+        response.data.measurements.sort((a, b) => {
           return Number(a.position) - Number(b.position);
         });
       }
@@ -206,7 +206,8 @@ export default {
     // Save measurements to database.
     save: function() {
       // Save the new measurement if the user filled it out.
-      var new_measurement = {};
+      const new_measurement = {};
+      // eslint-disable-next-line eqeqeq
       if (this.newMeasurementName != '') {
         new_measurement.name = this.newMeasurementName;
         new_measurement.id = -1;
@@ -214,14 +215,14 @@ export default {
         this.cdash.measurements.push(new_measurement);
       }
       // Submit the request.
-      var parameters = {
+      const parameters = {
         projectid: this.cdash.projectid,
-        measurements: this.cdash.measurements
+        measurements: this.cdash.measurements,
       };
       this.$axios.post('api/v1/manageMeasurements.php', parameters)
         .then(response => {
-          $("#save_complete").show();
-          $("#save_complete").delay(3000).fadeOut(400);
+          $('#save_complete').show();
+          $('#save_complete').delay(3000).fadeOut(400);
           if (response.data.id > 0) {
             // Assign an id to the measurement we just created,
             // and initialize a new blank measurement for the user to fill out.
@@ -234,22 +235,22 @@ export default {
         .catch(error => {
           // Display the error.
           this.cdash.error = error;
-          console.log(error)
+          console.log(error);
         });
     },
 
     // Remove measurement upon confirmation.
     removeMeasurement: function() {
-      var parameters = {
+      const parameters = {
         projectid: this.cdash.projectid,
-        id: this.measurementToDelete
+        id: this.measurementToDelete,
       };
 
       this.$axios
         .delete('/api/v1/manageMeasurements.php', { data: parameters})
         .then(response => {
           // Find the measurement to remove.
-          for (var i = 0, len = this.cdash.measurements.length; i < len; i++) {
+          for (let i = 0, len = this.cdash.measurements.length; i < len; i++) {
             if (this.cdash.measurements[i].id === this.measurementToDelete) {
               // Remove it from our scope.
               this.cdash.measurements.splice(i, 1);
@@ -265,17 +266,17 @@ export default {
         })
         .catch(error => {
           this.cdash.error = error;
-          console.log(error)
+          console.log(error);
         });
     },
 
     // Update positions when dragging stops.
     updatePositions: function() {
-      for (var i = 0; i < this.cdash.measurements.length; i++) {
+      for (let i = 0; i < this.cdash.measurements.length; i++) {
         this.cdash.measurements[i].position = i + 1;
       }
     },
 
   },
-}
+};
 </script>
