@@ -3,7 +3,6 @@ public/laravel/*
 public/build/*
 _build/*
 cypress_cache/*
-resources/js/components/ManageAuthTokens.vue
 resources/js/components/EditProject.vue
 resources/js/components/BuildUpdate.vue
 resources/js/components/BuildSummary.vue
