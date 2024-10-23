@@ -7,7 +7,10 @@
       id="header-nav-previous-btn"
       :class="previousClass"
     >
-      <a class="cdash-link" :href="previous">
+      <a
+        class="cdash-link"
+        :href="previous"
+      >
         <svg
           id="i-chevron-left"
           xmlns="http://www.w3.org/2000/svg"
@@ -29,13 +32,19 @@
       id="header-nav-current-btn"
       :class="currentClass"
     >
-      <a class="cdash-link" :href="current">LATEST</a>
+      <a
+        class="cdash-link"
+        :href="current"
+      >LATEST</a>
     </li>
     <li
       id="header-nav-next-btn"
       :class="nextClass"
     >
-      <a class="cdash-link" :href="next">
+      <a
+        class="cdash-link"
+        :href="next"
+      >
         NEXT
         <svg
           id="i-chevron-right"
@@ -59,7 +68,7 @@
 <script>
 import ApiLoader from '../shared/ApiLoader';
 export default {
-  name: "HeaderNav",
+  name: 'HeaderNav',
 
   data() {
     return {
@@ -67,7 +76,7 @@ export default {
       current: null,
       next: null,
       showNav: false,
-    }
+    };
   },
 
   computed: {
@@ -81,7 +90,7 @@ export default {
 
     nextClass () {
       return this.next === null ? 'btn-disabled' : 'btn-enabled';
-    }
+    },
   },
 
   mounted() {
@@ -105,7 +114,7 @@ export default {
     });
   },
 
-}
+};
 </script>
 
 <style scoped>

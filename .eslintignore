@@ -3,7 +3,6 @@ public/laravel/*
 public/build/*
 _build/*
 cypress_cache/*
-resources/js/components/page-header/HeaderNav.vue
 resources/js/components/page-header/HeaderMenu.vue
 resources/js/components/ViewDynamicAnalysis.vue
 resources/js/components/UserHomepage.vue
