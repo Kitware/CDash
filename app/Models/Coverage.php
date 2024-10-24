@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $buildid
@@ -35,4 +36,12 @@ class Coverage extends Model
         'functionstested',
         'functionsuntested',
     ];
+
+    /**
+     * @return BelongsTo<Build, self>
+     */
+    public function build(): BelongsTo
+    {
+        return $this->belongsTo(Build::class, 'buildid');
+    }
 }

@@ -221,4 +221,12 @@ class Build extends Model
     {
         return $this->hasMany(BuildMeasurement::class, 'buildid');
     }
+
+    /**
+     * @return HasMany<Coverage>
+     */
+    public function coverageResults(): HasMany
+    {
+        return $this->hasMany(Coverage::class, 'buildid');
+    }
 }

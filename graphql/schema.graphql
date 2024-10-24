@@ -251,6 +251,10 @@ type Build {
   compilerName: String @rename(attribute: "compilername")
 
   compilerVersion: String @rename(attribute: "compilerversion")
+  
+  coverageResults(
+    filters: _ @filter(inputType: "CoverageFilterInput")
+  ): [Coverage!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 }
 
 input BuildFilterInput {
@@ -469,4 +473,35 @@ input NoteFilterInput {
   id: ID
   name: String
   text: String
+}
+
+
+"""
+Coverage result for a particular build+file combination.
+"""
+type Coverage {
+  "Unique primary key."
+  id: ID!
+
+  linesOfCodeTested: Int! @rename(attribute: "loctested")
+
+  linesOfCodeUntested: Int! @rename(attribute: "locuntested")
+
+  branchesTested: Int! @rename(attribute: "branchestested")
+
+  branchesUntested: Int! @rename(attribute: "branchesuntested")
+
+  functionsTested: Int! @rename(attribute: "functionstested")
+
+  functionsUntested: Int! @rename(attribute: "functionsuntested")
+}
+
+input CoverageFilterInput {
+  id: ID
+  linesOfCodeTested: Int @rename(attribute: "loctested")
+  linesOfCodeUntested: Int @rename(attribute: "locuntested")
+  branchesTested: Int @rename(attribute: "branchestested")
+  branchesUntested: Int @rename(attribute: "branchesuntested")
+  functionsTested: Int @rename(attribute: "functionstested")
+  functionsUntested: Int @rename(attribute: "functionsuntested")
 }
