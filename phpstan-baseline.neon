@@ -18571,23 +18571,13 @@ parameters:
 			path: app/cdash/tests/manageCoverageTest.php
 
 		-
-			message: "#^Offset 1 might not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string, 2\\?\\: numeric\\-string\\}\\.$#"
-			count: 1
-			path: app/cdash/tests/manageCoverageTest.php
-
-		-
-			message: "#^Offset 2 might not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string, 2\\?\\: numeric\\-string\\}\\.$#"
-			count: 1
-			path: app/cdash/tests/manageCoverageTest.php
-
-		-
 			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
 			count: 2
 			path: app/cdash/tests/manageCoverageTest.php
 
 		-
 			message: "#^Parameter \\#2 \\$value of method WebTestCase\\:\\:setFieldByName\\(\\) expects string, int given\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/manageCoverageTest.php
 
 		-
