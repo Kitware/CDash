@@ -8,14 +8,12 @@ use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
-use CDash\Model\CoverageFile2User;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 use App\Models\Project as EloquentProject;
 use CDash\Model\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -105,172 +103,13 @@ final class CoverageController extends AbstractBuildController
         $currentUTCTime = gmdate(FMT_DATETIME);
         $beginUTCTime = gmdate(FMT_DATETIME, time() - 3600 * 7 * 24); // 7 days
 
-        $CoverageFile2User = new CoverageFile2User();
-        $CoverageFile2User->ProjectId = $projectid;
-
         // Change the priority of selected files, assuming that the bulk replacement takes priority.
         if (isset($_POST['changePrioritySelected'])) {
             foreach ($_POST['selectionFiles'] ?? [] as $key => $value) {
-                $CoverageFile2User->FullPath = htmlspecialchars($value);
-                $CoverageFile2User->SetPriority(intval($_POST['prioritySelectedSelection']));
+                $this->setFilePriority($Project->Id, htmlspecialchars($value), intval($_POST['prioritySelectedSelection']));
             }
         } elseif (isset($_POST['prioritySelection'])) {
-            $CoverageFile2User = new CoverageFile2User();
-            $CoverageFile2User->ProjectId = $projectid;
-            $CoverageFile2User->FullPath = htmlspecialchars($_POST['fullpath'] ?? '');
-            $CoverageFile2User->SetPriority(intval($_POST['prioritySelection'] ?? -1));
-        }
-
-        // Remove the selected authors
-        if (isset($_POST['removeAuthorsSelected'])) {
-            foreach ($_POST['selectionFiles'] ?? [] as $key => $value) {
-                $CoverageFile2User->FullPath = htmlspecialchars($value);
-                $CoverageFile2User->RemoveAuthors();
-            }
-        }
-
-        // Add the selected authors
-        if (isset($_POST['addAuthorsSelected'])) {
-            foreach ($_POST['selectionFiles'] ?? [] as $key => $value) {
-                $CoverageFile2User->UserId = intval($_POST['userSelectedSelection']);
-                $CoverageFile2User->FullPath = htmlspecialchars($value);
-                $CoverageFile2User->Insert();
-            }
-        }
-
-        // Add an author manually
-        if (isset($_POST['addAuthor'])) {
-            $CoverageFile2User->UserId = intval($_POST['userSelection']);
-            $CoverageFile2User->FullPath = htmlspecialchars($_POST['fullpath']);
-            $CoverageFile2User->Insert();
-        }
-
-        // Remove an author manually
-        if (isset($_GET['removefileid'])) {
-            $CoverageFile2User->UserId = intval($_GET['removeuserid']);
-            $CoverageFile2User->FileId = intval($_GET['removefileid']);
-            $CoverageFile2User->Remove();
-        }
-
-        // Assign last author
-        if (isset($_POST['assignLastAuthor'])) {
-            $CoverageFile2User->AssignAuthors($buildid, onlylast: true);
-        }
-
-        // Assign all authors
-        if (isset($_POST['assignAllAuthors'])) {
-            $CoverageFile2User->AssignAuthors($buildid);
-        }
-
-        // Upload file
-        if (isset($_POST['uploadAuthorsFile'])) {
-            $contents = file_get_contents($_FILES['authorsFile']['tmp_name']);
-            if (strlen($contents) > 0) {
-                $pos = 0;
-                $pos2 = strpos($contents, "\n");
-                while ($pos !== false) {
-                    $line = substr($contents, $pos, $pos2 - $pos);
-
-                    $file = '';
-                    $authors = [];
-
-                    // first is the svnuser
-                    $posfile = strpos($line, ':');
-                    if ($posfile !== false) {
-                        $file = trim(substr($line, 0, $posfile));
-                        $begauthor = $posfile + 1;
-                        $endauthor = strpos($line, ',', $begauthor);
-                        while ($endauthor !== false) {
-                            $authors[] = trim(substr($line, $begauthor, $endauthor - $begauthor));
-                            $begauthor = $endauthor + 1;
-                            $endauthor = strpos($line, ',', $begauthor);
-                        }
-
-                        $authors[] = trim(substr($line, $begauthor));
-
-                        // Insert the user
-                        $CoverageFile = new CoverageFile;
-                        if ($CoverageFile->GetIdFromName($file, $buildid) === false) {
-                            $xml .= add_XML_value('warning', '*File not found for: ' . $file);
-                        } else {
-                            foreach ($authors as $author) {
-                                $User = User::where('firstname', $author)
-                                    ->orWhere('lastname', $author)
-                                    ->first();
-                                $CoverageFile2User->UserId = $User->id ?? false;
-                                if ($CoverageFile2User->UserId === false) {
-                                    $xml .= add_XML_value('warning', '*User not found for: ' . $author);
-                                } else {
-                                    $CoverageFile2User->FullPath = $file;
-                                    $CoverageFile2User->Insert();
-                                }
-                            }
-                        }
-                    }
-
-                    $pos = $pos2;
-                    $pos2 = strpos($contents, "\n", $pos2 + 1);
-                }
-            }
-        }
-
-        // Send an email
-        if (isset($_POST['sendEmail'])) {
-            $coverageThreshold = $Project->GetCoverageThreshold();
-            $userids = DB::table('coveragefilepriority')
-                        ->join('coveragefile2user', 'coveragefilepriority.id', '=', 'coveragefile2user.fileid')
-                        ->where('coveragefilepriority.projectid', '=', intval($projectid))->distinct()
-                        ->pluck('userid')->toArray();
-            foreach ($userids as $userid) {
-                $CoverageFile2User->UserId = $userid;
-                $fileids = $CoverageFile2User->GetFiles();
-
-                $files = [];
-
-                // For each file check the coverage metric
-                foreach ($fileids as $fileid) {
-                    $coveragefile = new CoverageFile;
-                    $CoverageFile2User->FileId = $fileid;
-                    $coveragefile->Id = $CoverageFile2User->GetCoverageFileId($buildid);
-                    $metric = $coveragefile->GetMetric();
-                    if ($metric < ($coverageThreshold / 100.0)) {
-                        $file = [
-                            'percent' => $coveragefile->GetLastPercentCoverage(),
-                            'path' => $coveragefile->GetPath(),
-                            'id' => $fileid,
-                        ];
-                        $files[] = $file;
-                    }
-                }
-
-                // Send an email if the number of uncovered file is greater than one
-                if (count($files) > 0) {
-                    // Writing the message
-                    $messagePlainText = 'The following files for the project ' . $Project->GetName();
-                    $messagePlainText .= ' have a low coverage and ';
-                    $messagePlainText .= "you have been identified as one of the authors of these files.\n";
-
-                    foreach ($files as $file) {
-                        $messagePlainText .= $file['path'] . ' (' . round($file['percent'], 2) . "%)\n";
-                    }
-
-                    $messagePlainText .= 'Details on the submission can be found at ';
-
-                    $messagePlainText .= url('/');
-                    $messagePlainText .= "\n\n";
-
-                    $messagePlainText .= "\n-CDash\n";
-
-                    // Send the email
-                    $title = 'CDash [' . $Project->GetName() . '] - Low Coverage';
-
-                    $user = User::find($userid);
-                    cdashmail($user->email, $title, $messagePlainText);
-                    $xml .= add_XML_value('warning', '*The email has been sent successfully.');
-                } else {
-                    $xml .= add_XML_value('warning', '*No email sent because the coverage is green.');
-                }
-            }
+            $this->setFilePriority($Project->Id, $_POST['fullpath'] ?? '', intval($_POST['prioritySelection'] ?? -1));
         }
 
         /* We start generating the XML here */
@@ -315,28 +154,23 @@ final class CoverageController extends AbstractBuildController
                     $CoverageFile = new CoverageFile();
                     $CoverageFile->Id = $fileid;
                     $xml .= '<file>';
-                    $CoverageFile2User->FullPath = $CoverageFile->GetPath();
 
-                    $xml .= add_XML_value('fullpath', $CoverageFile->GetPath());
-                    $xml .= add_XML_value('id', $CoverageFile2User->GetId());
+                    $file_path = $CoverageFile->GetPath();
+
+                    $xml .= add_XML_value('fullpath', $file_path);
+                    $xml .= add_XML_value('id', $CoverageFile->Id);
                     $xml .= add_XML_value('fileid', $fileid);
 
                     $row = $row == 0 ? 1 : 0;
 
                     $xml .= add_XML_value('row', $row);
 
-                    // Get the authors
-                    $CoverageFile2User->FullPath = $CoverageFile->GetPath();
-                    $authorids = $CoverageFile2User->GetAuthors();
-                    foreach ($authorids as $authorid) {
-                        $xml .= '<author>';
-                        $user = User::find($authorid);
-                        $xml .= add_XML_value('name', $user !== null ? $user->full_name : '');
-                        $xml .= add_XML_value('id', $authorid);
-                        $xml .= '</author>';
-                    }
+                    $priority = (int) (DB::select('
+                        SELECT priority
+                        FROM coveragefilepriority
+                        WHERE fullpath=? AND projectid=?
+                    ', [$file_path, $Project->Id])[0]->priority ?? 0);
 
-                    $priority = $CoverageFile2User->GetPriority();
                     if ($priority > 0) {
                         $xml .= add_XML_value('priority', $priority);
                     }
@@ -344,16 +178,6 @@ final class CoverageController extends AbstractBuildController
                     $xml .= '</file>';
                 }
             }
-
-            // List all the users of the project
-            $eloquent_project = \App\Models\Project::findOrFail($Project->Id);
-            foreach ($eloquent_project->users()->get() as $user) {
-                $xml .= '<user>';
-                $xml .= add_XML_value('id', $user->id);
-                $xml .= add_XML_value('name', $User !== null ? $user->full_name : 1);
-                $xml .= '</user>';
-            }
-
             $xml .= '</project>';
         }
         $xml .= '</cdash>';
@@ -790,6 +614,28 @@ final class CoverageController extends AbstractBuildController
             ->with('xsl_content', generate_XSLT($xml, 'viewCoverage', true));
     }
 
+    private function setFilePriority(int $projectid, string $file_path, int $priority): void
+    {
+        $count = (int) (DB::select('
+            SELECT count(*) AS c
+            FROM coveragefilepriority
+            WHERE FullPath=?
+        ', [$file_path])[0]->c ?? 0);
+
+        if ($count === 0) {
+            DB::insert('
+                INSERT INTO coveragefilepriority (projectid, priority, fullpath)
+                VALUES (?, ?, ?)
+            ', [$projectid, $priority, $file_path]);
+        } else {
+            DB::update('
+                UPDATE coveragefilepriority
+                SET priority=?
+                WHERE fullpath=? AND projectid=?
+            ', [$priority, $file_path, $projectid]);
+        }
+    }
+
     public function viewCoverageFile(): View
     {
         $this->setBuildById(intval($_GET['buildid'] ?? 0));
@@ -980,13 +826,6 @@ final class CoverageController extends AbstractBuildController
             $SQLsearchTermParams[] = '%' . htmlspecialchars($_GET['sSearch']) . '%';
         }
 
-        $SQLDisplayAuthors = '';
-        $SQLDisplayAuthor = '';
-        if ($userid > 0) {
-            $SQLDisplayAuthor = ', cfu.userid ';
-            $SQLDisplayAuthors = ' LEFT JOIN coveragefile2user AS cfu ON (cfu.fileid=cf.id) ';
-        }
-
         // Filters:
         //
         $filterdata = get_filterdata_from_request();
@@ -1017,11 +856,9 @@ final class CoverageController extends AbstractBuildController
                                 c.functionstested,
                                 c.functionsuntested,
                                 cfp.priority
-                                $SQLDisplayAuthor
                             FROM
                                 coverage AS c,
                                 coveragefile AS cf
-                            $SQLDisplayAuthors
                             LEFT JOIN coveragefilepriority AS cfp ON (
                                 cfp.fullpath=cf.fullpath
                                 AND projectid=?
@@ -1099,10 +936,6 @@ final class CoverageController extends AbstractBuildController
             // Add the priority
             $covfile['priority'] = $coveragefile_array['priority'];
 
-            // If the user is logged in we set the users
-            if (isset($coveragefile_array['userid'])) {
-                $covfile['user'] = $coveragefile_array['userid'];
-            }
             if ($covfile['coveragemetric'] != 1.0 || $status !== -1) {
                 $covfile_array[] = $covfile;
             }
@@ -1176,11 +1009,9 @@ final class CoverageController extends AbstractBuildController
                         SELECT
                             cf.fullpath,
                             cfp.priority
-                            $SQLDisplayAuthor
                         FROM
                             coverage AS c,
                             coveragefile AS cf
-                            $SQLDisplayAuthors
                         LEFT JOIN coveragefilepriority AS cfp ON (
                             cfp.fullpath=cf.fullpath
                             AND projectid=?
@@ -1208,9 +1039,7 @@ final class CoverageController extends AbstractBuildController
                 $covfile['coveragemetric'] = 0;
 
                 $covfile['priority'] = $coveragefile_array['priority'];
-                if (isset($coveragefile_array['userid'])) {
-                    $covfile['user'] = $coveragefile_array['userid'];
-                }
+
                 $covfile_array[] = $covfile;
             }
         }

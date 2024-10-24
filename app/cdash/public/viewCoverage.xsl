@@ -240,11 +240,6 @@
      <xsl:value-of select="/cdash/coverage/metricpass"/>
   </xsl:attribute>
   </input>
-  <input type="hidden" name="userid" id="userid">
-  <xsl:attribute name="value">
-     <xsl:value-of select="/cdash/coverage/userid"/>
-  </xsl:attribute>
-  </input>
   <input type="hidden" name="displaylabels" id="displaylabels">
   <xsl:attribute name="value">
      <xsl:value-of select="cdash/coverage/displaylabels"/>
@@ -273,9 +268,6 @@
           <th width="10%" align="center">Branches not covered</th>
         </xsl:if>
         <th width="10%" align="center">Priority</th>
-        <xsl:if test="/cdash/coverage/userid!=0">
-           <th>Author</th>
-        </xsl:if>
         <xsl:if test="cdash/coverage/displaylabels=1">
             <th>Labels</th>
          </xsl:if>
@@ -286,9 +278,6 @@
           <th width="10%" align="center">Branch Points not covered</th>
           <th width="10%" align="center">Functions not covered</th>
           <th>Priority</th>
-          <xsl:if test="/cdash/coverage/userid!=0">
-            <th>Author</th>
-          </xsl:if>
            <xsl:if test="cdash/coverage/displaylabels=1">
             <th>Labels</th>
           </xsl:if>
