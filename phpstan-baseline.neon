@@ -172,6 +172,11 @@ parameters:
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\|Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:orWhereRaw\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
 			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\|Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:where\\(\\)\\.$#"
 			count: 1
 			path: app/GraphQL/Directives/FilterDirective.php
@@ -179,6 +184,11 @@ parameters:
 		-
 			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\|Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:whereNested\\(\\)\\.$#"
 			count: 2
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\|Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:whereRaw\\(\\)\\.$#"
+			count: 1
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
