@@ -109,6 +109,8 @@ class Test extends Model
 
     /**
      * Add a label to this buildtest.
+     *
+     * @deprecated 10/26/2024  The legacy Label class is deprecated.  Use the labels() Eloquent relationship instead.
      **/
     public function addLabel(Label $label): void
     {
