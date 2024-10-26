@@ -190,4 +190,144 @@ class TestTypeTest extends TestCase
             ],
         ], true);
     }
+
+    public function testLabelRelationship(): void
+    {
+        $build = $this->project->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+
+        $label = $build->tests()->create([
+            'testname' => Str::uuid()->toString(),
+            'outputid' => $this->test_output->id,
+        ])->labels()->create([
+            'text' => Str::uuid()->toString(),
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    tests {
+                        edges {
+                            node {
+                                labels {
+                                    edges {
+                                        node {
+                                            id
+                                            text
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertJson([
+            'data' => [
+                'build' => [
+                    'tests' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'labels' => [
+                                        'edges' => [
+                                            [
+                                                'node' => [
+                                                    'id' => $label->id,
+                                                    'text' => $label->text,
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $label->delete();
+    }
+
+    public function testLabelFilters(): void
+    {
+        $build = $this->project->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+
+        $test = $build->tests()->create([
+            'testname' => Str::uuid()->toString(),
+            'outputid' => $this->test_output->id,
+        ]);
+
+        $label1 = $test->labels()->create([
+            'text' => Str::uuid()->toString(),
+        ]);
+
+        $label2 = $test->labels()->create([
+            'text' => Str::uuid()->toString(),
+        ]);
+
+        $this->graphQL('
+            query build($id: ID, $labeltext: String!) {
+                build(id: $id) {
+                    tests {
+                        edges {
+                            node {
+                                labels(
+                                    filters: {
+                                        eq: {
+                                            text: $labeltext
+                                        }
+                                    }
+                                ) {
+                                    edges {
+                                        node {
+                                            text
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+            'labeltext' => $label1->text,
+        ])->assertJson([
+            'data' => [
+                'build' => [
+                    'tests' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'labels' => [
+                                        'edges' => [
+                                            [
+                                                'node' => [
+                                                    'text' => $label1->text,
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $label1->delete();
+        $label2->delete();
+    }
 }

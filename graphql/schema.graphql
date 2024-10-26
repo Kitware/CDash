@@ -296,6 +296,10 @@ type Test {
   appear first when using paginated queries.
   """
   testMeasurements: [TestMeasurement!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+
+  labels(
+    filters: _ @filter(inputType: "LabelFilterInput")
+  ): [Label!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 }
 
 enum TestStatus {
