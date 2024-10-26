@@ -251,10 +251,14 @@ type Build {
   compilerName: String @rename(attribute: "compilername")
 
   compilerVersion: String @rename(attribute: "compilerversion")
-  
+
   coverageResults(
     filters: _ @filter(inputType: "CoverageFilterInput")
   ): [Coverage!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+
+  labels(
+    filters: _ @filter(inputType: "LabelFilterInput")
+  ): [Label!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 }
 
 input BuildFilterInput {
@@ -504,4 +508,20 @@ input CoverageFilterInput {
   branchesUntested: Int @rename(attribute: "branchesuntested")
   functionsTested: Int @rename(attribute: "functionstested")
   functionsUntested: Int @rename(attribute: "functionsuntested")
+}
+
+
+"""
+Label.
+"""
+type Label {
+  "Unique primary key."
+  id: ID!
+
+  text: String!
+}
+
+input LabelFilterInput {
+  id: ID
+  text: String
 }
