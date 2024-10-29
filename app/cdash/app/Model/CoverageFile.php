@@ -27,7 +27,6 @@ class CoverageFile
     public $FullPath;
     public $Crc32;
 
-    private $LastPercentCoverage; // used when GetMetric
     private $PDO;
     public function __construct()
     {
@@ -184,63 +183,6 @@ class CoverageFile
         $row = $stmt->fetch();
         return $row['fullpath'];
     }  // GetPath
-
-    /** Return the metric */
-    public function GetMetric()
-    {
-        if (!$this->Id) {
-            abort(500, 'CoverageFile GetMetric(): Id not set');
-        }
-
-        $stmt = $this->PDO->prepare(
-            'SELECT loctested, locuntested, branchestested, branchesuntested,
-                functionstested, functionsuntested
-                FROM coverage WHERE fileid=:id');
-        $stmt->bindParam(':id', $this->Id);
-        if (!pdo_execute($stmt)) {
-            return false;
-        }
-
-        $row = $stmt->fetch();
-        if (!array_key_exists('loctested', $row)) {
-            return false;
-        }
-
-        $coveragemetric = 1;
-        $loctested = $row['loctested'];
-        $locuntested = $row['locuntested'];
-        $branchestested = $row['branchestested'];
-        $branchesuntested = $row['branchesuntested'];
-        $functionstested = $row['functionstested'];
-        $functionsuntested = $row['functionsuntested'];
-
-        // Compute the coverage metric for bullseye
-        if ($branchestested > 0 || $branchesuntested > 0 || $functionstested > 0 || $functionsuntested > 0) {
-            // Metric coverage
-            $metric = 0;
-            if ($functionstested + $functionsuntested > 0) {
-                $metric += $functionstested / ($functionstested + $functionsuntested);
-            }
-            if ($branchesuntested + $branchesuntested > 0) {
-                $metric += $branchesuntested / ($branchestested + $branchesuntested);
-                $metric /= 2.0;
-            }
-            $coveragemetric = $metric;
-            $this->LastPercentCoverage = $metric * 100;
-        } else {
-            // coverage metric for gcov
-
-            $coveragemetric = ($loctested + 10) / ($loctested + $locuntested + 10);
-            $this->LastPercentCoverage = ($loctested / ($loctested + $locuntested)) * 100;
-        }
-        return $coveragemetric;
-    }
-
-    // Get the percent coverage
-    public function GetLastPercentCoverage()
-    {
-        return $this->LastPercentCoverage;
-    }
 
     // Get the fileid from the name
     public function GetIdFromName($file, $buildid)

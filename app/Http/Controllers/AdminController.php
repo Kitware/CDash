@@ -418,7 +418,6 @@ final class AdminController extends AbstractController
 
             self::delete_unused_rows('dailyupdatefile', 'dailyupdateid', 'dailyupdate');
             self::delete_unused_rows('coveragefile', 'id', 'coverage', 'fileid');
-            self::delete_unused_rows('coveragefile2user', 'fileid', 'coveragefile');
 
             self::delete_unused_rows('dailyupdatefile', 'dailyupdateid', 'dailyupdate');
             self::delete_unused_rows('test2image', 'outputid', 'testoutput');
