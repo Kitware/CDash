@@ -88,7 +88,10 @@
             class="table-heading"
           >
             <td align="center">
-              <a class="cdash-link" :href="$baseURL + '/index.php?project=' + project.name_encoded">{{ project.name }}</a>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/index.php?project=' + project.name_encoded"
+              >{{ project.name }}</a>
             </td>
             <td
               align="center"
@@ -99,49 +102,49 @@
                 title="Edit subscription"
                 :href="$baseURL + '/subscribeProject.php?projectid=' + project.id + '&edit=1'"
               >
-                <font-awesome-icon icon="fa-bell"/>
+                <font-awesome-icon icon="fa-bell" />
               </a>
               <a
                 v-if="project.role > 0"
                 title="Claim sites"
                 :href="$baseURL + '/editSite.php?projectid=' + project.id"
               >
-                <font-awesome-icon icon="fa-computer"/>
+                <font-awesome-icon icon="fa-computer" />
               </a>
               <a
                 v-if="project.role > 1"
                 title="Edit project"
                 :href="$baseURL + '/project/' + project.id + '/edit'"
               >
-                <font-awesome-icon icon="fa-pencil"/>
+                <font-awesome-icon icon="fa-pencil" />
               </a>
               <a
                 v-if="project.role > 1"
                 title="Manage subprojects"
                 :href="$baseURL + '/manageSubProject.php?projectid=' + project.id"
               >
-                <font-awesome-icon icon="fa-folder-tree"/>
+                <font-awesome-icon icon="fa-folder-tree" />
               </a>
               <a
                 v-if="project.role > 1"
                 title="Manage project groups"
                 :href="$baseURL + '/manageBuildGroup.php?projectid=' + project.id"
               >
-                <font-awesome-icon icon="fa-layer-group"/>
+                <font-awesome-icon icon="fa-layer-group" />
               </a>
               <a
                 v-if="project.role > 1"
                 title="Manage project users"
                 :href="$baseURL + '/manageProjectRoles.php?projectid=' + project.id"
               >
-                <font-awesome-icon icon="fa-user-pen"/>
+                <font-awesome-icon icon="fa-user-pen" />
               </a>
               <a
                 v-if="project.role > 1"
                 title="Manage project coverage"
                 :href="$baseURL + '/manageCoverage.php?projectid=' + project.id"
               >
-                <font-awesome-icon icon="fa-chart-line"/>
+                <font-awesome-icon icon="fa-chart-line" />
               </a>
             </td>
             <td
@@ -209,7 +212,10 @@
               v-for="project in cdash.claimedsiteprojects"
               align="center"
             >
-              <a class="cdash-link" :href="$baseURL + '/index.php?project=' + project.name_encoded">
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/index.php?project=' + project.name_encoded"
+              >
                 {{ project.name }}
               </a>
             </td>
@@ -219,7 +225,10 @@
             v-for="site in cdash.claimedsites"
           >
             <td align="center">
-              <a class="cdash-link" :href="$baseURL + '/editSite.php?siteid=' + site.id">
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/editSite.php?siteid=' + site.id"
+              >
                 {{ site.name }}
               </a>
               <img
@@ -380,10 +389,16 @@
         <tbody>
           <tr v-for="project in cdash.publicprojects">
             <td align="center">
-              <a class="cdash-link" :href="$baseURL + '/index.php?project=' + project.name">{{ project.name }}</a>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/index.php?project=' + project.name"
+              >{{ project.name }}</a>
             </td>
             <td>
-              <a class="cdash-link" :href="$baseURL + '/subscribeProject.php?projectid=' + project.id">
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/subscribeProject.php?projectid=' + project.id"
+              >
                 Subscribe to this project
               </a>
             </td>
@@ -578,7 +593,10 @@
           </tr>
           <tr class="trodd">
             <td id="nob">
-              <a class="cdash-link" href="project/new">Start a new project</a>
+              <a
+                class="cdash-link"
+                href="project/new"
+              >Start a new project</a>
             </td>
           </tr>
         </tbody>
@@ -605,73 +623,115 @@
         <template v-if="cdash.user_is_admin == 1">
           <tr>
             <td>
-              <a class="cdash-link" :href="$baseURL + '/project/new'">Create new project</a>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/project/new'"
+              >Create new project</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a class="cdash-link" :href="$baseURL + '/manageProjectRoles.php'">Manage project roles</a>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/manageProjectRoles.php'"
+              >Manage project roles</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a class="cdash-link" :href="$baseURL + '/manageSubProject.php'">Manage subproject</a>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/manageSubProject.php'"
+              >Manage subproject</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a class="cdash-link" :href="$baseURL + '/manageBuildGroup.php'">Manage project groups</a>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/manageBuildGroup.php'"
+              >Manage project groups</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a class="cdash-link" :href="$baseURL + '/manageCoverage.php'">Manage project coverage</a>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/manageCoverage.php'"
+              >Manage project coverage</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a class="cdash-link" :href="$baseURL + '/manageBanner.php'">Manage banner message</a>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/manageBanner.php'"
+              >Manage banner message</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a class="cdash-link" :href="$baseURL + '/manageUsers.php'">Manage users</a>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/manageUsers.php'"
+              >Manage users</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a class="cdash-link" :href="$baseURL + '/authtokens/manage'">Manage authentication tokens</a>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/authtokens/manage'"
+              >Manage authentication tokens</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a class="cdash-link" :href="$baseURL + '/upgrade.php'">Maintenance</a>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/upgrade.php'"
+              >Maintenance</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a class="cdash-link" :href="$baseURL + '/sites'">Site Statistics</a>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/sites'"
+              >Site Statistics</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a class="cdash-link" :href="$baseURL + '/userStatistics.php'">User Statistics</a>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/userStatistics.php'"
+              >User Statistics</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a class="cdash-link" :href="$baseURL + '/removeBuilds.php'">Remove Builds</a>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/removeBuilds.php'"
+              >Remove Builds</a>
             </td>
           </tr>
           <tr v-if="cdash.show_monitor">
             <td>
-              <a class="cdash-link" :href="$baseURL + '/monitor'">Monitor / Processing Statistics</a>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/monitor'"
+              >Monitor / Processing Statistics</a>
             </td>
           </tr>
         </template>
         <tr>
           <td>
-            <a class="cdash-link" :href="$baseURL + '/profile'">My Profile</a>
+            <a
+              class="cdash-link"
+              :href="$baseURL + '/profile'"
+            >My Profile</a>
           </td>
         </tr>
       </tbody>
@@ -681,10 +741,10 @@
 
 <script>
 import ApiLoader from './shared/ApiLoader';
-import LoadingIndicator from "./shared/LoadingIndicator.vue";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import LoadingIndicator from './shared/LoadingIndicator.vue';
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 export default {
-  name: "UserHomepage",
+  name: 'UserHomepage',
   components: { FontAwesomeIcon, LoadingIndicator },
 
   data () {
@@ -694,7 +754,7 @@ export default {
       loading: true,
       errored: false,
       tokenscope: 'full_access',
-    }
+    };
   },
 
   mounted () {
@@ -706,7 +766,7 @@ export default {
       const parameters = {
         description: this.cdash.tokendescription,
         scope: this.tokenscope === 'full_access' ? 'full_access' : 'submit_only',
-        projectid: this.tokenscope === 'full_access' || this.tokenscope === 'submit_only' ? -1 : this.tokenscope
+        projectid: this.tokenscope === 'full_access' || this.tokenscope === 'submit_only' ? -1 : this.tokenscope,
       };
       this.$axios.post('/api/authtokens/create', parameters)
         .then((response) => {
@@ -715,6 +775,7 @@ export default {
           authtoken.raw_token = response.data.raw_token;
 
           this.cdash.projects.forEach(project => {
+            // eslint-disable-next-line eqeqeq
             if (project.id == authtoken.projectid) {
               authtoken.projectname = project.name;
             }
@@ -760,13 +821,14 @@ export default {
         setTimeout(() => {
           token.showcheck = false;
         }, 2000);
-      } catch(error) {
+      }
+      catch (error) {
         this.errored = true;
         this.error = error.toString();
       }
     },
   },
-}
+};
 </script>
 
 <style>

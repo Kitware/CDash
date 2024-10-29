@@ -15,7 +15,10 @@
         <tr>
           <td align="left">
             <b>Site: </b>
-            <a class="cdash-link" :href="$baseURL + '/sites/' + cdash.build.siteid">
+            <a
+              class="cdash-link"
+              :href="$baseURL + '/sites/' + cdash.build.siteid"
+            >
               {{ cdash.build.site }}
             </a>
           </td>
@@ -23,7 +26,10 @@
         <tr>
           <td align="left">
             <b>Build: </b>
-            <a class="cdash-link" :href="$baseURL + '/build/' + buildid">
+            <a
+              class="cdash-link"
+              :href="$baseURL + '/build/' + buildid"
+            >
               {{ cdash.build.buildname }}
             </a>
           </td>
@@ -96,7 +102,10 @@
               {{ configure.configurewarnings }}
             </td>
             <td>
-              <a class="cdash-link" :click="configure.show = !configure.show">
+              <a
+                class="cdash-link"
+                :click="configure.show = !configure.show"
+              >
                 <span v-show="!configure.show">View</span>
                 <span v-show="configure.show">Hide</span>
               </a>
@@ -111,7 +120,10 @@
                 <tr>
                   <td align="left">
                     <b>Site: </b>
-                    <a class="cdash-link" :href="$baseURL + '/sites/' + cdash.build.siteid">
+                    <a
+                      class="cdash-link"
+                      :href="$baseURL + '/sites/' + cdash.build.siteid"
+                    >
                       {{ cdash.build.site }}
                     </a>
                   </td>
@@ -152,7 +164,7 @@
 <script>
 import ApiLoader from './shared/ApiLoader';
 export default {
-  name: "BuildConfigure",
+  name: 'BuildConfigure',
 
   data () {
     return {
@@ -161,16 +173,16 @@ export default {
       cdash: {},
       loading: true,
       errored: false,
-    }
+    };
   },
 
   mounted () {
-    var path_parts = window.location.pathname.split("/");
+    const path_parts = window.location.pathname.split('/');
     this.buildid = path_parts[path_parts.length - 2];
-    var endpoint_path = '/api/v1/viewConfigure.php?buildid=' + this.buildid;
+    const endpoint_path = `/api/v1/viewConfigure.php?buildid=${this.buildid}`;
     ApiLoader.loadPageData(this, endpoint_path);
   },
-}
+};
 </script>
 
 <style scoped>

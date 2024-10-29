@@ -4,5 +4,5 @@
 ])
 
 @section('main_content')
-    <all-projects :show_all="@json($show_all)"></all-projects>
+    <all-projects :show-all="@json($show_all)"></all-projects>
 @endsection

@@ -12,7 +12,10 @@
         <tr>
           <td align="left">
             <b>Site: </b>
-            <a class="cdash-link" :href="$baseURL + '/sites/' + cdash.build.siteid">
+            <a
+              class="cdash-link"
+              :href="$baseURL + '/sites/' + cdash.build.siteid"
+            >
               {{ cdash.build.site }}
             </a>
           </td>
@@ -20,7 +23,10 @@
         <tr>
           <td align="left">
             <b>Build: </b>
-            <a class="cdash-link" :href="$baseURL + '/build/' + cdash.build.buildid">
+            <a
+              class="cdash-link"
+              :href="$baseURL + '/build/' + cdash.build.buildid"
+            >
               {{ cdash.build.buildname }}
             </a>
           </td>
@@ -87,7 +93,7 @@
 <script>
 import ApiLoader from './shared/ApiLoader';
 export default {
-  name: "BuildNotes",
+  name: 'BuildNotes',
 
   data () {
     return {
@@ -96,29 +102,29 @@ export default {
       cdash: {},
       loading: true,
       errored: false,
-    }
+    };
   },
 
   mounted () {
-    var path_parts = window.location.pathname.split("/");
+    const path_parts = window.location.pathname.split('/');
     this.buildid = path_parts[path_parts.length - 2];
-    var endpoint_path = '/api/v1/viewNotes.php?buildid=' + this.buildid;
+    const endpoint_path = `/api/v1/viewNotes.php?buildid=${this.buildid}`;
     ApiLoader.loadPageData(this, endpoint_path);
   },
 
   methods: {
     preSetup: function(response) {
       // Collapse notes by default if there's more than one.
-      var showNotes = true;
+      let showNotes = true;
       this.cdash.multiple_notes = false;
       if (response.data.notes.length > 1) {
         this.cdash.multiple_notes = true;
         showNotes = false;
       }
-      for (var i = 0; i < response.data.notes.length; i++) {
+      for (let i = 0; i < response.data.notes.length; i++) {
         response.data.notes[i].show = showNotes;
       }
     },
   },
-}
+};
 </script>

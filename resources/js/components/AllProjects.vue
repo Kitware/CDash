@@ -7,7 +7,9 @@
       No Projects Found
     </h1>
 
-    <div v-else-if="error">Unable to load projects!</div>
+    <div v-else-if="error">
+      Unable to load projects!
+    </div>
 
     <div v-else>
       <DataTable
@@ -35,7 +37,7 @@
         class="projects-table"
         data-cy="all-projects"
       >
-        <template #last_submission="{ props: { project } }" >
+        <template #last_submission="{ props: { project } }">
           <a
             v-if="project.mostRecentBuild"
             :href="$baseURL + '/index.php?project=' + project.name + '&date=' + DateTime.fromISO(project.mostRecentBuild.startTime).toISODate()"
@@ -57,7 +59,7 @@
         style="float: right;"
       >
         <a
-          v-if="show_all"
+          v-if="showAll"
           :href="$baseURL + '/projects'"
         >Show Active Projects</a>
         <a
@@ -71,19 +73,14 @@
 
 <script>
 
-import LoadingIndicator from "./shared/LoadingIndicator.vue";
-import DataTable from "./shared/DataTable.vue";
-import gql from "graphql-tag";
-import { useQuery } from "@vue/apollo-composable";
-import { DateTime } from "luxon";
+import LoadingIndicator from './shared/LoadingIndicator.vue';
+import DataTable from './shared/DataTable.vue';
+import gql from 'graphql-tag';
+import { useQuery } from '@vue/apollo-composable';
+import { DateTime } from 'luxon';
 
 export default {
   name: 'AllProjects',
-  computed: {
-    DateTime() {
-      return DateTime
-    }
-  },
 
   components: {
     DataTable,
@@ -91,7 +88,7 @@ export default {
   },
 
   props: {
-    show_all: {
+    showAll: {
       type: Boolean,
       default: false,
     },
@@ -134,7 +131,7 @@ export default {
           },
         });
       }
-    })
+    });
 
     return {
       result,
@@ -142,22 +139,30 @@ export default {
       error,
     };
   },
+  computed: {
+    DateTime() {
+      return DateTime;
+    },
+  },
 
   methods: {
     formatProjectResults: function (project_edges) {
       return project_edges
-        .filter((project) => this.show_all ? true : project.node.buildCount > 0)
+        .filter((project) => this.showAll ? true : project.node.buildCount > 0)
         .map((project) => {
           const num_builds_in_last_week = project.node.buildCount;
 
           let activity_level;
           if (num_builds_in_last_week >= 70) {
             activity_level = 'high';
-          } else if (num_builds_in_last_week >= 20) {
+          }
+          else if (num_builds_in_last_week >= 20) {
             activity_level = 'medium';
-          } else if (num_builds_in_last_week > 0) {
+          }
+          else if (num_builds_in_last_week > 0) {
             activity_level = 'low';
-          } else {
+          }
+          else {
             activity_level = 'none';
           }
 
@@ -178,7 +183,7 @@ export default {
             },
           };
         });
-    }
-  }
-}
+    },
+  },
+};
 </script>
