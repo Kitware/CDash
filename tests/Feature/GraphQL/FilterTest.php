@@ -148,6 +148,55 @@ class FilterTest extends TestCase
         ]);
     }
 
+    public function testContainsOperator(): void
+    {
+        $this->constructNameFilterQuery('
+            contains: {
+                name: "2"
+            }
+        ', [
+            'public2',
+            'private2',
+        ]);
+
+        $this->constructNameFilterQuery('
+            contains: {
+                name: "vate"
+            }
+        ', [
+            'private1',
+            'private2',
+        ]);
+
+        $this->constructNameFilterQuery('
+            contains: {
+                name: ""
+            }
+        ', []);
+    }
+
+    public function testMultipleContainsClauses(): void
+    {
+        $this->constructNameFilterQuery('
+            any: [
+                {
+                    contains: {
+                        name: "2"
+                    }
+                },
+                {
+                    contains: {
+                        name: "3"
+                    }
+                }
+            ]
+        ', [
+            'public2',
+            'public3',
+            'private2',
+        ]);
+    }
+
     public function testAllOperatorWithMultipleEqualOperators(): void
     {
         $this->constructNameFilterQuery('

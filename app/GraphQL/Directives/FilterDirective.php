@@ -114,6 +114,22 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
                     break;
                 }
             }
+
+            // The "contains" filter requires special treatment
+            if (array_key_exists('contains', $filter)) {
+                $key = array_key_first($filter['contains']);
+                $value = $filter['contains'][$key];
+
+                $query = "POSITION(? IN {$table}.{$key}) > 0";
+
+                if ($context === 'and') {
+                    $builder->whereRaw($query, [$value]);
+                } elseif ($context === 'or') {
+                    $builder->orWhereRaw($query, [$value]);
+                } else {
+                    throw new \InvalidArgumentException('$context must be "and" or "or"');
+                }
+            }
         }
     }
 
@@ -137,6 +153,8 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
                     gt: {$filterName}
                     "Find nodes where the provided field is less than the provided value."
                     lt: {$filterName}
+                    "Find nodes where the provided field contains the provided value."
+                    contains: {$filterName}
                 }
             GRAPHQL
         );
