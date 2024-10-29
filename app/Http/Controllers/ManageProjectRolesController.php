@@ -77,18 +77,15 @@ final class ManageProjectRolesController extends AbstractProjectController
             if (strlen($emailMaintainers) < 50) {
                 $xml .= '<error>The email should be more than 50 characters.</error>';
             } else {
+                $email_to = [];
                 $maintainerids = self::find_site_maintainers(intval($projectid));
-                $email = '';
                 foreach ($maintainerids as $maintainerid) {
-                    if (strlen($email) > 0) {
-                        $email .= ', ';
-                    }
-                    $email .= User::findOrFail((int) $maintainerid)->email;
+                    $email_to[] = User::findOrFail((int) $maintainerid)->email;
                 }
 
                 $projectname = get_project_name($projectid);
-                if ($email != '') {
-                    if (cdashmail("$email", 'CDash - ' . $projectname . ' : To Site Maintainers', "$emailMaintainers")) {
+                if (count($email_to) !== 0) {
+                    if (cdashmail($email_to, 'CDash - ' . $projectname . ' : To Site Maintainers', "$emailMaintainers")) {
                         $xml .= '<warning>Email sent to site maintainers.</warning>';
                     } else {
                         $xml .= '<error>Cannot send email to site maintainers.</error>';
