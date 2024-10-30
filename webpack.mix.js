@@ -10,8 +10,6 @@ mix.sourceMaps(true, 'source-map');
 // Hash the built files to create a version identifier.  Use the mix() helper in PHP to automatically append the identifier to a path.
 mix.version();
 
-const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
-
 // Webpack plugins.
 const webpack_plugins = [];
 
