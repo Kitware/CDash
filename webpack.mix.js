@@ -147,10 +147,6 @@ mix.sass('resources/sass/app.scss', 'public/laravel/css')
   .sourceMaps(true, 'source-map')
   .version();
 
-// Added this line to get mocha testing working with versioning.
-mix.copy('resources/js/app.js', 'public/main.js')
-  .sourceMaps(true, 'source-map');
-
 mix.webpackConfig({
   plugins: webpack_plugins,
   stats: {
