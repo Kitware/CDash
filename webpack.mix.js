@@ -1,9 +1,14 @@
-// Load required modules.
 const mix = require('laravel-mix');
 mix.disableNotifications();
 mix.options({
   clearConsole: false,
 });
+
+// Enable source maps for everything Mix builds
+mix.sourceMaps(true, 'source-map');
+
+// Hash the built files to create a version identifier.  Use the mix() helper in PHP to automatically append the idenfier to a path.
+mix.version();
 
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 
@@ -88,7 +93,7 @@ mix.styles([
   'node_modules/bootstrap/dist/css/bootstrap.css',
   'node_modules/jquery-ui-dist/jquery-ui.css',
   'node_modules/nvd3/build/nv.d3.min.css',
-], 'public/build/css/3rdparty.css').sourceMaps(true, 'source-map').version();
+], 'public/build/css/3rdparty.css');
 
 // Concatenate and minify 3rd party javascript.
 mix.scripts([
@@ -112,7 +117,7 @@ mix.scripts([
   'node_modules/ng-file-upload/dist/ng-file-upload.js',
   'node_modules/nvd3/build/nv.d3.js',
   'public/js/ui-bootstrap-tpls-0.14.2.min.js',
-], 'public/js/3rdparty.min.js').sourceMaps(true, 'source-map');
+], 'public/js/3rdparty.min.js');
 
 // Concatenate and minify 1st party javascript.
 mix.scripts([
@@ -126,26 +131,21 @@ mix.scripts([
   'public/js/filters/**.js',
   'public/js/services/**.js',
   'public/js/controllers/**.js',
-], 'public/js/1stparty.min.js').sourceMaps(true, 'source-map');
+], 'public/js/1stparty.min.js');
 
 // Combine 1st and 3rd party into a single file.
 mix.scripts([
   'public/js/3rdparty.min.js',
   'public/js/1stparty.min.js',
-], `public/js/CDash_${version}.min.js`).sourceMaps(true, 'source-map');
+], `public/js/CDash_${version}.min.js`)
 
 // Copy jquery-ui images to public/css/images/
 mix.copyDirectory('node_modules/jquery-ui-dist/images', 'public/build/css/images');
 
 // Boilerplate.
-mix.js('resources/js/app.js', 'public/laravel/js')
-  .sourceMaps(true, 'source-map')
-  .vue()
-  .version();
+mix.js('resources/js/app.js', 'public/laravel/js').vue();
 
-mix.sass('resources/sass/app.scss', 'public/laravel/css')
-  .sourceMaps(true, 'source-map')
-  .version();
+mix.sass('resources/sass/app.scss', 'public/laravel/css');
 
 mix.webpackConfig({
   plugins: webpack_plugins,
