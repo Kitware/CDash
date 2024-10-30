@@ -86,14 +86,16 @@ glob.sync('public/views/partials/*.html').forEach((src) => {
 });
 
 // Version CSS files.
-mix.copy('public/css/cdash.css', `public/build/css/cdash_${version}.css`);
-mix.copy('public/css/colorblind.css', `public/build/css/colorblind_${version}.css`);
-mix.copy('public/css/common.css', 'public/build/css/common.css');
+mix.css('public/css/cdash.css', 'public/build/css/cdash.css');
+mix.css('public/css/colorblind.css', 'public/build/css/colorblind.css');
+
 mix.styles([
   'node_modules/bootstrap/dist/css/bootstrap.css',
   'node_modules/jquery-ui-dist/jquery-ui.css',
   'node_modules/nvd3/build/nv.d3.min.css',
-], 'public/build/css/3rdparty.css');
+], 'public/build/css/legacy_3rdparty.css');
+
+mix.sass('resources/sass/app.scss', 'public/laravel/css');
 
 // Concatenate and minify 3rd party javascript.
 mix.scripts([
@@ -133,13 +135,8 @@ mix.scripts([
   'public/js/controllers/**.js',
 ], 'public/js/legacy_1stparty.min.js');
 
-// Copy jquery-ui images to public/css/images/
-mix.copyDirectory('node_modules/jquery-ui-dist/images', 'public/build/css/images');
-
 // Boilerplate.
 mix.js('resources/js/app.js', 'public/laravel/js').vue();
-
-mix.sass('resources/sass/app.scss', 'public/laravel/css');
 
 mix.webpackConfig({
   plugins: webpack_plugins,

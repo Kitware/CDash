@@ -937,19 +937,8 @@ function getByteValueWithExtension($value, $base = 1024): string
  */
 function get_css_file(): string
 {
-    $classic = 'css/cdash.css';
-    $colorblind = 'css/colorblind.css';
-
-    // Return cache-busting filenames if available.
-    $css_files = glob(base_path('public/build/css/*.css'));
-    foreach ($css_files as $css_file) {
-        $css_file = basename($css_file);
-        if (strpos($css_file, 'cdash_') !== false) {
-            $classic = "build/css/{$css_file}";
-        } elseif (strpos($css_file, 'colorblind_') !== false) {
-            $colorblind = "build/css/{$css_file}";
-        }
-    }
+    $classic = 'build/css/cdash.css';
+    $colorblind = 'build/css/colorblind.css';
 
     if (array_key_exists('colorblind', $_COOKIE) && $_COOKIE['colorblind'] == 1) {
         return $colorblind;
