@@ -131,13 +131,7 @@ mix.scripts([
   'public/js/filters/**.js',
   'public/js/services/**.js',
   'public/js/controllers/**.js',
-], 'public/js/1stparty.min.js');
-
-// Combine 1st and 3rd party into a single file.
-mix.scripts([
-  'public/js/3rdparty.min.js',
-  'public/js/1stparty.min.js',
-], `public/js/CDash_${version}.min.js`)
+], 'public/js/legacy_1stparty.min.js');
 
 // Copy jquery-ui images to public/css/images/
 mix.copyDirectory('node_modules/jquery-ui-dist/images', 'public/build/css/images');
