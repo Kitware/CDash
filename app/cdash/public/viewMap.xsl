@@ -84,7 +84,6 @@
 </xsl:if>
 </div>
 
-<script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
 <script language="javascript" type="text/javascript" src="js/cdashSiteSorter.js"></script>
 
     </xsl:template>

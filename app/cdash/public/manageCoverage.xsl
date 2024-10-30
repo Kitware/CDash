@@ -121,7 +121,6 @@
 
 </xsl:if>
 
-<script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/cdashManageCoverageSorter.js" type="text/javascript" charset="utf-8"></script>
 
     </xsl:template>
