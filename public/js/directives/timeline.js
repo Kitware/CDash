@@ -261,7 +261,7 @@ timelineController.$inject = ["$http", "$scope"];
 CDash.directive('timeline', ["VERSION", function (VERSION) {
   return {
     restrict: 'A',
-    templateUrl: 'build/views/partials/timeline_' + VERSION + '.html',
+    templateUrl: 'build/views/partials/timeline.html?id=' + VERSION,
     controller: timelineController
   };
 }]);

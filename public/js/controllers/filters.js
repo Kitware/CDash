@@ -461,13 +461,13 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
 angular.module('CDash')
        .directive('filterRow', ["VERSION", function (VERSION) {
   return {
-    templateUrl: 'build/views/partials/filterRow_' + VERSION + '.html'
+    templateUrl: 'build/views/partials/filterRow.html?id=' + VERSION,
   };
 }]);
 
 angular.module('CDash')
        .directive('filterButtons', ["VERSION", function (VERSION) {
   return {
-    templateUrl: 'build/views/partials/filterButtons_' + VERSION + '.html'
+    templateUrl: 'build/views/partials/filterButtons.html?id=' + VERSION,
   };
 }]);

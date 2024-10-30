@@ -37,36 +37,8 @@ else {
   fs.writeFileSync('./public/VERSION', `v${version}`);
 }
 
-// Write out version file for angular.js
-const dir = 'public/build/js';
-if (!fs.existsSync(dir)) {
-  fs.mkdirSync(dir);
-}
-fs.writeFileSync(`${dir}/version.js`, `angular.module('CDash').constant('VERSION', '${version}');`);
-
 // Webpack plugins.
-const webpack_plugins = [
-  // Replace version string in angular files.
-  new ReplaceInFileWebpackPlugin([
-    {
-      dir: 'public/build/views',
-      test: /\.html$/,
-      rules: [{
-        search: /@@version/g,
-        replace: version,
-      }],
-    },
-    {
-      dir: 'public/js',
-      test: /\.js$/,
-      rules: [{
-        search: /@@cdash_version/g,
-        replace: version,
-      }],
-    },
-  ]),
-];
-
+const webpack_plugins = [];
 if (git_clone) {
   const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
   webpack_plugins.push(new GitRevisionPlugin({
@@ -74,18 +46,18 @@ if (git_clone) {
   }));
 }
 
+// Write out version file for angular.js
+const dir = 'public/build/js';
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir);
+}
+fs.writeFileSync(`${dir}/version.js`, `angular.module('CDash').constant('VERSION', '${version}');`);
+
 // Copy angularjs files to build directory.
 mix.copy('public/views/*.html', 'public/build/views/');
+mix.copy('public/views/partials/*.html', 'public/build/views/partials/');
 
-// Cache busting for angularjs partials.
-const glob = require('glob');
-glob.sync('public/views/partials/*.html').forEach((src) => {
-  let dest = src.replace('.html', `_${version}.html`);
-  dest = dest.replace('views', 'build/views');
-  mix.copy(src, dest);
-});
-
-// Version CSS files.
+// Copy CSS files
 mix.css('public/css/cdash.css', 'public/build/css/cdash.css');
 mix.css('public/css/colorblind.css', 'public/build/css/colorblind.css');
 
