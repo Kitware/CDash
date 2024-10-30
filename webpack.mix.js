@@ -12,16 +12,19 @@ mix.version();
 
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 
-// Determine if this is a git clone of CDash or not.
+// Webpack plugins.
+const webpack_plugins = [];
+
+// Write a VERSION file to be reported in the page footer
 fs = require('fs');
-let git_clone = false;
 let version;
 if (fs.existsSync('.git')) {
-  git_clone = true;
   // If this is a git clone, we will use the `git describe` to generate a version
   // to report in the footer.
-  // Use current UNIX timestamp for cache busting.
-  version = new Date().getTime().toString();
+  const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
+  webpack_plugins.push(new GitRevisionPlugin({
+    lightweightTags: true,
+  }));
 }
 else {
   // Otherwise if this is a release download, use the version from package.json.
@@ -30,21 +33,12 @@ else {
   fs.writeFileSync('./public/VERSION', `v${version}`);
 }
 
-// Webpack plugins.
-const webpack_plugins = [];
-if (git_clone) {
-  const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
-  webpack_plugins.push(new GitRevisionPlugin({
-    lightweightTags: true,
-  }));
-}
-
 // Write out version file for angular.js
 const dir = 'public/build/js';
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir);
 }
-fs.writeFileSync(`${dir}/version.js`, `angular.module('CDash').constant('VERSION', '${version}');`);
+fs.writeFileSync(`${dir}/version.js`, `angular.module('CDash').constant('VERSION', '${new Date().getTime().toString()}');`);
 
 // Copy angularjs files to build directory.
 mix.copy('public/views/*.html', 'public/build/views/');
