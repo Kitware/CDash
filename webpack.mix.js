@@ -7,17 +7,10 @@ mix.options({
 // Enable source maps for everything Mix builds
 mix.sourceMaps(true, 'source-map');
 
-// Hash the built files to create a version identifier.  Use the mix() helper in PHP to automatically append the idenfier to a path.
+// Hash the built files to create a version identifier.  Use the mix() helper in PHP to automatically append the identifier to a path.
 mix.version();
 
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
-
-// Clean up from previous webpack runs.
-const del = require('del');
-del.sync('public/build/css');
-del.sync('public/build/js');
-del.sync('public/build/views');
-del.sync('public/js/CDash_*.js');
 
 // Determine if this is a git clone of CDash or not.
 fs = require('fs');
