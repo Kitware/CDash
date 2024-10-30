@@ -21,7 +21,7 @@ abstract class AbstractController extends BaseController
     {
         session()->put('url.intended', url()->full());
 
-        $result = view($view)->with('js_version', self::getJsVersion());
+        $result = view($view);
 
         if ($title !== '') {
             $result = $result->with('title', $title);
@@ -59,24 +59,6 @@ abstract class AbstractController extends BaseController
     public static function getCDashVersion(): string
     {
         return file_get_contents(public_path('VERSION'));
-    }
-
-    /**
-     * Returns the version used to find compiled css and javascript files
-     *
-     * TODO: (williamjallen) make this a private function and rip the remaining usages.
-     */
-    public static function getJsVersion(): string
-    {
-        $path = config('cdash.file.path.js.version');
-        $version = '';
-        if (is_readable($path)) {
-            $file = file_get_contents($path);
-            if (preg_match("/'VERSION',\s+'([0-9.]+)'/", $file, $match)) {
-                $version = $match[1];
-            }
-        }
-        return $version;
     }
 
     protected function redirectToLogin(): RedirectResponse

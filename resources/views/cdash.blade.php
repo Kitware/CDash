@@ -1,7 +1,6 @@
 @php
     use App\Http\Controllers\AbstractController;
 
-    $js_version = AbstractController::getJsVersion();
     $cdash_version = AbstractController::getCDashVersion();
 @endphp
 

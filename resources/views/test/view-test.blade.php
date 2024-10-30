@@ -3,12 +3,6 @@
     'angular_controller' => 'ViewTestController'
 ])
 
-@php
-    use App\Http\Controllers\AbstractController;
-
-    $js_version = AbstractController::getJsVersion();
-@endphp
-
 @section('main_content')
     @verbatim
         <h3>Testing started on {{::cdash.build.testtime}}</h3>
