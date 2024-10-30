@@ -229,4 +229,12 @@ class Build extends Model
     {
         return $this->hasMany(Coverage::class, 'buildid');
     }
+
+    /**
+     * @return BelongsToMany<Label>
+     */
+    public function labels(): BelongsToMany
+    {
+        return $this->belongsToMany(Label::class, 'label2build', 'buildid', 'labelid');
+    }
 }

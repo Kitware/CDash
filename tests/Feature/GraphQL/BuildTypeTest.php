@@ -557,4 +557,107 @@ class BuildTypeTest extends TestCase
             ],
         ]);
     }
+
+    public function testLabelRelationship(): void
+    {
+        $build = $this->project->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $label = $build->labels()->create([
+            'text' => Str::uuid()->toString(),
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    labels {
+                        edges {
+                            node {
+                                id
+                                text
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertJson([
+            'data' => [
+                'build' => [
+                    'labels' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'id' => (string) $label->id,
+                                    'text' => $label->text,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $label->delete();
+    }
+
+    public function testLabelFilters(): void
+    {
+        $build = $this->project->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $label1 = $build->labels()->create([
+            'text' => 'text1',
+        ]);
+
+        $label2 = $build->labels()->create([
+            'text' => 'text2',
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    labels(
+                        filters: {
+                            eq: {
+                                text: "text1"
+                            }
+                        }
+                    ){
+                        edges {
+                            node {
+                                id
+                                text
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertJson([
+            'data' => [
+                'build' => [
+                    'labels' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'id' => (string) $label1->id,
+                                    'text' => $label1->text,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $label1->delete();
+        $label2->delete();
+    }
 }

@@ -2859,14 +2859,6 @@ parameters:
 			path: app/Models/SubProject.php
 
 		-
-			message: """
-				#^Access to deprecated property \\$labels of class App\\\\Models\\\\Test\\:
-				08/24/2024  This member variable is deprecated\\.  Use the labels\\(\\) Eloquent relationship instead\\.$#
-			"""
-			count: 3
-			path: app/Models/Test.php
-
-		-
 			message: "#^Method App\\\\Models\\\\Test\\:\\:getLabels\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Models/Test.php
@@ -4484,6 +4476,14 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property App\\\\Models\\\\Test\\:\\:\\$measurements\\.$#"
+			count: 1
+			path: app/Utils/TestCreator.php
+
+		-
+			message: """
+				#^Call to deprecated method addLabel\\(\\) of class App\\\\Models\\\\Test\\:
+				10/26/2024  The legacy Label class is deprecated\\.  Use the labels\\(\\) Eloquent relationship instead\\.$#
+			"""
 			count: 1
 			path: app/Utils/TestCreator.php
 
@@ -15969,6 +15969,14 @@ parameters:
 		-
 			message: "#^Access to property \\$Id on an unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
 			count: 2
+			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			message: """
+				#^Call to deprecated method addLabel\\(\\) of class App\\\\Models\\\\Test\\:
+				10/26/2024  The legacy Label class is deprecated\\.  Use the labels\\(\\) Eloquent relationship instead\\.$#
+			"""
+			count: 6
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
 		-
