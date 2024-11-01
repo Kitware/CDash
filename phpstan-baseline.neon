@@ -142,6 +142,11 @@ parameters:
 			path: app/Console/Commands/UpdateDependencies.php
 
 		-
+			message: "#^Parameter \\#1 \\$path of function app_path expects string, bool\\|string given\\.$#"
+			count: 1
+			path: app/Console/Kernel.php
+
+		-
 			message: "#^PHPDoc type array of property App\\\\Exceptions\\\\Handler\\:\\:\\$dontFlash is not the same as PHPDoc type array\\<int, string\\> of overridden property Illuminate\\\\Foundation\\\\Exceptions\\\\Handler\\:\\:\\$dontFlash\\.$#"
 			count: 1
 			path: app/Exceptions/Handler.php
@@ -160,36 +165,6 @@ parameters:
 			message: "#^Property App\\\\Exceptions\\\\Handler\\:\\:\\$dontReport type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Exceptions/Handler.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\:\\:getModel\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Directives/FilterDirective.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\|Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:orWhere\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Directives/FilterDirective.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\|Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:orWhereRaw\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Directives/FilterDirective.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\|Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:where\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Directives/FilterDirective.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\|Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:whereNested\\(\\)\\.$#"
-			count: 2
-			path: app/GraphQL/Directives/FilterDirective.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\|Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:whereRaw\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
 			message: "#^Method App\\\\GraphQL\\\\Directives\\\\FilterDirective\\:\\:applyFilters\\(\\) has parameter \\$builder with generic class Illuminate\\\\Database\\\\Eloquent\\\\Builder but does not specify its types\\: TModelClass$#"
@@ -2789,6 +2764,11 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
+			message: "#^Parameter \\#1 \\$filters of static method LdapRecord\\\\Query\\\\Builder\\:\\:rawFilter\\(\\) expects array\\|string, string\\|true given\\.$#"
+			count: 3
+			path: app/Ldap/Rules/FilterRules.php
+
+		-
 			message: "#^Method App\\\\Listeners\\\\ConfiguredSendEmailVerificationNotification\\:\\:handle\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Listeners/ConfiguredSendEmailVerificationNotification.php
@@ -2860,11 +2840,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Models\\\\Test\\:\\:getLabels\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Models/Test.php
-
-		-
-			message: "#^Property App\\\\Models\\\\Test\\:\\:\\$attributes type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Models/Test.php
 
@@ -26544,9 +26519,34 @@ parameters:
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
+			message: "#^Parameter \\#1 \\$title of static method Illuminate\\\\Support\\\\Str\\:\\:slug\\(\\) expects string, bool\\|string given\\.$#"
+			count: 1
+			path: config/cache.php
+
+		-
 			message: "#^Only booleans are allowed in an if condition, string\\|false given\\.$#"
 			count: 1
 			path: config/cdash.php
+
+		-
+			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool\\|string given\\.$#"
+			count: 1
+			path: config/cdash.php
+
+		-
+			message: "#^Parameter \\#1 \\$path of function app_path expects string, bool\\|string given\\.$#"
+			count: 1
+			path: config/cdash.php
+
+		-
+			message: "#^Binary operation \"\\+\" between 2000\\|bool\\|string and 60 results in an error\\.$#"
+			count: 2
+			path: config/queue.php
+
+		-
+			message: "#^Parameter \\#1 \\$title of static method Illuminate\\\\Support\\\\Str\\:\\:slug\\(\\) expects string, bool\\|string given\\.$#"
+			count: 1
+			path: config/session.php
 
 		-
 			message: "#^Class App\\\\Password not found\\.$#"
