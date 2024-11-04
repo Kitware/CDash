@@ -1,4 +1,4 @@
-@import url("common.css");
+@import url(common.css);
 .normal { background-color : #bfefbf !important; }
 .warning { background-color : #fd9e40 !important; }
 .warning, .warning a {

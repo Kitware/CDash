@@ -4,7 +4,6 @@ public/build/*
 _build/*
 cypress_cache/*
 app/cdash/public/*
-public/main.js
 public/js/ui.tabs.js
 public/js/tabNavigation.js
 public/js/services/renderTimer.js

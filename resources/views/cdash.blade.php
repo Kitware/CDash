@@ -1,7 +1,6 @@
 @php
     use App\Http\Controllers\AbstractController;
 
-    $js_version = AbstractController::getJsVersion();
     $cdash_version = AbstractController::getCDashVersion();
 @endphp
 
@@ -23,28 +22,30 @@
 
     {{-- Framework-specific details --}}
     @if(isset($angular) && $angular === true)
-        <link rel="stylesheet" type="text/css" href="{{ asset(mix('build/css/3rdparty.css')) }}"/>
-        <link rel="stylesheet" type="text/css" ng-href="{{ asset("build/css") }}/@{{cssfile}}_{{  $js_version }}.css"/>
+        <link rel="stylesheet" type="text/css" href="{{ asset(mix('build/css/legacy_3rdparty.css')) }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ asset(mix(get_css_file())) }} }}"/>
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}"/>
-        <script src="{{ asset("js/CDash_$js_version.min.js") }}"></script>
+        <script src="{{ mix("js/3rdparty.min.js") }}"></script>
+        <script src="{{ mix("js/legacy_1stparty.min.js") }}"></script>
     @elseif(isset($vue) && $vue === true)
-        <link rel="stylesheet" type="text/css" href="{{ asset(get_css_file()) }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ asset(mix(get_css_file())) }}"/>
         @if(isset($daisyui) && $daisyui === true)
             <link rel="stylesheet" type="text/css" href="{{ asset('laravel/css/app.css') }}"/>
         @else
-            <link rel="stylesheet" type="text/css" href="{{ asset(mix('build/css/3rdparty.css')) }}"/>
+            <link rel="stylesheet" type="text/css" href="{{ asset(mix('build/css/legacy_3rdparty.css')) }}"/>
             <link type="text/css" rel="stylesheet" href="{{ asset('css/jquery.dataTables.css') }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset('css/vue_common.css') }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}"/>
         @endif
-        <script src="{{ asset('js/3rdparty.min.js') }}" type="text/javascript" defer></script>
-        <script src="{{ asset(mix('laravel/js/app.js')) }}" type="text/javascript" defer></script>
+        <script src="{{ mix('js/3rdparty.min.js') }}" type="text/javascript" defer></script>
+        <script src="{{ mix('laravel/js/app.js') }}" type="text/javascript" defer></script>
     @else
-        <link rel="stylesheet" type="text/css" href="{{ asset(mix('build/css/3rdparty.css')) }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ asset(mix('build/css/legacy_3rdparty.css')) }}"/>
         <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.dataTables.css') }}"/>
-        <link rel="stylesheet" type="text/css" href="{{ asset('css/cdash.css') }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ asset(mix(get_css_file())) }}"/>
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}"/>
-        <script src="{{ asset("js/CDash_${js_version}.min.js") }}"></script>
+        <script src="{{ asset(mix("js/3rdparty.min.js")) }}"></script>
+        <script src="{{ asset(mix("js/legacy_1stparty.min.js")) }}"></script>
         <script src="{{ asset('js/jquery.tablesorter.js') }}" type="text/javascript" charset="utf-8"></script>
         <script src="{{ asset('js/jquery.dataTables.min.js') }}" type="text/javascript" charset="utf-8"></script>
         <script src="{{ asset('js/jquery.metadata.js') }}" type="text/javascript" charset="utf-8"></script>

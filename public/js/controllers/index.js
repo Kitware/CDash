@@ -522,6 +522,8 @@ CDash.filter("showEmptyBuildsLast", function () {
       $rootScope.cssfile = "cdash";
       $.cookie("colorblind", 0, { expires: 365 } );
     }
+
+    window.location.reload();
   };
 
   $scope.showfilters_toggle = function() {

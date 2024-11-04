@@ -1,29 +1,28 @@
-// Load required modules.
 const mix = require('laravel-mix');
 mix.disableNotifications();
 mix.options({
   clearConsole: false,
 });
 
-const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
+// Enable source maps for everything Mix builds
+mix.sourceMaps(true, 'source-map');
 
-// Clean up from previous webpack runs.
-const del = require('del');
-del.sync('public/build/css');
-del.sync('public/build/js');
-del.sync('public/build/views');
-del.sync('public/js/CDash_*.js');
+// Hash the built files to create a version identifier.  Use the mix() helper in PHP to automatically append the identifier to a path.
+mix.version();
 
-// Determine if this is a git clone of CDash or not.
+// Webpack plugins.
+const webpack_plugins = [];
+
+// Write a VERSION file to be reported in the page footer
 fs = require('fs');
-let git_clone = false;
 let version;
 if (fs.existsSync('.git')) {
-  git_clone = true;
   // If this is a git clone, we will use the `git describe` to generate a version
   // to report in the footer.
-  // Use current UNIX timestamp for cache busting.
-  version = new Date().getTime().toString();
+  const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
+  webpack_plugins.push(new GitRevisionPlugin({
+    lightweightTags: true,
+  }));
 }
 else {
   // Otherwise if this is a release download, use the version from package.json.
@@ -37,58 +36,23 @@ const dir = 'public/build/js';
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir);
 }
-fs.writeFileSync(`${dir}/version.js`, `angular.module('CDash').constant('VERSION', '${version}');`);
-
-// Webpack plugins.
-const webpack_plugins = [
-  // Replace version string in angular files.
-  new ReplaceInFileWebpackPlugin([
-    {
-      dir: 'public/build/views',
-      test: /\.html$/,
-      rules: [{
-        search: /@@version/g,
-        replace: version,
-      }],
-    },
-    {
-      dir: 'public/js',
-      test: /\.js$/,
-      rules: [{
-        search: /@@cdash_version/g,
-        replace: version,
-      }],
-    },
-  ]),
-];
-
-if (git_clone) {
-  const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
-  webpack_plugins.push(new GitRevisionPlugin({
-    lightweightTags: true,
-  }));
-}
+fs.writeFileSync(`${dir}/version.js`, `angular.module('CDash').constant('VERSION', '${new Date().getTime().toString()}');`);
 
 // Copy angularjs files to build directory.
 mix.copy('public/views/*.html', 'public/build/views/');
+mix.copy('public/views/partials/*.html', 'public/build/views/partials/');
 
-// Cache busting for angularjs partials.
-const glob = require('glob');
-glob.sync('public/views/partials/*.html').forEach((src) => {
-  let dest = src.replace('.html', `_${version}.html`);
-  dest = dest.replace('views', 'build/views');
-  mix.copy(src, dest);
-});
+// Copy CSS files
+mix.css('public/css/cdash.css', 'public/build/css/cdash.css');
+mix.css('public/css/colorblind.css', 'public/build/css/colorblind.css');
 
-// Version CSS files.
-mix.copy('public/css/cdash.css', `public/build/css/cdash_${version}.css`);
-mix.copy('public/css/colorblind.css', `public/build/css/colorblind_${version}.css`);
-mix.copy('public/css/common.css', 'public/build/css/common.css');
 mix.styles([
   'node_modules/bootstrap/dist/css/bootstrap.css',
   'node_modules/jquery-ui-dist/jquery-ui.css',
   'node_modules/nvd3/build/nv.d3.min.css',
-], 'public/build/css/3rdparty.css').sourceMaps(true, 'source-map').version();
+], 'public/build/css/legacy_3rdparty.css');
+
+mix.sass('resources/sass/app.scss', 'public/laravel/css');
 
 // Concatenate and minify 3rd party javascript.
 mix.scripts([
@@ -112,7 +76,7 @@ mix.scripts([
   'node_modules/ng-file-upload/dist/ng-file-upload.js',
   'node_modules/nvd3/build/nv.d3.js',
   'public/js/ui-bootstrap-tpls-0.14.2.min.js',
-], 'public/js/3rdparty.min.js').sourceMaps(true, 'source-map');
+], 'public/js/3rdparty.min.js');
 
 // Concatenate and minify 1st party javascript.
 mix.scripts([
@@ -126,30 +90,10 @@ mix.scripts([
   'public/js/filters/**.js',
   'public/js/services/**.js',
   'public/js/controllers/**.js',
-], 'public/js/1stparty.min.js').sourceMaps(true, 'source-map');
-
-// Combine 1st and 3rd party into a single file.
-mix.scripts([
-  'public/js/3rdparty.min.js',
-  'public/js/1stparty.min.js',
-], `public/js/CDash_${version}.min.js`).sourceMaps(true, 'source-map');
-
-// Copy jquery-ui images to public/css/images/
-mix.copyDirectory('node_modules/jquery-ui-dist/images', 'public/build/css/images');
+], 'public/js/legacy_1stparty.min.js');
 
 // Boilerplate.
-mix.js('resources/js/app.js', 'public/laravel/js')
-  .sourceMaps(true, 'source-map')
-  .vue()
-  .version();
-
-mix.sass('resources/sass/app.scss', 'public/laravel/css')
-  .sourceMaps(true, 'source-map')
-  .version();
-
-// Added this line to get mocha testing working with versioning.
-mix.copy('resources/js/app.js', 'public/main.js')
-  .sourceMaps(true, 'source-map');
+mix.js('resources/js/app.js', 'public/laravel/js').vue();
 
 mix.webpackConfig({
   plugins: webpack_plugins,
