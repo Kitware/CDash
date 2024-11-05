@@ -4,5 +4,5 @@
 ])
 
 @section('main_content')
-    <view-dynamic-analysis buildid="{{ $build->Id }}"></view-dynamic-analysis>
+    <view-dynamic-analysis :buildid="{{ $build->Id }}"></view-dynamic-analysis>
 @endsection
