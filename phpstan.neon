@@ -43,6 +43,7 @@ parameters:
     checkUninitializedProperties: true
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
     checkBenevolentUnionTypes: true
+    reportAnyTypeWideningInVarTag: true
 
     level: 9
 
