@@ -2,16 +2,18 @@
   <loading-indicator :is-loading="loading">
     <!-- Message -->
     <table v-if="cdash.message">
-      <tr>
-        <td width="95">
-          <div align="right" />
-        </td>
-        <td>
-          <div style="color: green;">
-            {{ cdash.message }}
-          </div>
-        </td>
-      </tr>
+      <tbody>
+        <tr>
+          <td width="95">
+            <div align="right" />
+          </td>
+          <td>
+            <div style="color: green;">
+              {{ cdash.message }}
+            </div>
+          </td>
+        </tr>
+      </tbody>
     </table>
 
     <!-- My Projects -->

@@ -12,52 +12,54 @@
         v-if="!cdash.build.hassubprojects"
         border="0"
       >
-        <tr>
-          <td align="left">
-            <b>Site: </b>
-            <a
-              class="cdash-link"
-              :href="$baseURL + '/sites/' + cdash.build.siteid"
-            >
-              {{ cdash.build.site }}
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td align="left">
-            <b>Build: </b>
-            <a
-              class="cdash-link"
-              :href="$baseURL + '/build/' + buildid"
-            >
-              {{ cdash.build.buildname }}
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td align="left">
-            <b>Build Start Time: </b>
-            {{ cdash.build.buildstarttime }}
-          </td>
-        </tr>
-        <tr>
-          <td align="left">
-            <b>Configure Command: </b>
-            <pre class="pre-wrap">{{ cdash.configures[0].command }}</pre>
-          </td>
-        </tr>
-        <tr>
-          <td align="left">
-            <b>Configure Return Value: </b>
-            <pre class="pre-wrap">{{ cdash.configures[0].status }}</pre>
-          </td>
-        </tr>
-        <tr>
-          <td align="left">
-            <b>Configure Output:</b>
-            <pre>{{ cdash.configures[0].output }}</pre>
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <td align="left">
+              <b>Site: </b>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/sites/' + cdash.build.siteid"
+              >
+                {{ cdash.build.site }}
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td align="left">
+              <b>Build: </b>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/build/' + buildid"
+              >
+                {{ cdash.build.buildname }}
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td align="left">
+              <b>Build Start Time: </b>
+              {{ cdash.build.buildstarttime }}
+            </td>
+          </tr>
+          <tr>
+            <td align="left">
+              <b>Configure Command: </b>
+              <pre class="pre-wrap">{{ cdash.configures[0].command }}</pre>
+            </td>
+          </tr>
+          <tr>
+            <td align="left">
+              <b>Configure Return Value: </b>
+              <pre class="pre-wrap">{{ cdash.configures[0].status }}</pre>
+            </td>
+          </tr>
+          <tr>
+            <td align="left">
+              <b>Configure Output:</b>
+              <pre>{{ cdash.configures[0].output }}</pre>
+            </td>
+          </tr>
+        </tbody>
       </table>
 
       <table
@@ -117,40 +119,42 @@
                 cellspacing="0"
                 width="100%"
               >
-                <tr>
-                  <td align="left">
-                    <b>Site: </b>
-                    <a
-                      class="cdash-link"
-                      :href="$baseURL + '/sites/' + cdash.build.siteid"
-                    >
-                      {{ cdash.build.site }}
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td align="left">
-                    <b>Build Name: </b>{{ cdash.build.buildname }}
-                  </td>
-                </tr>
-                <tr>
-                  <td align="left">
-                    <b>Configure Command:</b>
-                    <pre class="pre-wrap">{{ configure.command }}</pre>
-                  </td>
-                </tr>
-                <tr>
-                  <td align="left">
-                    <b>Configure Return Value:</b>
-                    <pre class="pre-wrap">{{ configure.status }}</pre>
-                  </td>
-                </tr>
-                <tr>
-                  <td align="left">
-                    <b>Configure Output:</b>
-                    <pre>{{ configure.output }}</pre>
-                  </td>
-                </tr>
+                <tbody>
+                  <tr>
+                    <td align="left">
+                      <b>Site: </b>
+                      <a
+                        class="cdash-link"
+                        :href="$baseURL + '/sites/' + cdash.build.siteid"
+                      >
+                        {{ cdash.build.site }}
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="left">
+                      <b>Build Name: </b>{{ cdash.build.buildname }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="left">
+                      <b>Configure Command:</b>
+                      <pre class="pre-wrap">{{ configure.command }}</pre>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="left">
+                      <b>Configure Return Value:</b>
+                      <pre class="pre-wrap">{{ configure.status }}</pre>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="left">
+                      <b>Configure Output:</b>
+                      <pre>{{ configure.output }}</pre>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </td>
           </tr>

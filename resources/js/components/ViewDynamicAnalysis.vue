@@ -7,18 +7,20 @@
       <h3>Dynamic analysis started on {{ cdash.build.buildtime }}</h3>
 
       <table border="0">
-        <tr>
-          <td align="right">
-            <b>Site Name:</b>
-          </td>
-          <td>{{ cdash.build.site }}</td>
-        </tr>
-        <tr>
-          <td align="right">
-            <b>Build Name:</b>
-          </td>
-          <td>{{ cdash.build.buildname }}</td>
-        </tr>
+        <tbody>
+          <tr>
+            <td align="right">
+              <b>Site Name:</b>
+            </td>
+            <td>{{ cdash.build.site }}</td>
+          </tr>
+          <tr>
+            <td align="right">
+              <b>Build Name:</b>
+            </td>
+            <td>{{ cdash.build.buildname }}</td>
+          </tr>
+        </tbody>
       </table>
 
       <div class="buildgroup">

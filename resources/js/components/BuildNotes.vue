@@ -9,42 +9,44 @@
     <div v-else>
       <br>
       <table border="0">
-        <tr>
-          <td align="left">
-            <b>Site: </b>
-            <a
-              class="cdash-link"
-              :href="$baseURL + '/sites/' + cdash.build.siteid"
-            >
-              {{ cdash.build.site }}
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td align="left">
-            <b>Build: </b>
-            <a
-              class="cdash-link"
-              :href="$baseURL + '/build/' + cdash.build.buildid"
-            >
-              {{ cdash.build.buildname }}
-            </a>
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <td align="left">
+              <b>Site: </b>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/sites/' + cdash.build.siteid"
+              >
+                {{ cdash.build.site }}
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td align="left">
+              <b>Build: </b>
+              <a
+                class="cdash-link"
+                :href="$baseURL + '/build/' + cdash.build.buildid"
+              >
+                {{ cdash.build.buildname }}
+              </a>
+            </td>
+          </tr>
 
-        <tr v-if="cdash.build.subproject">
-          <td align="left">
-            <b>SubProject: </b>
-            {{ cdash.build.subproject }}
-          </td>
-        </tr>
+          <tr v-if="cdash.build.subproject">
+            <td align="left">
+              <b>SubProject: </b>
+              {{ cdash.build.subproject }}
+            </td>
+          </tr>
 
-        <tr>
-          <td align="left">
-            <b>Start Time: </b>
-            {{ cdash.build.starttime }}
-          </td>
-        </tr>
+          <tr>
+            <td align="left">
+              <b>Start Time: </b>
+              {{ cdash.build.starttime }}
+            </td>
+          </tr>
+        </tbody>
       </table>
 
       <br>

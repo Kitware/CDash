@@ -168,499 +168,501 @@
       <br>
 
       <table>
-        <tr>
-          <td>
-            <!-- Previous build -->
-            <table
-              v-if="cdash.previousbuild"
-              class="tabb striped"
-            >
-              <thead>
-                <tr class="table-heading1">
-                  <th
-                    colspan="3"
-                    class="header"
-                  >
-                    <a
-                      class="cdash-link"
-                      :href="$baseURL + '/build/' + cdash.previousbuild.buildid"
+        <tbody>
+          <tr>
+            <td>
+              <!-- Previous build -->
+              <table
+                v-if="cdash.previousbuild"
+                class="tabb striped"
+              >
+                <thead>
+                  <tr class="table-heading1">
+                    <th
+                      colspan="3"
+                      class="header"
                     >
-                      <b>Previous Build</b>
-                    </a>
-                  </th>
-                </tr>
-                <tr class="table-heading">
-                  <th>Stage</th>
-                  <th>Errors</th>
-                  <th>Warnings</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th>
-                    <b>Update</b>
-                  </th>
-                  <td
-                    align="right"
-                    :class="cdash.previousbuild.nupdateerrors > 0 ? 'error' : 'normal'"
-                  >
-                    <b>
                       <a
                         class="cdash-link"
-                        :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/update'"
+                        :href="$baseURL + '/build/' + cdash.previousbuild.buildid"
                       >
-                        {{ cdash.previousbuild.nupdateerrors }}
+                        <b>Previous Build</b>
                       </a>
-                    </b>
-                  </td>
-                  <td
-                    align="right"
-                    :class="cdash.previousbuild.nupdatewarnings > 0 ? 'warning' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/update'"
-                      >
-                        {{ cdash.previousbuild.nupdatewarnings }}
-                      </a>
-                    </b>
-                  </td>
-                </tr>
-
-                <tr v-if="cdash.hasconfigure">
-                  <th>
-                    <b>Configure</b>
-                  </th>
-                  <td
-                    align="right"
-                    :class="cdash.previousbuild.nconfigureerrors > 0 ? 'error' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/configure'"
-                      >
-                        {{ cdash.previousbuild.nconfigureerrors }}
-                      </a>
-                    </b>
-                  </td>
-                  <td
-                    align="right"
-                    :class="cdash.previousbuild.nconfigurewarnings > 0 ? 'warning' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/configure'"
-                      >
-                        {{ cdash.previousbuild.nconfigurewarnings }}
-                      </a>
-                    </b>
-                  </td>
-                </tr>
-
-                <tr>
-                  <th>
-                    <b>Build</b>
-                  </th>
-                  <td
-                    align="right"
-                    :class="cdash.previousbuild.nerrors > 0 ? 'error' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.previousbuild.buildid"
-                      >
-                        {{ cdash.previousbuild.nerrors }}
-                      </a>
-                    </b>
-                  </td>
-                  <td
-                    align="right"
-                    :class="cdash.previousbuild.nwarnings > 0 ? 'warning' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.previousbuild.buildid"
-                      >
-                        {{ cdash.previousbuild.nwarnings }}
-                      </a>
-                    </b>
-                  </td>
-                </tr>
-
-                <tr>
-                  <th>
-                    <b>Test</b>
-                  </th>
-                  <td
-                    align="right"
-                    :class="cdash.previousbuild.ntestfailed > 0 ? 'error' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.previousbuild.buildid"
-                      >
-                        {{ cdash.previousbuild.ntestfailed }}
-                      </a>
-                    </b>
-                  </td>
-                  <td
-                    align="right"
-                    :class="cdash.previousbuild.ntestnotrun > 0 ? 'warning' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.previousbuild.buildid"
-                      >
-                        {{ cdash.previousbuild.ntestnotrun }}
-                      </a>
-                    </b>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-
-          <!-- A horrible hack to put some space between these tables... -->
-          <!-- TODO: (williamjallen) Why do we have nested tables here to begin with??? -->
-          <td>&nbsp;</td>
-
-          <td>
-            <!-- Current build -->
-            <table class="tabb striped">
-              <thead>
-                <tr class="table-heading1">
-                  <th
-                    colspan="3"
-                    class="header"
-                  >
-                    This Build
-                  </th>
-                </tr>
-                <tr class="table-heading">
-                  <th>Stage</th>
-                  <th>Errors</th>
-                  <th>Warnings</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th>
-                    <a
-                      v-if="cdash.hasupdate"
-                      href="#Update"
-                    >
+                    </th>
+                  </tr>
+                  <tr class="table-heading">
+                    <th>Stage</th>
+                    <th>Errors</th>
+                    <th>Warnings</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>
                       <b>Update</b>
-                    </a>
-                    <span v-if="!cdash.hasupdate">
-                      Update
-                    </span>
-                  </th>
-                  <td
-                    align="right"
-                    :class="cdash.update.nerrors > 0 ? 'error' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/build/' + cdash.build.id + '/update'"
-                      >
-                        {{ cdash.update.nerrors }}
-                      </a>
-                    </b>
-                  </td>
-                  <td
-                    align="right"
-                    :class="cdash.update.nwarnings > 0 ? 'warning' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/build/' + cdash.build.id + '/update'"
-                      >
-                        {{ cdash.update.nwarnings }}
-                      </a>
-                    </b>
-                  </td>
-                </tr>
-                <tr v-if="cdash.hasconfigure">
-                  <th>
-                    <a
-                      class="cdash-link"
-                      href="#Configure"
+                    </th>
+                    <td
+                      align="right"
+                      :class="cdash.previousbuild.nupdateerrors > 0 ? 'error' : 'normal'"
                     >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/update'"
+                        >
+                          {{ cdash.previousbuild.nupdateerrors }}
+                        </a>
+                      </b>
+                    </td>
+                    <td
+                      align="right"
+                      :class="cdash.previousbuild.nupdatewarnings > 0 ? 'warning' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/update'"
+                        >
+                          {{ cdash.previousbuild.nupdatewarnings }}
+                        </a>
+                      </b>
+                    </td>
+                  </tr>
+
+                  <tr v-if="cdash.hasconfigure">
+                    <th>
                       <b>Configure</b>
-                    </a>
-                  </th>
-                  <td
-                    align="right"
-                    :class="cdash.configure.nerrors > 0 ? 'error' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/build/' + cdash.build.id + '/configure'"
-                      >
-                        {{ cdash.configure.nerrors }}
-                      </a>
-                    </b>
-                  </td>
-                  <td
-                    align="right"
-                    :class="cdash.configure.nwarnings > 0 ? 'warning' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/build/' + cdash.build.id + '/configure'"
-                      >
-                        {{ cdash.configure.nwarnings }}
-                      </a>
-                    </b>
-                  </td>
-                </tr>
-                <tr>
-                  <th>
-                    <a
-                      class="cdash-link"
-                      href="#Build"
+                    </th>
+                    <td
+                      align="right"
+                      :class="cdash.previousbuild.nconfigureerrors > 0 ? 'error' : 'normal'"
                     >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/configure'"
+                        >
+                          {{ cdash.previousbuild.nconfigureerrors }}
+                        </a>
+                      </b>
+                    </td>
+                    <td
+                      align="right"
+                      :class="cdash.previousbuild.nconfigurewarnings > 0 ? 'warning' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/configure'"
+                        >
+                          {{ cdash.previousbuild.nconfigurewarnings }}
+                        </a>
+                      </b>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th>
                       <b>Build</b>
-                    </a>
-                  </th>
-                  <td
-                    align="right"
-                    :class="cdash.build.nerrors > 0 ? 'error' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.build.id"
-                      >
-                        {{ cdash.build.nerrors }}
-                      </a>
-                    </b>
-                  </td>
-                  <td
-                    align="right"
-                    :class="cdash.build.nwarnings > 0 ? 'warning' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.build.id"
-                      >
-                        {{ cdash.build.nwarnings }}
-                      </a>
-                    </b>
-                  </td>
-                </tr>
-                <tr>
-                  <th>
-                    <a
-                      class="cdash-link"
-                      href="#Test"
+                    </th>
+                    <td
+                      align="right"
+                      :class="cdash.previousbuild.nerrors > 0 ? 'error' : 'normal'"
                     >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.previousbuild.buildid"
+                        >
+                          {{ cdash.previousbuild.nerrors }}
+                        </a>
+                      </b>
+                    </td>
+                    <td
+                      align="right"
+                      :class="cdash.previousbuild.nwarnings > 0 ? 'warning' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.previousbuild.buildid"
+                        >
+                          {{ cdash.previousbuild.nwarnings }}
+                        </a>
+                      </b>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th>
                       <b>Test</b>
-                    </a>
-                  </th>
-                  <td
-                    align="right"
-                    :class="cdash.test.nfailed > 0 ? 'error' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.build.id"
-                      >
-                        {{ cdash.test.nfailed }}
-                      </a>
-                    </b>
-                  </td>
-                  <td
-                    align="right"
-                    :class="cdash.test.nnotrun > 0 ? 'warning' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.build.id"
-                      >
-                        {{ cdash.test.nnotrun }}
-                      </a>
-                    </b>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-
-          <td>&nbsp;</td>
-
-          <td>
-            <!-- Next build -->
-            <table
-              v-if="cdash.nextbuild"
-              class="tabb striped"
-            >
-              <thead>
-                <tr class="table-heading1">
-                  <th
-                    colspan="3"
-                    class="header"
-                  >
-                    <a
-                      class="cdash-link"
-                      :href="$baseURL + '/build/' + cdash.nextbuild.buildid"
+                    </th>
+                    <td
+                      align="right"
+                      :class="cdash.previousbuild.ntestfailed > 0 ? 'error' : 'normal'"
                     >
-                      <b>Next Build</b>
-                    </a>
-                  </th>
-                </tr>
-                <tr class="table-heading">
-                  <th>Stage</th>
-                  <th>Errors</th>
-                  <th>Warnings</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th>
-                    <b>Update</b>
-                  </th>
-                  <td
-                    align="right"
-                    :class="cdash.nextbuild.nupdateerrors > 0 ? 'error' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/update'"
-                      >
-                        {{ cdash.nextbuild.nupdateerrors }}
-                      </a>
-                    </b>
-                  </td>
-                  <td
-                    align="right"
-                    :class="cdash.nextbuild.nupdatewarnings > 0 ? 'warning' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/update'"
-                      >
-                        {{ cdash.nextbuild.nupdatewarnings }}
-                      </a>
-                    </b>
-                  </td>
-                </tr>
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.previousbuild.buildid"
+                        >
+                          {{ cdash.previousbuild.ntestfailed }}
+                        </a>
+                      </b>
+                    </td>
+                    <td
+                      align="right"
+                      :class="cdash.previousbuild.ntestnotrun > 0 ? 'warning' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.previousbuild.buildid"
+                        >
+                          {{ cdash.previousbuild.ntestnotrun }}
+                        </a>
+                      </b>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
 
-                <tr v-if="cdash.hasconfigure">
-                  <th>
-                    <b>Configure</b>
-                  </th>
-                  <td
-                    align="right"
-                    :class="cdash.nextbuild.nconfigureerrors > 0 ? 'error' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/configure'"
-                      >
-                        {{ cdash.nextbuild.nconfigureerrors }}
-                      </a>
-                    </b>
-                  </td>
-                  <td
-                    align="right"
-                    :class="cdash.nextbuild.nconfigurewarnings > 0 ? 'warning' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/configure'"
-                      >
-                        {{ cdash.nextbuild.nconfigurewarnings }}
-                      </a>
-                    </b>
-                  </td>
-                </tr>
+            <!-- A horrible hack to put some space between these tables... -->
+            <!-- TODO: (williamjallen) Why do we have nested tables here to begin with??? -->
+            <td>&nbsp;</td>
 
-                <tr>
-                  <th>
-                    <b>Build</b>
-                  </th>
-                  <td
-                    align="right"
-                    :class="cdash.nextbuild.nerrors > 0 ? 'error' : 'normal'"
-                  >
-                    <b>
+            <td>
+              <!-- Current build -->
+              <table class="tabb striped">
+                <thead>
+                  <tr class="table-heading1">
+                    <th
+                      colspan="3"
+                      class="header"
+                    >
+                      This Build
+                    </th>
+                  </tr>
+                  <tr class="table-heading">
+                    <th>Stage</th>
+                    <th>Errors</th>
+                    <th>Warnings</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>
+                      <a
+                        v-if="cdash.hasupdate"
+                        href="#Update"
+                      >
+                        <b>Update</b>
+                      </a>
+                      <span v-if="!cdash.hasupdate">
+                        Update
+                      </span>
+                    </th>
+                    <td
+                      align="right"
+                      :class="cdash.update.nerrors > 0 ? 'error' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/build/' + cdash.build.id + '/update'"
+                        >
+                          {{ cdash.update.nerrors }}
+                        </a>
+                      </b>
+                    </td>
+                    <td
+                      align="right"
+                      :class="cdash.update.nwarnings > 0 ? 'warning' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/build/' + cdash.build.id + '/update'"
+                        >
+                          {{ cdash.update.nwarnings }}
+                        </a>
+                      </b>
+                    </td>
+                  </tr>
+                  <tr v-if="cdash.hasconfigure">
+                    <th>
                       <a
                         class="cdash-link"
-                        :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.nextbuild.buildid"
+                        href="#Configure"
                       >
-                        {{ cdash.nextbuild.nerrors }}
+                        <b>Configure</b>
                       </a>
-                    </b>
-                  </td>
-                  <td
-                    align="right"
-                    :class="cdash.nextbuild.nwarnings > 0 ? 'warning' : 'normal'"
-                  >
-                    <b>
+                    </th>
+                    <td
+                      align="right"
+                      :class="cdash.configure.nerrors > 0 ? 'error' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/build/' + cdash.build.id + '/configure'"
+                        >
+                          {{ cdash.configure.nerrors }}
+                        </a>
+                      </b>
+                    </td>
+                    <td
+                      align="right"
+                      :class="cdash.configure.nwarnings > 0 ? 'warning' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/build/' + cdash.build.id + '/configure'"
+                        >
+                          {{ cdash.configure.nwarnings }}
+                        </a>
+                      </b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>
                       <a
                         class="cdash-link"
-                        :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.nextbuild.buildid"
+                        href="#Build"
                       >
-                        {{ cdash.nextbuild.nwarnings }}
+                        <b>Build</b>
                       </a>
-                    </b>
-                  </td>
-                </tr>
+                    </th>
+                    <td
+                      align="right"
+                      :class="cdash.build.nerrors > 0 ? 'error' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.build.id"
+                        >
+                          {{ cdash.build.nerrors }}
+                        </a>
+                      </b>
+                    </td>
+                    <td
+                      align="right"
+                      :class="cdash.build.nwarnings > 0 ? 'warning' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.build.id"
+                        >
+                          {{ cdash.build.nwarnings }}
+                        </a>
+                      </b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>
+                      <a
+                        class="cdash-link"
+                        href="#Test"
+                      >
+                        <b>Test</b>
+                      </a>
+                    </th>
+                    <td
+                      align="right"
+                      :class="cdash.test.nfailed > 0 ? 'error' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.build.id"
+                        >
+                          {{ cdash.test.nfailed }}
+                        </a>
+                      </b>
+                    </td>
+                    <td
+                      align="right"
+                      :class="cdash.test.nnotrun > 0 ? 'warning' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.build.id"
+                        >
+                          {{ cdash.test.nnotrun }}
+                        </a>
+                      </b>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
 
-                <tr>
-                  <th>
-                    <b>Test</b>
-                  </th>
-                  <td
-                    align="right"
-                    :class="cdash.nextbuild.ntestfailed > 0 ? 'error' : 'normal'"
-                  >
-                    <b>
+            <td>&nbsp;</td>
+
+            <td>
+              <!-- Next build -->
+              <table
+                v-if="cdash.nextbuild"
+                class="tabb striped"
+              >
+                <thead>
+                  <tr class="table-heading1">
+                    <th
+                      colspan="3"
+                      class="header"
+                    >
                       <a
                         class="cdash-link"
-                        :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.nextbuild.buildid"
+                        :href="$baseURL + '/build/' + cdash.nextbuild.buildid"
                       >
-                        {{ cdash.nextbuild.ntestfailed }}
+                        <b>Next Build</b>
                       </a>
-                    </b>
-                  </td>
-                  <td
-                    align="right"
-                    :class="cdash.nextbuild.ntestnotrun > 0 ? 'warning' : 'normal'"
-                  >
-                    <b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.nextbuild.buildid"
-                      >
-                        {{ cdash.nextbuild.ntestnotrun }}
-                      </a>
-                    </b>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-        </tr>
+                    </th>
+                  </tr>
+                  <tr class="table-heading">
+                    <th>Stage</th>
+                    <th>Errors</th>
+                    <th>Warnings</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>
+                      <b>Update</b>
+                    </th>
+                    <td
+                      align="right"
+                      :class="cdash.nextbuild.nupdateerrors > 0 ? 'error' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/update'"
+                        >
+                          {{ cdash.nextbuild.nupdateerrors }}
+                        </a>
+                      </b>
+                    </td>
+                    <td
+                      align="right"
+                      :class="cdash.nextbuild.nupdatewarnings > 0 ? 'warning' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/update'"
+                        >
+                          {{ cdash.nextbuild.nupdatewarnings }}
+                        </a>
+                      </b>
+                    </td>
+                  </tr>
+
+                  <tr v-if="cdash.hasconfigure">
+                    <th>
+                      <b>Configure</b>
+                    </th>
+                    <td
+                      align="right"
+                      :class="cdash.nextbuild.nconfigureerrors > 0 ? 'error' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/configure'"
+                        >
+                          {{ cdash.nextbuild.nconfigureerrors }}
+                        </a>
+                      </b>
+                    </td>
+                    <td
+                      align="right"
+                      :class="cdash.nextbuild.nconfigurewarnings > 0 ? 'warning' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/configure'"
+                        >
+                          {{ cdash.nextbuild.nconfigurewarnings }}
+                        </a>
+                      </b>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th>
+                      <b>Build</b>
+                    </th>
+                    <td
+                      align="right"
+                      :class="cdash.nextbuild.nerrors > 0 ? 'error' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.nextbuild.buildid"
+                        >
+                          {{ cdash.nextbuild.nerrors }}
+                        </a>
+                      </b>
+                    </td>
+                    <td
+                      align="right"
+                      :class="cdash.nextbuild.nwarnings > 0 ? 'warning' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.nextbuild.buildid"
+                        >
+                          {{ cdash.nextbuild.nwarnings }}
+                        </a>
+                      </b>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th>
+                      <b>Test</b>
+                    </th>
+                    <td
+                      align="right"
+                      :class="cdash.nextbuild.ntestfailed > 0 ? 'error' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.nextbuild.buildid"
+                        >
+                          {{ cdash.nextbuild.ntestfailed }}
+                        </a>
+                      </b>
+                    </td>
+                    <td
+                      align="right"
+                      :class="cdash.nextbuild.ntestnotrun > 0 ? 'warning' : 'normal'"
+                    >
+                      <b>
+                        <a
+                          class="cdash-link"
+                          :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.nextbuild.buildid"
+                        >
+                          {{ cdash.nextbuild.ntestnotrun }}
+                        </a>
+                      </b>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
       </table>
       <br>
 
@@ -796,48 +798,50 @@
           id="new_note_div"
         >
           <table>
-            <tr>
-              <td><b>Note:</b></td>
-              <td>
-                <textarea
-                  id="note_text"
-                  v-model="cdash.noteText"
-                  cols="50"
-                  rows="5"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td><b>Status:</b></td>
-              <td>
-                <select
-                  id="note_status"
-                  v-model="cdash.noteStatus"
-                >
-                  <option value="0">
-                    Simple Note
-                  </option>
-                  <option value="1">
-                    Fix in progress
-                  </option>
-                  <option value="2">
-                    Fixed
-                  </option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td />
-              <td>
-                <input
-                  id="add_note"
-                  type="submit"
-                  value="Add Note"
-                  :disabled="!cdash.noteText"
-                  @click="addNote()"
-                >
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td><b>Note:</b></td>
+                <td>
+                  <textarea
+                    id="note_text"
+                    v-model="cdash.noteText"
+                    cols="50"
+                    rows="5"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td><b>Status:</b></td>
+                <td>
+                  <select
+                    id="note_status"
+                    v-model="cdash.noteStatus"
+                  >
+                    <option value="0">
+                      Simple Note
+                    </option>
+                    <option value="1">
+                      Fix in progress
+                    </option>
+                    <option value="2">
+                      Fixed
+                    </option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td />
+                <td>
+                  <input
+                    id="add_note"
+                    type="submit"
+                    value="Add Note"
+                    :disabled="!cdash.noteText"
+                    @click="addNote()"
+                  >
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
         <br>
