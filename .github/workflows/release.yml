@@ -21,6 +21,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
+          sbom: true
           tags: "kitware/cdash:${{ github.ref_name }}"
           target: cdash
           cache-from: type=gha
@@ -51,6 +52,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
+          sbom: true
           tags: "kitware/cdash:${{ github.ref_name }}-ubi"
           target: cdash
           build-args: |

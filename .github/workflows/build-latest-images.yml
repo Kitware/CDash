@@ -22,6 +22,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
+          sbom: true
           tags: "kitware/cdash:latest"
           target: cdash
           cache-from: type=gha
@@ -42,6 +43,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
+          sbom: true
           tags: "kitware/cdash:latest-ubi"
           target: cdash
           build-args: |
@@ -64,6 +66,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
+          sbom: true
           tags: "kitware/cdash-worker:latest"
           target: cdash-worker
           cache-from: type=gha
@@ -84,6 +87,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
+          sbom: true
           tags: "kitware/cdash-worker:latest-ubi"
           target: cdash-worker
           build-args: |
@@ -106,6 +110,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
+          sbom: true
           tags: "kitware/cdash:testing"
           target: cdash
           build-args: |
@@ -128,6 +133,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
+          sbom: true
           tags: "kitware/cdash:testing-ubi"
           target: cdash
           build-args: |
