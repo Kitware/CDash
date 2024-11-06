@@ -1347,7 +1347,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 5
+			count: 4
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
