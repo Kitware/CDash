@@ -44,7 +44,7 @@ parameters:
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
     checkBenevolentUnionTypes: true
 
-    level: 8
+    level: 9
 
 includes:
     - vendor/phpstan/phpstan/conf/bleedingEdge.neon
