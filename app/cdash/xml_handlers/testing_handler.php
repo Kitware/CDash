@@ -15,7 +15,6 @@ use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Image;
 use CDash\Model\Label;
-use CDash\Model\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use CDash\Model\SubscriberInterface;
@@ -76,9 +75,6 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         $factory = $this->getModelFactory();
 
         if ($name == 'SITE') {
-            $this->Project = $factory->create(Project::class);
-            $this->Project->Id = $this->projectid;
-
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
@@ -365,7 +361,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         $build->CompilerName = $this->BuildInformation['compilername'] ?? null;
         $build->CompilerVersion = $this->BuildInformation['compilerversion'] ?? null;
         $build->ProjectId = $this->projectid;
-        $build->SetProject($this->Project);
+        $build->SetProject($this->GetProject());
         $build->SubmitTime = gmdate(FMT_DATETIME);
 
         // TODO: dark days lie in waiting for this...

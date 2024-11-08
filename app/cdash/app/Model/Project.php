@@ -336,7 +336,7 @@ class Project
             return;
         }
 
-        if (!$this->Id) {
+        if (!isset($this->Id)) {
             throw new RuntimeException('ID not set for project');
         }
 

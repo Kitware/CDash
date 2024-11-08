@@ -27,11 +27,15 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
     protected $SubProjectName;
 
     private $ModelFactory;
-    protected Project $Project;
+    private Project $Project;
 
     public function __construct($projectid)
     {
         $this->projectid = $projectid;
+
+        $this->Project = new Project();
+        $this->Project->Id = $projectid;
+
         $this->stack = new Stack();
     }
 
@@ -100,11 +104,7 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 
     public function GetProject(): Project
     {
-        if (!isset($this->Project)) {
-            $this->Project = new Project();
-            $this->Project->Id = $this->projectid;
-            $this->Project->Fill();
-        }
+        $this->Project->Fill();
         return $this->Project;
     }
 

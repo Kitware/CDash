@@ -27,7 +27,6 @@ use CDash\Model\BuildErrorFilter;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroup;
 use CDash\Model\Label;
-use CDash\Model\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use CDash\Model\SubscriberInterface;
@@ -63,9 +62,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         $this->BuildCommand = '';
         $this->Labels = [];
         $this->SubProjects = [];
-        $project = new Project();
-        $project->Id = $projectid;
-        $this->BuildErrorFilter = new BuildErrorFilter($project);
+        $this->BuildErrorFilter = new BuildErrorFilter($this->GetProject());
     }
 
     public function startElement($parser, $name, $attributes): void

@@ -20,7 +20,6 @@ use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageSummary;
 use CDash\Model\Label;
-use CDash\Model\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use CDash\Model\SubProject;
@@ -44,9 +43,7 @@ class CoverageHandler extends AbstractXmlHandler
         $this->Site = new Site();
         $this->Coverages = [];
         $this->CoverageSummaries = [];
-        $this->Project = new Project();
-        $this->Project->Id = $this->projectid;
-        $this->HasSubProjects = $this->Project->GetNumberOfSubProjects() > 0;
+        $this->HasSubProjects = $this->GetProject()->GetNumberOfSubProjects() > 0;
     }
 
     /** startElement */

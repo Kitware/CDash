@@ -50,7 +50,6 @@ class UploadHandler extends AbstractXmlHandler
     private $Label;
     private int $Timestamp;
     private bool $BuildInitialized;
-    protected Project $Project;
 
     /** If True, means an error happened while processing the file */
     private $UploadError;
@@ -65,7 +64,6 @@ class UploadHandler extends AbstractXmlHandler
         $this->Base64TmpFileWriteHandle = 0;
         $this->Base64TmpFilename = '';
         $this->UploadError = false;
-        $this->Project = $this->GetProject();
         $this->Timestamp = 0;
         $this->BuildInitialized = false;
     }
@@ -195,8 +193,8 @@ class UploadHandler extends AbstractXmlHandler
 
             // Check file size against the upload quota
             $upload_file_size = filesize($this->TmpFilename);
-            if ($upload_file_size > $this->Project->UploadQuota) {
-                Log::error("Size of uploaded file {$this->TmpFilename} is {$upload_file_size} bytes, which is greater than the total upload quota for this project ({$this->Project->UploadQuota} bytes)");
+            if ($upload_file_size > $this->GetProject()->UploadQuota) {
+                Log::error("Size of uploaded file {$this->TmpFilename} is {$upload_file_size} bytes, which is greater than the total upload quota for this project ({$this->GetProject()->UploadQuota} bytes)");
                 $this->UploadError = true;
                 cdash_unlink($this->TmpFilename);
                 return;
@@ -279,7 +277,7 @@ class UploadHandler extends AbstractXmlHandler
             if (!$success) {
                 Log::error("UploadFile model - Failed to insert row associated with file: '{$this->UploadFile->Filename}'");
             }
-            $this->Project->CullUploadedFiles();
+            $this->GetProject()->CullUploadedFiles();
 
             // Reset UploadError so that the handler could attempt to process following files
             $this->UploadError = false;
@@ -338,7 +336,7 @@ class UploadHandler extends AbstractXmlHandler
             // an upload.  Otherwise we defer to the values set by the
             // other handlers.
             $buildDate = SubmissionUtils::extract_date_from_buildstamp($this->Build->GetStamp());
-            [$beginningOfDay, $endOfDay] = $this->Project->ComputeTestingDayBounds($buildDate);
+            [$beginningOfDay, $endOfDay] = $this->GetProject()->ComputeTestingDayBounds($buildDate);
 
             $this->Build->EndTime = $beginningOfDay;
             $this->Build->StartTime = $endOfDay;
