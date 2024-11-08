@@ -361,9 +361,9 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
         return $collection;
     }
 
-    public function GetBuildGroup()
+    public function GetBuildGroup(): BuildGroup
     {
-        $buildGroup = $this->ModelFactory->create(BuildGroup::class);
+        $buildGroup = new BuildGroup();
         foreach ($this->Builds as $build) {
             $buildGroup->SetId($build->GroupId);
             break;

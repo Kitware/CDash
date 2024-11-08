@@ -257,10 +257,9 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
         return $this->Build->GetCommitAuthors();
     }
 
-    public function GetBuildGroup()
+    public function GetBuildGroup(): BuildGroup
     {
-        $factory = $this->getModelFactory();
-        $buildGroup = $factory->create(BuildGroup::class);
+        $buildGroup = new BuildGroup();
         $buildGroup->SetId($this->Build->GroupId);
         return $buildGroup;
     }

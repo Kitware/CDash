@@ -431,13 +431,9 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         return $collection;
     }
 
-    /**
-     * @return BuildGroup
-     */
-    public function GetBuildGroup()
+    public function GetBuildGroup(): BuildGroup
     {
-        $factory = $this->getModelFactory();
-        $buildGroup = $factory->create(BuildGroup::class);
+        $buildGroup = new BuildGroup();
         foreach ($this->Builds as $build) {
             // TODO: this used to work:
             // $buildGroup->SetId($build->GroupId);

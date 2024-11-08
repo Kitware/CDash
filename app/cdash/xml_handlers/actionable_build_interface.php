@@ -25,8 +25,5 @@ interface ActionableBuildInterface
 
     public function GetSubscriptionBuilderCollection(): SubscriptionBuilderCollection;
 
-    /**
-     * @return BuildGroup
-     */
-    public function GetBuildGroup();
+    public function GetBuildGroup(): BuildGroup;
 }

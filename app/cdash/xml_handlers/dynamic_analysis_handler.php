@@ -367,10 +367,9 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
         return $collection;
     }
 
-    public function GetBuildGroup()
+    public function GetBuildGroup(): BuildGroup
     {
-        $factory = $this->getModelFactory();
-        $buildGroup = $factory->create(BuildGroup::class);
+        $buildGroup = new BuildGroup();
         foreach ($this->Builds as $build) {
             if (!$build->GroupId) {
                 $build->AssignToGroup();

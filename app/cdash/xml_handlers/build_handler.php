@@ -458,10 +458,9 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         return $collection;
     }
 
-    public function GetBuildGroup()
+    public function GetBuildGroup(): BuildGroup
     {
-        $factory = $this->getModelFactory();
-        $buildGroup = $factory->create(BuildGroup::class);
+        $buildGroup = new BuildGroup();
         foreach ($this->Builds as $build) {
             $buildGroup->SetId($build->GroupId);
             break;
