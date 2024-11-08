@@ -2,6 +2,7 @@
 
 use CDash\Collection\BuildCollection;
 use CDash\Collection\Collection;
+use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
@@ -22,10 +23,7 @@ interface ActionableBuildInterface
 
     public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber): TopicCollection;
 
-    /**
-     * @return Collection
-     */
-    public function GetSubscriptionBuilderCollection();
+    public function GetSubscriptionBuilderCollection(): SubscriptionBuilderCollection;
 
     /**
      * @return BuildGroup
