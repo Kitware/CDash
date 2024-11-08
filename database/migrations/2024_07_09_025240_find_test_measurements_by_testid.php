@@ -40,8 +40,9 @@ return new class extends Migration {
             WHERE
                 testid IS NULL OR
                 NOT EXISTS (
-                    SELECT id from build2test
-                    WHERE id = testmeasurement.testid
+                    SELECT 1
+                    FROM build2test
+                    WHERE build2test.id = testmeasurement.testid
                 )
         ');
 

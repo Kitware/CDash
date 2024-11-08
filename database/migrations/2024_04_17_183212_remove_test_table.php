@@ -82,9 +82,9 @@ return new class extends Migration {
             $num_b2t_rows_deleted = DB::delete('
                 DELETE FROM build2test
                 WHERE NOT EXISTS (
-                    SELECT
+                    SELECT 1
                     FROM testoutput
-                    WHERE id = build2test.outputid
+                    WHERE testoutput.id = build2test.outputid
                 )
             ');
             if ($num_b2t_rows_deleted > 0) {
