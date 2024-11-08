@@ -334,14 +334,9 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
         return array_values($this->Builds);
     }
 
-    /**
-     * @return BuildCollection
-     * TODO: consider refactoring into abstract_handler asap
-     */
-    public function GetBuildCollection()
+    public function GetBuildCollection(): BuildCollection
     {
-        /** @var BuildCollection $collection */
-        $collection = $this->ModelFactory->create(BuildCollection::class);
+        $collection = new BuildCollection();
         foreach ($this->Builds as $build) {
             $collection->add($build);
         }

@@ -226,11 +226,9 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
     /**
      * @return BuildCollection
      */
-    public function GetBuildCollection()
+    public function GetBuildCollection(): BuildCollection
     {
-        $factory = $this->getModelFactory();
-        /** @var BuildCollection $collection */
-        $collection = $factory->create(BuildCollection::class);
+        $collection = new BuildCollection();
         $collection->add($this->Build);
         return $collection;
     }

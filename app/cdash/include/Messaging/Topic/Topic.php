@@ -147,10 +147,7 @@ abstract class Topic implements TopicInterface
         return '';
     }
 
-    /**
-     * @return BuildCollection
-     */
-    public function getBuildCollection()
+    public function getBuildCollection(): BuildCollection
     {
         if (!$this->buildCollection) {
             $this->buildCollection = new BuildCollection();

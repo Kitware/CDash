@@ -55,7 +55,6 @@ class ConfigUseCaseTest extends CDashUseCaseTestCase
         $this->assertInstanceOf(ConfigureHandler::class, $handler);
 
         $buildCollection = $handler->GetBuildCollection();
-        $this->assertInstanceOf(BuildCollection::class, $buildCollection);
 
         $this->assertCount(4, $buildCollection);
         $build = $buildCollection->get('MyExperimentalFeature');

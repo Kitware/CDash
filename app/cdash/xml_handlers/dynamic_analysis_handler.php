@@ -336,15 +336,9 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
         return array_values($this->Builds);
     }
 
-    /**
-     * @return BuildCollection
-     * TODO: consider refactoring into abstract_handler asap
-     */
-    public function GetBuildCollection()
+    public function GetBuildCollection(): BuildCollection
     {
-        $factory = $this->getModelFactory();
-        /** @var BuildCollection $collection */
-        $collection = $factory->create(BuildCollection::class);
+        $collection = new BuildCollection();
         foreach ($this->Builds as $key => $build) {
             if (is_numeric($key) || empty($key)) {
                 $collection->add($build);

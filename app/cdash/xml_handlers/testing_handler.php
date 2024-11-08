@@ -403,15 +403,9 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         return array_values($this->Builds);
     }
 
-    /**
-     * @return BuildCollection
-     * TODO: consider refactoring into abstract_handler asap
-     */
-    public function GetBuildCollection()
+    public function GetBuildCollection(): BuildCollection
     {
-        $factory = $this->getModelFactory();
-        /** @var BuildCollection $collection */
-        $collection = $factory->create(BuildCollection::class);
+        $collection = new BuildCollection();
         foreach ($this->Builds as $build) {
             $collection->add($build);
         }

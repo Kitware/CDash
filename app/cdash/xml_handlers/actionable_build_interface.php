@@ -14,12 +14,7 @@ use CDash\Model\SubscriberInterface;
  */
 interface ActionableBuildInterface
 {
-    /**
-     * @return BuildCollection
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
-     */
-    public function GetBuildCollection();
+    public function GetBuildCollection(): BuildCollection;
 
     /**
      * @return Project

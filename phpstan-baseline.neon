@@ -12331,6 +12331,16 @@ parameters:
 			path: app/cdash/include/Messaging/Subscription/CommitAuthorSubscriptionBuilder.php
 
 		-
+			message: "#^Method CDash\\\\Messaging\\\\Subscription\\\\CommitAuthorSubscriptionBuilder\\:\\:build\\(\\) has DI\\\\DependencyException in PHPDoc @throws tag but it's not thrown\\.$#"
+			count: 1
+			path: app/cdash/include/Messaging/Subscription/CommitAuthorSubscriptionBuilder.php
+
+		-
+			message: "#^Method CDash\\\\Messaging\\\\Subscription\\\\CommitAuthorSubscriptionBuilder\\:\\:build\\(\\) has DI\\\\NotFoundException in PHPDoc @throws tag but it's not thrown\\.$#"
+			count: 1
+			path: app/cdash/include/Messaging/Subscription/CommitAuthorSubscriptionBuilder.php
+
+		-
 			message: "#^Method CDash\\\\Messaging\\\\Subscription\\\\CommitAuthorSubscriptionBuilder\\:\\:getSubscriptionFactory\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Subscription/CommitAuthorSubscriptionBuilder.php
@@ -16931,16 +16941,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
 
 		-
-			message: "#^Method BuildUseCaseTest\\:\\:testBuildUseCase\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
-
-		-
-			message: "#^Method BuildUseCaseTest\\:\\:testBuildUseCase\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
-
-		-
 			message: "#^Method BuildUseCaseTest\\:\\:testUseCaseCreateBuilderReturnsInstanceOfBuildUseCase\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
@@ -16962,7 +16962,7 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 3
+			count: 2
 			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
 
 		-
@@ -16972,16 +16972,6 @@ parameters:
 
 		-
 			message: "#^Method ConfigUseCaseTest\\:\\:testConfigUseCaseBuild\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
-
-		-
-			message: "#^Method ConfigUseCaseTest\\:\\:testConfigUseCaseBuild\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
-
-		-
-			message: "#^Method ConfigUseCaseTest\\:\\:testConfigUseCaseBuild\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
 
@@ -17113,16 +17103,6 @@ parameters:
 
 		-
 			message: "#^Method DynamicAnalysisUseCaseTest\\:\\:testDynamicAnalysisUseCase\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
-
-		-
-			message: "#^Method DynamicAnalysisUseCaseTest\\:\\:testDynamicAnalysisUseCase\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
-
-		-
-			message: "#^Method DynamicAnalysisUseCaseTest\\:\\:testDynamicAnalysisUseCase\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
 
@@ -19253,27 +19233,7 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesMultisubprojectTestXMLFile\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesMultisubprojectTestXMLFile\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
 			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesSubproject\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesSubproject\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesSubproject\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
@@ -19283,27 +19243,7 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestFailed\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestFailed\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
 			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestNotRun\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestNotRun\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestNotRun\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
@@ -19313,27 +19253,7 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestPassed\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestPassed\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
 			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestTimeout\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestTimeout\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestTimeout\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
@@ -19355,16 +19275,6 @@ parameters:
 		-
 			message: "#^Method TestUseCaseTest\\:\\:testUseCaseSetsPropertiesByTestName\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testUseCaseSetsPropertiesByTestName\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testUseCaseSetsPropertiesByTestName\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
