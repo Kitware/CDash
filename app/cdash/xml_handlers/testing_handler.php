@@ -4,7 +4,6 @@ use App\Models\TestMeasurement;
 use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
 use CDash\Collection\BuildCollection;
-use CDash\Collection\Collection;
 use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;

@@ -1,10 +1,8 @@
 <?php
 
 use CDash\Collection\BuildCollection;
-use CDash\Collection\Collection;
 use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Topic\TopicCollection;
-use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use App\Models\Site;

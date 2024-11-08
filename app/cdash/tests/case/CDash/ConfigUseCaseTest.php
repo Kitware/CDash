@@ -1,6 +1,5 @@
 <?php
 
-use CDash\Collection\BuildCollection;
 use CDash\Model\BuildConfigure;
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\ConfigUseCase;

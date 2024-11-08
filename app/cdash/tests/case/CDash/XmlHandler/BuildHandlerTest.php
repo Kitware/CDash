@@ -19,7 +19,6 @@ use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\Topic;
-use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Subscriber;
 use Tests\TestCase;
 use CDash\Submission\CommitAuthorHandlerInterface;

@@ -16,7 +16,6 @@
 
 use App\Utils\SubmissionUtils;
 use CDash\Collection\BuildCollection;
-use CDash\Collection\Collection;
 use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
