@@ -18,10 +18,7 @@ interface ActionableBuildInterface
 
     public function GetProject(): Project;
 
-    /**
-     * @return Site
-     */
-    public function GetSite();
+    public function GetSite(): Site;
 
     /**
      * @param SubscriberInterface $subscriber

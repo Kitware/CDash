@@ -108,10 +108,7 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
         return $this->Project;
     }
 
-    /**
-     * @return Site
-     */
-    public function GetSite()
+    public function GetSite(): Site
     {
         return $this->Site;
     }
