@@ -224,15 +224,6 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
     }
 
     /**
-     * @return Build[]
-     * @deprecated
-     */
-    public function getActionableBuilds()
-    {
-        return $this->getBuilds();
-    }
-
-    /**
      * @return BuildCollection
      */
     public function GetBuildCollection()

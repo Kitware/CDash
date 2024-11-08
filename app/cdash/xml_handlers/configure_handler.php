@@ -335,14 +335,6 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
     }
 
     /**
-     * @return array|Build[]
-     */
-    public function getActionableBuilds()
-    {
-        return $this->Builds;
-    }
-
-    /**
      * @return BuildCollection
      * TODO: consider refactoring into abstract_handler asap
      */

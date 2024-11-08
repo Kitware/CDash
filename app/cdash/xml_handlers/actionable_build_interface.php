@@ -15,12 +15,6 @@ use CDash\Model\SubscriberInterface;
 interface ActionableBuildInterface
 {
     /**
-     * @return Build[]
-     * @deprecated Use GetBuildCollection() 02/04/18
-     */
-    public function getActionableBuilds();
-
-    /**
      * @return BuildCollection
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
