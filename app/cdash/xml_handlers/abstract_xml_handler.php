@@ -26,7 +26,7 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
     protected Site $Site;
     protected $SubProjectName;
 
-    protected $ModelFactory;
+    private $ModelFactory;
     protected Project $Project;
 
     public function __construct($projectid)
