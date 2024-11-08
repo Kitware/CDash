@@ -16,10 +16,7 @@ interface ActionableBuildInterface
 {
     public function GetBuildCollection(): BuildCollection;
 
-    /**
-     * @return Project
-     */
-    public function GetProject();
+    public function GetProject(): Project;
 
     /**
      * @return Site

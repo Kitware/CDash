@@ -98,10 +98,10 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
         return $this->ModelFactory;
     }
 
-    public function GetProject()
+    public function GetProject(): Project
     {
         if (!isset($this->Project)) {
-            $this->Project = $this->getModelFactory()->create(Project::class);
+            $this->Project = new Project();
             $this->Project->Id = $this->projectid;
             $this->Project->Fill();
         }

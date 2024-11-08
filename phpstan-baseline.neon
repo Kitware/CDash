@@ -30281,11 +30281,6 @@ parameters:
 			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractXmlHandler\\:\\:GetProject\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_xml_handler.php
-
-		-
 			message: "#^Method AbstractXmlHandler\\:\\:__construct\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/abstract_xml_handler.php
