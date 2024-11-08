@@ -20,11 +20,7 @@ interface ActionableBuildInterface
 
     public function GetSite(): Site;
 
-    /**
-     * @param SubscriberInterface $subscriber
-     * @return TopicCollection
-     */
-    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber);
+    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber): TopicCollection;
 
     /**
      * @return Collection

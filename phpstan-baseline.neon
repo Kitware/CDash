@@ -19349,7 +19349,7 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
 
 		-
@@ -19378,11 +19378,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
 
 		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\)\\.$#"
 			count: 2
 			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
@@ -19400,11 +19395,6 @@ parameters:
 		-
 			message: "#^Class DynamicAnalysisHandler constructor invoked with 2 parameters, 1 required\\.$#"
 			count: 2
-			path: app/cdash/tests/case/CDash/XmlHandler/DynamicAnalysisHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/DynamicAnalysisHandlerTest.php
 
 		-
@@ -19434,7 +19424,7 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
 
 		-
@@ -19469,7 +19459,7 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
 
 		-

@@ -41,7 +41,6 @@ class TestingHandlerTest extends TestCase
 
         $collection = $sut->GetTopicCollectionForSubscriber($subscriber);
 
-        $this->assertInstanceOf(TopicCollection::class, $collection);
         self::assertCount(0, $collection);
 
         $preferences->set(NotifyOn::TEST_FAILURE, true);

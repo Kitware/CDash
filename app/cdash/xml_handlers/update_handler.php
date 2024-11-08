@@ -233,11 +233,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
         return $collection;
     }
 
-    /**
-     * @param SubscriberInterface $subscriber
-     * @return TopicCollection
-     */
-    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber)
+    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber): TopicCollection
     {
         $collection = new TopicCollection();
         $preferences = $subscriber->getNotificationPreferences();

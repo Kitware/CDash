@@ -433,11 +433,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         return $collection;
     }
 
-    /**
-     * @param SubscriberInterface $subscriber
-     * @return TopicCollection
-     */
-    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber)
+    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber): TopicCollection
     {
         $collection = new TopicCollection();
         $errors = new BuildErrorTopic();

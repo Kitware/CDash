@@ -33,7 +33,6 @@ class ConfigureHandlerTest extends TestCase
 
         $collection = $sut->GetTopicCollectionForSubscriber($subscriber);
 
-        $this->assertInstanceOf(TopicCollection::class, $collection);
         self::assertCount(0, $collection);
 
         $preferences->set(NotifyOn::CONFIGURE, true);
