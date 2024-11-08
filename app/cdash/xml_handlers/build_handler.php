@@ -203,7 +203,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
              * @var Build $build
              */
             foreach ($this->Builds as $subproject => $build) {
-                $build->ProjectId = $this->projectid;
+                $build->ProjectId = $this->GetProject()->Id;
                 $build->StartTime = $start_time;
                 $build->EndTime = $end_time;
                 $build->SubmitTime = $submit_time;

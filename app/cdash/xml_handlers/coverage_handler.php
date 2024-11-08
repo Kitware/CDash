@@ -113,7 +113,7 @@ class CoverageHandler extends AbstractXmlHandler
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
 
-            $this->Build->ProjectId = $this->projectid;
+            $this->Build->ProjectId = $this->GetProject()->Id;
             $this->Build->StartTime = $start_time;
             $this->Build->EndTime = $end_time;
             $this->Build->SubmitTime = gmdate(FMT_DATETIME);
@@ -137,7 +137,7 @@ class CoverageHandler extends AbstractXmlHandler
                 if ($this->HasSubProjects) {
                     // Make sure this file gets associated with the correct SubProject.
                     $subproject = SubProject::GetSubProjectFromPath(
-                        $coverageFile->FullPath, $this->projectid);
+                        $coverageFile->FullPath, $this->GetProject()->Id);
                     if (!is_null($subproject)) {
                         // Find the sibling build that performed this SubProject.
                         $subprojectBuild = Build::GetSubProjectBuild(
@@ -146,7 +146,7 @@ class CoverageHandler extends AbstractXmlHandler
                             // Build doesn't exist yet, add it here.
                             $subprojectBuild = new Build();
                             $subprojectBuild->Name = $this->Build->Name;
-                            $subprojectBuild->ProjectId = $this->projectid;
+                            $subprojectBuild->ProjectId = $this->GetProject()->Id;
                             $subprojectBuild->SiteId = $this->Build->SiteId;
                             $subprojectBuild->SetParentId($this->Build->GetParentId());
                             $subprojectBuild->SetStamp($this->Build->GetStamp());

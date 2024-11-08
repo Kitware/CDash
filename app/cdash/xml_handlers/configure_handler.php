@@ -158,7 +158,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
              * @var  Build $build
              */
             foreach ($this->Builds as $subproject => $build) {
-                $build->ProjectId = $this->projectid;
+                $build->ProjectId = $this->GetProject()->Id;
                 $build->StartTime = $start_time;
                 $build->EndTime = $end_time;
                 $build->SubmitTime = gmdate(FMT_DATETIME);

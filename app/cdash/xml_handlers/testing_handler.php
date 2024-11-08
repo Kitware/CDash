@@ -133,7 +133,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
             }
         } elseif ($name == 'TEST' && count($attributes) > 0) {
             $this->TestCreator = new TestCreator;
-            $this->TestCreator->projectid = $this->projectid;
+            $this->TestCreator->projectid = $this->GetProject()->Id;
             $this->TestCreator->testStatus = $attributes['STATUS'];
             $this->TestSubProjectName = '';
             $this->Labels = [];
@@ -184,7 +184,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
             if ($this->Labels) {
                 $this->TestCreator->labels = $this->Labels;
             }
-            $this->TestCreator->projectid = $this->projectid;
+            $this->TestCreator->projectid = $this->GetProject()->Id;
             $this->TestCreator->create($build);
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             if (!empty($this->TestSubProjectName)) {
@@ -360,7 +360,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         $build->OSPlatform = $this->BuildInformation['osplatform'] ?? null;
         $build->CompilerName = $this->BuildInformation['compilername'] ?? null;
         $build->CompilerVersion = $this->BuildInformation['compilerversion'] ?? null;
-        $build->ProjectId = $this->projectid;
+        $build->ProjectId = $this->GetProject()->Id;
         $build->SetProject($this->GetProject());
         $build->SubmitTime = gmdate(FMT_DATETIME);
 

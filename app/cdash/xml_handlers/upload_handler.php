@@ -343,7 +343,7 @@ class UploadHandler extends AbstractXmlHandler
             $this->Build->SubmitTime = gmdate(FMT_DATETIME);
         }
 
-        $this->Build->ProjectId = $this->projectid;
+        $this->Build->ProjectId = $this->GetProject()->Id;
         $this->Build->SetSubProject($this->SubProjectName);
         $this->Build->GetIdFromName($this->SubProjectName);
         $this->Build->RemoveIfDone();

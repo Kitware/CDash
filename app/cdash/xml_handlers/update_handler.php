@@ -90,7 +90,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
             $this->Build->EndTime = $end_time;
             $this->Build->SubmitTime = $submit_time;
 
-            $this->Build->ProjectId = $this->projectid;
+            $this->Build->ProjectId = $this->GetProject()->Id;
 
             $this->Build->GetIdFromName($this->SubProjectName);
             // Update.xml doesn't include SubProject information.
@@ -129,11 +129,8 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
                 // what version of the code is being built, not what changed
                 // since last time.  In this case we need to query the remote
                 // repository to figure out what changed.
-                $project = new Project();
-                $project->Id = $this->projectid;
-                $project->Fill();
                 try {
-                    Repository::compareCommits($this->Update, $project);
+                    Repository::compareCommits($this->Update, $this->GetProject());
                 } catch (\Exception $e) {
                     // Do nothing.
                 }

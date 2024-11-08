@@ -93,7 +93,7 @@ class NoteHandler extends AbstractXmlHandler
     {
         parent::endElement($parser, $name);
         if ($name == 'NOTE') {
-            $this->Build->ProjectId = $this->projectid;
+            $this->Build->ProjectId = $this->GetProject()->Id;
             $this->Build->GetIdFromName($this->SubProjectName);
             $this->Build->RemoveIfDone();
 

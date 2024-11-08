@@ -80,7 +80,7 @@ class CoverageLogHandler extends AbstractXmlHandler
         if ($name === 'SITE') {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
-            $this->Build->ProjectId = $this->projectid;
+            $this->Build->ProjectId = $this->GetProject()->Id;
             $this->Build->StartTime = $start_time;
             $this->Build->EndTime = $end_time;
             $this->Build->SubmitTime = gmdate(FMT_DATETIME);
@@ -98,7 +98,7 @@ class CoverageLogHandler extends AbstractXmlHandler
 
             // Does this project have subprojects?
             $project = new Project();
-            $project->Id = $this->projectid;
+            $project->Id = $this->GetProject()->Id;
             $has_subprojects = $project->GetNumberOfSubProjects() > 0;
 
             // Record the coverage data that we parsed from this file.
@@ -115,14 +115,14 @@ class CoverageLogHandler extends AbstractXmlHandler
                     // Make sure this file gets associated with the correct
                     // subproject based on its path.
                     $subproject = SubProject::GetSubProjectFromPath(
-                        $coverageFile->FullPath, intval($this->projectid));
+                        $coverageFile->FullPath, intval($this->GetProject()->Id));
                     if (!is_null($subproject)) {
                         $subprojectBuild = Build::GetSubProjectBuild(
                             $this->Build->GetParentId(), $subproject->GetId());
                         if (is_null($subprojectBuild)) {
                             // This SubProject build doesn't exist yet, add it here.
                             $subprojectBuild = new Build();
-                            $subprojectBuild->ProjectId = $this->projectid;
+                            $subprojectBuild->ProjectId = $this->GetProject()->Id;
                             $subprojectBuild->Name = $this->Build->Name;
                             $subprojectBuild->SiteId = $this->Build->SiteId;
                             $subprojectBuild->SetParentId($this->Build->GetParentId());

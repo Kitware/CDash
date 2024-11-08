@@ -292,7 +292,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
 
         $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
 
-        $build->ProjectId = $this->projectid;
+        $build->ProjectId = $this->GetProject()->Id;
         $build->StartTime = $start_time;
         // EndTimeStamp hasn't been parsed yet.  We update this value later.
         $build->EndTime = $start_time;

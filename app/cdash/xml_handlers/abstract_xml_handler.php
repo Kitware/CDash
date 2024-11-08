@@ -21,7 +21,6 @@ use CDash\Model\Project;
 abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 {
     private Stack $stack;
-    protected $projectid;
     protected bool $Append = false;
     protected Site $Site;
     protected $SubProjectName;
@@ -31,8 +30,6 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 
     public function __construct($projectid)
     {
-        $this->projectid = $projectid;
-
         $this->Project = new Project();
         $this->Project->Id = $projectid;
 
