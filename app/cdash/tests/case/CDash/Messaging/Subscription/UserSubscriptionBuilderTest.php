@@ -50,7 +50,7 @@ class UserSubscriptionBuilderTest extends TestCase
         $mock_build_submission->expects($this->any())
             ->method('GetTopicCollectionForSubscriber')
             ->willReturnCallback(function ($subscriber) {
-                $handler = new BuildHandler(0, 0);
+                $handler = new BuildHandler(0);
                 return $handler->GetTopicCollectionForSubscriber($subscriber);
             });
 

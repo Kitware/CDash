@@ -25,7 +25,7 @@ class ConfigureHandlerTest extends TestCase
 {
     public function testGetBuildTopic()
     {
-        $sut = new ConfigureHandler(1, 0);
+        $sut = new ConfigureHandler(1);
 
         $preferences = new BitmaskNotificationPreferences();
         $subscriber = new Subscriber($preferences);
@@ -44,7 +44,7 @@ class ConfigureHandlerTest extends TestCase
 
     public function testGetSubscriptionBuilderCollection()
     {
-        $sut = new ConfigureHandler(0, 0);
+        $sut = new ConfigureHandler(0);
         $builders = $sut->GetSubscriptionBuilderCollection();
 
         self::assertCount(1, $builders);

@@ -26,7 +26,7 @@ class DynamicAnalysisHandlerTest extends TestCase
 {
     public function testGetBuildTopic()
     {
-        $sut = new DynamicAnalysisHandler(1, 0);
+        $sut = new DynamicAnalysisHandler(1);
 
         $preferences = new BitmaskNotificationPreferences();
         $subscriber = new Subscriber($preferences);
@@ -44,7 +44,7 @@ class DynamicAnalysisHandlerTest extends TestCase
 
     public function testGetSubscriptionBuilderCollection()
     {
-        $sut = new DynamicAnalysisHandler(0, 0);
+        $sut = new DynamicAnalysisHandler(0);
         $builders = $sut->GetSubscriptionBuilderCollection();
 
         self::assertCount(1, $builders);

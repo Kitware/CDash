@@ -27,13 +27,13 @@ class BuildHandlerTest extends TestCase
 {
     public function testBuildHandlerIsACommitAuthorHandler()
     {
-        $sut = new BuildHandler(0, 0);
+        $sut = new BuildHandler(0);
         $this->assertInstanceOf(CommitAuthorHandlerInterface::class, $sut);
     }
 
     public function testGetTopicCollectionForSubscriber()
     {
-        $sut = new BuildHandler(1, 0);
+        $sut = new BuildHandler(1);
         $preferences = new BitmaskNotificationPreferences();
         $subscriber = new Subscriber($preferences);
 
@@ -69,7 +69,7 @@ class BuildHandlerTest extends TestCase
 
     public function testGetSubscriptionBuilderCollection()
     {
-        $sut = new BuildHandler(0, 0);
+        $sut = new BuildHandler(0);
         $builders = $sut->GetSubscriptionBuilderCollection();
         $this->assertCount(2, $builders);
         $this->assertTrue($builders->has(UserSubscriptionBuilder::class));

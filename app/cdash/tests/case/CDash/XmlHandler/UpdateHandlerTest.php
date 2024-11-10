@@ -29,7 +29,7 @@ class UpdateHandlerTest extends CDashTestCase
 {
     public function testUpdateHandlerIsACommitAuthorHandler()
     {
-        $sut = new UpdateHandler(0, 0);
+        $sut = new UpdateHandler(0);
         $this->assertInstanceOf(CommitAuthorHandlerInterface::class, $sut);
     }
 
@@ -47,13 +47,13 @@ class UpdateHandlerTest extends CDashTestCase
             return $build;
         });
 
-        $sut = new UpdateHandler(0, 0);
+        $sut = new UpdateHandler(0);
         $sut->GetCommitAuthors();
     }
 
     public function testGetBuildTopic()
     {
-        $sut = new UpdateHandler(1, 0);
+        $sut = new UpdateHandler(1);
 
         $preferences = new BitmaskNotificationPreferences();
         $subscriber = new Subscriber($preferences);
@@ -72,7 +72,7 @@ class UpdateHandlerTest extends CDashTestCase
 
     public function testGetSubscriptionBuilderCollection()
     {
-        $sut = new UpdateHandler(0, 0);
+        $sut = new UpdateHandler(0);
         $collection = $sut->GetSubscriptionBuilderCollection();
 
         self::assertCount(2, $collection);
