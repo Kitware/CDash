@@ -546,7 +546,7 @@ function send_update_email(UpdateHandler $handler, int $projectid): void
     if ($update_errors['errors']) {
         // Find the site maintainer(s)
         $sitename = $handler->getSiteName();
-        $siteid = $handler->getSiteId();
+        $siteid = $handler->GetSite()->id;
         $recipients = [];
 
         $db = Database::getInstance();
@@ -556,7 +556,7 @@ function send_update_email(UpdateHandler $handler, int $projectid): void
                                WHERE
                                    ' . qid('user') . '.id=site2user.userid
                                    AND site2user.siteid=?
-                           ', [intval($siteid)]);
+                           ', [$siteid]);
         foreach ($email_addresses as $email_addresses_array) {
             $recipients[] = $email_addresses_array['email'];
         }

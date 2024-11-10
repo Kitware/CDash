@@ -71,11 +71,6 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
         return $this->Site->name;
     }
 
-    public function getSiteId(): int
-    {
-        return $this->Site->id;
-    }
-
     public function getBuildStamp()
     {
         return $this->Build->GetStamp();
