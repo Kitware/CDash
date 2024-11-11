@@ -81,9 +81,10 @@ return new class extends Migration {
             // Take care of any invalid rows which do not have an output ID before we add a foreign key
             $num_b2t_rows_deleted = DB::delete('
                 DELETE FROM build2test
-                WHERE outputid NOT IN (
-                    SELECT id
+                WHERE NOT EXISTS (
+                    SELECT 1
                     FROM testoutput
+                    WHERE testoutput.id = build2test.outputid
                 )
             ');
             if ($num_b2t_rows_deleted > 0) {
