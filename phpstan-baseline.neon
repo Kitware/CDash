@@ -20070,6 +20070,11 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
+			message: "#^Method CDashControllerUserAgent\\:\\:getIlluminateHttpRequest\\(\\) throws checked exception Symfony\\\\Component\\\\HttpFoundation\\\\Exception\\\\BadRequestException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
 			message: "#^Method CDashControllerUserAgent\\:\\:getSimpleHttpResponse\\(\\) has parameter \\$encoding with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
