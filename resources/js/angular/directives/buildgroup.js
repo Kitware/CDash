@@ -1,5 +1,5 @@
 CDash.directive('buildgroup', ["VERSION", function (VERSION) {
   return {
-    templateUrl: 'build/views/partials/buildgroup.html?id=' + VERSION,
+    templateUrl: 'assets/js/angular/views/partials/buildgroup.html?id=' + VERSION,
   }
 }]);

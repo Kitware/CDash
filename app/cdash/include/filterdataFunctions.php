@@ -1121,7 +1121,7 @@ function get_filterdata_from_request($page_id = '')
     if (array_key_exists('colorblind', $_COOKIE)) {
         $filterdata['colorblind'] = intval($_COOKIE['colorblind']);
     } else {
-        if (get_css_file() === 'build/css/colorblind.css') {
+        if (get_css_file() === 'assets/css/colorblind.css') {
             $filterdata['colorblind'] = 1;
         } else {
             $filterdata['colorblind'] = 0;

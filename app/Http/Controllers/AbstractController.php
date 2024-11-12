@@ -50,7 +50,7 @@ abstract class AbstractController extends BaseController
         }
 
         return $this->view('cdash')
-            ->with('xsl_content', file_get_contents(base_path("public/build/views/$view.html")))
+            ->with('xsl_content', file_get_contents(base_path("public/assets/js/angular/views/$view.html")))
             ->with('xsl', true)
             ->with('angular', true)
             ->with('angular_controller', $controller_name);

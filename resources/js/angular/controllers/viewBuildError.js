@@ -28,6 +28,6 @@ CDash.controller('ViewBuildErrorController',
     };
   }]).directive('buildError', ["VERSION", function (VERSION) {
       return {
-          templateUrl: 'build/views/partials/buildError.html?id=' + VERSION,
+          templateUrl: 'assets/js/angular/views/partials/buildError.html?id=' + VERSION,
       };
   }]);

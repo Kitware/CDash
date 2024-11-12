@@ -937,8 +937,8 @@ function getByteValueWithExtension($value, $base = 1024): string
  */
 function get_css_file(): string
 {
-    $classic = 'build/css/cdash.css';
-    $colorblind = 'build/css/colorblind.css';
+    $classic = 'assets/css/cdash.css';
+    $colorblind = 'assets/css/colorblind.css';
 
     if (array_key_exists('colorblind', $_COOKIE) && $_COOKIE['colorblind'] == 1) {
         return $colorblind;
