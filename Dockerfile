@@ -106,7 +106,8 @@ RUN sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
 RUN a2dissite 000-default && \
     a2ensite cdash-site && \
     a2enmod rewrite && \
-    a2enmod php
+    a2enmod php && \
+    a2enmod headers
 
 # Enable https site if we're not doing a development build.
 RUN if [ "$DEVELOPMENT_BUILD" != '1' ]; then \
