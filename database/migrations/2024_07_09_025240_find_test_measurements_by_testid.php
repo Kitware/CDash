@@ -39,8 +39,10 @@ return new class extends Migration {
             DELETE FROM testmeasurement
             WHERE
                 testid IS NULL OR
-                testid NOT IN (
-                    SELECT id from build2test
+                NOT EXISTS (
+                    SELECT 1
+                    FROM build2test
+                    WHERE build2test.id = testmeasurement.testid
                 )
         ');
 

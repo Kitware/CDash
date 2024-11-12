@@ -22,7 +22,7 @@ return new class extends Migration {
 
         // Execute at most 10k batches of buildwise updates
         if (config('database.default') === 'pgsql') {
-            for ($i = 0; $i < ceil($count / 10000); $i++) {
+            for ($i = 1; $i <= ceil($count / 10000); $i++) {
                 DB::update('
                     UPDATE label2test
                     SET testid = build2test.id
@@ -35,7 +35,7 @@ return new class extends Migration {
                 ', [$i]);
             }
         } else {
-            for ($i = 0; $i < ceil($count / 10000); $i++) {
+            for ($i = 1; $i <= ceil($count / 10000); $i++) {
                 DB::update('
                     UPDATE label2test, build2test
                     SET label2test.testid = build2test.id
