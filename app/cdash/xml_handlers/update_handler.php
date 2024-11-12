@@ -26,7 +26,6 @@ use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUpdateFile;
-use CDash\Model\Project;
 use CDash\Model\Repository;
 use App\Models\Site;
 use CDash\Model\SubscriberInterface;

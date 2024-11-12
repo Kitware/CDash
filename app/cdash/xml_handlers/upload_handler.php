@@ -17,7 +17,6 @@
 use App\Utils\SubmissionUtils;
 use CDash\Model\Build;
 use CDash\Model\Label;
-use CDash\Model\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use CDash\Model\UploadFile;
