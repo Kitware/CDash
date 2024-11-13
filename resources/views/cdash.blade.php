@@ -33,8 +33,8 @@
         <link rel="stylesheet" type="text/css" href="{{ asset(mix('build/css/legacy_3rdparty.css')) }}"/>
         <link rel="stylesheet" type="text/css" href="{{ asset(mix(get_css_file())) }} }}"/>
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}"/>
-        <script src="{{ mix("js/3rdparty.min.js") }}"></script>
-        <script src="{{ mix("js/legacy_1stparty.min.js") }}"></script>
+        <script src="{{ asset(mix("js/3rdparty.min.js")) }}"></script>
+        <script src="{{ asset(mix("js/legacy_1stparty.min.js")) }}"></script>
     @elseif(isset($vue) && $vue === true)
         <link rel="stylesheet" type="text/css" href="{{ asset(mix(get_css_file())) }}"/>
         @if(isset($daisyui) && $daisyui === true)
@@ -45,8 +45,8 @@
             <link rel="stylesheet" type="text/css" href="{{ asset('css/vue_common.css') }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}"/>
         @endif
-        <script src="{{ mix('js/3rdparty.min.js') }}" type="text/javascript" defer></script>
-        <script src="{{ mix('laravel/js/app.js') }}" type="text/javascript" defer></script>
+        <script src="{{ asset(mix('js/3rdparty.min.js')) }}" type="text/javascript" defer></script>
+        <script src="{{ asset(mix('laravel/js/app.js')) }}" type="text/javascript" defer></script>
     @else
         <link rel="stylesheet" type="text/css" href="{{ asset(mix('build/css/legacy_3rdparty.css')) }}"/>
         <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.dataTables.css') }}"/>
