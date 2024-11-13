@@ -1,4 +1,4 @@
-import LoadingIndicator from '../../../resources/js/components/shared/LoadingIndicator.vue';
+import LoadingIndicator from '../../../resources/js/vue/components/shared/LoadingIndicator.vue';
 
 it('displays according to isLoading prop', () => {
   cy.mount(LoadingIndicator, {

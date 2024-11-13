@@ -2,7 +2,7 @@ import {mount, config, createLocalVue} from '@vue/test-utils';
 import axios from 'axios';
 import AxiosMockAdapter from 'axios-mock-adapter';
 import expect from 'expect';
-import EditProject from '../../resources/js/components/EditProject.vue';
+import EditProject from '../../resources/js/vue/components/EditProject.vue';
 
 // const localVue = createLocalVue();
 

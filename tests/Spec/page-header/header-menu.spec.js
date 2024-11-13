@@ -1,6 +1,6 @@
 import {mount, config, createWrapper} from '@vue/test-utils';
 config.global.mocks['$baseURL'] = 'http://localhost';
-import HeaderMenu from '../../../resources/js/components/page-header/HeaderMenu.vue';
+import HeaderMenu from '../../../resources/js/vue/components/page-header/HeaderMenu.vue';
 
 import expect from 'expect';
 
