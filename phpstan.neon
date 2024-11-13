@@ -43,8 +43,9 @@ parameters:
     checkUninitializedProperties: true
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
     checkBenevolentUnionTypes: true
+    reportAnyTypeWideningInVarTag: true
 
-    level: 8
+    level: 9
 
 includes:
     - vendor/phpstan/phpstan/conf/bleedingEdge.neon
