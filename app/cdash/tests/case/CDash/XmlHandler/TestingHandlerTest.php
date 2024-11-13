@@ -19,7 +19,6 @@ use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\Topic;
-use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Subscriber;
 use Tests\TestCase;
 use CDash\Submission\CommitAuthorHandlerInterface;
@@ -28,20 +27,19 @@ class TestingHandlerTest extends TestCase
 {
     public function testTestingHandlerIsACommitAuthorHandler()
     {
-        $sut = new TestingHandler(0, 0);
+        $sut = new TestingHandler(0);
         $this->assertInstanceOf(CommitAuthorHandlerInterface::class, $sut);
     }
 
     public function testGetBuildTopic()
     {
-        $sut = new TestingHandler(1, 0);
+        $sut = new TestingHandler(1);
 
         $preferences = new BitmaskNotificationPreferences();
         $subscriber = new Subscriber($preferences);
 
         $collection = $sut->GetTopicCollectionForSubscriber($subscriber);
 
-        $this->assertInstanceOf(TopicCollection::class, $collection);
         self::assertCount(0, $collection);
 
         $preferences->set(NotifyOn::TEST_FAILURE, true);
@@ -55,7 +53,7 @@ class TestingHandlerTest extends TestCase
 
     public function testGetSubscriptionBuilderCollection()
     {
-        $sut = new TestingHandler(0, 0);
+        $sut = new TestingHandler(0);
         $collection = $sut->GetSubscriptionBuilderCollection();
 
         self::assertCount(2, $collection);

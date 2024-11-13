@@ -4,7 +4,6 @@ use App\Models\TestMeasurement;
 use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
 use CDash\Collection\BuildCollection;
-use CDash\Collection\Collection;
 use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
@@ -16,7 +15,6 @@ use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Image;
 use CDash\Model\Label;
-use CDash\Model\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use CDash\Model\SubscriberInterface;
@@ -77,9 +75,6 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         $factory = $this->getModelFactory();
 
         if ($name == 'SITE') {
-            $this->Project = $factory->create(Project::class);
-            $this->Project->Id = $this->projectid;
-
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
@@ -138,7 +133,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
             }
         } elseif ($name == 'TEST' && count($attributes) > 0) {
             $this->TestCreator = new TestCreator;
-            $this->TestCreator->projectid = $this->projectid;
+            $this->TestCreator->projectid = $this->GetProject()->Id;
             $this->TestCreator->testStatus = $attributes['STATUS'];
             $this->TestSubProjectName = '';
             $this->Labels = [];
@@ -189,7 +184,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
             if ($this->Labels) {
                 $this->TestCreator->labels = $this->Labels;
             }
-            $this->TestCreator->projectid = $this->projectid;
+            $this->TestCreator->projectid = $this->GetProject()->Id;
             $this->TestCreator->create($build);
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             if (!empty($this->TestSubProjectName)) {
@@ -365,8 +360,8 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         $build->OSPlatform = $this->BuildInformation['osplatform'] ?? null;
         $build->CompilerName = $this->BuildInformation['compilername'] ?? null;
         $build->CompilerVersion = $this->BuildInformation['compilerversion'] ?? null;
-        $build->ProjectId = $this->projectid;
-        $build->SetProject($this->Project);
+        $build->ProjectId = $this->GetProject()->Id;
+        $build->SetProject($this->GetProject());
         $build->SubmitTime = gmdate(FMT_DATETIME);
 
         // TODO: dark days lie in waiting for this...
@@ -402,35 +397,17 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
     {
         return array_values($this->Builds);
     }
-    /**
-     * @return Build[]
-     * @deprecated Use GetBuildCollection() 02/04/18
-     */
-    public function getActionableBuilds()
-    {
-        return $this->Builds;
-    }
 
-    /**
-     * @return BuildCollection
-     * TODO: consider refactoring into abstract_handler asap
-     */
-    public function GetBuildCollection()
+    public function GetBuildCollection(): BuildCollection
     {
-        $factory = $this->getModelFactory();
-        /** @var BuildCollection $collection */
-        $collection = $factory->create(BuildCollection::class);
+        $collection = new BuildCollection();
         foreach ($this->Builds as $build) {
             $collection->add($build);
         }
         return $collection;
     }
 
-    /**
-     * @param SubscriberInterface $subscriber
-     * @return TopicCollection
-     */
-    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber)
+    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber): TopicCollection
     {
         $collection = new TopicCollection();
         $preferences = $subscriber->getNotificationPreferences();
@@ -441,10 +418,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         return $collection;
     }
 
-    /**
-     * @return Collection
-     */
-    public function GetSubscriptionBuilderCollection()
+    public function GetSubscriptionBuilderCollection(): SubscriptionBuilderCollection
     {
         $collection = (new SubscriptionBuilderCollection)
             ->add(new UserSubscriptionBuilder($this))
@@ -452,13 +426,9 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         return $collection;
     }
 
-    /**
-     * @return BuildGroup
-     */
-    public function GetBuildGroup()
+    public function GetBuildGroup(): BuildGroup
     {
-        $factory = $this->getModelFactory();
-        $buildGroup = $factory->create(BuildGroup::class);
+        $buildGroup = new BuildGroup();
         foreach ($this->Builds as $build) {
             // TODO: this used to work:
             // $buildGroup->SetId($build->GroupId);

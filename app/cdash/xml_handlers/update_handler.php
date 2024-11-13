@@ -16,7 +16,6 @@
 
 use App\Utils\SubmissionUtils;
 use CDash\Collection\BuildCollection;
-use CDash\Collection\Collection;
 use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
@@ -27,7 +26,6 @@ use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUpdateFile;
-use CDash\Model\Project;
 use CDash\Model\Repository;
 use App\Models\Site;
 use CDash\Model\SubscriberInterface;
@@ -91,7 +89,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
             $this->Build->EndTime = $end_time;
             $this->Build->SubmitTime = $submit_time;
 
-            $this->Build->ProjectId = $this->projectid;
+            $this->Build->ProjectId = $this->GetProject()->Id;
 
             $this->Build->GetIdFromName($this->SubProjectName);
             // Update.xml doesn't include SubProject information.
@@ -130,11 +128,8 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
                 // what version of the code is being built, not what changed
                 // since last time.  In this case we need to query the remote
                 // repository to figure out what changed.
-                $project = new Project();
-                $project->Id = $this->projectid;
-                $project->Fill();
                 try {
-                    Repository::compareCommits($this->Update, $project);
+                    Repository::compareCommits($this->Update, $this->GetProject());
                 } catch (\Exception $e) {
                     // Do nothing.
                 }
@@ -224,31 +219,16 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
     }
 
     /**
-     * @return Build[]
-     * @deprecated
-     */
-    public function getActionableBuilds()
-    {
-        return $this->getBuilds();
-    }
-
-    /**
      * @return BuildCollection
      */
-    public function GetBuildCollection()
+    public function GetBuildCollection(): BuildCollection
     {
-        $factory = $this->getModelFactory();
-        /** @var BuildCollection $collection */
-        $collection = $factory->create(BuildCollection::class);
+        $collection = new BuildCollection();
         $collection->add($this->Build);
         return $collection;
     }
 
-    /**
-     * @param SubscriberInterface $subscriber
-     * @return TopicCollection
-     */
-    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber)
+    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber): TopicCollection
     {
         $collection = new TopicCollection();
         $preferences = $subscriber->getNotificationPreferences();
@@ -259,10 +239,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
         return $collection;
     }
 
-    /**
-     * @return Collection
-     */
-    public function GetSubscriptionBuilderCollection()
+    public function GetSubscriptionBuilderCollection(): SubscriptionBuilderCollection
     {
         $collection = (new SubscriptionBuilderCollection)
             ->add(new UserSubscriptionBuilder($this))
@@ -275,10 +252,9 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
         return $this->Build->GetCommitAuthors();
     }
 
-    public function GetBuildGroup()
+    public function GetBuildGroup(): BuildGroup
     {
-        $factory = $this->getModelFactory();
-        $buildGroup = $factory->create(BuildGroup::class);
+        $buildGroup = new BuildGroup();
         $buildGroup->SetId($this->Build->GroupId);
         return $buildGroup;
     }

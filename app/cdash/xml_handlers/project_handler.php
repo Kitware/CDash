@@ -42,9 +42,6 @@ class ProjectHandler extends AbstractXmlHandler
         // database.
         //
         $this->ProjectNameMatches = true;
-        $this->Project = new Project();
-        $this->Project->Id = $projectid;
-        $this->Project->Fill();
 
         $this->SubProjectPosition = 1;
     }
@@ -56,9 +53,9 @@ class ProjectHandler extends AbstractXmlHandler
 
         // Check that the project name matches
         if ($name == 'PROJECT') {
-            if (get_project_id($attributes['NAME']) != $this->projectid) {
+            if (get_project_id($attributes['NAME']) != $this->GetProject()->Id) {
                 add_log('Wrong project name: ' . $attributes['NAME'],
-                    'ProjectHandler::startElement', LOG_ERR, $this->projectid);
+                    'ProjectHandler::startElement', LOG_ERR, $this->GetProject()->Id);
                 $this->ProjectNameMatches = false;
             }
         }
@@ -73,7 +70,7 @@ class ProjectHandler extends AbstractXmlHandler
         } elseif ($name == 'SUBPROJECT') {
             $this->CurrentDependencies = [];
             $this->SubProject = new SubProject();
-            $this->SubProject->SetProjectId($this->projectid);
+            $this->SubProject->SetProjectId($this->GetProject()->Id);
             $this->SubProject->SetName($attributes['NAME']);
             if (array_key_exists('GROUP', $attributes)) {
                 $this->SubProject->SetGroup($attributes['GROUP']);
@@ -87,7 +84,7 @@ class ProjectHandler extends AbstractXmlHandler
             //
             $dependentProject = new SubProject();
             $dependentProject->SetName($attributes['NAME']);
-            $dependentProject->SetProjectId($this->projectid);
+            $dependentProject->SetProjectId($this->GetProject()->Id);
             // The subproject's Id is automatically loaded once its name & projectid
             // are set.
             $this->CurrentDependencies[] = $dependentProject->GetId();
@@ -125,7 +122,7 @@ class ProjectHandler extends AbstractXmlHandler
                                 "Not removing dependency $dep($removeid) from " .
                                 $subproject->GetName() .
                                 ' because it is not a SubProject element in this Project.xml file',
-                                'ProjectHandler:endElement', LOG_WARNING, $this->projectid);
+                                'ProjectHandler:endElement', LOG_WARNING, $this->GetProject()->Id);
                         }
                     }
                 }
@@ -139,14 +136,14 @@ class ProjectHandler extends AbstractXmlHandler
                     } else {
                         add_log(
                             'impossible condition: should NEVER see this: unknown DEPENDENCY clause should prevent this case',
-                            'ProjectHandler:endElement', LOG_WARNING, $this->projectid);
+                            'ProjectHandler:endElement', LOG_WARNING, $this->GetProject()->Id);
                     }
                 }
             }
 
             if (config('cdash.delete_old_subprojects')) {
                 // Delete old subprojects that weren't included in this file.
-                $previousSubProjectIds = $this->Project->GetSubProjects()->pluck('id')->toArray();
+                $previousSubProjectIds = $this->GetProject()->GetSubProjects()->pluck('id')->toArray();
                 foreach ($previousSubProjectIds as $previousId) {
                     $found = false;
                     foreach ($this->SubProjects as $subproject) {
@@ -161,7 +158,7 @@ class ProjectHandler extends AbstractXmlHandler
                         $subProjectToRemove->Delete();
                         add_log("Deleted " . $subProjectToRemove->GetName() . " because it was not mentioned in Project.xml",
                             'ProjectHandler:endElement', LOG_WARNING,
-                            $this->projectid);
+                            $this->GetProject()->Id);
                     }
                 }
             }
@@ -193,7 +190,7 @@ class ProjectHandler extends AbstractXmlHandler
                 if (!$added) {
                     add_log('Project.xml DEPENDENCY of ' . $this->SubProject->GetName() .
                         ' not mentioned earlier in file.',
-                        'ProjectHandler:endElement', LOG_WARNING, $this->projectid);
+                        'ProjectHandler:endElement', LOG_WARNING, $this->GetProject()->Id);
                 }
             }
 
@@ -222,7 +219,7 @@ class ProjectHandler extends AbstractXmlHandler
 
                 $UserProject = new UserProject();
                 $UserProject->UserId = $userid;
-                $UserProject->ProjectId = $this->projectid;
+                $UserProject->ProjectId = $this->GetProject()->Id;
                 if (!$UserProject->FillFromUserId()) {
                     // This user wasn't already subscribed to this project.
                     $UserProject->EmailType = 3; // any build
@@ -233,7 +230,7 @@ class ProjectHandler extends AbstractXmlHandler
                 // Insert the labels for this user
                 $LabelEmail = new LabelEmail;
                 $LabelEmail->UserId = $userid;
-                $LabelEmail->ProjectId = $this->projectid;
+                $LabelEmail->ProjectId = $this->GetProject()->Id;
 
                 $Label = new Label;
                 $Label->SetText($this->SubProject->GetName());

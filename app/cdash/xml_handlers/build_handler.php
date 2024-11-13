@@ -16,7 +16,6 @@
 
 use App\Utils\SubmissionUtils;
 use CDash\Collection\BuildCollection;
-use CDash\Collection\Collection;
 use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;
@@ -28,7 +27,6 @@ use CDash\Model\BuildErrorFilter;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroup;
 use CDash\Model\Label;
-use CDash\Model\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use CDash\Model\SubscriberInterface;
@@ -64,9 +62,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         $this->BuildCommand = '';
         $this->Labels = [];
         $this->SubProjects = [];
-        $project = new Project();
-        $project->Id = $projectid;
-        $this->BuildErrorFilter = new BuildErrorFilter($project);
+        $this->BuildErrorFilter = new BuildErrorFilter($this->GetProject());
     }
 
     public function startElement($parser, $name, $attributes): void
@@ -207,7 +203,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
              * @var Build $build
              */
             foreach ($this->Builds as $subproject => $build) {
-                $build->ProjectId = $this->projectid;
+                $build->ProjectId = $this->GetProject()->Id;
                 $build->StartTime = $start_time;
                 $build->EndTime = $end_time;
                 $build->SubmitTime = $submit_time;
@@ -420,23 +416,9 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         return array_values($this->Builds);
     }
 
-    /**
-     * @return array|Build[]
-     */
-    public function getActionableBuilds()
+    public function GetBuildCollection(): BuildCollection
     {
-        return $this->Builds;
-    }
-
-    /**
-     * @return BuildCollection
-     * TODO: consider refactoring into abstract_handler asap
-     */
-    public function GetBuildCollection()
-    {
-        $factory = $this->getModelFactory();
-        /** @var BuildCollection $collection */
-        $collection = $factory->create(BuildCollection::class);
+        $collection = new BuildCollection();
         foreach ($this->Builds as $key => $build) {
             if (is_numeric($key)) {
                 $collection->add($build);
@@ -447,11 +429,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         return $collection;
     }
 
-    /**
-     * @param SubscriberInterface $subscriber
-     * @return TopicCollection
-     */
-    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber)
+    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber): TopicCollection
     {
         $collection = new TopicCollection();
         $errors = new BuildErrorTopic();
@@ -468,10 +446,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         return $collection;
     }
 
-    /**
-     * @return Collection
-     */
-    public function GetSubscriptionBuilderCollection()
+    public function GetSubscriptionBuilderCollection(): SubscriptionBuilderCollection
     {
         $collection = (new SubscriptionBuilderCollection)
             ->add(new UserSubscriptionBuilder($this))
@@ -479,10 +454,9 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         return $collection;
     }
 
-    public function GetBuildGroup()
+    public function GetBuildGroup(): BuildGroup
     {
-        $factory = $this->getModelFactory();
-        $buildGroup = $factory->create(BuildGroup::class);
+        $buildGroup = new BuildGroup();
         foreach ($this->Builds as $build) {
             $buildGroup->SetId($build->GroupId);
             break;

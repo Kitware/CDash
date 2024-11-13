@@ -20,7 +20,6 @@ use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageSummary;
 use CDash\Model\Label;
-use CDash\Model\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use CDash\Model\SubProject;
@@ -44,9 +43,7 @@ class CoverageHandler extends AbstractXmlHandler
         $this->Site = new Site();
         $this->Coverages = [];
         $this->CoverageSummaries = [];
-        $this->Project = new Project();
-        $this->Project->Id = $this->projectid;
-        $this->HasSubProjects = $this->Project->GetNumberOfSubProjects() > 0;
+        $this->HasSubProjects = $this->GetProject()->GetNumberOfSubProjects() > 0;
     }
 
     /** startElement */
@@ -116,7 +113,7 @@ class CoverageHandler extends AbstractXmlHandler
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
 
-            $this->Build->ProjectId = $this->projectid;
+            $this->Build->ProjectId = $this->GetProject()->Id;
             $this->Build->StartTime = $start_time;
             $this->Build->EndTime = $end_time;
             $this->Build->SubmitTime = gmdate(FMT_DATETIME);
@@ -140,7 +137,7 @@ class CoverageHandler extends AbstractXmlHandler
                 if ($this->HasSubProjects) {
                     // Make sure this file gets associated with the correct SubProject.
                     $subproject = SubProject::GetSubProjectFromPath(
-                        $coverageFile->FullPath, $this->projectid);
+                        $coverageFile->FullPath, $this->GetProject()->Id);
                     if (!is_null($subproject)) {
                         // Find the sibling build that performed this SubProject.
                         $subprojectBuild = Build::GetSubProjectBuild(
@@ -149,7 +146,7 @@ class CoverageHandler extends AbstractXmlHandler
                             // Build doesn't exist yet, add it here.
                             $subprojectBuild = new Build();
                             $subprojectBuild->Name = $this->Build->Name;
-                            $subprojectBuild->ProjectId = $this->projectid;
+                            $subprojectBuild->ProjectId = $this->GetProject()->Id;
                             $subprojectBuild->SiteId = $this->Build->SiteId;
                             $subprojectBuild->SetParentId($this->Build->GetParentId());
                             $subprojectBuild->SetStamp($this->Build->GetStamp());

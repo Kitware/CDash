@@ -62,8 +62,6 @@ class Subscriber implements SubscriberInterface
     /**
      * @param ActionableBuildInterface $submission
      * @return bool
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      */
     public function hasBuildTopics(ActionableBuildInterface $submission)
     {

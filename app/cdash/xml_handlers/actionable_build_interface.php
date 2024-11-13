@@ -1,9 +1,8 @@
 <?php
 
 use CDash\Collection\BuildCollection;
-use CDash\Collection\Collection;
+use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Topic\TopicCollection;
-use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use App\Models\Site;
@@ -14,42 +13,15 @@ use CDash\Model\SubscriberInterface;
  */
 interface ActionableBuildInterface
 {
-    /**
-     * @return Build[]
-     * @deprecated Use GetBuildCollection() 02/04/18
-     */
-    public function getActionableBuilds();
+    public function GetBuildCollection(): BuildCollection;
 
-    /**
-     * @return BuildCollection
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
-     */
-    public function GetBuildCollection();
+    public function GetProject(): Project;
 
-    /**
-     * @return Project
-     */
-    public function GetProject();
+    public function GetSite(): Site;
 
-    /**
-     * @return Site
-     */
-    public function GetSite();
+    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber): TopicCollection;
 
-    /**
-     * @param SubscriberInterface $subscriber
-     * @return TopicCollection
-     */
-    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber);
+    public function GetSubscriptionBuilderCollection(): SubscriptionBuilderCollection;
 
-    /**
-     * @return Collection
-     */
-    public function GetSubscriptionBuilderCollection();
-
-    /**
-     * @return BuildGroup
-     */
-    public function GetBuildGroup();
+    public function GetBuildGroup(): BuildGroup;
 }

@@ -21,17 +21,18 @@ use CDash\Model\Project;
 abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 {
     private Stack $stack;
-    protected $projectid;
     protected bool $Append = false;
     protected Site $Site;
     protected $SubProjectName;
 
-    protected $ModelFactory;
-    protected Project $Project;
+    private $ModelFactory;
+    private Project $Project;
 
     public function __construct($projectid)
     {
-        $this->projectid = $projectid;
+        $this->Project = new Project();
+        $this->Project->Id = $projectid;
+
         $this->stack = new Stack();
     }
 
@@ -70,11 +71,6 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
         return $this->Site->name;
     }
 
-    public function getSiteId(): int
-    {
-        return $this->Site->id;
-    }
-
     public function getBuildStamp()
     {
         return $this->Build->GetStamp();
@@ -98,20 +94,13 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
         return $this->ModelFactory;
     }
 
-    public function GetProject()
+    public function GetProject(): Project
     {
-        if (!isset($this->Project)) {
-            $this->Project = $this->getModelFactory()->create(Project::class);
-            $this->Project->Id = $this->projectid;
-            $this->Project->Fill();
-        }
+        $this->Project->Fill();
         return $this->Project;
     }
 
-    /**
-     * @return Site
-     */
-    public function GetSite()
+    public function GetSite(): Site
     {
         return $this->Site;
     }

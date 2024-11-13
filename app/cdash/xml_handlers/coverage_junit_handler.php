@@ -136,7 +136,7 @@ class CoverageJUnitHandler extends AbstractXmlHandler
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
 
-            $this->Build->ProjectId = $this->projectid;
+            $this->Build->ProjectId = $this->GetProject()->Id;
             $this->Build->GetIdFromName($this->SubProjectName);
             $this->Build->RemoveIfDone();
 

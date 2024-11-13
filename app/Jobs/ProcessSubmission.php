@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use AbstractSubmissionHandler;
 use App\Utils\UnparsedSubmissionProcessor;
 use App\Models\SuccessfulJob;
 
@@ -292,7 +293,7 @@ class ProcessSubmission implements ShouldQueue
         }
     }
 
-    private function getBuildFromHandler($handler)
+    private function getBuildFromHandler(AbstractSubmissionHandler $handler)
     {
         $build = null;
         $builds = $handler->getBuilds();

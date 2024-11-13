@@ -82,10 +82,7 @@ class Subscription implements SubscriptionInterface
         return $this;
     }
 
-    /**
-     * @return Project
-     */
-    public function getProject()
+    public function getProject(): Project
     {
         return $this->project;
     }

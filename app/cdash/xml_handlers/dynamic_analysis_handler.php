@@ -16,7 +16,6 @@
 
 use App\Utils\SubmissionUtils;
 use CDash\Collection\BuildCollection;
-use CDash\Collection\Collection;
 use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;
@@ -293,7 +292,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
 
         $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
 
-        $build->ProjectId = $this->projectid;
+        $build->ProjectId = $this->GetProject()->Id;
         $build->StartTime = $start_time;
         // EndTimeStamp hasn't been parsed yet.  We update this value later.
         $build->EndTime = $start_time;
@@ -336,23 +335,9 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
         return array_values($this->Builds);
     }
 
-    /**
-     * @return array|Build[]
-     */
-    public function getActionableBuilds()
+    public function GetBuildCollection(): BuildCollection
     {
-        return $this->Builds;
-    }
-
-    /**
-     * @return BuildCollection
-     * TODO: consider refactoring into abstract_handler asap
-     */
-    public function GetBuildCollection()
-    {
-        $factory = $this->getModelFactory();
-        /** @var BuildCollection $collection */
-        $collection = $factory->create(BuildCollection::class);
+        $collection = new BuildCollection();
         foreach ($this->Builds as $key => $build) {
             if (is_numeric($key) || empty($key)) {
                 $collection->add($build);
@@ -363,11 +348,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
         return $collection;
     }
 
-    /**
-     * @param SubscriberInterface $subscriber
-     * @return TopicCollection
-     */
-    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber)
+    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber): TopicCollection
     {
         $collection = new TopicCollection();
         $preferences = $subscriber->getNotificationPreferences();
@@ -378,20 +359,16 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
         return $collection;
     }
 
-    /**
-     * @return Collection
-     */
-    public function GetSubscriptionBuilderCollection()
+    public function GetSubscriptionBuilderCollection(): SubscriptionBuilderCollection
     {
         $collection = (new SubscriptionBuilderCollection)
             ->add(new UserSubscriptionBuilder($this));
         return $collection;
     }
 
-    public function GetBuildGroup()
+    public function GetBuildGroup(): BuildGroup
     {
-        $factory = $this->getModelFactory();
-        $buildGroup = $factory->create(BuildGroup::class);
+        $buildGroup = new BuildGroup();
         foreach ($this->Builds as $build) {
             if (!$build->GroupId) {
                 $build->AssignToGroup();

@@ -142,7 +142,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
         } elseif ($name == 'TESTCASE' && count($attributes) > 0) {
             $this->TestCreator = new TestCreator;
             $this->TestCreator->testCommand = $this->TestProperties;
-            $this->TestCreator->projectid = $this->projectid;
+            $this->TestCreator->projectid = $this->GetProject()->Id;
 
             if (isset($attributes['TIME'])) {
                 $this->TestCreator->buildTestTime = $attributes['TIME'];
@@ -253,13 +253,13 @@ class TestingJUnitHandler extends AbstractXmlHandler
             return;
         }
         $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
-        $this->Build->ProjectId = $this->projectid;
+        $this->Build->ProjectId = $this->GetProject()->Id;
         $this->Build->GetIdFromName($this->SubProjectName);
         $this->Build->RemoveIfDone();
 
         // If the build doesn't exist we add it
         if ($this->Build->Id == 0) {
-            $this->Build->ProjectId = $this->projectid;
+            $this->Build->ProjectId = $this->GetProject()->Id;
             $this->Build->StartTime = $start_time;
             $this->Build->EndTime = $start_time;
             $this->Build->SubmitTime = gmdate(FMT_DATETIME);

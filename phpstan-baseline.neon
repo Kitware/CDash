@@ -3614,11 +3614,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:getBuildFromHandler\\(\\) has parameter \\$handler with no type specified\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:getRemoteSubmissionFileHandle\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
@@ -12336,6 +12331,16 @@ parameters:
 			path: app/cdash/include/Messaging/Subscription/CommitAuthorSubscriptionBuilder.php
 
 		-
+			message: "#^Method CDash\\\\Messaging\\\\Subscription\\\\CommitAuthorSubscriptionBuilder\\:\\:build\\(\\) has DI\\\\DependencyException in PHPDoc @throws tag but it's not thrown\\.$#"
+			count: 1
+			path: app/cdash/include/Messaging/Subscription/CommitAuthorSubscriptionBuilder.php
+
+		-
+			message: "#^Method CDash\\\\Messaging\\\\Subscription\\\\CommitAuthorSubscriptionBuilder\\:\\:build\\(\\) has DI\\\\NotFoundException in PHPDoc @throws tag but it's not thrown\\.$#"
+			count: 1
+			path: app/cdash/include/Messaging/Subscription/CommitAuthorSubscriptionBuilder.php
+
+		-
 			message: "#^Method CDash\\\\Messaging\\\\Subscription\\\\CommitAuthorSubscriptionBuilder\\:\\:getSubscriptionFactory\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Subscription/CommitAuthorSubscriptionBuilder.php
@@ -16936,16 +16941,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
 
 		-
-			message: "#^Method BuildUseCaseTest\\:\\:testBuildUseCase\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
-
-		-
-			message: "#^Method BuildUseCaseTest\\:\\:testBuildUseCase\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
-
-		-
 			message: "#^Method BuildUseCaseTest\\:\\:testUseCaseCreateBuilderReturnsInstanceOfBuildUseCase\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
@@ -16967,7 +16962,7 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 3
+			count: 2
 			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
 
 		-
@@ -16977,16 +16972,6 @@ parameters:
 
 		-
 			message: "#^Method ConfigUseCaseTest\\:\\:testConfigUseCaseBuild\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
-
-		-
-			message: "#^Method ConfigUseCaseTest\\:\\:testConfigUseCaseBuild\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
-
-		-
-			message: "#^Method ConfigUseCaseTest\\:\\:testConfigUseCaseBuild\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
 
@@ -17122,16 +17107,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
 
 		-
-			message: "#^Method DynamicAnalysisUseCaseTest\\:\\:testDynamicAnalysisUseCase\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
-
-		-
-			message: "#^Method DynamicAnalysisUseCaseTest\\:\\:testDynamicAnalysisUseCase\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
-
-		-
 			message: "#^Method DynamicAnalysisUseCaseTest\\:\\:testUseCaseBuildsDynamicAnalysisUseCase\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
@@ -17169,16 +17144,6 @@ parameters:
 		-
 			message: "#^Call to method expects\\(\\) on an unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
 			count: 11
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			message: "#^Class BuildHandler constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			message: "#^Class TestingHandler constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
@@ -17389,11 +17354,6 @@ parameters:
 		-
 			message: "#^Call to method expects\\(\\) on an unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
 			count: 3
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			message: "#^Class BuildHandler constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
 
 		-
@@ -19258,27 +19218,7 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesMultisubprojectTestXMLFile\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesMultisubprojectTestXMLFile\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
 			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesSubproject\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesSubproject\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesSubproject\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
@@ -19288,27 +19228,7 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestFailed\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestFailed\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
 			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestNotRun\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestNotRun\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestNotRun\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
@@ -19318,27 +19238,7 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestPassed\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestPassed\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
 			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestTimeout\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestTimeout\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testTestUseCaseCreatesTestTimeout\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
@@ -19360,16 +19260,6 @@ parameters:
 		-
 			message: "#^Method TestUseCaseTest\\:\\:testUseCaseSetsPropertiesByTestName\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testUseCaseSetsPropertiesByTestName\\(\\) throws checked exception DI\\\\DependencyException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: "#^Method TestUseCaseTest\\:\\:testUseCaseSetsPropertiesByTestName\\(\\) throws checked exception DI\\\\NotFoundException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 2
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
@@ -19433,18 +19323,13 @@ parameters:
 			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
 
 		-
-			message: "#^Class BuildHandler constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 3
-			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\)\\.$#"
 			count: 4
 			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
 
 		-
@@ -19468,16 +19353,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
 
 		-
-			message: "#^Class ConfigureHandler constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\)\\.$#"
 			count: 2
 			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
@@ -19491,16 +19366,6 @@ parameters:
 			message: "#^Method ConfigureHandlerTest\\:\\:testGetSubscriptionBuilderCollection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
-
-		-
-			message: "#^Class DynamicAnalysisHandler constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/XmlHandler/DynamicAnalysisHandlerTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/DynamicAnalysisHandlerTest.php
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\)\\.$#"
@@ -19523,13 +19388,8 @@ parameters:
 			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
 
 		-
-			message: "#^Class TestingHandler constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 3
-			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
 
 		-
@@ -19558,13 +19418,8 @@ parameters:
 			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
 
 		-
-			message: "#^Class UpdateHandler constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 4
-			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
 
 		-
@@ -30356,21 +30211,6 @@ parameters:
 			path: app/cdash/xml_handlers/SubProjectDirectories_handler.php
 
 		-
-			message: "#^Cannot access property \\$Id on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_xml_handler.php
-
-		-
-			message: "#^Cannot call method Fill\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_xml_handler.php
-
-		-
-			message: "#^Class AbstractXmlHandler has an uninitialized property \\$Project\\. Give it default value or assign it in the constructor\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_xml_handler.php
-
-		-
 			message: "#^Class AbstractXmlHandler has an uninitialized property \\$Site\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/abstract_xml_handler.php
@@ -30378,11 +30218,6 @@ parameters:
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 2
-			path: app/cdash/xml_handlers/abstract_xml_handler.php
-
-		-
-			message: "#^Method AbstractXmlHandler\\:\\:GetProject\\(\\) has no return type specified\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
@@ -30461,17 +30296,7 @@ parameters:
 			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Property AbstractXmlHandler\\:\\:\\$Project \\(CDash\\\\Model\\\\Project\\) does not accept mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_xml_handler.php
-
-		-
 			message: "#^Property AbstractXmlHandler\\:\\:\\$SubProjectName has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_xml_handler.php
-
-		-
-			message: "#^Property AbstractXmlHandler\\:\\:\\$projectid has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
@@ -30546,11 +30371,6 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
-			message: "#^Cannot call method SetId\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
 			message: "#^Cannot call method SetPullRequest\\(\\) on mixed\\.$#"
 			count: 2
 			path: app/cdash/xml_handlers/build_handler.php
@@ -30578,11 +30398,6 @@ parameters:
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 29
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Method BuildHandler\\:\\:GetBuildGroup\\(\\) should return CDash\\\\Model\\\\BuildGroup but returns mixed\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
@@ -30777,6 +30592,91 @@ parameters:
 
 		-
 			message: "#^Cannot access an offset on array\\|float\\|int\\|string\\|false\\|null\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot access property \\$BuildId on mixed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot access property \\$CompilerName on mixed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot access property \\$CompilerVersion on mixed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot access property \\$Generator on mixed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot access property \\$Id on mixed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot access property \\$Name on mixed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot access property \\$OSName on mixed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot access property \\$OSPlatform on mixed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot access property \\$OSRelease on mixed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot access property \\$OSVersion on mixed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot access property \\$SiteId on mixed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot access property \\$Text on mixed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot call method Delete\\(\\) on mixed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot call method Exists\\(\\) on mixed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot call method GetConfigureForBuild\\(\\) on mixed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot call method SetConfigureDuration\\(\\) on mixed\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
+			message: "#^Cannot call method SetStamp\\(\\) on mixed\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/configure_handler.php
 
@@ -31451,11 +31351,6 @@ parameters:
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
-			message: "#^Cannot call method SetId\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
 			message: "#^Cannot call method SetStamp\\(\\) on mixed\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
@@ -31488,11 +31383,6 @@ parameters:
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 22
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Method DynamicAnalysisHandler\\:\\:GetBuildGroup\\(\\) should return CDash\\\\Model\\\\BuildGroup but returns mixed\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
@@ -31915,7 +31805,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$Id on mixed\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
@@ -31930,11 +31820,6 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$type on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
-			message: "#^Cannot call method SetId\\(\\) on mixed\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/testing_handler.php
 
@@ -31956,11 +31841,6 @@ parameters:
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 34
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
-			message: "#^Method TestingHandler\\:\\:GetBuildGroup\\(\\) should return CDash\\\\Model\\\\BuildGroup but returns mixed\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
@@ -32036,11 +31916,6 @@ parameters:
 		-
 			message: "#^Only numeric types are allowed in \\+, int\\|false given on the right side\\.$#"
 			count: 3
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
-			message: "#^Property AbstractXmlHandler\\:\\:\\$Project \\(CDash\\\\Model\\\\Project\\) does not accept mixed\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
@@ -32299,11 +32174,6 @@ parameters:
 			path: app/cdash/xml_handlers/update_handler.php
 
 		-
-			message: "#^Cannot call method SetId\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/update_handler.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
 			path: app/cdash/xml_handlers/update_handler.php
@@ -32316,11 +32186,6 @@ parameters:
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 23
-			path: app/cdash/xml_handlers/update_handler.php
-
-		-
-			message: "#^Method UpdateHandler\\:\\:GetBuildGroup\\(\\) should return CDash\\\\Model\\\\BuildGroup but returns mixed\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/update_handler.php
 
 		-
