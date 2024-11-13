@@ -16,7 +16,15 @@
 >
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="robots" content="noindex,nofollow"/>
+    <meta
+        name="description"
+        content="
+            CDash is an open source, web-based software testing server. CDash aggregates, analyzes, and displays the
+            results of software testing processes submitted from clients located around the world. CDash is a part of a
+            larger software process that integrates Kitware’s CMake, CTest, and CPack tools, as well as other external
+            packages used to design, manage and maintain large-scale software systems
+        "
+    >
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
 
