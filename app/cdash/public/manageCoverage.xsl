@@ -121,7 +121,7 @@
 
 </xsl:if>
 
-<script src="js/cdashManageCoverageSorter.js" type="text/javascript" charset="utf-8"></script>
+<script src="assets/js/angular/cdashManageCoverageSorter.js" type="text/javascript" charset="utf-8"></script>
 
     </xsl:template>
 </xsl:stylesheet>

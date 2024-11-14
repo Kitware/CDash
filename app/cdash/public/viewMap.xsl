@@ -84,7 +84,7 @@
 </xsl:if>
 </div>
 
-<script language="javascript" type="text/javascript" src="js/cdashSiteSorter.js"></script>
+<script language="javascript" type="text/javascript" src="assets/js/angular/cdashSiteSorter.js"></script>
 
     </xsl:template>
 </xsl:stylesheet>
