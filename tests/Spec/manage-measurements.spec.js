@@ -3,7 +3,7 @@ import axios from 'axios';
 import AxiosMockAdapter from 'axios-mock-adapter';
 import bootstrap from 'bootstrap';
 import expect from 'expect';
-import ManageMeasurements from '../../resources/js/components/ManageMeasurements.vue';
+import ManageMeasurements from '../../resources/js/vue/components/ManageMeasurements.vue';
 
 config.global.mocks['$baseURL'] = '';
 axios.defaults.baseURL = config.global.mocks['$baseURL'];

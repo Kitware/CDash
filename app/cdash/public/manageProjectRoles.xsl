@@ -291,8 +291,8 @@
 </xsl:otherwise>
 </xsl:choose>
 
-<script src="js/cdashProjectRole.js" type="text/javascript"></script>
-<script src="js/ui.tabs.js" type="text/javascript"></script>
+<script src="assets/js/angular/cdashProjectRole.js" type="text/javascript"></script>
+<script src="assets/js/angular/ui.tabs.js" type="text/javascript"></script>
 
 
 <!-- Functions to confirm the email -->

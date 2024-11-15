@@ -31,11 +31,8 @@ return [
     'file' => [
         'path' => [
             'js' => [
-                'controllers' => base_path("public/js/controllers"),
-                'version' => base_path("public/build/js/version.js"),
-            ],
-            'custom' => [
-                'views' => base_path("public/local/views"),
+                'controllers' => base_path("public/assets/js/angular/controllers"),
+                'version' => base_path("public/assets/js/angular/version.js"),
             ],
             'public' => base_path("public"),
         ],

@@ -131,7 +131,7 @@
     </form>
 
     <!-- Include project roles -->
-    <script src="{{ asset('js/cdashManageUsers.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/angular/cdashManageUsers.js') }}" type="text/javascript"></script>
 
     <!-- Functions to confirm the email -->
     <script language="JavaScript" type="text/javascript">

@@ -19,3 +19,9 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js|svg|gif|png)$">
+        Header set Cache-Control "max-age=31536000"
+    </FilesMatch>
+</IfModule>

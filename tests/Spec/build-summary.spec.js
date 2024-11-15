@@ -2,7 +2,7 @@ import { mount, config } from '@vue/test-utils';
 import axios from 'axios';
 import AxiosMockAdapter from 'axios-mock-adapter';
 import expect from 'expect';
-import BuildSummary from '../../resources/js/components/BuildSummary.vue';
+import BuildSummary from '../../resources/js/vue/components/BuildSummary.vue';
 
 config.global.mocks['$baseURL'] = 'http://localhost';
 axios.defaults.baseURL = config.global.mocks['$baseURL'];

@@ -194,7 +194,7 @@ a.grouptrigger:visited{
 .tabs-nav a, .tabs-nav a span {
     display: block;
     padding: 0 10px;
-    background: url(../img/tab.png) no-repeat;
+    background: url(../../public/img/tab.png) no-repeat;
 }
 .tabs-nav a {
     position: relative;
@@ -257,7 +257,7 @@ a.grouptrigger:visited{
 }
 .tabs-loading em {
     padding: 0 0 0 20px;
-    background: url(../img/loading.gif) no-repeat 0 50%;
+    background: url(../../public/img/loading.gif) no-repeat 0 50%;
 }
 div.tab_content {
   border:1px solid #97A5B0;
@@ -448,25 +448,25 @@ div#calendar{
 }
 
 .activity-level-none {
-    background: url(../img/activity-level.png) no-repeat scroll -16px -16px transparent;
+    background: url(../../public/img/activity-level.png) no-repeat scroll -16px -16px transparent;
     height: 16px;
     width: 16px;
 }
 
 .activity-level-low {
-    background: url(../img/activity-level.png) no-repeat scroll 0 -16px transparent;
+    background: url(../../public/img/activity-level.png) no-repeat scroll 0 -16px transparent;
     height: 16px;
     width: 16px;
 }
 
 .activity-level-medium {
-    background: url(../img/activity-level.png) no-repeat scroll -16px 0 transparent;
+    background: url(../../public/img/activity-level.png) no-repeat scroll -16px 0 transparent;
     height: 16px;
     width: 16px;
 }
 
 .activity-level-high {
-    background: url(../img/activity-level.png) no-repeat scroll 0 0 transparent;
+    background: url(../../public/img/activity-level.png) no-repeat scroll 0 0 transparent;
     height: 16px;
     width: 16px;
 }
@@ -861,14 +861,14 @@ div#headertop {
 }
 
 #header .projectnav .projectnav_controls li.btnprev a:before {
-  background:url(../img/prev-chevron.svg) no-repeat center center;
+  background:url(../../public/img/prev-chevron.svg) no-repeat center center;
   background-size:100%;
   float:left;
   margin:2px 10px 0 0;
 }
 
 #header .projectnav .projectnav_controls li.btnnext a:after {
-  background:url(../img/next-chevron.svg) no-repeat center center;
+  background:url(../../public/img/next-chevron.svg) no-repeat center center;
   background-size:100%;
   float:right;
   margin:2px 0 0 10px;
@@ -1070,10 +1070,10 @@ div#main_content {
   cursor: pointer;
 }
 .tabb thead tr .headerSortUp {
-  background-image: url(../img/asc.gif);
+  background-image: url(../../public/img/asc.gif);
 }
 .tabb thead tr .headerSortDown {
-  background-image: url(../img/desc.gif);
+  background-image: url(../../public/img/desc.gif);
 }
 .tabb thead tr .headerSortDown, .tabb thead tr .headerSortUp {
 background-color: #adcae6

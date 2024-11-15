@@ -1,4 +1,4 @@
-import DataTable from '../../../resources/js/components/shared/DataTable.vue';
+import DataTable from '../../../resources/js/vue/components/shared/DataTable.vue';
 
 describe('Data table component tests', () => {
   it('Handles unsorted text data', () => {
