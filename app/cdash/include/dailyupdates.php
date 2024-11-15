@@ -22,7 +22,6 @@
 
 require_once 'include/cdashmail.php';
 
-use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
@@ -1151,9 +1150,5 @@ function addDailyChanges(int $projectid): void
             $buildgroup->SetId($row['id']);
             $buildgroup->Delete();
         }
-
-        // Remove the first builds of the project
-        DatabaseCleanupUtils::removeFirstBuilds($projectid, $project->AutoremoveTimeframe, $project->AutoremoveMaxBuilds);
-        DatabaseCleanupUtils::removeBuildsGroupwise($projectid, $project->AutoremoveMaxBuilds);
     }
 }

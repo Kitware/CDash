@@ -5,6 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 
 class NoBackupTestCase extends KWWebTestCase
@@ -86,6 +87,6 @@ class NoBackupTestCase extends KWWebTestCase
 
         $this->checkLog($this->logfilename);
 
-        remove_build($buildid);
+        DatabaseCleanupUtils::removeBuild((int) $buildid);
     }
 }

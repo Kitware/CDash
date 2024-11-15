@@ -6,6 +6,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Models\TestMeasurement;
+use App\Utils\DatabaseCleanupUtils;
 use App\Utils\TestCreator;
 use App\Utils\NoteCreator;
 
@@ -26,6 +27,7 @@ use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\Image;
 use CDash\Model\Label;
 use CDash\Model\UploadFile;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
 class RemoveBuildsTestCase extends KWWebTestCase
@@ -429,7 +431,8 @@ class RemoveBuildsTestCase extends KWWebTestCase
         return;
 
         // Remove the build.
-        remove_build($build->Id);
+        DatabaseCleanupUtils::removeBuild($build->Id);
+        Artisan::call('db:cleanup');
 
         // Check that everything was deleted properly.
         $this->verify('build', 'id', '=', $build->Id, 0, true);

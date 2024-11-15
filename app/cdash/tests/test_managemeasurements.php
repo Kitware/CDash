@@ -7,6 +7,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Models\Measurement;
+use App\Utils\DatabaseCleanupUtils;
 
 class ManageMeasurementsTestCase extends KWWebTestCase
 {
@@ -31,10 +32,10 @@ class ManageMeasurementsTestCase extends KWWebTestCase
     public function __destruct()
     {
         if (!is_null($this->BuildId)) {
-            remove_build($this->BuildId);
+            DatabaseCleanupUtils::removeBuild($this->BuildId);
         }
         if (!is_null($this->SubProjectBuildId)) {
-            remove_build($this->SubProjectBuildId);
+            DatabaseCleanupUtils::removeBuild($this->SubProjectBuildId);
         }
 
         Measurement::destroy($this->MeasurementIds);

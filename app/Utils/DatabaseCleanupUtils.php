@@ -6,6 +6,7 @@ namespace App\Utils;
 
 use App\Models\Build;
 use App\Models\BuildGroup;
+use CDash\Database;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -54,7 +55,7 @@ class DatabaseCleanupUtils
         $s = 'removing old buildids for projectid: ' . $projectid;
         Log::info($s);
         echo '  -- ' . $s . "\n";
-        remove_build_chunked($buildids);
+        self::removeBuildChunked($buildids);
     }
 
     /** Remove the first builds that are at the beginning of the queue */
@@ -89,6 +90,82 @@ class DatabaseCleanupUtils
         if ($echo) {
             echo '  -- ' . $s . "\n"; // for "interactive" command line feedback
         }
-        remove_build_chunked($buildids);
+        $start = microtime(true);
+        self::removeBuildChunked($buildids);
+        $end = microtime(true);
+        $duration = round($end - $start, 2);
+        $num_builds = count($buildids);
+        Log::info("Removed {$num_builds} builds for project #{$projectid} in {$duration} seconds");
+    }
+
+    /**
+     * Remove all related inserts for a given build or any build in an array of builds
+     * @param array<int>|int $buildid
+     * @throws \InvalidArgumentException
+     */
+    public static function removeBuild($buildid) : void
+    {
+        // TODO: (williamjallen) much of this work could be done on the DB side automatically by setting up
+        //       proper foreign-key relationships between between entities, and using the DB's cascade functionality.
+        //       For complex cascades, custom SQL functions can be written.
+
+        if (!is_array($buildid)) {
+            $buildid = [$buildid];
+        }
+
+        $buildids = [];
+        foreach ($buildid as $b) {
+            if (!is_numeric($b)) {
+                throw new \InvalidArgumentException('Invalid Build ID');
+            }
+            $buildids[] = intval($b);
+        }
+
+        $db = Database::getInstance();
+        $buildid_prepare_array = $db->createPreparedArray(count($buildids));
+
+        // Remove the buildfailureargument
+        $buildfailureids = [];
+        $buildfailure = DB::select("SELECT id FROM buildfailure WHERE buildid IN $buildid_prepare_array", $buildids);
+        foreach ($buildfailure as $buildfailure_array) {
+            $buildfailureids[] = intval($buildfailure_array->id);
+        }
+        if (count($buildfailureids) > 0) {
+            $buildfailure_prepare_array = $db->createPreparedArray(count($buildfailureids));
+            DB::delete("DELETE FROM buildfailure2argument WHERE buildfailureid IN $buildfailure_prepare_array", $buildfailureids);
+        }
+
+        // Remove any children of these builds.
+        // In order to avoid making the list of builds to delete too large
+        // we delete them in batches (one batch per parent).
+        foreach ($buildids as $parentid) {
+            $child_result = DB::select('SELECT id FROM build WHERE parentid=?', [intval($parentid)]);
+
+            $childids = [];
+            foreach ($child_result as $child_array) {
+                $childids[] = intval($child_array->id);
+            }
+            if (!empty($childids)) {
+                self::removeBuildChunked($childids);
+            }
+        }
+
+        // Only delete the buildid at the end so that no other build can get it in the meantime
+        DB::delete("DELETE FROM build WHERE id IN $buildid_prepare_array", $buildids);
+    }
+
+    /**
+     * Call removeBuild() one at a time.
+     * @param array<int>|int $buildids
+     */
+    public static function removeBuildChunked($buildids): void
+    {
+        if (!is_array($buildids)) {
+            self::removeBuild($buildids);
+        }
+        foreach ($buildids as $buildid) {
+            self::removeBuild($buildid);
+            usleep(1);
+        }
     }
 }

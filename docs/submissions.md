@@ -40,7 +40,7 @@ User=www-data
 WorkingDirectory=/var/www/CDash
 Restart=always
 RestartSec=5s
-ExecStart=/usr/bin/php artisan queue:work --max-time=3600
+ExecStart=/usr/bin/php artisan queue:work --max-time=3600 --queue=default,low
 
 [Install]
 WantedBy=multi-user.target
