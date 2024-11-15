@@ -604,5 +604,8 @@ set_tests_properties(/Feature/RemoteWorkers PROPERTIES DEPENDS install_3)
 
 add_laravel_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 
+add_php_test(submissionvalidation)
+set_tests_properties(submissionvalidation PROPERTIES DEPENDS createpublicdashboard)
+
 add_subdirectory(ctest)
 add_subdirectory(autoremovebuilds)

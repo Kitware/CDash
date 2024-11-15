@@ -26,6 +26,7 @@ class DoneHandler extends AbstractXmlHandler
     private $PendingSubmissions;
     private $Requeue;
     public $backupFileName;
+    protected $schema_file = "/app/Validators/Schemas/Done.xsd";
 
     public function __construct(Project $project)
     {

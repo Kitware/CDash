@@ -25,6 +25,7 @@ class NoteHandler extends AbstractXmlHandler
 {
     private $AdjustStartTime;
     private $NoteCreator;
+    protected $schema_file = "/app/Validators/Schemas/Notes.xsd";
 
     /** Constructor */
     public function __construct(Project $project)

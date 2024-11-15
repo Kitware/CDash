@@ -6,6 +6,8 @@ use App\Jobs\ProcessSubmission;
 use App\Models\Site;
 use App\Utils\AuthTokenUtil;
 use App\Utils\UnparsedSubmissionProcessor;
+use App\Utils\SubmissionUtils;
+use App\Exceptions\CDashXMLValidationException;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
@@ -128,6 +130,37 @@ final class SubmissionController extends AbstractProjectController
         } elseif (intval($this->project->Id) < 1) {
             abort(Response::HTTP_NOT_FOUND, 'The requested project does not exist.');
         }
+
+        // Figure out what type of XML file this is.
+        try {
+            $filename  = "inbox/".$filename;
+            $xml_info = SubmissionUtils::get_xml_type(fopen(Storage::path($filename), 'r'), $filename);
+        } catch (CDashXMLValidationException $e) {
+            foreach ($e->getDecodedMessage() as $error) {
+                Log::error($error);
+            }
+            abort(Response::HTTP_NOT_FOUND, 'Unable to determine the Type of the submission file.');
+        }
+        $filehandle = $xml_info['file_handle'];
+        $handler_ref = $xml_info['xml_handler'];
+        $file = $xml_info['xml_type'];
+
+        // If validation is enabled and if this file has a corresponding schema, validate it
+
+        $handler = new $handler_ref($this->project);
+        if (isset($handler->schema_file)) {
+            try {
+                $handler->validate_xml(storage_path("app/".$filename));
+            } catch (CDashXMLValidationException $e) {
+                foreach ($e->getDecodedMessage() as $error) {
+                    Log::error("Validating $filename: ".$error);
+                }
+                if ((bool) config('cdash.validate_xml_submissions') === true) {
+                    abort(400, "Xml validation failed: rejected file $filename");
+                }
+            }
+        }
+
 
         // Check if CTest provided us enough info to assign a buildid.
         $pendingSubmissions = new PendingSubmissions();
