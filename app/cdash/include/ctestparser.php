@@ -62,7 +62,7 @@ function generateBackupFileName($projectname, $subprojectname, $buildname,
 }
 
 /** Function to handle new style submissions via HTTP PUT */
-function parse_put_submission($filehandler, $projectid, $expected_md5, int|null $buildid)
+function parse_put_submission($filehandler, $projectid, $expected_md5, int|null $buildid): AbstractSubmissionHandler|false
 {
     $db = Database::getInstance();
 
@@ -118,7 +118,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, int|null 
     if (stream_resolve_include_path($include_file) === false || !in_array($buildfile->type, $valid_types, true)) {
         Log::error("Project: $projectid.  No handler include file for {$buildfile->type} (tried $include_file)");
         $buildfile->delete();
-        return true;
+        return false;
     }
     require_once $include_file;
 
@@ -127,7 +127,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, int|null 
     if (!class_exists($className)) {
         Log::error("Project: $projectid.  No handler class for {$buildfile->type}");
         $buildfile->delete();
-        return true;
+        return false;
     }
     $handler = new $className($buildfile->buildid);
 
@@ -152,12 +152,12 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, int|null 
 }
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($filehandle, $projectid, $expected_md5 = '', int|null $buildid=null)
+function ctest_parse($filehandle, $projectid, $expected_md5 = '', int|null $buildid=null): AbstractSubmissionHandler|false
 {
     // Check if this is a new style PUT submission.
     try {
         $handler = parse_put_submission($filehandle, $projectid, $expected_md5, $buildid);
-        if ($handler) {
+        if ($handler !== false) {
             return $handler;
         }
     } catch (CDashParseException $e) {

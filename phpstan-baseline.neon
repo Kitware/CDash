@@ -3534,12 +3534,12 @@ parameters:
 			path: app/Http/Middleware/VerifyCsrfToken.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$backupFileName\\.$#"
+			message: "#^Access to an undefined property AbstractSubmissionHandler\\|App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$backupFileName\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$backupFileName\\.$#"
+			message: "#^Access to an undefined property App\\\\Utils\\\\UnparsedSubmissionProcessor\\:\\:\\$backupFileName\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
@@ -3575,11 +3575,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:deleteSubmissionFile\\(\\) has parameter \\$filename with no type specified\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:doSubmit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
@@ -14578,11 +14573,6 @@ parameters:
 			path: app/cdash/include/ctestparser.php
 
 		-
-			message: "#^Function ctest_parse\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
 			message: "#^Function ctest_parse\\(\\) has parameter \\$expected_md5 with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparser.php
@@ -14594,6 +14584,11 @@ parameters:
 
 		-
 			message: "#^Function ctest_parse\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/ctestparser.php
+
+		-
+			message: "#^Function ctest_parse\\(\\) should return AbstractSubmissionHandler\\|false but returns object\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparser.php
 
@@ -14629,11 +14624,6 @@ parameters:
 
 		-
 			message: "#^Function generateBackupFileName\\(\\) has parameter \\$subprojectname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function parse_put_submission\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparser.php
 

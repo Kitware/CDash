@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use AbstractSubmissionHandler;
+use ActionableBuildInterface;
 use App\Utils\UnparsedSubmissionProcessor;
 use App\Models\SuccessfulJob;
 
@@ -171,7 +172,7 @@ class ProcessSubmission implements ShouldQueue
     /**
      * The job failed to process.
      */
-    public function failed(\Throwable $exception) : void
+    public function failed(\Throwable $exception): void
     {
         Log::warning("Failed to process {$this->filename} with message: {$exception}");
         $this->renameSubmissionFile("inprogress/{$this->filename}", "failed/{$this->filename}");
@@ -185,8 +186,7 @@ class ProcessSubmission implements ShouldQueue
      * This method could be running on a worker that is either remote or local, so it accepts
      * a file handle or a filename that it can query the CDash API for.
      **/
-    private function doSubmit($filename, $projectid, $buildid = null,
-        $expected_md5 = '')
+    private function doSubmit($filename, $projectid, $buildid = null, $expected_md5 = ''): AbstractSubmissionHandler|UnparsedSubmissionProcessor|false
     {
         $filehandle = $this->getSubmissionFileHandle($filename);
         if ($filehandle === false) {
@@ -237,12 +237,7 @@ class ProcessSubmission implements ShouldQueue
         }
 
         // Send more general build emails.
-        if (is_a($handler, 'TestingHandler') ||
-            is_a($handler, 'BuildHandler') ||
-            is_a($handler, 'ConfigureHandler') ||
-            is_a($handler, 'DynamicAnalysisHandler') ||
-            is_a($handler, 'UpdateHandler')
-        ) {
+        if ($handler instanceof ActionableBuildInterface) {
             sendemail($handler, intval($projectid));
         }
 
