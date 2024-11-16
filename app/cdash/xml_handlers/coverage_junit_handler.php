@@ -38,8 +38,6 @@ class CoverageJUnitHandler extends AbstractXmlHandler
     public function __construct(Project $project)
     {
         parent::__construct($project);
-
-        $this->Build = new Build();
         $this->Site = new Site();
         $this->CoverageSummary = new CoverageSummary();
     }

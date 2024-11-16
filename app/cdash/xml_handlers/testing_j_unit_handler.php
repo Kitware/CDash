@@ -44,7 +44,6 @@ class TestingJUnitHandler extends AbstractXmlHandler
     public function __construct(Project $project)
     {
         parent::__construct($project);
-        $this->Build = new Build();
 
         $this->UpdateEndTime = false;
         $this->Group = 'Nightly';

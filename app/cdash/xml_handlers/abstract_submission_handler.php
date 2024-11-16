@@ -5,8 +5,7 @@ use CDash\Model\Project;
 
 abstract class AbstractSubmissionHandler
 {
-    /** @var Build $Build */
-    protected $Build;
+    protected Build $Build;
 
     protected Project $Project;
 
@@ -19,6 +18,7 @@ abstract class AbstractSubmissionHandler
     {
         if ($init instanceof Project) {
             $this->Project = $init;
+            $this->Build = new Build();
         } else {
             $this->Build = $init;
             $this->Build->FillFromId($this->Build->Id);

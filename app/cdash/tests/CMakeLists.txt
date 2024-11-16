@@ -171,11 +171,8 @@ set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/
 add_unit_test(/CDash/ServiceContainer)
 set_tests_properties(/CDash/ServiceContainer PROPERTIES DEPENDS /CDash/Service/RepositoryService)
 
-add_unit_test(/CDash/Submission/CommitAuthorHandlerTrait)
-set_tests_properties(/CDash/Submission/CommitAuthorHandlerTrait PROPERTIES DEPENDS /CDash/ServiceContainer)
-
 add_unit_test(/CDash/TestUseCase)
-set_tests_properties(/CDash/TestUseCase PROPERTIES DEPENDS /CDash/Submission/CommitAuthorHandlerTrait)
+set_tests_properties(/CDash/TestUseCase PROPERTIES DEPENDS /CDash/ServiceContainer)
 
 add_unit_test(/CDash/UpdateUseCase)
 set_tests_properties(/CDash/UpdateUseCase PROPERTIES DEPENDS /CDash/TestUseCase)

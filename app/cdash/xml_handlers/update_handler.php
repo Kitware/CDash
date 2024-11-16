@@ -45,8 +45,6 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
     public function __construct(Project $project)
     {
         parent::__construct($project);
-        $factory = $this->getModelFactory();
-        $this->Build = $factory->create(Build::class);
     }
 
     /** Start element */
@@ -55,7 +53,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
         parent::startElement($parser, $name, $attributes);
         $factory = $this->getModelFactory();
         if ($name == 'UPDATE') {
-            $this->Build = $factory->create(Build::class);
+            $this->Build = new Build();
             $this->Update = $factory->create(BuildUpdate::class);
 
             if (isset($attributes['GENERATOR'])) {

@@ -19068,41 +19068,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/ServiceContainerTest.php
 
 		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertContains\\(\\)\\.$#"
-			count: 3
-			path: app/cdash/tests/case/CDash/Submission/CommitAuthorHandlerTraitTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Submission/CommitAuthorHandlerTraitTest.php
-
-		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:once\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/Submission/CommitAuthorHandlerTraitTest.php
-
-		-
-			message: "#^Method CommitAuthorHandlerTraitTest\\:\\:testGetCommitAuthors\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Submission/CommitAuthorHandlerTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/app/cdash/tests/case/CDash/Submission/CommitAuthorHandlerTraitTest\\.php\\:31\\:\\:GetCommitAuthors\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Submission/CommitAuthorHandlerTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/app/cdash/tests/case/CDash/Submission/CommitAuthorHandlerTraitTest\\.php\\:31\\:\\:__construct\\(\\) has parameter \\$builds with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Submission/CommitAuthorHandlerTraitTest.php
-
-		-
-			message: "#^Property class@anonymous/app/cdash/tests/case/CDash/Submission/CommitAuthorHandlerTraitTest\\.php\\:31\\:\\:\\$Builds has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Submission/CommitAuthorHandlerTraitTest.php
-
-		-
 			message: "#^Access to property \\$details on an unknown class Test\\.$#"
 			count: 4
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
@@ -19418,17 +19383,7 @@ parameters:
 			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
 
 		-
-			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:once\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
-
-		-
 			message: "#^Method UpdateHandlerTest\\:\\:testGetBuildTopic\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
-
-		-
-			message: "#^Method UpdateHandlerTest\\:\\:testGetCommitAuthors\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
 
@@ -32019,11 +31974,6 @@ parameters:
 			path: app/cdash/xml_handlers/update_handler.php
 
 		-
-			message: "#^Cannot access property \\$Generator on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/update_handler.php
-
-		-
 			message: "#^Cannot access property \\$Status on mixed\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/update_handler.php
@@ -32086,11 +32036,6 @@ parameters:
 		-
 			message: "#^Method UpdateHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/update_handler.php
-
-		-
-			message: "#^Property AbstractSubmissionHandler\\:\\:\\$Build \\(CDash\\\\Model\\\\Build\\) does not accept mixed\\.$#"
-			count: 2
 			path: app/cdash/xml_handlers/update_handler.php
 
 		-
