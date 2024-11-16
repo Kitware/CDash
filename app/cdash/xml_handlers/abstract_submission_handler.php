@@ -1,11 +1,32 @@
 <?php
 
 use CDash\Model\Build;
+use CDash\Model\Project;
 
 abstract class AbstractSubmissionHandler
 {
     /** @var Build $Build */
     protected $Build;
+
+    protected Project $Project;
+
+    /**
+     * We prefer to accept a Build if one is known, but some (mostly XML) handlers determine the build
+     * themselves by inspecting the XML.  In such cases, we provide only a project.  This approach is
+     * not ideal and should be improved in the future for better type safety.
+     */
+    public function __construct(Build|Project $init)
+    {
+        if ($init instanceof Project) {
+            $this->Project = $init;
+        } else {
+            $this->Build = $init;
+            $this->Build->FillFromId($this->Build->Id);
+            $this->Project = $this->Build->GetProject();
+        }
+
+        $this->Project->Fill();
+    }
 
     /**
      * TODO: This was copied here from legacy code.  In the future, we should re-evaluate

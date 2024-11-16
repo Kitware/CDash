@@ -129,7 +129,10 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, int|null 
         $buildfile->delete();
         return false;
     }
-    $handler = new $className($buildfile->buildid);
+
+    $build = new \CDash\Model\Build();
+    $build->Id = $buildfile->buildid;
+    $handler = new $className($build);
 
     // Parse the file.
     if (file_exists($filename)) {
@@ -171,21 +174,22 @@ function ctest_parse($filehandle, $projectid, $expected_md5 = '', int|null $buil
         $ip = $_SERVER['REMOTE_ADDR'];
     }
 
+    $Project = new Project();
+    $Project->Id = $projectid;
+
     // Figure out what type of XML file this is.
     $xml_info = SubmissionUtils::get_xml_type($filehandle);
     $filehandle = $xml_info['file_handle'];
     $handler_ref = $xml_info['xml_handler'];
     $file = $xml_info['xml_type'];
 
-    $handler = isset($handler_ref) ? new $handler_ref($projectid) : null;
+    $handler = isset($handler_ref) ? new $handler_ref($Project) : null;
 
     rewind($filehandle);
     $content = fread($filehandle, 8192);
 
     if ($handler == null) {
         add_log('error: could not create handler based on xml content', 'ctest_parse', LOG_ERR);
-        $Project = new Project();
-        $Project->Id = $projectid;
 
         $Project->SendEmailToAdmin('Cannot create handler based on XML content',
             'An XML submission from ' . $ip . ' to the project ' . get_project_name($projectid) . ' cannot be parsed. The content of the file is as follows: ' . $content);

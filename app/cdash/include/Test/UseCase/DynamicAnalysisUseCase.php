@@ -16,6 +16,7 @@
 
 namespace CDash\Test\UseCase;
 
+use CDash\Model\Project;
 use DOMDocument;
 use DOMElement;
 use DOMNode;
@@ -77,7 +78,9 @@ class DynamicAnalysisUseCase extends UseCase
         if ($xml_str === false) {
             throw new \Exception('Invalid XML.');
         }
-        $handler = new DynamicAnalysisHandler($this->projectId);
+        $project = new Project();
+        $project->Id = $this->projectId;
+        $handler = new DynamicAnalysisHandler($project);
         return $this->getXmlHandler($handler, $xml_str);
     }
 

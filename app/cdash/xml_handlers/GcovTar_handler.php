@@ -26,7 +26,6 @@ use Illuminate\Support\Facades\Storage;
 
 class GcovTarHandler extends AbstractSubmissionHandler
 {
-    private $ProjectId;
     private $CoverageSummary;
     private $SourceDirectory;
     private $BinaryDirectory;
@@ -36,12 +35,9 @@ class GcovTarHandler extends AbstractSubmissionHandler
     private $AggregateBuildId;
     private $PreviousAggregateParentId;
 
-    public function __construct($buildid)
+    public function __construct(Build $build)
     {
-        $this->Build = new Build();
-        $this->Build->Id = $buildid;
-        $this->Build->FillFromId($this->Build->Id);
-        $this->ProjectId = $this->Build->ProjectId;
+        parent::__construct($build);
 
         $this->CoverageSummary = new CoverageSummary();
         $this->CoverageSummary->BuildId = $this->Build->Id;
@@ -202,7 +198,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
             strpos($path, $this->SubProjectPath) === false
         ) {
             // Find the SubProject that corresponds to this path.
-            $subproject = SubProject::GetSubProjectFromPath($path, $this->ProjectId);
+            $subproject = SubProject::GetSubProjectFromPath($path, $this->Project->Id);
             if (is_null($subproject)) {
                 // Error already logged.
                 return;
@@ -215,7 +211,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
                 // Build doesn't exist yet, add it here.
                 $siblingBuild = new Build();
                 $siblingBuild->Name = $this->Build->Name;
-                $siblingBuild->ProjectId = $this->ProjectId;
+                $siblingBuild->ProjectId = $this->Project->Id;
                 $siblingBuild->SiteId = $this->Build->SiteId;
                 $siblingBuild->SetParentId($this->Build->GetParentId());
                 $siblingBuild->SetStamp($this->Build->GetStamp());

@@ -20,6 +20,7 @@ use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
+use CDash\Model\Project;
 use CDash\Model\Subscriber;
 use CDash\ServiceContainer;
 use CDash\Submission\CommitAuthorHandlerInterface;
@@ -29,7 +30,9 @@ class UpdateHandlerTest extends CDashTestCase
 {
     public function testUpdateHandlerIsACommitAuthorHandler()
     {
-        $sut = new UpdateHandler(0);
+        $project = new Project();
+        $project->Id = 0;
+        $sut = new UpdateHandler($project);
         $this->assertInstanceOf(CommitAuthorHandlerInterface::class, $sut);
     }
 
@@ -47,13 +50,17 @@ class UpdateHandlerTest extends CDashTestCase
             return $build;
         });
 
-        $sut = new UpdateHandler(0);
+        $project = new Project();
+        $project->Id = 0;
+        $sut = new UpdateHandler($project);
         $sut->GetCommitAuthors();
     }
 
     public function testGetBuildTopic()
     {
-        $sut = new UpdateHandler(1);
+        $project = new Project();
+        $project->Id = 1;
+        $sut = new UpdateHandler($project);
 
         $preferences = new BitmaskNotificationPreferences();
         $subscriber = new Subscriber($preferences);
@@ -72,7 +79,9 @@ class UpdateHandlerTest extends CDashTestCase
 
     public function testGetSubscriptionBuilderCollection()
     {
-        $sut = new UpdateHandler(0);
+        $project = new Project();
+        $project->Id = 0;
+        $sut = new UpdateHandler($project);
         $collection = $sut->GetSubscriptionBuilderCollection();
 
         self::assertCount(2, $collection);

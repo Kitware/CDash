@@ -28,6 +28,7 @@ use App\Models\Site;
 use App\Models\SiteInformation;
 
 use CDash\Collection\BuildCollection;
+use CDash\Model\Project;
 use CDash\Model\SubscriberInterface;
 
 class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInterface
@@ -46,9 +47,10 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
     private $Generator;
     private $PullRequest;
 
-    public function __construct($projectid)
+    public function __construct(Project $project)
     {
-        parent::__construct($projectid);
+        parent::__construct($project);
+
         $this->Builds = [];
         $this->SubProjects = [];
         $this->StartTimeStamp = 0;

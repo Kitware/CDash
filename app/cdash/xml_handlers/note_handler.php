@@ -19,6 +19,7 @@ use App\Utils\SubmissionUtils;
 use CDash\Model\Build;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use CDash\Model\Project;
 
 class NoteHandler extends AbstractXmlHandler
 {
@@ -26,9 +27,9 @@ class NoteHandler extends AbstractXmlHandler
     private $NoteCreator;
 
     /** Constructor */
-    public function __construct($projectID)
+    public function __construct(Project $project)
     {
-        parent::__construct($projectID);
+        parent::__construct($project);
         $this->Build = new Build();
         $this->Site = new Site();
 

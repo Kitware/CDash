@@ -19,6 +19,7 @@ use CDash\Model\Build;
 use CDash\Model\Label;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use CDash\Model\Project;
 use CDash\Model\UploadFile;
 
 use Illuminate\Http\File;
@@ -54,9 +55,9 @@ class UploadHandler extends AbstractXmlHandler
     private $UploadError;
 
     /** Constructor */
-    public function __construct($projectID)
+    public function __construct(Project $project)
     {
-        parent::__construct($projectID);
+        parent::__construct($project);
         $this->Build = new Build();
         $this->Site = new Site();
         $this->TmpFilename = '';

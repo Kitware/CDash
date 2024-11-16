@@ -2,6 +2,7 @@
 namespace CDash\Test\UseCase;
 
 use AbstractXmlHandler;
+use CDash\Model\Project;
 
 class UpdateUseCase extends UseCase
 {
@@ -86,7 +87,9 @@ class UpdateUseCase extends UseCase
         if ($xml_str === false) {
             throw new \Exception('Invalid XML.');
         }
-        $handler = new \UpdateHandler($this->projectId);
+        $project = new Project();
+        $project->Id = $this->projectId;
+        $handler = new \UpdateHandler($project);
         return $this->getXmlHandler($handler, $xml_str);
     }
 

@@ -35,9 +35,10 @@ class CoverageLogHandler extends AbstractXmlHandler
     private $CurrentLine;
 
     /** Constructor */
-    public function __construct($projectID)
+    public function __construct(Project $project)
     {
-        parent::__construct($projectID);
+        parent::__construct($project);
+
         $this->Build = new Build();
         $this->Site = new Site();
         $this->UpdateEndTime = false;

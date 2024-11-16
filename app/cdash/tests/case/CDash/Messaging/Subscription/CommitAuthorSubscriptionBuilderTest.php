@@ -38,7 +38,9 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
         $mock_submission->expects($this->any())
             ->method('GetTopicCollectionForSubscriber')
             ->willReturnCallback(function ($subscriber) {
-                $handler = new BuildHandler(0);
+                $project = new Project();
+                $project->Id = 0;
+                $handler = new BuildHandler($project);
                 return $handler->GetTopicCollectionForSubscriber($subscriber);
             });
 
@@ -60,7 +62,9 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
         $mock_submission->expects($this->any())
             ->method('GetTopicCollectionForSubscriber')
             ->willReturnCallback(function ($subscriber) {
-                $handler = new BuildHandler(0);
+                $project = new Project();
+                $project->Id = 0;
+                $handler = new BuildHandler($project);
                 return $handler->GetTopicCollectionForSubscriber($subscriber);
             });
 
@@ -82,7 +86,9 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
         $mock_submission->expects($this->any())
             ->method('GetTopicCollectionForSubscriber')
             ->willReturnCallback(function ($subscriber) {
-                $handler = new TestingHandler(0);
+                $project = new Project();
+                $project->Id = 0;
+                $handler = new TestingHandler($project);
                 return $handler->GetTopicCollectionForSubscriber($subscriber);
             });
 

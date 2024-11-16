@@ -19,6 +19,7 @@ use App\Utils\TestCreator;
 use CDash\Model\Build;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use CDash\Model\Project;
 
 class TestingJUnitHandler extends AbstractXmlHandler
 {
@@ -40,9 +41,9 @@ class TestingJUnitHandler extends AbstractXmlHandler
     private $TotalTestDuration;
 
     /** Constructor */
-    public function __construct($projectID)
+    public function __construct(Project $project)
     {
-        parent::__construct($projectID);
+        parent::__construct($project);
         $this->Build = new Build();
 
         $this->UpdateEndTime = false;

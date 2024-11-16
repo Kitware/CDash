@@ -29,6 +29,7 @@ use CDash\Model\DynamicAnalysis;
 use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\DynamicAnalysisDefect;
 use App\Models\SiteInformation;
+use CDash\Model\Project;
 use CDash\Model\SubscriberInterface;
 
 class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBuildInterface
@@ -50,9 +51,9 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
     private $TestSubProjectName;
 
     /** Constructor */
-    public function __construct($projectID)
+    public function __construct(Project $project)
     {
-        parent::__construct($projectID);
+        parent::__construct($project);
         $this->Builds = [];
         $this->SubProjects = [];
         $this->DynamicAnalysisSummaries = [];

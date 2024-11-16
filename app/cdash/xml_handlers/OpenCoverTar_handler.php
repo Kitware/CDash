@@ -23,15 +23,11 @@ use Illuminate\Support\Facades\Storage;
 
 class OpenCoverTarHandler extends AbstractXmlHandler
 {
-    protected $Build;
     protected $CoverageSummaries;
 
-    public function __construct($buildid)
+    public function __construct(Build $build)
     {
-        parent::__construct($buildid, $buildid);
-        $this->Build = new Build();
-        $this->Build->Id = $buildid;
-        $this->Build->FillFromId($this->Build->Id);
+        parent::__construct($build);
 
         $this->CoverageSummaries = [];
         $coverageSummary = new CoverageSummary();

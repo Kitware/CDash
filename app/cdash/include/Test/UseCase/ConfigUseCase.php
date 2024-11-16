@@ -1,6 +1,7 @@
 <?php
 namespace CDash\Test\UseCase;
 
+use CDash\Model\Project;
 use DOMDocument;
 use DOMElement;
 use DOMText;
@@ -62,7 +63,10 @@ class ConfigUseCase extends UseCase
         if ($xml_str === false) {
             throw new \Exception('Invalid XML.');
         }
-        $handler = new ConfigureHandler($this->projectId);
+
+        $project = new Project();
+        $project->Id = $this->projectId;
+        $handler = new ConfigureHandler($project);
         return $this->getXmlHandler($handler, $xml_str);
     }
 }

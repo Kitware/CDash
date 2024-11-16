@@ -15,19 +15,17 @@
 =========================================================================*/
 
 use CDash\Model\Build;
+use CDash\Model\Project;
 use CDash\Model\SubProject;
 
 class SubProjectDirectoriesHandler extends AbstractSubmissionHandler
 {
-    private $ProjectId;
     private $SubProjectOrder;
 
-    public function __construct($buildid)
+    public function __construct(Build|Project $init)
     {
-        $build = new Build();
-        $build->Id = $buildid;
-        $build->FillFromId($build->Id);
-        $this->ProjectId = $build->ProjectId;
+        parent::__construct($init);
+
         $this->SubProjectOrder = [];
     }
 
@@ -57,7 +55,7 @@ class SubProjectDirectoriesHandler extends AbstractSubmissionHandler
         // Save all of our SubProjects.
         foreach ($closed_list as $name => $path) {
             $subproject = new SubProject();
-            $subproject->SetProjectId($this->ProjectId);
+            $subproject->SetProjectId($this->Project->Id);
             $subproject->SetName($name);
             $subproject->SetPath($path);
             $subproject->SetPosition($this->SubProjectOrder[$path]);

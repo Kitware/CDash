@@ -26,6 +26,7 @@ use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUpdateFile;
+use CDash\Model\Project;
 use CDash\Model\Repository;
 use App\Models\Site;
 use CDash\Model\SubscriberInterface;
@@ -41,9 +42,9 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
     private $UpdateFile;
 
     /** Constructor */
-    public function __construct($projectID)
+    public function __construct(Project $project)
     {
-        parent::__construct($projectID);
+        parent::__construct($project);
         $factory = $this->getModelFactory();
         $this->Build = $factory->create(Build::class);
     }

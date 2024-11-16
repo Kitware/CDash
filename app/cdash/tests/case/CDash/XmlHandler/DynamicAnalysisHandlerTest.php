@@ -4,6 +4,7 @@ use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\Topic;
+use CDash\Model\Project;
 use CDash\Model\Subscriber;
 use Tests\TestCase;
 
@@ -26,7 +27,9 @@ class DynamicAnalysisHandlerTest extends TestCase
 {
     public function testGetBuildTopic()
     {
-        $sut = new DynamicAnalysisHandler(1);
+        $project = new Project();
+        $project->Id = 1;
+        $sut = new DynamicAnalysisHandler($project);
 
         $preferences = new BitmaskNotificationPreferences();
         $subscriber = new Subscriber($preferences);
@@ -44,7 +47,9 @@ class DynamicAnalysisHandlerTest extends TestCase
 
     public function testGetSubscriptionBuilderCollection()
     {
-        $sut = new DynamicAnalysisHandler(0);
+        $project = new Project();
+        $project->Id = 0;
+        $sut = new DynamicAnalysisHandler($project);
         $builders = $sut->GetSubscriptionBuilderCollection();
 
         self::assertCount(1, $builders);

@@ -29,6 +29,7 @@ use CDash\Model\BuildGroup;
 use CDash\Model\Label;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use CDash\Model\Project;
 use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
 use CDash\Submission\CommitAuthorHandlerTrait;
@@ -55,9 +56,9 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
     private $PullRequest;
     private $BuildErrorFilter;
 
-    public function __construct($projectid)
+    public function __construct(Project $project)
     {
-        parent::__construct($projectid);
+        parent::__construct($project);
         $this->Builds = [];
         $this->BuildCommand = '';
         $this->Labels = [];

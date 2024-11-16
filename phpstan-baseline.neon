@@ -29263,11 +29263,6 @@ parameters:
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
-			message: "#^Method BazelJSONHandler\\:\\:__construct\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/BazelJSON_handler.php
-
-		-
 			message: "#^Offset 1 might not exist on array\\{0\\?\\: string, 1\\?\\: string, 2\\?\\: string, 3\\?\\: string\\}\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
@@ -29343,11 +29338,6 @@ parameters:
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
-			message: "#^Property BazelJSONHandler\\:\\:\\$BuildId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/BazelJSON_handler.php
-
-		-
 			message: "#^Property BazelJSONHandler\\:\\:\\$Builds has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
@@ -29394,11 +29384,6 @@ parameters:
 
 		-
 			message: "#^Property BazelJSONHandler\\:\\:\\$ParseConfigure has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/BazelJSON_handler.php
-
-		-
-			message: "#^Property BazelJSONHandler\\:\\:\\$Project has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
@@ -29456,16 +29441,6 @@ parameters:
 			path: app/cdash/xml_handlers/BuildPropertiesJSON_handler.php
 
 		-
-			message: "#^Cannot access property \\$Id on mixed\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/BuildPropertiesJSON_handler.php
-
-		-
-			message: "#^Cannot call method FillFromId\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/BuildPropertiesJSON_handler.php
-
-		-
 			message: "#^Method BuildPropertiesJSONHandler\\:\\:Parse\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BuildPropertiesJSON_handler.php
@@ -29476,17 +29451,7 @@ parameters:
 			path: app/cdash/xml_handlers/BuildPropertiesJSON_handler.php
 
 		-
-			message: "#^Method BuildPropertiesJSONHandler\\:\\:__construct\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/BuildPropertiesJSON_handler.php
-
-		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/BuildPropertiesJSON_handler.php
-
-		-
-			message: "#^Property AbstractSubmissionHandler\\:\\:\\$Build \\(CDash\\\\Model\\\\Build\\) does not accept mixed\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BuildPropertiesJSON_handler.php
 
@@ -29594,11 +29559,6 @@ parameters:
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Method GcovTarHandler\\:\\:__construct\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/GcovTar_handler.php
-
-		-
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, array\\|string\\|false given\\.$#"
 			count: 4
 			path: app/cdash/xml_handlers/GcovTar_handler.php
@@ -29675,11 +29635,6 @@ parameters:
 
 		-
 			message: "#^Property GcovTarHandler\\:\\:\\$PreviousAggregateParentId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/GcovTar_handler.php
-
-		-
-			message: "#^Property GcovTarHandler\\:\\:\\$ProjectId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
@@ -29768,11 +29723,6 @@ parameters:
 
 		-
 			message: "#^Method JSCoverTarHandler\\:\\:ParseJSCoverFile\\(\\) has parameter \\$fileinfo with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/JSCoverTar_handler.php
-
-		-
-			message: "#^Method JSCoverTarHandler\\:\\:__construct\\(\\) has parameter \\$buildid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/JSCoverTar_handler.php
 
@@ -29866,11 +29816,6 @@ parameters:
 
 		-
 			message: "#^Method JavaJSONTarHandler\\:\\:ParsePackageMap\\(\\) has parameter \\$fileinfo with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/JavaJSONTar_handler.php
-
-		-
-			message: "#^Method JavaJSONTarHandler\\:\\:__construct\\(\\) has parameter \\$buildid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/JavaJSONTar_handler.php
 
@@ -29983,11 +29928,6 @@ parameters:
 			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
 
 		-
-			message: "#^Method AbstractXmlHandler\\:\\:__construct\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
-
-		-
 			message: "#^Method OpenCoverTarHandler\\:\\:Parse\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
@@ -30014,11 +29954,6 @@ parameters:
 
 		-
 			message: "#^Method OpenCoverTarHandler\\:\\:ParseOpenCoverFile\\(\\) has parameter \\$fileinfo with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
-
-		-
-			message: "#^Method OpenCoverTarHandler\\:\\:__construct\\(\\) has parameter \\$buildid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/OpenCoverTar_handler.php
 
@@ -30186,16 +30121,6 @@ parameters:
 			path: app/cdash/xml_handlers/SubProjectDirectories_handler.php
 
 		-
-			message: "#^Method SubProjectDirectoriesHandler\\:\\:__construct\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/SubProjectDirectories_handler.php
-
-		-
-			message: "#^Property SubProjectDirectoriesHandler\\:\\:\\$ProjectId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/SubProjectDirectories_handler.php
-
-		-
 			message: "#^Property SubProjectDirectoriesHandler\\:\\:\\$SubProjectOrder has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/SubProjectDirectories_handler.php
@@ -30208,11 +30133,6 @@ parameters:
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 2
-			path: app/cdash/xml_handlers/abstract_xml_handler.php
-
-		-
-			message: "#^Method AbstractXmlHandler\\:\\:__construct\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
@@ -30392,11 +30312,6 @@ parameters:
 
 		-
 			message: "#^Method BuildHandler\\:\\:GetCommitAuthors\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Method BuildHandler\\:\\:__construct\\(\\) has parameter \\$projectid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/build_handler.php
 
@@ -30691,11 +30606,6 @@ parameters:
 			path: app/cdash/xml_handlers/configure_handler.php
 
 		-
-			message: "#^Method ConfigureHandler\\:\\:__construct\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
 			message: "#^Method ConfigureHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/configure_handler.php
@@ -30836,11 +30746,6 @@ parameters:
 			path: app/cdash/xml_handlers/coverage_handler.php
 
 		-
-			message: "#^Method CoverageHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/coverage_handler.php
-
-		-
 			message: "#^Method CoverageHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/coverage_handler.php
@@ -30923,11 +30828,6 @@ parameters:
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 14
-			path: app/cdash/xml_handlers/coverage_junit_handler.php
-
-		-
-			message: "#^Method CoverageJUnitHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/coverage_junit_handler.php
 
 		-
@@ -31026,11 +30926,6 @@ parameters:
 			path: app/cdash/xml_handlers/coverage_log_handler.php
 
 		-
-			message: "#^Method CoverageLogHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/coverage_log_handler.php
-
-		-
 			message: "#^Method CoverageLogHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/coverage_log_handler.php
@@ -31118,11 +31013,6 @@ parameters:
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 3
-			path: app/cdash/xml_handlers/done_handler.php
-
-		-
-			message: "#^Method DoneHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/done_handler.php
 
 		-
@@ -31376,11 +31266,6 @@ parameters:
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
-			message: "#^Method DynamicAnalysisHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
 			message: "#^Method DynamicAnalysisHandler\\:\\:createBuild\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
@@ -31526,11 +31411,6 @@ parameters:
 			path: app/cdash/xml_handlers/note_handler.php
 
 		-
-			message: "#^Method NoteHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/note_handler.php
-
-		-
 			message: "#^Method NoteHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/note_handler.php
@@ -31646,11 +31526,6 @@ parameters:
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 9
-			path: app/cdash/xml_handlers/project_handler.php
-
-		-
-			message: "#^Method ProjectHandler\\:\\:__construct\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/project_handler.php
 
 		-
@@ -31839,11 +31714,6 @@ parameters:
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
-			message: "#^Method TestingHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
 			message: "#^Method TestingHandler\\:\\:createBuild\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/testing_handler.php
@@ -32001,11 +31871,6 @@ parameters:
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 21
-			path: app/cdash/xml_handlers/testing_j_unit_handler.php
-
-		-
-			message: "#^Method TestingJUnitHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
@@ -32184,11 +32049,6 @@ parameters:
 			path: app/cdash/xml_handlers/update_handler.php
 
 		-
-			message: "#^Method UpdateHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/update_handler.php
-
-		-
 			message: "#^Method UpdateHandler\\:\\:endElement\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/update_handler.php
@@ -32270,11 +32130,6 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
-			message: "#^Method UploadHandler\\:\\:__construct\\(\\) has parameter \\$projectID with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 

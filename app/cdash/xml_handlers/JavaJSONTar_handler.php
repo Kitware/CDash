@@ -26,11 +26,9 @@ class JavaJSONTarHandler extends AbstractSubmissionHandler
 {
     private $CoverageSummaries;
 
-    public function __construct($buildid)
+    public function __construct(Build $init)
     {
-        $this->Build = new Build();
-        $this->Build->Id = $buildid;
-        $this->Build->FillFromId($this->Build->Id);
+        parent::__construct($init);
 
         $this->CoverageSummaries = [];
         $coverageSummary = new CoverageSummary();
