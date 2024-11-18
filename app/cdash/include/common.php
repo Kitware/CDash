@@ -484,7 +484,6 @@ function remove_build($buildid)
     if (count($configureids) > 0) {
         $configureids_prepare_array = $db->createPreparedArray(count($configureids));
         DB::delete("DELETE FROM configure WHERE id IN $configureids_prepare_array", $configureids);
-        DB::delete("DELETE FROM configureerror WHERE configureid IN $configureids_prepare_array", $configureids);
     }
 
     // coverage files are kept unless they are shared
