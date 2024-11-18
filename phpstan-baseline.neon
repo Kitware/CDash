@@ -3604,11 +3604,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:getBuildFromHandler\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:getRemoteSubmissionFileHandle\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php

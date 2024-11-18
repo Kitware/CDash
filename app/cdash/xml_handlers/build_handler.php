@@ -409,12 +409,15 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         return $this->SubProjectName;
     }
 
-    /**
-     * @return Build[]
-     */
-    public function getBuilds(): array
+    public function getBuild(): Build
     {
-        return array_values($this->Builds);
+        if (count($this->Builds) > 1) {
+            $build = new Build();
+            $build->Id = array_values($this->Builds)[0]->GetParentId();
+            return $build;
+        } else {
+            return array_values($this->Builds)[0];
+        }
     }
 
     public function GetBuildCollection(): BuildCollection

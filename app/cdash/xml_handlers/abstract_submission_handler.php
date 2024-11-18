@@ -28,15 +28,8 @@ abstract class AbstractSubmissionHandler
         $this->Project->Fill();
     }
 
-    /**
-     * TODO: This was copied here from legacy code.  In the future, we should re-evaluate
-     *       whether this should be in the abstract handler or not, given that many handlers
-     *       override it.
-     *
-     * @return Build[]
-     */
-    public function getBuilds(): array
+    public function getBuild(): Build
     {
-        return [$this->Build];
+        return $this->Build;
     }
 }
