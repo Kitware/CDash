@@ -301,7 +301,7 @@ parameters:
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 7
+			count: 6
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -309,7 +309,7 @@ parameters:
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 12
+			count: 10
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -317,7 +317,7 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 14
+			count: 12
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -411,26 +411,6 @@ parameters:
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:delete_unused_rows\\(\\) has parameter \\$field with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:delete_unused_rows\\(\\) has parameter \\$selectfield with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:delete_unused_rows\\(\\) has parameter \\$table with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:delete_unused_rows\\(\\) has parameter \\$targettable with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:removeBuilds\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
@@ -447,7 +427,7 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 9
+			count: 6
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -3944,12 +3924,27 @@ parameters:
 			path: app/Utils/AuthTokenUtil.php
 
 		-
+			message: "#^Argument of an invalid type array\\<int\\>\\|int supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 1
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:limit\\(\\)\\.$#"
 			count: 1
 			path: app/Utils/DatabaseCleanupUtils.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
+			message: "#^Parameter \\#1 \\$buildids of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuildChunked\\(\\) expects array\\<int\\>\\|int, array given\\.$#"
 			count: 1
 			path: app/Utils/DatabaseCleanupUtils.php
 
@@ -13887,14 +13882,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function add_last_sql_error\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
 			"""
@@ -14030,7 +14017,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 5
+			count: 2
 			path: app/cdash/include/common.php
 
 		-
@@ -14115,11 +14102,6 @@ parameters:
 
 		-
 			message: "#^Function deepEncodeHTMLEntities\\(\\) has parameter \\$structure with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function delete_rows_chunked\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -14260,21 +14242,6 @@ parameters:
 
 		-
 			message: "#^Function qnum\\(\\) has parameter \\$num with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function remove_build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function remove_build\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function remove_build_chunked\\(\\) has parameter \\$buildid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -21385,93 +21352,6 @@ parameters:
 			path: app/cdash/tests/test_autoremovebuilds.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: """
-				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 4
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: """
-				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 6
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: """
-				#^Call to deprecated method query\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: "#^Cannot access offset 0 on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on PDOStatement\\|false\\.$#"
-			count: 4
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: "#^Method AutoRemoveBuildsOnSubmitTestCase\\:\\:enableAutoRemoveConfigSetting\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: "#^Method AutoRemoveBuildsOnSubmitTestCase\\:\\:setAutoRemoveTimeFrame\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: "#^Method AutoRemoveBuildsOnSubmitTestCase\\:\\:testBuildsRemovedOnSubmission\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, int\\|string\\|false\\|null given\\.$#"
-			count: 2
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 4
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: "#^Parameter \\#1 \\$time of method CDash\\\\Model\\\\BuildGroup\\:\\:SetEndTime\\(\\) expects Illuminate\\\\Support\\\\Carbon, Illuminate\\\\Support\\\\Carbon\\|false given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: "#^Property AutoRemoveBuildsOnSubmitTestCase\\:\\:\\$config_file has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
 			message: "#^Binary operation \"\\.\" between 'Expected error at…' and mixed results in an error\\.$#"
 			count: 1
 			path: app/cdash/tests/test_bazeljson.php
@@ -21813,6 +21693,11 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
+			count: 1
+			path: app/cdash/tests/test_buildconfigure.php
+
+		-
+			message: "#^Parameter \\#1 \\$buildid of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuild\\(\\) expects array\\<int\\>\\|int, mixed given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_buildconfigure.php
 
@@ -23327,6 +23212,11 @@ parameters:
 			path: app/cdash/tests/test_disabledtests.php
 
 		-
+			message: "#^Parameter \\#1 \\$buildid of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuild\\(\\) expects array\\<int\\>\\|int, mixed given\\.$#"
+			count: 1
+			path: app/cdash/tests/test_disabledtests.php
+
+		-
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
 			count: 2
 			path: app/cdash/tests/test_disabledtests.php
@@ -24399,6 +24289,11 @@ parameters:
 
 		-
 			message: "#^Method ImageComparisonTestCase\\:\\:testImageComparison\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_imagecomparison.php
+
+		-
+			message: "#^Parameter \\#1 \\$buildid of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuild\\(\\) expects array\\<int\\>\\|int, mixed given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_imagecomparison.php
 
@@ -25659,6 +25554,11 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$array of function array_pop expects array, mixed given\\.$#"
 			count: 7
+			path: app/cdash/tests/test_multiplesubprojects.php
+
+		-
+			message: "#^Parameter \\#1 \\$buildid of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuild\\(\\) expects array\\<int\\>\\|int, mixed given\\.$#"
+			count: 1
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
@@ -28563,6 +28463,11 @@ parameters:
 			path: app/cdash/tests/test_updateonlyuserstats.php
 
 		-
+			message: "#^Parameter \\#1 \\$buildid of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuild\\(\\) expects array\\<int\\>\\|int, mixed given\\.$#"
+			count: 1
+			path: app/cdash/tests/test_updateonlyuserstats.php
+
+		-
 			message: "#^Parameter \\#1 \\$key of function array_key_exists expects int\\|string, mixed given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_updateonlyuserstats.php
@@ -28599,7 +28504,7 @@ parameters:
 
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_upgrade.php
 
 		-
@@ -28614,16 +28519,6 @@ parameters:
 
 		-
 			message: "#^Method UpgradeTestCase\\:\\:testAssignBuildsToDefaultGroups\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Method UpgradeTestCase\\:\\:testCheckAndDeleteBuildsWrongDate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Method UpgradeTestCase\\:\\:testCleanup\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_upgrade.php
 
@@ -28780,6 +28675,11 @@ parameters:
 
 		-
 			message: "#^Method ViewDynamicAnalysisFileTestCase\\:\\:testViewDynamicAnalysisFile\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_viewdynamicanalysisfile.php
+
+		-
+			message: "#^Parameter \\#1 \\$buildid of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuild\\(\\) expects array\\<int\\>\\|int, mixed given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_viewdynamicanalysisfile.php
 

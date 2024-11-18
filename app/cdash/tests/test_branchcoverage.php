@@ -5,8 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +34,7 @@ class BranchCoverageTestCase extends KWWebTestCase
             SELECT id FROM build WHERE name = 'branch_coverage'");
         $existing_buildid = $stmt->fetchColumn();
         if ($existing_buildid !== false) {
-            remove_build($existing_buildid);
+            DatabaseCleanupUtils::removeBuild((int) $existing_buildid);
         }
 
         $files = Storage::allFiles('inbox');

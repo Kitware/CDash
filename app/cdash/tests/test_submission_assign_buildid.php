@@ -2,6 +2,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Build;
 
 class SubmissionAssignBuildIdTestCase extends KWWebTestCase
@@ -37,6 +38,6 @@ class SubmissionAssignBuildIdTestCase extends KWWebTestCase
         $this->assertEqual('gcc', $build->CompilerName);
         $this->assertEqual('5.5.0', $build->CompilerVersion);
 
-        remove_build($buildid);
+        DatabaseCleanupUtils::removeBuild($buildid);
     }
 }

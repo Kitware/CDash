@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Models\User;
 use App\Models\Build as EloquentBuild;
+use App\Utils\DatabaseCleanupUtils;
 use App\Utils\PageTimer;
 use App\Utils\RepositoryUtils;
 use App\Utils\TestingDay;
@@ -1470,7 +1471,7 @@ final class BuildController extends AbstractBuildController
     private function restApiDelete(): JsonResponse
     {
         Log::info("Build #{$this->build->Id} removed manually.");
-        remove_build($this->build->Id);
+        DatabaseCleanupUtils::removeBuild($this->build->Id);
         return response()->json();
     }
 }

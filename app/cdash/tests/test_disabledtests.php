@@ -5,6 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 
 class DisabledTestsTestCase extends KWWebTestCase
@@ -71,6 +72,6 @@ class DisabledTestsTestCase extends KWWebTestCase
             $this->fail("Erroneous email sent for test 'ThisTestIsDisabled'");
         }
 
-        remove_build($buildid);
+        DatabaseCleanupUtils::removeBuild($buildid);
     }
 }

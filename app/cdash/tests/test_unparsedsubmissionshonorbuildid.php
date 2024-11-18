@@ -6,6 +6,8 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'tests/test_branchcoverage.php';
 
+use App\Utils\DatabaseCleanupUtils;
+
 class UnparsedSubmissionsHonorBuildIdTestCase extends BranchCoverageTestCase
 {
     protected $projectname;
@@ -38,6 +40,6 @@ class UnparsedSubmissionsHonorBuildIdTestCase extends BranchCoverageTestCase
         $this->verifyResults();
 
         DB::delete("DELETE FROM buildfile WHERE buildid='{$old_buildid}'");
-        remove_build($old_buildid);
+        DatabaseCleanupUtils::removeBuild($old_buildid);
     }
 }

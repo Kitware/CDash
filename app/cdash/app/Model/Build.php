@@ -18,6 +18,7 @@ namespace CDash\Model;
 
 use App\Models\Test;
 use App\Models\Site;
+use App\Utils\DatabaseCleanupUtils;
 use App\Utils\RepositoryUtils;
 use App\Utils\SubmissionUtils;
 use App\Utils\TestingDay;
@@ -2199,7 +2200,7 @@ class Build
             return false;
         }
 
-        remove_build($this->Id);
+        DatabaseCleanupUtils::removeBuild($this->Id);
         $this->Id = 0;
         return true;
     }
