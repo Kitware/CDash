@@ -12,6 +12,7 @@ services:
       - ..:/cdash_src:ro
     links:
       - ldap
+      - selenium
 
   # Used for testing LDAP authentication
   ldap:
@@ -26,3 +27,19 @@ services:
       LDAP_USERS: ldapuser01,ldapuser02
       LDAP_PASSWORDS: password1,password2
       LDAP_PORT_NUMBER: 389
+
+  # Used for live browser testing
+  selenium:
+    image: selenium/standalone-chromium
+    container_name: selenium
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - 4444:4444
+      - 7900:7900
+    environment:
+      # Allows developers to view running jobs via browser-based VNC at localhost:7900
+      VNC_NO_PASSWORD: true
+      # Selenium takes a long time to detect idle+clean up, so allow a large number of sessions to exist at once if needed.
+      SE_NODE_OVERRIDE_MAX_SESSIONS: true
+      SE_NODE_MAX_SESSIONS: 500
