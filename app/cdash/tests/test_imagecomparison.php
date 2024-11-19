@@ -5,6 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 use CDash\Model\Image;
 
@@ -54,6 +55,6 @@ class ImageComparisonTestCase extends KWWebTestCase
             }
         }
 
-        remove_build($buildid);
+        DatabaseCleanupUtils::removeBuild($buildid);
     }
 }

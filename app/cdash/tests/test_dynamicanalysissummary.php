@@ -15,6 +15,7 @@
 =========================================================================*/
 
 
+use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
@@ -68,7 +69,7 @@ class DynamicAnalysisSummaryTestCase extends KWWebTestCase
     public function testDynamicAnalysisSummaryGetsDeleted()
     {
         // Remove the builds we just created.
-        remove_build($this->ParentId);
+        DatabaseCleanupUtils::removeBuild($this->ParentId);
 
         // Verify that the dynamicanalysisssummary rows got deleted.
         $result = DB::select("

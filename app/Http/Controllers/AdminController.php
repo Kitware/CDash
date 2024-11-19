@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -96,7 +97,7 @@ final class AdminController extends AbstractController
                 $builds[] = (int) $build_array->id;
             }
 
-            remove_build_chunked($builds);
+            DatabaseCleanupUtils::removeBuildChunked($builds);
             $alert = 'Removed ' . count($builds) . ' builds.';
         }
 
@@ -446,7 +447,7 @@ final class AdminController extends AbstractController
           starttime<'1975-12-31 23:59:59' OR starttime>'$forwarddate'");
             while ($builds_array = pdo_fetch_array($builds)) {
                 $buildid = $builds_array['id'];
-                remove_build($buildid);
+                DatabaseCleanupUtils::removeBuild($buildid);
             }
         }
 

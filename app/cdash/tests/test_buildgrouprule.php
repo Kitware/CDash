@@ -6,6 +6,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
+use App\Utils\DatabaseCleanupUtils;
 use App\Utils\SubmissionUtils;
 use CDash\Database;
 use CDash\Model\Build;
@@ -108,7 +109,7 @@ class BuildGroupRuleTestCase extends KWWebTestCase
             "SELECT id FROM build WHERE name = 'no-project-leakage'");
         pdo_execute($stmt);
         while ($row = $stmt->fetch()) {
-            remove_build($row['id']);
+            DatabaseCleanupUtils::removeBuild($row['id']);
         }
         DB::delete("DELETE FROM build2grouprule WHERE buildname = 'no-project-leakage'");
 
