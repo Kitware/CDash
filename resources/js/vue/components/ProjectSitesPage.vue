@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div data-test="all-sites-table">
     <loading-indicator :is-loading="!allSites">
       <data-table
         :column-groups="[

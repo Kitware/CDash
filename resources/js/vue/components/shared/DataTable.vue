@@ -3,6 +3,7 @@
     class="tabb striped"
     :class="{ 'full-width': fullWidth }"
     data-cy="data-table"
+    data-test="data-table"
   >
     <thead>
       <tr
@@ -38,12 +39,14 @@
       <tr
         v-for="row in (sortable ? sortedRows : rows)"
         data-cy="data-table-row"
+        data-test="data-table-row"
       >
         <td
           v-for="column in columns"
           :class="(row[column.name]?.classes ?? []).concat(column.expand ? [] : ['shrink'])"
           class="table-cell"
           data-cy="data-table-cell"
+          data-test="data-table-cell"
         >
           <!--
             Display a custom template for each table cell, or a default template
