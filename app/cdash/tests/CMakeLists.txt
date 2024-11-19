@@ -222,8 +222,11 @@ set_tests_properties(/Feature/GraphQL/CoverageTypeTest PROPERTIES DEPENDS /Featu
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
 set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES DEPENDS "/Feature/GraphQL/TestTypeTest;/Feature/GraphQL/TestMeasurementTypeTest;/Feature/GraphQL/NoteTypeTest;/Feature/GraphQL/BuildMeasurementTypeTest;/Feature/GraphQL/CoverageTypeTest")
 
+add_laravel_test(/Browser/Pages/ProjectSitesPageTest)
+set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES DEPENDS /Feature/PurgeUnusedProjectsCommand)
+
 add_laravel_test(/Feature/MeasurementPositionMigration)
-set_tests_properties(/Feature/MeasurementPositionMigration PROPERTIES DEPENDS /Feature/PurgeUnusedProjectsCommand)
+set_tests_properties(/Feature/MeasurementPositionMigration PROPERTIES DEPENDS /Browser/Pages/ProjectSitesPageTest)
 
 add_laravel_test(/Feature/RemoveMeasurementCheckboxesMigration)
 set_tests_properties(/Feature/RemoveMeasurementCheckboxesMigration PROPERTIES DEPENDS /Feature/MeasurementPositionMigration)
