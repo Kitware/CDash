@@ -7,10 +7,12 @@ use App\Utils\AuthTokenUtil;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Http\Client\Pool;
+use Tests\Traits\CreatesSubmissions;
 
 class DatabaseSeeder extends Seeder
 {
+    use CreatesSubmissions;
+
     private string $admin_auth_token = '';
 
     /**
@@ -22,44 +24,6 @@ class DatabaseSeeder extends Seeder
 
         $this->createPublicProject();
         $this->createTrilinosProject();
-    }
-
-    /**
-     * Submit files to a given project.  Requests are batched for better performance.
-     *
-     * @param array<string> $fixtures
-     * @param int<1,max> $batch_size
-     */
-    private function submit(string $project_name, array $fixtures, int $batch_size = 20): void
-    {
-        echo 'Submitting ' . count($fixtures) . " files to project $project_name..." . PHP_EOL;
-
-        $num_failed_submissions = 0;
-        foreach (array_chunk($fixtures, $batch_size) as $fixtures_chunk) {
-            $responses = Http::pool(function (Pool $pool) use ($project_name, $fixtures_chunk) {
-                foreach ($fixtures_chunk as $fixture) {
-                    $file_contents = file_get_contents($fixture);
-                    if ($file_contents === false) {
-                        throw new Exception('Unable to open submission file.');
-                    }
-                    $pool->as($fixture)->withBody($file_contents)->get(url('/submit.php'), [
-                        'project' => $project_name,
-                    ]);
-                }
-            });
-
-            foreach ($responses as $fixture => $response) {
-                if ($response->ok()) {
-                    echo "Submitted file $fixture to project $project_name successfully." . PHP_EOL;
-                } else {
-                    echo "Failed to submit file $fixture to project $project_name." . PHP_EOL;
-                    $num_failed_submissions++;
-                }
-            }
-        }
-        if ($num_failed_submissions > 0) {
-            throw new Exception("$num_failed_submissions submissions failed!");
-        }
     }
 
     /**
@@ -119,6 +83,6 @@ class DatabaseSeeder extends Seeder
             return app_path("/cdash/tests/data/ActualTrilinosSubmission/$filename");
         }, $files_to_submit);
 
-        $this->submit($project->name, $files_to_submit, 1);
+        $this->submitFiles($project->name, $files_to_submit, 1);
     }
 }
