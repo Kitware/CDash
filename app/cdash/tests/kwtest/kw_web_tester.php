@@ -378,6 +378,9 @@ class KWWebTestCase extends WebTestCase
         return $this->put($url, $parameters, $contentType);
     }
 
+    /**
+     * @deprecated 11/20/2024  Use the CreatesSubmissions trait instead.
+     */
     public function uploadfile($url, $filename, $header = null)
     {
         set_time_limit(0); // sometimes this is slow when access the local webserver from external URL
