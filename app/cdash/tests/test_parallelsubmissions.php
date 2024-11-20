@@ -8,7 +8,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'tests/trilinos_submission_test.php';
 
 
-
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Project;
 
 class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
@@ -47,7 +47,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
             ->whereBetween('starttime', ['2011-07-22 00:00:00', '2011-07-22 23:59:59'])
             ->first();
         if ($trilinos_build_row) {
-            remove_build($trilinos_build_row->id);
+            DatabaseCleanupUtils::removeBuild($trilinos_build_row->id);
         }
 
         // Change CDash config to queue submissions in the database.

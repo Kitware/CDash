@@ -6,6 +6,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
+use App\Utils\DatabaseCleanupUtils;
 use App\Utils\SubmissionUtils;
 use CDash\Database;
 use CDash\Model\Build;
@@ -27,7 +28,7 @@ class BuildRelationshipTestCase extends KWWebTestCase
             "SELECT id FROM build WHERE name = 'test-build-relationships'");
         pdo_execute($stmt);
         while ($row = $stmt->fetch()) {
-            remove_build($row['id']);
+            DatabaseCleanupUtils::removeBuild($row['id']);
         }
 
         // Login as admin.

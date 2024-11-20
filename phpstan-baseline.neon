@@ -3944,12 +3944,45 @@ parameters:
 			path: app/Utils/AuthTokenUtil.php
 
 		-
+			message: """
+				#^Call to deprecated function add_last_sql_error\\(\\)\\:
+				04/22/2023$#
+			"""
+			count: 1
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 3
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:limit\\(\\)\\.$#"
 			count: 1
 			path: app/Utils/DatabaseCleanupUtils.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:deleteRowsChunked\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_chunk expects array, array\\<int\\>\\|int given\\.$#"
+			count: 1
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
+			message: "#^Parameter \\#1 \\$buildids of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuildChunked\\(\\) expects array\\<int\\>\\|int, array given\\.$#"
+			count: 1
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
+			message: "#^Undefined variable\\: \\$buildid$#"
 			count: 1
 			path: app/Utils/DatabaseCleanupUtils.php
 
@@ -13887,14 +13920,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function add_last_sql_error\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: """
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
 			"""
@@ -14030,7 +14055,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 5
+			count: 2
 			path: app/cdash/include/common.php
 
 		-
@@ -14115,11 +14140,6 @@ parameters:
 
 		-
 			message: "#^Function deepEncodeHTMLEntities\\(\\) has parameter \\$structure with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function delete_rows_chunked\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -14260,21 +14280,6 @@ parameters:
 
 		-
 			message: "#^Function qnum\\(\\) has parameter \\$num with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function remove_build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function remove_build\\(\\) has parameter \\$buildid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function remove_build_chunked\\(\\) has parameter \\$buildid with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -21817,6 +21822,11 @@ parameters:
 			path: app/cdash/tests/test_buildconfigure.php
 
 		-
+			message: "#^Parameter \\#1 \\$buildid of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuild\\(\\) expects array\\<int\\>\\|int, mixed given\\.$#"
+			count: 1
+			path: app/cdash/tests/test_buildconfigure.php
+
+		-
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
 			count: 2
 			path: app/cdash/tests/test_buildconfigure.php
@@ -23327,6 +23337,11 @@ parameters:
 			path: app/cdash/tests/test_disabledtests.php
 
 		-
+			message: "#^Parameter \\#1 \\$buildid of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuild\\(\\) expects array\\<int\\>\\|int, mixed given\\.$#"
+			count: 1
+			path: app/cdash/tests/test_disabledtests.php
+
+		-
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
 			count: 2
 			path: app/cdash/tests/test_disabledtests.php
@@ -24399,6 +24414,11 @@ parameters:
 
 		-
 			message: "#^Method ImageComparisonTestCase\\:\\:testImageComparison\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_imagecomparison.php
+
+		-
+			message: "#^Parameter \\#1 \\$buildid of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuild\\(\\) expects array\\<int\\>\\|int, mixed given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_imagecomparison.php
 
@@ -25659,6 +25679,11 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$array of function array_pop expects array, mixed given\\.$#"
 			count: 7
+			path: app/cdash/tests/test_multiplesubprojects.php
+
+		-
+			message: "#^Parameter \\#1 \\$buildid of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuild\\(\\) expects array\\<int\\>\\|int, mixed given\\.$#"
+			count: 1
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
@@ -28563,6 +28588,11 @@ parameters:
 			path: app/cdash/tests/test_updateonlyuserstats.php
 
 		-
+			message: "#^Parameter \\#1 \\$buildid of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuild\\(\\) expects array\\<int\\>\\|int, mixed given\\.$#"
+			count: 1
+			path: app/cdash/tests/test_updateonlyuserstats.php
+
+		-
 			message: "#^Parameter \\#1 \\$key of function array_key_exists expects int\\|string, mixed given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_updateonlyuserstats.php
@@ -28780,6 +28810,11 @@ parameters:
 
 		-
 			message: "#^Method ViewDynamicAnalysisFileTestCase\\:\\:testViewDynamicAnalysisFile\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_viewdynamicanalysisfile.php
+
+		-
+			message: "#^Parameter \\#1 \\$buildid of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuild\\(\\) expects array\\<int\\>\\|int, mixed given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_viewdynamicanalysisfile.php
 

@@ -3,6 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
@@ -68,7 +69,7 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
         }
 
         // Delete one of the builds.
-        remove_build($buildids[0]);
+        DatabaseCleanupUtils::removeBuild($buildids[0]);
 
         // Verify 2 buildfailures, 1 build, and 2 details.
         $count_results = DB::select($count_query)[0];
@@ -89,7 +90,7 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
         }
 
         // Delete the other build.
-        remove_build($buildids[1]);
+        DatabaseCleanupUtils::removeBuild($buildids[1]);
 
         // Verify that the rest of our data is now gone.
         $count_results = DB::select($count_query)[0];

@@ -9,6 +9,7 @@ require_once 'tests/test_branchcoverage.php';
 
 
 use App\Models\AuthToken;
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Project;
 
 class DeferredSubmissionsTestCase extends BranchCoverageTestCase
@@ -86,7 +87,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
             ->where('name', '=', 'deferred_submission')
             ->first();
         if ($existing_build_row) {
-            remove_build($existing_build_row->id);
+            DatabaseCleanupUtils::removeBuild($existing_build_row->id);
         }
 
         // Make sure inbox is empty.

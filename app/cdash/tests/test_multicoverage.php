@@ -5,7 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
+use App\Utils\DatabaseCleanupUtils;
 
 class MultiCoverageTestCase extends KWWebTestCase
 {
@@ -30,7 +30,7 @@ class MultiCoverageTestCase extends KWWebTestCase
             $this->pass("Passed");
         }
 
-        remove_build($this->BuildId);
+        DatabaseCleanupUtils::removeBuild($this->BuildId);
         return $success;
     }
 
@@ -47,7 +47,7 @@ class MultiCoverageTestCase extends KWWebTestCase
             $this->pass("Passed");
         }
 
-        remove_build($this->BuildId);
+        DatabaseCleanupUtils::removeBuild($this->BuildId);
         return $success;
     }
 

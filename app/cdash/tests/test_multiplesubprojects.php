@@ -5,6 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 
 class MultipleSubprojectsTestCase extends KWWebTestCase
@@ -122,7 +123,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
         if ($total_builds != 5) {    // parent + 4 subprojects
             foreach ($this->buildIds as $id) {
-                remove_build($id);
+                DatabaseCleanupUtils::removeBuild($id);
             }
             $this->fail("Expected 5 Builds found {$total_builds}");
             return 1;
@@ -131,7 +132,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
     private function restoreState()
     {
-        remove_build($this->buildIds);
+        DatabaseCleanupUtils::removeBuild($this->buildIds);
 
         $this->restoreEmailPreference();
 

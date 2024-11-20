@@ -5,6 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 use CDash\Model\Project;
 
@@ -71,7 +72,7 @@ class FilterBuildErrorsTestCase extends KWWebTestCase
         }
 
         // Cleanup.
-        remove_build($buildid);
+        DatabaseCleanupUtils::removeBuild($buildid);
         $project->Delete();
     }
 }
