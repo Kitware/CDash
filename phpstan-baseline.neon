@@ -20104,31 +20104,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method KWWebTestCase\\:\\:submission\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method KWWebTestCase\\:\\:submission\\(\\) has parameter \\$debug with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method KWWebTestCase\\:\\:submission\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method KWWebTestCase\\:\\:submission\\(\\) has parameter \\$header with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method KWWebTestCase\\:\\:submission\\(\\) has parameter \\$projectname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: "#^Method KWWebTestCase\\:\\:submission_assign_buildid\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -20204,22 +20179,22 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:843\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:getSent\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:843\\:\\:getSent\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:isError\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:843\\:\\:isError\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:read\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:843\\:\\:read\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -20434,12 +20409,12 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:\\$read has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:843\\:\\:\\$read has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:\\$response has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:843\\:\\:\\$response has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -20693,16 +20668,6 @@ parameters:
 
 		-
 			message: "#^Method AggregateCoverageTestCase\\:\\:checkCoverage\\(\\) has parameter \\$expected_percentage with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_aggregatecoverage.php
-
-		-
-			message: "#^Method AggregateCoverageTestCase\\:\\:submitTestingFile\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_aggregatecoverage.php
-
-		-
-			message: "#^Method AggregateCoverageTestCase\\:\\:submitTestingFile\\(\\) has parameter \\$filename with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_aggregatecoverage.php
 
@@ -23343,7 +23308,7 @@ parameters:
 
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 5
+			count: 4
 			path: app/cdash/tests/test_email.php
 
 		-
@@ -25501,11 +25466,6 @@ parameters:
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
-			message: "#^Parameter \\#1 \\$buildid of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuild\\(\\) expects array\\<int\\>\\|int, mixed given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_multiplesubprojects.php
-
-		-
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, int\\|string\\|false\\|null given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_multiplesubprojects.php
@@ -26777,12 +26737,12 @@ parameters:
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
-			message: "#^Method SequenceIndependenceTestCase\\:\\:SubmitFiles\\(\\) has no return type specified\\.$#"
+			message: "#^Method SequenceIndependenceTestCase\\:\\:SubmitXMLFiles\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
-			message: "#^Method SequenceIndependenceTestCase\\:\\:SubmitFiles\\(\\) has parameter \\$file_order with no type specified\\.$#"
+			message: "#^Method SequenceIndependenceTestCase\\:\\:SubmitXMLFiles\\(\\) has parameter \\$file_order with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_sequenceindependence.php
 
@@ -28650,17 +28610,17 @@ parameters:
 			path: app/cdash/tests/trilinos_submission_test.php
 
 		-
-			message: "#^Method TrilinosSubmissionTestCase\\:\\:submitFiles\\(\\) has no return type specified\\.$#"
+			message: "#^Method TrilinosSubmissionTestCase\\:\\:submitTrilinosFiles\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/trilinos_submission_test.php
 
 		-
-			message: "#^Method TrilinosSubmissionTestCase\\:\\:submitFiles\\(\\) has parameter \\$test with no type specified\\.$#"
+			message: "#^Method TrilinosSubmissionTestCase\\:\\:submitTrilinosFiles\\(\\) has parameter \\$test with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/trilinos_submission_test.php
 
 		-
-			message: "#^Method TrilinosSubmissionTestCase\\:\\:submitFiles\\(\\) has parameter \\$trilinosOnly with no type specified\\.$#"
+			message: "#^Method TrilinosSubmissionTestCase\\:\\:submitTrilinosFiles\\(\\) has parameter \\$trilinosOnly with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/trilinos_submission_test.php
 
