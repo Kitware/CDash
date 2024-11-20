@@ -120,17 +120,6 @@ class DatabaseCleanupUtils
         $db = Database::getInstance();
         $buildid_prepare_array = $db->createPreparedArray(count($buildids));
 
-        // Remove the buildfailureargument
-        $buildfailureids = [];
-        $buildfailure = DB::select("SELECT id FROM buildfailure WHERE buildid IN $buildid_prepare_array", $buildids);
-        foreach ($buildfailure as $buildfailure_array) {
-            $buildfailureids[] = intval($buildfailure_array->id);
-        }
-        if (count($buildfailureids) > 0) {
-            $buildfailure_prepare_array = $db->createPreparedArray(count($buildfailureids));
-            DB::delete("DELETE FROM buildfailure2argument WHERE buildfailureid IN $buildfailure_prepare_array", $buildfailureids);
-        }
-
         // Delete buildfailuredetails that are only used by builds that are being
         // deleted.
         DB::delete("
@@ -242,7 +231,6 @@ class DatabaseCleanupUtils
         if (count($updateids) > 0) {
             $updateids_prepare_array = $db->createPreparedArray(count($updateids));
             DB::delete("DELETE FROM buildupdate WHERE id IN $updateids_prepare_array", $updateids);
-            DB::delete("DELETE FROM updatefile WHERE updateid IN $updateids_prepare_array", $updateids);
         }
 
         // Delete tests and testoutputs that are not shared.
@@ -303,7 +291,6 @@ class DatabaseCleanupUtils
                     $imgids_prepare_array = $db->createPreparedArray(count($imgids));
                     DB::delete("DELETE FROM image WHERE id IN $imgids_prepare_array", $imgids);
                 }
-                self::deleteRowsChunked('DELETE FROM test2image WHERE outputid IN ', $testoutputs_to_delete);
             }
         }
 
