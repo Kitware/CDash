@@ -129,7 +129,6 @@ class DatabaseCleanupUtils
         if (count($buildfailureids) > 0) {
             $buildfailure_prepare_array = $db->createPreparedArray(count($buildfailureids));
             DB::delete("DELETE FROM buildfailure2argument WHERE buildfailureid IN $buildfailure_prepare_array", $buildfailureids);
-            DB::delete("DELETE FROM label2buildfailure WHERE buildfailureid IN $buildfailure_prepare_array", $buildfailureids);
         }
 
         // Delete buildfailuredetails that are only used by builds that are being
@@ -196,24 +195,6 @@ class DatabaseCleanupUtils
                 WHERE f1.c = f2.c
             )
         ", array_merge($buildids, $buildids));
-
-        // dynamicanalysisdefect
-        $dynamicanalysis = DB::select("
-                               SELECT id
-                               FROM dynamicanalysis
-                               WHERE buildid IN $buildid_prepare_array
-                           ", $buildids);
-
-        $dynids = [];
-        foreach ($dynamicanalysis as $dynamicanalysis_array) {
-            $dynids[] = intval($dynamicanalysis_array->id);
-        }
-
-        if (count($dynids) > 0) {
-            $dynids_prepare_array = $db->createPreparedArray(count($dynids));
-            DB::delete("DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid IN $dynids_prepare_array", $dynids);
-            DB::delete("DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid IN $dynids_prepare_array", $dynids);
-        }
 
         // Delete the note if not shared
         DB::delete("
@@ -349,7 +330,6 @@ class DatabaseCleanupUtils
         if (count($fileids) > 0) {
             $fileids_prepare_array = $db->createPreparedArray(count($fileids));
             DB::delete("DELETE FROM uploadfile WHERE id IN $fileids_prepare_array", $fileids);
-            DB::delete("DELETE FROM build2uploadfile WHERE fileid IN $fileids_prepare_array", $fileids);
         }
 
         // Remove any children of these builds.
