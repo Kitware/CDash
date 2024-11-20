@@ -3,15 +3,13 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 class MisassignedConfigureTestCase extends KWWebTestCase
 {
-    private Project $project;
+    use CreatesSubmissions;
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    private Project $project;
 
     public function __destruct()
     {
@@ -34,8 +32,10 @@ class MisassignedConfigureTestCase extends KWWebTestCase
         $data_dir = dirname(__FILE__) . '/data/MultipleSubprojects/';
 
         // Submit some testing data.
-        $this->submission($this->project->Name, "{$data_dir}/Configure_bad.xml");
-        $this->submission($this->project->Name, "{$data_dir}/Build.xml");
+        $this->submitFiles($this->project->Name, [
+            "{$data_dir}/Configure_bad.xml",
+            "{$data_dir}/Build.xml",
+        ], 1);
 
         $this->assertTrue($this->checkLog($this->logfilename) !== false);
 

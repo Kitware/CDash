@@ -3,9 +3,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Database;
 use CDash\Model\Project;
+use Tests\Traits\CreatesSubmissions;
 
 class SubProjectOrderTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $project;
 
     public function __construct()
@@ -34,10 +37,7 @@ class SubProjectOrderTestCase extends KWWebTestCase
         $this->project->Fill();
 
         // Submit our testing data.
-        $test_data = dirname(__FILE__) . '/data/MultipleSubprojects/Build.xml';
-        if (!$this->submission('SubProjectOrder', $test_data)) {
-            $this->fail('failed to submit Build.xml');
-        }
+        $this->submitFiles('SubProjectOrder', [dirname(__FILE__) . '/data/MultipleSubprojects/Build.xml']);
 
         // Get the parent build we created.
         $db = Database::getInstance();

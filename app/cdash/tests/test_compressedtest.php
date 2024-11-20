@@ -3,14 +3,13 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use Tests\Traits\CreatesSubmissions;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class CompressedTestCase extends KWWebTestCase
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    use CreatesSubmissions;
 
     public function testSubmissionCompressedTest()
     {
@@ -27,16 +26,14 @@ class CompressedTestCase extends KWWebTestCase
 
         // Make sure we can submit to it.
         $file = dirname(__FILE__) . '/data/CompressedTest.xml';
-        $this->submission('TestCompressionExample', $file);
+        $this->submitFiles('TestCompressionExample', [$file]);
     }
 
     public function testGITUpdate()
     {
         echo "4. testGITUpdate\n";
         $file = dirname(__FILE__) . '/data/git-Update.xml';
-        if (!$this->submission('TestCompressionExample', $file)) {
-            return;
-        }
+        $this->submitFiles('TestCompressionExample', [$file]);
 
         // Find the buildid that has the updates we just submitted.
         $this->get($this->url . '/api/v1/index.php?project=TestCompressionExample&date=2009-12-18');

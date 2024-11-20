@@ -3,9 +3,12 @@
 use Illuminate\Support\Str;
 
 use CDash\Model\BuildGroup;
+use Tests\Traits\CreatesSubmissions;
 
 class CommitAuthorNotificationTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $dataDir;
     private $projectId;
     private $projectName = 'CommitAuthorNotification';
@@ -34,11 +37,7 @@ class CommitAuthorNotificationTestCase extends KWWebTestCase
 
     private function submitFile($file)
     {
-        $submission_file = "{$this->dataDir}/$file";
-        if (!$this->submission($this->projectName, $submission_file)) {
-            $this->fail("Submission of {$submission_file} failed");
-            return;
-        }
+        $this->submitFiles($this->projectName, ["{$this->dataDir}/$file"]);
     }
 
     public function testCommitAuthorsDoNotRecieveBuildWarningsNotifications()

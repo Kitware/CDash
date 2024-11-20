@@ -5,6 +5,7 @@
 //
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -12,10 +13,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class SubProjectNextPreviousTestCase extends KWWebTestCase
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    use CreatesSubmissions;
 
     public function testSubProjectNextPrevious()
     {
@@ -34,7 +32,9 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
              'Test_2.xml'];
         $dir = dirname(__FILE__) . '/data/SubProjectNextPrevious';
         foreach ($filesToSubmit as $file) {
-            if (!$this->submission('Trilinos', "$dir/$file")) {
+            try {
+                $this->submitFiles('Trilinos', ["$dir/$file"]);
+            } catch (Exception) {
                 $this->fail("Failed to submit $file");
                 return 1;
             }

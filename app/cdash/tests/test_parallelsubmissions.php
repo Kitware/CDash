@@ -55,7 +55,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
 
         // Re-submit the Trilinos build.
         $begin = time();
-        $this->submitFiles('ActualTrilinosSubmission', true);
+        $this->submitTrilinosFiles('ActualTrilinosSubmission', true);
         echo 'Submission took ' . (time() - $begin) . " seconds.\n";
 
         // Verify some queued jobs.

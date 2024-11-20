@@ -4,9 +4,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 use App\Models\Build;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 class LongBuildNameTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $project;
 
     public function __construct()
@@ -38,10 +41,7 @@ class LongBuildNameTestCase extends KWWebTestCase
 
         // Submit our testing data.
         $test_dir = dirname(__FILE__) . '/data/LongBuildName/';
-        $filename = "{$test_dir}/Configure.xml";
-        if (!$this->submission('LongBuildName', $filename)) {
-            $this->fail("Failed to submit {$filename}");
-        }
+        $this->submitFiles('LongBuildName', ["{$test_dir}/Configure.xml"]);
 
         // No errors in the log.
         $this->assertTrue($this->checkLog($this->logfilename) !== false);

@@ -5,6 +5,7 @@
 //
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -12,6 +13,8 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class HideColumnsTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $MethodsToTest;
 
     public function __construct()
@@ -44,9 +47,7 @@ class HideColumnsTestCase extends KWWebTestCase
     {
         // Submit our testing file.
         $rep = dirname(__FILE__) . '/data/HideColumns';
-        if (!$this->submission('InsightExample', "$rep/$method.xml")) {
-            return false;
-        }
+        $this->submitFiles('InsightExample', ["$rep/$method.xml"]);
 
         // Use our API to verify which columns will be displayed.
         $content = $this->connect($this->url . '/api/v1/index.php?project=InsightExample&date=2015-10-06');

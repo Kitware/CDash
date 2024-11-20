@@ -9,9 +9,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 class TestHistoryTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $project;
 
     public function __construct()
@@ -206,9 +209,7 @@ class TestHistoryTestCase extends KWWebTestCase
             $xml_contents = $this->generateXML($minute, $timestamp, $even, !$even);
             $test_filename = "TestHistory_Test{$i}.xml";
             file_put_contents($test_filename, $xml_contents);
-            if (!$this->submission('TestHistory', $test_filename)) {
-                $this->fail("Failed to submit $test_filename");
-            }
+            $this->submitFiles('TestHistory', [$test_filename]);
             unlink($test_filename);
         }
 

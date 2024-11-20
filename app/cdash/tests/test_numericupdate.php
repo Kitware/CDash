@@ -2,9 +2,12 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Project;
+use Tests\Traits\CreatesSubmissions;
 
 class NumericUpdateTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $project;
 
     public function __construct()
@@ -33,7 +36,7 @@ class NumericUpdateTestCase extends KWWebTestCase
         $this->project->Fill();
 
         // Submit our testing data.
-        $this->submission('NumericUpdate', dirname(__FILE__) . '/data/UpdateNumeric.xml');
+        $this->submitFiles('NumericUpdate', [dirname(__FILE__) . '/data/UpdateNumeric.xml']);
 
         // Check index.php, make sure it shows the expected revision.
         $this->get($this->url . '/api/v1/index.php?project=NumericUpdate&date=2020-06-01');

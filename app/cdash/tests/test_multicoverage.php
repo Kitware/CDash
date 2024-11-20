@@ -6,9 +6,12 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
+use Tests\Traits\CreatesSubmissions;
 
 class MultiCoverageTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $BuildId;
 
     public function __construct()
@@ -56,7 +59,9 @@ class MultiCoverageTestCase extends KWWebTestCase
         $filesToSubmit = ['Coverage.xml', 'CoverageLog-0.xml'];
         $dir = dirname(__FILE__) . '/data/MultiCoverage';
         foreach ($filesToSubmit as $file) {
-            if (!$this->submission('TrilinosDriver', "$dir/$file")) {
+            try {
+                $this->submitFiles('TrilinosDriver', ["$dir/$file"]);
+            } catch (Exception) {
                 $this->fail("Failed to submit $file");
                 return 1;
             }

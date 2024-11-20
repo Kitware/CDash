@@ -7,9 +7,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
+use Tests\Traits\CreatesSubmissions;
 
 class NoBackupTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $ConfigFile;
     protected $Originals;
 
@@ -32,10 +35,7 @@ class NoBackupTestCase extends KWWebTestCase
 
         // Submit XML file.
         $xml = dirname(__FILE__) . '/data/nobackup/Build.xml';
-        if (!$this->submission('InsightExample', $xml)) {
-            $this->fail('failed to submit Build.xml');
-            return 1;
-        }
+        $this->submitFiles('InsightExample', [$xml]);
 
         // Submit gcov.tar to test the 'PUT' submission path.
         $post_result = $this->post($this->url . '/submit.php', [

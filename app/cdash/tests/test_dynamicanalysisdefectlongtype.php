@@ -3,9 +3,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 class DynamicAnalysisDefectLongTypeTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $project;
 
     public function __construct()
@@ -35,9 +38,7 @@ class DynamicAnalysisDefectLongTypeTestCase extends KWWebTestCase
 
         // Submit our testing data.
         $file = dirname(__FILE__) . '/data/DynamicAnalysisDefectLongType/DynamicAnalysis.xml';
-        if (!$this->submission('DynamicAnalysisDefectLongType', $file)) {
-            $this->fail("Failed to submit {$file}");
-        }
+        $this->submitFiles('DynamicAnalysisDefectLongType', [$file]);
 
         // Verify type was properly recorded.
         $results = DB::select("

@@ -3,9 +3,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 class TestImagesTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $project;
 
     public function __construct()
@@ -36,7 +39,9 @@ class TestImagesTestCase extends KWWebTestCase
         // Submit our testing data.
         $test_dir = dirname(__FILE__) . '/data/TestImages/';
         for ($i = 1; $i < 3; $i++) {
-            if (!$this->submission('TestImages', "{$test_dir}/Test_{$i}.xml")) {
+            try {
+                $this->submitFiles('TestImages', ["{$test_dir}/Test_{$i}.xml"]);
+            } catch (Exception) {
                 $this->fail("Failed to submit Test_{$i}.xml");
             }
         }

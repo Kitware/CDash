@@ -6,9 +6,12 @@ use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 use CDash\Database;
+use Tests\Traits\CreatesSubmissions;
 
 class IssueCreationTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $PDO;
     protected $Builds;
     protected $Projects;
@@ -59,7 +62,9 @@ class IssueCreationTestCase extends KWWebTestCase
             'Insight_Experimental_Test.xml'];
         foreach ($filenames as $filename) {
             $file = dirname(__FILE__) . "/data/InsightExperimentalExample/$filename";
-            if (!$this->submission('IssueCreationProject', $file)) {
+            try {
+                $this->submitFiles('IssueCreationProject', [$file]);
+            } catch (Exception) {
                 $this->fail("Failed to submit $file");
             }
         }
@@ -95,10 +100,7 @@ class IssueCreationTestCase extends KWWebTestCase
         $userproject->Save();
 
         // Setup subprojects.
-        $file = dirname(__FILE__) . '/data/GithubPR/Project.xml';
-        if (!$this->submission('CDash', $file)) {
-            $this->fail("Failed to submit $file");
-        }
+        $this->submitFiles('CDash', [dirname(__FILE__) . '/data/GithubPR/Project.xml']);
 
         // Verify that administrative access to this project was not overwritten
         // by the Project.xml handler.
@@ -108,10 +110,7 @@ class IssueCreationTestCase extends KWWebTestCase
         }
 
         // Submit subproject XML file.
-        $file = dirname(__FILE__) . '/data/GithubPR/Test.xml';
-        if (!$this->submission('CDash', $file)) {
-            $this->fail("Failed to submit $file");
-        }
+        $this->submitFiles('CDash', [dirname(__FILE__) . '/data/GithubPR/Test.xml']);
 
         // Get the build we just created.
         $query =

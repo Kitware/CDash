@@ -3,9 +3,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Database;
 use CDash\Model\Project;
+use Tests\Traits\CreatesSubmissions;
 
 class JUnitHandlerTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $PDO;
     protected $Project;
 
@@ -43,9 +46,7 @@ class JUnitHandlerTestCase extends KWWebTestCase
 
         // Submit our test data.
         $xml = dirname(__FILE__) . '/data/JUNit_example.xml';
-        if (!$this->submission('JUnitHandlerProject', $xml)) {
-            $this->fail('Failed to submit test data');
-        }
+        $this->submitFiles('JUnitHandlerProject', [$xml]);
 
         // Get newly created buildid.
         $stmt = $this->PDO->query("SELECT id, stamp FROM build WHERE name = 'junit-test-build'");

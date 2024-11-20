@@ -11,9 +11,14 @@ require_once 'tests/test_branchcoverage.php';
 use App\Models\AuthToken;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Tests\Traits\CreatesSubmissions;
 
 class DeferredSubmissionsTestCase extends BranchCoverageTestCase
 {
+    use CreatesSubmissions;
+
     protected $ConfigFile;
     protected $Original;
     protected $project;
@@ -58,9 +63,11 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         file_put_contents($this->ConfigFile, "DB_DATABASE=cdash4simpletestfake\n", FILE_APPEND | LOCK_EX);
 
         // Submit the build files.
-        $this->submission($this->projectname, "$this->dataDir/Build.xml");
-        $this->submission($this->projectname, "$this->dataDir/Configure.xml");
-        $this->submission($this->projectname, "$this->dataDir/Test.xml");
+        $this->submitFiles($this->projectname, [
+            "$this->dataDir/Build.xml",
+            "$this->dataDir/Configure.xml",
+            "$this->dataDir/Test.xml",
+        ], 1);
 
         // Verify that files exist in the inbox directory.
         $this->assertEqual(3, count(Storage::files('inbox')));
@@ -71,7 +78,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Submit one more file.
         // This automatically parses the deferred files now that the database
         // is available again.
-        $this->submission($this->projectname, "$this->dataDir/Notes.xml");
+        $this->submitFiles($this->projectname, ["$this->dataDir/Notes.xml"]);
 
         // Verify the results.
         $this->verifyNormalSubmission();
@@ -82,7 +89,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->deleteLog($this->logfilename);
 
         // Delete the existing build if it exists.
-        $existing_build_row = \DB::table('build')
+        $existing_build_row = DB::table('build')
             ->where('projectid', '=', $this->project->Id)
             ->where('name', '=', 'deferred_submission')
             ->first();
@@ -103,7 +110,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
 
     private function verifyNormalSubmission()
     {
-        $build_row = \DB::table('build')
+        $build_row = DB::table('build')
             ->where('projectid', '=', $this->project->Id)
             ->where('name', '=', 'deferred_submission')
             ->first();
@@ -160,10 +167,11 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         file_put_contents($this->ConfigFile, "DB_DATABASE=cdash4simpletestfake\n", FILE_APPEND | LOCK_EX);
 
         // Submit test data with bearer token.
-        $header = ["Authorization: Bearer {$this->token}"];
-        $this->submission($this->projectname, "$this->dataDir/Build.xml", $header);
-        $this->submission($this->projectname, "$this->dataDir/Configure.xml", $header);
-        $this->submission($this->projectname, "$this->dataDir/Test.xml", $header);
+        $this->submitFiles($this->projectname, [
+            "$this->dataDir/Build.xml",
+            "$this->dataDir/Configure.xml",
+            "$this->dataDir/Test.xml",
+        ], 1, $this->token);
 
         // Verify that files exist in the inbox directory.
         $this->assertEqual(3, count(Storage::files('inbox')));
@@ -174,7 +182,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Submit one more file.
         // This automatically parses the deferred files now that the database
         // is available again.
-        $this->submission($this->projectname, "$this->dataDir/Notes.xml", $header);
+        $this->submitFiles($this->projectname, ["$this->dataDir/Notes.xml"], 1, $this->token);
 
         // Verify the results.
         $this->verifyNormalSubmission();
@@ -196,8 +204,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         file_put_contents($this->ConfigFile, "DB_DATABASE=cdash4simpletestfake\n", FILE_APPEND | LOCK_EX);
 
         // Submit test data with invalid bearer token.
-        $header = ["Authorization: Bearer asdf"];
-        $this->submission($this->projectname, "$this->dataDir/Build.xml", $header);
+        $this->submitFiles($this->projectname, ["$this->dataDir/Build.xml"], 1, 'asdf');
 
         // Verify that files exist in the inbox directory.
         $this->assertEqual(1, count(Storage::files('inbox')));
@@ -208,8 +215,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Submit one more file.
         // This automatically parses the deferred files now that the database
         // is available again.
-        $valid_header = ["Authorization: Bearer {$this->token}"];
-        $this->submission($this->projectname, "$this->dataDir/Notes.xml", $valid_header);
+        $this->submitFiles($this->projectname, ["$this->dataDir/Notes.xml"], 1, $this->token);
 
         // Verify one failed submission.
         $this->assertEqual(1, count(Storage::files('failed')));
@@ -231,8 +237,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         file_put_contents($this->ConfigFile, "DB_DATABASE=cdash4simpletestfake\n", FILE_APPEND | LOCK_EX);
 
         // Submit test data with invalid bearer token.
-        $header = [];
-        $this->submission($this->projectname, "$this->dataDir/Build.xml", $header);
+        $this->submitFiles($this->projectname, ["$this->dataDir/Build.xml"]);
 
         // Verify that files exist in the inbox directory.
         $this->assertEqual(1, count(Storage::files('inbox')));
@@ -243,8 +248,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Submit one more file.
         // This automatically parses the deferred files now that the database
         // is available again.
-        $valid_header = ["Authorization: Bearer {$this->token}"];
-        $this->submission($this->projectname, "$this->dataDir/Notes.xml", $valid_header);
+        $this->submitFiles($this->projectname, ["$this->dataDir/Notes.xml"], 1, $this->token);
 
         // Verify one failed submission.
         $this->assertEqual(1, count(Storage::files('failed')));
@@ -278,10 +282,10 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Submit one more file.
         // This automatically parses the deferred files now that the database
         // is available again.
-        $this->submission($this->projectname, "$this->dataDir/Notes.xml");
+        $this->submitFiles($this->projectname, ["$this->dataDir/Notes.xml"]);
 
         // Get the newly created buildid.
-        $build_row = \DB::table('build')
+        $build_row = DB::table('build')
             ->where('projectid', '=', $this->project->Id)
             ->where('name', '=', 'branch_coverage')
             ->first();
@@ -327,11 +331,10 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Submit one more file.
         // This automatically parses the deferred files now that the database
         // is available again.
-        $valid_header = ["Authorization: Bearer {$this->token}"];
-        $this->submission($this->projectname, "$this->dataDir/Notes.xml", $valid_header);
+        $this->submitFiles($this->projectname, ["$this->dataDir/Notes.xml"], 1, $this->token);
 
         // Get the newly created buildid.
-        $build_row = \DB::table('build')
+        $build_row = DB::table('build')
             ->where('projectid', '=', $this->project->Id)
             ->where('name', '=', 'branch_coverage')
             ->first();
@@ -380,8 +383,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Submit one more file.
         // This automatically parses the deferred files now that the database
         // is available again.
-        $valid_header = ["Authorization: Bearer {$this->token}"];
-        $this->submission($this->projectname, "$this->dataDir/Notes.xml", $valid_header);
+        $this->submitFiles($this->projectname, ["$this->dataDir/Notes.xml"], 1, $this->token);
 
         // Verify two failed submission files.
         $this->assertEqual(2, count(Storage::files('failed')));
@@ -423,8 +425,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Submit one more file.
         // This automatically parses the deferred files now that the database
         // is available again.
-        $valid_header = ["Authorization: Bearer {$this->token}"];
-        $this->submission($this->projectname, "$this->dataDir/Notes.xml", $valid_header);
+        $this->submitFiles($this->projectname, ["$this->dataDir/Notes.xml"], 1, $this->token);
 
         // Verify two failed submission files.
         $this->assertEqual(2, count(Storage::files('failed')));
@@ -466,11 +467,10 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Submit one more file.
         // This automatically parses the deferred files now that the database
         // is available again.
-        $valid_header = ["Authorization: Bearer {$this->token}"];
-        $this->submission($this->projectname, "$this->dataDir/Notes.xml", $valid_header);
+        $this->submitFiles($this->projectname, ["$this->dataDir/Notes.xml"], 1, $this->token);
 
         // Get the newly created buildid.
-        $build_row = \DB::table('build')
+        $build_row = DB::table('build')
             ->where('projectid', '=', $this->project->Id)
             ->where('name', '=', 'branch_coverage')
             ->first();
@@ -532,11 +532,10 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         // Submit one more file.
         // This automatically parses the deferred files now that the database
         // is available again.
-        $valid_header = ["Authorization: Bearer {$this->token}"];
-        $this->submission($projectname2, "$this->dataDir/Notes.xml", $valid_header);
+        $this->submitFiles($projectname2, ["$this->dataDir/Notes.xml"], 1, $this->token);
 
         // Get the newly created buildid.
-        $build_row = \DB::table('build')
+        $build_row = DB::table('build')
             ->where('projectid', '=', $project2->Id)
             ->where('name', '=', 'branch_coverage')
             ->first();

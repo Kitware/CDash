@@ -5,6 +5,7 @@
 //
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -12,20 +13,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class ExternalLinksFromTestsTestCase extends KWWebTestCase
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    use CreatesSubmissions;
 
     public function testExternalLinksFromTests()
     {
         // Submit our testing data.
-        $file_to_submit =
-            dirname(__FILE__) . '/data/ExternalLinksFromTests/Test.xml';
-        if (!$this->submission('InsightExample', $file_to_submit)) {
-            $this->fail("Failed to submit $file_to_submit");
-            return 1;
-        }
+        $this->submitFiles('InsightExample', [dirname(__FILE__) . '/data/ExternalLinksFromTests/Test.xml']);
 
         // Get the IDs for the build and test that we just created.
         $result = DB::select(

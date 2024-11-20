@@ -5,6 +5,7 @@
 //
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -12,6 +13,8 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class BuildDetailsTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $testDataDir;
     protected $testDataFiles;
     protected $builds;
@@ -26,7 +29,9 @@ class BuildDetailsTestCase extends KWWebTestCase
         $this->createProject(['Name' => 'BuildDetails']);
 
         foreach ($this->testDataFiles as $testDataFile) {
-            if (!$this->submission('BuildDetails', $this->testDataDir . '/' . $testDataFile)) {
+            try {
+                $this->submitFiles('BuildDetails', [$this->testDataDir . '/' . $testDataFile]);
+            } catch (Exception) {
                 $this->fail('Failed to submit ' . $testDataFile);
                 return 1;
             }
@@ -107,11 +112,7 @@ class BuildDetailsTestCase extends KWWebTestCase
     // This will be specific to a test xml
     public function testViewTestReturnsProperFormat()
     {
-        $testDataFile = $this->testDataDir . '/' . 'Insight_Experimental_Test.xml';
-        if (!$this->submission('BuildDetails', $testDataFile)) {
-            $this->fail('Failed to submit ' . $testDataFile);
-            return 1;
-        }
+        $this->submitFiles('BuildDetails', [$this->testDataDir . '/' . 'Insight_Experimental_Test.xml']);
 
         $buildId = DB::select("SELECT id FROM build WHERE name = 'BuildDetails-Linux-g++-4.1-LesionSizingSandbox_Debug'")[0];
         $json = $this->get("{$this->url}/api/v1/viewTest.php?buildid={$buildId->id}");
@@ -131,11 +132,7 @@ class BuildDetailsTestCase extends KWWebTestCase
 
     public function testViewTestReturnsProperFormatForParentBuilds()
     {
-        $testDataFile = $this->testDataDir . '/' . 'Insight_Experimental_Test_Subbuild.xml';
-        if (!$this->submission('BuildDetails', $testDataFile)) {
-            $this->fail('Failed to submit ' . $testDataFile);
-            return 1;
-        }
+        $this->submitFiles('BuildDetails', [$this->testDataDir . '/' . 'Insight_Experimental_Test_Subbuild.xml']);
 
         $buildId = DB::select("SELECT id FROM build WHERE name = 'BuildDetails-Linux-g++-4.1-LesionSizingSandbox_Debug-has-subbuild' AND parentid=-1")[0];
 

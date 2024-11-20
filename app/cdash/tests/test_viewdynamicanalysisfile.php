@@ -9,13 +9,11 @@ use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Build;
 use CDash\Model\DynamicAnalysis;
 use CDash\Database;
+use Tests\Traits\CreatesSubmissions;
 
 class ViewDynamicAnalysisFileTestCase extends KWWebTestCase
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    use CreatesSubmissions;
 
     public function testViewDynamicAnalysisFile()
     {
@@ -52,7 +50,9 @@ class ViewDynamicAnalysisFileTestCase extends KWWebTestCase
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         foreach ($filenames as $filename) {
             $file = "$rep/$filename-DA.xml";
-            if (!$this->submission('InsightExample', $file)) {
+            try {
+                $this->submitFiles('InsightExample', [$file]);
+            } catch (Exception) {
                 $this->fail("Failed to submit $file");
             }
         }

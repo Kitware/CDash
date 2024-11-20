@@ -5,14 +5,14 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
-
 use CDash\Database;
 use CDash\Model\BuildConfigure;
+use Tests\Traits\CreatesSubmissions;
 
 class ConfigureWarningTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $ProjectId;
 
     public function __construct()
@@ -62,8 +62,8 @@ class ConfigureWarningTestCase extends KWWebTestCase
 
         // Submit our testing data.
         $dir = dirname(__FILE__) . '/data/ConfigureWarnings';
-        $this->submission('ConfigureWarningProject', "$dir/1.xml");
-        $this->submission('ConfigureWarningProject', "$dir/2.xml");
+        $this->submitFiles('ConfigureWarningProject', ["$dir/1.xml"]);
+        $this->submitFiles('ConfigureWarningProject', ["$dir/2.xml"]);
 
         // Make sure the +1 warning gets associated with the correct build.
         $db = Database::getInstance();

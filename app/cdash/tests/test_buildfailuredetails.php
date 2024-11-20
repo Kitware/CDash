@@ -5,6 +5,7 @@
 //
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -12,6 +13,8 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class BuildFailureDetailsTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $OriginalConfigSettings;
 
     public function __construct()
@@ -26,14 +29,8 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
 
         // Submit our test data.
         $rep = dirname(__FILE__) . '/data/BuildFailureDetails';
-        if (!$this->submission('EmailProjectExample', "$rep/Build_1.xml")) {
-            $this->fail('failed to submit Build_1.xml');
-            return 1;
-        }
-        if (!$this->submission('EmailProjectExample', "$rep/Build_2.xml")) {
-            $this->fail('failed to submit Build_2.xml');
-            return 1;
-        }
+        $this->submitFiles('EmailProjectExample', ["$rep/Build_1.xml"]);
+        $this->submitFiles('EmailProjectExample', ["$rep/Build_2.xml"]);
 
         // Get the buildids that we just created so we can delete them later.
         $buildids = [];

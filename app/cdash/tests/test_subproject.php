@@ -15,8 +15,12 @@
 =========================================================================*/
 
 
+use Tests\Traits\CreatesSubmissions;
+
 class SubProjectTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     public function __construct()
     {
         parent::__construct();
@@ -37,10 +41,7 @@ class SubProjectTestCase extends KWWebTestCase
     {
         $this->deleteLog($this->logfilename);
         $rep = dirname(__FILE__) . '/data/SubProjectExample';
-        $file = "$rep/Project_1.xml";
-        if (!$this->submission('SubProjectExample', $file)) {
-            return;
-        }
+        $this->submitFiles('SubProjectExample', ["$rep/Project_1.xml"]);
         if (!$this->checkLog($this->logfilename)) {
             return;
         }
@@ -51,10 +52,7 @@ class SubProjectTestCase extends KWWebTestCase
     {
         $this->deleteLog($this->logfilename);
         $rep = dirname(__FILE__) . '/data/SubProjectExample';
-        $file = "$rep/Build_1.xml";
-        if (!$this->submission('SubProjectExample', $file)) {
-            return;
-        }
+        $this->submitFiles('SubProjectExample', ["$rep/Build_1.xml"]);
         $url = url('/');
         $expected = [
             'simpletest@localhost',
@@ -93,10 +91,7 @@ class SubProjectTestCase extends KWWebTestCase
     {
         $this->deleteLog($this->logfilename);
         $rep = dirname(__FILE__) . '/data/SubProjectExample';
-        $file = "$rep/Test_1.xml";
-        if (!$this->submission('SubProjectExample', $file)) {
-            return;
-        }
+        $this->submitFiles('SubProjectExample', ["$rep/Test_1.xml"]);
         $url = url('/');
         $expected = [
             'nox-noemail@noemail',

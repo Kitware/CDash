@@ -5,9 +5,12 @@ use App\Models\Build;
 use App\Models\Configure;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 class ConfigureAppendTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $project;
 
     public function __construct()
@@ -39,7 +42,9 @@ class ConfigureAppendTestCase extends KWWebTestCase
         $test_dir = dirname(__FILE__) . '/data/ConfigureAppend/';
         $files = ['Configure_1.xml', 'Configure_2.xml'];
         foreach ($files as $file) {
-            if (!$this->submission('ConfigureAppend', "{$test_dir}/{$file}")) {
+            try {
+                $this->submitFiles('ConfigureAppend', ["{$test_dir}/{$file}"]);
+            } catch (Exception) {
                 $this->fail("Failed to submit {$file}");
             }
         }

@@ -52,8 +52,8 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
     {
         if ($this->createProjects()) {
             $this->setEmailCommitters('Trilinos', 1);
-            $this->submitFiles('ActualTrilinosSubmission');
-            $this->submitFiles('ActualTrilinosSubmissionTestData');
+            $this->submitTrilinosFiles('ActualTrilinosSubmission');
+            $this->submitTrilinosFiles('ActualTrilinosSubmissionTestData');
             $this->verifyResults();
             $this->setEmailCommitters('Trilinos', 0);
             $this->deleteLog($this->logfilename);

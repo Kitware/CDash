@@ -5,9 +5,12 @@ use App\Utils\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
+use Tests\Traits\CreatesSubmissions;
 
 class ConsistentTestingDayTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $project;
 
     public function __construct()
@@ -38,8 +41,8 @@ class ConsistentTestingDayTestCase extends KWWebTestCase
 
         // Submit our testing data.
         $dir = dirname(__FILE__) . '/data/TestingDay';
-        $this->submission('ConsistentTestingDay', "$dir/Test_1.xml");
-        $this->submission('ConsistentTestingDay', "$dir/Test_2.xml");
+        $this->submitFiles('ConsistentTestingDay', ["$dir/Test_1.xml"]);
+        $this->submitFiles('ConsistentTestingDay', ["$dir/Test_2.xml"]);
 
         // Get the builds we created.
         $db = Database::getInstance();
@@ -96,7 +99,7 @@ class ConsistentTestingDayTestCase extends KWWebTestCase
         // Different time zone case.
         $this->project->SetNightlyTime('10:00:00 America/Denver');
         $this->project->Save();
-        $this->submission('ConsistentTestingDay', "$dir/Build_1.xml");
+        $this->submitFiles('ConsistentTestingDay', ["$dir/Build_1.xml"]);
 
         // This build occurred slightly before the nightly start time,
         // so verify it shows up on the correct day.
@@ -119,7 +122,7 @@ class ConsistentTestingDayTestCase extends KWWebTestCase
         ], true);
 
         // Submit Upload.xml file.
-        $this->submission('ConsistentTestingDay', "$dir/Upload.xml");
+        $this->submitFiles('ConsistentTestingDay', ["$dir/Upload.xml"]);
 
         // Verify that it appears on the correct date.
         $this->get("{$this->url}/api/v1/index.php?project=ConsistentTestingDay&date=2023-11-29");

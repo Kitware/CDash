@@ -5,6 +5,7 @@
 //
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -12,6 +13,8 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class ReplaceBuildTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $OriginalConfigSettings;
 
     public function __construct()
@@ -27,10 +30,7 @@ class ReplaceBuildTestCase extends KWWebTestCase
 
         // Submit the first test file.
         $rep = dirname(__FILE__) . '/data/ReplaceBuild';
-        if (!$this->submission('EmailProjectExample', "$rep/Build_1.xml")) {
-            $this->fail('failed to submit Build_1.xml');
-            return 1;
-        }
+        $this->submitFiles('EmailProjectExample', ["$rep/Build_1.xml"]);
 
         // Verify details about the build that we just created.
         $row = DB::select("SELECT id, generator FROM build WHERE name='ReplaceBuild'")[0];
@@ -50,11 +50,7 @@ class ReplaceBuildTestCase extends KWWebTestCase
         }
 
         // Submit the second test file.
-        if (!$this->submission('EmailProjectExample', "$rep/Build_2.xml")) {
-            $error_msg = 'Failed to submit Build_2.xml';
-            echo "$error_msg\n";
-            $success = false;
-        }
+        $this->submitFiles('EmailProjectExample', ["$rep/Build_2.xml"]);
 
         // Make sure the first build doesn't exist anymore.
         $query = DB::select("SELECT * FROM build WHERE id=$first_buildid");

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -8,6 +9,8 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $buildName;
 
     public function __construct()
@@ -36,10 +39,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
         $rep = dirname(__FILE__) . '/data/TimeoutsAndMissingTests';
         $file = "{$rep}/5_test.xml";
 
-        if (!$this->submission('EmailProjectExample', $file)) {
-            $this->fail('submission of test data failed');
-            return;
-        }
+        $this->submitFiles('EmailProjectExample', [$file]);
 
         if (!$this->checkLog($this->logfilename)) {
             $this->fail('Errors in log after submit');
@@ -101,10 +101,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
         $rep = dirname(__FILE__) . '/data/TimeoutsAndMissingTests';
         $file = "{$rep}/4_test.xml";
 
-        if (!$this->submission('EmailProjectExample', $file)) {
-            $this->fail('failed to submit test data');
-            return;
-        }
+        $this->submitFiles('EmailProjectExample', [$file]);
         $url = url('/');
         $expected = [
             'simpletest@localhost',
