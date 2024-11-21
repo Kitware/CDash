@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use AbstractSubmissionHandler;
+use ActionableBuildInterface;
 use App\Utils\UnparsedSubmissionProcessor;
 use App\Models\SuccessfulJob;
 
@@ -141,8 +142,7 @@ class ProcessSubmission implements ShouldQueue
 
         // Resubmit the file if necessary.
         if (is_a($handler, 'DoneHandler') && $handler->shouldRequeue()) {
-            $build = $this->getBuildFromHandler($handler);
-            $this->requeueSubmissionFile($build->Id);
+            $this->requeueSubmissionFile($handler->getBuild()->Id);
         }
 
         if ((int) config('cdash.backup_timeframe') === 0) {
@@ -171,7 +171,7 @@ class ProcessSubmission implements ShouldQueue
     /**
      * The job failed to process.
      */
-    public function failed(\Throwable $exception) : void
+    public function failed(\Throwable $exception): void
     {
         Log::warning("Failed to process {$this->filename} with message: {$exception}");
         $this->renameSubmissionFile("inprogress/{$this->filename}", "failed/{$this->filename}");
@@ -185,8 +185,7 @@ class ProcessSubmission implements ShouldQueue
      * This method could be running on a worker that is either remote or local, so it accepts
      * a file handle or a filename that it can query the CDash API for.
      **/
-    private function doSubmit($filename, $projectid, $buildid = null,
-        $expected_md5 = '')
+    private function doSubmit($filename, $projectid, $buildid = null, $expected_md5 = ''): AbstractSubmissionHandler|UnparsedSubmissionProcessor|false
     {
         $filehandle = $this->getSubmissionFileHandle($filename);
         if ($filehandle === false) {
@@ -215,13 +214,11 @@ class ProcessSubmission implements ShouldQueue
             return false;
         }
 
-        $build = $this->getBuildFromHandler($handler);
-        if (!is_null($build)) {
-            $pendingSubmissions = new PendingSubmissions();
-            $pendingSubmissions->Build = $build;
-            if ($pendingSubmissions->Exists()) {
-                $pendingSubmissions->Decrement();
-            }
+        $build = $handler->getBuild();
+        $pendingSubmissions = new PendingSubmissions();
+        $pendingSubmissions->Build = $build;
+        if ($pendingSubmissions->Exists()) {
+            $pendingSubmissions->Decrement();
         }
 
         // Set status on repository.
@@ -237,12 +234,7 @@ class ProcessSubmission implements ShouldQueue
         }
 
         // Send more general build emails.
-        if (is_a($handler, 'TestingHandler') ||
-            is_a($handler, 'BuildHandler') ||
-            is_a($handler, 'ConfigureHandler') ||
-            is_a($handler, 'DynamicAnalysisHandler') ||
-            is_a($handler, 'UpdateHandler')
-        ) {
+        if ($handler instanceof ActionableBuildInterface) {
             sendemail($handler, intval($projectid));
         }
 
@@ -291,20 +283,5 @@ class ProcessSubmission implements ShouldQueue
             \Log::error('Failed to get a file handle for submission (was type ' . gettype($filename) . ')');
             return false;
         }
-    }
-
-    private function getBuildFromHandler(AbstractSubmissionHandler $handler)
-    {
-        $build = null;
-        $builds = $handler->getBuilds();
-        if (count($builds) > 1) {
-            // More than one build referenced by the handler.
-            // Return the parent build.
-            $build = new Build();
-            $build->Id = $builds[0]->GetParentId();
-        } elseif (count($builds) === 1 && $builds[0] instanceof Build) {
-            $build = $builds[0];
-        }
-        return $build;
     }
 }

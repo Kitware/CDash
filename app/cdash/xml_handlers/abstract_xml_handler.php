@@ -16,6 +16,7 @@
 
 use App\Models\Site;
 use App\Utils\Stack;
+use CDash\Model\Build;
 use CDash\Model\Project;
 
 abstract class AbstractXmlHandler extends AbstractSubmissionHandler
@@ -26,12 +27,10 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
     protected $SubProjectName;
 
     private $ModelFactory;
-    private Project $Project;
 
-    public function __construct($projectid)
+    public function __construct(Build|Project $init)
     {
-        $this->Project = new Project();
-        $this->Project->Id = $projectid;
+        parent::__construct($init);
 
         $this->stack = new Stack();
     }

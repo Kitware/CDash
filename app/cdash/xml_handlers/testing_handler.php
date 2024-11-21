@@ -17,6 +17,7 @@ use CDash\Model\Image;
 use CDash\Model\Label;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use CDash\Model\Project;
 use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
 use CDash\Submission\CommitAuthorHandlerTrait;
@@ -55,9 +56,9 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
     private $NumberTestsPassed;
 
     /** Constructor */
-    public function __construct($projectID)
+    public function __construct(Project $project)
     {
-        parent::__construct($projectID);
+        parent::__construct($project);
         $this->Builds = [];
         $this->SubProjects = [];
         $this->NumberTestsFailed = [];
@@ -390,12 +391,15 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         $this->Builds[$this->SubProjectName] = $build;
     }
 
-    /**
-     * @return Build[]
-     */
-    public function getBuilds(): array
+    public function getBuild(): Build
     {
-        return array_values($this->Builds);
+        if (count($this->Builds) > 1) {
+            $build = new Build();
+            $build->Id = array_values($this->Builds)[0]->GetParentId();
+            return $build;
+        } else {
+            return array_values($this->Builds)[0];
+        }
     }
 
     public function GetBuildCollection(): BuildCollection

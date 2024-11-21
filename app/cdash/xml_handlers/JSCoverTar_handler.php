@@ -26,11 +26,9 @@ class JSCoverTarHandler extends AbstractSubmissionHandler
 {
     private $CoverageSummaries;
 
-    public function __construct($buildid)
+    public function __construct(Build $build)
     {
-        $this->Build = new Build();
-        $this->Build->Id = $buildid;
-        $this->Build->FillFromId($this->Build->Id);
+        parent::__construct($build);
 
         $this->CoverageSummaries = [];
         $coverageSummary = new CoverageSummary();

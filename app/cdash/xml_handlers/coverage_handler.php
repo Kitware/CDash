@@ -22,6 +22,7 @@ use CDash\Model\CoverageSummary;
 use CDash\Model\Label;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use CDash\Model\Project;
 use CDash\Model\SubProject;
 
 class CoverageHandler extends AbstractXmlHandler
@@ -36,10 +37,9 @@ class CoverageHandler extends AbstractXmlHandler
     private $Label;
 
     /** Constructor */
-    public function __construct($projectID)
+    public function __construct(Project $project)
     {
-        parent::__construct($projectID);
-        $this->Build = new Build();
+        parent::__construct($project);
         $this->Site = new Site();
         $this->Coverages = [];
         $this->CoverageSummaries = [];

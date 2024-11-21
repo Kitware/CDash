@@ -17,6 +17,7 @@
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
 use CDash\Model\PendingSubmissions;
+use CDash\Model\Project;
 use CDash\Model\Repository;
 
 class DoneHandler extends AbstractXmlHandler
@@ -26,10 +27,9 @@ class DoneHandler extends AbstractXmlHandler
     private $Requeue;
     public $backupFileName;
 
-    public function __construct($projectID)
+    public function __construct(Project $project)
     {
-        parent::__construct($projectID);
-        $this->Build = new Build();
+        parent::__construct($project);
         $this->FinalAttempt = false;
         $this->PendingSubmissions = new PendingSubmissions();
         $this->Requeue = false;

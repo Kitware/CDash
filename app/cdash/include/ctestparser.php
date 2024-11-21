@@ -62,7 +62,7 @@ function generateBackupFileName($projectname, $subprojectname, $buildname,
 }
 
 /** Function to handle new style submissions via HTTP PUT */
-function parse_put_submission($filehandler, $projectid, $expected_md5, int|null $buildid)
+function parse_put_submission($filehandler, $projectid, $expected_md5, int|null $buildid): AbstractSubmissionHandler|false
 {
     $db = Database::getInstance();
 
@@ -118,7 +118,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, int|null 
     if (stream_resolve_include_path($include_file) === false || !in_array($buildfile->type, $valid_types, true)) {
         Log::error("Project: $projectid.  No handler include file for {$buildfile->type} (tried $include_file)");
         $buildfile->delete();
-        return true;
+        return false;
     }
     require_once $include_file;
 
@@ -127,9 +127,12 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, int|null 
     if (!class_exists($className)) {
         Log::error("Project: $projectid.  No handler class for {$buildfile->type}");
         $buildfile->delete();
-        return true;
+        return false;
     }
-    $handler = new $className($buildfile->buildid);
+
+    $build = new \CDash\Model\Build();
+    $build->Id = $buildfile->buildid;
+    $handler = new $className($build);
 
     // Parse the file.
     if (file_exists($filename)) {
@@ -152,12 +155,12 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, int|null 
 }
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($filehandle, $projectid, $expected_md5 = '', int|null $buildid=null)
+function ctest_parse($filehandle, $projectid, $expected_md5 = '', int|null $buildid=null): AbstractSubmissionHandler|false
 {
     // Check if this is a new style PUT submission.
     try {
         $handler = parse_put_submission($filehandle, $projectid, $expected_md5, $buildid);
-        if ($handler) {
+        if ($handler !== false) {
             return $handler;
         }
     } catch (CDashParseException $e) {
@@ -171,21 +174,22 @@ function ctest_parse($filehandle, $projectid, $expected_md5 = '', int|null $buil
         $ip = $_SERVER['REMOTE_ADDR'];
     }
 
+    $Project = new Project();
+    $Project->Id = $projectid;
+
     // Figure out what type of XML file this is.
     $xml_info = SubmissionUtils::get_xml_type($filehandle);
     $filehandle = $xml_info['file_handle'];
     $handler_ref = $xml_info['xml_handler'];
     $file = $xml_info['xml_type'];
 
-    $handler = isset($handler_ref) ? new $handler_ref($projectid) : null;
+    $handler = isset($handler_ref) ? new $handler_ref($Project) : null;
 
     rewind($filehandle);
     $content = fread($filehandle, 8192);
 
     if ($handler == null) {
         add_log('error: could not create handler based on xml content', 'ctest_parse', LOG_ERR);
-        $Project = new Project();
-        $Project->Id = $projectid;
 
         $Project->SendEmailToAdmin('Cannot create handler based on XML content',
             'An XML submission from ' . $ip . ' to the project ' . get_project_name($projectid) . ' cannot be parsed. The content of the file is as follows: ' . $content);

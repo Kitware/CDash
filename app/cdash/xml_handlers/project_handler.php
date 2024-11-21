@@ -33,9 +33,9 @@ class ProjectHandler extends AbstractXmlHandler
     private $ProjectNameMatches;
 
     /** Constructor */
-    public function __construct($projectid)
+    public function __construct(Project $project)
     {
-        parent::__construct($projectid);
+        parent::__construct($project);
 
         // Only actually track stuff and write it into the database if the
         // Project.xml file's name element matches this project's name in the

@@ -27,7 +27,6 @@ use CDash\Database;
 
 class BazelJSONHandler extends AbstractSubmissionHandler
 {
-    private $BuildId;
     private $Builds;
     private $BuildErrors;
     private $CommandLine;
@@ -37,7 +36,6 @@ class BazelJSONHandler extends AbstractSubmissionHandler
     private $NumTestsFailed;
     private $NumTestsNotRun;
     private $ParentBuild;
-    private $Project;
     private $RecordingTestOutput;
     private $RecordingTestSummary;
     private $Tests;
@@ -49,19 +47,14 @@ class BazelJSONHandler extends AbstractSubmissionHandler
 
     private $PDO;
 
-    public function __construct($buildid)
+    public function __construct(Build $build)
     {
-        $this->BuildId = $buildid;
+        parent::__construct($build);
+
         $this->Builds = [];
-        $build = new Build();
-        $build->Id = $buildid;
-        $build->FillFromId($build->Id);
-        $this->Builds[''] = $build;
+        $this->Builds[''] = $this->Build;
         $this->ParentBuild = null;
 
-        $this->Project = new Project();
-        $this->Project->Id = $build->ProjectId;
-        $this->Project->Fill();
         $this->HasSubProjects = $this->Project->GetNumberOfSubProjects() > 0;
 
         $this->CommandLine = '';
@@ -526,7 +519,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                 // Skip test results with children, the output is duplicated
                 if (!array_key_exists('children', $json_array)) {
                     // By default, associate any tests with this->BuildId.
-                    $buildid = $this->BuildId;
+                    $buildid = $this->Build->Id;
                     $subproject_name = '';
                     if ($this->HasSubProjects) {
                         // But if this project is broken up into subprojects,
@@ -739,12 +732,15 @@ class BazelJSONHandler extends AbstractSubmissionHandler
         return false;
     }
 
-    /**
-     * @return Build[]
-     */
-    public function getBuilds(): array
+    public function getBuild(): Build
     {
-        return array_values($this->Builds);
+        if (count($this->Builds) > 1) {
+            $build = new Build();
+            $build->Id = array_values($this->Builds)[0]->GetParentId();
+            return $build;
+        } else {
+            return array_values($this->Builds)[0];
+        }
     }
 
     private function RecordError($build_error, $type, $subproject_name)
