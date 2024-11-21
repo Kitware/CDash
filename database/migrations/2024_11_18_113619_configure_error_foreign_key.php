@@ -11,6 +11,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        echo 'Converting configureerror.configureid to int' . PHP_EOL;
+        Schema::table('configureerror', function (Blueprint $table) {
+            $table->integer('configureid')->change();
+        });
+
         echo "Adding foreign key constraint configureerror(configureid)->configure(id)...";
         $num_deleted = DB::delete("DELETE FROM configureerror WHERE configureid NOT IN (SELECT id FROM configure)");
         echo $num_deleted . ' invalid rows deleted' . PHP_EOL;
