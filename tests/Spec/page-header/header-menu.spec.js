@@ -67,7 +67,7 @@ test('HeaderMenu has a "Statistics" link', () => {
 });
 
 test('HeaderMenu has a "Sites" link', () => {
-  const expected = `http://localhost/viewMap.php?project=TestProject&date=${today}`;
+  const expected = 'http://localhost/projects/111/sites';
   expect(component.vm.sitesUrl).toBe(expected);
   verifyLink(expected, 'Sites');
 });

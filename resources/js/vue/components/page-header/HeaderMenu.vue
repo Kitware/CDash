@@ -269,7 +269,7 @@ export default {
       }
 
       this.statisticsUrl = `${this.$baseURL}/userStatistics.php?project=${cdash.projectname_encoded}&date=${cdash.date}`;
-      this.sitesUrl = `${this.$baseURL}/viewMap.php?project=${cdash.projectname_encoded}&date=${cdash.date}${extraurl}`;
+      this.sitesUrl = `${this.$baseURL}/projects/${cdash.projectid}/sites${extraurl}`;
 
       if (cdash.home.startsWith('index.php?project=')) {
         this.homeUrl = `${this.$baseURL}/${cdash.home}`;
