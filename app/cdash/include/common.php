@@ -688,7 +688,6 @@ function get_dashboard_JSON($projectname, $date, &$response)
     $project_array['bugtrackerurl'] = $project->Id ? $project->BugTrackerUrl : 'unknown';
     $project_array['documentationurl'] = $project->Id ? $project->DocumentationUrl : 'unknown';
     $project_array['homeurl'] = $project->Id ? $project->HomeUrl : 'unknown';
-    $project_array['googletracker'] = $project->Id ? $project->GoogleTracker : 'unknown';
     $project_array['name'] = $projectname;
     $project_array['nightlytime'] =  $project->Id ? $project->NightlyTime : '00:00:00';
 
@@ -704,7 +703,6 @@ function get_dashboard_JSON($projectname, $date, &$response)
     $response['currentdate'] = TestingDay::get($project, gmdate(FMT_DATETIME));
     $response['vcs'] = make_cdash_url(htmlentities($project_array['cvsurl']));
     $response['bugtracker'] = make_cdash_url(htmlentities($project_array['bugtrackerurl']));
-    $response['googletracker'] = htmlentities($project_array['googletracker']);
     $response['documentation'] = make_cdash_url(htmlentities($project_array['documentationurl']));
     $response['projectid'] = $project->Id;
     $response['projectname'] = $project_array['name'];

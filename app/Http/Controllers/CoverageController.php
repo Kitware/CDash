@@ -199,7 +199,6 @@ final class CoverageController extends AbstractBuildController
             'cvsurl' => 'unknown',
             'bugtrackerurl' => 'unknown',
             'documentationurl' => 'unknown',
-            'googletracker' => 'unknonw',
             'name' => $projectname,
             'nightlytime' => '00:00:00',
         ];
@@ -223,7 +222,6 @@ final class CoverageController extends AbstractBuildController
   <startdate>' . date('l, F d Y H:i:s', $currentstarttime) . '</startdate>
   <svn>' . make_cdash_url(htmlentities($project_array['cvsurl'])) . '</svn>
   <bugtracker>' . make_cdash_url(htmlentities($project_array['bugtrackerurl'])) . '</bugtracker>
-  <googletracker>' . htmlentities($project_array['googletracker']) . '</googletracker>
   <documentation>' . make_cdash_url(htmlentities($project_array['documentationurl'])) . '</documentation>
   <projectid>' . $projectid . '</projectid>
   <projectname>' . $project_array['name'] . '</projectname>
