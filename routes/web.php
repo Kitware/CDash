@@ -129,6 +129,8 @@ Route::get('/generateCTestConfig.php', function (Request $request) {
     return redirect("/projects/{$projectid}/ctest_configuration", 301);
 });
 
+Route::get('/projects/{project_id}/sites', 'ProjectController@sites');
+
 Route::get('/tests/{id}', 'TestController@details');
 Route::permanentRedirect('/test/{id}', url('/tests/{id}'));
 Route::get('/testDetails.php', function (Request $request) {

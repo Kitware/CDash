@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\View\View;
 
 final class ProjectController extends AbstractProjectController
 {
@@ -192,5 +193,12 @@ final class ProjectController extends AbstractProjectController
         $stmt->execute();
         $projects = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return is_array($projects) ? $projects : [];
+    }
+
+    public function sites(int $project_id): View
+    {
+        $this->setProjectById($project_id);
+
+        return $this->view('project.sites', 'Sites');
     }
 }
