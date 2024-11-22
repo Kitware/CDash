@@ -25,7 +25,6 @@ use Illuminate\Support\Facades\Auth;
  * @property int $coveragethreshold
  * @property string $testingdataurl
  * @property string $nightlytime
- * @property string $googletracker
  * @property int $emaillowcoverage
  * @property int $emailtesttimingchanged
  * @property int $emailbrokensubmission
@@ -73,7 +72,6 @@ class Project extends Model
         'coveragethreshold',
         'testingdataurl',
         'nightlytime',
-        'googletracker',
         'emaillowcoverage',
         'emailtesttimingchanged',
         'emailbrokensubmission',

@@ -51,7 +51,6 @@ return [
     'curl_localhost_prefix' => env('CURL_LOCALHOST_PREFIX', ''),
     'daily_updates' => env('DAILY_UPDATES', true),
     'default_git_dir' => env('DEFAULT_GIT_DIRECTORY', '/cdash/_build'),
-    'default_google_analytics' => env('DEFAULT_GOOGLE_ANALYTICS', ''),
     'default_project' => env('DEFAULT_PROJECT', null),
     'delete_old_subprojects' => env('DELETE_OLD_SUBPROJECTS', true),
     'google_map_api_key' => env('GOOGLE_MAP_API_KEY', null),

@@ -63,7 +63,6 @@ class Project
     public $NightlyTime;
     public $NightlyDateTime;
     public $NightlyTimezone;
-    public $GoogleTracker;
     public $EmailLowCoverage;
     public $EmailTestTimingChanged;
     public $EmailBrokenSubmission;
@@ -266,7 +265,6 @@ class Project
             'coveragethreshold' => (int) $this->CoverageThreshold,
             'testingdataurl' => $this->TestingDataUrl ?? '',
             'nightlytime' => $this->NightlyTime ?? '',
-            'googletracker' => $this->GoogleTracker ?? '',
             'emaillowcoverage' => (int) $this->EmailLowCoverage,
             'emailtesttimingchanged' => (int) $this->EmailTestTimingChanged,
             'emailbrokensubmission' => (int) $this->EmailBrokenSubmission,
@@ -355,7 +353,6 @@ class Project
             $this->CoverageThreshold = $project->coveragethreshold;
             $this->TestingDataUrl = $project->testingdataurl;
             $this->SetNightlyTime($project->nightlytime);
-            $this->GoogleTracker = $project->googletracker;
             $this->EmailLowCoverage = $project->emaillowcoverage;
             $this->EmailTestTimingChanged = $project->emailtesttimingchanged;
             $this->EmailBrokenSubmission = $project->emailbrokensubmission;

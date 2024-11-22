@@ -1706,44 +1706,6 @@
                     <td />
                     <td>
                       <div align="right">
-                        <strong>Google Analytics Tracker:</strong>
-                      </div>
-                    </td>
-                    <td>
-                      <input
-                        id="googleTracker"
-                        v-model="cdash.project.GoogleTracker"
-                        name="googleTracker"
-                        type="text"
-                        size="30"
-                        @change="cdash.changesmade = true"
-                        @focus="showHelp('google_help')"
-                      >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
-                          :src="$baseURL + '/img/help.gif'"
-                          border="0"
-                          @mouseover="showHelp('google_help')"
-                        >
-                      </a>
-                      <span
-                        id="google_help"
-                        class="help_content"
-                      >
-                        <b>Google Analytics Tracker</b>
-                        <br>
-                        CDash supports visitor tracking through Google analytics.
-                        See “Adding Google Analytics” for more information.
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td />
-                    <td>
-                      <div align="right">
                         <strong>Show site IP addresses:</strong>
                       </div>
                     </td>

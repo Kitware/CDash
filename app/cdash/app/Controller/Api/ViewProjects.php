@@ -57,7 +57,6 @@ class ViewProjects extends \CDash\Controller\Api
 
         $response['title'] = 'Projects';
         $response['subtitle'] = 'Projects';
-        $response['googletracker'] = config('cdash.default_google_analytics');
 
         $response['showoldtoggle'] = true;
         $this->activeProjectDays = (int) config('cdash.active_project_days');
