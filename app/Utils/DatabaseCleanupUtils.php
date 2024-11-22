@@ -379,9 +379,9 @@ class DatabaseCleanupUtils
 
         $start = intval($start);
         $max = intval($max);
-
-        $total = $max - $start;
+        $total = $max - $start + 1;
         if ($total < 1) {
+            Log::info("Invalid values found for min ({$start}) and/or max ({$max}) for `{$field}` on `{$table}`");
             return;
         }
         $num_done = 0;
