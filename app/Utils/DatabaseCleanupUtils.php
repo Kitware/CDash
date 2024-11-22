@@ -392,9 +392,10 @@ class DatabaseCleanupUtils
         while (!$done) {
             $end = $start + 49999;
             $num_deleted += DB::delete("
-                DELETE FROM $table
-                WHERE $field BETWEEN $start AND $end
-                      AND $field NOT IN (SELECT $selectfield FROM $targettable)");
+                DELETE FROM {$table}
+                WHERE {$field} BETWEEN {$start} AND {$end}
+                      AND NOT EXISTS
+                      (SELECT 1 FROM {$targettable} WHERE {$targettable}.{$selectfield} = {$table}.{$field})");
             $num_done += 50000;
             if ($end >= $max) {
                 $done = true;
