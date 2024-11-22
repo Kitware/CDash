@@ -426,9 +426,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('label2dynamicanalysis', 'labelid', '=', $labelid, 1);
         $this->verify('label2test', 'labelid', '=', $labelid, 3);
 
-        echo "Check on labelid = $labelid\n";
-        return;
-
         // Remove the build.
         DatabaseCleanupUtils::removeBuild($build->Id);
 
@@ -465,7 +462,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('label2buildfailure', 'labelid', '=', $labelid, 1, true);
         $this->verify('label2coveragefile', 'labelid', '=', $labelid, 1, true);
         $this->verify('label2dynamicanalysis', 'labelid', '=', $labelid, 0, true);
-        $this->verify('label2test', 'labelid', '=', $labelid, 0, true);
+        $this->verify('label2test', 'labelid', '=', $labelid, 1, true);
         $this->verify('note', 'id', 'IN', $noteids, 1, true);
         $this->verify('summaryemail', 'buildid', '=', $build->Id, 0, true);
         $this->verify('subproject2build', 'buildid', '=', $build->Id, 0, true);
@@ -473,6 +470,9 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('testdiff', 'buildid', '=', $build->Id, 0, true);
         $this->verify('updatefile', 'updateid', '=', $updateid, 1, true);
         $this->verify('uploadfile', 'id', 'IN', $uploadfileids, 1, true);
+
+        // Remove the other build too to make this test idempotent.
+        DatabaseCleanupUtils::removeBuild($existing_build->Id);
     }
 
     public function verify($table, $field, $compare, $value, $expected, $deleted=false)

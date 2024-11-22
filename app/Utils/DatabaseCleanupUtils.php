@@ -266,8 +266,6 @@ class DatabaseCleanupUtils
             // Use array_diff to get the list of tests that should be deleted.
             $testoutputs_to_delete = array_diff($all_outputids, $testoutputs_to_save);
             if (!empty($testoutputs_to_delete)) {
-                self::deleteRowsChunked('DELETE FROM testoutput WHERE id IN ', $testoutputs_to_delete);
-
                 $testoutputs_to_delete_prepare_array = $db->createPreparedArray(count($testoutputs_to_delete));
                 // Check if the images for the test are not shared
                 $test2image = DB::select("
@@ -291,6 +289,8 @@ class DatabaseCleanupUtils
                     $imgids_prepare_array = $db->createPreparedArray(count($imgids));
                     DB::delete("DELETE FROM image WHERE id IN $imgids_prepare_array", $imgids);
                 }
+
+                self::deleteRowsChunked('DELETE FROM testoutput WHERE id IN ', $testoutputs_to_delete);
             }
         }
 
