@@ -31,6 +31,7 @@ import ViewDynamicAnalysis from './components/ViewDynamicAnalysis.vue';
 import AllProjects from './components/AllProjects.vue';
 import SubProjectDependencies from './components/SubProjectDependencies.vue';
 import BuildTestsPage from './components/BuildTestsPage.vue';
+import ProjectSitesPage from './components/ProjectSitesPage.vue';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import * as FA from '@fortawesome/fontawesome-svg-core';
@@ -60,6 +61,7 @@ const cdash_components = {
   AllProjects,
   SubProjectDependencies,
   BuildTestsPage,
+  ProjectSitesPage,
 };
 
 /**

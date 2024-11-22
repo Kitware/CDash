@@ -11,10 +11,12 @@
 |
 */
 
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 
 $routeList = ['verify' => true];
@@ -129,6 +131,15 @@ Route::get('/generateCTestConfig.php', function (Request $request) {
     return redirect("/projects/{$projectid}/ctest_configuration", 301);
 });
 
+Route::get('/projects/{project_id}/sites', 'ProjectController@sites')->whereNumber('project_id');
+Route::get('/viewMap.php', function (Request $request) {
+    $project = Project::where('name', $request->query('project'))->first();
+    if ($project === null || Gate::denies('view', $project)) {
+        abort(403, 'Unknown project');
+    }
+    return redirect("/projects/{$project->id}/sites", 301);
+});
+
 Route::get('/tests/{id}', 'TestController@details');
 Route::permanentRedirect('/test/{id}', url('/tests/{id}'));
 Route::get('/testDetails.php', function (Request $request) {
@@ -193,8 +204,6 @@ Route::get('/viewSite.php', function (Request $request) {
     $siteid = $request->query('siteid');
     return redirect("/sites/$siteid", 301);
 });
-
-Route::get('/viewMap.php', 'MapController@viewMap');
 
 Route::get('/viewDynamicAnalysisFile.php', 'DynamicAnalysisController@viewDynamicAnalysisFile');
 

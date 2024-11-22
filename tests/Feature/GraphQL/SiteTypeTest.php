@@ -1049,4 +1049,119 @@ class SiteTypeTest extends TestCase
             ],
         ], true);
     }
+
+    public function testNoSiteMaintainers(): void
+    {
+        $this->sites['site1'] = $this->makeSite();
+
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid(),
+            'siteid' => $this->sites['site1']->id,
+        ]);
+
+        $this->graphQL('
+            query($projectid: ID) {
+                project(id: $projectid) {
+                    name
+                    sites {
+                        edges {
+                            node {
+                                name
+                                maintainers {
+                                    edges {
+                                        node {
+                                            id
+                                            email
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'projectid' => $this->projects['public1']->id,
+        ])->assertJson([
+            'data' => [
+                'project' => [
+                    'name' => $this->projects['public1']->name,
+                    'sites' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => $this->sites['site1']->name,
+                                    'maintainers' => [],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testSiteMaintainer(): void
+    {
+        $this->sites['site1'] = $this->makeSite();
+
+        $this->sites['site1']->maintainers()->attach($this->users['normal']);
+
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid(),
+            'siteid' => $this->sites['site1']->id,
+        ]);
+
+        $this->graphQL('
+            query($projectid: ID) {
+                project(id: $projectid) {
+                    name
+                    sites {
+                        edges {
+                            node {
+                                name
+                                maintainers {
+                                    edges {
+                                        node {
+                                            id
+                                            email
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'projectid' => $this->projects['public1']->id,
+        ])->assertJson([
+            'data' => [
+                'project' => [
+                    'name' => $this->projects['public1']->name,
+                    'sites' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => $this->sites['site1']->name,
+                                    'maintainers' => [
+                                        'edges' => [
+                                            [
+                                                'node' => [
+                                                    'id' => (string) $this->users['normal']->id,
+                                                    'email' => $this->users['normal']->email,
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
 }

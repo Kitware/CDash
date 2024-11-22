@@ -329,11 +329,8 @@ set_tests_properties(viewdynamicanalysis PROPERTIES DEPENDS viewconfigure)
 add_php_test(viewdynamicanalysisfile)
 set_tests_properties(viewdynamicanalysisfile PROPERTIES DEPENDS viewdynamicanalysis)
 
-add_php_test(viewmap)
-set_tests_properties(viewmap PROPERTIES DEPENDS viewdynamicanalysisfile)
-
 add_php_test(buildmodel)
-set_tests_properties(buildmodel PROPERTIES DEPENDS viewmap)
+set_tests_properties(buildmodel PROPERTIES DEPENDS viewdynamicanalysisfile)
 
 add_unit_test(/CDash/Model/PendingSubmissions)
 set_tests_properties(/CDash/Model/PendingSubmissions PROPERTIES DEPENDS buildmodel)

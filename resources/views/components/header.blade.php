@@ -137,7 +137,7 @@ $hideRegistration = config('auth.user_registration_form_enabled') === false;
                                 </a>
                             </li>
                             <li class="endsubmenu">
-                                <a class="cdash-link" ng-href="{{ url('/viewMap.php') }}?project=@{{::cdash.projectname_encoded}}&date=@{{::cdash.date}}@{{::cdash.extraurl}}">
+                                <a class="cdash-link" ng-href="{{ url('/projects') }}/@{{::cdash.projectid}}/sites@{{::cdash.extraurl}}">
                                     Sites
                                 </a>
                             </li>

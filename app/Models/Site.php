@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\QueryException;
@@ -61,6 +62,14 @@ class Site extends Model
             ->ofMany(['timestamp' => 'max'], function (Builder $query) use ($date) {
                 $query->where('timestamp', '<=', $date ?? Carbon::maxValue());
             });
+    }
+
+    /**
+     * @return BelongsToMany<User>
+     */
+    public function maintainers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'site2user', 'siteid', 'userid');
     }
 
     public function save(array $options = []): bool
