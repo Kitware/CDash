@@ -421,6 +421,9 @@ type Site {
   "The most recent information we have about this site."
   # TODO: Figure out how to support the date parameter. Perhaps it would be better to use a scope instead.
   mostRecentInformation: SiteInformation @hasOne
+
+  "The users who have signed up to maintain this site."
+  maintainers: [User!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
 }
 
 input SiteFilterInput {
