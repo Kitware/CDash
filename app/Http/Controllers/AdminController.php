@@ -331,7 +331,6 @@ final class AdminController extends AbstractController
         @$ComputeTestTiming = $_POST['ComputeTestTiming'];
         @$ComputeUpdateStatistics = $_POST['ComputeUpdateStatistics'];
 
-        @$Cleanup = $_POST['Cleanup'];
         @$Dependencies = $_POST['Dependencies'];
         @$Audit = $_POST['Audit'];
         @$ClearAudit = $_POST['Clear'];
@@ -375,55 +374,6 @@ final class AdminController extends AbstractController
 
         if ($ClearAudit && file_exists($configFile)) {
             unlink($configFile);
-        }
-
-
-        /* Cleanup the database */
-        if ($Cleanup) {
-            self::delete_unused_rows('banner', 'projectid', 'project');
-            self::delete_unused_rows('blockbuild', 'projectid', 'project');
-            self::delete_unused_rows('build', 'projectid', 'project');
-            self::delete_unused_rows('buildgroup', 'projectid', 'project');
-            self::delete_unused_rows('labelemail', 'projectid', 'project');
-            self::delete_unused_rows('project2repositories', 'projectid', 'project');
-            self::delete_unused_rows('dailyupdate', 'projectid', 'project');
-            self::delete_unused_rows('subproject', 'projectid', 'project');
-            self::delete_unused_rows('coveragefilepriority', 'projectid', 'project');
-            self::delete_unused_rows('user2project', 'projectid', 'project');
-            self::delete_unused_rows('userstatistics', 'projectid', 'project');
-
-            self::delete_unused_rows('build2configure', 'buildid', 'build');
-            self::delete_unused_rows('build2note', 'buildid', 'build');
-            self::delete_unused_rows('build2test', 'buildid', 'build');
-            self::delete_unused_rows('buildemail', 'buildid', 'build');
-            self::delete_unused_rows('builderror', 'buildid', 'build');
-            self::delete_unused_rows('builderrordiff', 'buildid', 'build');
-            self::delete_unused_rows('buildfailure', 'buildid', 'build');
-            self::delete_unused_rows('buildfailuredetails', 'id', 'buildfailure', 'detailsid');
-            self::delete_unused_rows('buildtesttime', 'buildid', 'build');
-            self::delete_unused_rows('configure', 'id', 'build2configure', 'configureid');
-            self::delete_unused_rows('configureerror', 'configureid', 'configure');
-            self::delete_unused_rows('configureerrordiff', 'buildid', 'build');
-            self::delete_unused_rows('coverage', 'buildid', 'build');
-            self::delete_unused_rows('coveragefilelog', 'buildid', 'build');
-            self::delete_unused_rows('coveragesummary', 'buildid', 'build');
-            self::delete_unused_rows('coveragesummarydiff', 'buildid', 'build');
-            self::delete_unused_rows('dynamicanalysis', 'buildid', 'build');
-            self::delete_unused_rows('label2build', 'buildid', 'build');
-            self::delete_unused_rows('subproject2build', 'buildid', 'build');
-            self::delete_unused_rows('summaryemail', 'buildid', 'build');
-            self::delete_unused_rows('testdiff', 'buildid', 'build');
-
-            self::delete_unused_rows('dynamicanalysisdefect', 'dynamicanalysisid', 'dynamicanalysis');
-            self::delete_unused_rows('subproject2subproject', 'subprojectid', 'subproject');
-
-            self::delete_unused_rows('dailyupdatefile', 'dailyupdateid', 'dailyupdate');
-            self::delete_unused_rows('coveragefile', 'id', 'coverage', 'fileid');
-
-            self::delete_unused_rows('dailyupdatefile', 'dailyupdateid', 'dailyupdate');
-            self::delete_unused_rows('test2image', 'outputid', 'testoutput');
-
-            $xml .= add_XML_value('alert', 'Database cleanup complete.');
         }
 
         /* Check the builds with wrong date */
@@ -505,12 +455,5 @@ final class AdminController extends AbstractController
     public function userStatistics(): View
     {
         return $this->angular_view('userStatistics');
-    }
-
-    /** Delete unused rows */
-    private static function delete_unused_rows($table, $field, $targettable, $selectfield = 'id'): void
-    {
-        DB::delete("DELETE FROM $table WHERE $field NOT IN (SELECT $selectfield AS $field FROM $targettable)");
-        echo pdo_error();
     }
 }

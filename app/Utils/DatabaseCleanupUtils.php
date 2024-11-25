@@ -266,8 +266,6 @@ class DatabaseCleanupUtils
             // Use array_diff to get the list of tests that should be deleted.
             $testoutputs_to_delete = array_diff($all_outputids, $testoutputs_to_save);
             if (!empty($testoutputs_to_delete)) {
-                self::deleteRowsChunked('DELETE FROM testoutput WHERE id IN ', $testoutputs_to_delete);
-
                 $testoutputs_to_delete_prepare_array = $db->createPreparedArray(count($testoutputs_to_delete));
                 // Check if the images for the test are not shared
                 $test2image = DB::select("
@@ -291,6 +289,8 @@ class DatabaseCleanupUtils
                     $imgids_prepare_array = $db->createPreparedArray(count($imgids));
                     DB::delete("DELETE FROM image WHERE id IN $imgids_prepare_array", $imgids);
                 }
+
+                self::deleteRowsChunked('DELETE FROM testoutput WHERE id IN ', $testoutputs_to_delete);
             }
         }
 
@@ -365,5 +365,51 @@ class DatabaseCleanupUtils
             // Sleep for a microsecond to give other processes a chance.
             usleep(1);
         }
+    }
+
+    /** Delete unused rows in batches */
+    public static function deleteUnusedRows(string $table, string $field, string $targettable, string $selectfield = 'id'): void
+    {
+        $start = DB::table($table)->min($field);
+        $max = DB::table($table)->max($field);
+        if (!is_numeric($start) || !is_numeric($max)) {
+            Log::info("Could not determine min and max for `{$field}` on `{$table}`");
+            return;
+        }
+
+        $start = intval($start);
+        $max = intval($max);
+        $total = $max - $start + 1;
+        if ($total < 1) {
+            Log::info("Invalid values found for min ({$start}) and/or max ({$max}) for `{$field}` on `{$table}`");
+            return;
+        }
+        $num_done = 0;
+        $num_deleted = 0;
+        $next_report = 10;
+        $done = false;
+        Log::info("Deleting unused rows from `{$table}`");
+        while (!$done) {
+            $end = $start + 49999;
+            $num_deleted += DB::delete("
+                DELETE FROM {$table}
+                WHERE {$field} BETWEEN {$start} AND {$end}
+                      AND NOT EXISTS
+                      (SELECT 1 FROM {$targettable} WHERE {$targettable}.{$selectfield} = {$table}.{$field})");
+            $num_done += 50000;
+            if ($end >= $max) {
+                $done = true;
+            } else {
+                usleep(1);
+                $start += 50000;
+                // Calculate percentage of work completed so far.
+                $percent = round(($num_done / $total) * 100, -1);
+                if ($percent > $next_report) {
+                    Log::info("Cleaning `{$table}`: {$next_report}%");
+                    $next_report = $next_report + 10;
+                }
+            }
+        }
+        Log::info("{$num_deleted} rows deleted from `{$table}`");
     }
 }

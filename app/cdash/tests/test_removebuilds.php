@@ -27,6 +27,7 @@ use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\Image;
 use CDash\Model\Label;
 use CDash\Model\UploadFile;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
 class RemoveBuildsTestCase extends KWWebTestCase
@@ -36,19 +37,17 @@ class RemoveBuildsTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testRemoveBuilds()
+    public function testRemoveBuilds(): void
     {
         $this->login();
         $this->get($this->url . '/removeBuilds.php?projectid=5');
         $this->clickSubmitByName('Submit');
         if (strpos($this->getBrowser()->getContentAsText(), 'Removed') === false) {
             $this->fail("'Removed' not found when expected");
-            return 1;
         }
-        $this->pass('Passed');
     }
 
-    public function testBuildRemovalWorksAsExpected()
+    public function testBuildRemovalWorksAsExpected(): void
     {
         $time = gmdate(FMT_DATETIME);
 
@@ -272,7 +271,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $measurement = new TestMeasurement();
         $measurement->name = 'Exit Value';
         $measurement->type = 'text/string';
-        $measurement->value = 5;
+        $measurement->value = '5';
         $test_creator->measurements->push($measurement);
 
         $image = new Image();
@@ -301,7 +300,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $measurement2 = new TestMeasurement();
         $measurement2->name = 'Exit Value';
         $measurement2->type = 'text/string';
-        $measurement2->value = 0;
+        $measurement2->value = '0';
         $test_creator2->measurements->push($measurement2);
 
         $image2 = new Image();
@@ -340,32 +339,130 @@ class RemoveBuildsTestCase extends KWWebTestCase
 
         // Various tables that are too hard to spoof with models so we resort
         // to direct insertion.
-        pdo_query(
-            "INSERT INTO buildemail (userid, buildid, category)
-            VALUES (1, $build->Id, 0)");
-        pdo_query(
-            "INSERT INTO builderrordiff
-            (buildid, type, difference_positive, difference_negative)
-            VALUES ($build->Id, 0, 1, 1)");
-        pdo_query(
-            "INSERT INTO configureerrordiff (buildid, type, difference)
-            VALUES ($build->Id, 0, 1)");
-        pdo_query(
-            "INSERT INTO coveragesummarydiff (buildid, loctested, locuntested)
-            VALUES ($build->Id, 1, 1)");
-        pdo_query(
-            "INSERT INTO summaryemail (buildid, date, groupid)
-            VALUES ($build->Id, '$time', 1)");
-        pdo_query(
-            "INSERT INTO subproject2build (subprojectid, buildid)
-            VALUES (1, $build->Id)");
-        pdo_query(
-            "INSERT INTO testdiff
-            (buildid, type, difference_positive, difference_negative)
-            VALUES ($build->Id, 0, 1, 1)");
+        DB::table('buildemail')->insert([
+            'userid' => 1,
+            'buildid' => $build->Id,
+            'category' => 0,
+        ]);
+        DB::table('builderrordiff')->insert([
+            'buildid' => $build->Id,
+            'type' => 0,
+            'difference_positive' => 1,
+            'difference_negative' => 1,
+        ]);
+        DB::table('configureerrordiff')->insert([
+            'buildid' => $build->Id,
+            'type' => 0,
+            'difference' => 1,
+        ]);
+        DB::table('coveragesummarydiff')->insert([
+            'buildid' => $build->Id,
+            'loctested' => 1,
+            'locuntested' => 1,
+        ]);
+        DB::table('summaryemail')->insert([
+            'buildid' => $build->Id,
+            'date' => $time,
+            'groupid' => 1,
+        ]);
+        DB::table('subproject2build')->insert([
+            'subprojectid' => 1,
+            'buildid' => $build->Id,
+        ]);
+        DB::table('testdiff')->insert([
+            'buildid' => $build->Id,
+            'type' => 0,
+            'difference_positive' => 1,
+            'difference_negative' => 1,
+        ]);
 
+        // Insert some unused records to make sure they get properly pruned by db:clean
+        // without impacting the data created above.
+        $crc32 = crc32('');
+        DB::table('banner')->insert([
+            'projectid' => 999,
+            'text' => 'created by test_removebuilds',
+        ]);
+        $buildfailuredetails_id = DB::table('buildfailuredetails')->insertGetId([
+            'type' => 0,
+            'stdoutput' => '',
+            'stderror' => '',
+            'exitcondition' => 'normal',
+            'language' => 'PHP',
+            'targetname' => 'test_removebuilds',
+            'outputfile' => 'test_removebuilds',
+            'outputtype' => 'test',
+            'crc32' => $crc32,
+        ]);
+        $configure_id = DB::table('configure')->insertGetId([
+            'command' => 'test_removebuilds',
+            'log' => 'created by test_removebuilds',
+            'status' => 0,
+            'warnings' => 0,
+            'crc32' => $crc32,
+        ]);
+        $coveragefile_id = DB::table('coveragefile')->insertGetId([
+            'fullpath' => 'tests/test_removebuild.php',
+            'file' => 'asdf',
+            'crc32' => $crc32,
+        ]);
+        $dailyupdate_id = DB::table('dailyupdate')->insertGetId([
+            'projectid' => 999,
+            'date' => $time,
+            'command' => 'created by test_removebuilds',
+            'type' => 'ok',
+            'status' => 0,
+            'revision' => 'DEADBEEF',
+        ]);
+        DB::table('dailyupdatefile')->insert([
+            'dailyupdateid' => $dailyupdate_id,
+            'filename' => 'test_removebuilds.php',
+            'checkindate' => $time,
+            'author' => 'CDash',
+            'email' => 'admin@cdash.org',
+            'log' => 'test_removebuilds.php',
+            'revision' => 'DEADBEEF',
+            'priorrevision' => '00000000',
+        ]);
+        $image_id = DB::table('image')->insertGetId([
+            'img' => 'asdf',
+            'extension' => 'png',
+            'checksum' => 0,
+        ]);
+        $note_id = DB::table('note')->insertGetId([
+            'text' => 'note for test_removebuildds',
+            'name' => 'test_removebuilds.log',
+            'crc32' => $crc32,
+        ]);
+        $testoutput_id = DB::table('testoutput')->insertGetId([
+            'output' => 'testoutput for test_removebuildds',
+            'command' => 'php test_removebuilds.php',
+            'path' => '/cdash/tests/test_removebuilds.php',
+            'crc32' => $crc32,
+        ]);
+        $uploadfile_id = DB::table('uploadfile')->insertGetId([
+            'filename' => 'test_removebuilds.php',
+            'filesize' => 0,
+            'sha1sum' => '00000000',
+            'isurl' => 0,
+        ]);
 
-        // Check that everything was created successfully.
+        // Verify that db:clean works as expected.
+        Artisan::call('db:clean');
+        $extra_msg = 'after db:clean';
+        $this->verify('banner', 'projectid', '=', 999, 0, $extra_msg);
+        $this->verify('buildfailuredetails', 'id', '=', $buildfailuredetails_id, 0, $extra_msg);
+        $this->verify('configure', 'id', '=', $configure_id, 0, $extra_msg);
+        $this->verify('coveragefile', 'id', '=', $coveragefile_id, 0, $extra_msg);
+        $this->verify('dailyupdate', 'id', '=', $dailyupdate_id, 0, $extra_msg);
+        $this->verify('dailyupdatefile', 'dailyupdateid', '=', $dailyupdate_id, 0, $extra_msg);
+        $this->verify('image', 'id', '=', $image_id, 0, $extra_msg);
+        $this->verify('note', 'id', '=', $note_id, 0, $extra_msg);
+        $this->verify('testoutput', 'id', '=', $testoutput_id, 0, $extra_msg);
+        $this->verify('uploadfile', 'id', '=', $uploadfile_id, 0, $extra_msg);
+
+        // Verify that our build-related data was created successfully
+        // and not accidentally removed by db:clean.
         $this->verify('build', 'id', '=', $build->Id, 1);
         $this->verify('build2group', 'buildid', '=', $build->Id, 1);
         $this->verify('buildemail', 'buildid', '=', $build->Id, 1);
@@ -426,68 +523,110 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('label2dynamicanalysis', 'labelid', '=', $labelid, 1);
         $this->verify('label2test', 'labelid', '=', $labelid, 3);
 
-        echo "Check on labelid = $labelid\n";
-        return;
-
         // Remove the build.
         DatabaseCleanupUtils::removeBuild($build->Id);
 
-        // Check that everything was deleted properly.
-        $this->verify('build', 'id', '=', $build->Id, 0, true);
-        $this->verify('build2configure', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('build2configure', 'buildid', '=', $existing_build->Id, 1, true);
-        $this->verify('build2group', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('build2note', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('build2test', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('build2update', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('build2uploadfile', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('buildemail', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('builderror', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('builderrordiff', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('buildfailure', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('buildfailure2argument', 'buildfailureid', '=', $buildfailureid, 0, true);
-        $this->verify('buildfailuredetails', 'id', '=', $detailsid, 1, true);
-        $this->verify('buildtesttime', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('buildupdate', 'id', '=', $updateid, 1, true);
-        $this->verify('configure', 'id', '=', $configureid, 1, true);
-        $this->verify('configureerror', 'configureid', '=', $configureid, 1, true);
-        $this->verify('configureerrordiff', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('coverage', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('coveragefile', 'id', 'IN', $coveragefileids, 1, true);
-        $this->verify('coveragefilelog', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('coveragesummary', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('coveragesummarydiff', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('dynamicanalysis', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('dynamicanalysissummary', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('dynamicanalysisdefect', 'dynamicanalysisid', '=', $dynamicanalysisid, 0, true);
-        $this->verify('image', 'id', 'IN', $imgids, 1, true);
-        $this->verify('label2build', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('label2buildfailure', 'labelid', '=', $labelid, 1, true);
-        $this->verify('label2coveragefile', 'labelid', '=', $labelid, 1, true);
-        $this->verify('label2dynamicanalysis', 'labelid', '=', $labelid, 0, true);
-        $this->verify('label2test', 'labelid', '=', $labelid, 0, true);
-        $this->verify('note', 'id', 'IN', $noteids, 1, true);
-        $this->verify('summaryemail', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('subproject2build', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('test2image', 'outputid', 'IN', $outputids, 1, true);
-        $this->verify('testdiff', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('updatefile', 'updateid', '=', $updateid, 1, true);
-        $this->verify('uploadfile', 'id', 'IN', $uploadfileids, 1, true);
+        // Check that everything was deleted properly but shared records remain.
+        $extra_msg = 'after 1st delete';
+        $this->verify('build', 'id', '=', $build->Id, 0, $extra_msg);
+        $this->verify('build2configure', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('build2configure', 'buildid', '=', $existing_build->Id, 1, $extra_msg);
+        $this->verify('build2group', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('build2note', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('build2test', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('build2update', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('build2uploadfile', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('buildemail', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('builderror', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('builderrordiff', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('buildfailure', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('buildfailure2argument', 'buildfailureid', '=', $buildfailureid, 0, $extra_msg);
+        $this->verify('buildfailuredetails', 'id', '=', $detailsid, 1, $extra_msg);
+        $this->verify('buildtesttime', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('buildupdate', 'id', '=', $updateid, 1, $extra_msg);
+        $this->verify('configure', 'id', '=', $configureid, 1, $extra_msg);
+        $this->verify('configureerror', 'configureid', '=', $configureid, 1, $extra_msg);
+        $this->verify('configureerrordiff', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('coverage', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('coveragefile', 'id', 'IN', $coveragefileids, 1, $extra_msg);
+        $this->verify('coveragefilelog', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('coveragesummary', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('coveragesummarydiff', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('dynamicanalysis', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('dynamicanalysissummary', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('dynamicanalysisdefect', 'dynamicanalysisid', '=', $dynamicanalysisid, 0, $extra_msg);
+        $this->verify('image', 'id', 'IN', $imgids, 1, $extra_msg);
+        $this->verify('label2build', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('label2buildfailure', 'labelid', '=', $labelid, 1, $extra_msg);
+        $this->verify('label2coveragefile', 'labelid', '=', $labelid, 1, $extra_msg);
+        $this->verify('label2dynamicanalysis', 'labelid', '=', $labelid, 0, $extra_msg);
+        $this->verify('label2test', 'labelid', '=', $labelid, 1, $extra_msg);
+        $this->verify('note', 'id', 'IN', $noteids, 1, $extra_msg);
+        $this->verify('summaryemail', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('subproject2build', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('test2image', 'outputid', 'IN', $outputids, 1, $extra_msg);
+        $this->verify('testdiff', 'buildid', '=', $build->Id, 0, $extra_msg);
+        $this->verify('updatefile', 'updateid', '=', $updateid, 1, $extra_msg);
+        $this->verify('uploadfile', 'id', 'IN', $uploadfileids, 1, $extra_msg);
+
+        // Remove the other build too to verify that shared resources get cleaned up
+        // and to make this test idempotent.
+        DatabaseCleanupUtils::removeBuild($existing_build->Id);
+
+        $extra_msg = 'after 2nd delete';
+        $this->verify('build', 'id', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('build2configure', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('build2group', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('build2note', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('build2test', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('build2update', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('build2uploadfile', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('buildemail', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('builderror', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('builderrordiff', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('buildfailure', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('buildfailuredetails', 'id', '=', $detailsid, 0, $extra_msg);
+        $this->verify('buildtesttime', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('buildupdate', 'id', '=', $updateid, 0, $extra_msg);
+        $this->verify('configure', 'id', '=', $configureid, 0, $extra_msg);
+        $this->verify('configureerror', 'configureid', '=', $configureid, 0, $extra_msg);
+        $this->verify('configureerrordiff', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('coverage', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('coveragefile', 'id', 'IN', $coveragefileids, 0, $extra_msg);
+        $this->verify('coveragefilelog', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('coveragesummary', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('coveragesummarydiff', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('dynamicanalysis', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('dynamicanalysissummary', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('dynamicanalysisdefect', 'dynamicanalysisid', '=', $dynamicanalysisid, 0, $extra_msg);
+        $this->verify('image', 'id', 'IN', $imgids, 0, $extra_msg);
+        $this->verify('label2build', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('label2buildfailure', 'labelid', '=', $labelid, 0, $extra_msg);
+        $this->verify('label2coveragefile', 'labelid', '=', $labelid, 0, $extra_msg);
+        $this->verify('label2dynamicanalysis', 'labelid', '=', $labelid, 0, $extra_msg);
+        $this->verify('label2test', 'labelid', '=', $labelid, 0, $extra_msg);
+        $this->verify('note', 'id', 'IN', $noteids, 0, $extra_msg);
+        $this->verify('summaryemail', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('subproject2build', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('test2image', 'outputid', 'IN', $outputids, 0, $extra_msg);
+        $this->verify('testdiff', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
+        $this->verify('updatefile', 'updateid', '=', $updateid, 0, $extra_msg);
+        $this->verify('uploadfile', 'id', 'IN', $uploadfileids, 0, $extra_msg);
     }
 
-    public function verify($table, $field, $compare, $value, $expected, $deleted=false)
+    public function verify(string $table, string $field, string $compare, string|int $value, int $expected, string $extra_msg=''): void
     {
-        $delete_msg = '';
-        if ($deleted) {
-            $delete_msg = 'after deletion';
-        }
         $num_rows = count(DB::select("SELECT $field FROM $table WHERE $field $compare $value"));
         if ($num_rows !== $expected) {
-            $this->fail("Expected $expected for $table $delete_msg, found $num_rows");
+            $this->fail("Expected $expected for $table $extra_msg, found $num_rows");
         }
     }
 
-    public function verify_get_columns($table, $columns, $field, $compare, $value, $expected)
+    /**
+     * @param array<int|string> $columns
+     * @return array<int|string>
+     */
+    public function verify_get_columns(string $table, array $columns, string $field, string $compare, string $value, int $expected): array
     {
         $col_arg = implode(',', $columns);
         $result = DB::select("SELECT $col_arg FROM $table WHERE $field $compare $value");
@@ -503,7 +642,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         return $retval;
     }
 
-    public function verify_get_rows($table, $column, $field, $compare, $value, $expected)
+    public function verify_get_rows(string $table, string $column, string $field, string $compare, string $value, int $expected): string
     {
         $result = DB::select("SELECT $column FROM $table WHERE $field $compare $value");
         $num_rows = count($result);
