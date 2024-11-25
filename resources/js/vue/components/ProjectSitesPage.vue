@@ -121,12 +121,12 @@ export default {
             href: `${this.$baseURL}/sites/${edge.node.id}`,
           },
           processors: {
-            value: edge.node.mostRecentInformation.numberPhysicalCpus,
-            text: edge.node.mostRecentInformation.numberPhysicalCpus,
+            value: edge.node.mostRecentInformation?.numberPhysicalCpus,
+            text: edge.node.mostRecentInformation?.numberPhysicalCpus,
           },
           memory: {
-            value: edge.node.mostRecentInformation.totalPhysicalMemory,
-            text: this.humanReadableMemory(edge.node.mostRecentInformation.totalPhysicalMemory),
+            value: edge.node.mostRecentInformation?.totalPhysicalMemory,
+            text: this.humanReadableMemory(edge.node.mostRecentInformation?.totalPhysicalMemory),
           },
           maintainers: edge.node.maintainers.edges.map(maintainer => {
             let maintainerName = '';
@@ -142,7 +142,7 @@ export default {
             return maintainerName;
           }).join(', '),
           description: {
-            value: edge.node.mostRecentInformation.description,
+            value: edge.node.mostRecentInformation?.description,
             text: edge.node.description,
           },
         };
@@ -152,6 +152,10 @@ export default {
 
   methods: {
     humanReadableMemory(inputInMiB) {
+      if (!inputInMiB) {
+        return '';
+      }
+
       if (inputInMiB < 1024) {
         return `${inputInMiB} MiB`;
       }
