@@ -96,6 +96,11 @@ const apolloClient = new ApolloClient({
           projects: relayStylePagination(),
         },
       },
+      Project: {
+        fields: {
+          sites: relayStylePagination(),
+        },
+      },
       Build: {
         fields: {
           tests: relayStylePagination(),
