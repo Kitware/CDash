@@ -135,6 +135,46 @@ class SiteTypeTest extends TestCase
         ], true);
     }
 
+    public function testTopLevelSiteField(): void
+    {
+        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site2'] = $this->makeSite();
+
+        $this->graphQL('
+            query ($id: ID!) {
+                site(id: $id) {
+                    id
+                    name
+                }
+            }
+        ', [
+            'id' => $this->sites['site1']->id,
+        ])->assertJson([
+            'data' => [
+                'site' => [
+                    'id' => (string) $this->sites['site1']->id,
+                    'name' => $this->sites['site1']->name,
+                ],
+            ],
+        ], true);
+
+        // Make sure it works properly when the site cannot be found
+        $this->graphQL('
+            query ($id: ID!) {
+                site(id: $id) {
+                    id
+                    name
+                }
+            }
+        ', [
+            'id' => 123456789,
+        ])->assertJson([
+            'data' => [
+                'site' => null,
+            ],
+        ], true);
+    }
+
     public function testSiteBuildRelationship(): void
     {
         $this->sites['site1'] = $this->makeSite();

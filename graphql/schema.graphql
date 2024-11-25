@@ -27,6 +27,16 @@ type Query {
     "Search by primary key."
     id: ID @eq
   ): Build @find @canResolved(ability: "view")
+
+  """
+  Find a single site by ID.  All sites are currently public (although not necessarily
+  the projects they contribute to).  In the future, the concept of "private sites"
+  may be a good feature to add.
+  """
+  site(
+    "Search by primary key."
+    id: ID @eq
+  ): Site @find
 }
 
 
