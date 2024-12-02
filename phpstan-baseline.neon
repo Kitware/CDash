@@ -32200,6 +32200,126 @@ parameters:
 			path: database/migrations/2024_04_17_183212_remove_test_table.php
 
 		-
+			message: "#^Binary operation \"\\+\" between mixed and 49999 results in an error\\.$#"
+			count: 1
+			path: database/migrations/2024_11_18_113619_configure_error_foreign_key.php
+
+		-
+			message: "#^Binary operation \"\\+\\=\" between mixed and 50000 results in an error\\.$#"
+			count: 1
+			path: database/migrations/2024_11_18_113619_configure_error_foreign_key.php
+
+		-
+			message: "#^Method class@anonymous/database/migrations/2024_11_18_113619_configure_error_foreign_key\\.php\\:8\\:\\:up\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: database/migrations/2024_11_18_113619_configure_error_foreign_key.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 2
+			path: database/migrations/2024_11_18_113619_configure_error_foreign_key.php
+
+		-
+			message: "#^Part \\$start \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
+			count: 1
+			path: database/migrations/2024_11_18_113619_configure_error_foreign_key.php
+
+		-
+			message: "#^Variable \\$total might not be defined\\.$#"
+			count: 1
+			path: database/migrations/2024_11_18_113619_configure_error_foreign_key.php
+
+		-
+			message: "#^Binary operation \"\\+\" between mixed and 49999 results in an error\\.$#"
+			count: 1
+			path: database/migrations/2024_11_20_144306_buildfailure2argument_foreign_key.php
+
+		-
+			message: "#^Binary operation \"\\+\\=\" between mixed and 50000 results in an error\\.$#"
+			count: 1
+			path: database/migrations/2024_11_20_144306_buildfailure2argument_foreign_key.php
+
+		-
+			message: "#^Method class@anonymous/database/migrations/2024_11_20_144306_buildfailure2argument_foreign_key\\.php\\:8\\:\\:up\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: database/migrations/2024_11_20_144306_buildfailure2argument_foreign_key.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 2
+			path: database/migrations/2024_11_20_144306_buildfailure2argument_foreign_key.php
+
+		-
+			message: "#^Part \\$start \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
+			count: 1
+			path: database/migrations/2024_11_20_144306_buildfailure2argument_foreign_key.php
+
+		-
+			message: "#^Variable \\$total might not be defined\\.$#"
+			count: 1
+			path: database/migrations/2024_11_20_144306_buildfailure2argument_foreign_key.php
+
+		-
+			message: "#^Binary operation \"\\+\" between mixed and 49999 results in an error\\.$#"
+			count: 1
+			path: database/migrations/2024_11_20_144307_updatefile_foreign_key.php
+
+		-
+			message: "#^Binary operation \"\\+\\=\" between mixed and 50000 results in an error\\.$#"
+			count: 1
+			path: database/migrations/2024_11_20_144307_updatefile_foreign_key.php
+
+		-
+			message: "#^Method class@anonymous/database/migrations/2024_11_20_144307_updatefile_foreign_key\\.php\\:8\\:\\:up\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: database/migrations/2024_11_20_144307_updatefile_foreign_key.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 2
+			path: database/migrations/2024_11_20_144307_updatefile_foreign_key.php
+
+		-
+			message: "#^Part \\$start \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
+			count: 1
+			path: database/migrations/2024_11_20_144307_updatefile_foreign_key.php
+
+		-
+			message: "#^Variable \\$total might not be defined\\.$#"
+			count: 1
+			path: database/migrations/2024_11_20_144307_updatefile_foreign_key.php
+
+		-
+			message: "#^Binary operation \"\\+\" between mixed and 49999 results in an error\\.$#"
+			count: 1
+			path: database/migrations/2024_11_20_144308_test2image_foreign_key.php
+
+		-
+			message: "#^Binary operation \"\\+\\=\" between mixed and 50000 results in an error\\.$#"
+			count: 1
+			path: database/migrations/2024_11_20_144308_test2image_foreign_key.php
+
+		-
+			message: "#^Method class@anonymous/database/migrations/2024_11_20_144308_test2image_foreign_key\\.php\\:8\\:\\:up\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: database/migrations/2024_11_20_144308_test2image_foreign_key.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 2
+			path: database/migrations/2024_11_20_144308_test2image_foreign_key.php
+
+		-
+			message: "#^Part \\$start \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
+			count: 1
+			path: database/migrations/2024_11_20_144308_test2image_foreign_key.php
+
+		-
+			message: "#^Variable \\$total might not be defined\\.$#"
+			count: 1
+			path: database/migrations/2024_11_20_144308_test2image_foreign_key.php
+
+		-
 			message: "#^Cannot access offset 'Id' on mixed\\.$#"
 			count: 1
 			path: database/seeds/DatabaseSeeder.php
