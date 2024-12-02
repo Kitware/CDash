@@ -51,7 +51,7 @@
     "ext-gd": "*",
     "ext-xdebug": "*",
     "fakerphp/faker": "1.23.1",
-    "friendsofphp/php-cs-fixer": "3.64.0",
+    "friendsofphp/php-cs-fixer": "3.65.0",
     "larastan/larastan": "^2.7",
     "mockery/mockery": "1.6.12",
     "phpstan/extension-installer": "1.4.3",
