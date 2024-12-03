@@ -149,7 +149,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
     /** Function endElement */
     public function endElement($parser, $name): void
     {
-        $parent = $this->getParent(); // should be before endElement
+        $parent = $this->hasParent() ? $this->getParent() : false; // should be before endElement
         parent::endElement($parser, $name);
         $factory = $this->getModelFactory();
         if ($name == 'STARTTESTTIME' && $parent == 'DYNAMICANALYSIS') {
@@ -215,7 +215,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
     /** Function Text */
     public function text($parser, $data)
     {
-        $parent = $this->getParent();
+        $parent = $this->hasParent() ? $this->getParent() : false;
         $element = $this->getElement();
 
         if ($parent == 'DYNAMICANALYSIS') {

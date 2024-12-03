@@ -222,11 +222,28 @@ set_tests_properties(/Feature/GraphQL/NoteTypeTest PROPERTIES DEPENDS /Feature/G
 add_laravel_test(/Feature/GraphQL/BuildMeasurementTypeTest)
 set_tests_properties(/Feature/GraphQL/BuildMeasurementTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
 
+add_laravel_test(/Feature/GraphQL/CompileBuildCommandTypeTest)
+set_tests_properties(/Feature/GraphQL/CompileBuildCommandTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
+
 add_laravel_test(/Feature/GraphQL/CoverageTypeTest)
 set_tests_properties(/Feature/GraphQL/CoverageTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
 
+add_laravel_test(/Feature/GraphQL/LabelTypeTest)
+set_tests_properties(/Feature/GraphQL/LabelTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
+
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
-set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES DEPENDS "/Feature/GraphQL/TestTypeTest;/Feature/GraphQL/TestMeasurementTypeTest;/Feature/GraphQL/NoteTypeTest;/Feature/GraphQL/BuildMeasurementTypeTest;/Feature/GraphQL/CoverageTypeTest")
+set_property(TEST /Feature/PurgeUnusedProjectsCommand PROPERTY DEPENDS
+  /Feature/GraphQL/TestTypeTest
+  /Feature/GraphQL/TestMeasurementTypeTest
+  /Feature/GraphQL/NoteTypeTest
+  /Feature/GraphQL/BuildMeasurementTypeTest
+  /Feature/GraphQL/CoverageTypeTest
+  /Feature/GraphQL/LabelTypeTest
+  /Feature/GraphQL/CompileBuildCommandTypeTest
+  /Feature/GraphQL/LinkBuildCommandTypeTest
+  /Feature/GraphQL/CMakeBuildCommandTypeTest
+  /Feature/GraphQL/CustomBuildCommandTypeTest
+)
 
 add_laravel_test(/Browser/Pages/ProjectSitesPageTest)
 set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES DEPENDS /Feature/PurgeUnusedProjectsCommand)

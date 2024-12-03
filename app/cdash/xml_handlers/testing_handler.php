@@ -73,7 +73,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
     public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
-        $parent = $this->getParent(); // should be before endElement
+        $parent = $this->hasParent() ? $this->getParent() : false; // should be before endElement
         $factory = $this->getModelFactory();
 
         if ($name == 'SITE') {
@@ -160,7 +160,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
     /** End Element */
     public function endElement($parser, $name): void
     {
-        $parent = $this->getParent(); // should be before endElement
+        $parent = $this->hasParent() ? $this->getParent() : false; // should be before endElement
         parent::endElement($parser, $name);
         $factory = $this->getModelFactory();
 
@@ -267,7 +267,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
     /** Text function */
     public function text($parser, $data)
     {
-        $parent = $this->getParent();
+        $parent = $this->hasParent() ? $this->getParent() : false;
         $element = $this->getElement();
 
         if ($parent == 'TESTING') {
