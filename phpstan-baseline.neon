@@ -3826,6 +3826,16 @@ parameters:
 			path: app/Utils/DatabaseCleanupUtils.php
 
 		-
+			message: "#^Cannot call method builds\\(\\) on mixed\\.$#"
+			count: 1
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
+			message: "#^Cannot call method delete\\(\\) on mixed\\.$#"
+			count: 1
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 3
 			path: app/Utils/DatabaseCleanupUtils.php
