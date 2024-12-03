@@ -33,7 +33,7 @@
     "laravel/legacy-factories": "1.4.0",
     "laravel/socialite": "5.16.0",
     "laravel/ui": "4.5.2",
-    "lcobucci/jwt": "5.4.0",
+    "lcobucci/jwt": "5.4.2",
     "mll-lab/laravel-graphiql": "3.2.1",
     "nuwave/lighthouse": "6.45.1",
     "nyholm/psr7": "1.8.2",
