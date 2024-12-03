@@ -6,26 +6,18 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
+use Tests\Traits\CreatesSubmissions;
 
 class FilterTestLabelsTestCase extends KWWebTestCase
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    use CreatesSubmissions;
 
     public function testFilterLabels()
     {
         // Submit our test data.
         $rep = dirname(__FILE__) . '/data/FilterTestLabels';
-        if (!$this->submission('EmailProjectExample', "$rep/Build_1.xml")) {
-            $this->fail('failed to submit Update_1.xml');
-            return 1;
-        }
-        if (!$this->submission('EmailProjectExample', "$rep/Test_1.xml")) {
-            $this->fail('failed to submit Update_2.xml');
-            return 1;
-        }
+        $this->submitFiles('EmailProjectExample', ["$rep/Build_1.xml"]);
+        $this->submitFiles('EmailProjectExample', ["$rep/Test_1.xml"]);
 
         // Turn this option on.
         pdo_query("UPDATE project SET sharelabelfilters=1

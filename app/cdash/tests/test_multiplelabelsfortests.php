@@ -4,9 +4,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 use App\Models\Test;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 class MultipleLabelsForTestsTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $project;
 
     public function __construct()
@@ -39,10 +42,7 @@ class MultipleLabelsForTestsTestCase extends KWWebTestCase
 
         // Submit our testing data.
         $test_dir = dirname(__FILE__) . '/data/MultipleLabelsForTests/';
-        $filename = "{$test_dir}/Test.xml";
-        if (!$this->submission('MultipleLabelsForTests', $filename)) {
-            $this->fail("Failed to submit {$filename}");
-        }
+        $this->submitFiles('MultipleLabelsForTests', ["{$test_dir}/Test.xml"]);
 
         // No errors in the log.
         $this->assertTrue($this->checkLog($this->logfilename) !== false);

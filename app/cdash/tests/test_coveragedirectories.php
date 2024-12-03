@@ -8,13 +8,11 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
 use CDash\Model\Project;
+use Tests\Traits\CreatesSubmissions;
 
 class CoverageDirectoriesTestCase extends KWWebTestCase
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    use CreatesSubmissions;
 
     public function testCoverageDirectories()
     {
@@ -37,7 +35,9 @@ class CoverageDirectoriesTestCase extends KWWebTestCase
         $filesToSubmit = ['prefix-Coverage.xml', 'prefix-CoverageLog-0.xml', 'sort-Coverage.xml', 'sort-CoverageLog-0.xml', 'sort-CoverageLog-1.xml'];
         $dir = dirname(__FILE__) . '/data/CoverageDirectories';
         foreach ($filesToSubmit as $file) {
-            if (!$this->submission('CoverageDirectories', "$dir/$file")) {
+            try {
+                $this->submitFiles('CoverageDirectories', ["$dir/$file"]);
+            } catch (Exception) {
                 $this->fail("Failed to submit $file");
                 return;
             }

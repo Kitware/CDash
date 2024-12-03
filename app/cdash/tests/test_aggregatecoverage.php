@@ -17,6 +17,7 @@
 // relative to the top of the CDash source tree
 //
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -24,10 +25,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class AggregateCoverageTestCase extends KWWebTestCase
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    use CreatesSubmissions;
 
     public function testAggregateCoverage()
     {
@@ -38,7 +36,10 @@ class AggregateCoverageTestCase extends KWWebTestCase
             'release_case/CoverageLog-0.xml'];
 
         foreach ($files as $file) {
-            if (!$this->submitTestingFile($file)) {
+            $file_to_submit = dirname(__FILE__) . '/data/AggregateCoverage/' . $file;
+            try {
+                $this->submitFiles('InsightExample', [$file_to_submit]);
+            } catch (Exception) {
                 $this->fail("Failed to submit $file");
                 return 1;
             }
@@ -152,12 +153,5 @@ class AggregateCoverageTestCase extends KWWebTestCase
             return false;
         }
         return true;
-    }
-
-    public function submitTestingFile($filename)
-    {
-        $file_to_submit =
-            dirname(__FILE__) . '/data/AggregateCoverage/' . $filename;
-        return $this->submission('InsightExample', $file_to_submit);
     }
 }

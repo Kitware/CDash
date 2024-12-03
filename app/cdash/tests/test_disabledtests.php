@@ -7,13 +7,11 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
+use Tests\Traits\CreatesSubmissions;
 
 class DisabledTestsTestCase extends KWWebTestCase
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    use CreatesSubmissions;
 
     public function testDisabledTests()
     {
@@ -21,10 +19,7 @@ class DisabledTestsTestCase extends KWWebTestCase
 
         // Submit testing data.
         $rep = dirname(__FILE__) . '/data/DisabledTests';
-        $file = "$rep/Test.xml";
-        if (!$this->submission('EmailProjectExample', $file)) {
-            return;
-        }
+        $this->submitFiles('EmailProjectExample', ["$rep/Test.xml"]);
 
         // Find the buildid we just created.
         $pdo = Database::getInstance()->getPdo();

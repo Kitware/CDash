@@ -15,12 +15,15 @@
 =========================================================================*/
 
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
 class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $DataDir;
 
     public function __construct()
@@ -41,11 +44,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
 
     public function testCreateSubProjects()
     {
-        $file = "$this->DataDir/Project.xml";
-        if (!$this->submission('CrossSubProjectExample', $file)) {
-            $this->fail("Failed to submit $file");
-            return;
-        }
+        $this->submitFiles('CrossSubProjectExample', ["$this->DataDir/Project.xml"]);
         $this->pass('Test passed');
     }
 
@@ -83,11 +82,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
 
     public function submitResults($subproject, $starttime, $endtime, $md5)
     {
-        $file = "$this->DataDir/$subproject/Build.xml";
-        if (!$this->submission('CrossSubProjectExample', $file)) {
-            $this->fail("Failed to submit $file");
-            return false;
-        }
+        $this->submitFiles('CrossSubProjectExample', ["$this->DataDir/$subproject/Build.xml"]);
 
         // Do the POST submission to get a pending buildid from CDash.
         $post_data = [

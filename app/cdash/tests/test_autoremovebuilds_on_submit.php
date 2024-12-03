@@ -11,6 +11,7 @@ use CDash\Model\Project;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Tests\Traits\CreatesSubmissions;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -18,6 +19,8 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $config_file;
 
     public function __construct()
@@ -66,10 +69,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         $rep = dirname(__FILE__) . '/data/EmailProjectExample';
         $testxml1 = "$rep/1_test.xml";
 
-        if (!$this->submission('EmailProjectExample', $testxml1)) {
-            $this->fail('submission 1 failed');
-            return;
-        }
+        $this->submitFiles('EmailProjectExample', [$testxml1]);
 
         // Check that the test is actually there
         $sql = "SELECT name FROM build WHERE projectid=:id AND stamp=:stamp";
@@ -118,10 +118,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         DB::delete("DELETE FROM dailyupdate WHERE projectid='{$projectid}'");
 
         $testxml2 = "$rep/2_test.xml";
-        if (!$this->submission('EmailProjectExample', $testxml2)) {
-            $this->fail('submission 2 failed');
-            return 1;
-        }
+        $this->submitFiles('EmailProjectExample', [$testxml2]);
 
         // The removal of the builds are done asynchronously so we might need to wait a little bit
         // in order for the process to be done

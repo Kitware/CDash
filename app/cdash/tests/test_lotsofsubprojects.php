@@ -3,9 +3,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 class LotsOfSubProjectsTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $project;
 
     public function __construct()
@@ -54,9 +57,7 @@ class LotsOfSubProjectsTestCase extends KWWebTestCase
         fwrite($handle, file_get_contents(dirname(__FILE__) . '/data/LotsOfSubProjects/After.xml'));
 
         // Submit our testing data.
-        if (!$this->submission('LotsOfSubProjects', $test_filename)) {
-            $this->fail("Failed to submit $test_filename");
-        }
+        $this->submitFiles('LotsOfSubProjects', [$test_filename]);
 
         // No errors in the log.
         $this->assertTrue($this->checkLog($this->logfilename) !== false);

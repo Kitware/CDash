@@ -12,9 +12,12 @@ use CDash\Model\Build;
 use CDash\Model\BuildError;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Tests\Traits\CreatesSubmissions;
 
 class BuildModelTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $testDataFiles;
     private $testDataDir;
     private $builds;
@@ -41,7 +44,9 @@ class BuildModelTestCase extends KWWebTestCase
         ]);
 
         foreach ($this->testDataFiles as $testDataFile) {
-            if (!$this->submission('BuildModel', $this->testDataDir . '/' . $testDataFile)) {
+            try {
+                $this->submitFiles('BuildModel', [$this->testDataDir . '/' . $testDataFile]);
+            } catch (Exception) {
                 $this->fail('Failed to submit ' . $testDataFile);
                 return 1;
             }

@@ -8,9 +8,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 use CDash\Model\Image;
+use Tests\Traits\CreatesSubmissions;
 
 class ImageComparisonTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $BuildId;
 
     public function __construct()
@@ -22,10 +25,7 @@ class ImageComparisonTestCase extends KWWebTestCase
     public function testImageComparison()
     {
         // Submit test data.
-        if (!$this->submission('InsightExample', dirname(__FILE__) . '/data/ImageComparisonTest.xml')) {
-            $this->fail('Failed to submit test data');
-            return 1;
-        }
+        $this->submitFiles('InsightExample', [dirname(__FILE__) . '/data/ImageComparisonTest.xml']);
 
         // Get the images created by this test.
         $pdo = Database::getInstance()->getPdo();

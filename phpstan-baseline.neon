@@ -19754,6 +19754,14 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				11/20/2024  Use the CreatesSubmissions trait instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
 			message: "#^Cannot access offset 'Id' on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -20104,31 +20112,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method KWWebTestCase\\:\\:submission\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method KWWebTestCase\\:\\:submission\\(\\) has parameter \\$debug with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method KWWebTestCase\\:\\:submission\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method KWWebTestCase\\:\\:submission\\(\\) has parameter \\$header with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method KWWebTestCase\\:\\:submission\\(\\) has parameter \\$projectname with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: "#^Method KWWebTestCase\\:\\:submission_assign_buildid\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -20204,22 +20187,22 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:846\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:getSent\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:846\\:\\:getSent\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:isError\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:846\\:\\:isError\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:read\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:846\\:\\:read\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -20434,12 +20417,12 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:\\$read has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:846\\:\\:\\$read has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:\\$response has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:846\\:\\:\\$response has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -20693,16 +20676,6 @@ parameters:
 
 		-
 			message: "#^Method AggregateCoverageTestCase\\:\\:checkCoverage\\(\\) has parameter \\$expected_percentage with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_aggregatecoverage.php
-
-		-
-			message: "#^Method AggregateCoverageTestCase\\:\\:submitTestingFile\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_aggregatecoverage.php
-
-		-
-			message: "#^Method AggregateCoverageTestCase\\:\\:submitTestingFile\\(\\) has parameter \\$filename with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_aggregatecoverage.php
 
@@ -20981,6 +20954,14 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
+			path: app/cdash/tests/test_authtoken.php
+
+		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				11/20/2024  Use the CreatesSubmissions trait instead\\.$#
+			"""
+			count: 2
 			path: app/cdash/tests/test_authtoken.php
 
 		-
@@ -21317,6 +21298,14 @@ parameters:
 			path: app/cdash/tests/test_bazeljson.php
 
 		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				11/20/2024  Use the CreatesSubmissions trait instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_bazeljson.php
+
+		-
 			message: "#^Cannot access offset 'buildid' on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_bazeljson.php
@@ -21485,6 +21474,14 @@ parameters:
 			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_branchcoverage.php
+
+		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				11/20/2024  Use the CreatesSubmissions trait instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_branchcoverage.php
@@ -22030,6 +22027,14 @@ parameters:
 				v2\\.5\\.0 01/22/2018$#
 			"""
 			count: 10
+			path: app/cdash/tests/test_buildproperties.php
+
+		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				11/20/2024  Use the CreatesSubmissions trait instead\\.$#
+			"""
+			count: 1
 			path: app/cdash/tests/test_buildproperties.php
 
 		-
@@ -22735,6 +22740,14 @@ parameters:
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
 		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				11/20/2024  Use the CreatesSubmissions trait instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_crosssubprojectcoverage.php
+
+		-
 			message: "#^Cannot access offset 'buildid' on mixed\\.$#"
 			count: 2
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
@@ -23343,7 +23356,7 @@ parameters:
 
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 5
+			count: 4
 			path: app/cdash/tests/test_email.php
 
 		-
@@ -24473,6 +24486,14 @@ parameters:
 			path: app/cdash/tests/test_javajsoncoverage.php
 
 		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				11/20/2024  Use the CreatesSubmissions trait instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_javajsoncoverage.php
+
+		-
 			message: "#^Cannot access offset 'buildid' on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_javajsoncoverage.php
@@ -24509,6 +24530,14 @@ parameters:
 
 		-
 			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and mixed results in an error\\.$#"
+			count: 1
+			path: app/cdash/tests/test_jscovercoverage.php
+
+		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				11/20/2024  Use the CreatesSubmissions trait instead\\.$#
+			"""
 			count: 1
 			path: app/cdash/tests/test_jscovercoverage.php
 
@@ -25058,6 +25087,14 @@ parameters:
 			path: app/cdash/tests/test_multicoverage.php
 
 		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				11/20/2024  Use the CreatesSubmissions trait instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_multicoverage.php
+
+		-
 			message: "#^Cannot access offset 'buildid' on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_multicoverage.php
@@ -25501,11 +25538,6 @@ parameters:
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
-			message: "#^Parameter \\#1 \\$buildid of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuild\\(\\) expects array\\<int\\>\\|int, mixed given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_multiplesubprojects.php
-
-		-
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, int\\|string\\|false\\|null given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_multiplesubprojects.php
@@ -25764,6 +25796,14 @@ parameters:
 			path: app/cdash/tests/test_nobackup.php
 
 		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				11/20/2024  Use the CreatesSubmissions trait instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_nobackup.php
+
+		-
 			message: "#^Cannot access offset 'builderrors' on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_nobackup.php
@@ -25940,6 +25980,14 @@ parameters:
 
 		-
 			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and mixed results in an error\\.$#"
+			count: 2
+			path: app/cdash/tests/test_opencovercoverage.php
+
+		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				11/20/2024  Use the CreatesSubmissions trait instead\\.$#
+			"""
 			count: 2
 			path: app/cdash/tests/test_opencovercoverage.php
 
@@ -26777,12 +26825,12 @@ parameters:
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
-			message: "#^Method SequenceIndependenceTestCase\\:\\:SubmitFiles\\(\\) has no return type specified\\.$#"
+			message: "#^Method SequenceIndependenceTestCase\\:\\:SubmitXMLFiles\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
-			message: "#^Method SequenceIndependenceTestCase\\:\\:SubmitFiles\\(\\) has parameter \\$file_order with no type specified\\.$#"
+			message: "#^Method SequenceIndependenceTestCase\\:\\:SubmitXMLFiles\\(\\) has parameter \\$file_order with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_sequenceindependence.php
 
@@ -28650,17 +28698,17 @@ parameters:
 			path: app/cdash/tests/trilinos_submission_test.php
 
 		-
-			message: "#^Method TrilinosSubmissionTestCase\\:\\:submitFiles\\(\\) has no return type specified\\.$#"
+			message: "#^Method TrilinosSubmissionTestCase\\:\\:submitTrilinosFiles\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/trilinos_submission_test.php
 
 		-
-			message: "#^Method TrilinosSubmissionTestCase\\:\\:submitFiles\\(\\) has parameter \\$test with no type specified\\.$#"
+			message: "#^Method TrilinosSubmissionTestCase\\:\\:submitTrilinosFiles\\(\\) has parameter \\$test with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/trilinos_submission_test.php
 
 		-
-			message: "#^Method TrilinosSubmissionTestCase\\:\\:submitFiles\\(\\) has parameter \\$trilinosOnly with no type specified\\.$#"
+			message: "#^Method TrilinosSubmissionTestCase\\:\\:submitTrilinosFiles\\(\\) has parameter \\$trilinosOnly with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/trilinos_submission_test.php
 

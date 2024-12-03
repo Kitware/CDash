@@ -6,9 +6,12 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
+use Tests\Traits\CreatesSubmissions;
 
 class UppdateAppendTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $OriginalConfigSettings;
 
     public function __construct()
@@ -23,18 +26,11 @@ class UppdateAppendTestCase extends KWWebTestCase
 
         // Submit our test data.
         $rep = dirname(__FILE__) . '/data/UpdateAppend';
-        if (!$this->submission('EmailProjectExample', "$rep/Update_1.xml")) {
-            $this->fail('failed to submit Update_1.xml');
-            return 1;
-        }
-        if (!$this->submission('EmailProjectExample', "$rep/Update_2.xml")) {
-            $this->fail('failed to submit Update_2.xml');
-            return 1;
-        }
-        if (!$this->submission('EmailProjectExample', "$rep/Update_3.xml")) {
-            $this->fail('failed to submit Update_3.xml');
-            return 1;
-        }
+        $this->submitFiles('EmailProjectExample', [
+            "$rep/Update_1.xml",
+            "$rep/Update_2.xml",
+            "$rep/Update_3.xml",
+        ], 1);
 
         // Get the buildid that we just created so we can delete it later.
         $buildids = [];

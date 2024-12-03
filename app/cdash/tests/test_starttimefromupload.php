@@ -4,9 +4,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 use CDash\Model\Build;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 class StartTimeFromUploadTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private Project $project;
 
     public function __construct()
@@ -36,9 +39,7 @@ class StartTimeFromUploadTestCase extends KWWebTestCase
 
         // Submit our testing data.
         $file = dirname(__FILE__) . '/data/StartTimeFromUpload/Upload.xml';
-        if (!$this->submission('StartTimeFromUpload', $file)) {
-            $this->fail("Failed to submit {$file}");
-        }
+        $this->submitFiles('StartTimeFromUpload', [$file]);
 
         // No errors in the log.
         $this->assertTrue($this->checkLog($this->logfilename) !== false);

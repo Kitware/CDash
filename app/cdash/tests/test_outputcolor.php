@@ -5,18 +5,13 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
-
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 class OutputColorTestCase extends KWWebTestCase
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    use CreatesSubmissions;
 
     public function testOutputColor()
     {
@@ -38,10 +33,7 @@ class OutputColorTestCase extends KWWebTestCase
 
         // Submit testing data.
         $file = dirname(__FILE__) . '/data/OutputColor/Test.xml';
-        if (!$this->submission('OutputColor', $file)) {
-            $this->fail("Failed to submit $file");
-            return;
-        }
+        $this->submitFiles('OutputColor', [$file]);
 
         // No errors in the log.
         $this->assertTrue($this->checkLog($this->logfilename) !== false);
@@ -67,10 +59,7 @@ class OutputColorTestCase extends KWWebTestCase
 
         // Verify that color output works as expected for preformatted test measurements too.
         $file = dirname(__FILE__) . '/data/OutputColor/Test_2.xml';
-        if (!$this->submission('OutputColor', $file)) {
-            $this->fail("Failed to submit $file");
-            return;
-        }
+        $this->submitFiles('OutputColor', [$file]);
         $this->assertTrue($this->checkLog($this->logfilename) !== false);
         $buildtestid = $this->getIdForTest('preformatted_color');
         $content = $this->connect($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
@@ -85,9 +74,7 @@ class OutputColorTestCase extends KWWebTestCase
 
         // Submit build data for later check in viewBuildErrors.
         $file = dirname(__FILE__) . '/data/OutputColor/Build.xml';
-        if (!$this->submission('OutputColor', $file)) {
-            $this->fail("Failed to submit $file");
-        }
+        $this->submitFiles('OutputColor', [$file]);
     }
 
     private function getIdForTest($testname)

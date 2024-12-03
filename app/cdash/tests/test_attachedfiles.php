@@ -6,6 +6,8 @@ use CDash\Model\Project;
 
 class AttachedFilesTestCase extends KWWebTestCase
 {
+    use \Tests\Traits\CreatesSubmissions;
+
     private $project;
 
     public function __construct()
@@ -34,7 +36,7 @@ class AttachedFilesTestCase extends KWWebTestCase
         $this->project->Fill();
 
         // Submit our testing data.
-        $this->submission('AttachedFiles', dirname(__FILE__) . '/data/AttachedFileTest.xml');
+        $this->submitFiles('AttachedFiles', [dirname(__FILE__) . '/data/AttachedFileTest.xml']);
 
         // Get the buildtest we created.
         $db = Database::getInstance();

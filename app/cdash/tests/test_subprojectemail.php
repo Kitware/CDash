@@ -16,9 +16,12 @@ use CDash\Model\SubProject;
 use CDash\Model\UserProject;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 class SubProjectEmailTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $PDO;
     protected $Project;
 
@@ -113,7 +116,9 @@ class SubProjectEmailTestCase extends KWWebTestCase
             'Trilinos_hut11.kitware_Windows_NT-MSVC10-SERIAL_DEBUG_DEV_20110722-1515-Experimental_131134909069_Update.xml'];
         foreach ($filenames as $filename) {
             $file = dirname(__FILE__) . "/data/ActualTrilinosSubmission/$filename";
-            if (!$this->submission('SubProjectEmails', $file)) {
+            try {
+                $this->submitFiles('SubProjectEmails', [$file]);
+            } catch (Exception) {
                 $this->fail("Failed to submit $file");
             }
         }

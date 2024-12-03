@@ -6,9 +6,12 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use Illuminate\Support\Facades\Storage;
+use Tests\Traits\CreatesSubmissions;
 
 class UploadFileTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     public $BuildId;
     public $FileId;
     public $Sha1Sum;
@@ -24,13 +27,9 @@ class UploadFileTestCase extends KWWebTestCase
         $this->deleteLog($this->logfilename);
         $rep = dirname(__FILE__) . '/data/EmailProjectExample';
         $file = "$rep/1_upload.xml";
-        if (!$this->submission('EmailProjectExample', $file)) {
-            $this->fail('Failed to submit Upload.xml');
-            return;
-        }
+        $this->submitFiles('EmailProjectExample', [$file]);
         if (!$this->checkLog($this->logfilename)) {
             $this->fail('errors in log file');
-            return;
         }
     }
 

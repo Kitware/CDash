@@ -2,6 +2,7 @@
 
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
+use Tests\Traits\CreatesSubmissions;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -9,10 +10,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class SummaryEmailTestCase extends KWWebTestCase
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    use CreatesSubmissions;
 
     public function testSummaryEmail()
     {
@@ -36,11 +34,12 @@ class SummaryEmailTestCase extends KWWebTestCase
         $buildgroup->Save();
 
         // Resubmit a previous build to this new project.
-        $parts = ['build', 'update', 'test', 'dynamicanalysis'];
-        foreach ($parts as $part) {
-            $file = dirname(__FILE__) . "/data/EmailProjectExample/2_$part.xml";
-            $this->submission('SummaryEmailProject', $file);
-        }
+        $this->submitFiles('SummaryEmailProject', [
+            dirname(__FILE__) . "/data/EmailProjectExample/2_build.xml",
+            dirname(__FILE__) . "/data/EmailProjectExample/2_update.xml",
+            dirname(__FILE__) . "/data/EmailProjectExample/2_test.xml",
+            dirname(__FILE__) . "/data/EmailProjectExample/2_dynamicanalysis.xml",
+        ], 1);
 
         $expected = [
             'about to query for builds to remove',

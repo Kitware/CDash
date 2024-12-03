@@ -8,9 +8,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Models\Measurement;
 use App\Utils\DatabaseCleanupUtils;
+use Tests\Traits\CreatesSubmissions;
 
 class ManageMeasurementsTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $PDO;
     private $BuildId;
     private $SubProjectBuildId;
@@ -114,10 +117,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
     {
         // Submit a test file with a named measurement.
         $testDataFile = dirname(__FILE__) .  '/data/TestMeasurements/Test.xml';
-        if (!$this->submission('InsightExample', $testDataFile)) {
-            $this->fail("Failed to submit Test.xml");
-            return false;
-        }
+        $this->submitFiles('InsightExample', [$testDataFile]);
 
         // Get the ID of the build we just created.
         $stmt = $this->PDO->query(
@@ -128,16 +128,10 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         }
 
         // Submit subproject test data too.
-        $projectFile = dirname(__FILE__) .  '/data/MultipleSubprojects/Project.xml';
-        if (!$this->submission('SubProjectExample', $projectFile)) {
-            $this->fail("Failed to submit Project.xml");
-            return false;
-        }
-        $testDataFile = dirname(__FILE__) .  '/data/TestMeasurements/Test_subproj.xml';
-        if (!$this->submission('SubProjectExample', $testDataFile)) {
-            $this->fail("Failed to submit Test_subproj.xml");
-            return false;
-        }
+        $this->submitFiles('SubProjectExample', [
+            dirname(__FILE__) .  '/data/MultipleSubprojects/Project.xml',
+            dirname(__FILE__) .  '/data/TestMeasurements/Test_subproj.xml',
+        ], 1);
         $stmt = $this->PDO->query(
             "SELECT id FROM build WHERE name = 'subprojects_measurements_example' AND parentid = -1");
         $this->SubProjectBuildId = $stmt->fetchColumn();

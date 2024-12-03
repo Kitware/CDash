@@ -343,18 +343,6 @@ class KWWebTestCase extends WebTestCase
         return true;
     }
 
-    public function submission($projectname, $file, $header = null, $debug = false)
-    {
-        $url = $this->url . "/submit.php?project=$projectname";
-
-        if ($debug) {
-            $url .= "&XDEBUG_SESSION_START";
-        }
-
-        $result = $this->uploadfile($url, $file, $header);
-        return $this->check_submission_result($result);
-    }
-
     public function submission_assign_buildid($file, $project, $build, $site,
         $stamp, $subproject = null, $header = null)
     {
@@ -390,6 +378,9 @@ class KWWebTestCase extends WebTestCase
         return $this->put($url, $parameters, $contentType);
     }
 
+    /**
+     * @deprecated 11/20/2024  Use the CreatesSubmissions trait instead.
+     */
     public function uploadfile($url, $filename, $header = null)
     {
         set_time_limit(0); // sometimes this is slow when access the local webserver from external URL

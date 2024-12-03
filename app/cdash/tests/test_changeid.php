@@ -2,9 +2,12 @@
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 use CDash\Database;
+use Tests\Traits\CreatesSubmissions;
 
 class ChangeIdTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $ProjectId;
 
     public function __construct()
@@ -32,9 +35,11 @@ class ChangeIdTestCase extends KWWebTestCase
 
         // Submit our testing data.
         $dir = dirname(__FILE__) . '/data/GithubPR';
-        $this->submission('ChangeIdProject', "$dir/UpdateBug_Build.xml");
-        $this->submission('ChangeIdProject', "$dir/UpdateBug_Test.xml");
-        $this->submission('ChangeIdProject', "$dir/Update.xml");
+        $this->submitFiles('ChangeIdProject', [
+            "$dir/UpdateBug_Build.xml",
+            "$dir/UpdateBug_Test.xml",
+            "$dir/Update.xml",
+        ], 1);
 
         // Make sure the builds have a changeid associated with them.
         $db = Database::getInstance();

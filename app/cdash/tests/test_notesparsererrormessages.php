@@ -3,9 +3,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Build;
 use CDash\Model\Project;
+use Tests\Traits\CreatesSubmissions;
 
 class NotesParserErrorMessagesTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $project;
 
     public function __construct()
@@ -36,7 +39,7 @@ class NotesParserErrorMessagesTestCase extends KWWebTestCase
 
         $test_dir = dirname(__FILE__) . '/data/NotesParserErrorMessages/';
 
-        $this->submission('NotesParserErrorMessages', "{$test_dir}/NoName.xml");
+        $this->submitFiles('NotesParserErrorMessages', ["{$test_dir}/NoName.xml"]);
         $expected = [
             'about to query for builds to remove',
             'removing old buildids for projectid:',
@@ -46,11 +49,11 @@ class NotesParserErrorMessagesTestCase extends KWWebTestCase
         $this->assertLogContains($expected, 5);
         $this->deleteLog($this->logfilename);
 
-        $this->submission('NotesParserErrorMessages', "{$test_dir}/NoText.xml");
+        $this->submitFiles('NotesParserErrorMessages', ["{$test_dir}/NoText.xml"]);
         $this->assertLogContains(["No note text for 'my very own note' on build"], 2);
         $this->deleteLog($this->logfilename);
 
-        $this->submission('NotesParserErrorMessages', "{$test_dir}/NoTime.xml");
+        $this->submitFiles('NotesParserErrorMessages', ["{$test_dir}/NoTime.xml"]);
         $expected = [
             "Cannot create build 'note_errors' for note 'my very own note' because time was not set",
             "No note time for 'my very own note' on build",

@@ -5,6 +5,7 @@
 //
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 require_once dirname(__FILE__).'/cdash_test_case.php';
 
@@ -12,6 +13,8 @@ require_once dirname(__FILE__).'/cdash_test_case.php';
 
 class TruncateOutputTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $ConfigFile;
     protected $Original;
     protected $Expected;
@@ -57,9 +60,7 @@ class TruncateOutputTestCase extends KWWebTestCase
         $rep  = dirname(__FILE__)."/data/TruncateOutput";
         foreach (['Build_stdout.xml', 'Build_stderr.xml', 'Build_both.xml'] as $file) {
             // Submit our testing data.
-            if (!$this->submission('InsightExample', "$rep/$file")) {
-                $this->fail("failed to submit $file");
-            }
+            $this->submitFiles('InsightExample', ["$rep/$file"]);
 
             // Query for the ID of the build that we just created.
             $buildid_results = DB::select("SELECT id FROM build WHERE name='TruncateOutput'")[0];
@@ -90,7 +91,7 @@ class TruncateOutputTestCase extends KWWebTestCase
 
         // Test removing suppressed warnings.
         $expected = "[CTest: warning matched] This part survives\n";
-        $this->submission('InsightExample', "$rep/Build_suppressed.xml");
+        $this->submitFiles('InsightExample', ["$rep/Build_suppressed.xml"]);
         $buildid_results = DB::select("SELECT id FROM build WHERE name='TruncateOutput'")[0];
         $this->BuildId = $buildid_results->id;
         $this->get($this->url . "/api/v1/viewBuildError.php?type=1&buildid=" . $this->BuildId);

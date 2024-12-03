@@ -3,16 +3,21 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+
+use Tests\Traits\CreatesSubmissions;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class TrilinosSubmissionTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     public function __construct()
     {
         parent::__construct();
     }
 
-    public function submitFiles($test, $trilinosOnly = false)
+    public function submitTrilinosFiles($test, $trilinosOnly = false)
     {
         $dir = str_replace('\\', '/', dirname(__FILE__) . "/data/$test");
 
@@ -46,7 +51,9 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 return false;
             }
 
-            if (!$this->submission($project, $fullname)) {
+            try {
+                $this->submitFiles($project, [$fullname]);
+            } catch (Exception $e) {
                 $this->fail("Submission of file [$fullname] for project [$project] failed");
                 return false;
             }

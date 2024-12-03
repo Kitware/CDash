@@ -4,9 +4,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 use CDash\Model\Project;
 use CDash\Model\DynamicAnalysis;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 class DynamicAnalysisLogsTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $project;
 
     public function __construct()
@@ -38,7 +41,9 @@ class DynamicAnalysisLogsTestCase extends KWWebTestCase
         $test_dir = dirname(__FILE__) . '/data/DynamicAnalysisLogs/';
         $files = ['Build.xml', 'Configure.xml', 'Test.xml', 'DynamicAnalysis.xml'];
         foreach ($files as $file) {
-            if (!$this->submission('DynamicAnalysisLogs', "{$test_dir}/{$file}")) {
+            try {
+                $this->submitFiles('DynamicAnalysisLogs', ["{$test_dir}/{$file}"]);
+            } catch (Exception) {
                 $this->fail("Failed to submit {$file}");
             }
         }

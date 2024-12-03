@@ -14,8 +14,12 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use Tests\Traits\CreatesSubmissions;
+
 class AggregateSubProjectCoverageTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $DataDir;
 
     public function __construct()
@@ -47,7 +51,9 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
             ];
         foreach ($files as $filename) {
             $file_to_submit = "$this->DataDir/$filename";
-            if (!$this->submission('CrossSubProjectExample', $file_to_submit)) {
+            try {
+                $this->submitFiles('CrossSubProjectExample', [$file_to_submit]);
+            } catch (Exception) {
                 $this->fail("Failed to submit $filename");
                 return 1;
             }

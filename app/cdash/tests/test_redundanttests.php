@@ -3,9 +3,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 class RedundantTestsTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     private $project;
 
     public function __construct()
@@ -53,9 +56,7 @@ class RedundantTestsTestCase extends KWWebTestCase
         }
 
         // Submit our testing data.
-        if (!$this->submission('RedundantTests', dirname(__FILE__) . '/data/RedundantTests/Test.xml')) {
-            $this->fail('Failed to submit');
-        }
+        $this->submitFiles('RedundantTests', [dirname(__FILE__) . '/data/RedundantTests/Test.xml']);
 
         // No errors in the log.
         $this->assertTrue($this->checkLog($this->logfilename) !== false);

@@ -4,16 +4,14 @@
 // relative to the top of the CDash source tree
 //
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesSubmissions;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
 class SequenceIndependenceTestCase extends KWWebTestCase
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    use CreatesSubmissions;
 
     public function testOriginalOrder()
     {
@@ -172,12 +170,12 @@ class SequenceIndependenceTestCase extends KWWebTestCase
     public function PerformOrderTest($file_order)
     {
         $success = true;
-        $success &= $this->SubmitFiles($file_order);
+        $success &= $this->SubmitXMLFiles($file_order);
         $success &= $this->VerifyBuild();
         return $success;
     }
 
-    public function SubmitFiles($file_order)
+    public function SubmitXMLFiles($file_order)
     {
         // Mark any existing build as 'done' so that it will be replaced
         // upon submission of these new files.
@@ -193,7 +191,9 @@ class SequenceIndependenceTestCase extends KWWebTestCase
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         foreach ($file_order as $type) {
             $file = "$rep/Insight_Experimental_$type.xml";
-            if (!$this->submission('InsightExample', $file)) {
+            try {
+                $this->submitFiles('InsightExample', [$file]);
+            } catch (Exception) {
                 $this->fail("Submission of $file failed");
                 return false;
             }

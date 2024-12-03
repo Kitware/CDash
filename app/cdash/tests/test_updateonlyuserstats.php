@@ -19,9 +19,12 @@ use CDash\Database;
 use App\Models\User;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\UserProject;
+use Tests\Traits\CreatesSubmissions;
 
 class UpdateOnlyUserStatsTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $DataDir;
     protected $ProjectId;
     protected $Users;
@@ -91,10 +94,7 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
             foreach ($files as $file) {
                 $file_to_submit = "$this->DataDir/$dir/$file";
                 echo "submitting $file_to_submit\n";
-                if (!$this->submission('CDash', $file_to_submit)) {
-                    $this->fail("Failed to submit $file_to_submit");
-                    return 1;
-                }
+                $this->submitFiles('CDash', [$file_to_submit]);
             }
         }
 

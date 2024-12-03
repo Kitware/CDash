@@ -8,9 +8,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 use CDash\Model\Project;
+use Tests\Traits\CreatesSubmissions;
 
 class FilterBuildErrorsTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     protected $PDO;
 
     public function __construct()
@@ -39,10 +42,7 @@ class FilterBuildErrorsTestCase extends KWWebTestCase
 
         // Submit our test data.
         $rep = dirname(__FILE__) . '/data/BuildFailureDetails';
-        if (!$this->submission('FilterErrors', "$rep/Build_1.xml")) {
-            $this->fail('failed to submit Build_1.xml');
-            return 1;
-        }
+        $this->submitFiles('FilterErrors', ["$rep/Build_1.xml"]);
 
         // Get the buildid that we just created so we can delete it later.
         $buildids = [];

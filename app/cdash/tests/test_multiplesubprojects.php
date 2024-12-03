@@ -7,9 +7,12 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
+use Tests\Traits\CreatesSubmissions;
 
 class MultipleSubprojectsTestCase extends KWWebTestCase
 {
+    use CreatesSubmissions;
+
     public const EMAIL_NORMAL = 0;
     public const EMAIL_SUMMARY = 1;
 
@@ -58,49 +61,17 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
         $this->buildIds = [];
 
-        if (!$this->submission('SubProjectExample', "{$this->dataDir}/Project.xml")) {
-            return 1;
-        }
-
-        if (!$this->submission('SubProjectExample', "{$this->dataDir}/Configure.xml")) {
-            $this->fail('failed to submit Configure.xml');
-            return 1;
-        }
-
-        if (!$this->submission('SubProjectExample', "{$this->dataDir}/Build.xml")) {
-            $this->fail('failed to submit Build.xml');
-            return 1;
-        }
-
-        if (!$this->submission('SubProjectExample', "{$this->dataDir}/Coverage.xml")) {
-            $this->fail('failed to submit Coverage.xml');
-            return 1;
-        }
-
-        if (!$this->submission('SubProjectExample', "{$this->dataDir}/CoverageLog.xml")) {
-            $this->fail('failed to submit CoverageLog.xml');
-            return 1;
-        }
-
-        if (!$this->submission('SubProjectExample', "{$this->dataDir}/DynamicAnalysis.xml")) {
-            $this->fail('failed to submit DynamicAnalysis.xml');
-            return 1;
-        }
-
-        if (!$this->submission('SubProjectExample', "{$this->dataDir}/Test.xml")) {
-            $this->fail('failed to submit Test.xml');
-            return 1;
-        }
-
-        if (!$this->submission('SubProjectExample', "{$this->dataDir}/Notes.xml")) {
-            $this->fail('failed to submit Notes.xml');
-            return 1;
-        }
-
-        if (!$this->submission('SubProjectExample', "{$this->dataDir}/Upload.xml")) {
-            $this->fail('failed to submit Upload.xml');
-            return 1;
-        }
+        $this->submitFiles('SubProjectExample', [
+            "{$this->dataDir}/Project.xml",
+            "{$this->dataDir}/Configure.xml",
+            "{$this->dataDir}/Build.xml",
+            "{$this->dataDir}/Coverage.xml",
+            "{$this->dataDir}/CoverageLog.xml",
+            "{$this->dataDir}/DynamicAnalysis.xml",
+            "{$this->dataDir}/Test.xml",
+            "{$this->dataDir}/Notes.xml",
+            "{$this->dataDir}/Upload.xml",
+        ], 1);
 
         // Get the buildids that we just created so we can delete it later.
         $pdo = Database::getInstance()->getPdo();
@@ -138,11 +109,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
         // Remove extra subprojects
         $rep = dirname(__FILE__) . '/data/SubProjectExample';
-        $file = "$rep/Project_1.xml";
-        if (!$this->submission('SubProjectExample', $file)) {
-            $this->fail('failed to submit Project_1.xml');
-            return 1;
-        }
+        $this->submitFiles('SubProjectExample', ["$rep/Project_1.xml"]);
     }
 
     private function setEmailPreference($status, $chars)
@@ -798,10 +765,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         }
 
         // Test changing subproject order.
-        if (!$this->submission('SubProjectExample', "{$this->dataDir}/Project_2.xml")) {
-            $this->fail("failed to submit Project_2.xml");
-            return;
-        }
+        $this->submitFiles('SubProjectExample', ["{$this->dataDir}/Project_2.xml"]);
         $new_order = ["MyProductionCode", "MyExperimentalFeature", "EmptySubproject", "MyThirdPartyDependency"];
         $this->get("{$this->url}/api/v1/index.php?project=SubProjectExample&parentid={$parentid}");
         $content = $this->getBrowser()->getContent();
