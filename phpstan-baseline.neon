@@ -3610,6 +3610,11 @@ parameters:
 			path: app/Models/Build.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\BuildCommand\\>\\:\\:where\\(\\)\\.$#"
+			count: 4
+			path: app/Models/Build.php
+
+		-
 			message: "#^PHPDoc tag @method for method App\\\\Models\\\\Build\\:\\:betweenDates\\(\\) return type contains generic class Illuminate\\\\Database\\\\Eloquent\\\\Builder but does not specify its types\\: TModelClass$#"
 			count: 1
 			path: app/Models/Build.php
@@ -29834,13 +29839,18 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
+			message: "#^Class BuildHandler has an uninitialized property \\$MostRecentBuildMeasurement\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 8
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 29
+			count: 26
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
@@ -29910,6 +29920,11 @@ parameters:
 
 		-
 			message: "#^Method BuildHandler\\:\\:text\\(\\) has parameter \\$parser with no type specified\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Negated boolean expression is always true\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/build_handler.php
 

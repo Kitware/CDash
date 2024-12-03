@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BuildCommandType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -215,14 +216,6 @@ class Build extends Model
     }
 
     /**
-     * @return HasMany<BuildMeasurement>
-     */
-    public function measurements(): HasMany
-    {
-        return $this->hasMany(BuildMeasurement::class, 'buildid');
-    }
-
-    /**
      * @return HasMany<Coverage>
      */
     public function coverageResults(): HasMany
@@ -236,5 +229,45 @@ class Build extends Model
     public function labels(): BelongsToMany
     {
         return $this->belongsToMany(Label::class, 'label2build', 'buildid', 'labelid');
+    }
+
+    /**
+     * @return HasMany<BuildCommand>
+     */
+    public function commands(): HasMany
+    {
+        return $this->hasMany(BuildCommand::class, 'buildid');
+    }
+
+    /**
+     * @return HasMany<BuildCommand>
+     */
+    public function compileCommands(): HasMany
+    {
+        return $this->commands()->where('type', BuildCommandType::COMPILE_COMMAND);
+    }
+
+    /**
+     * @return HasMany<BuildCommand>
+     */
+    public function linkCommands(): HasMany
+    {
+        return $this->commands()->where('type', BuildCommandType::LINK_COMMAND);
+    }
+
+    /**
+     * @return HasMany<BuildCommand>
+     */
+    public function cmakeBuildCommands(): HasMany
+    {
+        return $this->commands()->where('type', BuildCommandType::CMAKE_BUILD_COMMAND);
+    }
+
+    /**
+     * @return HasMany<BuildCommand>
+     */
+    public function customCommands(): HasMany
+    {
+        return $this->commands()->where('type', BuildCommandType::CUSTOM_COMMAND);
     }
 }

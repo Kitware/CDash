@@ -147,7 +147,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
     /** Text */
     public function text($parser, $data)
     {
-        $parent = $this->getParent();
+        $parent = $this->hasParent() ? $this->getParent() : false;
         $element = $this->getElement();
         if ($parent == 'UPDATE') {
             switch ($element) {

@@ -140,7 +140,7 @@ class NoteHandler extends AbstractXmlHandler
     /** text function */
     public function text($parser, $data)
     {
-        $parent = $this->getParent();
+        $parent = $this->hasParent() ? $this->getParent() : false;
         $element = $this->getElement();
         if ($parent == 'NOTE') {
             switch ($element) {

@@ -157,7 +157,7 @@ class UploadHandler extends AbstractXmlHandler
      */
     public function endElement($parser, $name): void
     {
-        $parent = $this->getParent(); // should be before endElement
+        $parent = $this->hasParent() ? $this->getParent() : false; // should be before endElement
         parent::endElement($parser, $name);
 
         if ($this->UploadError) {
@@ -291,7 +291,7 @@ class UploadHandler extends AbstractXmlHandler
             return;
         }
 
-        $parent = $this->getParent();
+        $parent = $this->hasParent() ? $this->getParent() : false;
         $element = $this->getElement();
 
         if ($parent === 'FILE') {
