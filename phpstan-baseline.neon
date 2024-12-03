@@ -3841,6 +3841,11 @@ parameters:
 			path: app/Utils/DatabaseCleanupUtils.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasManyThrough\\<App\\\\Models\\\\Build\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 1
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
 			message: "#^Method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:deleteRowsChunked\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Utils/DatabaseCleanupUtils.php

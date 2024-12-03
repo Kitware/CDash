@@ -6,6 +6,7 @@ namespace App\Utils;
 
 use App\Models\Build;
 use App\Models\BuildGroup;
+use App\Models\Configure;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -117,6 +118,8 @@ class DatabaseCleanupUtils
             $buildids[] = intval($b);
         }
 
+        $builds = Build::whereIn('id', $buildids)->get();
+
         $db = Database::getInstance();
         $buildid_prepare_array = $db->createPreparedArray(count($buildids));
 
@@ -137,27 +140,15 @@ class DatabaseCleanupUtils
         ", array_merge($buildids, $buildids));
 
         // Delete the configure if not shared.
-        $build2configure = DB::select("
-                               SELECT a.configureid
-                               FROM build2configure AS a
-                               LEFT JOIN build2configure AS b ON (
-                                   a.configureid=b.configureid
-                                   AND b.buildid NOT IN $buildid_prepare_array
-                               )
-                               WHERE a.buildid IN $buildid_prepare_array
-                               GROUP BY a.configureid
-                               HAVING count(b.configureid)=0
-                           ", array_merge($buildids, $buildids));
-
-        $configureids = [];
-        foreach ($build2configure as $build2configure_array) {
-            // It is safe to delete this configure because it is only used
-            // by builds that are being deleted.
-            $configureids[] = intval($build2configure_array->configureid);
-        }
-        if (count($configureids) > 0) {
-            $configureids_prepare_array = $db->createPreparedArray(count($configureids));
-            DB::delete("DELETE FROM configure WHERE id IN $configureids_prepare_array", $configureids);
+        foreach ($builds as $build) {
+            /** @var ?Configure $configure */
+            $configure = $build->configure()->first();
+            if ($configure !== null) {
+                $configure_buildids = $configure->builds()->pluck('id')->all();
+                if (array_diff($configure_buildids, $buildids) === []) {
+                    $configure->delete();
+                }
+            }
         }
 
         // coverage files are kept unless they are shared
