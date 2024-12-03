@@ -246,10 +246,6 @@ type Build {
 
   notes: [Note!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 
-  measurements(
-    filters: _ @filter(inputType: "BuildMeasurementFilterInput")
-  ): [BuildMeasurement!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
-
   operatingSystemName: String @rename(attribute: "osname")
 
   operatingSystemPlatform: String @rename(attribute: "osplatform")
@@ -269,6 +265,14 @@ type Build {
   labels(
     filters: _ @filter(inputType: "LabelFilterInput")
   ): [Label!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+
+  compileCommands: [CompileBuildCommand!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: ASC)
+
+  linkCommands: [LinkBuildCommand!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: ASC)
+
+  cmakeBuildCommands: [CMakeBuildCommand!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: ASC)
+
+  customCommands: [CustomBuildCommand!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: ASC)
 }
 
 input BuildFilterInput {
@@ -359,6 +363,116 @@ type TestMeasurement {
 }
 
 
+"""
+Represents a compile command run during the build step.
+"""
+type CompileBuildCommand @model(class: "App\\Models\\BuildCommand") {
+  id: ID!
+
+  startTime: DateTimeTz! @rename(attribute: "starttime")
+
+  endTime: DateTimeTz! @rename(attribute: "endtime")
+
+  command: String
+
+  binaryDirectory: String @rename(attribute: "binarydirectory")
+
+  returnValue: String @rename(attribute: "returnvalue")
+
+  language: String
+
+  target: String
+
+  """
+  The absolute path to the source file being compiled.
+  """
+  source: String
+
+  output: String
+
+  measurements(
+    filters: _ @filter(inputType: "BuildMeasurementFilterInput")
+  ): [BuildMeasurement!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: ASC)
+}
+
+
+"""
+Represents a link command run during the build step.
+"""
+type LinkBuildCommand @model(class: "App\\Models\\BuildCommand") {
+  id: ID!
+
+  startTime: DateTimeTz! @rename(attribute: "starttime")
+
+  endTime: DateTimeTz! @rename(attribute: "endtime")
+
+  command: String
+
+  binaryDirectory: String @rename(attribute: "binarydirectory")
+
+  returnValue: String @rename(attribute: "returnvalue")
+
+  language: String
+
+  target: String
+
+  """
+  https://cmake.org/cmake/help/latest/prop_tgt/TYPE.html
+  """
+  targetType: String
+
+  output: String
+
+  measurements(
+    filters: _ @filter(inputType: "BuildMeasurementFilterInput")
+  ): [BuildMeasurement!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: ASC)
+}
+
+
+"""
+Represents a CMake build command run during the build step.
+"""
+type CMakeBuildCommand @model(class: "App\\Models\\BuildCommand") {
+  id: ID!
+
+  startTime: DateTimeTz! @rename(attribute: "starttime")
+
+  endTime: DateTimeTz! @rename(attribute: "endtime")
+
+  command: String
+
+  binaryDirectory: String @rename(attribute: "binarydirectory")
+
+  returnValue: String @rename(attribute: "returnvalue")
+
+  measurements(
+    filters: _ @filter(inputType: "BuildMeasurementFilterInput")
+  ): [BuildMeasurement!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: ASC)
+}
+
+
+"""
+Represents a custom command run during the build step.
+"""
+type CustomBuildCommand @model(class: "App\\Models\\BuildCommand") {
+  id: ID!
+
+  startTime: DateTimeTz! @rename(attribute: "starttime")
+
+  endTime: DateTimeTz! @rename(attribute: "endtime")
+
+  command: String
+
+  binaryDirectory: String @rename(attribute: "binarydirectory")
+
+  returnValue: String @rename(attribute: "returnvalue")
+
+  measurements(
+    filters: _ @filter(inputType: "BuildMeasurementFilterInput")
+  ): [BuildMeasurement!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: ASC)
+}
+
+
 "Build Measurement."
 type BuildMeasurement {
   "Unique primary key."
@@ -366,13 +480,12 @@ type BuildMeasurement {
 
   name: String!
 
-  source: String!
-
-  type: BuildMeasurementType!
+  type: String!
 
   """
   The value for this measurement.  Even though some values may be numeric, all
-  values are returned as strings.
+  values are returned as strings.  The type of the value field is not guaranteed
+  to match the actual type of the value field.
 
   Example: "5"
   """
@@ -383,8 +496,7 @@ type BuildMeasurement {
 input BuildMeasurementFilterInput {
   id: ID
   name: String
-  source: String
-  type: BuildMeasurementType
+  type: String
   value: String
 }
 

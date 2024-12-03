@@ -14,7 +14,12 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Enums\BuildCommandType;
+use App\Models\Build as EloquentBuild;
+use App\Models\BuildCommand;
+use App\Models\BuildMeasurement;
 use App\Utils\SubmissionUtils;
+use Carbon\Carbon;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
@@ -55,6 +60,18 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
     private $Generator;
     private $PullRequest;
     private $BuildErrorFilter;
+
+    /**
+     * A list of BuildCommands to be attached to the parent build and associated
+     * unsaved measurements.  This should eventually be turned into a mapping of
+     * subproject names to BuildCommands so BuildCommands can be associated with
+     * child builds.
+     *
+     * @var array<BuildCommand>
+     */
+    private array $BuildCommands = [];
+
+    private BuildMeasurement $MostRecentBuildMeasurement;
 
     public function __construct(Project $project)
     {
@@ -183,6 +200,46 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             $this->ErrorSubProjectName = "";
         } elseif ($name == 'LABEL') {
             $this->Label = $factory->create(Label::class);
+        } elseif ($this->getParent() === 'COMMANDS') {
+            $command_info = [
+                'starttime' => Carbon::createFromTimestamp($attributes['TIMESTART']),
+                'endtime' => Carbon::createFromTimestamp($attributes['TIMEEND']),
+                'command' => $attributes['COMMAND'],
+                'binarydirectory' => $attributes['BINARYDIR'],
+            ];
+
+            switch ($name) {
+                case 'COMPILE':
+                    $command_info['type'] = BuildCommandType::COMPILE_COMMAND;
+                    $command_info['language'] = $attributes['LANGUAGE'];
+                    $command_info['output'] = $attributes['OUTPUT'];
+                    $command_info['source'] = $attributes['SOURCE'];
+                    $command_info['target'] = $attributes['TARGET'];
+                    break;
+                case 'LINK':
+                    $command_info['type'] = BuildCommandType::LINK_COMMAND;
+                    $command_info['language'] = $attributes['LANGUAGE'];
+                    $command_info['output'] = $attributes['OUTPUT'];
+                    $command_info['target'] = $attributes['TARGET'];
+                    $command_info['targettype'] = $attributes['TARGETTYPE'];
+                    break;
+                case 'CMAKEBUILD':
+                    $command_info['type'] = BuildCommandType::CMAKE_BUILD_COMMAND;
+                    break;
+                case 'CUSTOM':
+                    $command_info['type'] = BuildCommandType::CUSTOM_COMMAND;
+                    // TODO: Finish this
+                    break;
+                default:
+                    throw new Exception("Unknown element $name");
+            }
+
+            $this->BuildCommands[] = new BuildCommand($command_info);
+        } elseif ($name === 'NAMEDMEASUREMENT') {
+            $this->MostRecentBuildMeasurement = new BuildMeasurement([
+                'type' => $attributes['TYPE'],
+                'name' => $attributes['NAME'],
+            ]);
         }
     }
 
@@ -231,6 +288,21 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 }
 
                 $build->ComputeDifferences();
+            }
+
+            if (count($this->BuildCommands) > 0) {
+                // This is an unfortunate side effect of not having the build until the end.
+                // In the future, it would be good to initialize the build earlier and directly
+                // attach children as we go.
+                $eloquent_parent_build = EloquentBuild::findOrFail((int) $this->getBuild()->Id);
+                foreach ($this->BuildCommands as $command) {
+                    $build_command = $eloquent_parent_build->commands()->save($command);
+                    if ($build_command === false) {
+                        throw new Exception('Build command failed to save.');
+                    }
+                    $build_command->measurements()->saveMany($command->measurements);
+                }
+                $eloquent_parent_build->push();
             }
         } elseif ($name == 'WARNING' || $name == 'ERROR' || $name == 'FAILURE') {
             $skip_error = false;
@@ -391,6 +463,9 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             if (empty($this->ErrorSubProjectName)) {
                 $this->Label->SetText($data);
             }
+        } elseif ($element === 'VALUE' && $parent === 'NAMEDMEASUREMENT') {
+            $this->MostRecentBuildMeasurement->value = $data;
+            $this->BuildCommands[array_key_last($this->BuildCommands)]->measurements->add($this->MostRecentBuildMeasurement);
         }
     }
 
