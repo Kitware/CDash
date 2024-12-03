@@ -84,7 +84,7 @@ class DoneHandler extends AbstractXmlHandler
 
     public function text($parser, $data)
     {
-        $parent = $this->getParent();
+        $parent = $this->hasParent() ? $this->getParent() : false;
         $element = $this->getElement();
         if ($parent == 'DONE') {
             switch ($element) {
