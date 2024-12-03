@@ -3623,6 +3623,11 @@ parameters:
 			path: app/Models/Build.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\BuildCommand\\>\\:\\:where\\(\\)\\.$#"
+			count: 4
+			path: app/Models/Build.php
+
+		-
 			message: "#^PHPDoc tag @method for method App\\\\Models\\\\Build\\:\\:betweenDates\\(\\) return type contains generic class Illuminate\\\\Database\\\\Eloquent\\\\Builder but does not specify its types\\: TModelClass$#"
 			count: 1
 			path: app/Models/Build.php
@@ -30171,6 +30176,11 @@ parameters:
 
 		-
 			message: "#^Class BuildHandler has an uninitialized property \\$BuildInformation\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
+			message: "#^Class BuildHandler has an uninitialized property \\$MostRecentBuildMeasurement\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/build_handler.php
 
