@@ -34,6 +34,7 @@ class CoverageLogHandler extends AbstractXmlHandler
     private $UpdateEndTime;
     private $CurrentLine;
 
+    protected $schema_file = "/app/Validators/Schemas/CoverageLog.xsd";
     /** Constructor */
     public function __construct(Project $project)
     {

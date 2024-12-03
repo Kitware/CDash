@@ -16,10 +16,10 @@
 
 use CDash\Database;
 use App\Models\BuildFile;
+use App\Utils\SubmissionUtils;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use App\Utils\SubmissionUtils;
 
 class CDashParseException extends RuntimeException
 {
@@ -155,7 +155,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, int|null 
 }
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($filehandle, $projectid, $expected_md5 = '', int|null $buildid=null): AbstractSubmissionHandler|false
+function ctest_parse($filehandle, string $filename, $projectid, $expected_md5 = '', int|null $buildid=null): AbstractSubmissionHandler|false
 {
     // Check if this is a new style PUT submission.
     try {
@@ -178,11 +178,10 @@ function ctest_parse($filehandle, $projectid, $expected_md5 = '', int|null $buil
     $Project->Id = $projectid;
 
     // Figure out what type of XML file this is.
-    $xml_info = SubmissionUtils::get_xml_type($filehandle);
+    $xml_info = SubmissionUtils::get_xml_type($filehandle, $filename);
     $filehandle = $xml_info['file_handle'];
     $handler_ref = $xml_info['xml_handler'];
     $file = $xml_info['xml_type'];
-
     $handler = isset($handler_ref) ? new $handler_ref($Project) : null;
 
     rewind($filehandle);

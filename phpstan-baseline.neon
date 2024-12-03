@@ -177,7 +177,7 @@ parameters:
 			path: app/Console/Commands/UpdateDependencies.php
 
 		-
-			message: "#^Part \\$xml_type \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
+			message: "#^Parameter \\#2 \\$schema_file of static method App\\\\Utils\\\\SubmissionUtils\\:\\:validate_xml\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: app/Console/Commands/ValidateXml.php
 
@@ -185,6 +185,11 @@ parameters:
 			message: "#^Parameter \\#1 \\$path of function app_path expects string, bool\\|string given\\.$#"
 			count: 1
 			path: app/Console/Kernel.php
+
+		-
+			message: "#^Method App\\\\Exceptions\\\\CDashXMLValidationException\\:\\:getDecodedMessage\\(\\) should return array\\<int, string\\> but returns mixed\\.$#"
+			count: 1
+			path: app/Exceptions/CDashXMLValidationException.php
 
 		-
 			message: "#^PHPDoc type array of property App\\\\Exceptions\\\\Handler\\:\\:\\$dontFlash is not the same as PHPDoc type array\\<int, string\\> of overridden property Illuminate\\\\Foundation\\\\Exceptions\\\\Handler\\:\\:\\$dontFlash\\.$#"
@@ -2775,6 +2780,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$value of function decrypt expects string, mixed given\\.$#"
+			count: 1
+			path: app/Http/Controllers/SubmissionController.php
+
+		-
+			message: "#^Parameter \\#2 \\$schema_file of static method App\\\\Utils\\\\SubmissionUtils\\:\\:validate_xml\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: app/Http/Controllers/SubmissionController.php
 
@@ -14468,6 +14478,11 @@ parameters:
 
 		-
 			message: "#^Function ctest_parse\\(\\) should return AbstractSubmissionHandler\\|false but returns object\\.$#"
+			count: 1
+			path: app/cdash/include/ctestparser.php
+
+		-
+			message: "#^Function ctest_parse\\(\\) throws checked exception App\\\\Exceptions\\\\CDashXMLValidationException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparser.php
 
@@ -26872,6 +26887,46 @@ parameters:
 			path: app/cdash/tests/test_submission_assign_buildid.php
 
 		-
+			message: "#^Method SubmissionValidationTestCase\\:\\:_construct\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_submissionvalidation.php
+
+		-
+			message: "#^Method SubmissionValidationTestCase\\:\\:submit\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_submissionvalidation.php
+
+		-
+			message: "#^Method SubmissionValidationTestCase\\:\\:submit\\(\\) has parameter \\$fileName with no type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_submissionvalidation.php
+
+		-
+			message: "#^Method SubmissionValidationTestCase\\:\\:testSubmissionValidation\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_submissionvalidation.php
+
+		-
+			message: "#^Property SubmissionValidationTestCase\\:\\:\\$ConfigFile has no type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_submissionvalidation.php
+
+		-
+			message: "#^Property SubmissionValidationTestCase\\:\\:\\$Original has no type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_submissionvalidation.php
+
+		-
+			message: "#^Property SubmissionValidationTestCase\\:\\:\\$PDO has no type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/test_submissionvalidation.php
+
+		-
+			message: "#^Static call to __construct\\(\\) is only allowed on a parent class in the constructor\\.$#"
+			count: 1
+			path: app/cdash/tests/test_submissionvalidation.php
+
+		-
 			message: "#^Method SubmitSortingDataTestCase\\:\\:submitFile\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_submitsortingdata.php
@@ -32679,6 +32734,11 @@ parameters:
 			message: "#^Property Tests\\\\Feature\\\\UserCommand\\:\\:\\$user has no type specified\\.$#"
 			count: 1
 			path: tests/Feature/UserCommand.php
+
+		-
+			message: "#^Part \\$file \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
+			count: 1
+			path: tests/Unit/app/Console/Command/ValidateXmlCommandTest.php
 
 		-
 			message: "#^Parameter \\#1 \\$objectOrClass of class ReflectionClass constructor expects class\\-string\\<T of object\\>\\|T of object, array\\<int, string\\>\\|string given\\.$#"
