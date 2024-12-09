@@ -810,7 +810,7 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime): void
         $emails = $db->executePrepared('
                       SELECT email
                       FROM
-                          ' . qid('user') . ' AS u,
+                          users AS u,
                           site2user
                       WHERE
                           u.id=site2user.userid
@@ -850,7 +850,7 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime): void
         $emails = $db->executePrepared('
                       SELECT email
                       FROM
-                          ' . qid('user') . ' AS u,
+                          users AS u,
                           user2project
                       WHERE
                           u.id=user2project.userid
@@ -919,7 +919,7 @@ function sendEmailUnregisteredUsers(int $projectid, $cvsauthors): void
         $emails = $db->executePrepared('
                       SELECT email
                       FROM
-                          ' . qid('user') . ' AS u,
+                          users AS u,
                           user2project
                       WHERE
                           u.id=user2project.userid

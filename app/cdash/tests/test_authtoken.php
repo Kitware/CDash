@@ -55,8 +55,7 @@ class AuthTokenTestCase extends KWWebTestCase
         $this->Project->Id = $projectid;
 
         // Subscribe a non-administrative user to it.
-        $stmt = $this->PDO->query(
-            'SELECT * FROM ' . qid('user') . " WHERE email = 'user1@kw'");
+        $stmt = $this->PDO->query("SELECT * FROM users WHERE email = 'user1@kw'");
         $row = $stmt->fetch();
         if (!$row) {
             $this->fail('Failed to find non-admin user');

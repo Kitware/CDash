@@ -51,7 +51,7 @@ class PasswordRotation extends TestCase
         ];
 
         $this->post(route('register'), $post_data);
-        $this->assertDatabaseHas('user', ['email' => 'jane@smith']);
+        $this->assertDatabaseHas('users', ['email' => 'jane@smith']);
 
         // Get the id for this user.
         $this->user = User::where('email', 'jane@smith')->first();
