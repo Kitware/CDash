@@ -19754,6 +19754,14 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
 			message: "#^Cannot access offset 'Id' on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -20204,22 +20212,22 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:861\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:getSent\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:861\\:\\:getSent\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:isError\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:861\\:\\:isError\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:read\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:861\\:\\:read\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -20434,12 +20442,12 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:\\$read has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:861\\:\\:\\$read has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:855\\:\\:\\$response has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:861\\:\\:\\$response has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -20637,6 +20645,14 @@ parameters:
 			path: app/cdash/tests/test_aggregatecoverage.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_aggregatecoverage.php
+
+		-
 			message: "#^Cannot access offset 'buildgroups' on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_aggregatecoverage.php
@@ -20738,6 +20754,14 @@ parameters:
 
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
+			count: 1
+			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
 			count: 1
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
 
@@ -20938,6 +20962,14 @@ parameters:
 			path: app/cdash/tests/test_attachedfiles.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_attachedfiles.php
+
+		-
 			message: "#^Cannot call method fetchColumn\\(\\) on PDOStatement\\|false\\.$#"
 			count: 1
 			path: app/cdash/tests/test_attachedfiles.php
@@ -20981,6 +21013,14 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
+			path: app/cdash/tests/test_authtoken.php
+
+		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 2
 			path: app/cdash/tests/test_authtoken.php
 
 		-
@@ -21246,6 +21286,14 @@ parameters:
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
+
+		-
 			message: "#^Cannot access offset 0 on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
@@ -21312,6 +21360,14 @@ parameters:
 			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_bazeljson.php
+
+		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_bazeljson.php
@@ -21485,6 +21541,14 @@ parameters:
 			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_branchcoverage.php
+
+		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_branchcoverage.php
@@ -21677,6 +21741,14 @@ parameters:
 			path: app/cdash/tests/test_builddetails.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 3
+			path: app/cdash/tests/test_builddetails.php
+
+		-
 			message: "#^Cannot access offset int\\<0, max\\> on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_builddetails.php
@@ -21823,6 +21895,14 @@ parameters:
 			path: app/cdash/tests/test_buildfailuredetails.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/tests/test_buildfailuredetails.php
+
+		-
 			message: "#^Method BuildFailureDetailsTestCase\\:\\:testBuildFailureDetails\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_buildfailuredetails.php
@@ -21907,6 +21987,14 @@ parameters:
 				04/01/2023$#
 			"""
 			count: 2
+			path: app/cdash/tests/test_buildmodel.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
 			path: app/cdash/tests/test_buildmodel.php
 
 		-
@@ -22030,6 +22118,14 @@ parameters:
 				v2\\.5\\.0 01/22/2018$#
 			"""
 			count: 10
+			path: app/cdash/tests/test_buildproperties.php
+
+		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
 			path: app/cdash/tests/test_buildproperties.php
 
 		-
@@ -22305,6 +22401,14 @@ parameters:
 			path: app/cdash/tests/test_changeid.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 3
+			path: app/cdash/tests/test_changeid.php
+
+		-
 			message: "#^Cannot call method fetchAll\\(\\) on PDOStatement\\|false\\.$#"
 			count: 1
 			path: app/cdash/tests/test_changeid.php
@@ -22323,6 +22427,14 @@ parameters:
 			message: "#^Property ChangeIdTestCase\\:\\:\\$ProjectId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_changeid.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_commitauthornotification.php
 
 		-
 			message: "#^Method CommitAuthorNotificationTestCase\\:\\:submitFile\\(\\) has no return type specified\\.$#"
@@ -22375,6 +22487,14 @@ parameters:
 			path: app/cdash/tests/test_committerinfo.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_committerinfo.php
+
+		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 2
 			path: app/cdash/tests/test_committerinfo.php
@@ -22392,6 +22512,14 @@ parameters:
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 1
+			path: app/cdash/tests/test_compressedtest.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 2
 			path: app/cdash/tests/test_compressedtest.php
 
 		-
@@ -22475,6 +22603,14 @@ parameters:
 			path: app/cdash/tests/test_compressedtest.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_configureappend.php
+
+		-
 			message: "#^Method ConfigureAppendTestCase\\:\\:testConfigureAppend\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_configureappend.php
@@ -22496,6 +22632,14 @@ parameters:
 			message: """
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 2
+			path: app/cdash/tests/test_configurewarnings.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
 			"""
 			count: 2
 			path: app/cdash/tests/test_configurewarnings.php
@@ -22544,6 +22688,14 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
+			path: app/cdash/tests/test_consistenttestingday.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 4
 			path: app/cdash/tests/test_consistenttestingday.php
 
 		-
@@ -22604,6 +22756,14 @@ parameters:
 		-
 			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and mixed results in an error\\.$#"
 			count: 2
+			path: app/cdash/tests/test_coveragedirectories.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
 			path: app/cdash/tests/test_coveragedirectories.php
 
 		-
@@ -22732,6 +22892,22 @@ parameters:
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 2
+			path: app/cdash/tests/test_crosssubprojectcoverage.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/tests/test_crosssubprojectcoverage.php
+
+		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
 		-
@@ -22963,6 +23139,14 @@ parameters:
 			path: app/cdash/tests/test_deferredsubmissions.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 18
+			path: app/cdash/tests/test_deferredsubmissions.php
+
+		-
 			message: "#^Cannot access offset 'raw_token' on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_deferredsubmissions.php
@@ -23103,6 +23287,14 @@ parameters:
 			path: app/cdash/tests/test_deferredsubmissions.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_deletesubproject.php
+
+		-
 			message: "#^Method DeleteSubProjectTestCase\\:\\:testDeleteSubProject\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_deletesubproject.php
@@ -23116,6 +23308,14 @@ parameters:
 			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_disabledtests.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_disabledtests.php
@@ -23259,6 +23459,14 @@ parameters:
 			path: app/cdash/tests/test_donehandler.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_dynamicanalysisdefectlongtype.php
+
+		-
 			message: "#^Method DynamicAnalysisDefectLongTypeTestCase\\:\\:testDynamicAnalysisDefectLongType\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_dynamicanalysisdefectlongtype.php
@@ -23267,6 +23475,14 @@ parameters:
 			message: "#^Property DynamicAnalysisDefectLongTypeTestCase\\:\\:\\$project has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_dynamicanalysisdefectlongtype.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_dynamicanalysislogs.php
 
 		-
 			message: "#^Method DynamicAnalysisLogsTestCase\\:\\:testDynamicAnalysisLogs\\(\\) has no return type specified\\.$#"
@@ -23281,6 +23497,14 @@ parameters:
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 3
+			path: app/cdash/tests/test_dynamicanalysissummary.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 2
 			path: app/cdash/tests/test_dynamicanalysissummary.php
 
 		-
@@ -23352,6 +23576,14 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
+			path: app/cdash/tests/test_email.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 10
 			path: app/cdash/tests/test_email.php
 
 		-
@@ -23894,6 +24126,14 @@ parameters:
 			path: app/cdash/tests/test_externallinksfromtests.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_externallinksfromtests.php
+
+		-
 			message: "#^Cannot access offset 'measurements' on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_externallinksfromtests.php
@@ -24058,6 +24298,14 @@ parameters:
 			path: app/cdash/tests/test_filterbuilderrors.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_filterbuilderrors.php
+
+		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_filterbuilderrors.php
@@ -24091,6 +24339,14 @@ parameters:
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 1
+			path: app/cdash/tests/test_filtertestlabels.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 2
 			path: app/cdash/tests/test_filtertestlabels.php
 
 		-
@@ -24130,6 +24386,14 @@ parameters:
 
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
+			count: 1
+			path: app/cdash/tests/test_hidecolumns.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
 			count: 1
 			path: app/cdash/tests/test_hidecolumns.php
 
@@ -24212,6 +24476,14 @@ parameters:
 			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_imagecomparison.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_imagecomparison.php
@@ -24423,6 +24695,14 @@ parameters:
 			path: app/cdash/tests/test_issuecreation.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 3
+			path: app/cdash/tests/test_issuecreation.php
+
+		-
 			message: "#^Cannot access offset 'newissueurl' on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_issuecreation.php
@@ -24473,6 +24753,14 @@ parameters:
 			path: app/cdash/tests/test_javajsoncoverage.php
 
 		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_javajsoncoverage.php
+
+		-
 			message: "#^Cannot access offset 'buildid' on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_javajsoncoverage.php
@@ -24513,6 +24801,14 @@ parameters:
 			path: app/cdash/tests/test_jscovercoverage.php
 
 		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_jscovercoverage.php
+
+		-
 			message: "#^Cannot access offset 'buildid' on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_jscovercoverage.php
@@ -24546,6 +24842,14 @@ parameters:
 			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_junithandler.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_junithandler.php
@@ -24654,6 +24958,14 @@ parameters:
 			path: app/cdash/tests/test_limitedbuilds.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_longbuildname.php
+
+		-
 			message: "#^Cannot access property \\$log on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_longbuildname.php
@@ -24667,6 +24979,14 @@ parameters:
 			message: "#^Property LongBuildNameTestCase\\:\\:\\$project has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_longbuildname.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_lotsofsubprojects.php
 
 		-
 			message: "#^Method LotsOfSubProjectsTestCase\\:\\:testLotsOfSubProjects\\(\\) has no return type specified\\.$#"
@@ -24699,6 +25019,14 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
+			path: app/cdash/tests/test_managemeasurements.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 3
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
@@ -25012,6 +25340,14 @@ parameters:
 			path: app/cdash/tests/test_manageusers.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/tests/test_misassignedconfigure.php
+
+		-
 			message: "#^Cannot access offset 'configures' on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_misassignedconfigure.php
@@ -25055,6 +25391,22 @@ parameters:
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 2
+			path: app/cdash/tests/test_multicoverage.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_multicoverage.php
+
+		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
 			path: app/cdash/tests/test_multicoverage.php
 
 		-
@@ -25118,6 +25470,14 @@ parameters:
 			path: app/cdash/tests/test_multicoverage.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_multiplelabelsfortests.php
+
+		-
 			message: "#^Cannot access offset 'labels' on mixed\\.$#"
 			count: 2
 			path: app/cdash/tests/test_multiplelabelsfortests.php
@@ -25173,6 +25533,14 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 5
+			path: app/cdash/tests/test_multiplesubprojects.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 11
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
@@ -25726,6 +26094,14 @@ parameters:
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_namedmeasurements.php
+
+		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 2
 			path: app/cdash/tests/test_namedmeasurements.php
@@ -25759,6 +26135,22 @@ parameters:
 			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_nobackup.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_nobackup.php
+
+		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_nobackup.php
@@ -25864,6 +26256,14 @@ parameters:
 			path: app/cdash/tests/test_notesapi.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 3
+			path: app/cdash/tests/test_notesparsererrormessages.php
+
+		-
 			message: "#^Method NotesParserErrorMessagesTestCase\\:\\:testNotesParserErrorMessages\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_notesparsererrormessages.php
@@ -25872,6 +26272,14 @@ parameters:
 			message: "#^Property NotesParserErrorMessagesTestCase\\:\\:\\$project has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_notesparsererrormessages.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_numericupdate.php
 
 		-
 			message: "#^Cannot access offset 'buildgroups' on mixed\\.$#"
@@ -25944,6 +26352,14 @@ parameters:
 			path: app/cdash/tests/test_opencovercoverage.php
 
 		-
+			message: """
+				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/tests/test_opencovercoverage.php
+
+		-
 			message: "#^Cannot access offset 'buildid' on mixed\\.$#"
 			count: 2
 			path: app/cdash/tests/test_opencovercoverage.php
@@ -25987,6 +26403,14 @@ parameters:
 			message: "#^Property OpenCoverCoverageTestCase\\:\\:\\$buildId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_opencovercoverage.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 3
+			path: app/cdash/tests/test_outputcolor.php
 
 		-
 			message: "#^Cannot access offset 'name' on mixed\\.$#"
@@ -26195,6 +26619,14 @@ parameters:
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 12
+			path: app/cdash/tests/test_projectwebpage.php
+
+		-
 			message: "#^Cannot access offset 'aaData' on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
@@ -26348,6 +26780,14 @@ parameters:
 			message: "#^Part \\$siteid \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
 			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_projectxmlsequence.php
 
 		-
 			message: "#^Method ProjectXmlSequenceTestCase\\:\\:submitFile\\(\\) has no return type specified\\.$#"
@@ -26558,6 +26998,14 @@ parameters:
 			path: app/cdash/tests/test_querytests.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_querytestsfilterlabels.php
+
+		-
 			message: "#^Cannot access offset 'builds' on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_querytestsfilterlabels.php
@@ -26599,6 +27047,14 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: app/cdash/tests/test_redundanttests.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
 			count: 1
 			path: app/cdash/tests/test_redundanttests.php
 
@@ -26668,6 +27124,14 @@ parameters:
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 1
+			path: app/cdash/tests/test_replacebuild.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 2
 			path: app/cdash/tests/test_replacebuild.php
 
 		-
@@ -26749,6 +27213,14 @@ parameters:
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 9
+			path: app/cdash/tests/test_sequenceindependence.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
@@ -26852,6 +27324,14 @@ parameters:
 			path: app/cdash/tests/test_sitestatistics.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_starttimefromnotes.php
+
+		-
 			message: "#^Method StartTimeFromNotesTestCase\\:\\:testStartTimeFromNotes\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_starttimefromnotes.php
@@ -26862,6 +27342,14 @@ parameters:
 			path: app/cdash/tests/test_starttimefromnotes.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_starttimefromupload.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:firstOrFail\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/test_starttimefromupload.php
@@ -26870,6 +27358,14 @@ parameters:
 			message: "#^Method SubmissionAssignBuildIdTestCase\\:\\:testSubmissionAssignBuildId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_submission_assign_buildid.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_submitsortingdata.php
 
 		-
 			message: "#^Method SubmitSortingDataTestCase\\:\\:submitFile\\(\\) has no return type specified\\.$#"
@@ -26893,6 +27389,14 @@ parameters:
 
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
+			count: 3
+			path: app/cdash/tests/test_subproject.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
 			count: 3
 			path: app/cdash/tests/test_subproject.php
 
@@ -26927,6 +27431,14 @@ parameters:
 				v2\\.5\\.0 01/22/2018$#
 			"""
 			count: 2
+			path: app/cdash/tests/test_subprojectemail.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
 			path: app/cdash/tests/test_subprojectemail.php
 
 		-
@@ -27006,6 +27518,14 @@ parameters:
 
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
+			count: 1
+			path: app/cdash/tests/test_subprojectnextprevious.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
 			count: 1
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
@@ -27151,6 +27671,14 @@ parameters:
 			message: """
 				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_subprojectorder.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_subprojectorder.php
@@ -27339,6 +27867,14 @@ parameters:
 			path: app/cdash/tests/test_subscribeprojectshowlabels.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_summaryemail.php
+
+		-
 			message: "#^Method SummaryEmailTestCase\\:\\:testSummaryEmail\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_summaryemail.php
@@ -27416,6 +27952,14 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: app/cdash/tests/test_testhistory.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
 			count: 1
 			path: app/cdash/tests/test_testhistory.php
 
@@ -27598,6 +28142,14 @@ parameters:
 			message: "#^Property TestHistoryTestCase\\:\\:\\$project has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_testhistory.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_testimages.php
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
@@ -27792,6 +28344,14 @@ parameters:
 
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
+			count: 2
+			path: app/cdash/tests/test_timeoutsandmissingtests.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
 			count: 2
 			path: app/cdash/tests/test_timeoutsandmissingtests.php
 
@@ -28022,6 +28582,14 @@ parameters:
 			path: app/cdash/tests/test_truncateoutput.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 2
+			path: app/cdash/tests/test_truncateoutput.php
+
+		-
 			message: "#^Cannot access offset 'errors' on mixed\\.$#"
 			count: 2
 			path: app/cdash/tests/test_truncateoutput.php
@@ -28181,6 +28749,14 @@ parameters:
 			path: app/cdash/tests/test_updateappend.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 3
+			path: app/cdash/tests/test_updateappend.php
+
+		-
 			message: "#^Cannot access offset 'nfiles' on array\\|false\\|null\\.$#"
 			count: 2
 			path: app/cdash/tests/test_updateappend.php
@@ -28214,6 +28790,14 @@ parameters:
 			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_updateonlyuserstats.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_updateonlyuserstats.php
@@ -28354,6 +28938,14 @@ parameters:
 			path: app/cdash/tests/test_uploadfile.php
 
 		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_uploadfile.php
+
+		-
 			message: "#^Cannot access offset 'buildgroups' on mixed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_uploadfile.php
@@ -28460,6 +29052,14 @@ parameters:
 			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
+			"""
+			count: 1
+			path: app/cdash/tests/test_viewdynamicanalysisfile.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_viewdynamicanalysisfile.php
@@ -28596,6 +29196,14 @@ parameters:
 
 		-
 			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and mixed results in an error\\.$#"
+			count: 1
+			path: app/cdash/tests/trilinos_submission_test.php
+
+		-
+			message: """
+				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+			"""
 			count: 1
 			path: app/cdash/tests/trilinos_submission_test.php
 
