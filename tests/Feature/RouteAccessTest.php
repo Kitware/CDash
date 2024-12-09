@@ -27,10 +27,10 @@ class RouteAccessTest extends TestCase
         URL::forceRootUrl('http://localhost');
 
         $this->normal_user = $this->makeNormalUser();
-        $this->assertDatabaseHas('user', ['email' => $this->normal_user->email]);
+        $this->assertDatabaseHas('users', ['email' => $this->normal_user->email]);
 
         $this->admin_user = $this->makeAdminUser();
-        $this->assertDatabaseHas('user', ['email' => $this->admin_user->email, 'admin' => '1']);
+        $this->assertDatabaseHas('users', ['email' => $this->admin_user->email, 'admin' => '1']);
 
         $this->public_project = $this->makePublicProject();
     }

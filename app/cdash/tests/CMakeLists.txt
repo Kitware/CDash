@@ -234,12 +234,9 @@ set_tests_properties(/Feature/IncreaseSiteInformationCPUColumnsSizeMigration PRO
 add_laravel_test(/Feature/UploadStorageMigration)
 set_tests_properties(/Feature/UploadStorageMigration PROPERTIES DEPENDS /Feature/IncreaseSiteInformationCPUColumnsSizeMigration)
 
-add_laravel_test(/Feature/UniqueEmailsMigration)
-set_tests_properties(/Feature/UniqueEmailsMigration PROPERTIES DEPENDS /Feature/UploadStorageMigration)
-
 
 cdash_install()
-set_tests_properties(install_3 PROPERTIES DEPENDS /Feature/UniqueEmailsMigration)
+set_tests_properties(install_3 PROPERTIES DEPENDS /Feature/UploadStorageMigration)
 
 
 add_php_test(compressedtest)

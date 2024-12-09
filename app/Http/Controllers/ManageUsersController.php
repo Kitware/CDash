@@ -90,7 +90,7 @@ final class ManageUsersController extends AbstractController
                 $sql = "email LIKE ? OR firstname LIKE ? OR lastname LIKE ?";
                 $params = [$search, $search, $search];
             }
-            $users = DB::select('SELECT * FROM ' . qid('user') . ' WHERE ' . $sql, $params);
+            $users = DB::select('SELECT * FROM users WHERE ' . $sql, $params);
         } else {
             $users = [];
         }

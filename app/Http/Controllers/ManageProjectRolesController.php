@@ -283,7 +283,7 @@ final class ManageProjectRolesController extends AbstractProjectController
                             up.emailtype
                         FROM
                             user2project AS up,
-                            ' . qid('user') . ' AS u
+                            users AS u
                         WHERE
                             u.id=up.userid
                             AND up.projectid=?
@@ -351,7 +351,7 @@ final class ManageProjectRolesController extends AbstractProjectController
                                  user2repository.userid= user2project.userid
                                  AND user2project.projectid=?
                              )
-                             LEFT JOIN ' . qid('user') . ' AS u ON (
+                             LEFT JOIN users AS u ON (
                                  user2project.userid=u.id
                              )
                              WHERE
@@ -535,7 +535,7 @@ final class ManageProjectRolesController extends AbstractProjectController
         $params[] = $this->project->Id;
         $users = DB::select('
                       SELECT id, email, firstname, lastname
-                      FROM ' . qid('user') . '
+                      FROM users
                       WHERE
                           ' . $sql . '
                           AND id NOT IN (
