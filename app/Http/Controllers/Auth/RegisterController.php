@@ -78,7 +78,7 @@ final class RegisterController extends AbstractController
             'url' => ['bail', 'required', 'string', 'regex:/^catchbot$/'],
             'fname' => ['required', 'string', 'max:255'],
             'lname' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:user'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', "min:{$password_min}", 'complexity', 'confirmed'],
         ];
 

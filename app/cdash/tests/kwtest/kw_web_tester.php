@@ -300,18 +300,6 @@ class KWWebTestCase extends WebTestCase
         return $this->ctest_submission;
     }
 
-    public function userExists($email)
-    {
-        $pdo = CDash\Database::getInstance()->getPdo();
-        $user_table = qid('user');
-        $stmt = $pdo->prepare("SELECT id FROM $user_table WHERE email = ?");
-        $stmt->execute([$email]);
-        if (!$stmt->fetch()) {
-            return false;
-        }
-        return true;
-    }
-
     public function getUser($email)
     {
         return User::where('email', $email)->first();

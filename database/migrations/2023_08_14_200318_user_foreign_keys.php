@@ -5,8 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-require_once 'include/common.php';
-
 return new class extends Migration {
     private const tables_to_modify = [
         'authtoken',
@@ -31,7 +29,7 @@ return new class extends Migration {
     {
         foreach (self::tables_to_modify as $table) {
             echo "Adding userid foreign key to $table table...";
-            $user_table = qid('user');
+            $user_table = $this->qid('user');
             $num_deleted = DB::delete("DELETE FROM $table WHERE userid NOT IN (SELECT id FROM $user_table)");
             echo $num_deleted . ' invalid rows deleted' . PHP_EOL;
             Schema::table($table, function (Blueprint $table) {
@@ -53,6 +51,17 @@ return new class extends Migration {
                 $table->integer('userid')->change();
                 $table->dropForeign(['userid']);
             });
+        }
+    }
+
+    private function qid(string $id): string
+    {
+        if (!config('database.default') || (config('database.default') == 'mysql')) {
+            return "`$id`";
+        } elseif (config('database.default') == 'pgsql') {
+            return "\"$id\"";
+        } else {
+            return $id;
         }
     }
 };

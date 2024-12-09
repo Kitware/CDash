@@ -161,7 +161,7 @@ class Project extends Model
         } elseif (!$user->admin) {
             $query->where(function ($subquery) use ($user) {
                 $subquery->whereHas('users', function ($subquery2) use ($user) {
-                    $subquery2->where('user.id', $user->id);
+                    $subquery2->where('users.id', $user->id);
                 })
                     ->orWhere('public', self::ACCESS_PUBLIC)
                     ->orWhere('public', self::ACCESS_PROTECTED);

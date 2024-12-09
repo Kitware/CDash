@@ -71,7 +71,7 @@ class LoginAndRegistration extends TestCase
         $this->post(route('register'), $post_data);
 
         // Verify that it really landed in the database.
-        $this->assertDatabaseHas('user', ['email' => LoginAndRegistration::$email]);
+        $this->assertDatabaseHas('users', ['email' => LoginAndRegistration::$email]);
     }
 
     public function testUserCanLoginWithCorrectCredentials() : void
@@ -333,7 +333,7 @@ class LoginAndRegistration extends TestCase
         $this->post(route('register'), $post_data);
 
         // Verify that nothing was added to the database
-        $this->assertDatabaseMissing('user', ['email' => LoginAndRegistration::$blockedEmail]);
+        $this->assertDatabaseMissing('users', ['email' => LoginAndRegistration::$blockedEmail]);
     }
 
     public function testDisabledRegistrationForm() : void
