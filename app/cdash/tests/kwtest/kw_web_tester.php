@@ -343,6 +343,9 @@ class KWWebTestCase extends WebTestCase
         return true;
     }
 
+    /**
+     * @deprecated 12/09/2024  Use \Test\Traits\CreatesSubmissions instead.
+     */
     public function submission($projectname, $file, $header = null, $debug = false)
     {
         $url = $this->url . "/submit.php?project=$projectname";
@@ -390,6 +393,9 @@ class KWWebTestCase extends WebTestCase
         return $this->put($url, $parameters, $contentType);
     }
 
+    /**
+     * @deprecated 12/09/2024  Use \Test\Traits\CreatesSubmissions instead.
+     */
     public function uploadfile($url, $filename, $header = null)
     {
         set_time_limit(0); // sometimes this is slow when access the local webserver from external URL
