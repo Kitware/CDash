@@ -72,8 +72,7 @@ class CreateProjectPermissionsTestCase extends KWWebTestCase
 
         // Test for project administrator.
         $pdo = \CDash\Database::getInstance();
-        $user_table = qid('user');
-        $stmt = $pdo->prepare("SELECT id FROM $user_table WHERE email=?");
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE email=?");
         $stmt->execute(['user1@kw']);
         $row = $stmt->fetch();
         $userid = $row['id'];

@@ -877,10 +877,9 @@ class RepositoryUtils
         if ($subproject_name) {
             // Get users to notify for this SubProject.
             $pdo = Database::getInstance()->getPdo();
-            $user_table = qid('user');
             $stmt = $pdo->prepare(
-                "SELECT email FROM $user_table
-            JOIN labelemail ON labelemail.userid = $user_table.id
+                "SELECT email FROM users
+            JOIN labelemail ON labelemail.userid = users.id
             JOIN label ON label.id = labelemail.labelid
             WHERE label.text = ?  AND labelemail.projectid = ?");
             pdo_execute($stmt, [$subproject_name, $project->Id]);

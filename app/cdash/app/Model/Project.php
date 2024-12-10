@@ -1200,7 +1200,6 @@ class Project
     {
         $service = ServiceContainer::getInstance()->getContainer();
         $collection = $service->make(SubscriberCollection::class);
-        $userTable = qid('user');
         // TODO: works, but maybe find a better query
         $sql = "
             SELECT
@@ -1208,7 +1207,7 @@ class Project
                u.email email,
                labelid haslabels
             FROM user2project u2p
-              JOIN $userTable u ON u.id = u2p.userid
+              JOIN users u ON u.id = u2p.userid
               LEFT JOIN labelemail ON labelemail.userid = u2p.userid
             WHERE u2p.projectid = :id
             ORDER BY u.email;

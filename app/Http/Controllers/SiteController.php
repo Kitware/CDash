@@ -409,7 +409,7 @@ final class SiteController extends AbstractController
         // List the claimers of the site
         $siteclaimer = $db->executePrepared("
                            SELECT u.firstname, u.lastname, u.email
-                           FROM " . qid('user') . " as u, site2user
+                           FROM users as u, site2user
                            WHERE
                                u.id=site2user.userid
                                AND site2user.siteid=?

@@ -566,20 +566,6 @@ function make_cdash_url(string $url): string
 }
 
 /**
- * Quote SQL identifier
- */
-function qid($id)
-{
-    if (!config('database.default') || (config('database.default') == 'mysql')) {
-        return "`$id`";
-    } elseif (config('database.default') == 'pgsql') {
-        return "\"$id\"";
-    } else {
-        return $id;
-    }
-}
-
-/**
  * Quote SQL interval specifier
  */
 function qiv($iv)

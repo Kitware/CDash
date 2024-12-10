@@ -223,7 +223,7 @@ class AuthTokenUtil
     {
         return AuthToken::select('authtoken.*', 'project.name AS projectname', 'user.firstname AS owner_firstname', 'user.lastname AS owner_lastname')
             ->leftJoin('project', 'project.id', '=', 'authtoken.projectid')
-            ->leftJoin('user', 'user.id', '=', 'authtoken.userid')
+            ->leftJoin('users', 'user.id', '=', 'authtoken.userid')
             ->get();
     }
 

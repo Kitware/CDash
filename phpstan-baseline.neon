@@ -11450,11 +11450,6 @@ parameters:
 			path: app/cdash/app/Model/User.php
 
 		-
-			message: "#^Property CDash\\\\Model\\\\User\\:\\:\\$TableName has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
 			message: """
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
@@ -14123,16 +14118,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function qid\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function qid\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function qiv\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -14214,7 +14199,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 10
+			count: 8
 			path: app/cdash/include/common.php
 
 		-
@@ -14224,7 +14209,7 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
-			count: 3
+			count: 2
 			path: app/cdash/include/common.php
 
 		-
@@ -19747,14 +19732,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: """
 				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
 				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
 			"""
@@ -19788,16 +19765,6 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'username' on mixed\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Cannot call method execute\\(\\) on PDOStatement\\|false\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -20202,32 +20169,22 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method KWWebTestCase\\:\\:userExists\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:849\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method KWWebTestCase\\:\\:userExists\\(\\) has parameter \\$email with no type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:849\\:\\:getSent\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:861\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:849\\:\\:isError\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:861\\:\\:getSent\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:861\\:\\:isError\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:861\\:\\:read\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:849\\:\\:read\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -20243,11 +20200,6 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in &&, string given on the left side\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -20442,12 +20394,12 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:861\\:\\:\\$read has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:849\\:\\:\\$read has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:861\\:\\:\\$response has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:849\\:\\:\\$response has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -32778,6 +32730,16 @@ parameters:
 			path: database/migrations/2023_04_16_204249_project_name_regex.php
 
 		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 2
+			path: database/migrations/2023_08_14_200318_user_foreign_keys.php
+
+		-
+			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
+			count: 1
+			path: database/migrations/2023_08_14_200318_user_foreign_keys.php
+
+		-
 			message: "#^Cannot call method getBaseName\\(\\) on mixed\\.$#"
 			count: 1
 			path: database/migrations/2023_11_13_190025_move_uploaded_files_to_storage.php
@@ -32786,6 +32748,16 @@ parameters:
 			message: "#^Cannot call method getRealPath\\(\\) on mixed\\.$#"
 			count: 1
 			path: database/migrations/2023_11_13_190025_move_uploaded_files_to_storage.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			count: 2
+			path: database/migrations/2023_12_19_211314_user_unique_email.php
+
+		-
+			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
+			count: 1
+			path: database/migrations/2023_12_19_211314_user_unique_email.php
 
 		-
 			message: "#^Binary operation \"\\+\" between mixed and 4999 results in an error\\.$#"

@@ -552,9 +552,9 @@ function send_update_email(UpdateHandler $handler, int $projectid): void
         $db = Database::getInstance();
         $email_addresses = $db->executePrepared('
                                SELECT email
-                               FROM ' . qid('user') . ', site2user
+                               FROM users, site2user
                                WHERE
-                                   ' . qid('user') . '.id=site2user.userid
+                                   users.id=site2user.userid
                                    AND site2user.siteid=?
                            ', [$siteid]);
         foreach ($email_addresses as $email_addresses_array) {

@@ -38,7 +38,7 @@ class User extends Authenticatable implements MustVerifyEmail, LdapAuthenticatab
 
     protected $user;
 
-    protected $table = 'user';
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.

@@ -90,13 +90,12 @@ class BuildEmail
     public static function GetEmailSentForBuild($buildId)
     {
         $collection = new BuildEmailCollection();
-        $userTable = qid('user');
         $sql = "
             SELECT
                 buildemail.*,
                 u.email
             FROM buildemail
-            JOIN $userTable u ON u.id=buildemail.userid
+            JOIN users u ON u.id=buildemail.userid
             WHERE buildemail.buildid=:b";
 
         $db = Database::getInstance();

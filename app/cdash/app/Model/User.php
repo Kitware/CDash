@@ -30,7 +30,6 @@ class User
     public $Institution;
     public $Admin;
     private $Filled;
-    private $TableName;
     private $PDO;
     private $Credentials;
     private $LabelCollection;
@@ -45,7 +44,6 @@ class User
         $this->Institution = '';
         $this->Admin = 0;
         $this->Filled = false;
-        $this->TableName = qid('user');
         $this->PDO = Database::getInstance();
         $this->Credentials = null;
         $this->LabelCollection = collect();
@@ -89,7 +87,7 @@ class User
 
             // Update the project
             $stmt = $this->PDO->prepare(
-                "UPDATE $this->TableName SET
+                "UPDATE users SET
                 email = :email, password = :password, firstname = :firstname,
                 lastname = :lastname, institution = :institution, admin = :admin
                 WHERE id = :id");
@@ -113,7 +111,7 @@ class User
                 throw new InvalidArgumentException('Id set before user insert operation.');
             }
 
-            $this->Id = DB::table('user')
+            $this->Id = DB::table('users')
                 ->insertGetId([
                     'email' => $this->Email,
                     'password' => $this->Password,
