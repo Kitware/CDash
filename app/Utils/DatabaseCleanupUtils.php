@@ -7,6 +7,7 @@ namespace App\Utils;
 use App\Models\Build;
 use App\Models\BuildGroup;
 use App\Models\Configure;
+use App\Models\Note;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -176,29 +177,18 @@ class DatabaseCleanupUtils
             )
         ", array_merge($buildids, $buildids));
 
-        // Delete the note if not shared
-        DB::delete("
-            DELETE FROM note WHERE id IN (
-                SELECT f1.id
-                FROM (
-                    SELECT a.noteid AS id, COUNT(DISTINCT a.buildid) AS c
-                    FROM build2note a
-                    WHERE a.buildid IN $buildid_prepare_array
-                    GROUP BY a.noteid
-                 ) AS f1
-                INNER JOIN (
-                    SELECT b.noteid AS id, COUNT(DISTINCT b.buildid) AS c
-                    FROM build2note b
-                    INNER JOIN (
-                        SELECT noteid
-                        FROM build2note
-                        WHERE buildid IN $buildid_prepare_array
-                    ) AS d ON b.noteid = d.noteid
-                    GROUP BY b.noteid
-                ) AS f2 ON (f1.id = f2.id)
-                WHERE f1.c = f2.c
-            )
-        ", array_merge($buildids, $buildids));
+        // Delete notes if not shared.
+        foreach ($builds as $build) {
+            foreach ($build->notes()->get() as $note) {
+                /** @var Note $note */
+                if ($note !== null) {
+                    $note_buildids = $note->builds()->pluck('id')->all();
+                    if (array_diff($note_buildids, $buildids) === []) {
+                        $note->delete();
+                    }
+                }
+            }
+        }
 
         // Delete the update if not shared
         $build2update = DB::select("
