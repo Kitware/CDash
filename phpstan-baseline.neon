@@ -3841,6 +3841,16 @@ parameters:
 			path: app/Utils/DatabaseCleanupUtils.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\:\\:whereIn\\(\\)\\.$#"
+			count: 2
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\:\\:whereNotIn\\(\\)\\.$#"
+			count: 2
+			path: app/Utils/DatabaseCleanupUtils.php
+
+		-
 			message: "#^Method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:deleteRowsChunked\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Utils/DatabaseCleanupUtils.php

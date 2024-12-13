@@ -6,7 +6,10 @@ namespace App\Utils;
 
 use App\Models\Build;
 use App\Models\BuildGroup;
+use App\Models\Configure;
+use App\Models\Note;
 use CDash\Database;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
@@ -137,28 +140,12 @@ class DatabaseCleanupUtils
         ", array_merge($buildids, $buildids));
 
         // Delete the configure if not shared.
-        $build2configure = DB::select("
-                               SELECT a.configureid
-                               FROM build2configure AS a
-                               LEFT JOIN build2configure AS b ON (
-                                   a.configureid=b.configureid
-                                   AND b.buildid NOT IN $buildid_prepare_array
-                               )
-                               WHERE a.buildid IN $buildid_prepare_array
-                               GROUP BY a.configureid
-                               HAVING count(b.configureid)=0
-                           ", array_merge($buildids, $buildids));
-
-        $configureids = [];
-        foreach ($build2configure as $build2configure_array) {
-            // It is safe to delete this configure because it is only used
-            // by builds that are being deleted.
-            $configureids[] = intval($build2configure_array->configureid);
-        }
-        if (count($configureids) > 0) {
-            $configureids_prepare_array = $db->createPreparedArray(count($configureids));
-            DB::delete("DELETE FROM configure WHERE id IN $configureids_prepare_array", $configureids);
-        }
+        Configure::whereHas('builds', function (Builder $query) use ($buildids) {
+            $query->whereIn('id', $buildids);
+        })
+        ->whereDoesntHave('builds', function (Builder $query) use ($buildids) {
+            $query->whereNotIn('id', $buildids);
+        })->delete();
 
         // coverage files are kept unless they are shared
         DB::delete("
@@ -185,29 +172,13 @@ class DatabaseCleanupUtils
             )
         ", array_merge($buildids, $buildids));
 
-        // Delete the note if not shared
-        DB::delete("
-            DELETE FROM note WHERE id IN (
-                SELECT f1.id
-                FROM (
-                    SELECT a.noteid AS id, COUNT(DISTINCT a.buildid) AS c
-                    FROM build2note a
-                    WHERE a.buildid IN $buildid_prepare_array
-                    GROUP BY a.noteid
-                 ) AS f1
-                INNER JOIN (
-                    SELECT b.noteid AS id, COUNT(DISTINCT b.buildid) AS c
-                    FROM build2note b
-                    INNER JOIN (
-                        SELECT noteid
-                        FROM build2note
-                        WHERE buildid IN $buildid_prepare_array
-                    ) AS d ON b.noteid = d.noteid
-                    GROUP BY b.noteid
-                ) AS f2 ON (f1.id = f2.id)
-                WHERE f1.c = f2.c
-            )
-        ", array_merge($buildids, $buildids));
+        // Delete notes if not shared.
+        Note::whereHas('builds', function (Builder $query) use ($buildids) {
+            $query->whereIn('id', $buildids);
+        })
+        ->whereDoesntHave('builds', function (Builder $query) use ($buildids) {
+            $query->whereNotIn('id', $buildids);
+        })->delete();
 
         // Delete the update if not shared
         $build2update = DB::select("
