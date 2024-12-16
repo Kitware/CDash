@@ -11868,7 +11868,7 @@ parameters:
 			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php
 
 		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailBuilder\\:\\:setBuildEmailCollection\\(\\) has no return type specified\\.$#"
+			message: "#^Class CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailBuilder has an uninitialized property \\$subscriptions\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php
 
@@ -11903,7 +11903,7 @@ parameters:
 			path: app/cdash/include/Messaging/Notification/NotificationDirector.php
 
 		-
-			message: "#^Parameter \\#1 \\$subscription of method CDash\\\\Messaging\\\\Notification\\\\NotificationBuilderInterface\\:\\:createNotification\\(\\) expects CDash\\\\Messaging\\\\Subscription\\\\SubscriptionInterface, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$subscription of method CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailBuilder\\:\\:createNotification\\(\\) expects CDash\\\\Messaging\\\\Subscription\\\\SubscriptionInterface, mixed given\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/NotificationDirector.php
 
@@ -12191,16 +12191,6 @@ parameters:
 			message: "#^Method CDash\\\\Messaging\\\\Subscription\\\\SubscriptionFactory\\:\\:create\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Subscription/SubscriptionFactory.php
-
-		-
-			message: "#^Property CDash\\\\Messaging\\\\Subscription\\\\SubscriptionNotificationBuilder\\:\\:\\$notifications \\(CDash\\\\Messaging\\\\Notification\\\\NotificationCollection\\) does not accept CDash\\\\Collection\\\\Collection\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Subscription/SubscriptionNotificationBuilder.php
-
-		-
-			message: "#^Return type \\(CDash\\\\Messaging\\\\Subscription\\\\SubscriptionCollection\\) of method CDash\\\\Messaging\\\\Subscription\\\\SubscriptionNotificationBuilder\\:\\:getSubscriptions\\(\\) should be compatible with return type \\(CDash\\\\Collection\\\\SubscriberCollection\\) of method CDash\\\\Messaging\\\\Notification\\\\NotificationBuilderInterface\\:\\:getSubscriptions\\(\\)$#"
-			count: 2
-			path: app/cdash/include/Messaging/Subscription/SubscriptionNotificationBuilder.php
 
 		-
 			message: "#^Method CDash\\\\Messaging\\\\Topic\\\\AuthoredTopic\\:\\:getTemplate\\(\\) return type has no value type specified in iterable type array\\.$#"

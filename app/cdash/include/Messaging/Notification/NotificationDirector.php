@@ -2,9 +2,11 @@
 
 namespace CDash\Messaging\Notification;
 
+use CDash\Messaging\Notification\Email\EmailBuilder;
+
 class NotificationDirector
 {
-    public function build(NotificationBuilderInterface $builder): NotificationCollection
+    public function build(EmailBuilder $builder): NotificationCollection
     {
         $subscriptions = $builder->getSubscriptions();
         $notifications = $builder->getNotifications();

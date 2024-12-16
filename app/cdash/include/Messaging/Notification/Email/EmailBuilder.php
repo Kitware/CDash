@@ -17,26 +17,29 @@ namespace CDash\Messaging\Notification\Email;
 
 use CDash\Collection\BuildEmailCollection;
 use CDash\Messaging\FactoryInterface;
-use CDash\Collection\Collection;
 use CDash\Messaging\Notification\NotificationCollection;
+use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Messaging\Subscription\SubscriptionInterface;
-use CDash\Messaging\Subscription\SubscriptionNotificationBuilder;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\ActionableTypes;
 use CDash\Model\BuildEmail;
 
-class EmailBuilder extends SubscriptionNotificationBuilder
+class EmailBuilder
 {
-    public function __construct(FactoryInterface $factory, Collection $collection)
+    protected FactoryInterface $factory;
+    protected NotificationCollection $notifications;
+    protected SubscriptionCollection $subscriptions;
+
+    public function __construct(FactoryInterface $factory, NotificationCollection $collection)
     {
-        parent::__construct($factory, $collection);
+        $this->factory = $factory;
+        $this->notifications = $collection;
     }
 
     /**
-     * @param SubscriptionInterface $subscription
      * @param string $templateName
      */
-    public function createNotification(SubscriptionInterface $subscription, $templateName): EmailMessage
+    public function createNotification(SubscriptionInterface $subscription, string $templateName): EmailMessage
     {
         $subject_template = "email.{$templateName}.subject";
         $template = "email.{$templateName}";
@@ -55,19 +58,12 @@ class EmailBuilder extends SubscriptionNotificationBuilder
         return $message;
     }
 
-    /**
-     * @return NotificationCollection
-     */
-    public function getNotifications()
+    public function getNotifications(): NotificationCollection
     {
         return $this->notifications;
     }
 
-    /**
-     * @param EmailMessage $message
-     * @param SubscriptionInterface $subscription
-     */
-    public function setBuildEmailCollection(EmailMessage $message, SubscriptionInterface $subscription)
+    protected function setBuildEmailCollection(EmailMessage $message, SubscriptionInterface $subscription): void
     {
         $topics = $subscription->getTopicCollection();
         $subscriber = $subscription->getSubscriber();
@@ -92,5 +88,16 @@ class EmailBuilder extends SubscriptionNotificationBuilder
         }
 
         $message->setBuildEmailCollection($collection);
+    }
+
+    public function setSubscriptions(SubscriptionCollection $subscriptions): self
+    {
+        $this->subscriptions = $subscriptions;
+        return $this;
+    }
+
+    public function getSubscriptions(): SubscriptionCollection
+    {
+        return $this->subscriptions;
     }
 }
