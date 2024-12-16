@@ -458,9 +458,7 @@ Total Dynamic analysis tests failing or not run: 1
 *Dynamic analysis tests failing or not run* " . /* Join is needed to preserve trailing space */"
 experimentalFail (http://open.cdash.org/viewDynamicAnalysisFile.php?id=1)
 
--CDash
-
-";
+-CDash";
         $actual = "{$notification}";
         $this->assertEquals($expected, $actual);
     }

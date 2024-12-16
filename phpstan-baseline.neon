@@ -11873,37 +11873,22 @@ parameters:
 			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php
 
 		-
-			message: "#^Parameter \\#1 \\$body of method CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage\\:\\:setBody\\(\\) expects CDash\\\\Messaging\\\\Notification\\\\Email\\\\Decorator\\\\DecoratorInterface, Illuminate\\\\View\\\\View given\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage\\:\\:setRecipient\\(\\) has parameter \\$recipient with no type specified\\.$#"
+			message: "#^Class CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage has an uninitialized property \\$body\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/EmailMessage.php
 
 		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage\\:\\:setSender\\(\\) has parameter \\$sender with no type specified\\.$#"
+			message: "#^Class CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage has an uninitialized property \\$recipient\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/EmailMessage.php
 
 		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage\\:\\:setSubject\\(\\) has parameter \\$subject with no type specified\\.$#"
+			message: "#^Class CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage has an uninitialized property \\$sender\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/EmailMessage.php
 
 		-
-			message: "#^Only booleans are allowed in a negated boolean, CDash\\\\Collection\\\\BuildEmailCollection given\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/EmailMessage.php
-
-		-
-			message: "#^Parameter \\$body of method CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage\\:\\:setBody\\(\\) has invalid type CDash\\\\Messaging\\\\Notification\\\\Email\\\\Decorator\\\\DecoratorInterface\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/EmailMessage.php
-
-		-
-			message: "#^Property CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage\\:\\:\\$body \\(string\\) does not accept CDash\\\\Messaging\\\\Notification\\\\Email\\\\Decorator\\\\DecoratorInterface\\.$#"
+			message: "#^Class CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage has an uninitialized property \\$subject\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/EmailMessage.php
 
