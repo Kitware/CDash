@@ -25,13 +25,11 @@ use CDash\Model\BuildEmail;
 
 class EmailBuilder
 {
-    protected EmailNotificationFactory $factory;
     protected NotificationCollection $notifications;
     protected SubscriptionCollection $subscriptions;
 
-    public function __construct(EmailNotificationFactory $factory, NotificationCollection $collection)
+    public function __construct(NotificationCollection $collection)
     {
-        $this->factory = $factory;
         $this->notifications = $collection;
     }
 
@@ -47,9 +45,8 @@ class EmailBuilder
         $subject = view($subject_template)->with($data);
         $body = view($template)->with($data);
         $recipient = $subscription->getSubscriber()->getAddress();
-        /** @var EmailMessage $message */
-        $message = $this->factory->create();
-        $message->setSubject($subject)
+        $message = (new EmailMessage())
+            ->setSubject($subject)
             ->setBody($body)
             ->setRecipient($recipient);
         // todo: this doesn't really belong here, refactor asap

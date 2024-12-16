@@ -20,7 +20,6 @@ use App\Models\Configure;
 use CDash\Database;
 use CDash\Messaging\Notification\Email\EmailBuilder;
 use CDash\Messaging\Notification\Email\EmailMessage;
-use CDash\Messaging\Notification\Email\EmailNotificationFactory;
 use CDash\Messaging\Notification\NotificationCollection;
 use CDash\Messaging\Notification\NotificationDirector;
 use CDash\Messaging\Subscription\SubscriptionCollection;
@@ -609,7 +608,7 @@ function sendemail(ActionableBuildInterface $handler, int $projectid): void
     }
 
     // TODO: remove NotificationCollection then pass subscriptions to constructor
-    $builder = new EmailBuilder(new EmailNotificationFactory(), new NotificationCollection());
+    $builder = new EmailBuilder(new NotificationCollection());
     $builder->setSubscriptions($subscriptions);
 
     $director = new NotificationDirector();
