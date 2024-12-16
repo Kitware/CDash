@@ -19,12 +19,13 @@ require_once 'include/cdashmail.php';
 use App\Models\Configure;
 use CDash\Database;
 use CDash\Messaging\Notification\Email\EmailBuilder;
+use CDash\Messaging\Notification\Email\EmailMessage;
 use CDash\Messaging\Notification\Email\EmailNotificationFactory;
-use CDash\Messaging\Notification\Mailer;
 use CDash\Messaging\Notification\NotificationCollection;
 use CDash\Messaging\Notification\NotificationDirector;
 use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Model\Build;
+use CDash\Model\BuildEmail;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildUpdate;
 use CDash\Model\DynamicAnalysis;
@@ -613,5 +614,14 @@ function sendemail(ActionableBuildInterface $handler, int $projectid): void
 
     $director = new NotificationDirector();
     $notifications = $director->build($builder);
-    Mailer::send($notifications);
+
+    /**
+     * @var EmailMessage $notification
+     */
+    foreach ($notifications as $notification) {
+        cdashmail($notification->getRecipient(), $notification->getSubject(), $notification->getBody());
+
+        BuildEmail::Log($notification, true);
+        BuildEmail::SaveNotification($notification);
+    }
 }

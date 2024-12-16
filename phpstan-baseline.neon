@@ -11913,26 +11913,6 @@ parameters:
 			path: app/cdash/include/Messaging/Notification/Email/EmailMessage.php
 
 		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Mailer\\:\\:send\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Mailer.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Mailer\\:\\:sendNotification\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Mailer.php
-
-		-
-			message: "#^Parameter \\#1 \\$message of static method CDash\\\\Model\\\\BuildEmail\\:\\:SaveNotification\\(\\) expects CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage, CDash\\\\Messaging\\\\Notification\\\\NotificationInterface given\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Mailer.php
-
-		-
-			message: "#^Parameter \\#1 \\$notification of method CDash\\\\Messaging\\\\Notification\\\\Mailer\\:\\:sendNotification\\(\\) expects CDash\\\\Messaging\\\\Notification\\\\NotificationInterface, mixed given\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Mailer.php
-
-		-
 			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\NotificationCollection\\:\\:add\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/NotificationCollection.php
