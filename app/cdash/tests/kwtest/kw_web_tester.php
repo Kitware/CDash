@@ -213,7 +213,7 @@ class KWWebTestCase extends WebTestCase
         $count = count($lines);
         if ($count !== $lineCount) {
             $message = "\nExpected {$lineCount} lines of log output, received {$count}";
-            throw new Exception($log);
+            throw new Exception($message);
             $this->fail($message);
             $passed = false;
         }

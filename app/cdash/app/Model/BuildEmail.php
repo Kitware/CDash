@@ -64,9 +64,8 @@ class BuildEmail
     public static function Log(NotificationInterface $notification, $sent)
     {
         if (config('app.debug')) {
-            Log::debug($notification->getRecipient());
-            Log::debug($notification->getSubject());
-            Log::debug($notification->getBody());
+            // This logging functionality is handled for us by cdashmail().
+            return;
         } else {
             $status = $sent ? 'SENT' : 'NOT SENT';
             $class_name = get_class($notification);
