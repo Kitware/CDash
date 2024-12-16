@@ -69,14 +69,6 @@ class EmailMessage implements NotificationInterface
     }
 
     /**
-     * @return string
-     */
-    public function getSender()
-    {
-        return $this->sender;
-    }
-
-    /**
      * @param $recipient
      * @return EmailMessage
      */
