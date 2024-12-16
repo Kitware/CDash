@@ -17,7 +17,6 @@
 namespace CDash\Messaging\Notification;
 
 use CDash\Messaging\Notification\Email\EmailMessage;
-use CDash\Messaging\Notification\Email\Mail;
 use CDash\Model\BuildEmail;
 use CDash\Singleton;
 use Exception;
@@ -47,7 +46,7 @@ class Mailer extends Singleton
         $type = get_class($notification);
         switch ($type) {
             case EmailMessage::class:
-                Mail::to($notification->getRecipient())->send($notification);
+                cdashmail($notification->getRecipient(), $notification->getSubject(), $notification->getBody());
                 break;
             default:
                 $message = "Unrecognized message type [{$type}]";

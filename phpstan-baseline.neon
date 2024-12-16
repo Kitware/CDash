@@ -11913,47 +11913,12 @@ parameters:
 			path: app/cdash/include/Messaging/Notification/Email/EmailMessage.php
 
 		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:setRecipient\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/Mail.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:setRecipient\\(\\) has parameter \\$recipient with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/Mail.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:to\\(\\) has parameter \\$address with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/Mail.php
-
-		-
-			message: "#^Property CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:\\$emails has no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/Mail.php
-
-		-
-			message: "#^Property CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:\\$mailer has no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/Mail.php
-
-		-
-			message: "#^Property CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:\\$recipient has no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/Mail.php
-
-		-
 			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Mailer\\:\\:send\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Mailer.php
 
 		-
 			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\Mailer\\:\\:sendNotification\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Mailer.php
-
-		-
-			message: "#^Parameter \\#1 \\$message of method CDash\\\\Messaging\\\\Notification\\\\Email\\\\Mail\\:\\:send\\(\\) expects CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage, CDash\\\\Messaging\\\\Notification\\\\NotificationInterface given\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Mailer.php
 
