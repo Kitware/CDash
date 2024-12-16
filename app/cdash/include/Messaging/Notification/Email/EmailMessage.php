@@ -17,9 +17,8 @@ namespace CDash\Messaging\Notification\Email;
 
 use CDash\Collection\BuildEmailCollection;
 use CDash\Messaging\Notification\Email\Decorator\DecoratorInterface;
-use CDash\Messaging\Notification\NotificationInterface;
 
-class EmailMessage implements NotificationInterface
+class EmailMessage
 {
     /** @var  string $sender */
     protected $sender;

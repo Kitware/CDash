@@ -19,7 +19,6 @@ use CDash\Collection\BuildEmailCollection;
 use CDash\Messaging\FactoryInterface;
 use CDash\Collection\Collection;
 use CDash\Messaging\Notification\NotificationCollection;
-use CDash\Messaging\Notification\NotificationInterface;
 use CDash\Messaging\Subscription\SubscriptionInterface;
 use CDash\Messaging\Subscription\SubscriptionNotificationBuilder;
 use CDash\Messaging\Topic\Topic;
@@ -37,7 +36,7 @@ class EmailBuilder extends SubscriptionNotificationBuilder
      * @param SubscriptionInterface $subscription
      * @param string $templateName
      */
-    public function createNotification(SubscriptionInterface $subscription, $templateName): EmailMessage|NotificationInterface
+    public function createNotification(SubscriptionInterface $subscription, $templateName): EmailMessage
     {
         $subject_template = "email.{$templateName}.subject";
         $template = "email.{$templateName}";

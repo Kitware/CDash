@@ -12,10 +12,7 @@ class NotificationDirector
         /* @var \CDash\Messaging\Subscription\Subscription $subscription */
         foreach ($subscriptions as $recipient => $subscription) {
             foreach ($subscription->getTopicTemplates() as $template) {
-                $notification = $builder->createNotification($subscription, $template);
-                if ($notification) {
-                    $notifications->add($notification);
-                }
+                $notifications->add($builder->createNotification($subscription, $template));
             }
         }
         return $notifications;

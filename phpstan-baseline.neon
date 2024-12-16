@@ -11898,11 +11898,6 @@ parameters:
 			path: app/cdash/include/Messaging/Notification/Email/EmailMessage.php
 
 		-
-			message: "#^Parameter \\#1 \\$body \\(CDash\\\\Messaging\\\\Notification\\\\Email\\\\Decorator\\\\DecoratorInterface\\) of method CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage\\:\\:setBody\\(\\) should be contravariant with parameter \\$body \\(mixed\\) of method CDash\\\\Messaging\\\\Notification\\\\NotificationInterface\\:\\:setBody\\(\\)$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/EmailMessage.php
-
-		-
 			message: "#^Parameter \\$body of method CDash\\\\Messaging\\\\Notification\\\\Email\\\\EmailMessage\\:\\:setBody\\(\\) has invalid type CDash\\\\Messaging\\\\Notification\\\\Email\\\\Decorator\\\\DecoratorInterface\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/EmailMessage.php
@@ -11923,69 +11918,9 @@ parameters:
 			path: app/cdash/include/Messaging/Notification/NotificationDirector.php
 
 		-
-			message: "#^Only booleans are allowed in an if condition, CDash\\\\Messaging\\\\Notification\\\\NotificationInterface\\|null given\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/NotificationDirector.php
-
-		-
 			message: "#^Parameter \\#1 \\$subscription of method CDash\\\\Messaging\\\\Notification\\\\NotificationBuilderInterface\\:\\:createNotification\\(\\) expects CDash\\\\Messaging\\\\Subscription\\\\SubscriptionInterface, mixed given\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/NotificationDirector.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\NotificationInterface\\:\\:getBody\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/NotificationInterface.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\NotificationInterface\\:\\:getRecipient\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/NotificationInterface.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\NotificationInterface\\:\\:getSubject\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/NotificationInterface.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\NotificationInterface\\:\\:setBody\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/NotificationInterface.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\NotificationInterface\\:\\:setBody\\(\\) has parameter \\$body with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/NotificationInterface.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\NotificationInterface\\:\\:setRecipient\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/NotificationInterface.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\NotificationInterface\\:\\:setRecipient\\(\\) has parameter \\$recipient with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/NotificationInterface.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\NotificationInterface\\:\\:setSender\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/NotificationInterface.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\NotificationInterface\\:\\:setSender\\(\\) has parameter \\$sender with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/NotificationInterface.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\NotificationInterface\\:\\:setSubject\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/NotificationInterface.php
-
-		-
-			message: "#^Method CDash\\\\Messaging\\\\Notification\\\\NotificationInterface\\:\\:setSubject\\(\\) has parameter \\$subject with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/Notification/NotificationInterface.php
 
 		-
 			message: "#^Method CDash\\\\Messaging\\\\Preferences\\\\BitmaskNotificationPreferences\\:\\:__construct\\(\\) has parameter \\$mask with no type specified\\.$#"

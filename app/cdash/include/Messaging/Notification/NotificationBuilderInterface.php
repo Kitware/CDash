@@ -18,6 +18,7 @@ namespace CDash\Messaging\Notification;
 use CDash\Collection\Collection;
 use CDash\Collection\SubscriberCollection;
 use CDash\Messaging\FactoryInterface;
+use CDash\Messaging\Notification\Email\EmailMessage;
 use CDash\Messaging\Subscription\SubscriptionInterface;
 
 interface NotificationBuilderInterface
@@ -25,11 +26,9 @@ interface NotificationBuilderInterface
     public function __construct(FactoryInterface $factory, Collection $collection);
 
     /**
-     * @param SubscriptionInterface $subscription
      * @param string $templateName
-     * @return NotificationInterface|null
      */
-    public function createNotification(SubscriptionInterface $subscription, $templateName);
+    public function createNotification(SubscriptionInterface $subscription, $templateName): EmailMessage;
 
     /**
      * @return SubscriberCollection
