@@ -16,7 +16,6 @@
 namespace CDash\Messaging\Notification\Email;
 
 use CDash\Collection\BuildEmailCollection;
-use CDash\Messaging\FactoryInterface;
 use CDash\Messaging\Notification\NotificationCollection;
 use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Messaging\Subscription\SubscriptionInterface;
@@ -26,11 +25,11 @@ use CDash\Model\BuildEmail;
 
 class EmailBuilder
 {
-    protected FactoryInterface $factory;
+    protected EmailNotificationFactory $factory;
     protected NotificationCollection $notifications;
     protected SubscriptionCollection $subscriptions;
 
-    public function __construct(FactoryInterface $factory, NotificationCollection $collection)
+    public function __construct(EmailNotificationFactory $factory, NotificationCollection $collection)
     {
         $this->factory = $factory;
         $this->notifications = $collection;

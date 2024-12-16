@@ -11858,11 +11858,6 @@ parameters:
 			path: app/cdash/include/Collection/SubscriptionBuilderCollection.php
 
 		-
-			message: "#^Method CDash\\\\Messaging\\\\FactoryInterface\\:\\:create\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/Messaging/FactoryInterface.php
-
-		-
 			message: "#^Cannot access property \\$Id on mixed\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php

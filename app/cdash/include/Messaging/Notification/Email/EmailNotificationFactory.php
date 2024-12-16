@@ -1,9 +1,7 @@
 <?php
 namespace CDash\Messaging\Notification\Email;
 
-use CDash\Messaging\FactoryInterface;
-
-class EmailNotificationFactory implements FactoryInterface
+class EmailNotificationFactory
 {
     /**
      * @return EmailMessage
