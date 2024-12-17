@@ -466,12 +466,15 @@ type SiteInformation {
 
   numberPhysicalCpus: Int @rename(attribute: "numberphysicalcpus")
 
+  "Virtual memory in MiB."
   totalVirtualMemory: Int @rename(attribute: "totalvirtualmemory")
 
+  "Physical memory in MiB."
   totalPhysicalMemory: Int @rename(attribute: "totalphysicalmemory")
 
   logicalProcessorsPerPhysical: Int @rename(attribute: "logicalprocessorsperphysical")
 
+  "Clock frequency in MHz."
   processorClockFrequency: Int @rename(attribute: "processorclockfrequency")
 
   description: String
