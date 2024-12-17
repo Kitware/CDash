@@ -33006,11 +33006,6 @@ parameters:
 			path: tests/Feature/GraphQL/ProjectTypeTest.php
 
 		-
-			message: "#^Binary operation \"\\.\" between mixed and '_' results in an error\\.$#"
-			count: 1
-			path: tests/Feature/GraphQL/SiteTypeTest.php
-
-		-
 			message: "#^Cannot access offset 'edges' on mixed\\.$#"
 			count: 3
 			path: tests/Feature/GraphQL/SiteTypeTest.php

@@ -69,6 +69,7 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
     apt-get install -y \
         cmake \
         rsync \
+        libzip-dev `# needed for Laravel Dusk/Selenium` \
         && \
     `# Cypress dependencies` \
     apt-get install -y \
@@ -89,7 +90,8 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
     chown root /tmp/.X11-unix/ && \
     mkdir -p /var/www/.cache/mesa_shader_cache && \
     pecl install xdebug && \
-    docker-php-ext-enable xdebug; \
+    docker-php-ext-enable xdebug && \
+    docker-php-ext-install zip; \
 fi
 
 # Create an npm cache directory for www-data
