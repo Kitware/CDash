@@ -17,7 +17,6 @@
 use CDash\Collection\SubscriberCollection;
 use CDash\Database;
 use CDash\Messaging\Notification\Email\EmailBuilder;
-use CDash\Messaging\Notification\Email\EmailNotificationFactory;
 use CDash\Messaging\Notification\NotificationCollection;
 use CDash\Messaging\Notification\NotificationDirector;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
@@ -170,8 +169,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         $builder->build($subscriptions);
         $director = new NotificationDirector();
 
-        /** @var EmailBuilder $builder */
-        $builder = new EmailBuilder(new EmailNotificationFactory(), new NotificationCollection());
+        $builder = new EmailBuilder(new NotificationCollection());
         $builder
             ->setSubscriptions($subscriptions);
 
@@ -458,9 +456,7 @@ Total Dynamic analysis tests failing or not run: 1
 *Dynamic analysis tests failing or not run* " . /* Join is needed to preserve trailing space */"
 experimentalFail (http://open.cdash.org/viewDynamicAnalysisFile.php?id=1)
 
--CDash
-
-";
+-CDash";
         $actual = "{$notification}";
         $this->assertEquals($expected, $actual);
     }

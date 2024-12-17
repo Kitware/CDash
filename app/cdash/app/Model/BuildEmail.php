@@ -19,7 +19,6 @@ namespace CDash\Model;
 use CDash\Collection\BuildEmailCollection;
 use CDash\Database;
 use CDash\Messaging\Notification\Email\EmailMessage;
-use CDash\Messaging\Notification\NotificationInterface;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -57,11 +56,8 @@ class BuildEmail
     /**
      * Logs the status (sent, or not sent) of a notification. Given a testing configuration
      * this method will log the email in a manner expected by some of the older CDash tests.
-     *
-     * @param NotificationInterface $notification
-     * @param $sent
      */
-    public static function Log(NotificationInterface $notification, $sent)
+    public static function Log(EmailMessage $notification, $sent)
     {
         if (config('app.debug')) {
             // This logging functionality is handled for us by cdashmail().

@@ -16,132 +16,70 @@
 namespace CDash\Messaging\Notification\Email;
 
 use CDash\Collection\BuildEmailCollection;
-use CDash\Messaging\Notification\Email\Decorator\DecoratorInterface;
-use CDash\Messaging\Notification\NotificationInterface;
+use Illuminate\View\View;
 
-class EmailMessage implements NotificationInterface
+class EmailMessage
 {
-    /** @var  string $sender */
-    protected $sender;
+    protected string $sender;
+    protected string $recipient;
+    protected string $subject;
+    private string $body;
+    private BuildEmailCollection $buildEmailCollection;
 
-    /** @var  string $recipient */
-    protected $recipient;
+    public function __construct()
+    {
+        $this->buildEmailCollection = new BuildEmailCollection();
+    }
 
-    /** @var  string $subject */
-    protected $subject;
-
-    /** @var  string $body */
-    private $body;
-
-    /** @var BuildEmailCollection $buildEmailCollection */
-    private $buildEmailCollection;
-
-    /**
-     * @param BuildEmailCollection $collection
-     * @return $this
-     */
-    public function setBuildEmailCollection(BuildEmailCollection $collection)
+    public function setBuildEmailCollection(BuildEmailCollection $collection): self
     {
         $this->buildEmailCollection = $collection;
         return $this;
     }
 
-    /**
-     * @return BuildEmailCollection
-     */
-    public function getBuildEmailCollection()
+    public function getBuildEmailCollection(): BuildEmailCollection
     {
-        if (!$this->buildEmailCollection) {
-            $this->buildEmailCollection = new BuildEmailCollection();
-        }
-
         return $this->buildEmailCollection;
     }
 
-    /**
-     * @param $sender
-     * @return EmailMessage
-     */
-    public function setSender($sender)
-    {
-        $this->sender = $sender;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSender()
-    {
-        return $this->sender;
-    }
-
-    /**
-     * @param $recipient
-     * @return EmailMessage
-     */
-    public function setRecipient($recipient)
+    public function setRecipient(string $recipient): self
     {
         $this->recipient = $recipient;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getRecipient()
+    public function getRecipient(): string
     {
         return $this->recipient;
     }
 
-    /**
-     * @param DecoratorInterface $body
-     * @return EmailMessage
-     */
-    public function setBody($body)
+    public function setBody(View $body): self
     {
-        $this->body = $body;
+        $this->body = trim($body->render());
         return $this;
     }
 
-    /**
-     * @param $subject
-     * @return EmailMessage
-     */
-    public function setSubject($subject)
+    public function setSubject(View $subject): self
     {
-        $this->subject = trim($subject);
+        $this->subject = trim($subject->render());
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSubject()
+    public function getSubject(): string
     {
         return trim($this->subject);
     }
 
-    /**
-     * @return string
-     */
-    public function getBody()
+    public function getBody(): string
     {
-        return trim($this->body);
+        return $this->body;
     }
 
     /**
-     * @return string
      * TODO: this should probably return all headers + body see (RFC 2822)
      */
-    public function __toString()
+    public function __toString(): string
     {
-        $body = '';
-        if (is_string($this->body)) {
-            $body = $this->body;
-        } elseif (method_exists($this->body, '__toString')) {
-            $body = $this->body->__toString();
-        }
-        return $body;
+        return $this->body;
     }
 }

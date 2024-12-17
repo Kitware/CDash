@@ -2,13 +2,11 @@
 
 namespace CDash\Messaging\Notification;
 
+use CDash\Messaging\Notification\Email\EmailBuilder;
+
 class NotificationDirector
 {
-    /**
-     * @param NotificationBuilderInterface $builder
-     * @return NotificationCollection
-     */
-    public function build(NotificationBuilderInterface $builder)
+    public function build(EmailBuilder $builder): NotificationCollection
     {
         $subscriptions = $builder->getSubscriptions();
         $notifications = $builder->getNotifications();
@@ -16,10 +14,7 @@ class NotificationDirector
         /* @var \CDash\Messaging\Subscription\Subscription $subscription */
         foreach ($subscriptions as $recipient => $subscription) {
             foreach ($subscription->getTopicTemplates() as $template) {
-                $notification = $builder->createNotification($subscription, $template);
-                if ($notification) {
-                    $notifications->add($notification);
-                }
+                $notifications->add($builder->createNotification($subscription, $template));
             }
         }
         return $notifications;

@@ -16,28 +16,27 @@
 namespace CDash\Messaging\Notification\Email;
 
 use CDash\Collection\BuildEmailCollection;
-use CDash\Messaging\FactoryInterface;
-use CDash\Collection\Collection;
 use CDash\Messaging\Notification\NotificationCollection;
-use CDash\Messaging\Notification\NotificationInterface;
+use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Messaging\Subscription\SubscriptionInterface;
-use CDash\Messaging\Subscription\SubscriptionNotificationBuilder;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\ActionableTypes;
 use CDash\Model\BuildEmail;
 
-class EmailBuilder extends SubscriptionNotificationBuilder
+class EmailBuilder
 {
-    public function __construct(FactoryInterface $factory, Collection $collection)
+    protected NotificationCollection $notifications;
+    protected SubscriptionCollection $subscriptions;
+
+    public function __construct(NotificationCollection $collection)
     {
-        parent::__construct($factory, $collection);
+        $this->notifications = $collection;
     }
 
     /**
-     * @param SubscriptionInterface $subscription
      * @param string $templateName
      */
-    public function createNotification(SubscriptionInterface $subscription, $templateName): EmailMessage|NotificationInterface
+    public function createNotification(SubscriptionInterface $subscription, string $templateName): EmailMessage
     {
         $subject_template = "email.{$templateName}.subject";
         $template = "email.{$templateName}";
@@ -46,9 +45,8 @@ class EmailBuilder extends SubscriptionNotificationBuilder
         $subject = view($subject_template)->with($data);
         $body = view($template)->with($data);
         $recipient = $subscription->getSubscriber()->getAddress();
-        /** @var EmailMessage $message */
-        $message = $this->factory->create();
-        $message->setSubject($subject)
+        $message = (new EmailMessage())
+            ->setSubject($subject)
             ->setBody($body)
             ->setRecipient($recipient);
         // todo: this doesn't really belong here, refactor asap
@@ -56,19 +54,12 @@ class EmailBuilder extends SubscriptionNotificationBuilder
         return $message;
     }
 
-    /**
-     * @return NotificationCollection
-     */
-    public function getNotifications()
+    public function getNotifications(): NotificationCollection
     {
         return $this->notifications;
     }
 
-    /**
-     * @param EmailMessage $message
-     * @param SubscriptionInterface $subscription
-     */
-    public function setBuildEmailCollection(EmailMessage $message, SubscriptionInterface $subscription)
+    protected function setBuildEmailCollection(EmailMessage $message, SubscriptionInterface $subscription): void
     {
         $topics = $subscription->getTopicCollection();
         $subscriber = $subscription->getSubscriber();
@@ -93,5 +84,16 @@ class EmailBuilder extends SubscriptionNotificationBuilder
         }
 
         $message->setBuildEmailCollection($collection);
+    }
+
+    public function setSubscriptions(SubscriptionCollection $subscriptions): self
+    {
+        $this->subscriptions = $subscriptions;
+        return $this;
+    }
+
+    public function getSubscriptions(): SubscriptionCollection
+    {
+        return $this->subscriptions;
     }
 }
