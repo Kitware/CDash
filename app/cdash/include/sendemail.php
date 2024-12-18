@@ -14,8 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'include/cdashmail.php';
-
 use App\Models\Configure;
 use CDash\Database;
 use CDash\Messaging\Notification\Email\EmailBuilder;
@@ -30,6 +28,7 @@ use CDash\Model\BuildUpdate;
 use CDash\Model\DynamicAnalysis;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 /** Check for errors for a given build. Return false if no errors */
 function check_email_errors(int $buildid, bool $checktesttimeingchanged, int $testtimemaxstatus, bool $checkpreviouserrors): array
@@ -575,11 +574,11 @@ function send_update_email(UpdateHandler $handler, int $projectid): void
             $body = "$sitename has encountered errors during the Update step and you have been identified as the maintainer of this site.\n\n";
             $body .= "*Update Errors*\n";
             $body .= 'Status: ' . $update['status'] . ' (' . url('/build/' . $buildid . '/update') . ")\n";
-            if (cdashmail($recipients, $subject, $body)) {
-                add_log('email sent to: ' . implode(', ', $recipients), 'send_update_email');
-            } else {
-                add_log('cannot send email to: ' . implode(', ', $recipients), 'send_update_email');
-            }
+
+            Mail::raw($body, function ($message) use ($subject, $recipients) {
+                $message->subject($subject)
+                    ->to($recipients);
+            });
         }
     }
 }
@@ -618,9 +617,11 @@ function sendemail(ActionableBuildInterface $handler, int $projectid): void
      * @var EmailMessage $notification
      */
     foreach ($notifications as $notification) {
-        cdashmail($notification->getRecipient(), $notification->getSubject(), $notification->getBody());
+        Mail::raw($notification->getBody(), function ($message) use ($notification) {
+            $message->subject($notification->getSubject())
+                ->to($notification->getRecipient());
+        });
 
-        BuildEmail::Log($notification, true);
         BuildEmail::SaveNotification($notification);
     }
 }

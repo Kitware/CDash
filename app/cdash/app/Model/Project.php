@@ -15,8 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-require_once 'include/cdashmail.php';
-
 use CDash\Collection\SubscriberCollection;
 
 use CDash\Database;
@@ -34,6 +32,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Project as EloquentProject;
 use App\Utils\DatabaseCleanupUtils;
+use Illuminate\Support\Facades\Mail;
 use RuntimeException;
 
 /** Main project class */
@@ -917,11 +916,10 @@ class Project
 
             $emailbody .= "\n-CDash\n";
 
-            if (cdashmail($recipients, $emailtitle, $emailbody)) {
-                add_log('email sent to: ' . implode(', ', $recipients), 'SendEmailToAdmin');
-            } else {
-                add_log('cannot send email to: ' . implode(', ', $recipients), 'SendEmailToAdmin', LOG_ERR, $this->Id);
-            }
+            Mail::raw($emailbody, function ($message) use ($emailtitle, $recipients) {
+                $message->subject($emailtitle)
+                    ->to($recipients);
+            });
         }
 
         return true;

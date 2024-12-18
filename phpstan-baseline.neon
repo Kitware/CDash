@@ -1745,14 +1745,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: """
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
 			"""
@@ -3159,11 +3151,6 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			message: "#^Part \\$email \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
 			message: "#^Part \\$minimum_complexity \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
 			count: 2
 			path: app/Http/Controllers/UserController.php
@@ -3596,6 +3583,19 @@ parameters:
 			message: "#^PHPDoc tag @var with type Illuminate\\\\Contracts\\\\Auth\\\\MustVerifyEmail is not subtype of type Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\.$#"
 			count: 1
 			path: app/Listeners/ConfiguredSendEmailVerificationNotification.php
+
+		-
+			message: """
+				#^Call to deprecated function add_log\\(\\)\\:
+				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
+			"""
+			count: 3
+			path: app/Listeners/EmailSentListener.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
+			count: 1
+			path: app/Listeners/EmailSentListener.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\BasicBuildAlert\\>\\:\\:where\\(\\)\\.$#"
@@ -8109,21 +8109,6 @@ parameters:
 			path: app/cdash/app/Model/BuildEmail.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\BuildEmail\\:\\:Log\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildEmail.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildEmail\\:\\:Log\\(\\) has parameter \\$sent with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildEmail.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\BuildEmail\\:\\:SaveNotification\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildEmail.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildEmail\\:\\:SetBuildId\\(\\) has parameter \\$buildId with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildEmail.php
@@ -8150,21 +8135,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\BuildEmail\\:\\:SetUserId\\(\\) has parameter \\$userId with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildEmail.php
-
-		-
-			message: "#^Only booleans are allowed in a ternary operator condition, int\\|false given\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildEmail.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildEmail.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$notification$#"
 			count: 1
 			path: app/cdash/app/Model/BuildEmail.php
 
@@ -10455,14 +10425,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method App\\\\Models\\\\Project\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Project\\>\\:\\:save\\(\\)\\.$#"
 			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 2
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -13520,64 +13482,6 @@ parameters:
 			path: app/cdash/include/api_common.php
 
 		-
-			message: "#^Anonymous function has an unused use \\$headers\\.$#"
-			count: 1
-			path: app/cdash/include/cdashmail.php
-
-		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 4
-			path: app/cdash/include/cdashmail.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/cdash/include/cdashmail.php
-
-		-
-			message: "#^Function cdashmail\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/cdashmail.php
-
-		-
-			message: "#^Function cdashmail\\(\\) has parameter \\$body with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/cdashmail.php
-
-		-
-			message: "#^Function cdashmail\\(\\) has parameter \\$headers with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/cdashmail.php
-
-		-
-			message: "#^Function cdashmail\\(\\) has parameter \\$subject with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/cdashmail.php
-
-		-
-			message: "#^Function cdashmail\\(\\) has parameter \\$to with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/cdashmail.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 1
-			path: app/cdash/include/cdashmail.php
-
-		-
-			message: "#^Parameter \\#1 \\$address of method Illuminate\\\\Mail\\\\Message\\:\\:from\\(\\) expects array\\|string, mixed given\\.$#"
-			count: 1
-			path: app/cdash/include/cdashmail.php
-
-		-
-			message: "#^Parameter \\#1 \\$address of method Illuminate\\\\Mail\\\\Message\\:\\:replyTo\\(\\) expects array\\|string, mixed given\\.$#"
-			count: 1
-			path: app/cdash/include/cdashmail.php
-
-		-
 			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$pivot\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -14394,7 +14298,7 @@ parameters:
 				#^Call to deprecated function add_log\\(\\)\\:
 				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
 			"""
-			count: 8
+			count: 1
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -15357,14 +15261,6 @@ parameters:
 				04/22/2023$#
 			"""
 			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 2
 			path: app/cdash/include/sendemail.php
 
 		-
