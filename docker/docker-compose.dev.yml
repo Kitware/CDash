@@ -28,6 +28,14 @@ services:
       LDAP_PASSWORDS: password1,password2
       LDAP_PORT_NUMBER: 389
 
+  # Development mail server available at http://localhost:8025
+  mailpit:
+    image: axllent/mailpit
+    container_name: mailpit
+    ports:
+      - 8025:8025
+      - 1025:1025
+
   # Used for live browser testing
   selenium:
     image: selenium/standalone-chromium
