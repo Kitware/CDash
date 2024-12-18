@@ -20,8 +20,6 @@
 //
 
 
-require_once 'include/cdashmail.php';
-
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 use CDash\Model\BuildGroup;
@@ -29,6 +27,7 @@ use CDash\Model\BuildGroupRule;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 @set_time_limit(0);
@@ -827,12 +826,10 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime): void
             $missingSummary .= "\n" . url('/index.php') . '?project=' . urlencode($projectname) . "\n";
             $missingSummary .= "\n-CDash\n";
 
-            if (cdashmail($recipients, $missingTitle, $missingSummary)) {
-                add_log('email sent to: ' . implode(', ', $recipients), 'sendEmailExpectedBuilds');
-                return;
-            } else {
-                add_log('cannot send email to: ' . implode(', ', $recipients), 'sendEmailExpectedBuilds');
-            }
+            Mail::raw($missingSummary, function ($message) use ($missingTitle, $recipients) {
+                $message->subject($missingTitle)
+                    ->to($recipients);
+            });
         }
         $missingbuilds = 1;
     }
@@ -867,12 +864,10 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime): void
 
         // Send the email
         if (!empty($recipients)) {
-            if (cdashmail($recipients, $title, $summary)) {
-                add_log('email sent to: ' . implode(', ', $recipients), 'sendEmailExpectedBuilds');
-                return;
-            } else {
-                add_log('cannot send email to: ' . implode(', ', $recipients), 'sendEmailExpectedBuilds');
-            }
+            Mail::raw($summary, function ($message) use ($title, $recipients) {
+                $message->subject($title)
+                    ->to($recipients);
+            });
         }
     }
 }
@@ -942,13 +937,10 @@ function sendEmailUnregisteredUsers(int $projectid, $cvsauthors): void
             $body .= "\n You should register these users to your project. They are currently not receiving any emails from CDash.\n";
             $body .= "\n-CDash\n";
 
-            add_log($title . ' : ' . $body . ' : ' . implode(', ', $recipients), 'sendEmailUnregisteredUsers');
-
-            if (cdashmail($recipients, $title, $body)) {
-                add_log('email sent to: ' . implode(', ', $recipients), 'sendEmailUnregisteredUsers');
-            } else {
-                add_log('cannot send email to: ' . implode(', ', $recipients), 'sendEmailUnregisteredUsers');
-            }
+            Mail::raw($body, function ($message) use ($title, $recipients) {
+                $message->subject($title)
+                    ->to($recipients);
+            });
         }
     }
 }

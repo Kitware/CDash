@@ -39,10 +39,8 @@ class BuildEmail
      * Saves a EmailMessage's BuildEmailCollection to the database. The BuildEmailCollection
      * is the collection of all emails sent for a given CTest submission, e.g. Build, Test,
      * etc.
-     *
-     * @param EmailMessage $notification
      */
-    public static function SaveNotification(EmailMessage $message)
+    public static function SaveNotification(EmailMessage $message): void
     {
         $collection = $message->getBuildEmailCollection();
         /** @var BuildEmail $email */
@@ -50,28 +48,6 @@ class BuildEmail
             foreach ($emails as $email) {
                 $email->Save();
             }
-        }
-    }
-
-    /**
-     * Logs the status (sent, or not sent) of a notification. Given a testing configuration
-     * this method will log the email in a manner expected by some of the older CDash tests.
-     */
-    public static function Log(EmailMessage $notification, $sent)
-    {
-        if (config('app.debug')) {
-            // This logging functionality is handled for us by cdashmail().
-            return;
-        } else {
-            $status = $sent ? 'SENT' : 'NOT SENT';
-            $class_name = get_class($notification);
-            $slash_pos = strrpos($class_name, '\\');
-            $pos = $slash_pos ? $slash_pos + 1 : 0;
-            $notification_type = substr($class_name, $pos);
-            $title = $notification->getSubject();
-            $recipient = $notification->getRecipient();
-            $message = "[{$status}] {$notification_type} titled, '{$title}' to {$recipient}";
-            Log::info($message);
         }
     }
 
