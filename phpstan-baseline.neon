@@ -3842,12 +3842,12 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\:\\:whereIn\\(\\)\\.$#"
-			count: 2
+			count: 5
 			path: app/Utils/DatabaseCleanupUtils.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\:\\:whereNotIn\\(\\)\\.$#"
-			count: 2
+			count: 5
 			path: app/Utils/DatabaseCleanupUtils.php
 
 		-
