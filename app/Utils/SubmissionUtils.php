@@ -7,15 +7,16 @@ namespace App\Utils;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
+use App\Exceptions\CDashXMLValidationException;
 
 class SubmissionUtils
 {
-
     /**
      * Figure out what type of XML file this is
      * @return array<string,mixed>
+     * @throws CDashXMLValidationException
      */
-    public static function get_xml_type(mixed $filehandle): array
+    public static function get_xml_type(mixed $filehandle, string $xml_file): array
     {
         $file = '';
         $handler = null;
@@ -72,6 +73,12 @@ class SubmissionUtils
 
         // restore the file descriptor to beginning of file
         rewind($filehandle);
+
+        // perform minimal error checking as a sanity check
+        if ($file === '') {
+            throw new CDashXMLValidationException(["ERROR: Could not determine submission"
+                                                  ." file type for: '{$xml_file}'"]);
+        }
 
         return [
             'file_handle' => $filehandle,
