@@ -52,7 +52,7 @@
     "ext-xdebug": "*",
     "ext-zip": "*",
     "fakerphp/faker": "1.24.1",
-    "friendsofphp/php-cs-fixer": "3.65.0",
+    "friendsofphp/php-cs-fixer": "3.66.0",
     "larastan/larastan": "^2.7",
     "laravel/dusk": "8.2.12",
     "mockery/mockery": "1.6.12",
