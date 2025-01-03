@@ -15,7 +15,7 @@
   PURPOSE. See the above copyright notices for more information.
   =========================================================================*/
 
-use App\Exceptions\CDashXMLValidationException;
+use App\Exceptions\BadSubmissionException;
 use App\Models\BuildFile;
 use App\Utils\SubmissionUtils;
 use CDash\Database;
@@ -157,10 +157,11 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, ?int $bui
     return $handler;
 }
 
-/** Main function to parse the incoming xml from ctest */
 /**
- * @throws App\Exceptions\XMLValidationException
- **/
+ * Main function to parse the incoming xml from ctest
+ *
+ * @throws BadSubmissionException
+ */
 function ctest_parse($filehandle, string $filename, $projectid, $expected_md5 = '', int|null $buildid=null): AbstractSubmissionHandler|false
 {
     // Check if this is a new style PUT submission.
