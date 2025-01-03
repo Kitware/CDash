@@ -4,12 +4,11 @@ namespace App\Jobs;
 
 use AbstractSubmissionHandler;
 use ActionableBuildInterface;
-use App\Exceptions\XMLValidationException;
+use App\Exceptions\BadSubmissionException;
 use App\Utils\UnparsedSubmissionProcessor;
 use App\Models\SuccessfulJob;
 
 use BuildPropertiesJSONHandler;
-use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Repository;
 
@@ -124,7 +123,7 @@ class ProcessSubmission implements ShouldQueue
      * Execute the job.
      *
      * @return void
-     * @throws XMLValidationException
+     * @throws BadSubmissionException
      */
     public function handle()
     {
@@ -187,7 +186,7 @@ class ProcessSubmission implements ShouldQueue
      * This method could be running on a worker that is either remote or local, so it accepts
      * a file handle or a filename that it can query the CDash API for.
      *
-     * @throws XMLValidationException
+     * @throws BadSubmissionException
      **/
     private function doSubmit($filename, $projectid, $buildid = null, $expected_md5 = ''): AbstractSubmissionHandler|UnparsedSubmissionProcessor|false
     {

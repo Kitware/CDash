@@ -40,7 +40,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
     private $EndTimeStamp;
     private $Update;
     private $UpdateFile;
-    public static string $schema_file = "/app/Validators/Schemas/Update.xsd";
+    protected static ?string $schema_file = '/app/Validators/Schemas/Update.xsd';
 
     /** Constructor */
     public function __construct(Project $project)

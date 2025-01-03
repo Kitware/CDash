@@ -18,7 +18,6 @@ use App\Models\Site;
 use App\Utils\Stack;
 use CDash\Model\Build;
 use CDash\Model\Project;
-use App\Exceptions\XMLValidationException;
 
 abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 {
@@ -28,6 +27,8 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
     protected $SubProjectName;
 
     private $ModelFactory;
+
+    protected static ?string $schema_file = null;
 
     public function __construct(Build|Project $init)
     {
@@ -39,10 +40,15 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 
     /**
      * Validate the given XML file based on its type
-     * @throws XMLValidationException
+     *
+     * @return array<string>
      */
-    public static function validate_xml(string $xml_file): void
+    public static function validate(string $path): array
     {
+        if (static::$schema_file === null) {
+            return [];
+        }
+
         $errors = [];
         // let us control the failures so we can continue
         // parsing files instead of crashing midway
@@ -50,23 +56,20 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 
         // load the input file to be validated
         $xml = new DOMDocument();
-        $xml->load($xml_file, LIBXML_PARSEHUGE);
+        $xml->load($path, LIBXML_PARSEHUGE);
 
-        // run the validator and collect errors if there are any
-        // schema_file is defined in each child class
-        if (!$xml->schemaValidate(base_path().static::$schema_file)) {
+        // run the validator and collect errors if there are any.
+        if (!$xml->schemaValidate(base_path(static::$schema_file))) {
             $validation_errors = libxml_get_errors();
             foreach ($validation_errors as $error) {
                 if ($error->level === LIBXML_ERR_ERROR || $error->level === LIBXML_ERR_FATAL) {
-                    $errors[] = "ERROR: {$error->message} in {$error->file},"
-                                ." line: {$error->line}, column: {$error->column}";
+                    $errors[] = "ERROR: {$error->message} in {$error->file}, line: {$error->line}, column: {$error->column}";
                 }
             }
             libxml_clear_errors();
         }
-        if (count($errors) !== 0) {
-            throw new XMLValidationException($errors);
-        }
+
+        return $errors;
     }
 
 

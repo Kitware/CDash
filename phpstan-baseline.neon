@@ -177,25 +177,9 @@ parameters:
 			path: app/Console/Commands/UpdateDependencies.php
 
 		-
-			message: "#^Cannot access static property \\$schema_file on mixed\\.$#"
-			count: 2
-			path: app/Console/Commands/ValidateXml.php
-
-		-
-			message: "#^Cannot call static method validate_xml\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/Console/Commands/ValidateXml.php
-
-		-
 			message: "#^Parameter \\#1 \\$path of function app_path expects string, bool\\|string given\\.$#"
 			count: 1
 			path: app/Console/Kernel.php
-
-		-
-			message: "#^Method App\\\\Exceptions\\\\XMLValidationException\\:\\:getDecodedMessage\\(\\) should return array\\<int, string\\> but returns mixed\\.$#"
-
-			count: 1
-			path: app/Exceptions/XMLValidationException.php
 
 		-
 			message: "#^PHPDoc type array of property App\\\\Exceptions\\\\Handler\\:\\:\\$dontFlash is not the same as PHPDoc type array\\<int, string\\> of overridden property Illuminate\\\\Foundation\\\\Exceptions\\\\Handler\\:\\:\\$dontFlash\\.$#"
@@ -2749,16 +2733,6 @@ parameters:
 				04/01/2023$#
 			"""
 			count: 3
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
-			message: "#^Cannot access static property \\$schema_file on mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
-			message: "#^Cannot call static method validate_xml\\(\\) on mixed\\.$#"
-			count: 1
 			path: app/Http/Controllers/SubmissionController.php
 
 		-
@@ -14093,7 +14067,7 @@ parameters:
 			path: app/cdash/include/ctestparser.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$backupFileName\\.$#"
+			message: "#^Access to an undefined property BuildHandler\\|ConfigureHandler\\|CoverageHandler\\|CoverageJUnitHandler\\|CoverageLogHandler\\|DoneHandler\\|DynamicAnalysisHandler\\|NoteHandler\\|ProjectHandler\\|TestingHandler\\|TestingJUnitHandler\\|UpdateHandler\\|UploadHandler\\:\\:\\$backupFileName\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparser.php
 
@@ -14108,33 +14082,8 @@ parameters:
 			path: app/cdash/include/ctestparser.php
 
 		-
-			message: "#^Binary operation \"\\.\" between mixed and '\\.xml' results in an error\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
 			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and \\(list\\<string\\>\\|string\\|null\\) results in an error\\.$#"
 			count: 2
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getBuildName\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getBuildStamp\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getSiteName\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getSubProjectName\\(\\)\\.$#"
-			count: 1
 			path: app/cdash/include/ctestparser.php
 
 		-
@@ -14178,11 +14127,6 @@ parameters:
 
 		-
 			message: "#^Function ctest_parse\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function ctest_parse\\(\\) should return AbstractSubmissionHandler\\|false but returns object\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparser.php
 
@@ -14274,21 +14218,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$data of function xml_parse expects string, string\\|false given\\.$#"
 			count: 2
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Parameter \\#2 \\$handler of function xml_set_character_data_handler expects callable\\(\\)\\: mixed, array\\{object, 'text'\\} given\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Parameter \\#2 \\$start_handler of function xml_set_element_handler expects callable\\(\\)\\: mixed, array\\{object, 'startElement'\\} given\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Parameter \\#3 \\$end_handler of function xml_set_element_handler expects callable\\(\\)\\: mixed, array\\{object, 'endElement'\\} given\\.$#"
-			count: 1
 			path: app/cdash/include/ctestparser.php
 
 		-
@@ -27029,11 +26958,6 @@ parameters:
 			path: app/cdash/tests/test_submission_assign_buildid.php
 
 		-
-			message: "#^Method SubmissionValidationTestCase\\:\\:testSubmissionValidation\\(\\) has App\\\\Exceptions\\\\XMLValidationException in PHPDoc @throws tag but it's not thrown\\.$#"
-			count: 1
-			path: app/cdash/tests/test_submissionvalidation.php
-
-		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
 				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
@@ -30119,11 +30043,6 @@ parameters:
 			path: app/cdash/xml_handlers/SubProjectDirectories_handler.php
 
 		-
-			message: "#^Access to an undefined static property static\\(AbstractXmlHandler\\)\\:\\:\\$schema_file\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_xml_handler.php
-
-		-
 			message: "#^Class AbstractXmlHandler has an uninitialized property \\$Site\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/abstract_xml_handler.php
@@ -32981,11 +32900,6 @@ parameters:
 			message: "#^Property Tests\\\\Feature\\\\UserCommand\\:\\:\\$user has no type specified\\.$#"
 			count: 1
 			path: tests/Feature/UserCommand.php
-
-		-
-			message: "#^Part \\$file \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
-			count: 1
-			path: tests/Unit/app/Console/Command/ValidateXmlCommandTest.php
 
 		-
 			message: "#^Parameter \\#1 \\$objectOrClass of class ReflectionClass constructor expects class\\-string\\<T of object\\>\\|T of object, array\\<int, string\\>\\|string given\\.$#"

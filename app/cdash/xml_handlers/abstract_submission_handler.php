@@ -32,4 +32,17 @@ abstract class AbstractSubmissionHandler
     {
         return $this->Build;
     }
+
+    /**
+     * Accepts an absolute path to an input submission file.
+     *
+     * Returns an array of validation messages (if applicable).  An empty return array indicates
+     * that validation was successful.  Returns an empty array if no validation was defined.
+     *
+     * @return array<string>
+     */
+    public static function validate(string $path): array
+    {
+        return [];
+    }
 }
