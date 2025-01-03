@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\BadSubmissionException;
 use App\Jobs\ProcessSubmission;
 use App\Models\Site;
 use App\Utils\AuthTokenUtil;
 use App\Utils\UnparsedSubmissionProcessor;
+use App\Utils\SubmissionUtils;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
@@ -53,6 +55,9 @@ final class SubmissionController extends AbstractProjectController
         }
     }
 
+    /**
+     * @throws BadSubmissionException
+     */
     private function submitProcess(): Response
     {
         @set_time_limit(0);
@@ -128,6 +133,23 @@ final class SubmissionController extends AbstractProjectController
         } elseif (intval($this->project->Id) < 1) {
             abort(Response::HTTP_NOT_FOUND, 'The requested project does not exist.');
         }
+
+        // Figure out what type of XML file this is.
+        $stored_filename  = "inbox/".$filename;
+        $xml_info = SubmissionUtils::get_xml_type(fopen(Storage::path($stored_filename), 'r'), $stored_filename);
+
+        // If validation is enabled and if this file has a corresponding schema, validate it
+        $validation_errors = $xml_info['xml_handler']::validate(storage_path("app/" . $stored_filename));
+        if (count($validation_errors) > 0) {
+            $error_string = implode(PHP_EOL, $validation_errors);
+
+            // We always log validation failures, but we only send messages back to the client if configured to do so
+            Log::warning("Submission validation failed for file '$filename':" . PHP_EOL);
+            if ((bool) config('cdash.validate_xml_submissions') === true) {
+                abort(400, "XML validation failed: rejected file $filename:" . PHP_EOL . $error_string);
+            }
+        }
+
 
         // Check if CTest provided us enough info to assign a buildid.
         $pendingSubmissions = new PendingSubmissions();

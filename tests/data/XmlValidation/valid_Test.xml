@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="dummy_test_name"
+  BuildStamp="dummy_stamp"
+  Name="dummy_name"
+  >
+  <Testing>
+    <TestList>
+      <Test>./foo</Test>
+    </TestList>
+    <Test Status="failed">
+      <Name>foo</Name>
+      <Path>.</Path>
+      <FullName>./foo</FullName>
+      <FullCommandLine>/tmp/bin/foo</FullCommandLine>
+      <Results>
+        <NamedMeasurement type="text/string" name="Exit Code">
+          <Value>Failed</Value>
+        </NamedMeasurement>
+        <NamedMeasurement type="text/string" name="Exit Value">
+          <Value>1</Value>
+        </NamedMeasurement>
+      </Results>
+    </Test>
+    <ElapsedMinutes>0</ElapsedMinutes>
+  </Testing>
+</Site>
