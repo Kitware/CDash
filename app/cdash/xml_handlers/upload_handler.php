@@ -50,7 +50,7 @@ class UploadHandler extends AbstractXmlHandler
     private $Label;
     private int $Timestamp;
     private bool $BuildInitialized;
-    public static string $schema_file = "/app/Validators/Schemas/Upload.xsd";
+    protected static ?string $schema_file = '/app/Validators/Schemas/Upload.xsd';
 
     /** If True, means an error happened while processing the file */
     private $UploadError;

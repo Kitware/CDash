@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\BadSubmissionException;
 use App\Utils\SubmissionUtils;
+use BadMethodCallException;
 use Illuminate\Console\Command;
-use App\Exceptions\XMLValidationException;
 
 class ValidateXml extends Command
 {
@@ -43,41 +44,32 @@ class ValidateXml extends Command
                 $has_skipped = true;
                 continue;
             }
-
             try {
                 $xml_info = SubmissionUtils::get_xml_type($xml_file_handle, $input_xml_file);
-            } catch (XMLValidationException $e) {
-                foreach ($e->getDecodedMessage() as $error) {
-                    $this->error($error);
-                }
+            } catch (BadSubmissionException $e) {
+                $this->error($e->getMessage());
                 $has_errors = true;
                 continue;
             } finally {
                 fclose($xml_file_handle);
             }
-            $file = $xml_info['xml_type'];
-
-            // If validation is enabled and if this file has a corresponding schema, validate it
-            if (null === $xml_info['xml_handler']::$schema_file) {
-                $this->warn("WARNING: Skipped input file '{$input_xml_file}' as validation"
-                               ." of this file format is currently not supported. Validator was"
-                               ."{$xml_info['xml_handler']::$schema_file}");
-                $has_skipped = true;
-                continue;
-            }
 
             // run the validator and collect errors if there are any
             try {
-                $xml_info['xml_handler']::validate_xml($input_xml_file);
-            } catch (XMLValidationException $e) {
-                foreach ($e->getDecodedMessage() as $error) {
-                    $this->error($error);
+                $errors = $xml_info['xml_handler']::validate($input_xml_file);
+                if (count($errors) > 0) {
+                    foreach ($errors as $error) {
+                        $this->error($error);
+                    }
+                    $has_errors = true;
+                } else {
+                    $this->line("Validated file: {$input_xml_file}.");
                 }
-                $has_errors = true;
-                continue;
+            } catch (BadMethodCallException $e) {
+                $this->warn("WARNING: Skipped input file '{$input_xml_file}' as validation"
+                    ." of this file format is currently not supported.");
+                $has_skipped = true;
             }
-
-            $this->line("Validated file: {$input_xml_file}.");
         }
 
         // finally, report the results

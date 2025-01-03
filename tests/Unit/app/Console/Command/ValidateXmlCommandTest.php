@@ -16,11 +16,11 @@ class ValidateXmlCommandTest extends TestCase
      *
      * @return array<string,array<string>>
      */
-    private function formatCommandParams()
+    private function formatCommandParams(string ...$files)
     {
-        $data_dir = base_path()."/tests/data/XmlValidation";
+        $data_dir = base_path('/tests/data/XmlValidation');
         $file_paths = [];
-        foreach (func_get_args() as $file) {
+        foreach ($files as $file) {
             $file_paths[] = "{$data_dir}/{$file}";
         }
         return [

@@ -46,7 +46,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
     private $BuildStamp;
     private $Generator;
     private $PullRequest;
-    public static string $schema_file = "/app/Validators/Schemas/Configure.xsd";
+    protected static ?string $schema_file = '/app/Validators/Schemas/Configure.xsd';
 
     public function __construct(Project $project)
     {
