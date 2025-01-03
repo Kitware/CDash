@@ -21,6 +21,7 @@ return $config->setRules([
         'blank_line_before_statement' => false,
         'phpdoc_summary' => false,
         'concat_space' => ['spacing' => 'one'],
+        'increment_style' => ['style' => 'post'],
     ])
     ->setFinder($finder)
 ;
