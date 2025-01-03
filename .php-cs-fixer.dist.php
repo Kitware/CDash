@@ -20,6 +20,7 @@ return $config->setRules([
         'yoda_style' => false,
         'blank_line_before_statement' => false,
         'phpdoc_summary' => false,
+        'concat_space' => ['spacing' => 'one'],
     ])
     ->setFinder($finder)
 ;
