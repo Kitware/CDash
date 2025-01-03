@@ -1,4 +1,5 @@
 <?php
+
 namespace CDash\Messaging\Notification;
 
 class NotifyOn

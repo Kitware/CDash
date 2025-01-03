@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file contains the following classes: {@link SimpleCollector},
  * {@link SimplePatternCollector}.

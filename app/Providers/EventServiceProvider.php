@@ -25,7 +25,7 @@ class EventServiceProvider extends ServiceProvider
             \SocialiteProviders\Google\GoogleExtendSocialite::class.'@handle',
             \SocialiteProviders\PingIdentity\PingIdentityExtendSocialite::class.'@handle',
         ],
-        \Illuminate\Auth\Events\Login::class=>[
+        \Illuminate\Auth\Events\Login::class => [
             \App\Listeners\SuccessfulLdapAuthListener::class,
         ],
     ];
@@ -33,7 +33,7 @@ class EventServiceProvider extends ServiceProvider
     /**
      * Register any events for your application.
      */
-    public function boot() : void
+    public function boot(): void
     {
         parent::boot();
     }
@@ -41,7 +41,7 @@ class EventServiceProvider extends ServiceProvider
     /**
      * Determine if events and listeners should be automatically discovered.
      */
-    public function shouldDiscoverEvents() : bool
+    public function shouldDiscoverEvents(): bool
     {
         return true;
     }

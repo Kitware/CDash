@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,10 +14,10 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 use CDash\Collection\SubscriberCollection;
-
 use CDash\Database;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
@@ -1277,7 +1278,7 @@ class Project
         return true;
     }
 
-    private static function curlRequest(string $request) : void
+    private static function curlRequest(string $request): void
     {
         $use_https = config('app.env') === 'production';
         $ch = curl_init();

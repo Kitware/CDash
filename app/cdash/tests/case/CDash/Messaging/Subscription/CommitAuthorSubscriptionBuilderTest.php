@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -142,7 +143,7 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
 
         $mock_handler->expects($this->any())
             ->method('GetBuildCollection')
-            ->willReturn((new BuildCollection)
+            ->willReturn((new BuildCollection())
                 ->add($mock_build));
 
         $mock_handler->expects($this->any())

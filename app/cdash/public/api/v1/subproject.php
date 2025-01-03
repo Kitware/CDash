@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -17,7 +18,6 @@
 namespace CDash\Api\v1\SubProject;
 
 use App\Utils\PageTimer;
-
 use CDash\Database;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
@@ -44,7 +44,7 @@ if (!isset($projectid)) {
 $projectid = (int) $projectid;
 
 // Make sure the user has access to this page.
-$project = new Project;
+$project = new Project();
 $project->Id = $projectid;
 if (!Gate::allows('edit-project', $project)) {
     echo_error("You don't have the permissions to access this page ($projectid)", 403);

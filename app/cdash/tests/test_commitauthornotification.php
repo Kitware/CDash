@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Str;
-
 use CDash\Model\BuildGroup;
 
 class CommitAuthorNotificationTestCase extends KWWebTestCase

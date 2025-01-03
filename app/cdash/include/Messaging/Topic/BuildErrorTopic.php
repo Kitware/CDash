@@ -1,8 +1,8 @@
 <?php
+
 namespace CDash\Messaging\Topic;
 
 use Illuminate\Support\Collection;
-
 use CDash\Collection\BuildErrorCollection;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;

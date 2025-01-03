@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -57,7 +58,7 @@ final class CoverageController extends AbstractBuildController
             $projectid = intval($projectid);
         }
 
-        $Project = new Project;
+        $Project = new Project();
 
         $buildid = 0;
         if (isset($_GET['buildid'])) {
@@ -1985,7 +1986,7 @@ final class CoverageController extends AbstractBuildController
     /**
      * @return array<string,mixed>
      */
-    private static function apiCompareCoverage_get_build_data(int|null $parentid, int $projectid, string $beginning_UTCDate, string $end_UTCDate, string $filter_sql=''): array
+    private static function apiCompareCoverage_get_build_data(int|null $parentid, int $projectid, string $beginning_UTCDate, string $end_UTCDate, string $filter_sql = ''): array
     {
         $query_params = [];
         if ($parentid !== null) {

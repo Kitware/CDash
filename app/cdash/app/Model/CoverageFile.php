@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,6 +14,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 use CDash\Database;
@@ -245,7 +247,7 @@ class CoverageFile
     {
         // Remove trailing <br> tag.
         if (substr($this->File, -4) === '<br>') {
-            $this->File = substr($this->File, 0, strlen($this->File) -4);
+            $this->File = substr($this->File, 0, strlen($this->File) - 4);
         }
     }
 }

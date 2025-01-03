@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -17,7 +18,6 @@
 namespace CDash\Messaging\Topic;
 
 use App\Models\Test;
-
 use CDash\Model\Build;
 
 class MissingTestTopic extends Topic

@@ -100,7 +100,7 @@ class LdapIntegration extends TestCase
         $this->projects['only_group_1']->ldapfilter = "(uid=*group_1*)";
         $this->projects['only_group_1']->save();
 
-        $this->projects['only_group_2'] =$this->makePrivateProject();
+        $this->projects['only_group_2'] = $this->makePrivateProject();
         $this->projects['only_group_2']->ldapfilter = "(uid=*group_2*)";
         $this->projects['only_group_2']->save();
     }

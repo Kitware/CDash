@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -19,7 +20,7 @@ use CDash\Test\CDashTestCase;
 
 class PendingSubmissionsTest extends CDashTestCase
 {
-    public function setUp() : void
+    public function setUp(): void
     {
         // The parent method should always be called on all overridden TestCase methods
         // e.g. setUp, tearDown, setUpBeforeClass(), etc.

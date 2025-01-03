@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -18,14 +19,11 @@ namespace CDash\Lib\Repository;
 
 use Github\Client as GitHubClient;
 use Github\HttpClient\Builder as GitHubBuilder;
-
 use Illuminate\Support\Facades\Log;
-
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
-
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
@@ -81,12 +79,12 @@ class GitHub implements RepositoryInterface
         $this->check = null;
     }
 
-    public function setApiClient(GitHubClient $client) : void
+    public function setApiClient(GitHubClient $client): void
     {
         $this->apiClient = $client;
     }
 
-    protected function initializeApiClient() : void
+    protected function initializeApiClient(): void
     {
         $builder = new GitHubBuilder();
         $apiClient = new GithubClient($builder, 'machine-man-preview');
@@ -96,7 +94,7 @@ class GitHub implements RepositoryInterface
     /**
      * Attempt to log in to the GitHub API
      */
-    public function authenticate(bool $required = true) : bool
+    public function authenticate(bool $required = true): bool
     {
         if (!config('cdash.use_vcs_api')) {
             return false;
@@ -172,7 +170,7 @@ class GitHub implements RepositoryInterface
      *
      * @param array<string, string> $options
      */
-    public function setStatus($options) : void
+    public function setStatus($options): void
     {
         if (!$this->authenticate()) {
             return;
@@ -392,7 +390,7 @@ class GitHub implements RepositoryInterface
      * Generate a check summary for a given row of build data.
      * @param array<string, int|string> $row
      */
-    public function getCheckSummaryForBuildRow(array $row) : string|null
+    public function getCheckSummaryForBuildRow(array $row): string|null
     {
         // Check properties to see if this build should be excluded
         // from the check.
@@ -460,7 +458,7 @@ class GitHub implements RepositoryInterface
     /**
      * Record what changed between two commits.
      **/
-    public function compareCommits(BuildUpdate $update) : bool
+    public function compareCommits(BuildUpdate $update): bool
     {
         // Get current revision (head).
         if ($update->Revision === '') {
@@ -644,22 +642,22 @@ class GitHub implements RepositoryInterface
         return true;
     }
 
-    public function getInstallationId() : string
+    public function getInstallationId(): string
     {
         return $this->installationId;
     }
 
-    public function getOwner() : string
+    public function getOwner(): string
     {
         return $this->owner;
     }
 
-    public function getRepository() : string
+    public function getRepository(): string
     {
         return $this->repo;
     }
 
-    protected function getRepositoryInformation() : void
+    protected function getRepositoryInformation(): void
     {
         $url = str_replace('//', '', $this->project->CvsUrl);
         $parts = explode('/', $url);

@@ -1,10 +1,10 @@
 <?php
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 
 
 use App\Utils\TestCreator;
-
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
@@ -60,7 +60,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
         $this->create_build('fixed', 'fixed.json', '20170529-0500', '0d7a8415c91ea126550bdff6f5b18b2f');
 
         // Add a test for these builds.
-        $testcreator = new TestCreator;
+        $testcreator = new TestCreator();
         $testcreator->projectid = $this->Project->Id;
         $testcreator->testDetails = '';
         $testcreator->setTestName('BuildPropUnitTest');

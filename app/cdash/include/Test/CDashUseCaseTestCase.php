@@ -1,4 +1,5 @@
 <?php
+
 namespace CDash\Test;
 
 use CDash\Model\Build;
@@ -10,7 +11,7 @@ class CDashUseCaseTestCase extends CDashTestCase
     /** @var  ServiceContainer $originalServiceContainer */
     private $originalServiceContainer;
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         if ($this->originalServiceContainer) {
             ServiceContainer::setInstance(

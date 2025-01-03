@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -598,7 +599,7 @@ function get_bzr_repository_commits($bzrroot, $dates): array
 
     $raw_output = `bzr log -v --xml -r date:"$fromtime"..date:"$totime" $bzrroot 2>&1`;
 
-    $doc = new DomDocument;
+    $doc = new DomDocument();
     $doc->loadXML($raw_output);
     $logs = $doc->getElementsByTagName('log');
 

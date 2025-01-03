@@ -1,4 +1,5 @@
 <?php
+
 namespace CDash\Messaging\Topic;
 
 use CDash\Collection\Collection;

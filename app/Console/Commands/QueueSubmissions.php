@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Jobs\ProcessSubmission;
 use App\Utils\AuthTokenUtil;
 use CDash\Model\Project;
-
 use Illuminate\Console\Command;
 
 class QueueSubmissions extends Command

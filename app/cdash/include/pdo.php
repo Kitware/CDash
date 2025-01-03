@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -78,7 +79,7 @@ function pdo_real_escape_string(mixed $unescaped_string): string
  *
  * @deprecated v2.5.0 01/22/2018
  */
-function pdo_execute(PDOStatement $stmt, array|null $input_parameters=null): bool
+function pdo_execute(PDOStatement $stmt, array|null $input_parameters = null): bool
 {
     $db = Database::getInstance();
     return $db->execute($stmt, $input_parameters);

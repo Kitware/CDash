@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,6 +14,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Controller\Api;
 
 use App\Utils\TestingDay;
@@ -278,7 +280,7 @@ class Index extends ResultsApi
 
     // Encapsulate this monster query so that it is not duplicated between
     // index.php and get_dynamic_builds.
-    public function getIndexQuery(string $userupdatesql=''): string
+    public function getIndexQuery(string $userupdatesql = ''): string
     {
         return
             "SELECT b.id,b.siteid,b.parentid,b.done,b.changeid,b.testduration,

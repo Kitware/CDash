@@ -5,17 +5,17 @@ use CDash\Test\CDashTestCase;
 
 class DatabaseTest extends CDashTestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
     }
 
-    public static function tearDownAfterClass() : void
+    public static function tearDownAfterClass(): void
     {
         Database::setInstance(Database::class, null);
         parent::tearDownAfterClass();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Database::setInstance(Database::class, null);
         parent::tearDown();

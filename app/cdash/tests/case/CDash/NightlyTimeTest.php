@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -15,7 +16,6 @@
  */
 
 use App\Utils\TestingDay;
-
 use CDash\Model\Project;
 use Tests\TestCase;
 

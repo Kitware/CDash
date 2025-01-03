@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -39,7 +40,7 @@ class UserSubscriptionBuilderTest extends TestCase
         $buildA->Name = 'BuildA';
         $buildB->Name = 'BuildB';
 
-        $buildCollection = (new BuildCollection)
+        $buildCollection = (new BuildCollection())
             ->add($buildA)
             ->add($buildB);
 
@@ -112,37 +113,37 @@ class UserSubscriptionBuilderTest extends TestCase
         $collection
             ->add(
                 (new Subscriber(
-                    (new BitmaskNotificationPreferences)
+                    (new BitmaskNotificationPreferences())
                         ->set(NotifyOn::BUILD_ERROR, true)
                 ))->setAddress('build.error@company.tld')
             )
             ->add(
                 (new Subscriber(
-                    (new BitmaskNotificationPreferences)
+                    (new BitmaskNotificationPreferences())
                         ->set(NotifyOn::BUILD_WARNING, true)
                 ))->setAddress('build.warning@company.tld')
             )
             ->add(
                 (new Subscriber(
-                    (new BitmaskNotificationPreferences)
+                    (new BitmaskNotificationPreferences())
                         ->set(NotifyOn::CONFIGURE, true)
                 ))->setAddress('configure.error@company.tld')
             )
             ->add(
                 (new Subscriber(
-                    (new BitmaskNotificationPreferences)
+                    (new BitmaskNotificationPreferences())
                         ->set(NotifyOn::DYNAMIC_ANALYSIS, true)
                 ))->setAddress('dynamic.analysis@company.tld')
             )
             ->add(
                 (new Subscriber(
-                    (new BitmaskNotificationPreferences)
+                    (new BitmaskNotificationPreferences())
                         ->set(NotifyOn::TEST_FAILURE, true)
                 ))->setAddress('test.failure@company.tld')
             )
             ->add(
                 (new Subscriber(
-                    (new BitmaskNotificationPreferences)
+                    (new BitmaskNotificationPreferences())
                         ->set(NotifyOn::UPDATE_ERROR, true)
                 ))->setAddress('update.error@company.tld')
             );

@@ -19,7 +19,7 @@ class Monitor extends TestCase
     protected User $normal_user;
     protected User $admin_user;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -33,7 +33,7 @@ class Monitor extends TestCase
      * @throws InvalidCountException
      * @throws LogicException
      */
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         if ($this->normal_user::exists()) {
             $this->normal_user->delete();
@@ -47,7 +47,7 @@ class Monitor extends TestCase
         parent::tearDown();
     }
 
-    public function testAccessToMonitor() : void
+    public function testAccessToMonitor(): void
     {
         // By default, the monitor is not available.
 
@@ -63,7 +63,7 @@ class Monitor extends TestCase
         $response->assertDontSee('only available when QUEUE_CONNECTION=database');
     }
 
-    public function testMonitorAPI() : void
+    public function testMonitorAPI(): void
     {
         // Verify that only admins can see this page.
         $this->get('/api/monitor')->assertUnauthorized();

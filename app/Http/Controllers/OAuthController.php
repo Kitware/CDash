@@ -10,7 +10,6 @@ use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Routing\Redirector;
 use Symfony\Component\HttpFoundation\RedirectResponse as symfonyResponse;
-
 use App\Models\User;
 use App\Http\Controllers\Auth\RegisterController;
 

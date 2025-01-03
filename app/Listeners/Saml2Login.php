@@ -10,7 +10,6 @@ use Illuminate\Support\Str;
 use Psr\SimpleCache\InvalidArgumentException;
 use Slides\Saml2\Events\SignedIn as Saml2SignedInEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-
 use App\Models\User;
 use App\Http\Controllers\Auth\RegisterController;
 
@@ -21,7 +20,7 @@ class Saml2Login
       * @throws InvalidArgumentException
       * @throws HttpException
       */
-    public function handle(Saml2SignedInEvent $event) : void
+    public function handle(Saml2SignedInEvent $event): void
     {
         // Prevent reuse of $messageId to stop replay attacks.
         $messageId = $event->getAuth()->getLastMessageId();

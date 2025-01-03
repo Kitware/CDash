@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -85,7 +86,7 @@ class BuildDetailsTestCase extends KWWebTestCase
 
         $expectedErrors = json_decode(file_get_contents($this->testDataDir . '/' . 'Subbuild3_errors.json'));
 
-        for ($i=0; $i<count($expectedErrors); $i++) {
+        for ($i = 0; $i < count($expectedErrors); $i++) {
             $this->assertEqual($build_response->errors[$i], $expectedErrors[$i]);
         }
     }

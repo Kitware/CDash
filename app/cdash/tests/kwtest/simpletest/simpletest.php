@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  Global state for SimpleTest and kicker script in future versions.
  * @version    $Id$

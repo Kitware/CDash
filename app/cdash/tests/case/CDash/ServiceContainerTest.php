@@ -1,4 +1,5 @@
 <?php
+
 use CDash\ServiceContainer;
 use CDash\Test\CDashTestCase;
 
@@ -6,19 +7,19 @@ class ServiceContainerTest extends CDashTestCase
 {
     private static $di;
 
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         self::$di = ServiceContainer::getInstance();
     }
 
-    public static function tearDownAfterClass() : void
+    public static function tearDownAfterClass(): void
     {
         ServiceContainer::setInstance(ServiceContainer::class, self::$di);
         parent::tearDownAfterClass();
     }
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         ServiceContainer::setInstance(ServiceContainer::class, self::$di);

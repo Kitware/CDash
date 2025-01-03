@@ -1,4 +1,5 @@
 <?php
+
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\UseCase;
 

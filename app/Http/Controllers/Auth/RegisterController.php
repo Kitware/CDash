@@ -89,7 +89,7 @@ final class RegisterController extends AbstractController
      * Create a new user instance after a valid registration.
      * Assumes that caller has already validated $data.
      */
-    public function create(array $data) : User|null
+    public function create(array $data): User|null
     {
         if (is_null($data['institution'])) {
             $data['institution'] = '';

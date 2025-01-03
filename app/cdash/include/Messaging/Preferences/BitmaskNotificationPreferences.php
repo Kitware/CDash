@@ -1,4 +1,5 @@
 <?php
+
 namespace CDash\Messaging\Preferences;
 
 class BitmaskNotificationPreferences extends NotificationPreferences

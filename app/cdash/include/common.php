@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -16,10 +17,8 @@
 
 use App\Utils\SubmissionUtils;
 use Illuminate\Support\Facades\Auth;
-
 use App\Utils\DatabaseCleanupUtils;
 use App\Utils\TestingDay;
-
 use CDash\Database;
 use CDash\ServiceContainer;
 use CDash\Model\Build;
@@ -42,8 +41,8 @@ function xslt_process(XSLTProcessor $xsltproc,
     $xsl_arg = str_replace('arg:', '', $xsl_arg);
 
     // Create instances of the DomDocument class
-    $xml = new DomDocument;
-    $xsl = new DomDocument;
+    $xml = new DomDocument();
+    $xsl = new DomDocument();
 
     // Load the xml document and the xsl template
     if (LIBXML_VERSION >= 20700) {
@@ -879,7 +878,7 @@ function get_aggregate_build(Build $build): Build
     return $aggregate_build;
 }
 
-function create_aggregate_build($build, $siteid=null): Build
+function create_aggregate_build($build, $siteid = null): Build
 {
     if (is_null($siteid)) {
         $siteid = get_server_siteid();

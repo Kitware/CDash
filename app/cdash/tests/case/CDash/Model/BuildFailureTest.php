@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -19,7 +20,7 @@ use CDash\Test\CDashTestCase;
 
 class BuildFailureTest extends CDashTestCase
 {
-    public function setUp() : void
+    public function setUp(): void
     {
         $container = ServiceContainer::container();
         $this->mock_buildfailure = $this->getMockBuilder(BuildFailure::class)

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -18,7 +19,6 @@ namespace CDash\Controller\Api;
 
 use App\Models\Test;
 use App\Models\Project as EloquentProject;
-
 use CDash\Database;
 use CDash\Model\Build;
 use Illuminate\Support\Facades\DB;

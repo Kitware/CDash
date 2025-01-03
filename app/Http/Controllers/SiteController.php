@@ -377,7 +377,7 @@ final class SiteController extends AbstractController
 
         $processor_clock_frequency = $siteinformation?->processorclockfrequency;
         if ($processor_clock_frequency !== null) {
-            $processor_clock_frequency = getByteValueWithExtension($processor_clock_frequency * 10**6, 1000) . 'Hz';
+            $processor_clock_frequency = getByteValueWithExtension($processor_clock_frequency * 10 ** 6, 1000) . 'Hz';
         }
 
         $xml .= add_XML_value('googlemapkey', $apikey);

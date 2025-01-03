@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -291,7 +292,7 @@ class KWWebTestCase extends WebTestCase
     public function logout()
     {
         Auth::shouldReceive('check')->andReturn(false);
-        Auth::shouldReceive('user')->andReturn(new User);
+        Auth::shouldReceive('user')->andReturn(new User());
         Auth::shouldReceive('id')->andReturn(null);
     }
 
@@ -421,7 +422,7 @@ class KWWebTestCase extends WebTestCase
                 return false;
             }
             // Load its current settings.
-            $project = new Project;
+            $project = new Project();
             $project->Id = $input_settings['Id'];
             $project->Fill();
             $settings = get_object_vars($project);
@@ -846,7 +847,7 @@ class CDashControllerUserAgent extends SimpleUserAgent
      */
     private function getSocketEmulator()
     {
-        $socket = new class($this->response) {
+        $socket = new class ($this->response) {
             private $read = false;
             /** @var Response $body */
             private $response;
