@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -20,7 +21,7 @@ use CDash\Test\CDashTestCase;
 
 class BuildRelationshipTest extends CDashTestCase
 {
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->service = ServiceContainer::getInstance();
@@ -141,7 +142,7 @@ class BuildRelationshipTest extends CDashTestCase
     public function testMarshal()
     {
         $this->relationship->Build = $this->mock_build1;
-        $this->relationship->RelatedBuild =$this->mock_build2;
+        $this->relationship->RelatedBuild = $this->mock_build2;
         $this->relationship->Relationship = 'depends on';
         $expected = [
             'buildid'      => 1,

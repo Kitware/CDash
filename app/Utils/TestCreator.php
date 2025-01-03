@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -18,7 +19,6 @@ namespace App\Utils;
 
 use App\Models\Test;
 use App\Models\TestImage;
-
 use CDash\Model\Build;
 use CDash\Model\Image;
 use Illuminate\Support\Facades\DB;
@@ -97,7 +97,7 @@ class TestCreator
     public function saveImage(Image $image, $outputid): void
     {
         $image->Save();
-        $testImage = new TestImage;
+        $testImage = new TestImage();
         $testImage->imgid = $image->Id;
         $testImage->outputid = $outputid;
         $testImage->role = $image->Name;
@@ -206,7 +206,7 @@ class TestCreator
         }
 
         // build2test
-        $buildtest = new Test;
+        $buildtest = new Test();
         $buildtest->buildid = $build->Id;
         $buildtest->outputid = $outputid;
         $buildtest->status = $this->testStatus;

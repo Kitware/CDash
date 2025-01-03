@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  base include file for eclipse plugin
  * @version    $Id$

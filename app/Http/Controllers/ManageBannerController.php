@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -22,7 +23,7 @@ final class ManageBannerController extends AbstractController
         /** @var User $user */
         $user = Auth::user();
 
-        $project = new Project;
+        $project = new Project();
         if (isset($_GET['projectid']) && (int) $_GET['projectid'] > 0) {
             $project->Id = (int) $_GET['projectid'];
             Gate::authorize('edit-project', $project);

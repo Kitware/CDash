@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -27,7 +28,7 @@ class GitHubTest extends TestCase
     private string $baseUrl;
     /** @var Project|MockObject $project */
     private $project;
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->project = $this->getMockBuilder(Project::class)
@@ -36,7 +37,7 @@ class GitHubTest extends TestCase
         $this->baseUrl = config('app.url');
     }
 
-    public function testSetStatus() : void
+    public function testSetStatus(): void
     {
         $sut = $this->setupAuthentication();
         $options = [
@@ -49,7 +50,7 @@ class GitHubTest extends TestCase
         $sut->setStatus($options);
     }
 
-    public function testAuthenticateThrowsExceptionGivenNoInstallationId() : void
+    public function testAuthenticateThrowsExceptionGivenNoInstallationId(): void
     {
         $this->project->expects($this::once())
             ->method('GetRepositories')
@@ -60,7 +61,7 @@ class GitHubTest extends TestCase
         $sut->authenticate();
     }
 
-    public function testSkipCheckPropertyIsHonored() : void
+    public function testSkipCheckPropertyIsHonored(): void
     {
         $this->project->expects($this::once())
             ->method('GetRepositories')
@@ -71,7 +72,7 @@ class GitHubTest extends TestCase
         $this::assertNull($sut->getCheckSummaryForBuildRow($build_row));
     }
 
-    public function testCheckSummaryForBuildRow() : void
+    public function testCheckSummaryForBuildRow(): void
     {
         $this->project->expects($this::once())
             ->method('GetRepositories')
@@ -145,7 +146,7 @@ class GitHubTest extends TestCase
      * @param array<string, array<string, string>|string> $expected
      * @param array<string, array<string, string>|string> $actual
      */
-    private function validateCheckPayload(array $expected, array $actual) : void
+    private function validateCheckPayload(array $expected, array $actual): void
     {
         if ((bool) config('cdash.github_always_pass')) {
             $expected['status'] = 'completed';
@@ -156,7 +157,7 @@ class GitHubTest extends TestCase
         $this::assertEquals($expected, $actual);
     }
 
-    private function validateCheckPayloadFromBuildRows() : void
+    private function validateCheckPayloadFromBuildRows(): void
     {
         $this->project->expects($this::once())
             ->method('GetRepositories')
@@ -251,19 +252,19 @@ class GitHubTest extends TestCase
         $this->validateCheckPayload($expected, $actual);
     }
 
-    public function testGenerateCheckPayloadFromBuildRows() : void
+    public function testGenerateCheckPayloadFromBuildRows(): void
     {
         config(['cdash.github_always_pass' => false]);
         $this->validateCheckPayloadFromBuildRows();
     }
 
-    public function testGenerateAlwaysPassCheckPayloadFromBuildRows() : void
+    public function testGenerateAlwaysPassCheckPayloadFromBuildRows(): void
     {
         config(['cdash.github_always_pass' => true]);
         $this->validateCheckPayloadFromBuildRows();
     }
 
-    public function testDedupeAndSortBuildRows() : void
+    public function testDedupeAndSortBuildRows(): void
     {
         $this->project->expects($this::once())
             ->method('GetRepositories')
@@ -287,7 +288,7 @@ class GitHubTest extends TestCase
         $this::assertEquals($expected, $actual);
     }
 
-    private function setupAuthentication() : GitHub
+    private function setupAuthentication(): GitHub
     {
         $github_url = 'https://github.com/Foo/Bar';
         $repositories = [];
@@ -346,7 +347,7 @@ class GitHubTest extends TestCase
         return $sut;
     }
 
-    public function testCreateCheck() : void
+    public function testCreateCheck(): void
     {
         $sut = $this->setupAuthentication();
         $sut->createCheck(str_replace('-', '', Uuid::uuid4()->toString()));

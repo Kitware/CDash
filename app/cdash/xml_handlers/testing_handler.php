@@ -79,7 +79,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
-            $siteInformation = new SiteInformation;
+            $siteInformation = new SiteInformation();
             $this->BuildInformation = [];
             $this->BuildName = "";
             $this->BuildStamp = "";
@@ -133,7 +133,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                 $this->createBuild();
             }
         } elseif ($name == 'TEST' && count($attributes) > 0) {
-            $this->TestCreator = new TestCreator;
+            $this->TestCreator = new TestCreator();
             $this->TestCreator->projectid = $this->GetProject()->Id;
             $this->TestCreator->testStatus = $attributes['STATUS'];
             $this->TestSubProjectName = '';
@@ -424,7 +424,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
 
     public function GetSubscriptionBuilderCollection(): SubscriptionBuilderCollection
     {
-        $collection = (new SubscriptionBuilderCollection)
+        $collection = (new SubscriptionBuilderCollection())
             ->add(new UserSubscriptionBuilder($this))
             ->add(new CommitAuthorSubscriptionBuilder($this));
         return $collection;

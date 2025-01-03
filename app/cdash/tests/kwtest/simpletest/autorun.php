@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  Autorunner which runs all tests cases found in a file
  *  that includes this module.

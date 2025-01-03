@@ -12,7 +12,9 @@ use Illuminate\View\View;
 
 abstract class AbstractController extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
 
     /**
      * Add global data to each view

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -140,7 +141,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
                 }
             }
         } elseif ($name == 'TESTCASE' && count($attributes) > 0) {
-            $this->TestCreator = new TestCreator;
+            $this->TestCreator = new TestCreator();
             $this->TestCreator->testCommand = $this->TestProperties;
             $this->TestCreator->projectid = $this->GetProject()->Id;
 

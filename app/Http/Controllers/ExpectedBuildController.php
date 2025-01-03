@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use CDash\Model\BuildGroup;

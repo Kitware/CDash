@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -42,7 +43,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
         }
 
         $buildid = $post_json["buildid"];
-        $this->buildId= $buildid;
+        $this->buildId = $buildid;
         if (!is_numeric($buildid) || $buildid < 1) {
             $this->fail(
                 "Expected positive integer for buildid, instead got $buildid");
@@ -92,7 +93,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
         }
 
         $buildid = $post_json["buildid"];
-        $this->buildId= $buildid;
+        $this->buildId = $buildid;
         if (!is_numeric($buildid) || $buildid < 1) {
             $this->fail(
                 "Expected positive integer for buildid, instead got $buildid");

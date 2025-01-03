@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,6 +14,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 use CDash\Database;
@@ -71,7 +73,7 @@ class DynamicAnalysisSummary
     }
 
     // Insert the DynamicAnalysisSummary
-    public function Insert($append=false)
+    public function Insert($append = false)
     {
         if ($this->BuildId < 1) {
             return false;

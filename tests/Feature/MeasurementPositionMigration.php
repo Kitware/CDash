@@ -10,7 +10,7 @@ use Tests\MigrationTest;
 
 class MeasurementPositionMigration extends MigrationTest
 {
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }

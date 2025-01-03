@@ -52,7 +52,7 @@ class PurgeUnusedProjectsCommand extends TestCase
 
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         if (isset($this->project1)) {
             $this->project1->Delete();

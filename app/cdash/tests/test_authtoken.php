@@ -1,4 +1,5 @@
 <?php
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Models\AuthToken;

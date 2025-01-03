@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -17,7 +18,6 @@
 namespace CDash\Messaging\Topic;
 
 use Illuminate\Support\Collection;
-
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
 use CDash\Collection\ConfigureCollection;

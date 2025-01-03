@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  base include file for SimpleTest
  * @version    $Id$

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  Optional include file for SimpleTest
  * @version    $Id$

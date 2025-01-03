@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -13,6 +14,7 @@
  *   PURPOSE. See the above copyright notices for more information.
  * =========================================================================
  */
+
 namespace CDash\Collection;
 
 use Countable;
@@ -143,7 +145,7 @@ abstract class Collection implements Iterator, Countable
 
     public function first(int $size = 1): self
     {
-        $self = new static;
+        $self = new static();
         $collectionSize = $this->count();
         $size = $size <= $collectionSize ? $size : $collectionSize;
         for ($i = 0; $i < $size; $i++) {

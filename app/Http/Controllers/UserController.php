@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -402,7 +403,7 @@ final class UserController extends AbstractController
             }
 
             if ($password_is_good) {
-                $password_validator = new Password;
+                $password_validator = new Password();
                 $complexity_count = config('cdash.password.count');
                 $complexity = $password_validator->computeComplexity($passwd, $complexity_count);
                 $minimum_complexity = config('cdash.password.complexity');

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  base include file for SimpleTest
  * @author Rene vd O (original code)

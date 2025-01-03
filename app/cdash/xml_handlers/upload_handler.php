@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -21,7 +22,6 @@ use App\Models\Site;
 use App\Models\SiteInformation;
 use CDash\Model\Project;
 use CDash\Model\UploadFile;
-
 use Illuminate\Http\File;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
@@ -308,7 +308,7 @@ class UploadHandler extends AbstractXmlHandler
         }
     }
 
-    private function initializeBuild() : void
+    private function initializeBuild(): void
     {
         if ($this->BuildInitialized) {
             return;

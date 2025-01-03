@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -16,7 +17,6 @@
 
 use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
-
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
@@ -162,7 +162,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
 
         // Save testing information.
         foreach ($this->Tests as $testdata) {
-            $testCreator = new TestCreator;
+            $testCreator = new TestCreator();
 
             $testCreator->buildTestTime = $testdata->time;
             $testCreator->projectid = $this->Project->Id;

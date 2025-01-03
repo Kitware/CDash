@@ -10,7 +10,6 @@ use CDash\Model\BuildUpdate;
 
 class SubmissionUtils
 {
-
     /**
      * Figure out what type of XML file this is
      * @return array<string,mixed>

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -46,7 +47,7 @@ if (!is_null($hookSecret)) {
 
 init_api_request();
 
-$event = array_key_exists('HTTP_X_GITHUB_EVENT', $_SERVER) ?  $_SERVER['HTTP_X_GITHUB_EVENT'] : '';
+$event = array_key_exists('HTTP_X_GITHUB_EVENT', $_SERVER) ? $_SERVER['HTTP_X_GITHUB_EVENT'] : '';
 
 switch ($event) {
     case 'check_run':

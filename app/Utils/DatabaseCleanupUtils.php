@@ -105,7 +105,7 @@ class DatabaseCleanupUtils
      * @param array<int>|int $buildid
      * @throws \InvalidArgumentException
      */
-    public static function removeBuild($buildid) : void
+    public static function removeBuild($buildid): void
     {
         // TODO: (williamjallen) much of this work could be done on the DB side automatically by setting up
         //       proper foreign-key relationships between between entities, and using the DB's cascade functionality.

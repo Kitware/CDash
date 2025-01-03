@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -29,7 +30,7 @@ class ConfigureTopicTest extends \CDash\Test\CDashTestCase
     /** @var Topic|PHPUnit_Framework_MockObject_MockObject */
     private $parent;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->parent = $this->getMockForAbstractClass(Topic::class);

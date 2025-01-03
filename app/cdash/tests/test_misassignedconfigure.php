@@ -1,4 +1,5 @@
 <?php
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Project;
@@ -20,7 +21,7 @@ class MisassignedConfigureTestCase extends KWWebTestCase
         $this->project->Delete();
     }
 
-    public function testMisassignedConfigure() : void
+    public function testMisassignedConfigure(): void
     {
         // Create test project.
         $this->login();

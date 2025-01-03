@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -9,7 +10,6 @@ use App\Models\TestMeasurement;
 use App\Utils\DatabaseCleanupUtils;
 use App\Utils\TestCreator;
 use App\Utils\NoteCreator;
-
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
@@ -614,7 +614,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('uploadfile', 'id', 'IN', $uploadfileids, 0, $extra_msg);
     }
 
-    public function verify(string $table, string $field, string $compare, string|int $value, int $expected, string $extra_msg=''): void
+    public function verify(string $table, string $field, string $compare, string|int $value, int $expected, string $extra_msg = ''): void
     {
         $num_rows = count(DB::select("SELECT $field FROM $table WHERE $field $compare $value"));
         if ($num_rows !== $expected) {

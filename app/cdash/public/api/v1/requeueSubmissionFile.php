@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -18,7 +19,6 @@ namespace CDash\Api\v1\RequeueSubmissionFile;
 
 use App\Jobs\ProcessSubmission;
 use CDash\Model\PendingSubmissions;
-
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -99,7 +100,7 @@ class TestGraph extends BuildTestApi
                     $chart_data[0]['data'][] = $data_point;
 
                     // Also insert a point for the threshold at this time value.
-                    $data_point= [];
+                    $data_point = [];
                     $data_point['x'] = $build_start_time;
                     $threshold =
                         $row['timemean'] + $this->project->TestTimeStd * $row['timestd'];

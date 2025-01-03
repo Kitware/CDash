@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -452,7 +453,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
 
     public function GetSubscriptionBuilderCollection(): SubscriptionBuilderCollection
     {
-        $collection = (new SubscriptionBuilderCollection)
+        $collection = (new SubscriptionBuilderCollection())
             ->add(new UserSubscriptionBuilder($this))
             ->add(new CommitAuthorSubscriptionBuilder($this));
         return $collection;

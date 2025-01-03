@@ -289,7 +289,7 @@ class EmailTestCase extends KWWebTestCase
         }
     }
 
-    public function testVerifyTestDiffValues() : void
+    public function testVerifyTestDiffValues(): void
     {
         // Verify that we have three builds for this project.
         $project = DB::table('project')->where('name', 'EmailProjectExample')->first();

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -55,7 +56,7 @@ function generateBackupFileName($projectname, $subprojectname, $buildname,
     $maxChars = 250;
     $textLength = strlen($filename);
     if ($textLength > $maxChars) {
-        $filename = substr_replace($filename, '', $maxChars/2, $textLength-$maxChars);
+        $filename = substr_replace($filename, '', $maxChars / 2, $textLength - $maxChars);
     }
 
     return $filename;
@@ -155,7 +156,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, int|null 
 }
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($filehandle, $projectid, $expected_md5 = '', int|null $buildid=null): AbstractSubmissionHandler|false
+function ctest_parse($filehandle, $projectid, $expected_md5 = '', int|null $buildid = null): AbstractSubmissionHandler|false
 {
     // Check if this is a new style PUT submission.
     try {

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -26,7 +27,6 @@ use CDash\Model\BuildGroup;
 use CDash\Model\Label;
 use App\Models\Site;
 use App\Models\SiteInformation;
-
 use CDash\Collection\BuildCollection;
 use CDash\Model\Project;
 use CDash\Model\SubscriberInterface;
@@ -69,7 +69,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
             $sitename = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
             $this->Site = Site::firstOrCreate(['name' => $sitename], ['name' => $sitename]);
 
-            $siteInformation = new SiteInformation;
+            $siteInformation = new SiteInformation();
             $this->BuildInformation = [];
             $this->BuildName = "";
             $this->BuildStamp = "";
@@ -359,7 +359,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
 
     public function GetSubscriptionBuilderCollection(): SubscriptionBuilderCollection
     {
-        $collection = (new SubscriptionBuilderCollection)
+        $collection = (new SubscriptionBuilderCollection())
             ->add(new UserSubscriptionBuilder($this));
         return $collection;
     }

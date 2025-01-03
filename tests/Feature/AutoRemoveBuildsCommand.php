@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
-
 use DateTime;
 use Tests\TestCase;
 
@@ -74,7 +73,7 @@ class AutoRemoveBuildsCommand extends TestCase
         $this::assertEquals(0, $stmt->fetchColumn());
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         if ($this->project) {
             $this->project->Delete();

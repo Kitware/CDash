@@ -8,7 +8,7 @@ use Tests\MigrationTest;
 
 class UploadStorageMigration extends MigrationTest
 {
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }

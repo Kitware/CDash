@@ -1,4 +1,5 @@
 <?php
+
 $cdash_directory_name = env('CDASH_DIRECTORY', 'cdash');
 $cdash = realpath(app_path($cdash_directory_name));
 

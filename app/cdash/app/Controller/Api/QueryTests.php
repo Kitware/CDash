@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -20,7 +21,6 @@ use App\Models\Measurement;
 use App\Models\TestMeasurement;
 use App\Models\TestOutput;
 use App\Models\Project as EloquentProject;
-
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;

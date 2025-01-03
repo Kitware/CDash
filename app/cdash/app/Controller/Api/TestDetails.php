@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -21,7 +22,6 @@ use App\Models\Project as EloquentProject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-
 use App\Utils\RepositoryUtils;
 
 class TestDetails extends BuildTestApi

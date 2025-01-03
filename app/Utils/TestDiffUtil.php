@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Log;
 
 class TestDiffUtil
 {
-    public static function computeDifferences(Build $build) : bool
+    public static function computeDifferences(Build $build): bool
     {
         // Populate previous build.
         $previous_build_id = $build->GetPreviousBuildId();
@@ -34,7 +34,7 @@ class TestDiffUtil
             self::computeDifferencesForType($build, $previous_build, TestDiffType::FailedTimeStatus->value);
     }
 
-    private static function computeDifferencesForType(Build $build, Build $previous_build, int $type) : bool
+    private static function computeDifferencesForType(Build $build, Build $previous_build, int $type): bool
     {
         $tests = [];
         $previous_tests = [];

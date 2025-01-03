@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -81,7 +82,7 @@ class NoteHandler extends AbstractXmlHandler
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
         } elseif ($name == 'NOTE') {
-            $this->NoteCreator = new NoteCreator;
+            $this->NoteCreator = new NoteCreator();
             $this->NoteCreator->name =
                 $attributes['NAME'] ?? '';
             $this->Timestamp = 0;

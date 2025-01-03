@@ -1,4 +1,5 @@
 <?php
+
 namespace CDash\Test\UseCase;
 
 use CDash\Model\Project;

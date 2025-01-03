@@ -1,4 +1,5 @@
 <?php
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Build;
@@ -22,7 +23,7 @@ class StartTimeFromUploadTestCase extends KWWebTestCase
         $this->project->Delete();
     }
 
-    public function testStartTimeFromUpload() : void
+    public function testStartTimeFromUpload(): void
     {
         $this->deleteLog($this->logfilename);
 

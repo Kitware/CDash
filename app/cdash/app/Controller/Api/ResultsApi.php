@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,10 +14,10 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Controller\Api;
 
 use App\Utils\TestingDay;
-
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;

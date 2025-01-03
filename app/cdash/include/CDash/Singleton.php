@@ -1,4 +1,5 @@
 <?php
+
 namespace CDash;
 
 abstract class Singleton
@@ -11,7 +12,7 @@ abstract class Singleton
     public static function getInstance()
     {
         if (!isset(self::$_instances[static::class])) {
-            self::$_instances[static::class] = new static;
+            self::$_instances[static::class] = new static();
         }
         return self::$_instances[static::class];
     }

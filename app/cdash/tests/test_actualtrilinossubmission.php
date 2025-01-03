@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -37,7 +38,7 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
         $db = \CDash\Database::getInstance();
         $query = $db->query("SELECT id FROM project WHERE name='$projectname'");
         $project = $query->fetchColumn();
-        $sql ="UPDATE buildgroup SET emailcommitters=:email WHERE projectid=:project";
+        $sql = "UPDATE buildgroup SET emailcommitters=:email WHERE projectid=:project";
         $stmt = $db->prepare($sql);
         $db->execute($stmt, [':email' => $email, ':project' => $project]);
     }

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -23,7 +24,6 @@ use App\Utils\RepositoryUtils;
 use App\Utils\SubmissionUtils;
 use App\Utils\TestingDay;
 use App\Utils\TestDiffUtil;
-
 use CDash\Collection\BuildEmailCollection;
 use CDash\Collection\DynamicAnalysisCollection;
 use CDash\Database;
@@ -118,7 +118,7 @@ class Build
         $this->PDO = Database::getInstance()->getPdo();
     }
 
-    public function IsParentBuild() : bool
+    public function IsParentBuild(): bool
     {
         return $this->ParentId === -1;
     }
@@ -175,7 +175,7 @@ class Build
             return false;
         }
 
-        $label = new Label;
+        $label = new Label();
         $label->Text = $subproject;
         $this->AddLabel($label);
 
@@ -203,7 +203,7 @@ class Build
         $subProject->Save();
 
         // Insert the label too.
-        $Label = new Label;
+        $Label = new Label();
         $Label->Text = $subProject->GetName();
         $Label->Insert();
 
@@ -1828,7 +1828,7 @@ class Build
         $this->UpdateBuild($this->ParentId, $numErrors, $numWarnings);
 
         // Give the parent a label for this build's subproject.
-        $label = new Label;
+        $label = new Label();
         $label->Text = $this->SubProjectName;
         $parent = new Build();
         $parent->Id = $this->ParentId;

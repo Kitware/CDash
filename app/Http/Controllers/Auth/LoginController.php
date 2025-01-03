@@ -107,7 +107,7 @@ final class LoginController extends AbstractController
         return session('url.intended') ?? '/';
     }
 
-    public static function saml2Login() : Response|RedirectResponse
+    public static function saml2Login(): Response|RedirectResponse
     {
         if (config('saml2.enabled') === false) {
             return response('SAML2 login is not enabled.', 500);

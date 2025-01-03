@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -11,12 +12,12 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Test;
 
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\ServiceContainer;
-
 use Tests\TestCase;
 
 require_once 'include/common.php';
@@ -28,13 +29,13 @@ class CDashTestCase extends TestCase
     /** @var  Database $originalDatabase*/
     private $originalDatabase;
 
-    public static function tearDownAfterClass() : void
+    public static function tearDownAfterClass(): void
     {
         ServiceContainer::setInstance(ServiceContainer::class, null);
         parent::tearDownAfterClass();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         global $cdash_database_connection;
         $cdash_database_connection = null;

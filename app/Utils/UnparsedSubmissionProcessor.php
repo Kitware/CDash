@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -22,7 +23,6 @@ use App\Models\BuildFile;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use App\Models\Site;
-
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;

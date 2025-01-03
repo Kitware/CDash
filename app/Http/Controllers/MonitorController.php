@@ -133,7 +133,7 @@ final class MonitorController extends AbstractController
      * Group timestamp values by hour.
      * @return Collection<int,\stdClass>
      */
-    private function resultsPerHour(string $table, string $field) : Collection
+    private function resultsPerHour(string $table, string $field): Collection
     {
         if (config('database.default') === 'mysql') {
             return $this->mySQLResultsPerHour($table, $field);
@@ -146,7 +146,7 @@ final class MonitorController extends AbstractController
      * MySQL implementation of resultsPerHour
      * @return Collection<int,\stdClass>
      */
-    private function mySQLResultsPerHour(string $table, string $field) : Collection
+    private function mySQLResultsPerHour(string $table, string $field): Collection
     {
         // Group jobs by hour.
         // We achieve this by:
@@ -171,7 +171,7 @@ final class MonitorController extends AbstractController
      * Postgres implementation of resultsPerHour
      * @return Collection<int,\stdClass>
      */
-    private function postgreSQLResultsPerHour(string $table, string $field) : Collection
+    private function postgreSQLResultsPerHour(string $table, string $field): Collection
     {
         // Group jobs by hour.
         // We achieve this by:

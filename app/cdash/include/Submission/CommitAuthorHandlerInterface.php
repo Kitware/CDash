@@ -1,4 +1,5 @@
 <?php
+
 namespace CDash\Submission;
 
 interface CommitAuthorHandlerInterface extends \ActionableBuildInterface

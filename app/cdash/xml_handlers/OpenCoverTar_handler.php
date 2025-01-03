@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -52,7 +53,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
          *  EL -> Line offset, reduced by one to start the file at line 0
          */
         if (($name == "SEQUENCEPOINT") && ($this->coverageFileLog)) {
-            $this->coverageFileLog->AddLine($attributes['EL']-1, $attributes['VC']);
+            $this->coverageFileLog->AddLine($attributes['EL'] - 1, $attributes['VC']);
         }
     }
 
@@ -101,7 +102,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
 
             $this->CoverageFiles[$path] = $coverageFile;
             $this->CoverageFileLogs[$path] = $coverageFileLog;
-            $this->coverageFile =$coverageFile;
+            $this->coverageFile = $coverageFile;
             $this->coverageFileLog = $coverageFileLog;
         } else {
             $this->coverageFile = $this->CoverageFiles[$path];
@@ -237,14 +238,14 @@ class OpenCoverTarHandler extends AbstractXmlHandler
         $path = str_replace($this->tarDir.'/', '', $path);
         $fileContents = file($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
         $this->getCoverageObjects($path);
-        $inlongComment= false;
+        $inlongComment = false;
         if ($this->coverageFile) {
-            foreach ($fileContents as $key=>$line) {
+            foreach ($fileContents as $key => $line) {
                 $trimmedLine = trim($line);
                 $displayLine = rtrim($line);
                 // Matches the beginning of a comment block
                 if (preg_match("/\/[*]+/", $trimmedLine)) {
-                    $inlongComment=true;
+                    $inlongComment = true;
                 }
 
                 $this->coverageFile->File .= $displayLine.'<br>';
@@ -263,7 +264,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
                 }
                 // Captures the end of a comment block
                 if (preg_match("/[*]+\//", $trimmedLine)) {
-                    $inlongComment=false;
+                    $inlongComment = false;
                 }
             }
         }

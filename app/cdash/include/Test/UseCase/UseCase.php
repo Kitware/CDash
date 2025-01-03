@@ -1,4 +1,5 @@
 <?php
+
 namespace CDash\Test\UseCase;
 
 use AbstractXmlHandler;
@@ -40,7 +41,7 @@ abstract class UseCase
         $this->properties[$name] = $properties;
 
         $this->setStartTime(time());
-        $this->setEndTime(time()+1);
+        $this->setEndTime(time() + 1);
     }
 
     public static function createBuilder(CDashUseCaseTestCase $testCase, $type): TestUseCase|ConfigUseCase|UpdateUseCase|BuildUseCase|DynamicAnalysisUseCase

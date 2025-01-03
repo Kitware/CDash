@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,6 +14,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 use CDash\Database;
@@ -71,7 +73,7 @@ class Image
     }
 
     /** Save the image */
-    public function Save($update=false): bool
+    public function Save($update = false): bool
     {
         // Get the data from the file if necessary
         $this->GetData();

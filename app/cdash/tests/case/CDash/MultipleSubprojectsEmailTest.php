@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -46,7 +47,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
     /** @var UseCase $useCase */
     private $useCase;
 
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -57,7 +58,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         self::$database = Database::getInstance();
     }
 
-    public static function tearDownAfterClass() : void
+    public static function tearDownAfterClass(): void
     {
         // restore state
         date_default_timezone_set(self::$tz);
@@ -73,7 +74,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         parent::tearDownAfterClass();
     }
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $mock_stmt = $this->createMock(PDOStatement::class);
         $mock_stmt

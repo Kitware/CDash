@@ -6,12 +6,10 @@ use AbstractSubmissionHandler;
 use ActionableBuildInterface;
 use App\Utils\UnparsedSubmissionProcessor;
 use App\Models\SuccessfulJob;
-
 use BuildPropertiesJSONHandler;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Repository;
-
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -19,7 +17,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-
 use UpdateHandler;
 
 require_once 'include/ctestparser.php';
@@ -27,7 +24,10 @@ require_once 'include/sendemail.php';
 
 class ProcessSubmission implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public int $timeout;
 
