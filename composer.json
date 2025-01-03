@@ -30,7 +30,6 @@
     "http-interop/http-factory-guzzle": "1.2.0",
     "knplabs/github-api": "3.16.0",
     "laravel/framework": "10.48.23",
-    "laravel/legacy-factories": "1.4.0",
     "laravel/socialite": "5.16.1",
     "laravel/ui": "4.6.0",
     "lcobucci/jwt": "5.4.2",

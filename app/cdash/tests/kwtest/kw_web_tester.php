@@ -311,7 +311,7 @@ class KWWebTestCase extends WebTestCase
             $fields['password'] = password_hash($fields['password'], PASSWORD_DEFAULT);
         }
 
-        $user = factory(User::class)->create($fields);
+        $user = User::create($fields);
         return $user;
     }
 
