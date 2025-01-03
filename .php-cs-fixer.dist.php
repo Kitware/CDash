@@ -19,6 +19,7 @@ return $config->setRules([
         '@Symfony' => true,
         'yoda_style' => false,
         'blank_line_before_statement' => false,
+        'phpdoc_summary' => false,
     ])
     ->setFinder($finder)
 ;
