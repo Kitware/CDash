@@ -22,6 +22,8 @@ return $config->setRules([
         'phpdoc_summary' => false,
         'concat_space' => ['spacing' => 'one'],
         'increment_style' => ['style' => 'post'],
+        'fully_qualified_strict_types' => ['import_symbols' => true],
+        'global_namespace_import' => ['import_classes' => true, 'import_constants' => null, 'import_functions' => null],
     ])
     ->setFinder($finder)
 ;
