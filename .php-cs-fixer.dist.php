@@ -18,6 +18,7 @@ return $config->setRules([
         '@PHP82Migration' => true,
         '@Symfony' => true,
         'yoda_style' => false,
+        'blank_line_before_statement' => false,
     ])
     ->setFinder($finder)
 ;
