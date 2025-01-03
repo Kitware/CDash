@@ -16,8 +16,7 @@ $config = new PhpCsFixer\Config();
 return $config->setRules([
         '@PSR12' => true,
         '@PHP82Migration' => true,
-        'method_argument_space' => ['on_multiline' => 'ignore'],
-        'no_unused_imports' => true,
+        '@Symfony' => true,
     ])
     ->setFinder($finder)
 ;
