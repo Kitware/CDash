@@ -14,7 +14,7 @@ $finder = PhpCsFixer\Finder::create()
 
 $config = new PhpCsFixer\Config();
 return $config->setRules([
-        '@PSR2' => true,
+        '@PSR12' => true,
         '@PHP82Migration' => true,
         'method_argument_space' => ['on_multiline' => 'ignore'],
         'no_unused_imports' => true,
