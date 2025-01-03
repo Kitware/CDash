@@ -17,6 +17,7 @@ return $config->setRules([
         '@PSR12' => true,
         '@PHP82Migration' => true,
         '@Symfony' => true,
+        'yoda_style' => false,
     ])
     ->setFinder($finder)
 ;
