@@ -21,6 +21,9 @@ use CDash\Model\Project;
 
 abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 {
+    /**
+     * @var Stack<string>
+     */
     private Stack $stack;
     protected bool $Append = false;
     protected Site $Site;
@@ -35,6 +38,11 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
         $this->stack = new Stack();
     }
 
+    protected function hasParent(): bool
+    {
+        return $this->stack->size() > 1;
+    }
+
     protected function getParent()
     {
         return $this->stack->at($this->stack->size() - 2);
@@ -43,6 +51,27 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
     protected function getElement()
     {
         return $this->stack->top();
+    }
+
+    protected function currentPathMatches(string $path): bool
+    {
+        $path = explode('.', $path);
+
+        // We can return early if this isn't even the right level of the document
+        if ($this->stack->size() !== count($path)) {
+            return false;
+        }
+
+        for ($i = 0; $i < $this->stack->size(); $i++) {
+            if ($path[$i] === '*') {  // Wildcard matches any string at a given level (but only one level)
+                continue;
+            } elseif (strtoupper($path[$i]) === strtoupper((string) $this->stack->at($i))) {  // Match the specified string
+                continue;
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 
     public function startElement($parser, $name, $attributes): void

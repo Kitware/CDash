@@ -65,7 +65,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
     public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
-        $parent = $this->getParent(); // should be before endElement
+        $parent = $this->hasParent() ? $this->getParent() : false; // should be before endElement
 
         if ($name == 'SITE') {
             $this->HasSiteTag = true;
