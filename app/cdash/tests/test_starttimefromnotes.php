@@ -65,7 +65,7 @@ class StartTimeFromNotesTestCase extends KWWebTestCase
             WHERE build.id = ?
         ', [(int) $build->Id]);
         $this->assertTrue(1 === count($results));
-        $this->assertEqual("my very own note", $results[0]->name);
+        $this->assertEqual('my very own note', $results[0]->name);
         $this->assertEqual("this is\nmy note\n", $results[0]->text);
     }
 }

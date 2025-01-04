@@ -2,6 +2,7 @@
 
 namespace App\Ldap\Rules;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use LdapRecord\Laravel\Auth\Rule;
 use LdapRecord\Models\Model as LdapRecord;
@@ -11,7 +12,7 @@ class FilterRules implements Rule
     /**
      * Check if the rule passes validation.
      */
-    public function passes(LdapRecord $user, Eloquent $model = null): bool
+    public function passes(LdapRecord $user, ?Eloquent $model = null): bool
     {
         $filter = env('LDAP_FILTERS_ON', false);
 
@@ -20,7 +21,7 @@ class FilterRules implements Rule
             return true;
         }
 
-        if (!($model instanceof \App\Models\User)) {
+        if (!($model instanceof User)) {
             return false;
         }
 

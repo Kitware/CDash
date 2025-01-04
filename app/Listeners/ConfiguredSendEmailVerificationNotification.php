@@ -31,7 +31,7 @@ class ConfiguredSendEmailVerificationNotification
         }
 
         if (config('cdash.registration.email.verify')) {
-            if (! $user->hasVerifiedEmail()) {
+            if (!$user->hasVerifiedEmail()) {
                 $user->sendEmailVerificationNotification();
             }
         } else {

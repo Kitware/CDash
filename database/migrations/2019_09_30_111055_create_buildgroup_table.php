@@ -29,7 +29,6 @@ class CreateBuildgroupTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

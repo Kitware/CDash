@@ -4,9 +4,9 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 require_once 'include/ctestparser.php';
 
-
 use App\Models\Site;
 use App\Utils\DatabaseCleanupUtils;
+use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use Illuminate\Support\Facades\Artisan;
@@ -21,7 +21,7 @@ class DoneHandlerTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->PDO = CDash\Database::getInstance()->getPdo();
+        $this->PDO = Database::getInstance()->getPdo();
     }
 
     public function testDoneHandlerLocal()
@@ -100,12 +100,12 @@ class DoneHandlerTestCase extends KWWebTestCase
         if ($remote) {
             foreach (range(0, 5) as $i) {
                 Artisan::call('queue:work --once');
-            };
+            }
         }
 
         $files = Storage::files('parsed');
         $contents = file_get_contents(Storage::path($files[0]));
-        $this->assertTrue(strpos($contents, "Done retries=\"5\"") !== false);
+        $this->assertTrue(strpos($contents, 'Done retries="5"') !== false);
 
         unlink($tmpfname);
         DatabaseCleanupUtils::removeBuild($build->Id);

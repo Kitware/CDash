@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use CDash\Controller\Api\Timeline as LegacyTimelineController;
 use CDash\Database;
 use Illuminate\Http\JsonResponse;
-use CDash\Controller\Api\Timeline as LegacyTimelineController;
 
 final class TimelineController extends AbstractProjectController
 {

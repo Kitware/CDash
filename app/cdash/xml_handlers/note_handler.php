@@ -15,11 +15,11 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\Site;
+use App\Models\SiteInformation;
 use App\Utils\NoteCreator;
 use App\Utils\SubmissionUtils;
 use CDash\Model\Build;
-use App\Models\Site;
-use App\Models\SiteInformation;
 use CDash\Model\Project;
 
 class NoteHandler extends AbstractXmlHandler
@@ -101,7 +101,7 @@ class NoteHandler extends AbstractXmlHandler
             $this->NoteCreator->time = gmdate(FMT_DATETIME, $this->Timestamp);
 
             if ($this->Timestamp === 0) {
-                \Log::error("Cannot create build '{$this->Build->Name}' for note '{$this->NoteCreator->name}' because time was not set");
+                Log::error("Cannot create build '{$this->Build->Name}' for note '{$this->NoteCreator->name}' because time was not set");
             } elseif ($this->Build->Id == 0) {
                 // If the build doesn't exist we add it.
                 $this->Build->SetSubProject($this->SubProjectName);
@@ -121,13 +121,13 @@ class NoteHandler extends AbstractXmlHandler
             }
 
             if (!$this->Build->Id) {
-                \Log::error("Trying to add note '{$this->NoteCreator->name}' to a nonexistent build");
+                Log::error("Trying to add note '{$this->NoteCreator->name}' to a nonexistent build");
             } elseif (!$this->NoteCreator->name) {
-                \Log::error("Note missing name for build #{$this->Build->Id}");
+                Log::error("Note missing name for build #{$this->Build->Id}");
             } elseif (!$this->NoteCreator->text) {
-                \Log::debug("No note text for '{$this->NoteCreator->name}' on build #{$this->Build->Id}");
+                Log::debug("No note text for '{$this->NoteCreator->name}' on build #{$this->Build->Id}");
             } elseif ($this->Timestamp === 0) {
-                \Log::error("No note time for '{$this->NoteCreator->name}' on build #{$this->Build->Id}");
+                Log::error("No note time for '{$this->NoteCreator->name}' on build #{$this->Build->Id}");
             } else {
                 // Insert the note
                 $this->NoteCreator->buildid = $this->Build->Id;

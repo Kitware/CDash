@@ -7,8 +7,6 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'tests/test_branchcoverage.php';
 
-
-
 use App\Models\AuthToken;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Project;
@@ -83,7 +81,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->deleteLog($this->logfilename);
 
         // Delete the existing build if it exists.
-        $existing_build_row = \DB::table('build')
+        $existing_build_row = DB::table('build')
             ->where('projectid', '=', $this->project->Id)
             ->where('name', '=', 'deferred_submission')
             ->first();
@@ -104,7 +102,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
 
     private function verifyNormalSubmission()
     {
-        $build_row = \DB::table('build')
+        $build_row = DB::table('build')
             ->where('projectid', '=', $this->project->Id)
             ->where('name', '=', 'deferred_submission')
             ->first();
@@ -197,7 +195,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         file_put_contents($this->ConfigFile, "DB_DATABASE=cdash4simpletestfake\n", FILE_APPEND | LOCK_EX);
 
         // Submit test data with invalid bearer token.
-        $header = ["Authorization: Bearer asdf"];
+        $header = ['Authorization: Bearer asdf'];
         $this->submission($this->projectname, "$this->dataDir/Build.xml", $header);
 
         // Verify that files exist in the inbox directory.
@@ -282,7 +280,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->submission($this->projectname, "$this->dataDir/Notes.xml");
 
         // Get the newly created buildid.
-        $build_row = \DB::table('build')
+        $build_row = DB::table('build')
             ->where('projectid', '=', $this->project->Id)
             ->where('name', '=', 'branch_coverage')
             ->first();
@@ -332,7 +330,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->submission($this->projectname, "$this->dataDir/Notes.xml", $valid_header);
 
         // Get the newly created buildid.
-        $build_row = \DB::table('build')
+        $build_row = DB::table('build')
             ->where('projectid', '=', $this->project->Id)
             ->where('name', '=', 'branch_coverage')
             ->first();
@@ -471,7 +469,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->submission($this->projectname, "$this->dataDir/Notes.xml", $valid_header);
 
         // Get the newly created buildid.
-        $build_row = \DB::table('build')
+        $build_row = DB::table('build')
             ->where('projectid', '=', $this->project->Id)
             ->where('name', '=', 'branch_coverage')
             ->first();
@@ -537,7 +535,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->submission($projectname2, "$this->dataDir/Notes.xml", $valid_header);
 
         // Get the newly created buildid.
-        $build_row = \DB::table('build')
+        $build_row = DB::table('build')
             ->where('projectid', '=', $project2->Id)
             ->where('name', '=', 'branch_coverage')
             ->first();

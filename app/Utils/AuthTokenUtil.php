@@ -9,12 +9,12 @@ use App\Models\User;
 use CDash\Model\Project;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 use RuntimeException;
 
 class AuthTokenUtil
@@ -25,6 +25,7 @@ class AuthTokenUtil
      * ensure that the $user_id has been properly authenticated.
      *
      * @return array{raw_token: string, token: AuthToken}
+     *
      * @throws InvalidArgumentException
      */
     public static function generateToken(int $user_id, int $project_id, string $scope, string $description): array
@@ -41,7 +42,7 @@ class AuthTokenUtil
 
         if (!is_numeric($duration) || intval($duration) < 0) {
             Log::error("Invalid token_duration configuration {$duration}");
-            throw new InvalidArgumentException("Invalid token_duration configuration");
+            throw new InvalidArgumentException('Invalid token_duration configuration');
         }
 
         if (intval($duration) === 0) {
@@ -135,7 +136,7 @@ class AuthTokenUtil
                 }
                 break;
             default:
-                # In theory, this case should never be possible
+                // In theory, this case should never be possible
                 Log::error("Invalid scope listed for auth token with hash {$token_hash}");
                 throw new RuntimeException("Invalid scope listed for auth token with hash {$token_hash}");
         }
@@ -190,7 +191,7 @@ class AuthTokenUtil
                 }
                 break;
             default:
-                # In theory, this case should never be possible
+                // In theory, this case should never be possible
                 Log::error("Invalid scope listed for auth token with hash {$token_hash}");
                 throw new RuntimeException("Invalid scope listed for auth token with hash {$token_hash}");
         }

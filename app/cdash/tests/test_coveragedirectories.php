@@ -6,8 +6,6 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
 use CDash\Model\Project;
 
 class CoverageDirectoriesTestCase extends KWWebTestCase
@@ -27,8 +25,8 @@ class CoverageDirectoriesTestCase extends KWWebTestCase
         }
 
         $settings = [
-                'Name' => 'CoverageDirectories',
-                'Description' => 'Test to make sure directories display proper files'];
+            'Name' => 'CoverageDirectories',
+            'Description' => 'Test to make sure directories display proper files'];
         $projectid = $this->createProject($settings);
         if ($projectid < 1) {
             $this->fail('Failed to create project');
@@ -80,31 +78,31 @@ class CoverageDirectoriesTestCase extends KWWebTestCase
         $jsonobj = json_decode($content, true);
 
         $expected_page_1 = [
-                'func_1',
-                'func_11',
-                'func_13',
-                'func_15',
-                'func_17',
-                'func_19',
-                'func_21',
-                'func_23',
-                'func_25',
-                'func_27',
-                'func_29',
-                'func_3',
-                'func_31',
-                'func_33',
-                'func_35',
-                'func_37',
-                'func_39',
-                'func_41',
-                'func_43',
-                'func_45',
-                'func_47',
-                'func_49',
-                'func_5',
-                'func_51',
-                'func_53',
+            'func_1',
+            'func_11',
+            'func_13',
+            'func_15',
+            'func_17',
+            'func_19',
+            'func_21',
+            'func_23',
+            'func_25',
+            'func_27',
+            'func_29',
+            'func_3',
+            'func_31',
+            'func_33',
+            'func_35',
+            'func_37',
+            'func_39',
+            'func_41',
+            'func_43',
+            'func_45',
+            'func_47',
+            'func_49',
+            'func_5',
+            'func_51',
+            'func_53',
         ];
 
         foreach ($expected_page_1 as $i => $value) {

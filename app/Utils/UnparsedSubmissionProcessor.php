@@ -18,11 +18,12 @@
 namespace App\Utils;
 
 use App\Jobs\ProcessSubmission;
-use CDash\Model\Build;
 use App\Models\BuildFile;
+use App\Models\Site;
+use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
-use App\Models\Site;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -93,8 +94,8 @@ class UnparsedSubmissionProcessor
         $this->serializeBuildMetadata($uuid);
 
         // Write a marker file so we know to process these files when the DB comes back up.
-        if (!Storage::exists("DB_WAS_DOWN")) {
-            Storage::put("DB_WAS_DOWN", "");
+        if (!Storage::exists('DB_WAS_DOWN')) {
+            Storage::put('DB_WAS_DOWN', '');
         }
 
         // Respond with success even though the database is down so that CTest will
@@ -262,8 +263,8 @@ class UnparsedSubmissionProcessor
             $this->inboxdatafilename = "inbox/{$this->projectname}_-_{$this->token}_-_{$this->type}_-_{$this->buildid}_-_{$this->md5}_-_.$ext";
             $this->serializeDataFileParameters();
 
-            if (!Storage::exists("DB_WAS_DOWN")) {
-                Storage::put("DB_WAS_DOWN", "");
+            if (!Storage::exists('DB_WAS_DOWN')) {
+                Storage::put('DB_WAS_DOWN', '');
             }
         }
 
@@ -286,8 +287,8 @@ class UnparsedSubmissionProcessor
         ProcessSubmission::dispatch($filename, $this->project->Id, $this->build->Id, $this->md5);
 
         // Check for marker file to see if we need to queue deferred submissions.
-        if (Storage::exists("DB_WAS_DOWN")) {
-            Storage::delete("DB_WAS_DOWN");
+        if (Storage::exists('DB_WAS_DOWN')) {
+            Storage::delete('DB_WAS_DOWN');
             Artisan::call('submission:queue');
         }
 
@@ -364,7 +365,7 @@ class UnparsedSubmissionProcessor
         try {
             DB::connection()->getPdo();
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

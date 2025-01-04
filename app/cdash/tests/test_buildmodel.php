@@ -6,8 +6,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
+use App\Models\Project;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
@@ -29,9 +28,9 @@ class BuildModelTestCase extends KWWebTestCase
 
         $this->testDataDir = dirname(__FILE__) . '/data/BuildModel';
         $this->testDataFiles = ['build1.xml', 'build2.xml', 'build3.xml', 'build4.xml',
-                                     'build5.xml', 'configure1.xml'];
+            'build5.xml', 'configure1.xml'];
 
-        $project = \App\Models\Project::create([
+        $project = Project::create([
             'name' => 'BuildModel',
         ]);
 
@@ -76,7 +75,7 @@ class BuildModelTestCase extends KWWebTestCase
         }
 
         $buildArray = $builds[$n];
-        $build = new build();
+        $build = new Build();
         $build->Id = $buildArray['id'];
         $build->FillFromId($buildArray['id']);
         return $build;
@@ -197,7 +196,7 @@ class BuildModelTestCase extends KWWebTestCase
 
         $build->Id = null;
         $build->SetStamp('20100610-1901-Experimental');
-        $build->Type = ''; //force this empty for coverage purposes
+        $build->Type = ''; // force this empty for coverage purposes
 
         $build->StartTime = '2009-12-18 14:19:11';
         $build->EndTime = '2009-12-18 14:20:23';

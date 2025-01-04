@@ -22,7 +22,6 @@ use CDash\Model\BuildEmail;
 class BuildEmailCollection extends Collection
 {
     /**
-     * @param BuildEmail $buildEmail
      * @return $this
      */
     public function add(BuildEmail $buildEmail)

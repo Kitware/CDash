@@ -53,9 +53,9 @@ class Coverage
     /** Put labels for coverage */
     public function InsertLabelAssociations($buildid)
     {
-        if ($buildid &&
-            isset($this->CoverageFile) &&
-            $this->CoverageFile->Id
+        if ($buildid
+            && isset($this->CoverageFile)
+            && $this->CoverageFile->Id
         ) {
             if (empty($this->Labels)) {
                 return;
@@ -85,8 +85,8 @@ class Coverage
     }
 
     /** Return true if this build already has coverage for this file,
-      * false otherwise.
-      **/
+     * false otherwise.
+     **/
     public function Exists(): bool
     {
         if (!$this->BuildId || !$this->CoverageFile || !$this->CoverageFile->Id) {

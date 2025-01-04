@@ -15,12 +15,12 @@ class ManageUsersTestCase extends KWWebTestCase
 
     public function testManageUsersTest()
     {
-        //make sure we can't visit the manageUsers page while logged out
+        // make sure we can't visit the manageUsers page while logged out
         if (!$this->expectsPageRequiresLogin('/manageUsers.php')) {
             return 1;
         }
 
-        //make sure we can visit the page while logged in
+        // make sure we can visit the page while logged in
         $this->login();
         $content = $this->get($this->url . '/manageUsers.php');
         if (strpos($content, 'Add new user') === false) {
@@ -28,7 +28,7 @@ class ManageUsersTestCase extends KWWebTestCase
             return 1;
         }
 
-        //add a new user
+        // add a new user
         if (!$this->SetFieldByName('fname', 'Simple')) {
             $this->fail('SetFieldByName on first name returned false');
             return 1;

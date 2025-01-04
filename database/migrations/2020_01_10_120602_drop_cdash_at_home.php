@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class DropCdashAtHome extends Migration
 {
@@ -94,42 +94,42 @@ class DropCdashAtHome extends Migration
             Schema::create('client_jobschedule2build', function (Blueprint $table) {
                 $table->bigInteger('scheduleid')->unsigned();
                 $table->integer('buildid');
-                $table->unique(['scheduleid','buildid'], 'scheduleid');
+                $table->unique(['scheduleid', 'buildid'], 'scheduleid');
             });
         }
         if (!Schema::hasTable('client_jobschedule2cmake')) {
             Schema::create('client_jobschedule2cmake', function (Blueprint $table) {
                 $table->bigInteger('scheduleid');
                 $table->integer('cmakeid');
-                $table->unique(['scheduleid','cmakeid'], 'client_jobschedule2cmake_scheduleid');
+                $table->unique(['scheduleid', 'cmakeid'], 'client_jobschedule2cmake_scheduleid');
             });
         }
         if (!Schema::hasTable('client_jobschedule2compiler')) {
             Schema::create('client_jobschedule2compiler', function (Blueprint $table) {
                 $table->bigInteger('scheduleid');
                 $table->integer('compilerid');
-                $table->unique(['scheduleid','compilerid'], 'client_jobschedule2compiler_scheduleid');
+                $table->unique(['scheduleid', 'compilerid'], 'client_jobschedule2compiler_scheduleid');
             });
         }
         if (!Schema::hasTable('client_jobschedule2library')) {
             Schema::create('client_jobschedule2library', function (Blueprint $table) {
                 $table->bigInteger('scheduleid');
                 $table->integer('libraryid');
-                $table->unique(['scheduleid','libraryid'], 'client_jobschedule2library_scheduleid');
+                $table->unique(['scheduleid', 'libraryid'], 'client_jobschedule2library_scheduleid');
             });
         }
         if (!Schema::hasTable('client_jobschedule2os')) {
             Schema::create('client_jobschedule2os', function (Blueprint $table) {
                 $table->bigInteger('scheduleid');
                 $table->integer('osid');
-                $table->unique(['scheduleid','osid'], 'client_jobschedule2os_scheduleid');
+                $table->unique(['scheduleid', 'osid'], 'client_jobschedule2os_scheduleid');
             });
         }
         if (!Schema::hasTable('client_jobschedule2site')) {
             Schema::create('client_jobschedule2site', function (Blueprint $table) {
                 $table->bigInteger('scheduleid');
                 $table->integer('siteid');
-                $table->unique(['scheduleid','siteid'], 'client_jobschedule2site_scheduleid');
+                $table->unique(['scheduleid', 'siteid'], 'client_jobschedule2site_scheduleid');
             });
         }
         if (!Schema::hasTable('client_jobschedule2submission')) {

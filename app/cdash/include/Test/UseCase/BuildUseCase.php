@@ -2,12 +2,13 @@
 
 namespace CDash\Test\UseCase;
 
+use AbstractXmlHandler;
+use BuildHandler;
 use CDash\Model\Project;
 use DOMDocument;
 use DOMElement;
 use DOMText;
-use BuildHandler;
-use AbstractXmlHandler;
+use Exception;
 
 class BuildUseCase extends UseCase
 {
@@ -51,7 +52,7 @@ class BuildUseCase extends UseCase
 
         $xml_str = $xml->saveXML($xml);
         if ($xml_str === false) {
-            throw new \Exception('Invalid XML.');
+            throw new Exception('Invalid XML.');
         }
 
         $project = new Project();
@@ -154,7 +155,6 @@ class BuildUseCase extends UseCase
         if (!isset($properties['TargetName'])) {
             $properties['TargetName'] = $target_name;
         }
-
 
         if (!isset($properties['OutputFile'])) {
             $properties['OutputFile'] = $cmake_dir;

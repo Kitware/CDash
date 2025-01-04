@@ -19,17 +19,17 @@ class SiteTypeTest extends TestCase
     use CreatesSites;
 
     /**
-     * @var array<Project> $projects
+     * @var array<Project>
      */
     private array $projects;
 
     /**
-     * @var array<User> $users
+     * @var array<User>
      */
     private array $users;
 
     /**
-     * @var array<Site> $sites
+     * @var array<Site>
      */
     private array $sites = [];
 

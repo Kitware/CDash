@@ -39,6 +39,7 @@ class Database extends Singleton
 
     /**
      * Get the underlying PDO object or false if it cannot be created.
+     *
      * @return PDO
      *
      * @deprecated 04/22/2023  Use Laravel query builder or Eloquent instead
@@ -124,7 +125,7 @@ class Database extends Singleton
      *
      * @deprecated 04/22/2023  Use Laravel query builder or Eloquent instead
      */
-    public function executePreparedSingleRow(string $sql, ?array $params = null): array|null|false
+    public function executePreparedSingleRow(string $sql, ?array $params = null): array|false|null
     {
         $stmt = $this->prepare($sql);
         $this->execute($stmt, $params);

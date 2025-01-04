@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\Storage;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
 class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
 {
     private $config_file;
@@ -34,7 +32,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
     public function enableAutoRemoveConfigSetting()
     {
         copy($this->config_file, "{$this->config_file}.bak");
-        file_put_contents($this->config_file, "AUTOREMOVE_BUILDS=true", FILE_APPEND);
+        file_put_contents($this->config_file, 'AUTOREMOVE_BUILDS=true', FILE_APPEND);
     }
 
     public function setAutoRemoveTimeFrame()
@@ -56,7 +54,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         $this->setAutoRemoveTimeFrame();
         $this->deleteLog($this->logfilename);
 
-        /** @var \CDash\Database $db */
+        /** @var Database $db */
         $db = Database::getInstance();
 
         $result = $db->query("SELECT id FROM project WHERE name = 'EmailProjectExample'");
@@ -72,7 +70,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         }
 
         // Check that the test is actually there
-        $sql = "SELECT name FROM build WHERE projectid=:id AND stamp=:stamp";
+        $sql = 'SELECT name FROM build WHERE projectid=:id AND stamp=:stamp';
 
         /** @var PDOStatement $stmt */
         $stmt = $db->prepare($sql);
@@ -127,7 +125,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         // in order for the process to be done
         sleep(10); // seconds
 
-        $sql = "SELECT id FROM build WHERE projectid=? AND stamp=?";
+        $sql = 'SELECT id FROM build WHERE projectid=? AND stamp=?';
 
         $results = DB::select($sql, [$projectid, '20090223-0100-Nightly']);
 

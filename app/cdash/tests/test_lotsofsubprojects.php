@@ -49,7 +49,7 @@ class LotsOfSubProjectsTestCase extends KWWebTestCase
         fwrite($handle, file_get_contents(dirname(__FILE__) . '/data/LotsOfSubProjects/Before.xml'));
         foreach (range(1, 100) as $i) {
             fwrite($handle, "	<Subproject name=\"LotsOfSubProjects{$i}\">" . PHP_EOL);
-            fwrite($handle, "		<Label>LotsOfSubProjects{$i}</Label>"  . PHP_EOL);
+            fwrite($handle, "		<Label>LotsOfSubProjects{$i}</Label>" . PHP_EOL);
             fwrite($handle, '	</Subproject>' . PHP_EOL);
         }
         fwrite($handle, file_get_contents(dirname(__FILE__) . '/data/LotsOfSubProjects/After.xml'));

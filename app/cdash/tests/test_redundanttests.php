@@ -3,6 +3,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Project;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\DB;
 
 class RedundantTestsTestCase extends KWWebTestCase
@@ -48,7 +49,7 @@ class RedundantTestsTestCase extends KWWebTestCase
             $response = $client->request('POST',
                 $this->url . '/api/v1/manageMeasurements.php',
                 ['json' => ['projectid' => $this->project->Id, 'measurements' => $measurements]]);
-        } catch (GuzzleHttp\Exception\ClientException $e) {
+        } catch (ClientException $e) {
             $this->fail($e->getMessage());
             return false;
         }
@@ -85,10 +86,10 @@ class RedundantTestsTestCase extends KWWebTestCase
             }
         }
         if (!$test1found) {
-            $this->fail("test #1 output not found when expected");
+            $this->fail('test #1 output not found when expected');
         }
         if (!$test2found) {
-            $this->fail("test #2 output not found when expected");
+            $this->fail('test #2 output not found when expected');
         }
 
         // Verify expected output from 'view tests' API.
@@ -108,10 +109,10 @@ class RedundantTestsTestCase extends KWWebTestCase
             }
         }
         if (!$purple_found) {
-            $this->fail("purple test not found when expected");
+            $this->fail('purple test not found when expected');
         }
         if (!$orange_found) {
-            $this->fail("orange test not found when expected");
+            $this->fail('orange test not found when expected');
         }
     }
 }

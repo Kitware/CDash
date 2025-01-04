@@ -22,7 +22,7 @@ class RemoteWorkers extends TestCase
     public function testRemoteWorkerAPIAccess(): void
     {
         Storage::put('inbox/delete_me', 'please delete me');
-        $_SERVER["REQUEST_METHOD"] = 'DELETE';
+        $_SERVER['REQUEST_METHOD'] = 'DELETE';
         $_REQUEST['filename'] = encrypt('inbox/delete_me');
 
         $response = $this
@@ -34,7 +34,7 @@ class RemoteWorkers extends TestCase
     public function testRemoteWorkerAPIAccessWithInvalidKey(): void
     {
         Storage::put('inbox/delete_me', 'please delete me');
-        $_SERVER["REQUEST_METHOD"] = 'DELETE';
+        $_SERVER['REQUEST_METHOD'] = 'DELETE';
         // Not encrypted, will fail.
         $_REQUEST['filename'] = 'inbox/delete_me';
 

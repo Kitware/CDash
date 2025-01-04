@@ -28,7 +28,7 @@ class MultiCoverageTestCase extends KWWebTestCase
         $success &= $this->verifyResults();
 
         if ($success) {
-            $this->pass("Passed");
+            $this->pass('Passed');
         }
 
         DatabaseCleanupUtils::removeBuild($this->BuildId);
@@ -45,7 +45,7 @@ class MultiCoverageTestCase extends KWWebTestCase
         $success &= $this->verifyResults();
 
         if ($success) {
-            $this->pass("Passed");
+            $this->pass('Passed');
         }
 
         DatabaseCleanupUtils::removeBuild($this->BuildId);

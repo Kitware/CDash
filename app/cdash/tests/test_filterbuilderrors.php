@@ -30,7 +30,7 @@ class FilterBuildErrorsTestCase extends KWWebTestCase
                 was not declared in this scope
                 No such file or directory
                 FILTER,
-];
+        ];
         $projectid = $this->createProject($settings);
         if ($projectid < 1) {
             $this->fail('Failed to create project');

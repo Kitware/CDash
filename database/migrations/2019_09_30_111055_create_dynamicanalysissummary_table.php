@@ -21,7 +21,6 @@ class CreateDynamicanalysissummaryTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

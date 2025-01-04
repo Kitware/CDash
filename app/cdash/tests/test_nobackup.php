@@ -80,10 +80,10 @@ class NoBackupTestCase extends KWWebTestCase
         $stmt->execute([$buildid]);
         $row = $stmt->fetch();
         if ($row['builderrors'] != 0) {
-            $this->fail("Unexpected number of build errors found");
+            $this->fail('Unexpected number of build errors found');
         }
         if ($row['loctested'] < 1) {
-            $this->fail("Unexpected number of loctested found");
+            $this->fail('Unexpected number of loctested found');
         }
 
         $this->checkLog($this->logfilename);

@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -66,7 +66,7 @@ return new class () extends Migration {
         }
 
         echo "{$num_deleted} rows deleted from `buildfailure2argument`" . PHP_EOL;
-        echo "Adding foreign key constraint buildfailure2argument(buildfailureid)->buildfailure(id)...";
+        echo 'Adding foreign key constraint buildfailure2argument(buildfailureid)->buildfailure(id)...';
 
         Schema::table('buildfailure2argument', function (Blueprint $table) {
             $table->foreign('buildfailureid')->references('id')->on('buildfailure')->cascadeOnDelete();

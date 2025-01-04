@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class extends Migration {
     private const tables_to_modify = [
         'blockbuild',
         'build',
@@ -32,8 +32,8 @@ return new class () extends Migration {
     public function up()
     {
         // The authtoken table is special because the projectid column can be nullable
-        echo "Adding projectid foreign key to authtoken table...";
-        $num_deleted = DB::delete("DELETE FROM authtoken WHERE projectid IS NOT NULL AND projectid NOT IN (SELECT id FROM project)");
+        echo 'Adding projectid foreign key to authtoken table...';
+        $num_deleted = DB::delete('DELETE FROM authtoken WHERE projectid IS NOT NULL AND projectid NOT IN (SELECT id FROM project)');
         echo $num_deleted . ' invalid rows deleted' . PHP_EOL;
         Schema::table('authtoken', function (Blueprint $table) {
             $table->integer('projectid')->nullable()->change();

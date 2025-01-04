@@ -6,8 +6,8 @@ use App\Models\User;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Project;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 require_once 'include/api_common.php';
@@ -23,7 +23,7 @@ final class AdminController extends AbstractController
 
         $alert = '';
 
-        //get date info here
+        // get date info here
         @$dayTo = intval($_POST['dayFrom']);
         if (empty($dayTo)) {
             $time = strtotime('2000-01-01 00:00:00');
@@ -69,9 +69,9 @@ final class AdminController extends AbstractController
         // Delete the builds
         if (isset($_POST['Submit'])) {
             if (config('database.default') === 'pgsql') {
-                $timestamp_sql =  "CAST(CONCAT(?, '-', ?, '-', ?, ' 00:00:00') AS timestamp)";
+                $timestamp_sql = "CAST(CONCAT(?, '-', ?, '-', ?, ' 00:00:00') AS timestamp)";
             } else {
-                $timestamp_sql =  "TIMESTAMP(CONCAT(?, '-', ?, '-', ?, ' 00:00:00'))";
+                $timestamp_sql = "TIMESTAMP(CONCAT(?, '-', ?, '-', ?, ' 00:00:00'))";
             }
 
             $build = DB::select("
@@ -361,7 +361,7 @@ final class AdminController extends AbstractController
         }
 
         if ($Dependencies) {
-            $returnVal = Artisan::call("dependencies:update");
+            $returnVal = Artisan::call('dependencies:update');
             $xml .= add_XML_value('alert', "The call to update CDash's dependencies was run. The call exited with value: $returnVal");
         }
 

@@ -29,7 +29,6 @@ class CreateUserstatisticsTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

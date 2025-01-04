@@ -25,7 +25,6 @@ class CreateDailyupdateTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

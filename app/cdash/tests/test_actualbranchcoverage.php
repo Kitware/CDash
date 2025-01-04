@@ -7,9 +7,6 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'tests/test_branchcoverage.php';
 
-
-
-
 class ActualBranchCoverageTestCase extends BranchCoverageTestCase
 {
     protected $projectname;

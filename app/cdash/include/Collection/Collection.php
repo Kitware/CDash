@@ -23,9 +23,9 @@ use Iterator;
 abstract class Collection implements Iterator, Countable
 {
     protected int $position = 0;
-    /** @var array<mixed> $collection */
+    /** @var array<mixed> */
     protected array $collection = [];
-    /** @var array<mixed> $keys */
+    /** @var array<mixed> */
     protected array $keys = [];
 
     public function __construct()
@@ -34,7 +34,8 @@ abstract class Collection implements Iterator, Countable
 
     /**
      * Return the current element
-     * @link http://php.net/manual/en/iterator.current.php
+     *
+     * @see http://php.net/manual/en/iterator.current.php
      * @since 5.0.0
      */
     public function current(): mixed
@@ -47,18 +48,22 @@ abstract class Collection implements Iterator, Countable
 
     /**
      * Move forward to next element
-     * @link http://php.net/manual/en/iterator.next.php
+     *
+     * @see http://php.net/manual/en/iterator.next.php
      * @since 5.0.0
      */
     public function next(): void
     {
-        ++$this->position;
+        $this->position++;
     }
 
     /**
      * Return the key of the current element
-     * @link http://php.net/manual/en/iterator.key.php
-     * @return mixed scalar on success, or null on failure.
+     *
+     * @see http://php.net/manual/en/iterator.key.php
+     *
+     * @return mixed scalar on success, or null on failure
+     *
      * @since 5.0.0
      */
     public function key(): mixed
@@ -71,9 +76,12 @@ abstract class Collection implements Iterator, Countable
 
     /**
      * Checks if current position is valid
-     * @link http://php.net/manual/en/iterator.valid.php
-     * @return boolean The return value will be casted to boolean and then evaluated.
-     * Returns true on success or false on failure.
+     *
+     * @see http://php.net/manual/en/iterator.valid.php
+     *
+     * @return bool The return value will be casted to boolean and then evaluated.
+     *              Returns true on success or false on failure.
+     *
      * @since 5.0.0
      */
     public function valid(): bool
@@ -91,7 +99,8 @@ abstract class Collection implements Iterator, Countable
 
     /**
      * Rewind the Iterator to the first element
-     * @link http://php.net/manual/en/iterator.rewind.php
+     *
+     * @see http://php.net/manual/en/iterator.rewind.php
      * @since 5.0.0
      */
     public function rewind(): void
@@ -113,11 +122,14 @@ abstract class Collection implements Iterator, Countable
 
     /**
      * Count elements of an object
-     * @link http://php.net/manual/en/countable.count.php
+     *
+     * @see http://php.net/manual/en/countable.count.php
+     *
      * @return int<0,max> The custom count as an integer.
-     * </p>
-     * <p>
-     * The return value is cast to an integer.
+     *                    </p>
+     *                    <p>
+     *                    The return value is cast to an integer.
+     *
      * @since 5.1.0
      */
     public function count(): int

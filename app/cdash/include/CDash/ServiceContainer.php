@@ -17,8 +17,8 @@
 
 namespace CDash;
 
-use DI\ContainerBuilder;
 use DI\Container;
+use DI\ContainerBuilder;
 
 class ServiceContainer extends Singleton
 {
@@ -40,9 +40,6 @@ class ServiceContainer extends Singleton
 
     /**
      * The create method will return a new instance of a class.
-     *
-     * @param $class_name
-     * @return mixed
      */
     public function create($class_name)
     {
@@ -51,9 +48,6 @@ class ServiceContainer extends Singleton
 
     /**
      * The get method will return a singelton instance of a class.
-     *
-     * @param $class_name
-     * @return mixed
      */
     public function get($class_name)
     {

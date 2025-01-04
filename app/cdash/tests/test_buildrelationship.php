@@ -6,11 +6,11 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
 use App\Utils\DatabaseCleanupUtils;
 use App\Utils\SubmissionUtils;
 use CDash\Database;
 use CDash\Model\Build;
+use GuzzleHttp\Exception\ClientException;
 
 class BuildRelationshipTestCase extends KWWebTestCase
 {
@@ -38,7 +38,7 @@ class BuildRelationshipTestCase extends KWWebTestCase
         // Check for expected error messages when missing parameters.
         // No project.
         $response = $client->request('GET',
-            $this->url .  '/api/v1/relateBuilds.php',
+            $this->url . '/api/v1/relateBuilds.php',
             ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
@@ -46,7 +46,7 @@ class BuildRelationshipTestCase extends KWWebTestCase
 
         // No buildid.
         $response = $client->request('GET',
-            $this->url .  '/api/v1/relateBuilds.php?project=InsightExample',
+            $this->url . '/api/v1/relateBuilds.php?project=InsightExample',
             ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
@@ -54,7 +54,7 @@ class BuildRelationshipTestCase extends KWWebTestCase
 
         // No relatedid.
         $response = $client->request('GET',
-            $this->url .  '/api/v1/relateBuilds.php?project=InsightExample&buildid=7',
+            $this->url . '/api/v1/relateBuilds.php?project=InsightExample&buildid=7',
             ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
@@ -62,7 +62,7 @@ class BuildRelationshipTestCase extends KWWebTestCase
 
         // No existing relationship.
         $response = $client->request('GET',
-            $this->url .  '/api/v1/relateBuilds.php?project=InsightExample&buildid=7&relatedid=44',
+            $this->url . '/api/v1/relateBuilds.php?project=InsightExample&buildid=7&relatedid=44',
             ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
@@ -93,12 +93,12 @@ class BuildRelationshipTestCase extends KWWebTestCase
 
         // Exercise no relationship specified error message.
         $payload = [
-            'project'    => 'InsightExample',
-            'buildid'    => $build2->Id,
-            'relatedid'  => $build1->Id,
+            'project' => 'InsightExample',
+            'buildid' => $build2->Id,
+            'relatedid' => $build1->Id,
         ];
         $response = $client->request('POST',
-            $this->url .  '/api/v1/relateBuilds.php',
+            $this->url . '/api/v1/relateBuilds.php',
             ['json' => $payload, 'http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
@@ -107,24 +107,24 @@ class BuildRelationshipTestCase extends KWWebTestCase
         // Use the API to create relationships between these builds.
         $payloads = [
             [
-                'project'    => 'InsightExample',
-                'buildid'      => $build2->Id,
-                'relatedid'    => $build1->Id,
+                'project' => 'InsightExample',
+                'buildid' => $build2->Id,
+                'relatedid' => $build1->Id,
                 'relationship' => 'depends on',
             ],
             [
-                'project'    => 'InsightExample',
-                'buildid'      => $build3->Id,
-                'relatedid'    => $build2->Id,
+                'project' => 'InsightExample',
+                'buildid' => $build3->Id,
+                'relatedid' => $build2->Id,
                 'relationship' => 'uses results from',
             ],
         ];
         foreach ($payloads as $payload) {
             try {
                 $response = $client->request('POST',
-                    $this->url .  '/api/v1/relateBuilds.php',
+                    $this->url . '/api/v1/relateBuilds.php',
                     ['json' => $payload]);
-            } catch (GuzzleHttp\Exception\ClientException $e) {
+            } catch (ClientException $e) {
                 $this->fail($e->getMessage());
             }
         }
@@ -153,7 +153,7 @@ class BuildRelationshipTestCase extends KWWebTestCase
         // Make sure that normal users can't delete relationships.
         $user_client = $this->getGuzzleClient('user1@kw', 'user1');
         $response = $user_client->request('DELETE',
-            $this->url .  "/api/v1/relateBuilds.php?project=InsightExample&buildid={$build1->Id}&relatedid={$build2->Id}",
+            $this->url . "/api/v1/relateBuilds.php?project=InsightExample&buildid={$build1->Id}&relatedid={$build2->Id}",
             ['http_errors' => false]);
         $response = json_decode($response->getBody());
         $this->assertTrue(property_exists($response, 'error'));
@@ -161,7 +161,7 @@ class BuildRelationshipTestCase extends KWWebTestCase
 
         // Exercise successful delete via API.
         $response = $client->request('DELETE',
-            $this->url .  "/api/v1/relateBuilds.php?project=InsightExample&buildid={$build2->Id}&relatedid={$build1->Id}",
+            $this->url . "/api/v1/relateBuilds.php?project=InsightExample&buildid={$build2->Id}&relatedid={$build1->Id}",
             ['http_errors' => false]);
         $this->assertEqual('', $response->getBody());
 

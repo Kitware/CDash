@@ -19,13 +19,13 @@ class InstallTestCase extends KWWebTestCase
 
     public function testInstall()
     {
-        //double check that it's the testing database before doing anything hasty...
+        // double check that it's the testing database before doing anything hasty...
         if ($this->databaseName !== 'cdash4simpletest') {
             $this->fail("can only test on a database named 'cdash4simpletest'");
             return 1;
         }
 
-        //drop any old testing database before testing install
+        // drop any old testing database before testing install
         $success = $this->db->drop($this->databaseName);
         if (!$success) {
             $this->fail('Error dropping database');

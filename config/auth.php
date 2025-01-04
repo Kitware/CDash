@@ -1,11 +1,14 @@
 <?php
 
+use App\Ldap\Rules\FilterRules;
+use App\Models\User;
+
 return [
     // Whether or not "normal" username+password authentication is enabled
     'username_password_authentication_enabled' => env('USERNAME_PASSWORD_AUTHENTICATION_ENABLED', true),
     // Whether or not "normal" username+password authentication is enabled
     'user_registration_form_enabled' => env('USER_REGISTRATION_FORM_ENABLED', true),
-    # Whether or not a Project administrator can register a user
+    // Whether or not a Project administrator can register a user
     'project_admin_registration_form_enabled' => env('PROJECT_ADMIN_REGISTRATION_FORM_ENABLED', true),
 
     /*
@@ -73,24 +76,24 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => User::class,
         ],
 
         'ldap' => [
             'driver' => 'ldap',
-            # Only openldap is tested
+            // Only openldap is tested
             'model' => match (env('LDAP_PROVIDER', 'openldap')) {
-                'openldap' => \LdapRecord\Models\OpenLDAP\User::class,
-                'activedirectory' => \LdapRecord\Models\ActiveDirectory\User::class,
-                'freeipa' => \LdapRecord\Models\FreeIPA\User::class,
+                'openldap' => LdapRecord\Models\OpenLDAP\User::class,
+                'activedirectory' => LdapRecord\Models\ActiveDirectory\User::class,
+                'freeipa' => LdapRecord\Models\FreeIPA\User::class,
                 default => false, // this case should never happen
             },
             'rules' => [
-                \App\Ldap\Rules\FilterRules::class,
+                FilterRules::class,
             ],
             'scopes' => [],
             'database' => [
-                'model' => App\Models\User::class,
+                'model' => User::class,
                 'sync_passwords' => false,
                 'sync_attributes' => [
                     'email' => env('LDAP_LOCATE_USERS_BY', 'mail'),
@@ -124,5 +127,4 @@ return [
             'expire' => 60,
         ],
     ],
-
 ];

@@ -17,23 +17,29 @@
 
 namespace CDash\Lib\Repository;
 
-use Github\Client as GitHubClient;
-use Github\HttpClient\Builder as GitHubBuilder;
-use Illuminate\Support\Facades\Log;
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Encoding\ChainedFormatter;
-use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUpdateFile;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
+use DateTime;
+use DateTimeImmutable;
+use Exception;
+use Github\Api\Repository\Checks\CheckRuns;
+use Github\AuthMethod;
+use Github\Client as GitHubClient;
+use Github\Exception\RuntimeException;
+use Github\HttpClient\Builder as GitHubBuilder;
+use Illuminate\Support\Facades\Log;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
+use PDO;
 
 /**
  * Class GitHub
- * @package CDash\Lib\Repository
  */
 class GitHub implements RepositoryInterface
 {
@@ -57,7 +63,6 @@ class GitHub implements RepositoryInterface
 
     /**
      * GitHub constructor.
-     * @param Project $project
      */
     public function __construct(Project $project)
     {
@@ -87,7 +92,7 @@ class GitHub implements RepositoryInterface
     protected function initializeApiClient(): void
     {
         $builder = new GitHubBuilder();
-        $apiClient = new GithubClient($builder, 'machine-man-preview');
+        $apiClient = new GitHubClient($builder, 'machine-man-preview');
         $this->setApiClient($apiClient);
     }
 
@@ -106,7 +111,7 @@ class GitHub implements RepositoryInterface
 
         if ($this->installationId === '') {
             if ($required) {
-                throw new \Exception('Unable to find installation ID for repository');
+                throw new Exception('Unable to find installation ID for repository');
             }
             return false;
         }
@@ -114,16 +119,16 @@ class GitHub implements RepositoryInterface
         $pem = config('cdash.github_private_key');
         if (!file_exists($pem)) {
             if ($required) {
-                throw new \Exception('Could not find GitHub private key');
+                throw new Exception('Could not find GitHub private key');
             }
             return false;
         }
-        $pem = "file://" . $pem;
+        $pem = 'file://' . $pem;
 
         $integrationId = config('cdash.github_app_id');
         if (is_null($integrationId)) {
             if ($required) {
-                throw new \Exception('GITHUB_APP_ID is not set');
+                throw new Exception('GITHUB_APP_ID is not set');
             }
             return false;
         }
@@ -133,7 +138,7 @@ class GitHub implements RepositoryInterface
             InMemory::file($pem)
         );
 
-        $now = new \DateTimeImmutable();
+        $now = new DateTimeImmutable();
         $jwt = $config->builder(ChainedFormatter::withUnixTimestampDates())
             ->issuedBy($integrationId)
             ->issuedAt($now)
@@ -141,16 +146,16 @@ class GitHub implements RepositoryInterface
             ->getToken($config->signer(), $config->signingKey())
         ;
 
-        $this->apiClient->authenticate($jwt->toString(), null, \Github\AuthMethod::JWT);
+        $this->apiClient->authenticate($jwt->toString(), null, AuthMethod::JWT);
 
         try {
             $token = $this->apiClient->api('apps')->createInstallationToken($this->installationId);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             \Log::error($e->getMessage());
             return false;
         }
         if ($token) {
-            $this->apiClient->authenticate($token['token'], null, \Github\AuthMethod::ACCESS_TOKEN);
+            $this->apiClient->authenticate($token['token'], null, AuthMethod::ACCESS_TOKEN);
         }
         return true;
     }
@@ -202,11 +207,11 @@ class GitHub implements RepositoryInterface
         $payload = $this->generateCheckPayloadFromBuildRows($build_rows, $head_sha);
 
         if (!$this->check) {
-            $this->check = new \Github\Api\Repository\Checks\CheckRuns($this->apiClient);
+            $this->check = new CheckRuns($this->apiClient);
         }
         try {
             $this->check->create($this->owner, $this->repo, $payload);
-        } catch (\Github\Exception\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             Log::warning("RunTimeException while trying to create the check.\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n");
         }
     }
@@ -214,6 +219,7 @@ class GitHub implements RepositoryInterface
     /**
      * Query the database for information needed to generate a check
      * for a commit.
+     *
      * @return array<int, array<string, int|string>>
      */
     public function getBuildRowsForCheck(string $head_sha): array
@@ -227,14 +233,16 @@ class GitHub implements RepositoryInterface
             LEFT JOIN buildproperties bp ON bp.buildid = b.id
             WHERE bu.revision = :sha');
         $this->db->execute($stmt, [':sha' => $head_sha]);
-        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $this->dedupeAndSortBuildRows($rows);
     }
 
     /**
      * Include only one row per build name: the one with the most recent start time.
      * Also sort the rows by the build name (in alphabetical order).
+     *
      * @param array<int, array<string, int|string>> $rows
+     *
      * @return array<int, array<string, int|string>>
      */
     public function dedupeAndSortBuildRows($rows)
@@ -294,7 +302,9 @@ class GitHub implements RepositoryInterface
 
     /**
      * Create a payload to make a check from an array of build data.
+     *
      * @param array<int, array<string, int|string>> $build_rows
+     *
      * @return array<string, array<string, string>|string>
      */
     public function generateCheckPayloadFromBuildRows($build_rows, string $head_sha): array
@@ -317,14 +327,14 @@ class GitHub implements RepositoryInterface
         // Initialize our payload with default values.
         $summary_url = "$this->baseUrl/index.php?project={$this->project->Name}&filtercount=1&showfilters=1&field1=revision&compare1=61&value1=$head_sha";
 
-        $datetime = new \DateTime();
-        $now = $datetime->format(\DateTime::ATOM);
+        $datetime = new DateTime();
+        $now = $datetime->format(DateTime::ATOM);
         $params = [
-            'name'        => 'CDash',
-            'head_sha'    => $head_sha,
+            'name' => 'CDash',
+            'head_sha' => $head_sha,
             'details_url' => $summary_url,
-            'started_at'  => $now,
-            'status'      => 'in_progress',
+            'started_at' => $now,
+            'status' => 'in_progress',
         ];
 
         // Populate payload with build results.
@@ -388,9 +398,10 @@ class GitHub implements RepositoryInterface
 
     /**
      * Generate a check summary for a given row of build data.
+     *
      * @param array<string, int|string> $row
      */
-    public function getCheckSummaryForBuildRow(array $row): string|null
+    public function getCheckSummaryForBuildRow(array $row): ?string
     {
         // Check properties to see if this build should be excluded
         // from the check.
@@ -507,9 +518,9 @@ class GitHub implements RepositoryInterface
         // To do anything meaningful here our response needs to tell us about commits
         // and the files that changed.  Abort early if either of these pieces of
         // information are missing.
-        if (!is_array($commits) ||
-                !array_key_exists('commits', $commits) ||
-                !array_key_exists('files', $commits)) {
+        if (!is_array($commits)
+                || !array_key_exists('commits', $commits)
+                || !array_key_exists('files', $commits)) {
             return false;
         }
 
@@ -589,8 +600,8 @@ class GitHub implements RepositoryInterface
                             ->commits()
                             ->show($this->owner, $this->repo, $sha);
 
-                        if (!is_array($commit_array) ||
-                                !array_key_exists('files', $commit_array)) {
+                        if (!is_array($commit_array)
+                                || !array_key_exists('files', $commit_array)) {
                             // Skip to the next commit if no list of files was returned.
                             $cached_commits[$sha] = [];
                             continue;

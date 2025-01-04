@@ -21,8 +21,6 @@ use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
 class AggregateCoverageTestCase extends KWWebTestCase
 {
     public function __construct()

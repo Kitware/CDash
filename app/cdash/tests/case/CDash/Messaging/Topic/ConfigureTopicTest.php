@@ -15,7 +15,6 @@
  * =========================================================================
  */
 
-
 use CDash\Collection\ConfigureCollection;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Topic\ConfigureTopic;
@@ -24,8 +23,9 @@ use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\Label;
 use CDash\Model\Subscriber;
+use CDash\Test\CDashTestCase;
 
-class ConfigureTopicTest extends \CDash\Test\CDashTestCase
+class ConfigureTopicTest extends CDashTestCase
 {
     /** @var Topic|PHPUnit_Framework_MockObject_MockObject */
     private $parent;

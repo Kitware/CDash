@@ -17,9 +17,9 @@
 
 namespace CDash\Model;
 
+use App\Models\BasicBuildAlert;
 use App\Utils\RepositoryUtils;
 use PDO;
-use App\Models\BasicBuildAlert;
 
 /** BuildError */
 class BuildError

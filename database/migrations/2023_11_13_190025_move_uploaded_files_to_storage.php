@@ -3,12 +3,13 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Storage;
 
-return new class () extends Migration {
+return new class extends Migration {
     /**
      * Run the migrations.
      *
-     * @throws UnexpectedValueException
      * @return void
+     *
+     * @throws UnexpectedValueException
      */
     public function up()
     {

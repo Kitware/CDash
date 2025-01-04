@@ -33,19 +33,17 @@ class SaveUser extends Command
 
     /**
      * Create or update a user.
-     *
-     * @return mixed
      */
     public function handle()
     {
         $email = $this->option('email');
         if (is_null($email)) {
-            $this->error("You must specify the --email option");
+            $this->error('You must specify the --email option');
             return;
         }
 
         // Are we creating a new user or updating an existing one?
-        $user = \App\Models\User::where('email', $email)->first();
+        $user = User::where('email', $email)->first();
         if ($user === null) {
             $user = new User();
             $user->email = $email;

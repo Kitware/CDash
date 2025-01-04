@@ -22,7 +22,6 @@ class CreateClientOsTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

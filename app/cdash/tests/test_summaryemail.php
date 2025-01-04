@@ -5,8 +5,6 @@ use CDash\Model\Project;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
 class SummaryEmailTestCase extends KWWebTestCase
 {
     public function __construct()
@@ -55,7 +53,7 @@ class SummaryEmailTestCase extends KWWebTestCase
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
             'Build Time: 2009-02-23 10:02:04',
-            "Type: Nightly",
+            'Type: Nightly',
             'Total Warnings: 3',
             '*Warnings*',
             '3>f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma',

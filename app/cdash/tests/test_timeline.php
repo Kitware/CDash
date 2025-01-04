@@ -6,10 +6,9 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
 use CDash\Database;
 use CDash\Model\Build;
+use GuzzleHttp\Exception\ClientException;
 
 class TimelineTestCase extends KWWebTestCase
 {
@@ -31,9 +30,9 @@ class TimelineTestCase extends KWWebTestCase
         ];
         try {
             $response = $client->request('POST',
-                $this->url .  '/api/v1/build.php',
+                $this->url . '/api/v1/build.php',
                 ['json' => $payload]);
-        } catch (GuzzleHttp\Exception\ClientException $e) {
+        } catch (ClientException $e) {
             $this->fail($e->getMessage());
         }
 
@@ -68,7 +67,7 @@ class TimelineTestCase extends KWWebTestCase
             }
         }
         if (is_null($build)) {
-            $this->fail("build lookup failed");
+            $this->fail('build lookup failed');
         }
 
         // Login as admin.
@@ -108,10 +107,10 @@ class TimelineTestCase extends KWWebTestCase
     private function validateExtent($start, $end, $jsonobj)
     {
         if ($jsonobj['extentstart'] != $start) {
-            $this->fail("Expected $start but found " . $jsonobj['extentstart'] . " for extentstart");
+            $this->fail("Expected $start but found " . $jsonobj['extentstart'] . ' for extentstart');
         }
         if ($jsonobj['extentend'] != $end) {
-            $this->fail("Expected $end but found " . $jsonobj['extentend'] . " for extentend");
+            $this->fail("Expected $end but found " . $jsonobj['extentend'] . ' for extentend');
         }
     }
 

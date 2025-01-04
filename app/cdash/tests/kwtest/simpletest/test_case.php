@@ -2,6 +2,7 @@
 
 /**
  *  Base include file for SimpleTest
+ *
  * @version    $Id$
  */
 
@@ -41,8 +42,9 @@ class SimpleTestCase
 
     /**
      *    Sets up the test with no display.
-     * @param string $label If no test name is given then
-     *                            the class name is used.
+     *
+     * @param string $label if no test name is given then
+     *                      the class name is used
      */
     public function __construct($label = false)
     {
@@ -53,7 +55,8 @@ class SimpleTestCase
 
     /**
      *    Accessor for the test name for subclasses.
-     * @return string           Name of the test.
+     *
+     * @return string name of the test
      */
     public function getLabel()
     {
@@ -72,8 +75,9 @@ class SimpleTestCase
     /**
      *    Will issue a message to the reporter and tell the test
      *    case to skip if the incoming flag is true.
-     * @param string $should_skip Condition causing the tests to be skipped.
-     * @param string $message Text of skip condition.
+     *
+     * @param string $should_skip condition causing the tests to be skipped
+     * @param string $message text of skip condition
      */
     public function skipIf($should_skip, $message = '%s')
     {
@@ -95,8 +99,9 @@ class SimpleTestCase
     /**
      *    Will issue a message to the reporter and tell the test
      *    case to skip if the incoming flag is false.
-     * @param string $shouldnt_skip Condition causing the tests to be run.
-     * @param string $message Text of skip condition.
+     *
+     * @param string $shouldnt_skip condition causing the tests to be run
+     * @param string $message text of skip condition
      */
     public function skipUnless($shouldnt_skip, $message = false)
     {
@@ -105,7 +110,8 @@ class SimpleTestCase
 
     /**
      *    Used to invoke the single tests.
-     * @return SimpleInvoker        Individual test runner.
+     *
+     * @return SimpleInvoker individual test runner
      */
     public function createInvoker()
     {
@@ -117,8 +123,10 @@ class SimpleTestCase
      *    Uses reflection to run every method within itself
      *    starting with the string "test" unless a method
      *    is specified.
-     * @param SimpleReporter $reporter Current test reporter.
-     * @return bool                    True if all tests passed.
+     *
+     * @param SimpleReporter $reporter current test reporter
+     *
+     * @return bool true if all tests passed
      */
     public function run($reporter)
     {
@@ -156,7 +164,8 @@ class SimpleTestCase
      *    be all internal methods that start with the
      *    name "test". This method should be overridden
      *    if you want a different rule.
-     * @return array        List of test names.
+     *
+     * @return array list of test names
      */
     public function getTests()
     {
@@ -173,8 +182,10 @@ class SimpleTestCase
      *    Tests to see if the method is a test that should
      *    be run. Currently any method that starts with 'test'
      *    is a candidate unless it is the constructor.
-     * @param string $method Method name to try.
-     * @return bool              True if test method.
+     *
+     * @param string $method method name to try
+     *
+     * @return bool true if test method
      */
     protected function isTest($method)
     {
@@ -186,7 +197,8 @@ class SimpleTestCase
 
     /**
      *    Announces the start of the test.
-     * @param string $method Test method just started.
+     *
+     * @param string $method test method just started
      */
     public function before($method)
     {
@@ -213,7 +225,8 @@ class SimpleTestCase
 
     /**
      *    Announces the end of the test. Includes private clean up.
-     * @param string $method Test method just finished.
+     *
+     * @param string $method test method just finished
      */
     public function after($method)
     {
@@ -225,8 +238,9 @@ class SimpleTestCase
 
     /**
      *    Sets up an observer for the test end.
-     * @param object $observer Must have atTestEnd()
-     *                               method.
+     *
+     * @param object $observer must have atTestEnd()
+     *                         method
      */
     public function tell($observer)
     {
@@ -248,7 +262,8 @@ class SimpleTestCase
 
     /**
      *    Sends a fail event with a message.
-     * @param string $message Message to send.
+     *
+     * @param string $message message to send
      */
     public function fail($message = 'Fail')
     {
@@ -263,10 +278,11 @@ class SimpleTestCase
     /**
      *    Formats a PHP error and dispatches it to the
      *    reporter.
-     * @param int $severity PHP error code.
-     * @param string $message Text of error.
-     * @param string $file File error occoured in.
-     * @param int $line Line number of error.
+     *
+     * @param int $severity PHP error code
+     * @param string $message text of error
+     * @param string $file file error occoured in
+     * @param int $line line number of error
      */
     public function error($severity, $message, $file, $line)
     {
@@ -280,7 +296,8 @@ class SimpleTestCase
     /**
      *    Formats an exception and dispatches it to the
      *    reporter.
-     * @param Exception $exception Object thrown.
+     *
+     * @param Exception $exception object thrown
      */
     public function exception($exception)
     {
@@ -289,8 +306,9 @@ class SimpleTestCase
 
     /**
      *    For user defined expansion of the available messages.
-     * @param string $type Tag for sorting the signals.
-     * @param mixed $payload Extra user specific information.
+     *
+     * @param string $type tag for sorting the signals
+     * @param mixed $payload extra user specific information
      */
     public function signal($type, $payload)
     {
@@ -303,10 +321,12 @@ class SimpleTestCase
     /**
      *    Runs an expectation directly, for extending the
      *    tests with new expectation classes.
-     * @param SimpleExpectation $expectation Expectation subclass.
-     * @param mixed $compare Value to compare.
-     * @param string $message Message to display.
-     * @return bool                        True on pass
+     *
+     * @param SimpleExpectation $expectation expectation subclass
+     * @param mixed $compare value to compare
+     * @param string $message message to display
+     *
+     * @return bool True on pass
      */
     public function assert($expectation, $compare, $message = '%s')
     {
@@ -323,8 +343,9 @@ class SimpleTestCase
 
     /**
      *    Uses a stack trace to find the line of an assertion.
-     * @return string           Line number of first assert*
-     *                             method embedded in format string.
+     *
+     * @return string line number of first assert*
+     *                method embedded in format string
      */
     public function getAssertionLine()
     {
@@ -336,9 +357,11 @@ class SimpleTestCase
      *    Sends a formatted dump of a variable to the
      *    test suite for those emergency debugging
      *    situations.
-     * @param mixed $variable Variable to display.
-     * @param string $message Message to display.
-     * @return mixed             The original variable.
+     *
+     * @param mixed $variable variable to display
+     * @param string $message message to display
+     *
+     * @return mixed the original variable
      */
     public function dump($variable, $message = false)
     {
@@ -353,7 +376,8 @@ class SimpleTestCase
 
     /**
      *    Accessor for the number of subtests including myelf.
-     * @return int           Number of test cases.
+     *
+     * @return int number of test cases
      */
     public function getSize()
     {
@@ -369,9 +393,11 @@ class SimpleFileLoader
     /**
      *    Builds a test suite from a library of test cases.
      *    The new suite is composed into this one.
-     * @param string $test_file File name of library with
-     *                                    test case classes.
-     * @return TestSuite               The new test suite.
+     *
+     * @param string $test_file file name of library with
+     *                          test case classes
+     *
+     * @return TestSuite the new test suite
      */
     public function load($test_file)
     {
@@ -390,8 +416,9 @@ class SimpleFileLoader
 
     /**
      *    Imports new variables into the global namespace.
-     * @param hash $existing Variables before the file was loaded.
-     * @param hash $new Variables after the file was loaded.
+     *
+     * @param hash $existing variables before the file was loaded
+     * @param hash $new variables after the file was loaded
      */
     protected function makeFileVariablesGlobal($existing, $new)
     {
@@ -408,7 +435,8 @@ class SimpleFileLoader
      *    out after a failed test case is going to be tricky for us,
      *    never mind the user. A test case should not be included
      *    twice anyway.
-     * @param string $test_file File name with classes.
+     *
+     * @param string $test_file file name with classes
      */
     protected function scrapeClassesFromFile($test_file)
     {
@@ -421,9 +449,11 @@ class SimpleFileLoader
     /**
      *    Calculates the incoming test cases. Skips abstract
      *    and ignored classes.
-     * @param array $candidates Candidate classes.
-     * @return array              New classes which are test
-     *                               cases that shouldn't be ignored.
+     *
+     * @param array $candidates candidate classes
+     *
+     * @return array new classes which are test
+     *               cases that shouldn't be ignored
      */
     public function selectRunnableTests($candidates)
     {
@@ -443,10 +473,12 @@ class SimpleFileLoader
 
     /**
      *    Builds a test suite from a class list.
-     * @param string $title Title of new group.
-     * @param array $classes Test classes.
-     * @return TestSuite          Group loaded with the new
-     *                               test cases.
+     *
+     * @param string $title title of new group
+     * @param array $classes test classes
+     *
+     * @return TestSuite group loaded with the new
+     *                   test cases
      */
     public function createSuiteFromClasses($title, $classes)
     {
@@ -477,8 +509,9 @@ class TestSuite
 
     /**
      *    Sets the name of the test suite.
-     * @param string $label Name sent at the start and end
-     *                            of the test.
+     *
+     * @param string $label name sent at the start and end
+     *                      of the test
      */
     public function __construct($label = false)
     {
@@ -489,7 +522,8 @@ class TestSuite
     /**
      *    Accessor for the test name for subclasses. If the suite
      *    wraps a single test case the label defaults to the name of that test.
-     * @return string           Name of the test.
+     *
+     * @return string name of the test
      */
     public function getLabel()
     {
@@ -504,9 +538,10 @@ class TestSuite
     /**
      *    Adds a test into the suite by instance or class. The class will
      *    be instantiated if it's a test suite.
-     * @param SimpleTestCase $test_case Suite or individual test
-     *                                      case implementing the
-     *                                      runnable test interface.
+     *
+     * @param SimpleTestCase $test_case suite or individual test
+     *                                  case implementing the
+     *                                  runnable test interface
      */
     public function add($test_case)
     {
@@ -522,8 +557,9 @@ class TestSuite
     /**
      *    Builds a test suite from a library of test cases.
      *    The new suite is composed into this one.
-     * @param string $test_file File name of library with
-     *                                    test case classes.
+     *
+     * @param string $test_file file name of library with
+     *                          test case classes
      */
     public function addFile($test_file)
     {
@@ -534,8 +570,9 @@ class TestSuite
     /**
      *    Delegates to a visiting collector to add test
      *    files.
-     * @param string $path Path to scan from.
-     * @param SimpleCollector $collector Directory scanner.
+     *
+     * @param string $path path to scan from
+     * @param SimpleCollector $collector directory scanner
      */
     public function collect($path, $collector)
     {
@@ -545,7 +582,8 @@ class TestSuite
     /**
      *    Invokes run() on all of the held test cases, instantiating
      *    them if necessary.
-     * @param SimpleReporter $reporter Current test reporter.
+     *
+     * @param SimpleReporter $reporter current test reporter
      */
     public function run($reporter)
     {
@@ -566,7 +604,8 @@ class TestSuite
 
     /**
      *    Number of contained test cases.
-     * @return int     Total count of cases in the group.
+     *
+     * @return int total count of cases in the group
      */
     public function getSize()
     {
@@ -586,7 +625,8 @@ class TestSuite
     /**
      *    Test to see if a class is derived from the
      *    SimpleTestCase class.
-     * @param string $class Class name.
+     *
+     * @param string $class class name
      */
     public static function getBaseTestCase($class)
     {
@@ -611,8 +651,9 @@ class BadTestSuite
 
     /**
      *    Sets the name of the test suite and error message.
-     * @param string $label Name sent at the start and end
-     *                            of the test.
+     *
+     * @param string $label name sent at the start and end
+     *                      of the test
      */
     public function __construct($label, $error)
     {
@@ -622,7 +663,8 @@ class BadTestSuite
 
     /**
      *    Accessor for the test name for subclasses.
-     * @return string           Name of the test.
+     *
+     * @return string name of the test
      */
     public function getLabel()
     {
@@ -631,7 +673,8 @@ class BadTestSuite
 
     /**
      *    Sends a single error to the reporter.
-     * @param SimpleReporter $reporter Current test reporter.
+     *
+     * @param SimpleReporter $reporter current test reporter
      */
     public function run($reporter)
     {
@@ -644,7 +687,8 @@ class BadTestSuite
 
     /**
      *    Number of contained test cases. Always zero.
-     * @return int     Total count of cases in the group.
+     *
+     * @return int total count of cases in the group
      */
     public function getSize()
     {

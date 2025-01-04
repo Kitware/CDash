@@ -148,10 +148,10 @@ class JavaJSONTarHandler extends AbstractSubmissionHandler
         $jsonDecoded = json_decode($jsonContents, true);
 
         // Make sure it has the fields we expect.
-        if (is_null($jsonDecoded) ||
-            !array_key_exists('file', $jsonDecoded) ||
-            !array_key_exists('package', $jsonDecoded) ||
-            !array_key_exists('lines', $jsonDecoded)
+        if (is_null($jsonDecoded)
+            || !array_key_exists('file', $jsonDecoded)
+            || !array_key_exists('package', $jsonDecoded)
+            || !array_key_exists('lines', $jsonDecoded)
         ) {
             return;
         }
@@ -179,22 +179,22 @@ class JavaJSONTarHandler extends AbstractSubmissionHandler
 
             if ($timesHit == '-1') {
                 // Uncoverable code
-                $lineNumber += 1;
+                $lineNumber++;
                 continue;
             }
 
             // This is how gcov indicates an uncovered line.
             if ($timesHit === '0') {
                 $timesHit = 0;
-                $coverage->LocUntested += 1;
+                $coverage->LocUntested++;
             } else {
                 $timesHit = 1;
                 $coverage->Covered = 1;
-                $coverage->LocTested += 1;
+                $coverage->LocTested++;
             }
 
             $coverageFileLog->AddLine($lineNumber, $timesHit);
-            $lineNumber += 1;
+            $lineNumber++;
         }
 
         // Save these models to the database.

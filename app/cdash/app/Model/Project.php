@@ -17,12 +17,16 @@
 
 namespace CDash\Model;
 
+use App\Models\Project as EloquentProject;
+use App\Models\SubProject;
+use App\Utils\DatabaseCleanupUtils;
 use CDash\Collection\SubscriberCollection;
 use CDash\Database;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Preferences\NotificationPreferences;
 use CDash\ServiceContainer;
+use DateInterval;
 use DateTime;
 use DateTimeZone;
 use Exception;
@@ -31,9 +35,10 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\Project as EloquentProject;
-use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\Mail;
+use PDO;
+use ReflectionObject;
+use ReflectionProperty;
 use RuntimeException;
 
 /** Main project class */
@@ -87,7 +92,7 @@ class Project
     public $WarningsFilter;
     public $ErrorsFilter;
     public ?string $LdapFilter = null;
-    /** @var Database $PDO */
+    /** @var Database */
     private $PDO;
 
     /**
@@ -293,8 +298,8 @@ class Project
         $this->Id = $project->id;
 
         $buildErrorFilter = new BuildErrorFilter($this);
-        if ($buildErrorFilter->GetErrorsFilter() != $this->ErrorsFilter ||
-            $buildErrorFilter->GetWarningsFilter() != $this->WarningsFilter) {
+        if ($buildErrorFilter->GetErrorsFilter() != $this->ErrorsFilter
+            || $buildErrorFilter->GetWarningsFilter() != $this->WarningsFilter) {
             return $buildErrorFilter->AddOrUpdateFilters($this->WarningsFilter, $this->ErrorsFilter);
         }
         return true;
@@ -549,7 +554,7 @@ class Project
     /**
      * Get the subproject ids
      *
-     * @return Collection<int, \App\Models\SubProject>
+     * @return Collection<int, SubProject>
      */
     public function GetSubProjects(): Collection
     {
@@ -872,17 +877,17 @@ class Project
                               AND build.starttime>?
                       )
                   ", [
-                      intval($this->Id),
-                      $today,
-                      intval($this->Id),
-                      $today,
-                      intval($this->Id),
-                      $today,
-                      intval($this->Id),
-                      $today,
-                      intval($this->Id),
-                      $today,
-                  ]);
+            intval($this->Id),
+            $today,
+            intval($this->Id),
+            $today,
+            intval($this->Id),
+            $today,
+            intval($this->Id),
+            $today,
+            intval($this->Id),
+            $today,
+        ]);
 
         $labelids = [];
         foreach ($labels as $label_array) {
@@ -906,7 +911,7 @@ class Project
             return true;
         }
 
-        $project = \App\Models\Project::findOrFail((int) $this->Id);
+        $project = EloquentProject::findOrFail((int) $this->Id);
         $recipients = $project->administrators()->get()->pluck('email')->toArray();
 
         if (count($recipients) > 0) {
@@ -1035,8 +1040,8 @@ class Project
     public function ConvertToJSON(): array
     {
         $response = [];
-        $clone = new \ReflectionObject($this);
-        $properties = $clone->getProperties(\ReflectionProperty::IS_PUBLIC);
+        $clone = new ReflectionObject($this);
+        $properties = $clone->getProperties(ReflectionProperty::IS_PUBLIC);
         foreach ($properties as $property) {
             $k = $property->getName();
             $v = $this->$k;
@@ -1110,7 +1115,7 @@ class Project
         // Add administrator to the project.
         $UserProject = new UserProject();
         $UserProject->Role = 2;
-        $UserProject->EmailType = 3;// receive all emails
+        $UserProject->EmailType = 3; // receive all emails
         $UserProject->ProjectId = $this->Id;
         $UserProject->UserId = 1; // administrator
         $UserProject->Save();
@@ -1154,7 +1159,7 @@ class Project
             return false;
         }
 
-        $project = \App\Models\Project::findOrFail((int) $this->Id);
+        $project = EloquentProject::findOrFail((int) $this->Id);
         $num_builds = $project->builds()->count();
 
         // The +1 here is to account for the build we're currently inserting.
@@ -1200,7 +1205,7 @@ class Project
         $service = ServiceContainer::getInstance()->getContainer();
         $collection = $service->make(SubscriberCollection::class);
         // TODO: works, but maybe find a better query
-        $sql = "
+        $sql = '
             SELECT
                u2p.*,
                u.email email,
@@ -1210,13 +1215,13 @@ class Project
               LEFT JOIN labelemail ON labelemail.userid = u2p.userid
             WHERE u2p.projectid = :id
             ORDER BY u.email;
-        ";
+        ';
 
         $user = $this->PDO->prepare($sql);
-        $user->bindParam(':id', $this->Id, \PDO::PARAM_INT);
+        $user->bindParam(':id', $this->Id, PDO::PARAM_INT);
         $user->execute();
 
-        foreach ($user->fetchAll(\PDO::FETCH_OBJ) as $row) {
+        foreach ($user->fetchAll(PDO::FETCH_OBJ) as $row) {
             /** @var NotificationPreferences $preferences */
             $preferences = $service->make(
                 BitmaskNotificationPreferences::class,
@@ -1229,7 +1234,7 @@ class Project
             $preferences->set(NotifyOn::FIXED, $row->emailsuccess);
             $preferences->set(NotifyOn::SITE_MISSING, $row->emailmissingsites);
             $preferences->set(NotifyOn::REDUNDANT, $this->EmailRedundantFailures);
-            $preferences->set(NotifyOn::LABELED, (bool)$row->haslabels);
+            $preferences->set(NotifyOn::LABELED, (bool) $row->haslabels);
 
             /** @var Subscriber $subscriber */
             $subscriber = $service->make(Subscriber::class, ['preferences' => $preferences]);
@@ -1253,9 +1258,9 @@ class Project
     {
         [$unused, $beginning_timestamp] = get_dates($date, $this->NightlyTime);
 
-        $datetime = new \DateTime();
+        $datetime = new DateTime();
         $datetime->setTimeStamp($beginning_timestamp);
-        $datetime->add(new \DateInterval('P1D'));
+        $datetime->add(new DateInterval('P1D'));
         $end_timestamp = $datetime->getTimestamp();
 
         $beginningOfDay = gmdate(FMT_DATETIME, $beginning_timestamp);

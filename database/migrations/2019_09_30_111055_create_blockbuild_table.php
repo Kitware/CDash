@@ -23,7 +23,6 @@ class CreateBlockbuildTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

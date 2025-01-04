@@ -24,7 +24,6 @@ class CreateBuildfailureTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

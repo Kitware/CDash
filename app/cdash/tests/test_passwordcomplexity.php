@@ -1,5 +1,7 @@
 <?php
 
+use App\Validators\Password;
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -24,7 +26,7 @@ class PasswordComplexityTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->validator = new \App\Validators\Password();
+        $this->validator = new Password();
     }
 
     public function testPasswordComplexity()

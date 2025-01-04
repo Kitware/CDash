@@ -17,13 +17,14 @@
 
 namespace CDash\Controller\Api;
 
+use CDash\Controller\Api;
 use CDash\Database;
 use CDash\Model\Project;
 
 /**
  * Parent class for all API controllers that deal with a particular project.
  **/
-abstract class ProjectApi extends \CDash\Controller\Api
+abstract class ProjectApi extends Api
 {
     protected $project;
 

@@ -319,7 +319,7 @@ class CoverageSummary
             if (CoverageSummaryDiff::where(['buildid' => $this->BuildId])->exists() || $loctesteddiff !== 0 || $locuntesteddiff !== 0) {
                 CoverageSummaryDiff::updateOrCreate([
                     'buildid' => $this->BuildId,
-                    ], [
+                ], [
                     'loctested' => $loctesteddiff,
                     'locuntested' => $locuntesteddiff,
                 ]);

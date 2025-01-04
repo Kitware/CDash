@@ -1,6 +1,7 @@
 <?php
 
 use CDash\Database;
+use CDash\Singleton;
 use CDash\Test\CDashTestCase;
 
 class DatabaseTest extends CDashTestCase
@@ -26,7 +27,7 @@ class DatabaseTest extends CDashTestCase
         $db1 = Database::getInstance();
         $this->assertInstanceOf(Database::class, $db1);
 
-        $reflection = new ReflectionClass(\CDash\Singleton::class);
+        $reflection = new ReflectionClass(Singleton::class);
         $property = $reflection->getProperty('_instances');
         $property->setAccessible(true);
         $instances = $property->getValue();

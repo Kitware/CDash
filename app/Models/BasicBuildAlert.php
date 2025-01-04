@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $postcontext
  * @property int $repeatcount
  * @property int $crc32
- * @property boolean $newstatus
+ * @property bool $newstatus
  *
  * @mixin Builder<BasicBuildAlert>
  */

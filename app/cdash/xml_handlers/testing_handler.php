@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Site;
+use App\Models\SiteInformation;
 use App\Models\TestMeasurement;
 use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
@@ -15,8 +17,6 @@ use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Image;
 use CDash\Model\Label;
-use App\Models\Site;
-use App\Models\SiteInformation;
 use CDash\Model\Project;
 use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
@@ -81,11 +81,11 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
 
             $siteInformation = new SiteInformation();
             $this->BuildInformation = [];
-            $this->BuildName = "";
-            $this->BuildStamp = "";
-            $this->SubProjectName = "";
-            $this->Generator = "";
-            $this->PullRequest = "";
+            $this->BuildName = '';
+            $this->BuildStamp = '';
+            $this->SubProjectName = '';
+            $this->Generator = '';
+            $this->PullRequest = '';
 
             // Fill in the attribute
             foreach ($attributes as $key => $value) {
@@ -299,7 +299,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         } elseif ($parent == 'MEASUREMENT' && $element == 'VALUE') {
             $this->TestCreator->testOutput .= $data;
         } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
-            $this->SubProjects[$this->SubProjectName][] =  $data;
+            $this->SubProjects[$this->SubProjectName][] = $data;
         } elseif ($parent == 'LABELS' && $element == 'LABEL') {
             // Check if this label belongs to a SubProject.
             foreach ($this->SubProjects as $subproject => $labels) {

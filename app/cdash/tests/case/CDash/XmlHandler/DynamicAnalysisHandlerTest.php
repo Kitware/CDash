@@ -22,7 +22,6 @@ use Tests\TestCase;
  *   PURPOSE. See the above copyright notices for more information.
  * =========================================================================
  */
-
 class DynamicAnalysisHandlerTest extends TestCase
 {
     public function testGetBuildTopic()

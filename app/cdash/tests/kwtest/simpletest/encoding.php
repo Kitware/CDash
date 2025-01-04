@@ -2,6 +2,7 @@
 
 /**
  *  base include file for SimpleTest
+ *
  * @version    $Id$
  */
 
@@ -21,8 +22,9 @@ class SimpleEncodedPair
 
     /**
      *    Stashes the data for rendering later.
-     * @param string $key Form element name.
-     * @param string $value Data to send.
+     *
+     * @param string $key form element name
+     * @param string $value data to send
      */
     public function __construct($key, $value)
     {
@@ -32,7 +34,8 @@ class SimpleEncodedPair
 
     /**
      *    The pair as a single string.
-     * @return string        Encoded pair.
+     *
+     * @return string encoded pair
      */
     public function asRequest()
     {
@@ -41,7 +44,8 @@ class SimpleEncodedPair
 
     /**
      *    The MIME part as a string.
-     * @return string        MIME part encoding.
+     *
+     * @return string MIME part encoding
      */
     public function asMime()
     {
@@ -53,8 +57,10 @@ class SimpleEncodedPair
 
     /**
      *    Is this the value we are looking for?
-     * @param string $key Identifier.
-     * @return bool       True if matched.
+     *
+     * @param string $key identifier
+     *
+     * @return bool true if matched
      */
     public function isKey($key)
     {
@@ -63,7 +69,8 @@ class SimpleEncodedPair
 
     /**
      *    Is this the value we are looking for?
-     * @return string       Identifier.
+     *
+     * @return string identifier
      */
     public function getKey()
     {
@@ -72,7 +79,8 @@ class SimpleEncodedPair
 
     /**
      *    Is this the value we are looking for?
-     * @return string       Content.
+     *
+     * @return string content
      */
     public function getValue()
     {
@@ -91,9 +99,10 @@ class SimpleAttachment
 
     /**
      *    Stashes the data for rendering later.
-     * @param string $key Key to add value to.
-     * @param string $content Raw data.
-     * @param hash $filename Original filename.
+     *
+     * @param string $key key to add value to
+     * @param string $content raw data
+     * @param hash $filename original filename
      */
     public function __construct($key, $content, $filename)
     {
@@ -104,7 +113,8 @@ class SimpleAttachment
 
     /**
      *    The pair as a single string.
-     * @return string        Encoded pair.
+     *
+     * @return string encoded pair
      */
     public function asRequest()
     {
@@ -113,7 +123,8 @@ class SimpleAttachment
 
     /**
      *    The MIME part as a string.
-     * @return string        MIME part encoding.
+     *
+     * @return string MIME part encoding
      */
     public function asMime()
     {
@@ -128,7 +139,8 @@ class SimpleAttachment
     /**
      *    Attempts to figure out the MIME type from the
      *    file extension and the content.
-     * @return string        MIME type.
+     *
+     * @return string MIME type
      */
     protected function deduceMimeType()
     {
@@ -140,7 +152,8 @@ class SimpleAttachment
 
     /**
      *    Tests each character is in the range 0-127.
-     * @param string $ascii String to test.
+     *
+     * @param string $ascii string to test
      */
     protected function isOnlyAscii($ascii)
     {
@@ -154,8 +167,10 @@ class SimpleAttachment
 
     /**
      *    Is this the value we are looking for?
-     * @param string $key Identifier.
-     * @return bool       True if matched.
+     *
+     * @param string $key identifier
+     *
+     * @return bool true if matched
      */
     public function isKey($key)
     {
@@ -164,7 +179,8 @@ class SimpleAttachment
 
     /**
      *    Is this the value we are looking for?
-     * @return string       Identifier.
+     *
+     * @return string identifier
      */
     public function getKey()
     {
@@ -173,7 +189,8 @@ class SimpleAttachment
 
     /**
      *    Is this the value we are looking for?
-     * @return string       Content.
+     *
+     * @return string content
      */
     public function getValue()
     {
@@ -191,9 +208,10 @@ class SimpleEncoding
 
     /**
      *    Starts empty.
+     *
      * @param array $query Hash of parameters.
-     *                              Multiple values are
-     *                              as lists on a single key.
+     *                     Multiple values are
+     *                     as lists on a single key.
      */
     public function __construct($query = false)
     {
@@ -214,8 +232,9 @@ class SimpleEncoding
 
     /**
      *    Adds a parameter to the query.
-     * @param string $key Key to add value to.
-     * @param string /array $value    New data.
+     *
+     * @param string $key key to add value to
+     * @param string /array $value    New data
      */
     public function add($key, $value)
     {
@@ -233,8 +252,9 @@ class SimpleEncoding
 
     /**
      *    Adds a new value into the request.
-     * @param string $key Key to add value to.
-     * @param string /array $value    New data.
+     *
+     * @param string $key key to add value to
+     * @param string /array $value    New data
      */
     protected function addPair($key, $value)
     {
@@ -244,9 +264,10 @@ class SimpleEncoding
     /**
      *    Adds a MIME part to the query. Does nothing for a
      *    form encoded packet.
-     * @param string $key Key to add value to.
-     * @param string $content Raw data.
-     * @param hash $filename Original filename.
+     *
+     * @param string $key key to add value to
+     * @param string $content raw data
+     * @param hash $filename original filename
      */
     public function attach($key, $content, $filename)
     {
@@ -255,8 +276,9 @@ class SimpleEncoding
 
     /**
      *    Adds a set of parameters to this query.
+     *
      * @param array /SimpleQueryString $query  Multiple values are
-     *                                           as lists on a single key.
+     *                                           as lists on a single key
      */
     public function merge($query)
     {
@@ -271,9 +293,10 @@ class SimpleEncoding
 
     /**
      *    Accessor for single value.
+     *
      * @return string/array    False if missing, string
      *                            if present and array if
-     *                            multiple entries.
+     *                            multiple entries
      */
     public function getValue($key)
     {
@@ -294,7 +317,8 @@ class SimpleEncoding
 
     /**
      *    Accessor for listing of pairs.
-     * @return array        All pair objects.
+     *
+     * @return array all pair objects
      */
     public function getAll()
     {
@@ -304,7 +328,8 @@ class SimpleEncoding
     /**
      *    Renders the query string as a URL encoded
      *    request part.
-     * @return string        Part of URL.
+     *
+     * @return string part of URL
      */
     protected function encode()
     {
@@ -326,9 +351,10 @@ class SimpleGetEncoding extends SimpleEncoding
 {
     /**
      *    Starts empty.
+     *
      * @param array $query Hash of parameters.
-     *                              Multiple values are
-     *                              as lists on a single key.
+     *                     Multiple values are
+     *                     as lists on a single key.
      */
     public function __construct($query = false)
     {
@@ -337,7 +363,8 @@ class SimpleGetEncoding extends SimpleEncoding
 
     /**
      *    HTTP request method.
-     * @return string        Always GET.
+     *
+     * @return string always GET
      */
     public function getMethod()
     {
@@ -346,7 +373,8 @@ class SimpleGetEncoding extends SimpleEncoding
 
     /**
      *    Writes no extra headers.
-     * @param SimpleSocket $socket Socket to write to.
+     *
+     * @param SimpleSocket $socket socket to write to
      */
     public function writeHeadersTo(&$socket)
     {
@@ -355,7 +383,8 @@ class SimpleGetEncoding extends SimpleEncoding
     /**
      *    No data is sent to the socket as the data is encoded into
      *    the URL.
-     * @param SimpleSocket $socket Socket to write to.
+     *
+     * @param SimpleSocket $socket socket to write to
      */
     public function writeTo(&$socket)
     {
@@ -364,7 +393,8 @@ class SimpleGetEncoding extends SimpleEncoding
     /**
      *    Renders the query string as a URL encoded
      *    request part for attaching to a URL.
-     * @return string        Part of URL.
+     *
+     * @return string part of URL
      */
     public function asUrlRequest()
     {
@@ -379,9 +409,10 @@ class SimpleHeadEncoding extends SimpleGetEncoding
 {
     /**
      *    Starts empty.
+     *
      * @param array $query Hash of parameters.
-     *                              Multiple values are
-     *                              as lists on a single key.
+     *                     Multiple values are
+     *                     as lists on a single key.
      */
     public function __construct($query = false)
     {
@@ -390,7 +421,8 @@ class SimpleHeadEncoding extends SimpleGetEncoding
 
     /**
      *    HTTP request method.
-     * @return string        Always HEAD.
+     *
+     * @return string always HEAD
      */
     public function getMethod()
     {
@@ -405,9 +437,10 @@ class SimpleDeleteEncoding extends SimpleGetEncoding
 {
     /**
      *    Starts empty.
+     *
      * @param array $query Hash of parameters.
-     *                              Multiple values are
-     *                              as lists on a single key.
+     *                     Multiple values are
+     *                     as lists on a single key.
      */
     public function __construct($query = false)
     {
@@ -416,7 +449,8 @@ class SimpleDeleteEncoding extends SimpleGetEncoding
 
     /**
      *    HTTP request method.
-     * @return string        Always DELETE.
+     *
+     * @return string always DELETE
      */
     public function getMethod()
     {
@@ -446,6 +480,7 @@ class SimpleEntityEncoding extends SimpleEncoding
 
     /**
      *    Returns the media type of the entity body
+     *
      * @return string
      */
     public function getContentType()
@@ -458,17 +493,19 @@ class SimpleEntityEncoding extends SimpleEncoding
 
     /**
      *    Dispatches the form headers down the socket.
-     * @param SimpleSocket $socket Socket to write to.
+     *
+     * @param SimpleSocket $socket socket to write to
      */
     public function writeHeadersTo(&$socket)
     {
-        $socket->write('Content-Length: ' . (int)strlen($this->encode()) . "\r\n");
+        $socket->write('Content-Length: ' . (int) strlen($this->encode()) . "\r\n");
         $socket->write('Content-Type: ' . $this->getContentType() . "\r\n");
     }
 
     /**
      *    Dispatches the form data down the socket.
-     * @param SimpleSocket $socket Socket to write to.
+     *
+     * @param SimpleSocket $socket socket to write to
      */
     public function writeTo(&$socket)
     {
@@ -477,6 +514,7 @@ class SimpleEntityEncoding extends SimpleEncoding
 
     /**
      *    Renders the request body
+     *
      * @return Encoded entity body
      */
     protected function encode()
@@ -493,9 +531,10 @@ class SimplePostEncoding extends SimpleEntityEncoding
 {
     /**
      *    Starts empty.
+     *
      * @param array $query Hash of parameters.
-     *                              Multiple values are
-     *                              as lists on a single key.
+     *                     Multiple values are
+     *                     as lists on a single key.
      */
     public function __construct($query = false, $content_type = false)
     {
@@ -535,7 +574,8 @@ class SimplePostEncoding extends SimpleEntityEncoding
 
     /**
      *    HTTP request method.
-     * @return string        Always POST.
+     *
+     * @return string always POST
      */
     public function getMethod()
     {
@@ -545,7 +585,8 @@ class SimplePostEncoding extends SimpleEntityEncoding
     /**
      *    Renders the query string as a URL encoded
      *    request part for attaching to a URL.
-     * @return string        Part of URL.
+     *
+     * @return string part of URL
      */
     public function asUrlRequest()
     {
@@ -560,9 +601,10 @@ class SimplePutEncoding extends SimpleEntityEncoding
 {
     /**
      *    Starts empty.
+     *
      * @param array $query Hash of parameters.
-     *                              Multiple values are
-     *                              as lists on a single key.
+     *                     Multiple values are
+     *                     as lists on a single key.
      */
     public function __construct($query = false, $content_type = false)
     {
@@ -571,7 +613,8 @@ class SimplePutEncoding extends SimpleEntityEncoding
 
     /**
      *    HTTP request method.
-     * @return string        Always PUT.
+     *
+     * @return string always PUT
      */
     public function getMethod()
     {
@@ -589,9 +632,10 @@ class SimpleMultipartEncoding extends SimplePostEncoding
 
     /**
      *    Starts empty.
+     *
      * @param array $query Hash of parameters.
-     *                              Multiple values are
-     *                              as lists on a single key.
+     *                     Multiple values are
+     *                     as lists on a single key.
      */
     public function __construct($query = false, $boundary = false)
     {
@@ -601,17 +645,19 @@ class SimpleMultipartEncoding extends SimplePostEncoding
 
     /**
      *    Dispatches the form headers down the socket.
-     * @param SimpleSocket $socket Socket to write to.
+     *
+     * @param SimpleSocket $socket socket to write to
      */
     public function writeHeadersTo(&$socket)
     {
-        $socket->write('Content-Length: ' . (int)strlen($this->encode()) . "\r\n");
+        $socket->write('Content-Length: ' . (int) strlen($this->encode()) . "\r\n");
         $socket->write('Content-Type: multipart/form-data; boundary=' . $this->boundary . "\r\n");
     }
 
     /**
      *    Dispatches the form data down the socket.
-     * @param SimpleSocket $socket Socket to write to.
+     *
+     * @param SimpleSocket $socket socket to write to
      */
     public function writeTo(&$socket)
     {
@@ -621,7 +667,8 @@ class SimpleMultipartEncoding extends SimplePostEncoding
     /**
      *    Renders the query string as a URL encoded
      *    request part.
-     * @return string        Part of URL.
+     *
+     * @return string part of URL
      */
     public function encode()
     {

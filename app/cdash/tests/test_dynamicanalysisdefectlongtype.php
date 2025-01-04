@@ -41,13 +41,13 @@ class DynamicAnalysisDefectLongTypeTestCase extends KWWebTestCase
         }
 
         // Verify type was properly recorded.
-        $results = DB::select("
+        $results = DB::select('
             SELECT dynamicanalysisdefect.type
             FROM dynamicanalysisdefect
             JOIN dynamicanalysis ON (dynamicanalysisdefect.dynamicanalysisid = dynamicanalysis.id)
             JOIN build on (dynamicanalysis.buildid = build.id)
             WHERE build.projectid = ?
-        ", [(int) $this->project->Id]);
+        ', [(int) $this->project->Id]);
         $this->assertTrue(1 === count($results));
         $expected = "member call on address 0x7f9ce2a84da8 which does not point to an object of type 'error_category'";
         $this->assertEqual($expected, $results[0]->type);

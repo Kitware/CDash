@@ -9,11 +9,14 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
+use LogicException;
 use Mockery;
+use Psr\SimpleCache\InvalidArgumentException;
 use Slides\Saml2\Events\SignedIn as Saml2SignedInEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
-use Laravel\Socialite\Facades\Socialite;
+use Throwable;
 
 class LoginAndRegistration extends TestCase
 {
@@ -30,11 +33,11 @@ class LoginAndRegistration extends TestCase
 
     protected function tearDown(): void
     {
-        /**
-          * The lack of a call to parent::tearDown() here is intentional.
-          * Otherwise tearDownAfterClass() fails with:
-          * "Target class [config] does not exist."
-          */
+        /*
+         * The lack of a call to parent::tearDown() here is intentional.
+         * Otherwise tearDownAfterClass() fails with:
+         * "Target class [config] does not exist."
+         */
     }
 
     public static function tearDownAfterClass(): void
@@ -189,8 +192,9 @@ class LoginAndRegistration extends TestCase
 
     /**
      * Test SAML2 authentication
-     * @throws \LogicException
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     *
+     * @throws LogicException
+     * @throws InvalidArgumentException
      * @throws HttpException
      */
     public function testSaml2LoginListener(): void
@@ -215,7 +219,7 @@ class LoginAndRegistration extends TestCase
         Cache::put('saml-message-id-12345', true, 5);
         try {
             $sut->handle($event);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
         self::assertEquals(new HttpException(400, 'Invalid SAML2 message ID'), $e);
         Cache::delete('saml-message-id-12345');
@@ -224,7 +228,7 @@ class LoginAndRegistration extends TestCase
         config(['saml2.autoregister_new_users' => false]);
         try {
             $sut->handle($event);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
         self::assertEquals(new HttpException(401), $e);
         Cache::delete('saml-message-id-12345');
@@ -286,8 +290,8 @@ class LoginAndRegistration extends TestCase
 
         Socialite::shouldReceive('driver')->with('pingidentity')->andReturn($provider);
 
-        $response = $this->get("auth/pingidentity/callback");
-        $response->assertRedirect("/register?fname=Arlette&lname=Laguiller&email=cdash%40test.com");
+        $response = $this->get('auth/pingidentity/callback');
+        $response->assertRedirect('/register?fname=Arlette&lname=Laguiller&email=cdash%40test.com');
     }
 
     public function testNoFullNamePingIdentityProvider(): void
@@ -310,10 +314,9 @@ class LoginAndRegistration extends TestCase
 
         Socialite::shouldReceive('driver')->with('pingidentity')->andReturn($provider);
 
-        $response = $this->get("auth/pingidentity/callback");
-        $response->assertRedirect("/register?fname=Pseudo&lname=&email=cdash%40test.com");
+        $response = $this->get('auth/pingidentity/callback');
+        $response->assertRedirect('/register?fname=Pseudo&lname=&email=cdash%40test.com');
     }
-
 
     public function testRegisterUserWhenDisabled(): void
     {

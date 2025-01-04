@@ -39,8 +39,8 @@ class DoneHandler extends AbstractXmlHandler
     public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
-        if ($name == 'DONE' && array_key_exists('RETRIES', $attributes) &&
-                $attributes['RETRIES'] > 4) {
+        if ($name == 'DONE' && array_key_exists('RETRIES', $attributes)
+                && $attributes['RETRIES'] > 4) {
             // Too many retries, stop trying to parse this file.
             $this->FinalAttempt = true;
         }

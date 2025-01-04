@@ -2,30 +2,30 @@
 
 namespace CDash\Messaging\Subscription;
 
+use App\Models\Site;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
-use App\Models\Site;
 use CDash\Model\SubscriberInterface;
 
 class Subscription implements SubscriptionInterface
 {
     protected static $max_display_items = 5;
 
-    /** @var  SubscriberInterface $subscriber */
+    /** @var SubscriberInterface */
     private $subscriber;
 
-    /** @var  Project $project */
+    /** @var Project */
     private $project;
 
-    /** @var  array $summary */
+    /** @var array */
     private $summary;
 
-    /** @var  Site $site */
+    /** @var Site */
     private $site;
 
-    /** @var BuildGroup $buildGroup */
+    /** @var BuildGroup */
     private $buildGroup;
 
     public function getBuildGroup()
@@ -40,7 +40,6 @@ class Subscription implements SubscriptionInterface
     }
 
     /**
-     * @param SubscriberInterface $subscriber
      * @return Subscription
      */
     public function setSubscriber(SubscriberInterface $subscriber)
@@ -74,7 +73,6 @@ class Subscription implements SubscriptionInterface
     }
 
     /**
-     * @param Project $project
      * @return Subscription
      */
     public function setProject(Project $project)
@@ -102,9 +100,6 @@ class Subscription implements SubscriptionInterface
         return self::$max_display_items;
     }
 
-    /**
-     * @param $max_display_items
-     */
     public static function setMaxDisplayItems($max_display_items)
     {
         // $max_display_items must always have an integer value > zero
@@ -133,7 +128,7 @@ class Subscription implements SubscriptionInterface
 
     /**
      * @return string[]
-     * TODO: A summary should be a BuildSummary class, create one asap
+     *                  TODO: A summary should be a BuildSummary class, create one asap
      */
     public function getBuildSummary()
     {
@@ -144,7 +139,7 @@ class Subscription implements SubscriptionInterface
             $summary['topics'] = [];
             $summary['build_group'] = $this->buildGroup->GetName();
             $summary['project_name'] = $project->GetName();
-            $summary['project_url'] = url("/index.php") . "?project={$project->Name}";
+            $summary['project_url'] = url('/index.php') . "?project={$project->Name}";
             $summary['site_name'] = $this->site->name;
             $summary['build_name'] = '';
             $summary['build_subproject_names'] = [];
@@ -215,7 +210,7 @@ class Subscription implements SubscriptionInterface
         $templates = [];
         foreach ($this->subscriber->getTopics() as $topic) {
             // This seems like a good idea now but just wait.
-            $templates = array_merge($templates, (array)$topic->getTemplate());
+            $templates = array_merge($templates, (array) $topic->getTemplate());
         }
 
         return array_unique($templates);

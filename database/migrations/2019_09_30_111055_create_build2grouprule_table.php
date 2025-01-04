@@ -35,7 +35,6 @@ class CreateBuild2groupruleTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

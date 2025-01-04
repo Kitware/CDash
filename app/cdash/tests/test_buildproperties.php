@@ -2,14 +2,14 @@
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
 use App\Utils\TestCreator;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
 use CDash\Model\Project;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 class BuildPropertiesTestCase extends KWWebTestCase
 {
@@ -146,7 +146,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
 
     public function testComputeClassifiers()
     {
-        $this->get($this->url . "/api/v1/buildProperties.php?project=BuildPropertiesProject&begin=2017-05-26&end=2017-05-29");
+        $this->get($this->url . '/api/v1/buildProperties.php?project=BuildPropertiesProject&begin=2017-05-26&end=2017-05-29');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $builds = [];
@@ -205,7 +205,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
             'track' => 'Experimental',
             'type' => 'BuildPropertiesJSON',
             'datafilesmd5[0]=' => $md5];
-        $client = new GuzzleHttp\Client();
+        $client = new Client();
 
         try {
             $response = $client->request(
@@ -215,7 +215,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
                     'form_params' => $fields,
                 ]
             );
-        } catch (GuzzleHttp\Exception\ClientException $e) {
+        } catch (ClientException $e) {
             $this->fail("POST submit failed for $buildname");
         }
 

@@ -19,15 +19,12 @@ use Illuminate\Validation\Validator;
 
 /**
  * Class Password
- * @package App\Validators
  */
 class Password
 {
     /**
-     * @param $attribute
-     * @param $value
-     * @param $parameters
      * @param Validator $validator
+     *
      * @return bool
      */
     public function complexity($attribute, $value, $parameters, $validator)
@@ -41,11 +38,11 @@ class Password
         // parameter[1] is our count
         $args = [];
         if (isset($parameters[0]) && is_numeric($parameters[0])) {
-            $args['complexity'] = (int)$parameters[0];
+            $args['complexity'] = (int) $parameters[0];
         }
 
         if (isset($parameters[1]) && is_numeric($parameters[1])) {
-            $args['count'] = (int)$parameters[1];
+            $args['count'] = (int) $parameters[1];
         }
 
         $config = $this->getComplexityConfiguration($args);
@@ -66,8 +63,6 @@ class Password
     }
 
     /**
-     * @param $password
-     * @param $count
      * @return int
      */
     public function computeComplexity($password, $count)
@@ -115,8 +110,8 @@ class Password
         //              this message will read "... 1 of the following types: ..."
         //              Might be better just to say, "...password must be at least n
         //              characters long"
-        $tmpl = "Your :attribute must contain %s %s of the following types: "
-            . "uppercase, lowercase, numbers, and symbols";
+        $tmpl = 'Your :attribute must contain %s %s of the following types: '
+            . 'uppercase, lowercase, numbers, and symbols';
 
         $complexity = $config['complexity'];
         $quantifier = 'at least';
@@ -124,7 +119,7 @@ class Password
         // since the number of character classes is *not* bound to change this should
         // be okay to hardcode
         if ($complexity == 4) {
-            $complexity = "each";
+            $complexity = 'each';
             if (!($config['count'] > 1)) {
                 $quantifier = '';
             }
@@ -143,6 +138,7 @@ class Password
 
     /**
      * @param array $parameters
+     *
      * @return array
      */
     public function getComplexityConfiguration($parameters = [])

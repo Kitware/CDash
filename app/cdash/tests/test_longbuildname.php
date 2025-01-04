@@ -48,7 +48,7 @@ class LongBuildNameTestCase extends KWWebTestCase
         $this->assertTrue($this->checkLog($this->logfilename) !== false);
 
         // The build exists.
-        $results = DB::select("SELECT id FROM build WHERE projectid = ?", [(int) $this->project->Id]);
+        $results = DB::select('SELECT id FROM build WHERE projectid = ?', [(int) $this->project->Id]);
         $this->assertTrue(1 === count($results));
 
         // Its configure log was stored correctly.

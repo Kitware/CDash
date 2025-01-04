@@ -26,7 +26,6 @@ class CreateSubprojectgroupTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

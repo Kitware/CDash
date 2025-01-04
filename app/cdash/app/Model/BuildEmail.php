@@ -21,10 +21,10 @@ use CDash\Collection\BuildEmailCollection;
 use CDash\Database;
 use CDash\Messaging\Notification\Email\EmailMessage;
 use Illuminate\Support\Facades\Log;
+use PDO;
 
 /**
  * Class BuildEmail
- * @package CDash\Model
  */
 class BuildEmail
 {
@@ -44,7 +44,7 @@ class BuildEmail
     public static function SaveNotification(EmailMessage $message): void
     {
         $collection = $message->getBuildEmailCollection();
-        /** @var BuildEmail $email */
+        /* @var BuildEmail $email */
         foreach ($collection as $emails) {
             foreach ($emails as $email) {
                 $email->Save();
@@ -55,27 +55,25 @@ class BuildEmail
     /**
      * Returns a collection of emails sent given a build and category.
      *
-     * @param $buildId
-     * @param $category
      * @return BuildEmailCollection
      */
     public static function GetEmailSentForBuild($buildId)
     {
         $collection = new BuildEmailCollection();
-        $sql = "
+        $sql = '
             SELECT
                 buildemail.*,
                 u.email
             FROM buildemail
             JOIN users u ON u.id=buildemail.userid
-            WHERE buildemail.buildid=:b";
+            WHERE buildemail.buildid=:b';
 
         $db = Database::getInstance();
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':b', $buildId);
 
         if ($db->execute($stmt)) {
-            foreach ($stmt->fetchAll(\PDO::FETCH_OBJ) as $row) {
+            foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
                 $email = new BuildEmail();
                 $email
                     ->SetBuildId($buildId)
@@ -131,9 +129,6 @@ class BuildEmail
         return $db->execute($stmt);
     }
 
-    /**
-     * @return mixed
-     */
     public function GetEmail()
     {
         return $this->Email;
@@ -148,7 +143,6 @@ class BuildEmail
     }
 
     /**
-     * @param $email
      * @return $this
      */
     public function SetEmail($email)
@@ -158,7 +152,6 @@ class BuildEmail
     }
 
     /**
-     * @param $exists
      * @return $this
      */
     public function SetSent($exists)
@@ -168,7 +161,6 @@ class BuildEmail
     }
 
     /**
-     * @param $category
      * @return $this
      */
     public function SetCategory($category)
@@ -178,7 +170,6 @@ class BuildEmail
     }
 
     /**
-     * @param $userId
      * @return $this
      */
     public function SetUserId($userId)
@@ -188,7 +179,6 @@ class BuildEmail
     }
 
     /**
-     * @param $buildId
      * @return $this
      */
     public function SetBuildId($buildId)
@@ -198,7 +188,6 @@ class BuildEmail
     }
 
     /**
-     * @param $time
      * @return $this
      */
     public function SetTime($time = null)

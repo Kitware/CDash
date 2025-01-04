@@ -20,7 +20,6 @@ class CreateSubproject2buildTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

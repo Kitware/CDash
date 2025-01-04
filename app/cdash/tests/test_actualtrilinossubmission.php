@@ -1,5 +1,7 @@
 <?php
 
+use CDash\Database;
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -17,13 +19,13 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
     public function createProjectWithName($project)
     {
         $settings = [
-                'Name' => $project,
-                'Description' => $project . ' project created by test code in file [' . __FILE__ . ']',
-                'EmailBrokenSubmission' => '1',
-                'ShowIPAddresses' => '1',
-                'DisplayLabels' => '1',
-                'NightlyTime' => '21:00:00 America/New_York',
-                'ShareLabelFilters' => '1'];
+            'Name' => $project,
+            'Description' => $project . ' project created by test code in file [' . __FILE__ . ']',
+            'EmailBrokenSubmission' => '1',
+            'ShowIPAddresses' => '1',
+            'DisplayLabels' => '1',
+            'NightlyTime' => '21:00:00 America/New_York',
+            'ShareLabelFilters' => '1'];
         return $this->createProject($settings);
     }
 
@@ -35,18 +37,18 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
         // the functionality of emailing the committers, not the web UI for
         // it.
         //
-        $db = \CDash\Database::getInstance();
+        $db = Database::getInstance();
         $query = $db->query("SELECT id FROM project WHERE name='$projectname'");
         $project = $query->fetchColumn();
-        $sql = "UPDATE buildgroup SET emailcommitters=:email WHERE projectid=:project";
+        $sql = 'UPDATE buildgroup SET emailcommitters=:email WHERE projectid=:project';
         $stmt = $db->prepare($sql);
         $db->execute($stmt, [':email' => $email, ':project' => $project]);
     }
 
     public function createProjects()
     {
-        return $this->createProjectWithName('TrilinosDriver') &&
-            $this->createProjectWithName('Trilinos');
+        return $this->createProjectWithName('TrilinosDriver')
+            && $this->createProjectWithName('Trilinos');
     }
 
     public function testActualTrilinosSubmission()

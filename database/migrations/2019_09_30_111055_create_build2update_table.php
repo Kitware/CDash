@@ -20,7 +20,6 @@ class CreateBuild2updateTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

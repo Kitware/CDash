@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Build as EloquentBuild;
 use App\Models\Comment;
 use App\Models\User;
-use App\Models\Build as EloquentBuild;
 use App\Utils\DatabaseCleanupUtils;
 use App\Utils\PageTimer;
 use App\Utils\RepositoryUtils;
@@ -76,6 +76,7 @@ final class BuildController extends AbstractBuildController
         }
         return $this->view("build.{$page_name}", $page_title);
     }
+
     public function apiBuildSummary(): JsonResponse
     {
         $pageTimer = new PageTimer();
@@ -134,7 +135,7 @@ final class BuildController extends AbstractBuildController
         }
 
         // Notes added by users.
-        $eloquent_build = \App\Models\Build::with(['comments', 'comments.user'])->findOrFail((int) $this->build->Id);
+        $eloquent_build = EloquentBuild::with(['comments', 'comments.user'])->findOrFail((int) $this->build->Id);
         $notes_response = [];
         /**
          * @var Comment $comment
@@ -300,7 +301,7 @@ final class BuildController extends AbstractBuildController
 
             // Check also if the status is not zero
             if (strlen($update_array->status) > 0 && $update_array->status != '0') {
-                $nerrors += 1;
+                $nerrors++;
                 $update_response['status'] = $update_array->status;
             }
             $nwarnings = 0;
@@ -494,7 +495,7 @@ final class BuildController extends AbstractBuildController
         $groupSelectionSQL = '';
         $params = [];
         if ($selected_group > 0) {
-            $groupSelectionSQL = " AND b2g.groupid=? ";
+            $groupSelectionSQL = ' AND b2g.groupid=? ';
             $params[] = $selected_group;
         }
 
@@ -638,14 +639,14 @@ final class BuildController extends AbstractBuildController
             if (Auth::check()) {
                 if ($update_file->Email == '') {
                     // Try to find author email from repository credentials.
-                    $stmt = $db->prepare("
+                    $stmt = $db->prepare('
                 SELECT email FROM user WHERE id IN (
                   SELECT up.userid FROM user2project AS up, user2repository AS ur
                    WHERE ur.userid=up.userid
                    AND up.projectid=:projectid
                    AND ur.credential=:author
                    AND (ur.projectid=0 OR ur.projectid=:projectid) )
-                   LIMIT 1");
+                   LIMIT 1');
                     $stmt->bindParam(':projectid', $this->project->Id);
                     $stmt->bindParam(':author', $file['author']);
                     $db->execute($stmt);
@@ -738,7 +739,7 @@ final class BuildController extends AbstractBuildController
                 $this->add_file($file, $directory, $modified_files);
                 $num_modified_files++;
             } else {
-                //CONFLICTED
+                // CONFLICTED
                 $diff_url = RepositoryUtils::get_diff_url($this->project->Id, $this->project->CvsUrl, $directory, $filename);
                 $diff_url = XMLStrFormat($diff_url);
                 $file['diffurl'] = $diff_url;
@@ -843,8 +844,8 @@ final class BuildController extends AbstractBuildController
         $uploadFile->Id = $file_id;
         $uploadFile->Fill();
         return response()->file(Storage::path("upload/{$uploadFile->Sha1Sum}"), [
-            "Content-Type" => "text/plain",
-            "Content-Disposition" => "inline/attachment; filename={$uploadFile->Filename}",
+            'Content-Type' => 'text/plain',
+            'Content-Disposition' => "inline/attachment; filename={$uploadFile->Filename}",
         ]);
     }
 
@@ -1036,6 +1037,7 @@ final class BuildController extends AbstractBuildController
      * Add a new (marshaled) error to the response.
      * Keeps track of the id necessary for frontend JS, and updates
      * the numErrors response key.
+     *
      * @todo id should probably just be a unique id for the builderror?
      * builderror table currently has no integer that serves as a unique identifier.
      *
@@ -1056,7 +1058,7 @@ final class BuildController extends AbstractBuildController
         if (!isset($_GET['buildid']) || !is_numeric($_GET['buildid'])) {
             abort(400, 'Invalid buildid!');
         }
-        $this->setBuildById((int)$_GET['buildid']);
+        $this->setBuildById((int) $_GET['buildid']);
 
         $response = begin_JSON_response();
 
@@ -1142,7 +1144,7 @@ final class BuildController extends AbstractBuildController
         $response['buildids'] = [];
 
         foreach ($query_result as $row) {
-            $t = strtotime($row->starttime) * 1000; //flot expects milliseconds
+            $t = strtotime($row->starttime) * 1000; // flot expects milliseconds
             $response['data'][] = [$t, $row->nfiles];
             $response['buildids'][$t] = $row->id;
         }
@@ -1193,12 +1195,12 @@ final class BuildController extends AbstractBuildController
                             ORDER BY starttime DESC
                             LIMIT 50
                         ", array_merge([
-                            $this->build->SiteId,
-                            $this->build->Type,
-                            $this->build->Name,
-                            $this->build->ProjectId,
-                            $this->build->StartTime,
-                        ], $query_params));
+            $this->build->SiteId,
+            $this->build->Type,
+            $this->build->Name,
+            $this->build->ProjectId,
+            $this->build->StartTime,
+        ], $query_params));
 
         $builds_response = [];
         foreach ($query_result as $previous_build_row) {
@@ -1265,7 +1267,7 @@ final class BuildController extends AbstractBuildController
             case 'DELETE':
                 return $this->apiRelateBuildsDelete($buildRelationship);
             default:
-                abort(500, "Unhandled method: " . request()->method());
+                abort(500, 'Unhandled method: ' . request()->method());
         }
     }
 
@@ -1347,9 +1349,9 @@ final class BuildController extends AbstractBuildController
 
             // Details about this build that will be used in SQL queries below.
             $query_params = [
-                ':siteid'    => $this->build->SiteId,
-                ':type'      => $this->build->Type,
-                ':name'      => $this->build->Name,
+                ':siteid' => $this->build->SiteId,
+                ':type' => $this->build->Type,
+                ':name' => $this->build->Name,
                 ':projectid' => $this->build->ProjectId,
                 ':starttime' => $this->build->StartTime,
             ];

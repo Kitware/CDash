@@ -45,14 +45,14 @@ class OpenCoverTarHandler extends AbstractXmlHandler
     public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
-        /**
+        /*
          *  SEQUENCEPOINT denotes a line in the source file that is executable and
          *  may have been executed.
          *
          *  VC -> Visit Count
          *  EL -> Line offset, reduced by one to start the file at line 0
          */
-        if (($name == "SEQUENCEPOINT") && ($this->coverageFileLog)) {
+        if (($name == 'SEQUENCEPOINT') && $this->coverageFileLog) {
             $this->coverageFileLog->AddLine($attributes['EL'] - 1, $attributes['VC']);
         }
     }
@@ -74,23 +74,24 @@ class OpenCoverTarHandler extends AbstractXmlHandler
         foreach ($this->currentModule as $path) {
             $filePath = str_ireplace($path, '', $string);
             $filePath = str_replace('.', '/', $filePath);
-            if (file_exists($this->tarDir.'/'.$path.$filePath.'.cs')) {
-                return $path.$filePath.'.cs';
+            if (file_exists($this->tarDir . '/' . $path . $filePath . '.cs')) {
+                return $path . $filePath . '.cs';
             }
         }
         return false;
     }
+
     // Queries for the coverage objects for both adding source and
     // adding coverage values
     public function getCoverageObjects($path)
     {
         if (!array_key_exists($path, $this->CoverageFileLogs)) {
             $coverageFileLog = new CoverageFileLog();
-            $coverageFileLog->BuildId =  $this->Build->Id;
+            $coverageFileLog->BuildId = $this->Build->Id;
             $coverageFile = new CoverageFile();
             $coverageFile->FullPath = trim($path);
 
-            //Run update which will create a new entry if there
+            // Run update which will create a new entry if there
             // isn't one for the current path
             $coverageFile->Update($this->Build->Id);
 
@@ -109,13 +110,14 @@ class OpenCoverTarHandler extends AbstractXmlHandler
             $this->coverageFileLog = $this->CoverageFileLogs[$path];
         }
     }
+
     /** Text function */
     public function text($parser, $data)
     {
         $element = $this->getElement();
         $data = trim($data);
         // FULLNAME refers to the "namespace" of the individual file
-        if ($element == 'FULLNAME' && (strlen($data))) {
+        if ($element == 'FULLNAME' && strlen($data)) {
             $path = $this->parseFullName($data);
             // Lookup our models & create them if they don't exist yet.
             if ($path) {
@@ -126,14 +128,14 @@ class OpenCoverTarHandler extends AbstractXmlHandler
             }
         }
         // MODULENAME gives the folder structure that the .cs file belongs in
-        if ($element == 'MODULENAME' && (strlen($data))) {
+        if ($element == 'MODULENAME' && strlen($data)) {
             $this->currentModule = [$data, strtolower($data)];
         }
     }
 
     /**
      * Parse a tarball of JSON files.
-    **/
+     **/
     public function Parse($filename)
     {
         // Create a new directory where we can extract our tarball.
@@ -188,9 +190,9 @@ class OpenCoverTarHandler extends AbstractXmlHandler
             foreach ($coverageFileLog->Lines as $line) {
                 $coverage->Covered = 1;
                 if ($line == 0) {
-                    $coverage->LocUntested += 1;
+                    $coverage->LocUntested++;
                 } else {
-                    $coverage->LocTested += 1;
+                    $coverage->LocTested++;
                 }
             }
 
@@ -224,18 +226,17 @@ class OpenCoverTarHandler extends AbstractXmlHandler
         return true;
     }
 
-
     /**
      * Read in the source for each .cs file
      **/
     public function readSourceFile($buildid, $fileinfo)
     {
         // If the name starts with "TemporaryGenerated", ignore the file
-        if (preg_match("/^TemporaryGenerated/", $fileinfo->getFilename())) {
+        if (preg_match('/^TemporaryGenerated/', $fileinfo->getFilename())) {
             return true;
         }
         $path = $fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename();
-        $path = str_replace($this->tarDir.'/', '', $path);
+        $path = str_replace($this->tarDir . '/', '', $path);
         $fileContents = file($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
         $this->getCoverageObjects($path);
         $inlongComment = false;
@@ -248,17 +249,17 @@ class OpenCoverTarHandler extends AbstractXmlHandler
                     $inlongComment = true;
                 }
 
-                $this->coverageFile->File .= $displayLine.'<br>';
-                if (!((preg_match("/^\/\//", $trimmedLine)) or
-                   (preg_match("/using /", $trimmedLine)) or
-                   (preg_match("/^namespace/", $trimmedLine)) or
-                   (preg_match("/^public/", $trimmedLine)) or
-                   (preg_match("/^protected/", $trimmedLine)) or
-                   (preg_match("/^private/", $trimmedLine)) or
-                   (preg_match("/^\[/", $trimmedLine)) or
-                   (preg_match("/[{}]/", $trimmedLine)) or
-                   ("" == $trimmedLine) or
-                   ($inlongComment)
+                $this->coverageFile->File .= $displayLine . '<br>';
+                if (!(preg_match("/^\/\//", $trimmedLine)
+                   or preg_match('/using /', $trimmedLine)
+                   or preg_match('/^namespace/', $trimmedLine)
+                   or preg_match('/^public/', $trimmedLine)
+                   or preg_match('/^protected/', $trimmedLine)
+                   or preg_match('/^private/', $trimmedLine)
+                   or preg_match("/^\[/", $trimmedLine)
+                   or preg_match('/[{}]/', $trimmedLine)
+                   or ('' == $trimmedLine)
+                   or $inlongComment
                 ) && $this->ParseCSFiles) {
                     $this->coverageFileLog->AddLine($key, 0);
                 }
@@ -269,6 +270,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
             }
         }
     }
+
     /**
      * Parse an individual XML file.
      **/
@@ -278,7 +280,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
         $parser = xml_parser_create();
         $fileContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
         $parser = xml_parser_create();
-        xml_set_element_handler($parser, [$this,"startElement"], [$this,'endElement']);
+        xml_set_element_handler($parser, [$this, 'startElement'], [$this, 'endElement']);
         xml_set_character_data_handler($parser, [$this, 'text']);
         xml_parse($parser, $fileContents, false);
     }

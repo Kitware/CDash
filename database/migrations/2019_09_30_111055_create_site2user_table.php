@@ -20,7 +20,6 @@ class CreateSite2userTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -66,7 +66,7 @@ return new class () extends Migration {
         }
 
         echo "{$num_deleted} rows deleted from `updatefile`" . PHP_EOL;
-        echo "Adding foreign key constraint updatefile(updateid)->buildupdate(id)...";
+        echo 'Adding foreign key constraint updatefile(updateid)->buildupdate(id)...';
 
         Schema::table('updatefile', function (Blueprint $table) {
             $table->foreign('updateid')->references('id')->on('buildupdate')->cascadeOnDelete();

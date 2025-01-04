@@ -6,8 +6,6 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
 class AutoRemoveBuildsTestCase extends KWWebTestCase
 {
     public function __construct()

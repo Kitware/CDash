@@ -18,6 +18,7 @@
 namespace CDash\Model;
 
 use CDash\Database;
+use Exception;
 
 /** PendingSubmission class */
 class PendingSubmissions
@@ -170,9 +171,9 @@ class PendingSubmissions
                 // The UPDATE statement didn't execute cleanly.
                 $error_info = $stmt->errorInfo();
                 $error = $error_info[2];
-                throw new \Exception($error);
+                throw new Exception($error);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->PDO->rollBack();
             // Ignore any 'Numeric value out of range' SQL errors.
             if ($this->GetNumFiles() > 0) {

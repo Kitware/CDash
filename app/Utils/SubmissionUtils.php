@@ -4,14 +4,28 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use BuildHandler;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
+use ConfigureHandler;
+use CoverageHandler;
+use CoverageJUnitHandler;
+use CoverageLogHandler;
+use DoneHandler;
+use DynamicAnalysisHandler;
+use NoteHandler;
+use ProjectHandler;
+use TestingHandler;
+use TestingJUnitHandler;
+use UpdateHandler;
+use UploadHandler;
 
 class SubmissionUtils
 {
     /**
      * Figure out what type of XML file this is
+     *
      * @return array<string,mixed>
      */
     public static function get_xml_type(mixed $filehandle): array
@@ -27,44 +41,44 @@ class SubmissionUtils
             }
             if (str_contains($content, '<Update')) {
                 // Should be first otherwise confused with Build
-                $handler = \UpdateHandler::class;
+                $handler = UpdateHandler::class;
                 $file = 'Update';
             } elseif (str_contains($content, '<Build')) {
-                $handler = \BuildHandler::class;
+                $handler = BuildHandler::class;
                 $file = 'Build';
             } elseif (str_contains($content, '<Configure')) {
-                $handler = \ConfigureHandler::class;
+                $handler = ConfigureHandler::class;
                 $file = 'Configure';
             } elseif (str_contains($content, '<Testing')) {
-                $handler = \TestingHandler::class;
+                $handler = TestingHandler::class;
                 $file = 'Test';
             } elseif (str_contains($content, '<CoverageLog')) {
                 // Should be before coverage
-                $handler = \CoverageLogHandler::class;
+                $handler = CoverageLogHandler::class;
                 $file = 'CoverageLog';
             } elseif (str_contains($content, '<Coverage')) {
-                $handler = \CoverageHandler::class;
+                $handler = CoverageHandler::class;
                 $file = 'Coverage';
             } elseif (str_contains($content, '<report')) {
-                $handler = \CoverageJUnitHandler::class;
+                $handler = CoverageJUnitHandler::class;
                 $file = 'CoverageJUnit';
             } elseif (str_contains($content, '<Notes')) {
-                $handler = \NoteHandler::class;
+                $handler = NoteHandler::class;
                 $file = 'Notes';
             } elseif (str_contains($content, '<DynamicAnalysis')) {
-                $handler = \DynamicAnalysisHandler::class;
+                $handler = DynamicAnalysisHandler::class;
                 $file = 'DynamicAnalysis';
             } elseif (str_contains($content, '<Project')) {
-                $handler = \ProjectHandler::class;
+                $handler = ProjectHandler::class;
                 $file = 'Project';
             } elseif (str_contains($content, '<Upload')) {
-                $handler = \UploadHandler::class;
+                $handler = UploadHandler::class;
                 $file = 'Upload';
             } elseif (str_contains($content, '<testsuite')) {
-                $handler = \TestingJUnitHandler::class;
+                $handler = TestingJUnitHandler::class;
                 $file = 'TestJUnit';
             } elseif (str_contains($content, '<Done')) {
-                $handler = \DoneHandler::class;
+                $handler = DoneHandler::class;
                 $file = 'Done';
             }
         }
@@ -220,7 +234,7 @@ class SubmissionUtils
 
         foreach ($previous_failures as $failure) {
             if (!in_array($failure, $current_failures)) {
-                $nnegatives += 1;
+                $nnegatives++;
             }
         }
 

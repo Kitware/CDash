@@ -17,20 +17,17 @@
 
 namespace CDash\Messaging\Topic;
 
-use Illuminate\Support\Collection;
 use CDash\Model\Build;
+use Illuminate\Support\Collection;
 
 interface Labelable
 {
     /**
-     * @param Build $build
      * @return Collection
      */
     public function getLabelsFromBuild(Build $build);
 
     /**
-     * @param Build $build
-     * @param Collection $labels
      * @return void
      */
     public function setTopicDataWithLabels(Build $build, Collection $labels);

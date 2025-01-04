@@ -21,7 +21,6 @@ class CreateProjectjobscriptTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

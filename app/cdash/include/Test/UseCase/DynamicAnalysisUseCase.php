@@ -17,13 +17,14 @@
 
 namespace CDash\Test\UseCase;
 
+use AbstractXmlHandler;
 use CDash\Model\Project;
 use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMText;
 use DynamicAnalysisHandler;
-use AbstractXmlHandler;
+use Exception;
 
 class DynamicAnalysisUseCase extends UseCase
 {
@@ -77,7 +78,7 @@ class DynamicAnalysisUseCase extends UseCase
 
         $xml_str = $xml->saveXML($xml);
         if ($xml_str === false) {
-            throw new \Exception('Invalid XML.');
+            throw new Exception('Invalid XML.');
         }
         $project = new Project();
         $project->Id = $this->projectId;

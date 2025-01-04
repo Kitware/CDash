@@ -15,12 +15,13 @@
   PURPOSE. See the above copyright notices for more information.
   =========================================================================*/
 
-use CDash\Database;
 use App\Models\BuildFile;
+use App\Utils\SubmissionUtils;
+use CDash\Database;
+use CDash\Model\Build;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use App\Utils\SubmissionUtils;
 
 class CDashParseException extends RuntimeException
 {
@@ -49,7 +50,7 @@ function generateBackupFileName($projectname, $subprojectname, $buildname,
         // only record the site and buildname for other types of submissions.
         $filename .= $subprojectname_escaped . '_' . $sitename_escaped . '_' . $buildname_escaped . '_' . $stamp . '_';
     }
-    $filename .=  $currenttimestamp . '_' . $file . $ext;
+    $filename .= $currenttimestamp . '_' . $file . $ext;
 
     // Make sure we don't generate a filename that's too long, otherwise
     // fopen() will fail later.
@@ -63,7 +64,7 @@ function generateBackupFileName($projectname, $subprojectname, $buildname,
 }
 
 /** Function to handle new style submissions via HTTP PUT */
-function parse_put_submission($filehandler, $projectid, $expected_md5, int|null $buildid): AbstractSubmissionHandler|false
+function parse_put_submission($filehandler, $projectid, $expected_md5, ?int $buildid): AbstractSubmissionHandler|false
 {
     $db = Database::getInstance();
 
@@ -131,7 +132,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, int|null 
         return false;
     }
 
-    $build = new \CDash\Model\Build();
+    $build = new Build();
     $build->Id = $buildfile->buildid;
     $handler = new $className($build);
 
@@ -156,7 +157,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, int|null 
 }
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($filehandle, $projectid, $expected_md5 = '', int|null $buildid = null): AbstractSubmissionHandler|false
+function ctest_parse($filehandle, $projectid, $expected_md5 = '', ?int $buildid = null): AbstractSubmissionHandler|false
 {
     // Check if this is a new style PUT submission.
     try {

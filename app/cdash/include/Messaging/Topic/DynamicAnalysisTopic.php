@@ -29,11 +29,10 @@ class DynamicAnalysisTopic extends Topic implements Decoratable
 
     protected static $statuses = [DynamicAnalysis::NOTRUN, DynamicAnalysis::FAILED];
 
-    /** @var DynamicAnalysisCollection $collection */
+    /** @var DynamicAnalysisCollection */
     private $collection;
 
     /**
-     * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)
@@ -53,7 +52,6 @@ class DynamicAnalysisTopic extends Topic implements Decoratable
     }
 
     /**
-     * @param Build $build
      * @return Topic|void
      */
     public function setTopicData(Build $build)
@@ -76,9 +74,7 @@ class DynamicAnalysisTopic extends Topic implements Decoratable
     }
 
     /**
-     * @param Build $build
-     * @param $item
-     * @return boolean
+     * @return bool
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
@@ -113,7 +109,6 @@ class DynamicAnalysisTopic extends Topic implements Decoratable
     }
 
     /**
-     * @param SubscriberInterface $subscriber
      * @return bool
      */
     public function isSubscribedToBy(SubscriberInterface $subscriber)

@@ -8,7 +8,7 @@ class LinkifyCompilerOutputTest extends CDashTestCase
     public function testLinkifyCompilerOutput()
     {
         $compiler_output =
-            "/.../file.cxx:1:22: error: <fakefile.h>: No such file";
+            '/.../file.cxx:1:22: error: <fakefile.h>: No such file';
 
         $linkified_output = RepositoryUtils::linkify_compiler_output(
             'https://github.com/Kitware/CDash', "/\.\.\.", 'master',

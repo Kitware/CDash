@@ -27,7 +27,6 @@ class CreateCoverageTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

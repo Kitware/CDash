@@ -20,7 +20,6 @@ class CreateLabelTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

@@ -39,7 +39,7 @@ class BuildProperties
     }
 
     /** Save these build properties to the database,
-        overwriting any existing content. */
+     * overwriting any existing content. */
     public function Save(): bool
     {
         // Delete any previously existing properties for this build.

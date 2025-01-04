@@ -15,6 +15,7 @@
  * =========================================================================
  */
 
+use App\Models\Site;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\SubscriberCollection;
 use CDash\Messaging\Notification\NotifyOn;
@@ -23,7 +24,6 @@ use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
-use App\Models\Site;
 use CDash\Model\Subscriber;
 use CDash\Test\BuildDiffForTesting;
 use Tests\TestCase;

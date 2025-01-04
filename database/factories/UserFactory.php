@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
@@ -14,8 +15,7 @@ use Illuminate\Support\Str;
 |
 */
 
-
-$factory->define(App\Models\User::class, function (Faker $faker) {
+$factory->define(User::class, function (Faker $faker) {
     return [
         'firstname' => $faker->firstName,
         'lastname' => $faker->lastName,
@@ -27,9 +27,9 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(App\Models\User::class, 'admin', ['admin' => 1,]);
+$factory->state(User::class, 'admin', ['admin' => 1]);
 
-$factory->afterCreating(App\Models\User::class, function ($user, $faker) {
+$factory->afterCreating(User::class, function ($user, $faker) {
     $user->passwords()->insert([
         'userid' => $user->id,
         'date' => now(),

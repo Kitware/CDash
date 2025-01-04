@@ -21,7 +21,6 @@ class CreatePendingSubmissionsTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

@@ -24,7 +24,6 @@ class CreateFeedTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

@@ -25,7 +25,6 @@ class CreateClientSiteTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

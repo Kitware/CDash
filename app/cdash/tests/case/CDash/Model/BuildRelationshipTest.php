@@ -145,8 +145,8 @@ class BuildRelationshipTest extends CDashTestCase
         $this->relationship->RelatedBuild = $this->mock_build2;
         $this->relationship->Relationship = 'depends on';
         $expected = [
-            'buildid'      => 1,
-            'relatedid'    => 2,
+            'buildid' => 1,
+            'relatedid' => 2,
             'relationship' => 'depends on',
         ];
         $actual = $this->relationship->marshal();

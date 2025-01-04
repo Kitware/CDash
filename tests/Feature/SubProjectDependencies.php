@@ -27,9 +27,9 @@ class SubProjectDependencies extends TestCase
         $this->getJson($api_route)->assertJsonStructure([
             'dependencies' => [
                 [
-                    "name",
-                    "id",
-                    "depends",
+                    'name',
+                    'id',
+                    'depends',
                 ],
             ],
         ]);

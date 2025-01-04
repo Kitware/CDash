@@ -15,11 +15,11 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\Site;
+use App\Models\SiteInformation;
 use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
 use CDash\Model\Build;
-use App\Models\Site;
-use App\Models\SiteInformation;
 use CDash\Model\Project;
 
 class TestingJUnitHandler extends AbstractXmlHandler
@@ -278,8 +278,8 @@ class TestingJUnitHandler extends AbstractXmlHandler
             // Otherwise make sure that the build is up-to-date.
             $this->Build->UpdateBuild($this->Build->Id, -1, -1);
 
-            //if the build already exists factor the number of tests that have
-            //already been run into our running total
+            // if the build already exists factor the number of tests that have
+            // already been run into our running total
             $this->NumberTestsFailed += $this->Build->GetNumberOfFailedTests();
             $this->NumberTestsNotRun += $this->Build->GetNumberOfNotRunTests();
             $this->NumberTestsPassed += $this->Build->GetNumberOfPassedTests();

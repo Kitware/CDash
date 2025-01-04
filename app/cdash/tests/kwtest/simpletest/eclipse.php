@@ -2,6 +2,7 @@
 
 /**
  *  base include file for eclipse plugin
+ *
  * @version    $Id$
  */
 /**#@+
@@ -21,8 +22,9 @@ class EclipseReporter extends SimpleScorer
 {
     /**
      *    Reporter to be run inside of Eclipse interface.
-     * @param object $listener Eclipse listener (?).
-     * @param bool $cc Whether to include test coverage.
+     *
+     * @param object $listener eclipse listener (?)
+     * @param bool $cc whether to include test coverage
      */
     public function __construct(&$listener, $cc = false)
     {
@@ -38,7 +40,8 @@ class EclipseReporter extends SimpleScorer
 
     /**
      *    Means to display human readable object comparisons.
-     * @return SimpleDumper        Visual comparer.
+     *
+     * @return SimpleDumper visual comparer
      */
     public function getDumper()
     {
@@ -47,9 +50,11 @@ class EclipseReporter extends SimpleScorer
 
     /**
      *    Localhost connection from Eclipse.
-     * @param int $port Port to connect to Eclipse.
-     * @param string $host Normally localhost.
-     * @return SimpleSocket      Connection to Eclipse.
+     *
+     * @param int $port port to connect to Eclipse
+     * @param string $host normally localhost
+     *
+     * @return SimpleSocket connection to Eclipse
      */
     public function &createListener($port, $host = '127.0.0.1')
     {
@@ -59,8 +64,10 @@ class EclipseReporter extends SimpleScorer
 
     /**
      *    Wraps the test in an output buffer.
-     * @param SimpleInvoker $invoker Current test runner.
-     * @return EclipseInvoker            Decorator with output buffering.
+     *
+     * @param SimpleInvoker $invoker current test runner
+     *
+     * @return EclipseInvoker decorator with output buffering
      */
     public function &createInvoker(&$invoker)
     {
@@ -70,8 +77,10 @@ class EclipseReporter extends SimpleScorer
 
     /**
      *    C style escaping.
-     * @param string $raw String with backslashes, quotes and whitespace.
-     * @return string        Replaced with C backslashed tokens.
+     *
+     * @param string $raw string with backslashes, quotes and whitespace
+     *
+     * @return string replaced with C backslashed tokens
      */
     public function escapeVal($raw)
     {
@@ -83,7 +92,8 @@ class EclipseReporter extends SimpleScorer
     /**
      *    Stash the first passing item. Clicking the test
      *    item goes to first pass.
-     * @param string $message Test message, but we only wnat the first.
+     *
+     * @param string $message test message, but we only wnat the first
      */
     public function paintPass($message)
     {
@@ -96,11 +106,12 @@ class EclipseReporter extends SimpleScorer
     /**
      *    Stash the first failing item. Clicking the test
      *    item goes to first fail.
-     * @param string $message Test message, but we only wnat the first.
+     *
+     * @param string $message test message, but we only wnat the first
      */
     public function paintFail($message)
     {
-        //only get the first failure or error
+        // only get the first failure or error
         if (!$this->fail && !$this->error) {
             $this->fail = true;
             $this->message = $this->escapeVal($message);
@@ -111,7 +122,8 @@ class EclipseReporter extends SimpleScorer
     /**
      *    Stash the first error. Clicking the test
      *    item goes to first error.
-     * @param string $message Test message, but we only wnat the first.
+     *
+     * @param string $message test message, but we only wnat the first
      */
     public function paintError($message)
     {
@@ -125,7 +137,6 @@ class EclipseReporter extends SimpleScorer
     /**
      *    Stash the first exception. Clicking the test
      *    item goes to first message.
-     * @param string $message Test message, but we only wnat the first.
      */
     public function paintException($exception)
     {
@@ -144,8 +155,9 @@ class EclipseReporter extends SimpleScorer
 
     /**
      *    We don't display any special header.
-     * @param string $test_name First test top level
-     *                                 to start.
+     *
+     * @param string $test_name first test top level
+     *                          to start
      */
     public function paintHeader($test_name)
     {
@@ -153,7 +165,8 @@ class EclipseReporter extends SimpleScorer
 
     /**
      *    We don't display any special footer.
-     * @param string $test_name The top level test.
+     *
+     * @param string $test_name the top level test
      */
     public function paintFooter($test_name)
     {
@@ -162,7 +175,6 @@ class EclipseReporter extends SimpleScorer
     /**
      *    Paints nothing at the start of a test method, but stash
      *    the method name for later.
-     * @param string $test_name Name of test that is starting.
      */
     public function paintMethodStart($method)
     {
@@ -175,7 +187,6 @@ class EclipseReporter extends SimpleScorer
     /**
      *    Only send one message if the test passes, after that
      *    suppress the message.
-     * @param string $test_name Name of test that is ending.
      */
     public function paintMethodEnd($method)
     {
@@ -190,7 +201,6 @@ class EclipseReporter extends SimpleScorer
 
     /**
      *    Stashes the test case name for the later failure message.
-     * @param string $test_name Name of test or other label.
      */
     public function paintCaseStart($case)
     {
@@ -199,7 +209,6 @@ class EclipseReporter extends SimpleScorer
 
     /**
      *    Drops the name.
-     * @param string $test_name Name of test or other label.
      */
     public function paintCaseEnd($case)
     {
@@ -209,8 +218,9 @@ class EclipseReporter extends SimpleScorer
     /**
      *    Stashes the name of the test suite. Starts test coverage
      *    if enabled.
-     * @param string $group Name of test or other label.
-     * @param int $size Number of test cases starting.
+     *
+     * @param string $group name of test or other label
+     * @param int $size number of test cases starting
      */
     public function paintGroupStart($group, $size)
     {
@@ -224,7 +234,8 @@ class EclipseReporter extends SimpleScorer
 
     /**
      *    Paints coverage report if enabled.
-     * @param string $group Name of test or other label.
+     *
+     * @param string $group name of test or other label
      */
     public function paintGroupEnd($group)
     {
@@ -279,7 +290,8 @@ class EclipseInvoker extends SimpleInvokerDecorator
 
     /**
      *    Starts output buffering.
-     * @param string $method Test method to call.
+     *
+     * @param string $method test method to call
      */
     public function before($method)
     {
@@ -290,7 +302,8 @@ class EclipseInvoker extends SimpleInvokerDecorator
     /**
      *    Stops output buffering and send the captured output
      *    to the listener.
-     * @param string $method Test method to call.
+     *
+     * @param string $method test method to call
      */
     public function after($method)
     {

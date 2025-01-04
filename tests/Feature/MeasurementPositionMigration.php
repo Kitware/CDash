@@ -44,8 +44,8 @@ class MeasurementPositionMigration extends MigrationTest
 
         // Populate some data to migrate.
         $base_measurement = [
-            'projectid'    => $project1->Id,
-            'name'         => 'a',
+            'projectid' => $project1->Id,
+            'name' => 'a',
         ];
         $measurement1 = $base_measurement;
 

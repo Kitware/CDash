@@ -52,11 +52,10 @@ class CreateBuildTable extends Migration
                 $table->index('starttime');
                 $table->index('submittime');
 
-                $table->index(['projectid','parentid','starttime'], 'projectid_parentid_starttime');
+                $table->index(['projectid', 'parentid', 'starttime'], 'projectid_parentid_starttime');
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

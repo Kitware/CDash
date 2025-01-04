@@ -17,11 +17,10 @@ class CreateLabel2coveragefileTable extends Migration
                 $table->bigInteger('labelid');
                 $table->bigInteger('buildid');
                 $table->bigInteger('coveragefileid');
-                $table->primary(['labelid','buildid','coveragefileid']);
+                $table->primary(['labelid', 'buildid', 'coveragefileid']);
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

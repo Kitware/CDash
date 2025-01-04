@@ -6,8 +6,6 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
 class IndexFiltersTestCase extends KWWebTestCase
 {
     protected $InsightUrl;

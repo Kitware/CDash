@@ -15,7 +15,10 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\Site;
+use App\Models\SiteInformation;
 use App\Utils\SubmissionUtils;
+use CDash\Collection\BuildCollection;
 use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;
@@ -25,9 +28,6 @@ use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildGroup;
 use CDash\Model\Label;
-use App\Models\Site;
-use App\Models\SiteInformation;
-use CDash\Collection\BuildCollection;
 use CDash\Model\Project;
 use CDash\Model\SubscriberInterface;
 
@@ -71,11 +71,11 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
 
             $siteInformation = new SiteInformation();
             $this->BuildInformation = [];
-            $this->BuildName = "";
-            $this->BuildStamp = "";
-            $this->SubProjectName = "";
-            $this->Generator = "";
-            $this->PullRequest = "";
+            $this->BuildName = '';
+            $this->BuildStamp = '';
+            $this->SubProjectName = '';
+            $this->Generator = '';
+            $this->PullRequest = '';
 
             // Fill in the attribute
             foreach ($attributes as $key => $value) {
@@ -157,7 +157,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
 
             /**
              * @var string $subproject
-             * @var  Build $build
+             * @var Build $build
              */
             foreach ($this->Builds as $subproject => $build) {
                 $build->ProjectId = $this->GetProject()->Id;
@@ -291,14 +291,14 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
                     break;
             }
         } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
-            $this->SubProjects[$this->SubProjectName][] =  $data;
+            $this->SubProjects[$this->SubProjectName][] = $data;
             $build = $this->Builds[$this->SubProjectName];
             $label = $this->getModelFactory()->create(Label::class);
             $label->Text = $data;
             $build->AddLabel($label);
         } elseif ($parent == 'LABELS' && $element == 'LABEL') {
             // First, check if this label belongs to a SubProject
-            $subproject_name = "";
+            $subproject_name = '';
             foreach ($this->SubProjects as $subproject => $labels) {
                 if (in_array($data, $labels)) {
                     $subproject_name = $subproject;

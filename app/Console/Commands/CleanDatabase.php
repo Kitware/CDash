@@ -27,9 +27,9 @@ class CleanDatabase extends Command
         // Reconfigure laravel to log to stderr for the rest of this command.
         config(['logging.default' => 'stderr']);
 
-        Log::info("Deleting unused rows from `banner`");
-        $num_deleted = DB::delete("DELETE FROM banner WHERE projectid != 0 AND
-                NOT EXISTS (SELECT 1 FROM project WHERE project.id = banner.projectid)");
+        Log::info('Deleting unused rows from `banner`');
+        $num_deleted = DB::delete('DELETE FROM banner WHERE projectid != 0 AND
+                NOT EXISTS (SELECT 1 FROM project WHERE project.id = banner.projectid)');
         Log::info("{$num_deleted} rows deleted from `banner`");
 
         DatabaseCleanupUtils::deleteUnusedRows('dailyupdate', 'projectid', 'project');
@@ -42,10 +42,10 @@ class CleanDatabase extends Command
         DatabaseCleanupUtils::deleteUnusedRows('testoutput', 'id', 'build2test', 'outputid');
         DatabaseCleanupUtils::deleteUnusedRows('uploadfile', 'id', 'build2uploadfile', 'fileid');
 
-        Log::info("Deleting unused rows from `image`");
-        $num_deleted = DB::delete("DELETE FROM image WHERE
+        Log::info('Deleting unused rows from `image`');
+        $num_deleted = DB::delete('DELETE FROM image WHERE
                 NOT EXISTS (SELECT 1 FROM project WHERE project.imageid = image.id) AND
-                NOT EXISTS (SELECT 1 FROM test2image WHERE test2image.imgid = image.id)");
+                NOT EXISTS (SELECT 1 FROM test2image WHERE test2image.imgid = image.id)');
         Log::info("{$num_deleted} rows deleted from `image`");
     }
 }
