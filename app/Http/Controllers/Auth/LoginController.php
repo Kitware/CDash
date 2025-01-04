@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\AbstractController;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -49,10 +50,9 @@ final class LoginController extends AbstractController
     /**
      * Handle a login request to the application.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|\Illuminate\Http\Response|JsonResponse|Response
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function login(Request $request)
     {
@@ -94,9 +94,9 @@ final class LoginController extends AbstractController
         $e->status(401)
             ->response = response()
                 ->view('auth.login', [
-                        'errors' => $e->validator->getMessageBag(),
-                        'title' => 'Login',
-                    ],
+                    'errors' => $e->validator->getMessageBag(),
+                    'title' => 'Login',
+                ],
                     401
                 );
         throw $e;
@@ -107,7 +107,7 @@ final class LoginController extends AbstractController
         return session('url.intended') ?? '/';
     }
 
-    public static function saml2Login() : Response|RedirectResponse
+    public static function saml2Login(): Response|RedirectResponse
     {
         if (config('saml2.enabled') === false) {
             return response('SAML2 login is not enabled.', 500);

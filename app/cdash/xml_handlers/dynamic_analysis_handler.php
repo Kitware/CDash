@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -14,6 +15,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\Site;
+use App\Models\SiteInformation;
 use App\Utils\SubmissionUtils;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\SubscriptionBuilderCollection;
@@ -23,12 +26,10 @@ use CDash\Messaging\Topic\DynamicAnalysisTopic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
-use CDash\Model\Label;
-use App\Models\Site;
 use CDash\Model\DynamicAnalysis;
-use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\DynamicAnalysisDefect;
-use App\Models\SiteInformation;
+use CDash\Model\DynamicAnalysisSummary;
+use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\SubscriberInterface;
 
@@ -131,7 +132,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
             $this->DynamicAnalysis = $factory->create(DynamicAnalysis::class);
             $this->DynamicAnalysis->Checker = $this->Checker;
             $this->DynamicAnalysis->Status = $attributes['STATUS'];
-            $this->TestSubProjectName = "";
+            $this->TestSubProjectName = '';
         } elseif ($name == 'DEFECT') {
             $this->DynamicAnalysisDefect = $factory->create(DynamicAnalysisDefect::class);
             $this->DynamicAnalysisDefect->Type = $attributes['TYPE'];
@@ -244,7 +245,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
                 $this->DynamicAnalysisDefect->Value .= $data;
             }
         } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
-            $this->SubProjects[$this->SubProjectName][] =  $data;
+            $this->SubProjects[$this->SubProjectName][] = $data;
         } elseif ($element == 'LABEL') {
             // Check if this label belongs to a SubProject.
             foreach ($this->SubProjects as $subproject => $labels) {
@@ -365,7 +366,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
 
     public function GetSubscriptionBuilderCollection(): SubscriptionBuilderCollection
     {
-        $collection = (new SubscriptionBuilderCollection)
+        $collection = (new SubscriptionBuilderCollection())
             ->add(new UserSubscriptionBuilder($this));
         return $collection;
     }

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -20,8 +21,8 @@
  */
 class database
 {
-    public $dbo = null;
-    public $type = null;
+    public $dbo;
+    public $type;
 
     public function __construct($type)
     {
@@ -115,12 +116,12 @@ class database
 
 class dbo
 {
-    public $host = null;
-    public $port = null;
-    public $user = null;
-    public $password = null;
-    public $db = null;
-    public $dbconnect = null;
+    public $host;
+    public $port;
+    public $user;
+    public $password;
+    public $db;
+    public $dbconnect;
     public $connection = 'host';
 
     public function getDbConnect()
@@ -199,8 +200,8 @@ class dbo_mysql extends dbo
 
     public function connectToDb()
     {
-        $db = \CDash\Database::getInstance();
-        return ($db->getPdo() instanceof PDO);
+        $db = CDash\Database::getInstance();
+        return $db->getPdo() instanceof PDO;
     }
 
     public function query($query)

@@ -1,11 +1,12 @@
 <?php
+
+use CDash\Database;
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-
-
 
 class ExportToCSVTestCase extends KWWebTestCase
 {
@@ -17,7 +18,7 @@ class ExportToCSVTestCase extends KWWebTestCase
     public function testExportToCSV()
     {
         // Get the ID of a build that has tests.
-        $pdo = \CDash\Database::getInstance();
+        $pdo = Database::getInstance();
         $stmt = $pdo->prepare("
             SELECT b.id FROM build b
             JOIN build2test b2t ON b2t.buildid=b.id
@@ -32,7 +33,7 @@ class ExportToCSVTestCase extends KWWebTestCase
         // Verify expected contents.
         $expected = 'DashboardSendTest,0.05,"Completed (OTHER_FAULT)",Failed';
         if (strpos($content, $expected) === false) {
-            $this->fail("Expected content not found in CSV output");
+            $this->fail('Expected content not found in CSV output');
         }
     }
 }

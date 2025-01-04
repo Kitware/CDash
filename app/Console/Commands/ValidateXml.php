@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Utils\SubmissionUtils;
-use Illuminate\Console\Command;
 use DOMDocument;
+use Illuminate\Console\Command;
 
 class ValidateXml extends Command
 {
@@ -26,7 +26,7 @@ class ValidateXml extends Command
     {
         // parse all input files from command line
         $xml_files_args = $this->argument('xml_file');
-        $schemas_dir = base_path()."/app/Validators/Schemas";
+        $schemas_dir = base_path() . '/app/Validators/Schemas';
 
         // process each of the input files
         $has_errors = false;
@@ -43,8 +43,8 @@ class ValidateXml extends Command
 
             // verify we identified a valid xml type
             if ($xml_type === '') {
-                $this->error("ERROR: Could not determine submission"
-                            ." file type for: '{$input_xml_file}'");
+                $this->error('ERROR: Could not determine submission'
+                            . " file type for: '{$input_xml_file}'");
                 $has_errors = true;
                 continue;
             }
@@ -53,7 +53,7 @@ class ValidateXml extends Command
             $schema_file = "{$schemas_dir}/{$xml_type}.xsd";
             if (!file_exists($schema_file)) {
                 $this->error("ERROR: Could not find schema file '{$schema_file}'"
-                            ." corresonding to input: '{$input_xml_file}'");
+                            . " corresonding to input: '{$input_xml_file}'");
                 $has_errors = true;
                 continue;
             }
@@ -72,7 +72,7 @@ class ValidateXml extends Command
                 foreach ($errors as $error) {
                     if ($error->level > 2) {
                         $this->error("ERROR: {$error->message} in {$error->file},"
-                            ." line: {$error->line}, column: {$error->column}");
+                            . " line: {$error->line}, column: {$error->column}");
                     }
                 }
                 libxml_clear_errors();
@@ -84,10 +84,10 @@ class ValidateXml extends Command
 
         // finally, report the results
         if ($has_errors) {
-            $this->error("FAILED: Some XML file checks did not pass!");
+            $this->error('FAILED: Some XML file checks did not pass!');
             return Command::FAILURE;
         } else {
-            $this->line("SUCCESS: All XML file checks passed.");
+            $this->line('SUCCESS: All XML file checks passed.');
             return Command::SUCCESS;
         }
     }

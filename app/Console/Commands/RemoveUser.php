@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\User;
 use Illuminate\Console\Command;
 
 class RemoveUser extends Command
@@ -32,18 +33,16 @@ class RemoveUser extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
         $email = $this->option('email');
         if (is_null($email)) {
-            $this->error("You must specify the --email option");
+            $this->error('You must specify the --email option');
             return;
         }
 
-        $user = \App\Models\User::where('email', $email)->first();
+        $user = User::where('email', $email)->first();
         if (!$user) {
             $this->error("User $email does not exist");
             return;

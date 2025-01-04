@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -17,13 +18,13 @@ class ProjectWebPageTestCase extends KWWebTestCase
     public function testAccessToWebPageProjectTest()
     {
         $settings = [
-                'Name' => 'BatchmakeExample',
-                'Description' => "Project Batchmake's test for cdash testing"];
+            'Name' => 'BatchmakeExample',
+            'Description' => "Project Batchmake's test for cdash testing"];
         $this->createProject($settings);
 
         $settings = [
-                'Name' => 'InsightExample',
-                'Description' => 'Project Insight test for cdash testing'];
+            'Name' => 'InsightExample',
+            'Description' => 'Project Insight test for cdash testing'];
         $this->createProject($settings);
     }
 
@@ -119,7 +120,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
             }
         }
         if ($url === null) {
-            $this->fail("Failed to find specific coverage file");
+            $this->fail('Failed to find specific coverage file');
         }
         $url = str_replace('&#38;', '&', $url);
         $content = $this->connect($this->url . '/' . $url);

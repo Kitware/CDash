@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,13 +14,14 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
+use App\Models\BuildGroup as EloquentBuildGroup;
 use CDash\Database;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\BuildGroup as EloquentBuildGroup;
 
 class BuildGroup
 {
@@ -28,7 +30,7 @@ class BuildGroup
 
     private int $Position = 0;
     private Database $PDO;
-    /** @var EloquentBuildGroup $eloquent_model */
+    /** @var EloquentBuildGroup */
     private $eloquent_model;
 
     public function __construct()
@@ -171,7 +173,7 @@ class BuildGroup
     public function GetSummaryEmail()
     {
         if (!isset($this->eloquent_model->id)) {
-            Log::error("BuildGroup GetSummaryEmail(): Id not set");
+            Log::error('BuildGroup GetSummaryEmail(): Id not set');
             return false;
         }
         return $this->eloquent_model->summaryemail;
@@ -379,7 +381,7 @@ class BuildGroup
                              FROM buildgroup
                              WHERE name='Experimental' AND projectid=?
                          ", [$this->eloquent_model->projectid])[0];
-            };
+            }
             $grouptype = $query->id;
 
             DB::update('
@@ -465,7 +467,7 @@ class BuildGroup
 
         return EloquentBuildGroup::where([
             'name' => 'Experimental',
-            'projectid' => (int)$build->ProjectId,
+            'projectid' => (int) $build->ProjectId,
         ])->first()->id ?? 0;
     }
 

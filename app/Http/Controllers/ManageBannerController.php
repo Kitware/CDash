@@ -1,8 +1,9 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Banner;
+use App\Models\User;
 use CDash\Model\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,7 @@ final class ManageBannerController extends AbstractController
         /** @var User $user */
         $user = Auth::user();
 
-        $project = new Project;
+        $project = new Project();
         if (isset($_GET['projectid']) && (int) $_GET['projectid'] > 0) {
             $project->Id = (int) $_GET['projectid'];
             Gate::authorize('edit-project', $project);
@@ -47,7 +48,7 @@ final class ManageBannerController extends AbstractController
         $sql = 'SELECT id, name FROM project';
         $params = [];
         if (!$user->admin) {
-            $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)";
+            $sql .= ' WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)';
             $params[] = intval(Auth::id());
         }
 

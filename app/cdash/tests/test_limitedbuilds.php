@@ -1,12 +1,10 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-
-
-
 
 use CDash\Database;
 use CDash\Model\Build;
@@ -26,7 +24,7 @@ class LimitedBuildsTestCase extends KWWebTestCase
 
         $this->testDataDir = dirname(__FILE__) . '/data/BuildModel';
         $this->PDO = Database::getInstance();
-        $this->get_build_stmt =  $this->PDO->prepare('SELECT id FROM build WHERE projectid = ?');
+        $this->get_build_stmt = $this->PDO->prepare('SELECT id FROM build WHERE projectid = ?');
         $this->Projects = [];
 
         $this->deleteLog($this->logfilename);
@@ -58,7 +56,7 @@ class LimitedBuildsTestCase extends KWWebTestCase
             'cdash.unlimited_projects' => ['Unlimited'],
         ]);
 
-        $project = \App\Models\Project::findOrFail((int) $this->Projects[0]->Id);
+        $project = App\Models\Project::findOrFail((int) $this->Projects[0]->Id);
 
         // Submit two builds to the 'Limited' project.
         // The second submission will cause the first build to get deleted.
@@ -95,7 +93,7 @@ class LimitedBuildsTestCase extends KWWebTestCase
         $this->submitBuild(2, 'Unlimited');
 
         // Verify that they both exist.
-        $project = \App\Models\Project::findOrFail((int) $this->Projects[1]->Id);
+        $project = App\Models\Project::findOrFail((int) $this->Projects[1]->Id);
         $this->assertEqual($project->refresh()->builds()->count(), 2);
     }
 

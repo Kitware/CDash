@@ -11,11 +11,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        echo "Adding subprojectid foreign key to subproject2subproject table...";
+        echo 'Adding subprojectid foreign key to subproject2subproject table...';
         $num_deleted = DB::delete('DELETE FROM subproject2subproject WHERE subprojectid NOT IN (SELECT id FROM subproject)');
         echo $num_deleted . ' invalid rows deleted' . PHP_EOL;
 
-        echo "Adding dependsonid foreign key to subproject2subproject table...";
+        echo 'Adding dependsonid foreign key to subproject2subproject table...';
         $num_deleted = DB::delete('DELETE FROM subproject2subproject WHERE dependsonid NOT IN (SELECT id FROM subproject)');
         echo $num_deleted . ' invalid rows deleted' . PHP_EOL;
 

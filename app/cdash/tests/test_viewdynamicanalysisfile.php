@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -6,9 +7,9 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
+use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\DynamicAnalysis;
-use CDash\Database;
 
 class ViewDynamicAnalysisFileTestCase extends KWWebTestCase
 {

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
@@ -13,22 +15,20 @@ use Illuminate\Support\Facades\Storage;
  *       been migrated to Laravel yet.  The ultimate goal is to remove this file entirely.
  *
  * Class CDash
- * @package App\Http\Controllers
  */
 final class CDash extends AbstractController
 {
-    /** @var Request $request */
+    /** @var Request */
     private $request;
 
-    /** @var FilesystemAdapter $disk */
+    /** @var FilesystemAdapter */
     private $disk;
 
-    /** @var string $path */
+    /** @var string */
     private $path;
 
     /**
      * CDash constructor.
-     * @param Request $request
      */
     public function __construct(Request $request)
     {
@@ -39,7 +39,6 @@ final class CDash extends AbstractController
     /**
      * Handle the incoming request.
      *
-     * @param Request $request
      * @return mixed $response
      */
     public function __invoke(Request $request)
@@ -110,7 +109,7 @@ final class CDash extends AbstractController
      * Returns JSON responses for CDash API requests or regular response given an
      * un-decodable json response
      *
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|Response|\Symfony\Component\HttpFoundation\Response
+     * @return ResponseFactory|JsonResponse|Response|\Symfony\Component\HttpFoundation\Response
      */
     public function handleApiRequest()
     {
@@ -122,7 +121,7 @@ final class CDash extends AbstractController
         } elseif (empty($json)) {
             $status = $status ?: 204;
             $response = response('', $status);
-        } elseif (($decoded = json_decode($json))) {
+        } elseif ($decoded = json_decode($json)) {
             $response = response()->json($decoded);
             if ($status) {
                 $response->setStatusCode($status);

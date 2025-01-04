@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -7,9 +8,8 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Models\TestMeasurement;
 use App\Utils\DatabaseCleanupUtils;
-use App\Utils\TestCreator;
 use App\Utils\NoteCreator;
-
+use App\Utils\TestCreator;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
@@ -168,8 +168,8 @@ class RemoveBuildsTestCase extends KWWebTestCase
         // Coverage
         $file1 = new CoverageFile();
         $file1->FullPath = '/path/to/unshared.php';
-        $file1->File .= "this unshared line gets covered<br>";
-        $file1->File .= "this unshared line does not<br>";
+        $file1->File .= 'this unshared line gets covered<br>';
+        $file1->File .= 'this unshared line does not<br>';
 
         $coverage1 = new Coverage();
         $coverage1->Covered = 1;
@@ -180,8 +180,8 @@ class RemoveBuildsTestCase extends KWWebTestCase
 
         $file2 = new CoverageFile();
         $file2->FullPath = '/path/to/shared.php';
-        $file2->File .= "this shared line gets covered<br>";
-        $file2->File .= "this shared line does not<br>";
+        $file2->File .= 'this shared line gets covered<br>';
+        $file2->File .= 'this shared line does not<br>';
 
         $coverage2 = new Coverage();
         $coverage2->Covered = 1;
@@ -614,7 +614,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('uploadfile', 'id', 'IN', $uploadfileids, 0, $extra_msg);
     }
 
-    public function verify(string $table, string $field, string $compare, string|int $value, int $expected, string $extra_msg=''): void
+    public function verify(string $table, string $field, string $compare, string|int $value, int $expected, string $extra_msg = ''): void
     {
         $num_rows = count(DB::select("SELECT $field FROM $table WHERE $field $compare $value"));
         if ($num_rows !== $expected) {
@@ -624,6 +624,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
 
     /**
      * @param array<int|string> $columns
+     *
      * @return array<int|string>
      */
     public function verify_get_columns(string $table, array $columns, string $field, string $compare, string $value, int $expected): array

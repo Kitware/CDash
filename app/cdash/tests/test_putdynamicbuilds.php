@@ -1,16 +1,14 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
-
+use App\Models\Site;
 use CDash\Database;
 use CDash\Model\BuildGroup;
-use App\Models\Site;
 
 class PutDynamicBuildsTestCase extends KWWebTestCase
 {
@@ -52,9 +50,9 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
         // Use the API PUT a list of builds.
         $client = $this->getGuzzleClient();
         $build_rules = [
-            [ 'match' => 'foo', 'parentgroupid' => $this->ParentGroupId, 'site' => 'Any', ],
-            [ 'match' => 'bar', 'parentgroupid' => $this->ParentGroupId, 'site' => 'Any', ],
-            [ 'match' => 'baz', 'parentgroupid' => $this->ParentGroupId, 'site' => 'Any', ],
+            ['match' => 'foo', 'parentgroupid' => $this->ParentGroupId, 'site' => 'Any'],
+            ['match' => 'bar', 'parentgroupid' => $this->ParentGroupId, 'site' => 'Any'],
+            ['match' => 'baz', 'parentgroupid' => $this->ParentGroupId, 'site' => 'Any'],
         ];
         $starttime_stmt = $this->PDO->prepare('
             SELECT starttime FROM build2grouprule
@@ -65,9 +63,9 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
 
         // Submit another list to test update functionality.
         $build_rules = [
-            [ 'match' => 'foo', 'parentgroupid' => $this->ParentGroupId, 'site' => 'Any', ],
-            [ 'match' => 'bip', 'parentgroupid' => $this->ParentGroupId, 'site' => 'Any', ],
-            [ 'match' => 'bop', 'parentgroupid' => $this->ParentGroupId, 'site' => 'Any', ],
+            ['match' => 'foo', 'parentgroupid' => $this->ParentGroupId, 'site' => 'Any'],
+            ['match' => 'bip', 'parentgroupid' => $this->ParentGroupId, 'site' => 'Any'],
+            ['match' => 'bop', 'parentgroupid' => $this->ParentGroupId, 'site' => 'Any'],
         ];
         $this->verifyListGetsCreated($client, $starttime_stmt, $build_rules);
 
@@ -79,7 +77,7 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
                   siteid        = 0');
         foreach (['bar', 'baz'] as $match) {
             $query_params = [
-                ':buildname'     => $match,
+                ':buildname' => $match,
                 ':parentgroupid' => $this->ParentGroupId,
             ];
             $this->PDO->execute($starttime_stmt, $query_params);
@@ -91,7 +89,7 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
         // hasn't submitted any builds to this project yet.
         $site = Site::find(1);
         $build_rules = [
-            [ 'match' => 'foo', 'parentgroupid' => $this->ParentGroupId, 'site' => $site->name],
+            ['match' => 'foo', 'parentgroupid' => $this->ParentGroupId, 'site' => $site->name],
         ];
         $starttime_stmt = $this->PDO->prepare("
             SELECT starttime FROM build2grouprule
@@ -124,7 +122,7 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
         // Verify that these rules were created.
         foreach ($build_rules as $build_rule) {
             $query_params = [
-                ':buildname'     => "{$build_rule['match']}",
+                ':buildname' => "{$build_rule['match']}",
                 ':parentgroupid' => $build_rule['parentgroupid'],
             ];
             $this->PDO->execute($stmt, $query_params);

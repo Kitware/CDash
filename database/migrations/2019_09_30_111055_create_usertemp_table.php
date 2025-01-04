@@ -25,7 +25,6 @@ class CreateUsertempTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

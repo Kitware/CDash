@@ -21,7 +21,6 @@ class CreateApitokenTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

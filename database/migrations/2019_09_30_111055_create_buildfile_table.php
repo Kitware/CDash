@@ -22,7 +22,6 @@ class CreateBuildfileTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

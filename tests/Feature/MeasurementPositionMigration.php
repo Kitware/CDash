@@ -10,7 +10,7 @@ use Tests\MigrationTest;
 
 class MeasurementPositionMigration extends MigrationTest
 {
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
@@ -44,8 +44,8 @@ class MeasurementPositionMigration extends MigrationTest
 
         // Populate some data to migrate.
         $base_measurement = [
-            'projectid'    => $project1->Id,
-            'name'         => 'a',
+            'projectid' => $project1->Id,
+            'name' => 'a',
         ];
         $measurement1 = $base_measurement;
 

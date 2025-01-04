@@ -21,7 +21,6 @@ class CreateCoveragefile2userTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

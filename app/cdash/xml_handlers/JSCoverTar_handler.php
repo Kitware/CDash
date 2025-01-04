@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -77,10 +78,10 @@ class JSCoverTarHandler extends AbstractSubmissionHandler
             // Tally up how many lines of code were covered & uncovered.
             foreach ($coverageFileLog->Lines as $line) {
                 if ($line == 0) {
-                    $coverage->LocUntested += 1;
+                    $coverage->LocUntested++;
                 } else {
                     $coverage->Covered = 1;
-                    $coverage->LocTested += 1;
+                    $coverage->LocTested++;
                 }
             }
 
@@ -124,9 +125,9 @@ class JSCoverTarHandler extends AbstractSubmissionHandler
         $jsonDecoded = json_decode($jsonContents, true);
         foreach ($jsonDecoded as $path => $coverageEntry) {
             // Make sure it has the fields we expect.
-            if (is_null($coverageEntry) ||
-                !array_key_exists('source', $coverageEntry) ||
-                !array_key_exists('coverage', $coverageEntry)
+            if (is_null($coverageEntry)
+                || !array_key_exists('source', $coverageEntry)
+                || !array_key_exists('coverage', $coverageEntry)
             ) {
                 return;
             }
@@ -140,7 +141,7 @@ class JSCoverTarHandler extends AbstractSubmissionHandler
                 $coverageFile = new CoverageFile();
                 $coverageFile->FullPath = trim($path);
                 // Get the ID for this coverage file, or create a new empty one
-                //if it doesn't already exist.
+                // if it doesn't already exist.
                 $coveragefile_array = DB::select('
                                           SELECT id
                                           FROM coveragefile

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,6 +14,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 use CDash\Database;
@@ -28,7 +30,7 @@ class BuildUpdateFile
     public $Log;
     public $Revision;
     public $PriorRevision;
-    public $Status; //MODIFIED | CONFLICTING | UPDATED
+    public $Status; // MODIFIED | CONFLICTING | UPDATED
     public $UpdateId;
 
     // Insert the update
@@ -69,18 +71,18 @@ class BuildUpdateFile
                      )
                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                  ', [
-                     intval($this->UpdateId),
-                     $this->Filename ?? '',
-                     $this->CheckinDate ?? '',
-                     $this->Author ?? '',
-                     $this->Email ?? '',
-                     $this->Log ?? '',
-                     $this->Revision ?? '',
-                     $this->PriorRevision ?? '',
-                     $this->Status ?? '',
-                     $this->Committer ?? '',
-                     $this->CommitterEmail ?? '',
-                 ]);
+            intval($this->UpdateId),
+            $this->Filename ?? '',
+            $this->CheckinDate ?? '',
+            $this->Author ?? '',
+            $this->Email ?? '',
+            $this->Log ?? '',
+            $this->Revision ?? '',
+            $this->PriorRevision ?? '',
+            $this->Status ?? '',
+            $this->Committer ?? '',
+            $this->CommitterEmail ?? '',
+        ]);
 
         if ($query === false) {
             add_last_sql_error('BuildUpdateFile Insert', 0, $this->UpdateId);

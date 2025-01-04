@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
+use PDO;
+use PDOStatement;
 
 final class ProjectController extends AbstractProjectController
 {
@@ -29,7 +31,7 @@ final class ProjectController extends AbstractProjectController
             $this->project = new Project();
         }
 
-        /** @var \App\Models\User $User */
+        /** @var User $User */
         $User = Auth::user();
 
         // Check if the user has the necessary permissions.
@@ -119,8 +121,8 @@ final class ProjectController extends AbstractProjectController
             if (!boolval(config('cdash.user_create_projects')) || $User->admin) {
                 $project_response['UploadQuota'] = 1;
             }
-            $project_response['WarningsFilter'] = "";
-            $project_response['ErrorsFilter'] = "";
+            $project_response['WarningsFilter'] = '';
+            $project_response['ErrorsFilter'] = '';
             $project_response['ViewSubProjectsLink'] = 1;
         }
 
@@ -170,28 +172,28 @@ final class ProjectController extends AbstractProjectController
 
     private static function GetProjectsForUser(User $user): array
     {
-        /** @var \PDO $pdo */
+        /** @var PDO $pdo */
         $pdo = Database::getInstance()->getPdo();
         $sql = 'SELECT id, name FROM project';
         if (!$user->admin) {
-            $sql .= "
+            $sql .= '
                 WHERE id IN (
                     SELECT projectid AS id
                     FROM user2project
                     WHERE userid=:userid
                       AND role > 0
                 )
-            ";
+            ';
         }
         $sql .= ' ORDER BY name ASC';
 
-        /** @var \PDOStatement $stmt */
+        /** @var PDOStatement $stmt */
         $stmt = $pdo->prepare($sql);
         if (!$user->admin) {
             $stmt->bindParam(':userid', $id);
         }
         $stmt->execute();
-        $projects = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return is_array($projects) ? $projects : [];
     }
 

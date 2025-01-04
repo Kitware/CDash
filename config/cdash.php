@@ -1,4 +1,5 @@
 <?php
+
 $cdash_directory_name = env('CDASH_DIRECTORY', 'cdash');
 $cdash = realpath(app_path($cdash_directory_name));
 
@@ -31,10 +32,10 @@ return [
     'file' => [
         'path' => [
             'js' => [
-                'controllers' => base_path("public/assets/js/angular/controllers"),
-                'version' => base_path("public/assets/js/angular/version.js"),
+                'controllers' => base_path('public/assets/js/angular/controllers'),
+                'version' => base_path('public/assets/js/angular/version.js'),
             ],
-            'public' => base_path("public"),
+            'public' => base_path('public'),
         ],
     ],
     'login' => [

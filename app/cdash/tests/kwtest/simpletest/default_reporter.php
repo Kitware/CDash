@@ -1,6 +1,8 @@
 <?php
+
 /**
  *  Optional include file for SimpleTest
+ *
  * @version    $Id$
  */
 
@@ -32,7 +34,8 @@ class SimpleCommandLineParser
 
     /**
      *    Parses raw command line arguments into object properties.
-     * @param string $arguments Raw commend line arguments.
+     *
+     * @param string $arguments raw commend line arguments
      */
     public function __construct($arguments)
     {
@@ -60,7 +63,8 @@ class SimpleCommandLineParser
 
     /**
      *    Run only this test.
-     * @return string        Test name to run.
+     *
+     * @return string test name to run
      */
     public function getTest()
     {
@@ -69,7 +73,8 @@ class SimpleCommandLineParser
 
     /**
      *    Run only this test suite.
-     * @return string        Test class name to run.
+     *
+     * @return string test class name to run
      */
     public function getTestCase()
     {
@@ -78,7 +83,8 @@ class SimpleCommandLineParser
 
     /**
      *    Output should be XML or not.
-     * @return bool        True if XML desired.
+     *
+     * @return bool true if XML desired
      */
     public function isXml()
     {
@@ -87,7 +93,8 @@ class SimpleCommandLineParser
 
     /**
      *    Output should suppress skip messages.
-     * @return bool        True for no skips.
+     *
+     * @return bool true for no skips
      */
     public function noSkips()
     {
@@ -96,7 +103,8 @@ class SimpleCommandLineParser
 
     /**
      *    Output should be a help message. Disabled during XML mode.
-     * @return bool        True if help message desired.
+     *
+     * @return bool true if help message desired
      */
     public function help()
     {
@@ -105,7 +113,8 @@ class SimpleCommandLineParser
 
     /**
      *    Returns plain-text help message for command line runner.
-     * @return string         String help message
+     *
+     * @return string String help message
      */
     public function getHelpText()
     {

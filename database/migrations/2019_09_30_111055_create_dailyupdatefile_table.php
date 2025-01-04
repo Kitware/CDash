@@ -26,7 +26,6 @@ class CreateDailyupdatefileTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

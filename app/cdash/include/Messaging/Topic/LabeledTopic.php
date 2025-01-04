@@ -1,4 +1,5 @@
 <?php
+
 namespace CDash\Messaging\Topic;
 
 use CDash\Model\Build;
@@ -8,7 +9,6 @@ class LabeledTopic extends Topic
     private $decoratedSubscribes;
 
     /**
-     * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)
@@ -38,7 +38,6 @@ class LabeledTopic extends Topic
     }
 
     /**
-     * @param Build $build
      * @return Topic|void
      */
     public function setTopicData(Build $build)

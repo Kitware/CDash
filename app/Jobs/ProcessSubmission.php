@@ -4,14 +4,13 @@ namespace App\Jobs;
 
 use AbstractSubmissionHandler;
 use ActionableBuildInterface;
-use App\Utils\UnparsedSubmissionProcessor;
 use App\Models\SuccessfulJob;
-
+use App\Utils\UnparsedSubmissionProcessor;
 use BuildPropertiesJSONHandler;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Repository;
-
+use GuzzleHttp\Client;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -19,7 +18,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-
+use RetryHandler;
+use Throwable;
 use UpdateHandler;
 
 require_once 'include/ctestparser.php';
@@ -27,7 +27,10 @@ require_once 'include/sendemail.php';
 
 class ProcessSubmission implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public int $timeout;
 
@@ -56,9 +59,9 @@ class ProcessSubmission implements ShouldQueue
     {
         if (config('cdash.remote_workers')) {
             $url = url('/api/v1/deleteSubmissionFile.php');
-            $client = new \GuzzleHttp\Client();
+            $client = new Client();
             $response = $client->request('DELETE', $url, [
-                'query'   => ['filename' => encrypt($src), 'dest' => encrypt($dst)],
+                'query' => ['filename' => encrypt($src), 'dest' => encrypt($dst)],
             ]);
             return $response->getStatusCode() === 200;
         } else {
@@ -70,7 +73,7 @@ class ProcessSubmission implements ShouldQueue
     {
         if (config('cdash.remote_workers')) {
             $url = url('/api/v1/deleteSubmissionFile.php');
-            $client = new \GuzzleHttp\Client();
+            $client = new Client();
             $response = $client->request('DELETE', $url, [
                 'query' => ['filename' => encrypt($filename)],
             ]);
@@ -84,7 +87,7 @@ class ProcessSubmission implements ShouldQueue
     {
         if (config('cdash.remote_workers')) {
             $url = url('/api/v1/requeueSubmissionFile.php');
-            $client = new \GuzzleHttp\Client();
+            $client = new Client();
             $response = $client->request('POST', $url, [
                 'query' => [
                     'filename' => encrypt($this->filename),
@@ -98,7 +101,7 @@ class ProcessSubmission implements ShouldQueue
             return $response->getStatusCode() == 200;
         } else {
             // Increment retry count.
-            $retry_handler = new \RetryHandler(Storage::path("inprogress/{$this->filename}"));
+            $retry_handler = new RetryHandler(Storage::path("inprogress/{$this->filename}"));
             $retry_handler->increment();
 
             // Move file back to inbox.
@@ -171,7 +174,7 @@ class ProcessSubmission implements ShouldQueue
     /**
      * The job failed to process.
      */
-    public function failed(\Throwable $exception): void
+    public function failed(Throwable $exception): void
     {
         Log::warning("Failed to process {$this->filename} with message: {$exception}");
         $this->renameSubmissionFile("inprogress/{$this->filename}", "failed/{$this->filename}");
@@ -208,9 +211,9 @@ class ProcessSubmission implements ShouldQueue
         fclose($filehandle);
         unset($filehandle);
 
-        //this is the md5 checksum fail case
+        // this is the md5 checksum fail case
         if ($handler == false) {
-            //no need to log an error since ctest_parse already did
+            // no need to log an error since ctest_parse already did
             return false;
         }
 
@@ -222,8 +225,8 @@ class ProcessSubmission implements ShouldQueue
         }
 
         // Set status on repository.
-        if ($handler instanceof UpdateHandler ||
-            $handler instanceof BuildPropertiesJSONHandler
+        if ($handler instanceof UpdateHandler
+            || $handler instanceof BuildPropertiesJSONHandler
         ) {
             Repository::setStatus($build, false);
         }
@@ -253,7 +256,7 @@ class ProcessSubmission implements ShouldQueue
         $this->localFilename = "{$_t}.{$ext}";
         rename($_t, $this->localFilename);
 
-        $client = new \GuzzleHttp\Client();
+        $client = new Client();
         $url = url('/api/v1/getSubmissionFile.php');
         $response = $client->request('GET', $url, [
             'query' => ['filename' => encrypt($filename)],

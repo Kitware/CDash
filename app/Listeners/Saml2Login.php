@@ -2,6 +2,8 @@
 
 namespace App\Listeners;
 
+use App\Http\Controllers\Auth\RegisterController;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
@@ -11,17 +13,15 @@ use Psr\SimpleCache\InvalidArgumentException;
 use Slides\Saml2\Events\SignedIn as Saml2SignedInEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-use App\Models\User;
-use App\Http\Controllers\Auth\RegisterController;
-
 class Saml2Login
 {
     /**
-      * Login or register the authenticated Saml2 user
-      * @throws InvalidArgumentException
-      * @throws HttpException
-      */
-    public function handle(Saml2SignedInEvent $event) : void
+     * Login or register the authenticated Saml2 user
+     *
+     * @throws InvalidArgumentException
+     * @throws HttpException
+     */
+    public function handle(Saml2SignedInEvent $event): void
     {
         // Prevent reuse of $messageId to stop replay attacks.
         $messageId = $event->getAuth()->getLastMessageId();
@@ -56,7 +56,7 @@ class Saml2Login
             $user = $registerController->create($registerData);
             if ($user === null) {
                 Log::error("Error registering new SAML2 user: $email");
-                abort(500, "Error registering new SAML2 user");
+                abort(500, 'Error registering new SAML2 user');
             }
             Auth::login($user);
         } else {

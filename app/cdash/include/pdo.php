@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -20,6 +21,7 @@ use CDash\Database;
  * Get the last pdo error or empty string in the case of no error.
  *
  * @deprecated 04/01/2023
+ *
  * @return string containing error message (or not in the case of production)
  */
 function pdo_error(): string
@@ -40,7 +42,7 @@ function pdo_error(): string
  *
  * @deprecated 04/01/2023
  */
-function pdo_fetch_array(PDOStatement|false $result, int $result_type = PDO::FETCH_BOTH): array|null|false
+function pdo_fetch_array(PDOStatement|false $result, int $result_type = PDO::FETCH_BOTH): array|false|null
 {
     if ($result === false) {
         return false;
@@ -78,7 +80,7 @@ function pdo_real_escape_string(mixed $unescaped_string): string
  *
  * @deprecated v2.5.0 01/22/2018
  */
-function pdo_execute(PDOStatement $stmt, array|null $input_parameters=null): bool
+function pdo_execute(PDOStatement $stmt, ?array $input_parameters = null): bool
 {
     $db = Database::getInstance();
     return $db->execute($stmt, $input_parameters);

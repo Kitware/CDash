@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -19,7 +20,7 @@ use CDash\Test\CDashTestCase;
 
 class BuildFailureTest extends CDashTestCase
 {
-    public function setUp() : void
+    public function setUp(): void
     {
         $container = ServiceContainer::container();
         $this->mock_buildfailure = $this->getMockBuilder(BuildFailure::class)
@@ -43,16 +44,16 @@ class BuildFailureTest extends CDashTestCase
             ->willReturn([]);
 
         $input_data = [
-            'id'               => 1,
-            'language'         => 'C++',
-            'sourcefile'       => '/projects/foo/src/main.cpp',
-            'targetname'       => 'main',
-            'outputfile'       => 'CMakeFiles\main.dir\main.cpp.obj',
-            'outputtype'       => 'object file',
+            'id' => 1,
+            'language' => 'C++',
+            'sourcefile' => '/projects/foo/src/main.cpp',
+            'targetname' => 'main',
+            'outputfile' => 'CMakeFiles\main.dir\main.cpp.obj',
+            'outputtype' => 'object file',
             'workingdirectory' => '/projects/foo/bin',
-            'exitcondition'    => 2,
-            'stdoutput'        => '',
-            'stderror'         => '/projects/foo/src/main.cpp: In function `int main(int, char**)`:
+            'exitcondition' => 2,
+            'stdoutput' => '',
+            'stderror' => '/projects/foo/src/main.cpp: In function `int main(int, char**)`:
 /projects/foo/src/main.cpp:2:3: error: `asdf` was not declared in this scope
    asdf = 0;',
         ];
@@ -60,15 +61,15 @@ class BuildFailureTest extends CDashTestCase
         $marshaled = $this->mock_buildfailure->marshal($input_data, $this->mock_project, '12', true, $this->mock_buildfailure);
 
         $expected = [
-            'language'         => 'C++',
-            'sourcefile'       => '/projects/foo/src/main.cpp',
-            'targetname'       => 'main',
-            'outputfile'       => 'CMakeFiles\main.dir\main.cpp.obj',
-            'outputtype'       => 'object file',
+            'language' => 'C++',
+            'sourcefile' => '/projects/foo/src/main.cpp',
+            'targetname' => 'main',
+            'outputfile' => 'CMakeFiles\main.dir\main.cpp.obj',
+            'outputtype' => 'object file',
             'workingdirectory' => '/projects/foo/bin',
-            'exitcondition'    => '2',
-            'stdoutput'        => '',
-            'stderror'         => "foo/src/main.cpp: In function `int main(int, char**)`:\n<a class='cdash-link' href='https://github.com/FooCo/foo/blob/12/src/main.cpp#L2'>src/main.cpp:2</a>:3: error: `asdf` was not declared in this scope\n   asdf = 0;",
+            'exitcondition' => '2',
+            'stdoutput' => '',
+            'stderror' => "foo/src/main.cpp: In function `int main(int, char**)`:\n<a class='cdash-link' href='https://github.com/FooCo/foo/blob/12/src/main.cpp#L2'>src/main.cpp:2</a>:3: error: `asdf` was not declared in this scope\n   asdf = 0;",
             'cvsurl' => 'https://github.com/FooCo/foo/blob/12/src/main.cpp',
         ];
         $this->assertEquals($expected, $marshaled);

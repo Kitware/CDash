@@ -196,10 +196,10 @@ final class BuildPropertiesController extends AbstractBuildController
         }
 
         if (!is_array($_GET['buildid']) || count($_GET['buildid']) < 1) {
-            abort(400, "No builds specified");
+            abort(400, 'No builds specified');
         }
         if (!is_array($_GET['defect']) || count($_GET['defect']) < 1) {
-            abort(400, "No defects specified");
+            abort(400, 'No defects specified');
         }
 
         // A bit of a hack to ensure that we are able to access each specified buildid.

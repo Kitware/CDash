@@ -18,11 +18,10 @@ class CreateBuilderrordiffTable extends Migration
                 $table->tinyInteger('type')->index();
                 $table->integer('difference_positive')->index();
                 $table->integer('difference_negative')->index();
-                $table->unique(['buildid','type'], 'unique_builderrordiff');
+                $table->unique(['buildid', 'type'], 'unique_builderrordiff');
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

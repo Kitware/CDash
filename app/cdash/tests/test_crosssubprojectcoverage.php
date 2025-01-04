@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -18,7 +19,6 @@ use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
 class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
 {
     protected $DataDir;
@@ -34,8 +34,8 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
     {
         // Create a new project for this test.
         $settings = [
-                'Name' => 'CrossSubProjectExample',
-                'Description' => 'Example of coverage across SubProjects'];
+            'Name' => 'CrossSubProjectExample',
+            'Description' => 'Example of coverage across SubProjects'];
         $this->createProject($settings);
     }
 
@@ -164,10 +164,10 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
             $group_name = $coverage_group['label'];
             if ($group_name === 'Total') {
                 if ($coverage_group['loctested'] !== 25) {
-                    $this->fail("Expected 25 total loctested");
+                    $this->fail('Expected 25 total loctested');
                 }
                 if ($coverage_group['locuntested'] !== 10) {
-                    $this->fail("Expected 10 total locuntested");
+                    $this->fail('Expected 10 total locuntested');
                 }
                 continue;
             }

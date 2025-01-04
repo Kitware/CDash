@@ -17,11 +17,10 @@ class CreateConfigureerrordiffTable extends Migration
                 $table->bigInteger('buildid')->index();
                 $table->tinyInteger('type')->nullable()->index();
                 $table->integer('difference')->nullable();
-                $table->unique(['buildid','type'], 'unique_configureerrordiff');
+                $table->unique(['buildid', 'type'], 'unique_configureerrordiff');
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

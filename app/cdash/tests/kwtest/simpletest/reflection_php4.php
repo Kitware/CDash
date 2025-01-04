@@ -1,11 +1,14 @@
 <?php
+
 /**
  *  base include file for SimpleTest
+ *
  * @version    $Id$
  */
 
 /**
  *  Version specific reflection API.
+ *
  * @ignore duplicate with reflection_php5.php
  */
 class SimpleReflection
@@ -14,8 +17,9 @@ class SimpleReflection
 
     /**
      *    Stashes the class/interface.
-     * @param string $interface Class or interface
-     *                                to inspect.
+     *
+     * @param string $interface class or interface
+     *                          to inspect
      */
     public function SimpleReflection($interface)
     {
@@ -24,7 +28,8 @@ class SimpleReflection
 
     /**
      *    Checks that a class has been declared.
-     * @return bool        True if defined.
+     *
+     * @return bool true if defined
      */
     public function classExists()
     {
@@ -34,7 +39,8 @@ class SimpleReflection
     /**
      *    Needed to kill the autoload feature in PHP5
      *    for classes created dynamically.
-     * @return bool        True if defined.
+     *
+     * @return bool true if defined
      */
     public function classExistsSansAutoload()
     {
@@ -44,7 +50,8 @@ class SimpleReflection
     /**
      *    Checks that a class or interface has been
      *    declared.
-     * @return bool        True if defined.
+     *
+     * @return bool true if defined
      */
     public function classOrInterfaceExists()
     {
@@ -54,7 +61,8 @@ class SimpleReflection
     /**
      *    Needed to kill the autoload feature in PHP5
      *    for classes created dynamically.
-     * @return bool        True if defined.
+     *
+     * @return bool true if defined
      */
     public function classOrInterfaceExistsSansAutoload()
     {
@@ -64,6 +72,7 @@ class SimpleReflection
     /**
      *    Gets the list of methods on a class or
      *    interface.
+     *
      * @returns array          List of method names.
      */
     public function getMethods()
@@ -75,6 +84,7 @@ class SimpleReflection
      *    Gets the list of interfaces from a class. If the
      *    class name is actually an interface then just that
      *    interface is returned.
+     *
      * @returns array          List of interfaces.
      */
     public function getInterfaces()
@@ -84,6 +94,7 @@ class SimpleReflection
 
     /**
      *    Finds the parent class name.
+     *
      * @returns string      Parent class name.
      */
     public function getParent()
@@ -94,6 +105,7 @@ class SimpleReflection
     /**
      *    Determines if the class is abstract, which for PHP 4
      *    will never be the case.
+     *
      * @returns boolean      True if abstract.
      */
     public function isAbstract()
@@ -104,6 +116,7 @@ class SimpleReflection
     /**
      *    Determines if the the entity is an interface, which for PHP 4
      *    will never be the case.
+     *
      * @returns boolean      True if interface.
      */
     public function isInterface()
@@ -114,6 +127,7 @@ class SimpleReflection
     /**
      *    Scans for final methods, but as it's PHP 4 there
      *    aren't any.
+     *
      * @returns boolean   True if the class has a final method.
      */
     public function hasFinal()
@@ -124,7 +138,8 @@ class SimpleReflection
     /**
      *    Gets the source code matching the declaration
      *    of a method.
-     * @param string $method Method name.
+     *
+     * @param string $method method name
      */
     public function getSignature($method)
     {

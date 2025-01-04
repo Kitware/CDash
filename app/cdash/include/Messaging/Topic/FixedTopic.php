@@ -1,22 +1,21 @@
 <?php
+
 namespace CDash\Messaging\Topic;
 
 use CDash\Model\Build;
 
 /**
  * Class FixedTopic
- * @package CDash\Messaging\Topic
  */
 class FixedTopic extends Topic
 {
-    /** @var array $fixes */
+    /** @var array */
     private $fixes = [];
 
-    /** @var bool $decoratedSubscribes */
+    /** @var bool */
     private $decoratedSubscribes;
 
     /**
-     * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)
@@ -27,7 +26,6 @@ class FixedTopic extends Topic
     }
 
     /**
-     * @param Build $build
      * @return Topic|void
      */
     public function setTopicData(Build $build)

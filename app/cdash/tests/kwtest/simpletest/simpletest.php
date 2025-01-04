@@ -1,6 +1,8 @@
 <?php
+
 /**
  *  Global state for SimpleTest and kicker script in future versions.
+ *
  * @version    $Id$
  */
 
@@ -20,7 +22,8 @@ class SimpleTest
 {
     /**
      *    Reads the SimpleTest version from the release file.
-     * @return string        Version string.
+     *
+     * @return string version string
      */
     public static function getVersion()
     {
@@ -31,7 +34,8 @@ class SimpleTest
     /**
      *    Sets the name of a test case to ignore, usually
      *    because the class is an abstract case that should
-     * @param string $class Add a class to ignore.
+     *
+     * @param string $class add a class to ignore
      */
     public static function ignore($class)
     {
@@ -50,7 +54,8 @@ class SimpleTest
      *    a particular order on the class declarations and
      *    the ignore() calls. It's just nice to have the ignore()
      *    calls at the top of the file before the actual declarations.
-     * @param array $classes Class names of interest.
+     *
+     * @param array $classes class names of interest
      */
     public static function ignoreParentsIfIgnored($classes)
     {
@@ -69,7 +74,9 @@ class SimpleTest
      *   Puts the object to the global pool of 'preferred' objects
      *   which can be retrieved with SimpleTest :: preferred() method.
      *   Instances of the same class are overwritten.
+     *
      * @param object $object Preferred object
+     *
      * @see preferred()
      */
     public static function prefer($object)
@@ -82,8 +89,11 @@ class SimpleTest
      *   Retrieves 'preferred' objects from global pool. Class filter
      *   can be applied in order to retrieve the object of the specific
      *   class
-     * @param array|string $classes Allowed classes or interfaces.
+     *
+     * @param array|string $classes allowed classes or interfaces
+     *
      * @return array|object|null
+     *
      * @see prefer()
      */
     public static function preferred($classes)
@@ -108,8 +118,10 @@ class SimpleTest
      *    be a separate object and will be one day.
      *    This method is internal to SimpleTest. Don't
      *    use it.
-     * @param string $class Class name to test.
-     * @return bool             True if should not be run.
+     *
+     * @param string $class class name to test
+     *
+     * @return bool true if should not be run
      */
     public static function isIgnored($class)
     {
@@ -122,9 +134,10 @@ class SimpleTest
      *    testing from behind a firewall. Set host
      *    to false to disable. This will take effect
      *    if there are no other proxy settings.
-     * @param string $proxy Proxy host as URL.
-     * @param string $username Proxy username for authentication.
-     * @param string $password Proxy password for authentication.
+     *
+     * @param string $proxy proxy host as URL
+     * @param string $username proxy username for authentication
+     * @param string $password proxy password for authentication
      */
     public static function useProxy($proxy, $username = false, $password = false)
     {
@@ -136,7 +149,8 @@ class SimpleTest
 
     /**
      *    Accessor for default proxy host.
-     * @return string       Proxy URL.
+     *
+     * @return string proxy URL
      */
     public static function getDefaultProxy()
     {
@@ -146,7 +160,8 @@ class SimpleTest
 
     /**
      *    Accessor for default proxy username.
-     * @return string    Proxy username for authentication.
+     *
+     * @return string proxy username for authentication
      */
     public static function getDefaultProxyUsername()
     {
@@ -156,7 +171,8 @@ class SimpleTest
 
     /**
      *    Accessor for default proxy password.
-     * @return string    Proxy password for authentication.
+     *
+     * @return string proxy password for authentication
      */
     public static function getDefaultProxyPassword()
     {
@@ -166,9 +182,10 @@ class SimpleTest
 
     /**
      *    Accessor for default HTML parsers.
-     * @return array     List of parsers to try in
-     *                      order until one responds true
-     *                      to can().
+     *
+     * @return array list of parsers to try in
+     *               order until one responds true
+     *               to can()
      */
     public static function getParsers()
     {
@@ -178,9 +195,10 @@ class SimpleTest
 
     /**
      *    Set the list of HTML parsers to attempt to use by default.
-     * @param array $parsers List of parsers to try in
-     *                             order until one responds true
-     *                             to can().
+     *
+     * @param array $parsers list of parsers to try in
+     *                       order until one responds true
+     *                       to can()
      */
     public static function setParsers($parsers)
     {
@@ -190,7 +208,8 @@ class SimpleTest
 
     /**
      *    Accessor for global registry of options.
-     * @return hash           All stored values.
+     *
+     * @return hash all stored values
      */
     protected static function &getRegistry()
     {
@@ -204,7 +223,8 @@ class SimpleTest
     /**
      *    Accessor for the context of the current
      *    test run.
-     * @return SimpleTestContext    Current test run.
+     *
+     * @return SimpleTestContext current test run
      */
     public static function getContext()
     {
@@ -217,7 +237,8 @@ class SimpleTest
 
     /**
      *    Constant default values.
-     * @return hash       All registry defaults.
+     *
+     * @return hash all registry defaults
      */
     protected static function getDefaults()
     {
@@ -275,7 +296,8 @@ class SimpleTestContext
      *    Sets the current test case instance. This
      *    global instance can be used by the mock objects
      *    to send message to the test cases.
-     * @param SimpleTestCase $test Test case to register.
+     *
+     * @param SimpleTestCase $test test case to register
      */
     public function setTest($test)
     {
@@ -285,7 +307,8 @@ class SimpleTestContext
 
     /**
      *    Accessor for currently running test case.
-     * @return SimpleTestCase    Current test.
+     *
+     * @return SimpleTestCase current test
      */
     public function getTest()
     {
@@ -296,7 +319,8 @@ class SimpleTestContext
      *    Sets the current reporter. This
      *    global instance can be used by the mock objects
      *    to send messages.
-     * @param SimpleReporter $reporter Reporter to register.
+     *
+     * @param SimpleReporter $reporter reporter to register
      */
     public function setReporter($reporter)
     {
@@ -306,7 +330,8 @@ class SimpleTestContext
 
     /**
      *    Accessor for current reporter.
-     * @return SimpleReporter    Current reporter.
+     *
+     * @return SimpleReporter current reporter
      */
     public function getReporter()
     {
@@ -315,7 +340,8 @@ class SimpleTestContext
 
     /**
      *    Accessor for the Singleton resource.
-     * @return object       Global resource.
+     *
+     * @return object global resource
      */
     public function get($resource)
     {
@@ -336,8 +362,9 @@ class SimpleStackTrace
 
     /**
      *    Stashes the list of target prefixes.
-     * @param array $prefixes List of method prefixes
-     *                                to search for.
+     *
+     * @param array $prefixes list of method prefixes
+     *                        to search for
      */
     public function __construct($prefixes)
     {
@@ -347,9 +374,11 @@ class SimpleStackTrace
     /**
      *    Extracts the last method name that was not within
      *    Simpletest itself. Captures a stack trace if none given.
-     * @param array $stack List of stack frames.
-     * @return string           Snippet of test report with line
-     *                             number and file.
+     *
+     * @param array $stack list of stack frames
+     *
+     * @return string snippet of test report with line
+     *                number and file
      */
     public function traceMethod($stack = false)
     {
@@ -367,8 +396,10 @@ class SimpleStackTrace
 
     /**
      *    Test to see if error is generated by SimpleTest itself.
-     * @param array $frame PHP stack frame.
-     * @return bool         True if a SimpleTest file.
+     *
+     * @param array $frame PHP stack frame
+     *
+     * @return bool true if a SimpleTest file
      */
     protected function frameLiesWithinSimpleTestFolder($frame)
     {
@@ -385,8 +416,10 @@ class SimpleStackTrace
 
     /**
      *    Tries to determine if the method call is an assert, etc.
-     * @param array $frame PHP stack frame.
-     * @return bool         True if matches a target.
+     *
+     * @param array $frame PHP stack frame
+     *
+     * @return bool true if matches a target
      */
     protected function frameMatchesPrefix($frame)
     {
@@ -400,7 +433,8 @@ class SimpleStackTrace
 
     /**
      *    Grabs a current stack trace.
-     * @return array        Fulle trace.
+     *
+     * @return array fulle trace
      */
     protected function captureTrace()
     {

@@ -21,7 +21,6 @@ class CreateCoveragefilelogTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

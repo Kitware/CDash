@@ -20,7 +20,6 @@ class CreateSubmission2ipTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

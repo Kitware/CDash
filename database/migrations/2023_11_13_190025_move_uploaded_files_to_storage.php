@@ -7,8 +7,9 @@ return new class extends Migration {
     /**
      * Run the migrations.
      *
-     * @throws UnexpectedValueException
      * @return void
+     *
+     * @throws UnexpectedValueException
      */
     public function up()
     {

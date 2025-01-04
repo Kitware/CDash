@@ -22,7 +22,6 @@ class CreateTest2imageTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -29,7 +30,7 @@ class FilterBuildErrorsTestCase extends KWWebTestCase
                 was not declared in this scope
                 No such file or directory
                 FILTER,
-];
+        ];
         $projectid = $this->createProject($settings);
         if ($projectid < 1) {
             $this->fail('Failed to create project');

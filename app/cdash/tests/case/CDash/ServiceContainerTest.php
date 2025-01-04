@@ -1,24 +1,26 @@
 <?php
+
 use CDash\ServiceContainer;
 use CDash\Test\CDashTestCase;
+use DI\Container;
 
 class ServiceContainerTest extends CDashTestCase
 {
     private static $di;
 
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         self::$di = ServiceContainer::getInstance();
     }
 
-    public static function tearDownAfterClass() : void
+    public static function tearDownAfterClass(): void
     {
         ServiceContainer::setInstance(ServiceContainer::class, self::$di);
         parent::tearDownAfterClass();
     }
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         ServiceContainer::setInstance(ServiceContainer::class, self::$di);
@@ -42,7 +44,7 @@ class ServiceContainerTest extends CDashTestCase
 
     public function testCreate()
     {
-        $mock_di = $this->getMockBuilder(DI\Container::class)
+        $mock_di = $this->getMockBuilder(Container::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['make'])
             ->getMock();
@@ -59,7 +61,7 @@ class ServiceContainerTest extends CDashTestCase
 
     public function testGet()
     {
-        $mock_di = $this->getMockBuilder(DI\Container::class)
+        $mock_di = $this->getMockBuilder(Container::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['get'])
             ->getMock();

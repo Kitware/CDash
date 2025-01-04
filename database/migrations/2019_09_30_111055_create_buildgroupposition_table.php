@@ -22,7 +22,6 @@ class CreateBuildgrouppositionTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -14,16 +15,15 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\Project as EloquentProject;
 use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
-
+use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
 use CDash\Model\BuildErrorFilter;
 use CDash\Model\Project;
-use App\Models\Project as EloquentProject;
-use CDash\Database;
 
 class BazelJSONHandler extends AbstractSubmissionHandler
 {
@@ -89,7 +89,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
      **/
     public function Parse($filename)
     {
-        $handle = fopen($filename, "r");
+        $handle = fopen($filename, 'r');
         if (!$handle) {
             add_log("Could not open $filename for parsing",
                 'BazelJSONHandler::Parse', LOG_ERR);
@@ -162,7 +162,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
 
         // Save testing information.
         foreach ($this->Tests as $testdata) {
-            $testCreator = new TestCreator;
+            $testCreator = new TestCreator();
 
             $testCreator->buildTestTime = $testdata->time;
             $testCreator->projectid = $this->Project->Id;
@@ -242,7 +242,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                                 // A line of exacty 80 '='s means the end of output
                                 // for this test.
                                 $this->RecordingTestOutput = false;
-                                $this->TestName = "";
+                                $this->TestName = '';
                             } else {
                                 if (!array_key_exists(
                                     $this->TestName, $this->TestsOutput)) {
@@ -257,12 +257,12 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                                 }
                             }
                         } elseif ($this->RecordingTestSummary) {
-                            $begin_line = explode(" ", $line)[0];
-                            if ($begin_line === "Executed") {
+                            $begin_line = explode(' ', $line)[0];
+                            if ($begin_line === 'Executed') {
                                 // The summary of all tests begins with
                                 // "Executed"
                                 $this->RecordingTestSummary = false;
-                                $this->TestName = "";
+                                $this->TestName = '';
                             } elseif ($this->IsTestName($begin_line)) {
                                 // Check if this line starts with a test name
                                 // (might be a different test than the one we're
@@ -283,11 +283,11 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                             // For sharded tests, this string will be:
                             // '<test name> (shard <n> of <total>)'. Split
                             // off just the <test name> part.
-                            $this->TestName = explode(" ", $matches[1])[0];
+                            $this->TestName = explode(' ', $matches[1])[0];
                             $this->RecordingTestOutput = true;
                         } else {
                             // Check if this line starts with a test name
-                            $test_name = explode(" ", $line)[0];
+                            $test_name = explode(' ', $line)[0];
                             if (array_key_exists($test_name, $this->TestsOutput)) {
                                 $this->RecordingTestSummary = true;
                                 $this->TestName = $test_name;
@@ -345,12 +345,12 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                         if ($this->ParseConfigure) {
                             if (preg_match($analysis_warning_pattern, $line, $matches) === 1
                                     && count($matches) === 2) {
-                                $source_file = str_replace(":", "/", $matches[1]);
+                                $source_file = str_replace(':', '/', $matches[1]);
                                 $record_configure_error = true;
                                 $type = 1;
                             } elseif (preg_match($configure_error_pattern, $line, $matches) === 1
                                     && count($matches) === 2) {
-                                $source_file = $matches[1] . "BUILD";
+                                $source_file = $matches[1] . 'BUILD';
                                 $record_configure_error = true;
                                 $type = 0;
                             }
@@ -371,9 +371,9 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                                     // other than non-zero. Use 1 as a reasonable
                                     // default.
                                     $this->Configures[$subproject_name]->Status = 1;
-                                    $this->Configures[$subproject_name]->NumberOfErrors += 1;
+                                    $this->Configures[$subproject_name]->NumberOfErrors++;
                                 } else {
-                                    $this->Configures[$subproject_name]->NumberOfWarnings += 1;
+                                    $this->Configures[$subproject_name]->NumberOfWarnings++;
                                 }
 
                                 // Capture line as this configure's log.
@@ -505,7 +505,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
 
             case 'started':
                 // Parse out the command line that created this file.
-                $this->CommandLine = "bazel ";
+                $this->CommandLine = 'bazel ';
                 $this->CommandLine .= $json_array['started']['command'];
                 if (array_key_exists('optionsDescription', $json_array['started'])) {
                     $this->CommandLine .= $json_array['started']['optionsDescription'];

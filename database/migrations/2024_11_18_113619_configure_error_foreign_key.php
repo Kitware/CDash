@@ -71,7 +71,7 @@ return new class extends Migration {
         }
 
         echo "{$num_deleted} rows deleted from `configureerror`" . PHP_EOL;
-        echo "Adding foreign key constraint configureerror(configureid)->configure(id)...";
+        echo 'Adding foreign key constraint configureerror(configureid)->configure(id)...';
 
         Schema::table('configureerror', function (Blueprint $table) {
             $table->foreign('configureid')->references('id')->on('configure')->cascadeOnDelete();

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -77,7 +78,7 @@ class SubProjectDirectoriesHandler extends AbstractSubmissionHandler
      * @param array $open_list
      * @param array $closed_list
      * @param int $level
-
+     *
      **/
     public function ParseSubProjects($open_list, $closed_list, $level)
     {

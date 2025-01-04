@@ -1,13 +1,13 @@
 <?php
-namespace CDash\Messaging\Topic;
 
-use Illuminate\Support\Collection;
+namespace CDash\Messaging\Topic;
 
 use CDash\Collection\BuildErrorCollection;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
 use CDash\Model\BuildFailure;
 use CDash\Model\SubscriberInterface;
+use Illuminate\Support\Collection;
 
 class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
 {
@@ -23,7 +23,6 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
      * been notified for those events or if the has been notified but there are new events
      * not included in the previous notification.
      *
-     * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)
@@ -48,7 +47,6 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
     }
 
     /**
-     * @param Build $build
      * @return Topic|void
      */
     public function setTopicData(Build $build)
@@ -71,10 +69,8 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
     }
 
     /**
-     * @param Build $build
-     * @param $item
-     * @return boolean
-     * // TODO: refactor itemHasTopicSubject, remove callables from Topic and subclasses & remove Build from signature
+     * @return bool
+     *              // TODO: refactor itemHasTopicSubject, remove callables from Topic and subclasses & remove Build from signature
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
@@ -93,7 +89,6 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
     }
 
     /**
-     * @param $type
      * @return $this
      */
     public function setType($type)
@@ -133,7 +128,6 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
     }
 
     /**
-     * @param Build $build
      * @return Collection
      */
     public function getLabelsFromBuild(Build $build)
@@ -155,8 +149,6 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
     }
 
     /**
-     * @param Build $build
-     * @param Collection $labels
      * @return void
      */
     public function setTopicDataWithLabels(Build $build, Collection $labels)
@@ -167,7 +159,6 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
     }
 
     /**
-     * @param SubscriberInterface $subscriber
      * @return bool
      */
     public function isSubscribedToBy(SubscriberInterface $subscriber)

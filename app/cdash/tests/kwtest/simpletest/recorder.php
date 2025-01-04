@@ -1,9 +1,12 @@
 <?php
+
 /**
  *  base include file for SimpleTest
+ *
  * @author Rene vd O (original code)
  * @author Perrick Penet
  * @author Marcus Baker
+ *
  * @version  $Id$
  */
 
@@ -23,8 +26,9 @@ abstract class SimpleResult
 
     /**
      * Records the test result as public members.
-     * @param array $breadcrumb Test stack at the time of the event.
-     * @param string $message The messsage to the human.
+     *
+     * @param array $breadcrumb test stack at the time of the event
+     * @param string $message the messsage to the human
      */
     public function __construct($breadcrumb, $message)
     {
@@ -65,8 +69,9 @@ class Recorder extends SimpleReporterDecorator
     /**
      *    Stashes the pass as a SimpleResultOfPass
      *    for later retrieval.
-     * @param string $message Pass message to be displayed
-     *                              eventually.
+     *
+     * @param string $message pass message to be displayed
+     *                        eventually
      */
     public function paintPass($message)
     {
@@ -77,8 +82,9 @@ class Recorder extends SimpleReporterDecorator
     /**
      *    Stashes the fail as a SimpleResultOfFail
      *    for later retrieval.
-     * @param string $message Failure message to be displayed
-     *                              eventually.
+     *
+     * @param string $message failure message to be displayed
+     *                        eventually
      */
     public function paintFail($message)
     {
@@ -89,8 +95,9 @@ class Recorder extends SimpleReporterDecorator
     /**
      *    Stashes the exception as a SimpleResultOfException
      *    for later retrieval.
-     * @param string $message Exception message to be displayed
-     *                              eventually.
+     *
+     * @param string $message exception message to be displayed
+     *                        eventually
      */
     public function paintException($message)
     {

@@ -42,17 +42,15 @@ class PurgeUnusedProjectsCommand extends TestCase
         $this->project2->Save();
         $this->project2->InitialSetup();
 
-
         // Run the command.
         $this->artisan('projects:clean');
 
         // Confirm that project 2 was deleted but project 1 was not
         self::assertEquals(0, DB::select("SELECT COUNT(*) AS c FROM project WHERE name = 'RemoveProject'")[0]->c);
         self::assertEquals(1, DB::select("SELECT COUNT(*) AS c FROM project WHERE name = 'DontRemoveProject'")[0]->c);
-
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         if (isset($this->project1)) {
             $this->project1->Delete();

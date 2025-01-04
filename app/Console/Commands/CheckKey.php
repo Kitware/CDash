@@ -31,13 +31,10 @@ class CheckKey extends Command
         parent::__construct();
     }
 
-    /**
-     * @return mixed
-     */
     public function handle()
     {
         if (trim(config('app.key')) === '') {
-            echo "Error: APP_KEY environment variable is not set.  You can use the following randomly generated key:" . PHP_EOL;
+            echo 'Error: APP_KEY environment variable is not set.  You can use the following randomly generated key:' . PHP_EOL;
             // Print a new key to the screen.  Note: we can't use Artisan's key:generate command if there is no .env,
             // so we generate a random key ourselves.
             echo Str::password(32, true, true, false) . PHP_EOL;

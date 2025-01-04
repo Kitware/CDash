@@ -17,11 +17,10 @@ class CreateRelatedBuildsTable extends Migration
                 $table->bigInteger('buildid')->index();
                 $table->bigInteger('relatedid')->index();
                 $table->string('relationship')->nullable();
-                $table->primary(['buildid','relatedid']);
+                $table->primary(['buildid', 'relatedid']);
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

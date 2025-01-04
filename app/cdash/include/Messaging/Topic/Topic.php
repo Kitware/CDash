@@ -1,9 +1,10 @@
 <?php
+
 namespace CDash\Messaging\Topic;
 
-use CDash\Model\Build;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\Collection;
+use CDash\Model\Build;
 use CDash\Model\SubscriberInterface;
 
 abstract class Topic implements TopicInterface
@@ -17,35 +18,34 @@ abstract class Topic implements TopicInterface
     public const TEST_MISSING = 'TestMissing';
     public const UPDATE_ERROR = 'UpdateError';
 
-    /** @var  SubscriberInterface $subscriber */
+    /** @var SubscriberInterface */
     protected $subscriber;
 
-    /** @var  mixed $topicData */
     protected $topicData;
 
-    /** @var  Build $build */
+    /** @var Build */
     private $build;
 
-    /** @var  BuildCollection */
+    /** @var BuildCollection */
     private $buildCollection;
 
-    /** @var Topic $topic */
+    /** @var Topic */
     protected $topic;
 
-    /** @var  string[] $labels */
+    /** @var string[] */
     protected $labels;
 
     /**
      * Topic constructor.
+     *
      * @param TopicInterface|Fixable|Labelable|null $topic
      */
-    public function __construct(TopicInterface $topic = null)
+    public function __construct(?TopicInterface $topic = null)
     {
         $this->topic = $topic;
     }
 
     /**
-     * @param Build $build
      * @return $this
      */
     public function addBuild(Build $build)
@@ -57,7 +57,6 @@ abstract class Topic implements TopicInterface
     }
 
     /**
-     * @param Build $build
      * @return Topic
      */
     public function setBuild(Build $build)
@@ -75,7 +74,6 @@ abstract class Topic implements TopicInterface
     }
 
     /**
-     * @param SubscriberInterface $subscriber
      * @return Topic
      */
     public function setSubscriber(SubscriberInterface $subscriber)
@@ -88,7 +86,6 @@ abstract class Topic implements TopicInterface
     }
 
     /**
-     * @param Build $build
      * @return $this
      */
     public function setTopicData(Build $build)
@@ -100,8 +97,6 @@ abstract class Topic implements TopicInterface
     }
 
     /**
-     * @param Build $build
-     * @param $item
      * @return bool
      */
     public function itemHasTopicSubject(Build $build, $item)
@@ -173,8 +168,8 @@ abstract class Topic implements TopicInterface
     }
 
     /**
-     * @param Build $build
      * @param null $category
+     *
      * @return bool
      */
     public function hasSubscriberAlreadyBeenNotified(Build $build, $category = null)

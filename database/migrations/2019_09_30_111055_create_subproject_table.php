@@ -22,11 +22,10 @@ class CreateSubprojectTable extends Migration
                 $table->smallInteger('position')->unsigned()->default(0);
                 $table->dateTime('starttime')->default('1980-01-01 00:00:00');
                 $table->dateTime('endtime')->default('1980-01-01 00:00:00');
-                $table->unique(['name','projectid','endtime'], 'subproject_unique_key');
+                $table->unique(['name', 'projectid', 'endtime'], 'subproject_unique_key');
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

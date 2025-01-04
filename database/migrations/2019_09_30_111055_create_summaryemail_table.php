@@ -21,7 +21,6 @@ class CreateSummaryemailTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

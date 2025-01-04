@@ -9,11 +9,14 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
+use LogicException;
 use Mockery;
+use Psr\SimpleCache\InvalidArgumentException;
 use Slides\Saml2\Events\SignedIn as Saml2SignedInEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
-use Laravel\Socialite\Facades\Socialite;
+use Throwable;
 
 class LoginAndRegistration extends TestCase
 {
@@ -22,7 +25,7 @@ class LoginAndRegistration extends TestCase
 
     protected static string $blockedEmail = 'disabledRegistration@user.com';
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         URL::forceRootUrl('http://localhost');
@@ -30,14 +33,14 @@ class LoginAndRegistration extends TestCase
 
     protected function tearDown(): void
     {
-        /**
-          * The lack of a call to parent::tearDown() here is intentional.
-          * Otherwise tearDownAfterClass() fails with:
-          * "Target class [config] does not exist."
-          */
+        /*
+         * The lack of a call to parent::tearDown() here is intentional.
+         * Otherwise tearDownAfterClass() fails with:
+         * "Target class [config] does not exist."
+         */
     }
 
-    public static function tearDownAfterClass() : void
+    public static function tearDownAfterClass(): void
     {
         $user = User::where('email', LoginAndRegistration::$email)->first();
         if ($user !== null) {
@@ -47,7 +50,7 @@ class LoginAndRegistration extends TestCase
         parent::tearDownAfterClass();
     }
 
-    public function testCanViewLoginForm() : void
+    public function testCanViewLoginForm(): void
     {
         // Verify that the normal login form is shown by default.
         $response = $this->get('/login');
@@ -55,7 +58,7 @@ class LoginAndRegistration extends TestCase
         $response->assertSeeText('Email:');
     }
 
-    public function testRegisterUser() : void
+    public function testRegisterUser(): void
     {
         // Create a user by filling out the registration form.
         $post_data = [
@@ -74,7 +77,7 @@ class LoginAndRegistration extends TestCase
         $this->assertDatabaseHas('users', ['email' => LoginAndRegistration::$email]);
     }
 
-    public function testUserCanLoginWithCorrectCredentials() : void
+    public function testUserCanLoginWithCorrectCredentials(): void
     {
         // Verify that users can login with their username and password.
         $response = $this->post('/login', [
@@ -86,7 +89,7 @@ class LoginAndRegistration extends TestCase
         $this->assertAuthenticatedAs($user);
     }
 
-    public function testUserCannotLoginWithIncorrectCredentials() : void
+    public function testUserCannotLoginWithIncorrectCredentials(): void
     {
         // Test the incorrect password workflow.
         $response = $this->post('/login', [
@@ -97,7 +100,7 @@ class LoginAndRegistration extends TestCase
         $this->assertGuest();
     }
 
-    public function testDisabledLoginForm() : void
+    public function testDisabledLoginForm(): void
     {
         // Disable username+password authentication and verify that the
         // form is no longer displayed.
@@ -107,7 +110,7 @@ class LoginAndRegistration extends TestCase
         $response->assertDontSeeText('Email:');
     }
 
-    public function testUserCannotLoginWithDisabledLoginForm() : void
+    public function testUserCannotLoginWithDisabledLoginForm(): void
     {
         // Verify that we can't login by POSTing to /login when the
         // relevant config setting is disabled.
@@ -119,7 +122,7 @@ class LoginAndRegistration extends TestCase
         $this->assertGuest();
     }
 
-    public function testLocalView() : void
+    public function testLocalView(): void
     {
         // Verify that custom text does not appear when the local view is not in place.
         $response = $this->get('/login');
@@ -137,7 +140,7 @@ class LoginAndRegistration extends TestCase
         unlink($tmp_view_path);
     }
 
-    public function testSaml2() : void
+    public function testSaml2(): void
     {
         // Verify that SAML2 login fails when disabled.
         $response = $this->post('/saml2/login');
@@ -189,11 +192,12 @@ class LoginAndRegistration extends TestCase
 
     /**
      * Test SAML2 authentication
-     * @throws \LogicException
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     *
+     * @throws LogicException
+     * @throws InvalidArgumentException
      * @throws HttpException
      */
-    public function testSaml2LoginListener() : void
+    public function testSaml2LoginListener(): void
     {
         // Setup mock objects.
         $mock_base_auth = Mockery::mock('OneLogin\Saml2\Auth');
@@ -215,7 +219,7 @@ class LoginAndRegistration extends TestCase
         Cache::put('saml-message-id-12345', true, 5);
         try {
             $sut->handle($event);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
         self::assertEquals(new HttpException(400, 'Invalid SAML2 message ID'), $e);
         Cache::delete('saml-message-id-12345');
@@ -224,7 +228,7 @@ class LoginAndRegistration extends TestCase
         config(['saml2.autoregister_new_users' => false]);
         try {
             $sut->handle($event);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
         self::assertEquals(new HttpException(401), $e);
         Cache::delete('saml-message-id-12345');
@@ -251,7 +255,7 @@ class LoginAndRegistration extends TestCase
         Mockery::close();
     }
 
-    public function testPingIdentity() : void
+    public function testPingIdentity(): void
     {
         // Verify that the PingIdentity button doesn't appear by default.
         $response = $this->get('/login');
@@ -266,7 +270,7 @@ class LoginAndRegistration extends TestCase
     /**
      * Test PingIdentity authentication
      */
-    public function testPingIdentityProvider() : void
+    public function testPingIdentityProvider(): void
     {
         // Stolen from: https://laracasts.com/discuss/channels/testing/testing-laravel-socialite-callback
         $abstractUser = Mockery::mock('Laravel\Socialite\Two\User');
@@ -286,11 +290,11 @@ class LoginAndRegistration extends TestCase
 
         Socialite::shouldReceive('driver')->with('pingidentity')->andReturn($provider);
 
-        $response = $this->get("auth/pingidentity/callback");
-        $response->assertRedirect("/register?fname=Arlette&lname=Laguiller&email=cdash%40test.com");
+        $response = $this->get('auth/pingidentity/callback');
+        $response->assertRedirect('/register?fname=Arlette&lname=Laguiller&email=cdash%40test.com');
     }
 
-    public function testNoFullNamePingIdentityProvider() : void
+    public function testNoFullNamePingIdentityProvider(): void
     {
         // Stolen from: https://laracasts.com/discuss/channels/testing/testing-laravel-socialite-callback
         $abstractUser = Mockery::mock('Laravel\Socialite\Two\User');
@@ -310,12 +314,11 @@ class LoginAndRegistration extends TestCase
 
         Socialite::shouldReceive('driver')->with('pingidentity')->andReturn($provider);
 
-        $response = $this->get("auth/pingidentity/callback");
-        $response->assertRedirect("/register?fname=Pseudo&lname=&email=cdash%40test.com");
+        $response = $this->get('auth/pingidentity/callback');
+        $response->assertRedirect('/register?fname=Pseudo&lname=&email=cdash%40test.com');
     }
 
-
-    public function testRegisterUserWhenDisabled() : void
+    public function testRegisterUserWhenDisabled(): void
     {
         // Create a user by sending proper data
 
@@ -336,7 +339,7 @@ class LoginAndRegistration extends TestCase
         $this->assertDatabaseMissing('users', ['email' => LoginAndRegistration::$blockedEmail]);
     }
 
-    public function testDisabledRegistrationForm() : void
+    public function testDisabledRegistrationForm(): void
     {
         // Disable username+password authentication and verify that the
         // form is no longer displayed.

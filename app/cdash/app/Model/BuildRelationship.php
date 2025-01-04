@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,10 +14,12 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 use CDash\Database;
 use CDash\ServiceContainer;
+use PDO;
 
 /** BuildRelationship class */
 class BuildRelationship
@@ -173,8 +176,8 @@ class BuildRelationship
     public function marshal()
     {
         return [
-            'buildid'      => $this->Build->Id,
-            'relatedid'    => $this->RelatedBuild->Id,
+            'buildid' => $this->Build->Id,
+            'relatedid' => $this->RelatedBuild->Id,
             'relationship' => $this->Relationship,
         ];
     }
@@ -191,7 +194,7 @@ class BuildRelationship
         if (!pdo_execute($stmt, [$build->Id])) {
             return false;
         }
-        $response['from'] = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $response['from'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $stmt = $this->PDO->prepare(
             'SELECT buildid, relationship, b.name
@@ -201,7 +204,7 @@ class BuildRelationship
         if (!pdo_execute($stmt, [$build->Id])) {
             return false;
         }
-        $response['to'] = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $response['to'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $response;
     }
 }

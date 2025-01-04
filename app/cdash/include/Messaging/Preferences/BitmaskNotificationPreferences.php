@@ -1,4 +1,5 @@
 <?php
+
 namespace CDash\Messaging\Preferences;
 
 class BitmaskNotificationPreferences extends NotificationPreferences
@@ -13,7 +14,7 @@ class BitmaskNotificationPreferences extends NotificationPreferences
     public const EMAIL_MISSING_SITES = 256;                             // 2^8
 
     // NEW MASKS
-    public const EMAIL_NEVER    = 0;
+    public const EMAIL_NEVER = 0;
     public const EMAIL_FILTERED = 1;                                    // 2^0
     public const EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION = 512;            // 2^9
     public const EMAIL_ANY_USER_CHECKIN_ISSUE_NIGHTLY_SECTION = 1024;   // 2^10

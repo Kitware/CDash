@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class RemoteWorkers extends TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -19,10 +19,10 @@ class RemoteWorkers extends TestCase
         Config::set('cdash.backup_timeframe', 0);
     }
 
-    public function testRemoteWorkerAPIAccess() : void
+    public function testRemoteWorkerAPIAccess(): void
     {
         Storage::put('inbox/delete_me', 'please delete me');
-        $_SERVER["REQUEST_METHOD"] = 'DELETE';
+        $_SERVER['REQUEST_METHOD'] = 'DELETE';
         $_REQUEST['filename'] = encrypt('inbox/delete_me');
 
         $response = $this
@@ -31,10 +31,10 @@ class RemoteWorkers extends TestCase
         self::assertFalse(Storage::exists('inbox/delete_me'));
     }
 
-    public function testRemoteWorkerAPIAccessWithInvalidKey() : void
+    public function testRemoteWorkerAPIAccessWithInvalidKey(): void
     {
         Storage::put('inbox/delete_me', 'please delete me');
-        $_SERVER["REQUEST_METHOD"] = 'DELETE';
+        $_SERVER['REQUEST_METHOD'] = 'DELETE';
         // Not encrypted, will fail.
         $_REQUEST['filename'] = 'inbox/delete_me';
 
@@ -45,7 +45,7 @@ class RemoteWorkers extends TestCase
         Storage::delete('inbox/delete_me');
     }
 
-    public function testStoreUploadedFile() : void
+    public function testStoreUploadedFile(): void
     {
         Storage::fake('upload');
         $file = UploadedFile::fake()->image('my_upload.jpg');

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use CDash\Model\Label;
-
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -37,7 +36,7 @@ class Test extends Model
     /**
      * @deprecated 08/24/2024  This member variable is deprecated.  Use the labels() Eloquent relationship instead.
      */
-    protected $labels = null;
+    protected $labels;
 
     // TODO: Put these in an enum somewhere
     public const FAILED = 'failed';

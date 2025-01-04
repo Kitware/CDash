@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -8,6 +9,8 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Models\Measurement;
 use App\Utils\DatabaseCleanupUtils;
+use CDash\Database;
+use GuzzleHttp\Exception\ClientException;
 
 class ManageMeasurementsTestCase extends KWWebTestCase
 {
@@ -22,7 +25,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
     {
         parent::__construct();
 
-        $this->PDO = CDash\Database::getInstance();
+        $this->PDO = Database::getInstance();
         $this->PDO->getPdo();
         $this->BuildId = null;
         $this->SubProjectBuildId = null;
@@ -45,7 +48,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
     private function validate_test($test_name, $num_procs, $proc_time, $page)
     {
         // For those special moments when 4.2 does not equal 4.2
-        $proc_time = sprintf("%.1f", $proc_time);
+        $proc_time = sprintf('%.1f', $proc_time);
         if ($test_name == 'TestNoProcs') {
             if ($proc_time != 1.4) {
                 $this->fail("Expected 1.4 proc time on $page, found $proc_time");
@@ -73,8 +76,8 @@ class ManageMeasurementsTestCase extends KWWebTestCase
     private function validate_subproject_test($test_name, $num_procs, $proc_time, $io_wait_time, $page)
     {
         // For those special moments when 6.6 does not equal 6.6
-        $proc_time = sprintf("%.1f", $proc_time);
-        $io_wait_time = sprintf("%.1f", $io_wait_time);
+        $proc_time = sprintf('%.1f', $proc_time);
+        $io_wait_time = sprintf('%.1f', $io_wait_time);
         if ($test_name == 'experimentalFail1') {
             if ($num_procs != 2) {
                 $this->fail("Expected 2 processors on $page, found $num_procs");
@@ -113,9 +116,9 @@ class ManageMeasurementsTestCase extends KWWebTestCase
     public function testManageMeasurements()
     {
         // Submit a test file with a named measurement.
-        $testDataFile = dirname(__FILE__) .  '/data/TestMeasurements/Test.xml';
+        $testDataFile = dirname(__FILE__) . '/data/TestMeasurements/Test.xml';
         if (!$this->submission('InsightExample', $testDataFile)) {
-            $this->fail("Failed to submit Test.xml");
+            $this->fail('Failed to submit Test.xml');
             return false;
         }
 
@@ -128,14 +131,14 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         }
 
         // Submit subproject test data too.
-        $projectFile = dirname(__FILE__) .  '/data/MultipleSubprojects/Project.xml';
+        $projectFile = dirname(__FILE__) . '/data/MultipleSubprojects/Project.xml';
         if (!$this->submission('SubProjectExample', $projectFile)) {
-            $this->fail("Failed to submit Project.xml");
+            $this->fail('Failed to submit Project.xml');
             return false;
         }
-        $testDataFile = dirname(__FILE__) .  '/data/TestMeasurements/Test_subproj.xml';
+        $testDataFile = dirname(__FILE__) . '/data/TestMeasurements/Test_subproj.xml';
         if (!$this->submission('SubProjectExample', $testDataFile)) {
-            $this->fail("Failed to submit Test_subproj.xml");
+            $this->fail('Failed to submit Test_subproj.xml');
             return false;
         }
         $stmt = $this->PDO->query(
@@ -147,7 +150,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
 
         // Verify that the buildtesttime table correctly multiplies
         // test execution time by the number of processors used.
-        $stmt = $this->PDO->prepare("SELECT time FROM buildtesttime WHERE buildid = :buildid");
+        $stmt = $this->PDO->prepare('SELECT time FROM buildtesttime WHERE buildid = :buildid');
         $this->PDO->execute($stmt, [':buildid' => $this->BuildId]);
         $this->assertEqual(12.13, $stmt->fetchColumn());
 
@@ -157,8 +160,8 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         // POST to manageMeasurements.php to add 'Processors', 'I/O Wait Time',
         // and 'Peak Memory' as test measurements for these projects.
         $measurement_ids = [];
-        $this->ProjectId =  get_project_id('InsightExample');
-        $this->SubProjectId =  get_project_id('SubProjectExample');
+        $this->ProjectId = get_project_id('InsightExample');
+        $this->SubProjectId = get_project_id('SubProjectExample');
         $new_measurements = ['Processors', 'I/O Wait Time', 'Peak Memory'];
         $idx = 1;
         foreach ($new_measurements as $new_measurement) {
@@ -173,7 +176,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
                     $response = $client->request('POST',
                         $this->url . '/api/v1/manageMeasurements.php',
                         ['json' => ['projectid' => $projectid, 'measurements' => $measurements]]);
-                } catch (GuzzleHttp\Exception\ClientException $e) {
+                } catch (ClientException $e) {
                     $this->fail($e->getMessage());
                     return false;
                 }
@@ -193,7 +196,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
                     $this->fail("Expected $measurement_id but found $found for DB measurement ID");
                 }
             }
-            $idx += 1;
+            $idx++;
         }
 
         // Verify that the new measurements are displayed on viewTest.php.
@@ -213,7 +216,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             $this->validate_test($test_name, $num_procs, $proc_time, 'viewTest.php');
             if ($first && $num_procs) {
                 $selected_test_name = $test['name'];
-                $selected_nprocs =  $num_procs;
+                $selected_nprocs = $num_procs;
                 $first = false;
             }
         }
@@ -253,7 +256,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         if ($jsonobj['hasprocessors'] !== true) {
-            $this->fail("hasprocessors not true for queryTests.php");
+            $this->fail('hasprocessors not true for queryTests.php');
         }
         $this->assertEqual(2, count($jsonobj['extrameasurements']));
         $this->assertEqual('I/O Wait Time', $jsonobj['extrameasurements'][0]);
@@ -283,7 +286,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         if ($jsonobj['hasprocessors'] !== true) {
-            $this->fail("hasprocessors not true for queryTests.php");
+            $this->fail('hasprocessors not true for queryTests.php');
         }
         foreach ($jsonobj['builds'] as $build) {
             $this->validate_subproject_test($build['testname'], $build['nprocs'], $build['procTime'], $build['measurements'][0], 'queryTests.php');
@@ -312,10 +315,10 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         }
 
         // Verify that our test graphs correctly report Processors.
-        $this->get($this->url .  "/api/v1/testGraph.php?testname={$selected_test_name}&buildid={$this->BuildId}&measurementname=Processors&type=measurement");
+        $this->get($this->url . "/api/v1/testGraph.php?testname={$selected_test_name}&buildid={$this->BuildId}&measurementname=Processors&type=measurement");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
-        $this->assertTrue($jsonobj[0]['data'][0]['y']  == $selected_nprocs);
+        $this->assertTrue($jsonobj[0]['data'][0]['y'] == $selected_nprocs);
         $this->assertTrue(count($jsonobj[0]['data']) === 1);
     }
 }

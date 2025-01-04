@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -13,6 +14,7 @@
  *   PURPOSE. See the above copyright notices for more information.
  * =========================================================================
  */
+
 namespace CDash\Messaging\Topic;
 
 use CDash\Model\SubscriberInterface;
@@ -21,7 +23,6 @@ interface Decoratable
 {
     // TODO: consider changing param to NotificationsPreferences
     /**
-     * @param SubscriberInterface $subscriber
      * @return bool
      */
     public function isSubscribedToBy(SubscriberInterface $subscriber);

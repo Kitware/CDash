@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -73,8 +74,8 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
         // Isolate the parent build that we care about.
         $parent_build = null;
         foreach ($buildgroup['builds'] as $build) {
-            if ($build['site'] === 'hut11.kitware' &&
-                $build['buildname'] === 'Windows_NT-MSVC10-SERIAL_DEBUG_DEV'
+            if ($build['site'] === 'hut11.kitware'
+                && $build['buildname'] === 'Windows_NT-MSVC10-SERIAL_DEBUG_DEV'
             ) {
                 $parent_build = $build;
             }

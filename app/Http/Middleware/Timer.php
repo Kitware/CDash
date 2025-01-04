@@ -8,11 +8,6 @@ use Illuminate\Support\Facades\Log;
 
 class Timer
 {
-    /**
-     * @param Request $request
-     * @param Closure $next
-     * @return mixed
-     */
     public function handle(Request $request, Closure $next)
     {
         $response = $next($request);

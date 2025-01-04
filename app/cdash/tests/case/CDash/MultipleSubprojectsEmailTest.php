@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -37,16 +38,16 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
 
     private static int $projectid = -1;
 
-    /** @var  Database|PHPUnit_Framework_MockObject_MockObject $db */
+    /** @var Database|PHPUnit_Framework_MockObject_MockObject */
     private $db;
 
-    /** @var  ActionableBuildInterface $submission */
+    /** @var ActionableBuildInterface */
     private $submission;
 
-    /** @var UseCase $useCase */
+    /** @var UseCase */
     private $useCase;
 
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -57,7 +58,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         self::$database = Database::getInstance();
     }
 
-    public static function tearDownAfterClass() : void
+    public static function tearDownAfterClass(): void
     {
         // restore state
         date_default_timezone_set(self::$tz);
@@ -73,7 +74,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         parent::tearDownAfterClass();
     }
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $mock_stmt = $this->createMock(PDOStatement::class);
         $mock_stmt
@@ -129,7 +130,6 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
     }
 
     /**
-     * @param array $subscribers
      * @return NotificationCollection
      */
     private function getNotifications(array $subscribers)
@@ -200,33 +200,33 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
             ->createTestPassed('production', ['MyProductionCode']);
 
         $subscribers = [
-                [
-                    'simpletest@localhost',
-                    BitmaskNotificationPreferences::EMAIL_TEST |
-                    BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION,
-                ],
-                [
-                    'nox-noemail@noemail',
-                    BitmaskNotificationPreferences::EMAIL_TEST |
-                    BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
-                    BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
-                    ['NOX', 'MyExperimentalFeature'],
-                ],
-                [
-                    'optika-noemail@noemail',
-                    BitmaskNotificationPreferences::EMAIL_TEST |
-                    BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
-                    BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
-                    ['Optika', 'MyThirdPartyDependency'],
-                ],
-                [
-                    'trop-noemail@noemail',
-                    BitmaskNotificationPreferences::EMAIL_TEST |
-                    BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
-                    BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
-                    ['RTOp'],
-                ],
-            ];
+            [
+                'simpletest@localhost',
+                BitmaskNotificationPreferences::EMAIL_TEST |
+                BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION,
+            ],
+            [
+                'nox-noemail@noemail',
+                BitmaskNotificationPreferences::EMAIL_TEST |
+                BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
+                BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
+                ['NOX', 'MyExperimentalFeature'],
+            ],
+            [
+                'optika-noemail@noemail',
+                BitmaskNotificationPreferences::EMAIL_TEST |
+                BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
+                BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
+                ['Optika', 'MyThirdPartyDependency'],
+            ],
+            [
+                'trop-noemail@noemail',
+                BitmaskNotificationPreferences::EMAIL_TEST |
+                BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
+                BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
+                ['RTOp'],
+            ],
+        ];
 
         $notifications = $this->getNotifications($subscribers);
         $this->assertCount(3, $notifications);
@@ -394,8 +394,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
             ->createFailedTest('experimentalFail', ['Labels' => ['MyExperimentalFeature']])
             ->createPassedTest(
                 'thirdparty',
-                ['Labels' =>
-                    ['MyThirdPartyDependency', 'NotASubproject'],
+                ['Labels' => ['MyThirdPartyDependency', 'NotASubproject'],
                 ]
             )
             ->setStartTime($start)
@@ -453,10 +452,10 @@ Build Time: {$datetime}
 Type: Experimental
 Total Dynamic analysis tests failing or not run: 1
 
-*Dynamic analysis tests failing or not run* " . /* Join is needed to preserve trailing space */"
+*Dynamic analysis tests failing or not run* " . /* Join is needed to preserve trailing space */ '
 experimentalFail (http://open.cdash.org/viewDynamicAnalysisFile.php?id=1)
 
--CDash";
+-CDash';
         $actual = "{$notification}";
         $this->assertEquals($expected, $actual);
     }

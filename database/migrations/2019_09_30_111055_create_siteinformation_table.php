@@ -29,11 +29,10 @@ class CreateSiteinformationTable extends Migration
                 $table->integer('logicalprocessorsperphysical')->default(-1);
                 $table->integer('processorclockfrequency')->default(-1);
                 $table->string('description')->default('NA');
-                $table->index(['siteid','timestamp'], 'siteid');
+                $table->index(['siteid', 'timestamp'], 'siteid');
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

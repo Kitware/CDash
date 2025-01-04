@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -16,9 +17,8 @@
 
 namespace CDash\Controller\Api;
 
-use App\Models\Test;
 use App\Models\Project as EloquentProject;
-
+use App\Models\Test;
 use CDash\Database;
 use CDash\Model\Build;
 use Illuminate\Support\Facades\DB;
@@ -157,7 +157,7 @@ class ViewTest extends BuildApi
 
         $build_response = Build::MarshalResponseArray($this->build, [
             'displaylabels' => $this->project->DisplayLabels,
-            'site' =>  $this->build->GetSite()->name,
+            'site' => $this->build->GetSite()->name,
             'testtime' => $this->build->EndTime,
         ]);
 
@@ -621,7 +621,7 @@ class ViewTest extends BuildApi
 
         $csv_contents = [];
         // Standard columns.
-        $csv_headers = ['Name', 'Time','Details', 'Status'];
+        $csv_headers = ['Name', 'Time', 'Details', 'Status'];
         if ($projectshowtesttime) {
             $csv_headers[] = 'Time Status';
         }
@@ -690,7 +690,7 @@ class ViewTest extends BuildApi
         $data['buildtestid'] = '';
         $data['time'] = '';
         $data['details'] = '';
-        $data["newstatus"] = false;
+        $data['newstatus'] = false;
 
         $test = self::marshal($data, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate);
 

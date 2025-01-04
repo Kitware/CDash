@@ -21,7 +21,6 @@ class CreateVersionTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -22,7 +23,6 @@ use App\Models\Note;
  * This class is responsible for creating the various models associated
  * with a build note.
  **/
-
 class NoteCreator
 {
     public $buildid;

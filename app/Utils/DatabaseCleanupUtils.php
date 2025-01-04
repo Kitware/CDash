@@ -22,7 +22,7 @@ class DatabaseCleanupUtils
     /** Remove builds by their group-specific auto-remove timeframe setting */
     public static function removeBuildsGroupwise(int $projectid, int $maxbuilds, bool $force = false): void
     {
-        if (!$force && ! (bool) config('cdash.autoremove_builds')) {
+        if (!$force && !(bool) config('cdash.autoremove_builds')) {
             return;
         }
 
@@ -71,7 +71,7 @@ class DatabaseCleanupUtils
         @set_time_limit(0);
         $remove_builds = config('cdash.autoremove_builds');
 
-        if (!$force && ! (bool) $remove_builds) {
+        if (!$force && !(bool) $remove_builds) {
             return;
         }
 
@@ -102,10 +102,12 @@ class DatabaseCleanupUtils
 
     /**
      * Remove all related inserts for a given build or any build in an array of builds
+     *
      * @param array<int>|int $buildid
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
-    public static function removeBuild($buildid) : void
+    public static function removeBuild($buildid): void
     {
         // TODO: (williamjallen) much of this work could be done on the DB side automatically by setting up
         //       proper foreign-key relationships between between entities, and using the DB's cascade functionality.
@@ -278,6 +280,7 @@ class DatabaseCleanupUtils
 
     /**
      * Call removeBuild() in batches of 100.
+     *
      * @param array<int>|int $buildids
      */
     public static function removeBuildChunked($buildids): void

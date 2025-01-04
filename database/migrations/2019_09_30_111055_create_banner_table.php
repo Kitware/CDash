@@ -20,7 +20,6 @@ class CreateBannerTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,6 +14,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 use App\Models\CoverageSummaryDiff;
@@ -277,7 +279,7 @@ class CoverageSummary
     }   // Insert()
 
     /** Compute the coverage summary diff */
-    public function ComputeDifference($previous_parentid=null): bool
+    public function ComputeDifference($previous_parentid = null): bool
     {
         $build = new Build();
         $build->Id = $this->BuildId;
@@ -317,7 +319,7 @@ class CoverageSummary
             if (CoverageSummaryDiff::where(['buildid' => $this->BuildId])->exists() || $loctesteddiff !== 0 || $locuntesteddiff !== 0) {
                 CoverageSummaryDiff::updateOrCreate([
                     'buildid' => $this->BuildId,
-                    ], [
+                ], [
                     'loctested' => $loctesteddiff,
                     'locuntested' => $locuntesteddiff,
                 ]);

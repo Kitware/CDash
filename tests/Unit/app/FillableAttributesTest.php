@@ -3,6 +3,7 @@
 namespace Tests\Unit\app;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -23,7 +24,7 @@ class FillableAttributesTest extends TestCase
 
     public function testFailsToCreateModelWhenInvalidFillableAttribute(): void
     {
-        self::expectException(\Illuminate\Database\Eloquent\MassAssignmentException::class);
+        self::expectException(MassAssignmentException::class);
         new User([
             'firstname' => Str::uuid()->toString(),
             'lastname' => Str::uuid()->toString(),

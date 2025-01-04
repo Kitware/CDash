@@ -16,11 +16,10 @@ class CreateLabel2buildTable extends Migration
             Schema::create('label2build', function (Blueprint $table) {
                 $table->bigInteger('labelid')->index();
                 $table->bigInteger('buildid')->index();
-                $table->primary(['labelid','buildid']);
+                $table->primary(['labelid', 'buildid']);
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

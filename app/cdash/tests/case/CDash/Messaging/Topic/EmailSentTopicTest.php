@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -22,8 +23,9 @@ use CDash\Model\ActionableTypes;
 use CDash\Model\Build;
 use CDash\Model\BuildEmail;
 use CDash\Model\Subscriber;
+use CDash\Test\CDashTestCase;
 
-class EmailSentTopicTest extends \CDash\Test\CDashTestCase
+class EmailSentTopicTest extends CDashTestCase
 {
     public function testSubscribesToBuild()
     {

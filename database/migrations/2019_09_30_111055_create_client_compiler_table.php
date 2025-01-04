@@ -21,7 +21,6 @@ class CreateClientCompilerTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

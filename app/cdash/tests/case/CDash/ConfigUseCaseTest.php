@@ -29,7 +29,6 @@ class ConfigUseCaseTest extends CDashUseCaseTestCase
         $this->assertEquals($this->cmd, $configure->Command);
     }
 
-
     public function testConfigUseCaseBuild()
     {
         $sut = UseCase::createBuilder($this, UseCase::CONFIG)

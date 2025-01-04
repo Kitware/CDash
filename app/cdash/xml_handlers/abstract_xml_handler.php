@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -18,6 +19,7 @@ use App\Models\Site;
 use App\Utils\Stack;
 use CDash\Model\Build;
 use CDash\Model\Project;
+use CDash\ServiceContainer;
 
 abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 {
@@ -85,10 +87,10 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
         return $this->Build->SubProjectName;
     }
 
-    protected function getModelFactory(): \CDash\ServiceContainer
+    protected function getModelFactory(): ServiceContainer
     {
         if (!$this->ModelFactory) {
-            $this->ModelFactory = \CDash\ServiceContainer::getInstance();
+            $this->ModelFactory = ServiceContainer::getInstance();
         }
         return $this->ModelFactory;
     }

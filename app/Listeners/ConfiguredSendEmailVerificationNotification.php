@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -30,7 +31,7 @@ class ConfiguredSendEmailVerificationNotification
         }
 
         if (config('cdash.registration.email.verify')) {
-            if (! $user->hasVerifiedEmail()) {
+            if (!$user->hasVerifiedEmail()) {
                 $user->sendEmailVerificationNotification();
             }
         } else {

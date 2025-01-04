@@ -28,7 +28,6 @@ class CreateClientJobTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

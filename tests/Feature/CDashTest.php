@@ -1,9 +1,10 @@
 <?php
+
 namespace Tests\Feature;
 
 use App\Http\Controllers\CDash;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
@@ -13,7 +14,6 @@ use Tests\Traits\CreatesUsers;
  * A general place to test the CDash installation on-top of Laravel
  *
  * Class CDashTest
- * @package Tests\Feature
  */
 class CDashTest extends TestCase
 {

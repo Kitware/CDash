@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,11 +14,13 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Controller\Api;
 
-use App\Models\User;
-use CDash\Database;
 use App\Models\Banner;
+use App\Models\User;
+use CDash\Controller\Api;
+use CDash\Database;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -25,9 +28,9 @@ use Illuminate\Support\Facades\DB;
 /**
  * API controller for viewProjects.php.
  *
- * @deprecated 05/23/2024 This endpoint is deprecated in favor of the GraphQL API and will eventually be removed.
+ * @deprecated 05/23/2024 This endpoint is deprecated in favor of the GraphQL API and will eventually be removed
  **/
-class ViewProjects extends \CDash\Controller\Api
+class ViewProjects extends Api
 {
     private $projectids = [];
     private int $activeProjectDays = 7;
@@ -121,7 +124,7 @@ class ViewProjects extends \CDash\Controller\Api
         }
         $response['projects'] = $projects_response;
 
-        $response['enable_registration'] = config("auth.user_registration_form_enabled");
+        $response['enable_registration'] = config('auth.user_registration_form_enabled');
         $this->pageTimer->end($response);
         return $response;
     }
@@ -167,7 +170,7 @@ class ViewProjects extends \CDash\Controller\Api
         // Transform the result into something we can use more effectively
         $latest_build_rows = [];
         foreach ($query_result as $row) {
-            $latest_build_rows[(int)$row->projectid] = $row->submittime;
+            $latest_build_rows[(int) $row->projectid] = $row->submittime;
         }
 
         $query_result = DB::table('subproject')
@@ -179,7 +182,7 @@ class ViewProjects extends \CDash\Controller\Api
         // Transform the result into something we can use more effectively
         $nsubproj = [];
         foreach ($query_result as $row) {
-            $nsubproj[(int)$row->projectid] = $row->c;
+            $nsubproj[(int) $row->projectid] = $row->c;
         }
 
         // Get the number of builds in the past 7 days by project
@@ -192,7 +195,7 @@ class ViewProjects extends \CDash\Controller\Api
             ->get();
         $nbuilds = [];
         foreach ($query_result as $row) {
-            $nbuilds[(int)$row->projectid] = $row->c;
+            $nbuilds[(int) $row->projectid] = $row->c;
         }
 
         foreach ($project_rows as $project_row) {

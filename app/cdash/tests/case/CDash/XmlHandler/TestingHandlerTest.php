@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -21,8 +22,8 @@ use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\Project;
 use CDash\Model\Subscriber;
-use Tests\TestCase;
 use CDash\Submission\CommitAuthorHandlerInterface;
+use Tests\TestCase;
 
 class TestingHandlerTest extends TestCase
 {

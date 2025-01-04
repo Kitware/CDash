@@ -1,14 +1,14 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use CDash\Database;
 use CDash\Model\Build;
 use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-
-
 
 class UniqueDiffsTestCase extends KWWebTestCase
 {
@@ -22,14 +22,13 @@ class UniqueDiffsTestCase extends KWWebTestCase
 
     public function testUniqueDiffs()
     {
-        $pdo = \CDash\Database::getInstance();
+        $pdo = Database::getInstance();
 
         $build = new Build();
         $build->ProjectId = 1;
         $build->Name = 'uniquediffs_test_build';
         $this->assertTrue($build->AddBuild());
         $this->BuildId = $build->Id;
-
 
         // Perform multiple INSERTs that violate the unique constraint
         // and verify that only one row is recorded.

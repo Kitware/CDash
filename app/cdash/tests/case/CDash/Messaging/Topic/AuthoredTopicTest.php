@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -19,8 +20,9 @@ use CDash\Messaging\Topic\AuthoredTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
 use CDash\Model\Subscriber;
+use CDash\Test\CDashTestCase;
 
-class AuthoredTopicTest extends \CDash\Test\CDashTestCase
+class AuthoredTopicTest extends CDashTestCase
 {
     public function testSubscribesToBuild()
     {

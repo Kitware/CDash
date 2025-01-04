@@ -22,7 +22,6 @@ class CreateClientSite2libraryTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

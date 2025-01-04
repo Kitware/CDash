@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -25,7 +26,7 @@ class BuildConfigureTestCase extends KWWebTestCase
         $configure = new BuildConfigure();
         $configure->BuildId = 'foo';
         if ($configure->Exists()) {
-            $this->fail("configure with invalid buildid should not exist");
+            $this->fail('configure with invalid buildid should not exist');
         }
         $log_contents = file_get_contents($this->logfilename);
         if (strpos($log_contents, 'BuildId is not numeric') === false) {
@@ -34,7 +35,7 @@ class BuildConfigureTestCase extends KWWebTestCase
 
         $configure->BuildId = null;
         if ($configure->Exists()) {
-            $this->fail("Configure exists with null buildid");
+            $this->fail('Configure exists with null buildid');
         }
         $log_contents = file_get_contents($this->logfilename);
         if (strpos($log_contents, 'BuildId not set') === false) {
@@ -42,13 +43,13 @@ class BuildConfigureTestCase extends KWWebTestCase
         }
 
         $configure->BuildId = 1;
-        $configure->Command = "cmake .";
-        $configure->Log = "configure log";
+        $configure->Command = 'cmake .';
+        $configure->Log = 'configure log';
         $configure->StartTime = gmdate(FMT_DATETIME);
         $configure->EndTime = gmdate(FMT_DATETIME);
         $configure->Status = 0;
         if (!$configure->Insert()) {
-            $this->fail("configure->Insert returned false");
+            $this->fail('configure->Insert returned false');
         }
 
         $label = new Label();
@@ -57,24 +58,24 @@ class BuildConfigureTestCase extends KWWebTestCase
         $configure->BuildId = 2;
         // This is expected to return false because the configure row already exists.
         if ($configure->Insert()) {
-            $this->fail("configure->Insert returned true");
+            $this->fail('configure->Insert returned true');
         }
 
         if (!$configure->GetConfigureForBuild()) {
-            $this->fail("configure->GetConfigureForBuild returned false");
+            $this->fail('configure->GetConfigureForBuild returned false');
         }
 
         if ($configure->Delete()) {
-            $this->fail("configure->Delete returned true");
+            $this->fail('configure->Delete returned true');
         }
 
         $configure->BuildId = 2;
         if (!$configure->Delete()) {
-            $this->fail("configure->Delete returned false");
+            $this->fail('configure->Delete returned false');
         }
 
         if ($configure->Exists()) {
-            $this->fail("configure exists after delete");
+            $this->fail('configure exists after delete');
         }
 
         $this->deleteLog($this->logfilename);

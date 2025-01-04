@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -14,12 +15,12 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\Site;
 use App\Utils\SubmissionUtils;
 use CDash\Model\Build;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\Project;
-use App\Models\Site;
 use CDash\Model\SubProject;
 
 class CoverageLogHandler extends AbstractXmlHandler
@@ -41,7 +42,7 @@ class CoverageLogHandler extends AbstractXmlHandler
         $this->Site = new Site();
         $this->UpdateEndTime = false;
         $this->CoverageFiles = [];
-        $this->CurrentLine = "";
+        $this->CurrentLine = '';
     }
 
     /** Start element */
@@ -67,7 +68,7 @@ class CoverageLogHandler extends AbstractXmlHandler
             if ($attributes['COUNT'] >= 0) {
                 $this->CurrentCoverageFileLog->AddLine($attributes['NUMBER'], $attributes['COUNT']);
             }
-            $this->CurrentLine = "";
+            $this->CurrentLine = '';
         }
     }
 

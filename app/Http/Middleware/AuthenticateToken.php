@@ -12,11 +12,6 @@ use Illuminate\Support\Facades\Auth;
  */
 class AuthenticateToken
 {
-    /**
-     * @param Request $request
-     * @param Closure $next
-     * @return mixed
-     */
     public function handle(Request $request, Closure $next)
     {
         $user_id = AuthTokenUtil::getUserIdFromRequest();

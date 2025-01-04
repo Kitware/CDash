@@ -1,10 +1,11 @@
 <?php
 
-use CDash\Model\Build;
 use CDash\Collection\BuildCollection;
+use CDash\Model\Build;
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\TestUseCase;
 use CDash\Test\UseCase\UseCase;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class TestUseCaseTest extends CDashUseCaseTestCase
@@ -52,7 +53,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
     public function testBuildThrowsExceptionIfNameNotSet()
     {
         $sut = UseCase::createBuilder($this, UseCase::TEST);
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Site properties not initialized');
         $sut->build();
     }
@@ -63,7 +64,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $sut = UseCase::createBuilder($this, UseCase::TEST);
         $sut->createSite(['Name' => 'Site.Name']);
         $handler = $sut->build();
-        $this->assertInstanceOf(\TestingHandler::class, $handler);
+        $this->assertInstanceOf(TestingHandler::class, $handler);
     }
 
     public function testTestUseCaseCreatesBuildAndSiteInformation()
@@ -173,7 +174,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $builds = $handler->GetBuildCollection();
         /** @var Build $build */
         $build = $builds->current();
-        /** @var Illuminate\Support\Collection $tests */
+        /** @var Collection $tests */
         $tests = $build->GetTestCollection();
         /** @var Test $test */
         $test = $tests->get('some.test.name');
@@ -198,7 +199,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $builds = $handler->GetBuildCollection();
         /** @var Build $build */
         $build = $builds->current();
-        /** @var Illuminate\Support\Collection $tests */
+        /** @var Collection $tests */
         $tests = $build->GetTestCollection();
         /** @var Test $test */
         $test = $tests->get('some.test.name');
@@ -223,7 +224,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $builds = $handler->GetBuildCollection();
         /** @var Build $build */
         $build = $builds->current();
-        /** @var Illuminate\Support\Collection $tests */
+        /** @var Collection $tests */
         $tests = $build->GetTestCollection();
         /** @var Test $test */
         $test = $tests->get('some.test.name');
@@ -248,7 +249,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $builds = $handler->GetBuildCollection();
         /** @var Build $build */
         $build = $builds->current();
-        /** @var Illuminate\Support\Collection $tests */
+        /** @var Collection $tests */
         $tests = $build->GetTestCollection();
         /** @var Test $test */
         $test = $tests->get('some.test.name');

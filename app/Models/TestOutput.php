@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $crc32
  * @property string $path
  * @property string $command
- * @property mixed $output  # binary data
+ * @property mixed $output # binary data
  *
  * @mixin Builder<TestOutput>
  */

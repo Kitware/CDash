@@ -2,10 +2,10 @@
 
 use App\Models\User;
 use App\Utils\RepositoryUtils;
+use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
-use CDash\Database;
 
 class IssueCreationTestCase extends KWWebTestCase
 {
@@ -102,9 +102,9 @@ class IssueCreationTestCase extends KWWebTestCase
 
         // Verify that administrative access to this project was not overwritten
         // by the Project.xml handler.
-        $project = \App\Models\Project::findOrFail((int) $this->Projects['CDash']->Id);
+        $project = App\Models\Project::findOrFail((int) $this->Projects['CDash']->Id);
         if ($project->administrators()->find($userid) === null) {
-            $this->fail("Expected role to be an administrator");
+            $this->fail('Expected role to be an administrator');
         }
 
         // Submit subproject XML file.

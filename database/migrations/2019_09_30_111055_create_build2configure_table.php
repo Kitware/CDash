@@ -22,7 +22,6 @@ class CreateBuild2configureTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

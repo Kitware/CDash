@@ -22,7 +22,6 @@ class CreateClientSite2compilerTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

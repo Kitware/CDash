@@ -22,7 +22,6 @@ class CreateClientSite2programTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

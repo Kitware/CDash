@@ -21,7 +21,6 @@ class CreateBuildFiltersTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

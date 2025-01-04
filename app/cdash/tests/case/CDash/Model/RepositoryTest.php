@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -24,7 +25,7 @@ class RepositoryTest extends TestCase
     private $project;
     private $repo = [];
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->createApplication();
 

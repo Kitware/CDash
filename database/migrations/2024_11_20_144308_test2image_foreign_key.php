@@ -66,7 +66,7 @@ return new class extends Migration {
         }
 
         echo "{$num_deleted} rows deleted from `test2image`" . PHP_EOL;
-        echo "Adding foreign key constraint test2image(outputid)->testoutput(id)...";
+        echo 'Adding foreign key constraint test2image(outputid)->testoutput(id)...';
 
         Schema::table('test2image', function (Blueprint $table) {
             $table->foreign('outputid')->references('id')->on('testoutput')->cascadeOnDelete();

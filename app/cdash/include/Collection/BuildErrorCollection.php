@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -22,7 +23,6 @@ class BuildErrorCollection extends Collection
      * BuildError and BuildFailure both being equally valid in terms of
      * the Build::Errors property prevents us from doing so.
      *
-     * @param $error
      * @return $this
      */
     public function add($error)

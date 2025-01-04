@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -17,7 +18,6 @@
 namespace CDash\Controller\Api;
 
 use App\Models\Test;
-
 use CDash\Database;
 use CDash\Model\Build;
 
@@ -55,7 +55,7 @@ abstract class BuildTestApi extends BuildApi
         $this->project->Fill();
 
         $this->testHistoryQueryParams = [
-            ':siteid'=> $this->build->SiteId,
+            ':siteid' => $this->build->SiteId,
             ':projectid' => $this->project->Id,
             ':type' => $this->build->Type,
             ':buildname' => $this->build->Name,

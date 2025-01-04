@@ -1,15 +1,14 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
 use CDash\Database;
-use CDash\Test\UseCase\TestUseCase;
 use CDash\Model\Project;
+use CDash\Test\UseCase\TestUseCase;
 
 class TimeStatusTestCase extends KWWebTestCase
 {
@@ -99,7 +98,7 @@ class TimeStatusTestCase extends KWWebTestCase
             WHERE projectid = ?
             ORDER BY starttime');
         if (!pdo_execute($stmt, [$projectid])) {
-            $this->fail("SELECT query failed");
+            $this->fail('SELECT query failed');
         }
 
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);

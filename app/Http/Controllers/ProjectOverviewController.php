@@ -61,10 +61,10 @@ final class ProjectOverviewController extends AbstractProjectController
         // sanitized versions of these measurements.
         $clean_measurements = [
             'configure warnings' => 'configure_warnings',
-            'configure errors'   => 'configure_errors',
-            'build warnings'     => 'build_warnings',
-            'build errors'       => 'build_errors',
-            'failing tests'      => 'failing_tests'];
+            'configure errors' => 'configure_errors',
+            'build warnings' => 'build_warnings',
+            'build errors' => 'build_errors',
+            'failing tests' => 'failing_tests'];
 
         // for static analysis, we only care about errors & warnings.
         $static_measurements = ['errors', 'warnings'];
@@ -72,10 +72,10 @@ final class ProjectOverviewController extends AbstractProjectController
         // information on how to sort by the various build measurements
         $sort = [
             'configure warnings' => '-configure.warning',
-            'configure errors'   => '-configure.error',
-            'build warnings'     => '-compilation.warning',
-            'build errors'       => '-compilation.error',
-            'failing tests'      => '-test.fail'];
+            'configure errors' => '-configure.error',
+            'build warnings' => '-compilation.warning',
+            'build errors' => '-compilation.error',
+            'failing tests' => '-test.fail'];
 
         // get the build groups that are included in this project's overview,
         // split up by type (currently only static analysis and general builds).
@@ -144,8 +144,8 @@ final class ProjectOverviewController extends AbstractProjectController
         $threshold = $this->project->CoverageThreshold;
         if (!$has_subproject_groups) {
             $coverage_category = [];
-            $coverage_category['name']  = 'coverage';
-            $coverage_category['position']  = 1;
+            $coverage_category['name'] = 'coverage';
+            $coverage_category['position'] = 1;
             $coverage_category['low'] = 0.7 * $threshold;
             $coverage_category['medium'] = $threshold;
             $coverage_category['satisfactory'] = 100;

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -27,8 +28,8 @@ require_once dirname(__FILE__) . '/kw_unlink.php';
  */
 class TestManager
 {
-    public $testDir = null;
-    public $database = null;
+    public $testDir;
+    public $database;
 
     public function runFileTest(&$reporter, $file)
     {
@@ -45,8 +46,10 @@ class TestManager
 
     /**
      * run all the tests
-     * @return bool the result the test running
+     *
      * @param object $reporter
+     *
+     * @return bool the result the test running
      */
     public function runAllTests(&$reporter)
     {
@@ -60,18 +63,19 @@ class TestManager
 
     /**
      * Match all the test files inside the test directory
+     *
      * @return array an array of the test files
      */
     public function getTestCaseList()
     {
         if (!$this->testDir) {
-            die("please, set the test directory\n");
+            exit("please, set the test directory\n");
         }
         $testsFile = [];
         foreach (glob($this->testDir . '/test_*.php') as $file) {
             $fileinfo = pathinfo($file);
-            if (strcmp($fileinfo['basename'], 'test_install.php') != 0 &&
-                strcmp($fileinfo['basename'], 'test_uninstall.php') != 0
+            if (strcmp($fileinfo['basename'], 'test_install.php') != 0
+                && strcmp($fileinfo['basename'], 'test_uninstall.php') != 0
             ) {
                 $testsFile[$fileinfo['dirname'] . '/' . $fileinfo['basename']] = $fileinfo['basename'];
             }
@@ -81,13 +85,15 @@ class TestManager
 
     /**
      * drop the old test database
-     * @return bool success/failure depending of the database dropping
+     *
      * @param string $host
      * @param int $port
      * @param string $user
      * @param string $password
      * @param string $dbname
      * @param string $dbtype
+     *
+     * @return bool success/failure depending of the database dropping
      */
     public function _uninstalldb4test($host, $port, $user, $password, $dbname, $dbtype)
     {
@@ -99,18 +105,20 @@ class TestManager
             $database->setPassword($password);
             return $database->drop($dbname);
         } else {
-            die("We cannot test cdash because test database is not cdash4simpletest\n");
+            exit("We cannot test cdash because test database is not cdash4simpletest\n");
         }
     }
 
     /**
      * create the new test database
-     * @return bool success/failure depending of the database creating
+     *
      * @param string $host
      * @param string $user
      * @param string $password
      * @param string $dbname
      * @param string $dbtype
+     *
+     * @return bool success/failure depending of the database creating
      */
     public function _installdb4test($host, $port, $user, $password, $dbname, $dbtype)
     {
@@ -124,7 +132,7 @@ class TestManager
             if (!$database->create($dbname)) {
                 $dbcreated = false;
                 $msg = 'error query(CREATE DATABASE)';
-                die('Error' . ' File: ' . __FILE__ . ' on line: ' . __LINE__ . ": $msg");
+                exit('Error File: ' . __FILE__ . ' on line: ' . __LINE__ . ": $msg");
                 return false;
             }
             if ($dbcreated) {
@@ -132,7 +140,7 @@ class TestManager
             }
             return true;
         } else {
-            die("We cannot test cdash because test database is not cdash4simpletest\n");
+            exit("We cannot test cdash because test database is not cdash4simpletest\n");
         }
     }
 }

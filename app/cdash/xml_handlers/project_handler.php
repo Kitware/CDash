@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -156,7 +157,7 @@ class ProjectHandler extends AbstractXmlHandler
                         $subProjectToRemove = new SubProject();
                         $subProjectToRemove->SetId($previousId);
                         $subProjectToRemove->Delete();
-                        add_log("Deleted " . $subProjectToRemove->GetName() . " because it was not mentioned in Project.xml",
+                        add_log('Deleted ' . $subProjectToRemove->GetName() . ' because it was not mentioned in Project.xml',
                             'ProjectHandler:endElement', LOG_WARNING,
                             $this->GetProject()->Id);
                     }
@@ -169,7 +170,7 @@ class ProjectHandler extends AbstractXmlHandler
             $this->SubProjectPosition++;
 
             // Insert the label.
-            $Label = new Label;
+            $Label = new Label();
             $Label->Text = $this->SubProject->GetName();
             $Label->Insert();
 
@@ -228,11 +229,11 @@ class ProjectHandler extends AbstractXmlHandler
                 }
 
                 // Insert the labels for this user
-                $LabelEmail = new LabelEmail;
+                $LabelEmail = new LabelEmail();
                 $LabelEmail->UserId = $userid;
                 $LabelEmail->ProjectId = $this->GetProject()->Id;
 
-                $Label = new Label;
+                $Label = new Label();
                 $Label->SetText($this->SubProject->GetName());
                 $labelid = $Label->GetIdFromText();
                 if (!empty($labelid)) {

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,6 +14,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 use App\Models\Project as EloquentProject;
@@ -372,7 +374,7 @@ class SubProject
         $project = $db->executePrepared($query, $params);
 
         if ($project === false) {
-            add_last_sql_error("SubProject CommonBuildQuery");
+            add_last_sql_error('SubProject CommonBuildQuery');
             return false;
         }
         if ($allSubProjects) {
@@ -396,7 +398,7 @@ class SubProject
     public function GetDependencies(?string $date = null): array
     {
         if ($this->Id === 0) {
-            abort(500, "SubProject ID not set.");
+            abort(500, 'SubProject ID not set.');
         }
 
         // If not set, the date is now
@@ -420,7 +422,7 @@ class SubProject
     public function AddDependency(int $subprojectid): void
     {
         if ($this->Id === 0) {
-            abort(500, "SubProject ID not set.");
+            abort(500, 'SubProject ID not set.');
         }
 
         // If the dependency already exists, exit early
@@ -460,7 +462,7 @@ class SubProject
      *
      * TODO: Move this somewhere else...
      */
-    public static function GetSubProjectFromPath(string $path, int $projectid): SubProject|null
+    public static function GetSubProjectFromPath(string $path, int $projectid): ?SubProject
     {
         $query = DB::select("
             SELECT id

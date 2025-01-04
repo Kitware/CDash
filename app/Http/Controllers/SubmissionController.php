@@ -103,10 +103,10 @@ final class SubmissionController extends AbstractProjectController
             if (app()->isDownForMaintenance()) {
                 throw new Exception();
             }
-        } catch (\Exception) {
+        } catch (Exception) {
             // Write a marker file so we know to process these files when the DB comes back up.
-            if (!Storage::exists("DB_WAS_DOWN")) {
-                Storage::put("DB_WAS_DOWN", "");
+            if (!Storage::exists('DB_WAS_DOWN')) {
+                Storage::put('DB_WAS_DOWN', '');
             }
             $statusarray['status'] = 'OK';
             $statusarray['message'] = 'Database is unavailable.';
@@ -165,8 +165,8 @@ final class SubmissionController extends AbstractProjectController
         unset($fp);
 
         // Check for marker file to see if we need to queue deferred submissions.
-        if (Storage::exists("DB_WAS_DOWN")) {
-            Storage::delete("DB_WAS_DOWN");
+        if (Storage::exists('DB_WAS_DOWN')) {
+            Storage::delete('DB_WAS_DOWN');
             Artisan::call('submission:queue');
         }
 
@@ -192,7 +192,7 @@ final class SubmissionController extends AbstractProjectController
 
     public function storeUploadedFile(Request $request): Response
     {
-        if (! (bool) config('cdash.remote_workers')) {
+        if (!(bool) config('cdash.remote_workers')) {
             return response('This feature is disabled', Response::HTTP_CONFLICT);
         }
 

@@ -5,8 +5,11 @@ namespace Tests\Feature;
 use App\Models\Project;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use LdapRecord\LdapRecordException;
+use LdapRecord\Models\ModelDoesNotExistException;
 use LdapRecord\Models\OpenLDAP\Group;
 use LdapRecord\Models\OpenLDAP\User;
+use Mockery\Exception\InvalidCountException;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 
@@ -28,7 +31,7 @@ class LdapIntegration extends TestCase
     protected array $projects;
 
     /**
-     * @throws \LdapRecord\LdapRecordException
+     * @throws LdapRecordException
      */
     protected function setUp(): void
     {
@@ -97,18 +100,18 @@ class LdapIntegration extends TestCase
 
         // Create a pair of projects which are restricted to specific LDAP groups
         $this->projects['only_group_1'] = $this->makePrivateProject();
-        $this->projects['only_group_1']->ldapfilter = "(uid=*group_1*)";
+        $this->projects['only_group_1']->ldapfilter = '(uid=*group_1*)';
         $this->projects['only_group_1']->save();
 
-        $this->projects['only_group_2'] =$this->makePrivateProject();
-        $this->projects['only_group_2']->ldapfilter = "(uid=*group_2*)";
+        $this->projects['only_group_2'] = $this->makePrivateProject();
+        $this->projects['only_group_2']->ldapfilter = '(uid=*group_2*)';
         $this->projects['only_group_2']->save();
     }
 
     /**
-     * @throws \LdapRecord\LdapRecordException
-     * @throws \LdapRecord\Models\ModelDoesNotExistException
-     * @throws \Mockery\Exception\InvalidCountException
+     * @throws LdapRecordException
+     * @throws ModelDoesNotExistException
+     * @throws InvalidCountException
      */
     protected function tearDown(): void
     {
@@ -189,7 +192,7 @@ class LdapIntegration extends TestCase
         \App\Models\User::where(['email' => $user_all_groups->getAttribute('uid')[0]])->firstOrFail()->delete();
 
         // Restrict login to members of group 1 only
-        putenv("LDAP_FILTERS_ON=(uid=*group_1*)");
+        putenv('LDAP_FILTERS_ON=(uid=*group_1*)');
         $this->post('/login', [
             'email' => $user_group_1->getAttribute('uid')[0],
             'password' => $user_group_1->getAttribute('userpassword')[0],
@@ -212,7 +215,7 @@ class LdapIntegration extends TestCase
         \App\Models\User::where(['email' => $user_all_groups->getAttribute('uid')[0]])->firstOrFail()->delete();
 
         // Restrict login to both groups
-        putenv("LDAP_FILTERS_ON=(|(uid=*group_1*)(uid=*group_2*))");
+        putenv('LDAP_FILTERS_ON=(|(uid=*group_1*)(uid=*group_2*))');
 
         $this->post('/login', [
             'email' => $user_group_1->getAttribute('uid')[0],
@@ -254,13 +257,13 @@ class LdapIntegration extends TestCase
         self::assertNotContains($user->email, $this->projects['only_group_2']->users()->pluck('email'));
 
         // Use a project which didn't have this user as a member when the initial login occurred
-        $this->projects['only_group_2']->ldapfilter = "(uid=*group_1*)";
+        $this->projects['only_group_2']->ldapfilter = '(uid=*group_1*)';
         $this->projects['only_group_2']->save();
         $this->artisan('ldap:sync_projects');
         self::assertContains($user->email, $this->projects['only_group_2']->users()->pluck('email'));
 
         // Change the group, and verify that the user was removed from the project
-        $this->projects['only_group_2']->ldapfilter = "(uid=*group_2*)";
+        $this->projects['only_group_2']->ldapfilter = '(uid=*group_2*)';
         $this->projects['only_group_2']->save();
         $this->artisan('ldap:sync_projects');
         self::assertNotContains($user->email, $this->projects['only_group_2']->users()->pluck('email'));
@@ -342,7 +345,7 @@ class LdapIntegration extends TestCase
         $this->assertCanAccessProject('groups_1_and_2_1', 'only_group_2');
 
         // Make sure the membership is removed when the LDAP group rule is changed
-        $this->projects['only_group_2']->ldapfilter = "(uid=*group_1*)";
+        $this->projects['only_group_2']->ldapfilter = '(uid=*group_1*)';
         $this->projects['only_group_2']->save();
 
         $this->artisan('ldap:sync_projects');
@@ -368,7 +371,7 @@ class LdapIntegration extends TestCase
         // Basic sanity check...
         $this->assertCannotAccessProject('group_1_only_1', 'only_group_2');
 
-        $this->projects['only_group_2']->ldapfilter = "(uid=*group_1*)";
+        $this->projects['only_group_2']->ldapfilter = '(uid=*group_1*)';
         $this->projects['only_group_2']->save();
 
         // Still can't access the project because the link hasn't been created yet

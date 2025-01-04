@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Site;
+use App\Models\SiteInformation;
 use App\Models\TestMeasurement;
 use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
@@ -15,8 +17,6 @@ use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Image;
 use CDash\Model\Label;
-use App\Models\Site;
-use App\Models\SiteInformation;
 use CDash\Model\Project;
 use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
@@ -79,13 +79,13 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
-            $siteInformation = new SiteInformation;
+            $siteInformation = new SiteInformation();
             $this->BuildInformation = [];
-            $this->BuildName = "";
-            $this->BuildStamp = "";
-            $this->SubProjectName = "";
-            $this->Generator = "";
-            $this->PullRequest = "";
+            $this->BuildName = '';
+            $this->BuildStamp = '';
+            $this->SubProjectName = '';
+            $this->Generator = '';
+            $this->PullRequest = '';
 
             // Fill in the attribute
             foreach ($attributes as $key => $value) {
@@ -133,7 +133,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                 $this->createBuild();
             }
         } elseif ($name == 'TEST' && count($attributes) > 0) {
-            $this->TestCreator = new TestCreator;
+            $this->TestCreator = new TestCreator();
             $this->TestCreator->projectid = $this->GetProject()->Id;
             $this->TestCreator->testStatus = $attributes['STATUS'];
             $this->TestSubProjectName = '';
@@ -299,7 +299,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         } elseif ($parent == 'MEASUREMENT' && $element == 'VALUE') {
             $this->TestCreator->testOutput .= $data;
         } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
-            $this->SubProjects[$this->SubProjectName][] =  $data;
+            $this->SubProjects[$this->SubProjectName][] = $data;
         } elseif ($parent == 'LABELS' && $element == 'LABEL') {
             // Check if this label belongs to a SubProject.
             foreach ($this->SubProjects as $subproject => $labels) {
@@ -424,7 +424,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
 
     public function GetSubscriptionBuilderCollection(): SubscriptionBuilderCollection
     {
-        $collection = (new SubscriptionBuilderCollection)
+        $collection = (new SubscriptionBuilderCollection())
             ->add(new UserSubscriptionBuilder($this))
             ->add(new CommitAuthorSubscriptionBuilder($this));
         return $collection;

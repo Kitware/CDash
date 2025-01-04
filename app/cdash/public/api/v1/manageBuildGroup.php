@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -72,7 +73,7 @@ if (!$user->admin) {
 $projects = $db->executePrepared($sql, $params);
 $availableprojects = [];
 foreach ($projects as $project_array) {
-    $availableproject =[];
+    $availableproject = [];
     $availableproject['id'] = $project_array['id'];
     $availableproject['name'] = $project_array['name'];
     if ($project_array['id'] == $projectid) {

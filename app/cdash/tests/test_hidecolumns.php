@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -7,8 +8,6 @@ use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-
-
 
 class HideColumnsTestCase extends KWWebTestCase
 {
@@ -55,37 +54,37 @@ class HideColumnsTestCase extends KWWebTestCase
         $retval = false;
         switch ($method) {
             case 'Update':
-                if ($buildgroup['hasupdatedata'] == true &&
-                    $buildgroup['hasconfiguredata'] == false &&
-                    $buildgroup['hascompilationdata'] == false &&
-                    $buildgroup['hastestdata'] == false
+                if ($buildgroup['hasupdatedata'] == true
+                    && $buildgroup['hasconfiguredata'] == false
+                    && $buildgroup['hascompilationdata'] == false
+                    && $buildgroup['hastestdata'] == false
                 ) {
                     $retval = true;
                 }
                 break;
             case 'Configure':
-                if ($buildgroup['hasupdatedata'] == false &&
-                    $buildgroup['hasconfiguredata'] == true &&
-                    $buildgroup['hascompilationdata'] == false &&
-                    $buildgroup['hastestdata'] == false
+                if ($buildgroup['hasupdatedata'] == false
+                    && $buildgroup['hasconfiguredata'] == true
+                    && $buildgroup['hascompilationdata'] == false
+                    && $buildgroup['hastestdata'] == false
                 ) {
                     $retval = true;
                 }
                 break;
             case 'Build':
-                if ($buildgroup['hasupdatedata'] == false &&
-                    $buildgroup['hasconfiguredata'] == false &&
-                    $buildgroup['hascompilationdata'] == true &&
-                    $buildgroup['hastestdata'] == false
+                if ($buildgroup['hasupdatedata'] == false
+                    && $buildgroup['hasconfiguredata'] == false
+                    && $buildgroup['hascompilationdata'] == true
+                    && $buildgroup['hastestdata'] == false
                 ) {
                     $retval = true;
                 }
                 break;
             case 'Test':
-                if ($buildgroup['hasupdatedata'] == false &&
-                    $buildgroup['hasconfiguredata'] == false &&
-                    $buildgroup['hascompilationdata'] == false &&
-                    $buildgroup['hastestdata'] == true
+                if ($buildgroup['hasupdatedata'] == false
+                    && $buildgroup['hasconfiguredata'] == false
+                    && $buildgroup['hascompilationdata'] == false
+                    && $buildgroup['hastestdata'] == true
                 ) {
                     $retval = true;
                 }

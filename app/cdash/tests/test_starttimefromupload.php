@@ -1,4 +1,5 @@
 <?php
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Build;
@@ -22,7 +23,7 @@ class StartTimeFromUploadTestCase extends KWWebTestCase
         $this->project->Delete();
     }
 
-    public function testStartTimeFromUpload() : void
+    public function testStartTimeFromUpload(): void
     {
         $this->deleteLog($this->logfilename);
 
@@ -44,7 +45,7 @@ class StartTimeFromUploadTestCase extends KWWebTestCase
         $this->assertTrue($this->checkLog($this->logfilename) !== false);
 
         // Verify start time & testing day.
-        $build_row = \App\Models\Project::findOrFail((int) $this->project->Id)->builds()->firstOrFail();
+        $build_row = App\Models\Project::findOrFail((int) $this->project->Id)->builds()->firstOrFail();
         $build = new Build();
         $build->Id = $build_row->id;
         $build->FillFromId($build->Id);

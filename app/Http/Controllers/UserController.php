@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Models\Site;
 use App\Models\User;
 use App\Utils\AuthTokenUtil;
 use App\Utils\PageTimer;
@@ -10,7 +12,6 @@ use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Project;
-use App\Models\Site;
 use CDash\Model\UserProject;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -19,12 +20,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use PDO;
 
 final class UserController extends AbstractController
 {
     public function userPage(): View
     {
-        return $this->view("admin.user");
+        return $this->view('admin.user');
     }
 
     public function userPageContent(): JsonResponse
@@ -110,7 +112,7 @@ final class UserController extends AbstractController
         }
         $response['publicprojects'] = $publicprojects_response;
 
-        //Go through the claimed sites
+        // Go through the claimed sites
         $claimedsiteprojects = [];
         $siteidwheresql = '';
         $claimedsites = [];
@@ -133,7 +135,7 @@ final class UserController extends AbstractController
             if (strlen($siteidwheresql) > 0) {
                 $siteidwheresql .= ' OR ';
             }
-            $siteidwheresql .= " siteid=? ";
+            $siteidwheresql .= ' siteid=? ';
             $query_params[] = $Site->id;
         }
 
@@ -157,7 +159,6 @@ final class UserController extends AbstractController
                 $claimedsiteprojects[] = $claimedproject;
             }
         }
-
 
         // List the claimed sites
         $claimedsites_response = [];
@@ -213,7 +214,7 @@ final class UserController extends AbstractController
     }
 
     /** Report statistics about the last build */
-    private function ReportLastBuild(string $type, int $projectid, int $siteid, string $projectname, $nightlytime, \PDO $PDO): array
+    private function ReportLastBuild(string $type, int $projectid, int $siteid, string $projectname, $nightlytime, PDO $PDO): array
     {
         $response = [];
         $nightlytime = strtotime($nightlytime);
@@ -236,7 +237,7 @@ final class UserController extends AbstractController
             $builddate = $buildtime;
 
             if (date(FMT_TIME, $buildtime) > date(FMT_TIME, $nightlytime)) {
-                $builddate += 3600 * 24; //next day
+                $builddate += 3600 * 24; // next day
             }
 
             if (date(FMT_TIME, $nightlytime) < '12:00:00') {
@@ -402,7 +403,7 @@ final class UserController extends AbstractController
             }
 
             if ($password_is_good) {
-                $password_validator = new Password;
+                $password_validator = new Password();
                 $complexity_count = config('cdash.password.count');
                 $complexity = $password_validator->computeComplexity($passwd, $complexity_count);
                 $minimum_complexity = config('cdash.password.complexity');
@@ -463,7 +464,6 @@ final class UserController extends AbstractController
                 $credentials[] = $credential->credential;
             }
         }
-
 
         if (($_GET['reason'] ?? '') === 'expired') {
             $error_msg = 'Your password has expired. Please set a new one.';

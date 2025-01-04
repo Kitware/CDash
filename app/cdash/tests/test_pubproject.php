@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -18,9 +19,9 @@ class PubProjectTestCase extends KWWebTestCase
     public function testCreateProject()
     {
         $settings = [
-                'Name' => 'ProjectTest',
-                'Description' => 'This is a project test for cdash',
-                'EmailAdministrator' => 1];
+            'Name' => 'ProjectTest',
+            'Description' => 'This is a project test for cdash',
+            'EmailAdministrator' => 1];
         $this->ProjectId = $this->createProject($settings);
     }
 

@@ -14,7 +14,7 @@ class ProjectVisibilityAllowed implements ValidationRule
     /**
      * Verify that the current user is able to create/edit a project with the requested visibility.
      *
-     * @param  Closure(string): PotentiallyTranslatedString  $fail
+     * @param Closure(string): PotentiallyTranslatedString $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {

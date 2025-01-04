@@ -21,7 +21,6 @@ class CreateLabelemailTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

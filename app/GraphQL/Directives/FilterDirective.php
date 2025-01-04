@@ -1,7 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\GraphQL\Directives;
 
+use GraphQL\Error\SyntaxError;
 use GraphQL\Language\AST\FieldDefinitionNode;
 use GraphQL\Language\AST\InputObjectTypeDefinitionNode;
 use GraphQL\Language\AST\InputValueDefinitionNode;
@@ -9,8 +12,12 @@ use GraphQL\Language\AST\InterfaceTypeDefinitionNode;
 use GraphQL\Language\AST\ObjectTypeDefinitionNode;
 use GraphQL\Language\Parser;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use InvalidArgumentException;
+use JsonException;
 use Nuwave\Lighthouse\Schema\AST\ASTHelper;
 use Nuwave\Lighthouse\Schema\AST\DocumentAST;
 use Nuwave\Lighthouse\Schema\Directives\BaseDirective;
@@ -21,7 +28,7 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
 {
     public static function definition(): string
     {
-        return /** @lang GraphQL */ <<<'GRAPHQL'
+        return /* @lang GraphQL */ <<<'GRAPHQL'
                 directive @filter(
                     "Input type to filter on.  This should be of the form: <...>FilterInput"
                     inputType: String!
@@ -30,13 +37,13 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
     }
 
     /**
-     * @throws \GraphQL\Error\SyntaxError
-     * @throws \JsonException
+     * @throws SyntaxError
+     * @throws JsonException
      */
     public function manipulateArgDefinition(
-        DocumentAST                                          &$documentAST,
-        InputValueDefinitionNode                             &$argDefinition,
-        FieldDefinitionNode                                  &$parentField,
+        DocumentAST &$documentAST,
+        InputValueDefinitionNode &$argDefinition,
+        FieldDefinitionNode &$parentField,
         ObjectTypeDefinitionNode|InterfaceTypeDefinitionNode &$parentType,
     ): void {
         $multiFilterName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType) . 'MultiFilterInput';
@@ -48,15 +55,15 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
     /**
      * Add additional constraints to the builder based on the given argument value.
      *
-     * @param  \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Relations\Relation<\Illuminate\Database\Eloquent\Model>  $builder  the builder used to resolve the field
-     * @param  mixed  $value  the client given value of the argument
+     * @param Builder|EloquentBuilder<Model>|Relation<Model> $builder the builder used to resolve the field
+     * @param mixed $value the client given value of the argument
      *
-     * @return \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Relations\Relation<\Illuminate\Database\Eloquent\Model> the modified builder
+     * @return Builder|EloquentBuilder<Model>|Relation<Model> the modified builder
      */
     public function handleBuilder(QueryBuilder|EloquentBuilder|Relation $builder, mixed $value): QueryBuilder|EloquentBuilder|Relation
     {
         if (!is_array($value)) {
-            throw new \InvalidArgumentException('$value parameter must be array');
+            throw new InvalidArgumentException('$value parameter must be array');
         }
 
         $this->applyFilters($builder, $value);
@@ -108,7 +115,7 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
                     } elseif ($context === 'or') {
                         $builder->orWhere($table . '.' . $key, $sqlOperator, $value);
                     } else {
-                        throw new \InvalidArgumentException('$context must be "and" or "or"');
+                        throw new InvalidArgumentException('$context must be "and" or "or"');
                     }
 
                     break;
@@ -127,19 +134,19 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
                 } elseif ($context === 'or') {
                     $builder->orWhereRaw($query, [$value]);
                 } else {
-                    throw new \InvalidArgumentException('$context must be "and" or "or"');
+                    throw new InvalidArgumentException('$context must be "and" or "or"');
                 }
             }
         }
     }
 
     /**
-     * @throws \GraphQL\Error\SyntaxError
-     * @throws \JsonException
+     * @throws SyntaxError
+     * @throws JsonException
      */
     protected function createMultiFilterInput(string $multiFilterName, string $filterName): InputObjectTypeDefinitionNode
     {
-        return Parser::inputObjectTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
+        return Parser::inputObjectTypeDefinition(/* @lang GraphQL */ <<<GRAPHQL
                 input {$multiFilterName} {
                     "Find nodes which match at least one of the provided filters."
                     any: [{$multiFilterName}]

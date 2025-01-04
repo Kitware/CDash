@@ -1,20 +1,18 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
-
 use App\Models\User;
+use CDash\Database;
 use CDash\Model\Label;
 use CDash\Model\LabelEmail;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
 use CDash\Model\UserProject;
-use CDash\Database;
 use Illuminate\Support\Facades\DB;
 
 class SubProjectEmailTestCase extends KWWebTestCase
@@ -96,10 +94,10 @@ class SubProjectEmailTestCase extends KWWebTestCase
             $user_project->Save();
 
             // Subscribe this user to the subproject's label.
-            $label_email = new LabelEmail;
+            $label_email = new LabelEmail();
             $label_email->UserId = $userid;
             $label_email->ProjectId = $this->Project->Id;
-            $label = new Label;
+            $label = new Label();
             $label->SetText($subproject_name);
             $labelid = $label->GetIdFromText();
             $label_email->LabelId = $labelid;
