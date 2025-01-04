@@ -8,6 +8,7 @@ $finder = PhpCsFixer\Finder::create()
     ->exclude('vendor')
     ->exclude('_build')
     ->exclude('resources')
+    ->exclude('public')
     ->notPath('app/cdash/tests/config.test.local.php')
     ->in(__DIR__)
 ;
