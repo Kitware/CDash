@@ -15482,56 +15482,6 @@ parameters:
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/deleteSubmissionFile.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/deleteSubmissionFile.php
-
-		-
-			message: "#^Parameter \\#1 \\$from of static method Illuminate\\\\Contracts\\\\Filesystem\\\\Filesystem\\:\\:move\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/deleteSubmissionFile.php
-
-		-
-			message: "#^Parameter \\#1 \\$path of static method Illuminate\\\\Contracts\\\\Filesystem\\\\Filesystem\\:\\:exists\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/deleteSubmissionFile.php
-
-		-
-			message: "#^Parameter \\#1 \\$paths of static method Illuminate\\\\Contracts\\\\Filesystem\\\\Filesystem\\:\\:delete\\(\\) expects array\\|string, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/deleteSubmissionFile.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of function decrypt expects string, mixed given\\.$#"
-			count: 2
-			path: app/cdash/public/api/v1/deleteSubmissionFile.php
-
-		-
-			message: "#^Parameter \\#2 \\$to of static method Illuminate\\\\Contracts\\\\Filesystem\\\\Filesystem\\:\\:move\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/deleteSubmissionFile.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/getSubmissionFile.php
-
-		-
-			message: "#^Parameter \\#1 \\$path of function basename expects string, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/getSubmissionFile.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of function decrypt expects string, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/getSubmissionFile.php
-
-		-
 			message: "#^Access to an undefined property App\\\\Models\\\\Banner\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Banner\\>\\:\\:\\$text\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/index.php
@@ -16068,36 +16018,6 @@ parameters:
 			message: "#^Variable static method call on App\\\\Utils\\\\RepositoryUtils\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/project.php
-
-		-
-			message: "#^Call to method RetryHandler\\:\\:increment\\(\\) with incorrect case\\: Increment$#"
-			count: 1
-			path: app/cdash/public/api/v1/requeueSubmissionFile.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/requeueSubmissionFile.php
-
-		-
-			message: "#^Parameter \\#1 \\$num of function pow expects float\\|int, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/requeueSubmissionFile.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of function decrypt expects string, mixed given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/requeueSubmissionFile.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of method Carbon\\\\Carbon\\:\\:addSeconds\\(\\) expects int, \\(float\\|int\\) given\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/requeueSubmissionFile.php
-
-		-
-			message: "#^Part \\$filename \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
-			count: 5
-			path: app/cdash/public/api/v1/requeueSubmissionFile.php
 
 		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
