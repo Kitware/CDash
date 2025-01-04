@@ -1114,9 +1114,8 @@ function addDailyChanges(int $projectid): void
             $files = Storage::allFiles($dir_to_clean);
             foreach ($files as $filename) {
                 $filepath = Storage::path($filename);
-                if (file_exists($filepath) && is_file($filepath) &&
-                        time() - filemtime($filepath) > $timeframe * 3600) {
-                    cdash_unlink($filepath);
+                if (file_exists($filepath) && is_file($filepath) && time() - filemtime($filepath) > $timeframe * 3600) {
+                    Storage::delete($filepath);
                 }
             }
         }
