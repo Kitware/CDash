@@ -35,52 +35,67 @@ class CDashUseCaseTestCase extends CDashTestCase
             ->expects($this->any())
             ->method('create')
             ->willReturnCallback(function ($class_name) use ($useCase) {
+                $methods = [];
+                foreach (['Insert', 'Update', 'Save', 'GetCommitAuthors', 'GetMissingTests'] as $method) {
+                    if (method_exists($class_name, $method)) {
+                        $methods[] = $method;
+                    }
+                }
+
                 $model = $this->getMockBuilder($class_name)
-                    ->setMethods(['Insert', 'Update', 'Save', 'GetCommitAuthors', 'GetMissingTests'])
+                    ->onlyMethods($methods)
                     ->getMock();
 
-                $model->expects($this->any())
-                    ->method('Save')
-                    ->willReturnCallback(function () use ($class_name, $model, $useCase) {
-                        $model->Id = $useCase->getIdForClass($class_name);
-                        if (isset($model->Errors)) {
-                            foreach ($model->Errors as $error) {
-                                $error->BuildId = $model->Id;
-                            }
-                        }
-                        return $model->Id;
-                    });
-
-                $model->expects($this->any())
-                    ->method('Insert')
-                    ->willReturnCallback(function () use ($class_name, $model, $useCase) {
-                        // TODO: discuss
-                        if (!property_exists($model, 'Id')) {
-                            $model->Id = null;
-                        }
-
-                        if (!$model->Id) {
+                if (method_exists($class_name, 'Save')) {
+                    $model->expects($this->any())
+                        ->method('Save')
+                        ->willReturnCallback(function () use ($class_name, $model, $useCase) {
                             $model->Id = $useCase->getIdForClass($class_name);
-                        }
-                        return $model->Id;
-                    });
+                            if (isset($model->Errors)) {
+                                foreach ($model->Errors as $error) {
+                                    $error->BuildId = $model->Id;
+                                }
+                            }
+                            return $model->Id;
+                        });
+                }
 
-                $model->expects($this->any())
-                    ->method('GetCommitAuthors')
-                    ->willReturnCallback(function () use ($useCase, $model) {
-                        /** @var Build|\PHPUnit\Framework\MockObject\MockObject $model */
-                        return $useCase->getAuthors($model->SubProjectName);
-                    });
+                if (method_exists($class_name, 'Insert')) {
+                    $model->expects($this->any())
+                        ->method('Insert')
+                        ->willReturnCallback(function () use ($class_name, $model, $useCase) {
+                            // TODO: discuss
+                            if (!property_exists($model, 'Id')) {
+                                $model->Id = null;
+                            }
 
-                $model->expects($this->any())
-                    ->method('GetMissingTests')
-                    ->willReturnCallback(function () use ($useCase) {
-                        $missing = [];
-                        if (isset($useCase->missingTests)) {
-                            $missing = $useCase->missingTests;
-                        }
-                        return $missing;
-                    });
+                            if (!$model->Id) {
+                                $model->Id = $useCase->getIdForClass($class_name);
+                            }
+                            return $model->Id;
+                        });
+                }
+
+                if (method_exists($class_name, 'GetCommitAuthors')) {
+                    $model->expects($this->any())
+                        ->method('GetCommitAuthors')
+                        ->willReturnCallback(function () use ($useCase, $model) {
+                            /** @var Build|\PHPUnit\Framework\MockObject\MockObject $model */
+                            return $useCase->getAuthors($model->SubProjectName);
+                        });
+                }
+
+                if (method_exists($class_name, 'GetMissingTests')) {
+                    $model->expects($this->any())
+                        ->method('GetMissingTests')
+                        ->willReturnCallback(function () use ($useCase) {
+                            $missing = [];
+                            if (isset($useCase->missingTests)) {
+                                $missing = $useCase->missingTests;
+                            }
+                            return $missing;
+                        });
+                }
 
                 return $model;
             });
