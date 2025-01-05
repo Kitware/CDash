@@ -2,31 +2,7 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\Admin;
-use App\Http\Middleware\Authenticate;
-use App\Http\Middleware\AuthenticateToken;
-use App\Http\Middleware\CheckForMaintenanceMode;
-use App\Http\Middleware\EncryptCookies;
-use App\Http\Middleware\JsonOnly;
-use App\Http\Middleware\PasswordExpired;
-use App\Http\Middleware\RedirectIfAuthenticated;
-use App\Http\Middleware\Timer;
-use App\Http\Middleware\TrimStrings;
-use App\Http\Middleware\TrustProxies;
-use App\Http\Middleware\VerifyCsrfToken;
-use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
-use Illuminate\Auth\Middleware\Authorize;
-use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
-use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
-use Illuminate\Http\Middleware\SetCacheHeaders;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\Routing\Middleware\ThrottleRequests;
-use Illuminate\Routing\Middleware\ValidateSignature;
-use Illuminate\Session\Middleware\AuthenticateSession;
-use Illuminate\Session\Middleware\StartSession;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class Kernel extends HttpKernel
 {
@@ -38,12 +14,12 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        CheckForMaintenanceMode::class,
-        TrimStrings::class,
-        ConvertEmptyStringsToNull::class,
-        TrustProxies::class,
-        Timer::class,
-        StartSession::class,
+        \App\Http\Middleware\CheckForMaintenanceMode::class,
+        \App\Http\Middleware\TrimStrings::class,
+        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\TrustProxies::class,
+        \App\Http\Middleware\Timer::class,
+        \Illuminate\Session\Middleware\StartSession::class,
     ];
 
     /**
@@ -53,26 +29,26 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
-            EncryptCookies::class,
-            AddQueuedCookiesToResponse::class,
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
-            ShareErrorsFromSession::class,
-            VerifyCsrfToken::class,
-            SubstituteBindings::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
             'password.expired',
         ],
         'api' => [
-            EncryptCookies::class,
-            AddQueuedCookiesToResponse::class,
-            ShareErrorsFromSession::class,
-            JsonOnly::class,
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\JsonOnly::class,
             // 'throttle:60,1',
-            SubstituteBindings::class,
-            AuthenticateToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\AuthenticateToken::class,
         ],
         'saml' => [
-            EncryptCookies::class,
-            AddQueuedCookiesToResponse::class,
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
         ],
     ];
 
@@ -84,16 +60,17 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => Authenticate::class,
-        'auth.basic' => AuthenticateWithBasicAuth::class,
-        'cache.headers' => SetCacheHeaders::class,
-        'can' => Authorize::class,
-        'guest' => RedirectIfAuthenticated::class,
-        'signed' => ValidateSignature::class,
-        'throttle' => ThrottleRequests::class,
-        'verified' => EnsureEmailIsVerified::class,
-        'password.expired' => PasswordExpired::class,
-        'admin' => Admin::class,
+        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+        'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'password.expired' => \App\Http\Middleware\PasswordExpired::class,
+        'admin' => \App\Http\Middleware\Admin::class,
+        'internal' => \App\Http\Middleware\Internal::class,
     ];
 
     /**
@@ -104,17 +81,17 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewarePriority = [
-        JsonOnly::class,
-        StartSession::class,
-        ShareErrorsFromSession::class,
-        AuthenticateToken::class,
-        Authenticate::class,
-        AuthenticateSession::class,
-        SubstituteBindings::class,
-        Authorize::class,
+        \App\Http\Middleware\JsonOnly::class,
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        \App\Http\Middleware\AuthenticateToken::class,
+        \App\Http\Middleware\Authenticate::class,
+        \Illuminate\Session\Middleware\AuthenticateSession::class,
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        \Illuminate\Auth\Middleware\Authorize::class,
         'auth',
         'admin',
         'password.expired',
-        Timer::class,
+        \App\Http\Middleware\Timer::class,
     ];
 }

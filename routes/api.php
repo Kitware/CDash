@@ -98,10 +98,11 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-// TODO: Wrap these in an "internal" middleware group which performs automatic authentication for internal requests
-Route::get('/internal/getSubmissionFile.php', 'RemoteProcessingController@getSubmissionFile');
-Route::post('/internal/requeueSubmissionFile.php', 'RemoteProcessingController@requeueSubmissionFile');
-Route::delete('/internal/deleteSubmissionFile.php', 'RemoteProcessingController@deleteSubmissionFile');
+Route::middleware(['internal'])->group(function () {
+    Route::get('/internal/getSubmissionFile.php', 'RemoteProcessingController@getSubmissionFile');
+    Route::post('/internal/requeueSubmissionFile.php', 'RemoteProcessingController@requeueSubmissionFile');
+    Route::delete('/internal/deleteSubmissionFile.php', 'RemoteProcessingController@deleteSubmissionFile');
+});
 
 // this *MUST* be the last route in the file
 Route::any('{url}', 'CDash')->where('url', '.*');
