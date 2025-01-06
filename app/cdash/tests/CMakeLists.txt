@@ -605,7 +605,9 @@ set_tests_properties(/Feature/RemoteWorkers PROPERTIES DEPENDS install_3)
 add_laravel_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 
 add_php_test(submissionvalidation)
-set_tests_properties(submissionvalidation PROPERTIES DEPENDS createpublicdashboard)
+# Set this to RUN_SERIAL as we are changing the config and don't want to clobber other tests
+set_tests_properties(submissionvalidation PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(submissionvalidation PROPERTIES DEPENDS /Feature/AutoRemoveBuildsCommand)
 
 add_subdirectory(ctest)
 add_subdirectory(autoremovebuilds)
