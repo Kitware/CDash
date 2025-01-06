@@ -15201,16 +15201,6 @@ parameters:
 			path: app/cdash/include/log.php
 
 		-
-			message: "#^Function cdash_unlink\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/log.php
-
-		-
-			message: "#^Function cdash_unlink\\(\\) has parameter \\$filename with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/log.php
-
-		-
 			message: "#^Function to_psr3_level\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/log.php

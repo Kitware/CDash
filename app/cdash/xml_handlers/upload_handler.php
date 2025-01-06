@@ -185,8 +185,7 @@ class UploadHandler extends AbstractXmlHandler
             unset($whandle);
 
             // Delete base64 encoded file
-            $success = cdash_unlink($this->Base64TmpFilename);
-            if (!$success) {
+            if (!unlink($this->Base64TmpFilename)) {
                 Log::warning("Failed to delete file '{$this->Base64TmpFilename}'");
             }
 
@@ -195,7 +194,9 @@ class UploadHandler extends AbstractXmlHandler
             if ($upload_file_size > $this->GetProject()->UploadQuota) {
                 Log::error("Size of uploaded file {$this->TmpFilename} is {$upload_file_size} bytes, which is greater than the total upload quota for this project ({$this->GetProject()->UploadQuota} bytes)");
                 $this->UploadError = true;
-                cdash_unlink($this->TmpFilename);
+                if (!unlink($this->TmpFilename)) {
+                    Log::warning("Failed to delete file '{$this->TmpFilename}'");
+                }
                 return;
             }
 
@@ -227,7 +228,7 @@ class UploadHandler extends AbstractXmlHandler
                     $fp_to_upload = fopen($this->TmpFilename, 'r');
                     if ($fp_to_upload === false) {
                         Log::error("Failed to open temporary file {$this->TmpFilename} for upload");
-                        cdash_unlink($this->TmpFilename);
+                        unlink($this->TmpFilename);
                         $this->UploadError = true;
                         return;
                     }
@@ -239,7 +240,7 @@ class UploadHandler extends AbstractXmlHandler
                     fclose($fp_to_upload);
                     if (!$response->successful()) {
                         Log::error('Error uploading file via API: ' .  $response->status() . ' ' . $response->body());
-                        cdash_unlink($this->TmpFilename);
+                        unlink($this->TmpFilename);
                         $this->UploadError = true;
                         return;
                     }
@@ -251,13 +252,13 @@ class UploadHandler extends AbstractXmlHandler
                             $fileToUpload = new File($this->TmpFilename);
                         } catch (FileNotFoundException $e) {
                             Log::error("Could not find file {$this->TmpFilename} to upload");
-                            cdash_unlink($this->TmpFilename);
+                            unlink($this->TmpFilename);
                             $this->UploadError = true;
                             return;
                         }
                         if (Storage::putFileAs('upload', $fileToUpload, (string) $this->UploadFile->Sha1Sum) === false) {
                             Log::error("Failed to store {$this->TmpFilename} as {$uploadFilepath}");
-                            cdash_unlink($this->TmpFilename);
+                            unlink($this->TmpFilename);
                             $this->UploadError = true;
                             return;
                         }
@@ -266,8 +267,7 @@ class UploadHandler extends AbstractXmlHandler
             }
 
             // Delete decoded temporary file.
-            $success = cdash_unlink($this->TmpFilename);
-            if (!$success) {
+            if (!unlink($this->TmpFilename)) {
                 Log::error("Failed to delete file '{$this->TmpFilename}");
             }
 

@@ -17,19 +17,6 @@
 use Illuminate\Support\Facades\Log;
 use \Psr\Log\LogLevel;
 
-if (!function_exists('cdash_unlink')) {
-    function cdash_unlink($filename)
-    {
-        unlink($filename);
-
-        if (file_exists($filename)) {
-            throw new Exception("file still exists after unlink: $filename");
-        }
-
-        return true;
-    }
-}
-
 if (!function_exists('to_psr3_level')) {
     function to_psr3_level($type)
     {
