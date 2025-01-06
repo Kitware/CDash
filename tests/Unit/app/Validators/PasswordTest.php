@@ -19,7 +19,7 @@ namespace App\Validators;
 use App\Validators\Password as PasswordValidator;
 use Config;
 use Illuminate\Contracts\Translation\Translator;
-use PHPUnit\Framework\MockObject\MockObject;
+use Mockery;
 use Tests\TestCase;
 use Illuminate\Validation\Validator;
 
@@ -403,24 +403,10 @@ class PasswordTest extends TestCase
         $this::assertEquals($expected, $actual);
     }
 
-    /**
-     * @param array $methods
-     * @return Validator|MockObject
-     */
-    private function getMockValidator($methods = [])
+    private function getMockValidator(): Validator
     {
-        /** @var Translator|MockObject $translator */
-        $translator = $this->getMockBuilder(Translator::class)
-            ->setMethods(['trans', 'transChoice', 'setLocale', 'getLocale'])
-            ->getMockForAbstractClass();
+        $translator = Mockery::mock(Translator::class);
         $validator = new Validator($translator, [], []);
-        /** @var Validator|MockObject $validator */
-        /*
-        $validator = $this->getMockBuilder(Validator::class)
-            ->setConstructorArgs([$translator, [], []])
-            ->setMethods(null)
-            ->getMock();
-        */
         return $validator;
     }
 }

@@ -21,9 +21,9 @@ use Tests\TestCase;
 
 class NightlyTimeTest extends TestCase
 {
-    public function __construct()
+    public function setUp(): void
     {
-        parent::__construct();
+        parent::setUp();
         $this->Project = new Project();
         // Avoid the database for this test.
         $this->Project->Filled = true;

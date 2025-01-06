@@ -22,10 +22,6 @@ class BuildErrorTest extends CDashTestCase
     public function setUp() : void
     {
         $container = ServiceContainer::container();
-        $this->mock_builderror = $this->getMockBuilder(BuildError::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['GetBuildErrorArguments'])
-            ->getMock();
         $this->mock_project = $this->getMockBuilder(Project::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -48,7 +44,7 @@ class BuildErrorTest extends CDashTestCase
         ];
 
         $this->mock_project->CvsUrl = 'https://github.com/FooCo/foo';
-        $marshaled = $this->mock_builderror->marshal($input_data, $this->mock_project, '12');
+        $marshaled = BuildError::marshal($input_data, $this->mock_project, '12');
 
         $expected = [
             'new' => '1',

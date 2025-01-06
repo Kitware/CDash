@@ -12723,16 +12723,8 @@ parameters:
 			path: app/cdash/include/Submission/CommitAuthorHandlerInterface.php
 
 		-
-			message: """
-				#^Call to deprecated method setMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/pull/3687$#
-			"""
-			count: 2
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:any\\(\\)\\.$#"
-			count: 4
+			count: 3
 			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
@@ -12766,11 +12758,6 @@ parameters:
 			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
-			message: "#^Trying to mock an undefined method quote\\(\\) on class CDash\\\\Database\\.$#"
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
 			message: "#^Unable to resolve the template type T in call to method PHPUnit\\\\Framework\\\\TestCase\\:\\:getMockBuilder\\(\\)$#"
 			count: 1
 			path: app/cdash/include/Test/CDashTestCase.php
@@ -12791,14 +12778,6 @@ parameters:
 			path: app/cdash/include/Test/CDashUseCaseTestCase.php
 
 		-
-			message: """
-				#^Call to deprecated method setMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/pull/3687$#
-			"""
-			count: 1
-			path: app/cdash/include/Test/CDashUseCaseTestCase.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:any\\(\\)\\.$#"
 			count: 5
 			path: app/cdash/include/Test/CDashUseCaseTestCase.php
@@ -12811,6 +12790,11 @@ parameters:
 		-
 			message: "#^Only booleans are allowed in an if condition, CDash\\\\ServiceContainer given\\.$#"
 			count: 1
+			path: app/cdash/include/Test/CDashUseCaseTestCase.php
+
+		-
+			message: "#^Parameter \\#1 \\$class_name of method CDash\\\\Test\\\\UseCase\\\\UseCase\\:\\:getIdForClass\\(\\) expects string, class\\-string\\|object given\\.$#"
+			count: 2
 			path: app/cdash/include/Test/CDashUseCaseTestCase.php
 
 		-
@@ -18085,21 +18069,8 @@ parameters:
 			path: app/cdash/tests/case/CDash/Model/BuildErrorFilterTest.php
 
 		-
-			message: "#^Access to an undefined property BuildErrorTest\\:\\:\\$mock_builderror\\.$#"
-			count: 2
-			path: app/cdash/tests/case/CDash/Model/BuildErrorTest.php
-
-		-
 			message: "#^Access to an undefined property BuildErrorTest\\:\\:\\$mock_project\\.$#"
 			count: 3
-			path: app/cdash/tests/case/CDash/Model/BuildErrorTest.php
-
-		-
-			message: """
-				#^Call to deprecated method setMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/pull/3687$#
-			"""
-			count: 1
 			path: app/cdash/tests/case/CDash/Model/BuildErrorTest.php
 
 		-
@@ -32955,19 +32926,6 @@ parameters:
 			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, mixed given\\.$#"
 			count: 1
 			path: tests/Unit/app/ControllerNameTest.php
-
-		-
-			message: """
-				#^Call to deprecated method setMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/pull/3687$#
-			"""
-			count: 1
-			path: tests/Unit/app/Validators/PasswordTest.php
-
-		-
-			message: "#^Method App\\\\Validators\\\\PasswordTest\\:\\:getMockValidator\\(\\) has parameter \\$methods with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: tests/Unit/app/Validators/PasswordTest.php
 
 		-
 			message: "#^Method App\\\\Validators\\\\PasswordTest\\:\\:testComplexityFailsGivenEmptyPassword\\(\\) has no return type specified\\.$#"
