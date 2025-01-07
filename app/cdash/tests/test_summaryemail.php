@@ -63,7 +63,7 @@ class SummaryEmailTestCase extends KWWebTestCase
             '3>f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma',
             '-CDash on',
         ];
-        if (!$this->assertLogContains($expected, 28)) {
+        if (!$this->assertLogContains($expected, 26)) {
             $this->fail('Log did not contain expected contents');
         }
     }

@@ -3605,14 +3605,6 @@ parameters:
 			path: app/Listeners/ConfiguredSendEmailVerificationNotification.php
 
 		-
-			message: """
-				#^Call to deprecated function add_log\\(\\)\\:
-				04/04/2023  Use \\\\Illuminate\\\\Support\\\\Facades\\\\Log for logging instead$#
-			"""
-			count: 3
-			path: app/Listeners/EmailSentListener.php
-
-		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 1
 			path: app/Listeners/EmailSentListener.php

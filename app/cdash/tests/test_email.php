@@ -118,9 +118,7 @@ class EmailTestCase extends KWWebTestCase
         $url = url('/');
 
         $expected = [
-            'DEBUG: user1@kw',
-            'DEBUG: PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly',
-            'Congratulations. A submission to CDash for the project EmailProjectExample has fixed warnings',
+            'testing.INFO: Sent email titled \'PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly\' to user1@kw {"projectid":3,"subject":"PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly","body":"Congratulations. A submission to CDash for the project EmailProjectExample has fixed warnings. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
             "{$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
@@ -130,7 +128,7 @@ class EmailTestCase extends KWWebTestCase
             'Warnings fixed: 6',
             '-CDash on',
         ];
-        if ($this->assertLogContains($expected, 15)) {
+        if ($this->assertLogContains($expected, 13)) {
             $this->pass('Passed');
         }
 
@@ -164,9 +162,7 @@ class EmailTestCase extends KWWebTestCase
         }
         $url = url('/');
         $expected = [
-            'DEBUG: user1@kw',
-            'DEBUG: PASSED (t=2): EmailProjectExample - Win32-MSVC2009 - Nightly',
-            'Congratulations. A submission to CDash for the project EmailProjectExample has fixed failing tests',
+            'testing.INFO: Sent email titled \'PASSED (t=2): EmailProjectExample - Win32-MSVC2009 - Nightly\' to user1@kw {"projectid":3,"subject":"PASSED (t=2): EmailProjectExample - Win32-MSVC2009 - Nightly","body":"Congratulations. A submission to CDash for the project EmailProjectExample has fixed failing tests. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
             "{$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
@@ -177,7 +173,7 @@ class EmailTestCase extends KWWebTestCase
             '-CDash on',
         ];
 
-        if ($this->assertLogContains($expected, 15)) {
+        if ($this->assertLogContains($expected, 13)) {
             $this->pass('Passed');
         }
     }
@@ -229,7 +225,7 @@ class EmailTestCase extends KWWebTestCase
             '-CDash on',
         ];
 
-        if ($this->assertLogContains($expected, 43)) {
+        if ($this->assertLogContains($expected, 39)) {
             $this->pass('Passed');
         }
     }
@@ -284,7 +280,7 @@ class EmailTestCase extends KWWebTestCase
             '-CDash on',
         ];
 
-        if ($this->assertLogContains($expected, 41)) {
+        if ($this->assertLogContains($expected, 37)) {
             $this->pass('Passed');
         }
     }
