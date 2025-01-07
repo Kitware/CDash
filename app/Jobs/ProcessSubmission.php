@@ -58,7 +58,7 @@ class ProcessSubmission implements ShouldQueue
         if (config('cdash.remote_workers')) {
             /** @var string $app_key */
             $app_key = config('app.key', '');
-            return Http::withToken($app_key)->delete(url('/api/internal/deleteSubmissionFile.php'), [
+            return Http::withToken($app_key)->delete(url('/api/internal/deleteSubmissionFile'), [
                 'filename' => $src,
                 'dest' => $dst,
             ])->ok();
@@ -72,7 +72,7 @@ class ProcessSubmission implements ShouldQueue
         if (config('cdash.remote_workers')) {
             /** @var string $app_key */
             $app_key = config('app.key', '');
-            return Http::withToken($app_key)->delete(url('/api/internal/deleteSubmissionFile.php'), [
+            return Http::withToken($app_key)->delete(url('/api/internal/deleteSubmissionFile'), [
                 'filename' => $filename,
             ])->ok();
         } else {
@@ -85,7 +85,7 @@ class ProcessSubmission implements ShouldQueue
         if (config('cdash.remote_workers')) {
             /** @var string $app_key */
             $app_key = config('app.key', '');
-            $response = Http::withToken($app_key)->post(url('/api/internal/requeueSubmissionFile.php'), [
+            $response = Http::withToken($app_key)->post(url('/api/internal/requeueSubmissionFile'), [
                 'filename' => $this->filename,
                 'buildid' => $buildid,
                 'projectid' => $this->projectid,
@@ -256,7 +256,7 @@ class ProcessSubmission implements ShouldQueue
 
         /** @var string $app_key */
         $app_key = config('app.key', '');
-        $response = Http::withToken($app_key)->get(url('/api/internal/getSubmissionFile.php'), [
+        $response = Http::withToken($app_key)->get(url('/api/internal/getSubmissionFile'), [
             'filename' => $filename,
         ]);
 

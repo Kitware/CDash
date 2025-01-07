@@ -99,9 +99,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['internal'])->group(function () {
-    Route::get('/internal/getSubmissionFile.php', 'RemoteProcessingController@getSubmissionFile');
-    Route::post('/internal/requeueSubmissionFile.php', 'RemoteProcessingController@requeueSubmissionFile');
-    Route::delete('/internal/deleteSubmissionFile.php', 'RemoteProcessingController@deleteSubmissionFile');
+    Route::get('/internal/getSubmissionFile', 'RemoteProcessingController@getSubmissionFile');
+    Route::post('/internal/requeueSubmissionFile', 'RemoteProcessingController@requeueSubmissionFile');
+    Route::delete('/internal/deleteSubmissionFile', 'RemoteProcessingController@deleteSubmissionFile');
 });
 
 // this *MUST* be the last route in the file

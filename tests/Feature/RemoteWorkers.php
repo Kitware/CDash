@@ -25,7 +25,7 @@ class RemoteWorkers extends TestCase
 
         /** @var string $app_key */
         $app_key = config('app.key', '');
-        $response = $this->withToken($app_key)->delete('/api/internal/deleteSubmissionFile.php', [
+        $response = $this->withToken($app_key)->delete('/api/internal/deleteSubmissionFile', [
             'filename' => 'inbox/delete_me',
         ]);
         $response->assertOk();
@@ -36,7 +36,7 @@ class RemoteWorkers extends TestCase
     {
         Storage::put('inbox/delete_me', 'please delete me');
 
-        $response = $this->withToken('invalid token')->delete('/api/internal/deleteSubmissionFile.php', [
+        $response = $this->withToken('invalid token')->delete('/api/internal/deleteSubmissionFile', [
             'filename' => 'inbox/delete_me',
         ]);
 
@@ -49,7 +49,7 @@ class RemoteWorkers extends TestCase
     {
         Storage::put('inbox/delete_me', 'please delete me');
 
-        $response = $this->delete('/api/internal/deleteSubmissionFile.php', [
+        $response = $this->delete('/api/internal/deleteSubmissionFile', [
             'filename' => 'inbox/delete_me',
         ]);
 

@@ -16,7 +16,7 @@ final class RemoteProcessingController extends AbstractController
      * These are temporarily stored files which are removed after they've been processed,
      * usually by a queue.
      *
-     * GET /getSubmissionFile.php
+     * GET /getSubmissionFile
      * Required Params:
      * filename=[string] Filename to retrieve, must live in tmp_submissions directory
      **/
@@ -37,7 +37,7 @@ final class RemoteProcessingController extends AbstractController
     /**
      * Delete the temporary file related to a particular submission.
      *
-     * DELETE /deleteSubmissionFile.php
+     * DELETE /deleteSubmissionFile
      * Required Params:
      * filename=[string] Filename to delete, must live in tmp_submissions directory
      * Optional Params:
