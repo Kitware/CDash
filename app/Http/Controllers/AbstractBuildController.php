@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Utils\TestingDay;
 use CDash\Model\Build;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 abstract class AbstractBuildController extends AbstractProjectController
@@ -26,6 +27,10 @@ abstract class AbstractBuildController extends AbstractProjectController
         if (!$build->Exists()) {
             abort(404, 'Build does not exist. Maybe it has been deleted.');
         }
+
+        Log::shareContext([
+            'buildid' => $build->Id,
+        ]);
 
         $this->setProject($build->GetProject());
         $this->build = $build;

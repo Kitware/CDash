@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Utils\TestingDay;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 abstract class AbstractProjectController extends AbstractController
@@ -31,6 +32,10 @@ abstract class AbstractProjectController extends AbstractController
     protected function setProject(Project $project): void
     {
         Gate::authorize('view-project', $project);
+
+        Log::shareContext([
+            'projectid' => $project->Id,
+        ]);
 
         $this->project = $project;
         $this->project->Fill();
