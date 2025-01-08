@@ -549,7 +549,7 @@ class SiteTypeTest extends TestCase
      *     }
      * }
      */
-    public function nullabilityTestCases(): array
+    public static function nullabilityTestCases(): array
     {
         return [
             [['processoris64bits' => true]],

@@ -118,7 +118,7 @@ class TestTypeTest extends TestCase
     /**
      * @return array<array<string>>
      */
-    public function statuses(): array
+    public static function statuses(): array
     {
         return [
             ['passed', 'PASSED'],
