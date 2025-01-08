@@ -18,6 +18,7 @@
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
+use Illuminate\Support\Facades\Log;
 
 class SubProjectDirectoriesHandler extends AbstractSubmissionHandler
 {
@@ -37,8 +38,9 @@ class SubProjectDirectoriesHandler extends AbstractSubmissionHandler
     {
         $open_list = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         if ($open_list === false) {
-            add_log("Could not open $filename for parsing",
-                'SubProjectDirectoriesHandler::Parse', LOG_ERR);
+            Log::error("Could not open $filename for parsing", [
+                'function' => 'SubProjectDirectoriesHandler::Parse',
+            ]);
             return false;
         }
 

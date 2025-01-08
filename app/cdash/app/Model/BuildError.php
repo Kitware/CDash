@@ -19,6 +19,7 @@ namespace CDash\Model;
 
 use App\Models\BasicBuildAlert;
 use App\Utils\RepositoryUtils;
+use Illuminate\Support\Facades\Log;
 use PDO;
 
 /** BuildError */
@@ -76,7 +77,9 @@ class BuildError
     public function GetErrorsForBuild(int $fetchStyle = PDO::FETCH_ASSOC): array|false
     {
         if (!$this->BuildId) {
-            add_log('BuildId not set', 'BuildError::GetErrorsForBuild', LOG_WARNING);
+            Log::warning('BuildId not set', [
+                'function' => 'BuildError::GetErrorsForBuild',
+            ]);
             return false;
         }
 

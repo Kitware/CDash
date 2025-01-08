@@ -17,6 +17,7 @@
 
 use CDash\Model\Build;
 use CDash\Model\BuildProperties;
+use Illuminate\Support\Facades\Log;
 
 class BuildPropertiesJSONHandler extends AbstractSubmissionHandler
 {
@@ -34,7 +35,9 @@ class BuildPropertiesJSONHandler extends AbstractSubmissionHandler
         $json_obj = json_decode(file_get_contents($filename), true);
         if ($json_obj === null) {
             $err = json_last_error_msg();
-            add_log("Failed to parse $filename: $err", 'BuildPropertiesJSONHandler::Parse', LOG_ERR);
+            Log::error("Failed to parse $filename: $err", [
+                'function' => 'BuildPropertiesJSONHandler::Parse',
+            ]);
             return false;
         }
 

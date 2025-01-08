@@ -19,6 +19,7 @@ namespace CDash\Model;
 
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BuildGroupRule
 {
@@ -93,7 +94,9 @@ class BuildGroupRule
     public function Save()
     {
         if (!$this->GroupId) {
-            add_log('GroupId not set', 'BuildGroupRule::Save', LOG_ERR);
+            Log::error('GroupId not set', [
+                'function' => 'BuildGroupRule::Save',
+            ]);
             return false;
         }
 

@@ -20,6 +20,7 @@ namespace CDash\Model;
 use App\Utils\RepositoryUtils;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use PDO;
 
 /** BuildFailure */
@@ -71,8 +72,10 @@ class BuildFailure
                 $label->Insert();
             }
         } else {
-            add_log('No BuildFailure id - cannot call $label->Insert...',
-                'BuildFailure::InsertLabelAssociations', LOG_ERR, 0, $this->BuildId);
+            Log::error('No BuildFailure id - cannot call $label->Insert...', [
+                'function' => 'BuildFailure::InsertLabelAssociations',
+                'buildid' => $this->BuildId,
+            ]);
         }
     }
 
@@ -178,7 +181,9 @@ class BuildFailure
     public function GetFailuresForBuild(int $fetchStyle = PDO::FETCH_ASSOC): array|false
     {
         if (!$this->BuildId) {
-            add_log('BuildId not set', 'BuildFailure::GetFailuresForBuild', LOG_WARNING);
+            Log::warning('BuildId not set', [
+                'function' => 'BuildFailure::GetFailuresForBuild',
+            ]);
             return false;
         }
 

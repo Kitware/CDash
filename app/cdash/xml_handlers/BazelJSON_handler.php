@@ -24,6 +24,7 @@ use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
 use CDash\Model\BuildErrorFilter;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\Log;
 
 class BazelJSONHandler extends AbstractSubmissionHandler
 {
@@ -91,8 +92,9 @@ class BazelJSONHandler extends AbstractSubmissionHandler
     {
         $handle = fopen($filename, 'r');
         if (!$handle) {
-            add_log("Could not open $filename for parsing",
-                'BazelJSONHandler::Parse', LOG_ERR);
+            Log::error("Could not open $filename for parsing", [
+                'function' => 'BazelJSONHandler::Parse',
+            ]);
             return false;
         }
 
@@ -196,8 +198,9 @@ class BazelJSONHandler extends AbstractSubmissionHandler
     {
         $json_array = json_decode($line, true);
         if (is_null($json_array)) {
-            add_log('json_decode error: ' . json_last_error_msg(),
-                'BazelJSONHandler::ParseLine', LOG_ERR);
+            Log::error('json_decode error: ' . json_last_error_msg(), [
+                'function' => 'BazelJSONHandler::ParseLine',
+            ]);
             return false;
         }
 

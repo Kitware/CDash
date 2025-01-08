@@ -19,6 +19,7 @@ namespace CDash\Model;
 
 use CDash\Database;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 /** PendingSubmission class */
 class PendingSubmissions
@@ -59,7 +60,9 @@ class PendingSubmissions
     public function Save()
     {
         if (!$this->Build) {
-            add_log('Build not set', 'PendingSubmission::Save', LOG_ERR);
+            Log::error('Build not set', [
+                'function' => 'PendingSubmission::Save',
+            ]);
             return false;
         }
 
@@ -92,12 +95,15 @@ class PendingSubmissions
     public function Delete()
     {
         if (!$this->Build) {
-            add_log('Build not set', 'PendingSubmission::Delete', LOG_ERR);
+            Log::error('Build not set', [
+                'function' => 'PendingSubmission::Delete',
+            ]);
             return false;
         }
         if (!$this->Exists()) {
-            add_log('Record does not exist', 'PendingSubmission::Delete',
-                LOG_ERR);
+            Log::error('Record does not exist', [
+                'function' => 'PendingSubmission::Delete',
+            ]);
             return false;
         }
 
@@ -112,7 +118,9 @@ class PendingSubmissions
             return true;
         }
         if (!$this->Build) {
-            add_log('Build not set', 'PendingSubmission::Fill', LOG_ERR);
+            Log::error('Build not set', [
+                'function' => 'PendingSubmission::Fill',
+            ]);
             return false;
         }
 
@@ -150,7 +158,9 @@ class PendingSubmissions
     private function AtomicUpdate($caller, $clause)
     {
         if (!$this->Build) {
-            add_log('Build not set', "PendingSubmission::$caller", LOG_ERR);
+            Log::error('Build not set', [
+                'function' => "PendingSubmission::$caller",
+            ]);
             return false;
         }
 
@@ -178,8 +188,7 @@ class PendingSubmissions
             // Ignore any 'Numeric value out of range' SQL errors.
             if ($this->GetNumFiles() > 0) {
                 // Otherwise log the error and return false.
-                add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(),
-                    'IncrementOrDecrement', LOG_ERR);
+                report($e);
                 return false;
             }
         }

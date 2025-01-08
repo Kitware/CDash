@@ -19,6 +19,7 @@ namespace CDash\Model;
 
 use CDash\Database;
 use CDash\ServiceContainer;
+use Illuminate\Support\Facades\Log;
 use PDO;
 
 /** BuildRelationship class */
@@ -70,7 +71,9 @@ class BuildRelationship
         foreach ($required_params as $param) {
             if (!$this->$param) {
                 $error_msg = "$param not set";
-                add_log($error_msg, 'BuildRelationship::Save', LOG_ERR);
+                Log::error($error_msg, [
+                    'function' => 'BuildRelationship::Save',
+                ]);
                 return false;
             }
         }
@@ -79,26 +82,33 @@ class BuildRelationship
         foreach ($builds as $build) {
             if (!$build->Exists()) {
                 $error_msg = "Build #{$build->Id} does not exist";
-                add_log($error_msg, 'BuildRelationship::Save',
-                    LOG_ERR, $this->Project->Id, $build->Id);
+                Log::error($error_msg, [
+                    'function' => 'BuildRelationship::Save',
+                    'projectid' => $this->Project->Id,
+                    'buildid' => $build->Id,
+                ]);
                 return false;
             }
 
             $build->FillFromId($build->Id);
             if ($build->ProjectId != $this->Project->Id) {
                 $error_msg = 'Build does not belong to this project';
-                add_log($error_msg,
-                    'BuildRelationship::Save', LOG_ERR, $this->Project->Id,
-                    $build->Id);
+                Log::error($error_msg, [
+                    'function' => 'BuildRelationship::Save',
+                    'projectid' => $this->Project->Id,
+                    'buildid' => $build->Id,
+                ]);
                 return false;
             }
         }
 
         if ($this->Build->Id == $this->RelatedBuild->Id) {
             $error_msg = 'A build cannot be related to itself';
-            add_log($error_msg,
-                'BuildRelationship::Save', LOG_ERR, $this->Project->Id,
-                $this->Build->Id);
+            Log::error($error_msg, [
+                'function' => 'BuildRelationship::Save',
+                'projectid' => $this->Project->Id,
+                'buildid' => $this->Build->Id,
+            ]);
         }
 
         if ($this->Exists()) {
@@ -129,14 +139,17 @@ class BuildRelationship
         foreach ($required_params as $param) {
             if (!$this->$param) {
                 $error_msg = "$param not set";
-                add_log($error_msg, 'BuildRelationship::Delete', LOG_ERR);
+                Log::error($error_msg, [
+                    'function' => 'BuildRelationship::Delete',
+                ]);
                 return false;
             }
         }
         if (!$this->Exists()) {
             $error_msg = 'Relationship does not exist';
-            add_log($error_msg, 'BuildRelationship::Delete',
-                LOG_ERR);
+            Log::error($error_msg, [
+                'function' => 'BuildRelationship::Delete',
+            ]);
             return false;
         }
 
@@ -154,7 +167,10 @@ class BuildRelationship
         $required_params = ['Build', 'RelatedBuild'];
         foreach ($required_params as $param) {
             if (!$this->$param) {
-                add_log("$param not set", 'BuildRelationship::Fill', LOG_ERR);
+                $error_msg = "$param not set";
+                Log::error($error_msg, [
+                    'function' => 'BuildRelationship::Fill',
+                ]);
                 return false;
             }
         }

@@ -121,7 +121,7 @@ class Repository
         try {
             $repositoryInterface = self::getRepositoryInterface($project);
         } catch (\Exception $e) {
-            add_log($e->getMessage(), 'getRepositoryService', LOG_INFO);
+            report($e);
             return null;
         }
         return new RepositoryService($repositoryInterface);

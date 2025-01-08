@@ -22,6 +22,7 @@ use App\Models\SubProject as EloquentSubProject;
 use CDash\Database;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /** Main subproject class */
 class SubProject
@@ -475,9 +476,10 @@ class SubProject
         ", [$projectid, $path]);
 
         if ($query === []) {
-            add_log(
-                "No SubProject found for '$path'", 'GetSubProjectFromPath',
-                LOG_INFO, $projectid, 0);
+            Log::info("No SubProject found for '$path'", [
+                'function' => 'GetSubProjectFromPath',
+                'projectid' => $projectid,
+            ]);
             return null;
         }
         $subproject = new SubProject();

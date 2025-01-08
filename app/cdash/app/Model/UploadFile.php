@@ -19,6 +19,7 @@ namespace CDash\Model;
 
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UploadFile
 {
@@ -34,22 +35,30 @@ class UploadFile
     public function Insert(): bool
     {
         if (!$this->BuildId) {
-            add_log('BuildId is not set', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+            Log::error('BuildId is not set', [
+                'function' => __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
+            ]);
             return false;
         }
 
         if (!$this->Filename) {
-            add_log('Filename is not set', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+            Log::error('Filename is not set', [
+                'function' => __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
+            ]);
             return false;
         }
 
         if (!$this->Sha1Sum) {
-            add_log('Sha1Sum is not set', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+            Log::error('Sha1Sum is not set', [
+                'function' => __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
+            ]);
             return false;
         }
 
         if (!$this->Filesize) {
-            add_log('Filesize is not set', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+            Log::error('Filesize is not set', [
+                'function' => __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
+            ]);
             return false;
         }
 
@@ -88,7 +97,9 @@ class UploadFile
         }
 
         if (!$this->Id) {
-            add_log('No Id', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+            Log::error('No Id', [
+                'function' => __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
+            ]);
             return false;
         }
         $this->Id = intval($this->Id);
@@ -108,7 +119,9 @@ class UploadFile
     public function Fill(): bool
     {
         if (!$this->Id) {
-            add_log('Id not set', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+            Log::error('Id not set', [
+                'function' => __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
+            ]);
             return false;
         }
 
@@ -129,7 +142,9 @@ class UploadFile
             $this->Filesize = $query['filesize'];
             $this->IsUrl = $query['isurl'];
         } else {
-            add_log('Invalid id', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+            Log::error('Invalid id', [
+                'function' => __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
+            ]);
             return false;
         }
         return true;

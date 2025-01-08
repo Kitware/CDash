@@ -163,9 +163,10 @@ class Build
         }
 
         if (empty($this->ProjectId)) {
-            add_log('ProjectId not set' . $subproject, 'Build::SetSubProject', LOG_ERR,
-                $this->ProjectId, $this->Id,
-                ModelType::BUILD, $this->Id);
+            Log::error('ProjectId not set', [
+                'projectid' => $this->ProjectId,
+                'buildid' => $this->Id,
+            ]);
             return false;
         }
 
@@ -210,8 +211,10 @@ class Build
         $Label->Text = $subProject->GetName();
         $Label->Insert();
 
-        add_log('New subproject detected: ' . $subproject, 'Build::SetSubProject',
-            LOG_INFO, $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
+        Log::info('New subproject detected: ' . $subproject, [
+            'projectid' => $this->ProjectId,
+            'buildid' => $this->Id,
+        ]);
         return true;
     }
 
@@ -575,7 +578,11 @@ class Build
         // This needs to take into account that this build may be a parent build
         if ($this->Errors === []) {
             if (!$this->Id) {
-                add_log('BuildId not set', 'Build::GetErrors', LOG_WARNING);
+                Log::warning('BuildId not set', [
+                    'projectid' => $this->ProjectId,
+                    'buildid' => $this->Id,
+                    'function' => 'Build::GetErrors',
+                ]);
                 return false;
             }
 
@@ -602,7 +609,11 @@ class Build
         // This needs to take into account that this build may be a parent build
         if ($this->Failures === []) {
             if (!$this->Id) {
-                add_log('BuildId not set', 'Build::GetFailures', LOG_WARNING);
+                Log::warning('BuildId not set', [
+                    'projectid' => $this->ProjectId,
+                    'buildid' => $this->Id,
+                    'function' => 'Build::GetFailures',
+                ]);
                 return false;
             }
 
@@ -632,7 +643,9 @@ class Build
             foreach ($filters as $prop => $value) {
                 if (is_object($row)) {
                     if (!property_exists($row, $prop)) {
-                        add_log("Cannot filter on {$prop}: property does not exist", 'Build::PropertyFilter', LOG_WARNING);
+                        Log::warning("Cannot filter on {$prop}: property does not exist", [
+                            'function' => 'Build::PropertyFilter',
+                        ]);
                         continue;
                     }
 
@@ -641,7 +654,9 @@ class Build
                     }
                 } elseif (is_array($row)) {
                     if (!array_key_exists($prop, $row)) {
-                        add_log("Cannot filter on {$prop}: property does not exist", 'Build::PropertyFilter', LOG_WARNING);
+                        Log::warning("Cannot filter on {$prop}: property does not exist", [
+                            'function' => 'Build::PropertyFilter',
+                        ]);
                         continue;
                     }
 
@@ -767,9 +782,10 @@ class Build
     public function InsertLabelAssociations(): bool
     {
         if (!$this->Id) {
-            add_log('No Build::Id - cannot call $label->Insert...', 'Build::InsertLabelAssociations', LOG_ERR,
-                $this->ProjectId, $this->Id,
-                ModelType::BUILD, $this->Id);
+            Log::error('No Build::Id - cannot call $label->Insert...', [
+                'function' => 'Build::InsertLabelAssociations',
+                'projectid' => $this->ProjectId,
+            ]);
             return false;
         }
 
@@ -942,8 +958,10 @@ class Build
             $this->MissingTests = [];
 
             if (!$this->Id) {
-                add_log('BuildId is not set', 'Build::GetMissingTests', LOG_ERR,
-                    $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
+                Log::error('BuildId is not set', [
+                    'function' => 'Build::GetMissingTests',
+                    'projectid' => $this->ProjectId,
+                ]);
                 return [];
             }
 
@@ -990,8 +1008,10 @@ class Build
     private function GetTests(string $criteria, int $maxitems = 0): array|false
     {
         if (!$this->Id) {
-            add_log('BuildId is not set', 'Build::GetTests', LOG_ERR,
-                $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
+            Log::error('BuildId is not set', [
+                'function' => 'Build::GetTests',
+                'projectid' => $this->ProjectId,
+            ]);
             return false;
         }
 
@@ -1075,8 +1095,10 @@ class Build
     public function GetErrorDifferences(): array|false
     {
         if (!$this->Id) {
-            add_log('BuildId is not set', 'Build::GetErrorDifferences', LOG_ERR,
-                $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
+            Log::error('BuildId is not set', [
+                'function' => 'Build::GetErrorDifferences',
+                'projectid' => $this->ProjectId,
+            ]);
             return false;
         }
 
@@ -1155,9 +1177,10 @@ class Build
     public function ComputeDifferences(): bool
     {
         if (!$this->Id) {
-            add_log('BuildId is not set', 'Build::ComputeDifferences', LOG_ERR,
-                $this->ProjectId, $this->Id,
-                ModelType::BUILD, $this->Id);
+            Log::error('BuildId is not set', [
+                'function' => 'Build::ComputeDifferences',
+                'projectid' => $this->ProjectId,
+            ]);
             return false;
         }
 
@@ -1228,14 +1251,19 @@ class Build
     public function ComputeTestTiming(): bool
     {
         if (!$this->Id) {
-            add_log('BuildId is not set', 'Build::ComputeTestTiming', LOG_ERR,
-                $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
+            Log::error('BuildId is not set', [
+                'function' => 'Build::ComputeTestTiming',
+                'projectid' => $this->ProjectId,
+            ]);
             return false;
         }
 
         if (!$this->ProjectId) {
-            add_log('ProjectId is not set', 'Build::ComputeTestTiming', LOG_ERR,
-                $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
+            Log::error('ProjectId is not set', [
+                'function' => 'Build::ComputeTestTiming',
+                'projectid' => $this->ProjectId,
+                'buildid' => $this->Id,
+            ]);
             return false;
         }
 
@@ -1386,13 +1414,18 @@ class Build
     public function ComputeUpdateStatistics(): bool
     {
         if (!$this->Id) {
-            add_log('Id is not set', 'Build::ComputeUpdateStatistics', LOG_ERR,
-                $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
+            Log::error('Id is not set', [
+                'function' => 'Build::ComputeUpdateStatistics',
+                'projectid' => $this->ProjectId,
+            ]);
             return false;
         }
 
         if (!$this->ProjectId) {
-            add_log('ProjectId is not set', 'Build::ComputeUpdateStatistics', LOG_ERR, 0, $this->Id);
+            Log::error('ProjectId is not set', [
+                'function' => 'Build::ComputeUpdateStatistics',
+                'buildid' => $this->Id,
+            ]);
             return false;
         }
 
@@ -1708,7 +1741,9 @@ class Build
     public function GetGroup(): int|false
     {
         if (!$this->Id) {
-            add_log('Id not set', 'Build GetGroup()', LOG_ERR);
+            Log::error('Id is not set', [
+                'function' => 'Build::GetGroup',
+            ]);
             return false;
         }
         $stmt = $this->PDO->prepare(
@@ -1751,7 +1786,9 @@ class Build
     public function GetUploadedFilesOrUrls(): array|false
     {
         if (!$this->Id) {
-            add_log('Id not set', 'Build GetUploadedFilesOrUrls()', LOG_ERR);
+            Log::error('Id not set', [
+                'function' => 'Build GetUploadedFilesOrUrls()',
+            ]);
             return false;
         }
 
@@ -2226,10 +2263,11 @@ class Build
     public function SetParentId($parentid): void
     {
         if ($parentid > 0 && (int) $parentid === (int) $this->Id) {
-            add_log("Attempt to mark build $this->Id as its own parent",
-                'Build::SetParentId', LOG_ERR,
-                $this->ProjectId, $this->Id,
-                ModelType::BUILD, $this->Id);
+            Log::error("Attempt to mark build $this->Id as its own parent", [
+                'function' => 'Build::SetParentId',
+                'projectid' => $this->ProjectId,
+                'buildid' => $this->Id,
+            ]);
             return;
         }
         $this->ParentId = (int) $parentid;
@@ -2260,7 +2298,9 @@ class Build
     private function GetErrorsForChildren(int $fetchStyle = PDO::FETCH_ASSOC): array|false
     {
         if (!$this->Id) {
-            add_log('Id not set', 'Build::GetErrorsForChildren', LOG_WARNING);
+            Log::warning('Id not set', [
+                'function' => 'Build::GetErrorsForChildren',
+            ]);
             return false;
         }
 
@@ -2288,7 +2328,9 @@ class Build
     private function GetFailuresForChildren(int $fetchStyle = PDO::FETCH_ASSOC): array|false
     {
         if (!$this->Id) {
-            add_log('Id not set', 'Build::GetFailuresForChildren', LOG_WARNING);
+            Log::warning('Id not set', [
+                'function' => 'Build::GetFailuresForChildren',
+            ]);
             return false;
         }
 
