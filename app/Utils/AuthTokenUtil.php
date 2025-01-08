@@ -221,9 +221,9 @@ class AuthTokenUtil
      */
     public static function getAllTokens(): Collection
     {
-        return AuthToken::select('authtoken.*', 'project.name AS projectname', 'user.firstname AS owner_firstname', 'user.lastname AS owner_lastname')
+        return AuthToken::select('authtoken.*', 'project.name AS projectname', 'users.firstname AS owner_firstname', 'users.lastname AS owner_lastname')
             ->leftJoin('project', 'project.id', '=', 'authtoken.projectid')
-            ->leftJoin('users', 'user.id', '=', 'authtoken.userid')
+            ->leftJoin('users', 'users.id', '=', 'authtoken.userid')
             ->get();
     }
 
