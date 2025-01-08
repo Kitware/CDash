@@ -16881,6 +16881,11 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
 
 		-
+			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 2
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
@@ -16989,6 +16994,11 @@ parameters:
 			message: "#^Property UserSubscriptionBuilderTest\\:\\:\\$fixed_keys has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
+			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
 
 		-
 			message: "#^Call to method expects\\(\\) on an unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
@@ -17211,6 +17221,11 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
 
 		-
+			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
+
+		-
 			message: "#^Call to method method\\(\\) on an unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
@@ -17374,6 +17389,11 @@ parameters:
 			message: "#^Method DynamicAnalysisTopicTest\\:\\:testSubscribesToBuild\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
+
+		-
+			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Topic/EmailSentTopicTest.php
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\)\\.$#"
@@ -17782,6 +17802,11 @@ parameters:
 			message: "#^Property TestFailureTopicTest\\:\\:\\$fixed_keys has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#"
+			count: 3
+			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\)\\.$#"
@@ -18507,6 +18532,11 @@ parameters:
 			message: "#^Method NightlyTimeTest\\:\\:validateTestingDay\\(\\) has parameter \\$starttime with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/NightlyTimeTest.php
+
+		-
+			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#"
+			count: 1
+			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
 
 		-
 			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'CDash\\\\\\\\Service\\\\\\\\RepositoryService' and CDash\\\\Service\\\\RepositoryService will always evaluate to true\\.$#"
@@ -32523,27 +32553,7 @@ parameters:
 			path: tests/Feature/PurgeUnusedProjectsCommand.php
 
 		-
-			message: "#^@dataProvider adminRoutes related method must be public\\.$#"
-			count: 1
-			path: tests/Feature/RouteAccessTest.php
-
-		-
-			message: "#^@dataProvider protectedRoutes related method must be public\\.$#"
-			count: 1
-			path: tests/Feature/RouteAccessTest.php
-
-		-
-			message: "#^Method Tests\\\\Feature\\\\RouteAccessTest\\:\\:adminRoutes\\(\\) is unused\\.$#"
-			count: 1
-			path: tests/Feature/RouteAccessTest.php
-
-		-
 			message: "#^Method Tests\\\\Feature\\\\RouteAccessTest\\:\\:adminRoutes\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: tests/Feature/RouteAccessTest.php
-
-		-
-			message: "#^Method Tests\\\\Feature\\\\RouteAccessTest\\:\\:protectedRoutes\\(\\) is unused\\.$#"
 			count: 1
 			path: tests/Feature/RouteAccessTest.php
 
