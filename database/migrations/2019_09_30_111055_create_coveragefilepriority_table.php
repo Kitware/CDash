@@ -22,7 +22,6 @@ class CreateCoveragefilepriorityTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

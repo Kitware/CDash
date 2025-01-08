@@ -43,14 +43,14 @@ class AuditDependencies extends Command
     {
         //  PHP auditing via composer
         $output = null;
-        print("\n\nComposer Report:\n\n");
-        exec("HOME=" . base_path() . " composer audit --no-interaction -d" . base_path(), $output);
-        print(implode("\n", $output));
+        echo "\n\nComposer Report:\n\n";
+        exec('HOME=' . base_path() . ' composer audit --no-interaction -d' . base_path(), $output);
+        echo implode("\n", $output);
 
         //  NPM audit too
-        print("\n\nNPM Report:\n\n");
+        echo "\n\nNPM Report:\n\n";
         $output = null;
-        exec("/usr/bin/npm audit", $output);
-        print(implode("\n", $output));
+        exec('/usr/bin/npm audit', $output);
+        echo implode("\n", $output);
     }
 }

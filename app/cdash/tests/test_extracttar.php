@@ -1,6 +1,5 @@
 <?php
 
-
 class ExtractTarTestCase extends KWWebTestCase
 {
     public function __construct()

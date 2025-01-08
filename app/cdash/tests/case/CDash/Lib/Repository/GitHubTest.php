@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -17,6 +18,10 @@
 use App\Utils\RepositoryUtils;
 use CDash\Lib\Repository\GitHub;
 use CDash\Model\Project;
+use Github\Api\Apps;
+use Github\Api\Repo;
+use Github\Api\Repository\Statuses;
+use Github\Client;
 use Illuminate\Support\Facades\Log;
 use PHPUnit\Framework\MockObject\MockObject;
 use Ramsey\Uuid\Uuid;
@@ -25,9 +30,10 @@ use Tests\TestCase;
 class GitHubTest extends TestCase
 {
     private string $baseUrl;
-    /** @var Project|MockObject $project */
+    /** @var Project|MockObject */
     private $project;
-    public function setUp() : void
+
+    public function setUp(): void
     {
         parent::setUp();
         $this->project = $this->getMockBuilder(Project::class)
@@ -36,7 +42,7 @@ class GitHubTest extends TestCase
         $this->baseUrl = config('app.url');
     }
 
-    public function testSetStatus() : void
+    public function testSetStatus(): void
     {
         $sut = $this->setupAuthentication();
         $options = [
@@ -49,18 +55,18 @@ class GitHubTest extends TestCase
         $sut->setStatus($options);
     }
 
-    public function testAuthenticateThrowsExceptionGivenNoInstallationId() : void
+    public function testAuthenticateThrowsExceptionGivenNoInstallationId(): void
     {
         $this->project->expects($this::once())
             ->method('GetRepositories')
             ->willReturn([]);
         $sut = new GitHub($this->project);
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Unable to find installation ID for repository');
         $sut->authenticate();
     }
 
-    public function testSkipCheckPropertyIsHonored() : void
+    public function testSkipCheckPropertyIsHonored(): void
     {
         $this->project->expects($this::once())
             ->method('GetRepositories')
@@ -71,7 +77,7 @@ class GitHubTest extends TestCase
         $this::assertNull($sut->getCheckSummaryForBuildRow($build_row));
     }
 
-    public function testCheckSummaryForBuildRow() : void
+    public function testCheckSummaryForBuildRow(): void
     {
         $this->project->expects($this::once())
             ->method('GetRepositories')
@@ -145,7 +151,7 @@ class GitHubTest extends TestCase
      * @param array<string, array<string, string>|string> $expected
      * @param array<string, array<string, string>|string> $actual
      */
-    private function validateCheckPayload(array $expected, array $actual) : void
+    private function validateCheckPayload(array $expected, array $actual): void
     {
         if ((bool) config('cdash.github_always_pass')) {
             $expected['status'] = 'completed';
@@ -156,7 +162,7 @@ class GitHubTest extends TestCase
         $this::assertEquals($expected, $actual);
     }
 
-    private function validateCheckPayloadFromBuildRows() : void
+    private function validateCheckPayloadFromBuildRows(): void
     {
         $this->project->expects($this::once())
             ->method('GetRepositories')
@@ -183,7 +189,7 @@ class GitHubTest extends TestCase
 
         // Pending check.
         $table_header = "Build Name | Status | Details\n";
-        $table_header .= ":-: | :-: | :-:";
+        $table_header .= ':-: | :-: | :-:';
         $expected['output']['title'] = 'Pending';
         $expected['output']['summary'] = "[Some builds have not yet finished submitting their results to CDash.]($index_url)";
         $expected['output']['text'] = "$table_header\n[a]($this->baseUrl/build/99995) | :hourglass_flowing_sand: | [pending]($this->baseUrl/build/99995)";
@@ -251,19 +257,19 @@ class GitHubTest extends TestCase
         $this->validateCheckPayload($expected, $actual);
     }
 
-    public function testGenerateCheckPayloadFromBuildRows() : void
+    public function testGenerateCheckPayloadFromBuildRows(): void
     {
         config(['cdash.github_always_pass' => false]);
         $this->validateCheckPayloadFromBuildRows();
     }
 
-    public function testGenerateAlwaysPassCheckPayloadFromBuildRows() : void
+    public function testGenerateAlwaysPassCheckPayloadFromBuildRows(): void
     {
         config(['cdash.github_always_pass' => true]);
         $this->validateCheckPayloadFromBuildRows();
     }
 
-    public function testDedupeAndSortBuildRows() : void
+    public function testDedupeAndSortBuildRows(): void
     {
         $this->project->expects($this::once())
             ->method('GetRepositories')
@@ -287,12 +293,12 @@ class GitHubTest extends TestCase
         $this::assertEquals($expected, $actual);
     }
 
-    private function setupAuthentication() : GitHub
+    private function setupAuthentication(): GitHub
     {
         $github_url = 'https://github.com/Foo/Bar';
         $repositories = [];
         $repositories[] = [
-            'url'      => $github_url,
+            'url' => $github_url,
             'username' => 12345,
         ];
         $this->project->CvsUrl = $github_url;
@@ -302,7 +308,7 @@ class GitHubTest extends TestCase
 
         $sut = new GitHub($this->project);
 
-        $statuses = $this->getMockBuilder(\Github\Api\Repository\Statuses::class)
+        $statuses = $this->getMockBuilder(Statuses::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['create'])
             ->getMock();
@@ -310,14 +316,14 @@ class GitHubTest extends TestCase
             ->method('create')
             ->willReturn(true);
 
-        $apps = $this->getMockBuilder(\Github\Api\Apps::class)
+        $apps = $this->getMockBuilder(Apps::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['createInstallationToken'])
             ->getMock();
         $apps->expects($this::any())
             ->method('createInstallationToken');
 
-        $repo = $this->getMockBuilder(\Github\Api\Repo::class)
+        $repo = $this->getMockBuilder(Repo::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['statuses'])
             ->getMock();
@@ -325,7 +331,7 @@ class GitHubTest extends TestCase
             ->method('statuses')
             ->willReturn($statuses);
 
-        $client = $this->getMockBuilder(\Github\Client::class)
+        $client = $this->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['api', 'authenticate', 'getHttpClient'])
             ->getMock();
@@ -334,19 +340,19 @@ class GitHubTest extends TestCase
         $client->expects($this::any())
             ->method('api')
             ->willReturnMap([
-               ['apps', $apps],
-               ['repo', $repo],
-        ]);
+                ['apps', $apps],
+                ['repo', $repo],
+            ]);
 
         $sut->setApiClient($client);
-        $pem =  base_path() . "/app/cdash/tests/data/key_for_testing_only";
+        $pem = base_path() . '/app/cdash/tests/data/key_for_testing_only';
         config(['cdash.github_private_key' => $pem]);
         config(['cdash.github_app_id' => 12345]);
 
         return $sut;
     }
 
-    public function testCreateCheck() : void
+    public function testCreateCheck(): void
     {
         $sut = $this->setupAuthentication();
         $sut->createCheck(str_replace('-', '', Uuid::uuid4()->toString()));
@@ -356,6 +362,6 @@ class GitHubTest extends TestCase
     {
         Log::shouldReceive('info')
             ->with('pull request commenting is disabled');
-        RepositoryUtils::post_pull_request_comment(1, 1, "this is a comment", config('app.url'));
+        RepositoryUtils::post_pull_request_comment(1, 1, 'this is a comment', config('app.url'));
     }
 }

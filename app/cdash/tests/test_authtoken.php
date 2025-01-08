@@ -1,12 +1,15 @@
 <?php
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Models\AuthToken;
 use App\Utils\AuthTokenUtil;
+use CDash\Database;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\DB;
-use CDash\Database;
 
 class AuthTokenTestCase extends KWWebTestCase
 {
@@ -92,7 +95,7 @@ class AuthTokenTestCase extends KWWebTestCase
 
     public function testApiAccess()
     {
-        $client = new GuzzleHttp\Client(['cookies' => true]);
+        $client = new Client(['cookies' => true]);
         $client->getConfig('cookies')->clear();
 
         // Make sure we can't visit the private project page
@@ -101,7 +104,7 @@ class AuthTokenTestCase extends KWWebTestCase
         try {
             $response = $client->request('GET',
                 $this->url . '/api/v1/index.php?project=AuthTokenProject');
-        } catch (GuzzleHttp\Exception\ClientException $e) {
+        } catch (ClientException $e) {
             $exception_thrown = true;
             $status_code = $e->getResponse()->getStatusCode();
             if ($status_code != 401) {
@@ -117,8 +120,8 @@ class AuthTokenTestCase extends KWWebTestCase
         try {
             $response = $client->request('GET',
                 $this->url . '/api/v1/index.php?project=AuthTokenProject',
-                [ 'headers' => ['Authorization' => "Bearer $this->Token"] ]);
-        } catch (GuzzleHttp\Exception\ClientException $e) {
+                ['headers' => ['Authorization' => "Bearer $this->Token"]]);
+        } catch (ClientException $e) {
             $this->fail($e->getMessage());
             return 1;
         }
@@ -256,7 +259,7 @@ class AuthTokenTestCase extends KWWebTestCase
     public function testRemoveExpiredToken()
     {
         // Put an expired token in the database.
-        $result = AuthTokenUtil::generateToken(1, -1, AuthToken::SCOPE_FULL_ACCESS, "Test Token 1");
+        $result = AuthTokenUtil::generateToken(1, -1, AuthToken::SCOPE_FULL_ACCESS, 'Test Token 1');
         $token = $result['raw_token'];
         $authtoken = $result['token'];
         $authtoken['expires'] = gmdate(FMT_DATETIME, 1);
@@ -266,12 +269,12 @@ class AuthTokenTestCase extends KWWebTestCase
         // This will cause it to be revoked since it has already expired.
         $headers = ["Authorization: Bearer {$token}"];
         if ($this->normalSubmit($headers)) {
-            $this->fail("Normal submit succeeded with an expired token");
+            $this->fail('Normal submit succeeded with an expired token');
         }
 
         // Make sure this token does not exist anymore.
         if (AuthToken::find($this->Hash)) {
-            $this->fail("Expired token still exists after submission");
+            $this->fail('Expired token still exists after submission');
         }
     }
 }

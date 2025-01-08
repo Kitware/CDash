@@ -23,7 +23,6 @@ class CreateBuildnoteTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

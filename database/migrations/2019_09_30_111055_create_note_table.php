@@ -22,7 +22,6 @@ class CreateNoteTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

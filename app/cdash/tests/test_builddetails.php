@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -7,8 +8,6 @@ use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-
-
 
 class BuildDetailsTestCase extends KWWebTestCase
 {
@@ -83,9 +82,9 @@ class BuildDetailsTestCase extends KWWebTestCase
 
         $this->assertTrue(count($build_response->errors) === 3);
 
-        $expectedErrors = json_decode(file_get_contents($this->testDataDir . '/' . 'Subbuild3_errors.json'));
+        $expectedErrors = json_decode(file_get_contents($this->testDataDir . '/Subbuild3_errors.json'));
 
-        for ($i=0; $i<count($expectedErrors); $i++) {
+        for ($i = 0; $i < count($expectedErrors); $i++) {
             $this->assertEqual($build_response->errors[$i], $expectedErrors[$i]);
         }
     }
@@ -107,7 +106,7 @@ class BuildDetailsTestCase extends KWWebTestCase
     // This will be specific to a test xml
     public function testViewTestReturnsProperFormat()
     {
-        $testDataFile = $this->testDataDir . '/' . 'Insight_Experimental_Test.xml';
+        $testDataFile = $this->testDataDir . '/Insight_Experimental_Test.xml';
         if (!$this->submission('BuildDetails', $testDataFile)) {
             $this->fail('Failed to submit ' . $testDataFile);
             return 1;
@@ -117,7 +116,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         $json = $this->get("{$this->url}/api/v1/viewTest.php?buildid={$buildId->id}");
         $actualResponse = json_decode($json);
         $expectedResponse = json_decode(
-            file_get_contents($this->testDataDir . '/' . 'InsightExperimentalExample_Expected.json'));
+            file_get_contents($this->testDataDir . '/InsightExperimentalExample_Expected.json'));
 
         $this->assertEqual(count($actualResponse->tests), count($expectedResponse->tests));
 
@@ -131,7 +130,7 @@ class BuildDetailsTestCase extends KWWebTestCase
 
     public function testViewTestReturnsProperFormatForParentBuilds()
     {
-        $testDataFile = $this->testDataDir . '/' . 'Insight_Experimental_Test_Subbuild.xml';
+        $testDataFile = $this->testDataDir . '/Insight_Experimental_Test_Subbuild.xml';
         if (!$this->submission('BuildDetails', $testDataFile)) {
             $this->fail('Failed to submit ' . $testDataFile);
             return 1;

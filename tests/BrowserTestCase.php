@@ -53,7 +53,7 @@ abstract class BrowserTestCase extends BaseTestCase
      */
     protected function driver(): RemoteWebDriver
     {
-        $options = (new ChromeOptions)->addArguments(collect([
+        $options = (new ChromeOptions())->addArguments(collect([
             '--window-size=1920,1080',
             '--disable-search-engine-choice-screen',
         ])->unless($this->hasHeadlessDisabled(), function (Collection $items) {

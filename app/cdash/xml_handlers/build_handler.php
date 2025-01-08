@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -14,6 +15,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\Site;
+use App\Models\SiteInformation;
 use App\Utils\SubmissionUtils;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\SubscriptionBuilderCollection;
@@ -27,8 +30,6 @@ use CDash\Model\BuildErrorFilter;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroup;
 use CDash\Model\Label;
-use App\Models\Site;
-use App\Models\SiteInformation;
 use CDash\Model\Project;
 use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
@@ -77,11 +78,11 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
 
             $siteInformation = new SiteInformation();
             $this->BuildInformation = [];
-            $this->BuildName = "";
-            $this->BuildStamp = "";
-            $this->SubProjectName = "";
-            $this->Generator = "";
-            $this->PullRequest = "";
+            $this->BuildName = '';
+            $this->BuildStamp = '';
+            $this->SubProjectName = '';
+            $this->Generator = '';
+            $this->PullRequest = '';
 
             // Fill in the attribute
             foreach ($attributes as $key => $value) {
@@ -100,19 +101,19 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                             $this->BuildInformation['osname'] = $value;
                             break;
                         case 'OSRELEASE':
-                            $this->BuildInformation['osrelease']  = $value;
+                            $this->BuildInformation['osrelease'] = $value;
                             break;
                         case 'OSVERSION':
-                            $this->BuildInformation['osversion']  = $value;
+                            $this->BuildInformation['osversion'] = $value;
                             break;
                         case 'OSPLATFORM':
-                            $this->BuildInformation['osplatform']  = $value;
+                            $this->BuildInformation['osplatform'] = $value;
                             break;
                         case 'COMPILERNAME':
-                            $this->BuildInformation['compilername']  = $value;
+                            $this->BuildInformation['compilername'] = $value;
                             break;
                         case 'COMPILERVERSION':
-                            $this->BuildInformation['compilerversion']  = $value;
+                            $this->BuildInformation['compilerversion'] = $value;
                             break;
                     }
                 }
@@ -167,11 +168,11 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         } elseif ($name == 'WARNING') {
             $this->Error = $factory->create(BuildError::class);
             $this->Error->Type = 1;
-            $this->ErrorSubProjectName = "";
+            $this->ErrorSubProjectName = '';
         } elseif ($name == 'ERROR') {
             $this->Error = $factory->create(BuildError::class);
             $this->Error->Type = 0;
-            $this->ErrorSubProjectName = "";
+            $this->ErrorSubProjectName = '';
         } elseif ($name == 'FAILURE') {
             $this->Error = $factory->create(BuildFailure::class);
             $this->Error->Type = 0;
@@ -180,7 +181,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             } elseif ($attributes['TYPE'] == 'Warning') {
                 $this->Error->Type = 1;
             }
-            $this->ErrorSubProjectName = "";
+            $this->ErrorSubProjectName = '';
         } elseif ($name == 'LABEL') {
             $this->Label = $factory->create(Label::class);
         }
@@ -379,7 +380,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         } elseif ($element == 'POSTCONTEXT') {
             $this->Error->PostContext .= $data;
         } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
-            $this->SubProjects[$this->SubProjectName][] =  $data;
+            $this->SubProjects[$this->SubProjectName][] = $data;
         } elseif ($parent == 'LABELS' && $element == 'LABEL') {
             // First, check if this label belongs to a SubProject
             foreach ($this->SubProjects as $subproject => $labels) {
@@ -452,7 +453,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
 
     public function GetSubscriptionBuilderCollection(): SubscriptionBuilderCollection
     {
-        $collection = (new SubscriptionBuilderCollection)
+        $collection = (new SubscriptionBuilderCollection())
             ->add(new UserSubscriptionBuilder($this))
             ->add(new CommitAuthorSubscriptionBuilder($this));
         return $collection;

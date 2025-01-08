@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -19,8 +20,9 @@ use CDash\Messaging\Topic\FixedTopic;
 use CDash\Messaging\Topic\TestFailureTopic;
 use CDash\Model\Build;
 use CDash\Test\BuildDiffForTesting;
+use CDash\Test\CDashTestCase;
 
-class FixedTopicTest extends \CDash\Test\CDashTestCase
+class FixedTopicTest extends CDashTestCase
 {
     use BuildDiffForTesting;
 

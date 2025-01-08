@@ -20,7 +20,6 @@ class CreateClientCmakeTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -19,7 +20,6 @@ use CDash\Model\Build;
 class BuildGroupSummaryTopic extends Topic
 {
     /**
-     * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)

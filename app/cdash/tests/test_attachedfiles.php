@@ -1,4 +1,5 @@
 <?php
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Database;
@@ -47,8 +48,8 @@ class AttachedFilesTestCase extends KWWebTestCase
         $buildtestid = $stmt->fetchColumn();
 
         // Download, decompress, and examine the attached file.
-        $downloaded_file = sys_get_temp_dir() . "/output.txt.tgz";
-        $decompressed_file = sys_get_temp_dir() . "/output.txt";
+        $downloaded_file = sys_get_temp_dir() . '/output.txt.tgz';
+        $decompressed_file = sys_get_temp_dir() . '/output.txt';
         $client = $this->getGuzzleClient();
         $client->request('GET',
             "{$this->url}/api/v1/testDetails.php?buildtestid={$buildtestid}&fileid=1",

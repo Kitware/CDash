@@ -12,6 +12,7 @@
 */
 
 use App\Models\Project;
+use App\Models\Test;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -48,7 +49,7 @@ Route::get('ping', function (Response $response) {
     try {
         DB::connection()->getPdo();
         $response->setContent('OK');
-    } catch (\Exception $exception) {
+    } catch (Exception $exception) {
         $response->setStatusCode(503);
     }
     return $response;
@@ -145,7 +146,7 @@ Route::permanentRedirect('/test/{id}', url('/tests/{id}'));
 Route::get('/testDetails.php', function (Request $request) {
     $buildid = $request->query('build');
     $testid = $request->query('test');
-    $buildtest = \App\Models\Test::where('buildid', $buildid)->where('id', $testid)->first();
+    $buildtest = Test::where('buildid', $buildid)->where('id', $testid)->first();
     if ($buildtest !== null) {
         return redirect("/tests/{$buildtest->id}", 301);
     }

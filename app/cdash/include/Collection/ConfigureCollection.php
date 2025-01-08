@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -13,6 +14,7 @@
  *   PURPOSE. See the above copyright notices for more information.
  * =========================================================================
  */
+
 namespace CDash\Collection;
 
 use CDash\Model\BuildConfigure;
@@ -20,7 +22,6 @@ use CDash\Model\BuildConfigure;
 class ConfigureCollection extends Collection
 {
     /**
-     * @param BuildConfigure $configure
      * @return $this
      */
     public function add(BuildConfigure $configure)

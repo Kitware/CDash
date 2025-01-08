@@ -26,7 +26,6 @@ class CreateDynamicanalysisTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

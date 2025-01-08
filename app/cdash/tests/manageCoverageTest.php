@@ -1,10 +1,11 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-use CDash\Model\Project;
 use CDash\Database;
+use CDash\Model\Project;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -27,13 +28,13 @@ class ManageCoverageTestCase extends KWWebTestCase
             return 1;
         }
 
-        //make sure we can't visit the manageCoverage page while logged out
+        // make sure we can't visit the manageCoverage page while logged out
         $this->logout();
         if (!$this->expectsPageRequiresLogin('/manageCoverage.php')) {
             return 1;
         }
 
-        //get a valid coverage buildid
+        // get a valid coverage buildid
         $db = Database::getInstance();
         $db->getPdo();
         $stmt = $db->prepare("SELECT id FROM build WHERE name LIKE '%simple' AND projectid = :projectid");
@@ -41,7 +42,7 @@ class ManageCoverageTestCase extends KWWebTestCase
         $buildid = $stmt->fetchColumn();
         $retries = 0;
         while ($buildid === false) {
-            $retries += 1;
+            $retries++;
             if ($retries > 10) {
                 $this->fail('Too many attempts to find buildid');
                 return 1;

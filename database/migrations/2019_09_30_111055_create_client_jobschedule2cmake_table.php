@@ -16,11 +16,10 @@ class CreateClientJobschedule2cmakeTable extends Migration
             Schema::create('client_jobschedule2cmake', function (Blueprint $table) {
                 $table->bigInteger('scheduleid');
                 $table->integer('cmakeid');
-                $table->unique(['scheduleid','cmakeid'], 'client_jobschedule2cmake_scheduleid');
+                $table->unique(['scheduleid', 'cmakeid'], 'client_jobschedule2cmake_scheduleid');
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

@@ -11,13 +11,13 @@ class PasswordRotation extends TestCase
 {
     protected $user;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->user = null;
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         if ($this->user) {
             DB::table('password')->where('userid', $this->user->id)->delete();

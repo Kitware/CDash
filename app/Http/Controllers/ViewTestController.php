@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use CDash\Controller\Api\ViewTest;
 use CDash\Database;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
@@ -12,7 +14,7 @@ final class ViewTestController extends AbstractController
 {
     public function viewTest(): View
     {
-        return $this->view("test.view-test");
+        return $this->view('test.view-test');
     }
 
     /**
@@ -47,7 +49,7 @@ final class ViewTestController extends AbstractController
     public function fetchPageContent(): JsonResponse|StreamedResponse
     {
         $db = Database::getInstance();
-        $controller = new \CDash\Controller\Api\ViewTest($db, get_request_build());
+        $controller = new ViewTest($db, get_request_build());
         $response = $controller->getResponse();
         if ($controller->JSONEncodeResponse) {
             return response()->json(cast_data_for_JSON($response));

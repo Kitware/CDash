@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -22,7 +23,7 @@ class PdoExecuteLogsErrorsTestCase extends KWWebTestCase
 
         $log_contents = file_get_contents($this->logfilename);
         if (!str_contains($log_contents, 'notarealcolumn') || !str_contains($log_contents, 'ERROR')) {
-            $this->fail("Invalid query failed to produce log output!");
+            $this->fail('Invalid query failed to produce log output!');
             return 1;
         }
     }

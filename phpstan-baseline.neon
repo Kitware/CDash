@@ -52,8 +52,8 @@ parameters:
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
-			message: "#^Method App\\\\Console\\\\Commands\\\\AutoRemoveBuilds\\:\\:handle\\(\\) should return mixed but return statement is missing\\.$#"
-			count: 2
+			message: "#^Method App\\\\Console\\\\Commands\\\\AutoRemoveBuilds\\:\\:handle\\(\\) has no return type specified\\.$#"
+			count: 1
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
@@ -77,12 +77,17 @@ parameters:
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
+			message: "#^Method App\\\\Console\\\\Commands\\\\CheckKey\\:\\:handle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Console/Commands/CheckKey.php
+
+		-
 			message: "#^Parameter \\#1 \\$string of function trim expects string, mixed given\\.$#"
 			count: 1
 			path: app/Console/Commands/CheckKey.php
 
 		-
-			message: "#^Method App\\\\Console\\\\Commands\\\\QueueSubmissions\\:\\:handle\\(\\) should return mixed but return statement is missing\\.$#"
+			message: "#^Method App\\\\Console\\\\Commands\\\\QueueSubmissions\\:\\:handle\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Console/Commands/QueueSubmissions.php
 
@@ -127,7 +132,7 @@ parameters:
 			path: app/Console/Commands/QueueSubmissions.php
 
 		-
-			message: "#^Method App\\\\Console\\\\Commands\\\\RemoveUser\\:\\:handle\\(\\) should return mixed but return statement is missing\\.$#"
+			message: "#^Method App\\\\Console\\\\Commands\\\\RemoveUser\\:\\:handle\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Console/Commands/RemoveUser.php
 
@@ -147,7 +152,7 @@ parameters:
 			path: app/Console/Commands/SaveUser.php
 
 		-
-			message: "#^Method App\\\\Console\\\\Commands\\\\SaveUser\\:\\:handle\\(\\) should return mixed but return statement is missing\\.$#"
+			message: "#^Method App\\\\Console\\\\Commands\\\\SaveUser\\:\\:handle\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Console/Commands/SaveUser.php
 
@@ -471,11 +476,6 @@ parameters:
 			path: app/Http/Controllers/Auth/RegisterController.php
 
 		-
-			message: "#^Cannot call method hasVerifiedEmail\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/Auth/RegisterController.php
-
-		-
 			message: "#^Cannot call method passwords\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/Auth/RegisterController.php
@@ -491,7 +491,12 @@ parameters:
 			path: app/Http/Controllers/Auth/RegisterController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\RegisterController\\:\\:register\\(\\) should return Illuminate\\\\Http\\\\RedirectResponse\\|Illuminate\\\\Http\\\\Response but returns mixed\\.$#"
+			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\RegisterController\\:\\:registered\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Http/Controllers/Auth/RegisterController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\RegisterController\\:\\:registered\\(\\) has parameter \\$user with no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/Auth/RegisterController.php
 
@@ -628,11 +633,6 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			message: "#^Cannot access property \\$BuildId on mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			message: "#^Cannot access property \\$id on App\\\\Models\\\\Site\\|null\\.$#"
 			count: 2
 			path: app/Http/Controllers/BuildController.php
@@ -640,11 +640,6 @@ parameters:
 		-
 			message: "#^Cannot access property \\$name on App\\\\Models\\\\Site\\|null\\.$#"
 			count: 4
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: "#^Cannot call method GetUpdateForBuild\\(\\) on mixed\\.$#"
-			count: 1
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -3289,7 +3284,7 @@ parameters:
 		-
 			message: """
 				#^Instantiation of deprecated class CDash\\\\Controller\\\\Api\\\\ViewProjects\\:
-				05/23/2024 This endpoint is deprecated in favor of the GraphQL API and will eventually be removed\\.$#
+				05/23/2024 This endpoint is deprecated in favor of the GraphQL API and will eventually be removed$#
 			"""
 			count: 1
 			path: app/Http/Controllers/ViewProjectsController.php
@@ -3345,6 +3340,11 @@ parameters:
 			path: app/Http/Middleware/Admin.php
 
 		-
+			message: "#^Method App\\\\Http\\\\Middleware\\\\AuthenticateToken\\:\\:handle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Http/Middleware/AuthenticateToken.php
+
+		-
 			message: "#^PHPDoc type array of property App\\\\Http\\\\Middleware\\\\CheckForMaintenanceMode\\:\\:\\$except is not the same as PHPDoc type array\\<int, string\\> of overridden property Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\PreventRequestsDuringMaintenance\\:\\:\\$except\\.$#"
 			count: 1
 			path: app/Http/Middleware/CheckForMaintenanceMode.php
@@ -3365,12 +3365,32 @@ parameters:
 			path: app/Http/Middleware/EncryptCookies.php
 
 		-
+			message: "#^Method App\\\\Http\\\\Middleware\\\\JsonOnly\\:\\:handle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Http/Middleware/JsonOnly.php
+
+		-
 			message: "#^Cannot cast mixed to int\\.$#"
 			count: 1
 			path: app/Http/Middleware/PasswordExpired.php
 
 		-
+			message: "#^Method App\\\\Http\\\\Middleware\\\\PasswordExpired\\:\\:handle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Http/Middleware/PasswordExpired.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Middleware\\\\RedirectIfAuthenticated\\:\\:handle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Http/Middleware/RedirectIfAuthenticated.php
+
+		-
 			message: "#^Cannot cast mixed to int\\.$#"
+			count: 1
+			path: app/Http/Middleware/Timer.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Middleware\\\\Timer\\:\\:handle\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Http/Middleware/Timer.php
 
@@ -3978,21 +3998,6 @@ parameters:
 		-
 			message: "#^Cannot access offset 'email' on mixed\\.$#"
 			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Cannot access property \\$CvsViewerType on mixed\\.$#"
-			count: 2
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Cannot access property \\$Id on mixed\\.$#"
-			count: 2
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: "#^Cannot call method Fill\\(\\) on mixed\\.$#"
-			count: 2
 			path: app/Utils/RepositoryUtils.php
 
 		-
@@ -5266,11 +5271,6 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: "#^Binary operation \"\\+\\=\" between mixed and 1 results in an error\\.$#"
-			count: 1
-			path: app/Utils/SubmissionUtils.php
-
-		-
 			message: "#^Binary operation \"\\+\\=\" between mixed and mixed results in an error\\.$#"
 			count: 1
 			path: app/Utils/SubmissionUtils.php
@@ -5329,6 +5329,11 @@ parameters:
 		-
 			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
 			count: 6
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			message: "#^Cannot use \\+\\+ on mixed\\.$#"
+			count: 1
 			path: app/Utils/SubmissionUtils.php
 
 		-
@@ -6709,26 +6714,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
-			message: "#^Cannot call method Exists\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/Timeline.php
-
-		-
-			message: "#^Cannot call method GetType\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/Timeline.php
-
-		-
-			message: "#^Cannot call method SetName\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/Timeline.php
-
-		-
-			message: "#^Cannot call method SetProjectId\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/Timeline.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/Timeline.php
@@ -8104,6 +8089,11 @@ parameters:
 			path: app/cdash/app/Model/BuildEmail.php
 
 		-
+			message: "#^Method CDash\\\\Model\\\\BuildEmail\\:\\:GetEmail\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/BuildEmail.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\BuildEmail\\:\\:GetEmailSentForBuild\\(\\) has parameter \\$buildId with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildEmail.php
@@ -8175,11 +8165,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Model\\\\BuildEmail\\:\\:\\$UserId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildEmail.php
-
-		-
-			message: "#^Variable \\$email in PHPDoc tag @var does not match any variable in the foreach loop\\: \\$collection, \\$emails$#"
 			count: 1
 			path: app/cdash/app/Model/BuildEmail.php
 
@@ -11227,6 +11212,11 @@ parameters:
 			path: app/cdash/app/Model/SubscriberInterface.php
 
 		-
+			message: "#^Method CDash\\\\Model\\\\SubscriberInterface\\:\\:setAddress\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/app/Model/SubscriberInterface.php
+
+		-
 			message: "#^Method CDash\\\\Model\\\\SubscriberInterface\\:\\:setAddress\\(\\) has parameter \\$address with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubscriberInterface.php
@@ -11670,7 +11660,17 @@ parameters:
 			path: app/cdash/include/CDash/Database.php
 
 		-
+			message: "#^Method CDash\\\\ServiceContainer\\:\\:create\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/include/CDash/ServiceContainer.php
+
+		-
 			message: "#^Method CDash\\\\ServiceContainer\\:\\:create\\(\\) has parameter \\$class_name with no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/CDash/ServiceContainer.php
+
+		-
+			message: "#^Method CDash\\\\ServiceContainer\\:\\:get\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/CDash/ServiceContainer.php
 
@@ -12628,6 +12628,11 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/Topic.php
 
 		-
+			message: "#^Property CDash\\\\Messaging\\\\Topic\\\\Topic\\:\\:\\$topicData has no type specified\\.$#"
+			count: 1
+			path: app/cdash/include/Messaging/Topic/Topic.php
+
+		-
 			message: "#^Return type \\(CDash\\\\Messaging\\\\Topic\\\\Topic\\) of method CDash\\\\Messaging\\\\Topic\\\\Topic\\:\\:setSubscriber\\(\\) should be covariant with return type \\(\\$this\\(CDash\\\\Messaging\\\\Topic\\\\TopicInterface\\)\\) of method CDash\\\\Messaging\\\\Topic\\\\TopicInterface\\:\\:setSubscriber\\(\\)$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/Topic.php
@@ -12684,6 +12689,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Messaging\\\\Topic\\\\TopicInterface\\:\\:getTemplate\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/include/Messaging/Topic/TopicInterface.php
+
+		-
+			message: "#^Method CDash\\\\Messaging\\\\Topic\\\\TopicInterface\\:\\:getTopicCollection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/Messaging/Topic/TopicInterface.php
 
@@ -12775,6 +12785,11 @@ parameters:
 		-
 			message: "#^Access to an undefined property PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:\\$Id\\.$#"
 			count: 3
+			path: app/cdash/include/Test/CDashUseCaseTestCase.php
+
+		-
+			message: "#^Access to an undefined property PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:\\$SubProjectName\\.$#"
+			count: 1
 			path: app/cdash/include/Test/CDashUseCaseTestCase.php
 
 		-
@@ -13128,6 +13143,11 @@ parameters:
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
 		-
+			message: "#^Call to an undefined method DOMNode\\:\\:setAttribute\\(\\)\\.$#"
+			count: 2
+			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
+
+		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:__construct\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
@@ -13190,6 +13210,11 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$data of class DOMText constructor expects string, \\(int\\|string\\) given\\.$#"
 			count: 2
+			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
+
+		-
+			message: "#^Parameter \\#1 \\$root of method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:createDirectoryElement\\(\\) expects DOMElement, DOMNode given\\.$#"
+			count: 1
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
 
 		-
@@ -13387,11 +13412,6 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$Id on mixed\\.$#"
-			count: 2
-			path: app/cdash/include/api_common.php
-
-		-
-			message: "#^Cannot call method Exists\\(\\) on mixed\\.$#"
 			count: 1
 			path: app/cdash/include/api_common.php
 
@@ -13541,22 +13561,7 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Cannot access property \\$Id on mixed\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Cannot access property \\$Name on mixed\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Cannot access property \\$admin on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Cannot call method GetIdByName\\(\\) on mixed\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -13603,11 +13608,6 @@ parameters:
 		-
 			message: "#^Casting to string something that's already string\\.$#"
 			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Class DOMDocument referenced with incorrect case\\: DomDocument\\.$#"
-			count: 2
 			path: app/cdash/include/common.php
 
 		-
@@ -14261,7 +14261,7 @@ parameters:
 
 		-
 			message: "#^Backtick operator is not allowed\\. Use shell_exec\\(\\) instead\\.$#"
-			count: 10
+			count: 3
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -14349,11 +14349,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
-			count: 1
-			path: app/cdash/include/dailyupdates.php
-
-		-
-			message: "#^Class DOMDocument referenced with incorrect case\\: DomDocument\\.$#"
 			count: 1
 			path: app/cdash/include/dailyupdates.php
 
@@ -14603,7 +14598,22 @@ parameters:
 			path: app/cdash/include/dailyupdates.php
 
 		-
+			message: "#^Parameter \\#1 \\$string of function trim expects string, string\\|false\\|null given\\.$#"
+			count: 1
+			path: app/cdash/include/dailyupdates.php
+
+		-
 			message: "#^Parameter \\#2 \\$offset of function substr expects int, int\\<0, max\\>\\|false given\\.$#"
+			count: 1
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: "#^Parameter \\#2 \\$string of function explode expects string, string\\|false\\|null given\\.$#"
+			count: 3
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, string\\|false\\|null given\\.$#"
 			count: 1
 			path: app/cdash/include/dailyupdates.php
 
@@ -15216,11 +15226,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property UpdateHandler\\:\\:\\$BuildId\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
-			message: "#^Anonymous function has an unused use \\$buildid\\.$#"
 			count: 1
 			path: app/cdash/include/sendemail.php
 
@@ -18289,11 +18294,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Model/PendingSubmissionsTest.php
 
 		-
-			message: "#^Cannot access property \\$Build on mixed\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/PendingSubmissionsTest.php
-
-		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
 			count: 8
 			path: app/cdash/tests/case/CDash/Model/PendingSubmissionsTest.php
@@ -18529,12 +18529,12 @@ parameters:
 			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
 
 		-
-			message: "#^Method RepositoryServiceTest\\:\\:testSetStatusOnStart\\(\\) has no return type specified\\.$#"
+			message: "#^Method RepositoryServiceTest\\:\\:testConstruct\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
 
 		-
-			message: "#^Method RepositoryServiceTest\\:\\:test__construct\\(\\) has no return type specified\\.$#"
+			message: "#^Method RepositoryServiceTest\\:\\:testSetStatusOnStart\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
 
@@ -19395,7 +19395,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -19477,6 +19477,11 @@ parameters:
 
 		-
 			message: "#^Method CDashControllerBrowser\\:\\:setRequestKeyValuePair\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			message: "#^Method CDashControllerBrowser\\:\\:setRequestKeyValuePair\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -19831,22 +19836,22 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:849\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:858\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:849\\:\\:getSent\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:858\\:\\:getSent\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:849\\:\\:isError\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:858\\:\\:isError\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:849\\:\\:read\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:858\\:\\:read\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -19956,11 +19961,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function urldecode expects string, mixed given\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: "#^Parameter \\#1 \\$url \\(SimpleUrl\\) of method CDashControllerBrowser\\:\\:fetch\\(\\) should be contravariant with parameter \\$url \\(mixed\\) of method SimpleBrowser\\:\\:fetch\\(\\)$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -20051,12 +20051,7 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:849\\:\\:\\$read has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:849\\:\\:\\$response has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:858\\:\\:\\$read has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -20256,7 +20251,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_aggregatecoverage.php
@@ -20369,7 +20364,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
@@ -20573,7 +20568,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_attachedfiles.php
@@ -20627,7 +20622,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 2
 			path: app/cdash/tests/test_authtoken.php
@@ -20897,7 +20892,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 2
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
@@ -20976,7 +20971,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_bazeljson.php
@@ -21157,7 +21152,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_branchcoverage.php
@@ -21352,7 +21347,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 3
 			path: app/cdash/tests/test_builddetails.php
@@ -21506,7 +21501,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 2
 			path: app/cdash/tests/test_buildfailuredetails.php
@@ -21601,7 +21596,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_buildmodel.php
@@ -21732,7 +21727,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_buildproperties.php
@@ -22012,7 +22007,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 3
 			path: app/cdash/tests/test_changeid.php
@@ -22040,7 +22035,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_commitauthornotification.php
@@ -22098,7 +22093,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_committerinfo.php
@@ -22126,7 +22121,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 2
 			path: app/cdash/tests/test_compressedtest.php
@@ -22214,7 +22209,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_configureappend.php
@@ -22248,7 +22243,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 2
 			path: app/cdash/tests/test_configurewarnings.php
@@ -22302,7 +22297,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 4
 			path: app/cdash/tests/test_consistenttestingday.php
@@ -22370,7 +22365,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_coveragedirectories.php
@@ -22506,7 +22501,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 2
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
@@ -22514,7 +22509,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
@@ -22750,7 +22745,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 18
 			path: app/cdash/tests/test_deferredsubmissions.php
@@ -22898,7 +22893,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_deletesubproject.php
@@ -22924,7 +22919,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_disabledtests.php
@@ -23070,7 +23065,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_dynamicanalysisdefectlongtype.php
@@ -23088,7 +23083,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_dynamicanalysislogs.php
@@ -23111,7 +23106,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 2
 			path: app/cdash/tests/test_dynamicanalysissummary.php
@@ -23190,7 +23185,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 10
 			path: app/cdash/tests/test_email.php
@@ -23737,7 +23732,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_externallinksfromtests.php
@@ -23909,7 +23904,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_filterbuilderrors.php
@@ -23953,7 +23948,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 2
 			path: app/cdash/tests/test_filtertestlabels.php
@@ -24001,7 +23996,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_hidecolumns.php
@@ -24092,7 +24087,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_imagecomparison.php
@@ -24306,7 +24301,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 3
 			path: app/cdash/tests/test_issuecreation.php
@@ -24364,7 +24359,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_javajsoncoverage.php
@@ -24412,7 +24407,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_jscovercoverage.php
@@ -24458,7 +24453,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_junithandler.php
@@ -24569,7 +24564,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_longbuildname.php
@@ -24592,7 +24587,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_lotsofsubprojects.php
@@ -24633,7 +24628,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 3
 			path: app/cdash/tests/test_managemeasurements.php
@@ -24951,7 +24946,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 2
 			path: app/cdash/tests/test_misassignedconfigure.php
@@ -25005,7 +25000,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_multicoverage.php
@@ -25013,7 +25008,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_multicoverage.php
@@ -25081,7 +25076,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_multiplelabelsfortests.php
@@ -25147,7 +25142,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 11
 			path: app/cdash/tests/test_multiplesubprojects.php
@@ -25468,7 +25463,7 @@ parameters:
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
-			message: "#^Only numeric types are allowed in \\+, int\\|false given on the left side\\.$#"
+			message: "#^Only numeric types are allowed in post\\-increment, int\\|false given\\.$#"
 			count: 2
 			path: app/cdash/tests/test_multiplesubprojects.php
 
@@ -25705,7 +25700,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_namedmeasurements.php
@@ -25751,7 +25746,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_nobackup.php
@@ -25759,7 +25754,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_nobackup.php
@@ -25867,7 +25862,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 3
 			path: app/cdash/tests/test_notesparsererrormessages.php
@@ -25885,7 +25880,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_numericupdate.php
@@ -25963,7 +25958,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method uploadfile\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 2
 			path: app/cdash/tests/test_opencovercoverage.php
@@ -26016,7 +26011,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 3
 			path: app/cdash/tests/test_outputcolor.php
@@ -26230,7 +26225,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 12
 			path: app/cdash/tests/test_projectwebpage.php
@@ -26393,7 +26388,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_projectxmlsequence.php
@@ -26609,7 +26604,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_querytestsfilterlabels.php
@@ -26662,7 +26657,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_redundanttests.php
@@ -26738,7 +26733,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 2
 			path: app/cdash/tests/test_replacebuild.php
@@ -26827,7 +26822,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_sequenceindependence.php
@@ -26935,7 +26930,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_starttimefromnotes.php
@@ -26953,7 +26948,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_starttimefromupload.php
@@ -26971,7 +26966,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_submitsortingdata.php
@@ -27004,7 +26999,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 3
 			path: app/cdash/tests/test_subproject.php
@@ -27045,7 +27040,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_subprojectemail.php
@@ -27133,7 +27128,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_subprojectnextprevious.php
@@ -27287,7 +27282,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_subprojectorder.php
@@ -27478,7 +27473,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_summaryemail.php
@@ -27567,7 +27562,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_testhistory.php
@@ -27755,7 +27750,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_testimages.php
@@ -27959,7 +27954,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 2
 			path: app/cdash/tests/test_timeoutsandmissingtests.php
@@ -28193,7 +28188,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 2
 			path: app/cdash/tests/test_truncateoutput.php
@@ -28360,7 +28355,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 3
 			path: app/cdash/tests/test_updateappend.php
@@ -28406,7 +28401,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_updateonlyuserstats.php
@@ -28549,7 +28544,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_uploadfile.php
@@ -28668,7 +28663,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/test_viewdynamicanalysisfile.php
@@ -28811,7 +28806,7 @@ parameters:
 		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead\\.$#
+				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/trilinos_submission_test.php
@@ -30159,71 +30154,6 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
-			message: "#^Cannot access property \\$CompilerName on mixed\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Cannot access property \\$CompilerVersion on mixed\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Cannot access property \\$Generator on mixed\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Cannot access property \\$Name on mixed\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Cannot access property \\$OSName on mixed\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Cannot access property \\$OSPlatform on mixed\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Cannot access property \\$OSRelease on mixed\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Cannot access property \\$OSVersion on mixed\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Cannot access property \\$SiteId on mixed\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Cannot access property \\$Type on mixed\\.$#"
-			count: 5
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Cannot call method SetPullRequest\\(\\) on mixed\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Cannot call method SetStamp\\(\\) on mixed\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
-			message: "#^Cannot call method SetText\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
 			message: "#^Class BuildHandler has an uninitialized property \\$BuildInformation\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/build_handler.php
@@ -30425,91 +30355,6 @@ parameters:
 
 		-
 			message: "#^Cannot access an offset on array\\|float\\|int\\|string\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot access property \\$BuildId on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot access property \\$CompilerName on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot access property \\$CompilerVersion on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot access property \\$Generator on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot access property \\$Id on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot access property \\$Name on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot access property \\$OSName on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot access property \\$OSPlatform on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot access property \\$OSRelease on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot access property \\$OSVersion on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot access property \\$SiteId on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot access property \\$Text on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot call method Delete\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot call method Exists\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot call method GetConfigureForBuild\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot call method SetConfigureDuration\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
-			message: "#^Cannot call method SetStamp\\(\\) on mixed\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/configure_handler.php
 
@@ -31044,136 +30889,6 @@ parameters:
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
-			message: "#^Cannot access property \\$BuildId on mixed\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$Checker on mixed\\.$#"
-			count: 4
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$CompilerName on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$CompilerVersion on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$Empty on mixed\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$EndTime on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$Generator on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$Id on mixed\\.$#"
-			count: 4
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$InsertErrors on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$Name on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$OSName on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$OSPlatform on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$OSRelease on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$OSVersion on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$ProjectId on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$SiteId on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$StartTime on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$Status on mixed\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$SubmitTime on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot access property \\$Type on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot call method GetIdFromName\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot call method Insert\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot call method RemoveIfDone\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot call method SetStamp\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot call method SetSubProject\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Cannot call method UpdateBuild\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
 			message: "#^Class DynamicAnalysisHandler has an uninitialized property \\$BuildInformation\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
@@ -31259,11 +30974,6 @@ parameters:
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
-			message: "#^Parameter \\#1 \\$build of static method App\\\\Utils\\\\SubmissionUtils\\:\\:add_build\\(\\) expects CDash\\\\Model\\\\Build, mixed given\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
 			message: "#^Property DynamicAnalysisHandler\\:\\:\\$BuildInformation type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
@@ -31276,11 +30986,6 @@ parameters:
 		-
 			message: "#^Property DynamicAnalysisHandler\\:\\:\\$Checker has no type specified\\.$#"
 			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
-			message: "#^Property DynamicAnalysisHandler\\:\\:\\$DynamicAnalysis \\(CDash\\\\Model\\\\DynamicAnalysis\\) does not accept mixed\\.$#"
-			count: 2
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
@@ -31583,41 +31288,6 @@ parameters:
 
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
-			message: "#^Cannot access property \\$Data on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
-			message: "#^Cannot access property \\$Extension on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
-			message: "#^Cannot access property \\$Id on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
-			message: "#^Cannot access property \\$Name on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
-			message: "#^Cannot access property \\$name on mixed\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
-			message: "#^Cannot access property \\$type on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
-			message: "#^Cannot call method UpdateTestDuration\\(\\) on mixed\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/testing_handler.php
 
@@ -31938,16 +31608,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method CDash\\\\Messaging\\\\Preferences\\\\NotificationPreferencesInterface\\:\\:get\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/update_handler.php
-
-		-
-			message: "#^Cannot access property \\$Append on mixed\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/update_handler.php
-
-		-
-			message: "#^Cannot access property \\$Status on mixed\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/update_handler.php
 

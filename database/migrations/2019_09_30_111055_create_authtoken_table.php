@@ -23,7 +23,6 @@ class CreateAuthtokenTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Models\Project;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
-use App\Models\User;
-use App\Models\Project;
+use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
-use Tests\TestCase;
 
 class ProjectPermissions extends TestCase
 {

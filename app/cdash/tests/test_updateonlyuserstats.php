@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -15,9 +16,9 @@
 =========================================================================*/
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-use CDash\Database;
 use App\Models\User;
 use App\Utils\DatabaseCleanupUtils;
+use CDash\Database;
 use CDash\Model\UserProject;
 
 class UpdateOnlyUserStatsTestCase extends KWWebTestCase
@@ -53,18 +54,18 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
 
         // Create some users for the CDash project.
         $users_details = [
-                [
-                    'email' => 'dan.lamanna@kitware.com',
-                    'firstname' => 'Dan',
-                    'lastname' => 'LaManna'],
-                [
-                    'email' => 'jamie.snape@kitware.com',
-                    'firstname' => 'Jamie',
-                    'lastname' => 'Snape'],
-                [
-                    'email' => 'zack.galbreath@kitware.com',
-                    'firstname' => 'Zack',
-                    'lastname' => 'Galbreath']];
+            [
+                'email' => 'dan.lamanna@kitware.com',
+                'firstname' => 'Dan',
+                'lastname' => 'LaManna'],
+            [
+                'email' => 'jamie.snape@kitware.com',
+                'firstname' => 'Jamie',
+                'lastname' => 'Snape'],
+            [
+                'email' => 'zack.galbreath@kitware.com',
+                'firstname' => 'Zack',
+                'lastname' => 'Galbreath']];
         $userproject = new UserProject();
         $userproject->ProjectId = $this->ProjectId;
         foreach ($users_details as $user_details) {
@@ -109,30 +110,30 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
         }
 
         $expected_results = [
-                'Dan LaManna' => [
-                    'failed_errors' => 0,
-                    'fixed_errors' => 0,
-                    'failed_warnings' => 0,
-                    'fixed_warnings' => 1,
-                    'failed_tests' => 0,
-                    'fixed_tests' => 0,
-                    'totalupdatedfiles' => 2],
-                'Jamie Snape' => [
-                    'failed_errors' => 0,
-                    'fixed_errors' => 1,
-                    'failed_warnings' => 0,
-                    'fixed_warnings' => 0,
-                    'failed_tests' => 0,
-                    'fixed_tests' => 0,
-                    'totalupdatedfiles' => 7],
-                'Zack Galbreath' => [
-                    'failed_errors' => 0,
-                    'fixed_errors' => 0,
-                    'failed_warnings' => 0,
-                    'fixed_warnings' => 0,
-                    'failed_tests' => 2,
-                    'fixed_tests' => 0,
-                    'totalupdatedfiles' => 3]];
+            'Dan LaManna' => [
+                'failed_errors' => 0,
+                'fixed_errors' => 0,
+                'failed_warnings' => 0,
+                'fixed_warnings' => 1,
+                'failed_tests' => 0,
+                'fixed_tests' => 0,
+                'totalupdatedfiles' => 2],
+            'Jamie Snape' => [
+                'failed_errors' => 0,
+                'fixed_errors' => 1,
+                'failed_warnings' => 0,
+                'fixed_warnings' => 0,
+                'failed_tests' => 0,
+                'fixed_tests' => 0,
+                'totalupdatedfiles' => 7],
+            'Zack Galbreath' => [
+                'failed_errors' => 0,
+                'fixed_errors' => 0,
+                'failed_warnings' => 0,
+                'fixed_warnings' => 0,
+                'failed_tests' => 2,
+                'fixed_tests' => 0,
+                'totalupdatedfiles' => 3]];
 
         foreach ($jsonobj['users'] as $user) {
             $name = $user['name'];

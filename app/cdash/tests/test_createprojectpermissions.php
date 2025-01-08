@@ -1,13 +1,13 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use CDash\Database;
 use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-
-
 
 class CreateProjectPermissionsTestCase extends KWWebTestCase
 {
@@ -71,8 +71,8 @@ class CreateProjectPermissionsTestCase extends KWWebTestCase
         $this->assertEqual($response->error, 'You do not have permission to edit this project.');
 
         // Test for project administrator.
-        $pdo = \CDash\Database::getInstance();
-        $stmt = $pdo->prepare("SELECT id FROM users WHERE email=?");
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare('SELECT id FROM users WHERE email=?');
         $stmt->execute(['user1@kw']);
         $row = $stmt->fetch();
         $userid = $row['id'];

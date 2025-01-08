@@ -114,7 +114,7 @@ return new class extends Migration {
 
             Schema::drop('test');
         } else {
-            echo "Error: Unable to run migration because test table does not exist!";
+            echo 'Error: Unable to run migration because test table does not exist!';
         }
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,6 +14,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 use App\Models\BuildProperties as EloquentBuildProperties;
@@ -37,7 +39,7 @@ class BuildProperties
     }
 
     /** Save these build properties to the database,
-        overwriting any existing content. */
+     * overwriting any existing content. */
     public function Save(): bool
     {
         // Delete any previously existing properties for this build.

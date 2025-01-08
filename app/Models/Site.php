@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Log;
  * @property string $ip
  * @property string $latitude
  * @property string $longitude
- * @property boolean $outoforder
+ * @property bool $outoforder
  * @property SiteInformation|null $mostRecentInformation
  *
  * @mixin Builder<Site>

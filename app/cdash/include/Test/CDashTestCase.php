@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -11,12 +12,14 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Test;
 
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\ServiceContainer;
-
+use PDOStatement;
+use PHPUnit_Framework_MockObject_MockObject;
 use Tests\TestCase;
 
 require_once 'include/common.php';
@@ -25,16 +28,16 @@ class CDashTestCase extends TestCase
 {
     protected $mockPDO;
 
-    /** @var  Database $originalDatabase*/
+    /** @var Database */
     private $originalDatabase;
 
-    public static function tearDownAfterClass() : void
+    public static function tearDownAfterClass(): void
     {
         ServiceContainer::setInstance(ServiceContainer::class, null);
         parent::tearDownAfterClass();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         global $cdash_database_connection;
         $cdash_database_connection = null;
@@ -48,7 +51,7 @@ class CDashTestCase extends TestCase
     {
         $this->originalDatabase = Database::getInstance();
 
-        $mock_stmt = $this->getMockBuilder(\PDOStatement::class)
+        $mock_stmt = $this->getMockBuilder(PDOStatement::class)
             ->disableOriginalConstructor()
             ->onlyMethods([
                 'fetch', 'fetchAll', 'fetchColumn', 'bindParam', 'bindValue', 'rowCount', 'closeCursor'])
@@ -86,7 +89,7 @@ class CDashTestCase extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Build
+     * @return PHPUnit_Framework_MockObject_MockObject|Build
      */
     protected function getMockBuild()
     {

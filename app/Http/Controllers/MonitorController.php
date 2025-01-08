@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use stdClass;
 
 final class MonitorController extends AbstractController
 {
@@ -90,7 +91,7 @@ final class MonitorController extends AbstractController
 
         // Massage data into the expected format
         $success_trend = [
-            'color' =>  $palette::Success,
+            'color' => $palette::Success,
             'name' => 'Success',
             'values' => [],
         ];
@@ -102,7 +103,7 @@ final class MonitorController extends AbstractController
         }
 
         $fail_trend = [
-            'color' =>  $palette::Failure,
+            'color' => $palette::Failure,
             'name' => 'Fail',
             'values' => [],
         ];
@@ -117,13 +118,13 @@ final class MonitorController extends AbstractController
             'backlog_length' => $backlog_length,
             'backlog_time' => $backlog_time,
             'time_chart_data' => [
-                "data" => [
+                'data' => [
                     $success_trend,
                     $fail_trend,
                 ],
-                "title" => "Submissions Parsed Over the Past {$num_hours} Hours",
-                "xLabel" => "Date",
-                "yLabel" => "# of Submissions",
+                'title' => "Submissions Parsed Over the Past {$num_hours} Hours",
+                'xLabel' => 'Date',
+                'yLabel' => '# of Submissions',
             ],
             'log_directory' => config('logging.default') === 'stack' ? storage_path('logs') : '',
         ]);
@@ -131,9 +132,10 @@ final class MonitorController extends AbstractController
 
     /**
      * Group timestamp values by hour.
-     * @return Collection<int,\stdClass>
+     *
+     * @return Collection<int,stdClass>
      */
-    private function resultsPerHour(string $table, string $field) : Collection
+    private function resultsPerHour(string $table, string $field): Collection
     {
         if (config('database.default') === 'mysql') {
             return $this->mySQLResultsPerHour($table, $field);
@@ -144,9 +146,10 @@ final class MonitorController extends AbstractController
 
     /**
      * MySQL implementation of resultsPerHour
-     * @return Collection<int,\stdClass>
+     *
+     * @return Collection<int,stdClass>
      */
-    private function mySQLResultsPerHour(string $table, string $field) : Collection
+    private function mySQLResultsPerHour(string $table, string $field): Collection
     {
         // Group jobs by hour.
         // We achieve this by:
@@ -169,9 +172,10 @@ final class MonitorController extends AbstractController
 
     /**
      * Postgres implementation of resultsPerHour
-     * @return Collection<int,\stdClass>
+     *
+     * @return Collection<int,stdClass>
      */
-    private function postgreSQLResultsPerHour(string $table, string $field) : Collection
+    private function postgreSQLResultsPerHour(string $table, string $field): Collection
     {
         // Group jobs by hour.
         // We achieve this by:

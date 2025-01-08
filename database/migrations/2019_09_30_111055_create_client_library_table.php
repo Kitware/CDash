@@ -21,7 +21,6 @@ class CreateClientLibraryTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

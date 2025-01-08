@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,12 +14,13 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
+use App\Models\Label as EloquentLabel;
 use App\Models\Test;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\Label as EloquentLabel;
 
 /** Label */
 class Label
@@ -139,7 +141,7 @@ class Label
 
         // TODO: Implement this:
         //
-        //$this->InsertAssociation($this->UpdateFileKey,
+        // $this->InsertAssociation($this->UpdateFileKey,
         //  'label2updatefile', 'updatefilekey');
         return true;
     }

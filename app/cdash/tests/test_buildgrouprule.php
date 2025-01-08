@@ -1,10 +1,10 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-
 
 use App\Utils\DatabaseCleanupUtils;
 use App\Utils\SubmissionUtils;
@@ -12,6 +12,7 @@ use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\DB;
 
 class BuildGroupRuleTestCase extends KWWebTestCase
@@ -77,10 +78,10 @@ class BuildGroupRuleTestCase extends KWWebTestCase
         $longrule->BuildName = '%nightly-foo-coverage%';
 
         if (!$shortrule->Save()) {
-            $this->fail("Failed to add short rule");
+            $this->fail('Failed to add short rule');
         }
         if (!$longrule->Save()) {
-            $this->fail("Failed to add long rule");
+            $this->fail('Failed to add long rule');
         }
 
         // Make a build whose name matches both of these rules.
@@ -135,15 +136,15 @@ class BuildGroupRuleTestCase extends KWWebTestCase
         foreach ([$build1, $build2] as $build) {
             // Mark this build as expected.
             $payload = [
-                'buildid'  => $build->Id,
-                'groupid'  => $build->GroupId,
+                'buildid' => $build->Id,
+                'groupid' => $build->GroupId,
                 'expected' => 1,
             ];
             try {
                 $response = $client->request('POST',
-                    $this->url .  '/api/v1/build.php',
+                    $this->url . '/api/v1/build.php',
                     ['json' => $payload]);
-            } catch (GuzzleHttp\Exception\ClientException $e) {
+            } catch (ClientException $e) {
                 $this->fail($e->getMessage());
             }
         }
@@ -153,15 +154,15 @@ class BuildGroupRuleTestCase extends KWWebTestCase
         $group->SetProjectId($build1->ProjectId);
         $group->SetName('Continuous');
         $payload = [
-            'buildid'    => $build1->Id,
-            'expected'   => 1,
+            'buildid' => $build1->Id,
+            'expected' => 1,
             'newgroupid' => $group->GetId(),
         ];
         try {
             $response = $client->request('POST',
-                $this->url .  '/api/v1/build.php',
+                $this->url . '/api/v1/build.php',
                 ['json' => $payload]);
-        } catch (GuzzleHttp\Exception\ClientException $e) {
+        } catch (ClientException $e) {
             $this->fail($e->getMessage());
         }
 

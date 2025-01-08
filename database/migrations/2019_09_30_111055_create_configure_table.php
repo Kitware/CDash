@@ -24,7 +24,6 @@ class CreateConfigureTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -17,6 +18,7 @@ namespace CDash\Model;
 use CDash\Database;
 use CDash\Lib\Repository\GitHub;
 use CDash\Service\RepositoryService;
+use ReflectionClass;
 
 class Repository
 {
@@ -49,7 +51,7 @@ class Repository
      */
     public static function getViewers()
     {
-        $self = new \ReflectionClass(__CLASS__);
+        $self = new ReflectionClass(__CLASS__);
         $viewers = [];
         foreach ($self->getConstants() as $key => $text) {
             if (strpos($key, 'VIEWER_') === 0) {
@@ -126,8 +128,8 @@ class Repository
     }
 
     /**
-     * @param Project $project
      * @return RepositoryInterface
+     *
      * @throws Exception
      */
     public static function getRepositoryInterface(Project $project)

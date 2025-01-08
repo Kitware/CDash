@@ -29,7 +29,7 @@ function cdash_autoload($className)
     }
 
     // TODO: based on CakePHP (il)logic, remove a soon as possible locations become standardized
-    foreach ((array)$filenames as $file) {
+    foreach ((array) $filenames as $file) {
         if (file_exists($file)) {
             require_once $file;
         }

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -44,7 +45,7 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
             'release_case/thirdparty/CoverageLog-0.xml',
             'release_case/releaseonly/Coverage.xml',
             'release_case/releaseonly/CoverageLog-0.xml',
-            ];
+        ];
         foreach ($files as $filename) {
             $file_to_submit = "$this->DataDir/$filename";
             if (!$this->submission('CrossSubProjectExample', $file_to_submit)) {
@@ -112,14 +113,14 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
         $experimental['MyExperimentalFeature']['loctested'] = 5;
         $experimental['MyExperimentalFeature']['locuntested'] = 3;
         $experimental['MyExperimentalFeature']['percentage'] = 62.5;
-        $success &= $this->verifyChildResult($debug_buildid, "Experimental", $experimental);
+        $success &= $this->verifyChildResult($debug_buildid, 'Experimental', $experimental);
 
         $third_party = [];
         $third_party['MyThirdPartyDependency'] = [];
         $third_party['MyThirdPartyDependency']['loctested'] = 5;
         $third_party['MyThirdPartyDependency']['locuntested'] = 0;
         $third_party['MyThirdPartyDependency']['percentage'] = 100.0;
-        $success &= $this->verifyChildResult($debug_buildid, "Third Party", $third_party);
+        $success &= $this->verifyChildResult($debug_buildid, 'Third Party', $third_party);
 
         $production = [];
         $production['MyEmptyCoverage'] = [];
@@ -130,7 +131,7 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
         $production['MyProductionCode']['loctested'] = 10;
         $production['MyProductionCode']['locuntested'] = 6;
         $production['MyProductionCode']['percentage'] = 62.5;
-        $success &= $this->verifyChildResult($debug_buildid, "Production", $production);
+        $success &= $this->verifyChildResult($debug_buildid, 'Production', $production);
 
         // 'release_coverage'
         $experimental = [];
@@ -138,7 +139,7 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
         $experimental['MyExperimentalFeature']['loctested'] = 4;
         $experimental['MyExperimentalFeature']['locuntested'] = 4;
         $experimental['MyExperimentalFeature']['percentage'] = 50.0;
-        $success &= $this->verifyChildResult($release_buildid, "Experimental", $experimental);
+        $success &= $this->verifyChildResult($release_buildid, 'Experimental', $experimental);
 
         $third_party = [];
         $third_party['MyThirdPartyDependency'] = [];
@@ -149,14 +150,14 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
         $third_party['MyReleaseOnlyFeature']['loctested'] = 4;
         $third_party['MyReleaseOnlyFeature']['locuntested'] = 4;
         $third_party['MyReleaseOnlyFeature']['percentage'] = 50.0;
-        $success &= $this->verifyChildResult($release_buildid, "Third Party", $third_party);
+        $success &= $this->verifyChildResult($release_buildid, 'Third Party', $third_party);
 
         $production = [];
         $production['MyProductionCode'] = [];
         $production['MyProductionCode']['loctested'] = 8;
         $production['MyProductionCode']['locuntested'] = 8;
         $production['MyProductionCode']['percentage'] = 50.0;
-        $success &= $this->verifyChildResult($release_buildid, "Production", $production);
+        $success &= $this->verifyChildResult($release_buildid, 'Production', $production);
 
         // 'Aggregate Coverage'
         $experimental = [];
@@ -164,7 +165,7 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
         $experimental['MyExperimentalFeature']['loctested'] = 6;
         $experimental['MyExperimentalFeature']['locuntested'] = 2;
         $experimental['MyExperimentalFeature']['percentage'] = 75.0;
-        $success &= $this->verifyChildResult($aggregate_buildid, "Experimental", $experimental);
+        $success &= $this->verifyChildResult($aggregate_buildid, 'Experimental', $experimental);
 
         $third_party = [];
         $third_party['MyThirdPartyDependency'] = [];
@@ -175,7 +176,7 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
         $third_party['MyReleaseOnlyFeature']['loctested'] = 4;
         $third_party['MyReleaseOnlyFeature']['locuntested'] = 4;
         $third_party['MyReleaseOnlyFeature']['percentage'] = 50.0;
-        $success &= $this->verifyChildResult($aggregate_buildid, "Third Party", $third_party);
+        $success &= $this->verifyChildResult($aggregate_buildid, 'Third Party', $third_party);
 
         $production = [];
         $production['MyEmptyCoverage'] = [];
@@ -186,7 +187,7 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
         $production['MyProductionCode']['loctested'] = 12;
         $production['MyProductionCode']['locuntested'] = 4;
         $production['MyProductionCode']['percentage'] = 75.0;
-        $success &= $this->verifyChildResult($aggregate_buildid, "Production", $production);
+        $success &= $this->verifyChildResult($aggregate_buildid, 'Production', $production);
 
         return $success;
     }
@@ -297,7 +298,7 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
         $name)
     {
         if ($coverage['loctested'] != $expected_loctested) {
-            $this->fail("Expected $name loctested to be $expected_loctested, found " . $coverage['loctested'] .  " " . $coverage['locuntested'] .  " " . $coverage['percentage']);
+            $this->fail("Expected $name loctested to be $expected_loctested, found " . $coverage['loctested'] . ' ' . $coverage['locuntested'] . ' ' . $coverage['percentage']);
             return false;
         }
         if ($coverage['locuntested'] != $expected_locuntested) {

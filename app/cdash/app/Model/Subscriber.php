@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -16,12 +17,12 @@
 
 namespace CDash\Model;
 
+use ActionableBuildInterface;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\NotificationPreferences;
 use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Messaging\Topic\TopicDecorator;
-use ActionableBuildInterface;
 
 /**
  * Class Subscriber
@@ -29,30 +30,25 @@ use ActionableBuildInterface;
  * A subscriber is a wrapper for a User and contains properties and methods that concern,
  * specifically, a user's preference regarding notifications and the content of those
  * notifications.
- *
- * @package CDash\Model
  */
 class Subscriber implements SubscriberInterface
 {
-    /** @var  NotificationPreferences $preferences */
+    /** @var NotificationPreferences */
     private $preferences;
 
-    /** @var TopicCollection $topics */
+    /** @var TopicCollection */
     private $topics;
 
-    /** @var User $user */
+    /** @var User */
     private $user;
 
     /**
      * Subscriber constructor.
-     * @param NotificationPreferences $preferences
-     * @param TopicCollection|null $topics
-     * @param User|null $user
      */
     public function __construct(
         NotificationPreferences $preferences,
-        TopicCollection $topics = null,
-        User $user = null
+        ?TopicCollection $topics = null,
+        ?User $user = null,
     ) {
         $this->preferences = $preferences;
         $this->topics = $topics;
@@ -60,7 +56,6 @@ class Subscriber implements SubscriberInterface
     }
 
     /**
-     * @param ActionableBuildInterface $submission
      * @return bool
      */
     public function hasBuildTopics(ActionableBuildInterface $submission)
@@ -111,7 +106,6 @@ class Subscriber implements SubscriberInterface
     }
 
     /**
-     * @param $address
      * @return Subscriber
      */
     public function setAddress($address)
@@ -129,7 +123,6 @@ class Subscriber implements SubscriberInterface
     }
 
     /**
-     * @param array $labels
      * @return Subscriber
      */
     public function setLabels(array $labels)

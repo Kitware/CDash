@@ -1,6 +1,8 @@
 <?php
+
 /**
  *  base include file for SimpleTest
+ *
  * @version    $Id$
  */
 
@@ -22,7 +24,8 @@ class SimpleRoute
 
     /**
      *    Sets the target URL.
-     * @param SimpleUrl $url URL as object.
+     *
+     * @param simpleUrl $url URL as object
      */
     public function __construct($url)
     {
@@ -31,7 +34,8 @@ class SimpleRoute
 
     /**
      *    Resource name.
-     * @return SimpleUrl        Current url.
+     *
+     * @return SimpleUrl current url
      */
     public function getUrl()
     {
@@ -40,8 +44,10 @@ class SimpleRoute
 
     /**
      *    Creates the first line which is the actual request.
-     * @param string $method HTTP request method, usually GET.
-     * @return string          Request line content.
+     *
+     * @param string $method HTTP request method, usually GET
+     *
+     * @return string request line content
      */
     protected function getRequestLine($method)
     {
@@ -51,7 +57,8 @@ class SimpleRoute
 
     /**
      *    Creates the host part of the request.
-     * @return string          Host line content.
+     *
+     * @return string host line content
      */
     protected function getHostLine()
     {
@@ -64,9 +71,11 @@ class SimpleRoute
 
     /**
      *    Opens a socket to the route.
-     * @param string $method HTTP request method, usually GET.
-     * @param int $timeout Connection timeout.
-     * @return SimpleSocket       New socket.
+     *
+     * @param string $method HTTP request method, usually GET
+     * @param int $timeout connection timeout
+     *
+     * @return SimpleSocket new socket
      */
     public function createConnection($method, $timeout)
     {
@@ -86,11 +95,13 @@ class SimpleRoute
 
     /**
      *    Factory for socket.
-     * @param string $scheme Protocol to use.
-     * @param string $host Hostname to connect to.
-     * @param int $port Remote port.
-     * @param int $timeout Connection timeout.
-     * @return SimpleSocket/SimpleSecureSocket New socket.
+     *
+     * @param string $scheme protocol to use
+     * @param string $host hostname to connect to
+     * @param int $port remote port
+     * @param int $timeout connection timeout
+     *
+     * @return simpleSocket/SimpleSecureSocket New socket
      */
     protected function createSocket($scheme, $host, $port, $timeout)
     {
@@ -116,10 +127,11 @@ class SimpleProxyRoute extends SimpleRoute
 
     /**
      *    Stashes the proxy address.
-     * @param SimpleUrl $url URL as object.
-     * @param string $proxy Proxy URL.
-     * @param string $username Username for autentication.
-     * @param string $password Password for autentication.
+     *
+     * @param simpleUrl $url URL as object
+     * @param string $proxy proxy URL
+     * @param string $username username for autentication
+     * @param string $password password for autentication
      */
     public function __construct($url, $proxy, $username = false, $password = false)
     {
@@ -131,9 +143,10 @@ class SimpleProxyRoute extends SimpleRoute
 
     /**
      *    Creates the first line which is the actual request.
-     * @param string $method HTTP request method, usually GET.
-     * @param SimpleUrl $url URL as object.
-     * @return string          Request line content.
+     *
+     * @param string $method HTTP request method, usually GET
+     *
+     * @return string request line content
      */
     public function getRequestLine($method)
     {
@@ -146,8 +159,8 @@ class SimpleProxyRoute extends SimpleRoute
 
     /**
      *    Creates the host part of the request.
-     * @param SimpleUrl $url URL as object.
-     * @return string          Host line content.
+     *
+     * @return string host line content
      */
     public function getHostLine()
     {
@@ -158,9 +171,11 @@ class SimpleProxyRoute extends SimpleRoute
 
     /**
      *    Opens a socket to the route.
-     * @param string $method HTTP request method, usually GET.
-     * @param int $timeout Connection timeout.
-     * @return SimpleSocket        New socket.
+     *
+     * @param string $method HTTP request method, usually GET
+     * @param int $timeout connection timeout
+     *
+     * @return SimpleSocket new socket
      */
     public function createConnection($method, $timeout)
     {
@@ -199,9 +214,10 @@ class SimpleHttpRequest
      *    Builds the socket request from the different pieces.
      *    These include proxy information, URL, cookies, headers,
      *    request method and choice of encoding.
-     * @param SimpleRoute $route Request route.
-     * @param SimpleFormEncoding $encoding Content to send with
-     *                                           request.
+     *
+     * @param SimpleRoute $route request route
+     * @param SimpleFormEncoding $encoding content to send with
+     *                                     request
      */
     public function __construct($route, $encoding)
     {
@@ -213,10 +229,12 @@ class SimpleHttpRequest
 
     /**
      *    Dispatches the content to the route's socket.
-     * @param int $timeout Connection timeout.
-     * @return SimpleHttpResponse   A response which may only have
-     *                                 an error, but hopefully has a
-     *                                 complete web page.
+     *
+     * @param int $timeout connection timeout
+     *
+     * @return SimpleHttpResponse a response which may only have
+     *                            an error, but hopefully has a
+     *                            complete web page
      */
     public function fetch($timeout)
     {
@@ -229,10 +247,9 @@ class SimpleHttpRequest
 
     /**
      *    Sends the headers.
-     * @param SimpleSocket $socket Open socket.
-     * @param string $method HTTP request method,
-     *                                          usually GET.
-     * @param SimpleFormEncoding $encoding Content to send with request.
+     *
+     * @param SimpleSocket $socket open socket
+     * @param SimpleFormEncoding $encoding content to send with request
      */
     protected function dispatchRequest($socket, $encoding)
     {
@@ -249,7 +266,8 @@ class SimpleHttpRequest
 
     /**
      *    Adds a header line to the request.
-     * @param string $header_line Text of full header line.
+     *
+     * @param string $header_line text of full header line
      */
     public function addHeaderLine($header_line)
     {
@@ -259,8 +277,9 @@ class SimpleHttpRequest
     /**
      *    Reads all the relevant cookies from the
      *    cookie jar.
+     *
      * @param SimpleCookieJar $jar Jar to read
-     * @param SimpleUrl $url Url to use for scope.
+     * @param SimpleUrl $url url to use for scope
      */
     public function readCookiesFromJar($jar, $url)
     {
@@ -269,8 +288,10 @@ class SimpleHttpRequest
 
     /**
      *    Wraps the socket in a response parser.
-     * @param SimpleSocket $socket Responding socket.
-     * @return SimpleHttpResponse    Parsed response object.
+     *
+     * @param SimpleSocket $socket responding socket
+     *
+     * @return SimpleHttpResponse parsed response object
      */
     protected function createResponse($socket)
     {
@@ -299,7 +320,8 @@ class SimpleHttpHeaders
 
     /**
      *    Parses the incoming header block.
-     * @param string $headers Header block.
+     *
+     * @param string $headers header block
      */
     public function __construct($headers)
     {
@@ -318,7 +340,8 @@ class SimpleHttpHeaders
 
     /**
      *    Accessor for parsed HTTP protocol version.
-     * @return int           HTTP error code.
+     *
+     * @return int HTTP error code
      */
     public function getHttpVersion()
     {
@@ -327,7 +350,8 @@ class SimpleHttpHeaders
 
     /**
      *    Accessor for raw header block.
-     * @return string        All headers as raw string.
+     *
+     * @return string all headers as raw string
      */
     public function getRaw()
     {
@@ -336,17 +360,19 @@ class SimpleHttpHeaders
 
     /**
      *    Accessor for parsed HTTP error code.
-     * @return int           HTTP error code.
+     *
+     * @return int HTTP error code
      */
     public function getResponseCode()
     {
-        return (int)$this->response_code;
+        return (int) $this->response_code;
     }
 
     /**
      *    Returns the redirected URL or false if
      *    no redirection.
-     * @return string      URL or false for none.
+     *
+     * @return string URL or false for none
      */
     public function getLocation()
     {
@@ -355,29 +381,32 @@ class SimpleHttpHeaders
 
     /**
      *    Test to see if the response is a valid redirect.
-     * @return bool       True if valid redirect.
+     *
+     * @return bool true if valid redirect
      */
     public function isRedirect()
     {
-        return in_array($this->response_code, [301, 302, 303, 307]) &&
-        (bool)$this->getLocation();
+        return in_array($this->response_code, [301, 302, 303, 307])
+        && (bool) $this->getLocation();
     }
 
     /**
      *    Test to see if the response is an authentication
      *    challenge.
-     * @return bool       True if challenge.
+     *
+     * @return bool true if challenge
      */
     public function isChallenge()
     {
-        return ($this->response_code == 401) &&
-        (bool)$this->authentication &&
-        (bool)$this->realm;
+        return ($this->response_code == 401)
+        && (bool) $this->authentication
+        && (bool) $this->realm;
     }
 
     /**
      *    Accessor for MIME type header information.
-     * @return string           MIME type.
+     *
+     * @return string MIME type
      */
     public function getMimeType()
     {
@@ -386,7 +415,8 @@ class SimpleHttpHeaders
 
     /**
      *    Accessor for authentication type.
-     * @return string        Type.
+     *
+     * @return string type
      */
     public function getAuthentication()
     {
@@ -395,7 +425,8 @@ class SimpleHttpHeaders
 
     /**
      *    Accessor for security realm.
-     * @return string        Realm.
+     *
+     * @return string realm
      */
     public function getRealm()
     {
@@ -404,8 +435,9 @@ class SimpleHttpHeaders
 
     /**
      *    Writes new cookies to the cookie jar.
-     * @param SimpleCookieJar $jar Jar to write to.
-     * @param SimpleUrl $url Host and path to write under.
+     *
+     * @param SimpleCookieJar $jar jar to write to
+     * @param SimpleUrl $url host and path to write under
      */
     public function writeCookiesToJar($jar, $url)
     {
@@ -422,7 +454,8 @@ class SimpleHttpHeaders
     /**
      *    Called on each header line to accumulate the held
      *    data within the class.
-     * @param string $header_line One line of header.
+     *
+     * @param string $header_line one line of header
      */
     protected function parseHeaderLine($header_line)
     {
@@ -447,8 +480,10 @@ class SimpleHttpHeaders
 
     /**
      *    Parse the Set-cookie content.
+     *
      * @param string $cookie_line Text after "Set-cookie:"
-     * @return SimpleCookie          New cookie object.
+     *
+     * @return SimpleCookie new cookie object
      */
     protected function parseCookie($cookie_line)
     {
@@ -482,10 +517,11 @@ class SimpleHttpResponse extends SimpleStickyError
     /**
      *    Constructor. Reads and parses the incoming
      *    content and headers.
-     * @param SimpleSocket $socket Network connection to fetch
-     *                                  response text from.
-     * @param SimpleUrl $url Resource name.
-     * @param mixed $encoding Record of content sent.
+     *
+     * @param SimpleSocket $socket network connection to fetch
+     *                             response text from
+     * @param SimpleUrl $url resource name
+     * @param mixed $encoding record of content sent
      */
     public function __construct($socket, $url, $encoding)
     {
@@ -504,7 +540,8 @@ class SimpleHttpResponse extends SimpleStickyError
 
     /**
      *    Splits up the headers and the rest of the content.
-     * @param string $raw Content to parse.
+     *
+     * @param string $raw content to parse
      */
     protected function parse($raw)
     {
@@ -525,7 +562,8 @@ class SimpleHttpResponse extends SimpleStickyError
 
     /**
      *    Original request method.
-     * @return string        GET, POST or HEAD.
+     *
+     * @return string GET, POST or HEAD
      */
     public function getMethod()
     {
@@ -534,7 +572,8 @@ class SimpleHttpResponse extends SimpleStickyError
 
     /**
      *    Resource name.
-     * @return SimpleUrl        Current url.
+     *
+     * @return SimpleUrl current url
      */
     public function getUrl()
     {
@@ -543,7 +582,8 @@ class SimpleHttpResponse extends SimpleStickyError
 
     /**
      *    Original request data.
-     * @return mixed              Sent content.
+     *
+     * @return mixed sent content
      */
     public function getRequestData()
     {
@@ -552,7 +592,8 @@ class SimpleHttpResponse extends SimpleStickyError
 
     /**
      *    Raw request that was sent down the wire.
-     * @return string        Bytes actually sent.
+     *
+     * @return string bytes actually sent
      */
     public function getSent()
     {
@@ -562,7 +603,8 @@ class SimpleHttpResponse extends SimpleStickyError
     /**
      *    Accessor for the content after the last
      *    header line.
-     * @return string           All content.
+     *
+     * @return string all content
      */
     public function getContent()
     {
@@ -572,7 +614,8 @@ class SimpleHttpResponse extends SimpleStickyError
     /**
      *    Accessor for header block. The response is the
      *    combination of this and the content.
-     * @return SimpleHeaders        Wrapped header block.
+     *
+     * @return SimpleHeaders wrapped header block
      */
     public function getHeaders()
     {
@@ -581,7 +624,8 @@ class SimpleHttpResponse extends SimpleStickyError
 
     /**
      *    Accessor for any new cookies.
-     * @return array       List of new cookies.
+     *
+     * @return array list of new cookies
      */
     public function getNewCookies()
     {
@@ -591,9 +635,11 @@ class SimpleHttpResponse extends SimpleStickyError
     /**
      *    Reads the whole of the socket output into a
      *    single string.
-     * @param SimpleSocket $socket Unread socket.
-     * @return string               Raw output if successful
-     *                                 else false.
+     *
+     * @param SimpleSocket $socket unread socket
+     *
+     * @return string raw output if successful
+     *                else false
      */
     protected function readAll($socket)
     {
@@ -607,8 +653,10 @@ class SimpleHttpResponse extends SimpleStickyError
     /**
      *    Test to see if the packet from the socket is the
      *    last one.
-     * @param string $packet Chunk to interpret.
-     * @return bool          True if empty or EOF.
+     *
+     * @param string $packet chunk to interpret
+     *
+     * @return bool true if empty or EOF
      */
     protected function isLastPacket($packet)
     {

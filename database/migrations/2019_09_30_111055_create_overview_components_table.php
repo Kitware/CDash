@@ -22,7 +22,6 @@ class CreateOverviewComponentsTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

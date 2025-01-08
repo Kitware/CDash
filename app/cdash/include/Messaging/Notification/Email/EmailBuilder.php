@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -13,6 +14,7 @@
  *   PURPOSE. See the above copyright notices for more information.
  * =========================================================================
  */
+
 namespace CDash\Messaging\Notification\Email;
 
 use CDash\Collection\BuildEmailCollection;
@@ -33,9 +35,6 @@ class EmailBuilder
         $this->notifications = $collection;
     }
 
-    /**
-     * @param string $templateName
-     */
     public function createNotification(SubscriptionInterface $subscription, string $templateName): EmailMessage
     {
         $subject_template = "email.{$templateName}.subject";

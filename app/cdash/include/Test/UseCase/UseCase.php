@@ -1,4 +1,5 @@
 <?php
+
 namespace CDash\Test\UseCase;
 
 use AbstractXmlHandler;
@@ -7,6 +8,7 @@ use DOMDocument;
 use DOMElement;
 use DOMText;
 use Exception;
+use Faker\Factory;
 use InvalidArgumentException;
 
 abstract class UseCase
@@ -40,7 +42,7 @@ abstract class UseCase
         $this->properties[$name] = $properties;
 
         $this->setStartTime(time());
-        $this->setEndTime(time()+1);
+        $this->setEndTime(time() + 1);
     }
 
     public static function createBuilder(CDashUseCaseTestCase $testCase, $type): TestUseCase|ConfigUseCase|UpdateUseCase|BuildUseCase|DynamicAnalysisUseCase
@@ -244,7 +246,7 @@ abstract class UseCase
     public function getFaker()
     {
         if (!$this->faker) {
-            $this->faker = \Faker\Factory::create();
+            $this->faker = Factory::create();
         }
         return $this->faker;
     }

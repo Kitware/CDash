@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,6 +14,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 use CDash\Database;
@@ -27,7 +29,7 @@ class Image
 
     public $Data; // Loaded from database or the file referred by Filename.
     public $Name; // Use to track the role for test.
-    /** @var Database $PDO */
+    /** @var Database */
     private $PDO;
 
     public function __construct()
@@ -53,7 +55,6 @@ class Image
         $db = Database::getInstance();
         // If no id specify return false
         if ($this->Id) {
-            ;
             $query_array = $db->executePreparedSingleRow('SELECT count(*) AS c FROM image WHERE id=?', [$this->Id]);
             if ($query_array['c'] == 0) {
                 return false;
@@ -71,7 +72,7 @@ class Image
     }
 
     /** Save the image */
-    public function Save($update=false): bool
+    public function Save($update = false): bool
     {
         // Get the data from the file if necessary
         $this->GetData();

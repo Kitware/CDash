@@ -5,6 +5,7 @@ namespace Tests\Feature\GraphQL;
 use App\Models\Project;
 use App\Models\TestOutput;
 use Illuminate\Support\Str;
+use Random\RandomException;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
@@ -18,7 +19,7 @@ class TestTypeTest extends TestCase
     private TestOutput $test_output;
 
     /**
-     * @throws \Random\RandomException
+     * @throws RandomException
      */
     protected function setUp(): void
     {
@@ -198,7 +199,6 @@ class TestTypeTest extends TestCase
             'uuid' => Str::uuid()->toString(),
         ]);
 
-
         $label = $build->tests()->create([
             'testname' => Str::uuid()->toString(),
             'outputid' => $this->test_output->id,
@@ -261,7 +261,6 @@ class TestTypeTest extends TestCase
             'name' => 'build1',
             'uuid' => Str::uuid()->toString(),
         ]);
-
 
         $test = $build->tests()->create([
             'testname' => Str::uuid()->toString(),

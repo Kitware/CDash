@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -14,14 +15,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\Site;
+use App\Models\SiteInformation;
 use App\Utils\SubmissionUtils;
 use CDash\Model\Build;
 use CDash\Model\Label;
-use App\Models\Site;
-use App\Models\SiteInformation;
 use CDash\Model\Project;
 use CDash\Model\UploadFile;
-
 use Illuminate\Http\File;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
@@ -239,7 +239,7 @@ class UploadHandler extends AbstractXmlHandler
                     ]);
                     fclose($fp_to_upload);
                     if (!$response->successful()) {
-                        Log::error('Error uploading file via API: ' .  $response->status() . ' ' . $response->body());
+                        Log::error('Error uploading file via API: ' . $response->status() . ' ' . $response->body());
                         unlink($this->TmpFilename);
                         $this->UploadError = true;
                         return;
@@ -308,7 +308,7 @@ class UploadHandler extends AbstractXmlHandler
         }
     }
 
-    private function initializeBuild() : void
+    private function initializeBuild(): void
     {
         if ($this->BuildInitialized) {
             return;

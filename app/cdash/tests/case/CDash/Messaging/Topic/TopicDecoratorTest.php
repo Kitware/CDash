@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -32,13 +33,13 @@ use Tests\TestCase;
 
 abstract class MockTopic extends Topic implements Decoratable
 {
-};
+}
 abstract class MockTopicFixable extends MockTopic implements Fixable
 {
-};
+}
 abstract class MockTopicLabelable extends MockTopic implements Labelable
 {
-};
+}
 
 class TopicDecoratorTest extends TestCase
 {
@@ -153,7 +154,6 @@ class TopicDecoratorTest extends TestCase
     }
 
     /**
-     * @param $name
      * @return PHPUnit_Framework_MockObject_MockObject
      */
     private function getMockTopic($named)

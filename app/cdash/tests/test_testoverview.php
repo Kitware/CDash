@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -35,7 +36,7 @@ class TestOverviewTestCase extends KWWebTestCase
         $content = $this->get($this->url . '/api/v1/testOverview.php?project=InsightExample');
         $jsonobj = json_decode($content, true);
         if ($jsonobj['tests'] !== []) {
-            $this->fail("Empty list of tests not found when expected");
+            $this->fail('Empty list of tests not found when expected');
         }
 
         $content = $this->get($this->url . '/api/v1/testOverview.php?project=EmailProjectExample&date=2009-02-23');

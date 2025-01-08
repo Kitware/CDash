@@ -40,11 +40,11 @@ class PruneAuthTokensTest extends TestCase
             'userid' => $this->user->id,
         ]);
 
-        self::assertNotNull(Authtoken::find($hash));
+        self::assertNotNull(AuthToken::find($hash));
 
         PruneAuthTokens::dispatch();
 
-        self::assertNull(Authtoken::find($hash));
+        self::assertNull(AuthToken::find($hash));
     }
 
     public function testValidAuthTokenNotDeleted(): void
@@ -57,10 +57,10 @@ class PruneAuthTokensTest extends TestCase
             'userid' => $this->user->id,
         ]);
 
-        self::assertNotNull(Authtoken::find($hash));
+        self::assertNotNull(AuthToken::find($hash));
 
         PruneAuthTokens::dispatch();
 
-        self::assertNotNull(Authtoken::find($hash));
+        self::assertNotNull(AuthToken::find($hash));
     }
 }

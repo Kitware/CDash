@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use LdapRecord\Laravel\Auth\LdapAuthenticatable;
+use Illuminate\Notifications\Notifiable;
 use LdapRecord\Laravel\Auth\AuthenticatesWithLdap;
+use LdapRecord\Laravel\Auth\LdapAuthenticatable;
 
 /**
  * All of these methods are accessed through reflection.  Only the ones currently necessary are
@@ -27,14 +27,14 @@ use LdapRecord\Laravel\Auth\AuthenticatesWithLdap;
  * @property string $institution
  * @property string $ldapdomain
  * @property string $ldapguid
- *
  * @property Password $currentPassword
  *
  * @mixin Builder<User>
  */
 class User extends Authenticatable implements MustVerifyEmail, LdapAuthenticatable
 {
-    use Notifiable, AuthenticatesWithLdap;
+    use Notifiable;
+    use AuthenticatesWithLdap;
 
     protected $user;
 

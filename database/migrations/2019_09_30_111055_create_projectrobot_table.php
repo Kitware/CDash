@@ -21,7 +21,6 @@ class CreateProjectrobotTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

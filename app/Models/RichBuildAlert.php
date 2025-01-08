@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- *
  * @property int $buildid
  * @property int $detailsid
  * @property string $sourcefile

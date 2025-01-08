@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -6,6 +7,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
+use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +31,7 @@ class BranchCoverageTestCase extends KWWebTestCase
     protected function clearPriorBranchCoverageResults()
     {
         // Remove the build created by this test if it ran previously.
-        $pdo = \CDash\Database::getInstance()->getPdo();
+        $pdo = Database::getInstance()->getPdo();
         $stmt = $pdo->query("
             SELECT id FROM build WHERE name = 'branch_coverage'");
         $existing_buildid = $stmt->fetchColumn();
@@ -49,7 +51,7 @@ class BranchCoverageTestCase extends KWWebTestCase
         $this->deleteLog($this->logfilename);
     }
 
-    protected function postSubmit($token=null, string $stamp='')
+    protected function postSubmit($token = null, string $stamp = '')
     {
         if ($stamp === '') {
             $stamp = '20150128-1436-Experimental';
@@ -93,7 +95,7 @@ class BranchCoverageTestCase extends KWWebTestCase
         }
     }
 
-    protected function putSubmit($token=null)
+    protected function putSubmit($token = null)
     {
         // Do the PUT submission to actually upload our data.
         $puturl = $this->url . "/submit.php?type=GcovTar&md5=5454e16948a1d58d897e174b75cc5633&filename=gcov.tar&buildid={$this->buildid}";
@@ -143,11 +145,11 @@ class BranchCoverageTestCase extends KWWebTestCase
             INNER JOIN coveragefile ON (coverage.fileid=coveragefile.id)
             WHERE coveragefile.fullpath LIKE '%uncovered1.cxx%'")[0] ?? [];
         if ($row === []) {
-            $this->fail("Expected 1 result for uncovered file, found 0");
+            $this->fail('Expected 1 result for uncovered file, found 0');
             return 1;
         }
         if ((int) $row->loctested !== 0 || (int) $row->locuntested !== 1) {
-            $this->fail("Uncovered results differ from expectation");
+            $this->fail('Uncovered results differ from expectation');
             return 1;
         }
 

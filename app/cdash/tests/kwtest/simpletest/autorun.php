@@ -1,7 +1,9 @@
 <?php
+
 /**
  *  Autorunner which runs all tests cases found in a file
  *  that includes this module.
+ *
  * @version    $Id$
  */
 
@@ -37,6 +39,7 @@ function simpletest_autorun()
  *    run all recent test cases if no test has
  *    so far been run. Uses the DefaultReporter which can have
  *    it's output controlled with SimpleTest::prefer().
+ *
  * @return boolean/null false if there were test failures, true if
  *                         there were no failures, null if tests are
  *                         already running
@@ -62,19 +65,21 @@ function run_local_tests()
 /**
  *    Checks the current test context to see if a test has
  *    ever been run.
- * @return bool        True if tests have run.
+ *
+ * @return bool true if tests have run
  */
 function tests_have_run()
 {
     if ($context = SimpleTest::getContext()) {
-        return (bool)$context->getTest();
+        return (bool) $context->getTest();
     }
     return false;
 }
 
 /**
  *    The first autorun file.
- * @return string        Filename of first autorun script.
+ *
+ * @return string filename of first autorun script
  */
 function initial_file()
 {
@@ -93,7 +98,8 @@ function initial_file()
 /**
  *    Every class since the first autorun include. This
  *    is safe enough if require_once() is always used.
- * @return array        Class names.
+ *
+ * @return array class names
  */
 function capture_new_classes()
 {

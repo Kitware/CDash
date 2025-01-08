@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -13,15 +14,13 @@
  *   PURPOSE. See the above copyright notices for more information.
  * =========================================================================
  */
+
 namespace CDash\Collection;
 
 use CDash\Model\Build;
 
 class BuildCollection extends Collection
 {
-    /**
-     * @param Build $build
-     */
     public function add(Build $build)
     {
         $name = $build->SubProjectName ? $build->SubProjectName : $build->Name;

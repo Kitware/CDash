@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use CDash\Model\BuildGroup;
@@ -47,7 +48,7 @@ final class ExpectedBuildController extends AbstractProjectController
                 self::rest_post($request, $siteid, $buildgroupid, $buildname, $buildtype);
                 break;
             default:
-                abort(500, "Unhandled method: " . $request->method());
+                abort(500, 'Unhandled method: ' . $request->method());
         }
 
         return response()->json();

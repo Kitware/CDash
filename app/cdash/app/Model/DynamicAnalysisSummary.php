@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,6 +14,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 use CDash\Database;
@@ -45,9 +47,9 @@ class DynamicAnalysisSummary
         if ($this->BuildId < 1) {
             return false;
         }
-        $stmt = $this->PDO->prepare("
+        $stmt = $this->PDO->prepare('
                 SELECT COUNT(*) AS c FROM dynamicanalysissummary
-                WHERE buildid = ?");
+                WHERE buildid = ?');
         if (pdo_execute($stmt, [$this->BuildId])) {
             $row = $stmt->fetch();
             if ($row['c'] > 0) {
@@ -71,7 +73,7 @@ class DynamicAnalysisSummary
     }
 
     // Insert the DynamicAnalysisSummary
-    public function Insert($append=false)
+    public function Insert($append = false)
     {
         if ($this->BuildId < 1) {
             return false;
@@ -87,9 +89,9 @@ class DynamicAnalysisSummary
         if ($this->Exists()) {
             if ($append) {
                 // Load the existing results for this build.
-                $stmt = $this->PDO->prepare("
+                $stmt = $this->PDO->prepare('
                     SELECT checker, numdefects FROM dynamicanalysissummary
-                    WHERE buildid = ? FOR UPDATE");
+                    WHERE buildid = ? FOR UPDATE');
                 pdo_execute($stmt, [$this->BuildId]);
                 $row = $stmt->fetch();
                 if (!$row) {

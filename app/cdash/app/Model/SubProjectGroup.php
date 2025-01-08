@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,6 +14,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 use CDash\Database;
@@ -339,14 +341,14 @@ class SubProjectGroup
                          )
                          VALUES $prepared_array
                      ", array_merge($idvalue, [
-                         $this->Name,
-                         $this->ProjectId,
-                         $this->IsDefault,
-                         $this->CoverageThreshold,
-                         $starttime,
-                         $endtime,
-                         $position,
-                     ]));
+                $this->Name,
+                $this->ProjectId,
+                $this->IsDefault,
+                $this->CoverageThreshold,
+                $starttime,
+                $endtime,
+                $position,
+            ]));
 
             if ($query === false) {
                 add_last_sql_error('SubProjectGroup::Save Insert');

@@ -3,14 +3,15 @@
 namespace App\Providers;
 
 use App\Enums\BuildMeasurementType;
+use GraphQL\Error\InvariantViolation;
+use GraphQL\Type\Definition\PhpEnumType;
 use Illuminate\Support\ServiceProvider;
 use Nuwave\Lighthouse\Schema\TypeRegistry;
-use GraphQL\Type\Definition\PhpEnumType;
 
 final class GraphQLServiceProvider extends ServiceProvider
 {
     /**
-     * @throws \GraphQL\Error\InvariantViolation
+     * @throws InvariantViolation
      */
     public function boot(TypeRegistry $typeRegistry): void
     {

@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -71,7 +72,6 @@ class QueryTestsTestCase extends KWWebTestCase
         $this->assertEqual($jsonobj['builds'][0]['labels'], 'Claps, TestLabel');
         DB::insert('DELETE FROM label2test WHERE labelid = ? AND testid = ?', [$labelid, $query_result->testid]);
         DB::delete("DELETE FROM label WHERE text = 'TestLabel'");
-
 
         $this->get($this->url . '/api/v1/queryTests.php?project=Trilinos&date=2011-07-22&filtercount=2&showfilters=1&filtercombine=and&field1=testoutput&compare1=97&value1=der%5Biva%5D%2Btive&field2=testoutput&compare2=96&value2=Tay.*%3F%20series');
         $content = $this->getBrowser()->getContent();

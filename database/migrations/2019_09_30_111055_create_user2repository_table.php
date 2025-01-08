@@ -21,7 +21,6 @@ class CreateUser2repositoryTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

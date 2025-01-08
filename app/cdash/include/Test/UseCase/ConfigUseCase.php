@@ -1,12 +1,14 @@
 <?php
+
 namespace CDash\Test\UseCase;
 
+use AbstractXmlHandler;
 use CDash\Model\Project;
+use ConfigureHandler;
 use DOMDocument;
 use DOMElement;
 use DOMText;
-use ConfigureHandler;
-use AbstractXmlHandler;
+use Exception;
 
 class ConfigUseCase extends UseCase
 {
@@ -61,7 +63,7 @@ class ConfigUseCase extends UseCase
 
         $xml_str = $xml->saveXML($xml);
         if ($xml_str === false) {
-            throw new \Exception('Invalid XML.');
+            throw new Exception('Invalid XML.');
         }
 
         $project = new Project();

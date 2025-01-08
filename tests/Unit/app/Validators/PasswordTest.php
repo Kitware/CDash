@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -19,9 +20,9 @@ namespace App\Validators;
 use App\Validators\Password as PasswordValidator;
 use Config;
 use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Validation\Validator;
 use Mockery;
 use Tests\TestCase;
-use Illuminate\Validation\Validator;
 
 class PasswordTest extends TestCase
 {
@@ -273,7 +274,6 @@ class PasswordTest extends TestCase
         $password = self::SYMBOLS . self::LOWERCASE;
         $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
-
         $password = self::UNDERSCORE . self::DIGITS;
         $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
 
@@ -366,18 +366,15 @@ class PasswordTest extends TestCase
         $sut->complexity($attribute, $password, $parameters, $validator);
         // see comments in Password::setCustomMessages
         $expected = [
-            'password.complexity'
-            => "Your :attribute must contain at least {$length} characters from 1 of the following types: uppercase, lowercase, numbers, and symbols",
+            'password.complexity' => "Your :attribute must contain at least {$length} characters from 1 of the following types: uppercase, lowercase, numbers, and symbols",
         ];
         $actual = $validator->customMessages;
         $this::assertEquals($expected, $actual);
 
-
         $parameters = array_values(['complexity' => 2, 'count' => 1]);
         $sut->complexity($attribute, $password, $parameters, $validator);
         $expected = [
-            'password.complexity'
-            => "Your :attribute must contain at least 2 of the following types: uppercase, lowercase, numbers, and symbols",
+            'password.complexity' => 'Your :attribute must contain at least 2 of the following types: uppercase, lowercase, numbers, and symbols',
         ];
         $actual = $validator->customMessages;
         $this::assertEquals($expected, $actual);
@@ -385,8 +382,7 @@ class PasswordTest extends TestCase
         $parameters = array_values(['complexity' => 4, 'count' => 2]);
         $sut->complexity($attribute, $password, $parameters, $validator);
         $expected = [
-            'password.complexity'
-            => "Your :attribute must contain at least 2 characters from each of the following types: uppercase, lowercase, numbers, and symbols",
+            'password.complexity' => 'Your :attribute must contain at least 2 characters from each of the following types: uppercase, lowercase, numbers, and symbols',
         ];
         $actual = $validator->customMessages;
         $this::assertEquals($expected, $actual);
@@ -396,8 +392,7 @@ class PasswordTest extends TestCase
 
         // extra space between contain and each due to templating
         $expected = [
-            'password.complexity'
-            => "Your :attribute must contain  each of the following types: uppercase, lowercase, numbers, and symbols",
+            'password.complexity' => 'Your :attribute must contain  each of the following types: uppercase, lowercase, numbers, and symbols',
         ];
         $actual = $validator->customMessages;
         $this::assertEquals($expected, $actual);

@@ -39,7 +39,7 @@ class AddMeasurementOrder extends Migration
                 DB::table('measurement')
                     ->where('id', $measurementid_row->id)
                     ->update(['position' => $pos]);
-                $pos += 1;
+                $pos++;
             }
         }
     }

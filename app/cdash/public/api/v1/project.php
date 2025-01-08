@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -189,7 +190,7 @@ function get_project(&$response)
         return false;
     }
     // Make sure the project exists.
-    $Project = new Project;
+    $Project = new Project();
     $Project->Id = $projectid;
     if (!$Project->Exists()) {
         $response['error'] = 'This project does not exist.';

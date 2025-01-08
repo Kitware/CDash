@@ -1,8 +1,9 @@
 <?php
 
+use App\Password;
 use Faker\Generator as Faker;
 
-$factory->define(App\Password::class, function (Faker $faker) use ($factory) {
+$factory->define(Password::class, function (Faker $faker) use ($factory) {
     $user = $factory->create('App\Models\User');
     return [
         'userid' => $user->id,

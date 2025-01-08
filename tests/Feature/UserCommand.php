@@ -3,9 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-
-use Tests\TestCase;
 use Illuminate\Support\Facades\Artisan;
+use Tests\TestCase;
 
 class UserCommand extends TestCase
 {
@@ -75,7 +74,7 @@ class UserCommand extends TestCase
         $this->user = null;
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         if ($this->user) {
             $this->user->delete();

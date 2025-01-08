@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,6 +14,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 use CDash\Database;
@@ -80,7 +82,7 @@ class LabelEmail
     }
 
     /** Update the labels given a projectid and userid */
-    public function UpdateLabels(array|null $labels): bool
+    public function UpdateLabels(?array $labels): bool
     {
         if (!$this->ProjectId) {
             abort(500, 'LabelEmail UpdateLabels(): ProjectId not set');

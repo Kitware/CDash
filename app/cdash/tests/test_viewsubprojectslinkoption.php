@@ -1,4 +1,5 @@
 <?php
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Database;
@@ -35,7 +36,7 @@ class ViewSubProjectsLinkOptionTestCase extends KWWebTestCase
 
         // Turn this option off in the database and verify that we now
         // get a link to index.php instead.
-        \DB::table('project')
+        DB::table('project')
             ->where('name', 'Trilinos')
             ->update(['viewsubprojectslink' => 0]);
         $this->get("{$this->url}/api/v1/viewProjects.php");
@@ -44,7 +45,7 @@ class ViewSubProjectsLinkOptionTestCase extends KWWebTestCase
         $this->assertEqual('index.php?project=Trilinos', $this->getTrilinosLink($json_array['projects']));
 
         // Turn the option back on.
-        \DB::table('project')
+        DB::table('project')
             ->where('name', 'Trilinos')
             ->update(['viewsubprojectslink' => 1]);
     }

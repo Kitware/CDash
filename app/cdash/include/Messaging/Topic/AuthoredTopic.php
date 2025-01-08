@@ -1,4 +1,5 @@
 <?php
+
 namespace CDash\Messaging\Topic;
 
 use CDash\Model\Build;
@@ -6,7 +7,6 @@ use CDash\Model\Build;
 class AuthoredTopic extends Topic
 {
     /**
-     * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)

@@ -5,8 +5,8 @@ namespace App\Console\Commands;
 use App\Jobs\ProcessSubmission;
 use App\Utils\AuthTokenUtil;
 use CDash\Model\Project;
-
 use Illuminate\Console\Command;
+use Storage;
 
 class QueueSubmissions extends Command
 {
@@ -36,14 +36,12 @@ class QueueSubmissions extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
         // Queue the "build metadata" JSON files first, so they have a chance
         // to get parsed before the subsequent payload files.
-        foreach (\Storage::files('inbox') as $inboxFile) {
+        foreach (Storage::files('inbox') as $inboxFile) {
             if (!str_contains($inboxFile, '_-_build-metadata_-_') || !str_contains($inboxFile, '.json')) {
                 continue;
             }
@@ -51,7 +49,7 @@ class QueueSubmissions extends Command
         }
 
         // Iterate over our inbox files again, queueing them for parsing.
-        foreach (\Storage::files('inbox') as $inboxFile) {
+        foreach (Storage::files('inbox') as $inboxFile) {
             if (str_contains($inboxFile, '_-_build-metadata_-_') && str_contains($inboxFile, '.json')) {
                 continue;
             }
@@ -64,7 +62,7 @@ class QueueSubmissions extends Command
         $filename = str_replace('inbox/', '', $inboxFile);
         $pos = strpos($filename, '_-_');
         if ($pos === false) {
-            \Storage::move("inbox/{$filename}", "failed/{$filename}");
+            Storage::move("inbox/{$filename}", "failed/{$filename}");
             echo "Could not extract projectname from $filename\n";
             return;
         }
@@ -73,7 +71,7 @@ class QueueSubmissions extends Command
         $project = new Project();
         $project->FindByName($projectname);
         if (!$project->Id) {
-            \Storage::move("inbox/{$filename}", "failed/{$filename}");
+            Storage::move("inbox/{$filename}", "failed/{$filename}");
             echo "Could not find project $projectname\n";
             return;
         }
@@ -83,13 +81,13 @@ class QueueSubmissions extends Command
             $begin = $pos + 3;
             $end = strpos($filename, '_-_', $begin);
             if ($end === false) {
-                \Storage::move("inbox/{$filename}", "failed/{$filename}");
+                Storage::move("inbox/{$filename}", "failed/{$filename}");
                 echo "Could not extract authtoken from $filename\n";
                 return;
             }
             $len = $end - $begin;
             if (!AuthTokenUtil::checkToken(substr($filename, $begin, $len), $project->Id)) {
-                \Storage::move("inbox/{$filename}", "failed/{$filename}");
+                Storage::move("inbox/{$filename}", "failed/{$filename}");
                 echo "Invalid authentication token for $filename\n";
                 return;
             }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -16,13 +17,12 @@
 
 namespace CDash\Messaging\Topic;
 
-use Illuminate\Support\Collection;
-
+use CDash\Collection\ConfigureCollection;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
-use CDash\Collection\ConfigureCollection;
 use CDash\Model\BuildConfigure;
 use CDash\Model\SubscriberInterface;
+use Illuminate\Support\Collection;
 
 class ConfigureTopic extends Topic implements Decoratable, Labelable
 {
@@ -31,7 +31,6 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
     private $collection;
 
     /**
-     * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)
@@ -79,8 +78,7 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
     }
 
     /**
-     * @param $item
-     * @return boolean
+     * @return bool
      *
      * TODO: this breaks interface segregation principle, refactor
      */
@@ -90,7 +88,6 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
     }
 
     /**
-     * @param Build $build
      * @return Collection
      */
     public function getLabelsFromBuild(Build $build)
@@ -111,8 +108,6 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
     }
 
     /**
-     * @param Build $build
-     * @param Collection $labels
      * @return void
      */
     public function setTopicDataWithLabels(Build $build, Collection $labels)
@@ -122,7 +117,6 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
     }
 
     /**
-     * @param SubscriberInterface $subscriber
      * @return bool
      */
     public function isSubscribedToBy(SubscriberInterface $subscriber)

@@ -21,7 +21,6 @@ class CreateFilesumTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

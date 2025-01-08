@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Models\Project as EloquentProject;
 use App\Models\User;
 use CDash\Database;
 use CDash\Model\Project;
-use App\Models\Project as EloquentProject;
 use CDash\Model\UserProject;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +34,7 @@ final class ManageProjectRolesController extends AbstractProjectController
         if (!isset($_GET['projectid']) && EloquentProject::count() === 1) {
             $eloquent_project = EloquentProject::all()->firstOrFail();
         } else {
-            $eloquent_project = EloquentProject::find((int) ($_GET['projectid'] ?? -1)) ?? new \App\Models\Project();
+            $eloquent_project = EloquentProject::find((int) ($_GET['projectid'] ?? -1)) ?? new EloquentProject();
         }
 
         $projectid = $eloquent_project->id;
@@ -363,11 +364,11 @@ final class ManageProjectRolesController extends AbstractProjectController
                                      OR emailtype IS NULL
                                  )
                          ', [
-                             intval($project_array['id']),
-                             intval($project_array['id']),
-                             intval($project_array['id']),
-                             $date,
-                         ]);
+                    intval($project_array['id']),
+                    intval($project_array['id']),
+                    intval($project_array['id']),
+                    $date,
+                ]);
 
                 add_last_sql_error('ManageProjectRole');
                 foreach ($query as $query_array) {
@@ -400,7 +401,7 @@ final class ManageProjectRolesController extends AbstractProjectController
     private static function find_site_maintainers(int $projectid): array
     {
         // Get all the users with the 'Site maintainer' role for this project.
-        $project = \App\Models\Project::findOrFail($projectid);
+        $project = EloquentProject::findOrFail($projectid);
         $userids = $project->siteMaintainers()->pluck('userid')->toArray();
 
         // Next, get the users maintaining specific sites that have received
@@ -524,7 +525,7 @@ final class ManageProjectRolesController extends AbstractProjectController
             $sql = 'email=?';
             $params[] = $search;
         } else {
-            $sql = "(email LIKE ? OR firstname LIKE ? OR lastname LIKE ?)";
+            $sql = '(email LIKE ? OR firstname LIKE ? OR lastname LIKE ?)';
             $params[] = '%' . $search . '%';
             $params[] = '%' . $search . '%';
             $params[] = '%' . $search . '%';

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -24,6 +25,9 @@ use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
+use DateInterval;
+use DatePeriod;
+use DateTime;
 
 require_once 'include/api_common.php';
 require_once 'include/filterdataFunctions.php';
@@ -80,8 +84,8 @@ class Timeline extends Index
 
     private function generateColorMap()
     {
-        if (array_key_exists('colorblind', $this->filterdata) &&
-                $this->filterdata['colorblind']) {
+        if (array_key_exists('colorblind', $this->filterdata)
+                && $this->filterdata['colorblind']) {
             $this->colors[self::ERROR] = HighContrastPalette::Failure;
             $this->colors[self::FAILURE] = HighContrastPalette::Warning;
             $this->colors[self::CLEAN] = HighContrastPalette::Success;
@@ -155,11 +159,11 @@ class Timeline extends Index
             ],
         ];
 
-        $stmt = $this->db->prepare("
+        $stmt = $this->db->prepare('
                 SELECT b.id, b.starttime, b.testfailed, b.testnotrun, b.testpassed
                 FROM build b
                 WHERE b.projectid = :projectid AND b.parentid IN (0, -1)
-                ORDER BY starttime");
+                ORDER BY starttime');
         if (!pdo_execute($stmt, [':projectid' => $this->project->Id])) {
             abort(500, 'Failed to load results');
         }
@@ -215,7 +219,7 @@ class Timeline extends Index
                     bg.name = :buildgroupname
                     ORDER BY starttime');
             $query_params = [
-                ':projectid'      => $this->project->Id,
+                ':projectid' => $this->project->Id,
                 ':buildgroupname' => $groupname,
             ];
             if (!pdo_execute($stmt, $query_params)) {
@@ -226,10 +230,10 @@ class Timeline extends Index
                 $build = [];
                 $build['errors'] = Build::ConvertMissingToZero($row['builderrors']) +
                     Build::ConvertMissingToZero($row['configureerrors']);
-                if (strlen($row['updatestatus']) > 0 &&
-                        $row['updatestatus'] != '0'
+                if (strlen($row['updatestatus']) > 0
+                        && $row['updatestatus'] != '0'
                 ) {
-                    $build['errors'] += 1;
+                    $build['errors']++;
                 }
                 $build['testfailed'] = $row['testfailed'];
                 $build['starttime'] = $row['starttime'];
@@ -248,11 +252,11 @@ class Timeline extends Index
             // Iterate backwards in time from now until builds stop appearing
             // in this group.
             $this->endDate = gmdate(FMT_DATETIME);
-            $datetime = new \DateTime();
+            $datetime = new DateTime();
             // We want our date range to extend all the way through the current
             // testing day (to the beginning of tomorrow). So we add one extra
             // day to our range.
-            $datetime->add(new \DateInterval('P1D'));
+            $datetime->add(new DateInterval('P1D'));
             $builds = [];
             while (true) {
                 $dynamic_builds = $this->getDynamicBuilds();
@@ -280,7 +284,7 @@ class Timeline extends Index
                     $builds[] = $build;
                 }
                 unset($dynamic_builds);
-                $datetime->sub(new \DateInterval('P1D'));
+                $datetime->sub(new DateInterval('P1D'));
                 $this->endDate = gmdate(FMT_DATETIME, $datetime->getTimestamp());
             }
             $this->endDate = $end_date;
@@ -319,13 +323,13 @@ class Timeline extends Index
             foreach ($this->defectTypes as $defect_type) {
                 $key = $defect_type['name'];
                 if ($build[$key] > 0) {
-                    $this->timeData[$start_of_day_ms][$key] += 1;
+                    $this->timeData[$start_of_day_ms][$key]++;
                     $clean_build = false;
                     break;
                 }
             }
             if ($this->includeCleanBuilds && $clean_build) {
-                $this->timeData[$start_of_day_ms]['clean'] += 1;
+                $this->timeData[$start_of_day_ms]['clean']++;
             }
         }
 
@@ -363,10 +367,10 @@ class Timeline extends Index
 
         // Create empty entries for any dates in our range that did not have
         // any builds.
-        $period = new \DatePeriod(
-            new \DateTime($this->timeToDate[$oldest_time_ms]),
-            new \DateInterval('P1D'),
-            new \DateTime($this->timeToDate[$newest_time_ms]));
+        $period = new DatePeriod(
+            new DateTime($this->timeToDate[$oldest_time_ms]),
+            new DateInterval('P1D'),
+            new DateTime($this->timeToDate[$newest_time_ms]));
         foreach ($period as $datetime) {
             $date = $datetime->format('Y-m-d');
             [$unused, $start_of_day] = get_dates($date, $this->project->NightlyTime);

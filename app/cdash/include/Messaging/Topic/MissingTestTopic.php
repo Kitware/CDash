@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -17,20 +18,18 @@
 namespace CDash\Messaging\Topic;
 
 use App\Models\Test;
-
 use CDash\Model\Build;
 
 class MissingTestTopic extends Topic
 {
     use IssueTemplateTrait;
 
-    /** @var Illuminate\Support\Collection $collection */
+    /** @var Illuminate\Support\Collection */
     private $collection;
 
     /**
      * This method queries the build to check for missing tests
      *
-     * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)
@@ -41,7 +40,6 @@ class MissingTestTopic extends Topic
     /**
      * This method sets a build's missing tests in a TestCollection
      *
-     * @param Build $build
      * @return void
      */
     public function setTopicData(Build $build)

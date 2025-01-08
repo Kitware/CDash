@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -7,8 +8,6 @@ use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-
-
 
 class SubProjectNextPreviousTestCase extends KWWebTestCase
 {
@@ -30,8 +29,8 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         // is successfully selected.
         $filesToSubmit =
             ['Build_1.xml', 'Configure_1.xml', 'Notes_1.xml', 'Test_1.xml',
-             'Build_3.xml', 'Build_2.xml', 'Configure_2.xml', 'Notes_2.xml',
-             'Test_2.xml'];
+                'Build_3.xml', 'Build_2.xml', 'Configure_2.xml', 'Notes_2.xml',
+                'Test_2.xml'];
         $dir = dirname(__FILE__) . '/data/SubProjectNextPrevious';
         foreach ($filesToSubmit as $file) {
             if (!$this->submission('Trilinos', "$dir/$file")) {
@@ -90,8 +89,8 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
                 $success = false;
                 break;
             }
-            if (in_array($page, $pages_with_preview_tables, true) &&
-                $jsonobj['nextbuild']['buildid'] !== $second_buildid) {
+            if (in_array($page, $pages_with_preview_tables, true)
+                && $jsonobj['nextbuild']['buildid'] !== $second_buildid) {
                 $error_msg = "Expected id=$second_buildid in 'Next Build' table on $page, but got" . $jsonobj['nextbuild']['buildid'];
                 $success = false;
                 break;
@@ -114,8 +113,8 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
                 $success = false;
                 break;
             }
-            if (in_array($page, $pages_with_preview_tables, true) &&
-                $jsonobj['previousbuild']['buildid'] !== $first_buildid) {
+            if (in_array($page, $pages_with_preview_tables, true)
+                && $jsonobj['previousbuild']['buildid'] !== $first_buildid) {
                 $error_msg = "Expected id=$first_buildid in 'Previous Build' table on $page, but got" . $jsonobj['previousbuild']['buildid'];
                 $success = false;
                 break;
@@ -127,8 +126,8 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
                 $success = false;
                 break;
             }
-            if (in_array($page, $pages_with_preview_tables, true) &&
-                $jsonobj['nextbuild']['buildid'] !== $third_buildid) {
+            if (in_array($page, $pages_with_preview_tables, true)
+                && $jsonobj['nextbuild']['buildid'] !== $third_buildid) {
                 $error_msg = "Expected id=$third_buildid in 'Next Build' table on $page, but got" . $jsonobj['nextbuild']['buildid'];
                 $success = false;
                 break;
@@ -151,8 +150,8 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
                 $success = false;
                 break;
             }
-            if (in_array($page, $pages_with_preview_tables, true) &&
-                $jsonobj['previousbuild']['buildid'] !== $second_buildid) {
+            if (in_array($page, $pages_with_preview_tables, true)
+                && $jsonobj['previousbuild']['buildid'] !== $second_buildid) {
                 $error_msg = "Expected id=$second_buildid in 'Previous Build' table on $page, but got" . $jsonobj['previousbuild']['buildid'];
                 $success = false;
                 break;
@@ -236,7 +235,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             }
         }
         if (!$build_found) {
-            $this->fail("Could not find Didasko on 3rd day");
+            $this->fail('Could not find Didasko on 3rd day');
         }
 
         // Make sure that a build is not displayed when it does not
@@ -299,22 +298,22 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         $this->get($this->url . "/api/v1/viewBuildError.php?type=1&buildid=$second_buildid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
-        if (strpos($jsonobj['menu']['next'], "type=1") === false) {
-            $error_msg = "type=1 not found in Next link of viewBuildError.php";
+        if (strpos($jsonobj['menu']['next'], 'type=1') === false) {
+            $error_msg = 'type=1 not found in Next link of viewBuildError.php';
             $success = false;
         }
-        if (strpos($jsonobj['menu']['previous'], "type=1") === false) {
-            $error_msg = "type=1 not found in Previous link of viewBuildError.php";
+        if (strpos($jsonobj['menu']['previous'], 'type=1') === false) {
+            $error_msg = 'type=1 not found in Previous link of viewBuildError.php';
             $success = false;
         }
-        if (strpos($jsonobj['menu']['current'], "type=1") === false) {
-            $error_msg = "type=1 not found in Current link of viewBuildError.php";
+        if (strpos($jsonobj['menu']['current'], 'type=1') === false) {
+            $error_msg = 'type=1 not found in Current link of viewBuildError.php';
             $success = false;
         }
 
         // Make sure the tests from all three days are listed on queryTests.php when we
         // specify a date range.
-        $this->get($this->url . "/api/v1/queryTests.php?project=Trilinos&begin=2011-07-22&end=2011-07-24");
+        $this->get($this->url . '/api/v1/queryTests.php?project=Trilinos&begin=2011-07-22&end=2011-07-24');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $num_tests = count($jsonobj['builds']);

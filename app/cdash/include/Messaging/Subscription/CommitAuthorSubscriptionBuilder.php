@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -20,24 +21,26 @@ use ActionableBuildInterface;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Model\Subscriber;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  * Class CommitAuthorSubscriptionBuilder
- * @package CDash\Messaging\Subscription
  */
 class CommitAuthorSubscriptionBuilder implements SubscriptionBuilderInterface
 {
-    /** @var SubscriptionFactory $factory */
+    /** @var SubscriptionFactory */
     protected $factory;
 
-    /** @var ActionableBuildInterface $submission */
+    /** @var ActionableBuildInterface */
     protected $submission;
 
     /**
      * SubscriptionBuilder constructor.
-     * @param ActionableBuildInterface $submission
+     *
      * TODO: PHP 7.4 (finally) has covariant and contravariant parameters: this parameter should be
-     *   the covariant CommitAuthorHandlerInterface
+     * the covariant CommitAuthorHandlerInterface
+     *
      *   @see https://wiki.php.net/rfc/covariant-returns-and-contravariant-parameters
      */
     public function __construct(ActionableBuildInterface $submission)
@@ -46,10 +49,10 @@ class CommitAuthorSubscriptionBuilder implements SubscriptionBuilderInterface
     }
 
     /**
-     * @param SubscriptionCollection $subscriptions
      * @return void
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     *
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function build(SubscriptionCollection $subscriptions)
     {

@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\AbstractController;
 use App\Models\Password;
 use App\Models\User;
-use App\Http\Controllers\AbstractController;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -62,7 +62,6 @@ final class RegisterController extends AbstractController
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -89,7 +88,7 @@ final class RegisterController extends AbstractController
      * Create a new user instance after a valid registration.
      * Assumes that caller has already validated $data.
      */
-    public function create(array $data) : User|null
+    public function create(array $data): ?User
     {
         if (is_null($data['institution'])) {
             $data['institution'] = '';
@@ -105,10 +104,6 @@ final class RegisterController extends AbstractController
 
     /**
      * The user has been registered.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
-     * @return mixed
      */
     protected function registered(Request $request, $user)
     {
@@ -124,7 +119,7 @@ final class RegisterController extends AbstractController
     public function register(Request $request): Response|RedirectResponse
     {
         if (config('auth.user_registration_form_enabled') === false) {
-            return response("Registration via form is disabled", 404);
+            return response('Registration via form is disabled', 404);
         }
         try {
             $this->validator($request->all())->validate();

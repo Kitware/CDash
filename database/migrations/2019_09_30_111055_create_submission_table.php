@@ -29,7 +29,6 @@ class CreateSubmissionTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

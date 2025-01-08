@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -15,7 +16,7 @@
 =========================================================================*/
 
 use Illuminate\Support\Facades\Log;
-use \Psr\Log\LogLevel;
+use Psr\Log\LogLevel;
 
 if (!function_exists('to_psr3_level')) {
     function to_psr3_level($type)

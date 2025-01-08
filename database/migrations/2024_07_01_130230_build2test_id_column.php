@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -19,7 +20,7 @@ return new class extends Migration {
                 });
                 echo 'Dropped testmeasurement(testid) foreign key constraint';
                 $testmeasurement_foreign_dropped = true;
-            } catch (\Illuminate\Database\QueryException) {
+            } catch (QueryException) {
                 echo 'testmeasurement(testid) foreign key constraint does not exist.  No changes needed.';
             }
 
@@ -30,11 +31,10 @@ return new class extends Migration {
                 });
                 echo 'Dropped label2test(testid) foreign key constraint';
                 $label2test_foreign_dropped = true;
-            } catch (\Illuminate\Database\QueryException) {
+            } catch (QueryException) {
                 echo 'label2test(testid) foreign key constraint does not exist.  No changes needed.';
             }
         }
-
 
         Schema::table('build2test', function (Blueprint $table) {
             // Convert to bigint type

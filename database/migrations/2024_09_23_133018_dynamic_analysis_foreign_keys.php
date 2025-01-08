@@ -11,8 +11,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        echo "Adding foreign key constraint dynamicanalysisdefect(dynamicanalysisid)->dynamicanalysis(id)...";
-        $num_deleted = DB::delete("DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid NOT IN (SELECT id FROM dynamicanalysis)");
+        echo 'Adding foreign key constraint dynamicanalysisdefect(dynamicanalysisid)->dynamicanalysis(id)...';
+        $num_deleted = DB::delete('DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid NOT IN (SELECT id FROM dynamicanalysis)');
         echo $num_deleted . ' invalid rows deleted' . PHP_EOL;
         Schema::table('dynamicanalysisdefect', function (Blueprint $table) {
             $table->foreign('dynamicanalysisid')->references('id')->on('dynamicanalysis')->cascadeOnDelete();

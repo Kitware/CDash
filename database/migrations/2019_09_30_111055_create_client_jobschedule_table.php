@@ -36,7 +36,6 @@ class CreateClientJobscheduleTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

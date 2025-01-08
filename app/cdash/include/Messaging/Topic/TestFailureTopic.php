@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -17,31 +18,28 @@
 namespace CDash\Messaging\Topic;
 
 use App\Models\Test;
-use Illuminate\Support\Collection;
-
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
 use CDash\Model\Label;
 use CDash\Model\SubscriberInterface;
+use Illuminate\Support\Collection;
 
 /**
  * Class TestFailureTopic
- * @package CDash\Messaging\Topic
  */
 class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
 {
     use IssueTemplateTrait;
 
-    /** @var Collection $collection */
+    /** @var Collection */
     protected $collection;
 
-    /** @var array $diff */
+    /** @var array */
     protected $diff;
 
     /**
      * This method queries the build to check for failed tests
      *
-     * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)
@@ -65,7 +63,6 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
     /**
      * This method sets a build's failed tests in a Collection
      *
-     * @param Build $build
      * @return void
      */
     public function setTopicData(Build $build)
@@ -82,7 +79,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
     /**
      * This method returns the Collection containing a build's failed tests
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getTopicCollection()
     {
@@ -125,9 +122,9 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
      * This method will determine which of a Build's tests meet the criteria for adding to this
      * topic's TestCollection.
      *
-     * @param Build $build
      * @param Test $item
-     * @return boolean
+     *
+     * @return bool
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
@@ -155,8 +152,6 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
     }
 
     /**
-     * @param Build $build
-     * @param Collection $labels
      * @return void
      */
     public function setTopicDataWithLabels(Build $build, Collection $labels)
@@ -177,7 +172,6 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
     }
 
     /**
-     * @param Build $build
      * @return Collection
      */
     public function getLabelsFromBuild(Build $build)
@@ -197,7 +191,6 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
     }
 
     /**
-     * @param SubscriberInterface $subscriber
      * @return bool
      */
     public function isSubscribedToBy(SubscriberInterface $subscriber)

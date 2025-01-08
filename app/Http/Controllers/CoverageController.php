@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Models\Project as EloquentProject;
 use App\Models\User;
 use App\Utils\PageTimer;
 use App\Utils\TestingDay;
@@ -10,7 +12,6 @@ use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
-use App\Models\Project as EloquentProject;
 use CDash\Model\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -57,7 +58,7 @@ final class CoverageController extends AbstractBuildController
             $projectid = intval($projectid);
         }
 
-        $Project = new Project;
+        $Project = new Project();
 
         $buildid = 0;
         if (isset($_GET['buildid'])) {
@@ -205,7 +206,7 @@ final class CoverageController extends AbstractBuildController
 
         $db = Database::getInstance();
 
-        $sql = "SELECT * FROM project WHERE id=:id";
+        $sql = 'SELECT * FROM project WHERE id=:id';
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':id', $projectid);
         $db->execute($stmt);
@@ -248,7 +249,7 @@ final class CoverageController extends AbstractBuildController
 
             // Is the user administrator of the project
 
-            $project = \App\Models\Project::find((int) $projectid);
+            $project = EloquentProject::find((int) $projectid);
             $role = $project !== null ? $project->users()->withPivot('role')->find((int) ($user->id ?? -1))->pivot->role ?? 0 : -1;
 
             $xml .= add_XML_value('projectrole', $role);
@@ -257,7 +258,6 @@ final class CoverageController extends AbstractBuildController
         }
         return $xml;
     }
-
 
     /**
      * TODO: (williamjallen) this function contains legacy XSL templating and should be converted
@@ -484,9 +484,9 @@ final class CoverageController extends AbstractBuildController
 
             // Compute the coverage metric for bullseye.  (branch coverage without line coverage)
             if (
-                ($coveragefile_array['loctested'] == 0 && $coveragefile_array['locuntested'] == 0) &&
-                ($coveragefile_array['branchestested'] > 0 || $coveragefile_array['branchesuntested'] > 0 ||
-                    $coveragefile_array['functionstested'] > 0 || $coveragefile_array['functionsuntested'] > 0)) {
+                ($coveragefile_array['loctested'] == 0 && $coveragefile_array['locuntested'] == 0)
+                && ($coveragefile_array['branchestested'] > 0 || $coveragefile_array['branchesuntested'] > 0
+                    || $coveragefile_array['functionstested'] > 0 || $coveragefile_array['functionsuntested'] > 0)) {
                 // Metric coverage
                 $metric = 0;
                 if ($coveragefile_array['functionstested'] + $coveragefile_array['functionsuntested'] > 0) {
@@ -640,7 +640,6 @@ final class CoverageController extends AbstractBuildController
 
         $fileid = intval($_GET['fileid'] ?? 0);
 
-
         $db = Database::getInstance();
 
         $role = 0;
@@ -749,11 +748,11 @@ final class CoverageController extends AbstractBuildController
 
         /* Paging */
         if (isset($_GET['iDisplayStart']) && $_GET['iDisplayLength'] != '-1') {
-            $start = (int)($_GET['iDisplayStart'] ?? 0);
-            $end = $start + (int)($_GET['iDisplayLength'] ?? 0);
+            $start = (int) ($_GET['iDisplayStart'] ?? 0);
+            $end = $start + (int) ($_GET['iDisplayLength'] ?? 0);
         }
 
-        //add columns for branches only if(total_branchesuntested+total_branchestested)>0
+        // add columns for branches only if(total_branchesuntested+total_branchestested)>0
         $total_branchesuntested = 0;
         $total_branchestested = 0;
         $coverage_branches = $db->executePreparedSingleRow('
@@ -820,7 +819,7 @@ final class CoverageController extends AbstractBuildController
         $SQLsearchTerm = '';
         $SQLsearchTermParams = [];
         if (isset($_GET['sSearch']) && $_GET['sSearch'] != '') {
-            $SQLsearchTerm = " AND cf.fullpath LIKE ?";
+            $SQLsearchTerm = ' AND cf.fullpath LIKE ?';
             $SQLsearchTermParams[] = '%' . htmlspecialchars($_GET['sSearch']) . '%';
         }
 
@@ -871,7 +870,7 @@ final class CoverageController extends AbstractBuildController
                         ", array_merge([$this->project->Id, $this->build->Id], $SQLsearchTermParams, $limit_sql_params));
 
         // Add the coverage type
-        $status = (int)($_GET['status'] ?? -1);
+        $status = (int) ($_GET['status'] ?? -1);
 
         $covfile_array = [];
         foreach ($coveragefile as $coveragefile_array) {
@@ -892,12 +891,12 @@ final class CoverageController extends AbstractBuildController
             $covfile['loctested'] = $coveragefile_array['loctested'];
             $covfile['covered'] = 1;
             // Compute the coverage metric for bullseye (branch coverage without line coverage)
-            if (($coveragefile_array['loctested'] == 0 &&
-                    $coveragefile_array['locuntested'] == 0) &&
-                ($coveragefile_array['branchestested'] > 0 ||
-                    $coveragefile_array['branchesuntested'] > 0 ||
-                    $coveragefile_array['functionstested'] > 0 ||
-                    $coveragefile_array['functionsuntested'] > 0)) {
+            if (($coveragefile_array['loctested'] == 0
+                    && $coveragefile_array['locuntested'] == 0)
+                && ($coveragefile_array['branchestested'] > 0
+                    || $coveragefile_array['branchesuntested'] > 0
+                    || $coveragefile_array['functionstested'] > 0
+                    || $coveragefile_array['functionsuntested'] > 0)) {
                 // Metric coverage
                 $metric = 0;
                 if ($coveragefile_array['functionstested'] + $coveragefile_array['functionsuntested'] > 0) {
@@ -938,7 +937,6 @@ final class CoverageController extends AbstractBuildController
                 $covfile_array[] = $covfile;
             }
         }
-
 
         // Contruct the directory view
         if ($status === -1) {
@@ -1062,15 +1060,15 @@ final class CoverageController extends AbstractBuildController
         foreach ($covfile_array as $covfile) {
             // Show only the low coverage
             if (isset($covfile['directory'])) {
-                $filestatus = -1; //no
+                $filestatus = -1; // no
             } elseif ($covfile['covered'] == 0) {
-                $filestatus = 0; //no
+                $filestatus = 0; // no
             } elseif ($covfile['covered'] == 1 && $covfile['percentcoverage'] == 0.0) {
-                $filestatus = 1; //zero
-            } elseif (($covfile['covered'] == 1 && $covfile['coveragemetric'] < $_GET['metricerror'])) {
-                $filestatus = 2; //low
+                $filestatus = 1; // zero
+            } elseif ($covfile['covered'] == 1 && $covfile['coveragemetric'] < $_GET['metricerror']) {
+                $filestatus = 2; // low
             } elseif ($covfile['covered'] == 1 && $covfile['coveragemetric'] == 1.0) {
-                $filestatus = 5; //complete
+                $filestatus = 5; // complete
             } elseif ($covfile['covered'] == 1 && $covfile['coveragemetric'] >= $_GET['metricpass']) {
                 $filestatus = 4; // satisfactory
             } else {
@@ -1094,21 +1092,21 @@ final class CoverageController extends AbstractBuildController
             $roundedpercentage = round($covfile['percentcoverage']);
             if ($roundedpercentage > 98) {
                 $roundedpercentage = 98;
-            };
+            }
 
             // For display branch purposes
             if ($coveragetype == 'gcov') {
                 $roundedpercentage2 = round($covfile['branchpercentcoverage']);
                 if ($roundedpercentage2 > 98) {
                     $roundedpercentage2 = 98;
-                };
+                }
             }
 
             $row = [];
 
             // First column (Filename)
             if ($status == -1) {
-                //directory view
+                // directory view
 
                 $row[] = '<a class="cdash-link" href="viewCoverage.php?buildid=' . $this->build->Id . '&#38;status=6&#38;dir=' . $covfile['fullpath'] . '">' . $covfile['fullpath'] . '</a>';
             } elseif (!$covfile['covered'] || !($this->project->ShowCoverageCode || $role >= Project::PROJECT_ADMIN)) {
@@ -1143,10 +1141,10 @@ final class CoverageController extends AbstractBuildController
                         $row[] = 'N/A'; // No coverage
                     } elseif ($covfile['covered'] == 1 && $covfile['percentcoverage'] == 0.0) {
                         $row[] = 'Zero'; // zero
-                    } elseif (($covfile['covered'] == 1 && $covfile['coveragemetric'] < $_GET['metricerror'])) {
+                    } elseif ($covfile['covered'] == 1 && $covfile['coveragemetric'] < $_GET['metricerror']) {
                         $row[] = 'Low'; // low
                     } elseif ($covfile['covered'] == 1 && $covfile['coveragemetric'] == 1.0) {
-                        $row[] = 'Complete'; //complete
+                        $row[] = 'Complete'; // complete
                     } elseif ($covfile['covered'] == 1 && $covfile['coveragemetric'] >= $_GET['metricpass']) {
                         $row[] = 'Satisfactory'; // satisfactory
                     } else {
@@ -1181,10 +1179,10 @@ final class CoverageController extends AbstractBuildController
                     break;
                 case 6:
                 case -1:
-                    if (($covfile['coveragemetric'] < $_GET['metricerror'])) {
-                        $thirdcolumn .= '"error"'; //low
+                    if ($covfile['coveragemetric'] < $_GET['metricerror']) {
+                        $thirdcolumn .= '"error"'; // low
                     } elseif ($covfile['coveragemetric'] == 1.0) {
-                        $thirdcolumn .= '"normal"'; //complete
+                        $thirdcolumn .= '"normal"'; // complete
                     } elseif ($covfile['coveragemetric'] >= $_GET['metricpass']) {
                         $thirdcolumn .= '"normal"'; // satisfactory
                     } else {
@@ -1228,10 +1226,10 @@ final class CoverageController extends AbstractBuildController
                             break;
                         case 6:
                         case -1:
-                            if (($covfile['coveragemetric'] < $_GET['metricerror'])) {
-                                $fourthcolumn .= ' class="error">'; //low
+                            if ($covfile['coveragemetric'] < $_GET['metricerror']) {
+                                $fourthcolumn .= ' class="error">'; // low
                             } elseif ($covfile['coveragemetric'] == 1.0) {
-                                $fourthcolumn .= ' class="normal">'; //complete
+                                $fourthcolumn .= ' class="normal">'; // complete
                             } elseif ($covfile['coveragemetric'] >= $_GET['metricpass']) {
                                 $fourthcolumn .= ' class="normal">'; // satisfactory
                             } else {
@@ -1272,10 +1270,10 @@ final class CoverageController extends AbstractBuildController
                             break;
                         case 6:
                         case -1:
-                            if (($covfile['coveragemetric'] < $_GET['metricerror'])) {
-                                $fourthcolumn .= ' class="error">'; //low
+                            if ($covfile['coveragemetric'] < $_GET['metricerror']) {
+                                $fourthcolumn .= ' class="error">'; // low
                             } elseif ($covfile['coveragemetric'] == 1.0) {
-                                $fourthcolumn .= ' class="normal">'; //complete
+                                $fourthcolumn .= ' class="normal">'; // complete
                             } elseif ($covfile['coveragemetric'] >= $_GET['metricpass']) {
                                 $fourthcolumn .= ' class="normal">'; // satisfactory
                             } else {
@@ -1289,7 +1287,7 @@ final class CoverageController extends AbstractBuildController
                 $row[] = $fourthcolumn;
 
                 $fourthcolumn2 = '<span';
-                //functions
+                // functions
                 if ($covfile['covered'] == 0) {
                     $fourthcolumn2 .= ' class="error">0</span>';
                 } else {
@@ -1316,10 +1314,10 @@ final class CoverageController extends AbstractBuildController
                             break;
                         case 6:
                         case -1:
-                            if (($covfile['coveragemetric'] < $_GET['metricerror'])) {
-                                $fourthcolumn2 .= ' class="error">'; //low
+                            if ($covfile['coveragemetric'] < $_GET['metricerror']) {
+                                $fourthcolumn2 .= ' class="error">'; // low
                             } elseif ($covfile['coveragemetric'] == 1.0) {
-                                $fourthcolumn2 .= ' class="normal">'; //complete
+                                $fourthcolumn2 .= ' class="normal">'; // complete
                             } elseif ($covfile['coveragemetric'] >= $_GET['metricpass']) {
                                 $fourthcolumn2 .= ' class="normal">'; // satisfactory
                             } else {
@@ -1337,7 +1335,7 @@ final class CoverageController extends AbstractBuildController
                 $row[] = $fourthcolumn;
             }
 
-            //Next column (Branch Percentage)
+            // Next column (Branch Percentage)
             if ($coveragetype === 'gcov' && ($total_branchestested + $total_branchesuntested) > 0) {
                 $nextcolumn = '<div style="position:relative; width: 190px;">
                    <div style="position:relative; float:left;
@@ -1364,10 +1362,10 @@ final class CoverageController extends AbstractBuildController
                         break;
                     case 6:
                     case -1:
-                        if (($covfile['branchcoveragemetric'] < $_GET['metricerror'])) {
-                            $nextcolumn .= '"error"'; //low
+                        if ($covfile['branchcoveragemetric'] < $_GET['metricerror']) {
+                            $nextcolumn .= '"error"'; // low
                         } elseif ($covfile['branchcoveragemetric'] == 1.0) {
-                            $nextcolumn .= '"normal"'; //complete
+                            $nextcolumn .= '"normal"'; // complete
                         } elseif ($covfile['branchcoveragemetric'] >= $_GET['metricpass']) {
                             $nextcolumn .= '"normal"'; // satisfactory
                         } else {
@@ -1410,10 +1408,10 @@ final class CoverageController extends AbstractBuildController
                             break;
                         case 6:
                         case -1:
-                            if (($covfile['branchcoveragemetric'] < $_GET['metricerror'])) {
-                                $nextcolumn2 .= ' class="error">'; //low
+                            if ($covfile['branchcoveragemetric'] < $_GET['metricerror']) {
+                                $nextcolumn2 .= ' class="error">'; // low
                             } elseif ($covfile['branchcoveragemetric'] == 1.0) {
-                                $nextcolumn2 .= ' class="normal">'; //complete
+                                $nextcolumn2 .= ' class="normal">'; // complete
                             } elseif ($covfile['branchcoveragemetric'] >= $_GET['metricpass']) {
                                 $nextcolumn2 .= ' class="normal">'; // satisfactory
                             } else {
@@ -1772,7 +1770,7 @@ final class CoverageController extends AbstractBuildController
                         foreach ($coveragegroups[$group['id']]['coverages'] as $key => $subproject_response) {
                             if ($subproject_response['label'] == $coverage['label']) {
                                 $coveragegroups[$group['id']]['coverages'][$key] =
-                                    self::apiCompareCoverage_populate_subproject($coveragegroups[$group['id']]['coverages'][$key], 'build'.$buildid, $coverage);
+                                    self::apiCompareCoverage_populate_subproject($coveragegroups[$group['id']]['coverages'][$key], 'build' . $buildid, $coverage);
                                 break;
                             }
                         }
@@ -1786,7 +1784,7 @@ final class CoverageController extends AbstractBuildController
                     // Find this subproject in the response
                     foreach ($coverages as $key => $subproject_response) {
                         if ($subproject_response['label'] == $coverage['label']) {
-                            $coverages[$key] = self::apiCompareCoverage_populate_subproject($subproject_response, 'build'.$buildid, $coverage);
+                            $coverages[$key] = self::apiCompareCoverage_populate_subproject($subproject_response, 'build' . $buildid, $coverage);
                             break;
                         }
                     }
@@ -1820,6 +1818,7 @@ final class CoverageController extends AbstractBuildController
     /**
      * @param array<string,mixed> $coverage
      * @param array<string,mixed> $builds
+     *
      * @return array<string,mixed>
      */
     private static function apiCompareCoverage_create_subproject(array $coverage, array $builds): array
@@ -1836,18 +1835,19 @@ final class CoverageController extends AbstractBuildController
     /**
      * @param array<string,mixed> $subproject
      * @param array<string,mixed> $coverage
+     *
      * @return array<string,mixed>
      */
     private static function apiCompareCoverage_populate_subproject(array $subproject, string $key, array $coverage): array
     {
         $subproject[$key] = $coverage['percentage'];
-        $subproject[$key.'id'] = $coverage['buildid'];
+        $subproject[$key . 'id'] = $coverage['buildid'];
         if (array_key_exists('percentagediff', $coverage)) {
             $percentagediff = $coverage['percentagediff'];
         } else {
             $percentagediff = null;
         }
-        $subproject[$key.'percentagediff'] = $percentagediff;
+        $subproject[$key . 'percentagediff'] = $percentagediff;
         return $subproject;
     }
 
@@ -1888,6 +1888,7 @@ final class CoverageController extends AbstractBuildController
     /**
      * @param array<string,mixed> $build_data
      * @param array<string,mixed> $subproject_groups
+     *
      * @return array<string,mixed>
      */
     private static function apiCompareCoverage_get_coverage(array $build_data, array $subproject_groups): array
@@ -1985,7 +1986,7 @@ final class CoverageController extends AbstractBuildController
     /**
      * @return array<string,mixed>
      */
-    private static function apiCompareCoverage_get_build_data(int|null $parentid, int $projectid, string $beginning_UTCDate, string $end_UTCDate, string $filter_sql=''): array
+    private static function apiCompareCoverage_get_build_data(?int $parentid, int $projectid, string $beginning_UTCDate, string $end_UTCDate, string $filter_sql = ''): array
     {
         $query_params = [];
         if ($parentid !== null) {
@@ -1997,7 +1998,7 @@ final class CoverageController extends AbstractBuildController
         } else {
             // Only show builds that are not children.
             $parent_clause = 'AND (b.parentid = -1 OR b.parentid = 0)';
-            $date_clause = "AND b.starttime < ? AND b.starttime >= ?";
+            $date_clause = 'AND b.starttime < ? AND b.starttime >= ?';
             $query_params[] = $end_UTCDate;
             $query_params[] = $beginning_UTCDate;
         }

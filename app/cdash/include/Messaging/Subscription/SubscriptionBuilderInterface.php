@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -21,13 +22,11 @@ use ActionableBuildInterface;
 interface SubscriptionBuilderInterface
 {
     /**
-     * @param ActionableBuildInterface $submission
      * @return void
      */
     public function __construct(ActionableBuildInterface $submission);
 
     /**
-     * @param SubscriptionCollection $subscriptions
      * @return void
      */
     public function build(SubscriptionCollection $subscriptions);

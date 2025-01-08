@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -142,7 +143,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
                     // Get the path of this uncovered file relative to its
                     // source directory.
                     $relativePath =
-                        str_replace("$dirName/uncovered/", "./", $fileinfo);
+                        str_replace("$dirName/uncovered/", './', $fileinfo);
                     $this->ParseUncoveredSourceFile($fileinfo, $relativePath);
                 }
             }
@@ -194,8 +195,8 @@ class GcovTarHandler extends AbstractSubmissionHandler
 
         // Check if this file belongs to a different SubProject.
         $buildid = $this->Build->Id;
-        if (!empty($this->SubProjectPath) &&
-            strpos($path, $this->SubProjectPath) === false
+        if (!empty($this->SubProjectPath)
+            && strpos($path, $this->SubProjectPath) === false
         ) {
             // Find the SubProject that corresponds to this path.
             $subproject = SubProject::GetSubProjectFromPath($path, $this->Project->Id);
@@ -233,8 +234,8 @@ class GcovTarHandler extends AbstractSubmissionHandler
         } else {
             // If this source file isn't from the source or binary directory
             // we shouldn't include it in our coverage report.
-            if (!empty($this->SubProjectPath) &&
-                    strpos($path, $this->SubProjectPath) !== false) {
+            if (!empty($this->SubProjectPath)
+                    && strpos($path, $this->SubProjectPath) !== false) {
                 $path = substr($path, strpos($path, $this->SubProjectPath));
                 $path =
                     substr_replace($path, '.', 0, strlen($this->SubProjectPath));
@@ -268,8 +269,8 @@ class GcovTarHandler extends AbstractSubmissionHandler
         //   #include "src/../include/foo.h"
         // CDash will report the covered file as include/foo.h
         $pattern = "#/[^/]*?/\.\./#";
-        while (strpos($path, "/../") !== false) {
-            $path = preg_replace($pattern, "/", $path, 1);
+        while (strpos($path, '/../') !== false) {
+            $path = preg_replace($pattern, '/', $path, 1);
         }
 
         $coverageFile->FullPath = trim($path);
@@ -291,7 +292,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
                 $lineNumber = (int) trim($fields[1]);
                 $sourceLine = rtrim($fields[2]);
 
-                //check for duplicate line output
+                // check for duplicate line output
                 if ($lineNumber <= $last_lineNumber) {
                     $file->next();
                     continue;
@@ -314,7 +315,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
                     $timesHit = 0;
                 }
 
-                //save last inserted line number
+                // save last inserted line number
                 $last_lineNumber = $lineNumber;
                 $coverageFileLog->AddLine($lineNumber - 1, $timesHit);
                 $file->next();
@@ -333,16 +334,16 @@ class GcovTarHandler extends AbstractSubmissionHandler
                     if (substr($gcovLine, 0, 6) === 'branch') {
                         // Figure out whether this branch was covered or not.
                         if (strpos($gcovLine, 'taken 0%') !== false) {
-                            $uncoveredBranches += 1;
+                            $uncoveredBranches++;
                         } else {
-                            $coveredBranches += 1;
+                            $coveredBranches++;
                         }
 
                         // Also keep track of the different types of branches encountered.
                         if (strpos($gcovLine, '(throw)') !== false) {
-                            $throwBranches += 1;
+                            $throwBranches++;
                         } elseif (strpos($gcovLine, '(fallthrough)') !== false) {
-                            $fallthroughBranches += 1;
+                            $fallthroughBranches++;
                         }
                     }
 
@@ -354,8 +355,8 @@ class GcovTarHandler extends AbstractSubmissionHandler
                 // Don't report branch coverage for this line if we only
                 // encountered (throw) and (fallthrough) branches here.
                 $totalBranches = $coveredBranches + $uncoveredBranches;
-                if ($totalBranches > 0 &&
-                    $totalBranches > ($throwBranches + $fallthroughBranches)
+                if ($totalBranches > 0
+                    && $totalBranches > ($throwBranches + $fallthroughBranches)
                 ) {
                     $coverageFileLog->AddBranch($lineNumber - 1, $coveredBranches,
                         $totalBranches);

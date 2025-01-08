@@ -16,11 +16,10 @@ class CreateClientJobschedule2compilerTable extends Migration
             Schema::create('client_jobschedule2compiler', function (Blueprint $table) {
                 $table->bigInteger('scheduleid');
                 $table->integer('compilerid');
-                $table->unique(['scheduleid','compilerid'], 'client_jobschedule2compiler_scheduleid');
+                $table->unique(['scheduleid', 'compilerid'], 'client_jobschedule2compiler_scheduleid');
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

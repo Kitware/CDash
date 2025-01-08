@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,12 +14,12 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
-use App\Utils\RepositoryUtils;
-
-use PDO;
 use App\Models\BasicBuildAlert;
+use App\Utils\RepositoryUtils;
+use PDO;
 
 /** BuildError */
 class BuildError

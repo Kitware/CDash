@@ -15,12 +15,12 @@ class FilterTest extends TestCase
     use CreatesUsers;
 
     /**
-     * @var array<Project> $projects
+     * @var array<Project>
      */
     private array $projects;
 
     /**
-     * @var array<User> $users
+     * @var array<User>
      */
     private array $users;
 
@@ -259,7 +259,7 @@ class FilterTest extends TestCase
 
     public function testEnumFiltering(): void
     {
-        $this->actingAs($this->users['admin'])->graphQL("
+        $this->actingAs($this->users['admin'])->graphQL('
             query {
                 projects(filters: {
                     eq: {
@@ -274,7 +274,7 @@ class FilterTest extends TestCase
                     }
                 }
             }
-        ")->assertJson([
+        ')->assertJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -298,7 +298,7 @@ class FilterTest extends TestCase
 
     public function testFilterByAttributeNotInQuery(): void
     {
-        $this->actingAs($this->users['admin'])->graphQL("
+        $this->actingAs($this->users['admin'])->graphQL('
             query {
                 projects(filters: {
                     eq: {
@@ -312,7 +312,7 @@ class FilterTest extends TestCase
                     }
                 }
             }
-        ")->assertJson([
+        ')->assertJson([
             'data' => [
                 'projects' => [
                     'edges' => [

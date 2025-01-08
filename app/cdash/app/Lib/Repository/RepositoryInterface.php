@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =========================================================================
  *   Program:   CDash - Cross-Platform Dashboard System
@@ -21,5 +22,5 @@ interface RepositoryInterface
     /**
      * @param array<string, string> $options
      */
-    public function setStatus(array $options) : void;
+    public function setStatus(array $options): void;
 }

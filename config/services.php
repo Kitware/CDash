@@ -1,7 +1,8 @@
 <?php
 
-return [
+use App\Models\User;
 
+return [
     /*
     |--------------------------------------------------------------------------
     | Third Party Services
@@ -16,7 +17,7 @@ return [
     'github' => [
         'client_id' => env('GITHUB_CLIENT_ID'),
         'client_secret' => env('GITHUB_CLIENT_SECRET'),
-        'redirect' => env('APP_URL').'/auth/github/callback',
+        'redirect' => env('APP_URL') . '/auth/github/callback',
         'enable' => env('GITHUB_ENABLE', false),
         'autoregister' => env('GITHUB_AUTO_REGISTER_NEW_USERS', false),
         'oauth' => true,
@@ -25,7 +26,7 @@ return [
     'gitlab' => [
         'client_id' => env('GITLAB_CLIENT_ID'),
         'client_secret' => env('GITLAB_CLIENT_SECRET'),
-        'redirect' => env('APP_URL').'/auth/gitlab/callback',
+        'redirect' => env('APP_URL') . '/auth/gitlab/callback',
         'instance_uri' => env('GITLAB_DOMAIN'),
         'enable' => env('GITLAB_ENABLE', false),
         'autoregister' => env('GITLAB_AUTO_REGISTER_NEW_USERS', false),
@@ -37,7 +38,7 @@ return [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'hosted_domain' => '*',
-        'redirect' => env('APP_URL').'/auth/google/callback',
+        'redirect' => env('APP_URL') . '/auth/google/callback',
         'enable' => env('GOOGLE_ENABLE', false),
         'autoregister' => env('GOOGLE_AUTO_REGISTER_NEW_USERS', false),
         'oauth' => true,
@@ -47,11 +48,11 @@ return [
     'pingidentity' => [
         'client_id' => env('PINGIDENTITY_CLIENT_ID'),
         'client_secret' => env('PINGIDENTITY_CLIENT_SECRET'),
-        'redirect' => env('APP_URL').'/auth/pingidentity/callback',
+        'redirect' => env('APP_URL') . '/auth/pingidentity/callback',
         'instance_uri' => env('PINGIDENTITY_DOMAIN'),
         'auth_endpoint' => env('PINGIDENTITY_AUTH_ENDPOINT', '/as/authorization.oauth2'),
-        'token_endpoint'=> env('PINGIDENTITY_TOKEN_ENDPOINT', '/as/token.oauth2'),
-        'user_endpoint'=> env('PINGIDENTITY_USER_ENDPOINT', '/idp/userinfo.openid'),
+        'token_endpoint' => env('PINGIDENTITY_TOKEN_ENDPOINT', '/as/token.oauth2'),
+        'user_endpoint' => env('PINGIDENTITY_USER_ENDPOINT', '/idp/userinfo.openid'),
         'enable' => env('PINGIDENTITY_ENABLE', false),
         'autoregister' => env('PINGIDENTITY_AUTO_REGISTER_NEW_USERS', false),
         'oauth' => true,
@@ -75,7 +76,7 @@ return [
     ],
 
     'stripe' => [
-        'model' => App\Models\User::class,
+        'model' => User::class,
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
         'webhook' => [
@@ -83,5 +84,4 @@ return [
             'tolerance' => env('STRIPE_WEBHOOK_TOLERANCE', 300),
         ],
     ],
-
 ];

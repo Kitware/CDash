@@ -340,7 +340,7 @@ final class SiteController extends AbstractController
 
         $xml = begin_XML_for_XSLT();
 
-        $projectid =  (int) ($_GET['project'] ?? 0);
+        $projectid = (int) ($_GET['project'] ?? 0);
 
         if ($projectid > 0) {
             $project = new Project();
@@ -377,7 +377,7 @@ final class SiteController extends AbstractController
 
         $processor_clock_frequency = $siteinformation?->processorclockfrequency;
         if ($processor_clock_frequency !== null) {
-            $processor_clock_frequency = getByteValueWithExtension($processor_clock_frequency * 10**6, 1000) . 'Hz';
+            $processor_clock_frequency = getByteValueWithExtension($processor_clock_frequency * 10 ** 6, 1000) . 'Hz';
         }
 
         $xml .= add_XML_value('googlemapkey', $apikey);
@@ -407,14 +407,14 @@ final class SiteController extends AbstractController
         $xml .= '</site>';
 
         // List the claimers of the site
-        $siteclaimer = $db->executePrepared("
+        $siteclaimer = $db->executePrepared('
                            SELECT u.firstname, u.lastname, u.email
                            FROM users as u, site2user
                            WHERE
                                u.id=site2user.userid
                                AND site2user.siteid=?
                            ORDER BY firstname
-                       ", [$siteid]);
+                       ', [$siteid]);
         foreach ($siteclaimer as $sc) {
             $xml .= '<claimer>';
             $xml .= add_XML_value('firstname', $sc['firstname']);
@@ -519,11 +519,11 @@ final class SiteController extends AbstractController
             foreach ($projects as $projectid) {
                 // TODO: (williamjallen) Optimize this loop to execute a constant number of queries
 
-                $user2project = $db->executePrepared("SELECT role FROM user2project WHERE projectid=? and role>0", [$projectid]);
+                $user2project = $db->executePrepared('SELECT role FROM user2project WHERE projectid=? and role>0', [$projectid]);
                 if (count($user2project) > 0) {
                     $xml .= add_XML_value('sitemanager', '1');
 
-                    $user2site = $db->executePrepared("SELECT * FROM site2user WHERE siteid=? and userid=?",
+                    $user2site = $db->executePrepared('SELECT * FROM site2user WHERE siteid=? and userid=?',
                         [$siteid, $userid]);
                     if (count($user2site) == 0) {
                         $xml .= add_XML_value('siteclaimed', '0');
@@ -579,7 +579,7 @@ final class SiteController extends AbstractController
         $ip,
         $latitude,
         $longitude,
-        bool $outoforder = false
+        bool $outoforder = false,
     ): void {
         // Update the basic information first
         $site = Site::findOrFail($siteid);

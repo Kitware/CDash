@@ -1,4 +1,5 @@
 <?php
+
 use CDash\Middleware\Queue\DriverFactory as Driver;
 
 $queue_config = [

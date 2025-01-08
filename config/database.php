@@ -1,7 +1,8 @@
 <?php
 
-return [
+use Illuminate\Database\DBAL\TimestampType;
 
+return [
     /*
     |--------------------------------------------------------------------------
     | Default Database Connection Name
@@ -32,7 +33,6 @@ return [
     */
 
     'connections' => [
-
         'sqlite' => [
             'driver' => 'sqlite',
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
@@ -81,7 +81,6 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
-
     ],
 
     /*
@@ -97,13 +96,13 @@ return [
 
     'migrations' => 'migrations',
 
-    /**
+    /*
      * See this issue for information about why this is necessary:
      * - https://github.com/laravel/framework/issues/16526
      */
     'dbal' => [
         'types' => [
-            'timestamp' => \Illuminate\Database\DBAL\TimestampType::class,
+            'timestamp' => TimestampType::class,
         ],
     ],
 ];

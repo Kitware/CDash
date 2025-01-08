@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,6 +14,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 use CDash\Database;
@@ -231,7 +233,7 @@ class BuildUpdate
             abort(500, 'BuildUpdate::GetUpdateStatusForBuild(): BuildId not set');
         }
 
-        $sql = "
+        $sql = '
             SELECT
                 A.*,
                 B.buildid
@@ -240,7 +242,7 @@ class BuildUpdate
                 build2update B
             WHERE B.updateid=A.id
               AND B.buildid=:buildid
-        ";
+        ';
 
         $query = $this->PDO->prepare($sql);
         $query->bindParam(':buildid', $this->BuildId);
@@ -403,9 +405,9 @@ class BuildUpdate
 
         // Get updated files too.
         $stmt = $this->PDO->prepare(
-            "SELECT uf.* FROM updatefile uf
+            'SELECT uf.* FROM updatefile uf
             JOIN build2update b2u ON uf.updateid = b2u.updateid
-            WHERE b2u.buildid = ?");
+            WHERE b2u.buildid = ?');
         pdo_execute($stmt, [$this->BuildId]);
         while ($row = $stmt->fetch()) {
             $file = new BuildUpdateFile();

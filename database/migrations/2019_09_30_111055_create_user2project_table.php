@@ -22,11 +22,10 @@ class CreateUser2projectTable extends Migration
                 $table->tinyInteger('emailcategory')->default(62);
                 $table->tinyInteger('emailsuccess')->default(0)->index();
                 $table->tinyInteger('emailmissingsites')->default(0)->index();
-                $table->primary(['userid','projectid']);
+                $table->primary(['userid', 'projectid']);
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -14,9 +15,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-
-
-
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
@@ -25,13 +23,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 /**
- *
  * XHR post/put/delete data not available through the traditional
  * $_POST global, this method pulls that data straight from the
  * php://input stream.
  *
  * @return void
- *
  */
 function init_api_request()
 {
@@ -98,6 +94,7 @@ function can_administrate_project($projectid)
  * Get the named parameter from the request.
  *
  * @param bool $required
+ *
  * @return string
  */
 function get_param($name, $required = true)
@@ -119,13 +116,14 @@ function get_int_param($name, $required = true)
     if ($required && !is_numeric($value)) {
         abort(400, "Valid $name required");
     }
-    return (int)$value;
+    return (int) $value;
 }
 
 /**
  * Pulls the buildid from the request
  *
  * @param bool $required
+ *
  * @return int
  */
 function get_request_build_id($required = true)
@@ -171,6 +169,7 @@ function just_get_project_from_request()
  * necessary access to the project
  *
  * @param bool $required
+ *
  * @return Build|null
  */
 function get_request_build($required = true)

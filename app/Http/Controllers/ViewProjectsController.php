@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use CDash\Controller\Api\ViewProjects;
 use CDash\Database;
 use CDash\Model\Project;
 use Illuminate\Http\JsonResponse;
@@ -32,13 +34,13 @@ final class ViewProjectsController extends AbstractController
             return $this->redirectToLogin();
         }
 
-        return $this->view("project.view-all-projects")
+        return $this->view('project.view-all-projects')
             ->with('show_all', $all);
     }
 
     public function fetchPageContent(): JsonResponse
     {
-        $controller = new \CDash\Controller\Api\ViewProjects(Database::getInstance());
+        $controller = new ViewProjects(Database::getInstance());
         return response()->json(cast_data_for_JSON($controller->getResponse()));
     }
 }

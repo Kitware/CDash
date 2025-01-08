@@ -23,7 +23,6 @@ class CreateUploadfileTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

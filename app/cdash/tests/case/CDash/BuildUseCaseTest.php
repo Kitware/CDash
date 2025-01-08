@@ -1,5 +1,6 @@
 <?php
 
+use CDash\Collection\BuildCollection;
 use CDash\Model\Build;
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\BuildUseCase;
@@ -43,7 +44,7 @@ class BuildUseCaseTest extends CDashUseCaseTestCase
         $handler = $sut->build();
         $this->assertInstanceOf(BuildHandler::class, $handler);
 
-        /** @var \CDash\Collection\BuildCollection $builds */
+        /** @var BuildCollection $builds */
         $builds = $handler->GetBuildCollection();
         $this->assertCount(4, $builds);
 

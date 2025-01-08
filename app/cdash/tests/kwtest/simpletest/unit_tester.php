@@ -1,6 +1,8 @@
 <?php
+
 /**
  *  base include file for SimpleTest
+ *
  * @version    $Id$
  */
 
@@ -21,8 +23,9 @@ class UnitTestCase extends SimpleTestCase
     /**
      *    Creates an empty test case. Should be subclassed
      *    with test methods for a functional test case.
+     *
      * @param string $label Name of test case. Will use
-     *                             the class name if none specified.
+     *                      the class name if none specified.
      */
     public function __construct($label = false)
     {
@@ -35,10 +38,12 @@ class UnitTestCase extends SimpleTestCase
     /**
      *    Called from within the test methods to register
      *    passes and failures.
-     * @param bool $result Pass on true.
-     * @param string $message Message to display describing
-     *                              the test state.
-     * @return bool           True on pass
+     *
+     * @param bool $result pass on true
+     * @param string $message message to display describing
+     *                        the test state
+     *
+     * @return bool True on pass
      */
     public function assertTrue($result, $message = '%s')
     {
@@ -50,9 +55,11 @@ class UnitTestCase extends SimpleTestCase
      *    is the PHP definition of false, so that null,
      *    empty strings, zero and an empty array all count
      *    as false.
-     * @param bool $result Pass on false.
-     * @param string $message Message to display.
-     * @return bool           True on pass
+     *
+     * @param bool $result pass on false
+     * @param string $message message to display
+     *
+     * @return bool True on pass
      */
     public function assertFalse($result, $message = '%s')
     {
@@ -61,9 +68,11 @@ class UnitTestCase extends SimpleTestCase
 
     /**
      *    Will be true if the value is null.
-     * @param null $value Supposedly null value.
-     * @param string $message Message to display.
-     * @return bool                        True on pass
+     *
+     * @param null $value supposedly null value
+     * @param string $message message to display
+     *
+     * @return bool True on pass
      */
     public function assertNull($value, $message = '%s')
     {
@@ -76,9 +85,11 @@ class UnitTestCase extends SimpleTestCase
 
     /**
      *    Will be true if the value is set.
-     * @param mixed $value Supposedly set value.
-     * @param string $message Message to display.
-     * @return bool               True on pass.
+     *
+     * @param mixed $value supposedly set value
+     * @param string $message message to display
+     *
+     * @return bool true on pass
      */
     public function assertNotNull($value, $message = '%s')
     {
@@ -93,10 +104,12 @@ class UnitTestCase extends SimpleTestCase
      *    Type and class test. Will pass if class
      *    matches the type name or is a subclass or
      *    if not an object, but the type is correct.
-     * @param mixed $object Object to test.
-     * @param string $type Type name as string.
-     * @param string $message Message to display.
-     * @return bool              True on pass.
+     *
+     * @param mixed $object object to test
+     * @param string $type type name as string
+     * @param string $message message to display
+     *
+     * @return bool true on pass
      */
     public function assertIsA($object, $type, $message = '%s')
     {
@@ -110,10 +123,12 @@ class UnitTestCase extends SimpleTestCase
      *    Type and class mismatch test. Will pass if class
      *    name or underling type does not match the one
      *    specified.
-     * @param mixed $object Object to test.
-     * @param string $type Type name as string.
-     * @param string $message Message to display.
-     * @return bool              True on pass.
+     *
+     * @param mixed $object object to test
+     * @param string $type type name as string
+     * @param string $message message to display
+     *
+     * @return bool true on pass
      */
     public function assertNotA($object, $type, $message = '%s')
     {
@@ -126,10 +141,12 @@ class UnitTestCase extends SimpleTestCase
     /**
      *    Will trigger a pass if the two parameters have
      *    the same value only. Otherwise a fail.
-     * @param mixed $first Value to compare.
-     * @param mixed $second Value to compare.
-     * @param string $message Message to display.
-     * @return bool              True on pass
+     *
+     * @param mixed $first value to compare
+     * @param mixed $second value to compare
+     * @param string $message message to display
+     *
+     * @return bool True on pass
      */
     public function assertEqual($first, $second, $message = '%s')
     {
@@ -142,10 +159,12 @@ class UnitTestCase extends SimpleTestCase
     /**
      *    Will trigger a pass if the two parameters have
      *    a different value. Otherwise a fail.
-     * @param mixed $first Value to compare.
-     * @param mixed $second Value to compare.
-     * @param string $message Message to display.
-     * @return bool               True on pass
+     *
+     * @param mixed $first value to compare
+     * @param mixed $second value to compare
+     * @param string $message message to display
+     *
+     * @return bool True on pass
      */
     public function assertNotEqual($first, $second, $message = '%s')
     {
@@ -158,11 +177,13 @@ class UnitTestCase extends SimpleTestCase
     /**
      *    Will trigger a pass if the if the first parameter
      *    is near enough to the second by the margin.
-     * @param mixed $first Value to compare.
-     * @param mixed $second Value to compare.
-     * @param mixed $margin Fuzziness of match.
-     * @param string $message Message to display.
-     * @return bool              True on pass
+     *
+     * @param mixed $first value to compare
+     * @param mixed $second value to compare
+     * @param mixed $margin fuzziness of match
+     * @param string $message message to display
+     *
+     * @return bool True on pass
      */
     public function assertWithinMargin($first, $second, $margin, $message = '%s')
     {
@@ -175,11 +196,13 @@ class UnitTestCase extends SimpleTestCase
     /**
      *    Will trigger a pass if the two parameters differ
      *    by more than the margin.
-     * @param mixed $first Value to compare.
-     * @param mixed $second Value to compare.
-     * @param mixed $margin Fuzziness of match.
-     * @param string $message Message to display.
-     * @return bool              True on pass
+     *
+     * @param mixed $first value to compare
+     * @param mixed $second value to compare
+     * @param mixed $margin fuzziness of match
+     * @param string $message message to display
+     *
+     * @return bool True on pass
      */
     public function assertOutsideMargin($first, $second, $margin, $message = '%s')
     {
@@ -192,10 +215,12 @@ class UnitTestCase extends SimpleTestCase
     /**
      *    Will trigger a pass if the two parameters have
      *    the same value and same type. Otherwise a fail.
-     * @param mixed $first Value to compare.
-     * @param mixed $second Value to compare.
-     * @param string $message Message to display.
-     * @return bool               True on pass
+     *
+     * @param mixed $first value to compare
+     * @param mixed $second value to compare
+     * @param string $message message to display
+     *
+     * @return bool True on pass
      */
     public function assertIdentical($first, $second, $message = '%s')
     {
@@ -208,10 +233,12 @@ class UnitTestCase extends SimpleTestCase
     /**
      *    Will trigger a pass if the two parameters have
      *    the different value or different type.
-     * @param mixed $first Value to compare.
-     * @param mixed $second Value to compare.
-     * @param string $message Message to display.
-     * @return bool               True on pass
+     *
+     * @param mixed $first value to compare
+     * @param mixed $second value to compare
+     * @param string $message message to display
+     *
+     * @return bool True on pass
      */
     public function assertNotIdentical($first, $second, $message = '%s')
     {
@@ -227,10 +254,12 @@ class UnitTestCase extends SimpleTestCase
      *    This will cause problems testing objects under
      *    E_STRICT.
      *    TODO: Replace with expectation.
-     * @param mixed $first Reference to check.
-     * @param mixed $second Hopefully the same variable.
-     * @param string $message Message to display.
-     * @return bool               True on pass
+     *
+     * @param mixed $first reference to check
+     * @param mixed $second hopefully the same variable
+     * @param string $message message to display
+     *
+     * @return bool True on pass
      */
     public function assertReference(&$first, &$second, $message = '%s')
     {
@@ -252,10 +281,12 @@ class UnitTestCase extends SimpleTestCase
      *    That is, if values are passed in it has roughly
      *    the same affect as assertIdentical.
      *    TODO: Replace with expectation.
-     * @param mixed $first Object reference to check.
-     * @param mixed $second Hopefully the same object.
-     * @param string $message Message to display.
-     * @return bool               True on pass
+     *
+     * @param mixed $first object reference to check
+     * @param mixed $second hopefully the same object
+     * @param string $message message to display
+     *
+     * @return bool True on pass
      */
     public function assertSame($first, $second, $message = '%s')
     {
@@ -272,10 +303,12 @@ class UnitTestCase extends SimpleTestCase
      *    Will trigger a pass if both parameters refer
      *    to different objects. Fail otherwise. The objects
      *    have to be identical though.
-     * @param mixed $first Object reference to check.
-     * @param mixed $second Hopefully not the same object.
-     * @param string $message Message to display.
-     * @return bool               True on pass
+     *
+     * @param mixed $first object reference to check
+     * @param mixed $second hopefully not the same object
+     * @param string $message message to display
+     *
+     * @return bool True on pass
      */
     public function assertClone($first, $second, $message = '%s')
     {
@@ -297,10 +330,12 @@ class UnitTestCase extends SimpleTestCase
      *    have to be identical references though.
      *    This will fail under E_STRICT with objects. Use
      *    assertClone() for this.
-     * @param mixed $first Object reference to check.
-     * @param mixed $second Hopefully not the same object.
-     * @param string $message Message to display.
-     * @return bool               True on pass
+     *
+     * @param mixed $first object reference to check
+     * @param mixed $second hopefully not the same object
+     * @param string $message message to display
+     *
+     * @return bool True on pass
      */
     public function assertCopy(&$first, &$second, $message = '%s')
     {
@@ -318,11 +353,13 @@ class UnitTestCase extends SimpleTestCase
     /**
      *    Will trigger a pass if the Perl regex pattern
      *    is found in the subject. Fail otherwise.
-     * @param string $pattern Perl regex to look for including
-     *                              the regex delimiters.
-     * @param string $subject String to search in.
-     * @param string $message Message to display.
-     * @return bool           True on pass
+     *
+     * @param string $pattern perl regex to look for including
+     *                        the regex delimiters
+     * @param string $subject string to search in
+     * @param string $message message to display
+     *
+     * @return bool True on pass
      */
     public function assertPattern($pattern, $subject, $message = '%s')
     {
@@ -335,11 +372,13 @@ class UnitTestCase extends SimpleTestCase
     /**
      *    Will trigger a pass if the perl regex pattern
      *    is not present in subject. Fail if found.
-     * @param string $pattern Perl regex to look for including
-     *                              the regex delimiters.
-     * @param string $subject String to search in.
-     * @param string $message Message to display.
-     * @return bool           True on pass
+     *
+     * @param string $pattern perl regex to look for including
+     *                        the regex delimiters
+     * @param string $subject string to search in
+     * @param string $message message to display
+     *
+     * @return bool True on pass
      */
     public function assertNoPattern($pattern, $subject, $message = '%s')
     {
@@ -353,8 +392,9 @@ class UnitTestCase extends SimpleTestCase
      *    Prepares for an error. If the error mismatches it
      *    passes through, otherwise it is swallowed. Any
      *    left over errors trigger failures.
-     * @param SimpleExpectation /string $expected   The error to match.
-     * @param string $message Message on failure.
+     *
+     * @param simpleExpectation /string $expected   The error to match
+     * @param string $message message on failure
      */
     public function expectError($expected = false, $message = '%s')
     {
@@ -366,8 +406,9 @@ class UnitTestCase extends SimpleTestCase
      *    Prepares for an exception. If the error mismatches it
      *    passes through, otherwise it is swallowed. Any
      *    left over errors trigger failures.
-     * @param SimpleExpectation /Exception $expected  The error to match.
-     * @param string $message Message on failure.
+     *
+     * @param simpleExpectation /Exception $expected  The error to match
+     * @param string $message message on failure
      */
     public function expectException($expected = false, $message = '%s')
     {
@@ -380,7 +421,8 @@ class UnitTestCase extends SimpleTestCase
      *    Tells SimpleTest to ignore an upcoming exception as not relevant
      *    to the current test. It doesn't affect the test, whether thrown or
      *    not.
-     * @param SimpleExpectation /Exception $ignored  The error to ignore.
+     *
+     * @param simpleExpectation /Exception $ignored  The error to ignore
      */
     public function ignoreException($ignored = false)
     {
@@ -391,8 +433,10 @@ class UnitTestCase extends SimpleTestCase
      *    Creates an equality expectation if the
      *    object/value is not already some type
      *    of expectation.
-     * @param mixed $expected Expected value.
-     * @return SimpleExpectation   Expectation object.
+     *
+     * @param mixed $expected expected value
+     *
+     * @return SimpleExpectation expectation object
      */
     protected function coerceExpectation($expected)
     {

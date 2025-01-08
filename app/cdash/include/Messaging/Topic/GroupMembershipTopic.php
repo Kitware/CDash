@@ -1,4 +1,5 @@
 <?php
+
 namespace CDash\Messaging\Topic;
 
 use CDash\Model\Build;
@@ -6,12 +7,11 @@ use CDash\Model\Build;
 class GroupMembershipTopic extends Topic
 {
     /**
-     * @var string $group
+     * @var string
      */
     private $group;
 
     /**
-     * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)
@@ -41,9 +41,7 @@ class GroupMembershipTopic extends Topic
     }
 
     /**
-     * @param Build $build
-     * @param $item
-     * @return boolean
+     * @return bool
      */
     public function itemHasTopicSubject(Build $build, $item)
     {

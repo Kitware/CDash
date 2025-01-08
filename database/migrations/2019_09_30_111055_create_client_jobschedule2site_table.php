@@ -16,11 +16,10 @@ class CreateClientJobschedule2siteTable extends Migration
             Schema::create('client_jobschedule2site', function (Blueprint $table) {
                 $table->bigInteger('scheduleid');
                 $table->integer('siteid');
-                $table->unique(['scheduleid','siteid'], 'client_jobschedule2site_scheduleid');
+                $table->unique(['scheduleid', 'siteid'], 'client_jobschedule2site_scheduleid');
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

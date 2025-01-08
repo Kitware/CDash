@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -75,9 +76,9 @@ class ProjectInDbTestCase extends KWWebTestCase
     public function createProjectTest4Db()
     {
         $settings = [
-                'Name' => 'ProjectTest4Db',
-                'Description' => 'This is a project test for cdash',
-                'Public' => 0];
+            'Name' => 'ProjectTest4Db',
+            'Description' => 'This is a project test for cdash',
+            'Public' => 0];
         $this->createProject($settings);
     }
 }

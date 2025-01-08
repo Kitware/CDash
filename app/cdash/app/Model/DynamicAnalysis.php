@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,6 +14,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 use CDash\Database;
@@ -214,14 +216,14 @@ class DynamicAnalysis
                      )
                      VALUES $prepared_array
                  ", array_merge($idvalue, [
-                     $this->BuildId,
-                     $this->Status,
-                     $this->Checker,
-                     $this->Name,
-                     $path,
-                     $fullCommandLine,
-                     $this->Log,
-                 ]));
+            $this->BuildId,
+            $this->Status,
+            $this->Checker,
+            $this->Name,
+            $path,
+            $fullCommandLine,
+            $this->Log,
+        ]));
 
         if ($query === false) {
             add_last_sql_error('DynamicAnalysis Insert', 0, $this->BuildId);

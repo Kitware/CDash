@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $timestamp
- * @property boolean|null $processoris64bits
+ * @property bool|null $processoris64bits
  * @property string|null $processorvendor
  * @property string|null $processorvendorid
  * @property int|null $processorfamilyid

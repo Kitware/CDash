@@ -26,7 +26,6 @@ final class SubProjectController extends AbstractProjectController
         return $this->angular_view('manageSubProject');
     }
 
-
     public function apiManageSubProject(): JsonResponse
     {
         $pageTimer = new PageTimer();
@@ -43,11 +42,10 @@ final class SubProjectController extends AbstractProjectController
         // List the available projects that this user has admin rights to.
         $projectid = intval($_GET['projectid'] ?? 0);
 
-
         $sql = 'SELECT id, name FROM project';
         $params = [];
         if (!$user->admin) {
-            $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid = ? AND role > 0)";
+            $sql .= ' WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid = ? AND role > 0)';
             $params[] = intval(Auth::id());
         }
 
@@ -299,7 +297,7 @@ final class SubProjectController extends AbstractProjectController
             $subproject_groups[$group->GetId()] = $group;
         }
 
-        $result = []; # array to store the all the result
+        $result = []; // array to store the all the result
         /** @var \App\Models\SubProject $subproject */
         foreach ($subprojects as $subproject) {
             $subarray = [

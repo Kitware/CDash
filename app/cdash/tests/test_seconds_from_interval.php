@@ -1,11 +1,10 @@
 <?php
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-
-
 
 class SecondsFromIntervalTestCase extends KWWebTestCase
 {
@@ -17,7 +16,7 @@ class SecondsFromIntervalTestCase extends KWWebTestCase
     public function testSecondsFromInterval()
     {
         // Switch to GMT to avoid Daylight saving time whackiness.
-        date_default_timezone_set("GMT");
+        date_default_timezone_set('GMT');
 
         $this->intervalTest('43s', 43);
         $this->intervalTest('24m', 1440);

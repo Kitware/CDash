@@ -1,11 +1,12 @@
 <?php
+
+use CDash\Database;
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-
-
 
 class TestGraphPermissionsTestCase extends KWWebTestCase
 {
@@ -17,7 +18,7 @@ class TestGraphPermissionsTestCase extends KWWebTestCase
     {
         parent::__construct();
 
-        $db = \CDash\Database::getInstance();
+        $db = Database::getInstance();
         $stmt = $db->query("SELECT id, projectid FROM build WHERE name = 'Linux-g++-4.1-LesionSizingSandbox_Debug'");
         $row = $stmt->fetch();
         $this->build = $row['id'];
@@ -30,7 +31,7 @@ class TestGraphPermissionsTestCase extends KWWebTestCase
 
     public function __destruct()
     {
-        $db = \CDash\Database::getInstance();
+        $db = Database::getInstance();
         // Restore project to public status.
         $stmt = $db->prepare('UPDATE project SET public=1 WHERE id=?');
         $stmt->execute([$this->project]);
@@ -38,10 +39,10 @@ class TestGraphPermissionsTestCase extends KWWebTestCase
 
     public function testTestGraphPermissions()
     {
-        $db = \CDash\Database::getInstance();
+        $db = Database::getInstance();
 
         // Get testname
-        $stmt = $db->prepare("SELECT testname FROM build2test WHERE buildid=?");
+        $stmt = $db->prepare('SELECT testname FROM build2test WHERE buildid=?');
         $stmt->execute([$this->build]);
         $row = $stmt->fetch();
         $testname = $row['testname'];
@@ -50,32 +51,32 @@ class TestGraphPermissionsTestCase extends KWWebTestCase
         // Verify that we cannot access the graphs (because we're not logged in)
         $response = json_decode($result, true);
         if ($response['error'] !== 'You do not have access to the requested project or the requested project does not exist.') {
-            $this->fail("Unauthorized case #1 fails");
+            $this->fail('Unauthorized case #1 fails');
         }
         $response = json_decode($this->get($this->url . "/api/v1/testGraph.php?buildid={$this->build}&testname=$testname&type=status"), true);
         if ($response['error'] !== 'You do not have access to the requested project or the requested project does not exist.') {
-            $this->fail("Unauthorized case #2 fails");
+            $this->fail('Unauthorized case #2 fails');
         }
         $response = $this->get($this->url . "/ajax/showtestfailuregraph.php?testname=itkVectorSegmentationLevelSetFunctionTest1&projectid={$this->project}&starttime=1235350800");
         if (str_contains($response, 'You are not authorized to view this page.')) {
-            $this->fail("Unauthorized case #3 fails");
+            $this->fail('Unauthorized case #3 fails');
         }
 
         // Login and make sure we can see the graphs now.
         $this->login();
         $response = json_decode($this->get($this->url . "/api/v1/testGraph.php?buildid={$this->build}&testname=$testname&type=time"), true);
         if (array_key_exists('requirelogin', $response)) {
-            $this->fail("Authorized case #1 fails");
+            $this->fail('Authorized case #1 fails');
         }
         $response = json_decode($this->get($this->url . "/api/v1/testGraph.php?buildid={$this->build}&testname=$testname&type=status"), true);
         if (array_key_exists('requirelogin', $response)) {
-            $this->fail("Authorized case #2 fails");
+            $this->fail('Authorized case #2 fails');
         }
 
         // A horrible hack to make sure a real page was rendered
         $response = $this->get($this->url . "/ajax/showtestfailuregraph.php?testname=itkVectorSegmentationLevelSetFunctionTest1&projectid={$this->project}&starttime=1235350800");
         if (!str_contains($response, '</script>')) {
-            $this->fail("Authorized case #3 fails");
+            $this->fail('Authorized case #3 fails');
         }
     }
 }

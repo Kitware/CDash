@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,10 +14,11 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
-use CDash\Database;
 use App\Models\User;
+use CDash\Database;
 use Illuminate\Support\Facades\DB;
 
 class UserProject
@@ -89,14 +91,14 @@ class UserProject
                              userid=?
                              AND projectid=?
                      ', [
-                         $this->Role,
-                         $this->EmailType,
-                         $this->EmailCategory,
-                         $this->EmailSuccess,
-                         $this->EmailMissingSites,
-                         $this->UserId,
-                         $this->ProjectId,
-                     ]);
+                $this->Role,
+                $this->EmailType,
+                $this->EmailCategory,
+                $this->EmailSuccess,
+                $this->EmailMissingSites,
+                $this->UserId,
+                $this->ProjectId,
+            ]);
             if ($query === false) {
                 add_last_sql_error('User2Project Update');
                 return false;
@@ -116,14 +118,14 @@ class UserProject
                          )
                          VALUES (?, ?, ?, ?, ?, ?, ?)
                      ', [
-                         $this->UserId,
-                         $this->ProjectId,
-                         $this->Role,
-                         $this->EmailType,
-                         $this->EmailCategory,
-                         $this->EmailSuccess,
-                         $this->EmailMissingSites,
-                     ]);
+                $this->UserId,
+                $this->ProjectId,
+                $this->Role,
+                $this->EmailType,
+                $this->EmailCategory,
+                $this->EmailSuccess,
+                $this->EmailMissingSites,
+            ]);
             if ($query === false) {
                 add_last_sql_error('User2Project Create');
                 return false;

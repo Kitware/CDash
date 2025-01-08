@@ -3,13 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\Project;
-use Illuminate\Support\Facades\URL;
 use App\Models\User;
+use Illuminate\Support\Facades\URL;
 use LogicException;
 use Mockery\Exception\InvalidCountException;
+use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
-use Tests\TestCase;
 
 class RouteAccessTest extends TestCase
 {

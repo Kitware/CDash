@@ -21,7 +21,6 @@ class CreateClientSite2cmakeTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

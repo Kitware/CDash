@@ -1,13 +1,14 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Test;
 use App\Utils\PageTimer;
-use CDash\Controller\Api\TestOverview as LegacyTestOverviewController;
+use App\Utils\RepositoryUtils;
+use CDash\Controller\Api\QueryTests as LegacyQueryTestsController;
 use CDash\Controller\Api\TestDetails as LegacyTestDetailsController;
 use CDash\Controller\Api\TestGraph as LegacyTestGraphController;
-use CDash\Controller\Api\QueryTests as LegacyQueryTestsController;
-use App\Utils\RepositoryUtils;
+use CDash\Controller\Api\TestOverview as LegacyTestOverviewController;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -71,7 +72,7 @@ final class TestController extends AbstractProjectController
 
     public function ajaxTestFailureGraph(): View
     {
-        $this->setProjectById((int)($_GET['projectid'] ?? -1));
+        $this->setProjectById((int) ($_GET['projectid'] ?? -1));
 
         if (!isset($_GET['testname'])) {
             abort(400, 'Not a valid test name!');
@@ -434,19 +435,19 @@ final class TestController extends AbstractProjectController
                 case 'passed':
                     $build_response['status'] = 'Passed';
                     $build_response['statusclass'] = 'normal';
-                    $numpassed += 1;
+                    $numpassed++;
                     break;
                 case 'failed':
                     $build_response['status'] = 'Failed';
                     $build_response['statusclass'] = 'error';
-                    $numfailed += 1;
+                    $numfailed++;
                     break;
                 case 'notrun':
                     $build_response['status'] = 'Not Run';
                     $build_response['statusclass'] = 'warning';
                     break;
             }
-            $numtotal += 1;
+            $numtotal++;
 
             // Initialize an empty array of extra test measurements for this build.
             $test_measurements[$buildid] = [];
@@ -529,7 +530,7 @@ final class TestController extends AbstractProjectController
             abort(400, '"buildid" parameter is required.');
         }
         $buildid = (int) request()->input('buildid');
-        $build = new \CDash\Model\Build();
+        $build = new Build();
         $build->FillFromId($buildid);
         Gate::authorize('view-project', $build->GetProject());
 

@@ -1,4 +1,5 @@
 <?php
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -13,6 +14,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Controller\Api;
 
 use App\Utils\TestingDay;
@@ -135,14 +137,14 @@ class Index extends ResultsApi
         // If the user is logged in we display if the build has some changes for them.
         $userupdatesql = '';
         if (Auth::check()) {
-            $userupdatesql = "(SELECT count(updatefile.updateid) FROM updatefile,build2update,user2project,user2repository
+            $userupdatesql = '(SELECT count(updatefile.updateid) FROM updatefile,build2update,user2project,user2repository
                     WHERE build2update.buildid=b.id
                     AND build2update.updateid=updatefile.updateid
                     AND user2project.projectid=b.projectid
                     AND user2project.userid=?
                     AND user2repository.userid=user2project.userid
                     AND (user2repository.projectid=0 OR user2repository.projectid=b.projectid)
-                    AND user2repository.credential=updatefile.author) AS userupdates,";
+                    AND user2repository.credential=updatefile.author) AS userupdates,';
 
             $query_params[] = Auth::id();
         }
@@ -163,7 +165,7 @@ class Index extends ResultsApi
 
         // If the filter data doesn't have a date clause, use this as a default
         if (!$this->filterdata['hasdateclause']) {
-            $sql .= " AND b.starttime < ? AND b.starttime >= ? ";
+            $sql .= ' AND b.starttime < ? AND b.starttime >= ? ';
             $query_params[] = $this->endDate;
             $query_params[] = $this->beginDate;
         }
@@ -219,12 +221,12 @@ class Index extends ResultsApi
                             OR b2gr.endtime > ?
                         )
                 ", [
-                    (int) $this->project->Id,
-                    self::BEGIN_EPOCH,
-                    $this->endDate,
-                    self::BEGIN_EPOCH,
-                    $this->endDate,
-                ]);
+            (int) $this->project->Id,
+            self::BEGIN_EPOCH,
+            $this->endDate,
+            self::BEGIN_EPOCH,
+            $this->endDate,
+        ]);
 
         foreach ($stmt as $rule) {
             $buildgroup_name = $rule->name;
@@ -241,20 +243,20 @@ class Index extends ResultsApi
                 // optional fields: parentgroupid, site, and build name match.
                 // Use these to construct a WHERE clause for our query.
                 if (!empty($rule->parentgroupid)) {
-                    $whereClauses[] = "b2g.groupid=?";
+                    $whereClauses[] = 'b2g.groupid=?';
                     $query_params[] = (int) $rule->parentgroupid;
                 }
                 if (!empty($rule->siteid)) {
-                    $whereClauses[] = "s.id=?";
+                    $whereClauses[] = 's.id=?';
                     $query_params[] = (int) $rule->siteid;
                 }
                 if (!empty($rule->buildname)) {
-                    $whereClauses[] = "b.name = ?";
+                    $whereClauses[] = 'b.name = ?';
                     $query_params[] = $rule->buildname;
                 }
                 if (count($whereClauses) > 0) {
                     $sql .= ' WHERE ' . implode(' AND ', $whereClauses);
-                    $sql .= " AND b.starttime < ? ";
+                    $sql .= ' AND b.starttime < ? ';
                     $query_params[] = $this->endDate;
                 }
 
@@ -278,7 +280,7 @@ class Index extends ResultsApi
 
     // Encapsulate this monster query so that it is not duplicated between
     // index.php and get_dynamic_builds.
-    public function getIndexQuery(string $userupdatesql=''): string
+    public function getIndexQuery(string $userupdatesql = ''): string
     {
         return
             "SELECT b.id,b.siteid,b.parentid,b.done,b.changeid,b.testduration,
@@ -661,7 +663,7 @@ class Index extends ResultsApi
                     $selected_build_warnings += max(0, $select_array->buildwarnings);
                     $selected_build_duration += max(0, $select_array->buildduration);
                     $selected_tests_not_run += max(0, $select_array->testnotrun);
-                    $selected_tests_failed +=  max(0, $select_array->testfailed);
+                    $selected_tests_failed += max(0, $select_array->testfailed);
                     $selected_tests_passed += max(0, $select_array->testpassed);
                     $selected_proc_time += max(0, $select_array->testtime);
                 }
@@ -696,8 +698,8 @@ class Index extends ResultsApi
         // Add link based on changeid if appropriate.
         $changelink = null;
         $changeicon = null;
-        if ($build_array['changeid'] &&
-                $this->project->CvsViewerType === 'github') {
+        if ($build_array['changeid']
+                && $this->project->CvsViewerType === 'github') {
             $changelink = $this->project->CvsUrl . '/pull/' .
                 $build_array['changeid'];
             $changeicon = 'img/Octocat.png';
@@ -750,8 +752,8 @@ class Index extends ResultsApi
             $labels_result = $this->getLabelsForBuild($buildid);
             foreach ($labels_result as $label_row) {
                 // Whitelist case
-                if ($this->includeSubProjects &&
-                        in_array($label_row, $this->includedSubProjects)
+                if ($this->includeSubProjects
+                        && in_array($label_row, $this->includedSubProjects)
                 ) {
                     $num_labels++;
                     $build_labels[] = $label_row;
@@ -846,13 +848,13 @@ class Index extends ResultsApi
 
             if ($build_array['countupdateerrors'] > 0) {
                 $update_response['errors'] = 1;
-                $this->buildgroupsResponse[$i]['numupdateerror'] += 1;
+                $this->buildgroupsResponse[$i]['numupdateerror']++;
             } else {
                 $update_response['errors'] = 0;
 
                 if ($build_array['countupdatewarnings'] > 0) {
                     $update_response['warning'] = 1;
-                    $this->buildgroupsResponse[$i]['numupdatewarning'] += 1;
+                    $this->buildgroupsResponse[$i]['numupdatewarning']++;
                 }
             }
 
@@ -1093,7 +1095,7 @@ class Index extends ResultsApi
         if ($build_response['hasupdate'] && array_key_exists('time', $build_response['update'])) {
             $timesummary .= ', Update time: ' . $build_response['update']['time'];
         }
-        if ($build_response['hasconfigure'] &&  array_key_exists('time', $build_response['configure'])) {
+        if ($build_response['hasconfigure'] && array_key_exists('time', $build_response['configure'])) {
             $timesummary .= ', Configure time: ' . $build_response['configure']['time'];
         }
         if ($build_response['hascompilation'] && array_key_exists('time', $build_response['compilation'])) {
@@ -1207,14 +1209,14 @@ class Index extends ResultsApi
     // false otherwise.
     private function preserveFilterForChildBuild(array $filter): bool
     {
-        return $filter['field'] !== 'buildname' &&
-                $filter['field'] !== 'site' &&
-                $filter['field'] !== 'stamp' &&
-                $filter['compare'] != 0 &&
-                $filter['compare'] != 20 &&
-                $filter['compare'] != 40 &&
-                $filter['compare'] != 60 &&
-                $filter['compare'] != 80;
+        return $filter['field'] !== 'buildname'
+                && $filter['field'] !== 'site'
+                && $filter['field'] !== 'stamp'
+                && $filter['compare'] != 0
+                && $filter['compare'] != 20
+                && $filter['compare'] != 40
+                && $filter['compare'] != 60
+                && $filter['compare'] != 80;
     }
 
     private function getbuild2rouprule(int $groupid, $currentstarttime): array
@@ -1310,7 +1312,7 @@ class Index extends ResultsApi
                 // Compute historical average to get approximate expected time.
                 // PostgreSQL doesn't have the necessary functions for this.
                 if (config('database.default') === 'pgsql') {
-                    $query = $db->executePrepared("
+                    $query = $db->executePrepared('
                                  SELECT submittime
                                  FROM
                                      build,
@@ -1323,7 +1325,7 @@ class Index extends ResultsApi
                                      AND build2group.groupid=?
                                  ORDER BY id DESC
                                  LIMIT 5
-                             ", [intval($siteid), $buildname, $buildtype, intval($groupid)]);
+                             ', [intval($siteid), $buildname, $buildtype, intval($groupid)]);
 
                     $time = 0;
                     foreach ($query as $query_array) {
@@ -1474,7 +1476,7 @@ class Index extends ResultsApi
         // that has build results.
         $query_params = [
             ':projectid' => $this->project->Id,
-            ':time'      => $beginningOfDay,
+            ':time' => $beginningOfDay,
         ];
 
         // Only search for builds from a certain group when buildGroupName is set.

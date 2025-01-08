@@ -1,4 +1,5 @@
 <?php
+
 //
 // After including this file, all subsequent require_once calls are
 // relative to the top of the CDash source tree...
