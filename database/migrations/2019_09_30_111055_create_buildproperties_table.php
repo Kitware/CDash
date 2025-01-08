@@ -20,7 +20,6 @@ class CreateBuildpropertiesTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

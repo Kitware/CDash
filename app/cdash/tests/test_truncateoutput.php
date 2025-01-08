@@ -7,9 +7,7 @@
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
-require_once dirname(__FILE__).'/cdash_test_case.php';
-
-
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class TruncateOutputTestCase extends KWWebTestCase
 {
@@ -55,7 +53,7 @@ class TruncateOutputTestCase extends KWWebTestCase
         // Set a limit that will cause our test output to be truncated.
         file_put_contents($this->ConfigFile, "LARGE_TEXT_LIMIT=44\n", FILE_APPEND | LOCK_EX);
 
-        $rep  = dirname(__FILE__)."/data/TruncateOutput";
+        $rep = dirname(__FILE__) . '/data/TruncateOutput';
         foreach (['Build_stdout.xml', 'Build_stderr.xml', 'Build_both.xml'] as $file) {
             // Submit our testing data.
             if (!$this->submission('InsightExample', "$rep/$file")) {
@@ -75,7 +73,7 @@ class TruncateOutputTestCase extends KWWebTestCase
                 $fields[] = 'stderror';
             }
 
-            $this->get($this->url . "/api/v1/viewBuildError.php?buildid=" . $this->BuildId);
+            $this->get($this->url . '/api/v1/viewBuildError.php?buildid=' . $this->BuildId);
             $content = $this->getBrowser()->getContent();
             $jsonobj = json_decode($content, true);
             foreach ($jsonobj['errors'] as $error) {
@@ -94,7 +92,7 @@ class TruncateOutputTestCase extends KWWebTestCase
         $this->submission('InsightExample', "$rep/Build_suppressed.xml");
         $buildid_results = DB::select("SELECT id FROM build WHERE name='TruncateOutput'")[0];
         $this->BuildId = $buildid_results->id;
-        $this->get($this->url . "/api/v1/viewBuildError.php?type=1&buildid=" . $this->BuildId);
+        $this->get($this->url . '/api/v1/viewBuildError.php?type=1&buildid=' . $this->BuildId);
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $actual = $jsonobj['errors'][0]['stderror'];

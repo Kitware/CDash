@@ -16,12 +16,12 @@ class ProjectTypeTest extends TestCase
     use CreatesProjects;
 
     /**
-     * @var array<Project> $projects
+     * @var array<Project>
      */
     private array $projects;
 
     /**
-     * @var array<User> $users
+     * @var array<User>
      */
     private array $users;
 
@@ -172,6 +172,7 @@ class ProjectTypeTest extends TestCase
 
     /**
      * @param array<string> $allowable_projects
+     *
      * @dataProvider projectAccessByUser
      */
     public function testProjectPermissions(?string $user, array $allowable_projects): void
@@ -893,7 +894,7 @@ class ProjectTypeTest extends TestCase
         string $user,
         bool $use_authenticated_submits,
         bool $require_authenticated_submissions,
-        bool $result
+        bool $result,
     ): void {
         Config::set('cdash.user_create_projects', true);
         Config::set('cdash.require_authenticated_submissions', $require_authenticated_submissions);

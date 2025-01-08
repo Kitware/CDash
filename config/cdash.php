@@ -32,10 +32,10 @@ return [
     'file' => [
         'path' => [
             'js' => [
-                'controllers' => base_path("public/assets/js/angular/controllers"),
-                'version' => base_path("public/assets/js/angular/version.js"),
+                'controllers' => base_path('public/assets/js/angular/controllers'),
+                'version' => base_path('public/assets/js/angular/version.js'),
             ],
-            'public' => base_path("public"),
+            'public' => base_path('public'),
         ],
     ],
     'login' => [

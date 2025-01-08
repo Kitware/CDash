@@ -37,8 +37,8 @@ final class UserStatisticsController extends AbstractProjectController
         if (isset($_GET['range'])) {
             $range = $_GET['range'];
         }
-        if ($range !== 'day' && $range !== 'week' && $range !== 'month' &&
-            $range !== 'year') {
+        if ($range !== 'day' && $range !== 'week' && $range !== 'month'
+            && $range !== 'year') {
             $range = 'week';
         }
         $response['range'] = $range;

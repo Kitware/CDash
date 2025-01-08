@@ -35,9 +35,6 @@ class EmailBuilder
         $this->notifications = $collection;
     }
 
-    /**
-     * @param string $templateName
-     */
     public function createNotification(SubscriptionInterface $subscription, string $templateName): EmailMessage
     {
         $subject_template = "email.{$templateName}.subject";

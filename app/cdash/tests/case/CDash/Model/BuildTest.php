@@ -64,7 +64,6 @@ class BuildTest extends CDashTestCase
                 'testfailednegative' => 10,
                 'testnotrunpositive' => 11,
                 'testnotrunnegative' => 12,
-
             ]);
 
         $diff = $sut->GetDiffWithPreviousBuild();

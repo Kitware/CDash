@@ -23,7 +23,6 @@ class CreateBuild2uploadfileTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

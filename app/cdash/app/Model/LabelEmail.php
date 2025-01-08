@@ -82,7 +82,7 @@ class LabelEmail
     }
 
     /** Update the labels given a projectid and userid */
-    public function UpdateLabels(array|null $labels): bool
+    public function UpdateLabels(?array $labels): bool
     {
         if (!$this->ProjectId) {
             abort(500, 'LabelEmail UpdateLabels(): ProjectId not set');

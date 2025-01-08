@@ -20,7 +20,6 @@ class CreateClientSite2projectTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

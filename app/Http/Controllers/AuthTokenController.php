@@ -7,10 +7,11 @@ namespace App\Http\Controllers;
 use App\Models\AuthToken;
 use App\Utils\AuthTokenUtil;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Http\Request;
 
 final class AuthTokenController extends AbstractController
 {
@@ -61,7 +62,7 @@ final class AuthTokenController extends AbstractController
                 $request->input('scope'),
                 $request->input('description'),
             );
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             return response()->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 

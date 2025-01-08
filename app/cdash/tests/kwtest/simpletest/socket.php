@@ -2,6 +2,7 @@
 
 /**
  *  base include file for SimpleTest
+ *
  * @version    $Id$
  */
 
@@ -29,17 +30,19 @@ class SimpleStickyError
 
     /**
      *    Test for an outstanding error.
-     * @return bool           True if there is an error.
+     *
+     * @return bool true if there is an error
      */
     public function isError()
     {
-        return ($this->error != '');
+        return $this->error != '';
     }
 
     /**
      *    Accessor for an outstanding error.
-     * @return string     Empty string if no error otherwise
-     *                       the error message.
+     *
+     * @return string empty string if no error otherwise
+     *                the error message
      */
     public function getError()
     {
@@ -48,7 +51,8 @@ class SimpleStickyError
 
     /**
      *    Sets the internal error.
-     * @param string       Error message to stash.
+     *
+     * @param string       error message to stash
      */
     public function setError($error)
     {
@@ -64,8 +68,6 @@ class SimpleStickyError
     }
 }
 
-/**
- */
 class SimpleFileSocket extends SimpleStickyError
 {
     private $handle;
@@ -75,8 +77,9 @@ class SimpleFileSocket extends SimpleStickyError
 
     /**
      *    Opens a socket for reading and writing.
-     * @param SimpleUrl $file Target URI to fetch.
-     * @param int $block_size Size of chunk to read.
+     *
+     * @param SimpleUrl $file target URI to fetch
+     * @param int $block_size size of chunk to read
      */
     public function __construct($file, $block_size = 1024)
     {
@@ -92,8 +95,10 @@ class SimpleFileSocket extends SimpleStickyError
 
     /**
      *    Writes some data to the socket and saves alocal copy.
-     * @param string $message String to send to socket.
-     * @return bool              True if successful.
+     *
+     * @param string $message string to send to socket
+     *
+     * @return bool true if successful
      */
     public function write($message)
     {
@@ -104,6 +109,7 @@ class SimpleFileSocket extends SimpleStickyError
      *    Reads data from the socket. The error suppresion
      *    is a workaround for PHP4 always throwing a warning
      *    with a secure socket.
+     *
      * @return integer/boolean           Incoming bytes. False
      *                                     on error.
      */
@@ -119,7 +125,8 @@ class SimpleFileSocket extends SimpleStickyError
 
     /**
      *    Accessor for socket open state.
-     * @return bool           True if open.
+     *
+     * @return bool true if open
      */
     public function isOpen()
     {
@@ -129,7 +136,8 @@ class SimpleFileSocket extends SimpleStickyError
     /**
      *    Closes the socket preventing further reads.
      *    Cannot be reopened once closed.
-     * @return bool           True if successful.
+     *
+     * @return bool true if successful
      */
     public function close()
     {
@@ -142,7 +150,8 @@ class SimpleFileSocket extends SimpleStickyError
 
     /**
      *    Accessor for content so far.
-     * @return string        Bytes sent only.
+     *
+     * @return string bytes sent only
      */
     public function getSent()
     {
@@ -151,9 +160,9 @@ class SimpleFileSocket extends SimpleStickyError
 
     /**
      *    Actually opens the low level socket.
-     * @param SimpleUrl $file SimpleUrl file target.
-     * @param string $error Recipient of error message.
-     * @param int $timeout Maximum time to wait for connection.
+     *
+     * @param SimpleUrl $file simpleUrl file target
+     * @param string $error recipient of error message
      */
     protected function openFile($file, &$error)
     {
@@ -173,10 +182,11 @@ class SimpleSocket extends SimpleStickyError
 
     /**
      *    Opens a socket for reading and writing.
-     * @param string $host Hostname to send request to.
-     * @param int $port Port on remote machine to open.
-     * @param int $timeout Connection timeout in seconds.
-     * @param int $block_size Size of chunk to read.
+     *
+     * @param string $host hostname to send request to
+     * @param int $port port on remote machine to open
+     * @param int $timeout connection timeout in seconds
+     * @param int $block_size size of chunk to read
      */
     public function __construct($host, $port, $timeout, $block_size = 255)
     {
@@ -192,8 +202,10 @@ class SimpleSocket extends SimpleStickyError
 
     /**
      *    Writes some data to the socket and saves alocal copy.
-     * @param string $message String to send to socket.
-     * @return bool              True if successful.
+     *
+     * @param string $message string to send to socket
+     *
+     * @return bool true if successful
      */
     public function write($message)
     {
@@ -217,6 +229,7 @@ class SimpleSocket extends SimpleStickyError
      *    Reads data from the socket. The error suppresion
      *    is a workaround for PHP4 always throwing a warning
      *    with a secure socket.
+     *
      * @return integer/boolean           Incoming bytes. False
      *                                     on error.
      */
@@ -235,7 +248,8 @@ class SimpleSocket extends SimpleStickyError
 
     /**
      *    Accessor for socket open state.
-     * @return bool           True if open.
+     *
+     * @return bool true if open
      */
     public function isOpen()
     {
@@ -245,7 +259,8 @@ class SimpleSocket extends SimpleStickyError
     /**
      *    Closes the socket preventing further reads.
      *    Cannot be reopened once closed.
-     * @return bool           True if successful.
+     *
+     * @return bool true if successful
      */
     public function close()
     {
@@ -255,7 +270,8 @@ class SimpleSocket extends SimpleStickyError
 
     /**
      *    Accessor for content so far.
-     * @return string        Bytes sent only.
+     *
+     * @return string bytes sent only
      */
     public function getSent()
     {
@@ -264,11 +280,12 @@ class SimpleSocket extends SimpleStickyError
 
     /**
      *    Actually opens the low level socket.
-     * @param string $host Host to connect to.
-     * @param int $port Port on host.
-     * @param int $error_number Recipient of error code.
-     * @param string $error Recipoent of error message.
-     * @param int $timeout Maximum time to wait for connection.
+     *
+     * @param string $host host to connect to
+     * @param int $port port on host
+     * @param int $error_number recipient of error code
+     * @param string $error recipoent of error message
+     * @param int $timeout maximum time to wait for connection
      */
     protected function openSocket($host, $port, &$error_number, &$error, $timeout)
     {
@@ -283,9 +300,10 @@ class SimpleSecureSocket extends SimpleSocket
 {
     /**
      *    Opens a secure socket for reading and writing.
-     * @param string $host Hostname to send request to.
-     * @param int $port Port on remote machine to open.
-     * @param int $timeout Connection timeout in seconds.
+     *
+     * @param string $host hostname to send request to
+     * @param int $port port on remote machine to open
+     * @param int $timeout connection timeout in seconds
      */
     public function __construct($host, $port, $timeout)
     {
@@ -294,11 +312,12 @@ class SimpleSecureSocket extends SimpleSocket
 
     /**
      *    Actually opens the low level socket.
-     * @param string $host Host to connect to.
-     * @param int $port Port on host.
-     * @param int $error_number Recipient of error code.
-     * @param string $error Recipient of error message.
-     * @param int $timeout Maximum time to wait for connection.
+     *
+     * @param string $host host to connect to
+     * @param int $port port on host
+     * @param int $error_number recipient of error code
+     * @param string $error recipient of error message
+     * @param int $timeout maximum time to wait for connection
      */
     public function openSocket($host, $port, &$error_number, &$error, $timeout)
     {

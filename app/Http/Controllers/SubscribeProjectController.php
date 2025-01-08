@@ -186,7 +186,7 @@ final class SubscribeProjectController extends AbstractProjectController
 
             $EmailCategory = $emailcategory_update + $emailcategory_configure + $emailcategory_warning + $emailcategory_error + $emailcategory_test + $emailcategory_dynamicanalysis;
             if (!empty($user2project)) {
-                $db->executePrepared("
+                $db->executePrepared('
                 UPDATE user2project
                 SET
                     role=?,
@@ -197,7 +197,7 @@ final class SubscribeProjectController extends AbstractProjectController
                 WHERE
                     userid=?
                     AND projectid=?
-            ", [
+            ', [
                     $Role,
                     $EmailType,
                     $EmailCategory,
@@ -315,7 +315,7 @@ final class SubscribeProjectController extends AbstractProjectController
         $sql = 'SELECT id, name FROM project';
         $params = [];
         if (!$user->admin) {
-            $sql .= " WHERE public=1 OR id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)";
+            $sql .= ' WHERE public=1 OR id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)';
             $params[] = $user->id;
         }
         $projects = $db->executePrepared($sql, $params);

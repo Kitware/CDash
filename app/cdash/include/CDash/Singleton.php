@@ -18,8 +18,6 @@ abstract class Singleton
     }
 
     /**
-     * @param $class
-     * @param $instance
      * @return void
      */
     public static function setInstance($class, $instance)
@@ -30,12 +28,15 @@ abstract class Singleton
     private function __construct()
     {
     }
+
     private function __clone()
     {
     }
+
     public function __sleep()
     {
     }
+
     public function __wakeup()
     {
     }

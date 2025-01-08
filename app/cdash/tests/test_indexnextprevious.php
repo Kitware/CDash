@@ -2,10 +2,9 @@
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
+use App\Models\Site;
 use CDash\Model\Build;
 use CDash\Model\Project;
-use App\Models\Site;
 
 class IndexNextPreviousTestCase extends KWWebTestCase
 {

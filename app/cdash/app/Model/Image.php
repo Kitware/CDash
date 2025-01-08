@@ -29,7 +29,7 @@ class Image
 
     public $Data; // Loaded from database or the file referred by Filename.
     public $Name; // Use to track the role for test.
-    /** @var Database $PDO */
+    /** @var Database */
     private $PDO;
 
     public function __construct()
@@ -55,7 +55,6 @@ class Image
         $db = Database::getInstance();
         // If no id specify return false
         if ($this->Id) {
-            ;
             $query_array = $db->executePreparedSingleRow('SELECT count(*) AS c FROM image WHERE id=?', [$this->Id]);
             if ($query_array['c'] == 0) {
                 return false;

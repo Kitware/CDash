@@ -22,7 +22,6 @@ class CreateImageTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

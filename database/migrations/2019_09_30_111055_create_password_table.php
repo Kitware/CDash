@@ -22,7 +22,6 @@ class CreatePasswordTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

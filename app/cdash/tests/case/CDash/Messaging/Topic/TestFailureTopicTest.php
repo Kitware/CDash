@@ -24,8 +24,9 @@ use CDash\Model\Build;
 use CDash\Model\Label;
 use CDash\Model\Subscriber;
 use CDash\Test\BuildDiffForTesting;
+use CDash\Test\CDashTestCase;
 
-class TestFailureTopicTest extends \CDash\Test\CDashTestCase
+class TestFailureTopicTest extends CDashTestCase
 {
     use BuildDiffForTesting;
 

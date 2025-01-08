@@ -15,19 +15,19 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use App\Utils\SubmissionUtils;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AbstractController;
+use App\Models\Site;
 use App\Utils\DatabaseCleanupUtils;
+use App\Utils\SubmissionUtils;
 use App\Utils\TestingDay;
 use CDash\Database;
-use CDash\ServiceContainer;
 use CDash\Model\Build;
 use CDash\Model\Project;
-use App\Models\Site;
+use CDash\ServiceContainer;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 require_once 'include/log.php';
-
 
 function xslt_process(XSLTProcessor $xsltproc,
     $xml_arg,
@@ -41,8 +41,8 @@ function xslt_process(XSLTProcessor $xsltproc,
     $xsl_arg = str_replace('arg:', '', $xsl_arg);
 
     // Create instances of the DomDocument class
-    $xml = new DomDocument();
-    $xsl = new DomDocument();
+    $xml = new DOMDocument();
+    $xsl = new DOMDocument();
 
     // Load the xml document and the xsl template
     if (LIBXML_VERSION >= 20700) {
@@ -74,7 +74,6 @@ function xslt_process(XSLTProcessor $xsltproc,
 
     return $processed;
 }
-
 
 /**
  * Do the XSLT translation
@@ -520,7 +519,7 @@ function get_dates($date, $nightlytime): array
         $date = date(FMT_DATE); // the date is always the date of the server
 
         if (date(FMT_TIME) > date(FMT_TIME, $nightlytime)) {
-            $date = date(FMT_DATE, time() + 3600 * 24); //next day
+            $date = date(FMT_DATE, time() + 3600 * 24); // next day
         }
     } else {
         // If the $nightlytime is in the morning it's actually the day after
@@ -544,10 +543,10 @@ function get_dates($date, $nightlytime): array
 
 function has_next_date($date, $currentstarttime): bool
 {
-    return (
-        isset($date) &&
-        strlen($date) >= 8 &&
-        date(FMT_DATE, $currentstarttime) < date(FMT_DATE));
+    return
+        isset($date)
+        && strlen($date) >= 8
+        && date(FMT_DATE, $currentstarttime) < date(FMT_DATE);
 }
 
 /**
@@ -634,7 +633,7 @@ function begin_XML_for_XSLT(): string
 
     $xml = '<?xml version="1.0" encoding="UTF-8"?><cdash>';
     $xml .= add_XML_value('cssfile', $css_file);
-    $xml .= add_XML_value('version', \App\Http\Controllers\AbstractController::getCDashVersion());
+    $xml .= add_XML_value('version', AbstractController::getCDashVersion());
     $xml .= add_XML_value('_token', csrf_token());
 
     return $xml;
@@ -643,7 +642,7 @@ function begin_XML_for_XSLT(): string
 function begin_JSON_response(): array
 {
     $response = [];
-    $response['version'] = \App\Http\Controllers\AbstractController::getCDashVersion();
+    $response['version'] = AbstractController::getCDashVersion();
 
     $user_response = [];
     $userid = Auth::id();
@@ -674,7 +673,7 @@ function get_dashboard_JSON($projectname, $date, &$response)
     $project_array['documentationurl'] = $project->Id ? $project->DocumentationUrl : 'unknown';
     $project_array['homeurl'] = $project->Id ? $project->HomeUrl : 'unknown';
     $project_array['name'] = $projectname;
-    $project_array['nightlytime'] =  $project->Id ? $project->NightlyTime : '00:00:00';
+    $project_array['nightlytime'] = $project->Id ? $project->NightlyTime : '00:00:00';
 
     if (is_null($date)) {
         $date = date(FMT_DATE);
@@ -705,7 +704,7 @@ function get_dashboard_JSON($projectname, $date, &$response)
 
     $userid = Auth::id();
     if ($userid) {
-        $project = \App\Models\Project::findOrFail((int) $project->Id);
+        $project = App\Models\Project::findOrFail((int) $project->Id);
         $response['projectrole'] = $project->users()->withPivot('role')->find((int) $userid)->pivot->role ?? 0;
         if ($response['projectrole'] > Project::SITE_MAINTAINER) {
             $response['user']['admin'] = 1;
@@ -802,9 +801,9 @@ function cast_data_for_JSON($value)
         return $value + 0;
     }
     if (is_string($value)) {
-        $value = (string)$value;
-        if (function_exists('mb_detect_encoding') &&
-            mb_detect_encoding($value, 'UTF-8', true) === false
+        $value = (string) $value;
+        if (function_exists('mb_detect_encoding')
+            && mb_detect_encoding($value, 'UTF-8', true) === false
         ) {
             $value = mb_convert_encoding($value, 'UTF-8');
         }
@@ -840,8 +839,8 @@ function get_aggregate_build(Build $build): Build
     $subproj_where = '';
     $subproj_where_params = [];
     if ($build->SubProjectId) {
-        $subproj_table = "INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)";
-        $subproj_where = "AND sp2b.subprojectid=?";
+        $subproj_table = 'INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)';
+        $subproj_where = 'AND sp2b.subprojectid=?';
         $subproj_where_params[] = intval($build->SubProjectId);
     }
 
@@ -860,10 +859,10 @@ function get_aggregate_build(Build $build): Build
                    AND starttime >= ?
                $subproj_where
            ", array_merge([
-               intval($siteid),
-               intval($build->ProjectId),
-               $build->EndOfDay,
-               $build->BeginningOfDay],
+        intval($siteid),
+        intval($build->ProjectId),
+        $build->EndOfDay,
+        $build->BeginningOfDay],
         $subproj_where_params
     ));
     if (!$row || !array_key_exists('id', $row)) {
@@ -888,7 +887,7 @@ function create_aggregate_build($build, $siteid = null): Build
     $aggregate_build->Name = 'Aggregate Coverage';
     $aggregate_build->SiteId = $siteid;
     $date = substr($build->GetStamp(), 0, strpos($build->GetStamp(), '-'));
-    $aggregate_build->SetStamp($date."-0000-Nightly");
+    $aggregate_build->SetStamp($date . '-0000-Nightly');
     $aggregate_build->ProjectId = $build->ProjectId;
 
     $aggregate_build->StartTime = $build->StartTime;

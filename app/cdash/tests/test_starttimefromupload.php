@@ -45,7 +45,7 @@ class StartTimeFromUploadTestCase extends KWWebTestCase
         $this->assertTrue($this->checkLog($this->logfilename) !== false);
 
         // Verify start time & testing day.
-        $build_row = \App\Models\Project::findOrFail((int) $this->project->Id)->builds()->firstOrFail();
+        $build_row = App\Models\Project::findOrFail((int) $this->project->Id)->builds()->firstOrFail();
         $build = new Build();
         $build->Id = $build_row->id;
         $build->FillFromId($build->Id);

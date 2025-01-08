@@ -77,7 +77,7 @@ class JUnitHandlerTestCase extends KWWebTestCase
             $this->fail("Did not find 1 'Not Run' test when expected");
         }
         if (trim($jsonobj['totaltime']) !== '500ms') {
-            $this->fail("Did not find 500ms totaltime when expected");
+            $this->fail('Did not find 500ms totaltime when expected');
         }
     }
 }

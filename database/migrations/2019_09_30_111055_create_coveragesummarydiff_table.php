@@ -21,7 +21,6 @@ class CreateCoveragesummarydiffTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

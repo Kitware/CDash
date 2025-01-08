@@ -8,7 +8,7 @@ use CDash\Test\UseCase\UseCase;
 
 class CDashUseCaseTestCase extends CDashTestCase
 {
-    /** @var  ServiceContainer $originalServiceContainer */
+    /** @var ServiceContainer */
     private $originalServiceContainer;
 
     public function tearDown(): void
@@ -81,7 +81,7 @@ class CDashUseCaseTestCase extends CDashTestCase
                     $model->expects($this->any())
                         ->method('GetCommitAuthors')
                         ->willReturnCallback(function () use ($useCase, $model) {
-                            /** @var Build|\PHPUnit\Framework\MockObject\MockObject $model */
+                            /* @var Build|\PHPUnit\Framework\MockObject\MockObject $model */
                             return $useCase->getAuthors($model->SubProjectName);
                         });
                 }

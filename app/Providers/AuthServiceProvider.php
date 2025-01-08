@@ -9,9 +9,9 @@ use App\Models\User;
 use CDash\Model\Image;
 use CDash\Model\Project;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {

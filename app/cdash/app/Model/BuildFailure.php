@@ -182,7 +182,7 @@ class BuildFailure
             return false;
         }
 
-        $sql = "
+        $sql = '
             SELECT
                 bf.id,
                 bf.buildid,
@@ -202,7 +202,7 @@ class BuildFailure
                 ON (bf.detailsid = bfd.id)
             WHERE bf.buildid=?
             ORDER BY bf.id
-        ";
+        ';
         $query = $this->PDO->prepare($sql);
 
         pdo_execute($query, [$this->BuildId]);
@@ -220,21 +220,21 @@ class BuildFailure
             'arguments' => [],
         ];
 
-        $sql = "
+        $sql = '
             SELECT bfa.argument
             FROM buildfailureargument AS bfa,
             buildfailure2argument AS bf2a
             WHERE bf2a.buildfailureid=:build_failure_id
             AND bf2a.argumentid=bfa.id
             ORDER BY bf2a.place ASC
-        ";
+        ';
 
         $stmt = $this->PDO->prepare($sql);
         $stmt->bindParam(':build_failure_id', $buildFailureId);
         pdo_execute($stmt);
 
         $i = 0;
-        while ($argument_array = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+        while ($argument_array = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if ($i == 0) {
                 $response['argumentfirst'] = $argument_array['argument'];
             } else {

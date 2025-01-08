@@ -6,7 +6,6 @@ use CDash\Collection\Collection;
 
 /**
  * Class SubscriptionCollection
- * @package CDash\Messaging\Collection
  */
 class SubscriptionCollection extends Collection
 {

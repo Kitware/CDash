@@ -8,7 +8,6 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'tests/trilinos_submission_test.php';
 
-
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Project;
 
@@ -32,7 +31,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
     public function testParallelSubmissions()
     {
         $this->deleteLog($this->logfilename);
-        \DB::table('successful_jobs')->delete();
+        DB::table('successful_jobs')->delete();
 
         // Load Trilinos project.
         $project = new Project();
@@ -41,7 +40,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
         }
 
         // Delete the existing Trilinos build if it exists.
-        $trilinos_build_row = \DB::table('build')
+        $trilinos_build_row = DB::table('build')
             ->where('parentid', '=', '-1')
             ->where('projectid', '=', $project->Id)
             ->where('name', '=', 'Windows_NT-MSVC10-SERIAL_DEBUG_DEV')
@@ -60,7 +59,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
         echo 'Submission took ' . (time() - $begin) . " seconds.\n";
 
         // Verify some queued jobs.
-        $num_jobs = \DB::table('jobs')->count();
+        $num_jobs = DB::table('jobs')->count();
         $this->assertEqual(147, $num_jobs);
 
         // Start 4 queue workers.
@@ -72,7 +71,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
         // Wait for processing to complete.
         $begin = time();
         while ($num_jobs > 0) {
-            $num_jobs = \DB::table('jobs')->count();
+            $num_jobs = DB::table('jobs')->count();
             usleep(5000);
             if (time() - $begin > 120) {
                 $this->fail("Processing took longer than 120 seconds.\n");
@@ -82,7 +81,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
         echo 'Processing took ' . (time() - $begin) . " seconds.\n";
 
         // Verify number of successful jobs.
-        $num_jobs = \DB::table('successful_jobs')->count();
+        $num_jobs = DB::table('successful_jobs')->count();
         $this->assertEqual(147, $num_jobs);
 
         // Verify the results.

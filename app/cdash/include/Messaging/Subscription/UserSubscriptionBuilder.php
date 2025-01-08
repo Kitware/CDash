@@ -7,18 +7,17 @@ use CDash\Model\SubscriberInterface;
 
 class UserSubscriptionBuilder implements SubscriptionBuilderInterface
 {
-    /** @var  \ActionableBuildInterface $submission */
+    /** @var ActionableBuildInterface */
     private $submission;
 
-    /** @var SubscriptionFactory $subscriptionFactory */
+    /** @var SubscriptionFactory */
     private $subscriptionFactory;
 
-    /** @var  SubscriptionCollection $subscriptions */
+    /** @var SubscriptionCollection */
     private $subscriptions;
 
     /**
      * SubscriptionBuilder constructor.
-     * @param ActionableBuildInterface $submission
      */
     public function __construct(ActionableBuildInterface $submission)
     {
@@ -26,7 +25,6 @@ class UserSubscriptionBuilder implements SubscriptionBuilderInterface
     }
 
     /**
-     * @param SubscriptionCollection $subscriptions
      * @return void
      */
     public function build(SubscriptionCollection $subscriptions)
@@ -68,6 +66,7 @@ class UserSubscriptionBuilder implements SubscriptionBuilderInterface
 
     /**
      * TODO: PHPDI exists now, refactor accordingly
+     *
      * @return SubscriptionFactory
      */
     protected function getSubscriptionFactory()

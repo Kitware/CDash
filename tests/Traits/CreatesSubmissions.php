@@ -4,6 +4,7 @@ namespace Tests\Traits;
 
 use Exception;
 use Illuminate\Http\Client\Pool;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
 trait CreatesSubmissions
@@ -35,7 +36,7 @@ trait CreatesSubmissions
             });
 
             foreach ($responses as $file => $response) {
-                if (!($response instanceof \Illuminate\Http\Client\Response) || !$response->ok()) {
+                if (!($response instanceof Response) || !$response->ok()) {
                     $num_failed_submissions++;
                 }
             }

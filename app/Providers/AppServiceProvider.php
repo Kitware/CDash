@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Validator::extendImplicit('complexity', 'App\Validators\Password@complexity');
 
-        /** For migrations on MySQL older than 5.7.7 **/
+        /* For migrations on MySQL older than 5.7.7 * */
         if (config('database.default') !== 'pgsql') {
             Schema::defaultStringLength(191);
         }
@@ -54,6 +54,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
     }
 }

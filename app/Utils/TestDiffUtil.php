@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Log;
  * This class is responsible for populating the `testdiff` table.
  * It also sets `build2test::newstatus` = 1 as appropriate.
  **/
-
 class TestDiffUtil
 {
     public static function computeDifferences(Build $build): bool
@@ -28,10 +27,10 @@ class TestDiffUtil
         $previous_build->Id = $previous_build_id;
         $previous_build->FillFromId($previous_build->Id);
 
-        return self::computeDifferencesForType($build, $previous_build, TestDiffType::NotRun->value) &&
-            self::computeDifferencesForType($build, $previous_build, TestDiffType::Failed->value) &&
-            self::computeDifferencesForType($build, $previous_build, TestDiffType::Passed->value) &&
-            self::computeDifferencesForType($build, $previous_build, TestDiffType::FailedTimeStatus->value);
+        return self::computeDifferencesForType($build, $previous_build, TestDiffType::NotRun->value)
+            && self::computeDifferencesForType($build, $previous_build, TestDiffType::Failed->value)
+            && self::computeDifferencesForType($build, $previous_build, TestDiffType::Passed->value)
+            && self::computeDifferencesForType($build, $previous_build, TestDiffType::FailedTimeStatus->value);
     }
 
     private static function computeDifferencesForType(Build $build, Build $previous_build, int $type): bool
@@ -73,7 +72,7 @@ class TestDiffUtil
         foreach ($tests as $test) {
             if (array_search($test['name'], array_column($previous_tests, 'name')) === false) {
                 // This test was found for the current build but not the previous build.
-                $num_positive += 1;
+                $num_positive++;
                 $newstatus_b2t_ids[] = $test['buildtestid'];
             }
         }
@@ -86,7 +85,7 @@ class TestDiffUtil
         foreach ($previous_tests as $previous_test) {
             if (array_search($previous_test['name'], array_column($tests, 'name')) === false) {
                 // This test had status=$type in the previous build, but it doesn't any more.
-                $num_negative += 1;
+                $num_negative++;
             }
         }
 

@@ -50,7 +50,7 @@ class TestOverview extends ResultsApi
         $groupid = get_param('group', false) ?: 0;
         if ($groupid) {
             $group_join = 'JOIN build2group b2g ON (b2g.buildid=b.id)';
-            $group_clause = "b2g.groupid=:groupid";
+            $group_clause = 'b2g.groupid=:groupid';
             $group_link = "&group=$groupid";
         } else {
             $group_join = '';
@@ -84,7 +84,6 @@ class TestOverview extends ResultsApi
         $menu['current'] = 'testOverview.php?project=' . urlencode($this->project->Name) . "&date=$today$group_link";
         $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . "&date=$this->date";
         $response['menu'] = $menu;
-
 
         // List all active buildgroups for this project.
         $buildgroups = BuildGroup::GetBuildGroups($this->project->Id, $this->beginDate);
@@ -163,11 +162,11 @@ class TestOverview extends ResultsApi
             }
 
             if ($status === 'passed') {
-                $all_tests[$test_name]['passed'] += 1;
+                $all_tests[$test_name]['passed']++;
             } elseif (strpos($row['details'], 'Timeout') !== false) {
-                $all_tests[$test_name]['timeout'] += 1;
+                $all_tests[$test_name]['timeout']++;
             } else {
-                $all_tests[$test_name]['failed'] += 1;
+                $all_tests[$test_name]['failed']++;
             }
             if ($row['time'] > $all_tests[$test_name]['time']) {
                 $all_tests[$test_name]['time'] = $row['time'];

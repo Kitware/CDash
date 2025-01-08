@@ -40,7 +40,7 @@ function check_email_errors(int $buildid, bool $checktesttimeingchanged, int $te
 
     // Configure errors
     /** @var Configure $BuildConfigure */
-    $BuildConfigure = \App\Models\Build::findOrFail($buildid)->configure()->first();
+    $BuildConfigure = App\Models\Build::findOrFail($buildid)->configure()->first();
     $errors['configure_errors'] = $BuildConfigure->status ?? 0;
 
     // Build errors and warnings
@@ -156,7 +156,7 @@ function get_email_summary(int $buildid, array $errors, $errorkey, int $maxitems
         $information = "\n\n*Configure*\n";
 
         /** @var Configure $configure */
-        $configure = \App\Models\Build::findOrFail($buildid)->configure()->first();
+        $configure = App\Models\Build::findOrFail($buildid)->configure()->first();
 
         // If this is false pdo_execute called in BuildConfigure will
         // have already logged the error.
@@ -268,7 +268,7 @@ function get_email_summary(int $buildid, array $errors, $errorkey, int $maxitems
     } elseif ($errorkey === 'test_errors') {
         // Local function to add a set of tests to our email message body.
         // This reduces copied & pasted code below.
-        $AddTestsToEmail = function ($tests, $section_title) use ($buildid, $maxchars, $maxitems, $serverURI) {
+        $AddTestsToEmail = function ($tests, $section_title) use ($maxchars, $maxitems, $serverURI) {
             $num_tests = count($tests);
             if ($num_tests < 1) {
                 return '';
@@ -416,8 +416,8 @@ function generate_broken_build_message(array $emailtext, $Build, $Project): arra
     // if the 'configure_error' key exists in the category array of keys.
     $categories = array_keys($emailtext['category']);
 
-    $useSubProjectName = $Build->GetSubProjectName() &&
-        !in_array('configure_errors', $categories);
+    $useSubProjectName = $Build->GetSubProjectName()
+        && !in_array('configure_errors', $categories);
 
     // Because a configure error is not subproject specific, remove this from the output
     // if this is a configure_error.
@@ -485,14 +485,12 @@ function generate_broken_build_message(array $emailtext, $Build, $Project): arra
 
     $footer = "\n-CDash\n";
     return ['title' => $title, 'preamble' => $preamble, 'body' => $body,
-            'footer' => $footer];
+        'footer' => $footer];
 }
 
 /** function to send email to site maintainers when the update step fails */
 function send_update_email(UpdateHandler $handler, int $projectid): void
 {
-
-
     $Project = new Project();
     $Project->Id = $projectid;
     $Project->Fill();

@@ -39,7 +39,7 @@ class UploadFileTestCase extends KWWebTestCase
     public function testVerifyFileSubmission()
     {
         $this->deleteLog($this->logfilename);
-        //Verify file exists in the database
+        // Verify file exists in the database
         $query = $this->db->query('SELECT buildid, fileid FROM build2uploadfile');
         if (count($query) == 0) {
             $this->fail('No build2upload records were added to the database');
@@ -54,7 +54,7 @@ class UploadFileTestCase extends KWWebTestCase
 
         $this->assertClickable('http://www.kitware.com/company/about.html');
 
-        //Verify content exists on disk
+        // Verify content exists on disk
         $query = $this->db->query("SELECT id, sha1sum FROM uploadfile WHERE filename='CMakeCache.txt'");
         if (count($query) == 0) {
             $this->fail('CMakeCache.txt was not added to the uploadfile table');

@@ -18,9 +18,9 @@
 namespace CDash\Controller\Api;
 
 use App\Models\Measurement;
+use App\Models\Project as EloquentProject;
 use App\Models\TestMeasurement;
 use App\Models\TestOutput;
-use App\Models\Project as EloquentProject;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -43,7 +43,7 @@ class QueryTests extends ResultsApi
         $this->testOutputExcludeRegex = [];
 
         $this->delimiters = ['/', '#', '%', '~', '+', '!', '@', '_', ';', '`',
-                             '-', '=', ','];
+            '-', '=', ','];
 
         $this->hasProcessors = false;
         $this->numExtraMeasurements = 0;
@@ -340,7 +340,7 @@ class QueryTests extends ResultsApi
         if (config('database.default') === 'pgsql') {
             $text_concat = "array_to_string(array_agg(DISTINCT text), ', ')";
         } else {
-            $text_concat  = "GROUP_CONCAT(DISTINCT text SEPARATOR ', ')";
+            $text_concat = "GROUP_CONCAT(DISTINCT text SEPARATOR ', ')";
         }
 
         $query_params[':projectid'] = $this->project->Id;

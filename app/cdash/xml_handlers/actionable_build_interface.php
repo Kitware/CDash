@@ -1,11 +1,11 @@
 <?php
 
+use App\Models\Site;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
-use App\Models\Site;
 use CDash\Model\SubscriberInterface;
 
 /**

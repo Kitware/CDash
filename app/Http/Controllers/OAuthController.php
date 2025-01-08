@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Auth\RegisterController;
+use App\Models\User;
+use Exception;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Routing\Redirector;
 use Symfony\Component\HttpFoundation\RedirectResponse as symfonyResponse;
-use App\Models\User;
-use App\Http\Controllers\Auth\RegisterController;
 
 /**
  * Class OAuthController
- * @package App\Http\Controllers
  */
 final class OAuthController extends AbstractController
 {
@@ -29,19 +29,19 @@ final class OAuthController extends AbstractController
         // Try/Catch to prevent 500  error when access is denied at provider
         try {
             $authUser = Socialite::driver($service)->user();
-        } catch (\Exception $e) {
-            Log::error("Problem logging in with $service.  Error was ". $e->getMessage());
-            return redirect("/login");
-        };
+        } catch (Exception $e) {
+            Log::error("Problem logging in with $service.  Error was " . $e->getMessage());
+            return redirect('/login');
+        }
 
-        $email =  $authUser->getEmail();
+        $email = $authUser->getEmail();
         $name = $authUser->getName() ?? '';
 
         // Check if name has space.  Avoid issue where username = "Real" name
-        if (str_contains($name, " ")) {
-            [$fname, $lname] = explode(" ", $name);
+        if (str_contains($name, ' ')) {
+            [$fname, $lname] = explode(' ', $name);
         } else {
-            [$fname, $lname] = [$name, ""];
+            [$fname, $lname] = [$name, ''];
         }
 
         // TODO: What if, for whatever reason, there is more than one user found?
@@ -59,11 +59,11 @@ final class OAuthController extends AbstractController
                 $user = $registerController->create($registerData);
                 if ($user === null) {
                     Log::error("Error registering new user via $service: $email");
-                    abort(500, "Error registering new user");
+                    abort(500, 'Error registering new user');
                 }
                 Auth::login($user, true);
             } else {
-                $parameters = compact('fname', "lname", 'email');
+                $parameters = compact('fname', 'lname', 'email');
                 $to = route('register', $parameters);
                 return redirect($to);
             }

@@ -16,11 +16,10 @@ class CreateLabel2buildfailureTable extends Migration
             Schema::create('label2buildfailure', function (Blueprint $table) {
                 $table->bigInteger('labelid');
                 $table->bigInteger('buildfailureid');
-                $table->primary(['labelid','buildfailureid']);
+                $table->primary(['labelid', 'buildfailureid']);
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

@@ -6,16 +6,13 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
-
 use App\Models\User;
+use CDash\Database;
 use CDash\Model\Label;
 use CDash\Model\LabelEmail;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
 use CDash\Model\UserProject;
-use CDash\Database;
 use Illuminate\Support\Facades\DB;
 
 class SubProjectEmailTestCase extends KWWebTestCase

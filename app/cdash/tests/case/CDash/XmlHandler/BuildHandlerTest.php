@@ -22,8 +22,8 @@ use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\Project;
 use CDash\Model\Subscriber;
-use Tests\TestCase;
 use CDash\Submission\CommitAuthorHandlerInterface;
+use Tests\TestCase;
 
 class BuildHandlerTest extends TestCase
 {
@@ -62,7 +62,6 @@ class BuildHandlerTest extends TestCase
         $collection = $sut->GetTopicCollectionForSubscriber($subscriber);
         $this->assertCount(1, $collection);
         $this->assertTrue($collection->has(Topic::BUILD_WARNING));
-
 
         $preferences->set(NotifyOn::BUILD_ERROR, true)
             ->set(NotifyOn::BUILD_WARNING, true);

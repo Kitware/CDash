@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
      */
     private function createProject(array $details): Project
     {
-        $response = HTTP::withToken($this->admin_auth_token)->post(url('/api/v1/project.php'), [
+        $response = Http::withToken($this->admin_auth_token)->post(url('/api/v1/project.php'), [
             'project' => $details,
             'Submit' => true,
         ]);

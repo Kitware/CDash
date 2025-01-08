@@ -112,9 +112,9 @@ class TestCreator
         $crc32_input .= $this->testOutput;
         $crc32_input .= $this->testDetails;
         foreach ($this->measurements as $measurement) {
-            $crc32_input .= "_" . $measurement->type;
-            $crc32_input .= "_" . $measurement->name;
-            $crc32_input .= "_" . $measurement->value;
+            $crc32_input .= '_' . $measurement->type;
+            $crc32_input .= '_' . $measurement->name;
+            $crc32_input .= '_' . $measurement->value;
         }
 
         foreach ($this->images as $image) {
@@ -193,10 +193,10 @@ class TestCreator
             DB::insert(
                 'INSERT INTO testoutput (path, command, output, crc32)
                 VALUES (:path, :command, :output, :crc32)',
-                [':path'    => $this->testPath,
-                 ':command' => $this->testCommand,
-                 ':output'  => $this->testOutput,
-                 ':crc32'   => $crc32]);
+                [':path' => $this->testPath,
+                    ':command' => $this->testCommand,
+                    ':output' => $this->testOutput,
+                    ':crc32' => $crc32]);
             $outputid = DB::getPdo()->lastInsertId();
 
             // test2image

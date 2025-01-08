@@ -23,7 +23,6 @@ class CreateRepositoriesTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

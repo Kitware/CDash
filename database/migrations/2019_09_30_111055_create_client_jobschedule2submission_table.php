@@ -20,7 +20,6 @@ class CreateClientJobschedule2submissionTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

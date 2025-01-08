@@ -6,6 +6,7 @@ use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use DateTime;
+use DateTimeZone;
 use Tests\TestCase;
 
 class AutoRemoveBuildsCommand extends TestCase
@@ -38,7 +39,7 @@ class AutoRemoveBuildsCommand extends TestCase
         $build->AddBuild();
 
         // Make a new build for the project.
-        $datetime = new DateTime('now', new \DateTimeZone('UTC'));
+        $datetime = new DateTime('now', new DateTimeZone('UTC'));
         $buildstamp = $datetime->format('Ymd-His') . '-Experimental';
         $db_datetime_str = $datetime->format('Y-m-d H:i:s');
 

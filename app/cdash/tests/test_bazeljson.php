@@ -3,8 +3,10 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
-use CDash\Model\Project;
 use CDash\Database;
+use CDash\Model\Project;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 class BazelJSONTestCase extends KWWebTestCase
 {
@@ -63,9 +65,9 @@ class BazelJSONTestCase extends KWWebTestCase
         $jsonobj = json_decode($content, true);
         $output = $jsonobj['test']['output'];
 
-        $not_expected = "Executed 2 out of 2 tests";
+        $not_expected = 'Executed 2 out of 2 tests';
         if (strpos($output, $not_expected) !== false) {
-            $this->fail("Unexpected output! Should not include test summary");
+            $this->fail('Unexpected output! Should not include test summary');
         }
 
         // Submit the same data again to verify that no testdiff is recorded.
@@ -195,7 +197,6 @@ class BazelJSONTestCase extends KWWebTestCase
             }
         }
 
-
         // Validate the children builds.
         $stmt = $this->PDO->query(
             "SELECT builderrors, buildwarnings, testfailed, testpassed,
@@ -293,7 +294,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $jsonobj = json_decode($content, true);
         $output = $jsonobj['test']['output'];
 
-        $expected = "FAIL: testDrakeFindResourceOrThrowInInstall (__main__.TestCommonInstall)";
+        $expected = 'FAIL: testDrakeFindResourceOrThrowInInstall (__main__.TestCommonInstall)';
         if (strpos($output, $expected) === false) {
             $this->fail("Expected output to include '$expected'");
         }
@@ -349,7 +350,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $jsonobj = json_decode($content, true);
         $output = $jsonobj['test']['output'];
 
-        $expected = "TIMEOUT";
+        $expected = 'TIMEOUT';
         if (strpos($output, $expected) === false) {
             $this->fail("Expected output to include '$expected'");
         }
@@ -467,8 +468,8 @@ class BazelJSONTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $errors = $jsonobj['errors'];
-        if ($errors[0]["logline"] != 1) {
-            $this->fail("Expected error at line 1, found at line ".$errors[0]["logline"]);
+        if ($errors[0]['logline'] != 1) {
+            $this->fail('Expected error at line 1, found at line ' . $errors[0]['logline']);
         }
 
         // Cleanup.
@@ -491,7 +492,6 @@ class BazelJSONTestCase extends KWWebTestCase
                         configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
-
 
         $answer_key = [
             'builderrors' => 0,
@@ -522,7 +522,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $jsonobj = json_decode($content, true);
 
         // Check Details
-        $expected = "Completed";
+        $expected = 'Completed';
         if (strpos($jsonobj['test']['details'], $expected) === false) {
             $this->fail("Expected output to include '$expected'");
         }
@@ -547,7 +547,6 @@ class BazelJSONTestCase extends KWWebTestCase
                         configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
-
 
         $answer_key = [
             'builderrors' => 0,
@@ -580,17 +579,17 @@ class BazelJSONTestCase extends KWWebTestCase
         // Use the API to verify that the expected output is displayed
         $output = $jsonobj['test']['output'];
 
-        $expected = "//automotive/maliput/multilane:multilane_builder_test";
+        $expected = '//automotive/maliput/multilane:multilane_builder_test';
         if (strpos($output, $expected) === false) {
             $this->fail("Expected output to include '$expected'");
         }
 
-        $expected = "multilane/multilane_builder_test/test.log";
+        $expected = 'multilane/multilane_builder_test/test.log';
         if (strpos($output, $expected) === false) {
             $this->fail("Expected output to include '$expected'");
         }
 
-        $not_expected = "automotive/maliput/multilane:multilane_lanes_test";
+        $not_expected = 'automotive/maliput/multilane:multilane_lanes_test';
         $result = strpos($output, $not_expected);
         if ($result != false) {
             $this->fail("Expected output to NOT include '$not_expected'");
@@ -612,13 +611,13 @@ class BazelJSONTestCase extends KWWebTestCase
         // Use the API to verify that the expected output is displayed
         $output = $jsonobj['test']['output'];
 
-        $expected = "automotive/maliput/multilane:multilane_lanes_test";
+        $expected = 'automotive/maliput/multilane:multilane_lanes_test';
         if (strpos($output, $expected) === false) {
             $this->fail("Expected output to include '$expected'");
         }
 
         // Check Details
-        $expected = "Completed (Failed)";
+        $expected = 'Completed (Failed)';
         if (strpos($jsonobj['test']['details'], $expected) === false) {
             $this->fail("Expected output to include '$expected'");
         }
@@ -643,7 +642,6 @@ class BazelJSONTestCase extends KWWebTestCase
                         configureerrors, configurewarnings
                 FROM build WHERE id = $buildid");
         $row = $stmt->fetch();
-
 
         $answer_key = [
             'builderrors' => 0,
@@ -676,36 +674,36 @@ class BazelJSONTestCase extends KWWebTestCase
         // Use the API to verify that the expected output is displayed
         $output = $jsonobj['test']['output'];
 
-        $expected = "Note: This is test shard 8 of 10.";
+        $expected = 'Note: This is test shard 8 of 10.';
         if (strpos($output, $expected) === false) {
             $this->fail("Expected output to include '$expected'");
         }
-        $expected = "Note: This is test shard 9 of 10.";
+        $expected = 'Note: This is test shard 9 of 10.';
         if (strpos($output, $expected) === false) {
             $this->fail("Expected output to include '$expected'");
         }
-        $expected = "Note: This is test shard 10 of 10.";
+        $expected = 'Note: This is test shard 10 of 10.';
         if (strpos($output, $expected) === false) {
             $this->fail("Expected output to include '$expected'");
         }
         // 'TIMEOUT' has markup, skip looking for that to make test simpler
-        $expected = "in 3 out of 10 in 60.1s";
+        $expected = 'in 3 out of 10 in 60.1s';
         if (strpos($output, $expected) === false) {
             $this->fail("Expected output to include '$expected'");
         }
-        $expected = "Stats over 10 runs";
+        $expected = 'Stats over 10 runs';
         if (strpos($output, $expected) === false) {
             $this->fail("Expected output to include '$expected'");
         }
 
         // Check Details
-        $expected = "Completed (Timeout)";
+        $expected = 'Completed (Timeout)';
         if (strpos($jsonobj['test']['details'], $expected) === false) {
             $this->fail("Expected output to include '$expected'");
         }
 
         // Check time - should be sum of all shards
-        $expected = "3m 5s 750ms";
+        $expected = '3m 5s 750ms';
         if (strpos($jsonobj['test']['time'], $expected) === false) {
             $this->fail("Expected time to be $expected, found {$jsonobj['test']['time']}");
         }
@@ -728,7 +726,7 @@ class BazelJSONTestCase extends KWWebTestCase
             'track' => 'Experimental',
             'type' => $upload_type,
             'datafilesmd5[0]=' => $md5];
-        $client = new GuzzleHttp\Client();
+        $client = new Client();
         try {
             $response = $client->request('POST',
                 $this->url . '/submit.php',
@@ -736,7 +734,7 @@ class BazelJSONTestCase extends KWWebTestCase
                     'form_params' => $fields,
                 ]
             );
-        } catch (GuzzleHttp\Exception\ClientException $e) {
+        } catch (ClientException $e) {
             $this->fail('POST submit failed: ' . $e->getMessage());
             return false;
         }

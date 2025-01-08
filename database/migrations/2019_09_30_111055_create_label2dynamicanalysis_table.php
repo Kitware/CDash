@@ -16,11 +16,10 @@ class CreateLabel2dynamicanalysisTable extends Migration
             Schema::create('label2dynamicanalysis', function (Blueprint $table) {
                 $table->bigInteger('labelid');
                 $table->bigInteger('dynamicanalysisid');
-                $table->primary(['labelid','dynamicanalysisid']);
+                $table->primary(['labelid', 'dynamicanalysisid']);
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

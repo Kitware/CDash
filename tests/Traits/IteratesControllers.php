@@ -15,6 +15,7 @@ trait IteratesControllers
      * Returns an array of reflection objects corresponding to each controller.
      *
      * @return array<ReflectionClass<object>>
+     *
      * @throws Exception
      */
     private static function getControllers(): array

@@ -71,7 +71,6 @@ final class ManageUsersController extends AbstractController
             $warning = "$name has been removed.";
         }
 
-
         return $this->view('admin.manage-users')
             ->with('warning', $warning)
             ->with('error', $error)
@@ -84,11 +83,11 @@ final class ManageUsersController extends AbstractController
         $search = trim($_GET['search'] ?? '');
         if ($search !== '') {
             if ((bool) config('require_full_email_when_adding_user')) {
-                $sql = "email=?";
+                $sql = 'email=?';
                 $params = [$search];
             } else {
                 $search = '%' . $search . '%';
-                $sql = "email LIKE ? OR firstname LIKE ? OR lastname LIKE ?";
+                $sql = 'email LIKE ? OR firstname LIKE ? OR lastname LIKE ?';
                 $params = [$search, $search, $search];
             }
             $users = DB::select('SELECT * FROM users WHERE ' . $sql, $params);

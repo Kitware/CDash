@@ -16,11 +16,10 @@ class CreateClientJobschedule2libraryTable extends Migration
             Schema::create('client_jobschedule2library', function (Blueprint $table) {
                 $table->bigInteger('scheduleid');
                 $table->integer('libraryid');
-                $table->unique(['scheduleid','libraryid'], 'client_jobschedule2library_scheduleid');
+                $table->unique(['scheduleid', 'libraryid'], 'client_jobschedule2library_scheduleid');
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

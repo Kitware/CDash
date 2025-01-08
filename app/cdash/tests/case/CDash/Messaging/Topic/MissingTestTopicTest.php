@@ -18,6 +18,7 @@
 use CDash\Messaging\Topic\MissingTestTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 class MissingTestTopicTest extends TestCase
@@ -56,7 +57,7 @@ class MissingTestTopicTest extends TestCase
         $sut = new MissingTestTopic();
 
         $collection = $sut->getTopicCollection();
-        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $collection);
+        $this->assertInstanceOf(Collection::class, $collection);
     }
 
     public function testGetTopicDescription()

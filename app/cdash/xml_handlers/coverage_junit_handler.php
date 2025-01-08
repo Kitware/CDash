@@ -15,14 +15,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\Site;
+use App\Models\SiteInformation;
 use App\Utils\SubmissionUtils;
 use CDash\Model\Build;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageSummary;
 use CDash\Model\Label;
-use App\Models\Site;
-use App\Models\SiteInformation;
 use CDash\Model\Project;
 
 class CoverageJUnitHandler extends AbstractXmlHandler

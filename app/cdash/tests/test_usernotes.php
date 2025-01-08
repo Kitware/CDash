@@ -6,8 +6,6 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
 

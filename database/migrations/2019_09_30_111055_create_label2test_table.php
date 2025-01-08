@@ -17,11 +17,10 @@ class CreateLabel2testTable extends Migration
                 $table->bigInteger('labelid');
                 $table->bigInteger('buildid')->index();
                 $table->bigInteger('testid')->index();
-                $table->primary(['labelid','buildid','testid']);
+                $table->primary(['labelid', 'buildid', 'testid']);
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

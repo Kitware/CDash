@@ -26,8 +26,8 @@ class UpdateErrorTopic extends Topic implements Decoratable, Fixable
     use IssueTemplateTrait;
 
     private $diff;
+
     /**
-     * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)
@@ -38,7 +38,6 @@ class UpdateErrorTopic extends Topic implements Decoratable, Fixable
     }
 
     /**
-     * @param Build $build
      * @return $this
      */
     public function addBuild(Build $build)
@@ -49,9 +48,7 @@ class UpdateErrorTopic extends Topic implements Decoratable, Fixable
     }
 
     /**
-     * @param Build $build
-     * @param $item
-     * @return boolean
+     * @return bool
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
@@ -69,7 +66,6 @@ class UpdateErrorTopic extends Topic implements Decoratable, Fixable
     }
 
     /**
-     * @param SubscriberInterface $subscriber
      * @return bool
      */
     public function isSubscribedToBy(SubscriberInterface $subscriber)

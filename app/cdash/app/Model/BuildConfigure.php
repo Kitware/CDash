@@ -17,11 +17,12 @@
 
 namespace CDash\Model;
 
+use App\Models\BuildConfigure as EloquentBuildConfigure;
+use App\Models\Configure as EloquentConfigure;
+use CDash\Database;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use PDO;
-use CDash\Database;
-use App\Models\Configure as EloquentConfigure;
-use App\Models\BuildConfigure as EloquentBuildConfigure;
 
 /** BuildConfigure class */
 class BuildConfigure
@@ -131,8 +132,8 @@ class BuildConfigure
     }
 
     /** Delete a current configure given a buildid
-      * Returns true if the configure row was deleted from the database.
-      */
+     * Returns true if the configure row was deleted from the database.
+     */
     public function Delete(): bool
     {
         if (!$this->Exists()) {
@@ -214,9 +215,9 @@ class BuildConfigure
                 } else {
                     $error_info = $stmt->errorInfo();
                     $error = $error_info[2];
-                    throw new \Exception($error);
+                    throw new Exception($error);
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // This error might be due to a unique constraint violation.
                 // Query again to see if this configure was created since
                 // the last time we checked.
@@ -353,6 +354,7 @@ class BuildConfigure
 
     /**
      * Returns the current BuildConfigure's Label property as a LabelCollection.
+     *
      * @return Collection
      */
     public function GetLabelCollection()

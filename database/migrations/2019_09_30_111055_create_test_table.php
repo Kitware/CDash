@@ -26,7 +26,6 @@ class CreateTestTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

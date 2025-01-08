@@ -34,7 +34,7 @@ class BuildGroupRule
 
     private $PDO;
 
-    public function __construct(Build $build = null)
+    public function __construct(?Build $build = null)
     {
         if (!is_null($build)) {
             $this->BuildType = $build->Type;
@@ -74,12 +74,12 @@ class BuildGroupRule
                   siteid        = :siteid AND
                   endtime       = :endtime');
         $query_params = [
-            ':groupid'       => $this->GroupId,
+            ':groupid' => $this->GroupId,
             ':parentgroupid' => $this->ParentGroupId,
-            ':buildtype'     => $this->BuildType,
-            ':buildname'     => $this->BuildName,
-            ':siteid'        => $this->SiteId,
-            ':endtime'       => $this->EndTime,
+            ':buildtype' => $this->BuildType,
+            ':buildname' => $this->BuildName,
+            ':siteid' => $this->SiteId,
+            ':endtime' => $this->EndTime,
         ];
 
         $this->PDO->execute($stmt, $query_params);
@@ -106,14 +106,14 @@ class BuildGroupRule
                     (:groupid, :parentgroupid, :buildtype, :buildname, :siteid,
                      :expected, :starttime, :endtime)');
             $query_params = [
-                ':groupid'       => $this->GroupId,
+                ':groupid' => $this->GroupId,
                 ':parentgroupid' => $this->ParentGroupId,
-                ':buildtype'     => $this->BuildType,
-                ':buildname'     => $this->BuildName,
-                ':siteid'        => $this->SiteId,
-                ':expected'      => $this->Expected,
-                ':starttime'     => $this->StartTime,
-                ':endtime'       => $this->EndTime,
+                ':buildtype' => $this->BuildType,
+                ':buildname' => $this->BuildName,
+                ':siteid' => $this->SiteId,
+                ':expected' => $this->Expected,
+                ':starttime' => $this->StartTime,
+                ':endtime' => $this->EndTime,
             ];
             return $this->PDO->execute($stmt, $query_params);
         }
@@ -136,11 +136,11 @@ class BuildGroupRule
                   siteid    = :siteid AND
                   endtime   = '1980-01-01 00:00:00'");
         return $this->PDO->execute($stmt, [
-                ':expected'  => $this->Expected,
-                ':groupid'   => $this->GroupId,
-                ':buildtype' => $this->BuildType,
-                ':buildname' => $this->BuildName,
-                ':siteid'    => $this->SiteId]);
+            ':expected' => $this->Expected,
+            ':groupid' => $this->GroupId,
+            ':buildtype' => $this->BuildType,
+            ':buildname' => $this->BuildName,
+            ':siteid' => $this->SiteId]);
     }
 
     public function GetExpected()
@@ -153,11 +153,11 @@ class BuildGroupRule
                   siteid    = :siteid    AND
                   endtime   = :endtime');
         $this->PDO->execute($stmt, [
-            ':groupid'   => $this->GroupId,
+            ':groupid' => $this->GroupId,
             ':buildtype' => $this->BuildType,
             ':buildname' => $this->BuildName,
-            ':siteid'    => $this->SiteId,
-            ':endtime'   => $this->EndTime]);
+            ':siteid' => $this->SiteId,
+            ':endtime' => $this->EndTime]);
         return $stmt->fetchColumn() ? 1 : 0;
     }
 
@@ -185,13 +185,13 @@ class BuildGroupRule
                   siteid        = :siteid AND
                   endtime       = :begin_epoch');
         $query_params = [
-            ':endtime'         => $now,
-            ':groupid'         => $this->GroupId,
-            ':parentgroupid'   => $this->ParentGroupId,
-            ':buildtype'       => $this->BuildType,
-            ':buildname'       => $this->BuildName,
-            ':siteid'          => $this->SiteId,
-            ':begin_epoch'     => '1980-01-01 00:00:00',
+            ':endtime' => $now,
+            ':groupid' => $this->GroupId,
+            ':parentgroupid' => $this->ParentGroupId,
+            ':buildtype' => $this->BuildType,
+            ':buildname' => $this->BuildName,
+            ':siteid' => $this->SiteId,
+            ':begin_epoch' => '1980-01-01 00:00:00',
         ];
         return $this->PDO->execute($stmt, $query_params);
     }
@@ -210,14 +210,14 @@ class BuildGroupRule
                       starttime     = :starttime AND
                       endtime       = :endtime');
         $query_params = [
-            ':groupid'         => $this->GroupId,
-            ':parentgroupid'   => $this->ParentGroupId,
-            ':buildtype'       => $this->BuildType,
-            ':buildname'       => $this->BuildName,
-            ':siteid'          => $this->SiteId,
-            ':expected'        => $this->Expected,
-            ':starttime'       => $this->StartTime,
-            ':endtime'         => $this->EndTime,
+            ':groupid' => $this->GroupId,
+            ':parentgroupid' => $this->ParentGroupId,
+            ':buildtype' => $this->BuildType,
+            ':buildname' => $this->BuildName,
+            ':siteid' => $this->SiteId,
+            ':expected' => $this->Expected,
+            ':starttime' => $this->StartTime,
+            ':endtime' => $this->EndTime,
         ];
         return $this->PDO->execute($stmt, $query_params);
     }
@@ -235,11 +235,11 @@ class BuildGroupRule
                   groupid IN
                       (SELECT id FROM buildgroup WHERE projectid = :projectid)");
         $this->PDO->execute($stmt, [
-                ':endtime'   => $now,
-                ':projectid' => $this->ProjectId,
-                ':buildtype' => $this->BuildType,
-                ':buildname' => $this->BuildName,
-                ':siteid'    => $this->SiteId]);
+            ':endtime' => $now,
+            ':projectid' => $this->ProjectId,
+            ':buildtype' => $this->BuildType,
+            ':buildname' => $this->BuildName,
+            ':siteid' => $this->SiteId]);
     }
 
     /** Change the group that this rule points to. */
@@ -255,10 +255,10 @@ class BuildGroupRule
 
         $query_params = [
             ':newgroupid' => $newgroupid,
-            ':groupid'    => $this->GroupId,
-            ':buildtype'  => $this->BuildType,
-            ':buildname'  => $this->BuildName,
-            ':siteid'     => $this->SiteId];
+            ':groupid' => $this->GroupId,
+            ':buildtype' => $this->BuildType,
+            ':buildname' => $this->BuildName,
+            ':siteid' => $this->SiteId];
 
         $this->PDO->execute($stmt, $query_params);
 

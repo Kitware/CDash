@@ -18,11 +18,10 @@ class CreateTestdiffTable extends Migration
                 $table->tinyInteger('type')->index();
                 $table->integer('difference_positive')->index();
                 $table->integer('difference_negative')->index();
-                $table->unique(['buildid','type'], 'unique_testdiff');
+                $table->unique(['buildid', 'type'], 'unique_testdiff');
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

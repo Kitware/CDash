@@ -20,7 +20,6 @@ class CreateBuild2groupTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

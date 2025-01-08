@@ -15,10 +15,8 @@ trait CreatesUsers
         ?string $lastname = null,
         ?string $email = null,
         ?string $password = null,
-        ?string $institution = null
+        ?string $institution = null,
     ): User {
-
-
         return $this->makeUser(
             $firstname ?? 'Admin',
             $lastname ?? 'User',
@@ -37,7 +35,7 @@ trait CreatesUsers
         ?string $lastname = null,
         ?string $email = null,
         ?string $password = null,
-        ?string $institution = null
+        ?string $institution = null,
     ): User {
         return $this->makeUser(
             $firstname ?? 'Normal',
@@ -59,7 +57,7 @@ trait CreatesUsers
         string $email,
         string $password,
         string $institution,
-        bool $admin
+        bool $admin,
     ): User {
         $user = new User([
             'firstname' => $firstname,

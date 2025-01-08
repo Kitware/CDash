@@ -8,6 +8,7 @@ use GraphQL\Error\Error;
 use GraphQL\Error\InvariantViolation;
 use GraphQL\Language\AST\FloatValueNode;
 use GraphQL\Language\AST\Node;
+use GraphQL\Language\AST\ValueNode;
 use GraphQL\Type\Definition\ScalarType;
 
 final class NonNegativeSeconds extends ScalarType
@@ -50,8 +51,9 @@ final class NonNegativeSeconds extends ScalarType
      *
      * Should throw an exception with a client friendly message on invalid value nodes.
      *
-     * @param \GraphQL\Language\AST\ValueNode&\GraphQL\Language\AST\Node $valueNode
+     * @param ValueNode&Node $valueNode
      * @param array<string, mixed>|null $variables
+     *
      * @throws Error
      */
     public function parseLiteral(Node $valueNode, ?array $variables = null): float

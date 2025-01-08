@@ -15,6 +15,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\Site;
 use App\Utils\SubmissionUtils;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\SubscriptionBuilderCollection;
@@ -29,7 +30,6 @@ use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUpdateFile;
 use CDash\Model\Project;
 use CDash\Model\Repository;
-use App\Models\Site;
 use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
 
@@ -130,7 +130,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
                 // repository to figure out what changed.
                 try {
                     Repository::compareCommits($this->Update, $this->GetProject());
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     // Do nothing.
                 }
             }
@@ -218,9 +218,6 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
         }
     }
 
-    /**
-     * @return BuildCollection
-     */
     public function GetBuildCollection(): BuildCollection
     {
         $collection = new BuildCollection();

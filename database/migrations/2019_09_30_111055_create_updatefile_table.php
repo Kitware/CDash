@@ -29,7 +29,6 @@ class CreateUpdatefileTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

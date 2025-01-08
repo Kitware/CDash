@@ -15,13 +15,13 @@
  * =========================================================================
  */
 
+use App\Models\Site;
 use CDash\Collection\BuildCollection;
 use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
 use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
-use App\Models\Site;
 use CDash\Test\BuildDiffForTesting;
 use Tests\TestCase;
 

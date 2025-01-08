@@ -25,7 +25,6 @@ class CreateBuildinformationTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

@@ -20,7 +20,6 @@ class CreateBuildfailureargumentTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

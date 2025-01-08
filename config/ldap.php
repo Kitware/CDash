@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default LDAP Connection Name
@@ -27,7 +26,6 @@ return [
     */
 
     'connections' => [
-
         'default' => [
             'hosts' => [env('LDAP_HOSTS', '127.0.0.1')],
             'username' => env('LDAP_USERNAME', ''),
@@ -42,7 +40,6 @@ return [
                 // 'mech' => 'GSSAPI',
             ],
         ],
-
     ],
 
     /*
@@ -77,5 +74,4 @@ return [
         'enabled' => env('LDAP_CACHE', false),
         'driver' => env('CACHE_DRIVER', 'file'),
     ],
-
 ];

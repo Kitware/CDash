@@ -20,7 +20,6 @@ class CreateBuildtesttimeTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

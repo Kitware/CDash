@@ -29,7 +29,6 @@ class CreateBuildupdateTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

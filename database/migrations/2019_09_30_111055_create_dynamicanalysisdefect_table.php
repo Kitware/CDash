@@ -21,7 +21,6 @@ class CreateDynamicanalysisdefectTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

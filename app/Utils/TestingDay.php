@@ -18,6 +18,8 @@
 namespace App\Utils;
 
 use CDash\Model\Project;
+use DateInterval;
+use DateTime;
 
 /**
  * This class handles testing day bounds checks.
@@ -45,7 +47,7 @@ class TestingDay
         $second = intval(date('s', $current_nightly_timestamp));
 
         // Get UNIX timestamp for input date (interpreted as UTC time).
-        $build_datetime = new \DateTime($date . ' UTC');
+        $build_datetime = new DateTime($date . ' UTC');
         $build_start_timestamp = $build_datetime->getTimestamp();
 
         // Generate a DateTime object for our nightly starttime on the date
@@ -54,7 +56,7 @@ class TestingDay
         $month = intval(date('n', $build_start_timestamp));
         $day = intval(date('j', $build_start_timestamp));
 
-        $nightly_datetime = new \DateTime();
+        $nightly_datetime = new DateTime();
         $nightly_datetime->setTimezone($project->NightlyTimezone);
         $nightly_datetime->setDate($year, $month, $day);
         $nightly_datetime->setTime($hour, $minute, $second);
@@ -66,7 +68,7 @@ class TestingDay
             if (date(FMT_TIME, $build_start_timestamp) <
                     date(FMT_TIME, $nightly_start_timestamp)
             ) {
-                $build_datetime->sub(new \DateInterval('P1D'));
+                $build_datetime->sub(new DateInterval('P1D'));
                 $build_start_timestamp = $build_datetime->getTimestamp();
             }
         } else {
@@ -75,7 +77,7 @@ class TestingDay
             if (date(FMT_TIME, $build_start_timestamp) >=
                     date(FMT_TIME, $nightly_start_timestamp)
             ) {
-                $build_datetime->add(new \DateInterval('P1D'));
+                $build_datetime->add(new DateInterval('P1D'));
                 $build_start_timestamp = $build_datetime->getTimestamp();
             }
         }

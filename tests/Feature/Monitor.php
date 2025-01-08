@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use LogicException;
 use Mockery\Exception\InvalidCountException;
-use Tests\Traits\CreatesUsers;
 use Tests\TestCase;
+use Tests\Traits\CreatesUsers;
 
 class Monitor extends TestCase
 {
@@ -103,21 +103,21 @@ class Monitor extends TestCase
             'backlog_length',
             'backlog_time',
             'time_chart_data' => [
-                "data" => [
+                'data' => [
                     [
-                        "name",
-                        "color",
-                        "values",
+                        'name',
+                        'color',
+                        'values',
                     ],
                     [
-                        "name",
-                        "color",
-                        "values",
+                        'name',
+                        'color',
+                        'values',
                     ],
                 ],
-                "title",
-                "xLabel",
-                "yLabel",
+                'title',
+                'xLabel',
+                'yLabel',
             ],
             'log_directory',
         ]);

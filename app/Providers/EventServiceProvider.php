@@ -3,9 +3,16 @@
 namespace App\Providers;
 
 use App\Listeners\ConfiguredSendEmailVerificationNotification;
-use Illuminate\Support\Facades\Event;
+use App\Listeners\SuccessfulLdapAuthListener;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Event;
+use SocialiteProviders\GitHub\GitHubExtendSocialite;
+use SocialiteProviders\GitLab\GitLabExtendSocialite;
+use SocialiteProviders\Google\GoogleExtendSocialite;
+use SocialiteProviders\Manager\SocialiteWasCalled;
+use SocialiteProviders\PingIdentity\PingIdentityExtendSocialite;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -18,15 +25,15 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             ConfiguredSendEmailVerificationNotification::class,
         ],
-        \SocialiteProviders\Manager\SocialiteWasCalled::class => [
+        SocialiteWasCalled::class => [
             // ... other providers
-            \SocialiteProviders\GitLab\GitLabExtendSocialite::class.'@handle',
-            \SocialiteProviders\GitHub\GitHubExtendSocialite::class.'@handle',
-            \SocialiteProviders\Google\GoogleExtendSocialite::class.'@handle',
-            \SocialiteProviders\PingIdentity\PingIdentityExtendSocialite::class.'@handle',
+            GitLabExtendSocialite::class . '@handle',
+            GitHubExtendSocialite::class . '@handle',
+            GoogleExtendSocialite::class . '@handle',
+            PingIdentityExtendSocialite::class . '@handle',
         ],
-        \Illuminate\Auth\Events\Login::class => [
-            \App\Listeners\SuccessfulLdapAuthListener::class,
+        Login::class => [
+            SuccessfulLdapAuthListener::class,
         ],
     ];
 

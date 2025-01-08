@@ -23,8 +23,9 @@ use CDash\Model\Build;
 use CDash\Model\BuildError;
 use CDash\Model\Subscriber;
 use CDash\Test\BuildDiffForTesting;
+use CDash\Test\CDashTestCase;
 
-class BuildErrorTopicTest extends \CDash\Test\CDashTestCase
+class BuildErrorTopicTest extends CDashTestCase
 {
     use BuildDiffForTesting;
 

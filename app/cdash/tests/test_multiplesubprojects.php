@@ -246,10 +246,10 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
         $pdo = Database::getInstance()->getPdo();
 
-        $subprojects = ["MyThirdPartyDependency", "MyExperimentalFeature", "MyProductionCode", "EmptySubproject"];
+        $subprojects = ['MyThirdPartyDependency', 'MyExperimentalFeature', 'MyProductionCode', 'EmptySubproject'];
 
         // Check index.php for this date.
-        $this->get($this->url . "/api/v1/index.php?project=SubProjectExample&date=2016-07-28");
+        $this->get($this->url . '/api/v1/index.php?project=SubProjectExample&date=2016-07-28');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
 
@@ -265,7 +265,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         // Get parent id
         $parentid = $builds[0]['id'];
         if (empty($parentid) || $parentid < 1) {
-            $this->fail("No parentid found when expected");
+            $this->fail('No parentid found when expected');
         }
 
         // Check number of children builds
@@ -410,11 +410,11 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         }
 
         if ($jsonobj['parenthasnotes'] !== true) {
-            $this->fail("parenthasnotes not set to true when expected");
+            $this->fail('parenthasnotes not set to true when expected');
         }
 
         $num_uploaded_files = $jsonobj['uploadfilecount'];
-        if ($num_uploaded_files  !== 1) {
+        if ($num_uploaded_files !== 1) {
             $this->fail("Expected 1 uploaded file, found $num_uploaded_files");
         }
 
@@ -532,7 +532,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             if ($index === false) {
                 $this->fail("Invalid label ($label)!");
             }
-            $index += 1;
+            $index++;
             if ($build['position'] !== $index) {
                 $this->fail("Expected {$index} but found {$build['position']} for {$label} position");
             }
@@ -540,13 +540,13 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $this->verifyBuild($expected_builds[$label], $build, $label);
 
             // Adding tests to ensure that labels associated with subprojects and tests were saved
-            $sql = "
+            $sql = '
                 SELECT label.text
                 FROM label2test
                 INNER JOIN label ON label.id=label2test.labelid
                 INNER JOIN build2test ON build2test.id = label2test.testid
                 WHERE build2test.buildid=:buildid;
-            ";
+            ';
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':buildid', $build['id'], PDO::PARAM_INT);
             $stmt->execute();
@@ -614,7 +614,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
         $content = $this->getBrowser()->getContent();
         if ($content == false) {
-            $this->fail("Error retrieving content from viewConfigure.php");
+            $this->fail('Error retrieving content from viewConfigure.php');
         }
 
         foreach ($subprojects as $subproject) {
@@ -800,10 +800,10 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
         // Test changing subproject order.
         if (!$this->submission('SubProjectExample', "{$this->dataDir}/Project_2.xml")) {
-            $this->fail("failed to submit Project_2.xml");
+            $this->fail('failed to submit Project_2.xml');
             return;
         }
-        $new_order = ["MyProductionCode", "MyExperimentalFeature", "EmptySubproject", "MyThirdPartyDependency"];
+        $new_order = ['MyProductionCode', 'MyExperimentalFeature', 'EmptySubproject', 'MyThirdPartyDependency'];
         $this->get("{$this->url}/api/v1/index.php?project=SubProjectExample&parentid={$parentid}");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
@@ -815,7 +815,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             if ($index === false) {
                 $this->fail("Invalid label ({$label})!");
             }
-            $index += 1;
+            $index++;
             if ($build['position'] !== $index) {
                 $this->fail("Expected {$index} but found {$build['position']} for {$label} position");
             }

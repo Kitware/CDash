@@ -191,18 +191,18 @@ class RepositoryUtils
         if ($revision != '') {
             $prev_revision = self::get_previous_revision($revision);
             if ($prev_revision != $revision) {
-                //diff
+                // diff
 
                 $diff_url = $projecturl . '/?action=browse&path=' . ($directory ? ($directory) : '') . '/' . $file;
                 $diff_url .= '&r1=' . $prev_revision . '&r2=' . $revision;
             } else {
-                //view
+                // view
 
                 $diff_url = $projecturl . '/?action=browse&path=' . ($directory ? ($directory) : '') . '/' . $file;
                 $diff_url .= '&revision=' . $revision . '&view=markup';
             }
         } else {
-            //log
+            // log
 
             $diff_url = $projecturl . '/?action=browse&path=' . ($directory ? ($directory) : '') . '/' . $file . '&view=log';
         }
@@ -215,18 +215,18 @@ class RepositoryUtils
         if ($revision != '') {
             $prev_revision = self::get_previous_revision($revision);
             if ($prev_revision != $revision) {
-                //diff
+                // diff
 
                 $diff_url = $projecturl . '/' . ($directory ? ($directory) : '') . '/' . $file;
                 $diff_url .= '?r1=' . $prev_revision . '&r2=' . $revision;
             } else {
-                //view
+                // view
 
                 $diff_url = $projecturl . '/' . ($directory ? ($directory) : '') . '/' . $file;
                 $diff_url .= '?revision=' . $revision . '&view=markup';
             }
         } else {
-            //log
+            // log
 
             $diff_url = $projecturl . '/' . ($directory ? ($directory) : '') . '/' . $file . '?view=log';
         }
@@ -271,18 +271,18 @@ class RepositoryUtils
         if ($revision != '') {
             $prev_revision = self::get_previous_revision($revision);
             if ($prev_revision != $revision) {
-                //diff
+                // diff
 
                 $diff_url = $projecturl . '/diff.php?' . $repname . '&path=' . $root . ($directory ? '/' . ($directory) : '') . '/' . $file;
                 $diff_url .= '&rev=' . $revision . '&sc=1';
             } else {
-                //view
+                // view
 
                 $diff_url = $projecturl . '/filedetails.php?' . $repname . '&path=' . $root . ($directory ? '/' . ($directory) : '') . '/' . $file;
                 $diff_url .= '&rev=' . $revision;
             }
         } else {
-            //log
+            // log
 
             $diff_url = $projecturl . '/log.php?' . $repname . '&path=' . $root . ($directory ? '/' . ($directory) : '') . '/' . $file;
             $diff_url .= '&rev=0&sc=0&isdir=0';
@@ -296,16 +296,16 @@ class RepositoryUtils
         if ($revision != '') {
             $prev_revision = self::get_previous_revision($revision);
             if ($prev_revision != $revision) {
-                //diff
+                // diff
 
                 $diff_url = $projecturl . '/' . $revision . '/tree/trunk/' . $directory . '/' . $file . '?diff=' . $prev_revision;
             } else {
-                //view
+                // view
 
                 $diff_url = $projecturl . '/' . $revision . '/tree/trunk/';
             }
         } else {
-            //log
+            // log
 
             $diff_url = $projecturl . '/' . $revision;
         }
@@ -804,8 +804,8 @@ class RepositoryUtils
 
         $ch = curl_init($post_url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen($data_string)]
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string)]
         );
         curl_setopt($ch, CURLOPT_HEADER, 1);
         $userpwd = $repo['username'] . ':' . $repo['password'];
@@ -878,10 +878,10 @@ class RepositoryUtils
             // Get users to notify for this SubProject.
             $pdo = Database::getInstance()->getPdo();
             $stmt = $pdo->prepare(
-                "SELECT email FROM users
+                'SELECT email FROM users
             JOIN labelemail ON labelemail.userid = users.id
             JOIN label ON label.id = labelemail.labelid
-            WHERE label.text = ?  AND labelemail.projectid = ?");
+            WHERE label.text = ?  AND labelemail.projectid = ?');
             pdo_execute($stmt, [$subproject_name, $project->Id]);
             while ($row = $stmt->fetch()) {
                 $users[] = $row['email'];
@@ -902,7 +902,7 @@ class RepositoryUtils
     {
         $url = "$baseurl&type=BUG&priority=P0&severity=S0&title=$title&description=$body";
         if (!empty($users)) {
-            $cc = "&cc=";
+            $cc = '&cc=';
             $cc .= implode(',', $users);
             $url .= $cc;
         }
@@ -919,7 +919,7 @@ class RepositoryUtils
              * So for first.last@domain.com, we will add [~first.last] to the body.
              **/
             foreach ($users as $user) {
-                $parts = explode("@", $user, 2);
+                $parts = explode('@', $user, 2);
                 $user_name = $parts[0];
                 $body .= urlencode("[~$user_name] ");
             }
@@ -936,7 +936,7 @@ class RepositoryUtils
              * in the body of the issue.
              **/
             foreach ($users as $user) {
-                $parts = explode("@", $user, 2);
+                $parts = explode('@', $user, 2);
                 $user_name = $parts[0];
                 $body .= urlencode("@$user_name ");
             }

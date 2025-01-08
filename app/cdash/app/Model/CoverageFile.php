@@ -30,6 +30,7 @@ class CoverageFile
     public $Crc32;
 
     private $PDO;
+
     public function __construct()
     {
         $this->PDO = Database::getInstance()->getPdo();

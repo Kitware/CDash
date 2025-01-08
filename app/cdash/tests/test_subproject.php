@@ -15,7 +15,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-
 class SubProjectTestCase extends KWWebTestCase
 {
     public function __construct()
@@ -27,10 +26,10 @@ class SubProjectTestCase extends KWWebTestCase
     public function testAccessToWebPageProjectTest()
     {
         $settings = [
-                'Name' => 'SubProjectExample',
-                'Description' => 'Project SubProjectExample test for cdash testing',
-                'EmailBrokenSubmission' => 1,
-                'EmailRedundantFailures' => 1];
+            'Name' => 'SubProjectExample',
+            'Description' => 'Project SubProjectExample test for cdash testing',
+            'EmailBrokenSubmission' => 1,
+            'EmailRedundantFailures' => 1];
         $this->createProject($settings);
     }
 

@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /* Whether or not to use SAML2 authentication */
     'enabled' => env('SAML2_ENABLED', false),
 
@@ -85,7 +84,6 @@ return [
 
     'logoutRoute' => env('SAML2_LOGOUT_URL', '/projects'),
 
-
     /*
     |--------------------------------------------------------------------------
     | Login error redirection URL.
@@ -145,7 +143,6 @@ return [
     */
 
     'sp' => [
-
         /*
         |--------------------------------------------------------------------------
         | NameID format.
@@ -224,7 +221,6 @@ return [
     */
 
     'security' => [
-
         /*
         |--------------------------------------------------------------------------
         | NameId encryption
@@ -382,5 +378,4 @@ return [
             'url' => env('SAML2_ORGANIZATION_URL', 'http://url'),
         ],
     ],
-
 ];

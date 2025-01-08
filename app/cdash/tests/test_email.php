@@ -4,10 +4,10 @@ use App\Enums\TestDiffType;
 use App\Models\Site;
 use App\Models\TestDiff;
 use App\Models\User;
+use CDash\Database;
 use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-
 
 class EmailTestCase extends KWWebTestCase
 {
@@ -21,10 +21,10 @@ class EmailTestCase extends KWWebTestCase
     public function testCreateProjectTest()
     {
         $settings = [
-                'Name' => 'EmailProjectExample',
-                'Description' => 'Project EmailProjectExample test for cdash testing',
-                'EmailBrokenSubmission' => 1,
-                'EmailRedundantFailures' => 0];
+            'Name' => 'EmailProjectExample',
+            'Description' => 'Project EmailProjectExample test for cdash testing',
+            'EmailBrokenSubmission' => 1,
+            'EmailRedundantFailures' => 0];
         $this->project = $this->createProject($settings);
     }
 
@@ -41,7 +41,7 @@ class EmailTestCase extends KWWebTestCase
         ]);
 
         if (!$user->id) {
-            $this->fail("Unable to create user");
+            $this->fail('Unable to create user');
             return;
         }
 
@@ -51,7 +51,7 @@ class EmailTestCase extends KWWebTestCase
         $this->setField('emailsuccess', '1');
         $this->clickSubmitByName('subscribe');
         if (!$this->checkLog($this->logfilename)) {
-            $this->fail("Errors logged");
+            $this->fail('Errors logged');
         }
     }
 
@@ -135,7 +135,7 @@ class EmailTestCase extends KWWebTestCase
         }
 
         // Also check that viewUpdate shows email address for logged in users.
-        $db = \CDash\Database::getInstance();
+        $db = Database::getInstance();
         $stmt = $db->prepare("
                 SELECT build.id FROM build
                 JOIN project ON (build.projectid = project.id)
@@ -209,7 +209,7 @@ class EmailTestCase extends KWWebTestCase
             "itkVectorLevelSetFunctionTest2 ({$url}/viewDynamicAnalysisFile.php?id=",
             "itkVectorSparseFieldLevelSetImageFilterTest1 ({$url}/viewDynamicAnalysisFile.php?id=",
             "itkVectorSparseFieldLevelSetImageFilterTest2 ({$url}/viewDynamicAnalysisFile.php?id=",
-            "-CDash on",
+            '-CDash on',
             'user1@kw',
             'FAILED (d=10): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has dynamic analysis tests failing or not run',
@@ -226,7 +226,7 @@ class EmailTestCase extends KWWebTestCase
             "itkVectorLevelSetFunctionTest2 ({$url}/viewDynamicAnalysisFile.php?id=",
             "itkVectorSparseFieldLevelSetImageFilterTest1 ({$url}/viewDynamicAnalysisFile.php?id=",
             "itkVectorSparseFieldLevelSetImageFilterTest2 ({$url}/viewDynamicAnalysisFile.php?id=",
-            "-CDash on",
+            '-CDash on',
         ];
 
         if ($this->assertLogContains($expected, 43)) {
@@ -306,28 +306,28 @@ class EmailTestCase extends KWWebTestCase
         $found = [0 => false, 1 => false, 2 => false, 3 => false];
         $expected = [0 => true, 1 => true, 2 => true, 3 => true];
         foreach ($testdiffs as $testdiff) {
-            if ($testdiff->buildid === $builds[1]->id &&
-                $testdiff->type === TestDiffType::Failed->value &&
-                $testdiff->difference_positive === 0 &&
-                $testdiff->difference_negative === 2) {
+            if ($testdiff->buildid === $builds[1]->id
+                && $testdiff->type === TestDiffType::Failed->value
+                && $testdiff->difference_positive === 0
+                && $testdiff->difference_negative === 2) {
                 $found[0] = true;
             }
-            if ($testdiff->buildid === $builds[1]->id &&
-                $testdiff->type === TestDiffType::Passed->value &&
-                $testdiff->difference_positive === 2 &&
-                $testdiff->difference_negative === 0) {
+            if ($testdiff->buildid === $builds[1]->id
+                && $testdiff->type === TestDiffType::Passed->value
+                && $testdiff->difference_positive === 2
+                && $testdiff->difference_negative === 0) {
                 $found[1] = true;
             }
-            if ($testdiff->buildid === $builds[2]->id &&
-                $testdiff->type === TestDiffType::Failed->value &&
-                $testdiff->difference_positive === 1 &&
-                $testdiff->difference_negative === 0) {
+            if ($testdiff->buildid === $builds[2]->id
+                && $testdiff->type === TestDiffType::Failed->value
+                && $testdiff->difference_positive === 1
+                && $testdiff->difference_negative === 0) {
                 $found[2] = true;
             }
-            if ($testdiff->buildid === $builds[2]->id &&
-                $testdiff->type === TestDiffType::Passed->value &&
-                $testdiff->difference_positive === 0 &&
-                $testdiff->difference_negative === 1) {
+            if ($testdiff->buildid === $builds[2]->id
+                && $testdiff->type === TestDiffType::Passed->value
+                && $testdiff->difference_positive === 0
+                && $testdiff->difference_negative === 1) {
                 $found[3] = true;
             }
         }
@@ -352,7 +352,7 @@ class EmailTestCase extends KWWebTestCase
 
         // Verify no errors logged.
         if (!$this->checkLog($this->logfilename)) {
-            $this->fail("Errors logged");
+            $this->fail('Errors logged');
         }
 
         // TODO: verify log contents.

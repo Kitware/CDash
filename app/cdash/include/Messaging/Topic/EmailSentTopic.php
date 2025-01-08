@@ -23,7 +23,6 @@ use CDash\Model\Build;
 class EmailSentTopic extends Topic
 {
     /**
-     * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)

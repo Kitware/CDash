@@ -16,11 +16,10 @@ class CreateProject2repositoriesTable extends Migration
             Schema::create('project2repositories', function (Blueprint $table) {
                 $table->integer('projectid');
                 $table->integer('repositoryid');
-                $table->primary(['projectid','repositoryid']);
+                $table->primary(['projectid', 'repositoryid']);
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

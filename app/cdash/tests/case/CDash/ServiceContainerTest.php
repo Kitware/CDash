@@ -2,6 +2,7 @@
 
 use CDash\ServiceContainer;
 use CDash\Test\CDashTestCase;
+use DI\Container;
 
 class ServiceContainerTest extends CDashTestCase
 {
@@ -43,7 +44,7 @@ class ServiceContainerTest extends CDashTestCase
 
     public function testCreate()
     {
-        $mock_di = $this->getMockBuilder(DI\Container::class)
+        $mock_di = $this->getMockBuilder(Container::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['make'])
             ->getMock();
@@ -60,7 +61,7 @@ class ServiceContainerTest extends CDashTestCase
 
     public function testGet()
     {
-        $mock_di = $this->getMockBuilder(DI\Container::class)
+        $mock_di = $this->getMockBuilder(Container::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['get'])
             ->getMock();

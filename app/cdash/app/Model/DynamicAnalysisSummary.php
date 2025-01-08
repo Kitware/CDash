@@ -47,9 +47,9 @@ class DynamicAnalysisSummary
         if ($this->BuildId < 1) {
             return false;
         }
-        $stmt = $this->PDO->prepare("
+        $stmt = $this->PDO->prepare('
                 SELECT COUNT(*) AS c FROM dynamicanalysissummary
-                WHERE buildid = ?");
+                WHERE buildid = ?');
         if (pdo_execute($stmt, [$this->BuildId])) {
             $row = $stmt->fetch();
             if ($row['c'] > 0) {
@@ -89,9 +89,9 @@ class DynamicAnalysisSummary
         if ($this->Exists()) {
             if ($append) {
                 // Load the existing results for this build.
-                $stmt = $this->PDO->prepare("
+                $stmt = $this->PDO->prepare('
                     SELECT checker, numdefects FROM dynamicanalysissummary
-                    WHERE buildid = ? FOR UPDATE");
+                    WHERE buildid = ? FOR UPDATE');
                 pdo_execute($stmt, [$this->BuildId]);
                 $row = $stmt->fetch();
                 if (!$row) {

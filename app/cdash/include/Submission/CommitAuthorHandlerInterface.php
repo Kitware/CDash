@@ -2,7 +2,9 @@
 
 namespace CDash\Submission;
 
-interface CommitAuthorHandlerInterface extends \ActionableBuildInterface
+use ActionableBuildInterface;
+
+interface CommitAuthorHandlerInterface extends ActionableBuildInterface
 {
     /**
      * Returns an array of email addresses from those committers that are not CDash users

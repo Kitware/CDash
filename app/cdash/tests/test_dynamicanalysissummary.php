@@ -15,13 +15,10 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-
-
 
 class DynamicAnalysisSummaryTestCase extends KWWebTestCase
 {

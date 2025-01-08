@@ -21,6 +21,8 @@ use App\Utils\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
+use DateInterval;
+use DateTime;
 
 /**
  * Parent class for all API controllers responsible for displaying
@@ -56,7 +58,7 @@ abstract class ResultsApi extends ProjectApi
         $this->nextDate = '';
         $this->previousDate = '';
 
-        $this->datetime = new \DateTime();
+        $this->datetime = new DateTime();
     }
 
     public function getBeginDate()
@@ -81,7 +83,7 @@ abstract class ResultsApi extends ProjectApi
 
     public function validateDateString($date)
     {
-        $dt = \DateTime::createFromFormat("Y-m-d", $date);
+        $dt = DateTime::createFromFormat('Y-m-d', $date);
         if ($dt !== false) {
             $err = $dt::getLastErrors();
             if ($err === false || array_sum($err) === 0) {
@@ -106,7 +108,7 @@ abstract class ResultsApi extends ProjectApi
         $this->beginDate = gmdate(FMT_DATETIME, $beginning_timestamp);
 
         $this->datetime->setTimeStamp($beginning_timestamp);
-        $this->datetime->add(new \DateInterval('P1D'));
+        $this->datetime->add(new DateInterval('P1D'));
         $end_timestamp = $this->datetime->getTimestamp();
         $this->endDate = gmdate(FMT_DATETIME, $end_timestamp);
     }
@@ -142,7 +144,7 @@ abstract class ResultsApi extends ProjectApi
             $this->nextDate = $nextdate;
 
             $this->datetime->setTimeStamp($end_timestamp);
-            $this->datetime->add(new \DateInterval('P1D'));
+            $this->datetime->add(new DateInterval('P1D'));
             $end_timestamp = $this->datetime->getTimestamp();
             $this->endDate = gmdate(FMT_DATETIME, $end_timestamp);
             $date_set = true;

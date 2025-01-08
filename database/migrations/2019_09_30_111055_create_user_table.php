@@ -28,7 +28,6 @@ class CreateUserTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

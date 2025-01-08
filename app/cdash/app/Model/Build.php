@@ -17,21 +17,24 @@
 
 namespace CDash\Model;
 
-use App\Models\Test;
+use App\Models\Build as EloquentBuild;
 use App\Models\Site;
+use App\Models\Test;
+use App\Models\User;
 use App\Utils\DatabaseCleanupUtils;
 use App\Utils\RepositoryUtils;
 use App\Utils\SubmissionUtils;
-use App\Utils\TestingDay;
 use App\Utils\TestDiffUtil;
+use App\Utils\TestingDay;
 use CDash\Collection\BuildEmailCollection;
 use CDash\Collection\DynamicAnalysisCollection;
 use CDash\Database;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use PDO;
-use App\Models\Build as EloquentBuild;
+use PDOStatement;
 
 class Build
 {
@@ -251,7 +254,7 @@ class Build
         // Calculate how much processor time was spent running this build's tests.
         $total_proc_time = 0.0;
         foreach ($this->TestCollection as $test) {
-            $exec_time = (float)$test->time;
+            $exec_time = (float) $test->time;
             $num_procs = 1.0;
             foreach ($test->measurements as $measurement) {
                 if ($measurement->name === 'Processors') {
@@ -408,7 +411,7 @@ class Build
     }
 
     /** Get the previous build id. */
-    public function GetPreviousBuildId(int|null $previous_parentid = null): int
+    public function GetPreviousBuildId(?int $previous_parentid = null): int
     {
         if (!$this->Id) {
             return 0;
@@ -416,27 +419,27 @@ class Build
         $this->FillFromId($this->Id);
 
         $previous_clause =
-            "AND starttime < :starttime ORDER BY starttime DESC";
+            'AND starttime < :starttime ORDER BY starttime DESC';
         $values_to_bind = [':starttime' => $this->StartTime];
         return $this->GetRelatedBuildId($previous_clause, $values_to_bind,
             $previous_parentid);
     }
 
     /** Get the next build id. */
-    public function GetNextBuildId(int|null $next_parentid = null): int
+    public function GetNextBuildId(?int $next_parentid = null): int
     {
         if (!$this->Id) {
             return 0;
         }
         $this->FillFromId($this->Id);
 
-        $next_clause = "AND starttime > :starttime ORDER BY starttime";
+        $next_clause = 'AND starttime > :starttime ORDER BY starttime';
         $values_to_bind = [':starttime' => $this->StartTime];
         return $this->GetRelatedBuildId($next_clause, $values_to_bind, $next_parentid);
     }
 
     /** Get the most recent build id. */
-    public function GetCurrentBuildId(int|null $current_parentid = null): int
+    public function GetCurrentBuildId(?int $current_parentid = null): int
     {
         if (!$this->Id) {
             return 0;
@@ -449,12 +452,13 @@ class Build
 
     /** Private helper function to encapsulate the common parts of
      * Get{Previous,Next,Current}BuildId()
+     *
      * @param array<string, string> $extra_values_to_bind
      **/
     private function GetRelatedBuildId(
         string $which_build_criteria,
         array $extra_values_to_bind = [],
-        int|null $related_parentid = null
+        ?int $related_parentid = null,
     ): int {
         $related_build_criteria =
             'WHERE siteid = :siteid
@@ -538,14 +542,15 @@ class Build
         if (!$related_buildid) {
             return 0;
         }
-        return (int)$related_buildid;
+        return (int) $related_buildid;
     }
 
     /**
      * Return the errors that have been resolved from this build.
+     *
      * @todo This doesn't support getting resolved build errors across parent builds.
      **/
-    public function GetResolvedBuildErrors(int $type): \PDOStatement|false
+    public function GetResolvedBuildErrors(int $type): PDOStatement|false
     {
         // This returns an empty result if there was no previous build
         $stmt = $this->PDO->prepare(
@@ -652,9 +657,10 @@ class Build
     /**
      * Get build failures (with details) that occurred in the most recent build
      * but NOT this build.
+     *
      * @todo This doesn't support getting resolved build failures across parent builds.
      **/
-    public function GetResolvedBuildFailures(int $type): \PDOStatement
+    public function GetResolvedBuildFailures(int $type): PDOStatement
     {
         $currentFailuresQuery =
             'SELECT bf.detailsid FROM buildfailure AS bf
@@ -678,7 +684,7 @@ class Build
         return $stmt;
     }
 
-    public function GetConfigures(): \PDOStatement|false
+    public function GetConfigures(): PDOStatement|false
     {
         $stmt = null;
         if ($this->IsParentBuild()) {
@@ -927,6 +933,7 @@ class Build
 
     /**
      * Get missing tests' names relative to previous build
+     *
      * @return array<int, string>
      */
     public function GetMissingTests(): array
@@ -945,11 +952,11 @@ class Build
 
             $previous_build = $this->GetPreviousBuildId();
 
-            $sql = "SELECT DISTINCT testname
+            $sql = 'SELECT DISTINCT testname
                 FROM build2test
                 WHERE buildid=?
                 ORDER BY testname
-             ";
+             ';
 
             foreach (DB::select($sql, [$previous_build]) as $test) {
                 $previous_build_tests[] = $test->testname;
@@ -1479,10 +1486,10 @@ class Build
         int $firstbuild,
         $warningdiff,
         $errordiff,
-        $testdiff
+        $testdiff,
     ): void {
         // Find user by email address.
-        $user = \App\Models\User::firstWhere('email', $email);
+        $user = User::firstWhere('email', $email);
         if ($user === null) {
             // Find user by author name.
             $stmt = $this->PDO->prepare(
@@ -1907,7 +1914,7 @@ class Build
                 // If this is not a parent build, check if its command has changed.
                 if ($this->Command !== '' && $this->Command !== $build->command) {
                     if (!empty($build->command)) {
-                        $command = $build->command . "; " . $this->Command;
+                        $command = $build->command . '; ' . $this->Command;
                     } else {
                         $command = $this->Command;
                     }
@@ -2007,7 +2014,6 @@ class Build
         $num_warnings = EloquentBuild::findOrFail((int) $this->Id)->configurewarnings;
         return self::ConvertMissingToZero($num_warnings);
     }
-
 
     public function SetNumberOfConfigureWarnings(int $numWarnings): void
     {
@@ -2208,7 +2214,7 @@ class Build
     /** Generate a UUID from the specified build details. */
     private static function GenerateUuid($stamp, $name, $siteid, $projectid, $subprojectname): string
     {
-        return md5($stamp . '_' . $name . '_' . $siteid . '_' . '_' . $projectid . '_' . $subprojectname);
+        return md5($stamp . '_' . $name . '_' . $siteid . '__' . $projectid . '_' . $subprojectname);
     }
 
     /** Get/set the parentid for this build. */
@@ -2228,7 +2234,6 @@ class Build
         }
         $this->ParentId = (int) $parentid;
     }
-
 
     /**
      * Get the beginning and the end of the testing day for this build in DATETIME format.
@@ -2323,7 +2328,7 @@ class Build
     /**
      * Return a SubProject build for a particular parent if it exists.
      */
-    public static function GetSubProjectBuild(int $parentid, int $subprojectid): self|null
+    public static function GetSubProjectBuild(int $parentid, int $subprojectid): ?self
     {
         $row = DB::select('
             SELECT b.id
@@ -2346,7 +2351,7 @@ class Build
      * Returns the current Build's Site property. This method lazily loads the Site if no such
      * object exists.
      */
-    public function GetSite(): Site|null
+    public function GetSite(): ?Site
     {
         if (!$this->Site) {
             $this->Site = Site::find($this->SiteId);
@@ -2385,7 +2390,7 @@ class Build
      * Return the Id of the Build matching the given $uuid,
      * or FALSE if no such build exists.
      */
-    private static function GetIdFromUuid($uuid): int|null
+    private static function GetIdFromUuid($uuid): ?int
     {
         $model = EloquentBuild::where('uuid', $uuid);
         return $model->first()?->id;
@@ -2433,32 +2438,32 @@ class Build
         try {
             DB::transaction(function () use ($nbuilderrors, $nbuildwarnings, &$build_created) {
                 $this->Id = EloquentBuild::create([
-                    'siteid'         => $this->SiteId,
-                    'projectid'      => $this->ProjectId,
-                    'stamp'          => $this->Stamp,
-                    'name'           => $this->Name,
-                    'type'           => $this->Type,
-                    'generator'      => $this->Generator,
-                    'starttime'      => $this->StartTime,
-                    'endtime'        => $this->EndTime,
-                    'submittime'     => $this->SubmitTime,
-                    'command'        => $this->Command,
-                    'builderrors'    => $nbuilderrors,
-                    'buildwarnings'  => $nbuildwarnings,
-                    'parentid'       => $this->ParentId,
-                    'uuid'           => $this->Uuid,
-                    'changeid'       => $this->PullRequest,
-                    'osname'         => $this->OSName,
-                    'osplatform'     => $this->OSPlatform,
-                    'osrelease'      => $this->OSRelease,
-                    'osversion'      => $this->OSVersion,
-                    'compilername'   => $this->CompilerName,
+                    'siteid' => $this->SiteId,
+                    'projectid' => $this->ProjectId,
+                    'stamp' => $this->Stamp,
+                    'name' => $this->Name,
+                    'type' => $this->Type,
+                    'generator' => $this->Generator,
+                    'starttime' => $this->StartTime,
+                    'endtime' => $this->EndTime,
+                    'submittime' => $this->SubmitTime,
+                    'command' => $this->Command,
+                    'builderrors' => $nbuilderrors,
+                    'buildwarnings' => $nbuildwarnings,
+                    'parentid' => $this->ParentId,
+                    'uuid' => $this->Uuid,
+                    'changeid' => $this->PullRequest,
+                    'osname' => $this->OSName,
+                    'osplatform' => $this->OSPlatform,
+                    'osrelease' => $this->OSRelease,
+                    'osversion' => $this->OSVersion,
+                    'compilername' => $this->CompilerName,
                     'compilerversion' => $this->CompilerVersion,
                 ])->id;
                 $build_created = true;
                 $this->AssignToGroup();
             });
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // This error might be due to a unique key violation on the UUID.
             // Check again for a previously existing build.
             $existing_id = self::GetIdFromUuid($this->Uuid);
@@ -2509,7 +2514,7 @@ class Build
             $existing_parent_groupid_row = DB::table('build2group')->where('buildid', $this->ParentId)->first();
             if (!$existing_parent_groupid_row) {
                 DB::table('build2group')->insertOrIgnore([
-                        ['groupid' => $this->GroupId, 'buildid' => $this->ParentId],
+                    ['groupid' => $this->GroupId, 'buildid' => $this->ParentId],
                 ]);
             }
         }

@@ -22,7 +22,6 @@ class CreateLockoutTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

@@ -32,15 +32,15 @@ class UpdateDependencies extends Command
 
     public function handle()
     {
-        $composerInstallArgs = "--no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader";
-        $composerUpdateArgs = "--no-dev --prefer-lowest --prefer-stable";
-        if ($this->option("dev")) {
-            $composerInstallArgs = "--no-interaction --no-progress --prefer-dist";
-            $composerUpdateArgs = "--prefer-lowest --prefer-stable";
+        $composerInstallArgs = '--no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader';
+        $composerUpdateArgs = '--no-dev --prefer-lowest --prefer-stable';
+        if ($this->option('dev')) {
+            $composerInstallArgs = '--no-interaction --no-progress --prefer-dist';
+            $composerUpdateArgs = '--prefer-lowest --prefer-stable';
         }
 
-        if ($this->option("upgrade")) {
-            exec("npm update");
+        if ($this->option('upgrade')) {
+            exec('npm update');
             exec("composer update $composerUpdateArgs");
         }
 
@@ -48,9 +48,9 @@ class UpdateDependencies extends Command
         exec("composer install $composerInstallArgs");
 
         // Update JavaScript dependencies via npm
-        exec("npm install");
+        exec('npm install');
 
         // Run laravel-mix to builds assets
-        exec("npm run production");
+        exec('npm run production');
     }
 }

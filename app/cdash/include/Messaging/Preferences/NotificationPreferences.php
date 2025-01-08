@@ -4,9 +4,7 @@ namespace CDash\Messaging\Preferences;
 
 use CDash\Messaging\Notification\NotifyOn;
 
-abstract class NotificationPreferences implements
-    PreferencesInterface,
-    NotificationPreferencesInterface
+abstract class NotificationPreferences implements PreferencesInterface, NotificationPreferencesInterface
 {
     protected $properties = [
         NotifyOn::FILTERED,

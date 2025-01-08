@@ -17,9 +17,9 @@
 
 use CDash\Model\Build;
 use CDash\Model\DynamicAnalysis;
-use CDash\Test\UseCase\UseCase;
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\DynamicAnalysisUseCase;
+use CDash\Test\UseCase\UseCase;
 
 class DynamicAnalysisUseCaseTest extends CDashUseCaseTestCase
 {
@@ -45,8 +45,7 @@ class DynamicAnalysisUseCaseTest extends CDashUseCaseTestCase
             ->createFailedTest('experimentalFail', ['Labels' => ['MyExperimentalFeature']])
             ->createPassedTest(
                 'thirdparty',
-                ['Labels' =>
-                    ['MyThirdPartyDependency', 'NotASubproject'],
+                ['Labels' => ['MyThirdPartyDependency', 'NotASubproject'],
                 ]
             );
 

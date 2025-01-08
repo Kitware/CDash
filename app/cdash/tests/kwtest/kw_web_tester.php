@@ -24,9 +24,11 @@ if (!defined('LARAVEL_START')) {
     define('LARAVEL_START', microtime(true));
 }
 
+use App\Http\Kernel;
 use App\Models\User;
 use CDash\Model\Project;
-use App\Http\Kernel;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -50,13 +52,13 @@ class KWWebTestCase extends WebTestCase
 {
     use CreatesApplication;
 
-    public $url = null;
-    public $db = null;
-    public $logfilename = null;
+    public $url;
+    public $db;
+    public $logfilename;
 
     protected $app;
     protected $actingAs = [];
-    protected $ctest_submission = null;
+    protected $ctest_submission;
 
     /**
      * KWWebTestCase constructor.
@@ -116,20 +118,20 @@ class KWWebTestCase extends WebTestCase
 
     public function startCodeCoverage()
     {
-        //echo "startCodeCoverage called...\n";
+        // echo "startCodeCoverage called...\n";
         if (extension_loaded('xdebug')) {
             xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
-            //echo "xdebug_start_code_coverage called...\n";
+            // echo "xdebug_start_code_coverage called...\n";
         }
     }
 
     public function stopCodeCoverage()
     {
-        //echo "stopCodeCoverage called...\n";
+        // echo "stopCodeCoverage called...\n";
         if (extension_loaded('xdebug')) {
             $data = xdebug_get_code_coverage();
             xdebug_stop_code_coverage();
-            //echo "xdebug_stop_code_coverage called...\n";
+            // echo "xdebug_stop_code_coverage called...\n";
             $file = config('cdash.coverage_dir') . DIRECTORY_SEPARATOR .
                 md5($_SERVER['SCRIPT_FILENAME']);
             file_put_contents(
@@ -141,9 +143,11 @@ class KWWebTestCase extends WebTestCase
 
     /**
      * find a string into another one
-     * @return true if the search string has found or false in the other case
+     *
      * @param string $mystring
      * @param string $findme
+     *
+     * @return true if the search string has found or false in the other case
      */
     public function findString($mystring, $findme)
     {
@@ -155,6 +159,7 @@ class KWWebTestCase extends WebTestCase
 
     /**
      * Try to connect to the website
+     *
      * @param string $url
      */
     public function connect($url)
@@ -177,8 +182,8 @@ class KWWebTestCase extends WebTestCase
     {
         if (file_exists($filename)) {
             $content = file_get_contents($filename);
-            if ($this->findString($content, 'ERROR') ||
-                $this->findString($content, 'WARNING')
+            if ($this->findString($content, 'ERROR')
+                || $this->findString($content, 'WARNING')
             ) {
                 $this->fail('Log file has errors or warnings... ' . var_export($content, true));
                 return false;
@@ -224,9 +229,11 @@ class KWWebTestCase extends WebTestCase
 
     /**
      * Analyse a website page
-     * @return string|false the content of the page if there is no errors
-     *         otherwise false
+     *
      * @param object $page
+     *
+     * @return string|false the content of the page if there is no errors
+     *                      otherwise false
      */
     public function analyse($page): string|false
     {
@@ -322,9 +329,9 @@ class KWWebTestCase extends WebTestCase
             return false;
         }
 
-        if ($this->findString($result, 'error') ||
-            $this->findString($result, 'Warning') ||
-            $this->findString($result, 'Notice')
+        if ($this->findString($result, 'error')
+            || $this->findString($result, 'Warning')
+            || $this->findString($result, 'Notice')
         ) {
             $this->assertEqual($result, "\n");
             return false;
@@ -333,14 +340,14 @@ class KWWebTestCase extends WebTestCase
     }
 
     /**
-     * @deprecated 12/09/2024  Use \Test\Traits\CreatesSubmissions instead.
+     * @deprecated 12/09/2024  Use \Test\Traits\CreatesSubmissions instead
      */
     public function submission($projectname, $file, $header = null, $debug = false)
     {
         $url = $this->url . "/submit.php?project=$projectname";
 
         if ($debug) {
-            $url .= "&XDEBUG_SESSION_START";
+            $url .= '&XDEBUG_SESSION_START';
         }
 
         $result = $this->uploadfile($url, $file, $header);
@@ -357,9 +364,9 @@ class KWWebTestCase extends WebTestCase
 
         $result = $this->uploadfile($url, $file, $header);
         $pattern = '#<buildId>([0-9]+)</buildId>#';
-        if ($this->check_submission_result($result) &&
-            preg_match($pattern, $result, $matches) &&
-            isset($matches[1])) {
+        if ($this->check_submission_result($result)
+            && preg_match($pattern, $result, $matches)
+            && isset($matches[1])) {
             return $matches[1];
         }
 
@@ -370,7 +377,7 @@ class KWWebTestCase extends WebTestCase
         $filename,
         array $query,
         $parameters = [],
-        $contentType = 'text/xml'
+        $contentType = 'text/xml',
     ) {
         $this->ctest_submission = $filename;
         $qstr = '';
@@ -383,7 +390,7 @@ class KWWebTestCase extends WebTestCase
     }
 
     /**
-     * @deprecated 12/09/2024  Use \Test\Traits\CreatesSubmissions instead.
+     * @deprecated 12/09/2024  Use \Test\Traits\CreatesSubmissions instead
      */
     public function uploadfile($url, $filename, $header = null)
     {
@@ -418,7 +425,7 @@ class KWWebTestCase extends WebTestCase
         if ($update) {
             // Updating an existing project.
             if (!array_key_exists('Id', $input_settings)) {
-                $this->fail("Project Id must be set");
+                $this->fail('Project Id must be set');
                 return false;
             }
             // Load its current settings.
@@ -430,28 +437,28 @@ class KWWebTestCase extends WebTestCase
         } else {
             // Create a new project.
             if (!array_key_exists('Name', $input_settings)) {
-                $this->fail("Project name must be set");
+                $this->fail('Project name must be set');
                 return false;
             }
             // Specify some default settings.
             $settings = [
-                    'AutoremoveMaxBuilds' => 500,
-                    'AutoremoveTimeframe' => 60,
-                    'CoverageThreshold' => 70,
-                    'CvsViewerType' => 'viewcvs',
-                    'EmailBrokenSubmission' => 1,
-                    'EmailMaxChars' => 255,
-                    'EmailMaxItems' => 5,
-                    'NightlyTime' => '01:00:00 UTC',
-                    'Public' => 1,
-                    'ShowCoverageCode' => 1,
-                    'TestTimeMaxStatus' => 3,
-                    'TestTimeStd' => 4,
-                    'TestTimeStdThreshold' => 1,
-                    'UploadQuota' => 1,
-                    'ViewSubProjectsLink' => 1,
-                    'WarningsFilter' => '',
-                    'ErrorsFilter' => ''];
+                'AutoremoveMaxBuilds' => 500,
+                'AutoremoveTimeframe' => 60,
+                'CoverageThreshold' => 70,
+                'CvsViewerType' => 'viewcvs',
+                'EmailBrokenSubmission' => 1,
+                'EmailMaxChars' => 255,
+                'EmailMaxItems' => 5,
+                'NightlyTime' => '01:00:00 UTC',
+                'Public' => 1,
+                'ShowCoverageCode' => 1,
+                'TestTimeMaxStatus' => 3,
+                'TestTimeStd' => 4,
+                'TestTimeStdThreshold' => 1,
+                'UploadQuota' => 1,
+                'ViewSubProjectsLink' => 1,
+                'WarningsFilter' => '',
+                'ErrorsFilter' => ''];
             $submit_button = 'Submit';
         }
 
@@ -472,7 +479,7 @@ class KWWebTestCase extends WebTestCase
             $response = $client->request('POST',
                 $this->url . '/api/v1/project.php',
                 ['json' => [$submit_button => true, 'project' => $settings]]);
-        } catch (GuzzleHttp\Exception\ClientException $e) {
+        } catch (ClientException $e) {
             $this->fail($e->getMessage());
             return false;
         }
@@ -485,7 +492,7 @@ class KWWebTestCase extends WebTestCase
         $project->Id = $projectid;
         $project->Fill();
         if (!$project->Exists()) {
-            $this->fail("Project does not exist after it should have been created");
+            $this->fail('Project does not exist after it should have been created');
         }
         foreach ($input_settings as $k => $v) {
             if ($k === 'repositories') {
@@ -497,10 +504,10 @@ class KWWebTestCase extends WebTestCase
                 $matches_found = 0;
                 foreach ($project_repos as $project_repo) {
                     foreach ($added_repos as $added_repo) {
-                        if ($project_repo['url'] === $added_repo['url'] &&
-                                $project_repo['branch'] === $added_repo['branch'] &&
-                                $project_repo['username'] === $added_repo['username'] &&
-                                $project_repo['password'] === $added_repo['password']) {
+                        if ($project_repo['url'] === $added_repo['url']
+                                && $project_repo['branch'] === $added_repo['branch']
+                                && $project_repo['username'] === $added_repo['username']
+                                && $project_repo['password'] === $added_repo['password']) {
                             $matches_found++;
                         }
                     }
@@ -530,7 +537,7 @@ class KWWebTestCase extends WebTestCase
             $response = $client->delete(
                 $this->url . '/api/v1/project.php',
                 ['json' => ['project' => $project_array]]);
-        } catch (GuzzleHttp\Exception\ClientException $e) {
+        } catch (ClientException $e) {
             $this->fail($e->getMessage());
             return false;
         }
@@ -546,12 +553,12 @@ class KWWebTestCase extends WebTestCase
     public function getGuzzleClient($username = 'simpletest@localhost',
         $password = 'simpletest')
     {
-        $client = new GuzzleHttp\Client(['cookies' => true]);
+        $client = new Client(['cookies' => true]);
         try {
             // first get the csrf token
             $response = $client->request('GET', "{$this->url}/login");
             $html = "{$response->getBody()}";
-            $dom = new \DOMDocument();
+            $dom = new DOMDocument();
             @$dom->loadHTML($html);
             $token = $dom->getElementById('csrf-token')
                 ->getAttribute('value');
@@ -560,10 +567,10 @@ class KWWebTestCase extends WebTestCase
                 $this->url . '/login',
                 ['form_params' => [
                     '_token' => "{$token}",
-                'email' => $username,
-                'password' => $password,
-                'sent' => 'Login >>']]);
-        } catch (GuzzleHttp\Exception\ClientException $e) {
+                    'email' => $username,
+                    'password' => $password,
+                    'sent' => 'Login >>']]);
+        } catch (ClientException $e) {
             $this->fail($e->getMessage());
             return false;
         }
@@ -576,7 +583,7 @@ class KWWebTestCase extends WebTestCase
         $content = $this->get("{$this->url}{$page}");
 
         if (strpos($content, '<form method="POST" action="login" name="loginform" id="loginform">') === false) {
-            $this->fail("Login not found when expected");
+            $this->fail('Login not found when expected');
             return false;
         }
         return true;
@@ -588,10 +595,10 @@ class KWWebTestCase extends WebTestCase
  */
 class CDashControllerBrowser extends SimpleBrowser
 {
-    /** @var KWWebTestCase $test */
+    /** @var KWWebTestCase */
     private $test;
 
-    /** @var array $headers */
+    /** @var array */
     private $headers;
 
     private $files;
@@ -627,6 +634,7 @@ class CDashControllerBrowser extends SimpleBrowser
      * @param SimpleUrl $url
      * @param SimpleEncoding $encoding
      * @param int $depth
+     *
      * @return SimplePage
      */
     protected function fetch($url, $encoding, $depth = 0)
@@ -648,7 +656,7 @@ class CDashControllerBrowser extends SimpleBrowser
             foreach ($encoding->getAll() as $part) {
                 if (is_a($part, SimpleAttachment::class)) {
                     // one hates to have to do this unless absolutely necessary
-                    $reflection = new \ReflectionClass(SimpleAttachment::class);
+                    $reflection = new ReflectionClass(SimpleAttachment::class);
                     $property = $reflection->getProperty('content');
                     $property->setAccessible(true);
                     $content = $property->getValue($part);
@@ -677,6 +685,7 @@ class CDashControllerBrowser extends SimpleBrowser
 
     /**
      * @param SimpleEncoding $encoding
+     *
      * @return void
      */
     private function setRequestParameters($encoding)
@@ -708,7 +717,7 @@ class CDashControllerBrowser extends SimpleBrowser
         $parameters = [];
 
         if (!empty($query)) {
-            foreach (explode("&", $query) as $parameter) {
+            foreach (explode('&', $query) as $parameter) {
                 if (strpos($parameter, '=') !== false) {
                     [$key, $value] = explode('=', $parameter);
                     $this->setRequestKeyValuePair($parameters, $key, $value);
@@ -724,7 +733,6 @@ class CDashControllerBrowser extends SimpleBrowser
     /**
      * @param array &$parameters
      * @param string $key
-     * @param mixed $value
      */
     private function setRequestKeyValuePair(&$parameters, $key, $value)
     {
@@ -750,15 +758,14 @@ class CDashControllerBrowser extends SimpleBrowser
     }
 }
 
-
 class CDashControllerUserAgent extends SimpleUserAgent
 {
     use CreatesApplication;
 
-    /** @var KWWebTestCase $test */
+    /** @var KWWebTestCase */
     private $test;
 
-    /** @var Response $response */
+    /** @var Response */
     private $response;
 
     public function __construct(KWWebTestCase $test)
@@ -766,9 +773,11 @@ class CDashControllerUserAgent extends SimpleUserAgent
         parent::__construct();
         $this->test = $test;
     }
+
     /**
      * @param SimpleUrl $url
      * @param SimpleEncoding $encoding
+     *
      * @return SimpleHttpResponse
      */
     protected function fetch($url, $encoding)
@@ -796,8 +805,9 @@ class CDashControllerUserAgent extends SimpleUserAgent
     }
 
     /**
-     * @param String $url_string
+     * @param string $url_string
      * @param SimpleEncoding|SimpleGetEncoding|SimplePutEncoding|SimplePostEncoding $encoding
+     *
      * @return Request
      */
     private function getIlluminateHttpRequest($url_string, $encoding)
@@ -832,8 +842,6 @@ class CDashControllerUserAgent extends SimpleUserAgent
     }
 
     /**
-     * @param $url
-     * @param $encoding
      * @return SimpleHttpResponse
      */
     private function getSimpleHttpResponse($url, $encoding)
@@ -847,9 +855,9 @@ class CDashControllerUserAgent extends SimpleUserAgent
      */
     private function getSocketEmulator()
     {
-        $socket = new class ($this->response) {
+        $socket = new class($this->response) {
             private $read = false;
-            /** @var Response $body */
+            /** @var Response */
             private $response;
 
             public function __construct($response)

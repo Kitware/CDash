@@ -216,14 +216,14 @@ class DynamicAnalysis
                      )
                      VALUES $prepared_array
                  ", array_merge($idvalue, [
-                     $this->BuildId,
-                     $this->Status,
-                     $this->Checker,
-                     $this->Name,
-                     $path,
-                     $fullCommandLine,
-                     $this->Log,
-                 ]));
+            $this->BuildId,
+            $this->Status,
+            $this->Checker,
+            $this->Name,
+            $path,
+            $fullCommandLine,
+            $this->Log,
+        ]));
 
         if ($query === false) {
             add_last_sql_error('DynamicAnalysis Insert', 0, $this->BuildId);

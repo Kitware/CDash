@@ -22,16 +22,14 @@ use CDash\Model\Build;
 
 /**
  * Class RepositoryService
- * @package CDash\Service
  */
 class RepositoryService
 {
-    /** @var RepositoryInterface $repository */
+    /** @var RepositoryInterface */
     protected $repository;
 
     /**
      * RepositoryService constructor.
-     * @param RepositoryInterface $repository
      */
     public function __construct(RepositoryInterface $repository)
     {
@@ -46,18 +44,15 @@ class RepositoryService
         }
 
         $options = [
-            'context'     => "ci/CDash/$context",
+            'context' => "ci/CDash/$context",
             'description' => $description,
             'commit_hash' => $revision,
-            'state'       => $state,
-            'target_url'  => $target_url,
+            'state' => $state,
+            'target_url' => $target_url,
         ];
         $this->repository->setStatus($options);
     }
 
-    /**
-     * @param Build $build
-     */
     public function setStatusOnStart(Build $build, $context)
     {
         $this->setStatus($context, "Build: {$build->Name}",

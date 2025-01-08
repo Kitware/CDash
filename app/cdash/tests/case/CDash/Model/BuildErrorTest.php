@@ -39,8 +39,8 @@ class BuildErrorTest extends CDashTestCase
             'newstatus' => 1,
             'precontext' => "Scanning dependencies of target main\n[ 83%] Building CXX object src/CMakeFiles/main.dir/main.cpp.o\n/.../foo/src/main.cpp: In function `int main(int, char**)`:",
             'postcontext' => "   asdf = 0;\n   ^\n[100%] Linking CXX executable main",
-            'sourcefile'  => 'src/main.cpp',
-            'sourceline'  => '2',
+            'sourcefile' => 'src/main.cpp',
+            'sourceline' => '2',
             'text' => '/.../foo/src/main.cpp:2:3: error: `asdf` not declared in this scope',
         ];
 

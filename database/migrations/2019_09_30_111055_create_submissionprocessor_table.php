@@ -22,7 +22,6 @@ class CreateSubmissionprocessorTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *

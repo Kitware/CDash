@@ -6,9 +6,6 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-
-
-
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
 
@@ -29,8 +26,8 @@ class OutputColorTestCase extends KWWebTestCase
         }
 
         $settings = [
-                'Name' => 'OutputColor',
-                'Description' => 'Test to make sure test output uses terminal colors'];
+            'Name' => 'OutputColor',
+            'Description' => 'Test to make sure test output uses terminal colors'];
         $projectid = $this->createProject($settings);
         if ($projectid < 1) {
             $this->fail('Failed to create project');
@@ -93,11 +90,11 @@ class OutputColorTestCase extends KWWebTestCase
 
     private function getIdForTest($testname)
     {
-        $buildtestid_results = DB::select("
+        $buildtestid_results = DB::select('
             SELECT id
             FROM build2test
             WHERE testname = ?
-        ", [$testname]);
+        ', [$testname]);
         $this->assertEqual(1, count($buildtestid_results));
         return $buildtestid_results[0]->id;
     }

@@ -17,12 +17,12 @@
 
 namespace CDash\Controller\Api;
 
-use App\Models\TestOutput;
 use App\Models\Project as EloquentProject;
+use App\Models\TestOutput;
+use App\Utils\RepositoryUtils;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use App\Utils\RepositoryUtils;
 
 class TestDetails extends BuildTestApi
 {
@@ -90,7 +90,7 @@ class TestDetails extends BuildTestApi
         // If so we should make that chart appears when they click next or previous.
         $extra_url = '';
         if (array_key_exists('graph', $_GET)) {
-            $extra_url = "?graph=" . $_GET['graph'];
+            $extra_url = '?graph=' . $_GET['graph'];
         }
 
         // Get previous/current/next results for this buildtest.

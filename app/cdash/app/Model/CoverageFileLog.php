@@ -18,6 +18,7 @@
 namespace CDash\Model;
 
 use CDash\Database;
+use DB;
 
 class CoverageFileLog
 {
@@ -41,9 +42,9 @@ class CoverageFileLog
     public function AddLine($number, $code)
     {
         if (array_key_exists($number, $this->Lines)) {
-            $this->Lines[$number] += (int)$code;
+            $this->Lines[$number] += (int) $code;
         } else {
-            $this->Lines[$number] = (int)$code;
+            $this->Lines[$number] = (int) $code;
         }
     }
 
@@ -67,7 +68,7 @@ class CoverageFileLog
             return false;
         }
 
-        \DB::transaction(function () use ($append) {
+        DB::transaction(function () use ($append) {
             $update = false;
             if ($append) {
                 // Load any previously existing results for this file & build.
@@ -84,12 +85,12 @@ class CoverageFileLog
 
             if ($log != '') {
                 if ($update) {
-                    \DB::table('coveragefilelog')
+                    DB::table('coveragefilelog')
                         ->where('buildid', $this->BuildId)
                         ->where('fileid', $this->FileId)
                         ->update(['log' => $log]);
                 } else {
-                    \DB::table('coveragefilelog')
+                    DB::table('coveragefilelog')
                         ->insert([
                             'buildid' => $this->BuildId,
                             'fileid' => $this->FileId,
@@ -105,13 +106,13 @@ class CoverageFileLog
     public function Load($for_update = false)
     {
         if ($for_update) {
-            $row = \DB::table('coveragefilelog')
+            $row = DB::table('coveragefilelog')
                 ->where('buildid', $this->BuildId)
                 ->where('fileid', $this->FileId)
                 ->lockForUpdate()
                 ->first();
         } else {
-            $row = \DB::table('coveragefilelog')
+            $row = DB::table('coveragefilelog')
                 ->where('buildid', $this->BuildId)
                 ->where('fileid', $this->FileId)
                 ->first();
@@ -146,8 +147,8 @@ class CoverageFileLog
         // Use this info to remove any uncovered lines that
         // the previous result considered uncoverable.
         foreach ($this->Lines as $line_number => $times_hit) {
-            if ($times_hit == 0 &&
-                    !in_array($line_number, $lines_retrieved, true)) {
+            if ($times_hit == 0
+                    && !in_array($line_number, $lines_retrieved, true)) {
                 unset($this->Lines[$line_number]);
             }
         }
@@ -169,8 +170,8 @@ class CoverageFileLog
                 $this->AddBranch($line, $covered, $total);
             } else {
                 // Line coverage
-                if ($value == 0 && $alreadyPopulated &&
-                        !array_key_exists($line, $this->Lines)) {
+                if ($value == 0 && $alreadyPopulated
+                        && !array_key_exists($line, $this->Lines)) {
                     // This object already considers the line uncoverable,
                     // so ignore the result from the database marking it as
                     // missed.
@@ -191,9 +192,9 @@ class CoverageFileLog
         $stats['branchesuntested'] = 0;
         foreach ($this->Lines as $line => $timesHit) {
             if ($timesHit > 0) {
-                $stats['loctested'] += 1;
+                $stats['loctested']++;
             } else {
-                $stats['locuntested'] += 1;
+                $stats['locuntested']++;
             }
         }
 
@@ -215,8 +216,8 @@ class CoverageFileLog
         $this->Build->FillFromId($this->BuildId);
 
         // Only nightly builds count towards aggregate coverage.
-        if ($this->Build->Type !== 'Nightly' ||
-            $this->Build->Name === 'Aggregate Coverage'
+        if ($this->Build->Type !== 'Nightly'
+            || $this->Build->Name === 'Aggregate Coverage'
         ) {
             return;
         }
@@ -237,10 +238,10 @@ class CoverageFileLog
                                AND projectid=?
                                AND sp2b.subprojectid=?
                        ', [
-                           intval($this->AggregateBuildId),
-                           intval($this->Build->ProjectId),
-                           intval($this->Build->SubProjectId),
-                       ]);
+                    intval($this->AggregateBuildId),
+                    intval($this->Build->ProjectId),
+                    intval($this->Build->SubProjectId),
+                ]);
                 if (!$row || !array_key_exists('id', $row)) {
                     // An aggregate build for this SubProject doesn't exist yet.
                     // Create it here.

@@ -23,18 +23,18 @@ use PHPUnit_Framework_MockObject_MockObject;
 trait BuildDiffForTesting
 {
     private $diff = [
-        'builderrorspositive'   => 0,
-        'builderrorsnegative'   => 0,
+        'builderrorspositive' => 0,
+        'builderrorsnegative' => 0,
         'buildwarningspositive' => 0,
         'buildwarningsnegative' => 0,
-        'configureerrors'       => 0,
-        'configurewarnings'     => 0,
-        'testpassedpositive'    => 0,
-        'testpassednegative'    => 0,
-        'testfailedpositive'    => 0,
-        'testfailednegative'    => 0,
-        'testnotrunpositive'    => 0,
-        'testnotrunnegative'    => 0,
+        'configureerrors' => 0,
+        'configurewarnings' => 0,
+        'testpassedpositive' => 0,
+        'testpassednegative' => 0,
+        'testfailedpositive' => 0,
+        'testfailednegative' => 0,
+        'testnotrunpositive' => 0,
+        'testnotrunnegative' => 0,
     ];
 
     private $fixed_keys = [
@@ -53,7 +53,6 @@ trait BuildDiffForTesting
     }
 
     /**
-     * @param $key
      * @return array
      */
     protected function createFixed($key)
@@ -64,7 +63,6 @@ trait BuildDiffForTesting
     }
 
     /**
-     * @param $key
      * @return array
      */
     protected function createNew($key)
@@ -75,7 +73,6 @@ trait BuildDiffForTesting
     }
 
     /**
-     * @param $diff
      * @return Build|PHPUnit_Framework_MockObject_MockObject
      */
     protected function createMockBuildWithDiff($diff)

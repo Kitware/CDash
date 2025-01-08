@@ -4,6 +4,11 @@ namespace CDash\Test\UseCase;
 
 use AbstractXmlHandler;
 use CDash\Model\Project;
+use DOMDocument;
+use DOMElement;
+use DOMText;
+use Exception;
+use UpdateHandler;
 
 class UpdateUseCase extends UseCase
 {
@@ -24,140 +29,139 @@ class UpdateUseCase extends UseCase
     {
         $prop = $this->properties[self::UPDATE];
 
-        $xml = new \DOMDocument('1.0', 'UTF-8');
+        $xml = new DOMDocument('1.0', 'UTF-8');
         $startDateTimeText = date('M d H:i T', $this->startTime);
         $endDateTimeText = date('M d H:i T', $this->endTime);
 
         // create update root element
-        $update = $xml->appendChild(new \DOMElement('Update'));
-        /** @var \DOMElement $update */
+        $update = $xml->appendChild(new DOMElement('Update'));
+        /* @var \DOMElement $update */
         $update->setAttribute('mode', $this->mode);
         $update->setAttribute('Generator', $this->generator);
 
         // create Site element
-        $site = $update->appendChild(new \DOMElement('Site'));
-        $site->appendChild(new \DOMText($this->properties['Site'][0]['Name']));
+        $site = $update->appendChild(new DOMElement('Site'));
+        $site->appendChild(new DOMText($this->properties['Site'][0]['Name']));
 
         // create BuildName element
-        $buildName = $update->appendChild(new \DOMElement('BuildName'));
-        $buildName->appendChild(new \DOMText($prop['BuildName']));
+        $buildName = $update->appendChild(new DOMElement('BuildName'));
+        $buildName->appendChild(new DOMText($prop['BuildName']));
 
         // create BuildStamp element
-        $buildStamp = $update->appendChild(new \DOMElement('BuildStamp'));
-        $buildStamp->appendChild(new \DOMText($prop['BuildStamp']));
+        $buildStamp = $update->appendChild(new DOMElement('BuildStamp'));
+        $buildStamp->appendChild(new DOMText($prop['BuildStamp']));
 
         // create StartDateTime element
-        $startText = $update->appendChild(new \DOMElement('StartDateTime'));
-        $startText->appendChild(new \DOMText($startDateTimeText));
+        $startText = $update->appendChild(new DOMElement('StartDateTime'));
+        $startText->appendChild(new DOMText($startDateTimeText));
 
         // create StartTime element
-        $startTime = $update->appendChild(new \DOMElement('StartTime'));
-        $startTime->appendChild(new \DOMText($this->startTime));
+        $startTime = $update->appendChild(new DOMElement('StartTime'));
+        $startTime->appendChild(new DOMText($this->startTime));
 
         // create Revision element
-        $revision = $update->appendChild(new \DOMElement('Revision'));
-        $revision->appendChild(new \DOMText($prop['Revision']));
+        $revision = $update->appendChild(new DOMElement('Revision'));
+        $revision->appendChild(new DOMText($prop['Revision']));
 
         // create PriorRevision element
-        $priorRevision = $update->appendChild(new \DOMElement('PriorRevision'));
-        $priorRevision->appendChild(new \DOMText($prop['PriorRevision']));
+        $priorRevision = $update->appendChild(new DOMElement('PriorRevision'));
+        $priorRevision->appendChild(new DOMText($prop['PriorRevision']));
 
         if (isset($prop['Directory'])) {
             $this->createDirectoryElement($update, $prop['Directory']);
         }
 
         // create EndDateTime element
-        $endText = $update->appendChild(new \DOMElement('EndDateTime'));
-        $endText->appendChild(new \DOMText($endDateTimeText));
+        $endText = $update->appendChild(new DOMElement('EndDateTime'));
+        $endText->appendChild(new DOMText($endDateTimeText));
 
         // create EndTime element
-        $endTime = $update->appendChild(new \DOMElement('EndTime'));
-        $endTime->appendChild(new \DOMText($this->endTime));
+        $endTime = $update->appendChild(new DOMElement('EndTime'));
+        $endTime->appendChild(new DOMText($this->endTime));
 
         // create ElapsedMinutes element
         $minutes = ($this->endTime - $this->startTime) / 60;
-        $elapsed = $update->appendChild(new \DOMElement('ElapsedMinutes'));
-        $elapsed->appendChild(new \DOMText($minutes));
+        $elapsed = $update->appendChild(new DOMElement('ElapsedMinutes'));
+        $elapsed->appendChild(new DOMText($minutes));
 
         // create UpdateReturnStatus element
-        $status = $update->appendChild(new \DOMElement('UpdateReturnStatus'));
+        $status = $update->appendChild(new DOMElement('UpdateReturnStatus'));
         $text = $prop['UpdateReturnStatus'] ?? '';
-        $status->appendChild(new \DOMText($text));
+        $status->appendChild(new DOMText($text));
 
         $xml_str = $xml->saveXML($xml);
         if ($xml_str === false) {
-            throw new \Exception('Invalid XML.');
+            throw new Exception('Invalid XML.');
         }
         $project = new Project();
         $project->Id = $this->projectId;
-        $handler = new \UpdateHandler($project);
+        $handler = new UpdateHandler($project);
         return $this->getXmlHandler($handler, $xml_str);
     }
 
-    protected function createDirectoryElement(\DOMElement $root, array $directories): void
+    protected function createDirectoryElement(DOMElement $root, array $directories): void
     {
         foreach ($directories as $dir => $packages) {
-            $directory = $root->appendChild(new \DOMElement('Directory'));
+            $directory = $root->appendChild(new DOMElement('Directory'));
 
             // create Name element
-            $name = $directory->appendChild(new \DOMElement('Name'));
-            $name->appendChild(new \DOMText($dir));
+            $name = $directory->appendChild(new DOMElement('Name'));
+            $name->appendChild(new DOMText($dir));
 
             // create Updated elements
             foreach ($packages as $pkg) {
-                $updated = $directory->appendChild(new \DOMElement('Updated'));
+                $updated = $directory->appendChild(new DOMElement('Updated'));
 
                 // create File element
-                $file = $updated->appendChild(new \DOMElement('File'));
-                $file->appendChild(new \DOMText($pkg['File']));
+                $file = $updated->appendChild(new DOMElement('File'));
+                $file->appendChild(new DOMText($pkg['File']));
 
                 // create Directory element
-                $d = $updated->appendChild(new \DOMElement('Directory'));
-                $d->appendChild(new \DOMText($dir));
+                $d = $updated->appendChild(new DOMElement('Directory'));
+                $d->appendChild(new DOMText($dir));
 
                 // create FullName element
                 $fullpath = "{$dir}/{$pkg['File']}";
-                $fullName = $updated->appendChild(new \DOMElement('FullName'));
-                $fullName->appendChild(new \DOMText($fullpath));
+                $fullName = $updated->appendChild(new DOMElement('FullName'));
+                $fullName->appendChild(new DOMText($fullpath));
 
                 // create CheckinDate element
-                $checkin = $updated->appendChild(new \DOMElement('CheckinDate'));
-                $checkin->appendChild(new \DOMText($pkg['CheckinDate']));
+                $checkin = $updated->appendChild(new DOMElement('CheckinDate'));
+                $checkin->appendChild(new DOMText($pkg['CheckinDate']));
 
                 // create Author element
-                $author = $updated->appendChild(new \DOMElement('Author'));
-                $author->appendChild(new \DOMText($pkg['Author']));
+                $author = $updated->appendChild(new DOMElement('Author'));
+                $author->appendChild(new DOMText($pkg['Author']));
 
                 // create Email element
-                $email = $updated->appendChild(new \DOMElement('Email'));
-                $email->appendChild(new \DOMText($pkg['Email']));
+                $email = $updated->appendChild(new DOMElement('Email'));
+                $email->appendChild(new DOMText($pkg['Email']));
 
                 // create Committer element
-                $committer = $updated->appendChild(new \DOMElement('Committer'));
-                $committer->appendChild(new \DOMText($pkg['Committer']));
+                $committer = $updated->appendChild(new DOMElement('Committer'));
+                $committer->appendChild(new DOMText($pkg['Committer']));
 
                 // create CommitterEmail element
-                $committerEmail = $updated->appendChild(new \DOMElement('CommitterEmail'));
-                $committerEmail->appendChild(new \DOMText($pkg['CommitterEmail']));
+                $committerEmail = $updated->appendChild(new DOMElement('CommitterEmail'));
+                $committerEmail->appendChild(new DOMText($pkg['CommitterEmail']));
 
                 // create CommitDate element
                 // TODO: refactor to incldue forgotten CommitDate
 
                 // create Log element
-                $log = $updated->appendChild(new \DOMElement('Log'));
-                $log->appendChild(new \DOMText($pkg['Log']));
+                $log = $updated->appendChild(new DOMElement('Log'));
+                $log->appendChild(new DOMText($pkg['Log']));
 
                 // create Revision element
-                $revision = $updated->appendChild(new \DOMElement('Revision'));
-                $revision->appendChild(new \DOMText($pkg['Revision']));
+                $revision = $updated->appendChild(new DOMElement('Revision'));
+                $revision->appendChild(new DOMText($pkg['Revision']));
 
                 // create PriorRevision element
-                $priorRevision = $updated->appendChild(new \DOMElement('PriorRevision'));
-                $priorRevision->appendChild(new \DOMText($pkg['PriorRevision']));
+                $priorRevision = $updated->appendChild(new DOMElement('PriorRevision'));
+                $priorRevision->appendChild(new DOMText($pkg['PriorRevision']));
             }
         }
     }
-
 
     protected function set($property, $value): self
     {
@@ -231,15 +235,15 @@ class UpdateUseCase extends UseCase
 
         // ensure that required properties are set
         if (!isset($properties['Name'])) {
-            throw new \Exception("A 'Name' property must be present to create a package");
+            throw new Exception("A 'Name' property must be present to create a package");
         }
 
         if (!isset($properties['File'])) {
-            throw new \Exception("A 'File' property must be present to create a package");
+            throw new Exception("A 'File' property must be present to create a package");
         }
 
         if (!isset($properties['Author'])) {
-            throw new \Exception("An 'Author' property must be present to create a package");
+            throw new Exception("An 'Author' property must be present to create a package");
         }
 
         // create some reasonable defaults based on the name
@@ -292,7 +296,7 @@ class UpdateUseCase extends UseCase
 
     protected function createEmail(string $author): string
     {
-        $names = explode(" ", $author);
+        $names = explode(' ', $author);
         $first = preg_replace('/\W/', '', $names[0]);
         $last = count($names) > 1 ? array_pop($names) : null;
         $last = $last ? ('.' . preg_replace('/\W*/', '', $last)) : '';

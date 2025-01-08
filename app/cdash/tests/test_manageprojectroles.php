@@ -58,7 +58,7 @@ class ManageProjectRolesTestCase extends KWWebTestCase
     {
         $this->login();
 
-        //get projectid for PublicDashboards
+        // get projectid for PublicDashboards
         $content = $this->connect($this->url . '/manageProjectRoles.php');
         $lines = explode("\n", $content);
         foreach ($lines as $line) {

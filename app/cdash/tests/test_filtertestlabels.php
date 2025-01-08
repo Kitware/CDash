@@ -50,7 +50,7 @@ class FilterTestLabelsTestCase extends KWWebTestCase
         $buildid = $buildids[0];
 
         $success = true;
-        $error_msg = "";
+        $error_msg = '';
 
         // If any of these checks fail, the build still needs to be deleted
         try {

@@ -16,11 +16,10 @@ class CreateLabel2updateTable extends Migration
             Schema::create('label2update', function (Blueprint $table) {
                 $table->bigInteger('labelid');
                 $table->bigInteger('updateid');
-                $table->primary(['labelid','updateid']);
+                $table->primary(['labelid', 'updateid']);
             });
         }
     }
-
 
     /**
      * Reverse the migrations.

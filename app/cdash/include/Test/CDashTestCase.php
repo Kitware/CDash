@@ -18,6 +18,8 @@ namespace CDash\Test;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\ServiceContainer;
+use PDOStatement;
+use PHPUnit_Framework_MockObject_MockObject;
 use Tests\TestCase;
 
 require_once 'include/common.php';
@@ -26,7 +28,7 @@ class CDashTestCase extends TestCase
 {
     protected $mockPDO;
 
-    /** @var  Database $originalDatabase*/
+    /** @var Database */
     private $originalDatabase;
 
     public static function tearDownAfterClass(): void
@@ -49,7 +51,7 @@ class CDashTestCase extends TestCase
     {
         $this->originalDatabase = Database::getInstance();
 
-        $mock_stmt = $this->getMockBuilder(\PDOStatement::class)
+        $mock_stmt = $this->getMockBuilder(PDOStatement::class)
             ->disableOriginalConstructor()
             ->onlyMethods([
                 'fetch', 'fetchAll', 'fetchColumn', 'bindParam', 'bindValue', 'rowCount', 'closeCursor'])
@@ -87,7 +89,7 @@ class CDashTestCase extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Build
+     * @return PHPUnit_Framework_MockObject_MockObject|Build
      */
     protected function getMockBuild()
     {

@@ -5,14 +5,14 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        echo "Adding foreign key constraint dynamicanalysisdefect(dynamicanalysisid)->dynamicanalysis(id)...";
-        $num_deleted = DB::delete("DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid NOT IN (SELECT id FROM dynamicanalysis)");
+        echo 'Adding foreign key constraint dynamicanalysisdefect(dynamicanalysisid)->dynamicanalysis(id)...';
+        $num_deleted = DB::delete('DELETE FROM dynamicanalysisdefect WHERE dynamicanalysisid NOT IN (SELECT id FROM dynamicanalysis)');
         echo $num_deleted . ' invalid rows deleted' . PHP_EOL;
         Schema::table('dynamicanalysisdefect', function (Blueprint $table) {
             $table->foreign('dynamicanalysisid')->references('id')->on('dynamicanalysis')->cascadeOnDelete();

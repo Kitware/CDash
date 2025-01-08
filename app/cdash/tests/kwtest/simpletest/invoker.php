@@ -2,6 +2,7 @@
 
 /**
  *  Base include file for SimpleTest
+ *
  * @version    $Id$
  */
 
@@ -30,7 +31,8 @@ class SimpleInvoker
 
     /**
      *    Stashes the test case for later.
-     * @param SimpleTestCase $test_case Test case to run.
+     *
+     * @param SimpleTestCase $test_case test case to run
      */
     public function __construct($test_case)
     {
@@ -39,7 +41,8 @@ class SimpleInvoker
 
     /**
      *    Accessor for test case being run.
-     * @return SimpleTestCase    Test case.
+     *
+     * @return SimpleTestCase test case
      */
     public function getTestCase()
     {
@@ -49,7 +52,8 @@ class SimpleInvoker
     /**
      *    Runs test level set up. Used for changing
      *    the mechanics of base test cases.
-     * @param string $method Test method to call.
+     *
+     * @param string $method test method to call
      */
     public function before($method)
     {
@@ -59,7 +63,8 @@ class SimpleInvoker
     /**
      *    Invokes a test method and buffered with setUp()
      *    and tearDown() calls.
-     * @param string $method Test method to call.
+     *
+     * @param string $method test method to call
      */
     public function invoke($method)
     {
@@ -71,7 +76,8 @@ class SimpleInvoker
     /**
      *    Runs test level clean up. Used for changing
      *    the mechanics of base test cases.
-     * @param string $method Test method to call.
+     *
+     * @param string $method test method to call
      */
     public function after($method)
     {
@@ -89,7 +95,8 @@ class SimpleInvokerDecorator
 
     /**
      *    Stores the invoker to wrap.
-     * @param SimpleInvoker $invoker Test method runner.
+     *
+     * @param SimpleInvoker $invoker test method runner
      */
     public function __construct($invoker)
     {
@@ -98,7 +105,8 @@ class SimpleInvokerDecorator
 
     /**
      *    Accessor for test case being run.
-     * @return SimpleTestCase    Test case.
+     *
+     * @return SimpleTestCase test case
      */
     public function getTestCase()
     {
@@ -108,7 +116,8 @@ class SimpleInvokerDecorator
     /**
      *    Runs test level set up. Used for changing
      *    the mechanics of base test cases.
-     * @param string $method Test method to call.
+     *
+     * @param string $method test method to call
      */
     public function before($method)
     {
@@ -118,7 +127,8 @@ class SimpleInvokerDecorator
     /**
      *    Invokes a test method and buffered with setUp()
      *    and tearDown() calls.
-     * @param string $method Test method to call.
+     *
+     * @param string $method test method to call
      */
     public function invoke($method)
     {
@@ -128,7 +138,8 @@ class SimpleInvokerDecorator
     /**
      *    Runs test level clean up. Used for changing
      *    the mechanics of base test cases.
-     * @param string $method Test method to call.
+     *
+     * @param string $method test method to call
      */
     public function after($method)
     {

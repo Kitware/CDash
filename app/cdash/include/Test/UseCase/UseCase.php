@@ -8,6 +8,7 @@ use DOMDocument;
 use DOMElement;
 use DOMText;
 use Exception;
+use Faker\Factory;
 use InvalidArgumentException;
 
 abstract class UseCase
@@ -245,7 +246,7 @@ abstract class UseCase
     public function getFaker()
     {
         if (!$this->faker) {
-            $this->faker = \Faker\Factory::create();
+            $this->faker = Factory::create();
         }
         return $this->faker;
     }

@@ -17,24 +17,22 @@
 
 namespace CDash\Model;
 
-use CDash\Messaging\Preferences\NotificationPreferences;
-use CDash\Messaging\Topic\TopicCollection;
 use ActionableBuildInterface;
+use CDash\Messaging\Preferences\NotificationPreferences;
+use CDash\Messaging\Preferences\NotificationPreferencesInterface;
+use CDash\Messaging\Topic\TopicCollection;
 
 interface SubscriberInterface
 {
     /**
      * SubscriberInterface constructor.
-     * @param NotificationPreferences $preferences
-     * @param TopicCollection|null $topics
      */
     public function __construct(
         NotificationPreferences $preferences,
-        TopicCollection $topics = null
+        ?TopicCollection $topics = null,
     );
 
     /**
-     * @param ActionableBuildInterface $build
      * @return bool
      */
     public function hasBuildTopics(ActionableBuildInterface $build);
@@ -49,10 +47,6 @@ interface SubscriberInterface
      */
     public function getAddress();
 
-    /**
-     * @param $address
-     * @return mixed
-     */
     public function setAddress($address);
 
     /**
@@ -61,7 +55,7 @@ interface SubscriberInterface
     public function getLabels();
 
     /**
-     * @return \CDash\Messaging\Preferences\NotificationPreferencesInterface
+     * @return NotificationPreferencesInterface
      */
     public function getNotificationPreferences();
 

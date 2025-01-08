@@ -20,7 +20,6 @@
 // the input, the project's nightly start time, now
 //
 
-
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 use CDash\Model\BuildGroup;
@@ -94,7 +93,6 @@ function get_related_dates(string $projectnightlytime, string $basedate): array
     return $dates;
 }
 
-/** */
 function remove_directory_from_filename(&$filename): string
 {
     $npos = strrpos($filename, '/');
@@ -288,7 +286,7 @@ function get_p4_repository_commits($root, $branch, $dates): array
     foreach (array_reverse($lines) as $line) {
         if (preg_match('/^Change ([0-9]+) on/', $line, $matches)) {
             $currentrevision = $matches[1];
-            $raw_output = `$p4command describe -s $matches[1]`;
+            $raw_output = shell_exec("$p4command describe -s $matches[1]");
             $describe_lines = explode("\n", $raw_output);
 
             $commit = [];
@@ -308,7 +306,7 @@ function get_p4_repository_commits($root, $branch, $dates): array
                         $commit['author'] = $users[$user]['name'];
                         $commit['email'] = $users[$user]['email'];
                     } else {
-                        $raw_output = `$p4command users -m 1 $user`;
+                        $raw_output = shell_exec("$p4command users -m 1 $user");
                         if (preg_match("/^(.+) <(.*)> \((.*)\) accessed (.*)$/", $raw_output, $matches)) {
                             $newuser = [];
                             $newuser['username'] = $matches[1];
@@ -360,40 +358,40 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
     // If the current directory doesn't exist we create it
     if (!file_exists($gitdir)) {
         // If the bare repository doesn't exist we clone it
-        $command = 'cd "' . $gitlocaldirectory . '" && "' . 'git' . '" clone --bare ' . $gitroot . ' ' . $gitdirectory;
-        $raw_output = `$command`;
+        $command = 'cd "' . $gitlocaldirectory . '" && "git" clone --bare ' . $gitroot . ' ' . $gitdirectory;
+        $raw_output = shell_exec($command);
     }
 
     // Update the current bare repository
-    $command = '"' . 'git' . '" --git-dir="' . $gitdir . '" fetch ' . $gitroot;
+    $command = '"git" --git-dir="' . $gitdir . '" fetch ' . $gitroot;
     if ($branch != '') {
         $command .= ' +' . $branch . ':' . $branch;
     }
 
-    $raw_output = `$command`;
+    $raw_output = shell_exec($command);
 
     // Get what changed during that time
     if ($branch == '') {
         $branch = 'FETCH_HEAD';
     }
 
-    $command = '"' . 'git' . '" --git-dir="' . $gitdir . '" rev-parse ' . $branch;
-    $currentrevision = `$command`;
+    $command = '"git" --git-dir="' . $gitdir . '" rev-parse ' . $branch;
+    $currentrevision = shell_exec($command);
     $results['currentrevision'] = trim($currentrevision);
 
     // Find the previous day version
     if ($previousrevision != '') {
         // Compare with the fetch head for now
-        $command = '"' . 'git' . '" --git-dir="' . $gitdir . '" whatchanged ' . $previousrevision . '..' . $currentrevision . ' --pretty=medium ' . $branch;
+        $command = '"git" --git-dir="' . $gitdir . '" whatchanged ' . $previousrevision . '..' . $currentrevision . ' --pretty=medium ' . $branch;
     } else {
         $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1'] + 1) . ' GMT';
         $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . ' GMT';
 
         // Compare with the fetch head for now
-        $command = '"' . 'git' . '" --git-dir="' . $gitdir . '" whatchanged --since="' . $fromtime . '" --until="' . $totime . '" --pretty=medium ' . $branch;
+        $command = '"git" --git-dir="' . $gitdir . '" whatchanged --since="' . $fromtime . '" --until="' . $totime . '" --pretty=medium ' . $branch;
     }
 
-    $raw_output = `$command`;
+    $raw_output = shell_exec($command);
 
     $lines = explode("\n", $raw_output);
 
@@ -456,8 +454,8 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
     $ustring = (isset($username) && strlen($username) != 0) ? "--username $username" : '';
     $pstring = (isset($password) && strlen($password) != 0) ? "--password $password" : '';
 
-    $raw_output = `svn log --trust-server-cert --non-interactive $ustring $pstring $svnroot -r $svnrevision -v 2>&1`;
-    //$raw_output = `svn help log`;
+    $raw_output = shell_exec("svn log --trust-server-cert --non-interactive $ustring $pstring $svnroot -r $svnrevision -v 2>&1");
+    // $raw_output = `svn help log`;
 
     $lines = explode("\n", $raw_output);
 
@@ -518,35 +516,35 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
                         $commits[$current_directory . '/' . $current_filename . ';' . $current_revision] = $commit;
                     }
                 } else {
-                    //echo "excluding: '" . $current_time . "' (" . gmdate(FMT_DATETIMEMS, $current_time) . ")<br/>";
+                    // echo "excluding: '" . $current_time . "' (" . gmdate(FMT_DATETIMEMS, $current_time) . ")<br/>";
                 }
                 $gathered_file_lines = [];
             }
             $current_comment = '';
             $last_chunk_line_number = $line_number;
-            //echo "<br/>";
+            // echo "<br/>";
         }
 
         if ($line_number === $last_chunk_line_number + 1) {
             $npos = strpos($vv, ' | ');
             if ($npos !== false) {
                 $current_revision = substr($vv, 1, $npos - 1); // 1 == skip the 'r' at the beginning...
-                //echo "current_revision: '" . $current_revision . "'<br/>";
+                // echo "current_revision: '" . $current_revision . "'<br/>";
 
                 $npos2 = strpos($vv, ' | ', $npos + 3);
                 if ($npos2 !== false) {
                     $current_author = substr($vv, $npos + 3, $npos2 - ($npos + 3));
-                    //echo "current_author: '" . $current_author . "'<br/>";
+                    // echo "current_author: '" . $current_author . "'<br/>";
                     $npos = $npos2;
 
                     $npos2 = strpos($vv, ' (', $npos + 3);
                     if ($npos2 !== false) {
                         $current_date = substr($vv, $npos + 3, $npos2 - ($npos + 3));
-                        //echo "current_date: '" . $current_date . "'<br/>";
+                        // echo "current_date: '" . $current_date . "'<br/>";
 
                         $current_time = gmdate(FMT_DATETIME, strtotime($current_date));
-                        //echo "date: '" . $current_time . "' (" . date(FMT_DATETIMEMS, $current_time) . ")<br/>";
-                        //echo "gmdate: '" . $current_time . "' (" . gmdate(FMT_DATETIMEMS, $current_time) . ")<br/>";
+                        // echo "date: '" . $current_time . "' (" . date(FMT_DATETIMEMS, $current_time) . ")<br/>";
+                        // echo "gmdate: '" . $current_time . "' (" . gmdate(FMT_DATETIMEMS, $current_time) . ")<br/>";
 
                         $npos2 = strpos($vv, ' | ', $npos + 3);
                         $npos = $npos2;
@@ -554,7 +552,7 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
                             $current_line_count = substr($vv, $npos + 3);
                             $npos2 = strpos($current_line_count, ' line');
                             $current_line_count = substr($current_line_count, 0, $npos2);
-                            //echo "current_line_count: '" . $current_line_count . "'<br/>";
+                            // echo "current_line_count: '" . $current_line_count . "'<br/>";
                         }
                     }
                 }
@@ -564,7 +562,7 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
         if ($in_list_of_filenames === 0 && $line_number > $last_chunk_line_number + 2) {
             $in_comment = 1;
 
-            //echo "gather comment line: '" . $vv . "'<br/>";
+            // echo "gather comment line: '" . $vv . "'<br/>";
             if ($current_comment === '') {
                 $current_comment = $vv;
             } else {
@@ -599,7 +597,7 @@ function get_bzr_repository_commits($bzrroot, $dates): array
 
     $raw_output = `bzr log -v --xml -r date:"$fromtime"..date:"$totime" $bzrroot 2>&1`;
 
-    $doc = new DomDocument();
+    $doc = new DOMDocument();
     $doc->loadXML($raw_output);
     $logs = $doc->getElementsByTagName('log');
 
@@ -784,15 +782,15 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime): void
                                )
                                AND site.id=t1.siteid
                        ", [
-                           $projectid,
-                           $currentBeginUTCTime,
-                           $currentEndUTCTime,
-                           $currentBeginUTCTime,
-                           $currentEndUTCTime,
-                           $projectid,
-                           $currentBeginUTCTime,
-                           $currentEndUTCTime,
-                       ]);
+        $projectid,
+        $currentBeginUTCTime,
+        $currentEndUTCTime,
+        $currentBeginUTCTime,
+        $currentEndUTCTime,
+        $projectid,
+        $currentBeginUTCTime,
+        $currentEndUTCTime,
+    ]);
 
     $projectname = get_project_name($projectid);
     $summary = 'The following expected build(s) for the project *' . $projectname . "* didn't submit yesterday:\n";
@@ -1123,8 +1121,8 @@ function addDailyChanges(int $projectid): void
 
         // Delete expired buildgroups and rules.
         $current_date = gmdate(FMT_DATETIME);
-        $datetime = new \DateTime();
-        $datetime->sub(new \DateInterval("P{$project->AutoremoveTimeframe}D"));
+        $datetime = new DateTime();
+        $datetime->sub(new DateInterval("P{$project->AutoremoveTimeframe}D"));
         $cutoff_date = gmdate(FMT_DATETIME, $datetime->getTimestamp());
         BuildGroupRule::DeleteExpiredRulesForProject($project->Id, $cutoff_date);
 

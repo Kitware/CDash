@@ -16,7 +16,7 @@
 =========================================================================*/
 
 /** Because this class uses SimpleXML it is only suitable for use with small
-  * XML files that can fit into memory.
+ * XML files that can fit into memory.
  **/
 class RetryHandler
 {

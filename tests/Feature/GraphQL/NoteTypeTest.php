@@ -5,6 +5,7 @@ namespace Tests\Feature\GraphQL;
 use App\Models\Note;
 use App\Models\Project;
 use Illuminate\Support\Str;
+use Random\RandomException;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
@@ -33,7 +34,7 @@ class NoteTypeTest extends TestCase
     private Note $note3;
 
     /**
-     * @throws \Random\RandomException
+     * @throws RandomException
      */
     protected function setUp(): void
     {
@@ -75,7 +76,6 @@ class NoteTypeTest extends TestCase
             $this->note2->id,
             $this->note3->id,
         ]);
-
     }
 
     protected function tearDown(): void

@@ -21,6 +21,7 @@ use App\Models\Password;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
+use PDO;
 
 class User
 {
@@ -89,10 +90,10 @@ class User
 
             // Update the project
             $stmt = $this->PDO->prepare(
-                "UPDATE users SET
+                'UPDATE users SET
                 email = :email, password = :password, firstname = :firstname,
                 lastname = :lastname, institution = :institution, admin = :admin
-                WHERE id = :id");
+                WHERE id = :id');
             $stmt->bindParam(':email', $this->Email);
             $stmt->bindParam(':password', $this->Password);
             $stmt->bindParam(':firstname', $this->FirstName);
@@ -166,8 +167,8 @@ class User
     }
 
     /** Record this user's password for the purposes of password rotation.
-      * Does nothing if this feature is disabled.
-      */
+     * Does nothing if this feature is disabled.
+     */
     private function RecordPassword(): void
     {
         if (config('cdash.password.expires') < 1 || !$this->Id || !$this->Password) {
@@ -179,7 +180,6 @@ class User
             'userid' => (int) $this->Id,
             'password' => $this->Password,
         ]);
-
 
         $unique_password_limit = config('cdash.password.unique');
         if ($unique_password_limit > 0) {
@@ -221,7 +221,7 @@ class User
             $stmt = $this->PDO->prepare($sql);
             $stmt->bindParam(':id', $this->Id);
             if ($this->PDO->execute($stmt)) {
-                $this->Credentials = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+                $this->Credentials = $stmt->fetchAll(PDO::FETCH_COLUMN);
             }
         }
         return $this->Credentials;
@@ -246,7 +246,7 @@ class User
             $stmt = $this->PDO->prepare($sql);
             $stmt->bindParam(':user', $this->Id);
             if ($this->PDO->execute($stmt)) {
-                foreach ($stmt->fetchAll(\PDO::FETCH_OBJ) as $row) {
+                foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
                     $label = new Label();
                     $label->Id = $row->id;
                     $label->Text = $row->text;

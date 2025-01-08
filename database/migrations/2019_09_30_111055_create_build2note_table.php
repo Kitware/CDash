@@ -21,7 +21,6 @@ class CreateBuild2noteTable extends Migration
         }
     }
 
-
     /**
      * Reverse the migrations.
      *
