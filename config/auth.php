@@ -6,10 +6,9 @@ use App\Models\User;
 return [
     // Whether or not "normal" username+password authentication is enabled
     'username_password_authentication_enabled' => env('USERNAME_PASSWORD_AUTHENTICATION_ENABLED', true),
-    // Whether or not "normal" username+password authentication is enabled
-    'user_registration_form_enabled' => env('USER_REGISTRATION_FORM_ENABLED', true),
-    // Whether or not a Project administrator can register a user
-    'project_admin_registration_form_enabled' => env('PROJECT_ADMIN_REGISTRATION_FORM_ENABLED', true),
+    // Which level of permissions can register a user
+    // supported: PUBLIC,PROJECT_ADMIN,ADMIN,""
+    'user_registration_access_level_required' => env('USER_REGISTRATION_ACCESS_LEVEL_REQUIRED', (bool) env('USER_REGISTRATION_FORM_ENABLED', true) ? 'PUBLIC' : ((bool) env('PROJECT_ADMIN_REGISTRATION_FORM_ENABLED', true) ? 'PROJECT_ADMIN' : 'ADMIN')),
 
     /*
     |--------------------------------------------------------------------------

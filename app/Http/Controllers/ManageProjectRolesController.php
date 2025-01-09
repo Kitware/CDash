@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Project as EloquentProject;
@@ -384,7 +386,7 @@ final class ManageProjectRolesController extends AbstractProjectController
         if ((bool) config('require_full_email_when_adding_user')) {
             $xml .= add_XML_value('fullemail', '1');
         }
-        if ((config('auth.project_admin_registration_form_enabled') === true) || $current_user->admin) {
+        if ($current_user->can('create', [User::class, EloquentProject::find($projectid)])) {
             $xml .= add_XML_value('canRegister', '1');
         }
         $xml .= '</cdash>';
@@ -426,7 +428,7 @@ final class ManageProjectRolesController extends AbstractProjectController
 
     private function register_user($projectid, $email, $firstName, $lastName, $repositoryCredential)
     {
-        if (config('auth.project_admin_registration_form_enabled') === false) {
+        if (Gate::authorize('create', [User::class, EloquentProject::findOrFail($projectid)])->denied()) {
             return '<error>Users cannot be registered via this form at the current time.</error>';
         }
 

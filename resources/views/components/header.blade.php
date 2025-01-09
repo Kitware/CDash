@@ -2,9 +2,10 @@
     if (isset($project)) {
         $logoid = $project->ImageId;
     }
-$hideRegistration = config('auth.user_registration_form_enabled') === false;
-@endphp
 
+    use Illuminate\Support\Str;
+    $canRegister = Str::upper(config('auth.user_registration_access_level_required')) === "PUBLIC";
+@endphp
 <div id="header">
     <div id="headertop">
         <div id="topmenu">
@@ -18,7 +19,7 @@ $hideRegistration = config('auth.user_registration_form_enabled') === false;
                     <a class="cdash-link" href="{{ url('/logout') }}">Logout</a>
                 @else
                     <a class="cdash-link" href="{{ url('/login') }}">Login</a>
-                    @if(!$hideRegistration)
+                    @if($canRegister)
                       <a class="cdash-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                     @endif
                 @endif

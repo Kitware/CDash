@@ -3740,6 +3740,16 @@ parameters:
 			path: app/Policies/ProjectPolicy.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/Policies/UserPolicy.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of static method Illuminate\\\\Support\\\\Str\\:\\:upper\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: app/Policies/UserPolicy.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Foundation\\\\Application\\:\\:isProduction\\(\\)\\.$#"
 			count: 1
 			path: app/Providers/AppServiceProvider.php
