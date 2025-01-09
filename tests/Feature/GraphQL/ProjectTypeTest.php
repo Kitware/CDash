@@ -97,7 +97,7 @@ class ProjectTypeTest extends TestCase
      *     }
      * }
      */
-    public function projectAccessByUser(): array
+    public static function projectAccessByUser(): array
     {
         return [
             [
@@ -140,7 +140,7 @@ class ProjectTypeTest extends TestCase
      *     }
      * }
      */
-    public function perProjectAccess(): array
+    public static function perProjectAccess(): array
     {
         return [
             // No user
@@ -794,7 +794,7 @@ class ProjectTypeTest extends TestCase
      *     }
      * }
      */
-    public function createProjectVisibilityRules(): array
+    public static function createProjectVisibilityRules(): array
     {
         return [
             ['normal', 'PUBLIC', 'PUBLIC',  true],
@@ -872,7 +872,7 @@ class ProjectTypeTest extends TestCase
      *     }
      * }
      */
-    public function authenticatedSubmissionRules(): array
+    public static function authenticatedSubmissionRules(): array
     {
         return [
             ['normal', false, false,  true],
