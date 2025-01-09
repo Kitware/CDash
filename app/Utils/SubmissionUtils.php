@@ -26,11 +26,13 @@ class SubmissionUtils
 {
     /**
      * Figure out what type of XML file this is
+     *
      * @return array{
      *     file_handle: mixed,
      *     xml_handler: 'BuildHandler'|'ConfigureHandler'|'CoverageHandler'|'CoverageJUnitHandler'|'CoverageLogHandler'|'DoneHandler'|'DynamicAnalysisHandler'|'NoteHandler'|'ProjectHandler'|'TestingHandler'|'TestingJUnitHandler'|'UpdateHandler'|'UploadHandler',
      *     xml_type: 'Build'|'Configure'|'Coverage'|'CoverageJUnit'|'CoverageLog'|'Done'|'DynamicAnalysis'|'Notes'|'Project'|'Test'|'TestJUnit'|'Update'|'Upload',
      * }
+     *
      * @throws BadSubmissionException
      */
     public static function get_xml_type(mixed $filehandle, string $xml_file): array

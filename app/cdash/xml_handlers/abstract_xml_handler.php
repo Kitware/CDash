@@ -39,7 +39,6 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
         $this->stack = new Stack();
     }
 
-
     /**
      * Validate the given XML file based on its type
      *
@@ -73,7 +72,6 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 
         return $errors;
     }
-
 
     protected function getParent()
     {

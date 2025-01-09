@@ -135,6 +135,7 @@ class ProcessSubmission implements ShouldQueue
      * Execute the job.
      *
      * @return void
+     *
      * @throws BadSubmissionException
      */
     public function handle()

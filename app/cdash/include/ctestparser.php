@@ -162,7 +162,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, ?int $bui
  *
  * @throws BadSubmissionException
  */
-function ctest_parse($filehandle, string $filename, $projectid, $expected_md5 = '', int|null $buildid=null): AbstractSubmissionHandler|false
+function ctest_parse($filehandle, string $filename, $projectid, $expected_md5 = '', ?int $buildid = null): AbstractSubmissionHandler|false
 {
     // Check if this is a new style PUT submission.
     try {

@@ -67,7 +67,7 @@ class ValidateXml extends Command
                 }
             } catch (BadMethodCallException $e) {
                 $this->warn("WARNING: Skipped input file '{$input_xml_file}' as validation"
-                    ." of this file format is currently not supported.");
+                    . ' of this file format is currently not supported.');
                 $has_skipped = true;
             }
         }
@@ -77,7 +77,7 @@ class ValidateXml extends Command
             $this->error('FAILED: Some XML file checks did not pass!');
             return Command::FAILURE;
         } elseif ($has_skipped) {
-            $this->error("FAILED: Some XML file checks were skipped!");
+            $this->error('FAILED: Some XML file checks were skipped!');
             return Command::FAILURE;
         } else {
             $this->line('SUCCESS: All XML file checks passed.');
