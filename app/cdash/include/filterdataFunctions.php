@@ -15,6 +15,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use Illuminate\Support\Facades\Log;
+
 function getFilterDefinitionXML($key, $uitext, $type, $valuelist, $defaultvalue)
 {
     $xml = '<def>';
@@ -321,19 +323,17 @@ class IndexPhpFilters extends DefaultFilters
             case 'updateerrors':
                 // this one is pretty complicated... save it for later...
                 //  $sql_field = "(SELECT COUNT(buildid) FROM buildupdate WHERE buildid=b.id)";
-                add_log(
-                    'warning: updateerrors field not implemented yet...',
-                    'get_sql_field');
 
+                // TODO: throw exception instead?
+                Log::warning('updateerrors field not implemented yet...');
                 break;
 
             case 'updatewarnings':
                 // this one is pretty complicated... save it for later...
                 //  $sql_field = "(SELECT COUNT(buildid) FROM buildupdate WHERE buildid=b.id)";
-                add_log(
-                    'warning: updatewarnings field not implemented yet...',
-                    'get_sql_field');
 
+                // TODO: throw exception instead?
+                Log::warning('updatewarnings field not implemented yet...');
                 break;
 
             case 'subprojects':

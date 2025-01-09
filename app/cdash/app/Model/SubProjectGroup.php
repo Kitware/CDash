@@ -19,6 +19,7 @@ namespace CDash\Model;
 
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SubProjectGroup
 {
@@ -62,10 +63,9 @@ class SubProjectGroup
                    WHERE id=? AND endtime='1980-01-01 00:00:00'
                ", [$this->Id]);
         if (empty($row)) {
-            add_log(
-                "No subprojectgroup found with Id='$this->Id'",
-                'SubProjectGroup::SetId',
-                LOG_WARNING);
+            Log::warning("No subprojectgroup found with Id='$this->Id'", [
+                'function' => 'SubProjectGroup::SetId',
+            ]);
             return false;
         }
 
@@ -156,10 +156,9 @@ class SubProjectGroup
     public function Fill(): bool
     {
         if ($this->Name === '' || $this->ProjectId === 0) {
-            add_log(
-                "Name='" . $this->Name . "' or ProjectId='" . $this->ProjectId . "' not set",
-                'SubProjectGroup::Fill',
-                LOG_WARNING);
+            Log::warning("Name='" . $this->Name . "' or ProjectId='" . $this->ProjectId . "' not set", [
+                'function' => 'SubProjectGroup::Fill',
+            ]);
             return false;
         }
 
@@ -243,10 +242,9 @@ class SubProjectGroup
     public function Save(): bool
     {
         if ($this->Name === '' || $this->ProjectId === 0) {
-            add_log(
-                "Name='" . $this->Name . "' or ProjectId='" . $this->ProjectId . "' not set",
-                'SubProjectGroup::Save',
-                LOG_WARNING);
+            Log::warning("Name='" . $this->Name . "' or ProjectId='" . $this->ProjectId . "' not set", [
+                'function' => 'SubProjectGroup::Save',
+            ]);
             return false;
         }
 

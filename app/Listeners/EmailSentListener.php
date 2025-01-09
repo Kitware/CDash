@@ -15,13 +15,12 @@ class EmailSentListener
         }
         $addresses = implode(', ', $addresses);
 
-        // TODO: Clean up this logging code by using Log facade with multiple message levels
+        $context = [];
         if (config('app.debug')) {
-            add_log($addresses, 'TESTING: EMAIL', LOG_DEBUG);
-            add_log($event->message->getSubject(), 'TESTING: EMAILTITLE', LOG_DEBUG);
-            add_log($event->message->getTextBody(), 'TESTING: EMAILBODY', LOG_DEBUG);
-        } else {
-            Log::info("Sent email titled '{$event->message->getSubject()}' to {$addresses}");
+            $context['subject'] = $event->message->getSubject();
+            $context['body'] = $event->message->getTextBody();
         }
+
+        Log::info("Sent email titled '{$event->message->getSubject()}' to {$addresses}", $context);
     }
 }

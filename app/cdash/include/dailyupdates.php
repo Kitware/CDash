@@ -27,6 +27,7 @@ use CDash\Model\BuildGroupRule;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
@@ -346,7 +347,7 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
 
     // Check that the default git directory exists and is writable
     if (empty($gitlocaldirectory) || !is_writable($gitlocaldirectory)) {
-        add_log('git directory is not writable.', 'get_git_repository_commits');
+        Log::warning('git directory is not writable.');
         $results['commits'] = $commits;
         return $results;
     }

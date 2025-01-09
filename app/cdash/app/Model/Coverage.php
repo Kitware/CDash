@@ -18,6 +18,7 @@
 namespace CDash\Model;
 
 use App\Models\Coverage as EloquentCoverage;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Coverage class. Used by CoverageSummary
@@ -67,10 +68,9 @@ class Coverage
                 $label->Insert();
             }
         } else {
-            add_log('No buildid or coveragefile',
-                'Coverage::InsertLabelAssociations', LOG_ERR,
-                0, $buildid,
-                ModelType::COVERAGE, $this->CoverageFile->Id);
+            Log::error('No buildid or coveragefile', [
+                'function' => 'Coverage::InsertLabelAssociations',
+            ]);
         }
     }
 

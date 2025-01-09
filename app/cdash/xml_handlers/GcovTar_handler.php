@@ -23,6 +23,7 @@ use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 use CDash\Model\Label;
 use CDash\Model\SubProject;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class GcovTarHandler extends AbstractSubmissionHandler
@@ -73,7 +74,9 @@ class GcovTarHandler extends AbstractSubmissionHandler
         // Extract the tarball.
         $result = extract_tar($filename, $dirName);
         if ($result === false) {
-            add_log('Could not extract ' . $filename . ' into ' . $dirName, 'GcovTarHandler::Parse', LOG_ERR);
+            Log::error('Could not extract ' . $filename . ' into ' . $dirName, [
+                'function' => 'GcovTarHandler::Parse',
+            ]);
             return false;
         }
 

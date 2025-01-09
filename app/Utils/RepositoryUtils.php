@@ -749,8 +749,7 @@ class RepositoryUtils
         if (method_exists(self::class, $PR_func)) {
             self::$PR_func($project, $pull_request, $comment, $cdash_url);
         } else {
-            add_log("PR commenting not implemented for '$project->CvsViewerType'",
-                'post_pull_request_comment()', LOG_WARNING);
+            Log::warning("PR commenting not implemented for '$project->CvsViewerType'");
         }
     }
 
@@ -785,8 +784,7 @@ class RepositoryUtils
 
         if (is_null($repo) || !isset($repo['username'])
             || !isset($repo['password'])) {
-            add_log("Missing repository info for project #$project->Id",
-                'post_github_pull_request_comment()', LOG_WARNING);
+            Log::warning("Missing repository info for project #$project->Id");
             return;
         }
 
@@ -817,17 +815,11 @@ class RepositoryUtils
 
         $retval = curl_exec($ch);
         if ($retval === false) {
-            add_log(
-                'cURL error: ' . curl_error($ch),
-                'post_github_pull_request_comment',
-                LOG_ERR, $project->Id);
+            Log::error('cURL error: ' . curl_error($ch), ['projectid' => $project->Id]);
         } elseif (config('app.debug')) {
             $matches = [];
             preg_match("#/comments/(\d+)#", $retval, $matches);
-            add_log(
-                'Just posted comment #' . $matches[1],
-                'post_github_pull_request_comment',
-                LOG_DEBUG, $project->Id);
+            Log::debug('Just posted comment #' . $matches[1], ['projectid' => $project->Id]);
         }
 
         curl_close($ch);

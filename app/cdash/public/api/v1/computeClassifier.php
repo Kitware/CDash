@@ -17,6 +17,8 @@
 
 namespace CDash\Api\v1\ComputeClassifier;
 
+use Illuminate\Support\Facades\Log;
+
 require_once 'include/api_common.php';
 
 $builds = $_GET['builds'];
@@ -28,7 +30,9 @@ if (count($builds) < 1) {
 $builds = array_map(function ($build) {
     $decoded = json_decode($build, true);
     if ($decoded === null) {
-        add_log(json_last_error_msg(), 'compute_classifier');
+        Log::error(json_last_error_msg(), [
+            'function' => 'compute_classifier',
+        ]);
         return $build;
     }
     return $decoded;

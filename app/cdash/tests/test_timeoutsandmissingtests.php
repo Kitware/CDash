@@ -61,7 +61,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
             "SystemInfoTest ({$url}/viewTest.php?buildid=",
             '-CDash on',
         ];
-        if ($this->assertLogContains($expected, 20)) {
+        if ($this->assertLogContains($expected, 18)) {
             $this->pass('Passed');
         }
     }
@@ -120,7 +120,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
             "SleepTimer2 | Completed (Timeout) | ({$url}/test/",
             '-CDash on',
         ];
-        if ($this->assertLogContains($expected, 19)) {
+        if ($this->assertLogContains($expected, 17)) {
             $this->pass('Passed');
         }
     }

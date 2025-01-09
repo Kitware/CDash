@@ -22,6 +22,7 @@ use App\Models\Configure as EloquentConfigure;
 use CDash\Database;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use PDO;
 
 /** BuildConfigure class */
@@ -111,15 +112,15 @@ class BuildConfigure
     public function ExistsByBuildId(): bool
     {
         if (!$this->BuildId) {
-            add_log('BuildId not set',
-                'BuildConfigure::Exists', LOG_ERR,
-                0, 0, ModelType::CONFIGURE, 0);
+            Log::error('BuildId not set', [
+                'function' => 'BuildConfigure::Exists',
+            ]);
             return false;
         }
         if (!is_numeric($this->BuildId)) {
-            add_log('BuildId is not numeric',
-                'BuildConfigure::Exists', LOG_ERR,
-                0, 0, ModelType::CONFIGURE, 0);
+            Log::error('BuildId is not numeric', [
+                'function' => 'BuildConfigure::Exists',
+            ]);
             return false;
         }
 
@@ -137,9 +138,9 @@ class BuildConfigure
     public function Delete(): bool
     {
         if (!$this->Exists()) {
-            add_log('this configure does not exist',
-                'BuildConfigure::Delete', LOG_ERR,
-                0, 0, ModelType::CONFIGURE, 0);
+            Log::error('this configure does not exist', [
+                'function' => 'BuildConfigure::Delete',
+            ]);
             return false;
         }
 
@@ -171,9 +172,9 @@ class BuildConfigure
                 $label->Insert();
             }
         } else {
-            add_log('No BuildConfigure::BuildId - cannot call $label->Insert...',
-                'BuildConfigure::InsertLabelAssociations', LOG_ERR,
-                0, $this->BuildId, ModelType::CONFIGURE, $this->BuildId);
+            Log::error('No BuildConfigure::BuildId - cannot call $label->Insert...', [
+                'function' => 'BuildConfigure::InsertLabelAssociations',
+            ]);
         }
     }
 
@@ -184,16 +185,19 @@ class BuildConfigure
     public function Insert()
     {
         if (!$this->BuildId) {
-            add_log('BuildId not set',
-                'BuildConfigure::Insert', LOG_ERR,
-                0, 0, ModelType::CONFIGURE, $this->Id);
+            Log::error('BuildId not set', [
+                'function' => 'BuildConfigure::Insert',
+                'configureid' => $this->Id,
+            ]);
             return false;
         }
 
         if ($this->ExistsByBuildId()) {
-            add_log('This build already has a configure',
-                'BuildConfigure::Insert', LOG_ERR,
-                0, $this->BuildId, ModelType::CONFIGURE, $this->Id);
+            Log::error('This build already has a configure', [
+                'function' => 'BuildConfigure::Insert',
+                'configureid' => $this->Id,
+                'buildid' => $this->BuildId,
+            ]);
             return false;
         }
 
@@ -225,8 +229,7 @@ class BuildConfigure
                 if ($this->ExistsByCrc32()) {
                     return true;
                 } else {
-                    add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(),
-                        'Configure Insert', LOG_ERR);
+                    report($e);
                     return false;
                 }
             }
@@ -264,7 +267,9 @@ class BuildConfigure
     public function GetConfigureForBuild(): mixed
     {
         if (!$this->BuildId) {
-            add_log('BuildId not set', 'BuildConfigure::GetConfigureForBuild()', LOG_WARNING);
+            Log::warning('BuildId not set', [
+                'function' => 'BuildConfigure::GetConfigureForBuild()',
+            ]);
             return false;
         }
 

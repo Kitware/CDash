@@ -22,6 +22,7 @@ use CDash\Model\Project;
 use CDash\Model\SubProject;
 use CDash\Model\UserProject;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProjectHandler extends AbstractXmlHandler
 {
@@ -55,8 +56,10 @@ class ProjectHandler extends AbstractXmlHandler
         // Check that the project name matches
         if ($name == 'PROJECT') {
             if (get_project_id($attributes['NAME']) != $this->GetProject()->Id) {
-                add_log('Wrong project name: ' . $attributes['NAME'],
-                    'ProjectHandler::startElement', LOG_ERR, $this->GetProject()->Id);
+                Log::error('Wrong project name: ' . $attributes['NAME'], [
+                    'function' => 'ProjectHandler::startElement',
+                    'projectid' => $this->GetProject()->Id,
+                ]);
                 $this->ProjectNameMatches = false;
             }
         }
@@ -119,11 +122,11 @@ class ProjectHandler extends AbstractXmlHandler
                             // TODO: (williamjallen) Rewrite this loop to not make repetitive queries
                             $dep = DB::select('SELECT name FROM subproject WHERE id=?', [intval($removeid)])[0] ?? [];
                             $dep = $dep !== [] ? $dep->name : intval($removeid);
-                            add_log(
-                                "Not removing dependency $dep($removeid) from " .
-                                $subproject->GetName() .
-                                ' because it is not a SubProject element in this Project.xml file',
-                                'ProjectHandler:endElement', LOG_WARNING, $this->GetProject()->Id);
+                            Log::warning("Not removing dependency $dep($removeid) from " . $subproject->GetName() .
+                                ' because it is not a SubProject element in this Project.xml file', [
+                                    'function' => 'ProjectHandler:endElement',
+                                    'projectid' => $this->GetProject()->Id,
+                                ]);
                         }
                     }
                 }
@@ -135,9 +138,10 @@ class ProjectHandler extends AbstractXmlHandler
                     if (array_key_exists($addid, $this->SubProjects)) {
                         $subproject->AddDependency(intval($addid));
                     } else {
-                        add_log(
-                            'impossible condition: should NEVER see this: unknown DEPENDENCY clause should prevent this case',
-                            'ProjectHandler:endElement', LOG_WARNING, $this->GetProject()->Id);
+                        Log::warning('impossible condition: should NEVER see this: unknown DEPENDENCY clause should prevent this case', [
+                            'function' => 'ProjectHandler:endElement',
+                            'projectid' => $this->GetProject()->Id,
+                        ]);
                     }
                 }
             }
@@ -157,9 +161,10 @@ class ProjectHandler extends AbstractXmlHandler
                         $subProjectToRemove = new SubProject();
                         $subProjectToRemove->SetId($previousId);
                         $subProjectToRemove->Delete();
-                        add_log('Deleted ' . $subProjectToRemove->GetName() . ' because it was not mentioned in Project.xml',
-                            'ProjectHandler:endElement', LOG_WARNING,
-                            $this->GetProject()->Id);
+                        Log::warning('Deleted ' . $subProjectToRemove->GetName() . ' because it was not mentioned in Project.xml', [
+                            'function' => 'ProjectHandler:endElement',
+                            'projectid' => $this->GetProject()->Id,
+                        ]);
                     }
                 }
             }
@@ -189,9 +194,10 @@ class ProjectHandler extends AbstractXmlHandler
                 }
 
                 if (!$added) {
-                    add_log('Project.xml DEPENDENCY of ' . $this->SubProject->GetName() .
-                        ' not mentioned earlier in file.',
-                        'ProjectHandler:endElement', LOG_WARNING, $this->GetProject()->Id);
+                    Log::warning('Project.xml DEPENDENCY of ' . $this->SubProject->GetName() . ' not mentioned earlier in file.', [
+                        'function' => 'ProjectHandler:endElement',
+                        'projectid' => $this->GetProject()->Id,
+                    ]);
                 }
             }
 

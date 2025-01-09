@@ -20,6 +20,7 @@ namespace CDash\Model;
 use App\Models\User;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserProject
 {
@@ -138,8 +139,10 @@ class UserProject
     public function UpdateCredentials(array $credentials): bool
     {
         if (!$this->UserId) {
-            add_log('UserId not set', 'UserProject UpdateCredentials()', LOG_ERR,
-                $this->ProjectId, 0, ModelType::USER, $this->UserId);
+            Log::error('UserId not set', [
+                'method' => 'UserProject UpdateCredentials()',
+                'projectid' => $this->ProjectId,
+            ]);
             return false;
         }
 
@@ -170,8 +173,10 @@ class UserProject
         }
 
         if (!$this->UserId) {
-            add_log('UserId not set', 'UserProject AddCredential()', LOG_ERR,
-                $this->ProjectId, 0, ModelType::USER, $this->UserId);
+            Log::error('UserId not set', [
+                'method' => 'UserProject AddCredential()',
+                'projectid' => $this->ProjectId,
+            ]);
             return false;
         }
 
@@ -206,14 +211,20 @@ class UserProject
     public function FillFromRepositoryCredential(): bool
     {
         if (!$this->ProjectId) {
-            add_log('ProjectId not set', 'UserProject FillFromRepositoryCredential()', LOG_ERR,
-                $this->ProjectId, 0, ModelType::USER, $this->UserId);
+            Log::error('ProjectId not set', [
+                'method' => 'UserProject FillFromRepositoryCredential()',
+                'projectid' => $this->ProjectId,
+                'userid' => $this->UserId,
+            ]);
             return false;
         }
 
         if (!$this->RepositoryCredential) {
-            add_log('RepositoryCredential not set', 'UserProject FillFromRepositoryCredential()', LOG_ERR,
-                $this->ProjectId, 0, ModelType::USER, $this->UserId);
+            Log::error('RepositoryCredential not set', [
+                'method' => 'UserProject FillFromRepositoryCredential()',
+                'projectid' => $this->ProjectId,
+                'userid' => $this->UserId,
+            ]);
             return false;
         }
 
@@ -246,14 +257,19 @@ class UserProject
     public function FillFromUserId(): bool
     {
         if (!$this->ProjectId) {
-            add_log('ProjectId not set', 'UserProject FillFromUserId()', LOG_ERR,
-                $this->ProjectId, 0, ModelType::USER, $this->UserId);
+            Log::error('ProjectId not set', [
+                'method' => 'UserProject FillFromUserId()',
+                'projectid' => $this->ProjectId,
+                'userid' => $this->UserId,
+            ]);
             return false;
         }
 
         if (!$this->UserId) {
-            add_log('UserId not set', 'UserProject FillFromUserId()', LOG_ERR,
-                $this->ProjectId, 0, ModelType::USER, $this->UserId);
+            Log::error('UserId not set', [
+                'method' => 'UserProject FillFromUserId()',
+                'projectid' => $this->ProjectId,
+            ]);
             return false;
         }
 

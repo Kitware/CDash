@@ -19,6 +19,7 @@ namespace CDash\Model;
 
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DynamicAnalysis
 {
@@ -135,9 +136,10 @@ class DynamicAnalysis
                 $label->Insert();
             }
         } else {
-            add_log('No DynamicAnalysis::Id - cannot call $label->Insert...',
-                'DynamicAnalysis::InsertLabelAssociations', LOG_ERR,
-                0, $this->BuildId, ModelType::DYNAMICANALYSIS, $this->Id);
+            Log::error('No DynamicAnalysis::Id - cannot call $label->Insert...', [
+                'function' => 'DynamicAnalysis::InsertLabelAssociations',
+                'buildid' => $this->BuildId,
+            ]);
         }
     }
 
@@ -171,8 +173,11 @@ class DynamicAnalysis
         }
 
         if ($this->Log === false) {
-            add_log('Unable to decompress dynamic analysis log',
-                'DynamicAnalysis::Insert', LOG_ERR, 0, $this->BuildId, ModelType::DYNAMICANALYSIS, $this->Id);
+            Log::error('Unable to decompress dynamic analysis log', [
+                'function' => 'DynamicAnalysis::Insert',
+                'buildid' => $this->BuildId,
+                'dynamicanalysisid' => $this->Id,
+            ]);
             $this->Log = '';
         }
 

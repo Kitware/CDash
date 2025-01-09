@@ -18,12 +18,15 @@
 require_once 'include/api_common.php';
 
 use CDash\Model\Repository;
+use Illuminate\Support\Facades\Log;
 
 // Adapted from https://gist.github.com/milo/daed6e958ea534e4eba3
 if (!function_exists('handle_error')) {
     function handle_error($msg)
     {
-        add_log($msg, 'GitHub webhook', LOG_WARNING);
+        Log::warning($msg, [
+            'function' => 'GitHub webhook',
+        ]);
         abort(500, $msg);
     }
 }

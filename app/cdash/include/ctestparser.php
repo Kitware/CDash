@@ -166,7 +166,9 @@ function ctest_parse($filehandle, $projectid, $expected_md5 = '', ?int $buildid 
             return $handler;
         }
     } catch (CDashParseException $e) {
-        add_log($e->getMessage(), 'ctest_parse', LOG_ERR);
+        Log::error($e->getMessage(), [
+            'function' => 'ctest_parse',
+        ]);
         return false;
     }
 
@@ -191,7 +193,8 @@ function ctest_parse($filehandle, $projectid, $expected_md5 = '', ?int $buildid 
     $content = fread($filehandle, 8192);
 
     if ($handler == null) {
-        add_log('error: could not create handler based on xml content', 'ctest_parse', LOG_ERR);
+        // TODO: Add as much context as possible to this message
+        Log::error('error: could not create handler based on xml content');
 
         $Project->SendEmailToAdmin('Cannot create handler based on XML content',
             'An XML submission from ' . $ip . ' to the project ' . get_project_name($projectid) . ' cannot be parsed. The content of the file is as follows: ' . $content);
@@ -228,7 +231,12 @@ function ctest_parse($filehandle, $projectid, $expected_md5 = '', ?int $buildid 
         [$projectid, $buildname, $sitename, $ip]);
     if (!empty($rows)) {
         echo 'The submission is banned from this CDash server.';
-        add_log('Submission is banned from this CDash server', 'ctestparser');
+        Log::info('Blocked prohibited submission.', [
+            'projectid' => $projectid,
+            'build' => $buildname,
+            'site' => $sitename,
+            'ip' => $ip,
+        ]);
         return false;
     }
 

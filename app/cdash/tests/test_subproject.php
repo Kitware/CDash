@@ -84,7 +84,7 @@ class SubProjectTestCase extends KWWebTestCase
             '/',
             '-CDash on',
         ];
-        if ($this->assertLogContains($expected, 31)) {
+        if ($this->assertLogContains($expected, 29)) {
             $this->pass('Passed');
         }
     }
@@ -128,7 +128,7 @@ class SubProjectTestCase extends KWWebTestCase
             "NOX_FiniteDifferenceIsorropiaColoring | Completed (Failed) | ({$url}/testDetails.php?test=",
             '-CDash on',
         ];
-        if ($this->assertLogContains($expected, 37)) {
+        if ($this->assertLogContains($expected, 33)) {
             $this->pass('Passed');
         }
     }

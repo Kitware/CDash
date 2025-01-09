@@ -20,6 +20,7 @@ use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class OpenCoverTarHandler extends AbstractXmlHandler
@@ -144,7 +145,9 @@ class OpenCoverTarHandler extends AbstractXmlHandler
         $this->tarDir = $dirName;
         $result = extract_tar($filename, $dirName);
         if ($result === false) {
-            add_log('Could not extract ' . $filename . ' into ' . $dirName, 'OpenCoverTarHandler::Parse', LOG_ERR);
+            Log::error('Could not extract ' . $filename . ' into ' . $dirName, [
+                'function' => 'OpenCoverTarHandler::Parse',
+            ]);
             return false;
         }
 

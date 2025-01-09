@@ -120,7 +120,7 @@ class SubProjectEmailTestCase extends KWWebTestCase
         $log_contents = file($this->logfilename);
         $email_address_found = false;
         foreach ($log_contents as $line) {
-            if (strpos($line, '"TESTING: EMAIL"') !== false) {
+            if (strpos($line, 'Sent email titled') !== false) {
                 if ($email_address_found) {
                     $this->fail("Multiple emails found in log.\n$line");
                 }
@@ -128,7 +128,7 @@ class SubProjectEmailTestCase extends KWWebTestCase
                 if (strpos($line, 'mesquite-regression@noemail') === false) {
                     $this->fail("Email not sent to mesquite-regression\n$line");
                 }
-            } elseif (strpos($line, '"TESTING: EMAILTITLE"') !== false) {
+
                 $expected = 'FAILED (b=5): SubProjectEmails/Mesquite';
                 if (strpos($line, $expected) === false) {
                     $this->fail("Did not find $expected in subject\n$line\n$line");

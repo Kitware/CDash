@@ -26,8 +26,7 @@ use CDash\Model\Project;
 use CDash\ServiceContainer;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
-require_once 'include/log.php';
+use Illuminate\Support\Facades\Log;
 
 function xslt_process(XSLTProcessor $xsltproc,
     $xml_arg,
@@ -269,7 +268,10 @@ function get_seconds_from_interval($input)
         return $duration;
     }
 
-    add_log("Could not handle input: $input", 'get_seconds_from_interval', LOG_WARNING);
+    Log::warning("Could not handle input: $input", [
+        'function' => 'get_seconds_from_interval',
+    ]);
+
     return null;
 }
 
@@ -293,11 +295,23 @@ function add_XML_value(string $tag, $value): string
  *
  * @deprecated 04/22/2023
  */
-function add_last_sql_error($functionname, $projectid = 0, $buildid = 0, $resourcetype = 0, $resourceid = 0): void
+function add_last_sql_error($functionname, $projectid = 0, $buildid = 0): void
 {
     $pdo_error = pdo_error();
     if (strlen($pdo_error) > 0) {
-        add_log('SQL error: ' . $pdo_error, $functionname, LOG_ERR, $projectid, $buildid, $resourcetype, $resourceid);
+        $context = [
+            'function' => $functionname,
+        ];
+
+        if ($projectid > 0) {
+            $context['projectid'] = $projectid;
+        }
+
+        if ($buildid > 0) {
+            $context['buildid'] = $buildid;
+        }
+
+        Log::error('SQL error: ' . $pdo_error, $context);
         $text = "SQL error in $functionname():" . $pdo_error . '<br>';
         echo $text;
     }

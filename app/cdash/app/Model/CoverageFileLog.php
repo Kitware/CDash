@@ -18,7 +18,8 @@
 namespace CDash\Model;
 
 use CDash\Database;
-use DB;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CoverageFileLog
 {
@@ -57,14 +58,17 @@ class CoverageFileLog
     public function Insert($append = false)
     {
         if (!$this->BuildId || !is_numeric($this->BuildId)) {
-            add_log('BuildId not set', 'CoverageFileLog::Insert()', LOG_ERR,
-                0, $this->BuildId, ModelType::COVERAGE, $this->FileId);
+            Log::error('BuildId not set', [
+                'function' => 'CoverageFileLog::Insert()',
+            ]);
             return false;
         }
 
         if (!$this->FileId || !is_numeric($this->FileId)) {
-            add_log('FileId not set', 'CoverageFileLog::Insert()', LOG_ERR,
-                0, $this->BuildId, ModelType::COVERAGE, $this->FileId);
+            Log::error('FileId not set', [
+                'function' => 'CoverageFileLog::Insert()',
+                'buildid' => $this->BuildId,
+            ]);
             return false;
         }
 
@@ -280,12 +284,12 @@ class CoverageFileLog
                        AND cf.fullpath=?
                ', [$aggregateBuildId, $path]);
         if ($row && array_key_exists('id', $row) && intval($row['id']) !== intval($this->FileId)) {
-            add_log("Not appending coverage of '$path' to aggregate as it " .
-                'already contains a different version of this file.',
-                'CoverageFileLog::UpdateAggregate', LOG_INFO,
-                $this->BuildId);
+            Log::info("Not appending coverage of '$path' to aggregate as it already contains a different version of this file.", [
+                'function' => 'CoverageFileLog::UpdateAggregate',
+                'buildid' => $this->BuildId,
+            ]);
             return;
-        } // The stream or file "/Users/bryonbean/Projects/laravel-5.7-cdash/app/cdash/log/cdash.log" could not be opened: chmod(): No such file or directory
+        }
 
         // Append these results to the aggregate coverage log.
         $aggregateLog = clone $this;
