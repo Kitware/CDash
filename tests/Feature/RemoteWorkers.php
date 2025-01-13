@@ -22,11 +22,12 @@ class RemoteWorkers extends TestCase
     public function testRemoteWorkerAPIAccess(): void
     {
         Storage::put('inbox/delete_me', 'please delete me');
-        $_SERVER['REQUEST_METHOD'] = 'DELETE';
-        $_REQUEST['filename'] = encrypt('inbox/delete_me');
 
-        $response = $this
-            ->delete('/api/v1/deleteSubmissionFile.php');
+        /** @var string $app_key */
+        $app_key = config('app.key', '');
+        $response = $this->withToken($app_key)->delete('/api/internal/deleteSubmissionFile', [
+            'filename' => 'inbox/delete_me',
+        ]);
         $response->assertOk();
         self::assertFalse(Storage::exists('inbox/delete_me'));
     }
@@ -34,13 +35,25 @@ class RemoteWorkers extends TestCase
     public function testRemoteWorkerAPIAccessWithInvalidKey(): void
     {
         Storage::put('inbox/delete_me', 'please delete me');
-        $_SERVER['REQUEST_METHOD'] = 'DELETE';
-        // Not encrypted, will fail.
-        $_REQUEST['filename'] = 'inbox/delete_me';
 
-        $response = $this
-            ->delete('/api/v1/deleteSubmissionFile.php');
-        $response->assertConflict();
+        $response = $this->withToken('invalid token')->delete('/api/internal/deleteSubmissionFile', [
+            'filename' => 'inbox/delete_me',
+        ]);
+
+        $response->assertUnauthorized();
+        self::assertTrue(Storage::exists('inbox/delete_me'));
+        Storage::delete('inbox/delete_me');
+    }
+
+    public function testRemoteWorkerAPIAccessWithNoKey(): void
+    {
+        Storage::put('inbox/delete_me', 'please delete me');
+
+        $response = $this->delete('/api/internal/deleteSubmissionFile', [
+            'filename' => 'inbox/delete_me',
+        ]);
+
+        $response->assertUnauthorized();
         self::assertTrue(Storage::exists('inbox/delete_me'));
         Storage::delete('inbox/delete_me');
     }
