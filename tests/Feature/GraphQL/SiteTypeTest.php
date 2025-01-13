@@ -778,7 +778,7 @@ class SiteTypeTest extends TestCase
                                                     'edges' => [
                                                         [
                                                             'node' => [
-                                                                'description' => 'site 1 information 1',
+                                                                'description' => 'site 1 information 3',
                                                             ],
                                                         ],
                                                         [
@@ -788,7 +788,7 @@ class SiteTypeTest extends TestCase
                                                         ],
                                                         [
                                                             'node' => [
-                                                                'description' => 'site 1 information 3',
+                                                                'description' => 'site 1 information 1',
                                                             ],
                                                         ],
                                                     ],
