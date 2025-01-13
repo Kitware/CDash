@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ProcessSubmission;
 use CDash\Model\PendingSubmissions;
+use Exception;
 use Illuminate\Support\Facades\Storage;
+use RetryHandler;
 use Symfony\Component\HttpFoundation\Response;
 
 final class RemoteProcessingController extends AbstractController
@@ -45,7 +47,7 @@ final class RemoteProcessingController extends AbstractController
      **/
     public function deleteSubmissionFile(): Response
     {
-        if (! (bool) config('cdash.remote_workers')) {
+        if (!(bool) config('cdash.remote_workers')) {
             return response('This feature is disabled', Response::HTTP_CONFLICT);
         }
 
@@ -74,7 +76,7 @@ final class RemoteProcessingController extends AbstractController
                 return response('Rename failed', Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } else {
-            throw new \Exception('Invalid request.');
+            throw new Exception('Invalid request.');
         }
     }
 
@@ -86,7 +88,7 @@ final class RemoteProcessingController extends AbstractController
      **/
     public function requeueSubmissionFile(): Response
     {
-        if (! (bool) config('cdash.remote_workers')) {
+        if (!(bool) config('cdash.remote_workers')) {
             return response('This feature is disabled', Response::HTTP_CONFLICT);
         }
 
@@ -101,7 +103,7 @@ final class RemoteProcessingController extends AbstractController
             return response('File not found', Response::HTTP_NOT_FOUND);
         }
 
-        $retry_handler = new \RetryHandler(Storage::path("inprogress/{$filename}"));
+        $retry_handler = new RetryHandler(Storage::path("inprogress/{$filename}"));
         $retry_handler->increment();
 
         // Move file back to inbox.
