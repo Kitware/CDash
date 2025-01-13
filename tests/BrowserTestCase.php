@@ -6,18 +6,14 @@ use Exception;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Collection;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Dusk;
 use Laravel\Dusk\TestCase as BaseTestCase;
-use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 
 abstract class BrowserTestCase extends BaseTestCase
 {
     use CreatesApplication;
-    use MakesGraphQLRequests;
-    use DatabaseTruncation;
 
     private string $original_env_contents = '';
 

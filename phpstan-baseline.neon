@@ -26207,7 +26207,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'buildgroups' on mixed\\.$#"
-			count: 4
+			count: 2
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
@@ -26217,7 +26217,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'builds' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
@@ -26231,13 +26231,8 @@ parameters:
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
-			message: "#^Cannot access offset 'siteid' on mixed\\.$#"
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
 			message: "#^Cannot access offset 0 on mixed\\.$#"
-			count: 5
+			count: 4
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
@@ -26247,11 +26242,6 @@ parameters:
 
 		-
 			message: "#^Method ProjectWebPageTestCase\\:\\:testProjectExperimentalLinkBuildSummary\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: "#^Method ProjectWebPageTestCase\\:\\:testProjectExperimentalLinkMachineName\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
 
@@ -26322,7 +26312,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$array of function array_pop expects array, mixed given\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
@@ -26337,7 +26327,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
-			count: 3
+			count: 2
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
@@ -26347,11 +26337,6 @@ parameters:
 
 		-
 			message: "#^Part \\$buildid \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: "#^Part \\$siteid \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
 			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
 
@@ -32260,6 +32245,11 @@ parameters:
 			message: "#^Parameter \\#1 \\$url of function parse_url expects string, mixed given\\.$#"
 			count: 1
 			path: server.php
+
+		-
+			message: "#^Cannot access property \\$description on App\\\\Models\\\\SiteInformation\\|null\\.$#"
+			count: 1
+			path: tests/Browser/Pages/SitesIdPageTest.php
 
 		-
 			message: "#^Access to an undefined property CDash\\\\Model\\\\Build\\:\\:\\$Endime\\.$#"

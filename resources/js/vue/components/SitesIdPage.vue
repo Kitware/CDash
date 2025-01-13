@@ -1,7 +1,10 @@
 <template>
   <div class="tw-flex tw-flex-row tw-gap-4 tw-flex-wrap md:tw-flex-nowrap">
-    <div class="tw-flex tw-flex-col tw-gap-2">
-      <div class="tw-flex tw-flex-col tw-border tw-rounded tw-p-4">
+    <div class="tw-flex tw-flex-grow tw-flex-col tw-gap-2">
+      <div
+        class="tw-flex tw-flex-col tw-border tw-rounded tw-p-4"
+        data-test="site-details"
+      >
         <div class="tw-text-2xl tw-font-black">
           Site Details
         </div>
@@ -11,16 +14,23 @@
               <div class="tw-text-lg tw-font-black">
                 System Information
               </div>
-              <table class="tw-table tw-w-auto tw-table-xs tw-text-left tw-text-nowrap">
+              <table
+                class="tw-table tw-w-auto tw-table-xs tw-text-left tw-text-nowrap"
+                data-test="site-details-table"
+              >
                 <tbody>
                   <tr v-for="field in Object.keys(mostRecentInformation).filter(i => !['description', 'timestamp', '__typename'].includes(i))">
                     <th>{{ humanReadableSiteFieldName(field) }}</th>
-                    <td v-if="mostRecentInformation[field]">
+                    <td
+                      v-if="mostRecentInformation[field]"
+                      data-test="site-details-table-cell"
+                    >
                       {{ humanReadableSiteFieldValue(field, mostRecentInformation[field]) }}
                     </td>
                     <td
                       v-else
                       class="tw-italic"
+                      data-test="site-details-table-cell"
                     >
                       Unknown
                     </td>
@@ -28,7 +38,7 @@
                 </tbody>
               </table>
             </div>
-            <div>
+            <div data-test="site-description">
               <div class="tw-text-lg tw-font-black">
                 Description
               </div>
@@ -53,7 +63,10 @@
           Projects
         </div>
         <loading-indicator :is-loading="!projects">
-          <table class="tw-table">
+          <table
+            class="tw-table"
+            data-test="site-projects-table"
+          >
             <tbody>
               <tr v-for="project in projects.edges.filter(x => x.node.sites.edges.length > 0)">
                 <th>
@@ -73,13 +86,19 @@
         </loading-indicator>
       </div>
     </div>
-    <div class="tw-text-nowrap tw-flex-shrink-0 tw-max-w-80">
+    <div
+      class="tw-text-nowrap tw-flex-shrink-0 tw-max-w-80"
+      data-test="site-history"
+    >
       <div class="tw-text-2xl tw-font-black">
         History
       </div>
       <loading-indicator :is-loading="!site">
         <ul class="tw-timeline tw-timeline-snap-icon tw-timeline-compact tw-timeline-vertical">
-          <li v-for="(information, index) in site.information.edges">
+          <li
+            v-for="(information, index) in site.information.edges"
+            data-test="site-history-item"
+          >
             <div class="tw-timeline-middle">
               <font-awesome-icon icon="circle-check" />
             </div>
@@ -113,6 +132,7 @@
                 <div
                   v-if="site.information.edges[index].node.description"
                   class="tw-font-medium tw-text-neutral-500 tw-text-wrap"
+                  data-test="new-description"
                 >
                   {{ site.information.edges[index].node.description }}
                 </div>
@@ -122,7 +142,11 @@
                 >
                   No description provided...
                 </div>
-                <div class="tw-line-through tw-font-medium tw-text-neutral-500 tw-text-wrap">
+                <div
+                  v-if="site.information.edges[index + 1].node.description"
+                  class="tw-line-through tw-font-medium tw-text-neutral-500 tw-text-wrap"
+                  data-test="old-description"
+                >
                   {{ site.information.edges[index + 1].node.description }}
                 </div>
               </template>
