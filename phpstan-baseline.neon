@@ -182,11 +182,6 @@ parameters:
 			path: app/Console/Commands/UpdateDependencies.php
 
 		-
-			message: "#^Part \\$xml_type \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
-			count: 1
-			path: app/Console/Commands/ValidateXml.php
-
-		-
 			message: "#^Parameter \\#1 \\$path of function app_path expects string, bool\\|string given\\.$#"
 			count: 1
 			path: app/Console/Kernel.php
@@ -13902,7 +13897,7 @@ parameters:
 			path: app/cdash/include/ctestparser.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$backupFileName\\.$#"
+			message: "#^Access to an undefined property BuildHandler\\|ConfigureHandler\\|CoverageHandler\\|CoverageJUnitHandler\\|CoverageLogHandler\\|DoneHandler\\|DynamicAnalysisHandler\\|NoteHandler\\|ProjectHandler\\|TestingHandler\\|TestingJUnitHandler\\|UpdateHandler\\|UploadHandler\\:\\:\\$backupFileName\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparser.php
 
@@ -13917,33 +13912,8 @@ parameters:
 			path: app/cdash/include/ctestparser.php
 
 		-
-			message: "#^Binary operation \"\\.\" between mixed and '\\.xml' results in an error\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
 			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and \\(list\\<string\\>\\|string\\|null\\) results in an error\\.$#"
 			count: 2
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getBuildName\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getBuildStamp\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getSiteName\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getSubProjectName\\(\\)\\.$#"
-			count: 1
 			path: app/cdash/include/ctestparser.php
 
 		-
@@ -13979,11 +13949,6 @@ parameters:
 
 		-
 			message: "#^Function ctest_parse\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Function ctest_parse\\(\\) should return AbstractSubmissionHandler\\|false but returns object\\.$#"
 			count: 1
 			path: app/cdash/include/ctestparser.php
 
@@ -14075,21 +14040,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$data of function xml_parse expects string, string\\|false given\\.$#"
 			count: 2
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Parameter \\#2 \\$handler of function xml_set_character_data_handler expects callable\\(\\)\\: mixed, array\\{object, 'text'\\} given\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Parameter \\#2 \\$start_handler of function xml_set_element_handler expects callable\\(\\)\\: mixed, array\\{object, 'startElement'\\} given\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Parameter \\#3 \\$end_handler of function xml_set_element_handler expects callable\\(\\)\\: mixed, array\\{object, 'endElement'\\} given\\.$#"
-			count: 1
 			path: app/cdash/include/ctestparser.php
 
 		-

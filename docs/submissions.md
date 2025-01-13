@@ -76,3 +76,7 @@ for both the CDash web service and the remote worker(s).
 ## Deferred submissions
 
 CDash automatically detects when its database is unavailable and stores submissions received during this outage. When database access is restored, CDash will attempt to parse the submissions that were received during the outage. This behavior is controlled by the presence of the file named `DB_WAS_DOWN` in the storage directory.
+
+## Submission files validation
+
+CDash can be configured to validate submitted XML files before attempting to process them, in order to preemptively reject malformed files. If enabled, once a submission is moved out of the queue, its XML files will be scanned for valid syntax and validated against the [XML schemas](../app/Validators/Schemas/) CDash supports. To use this feature, set `VALIDATE_XML_SUBMISSIONS=true` in your `.env` file.

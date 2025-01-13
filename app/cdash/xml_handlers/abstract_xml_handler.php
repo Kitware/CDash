@@ -30,11 +30,47 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 
     private $ModelFactory;
 
+    protected static ?string $schema_file = null;
+
     public function __construct(Build|Project $init)
     {
         parent::__construct($init);
 
         $this->stack = new Stack();
+    }
+
+    /**
+     * Validate the given XML file based on its type
+     *
+     * @return array<string>
+     */
+    public static function validate(string $path): array
+    {
+        if (static::$schema_file === null) {
+            return [];
+        }
+
+        $errors = [];
+        // let us control the failures so we can continue
+        // parsing files instead of crashing midway
+        libxml_use_internal_errors(true);
+
+        // load the input file to be validated
+        $xml = new DOMDocument();
+        $xml->load($path, LIBXML_PARSEHUGE);
+
+        // run the validator and collect errors if there are any.
+        if (!$xml->schemaValidate(base_path(static::$schema_file))) {
+            $validation_errors = libxml_get_errors();
+            foreach ($validation_errors as $error) {
+                if ($error->level === LIBXML_ERR_ERROR || $error->level === LIBXML_ERR_FATAL) {
+                    $errors[] = "ERROR: {$error->message} in {$error->file}, line: {$error->line}, column: {$error->column}";
+                }
+            }
+            libxml_clear_errors();
+        }
+
+        return $errors;
     }
 
     protected function getParent()

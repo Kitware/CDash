@@ -47,6 +47,8 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
     private $Builds;
     private array $BuildInformation;
 
+    protected static ?string $schema_file = '/app/Validators/Schemas/DynamicAnalysis.xsd';
+
     // Map SubProjects to Labels
     private $SubProjects;
     private $TestSubProjectName;

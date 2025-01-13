@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use App\Exceptions\BadSubmissionException;
 use BuildHandler;
 use CDash\Database;
 use CDash\Model\Build;
@@ -26,9 +27,15 @@ class SubmissionUtils
     /**
      * Figure out what type of XML file this is
      *
-     * @return array<string,mixed>
+     * @return array{
+     *     file_handle: mixed,
+     *     xml_handler: 'BuildHandler'|'ConfigureHandler'|'CoverageHandler'|'CoverageJUnitHandler'|'CoverageLogHandler'|'DoneHandler'|'DynamicAnalysisHandler'|'NoteHandler'|'ProjectHandler'|'TestingHandler'|'TestingJUnitHandler'|'UpdateHandler'|'UploadHandler',
+     *     xml_type: 'Build'|'Configure'|'Coverage'|'CoverageJUnit'|'CoverageLog'|'Done'|'DynamicAnalysis'|'Notes'|'Project'|'Test'|'TestJUnit'|'Update'|'Upload',
+     * }
+     *
+     * @throws BadSubmissionException
      */
-    public static function get_xml_type(mixed $filehandle): array
+    public static function get_xml_type(mixed $filehandle, string $xml_file): array
     {
         $file = '';
         $handler = null;
@@ -85,6 +92,11 @@ class SubmissionUtils
 
         // restore the file descriptor to beginning of file
         rewind($filehandle);
+
+        // perform minimal error checking as a sanity check
+        if ($file === '' || $handler === null) {
+            throw new BadSubmissionException("Could not determine submission file type for: '{$xml_file}'");
+        }
 
         return [
             'file_handle' => $filehandle,

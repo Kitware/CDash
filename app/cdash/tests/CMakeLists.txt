@@ -192,8 +192,14 @@ set_tests_properties(/CDash/XmlHandler/TestingHandler PROPERTIES DEPENDS /CDash/
 add_unit_test(/CDash/XmlHandler/UpdateHandler)
 set_tests_properties(/CDash/XmlHandler/UpdateHandler PROPERTIES DEPENDS /CDash/XmlHandler/TestingHandler)
 
+
+add_laravel_test(/Feature/SubmissionValidation)
+# Set this to RUN_SERIAL as we are changing the config and don't want to clobber other tests
+set_tests_properties(/Feature/SubmissionValidation PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Feature/SubmissionValidation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 add_laravel_test(/Feature/GraphQL/FilterTest)
-set_tests_properties(/Feature/GraphQL/FilterTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_tests_properties(/Feature/GraphQL/FilterTest PROPERTIES DEPENDS /Feature/SubmissionValidation)
 
 add_laravel_test(/Feature/GraphQL/ProjectTypeTest)
 set_tests_properties(/Feature/GraphQL/ProjectTypeTest PROPERTIES DEPENDS /Feature/GraphQL/FilterTest)
@@ -601,6 +607,8 @@ set_tests_properties(misassignedconfigure PROPERTIES DEPENDS /Feature/SubProject
 
 add_laravel_test(/Feature/RemoteWorkers)
 set_tests_properties(/Feature/RemoteWorkers PROPERTIES DEPENDS install_3)
+
+add_laravel_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 
 add_subdirectory(ctest)
 add_subdirectory(autoremovebuilds)
