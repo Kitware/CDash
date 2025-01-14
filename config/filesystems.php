@@ -58,10 +58,17 @@ return [
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
+            'bucket' => env('AWS_BUCKET', 'cdash'),
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            // N.B. Laravel downloads files from S3 to a temporary directory on the
+            // local file system before serving them to clients!
+            // Setting 'stream_reads=true' would allow us to stream from S3 directly,
+            // but we can't use it because of our various calls to rewind().
+            // See https://github.com/laravel/framework/discussions/49232
+            // for more details.
+            // 'stream_reads' => true,
         ],
 
         'cdash' => [

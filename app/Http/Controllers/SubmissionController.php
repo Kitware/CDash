@@ -85,21 +85,20 @@ final class SubmissionController extends AbstractProjectController
         $authtoken = AuthTokenUtil::getBearerToken();
         $authtoken_hash = $authtoken === null || $authtoken === '' ? '' : AuthTokenUtil::hashToken($authtoken);
 
+        // Check that the md5sum of the file matches what we were told to expect.
+        $fp = request()->getContent(true);
+        if (strlen($expected_md5) > 0) {
+            $md5sum = SubmissionUtils::md5FileHandle($fp);
+            if ($md5sum != $expected_md5) {
+                abort(Response::HTTP_BAD_REQUEST, "md5 mismatch. expected: {$expected_md5}, received: {$md5sum}");
+            }
+        }
+
         // Save the incoming file in the inbox directory.
         $filename = "{$projectname}_-_{$authtoken_hash}_-_" . Str::uuid()->toString() . "_-_{$expected_md5}.xml";
-        $fp = request()->getContent(true);
         if (!Storage::put("inbox/{$filename}", $fp)) {
             Log::error("Failed to save submission to inbox for $projectname (md5=$expected_md5)");
             abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Failed to save submission file.');
-        }
-
-        // Check that the md5sum of the file matches what we were told to expect.
-        if (strlen($expected_md5) > 0) {
-            $md5sum = md5_file(Storage::path("inbox/{$filename}"));
-            if ($md5sum != $expected_md5) {
-                Storage::delete("inbox/{$filename}");
-                abort(Response::HTTP_BAD_REQUEST, "md5 mismatch. expected: {$expected_md5}, received: {$md5sum}");
-            }
         }
 
         // Check if we can connect to the database before proceeding any further.

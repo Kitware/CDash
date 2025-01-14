@@ -321,7 +321,7 @@ class UnparsedSubmissionProcessor
         }
 
         // Check that the md5sum of the file matches what we were expecting.
-        $md5sum = md5_file(Storage::path($this->inboxdatafilename));
+        $md5sum = SubmissionUtils::md5FileHandle(Storage::readStream($this->inboxdatafilename));
         if ($md5sum != $this->md5) {
             Storage::delete($this->inboxdatafilename);
             $buildfile->delete();

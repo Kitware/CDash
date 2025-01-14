@@ -17,6 +17,7 @@ class RemoteWorkers extends TestCase
         URL::forceRootUrl('http://localhost');
         Config::set('cdash.remote_workers', true);
         Config::set('cdash.backup_timeframe', 0);
+        Config::set('filesystem.default', 'local');
     }
 
     public function testRemoteWorkerAPIAccess(): void

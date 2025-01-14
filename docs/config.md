@@ -48,8 +48,6 @@ Please see that file for a full list of configuration options.
 | MAIL_USERNAME | The username used to connect to the SMTP server | '' |
 | MAIL_PASSWORD | The password of the SMTP user | '' |
 
-
-
 ## Authentication
 By default, CDash stores each user's email address and a hash of their password
 in the `user` table. This information is used to authenticate users as they log
@@ -72,6 +70,34 @@ but it is better to make sure this process is always running as a background
 service.
 
 See the [Submissions guide](submissions.md) for more details.
+
+## File Storage
+
+By default, CDash uses the local filesystem to store files it receives from CTest.
+If you're happy with this default, no additional configuration is necessary.
+
+CDash can be configured to use S3 instead, either hosted by AWS or a MinIO server.
+
+The following environment variables are common for both S3 implementations:
+```
+FILESYSTEM_DRIVER=s3
+AWS_ACCESS_KEY_ID=<access key id>
+AWS_SECRET_ACCESS_KEY=<secret access key>
+AWS_BUCKET=<your bucket name> (defaults to 'cdash')
+```
+
+For AWS S3, you will also need to set:
+```
+AWS_REGION=<region>
+```
+
+For MinIO, you should set the following environment variables:
+```
+AWS_REGION=local
+AWS_USE_PATH_STYLE_ENDPOINT=true
+AWS_ENDPOINT=<root Minio URL> (e.g. http://127.0.0.1:9001)
+AWS_URL=<bucket URL> (e.g. http://127.0.0.1:9001/cdash/)
+```
 
 ## Other settings
 | Variable  | Description | Default |

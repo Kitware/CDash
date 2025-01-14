@@ -99,6 +99,7 @@ final class RemoteProcessingController extends AbstractController
         $filename = request()->string('filename');
         $buildid = request()->integer('buildid');
         $projectid = request()->integer('projectid');
+        $md5 = request()->string('md5');
         if (!Storage::exists("inprogress/{$filename}")) {
             return response('File not found', Response::HTTP_NOT_FOUND);
         }
@@ -112,7 +113,7 @@ final class RemoteProcessingController extends AbstractController
         // Requeue the file with exponential backoff.
         PendingSubmissions::IncrementForBuildId($buildid);
         $delay = ((int) config('cdash.retry_base')) ** $retry_handler->Retries;
-        ProcessSubmission::dispatch($filename, $projectid, $buildid, md5_file(Storage::path("inbox/{$filename}")))->delay(now()->addSeconds($delay));
+        ProcessSubmission::dispatch($filename, $projectid, $buildid, $md5)->delay(now()->addSeconds($delay));
         return response('OK', Response::HTTP_OK);
     }
 }
