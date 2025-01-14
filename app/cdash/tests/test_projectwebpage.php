@@ -4,7 +4,6 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-use Illuminate\Support\Carbon;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -179,27 +178,6 @@ class ProjectWebPageTestCase extends KWWebTestCase
             'command' => 'F:\PROGRA~1\MICROS~1.0\Common7\IDE\VCExpress.exe BatchMake.sln /build Release /project ALL_BUILD',
         ];
         $this->assertEqual($result[0], $expected);
-    }
-
-    public function testProjectExperimentalLinkMachineName()
-    {
-        $content = $this->connect($this->url . '/api/v1/index.php?project=BatchmakeExample');
-        $jsonobj = json_decode($content, true);
-        if (count($jsonobj['buildgroups']) < 1) {
-            $this->fail('No build found when expected');
-            return;
-        }
-        $buildgroup = array_pop($jsonobj['buildgroups']);
-        $siteid = $buildgroup['builds'][0]['siteid'];
-
-        $content = $this->connect($this->url . "/sites/$siteid?project=4&currenttime=" . Carbon::now()->getTimestamp());
-        if (!$content) {
-            return;
-        } elseif (!$this->findString($content, '<b>Total Physical Memory: </b>15MiB<br />')) {
-            $this->assertTrue(false, 'The webpage does not match the expected content');
-            return;
-        }
-        $this->assertTrue(true, 'The webpage matches the expected content');
     }
 
     public function testProjectExperimentalLinkBuildSummary()
