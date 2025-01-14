@@ -2,6 +2,7 @@
 
 namespace Tests\Browser\Pages;
 
+use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
@@ -12,6 +13,7 @@ class ProjectSitesPageTest extends BrowserTestCase
 {
     use CreatesProjects;
     use CreatesSites;
+    use DatabaseTruncation;
 
     public function testSiteDisplaysLatestInformation(): void
     {

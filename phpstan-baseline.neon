@@ -2412,7 +2412,7 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 4
+			count: 1
 			path: app/Http/Controllers/SiteController.php
 
 		-
@@ -2425,7 +2425,7 @@ parameters:
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 2
+			count: 1
 			path: app/Http/Controllers/SiteController.php
 
 		-
@@ -2433,7 +2433,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 7
+			count: 2
 			path: app/Http/Controllers/SiteController.php
 
 		-
@@ -2455,32 +2455,12 @@ parameters:
 			path: app/Http/Controllers/SiteController.php
 
 		-
-			message: "#^Cannot access property \\$admin on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
 			message: "#^Cannot cast mixed to int\\.$#"
-			count: 4
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
 			path: app/Http/Controllers/SiteController.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasOne\\<App\\\\Models\\\\SiteInformation\\>\\:\\:first\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Foreach overwrites \\$projectid with its value variable\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
 			path: app/Http/Controllers/SiteController.php
 
@@ -2505,11 +2485,6 @@ parameters:
 			path: app/Http/Controllers/SiteController.php
 
 		-
-			message: "#^Only booleans are allowed in a negated boolean, int given\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 4
 			path: app/Http/Controllers/SiteController.php
@@ -2527,11 +2502,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$key of function array_key_exists expects int\\|string, mixed given\\.$#"
 			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|false given\\.$#"
-			count: 2
 			path: app/Http/Controllers/SiteController.php
 
 		-
@@ -25898,7 +25868,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'buildgroups' on mixed\\.$#"
-			count: 4
+			count: 2
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
@@ -25908,7 +25878,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'builds' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
@@ -25922,13 +25892,8 @@ parameters:
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
-			message: "#^Cannot access offset 'siteid' on mixed\\.$#"
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
 			message: "#^Cannot access offset 0 on mixed\\.$#"
-			count: 5
+			count: 4
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
@@ -25938,11 +25903,6 @@ parameters:
 
 		-
 			message: "#^Method ProjectWebPageTestCase\\:\\:testProjectExperimentalLinkBuildSummary\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: "#^Method ProjectWebPageTestCase\\:\\:testProjectExperimentalLinkMachineName\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
 
@@ -26013,7 +25973,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$array of function array_pop expects array, mixed given\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
@@ -26028,7 +25988,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
-			count: 3
+			count: 2
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
@@ -26038,11 +25998,6 @@ parameters:
 
 		-
 			message: "#^Part \\$buildid \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: "#^Part \\$siteid \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
 			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
 
@@ -31887,6 +31842,11 @@ parameters:
 			message: "#^Parameter \\#1 \\$url of function parse_url expects string, mixed given\\.$#"
 			count: 1
 			path: server.php
+
+		-
+			message: "#^Cannot access property \\$description on App\\\\Models\\\\SiteInformation\\|null\\.$#"
+			count: 1
+			path: tests/Browser/Pages/SitesIdPageTest.php
 
 		-
 			message: "#^Access to an undefined property CDash\\\\Model\\\\Build\\:\\:\\$Endime\\.$#"
