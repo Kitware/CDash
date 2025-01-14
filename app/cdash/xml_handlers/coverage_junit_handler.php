@@ -47,7 +47,7 @@ class CoverageJUnitHandler extends AbstractXmlHandler
     public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
-        $parent = $this->getParent();
+        $parent = $this->hasParent() ? $this->getParent() : false;
         if ($name == 'SITE') {
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
