@@ -49,6 +49,15 @@ class ProcessSubmission implements ShouldQueue
     {
         $this->timeout = config('cdash.queue_timeout');
 
+        $context = [];
+        if (isset($projectid)) {
+            $context['projectid'] = $projectid;
+        }
+        if (isset($buildid)) {
+            $context['buildid'] = $buildid;
+        }
+        Log::shareContext($context);
+
         $this->filename = $filename;
         $this->projectid = $projectid;
         $this->buildid = $buildid;
