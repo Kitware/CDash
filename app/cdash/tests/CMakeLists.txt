@@ -51,6 +51,8 @@ set_tests_properties(install_2 PROPERTIES DEPENDS cypress/e2e/user-profile)
 
 add_laravel_test(/Unit/app/Validators/PasswordTest)
 
+add_laravel_test(/Unit/app/Middleware/InternalTest)
+
 add_laravel_test(/Feature/LdapIntegration)
 set_tests_properties(/Feature/LdapIntegration PROPERTIES DEPENDS install_2)
 

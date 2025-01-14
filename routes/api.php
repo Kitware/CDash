@@ -98,5 +98,11 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+Route::middleware(['internal'])->group(function () {
+    Route::get('/internal/getSubmissionFile', 'RemoteProcessingController@getSubmissionFile');
+    Route::post('/internal/requeueSubmissionFile', 'RemoteProcessingController@requeueSubmissionFile');
+    Route::delete('/internal/deleteSubmissionFile', 'RemoteProcessingController@deleteSubmissionFile');
+});
+
 // this *MUST* be the last route in the file
 Route::any('{url}', 'CDash')->where('url', '.*');

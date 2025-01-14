@@ -10,12 +10,12 @@ use App\Utils\UnparsedSubmissionProcessor;
 use BuildPropertiesJSONHandler;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Repository;
-use GuzzleHttp\Client;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use RetryHandler;
@@ -67,12 +67,12 @@ class ProcessSubmission implements ShouldQueue
     private function renameSubmissionFile($src, $dst): bool
     {
         if (config('cdash.remote_workers')) {
-            $url = url('/api/v1/deleteSubmissionFile.php');
-            $client = new Client();
-            $response = $client->request('DELETE', $url, [
-                'query' => ['filename' => encrypt($src), 'dest' => encrypt($dst)],
-            ]);
-            return $response->getStatusCode() === 200;
+            /** @var string $app_key */
+            $app_key = config('app.key', '');
+            return Http::withToken($app_key)->delete(url('/api/internal/deleteSubmissionFile'), [
+                'filename' => $src,
+                'dest' => $dst,
+            ])->ok();
         } else {
             return Storage::move($src, $dst);
         }
@@ -81,12 +81,11 @@ class ProcessSubmission implements ShouldQueue
     private function deleteSubmissionFile($filename): bool
     {
         if (config('cdash.remote_workers')) {
-            $url = url('/api/v1/deleteSubmissionFile.php');
-            $client = new Client();
-            $response = $client->request('DELETE', $url, [
-                'query' => ['filename' => encrypt($filename)],
-            ]);
-            return $response->getStatusCode() === 200;
+            /** @var string $app_key */
+            $app_key = config('app.key', '');
+            return Http::withToken($app_key)->delete(url('/api/internal/deleteSubmissionFile'), [
+                'filename' => $filename,
+            ])->ok();
         } else {
             return Storage::delete($filename);
         }
@@ -95,19 +94,18 @@ class ProcessSubmission implements ShouldQueue
     private function requeueSubmissionFile($buildid): bool
     {
         if (config('cdash.remote_workers')) {
-            $url = url('/api/v1/requeueSubmissionFile.php');
-            $client = new Client();
-            $response = $client->request('POST', $url, [
-                'query' => [
-                    'filename' => encrypt($this->filename),
-                    'buildid' => $buildid,
-                    'projectid' => $this->projectid,
-                ],
+            /** @var string $app_key */
+            $app_key = config('app.key', '');
+            $response = Http::withToken($app_key)->post(url('/api/internal/requeueSubmissionFile'), [
+                'filename' => $this->filename,
+                'buildid' => $buildid,
+                'projectid' => $this->projectid,
             ]);
             if ($this->localFilename !== '') {
                 unlink($this->localFilename);
+                $this->localFilename = '';
             }
-            return $response->getStatusCode() == 200;
+            return $response->ok();
         } else {
             // Increment retry count.
             $retry_handler = new RetryHandler(Storage::path("inprogress/{$this->filename}"));
@@ -169,6 +167,7 @@ class ProcessSubmission implements ShouldQueue
 
         if ((bool) config('cdash.remote_workers') && $this->localFilename !== '') {
             unlink($this->localFilename);
+            $this->localFilename = '';
         }
 
         unset($handler);
@@ -192,6 +191,7 @@ class ProcessSubmission implements ShouldQueue
 
         if ((bool) config('cdash.remote_workers') && $this->localFilename !== '') {
             unlink($this->localFilename);
+            $this->localFilename = '';
         }
     }
 
@@ -269,22 +269,25 @@ class ProcessSubmission implements ShouldQueue
         $this->localFilename = "{$_t}.{$ext}";
         rename($_t, $this->localFilename);
 
-        $client = new Client();
-        $url = url('/api/v1/getSubmissionFile.php');
-        $response = $client->request('GET', $url, [
-            'query' => ['filename' => encrypt($filename)],
-            'sink' => $this->localFilename,
+        /** @var string $app_key */
+        $app_key = config('app.key', '');
+        $response = Http::withToken($app_key)->get(url('/api/internal/getSubmissionFile'), [
+            'filename' => $filename,
         ]);
 
-        if ($response->getStatusCode() === 200) {
-            // @todo I'm sure Guzzle can be used to return a file handle from the stream, but for now
-            // I'm just creating a temporary file with the output
+        if ($response->status() === 200) {
+            // TODO: It's probably possible to use a streaming approach for this instead.
+            // The file could be read directly from the stream without needing to explicitly save it somewhere.
+            if (!Storage::put('inbox/' . basename($this->localFilename), $response->body())) {
+                Log::warning('Failed to write file to inbox.');
+                return false;
+            }
+
             return fopen($this->localFilename, 'r');
         } else {
             // Log the status code and requested filename.
             // (404 status means it's already been processed).
-            \Log::warning('Failed to retrieve a file handle from filename ' .
-                    $filename . '(' . (string) $response->getStatusCode() . ')');
+            Log::warning('Failed to retrieve a file handle from filename ' . $filename . '(' . $response->status() . ')');
             return false;
         }
     }

@@ -7,6 +7,7 @@ use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\AuthenticateToken;
 use App\Http\Middleware\CheckForMaintenanceMode;
 use App\Http\Middleware\EncryptCookies;
+use App\Http\Middleware\Internal;
 use App\Http\Middleware\JsonOnly;
 use App\Http\Middleware\PasswordExpired;
 use App\Http\Middleware\RedirectIfAuthenticated;
@@ -94,6 +95,7 @@ class Kernel extends HttpKernel
         'verified' => EnsureEmailIsVerified::class,
         'password.expired' => PasswordExpired::class,
         'admin' => Admin::class,
+        'internal' => Internal::class,
     ];
 
     /**
