@@ -240,8 +240,8 @@ set_tests_properties(/Feature/RouteAccessTest PROPERTIES DEPENDS /CDash/XmlHandl
 
 # Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
 add_laravel_test(/Browser/Pages/SitesIdPageTest)
-set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 # Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
 add_laravel_test(/Feature/LdapIntegration)
@@ -251,13 +251,18 @@ set_tests_properties(/Feature/LdapIntegration PROPERTIES DEPENDS /CDash/XmlHandl
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
 set_property(TEST /Feature/PurgeUnusedProjectsCommand PROPERTY DEPENDS
   /Feature/SubmissionValidation
+  /Feature/GraphQL/FilterTypeTest
+  /Feature/GraphQL/ProjectTypeTest
+  /Feature/GraphQL/SiteTypeTest
   /Feature/GraphQL/BuildTypeTest
   /Feature/GraphQL/TestTypeTest
   /Feature/GraphQL/TestMeasurementTypeTest
   /Feature/GraphQL/NoteTypeTest
   /Feature/GraphQL/BuildMeasurementTypeTest
   /Feature/GraphQL/CoverageTypeTest
+  /Feature/RouteAccessTest
   /Browser/Pages/SitesIdPageTest
+  /Feature/LdapIntegration
 )
 
 add_laravel_test(/Browser/Pages/ProjectSitesPageTest)
