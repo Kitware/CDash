@@ -213,27 +213,28 @@ add_laravel_test(/Feature/GraphQL/BuildTypeTest)
 set_tests_properties(/Feature/GraphQL/BuildTypeTest PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
 
 add_laravel_test(/Feature/GraphQL/TestTypeTest)
-set_tests_properties(/Feature/GraphQL/TestTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
+set_tests_properties(/Feature/GraphQL/TestTypeTest PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
 
 add_laravel_test(/Feature/GraphQL/TestMeasurementTypeTest)
-set_tests_properties(/Feature/GraphQL/TestMeasurementTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
+set_tests_properties(/Feature/GraphQL/TestMeasurementTypeTest PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
 
 add_laravel_test(/Feature/GraphQL/NoteTypeTest)
-set_tests_properties(/Feature/GraphQL/NoteTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
+set_tests_properties(/Feature/GraphQL/NoteTypeTest PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
 
 add_laravel_test(/Feature/GraphQL/BuildMeasurementTypeTest)
-set_tests_properties(/Feature/GraphQL/BuildMeasurementTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
+set_tests_properties(/Feature/GraphQL/BuildMeasurementTypeTest PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
 
 add_laravel_test(/Feature/GraphQL/CoverageTypeTest)
-set_tests_properties(/Feature/GraphQL/CoverageTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
+set_tests_properties(/Feature/GraphQL/CoverageTypeTest PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
 
 # Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
 add_laravel_test(/Browser/Pages/SitesIdPageTest)
-set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
+set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
 set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES RUN_SERIAL TRUE)
 
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
 set_property(TEST /Feature/PurgeUnusedProjectsCommand PROPERTY DEPENDS
+  /Feature/GraphQL/BuildTypeTest
   /Feature/GraphQL/TestTypeTest
   /Feature/GraphQL/TestMeasurementTypeTest
   /Feature/GraphQL/NoteTypeTest
