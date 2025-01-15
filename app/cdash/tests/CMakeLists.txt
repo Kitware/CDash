@@ -59,6 +59,8 @@ add_unit_test(/PHPUnitTest)
 
 add_unit_test(/CDash/ServiceContainer)
 
+add_unit_test(/CDash/LinkifyCompilerOutput)
+
 ###################################################################################################
 
 cdash_install()
@@ -97,11 +99,8 @@ set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES
     DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
 )
 
-add_unit_test(/CDash/LinkifyCompilerOutput)
-set_tests_properties(/CDash/LinkifyCompilerOutput PROPERTIES DEPENDS /CDash/Lib/Repository/GitHub)
-
 add_unit_test(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
-set_tests_properties(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder PROPERTIES DEPENDS /CDash/LinkifyCompilerOutput)
+set_tests_properties(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder PROPERTIES DEPENDS /CDash/Lib/Repository/GitHub)
 
 add_unit_test(/CDash/Messaging/Subscription/UserSubscriptionBuilder)
 set_tests_properties(/CDash/Messaging/Subscription/UserSubscriptionBuilder PROPERTIES DEPENDS /CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
