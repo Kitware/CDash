@@ -54,6 +54,9 @@ add_laravel_test(/Unit/app/Validators/PasswordTest)
 
 add_laravel_test(/Unit/app/Middleware/InternalTest)
 
+# TODO: Is this test useful now?
+add_unit_test(/PHPUnitTest)
+
 ###################################################################################################
 
 cdash_install()
@@ -89,11 +92,8 @@ set_tests_properties(/Feature/RouteAccessTest PROPERTIES DEPENDS /Feature/UserCo
 add_laravel_test(/Feature/SlowPageTest)
 set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /Feature/RouteAccessTest)
 
-add_unit_test(/PHPUnitTest)
-set_tests_properties(/PHPUnitTest PROPERTIES DEPENDS /Feature/SlowPageTest)
-
 add_laravel_test(/Feature/GitHubWebhook)
-set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /PHPUnitTest)
+set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /Feature/SlowPageTest)
 
 add_unit_test(/CDash/BuildUseCase)
 set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /Feature/GitHubWebhook)
