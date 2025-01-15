@@ -57,6 +57,8 @@ add_laravel_test(/Unit/app/Middleware/InternalTest)
 # TODO: Is this test useful now?
 add_unit_test(/PHPUnitTest)
 
+add_unit_test(/CDash/ServiceContainer)
+
 ###################################################################################################
 
 cdash_install()
@@ -158,11 +160,8 @@ set_tests_properties(/CDash/NightlyTime PROPERTIES DEPENDS /CDash/MultipleSubpro
 add_unit_test(/CDash/Service/RepositoryService)
 set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/NightlyTime)
 
-add_unit_test(/CDash/ServiceContainer)
-set_tests_properties(/CDash/ServiceContainer PROPERTIES DEPENDS /CDash/Service/RepositoryService)
-
 add_unit_test(/CDash/TestUseCase)
-set_tests_properties(/CDash/TestUseCase PROPERTIES DEPENDS /CDash/ServiceContainer)
+set_tests_properties(/CDash/TestUseCase PROPERTIES DEPENDS /CDash/Service/RepositoryService)
 
 add_unit_test(/CDash/UpdateUseCase)
 set_tests_properties(/CDash/UpdateUseCase PROPERTIES DEPENDS /CDash/TestUseCase)
