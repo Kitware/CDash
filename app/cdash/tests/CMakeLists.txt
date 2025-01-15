@@ -194,46 +194,55 @@ set_tests_properties(/CDash/XmlHandler/TestingHandler PROPERTIES DEPENDS /CDash/
 add_unit_test(/CDash/XmlHandler/UpdateHandler)
 set_tests_properties(/CDash/XmlHandler/UpdateHandler PROPERTIES DEPENDS /CDash/XmlHandler/TestingHandler)
 
+###################################################################################################
+# Tests from this point to the next cdash_install() are expected to be completely independent.
+# Tests may wipe the database, provided that they use RUN_SERIAL. All tests in this section should
+# depend upon the last test prior to this section.
 
+# Set this to RUN_SERIAL as we are changing the config and don't want to clobber other tests.
+# Only requires exclusive .env access.
 add_laravel_test(/Feature/SubmissionValidation)
-# Set this to RUN_SERIAL as we are changing the config and don't want to clobber other tests
 set_tests_properties(/Feature/SubmissionValidation PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Feature/SubmissionValidation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/FilterTest)
-set_tests_properties(/Feature/GraphQL/FilterTest PROPERTIES DEPENDS /Feature/SubmissionValidation)
+set_tests_properties(/Feature/GraphQL/FilterTest PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Feature/GraphQL/FilterTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/ProjectTypeTest)
-set_tests_properties(/Feature/GraphQL/ProjectTypeTest PROPERTIES DEPENDS /Feature/GraphQL/FilterTest)
+set_tests_properties(/Feature/GraphQL/ProjectTypeTest PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Feature/GraphQL/ProjectTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/SiteTypeTest)
-set_tests_properties(/Feature/GraphQL/SiteTypeTest PROPERTIES DEPENDS /Feature/GraphQL/ProjectTypeTest)
+set_tests_properties(/Feature/GraphQL/SiteTypeTest PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Feature/GraphQL/SiteTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/BuildTypeTest)
-set_tests_properties(/Feature/GraphQL/BuildTypeTest PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
+set_tests_properties(/Feature/GraphQL/BuildTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/TestTypeTest)
-set_tests_properties(/Feature/GraphQL/TestTypeTest PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
+set_tests_properties(/Feature/GraphQL/TestTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/TestMeasurementTypeTest)
-set_tests_properties(/Feature/GraphQL/TestMeasurementTypeTest PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
+set_tests_properties(/Feature/GraphQL/TestMeasurementTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/NoteTypeTest)
-set_tests_properties(/Feature/GraphQL/NoteTypeTest PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
+set_tests_properties(/Feature/GraphQL/NoteTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/BuildMeasurementTypeTest)
-set_tests_properties(/Feature/GraphQL/BuildMeasurementTypeTest PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
+set_tests_properties(/Feature/GraphQL/BuildMeasurementTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/CoverageTypeTest)
-set_tests_properties(/Feature/GraphQL/CoverageTypeTest PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
+set_tests_properties(/Feature/GraphQL/CoverageTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 # Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
 add_laravel_test(/Browser/Pages/SitesIdPageTest)
-set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
+set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES RUN_SERIAL TRUE)
 
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
 set_property(TEST /Feature/PurgeUnusedProjectsCommand PROPERTY DEPENDS
+  /Feature/SubmissionValidation
   /Feature/GraphQL/BuildTypeTest
   /Feature/GraphQL/TestTypeTest
   /Feature/GraphQL/TestMeasurementTypeTest
