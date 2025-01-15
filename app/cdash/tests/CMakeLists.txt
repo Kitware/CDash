@@ -278,11 +278,8 @@ set_property(TEST /Feature/PurgeUnusedProjectsCommand PROPERTY DEPENDS
   /Browser/Pages/ProjectSitesPageTest
 )
 
-add_laravel_test(/Feature/RemoveMeasurementCheckboxesMigration)
-set_tests_properties(/Feature/RemoveMeasurementCheckboxesMigration PROPERTIES DEPENDS /Feature/PurgeUnusedProjectsCommand)
-
 add_laravel_test(/Feature/IncreaseSiteInformationCPUColumnsSizeMigration)
-set_tests_properties(/Feature/IncreaseSiteInformationCPUColumnsSizeMigration PROPERTIES DEPENDS /Feature/RemoveMeasurementCheckboxesMigration)
+set_tests_properties(/Feature/IncreaseSiteInformationCPUColumnsSizeMigration PROPERTIES DEPENDS /Feature/PurgeUnusedProjectsCommand)
 
 add_laravel_test(/Feature/UploadStorageMigration)
 set_tests_properties(/Feature/UploadStorageMigration PROPERTIES DEPENDS /Feature/IncreaseSiteInformationCPUColumnsSizeMigration)
