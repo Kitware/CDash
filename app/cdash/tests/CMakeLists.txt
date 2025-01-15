@@ -77,11 +77,8 @@ set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /Feature/C
 add_laravel_test(/Feature/ProjectPermissions)
 set_tests_properties(/Feature/ProjectPermissions PROPERTIES DEPENDS /Feature/LoginAndRegistration)
 
-add_laravel_test(/Feature/UserCommand)
-set_tests_properties(/Feature/UserCommand PROPERTIES DEPENDS /Feature/ProjectPermissions)
-
 add_laravel_test(/Feature/SlowPageTest)
-set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /Feature/UserCommand)
+set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /Feature/ProjectPermissions)
 
 add_laravel_test(/Feature/GitHubWebhook)
 set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /Feature/SlowPageTest)
@@ -256,6 +253,9 @@ set_tests_properties(/Feature/Jobs/PruneJobsTest PROPERTIES DEPENDS /CDash/XmlHa
 add_laravel_test(/Feature/Jobs/PruneAuthTokensTest)
 set_tests_properties(/Feature/Jobs/PruneAuthTokensTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/UserCommand)
+set_tests_properties(/Feature/UserCommand PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 cdash_install()
@@ -279,6 +279,7 @@ set_property(TEST install_3 PROPERTY DEPENDS
   /Feature/PurgeUnusedProjectsCommand
   /Feature/Jobs/PruneJobsTest
   /Feature/Jobs/PruneAuthTokensTest
+  /Feature/UserCommand
 )
 
 
