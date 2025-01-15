@@ -61,6 +61,8 @@ add_unit_test(/CDash/ServiceContainer)
 
 add_unit_test(/CDash/LinkifyCompilerOutput)
 
+add_laravel_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
+
 ###################################################################################################
 
 cdash_install()
@@ -655,8 +657,6 @@ set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS viewsubp
 
 add_php_test(misassignedconfigure)
 set_tests_properties(misassignedconfigure PROPERTIES DEPENDS /Feature/SubProjectDependencies)
-
-add_laravel_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 
 add_subdirectory(ctest)
 add_subdirectory(autoremovebuilds)
