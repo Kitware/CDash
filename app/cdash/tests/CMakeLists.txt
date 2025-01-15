@@ -86,11 +86,8 @@ set_tests_properties(/Feature/ProjectPermissions PROPERTIES DEPENDS /Feature/Pas
 add_laravel_test(/Feature/UserCommand)
 set_tests_properties(/Feature/UserCommand PROPERTIES DEPENDS /Feature/ProjectPermissions)
 
-add_laravel_test(/Feature/RouteAccessTest)
-set_tests_properties(/Feature/RouteAccessTest PROPERTIES DEPENDS /Feature/UserCommand)
-
 add_laravel_test(/Feature/SlowPageTest)
-set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /Feature/RouteAccessTest)
+set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /Feature/UserCommand)
 
 add_laravel_test(/Feature/GitHubWebhook)
 set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /Feature/SlowPageTest)
@@ -237,6 +234,9 @@ set_tests_properties(/Feature/GraphQL/BuildMeasurementTypeTest PROPERTIES DEPEND
 
 add_laravel_test(/Feature/GraphQL/CoverageTypeTest)
 set_tests_properties(/Feature/GraphQL/CoverageTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/RouteAccessTest)
+set_tests_properties(/Feature/RouteAccessTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 # Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
 add_laravel_test(/Browser/Pages/SitesIdPageTest)
