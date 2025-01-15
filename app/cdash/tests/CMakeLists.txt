@@ -227,12 +227,20 @@ set_tests_properties(/Feature/GraphQL/BuildMeasurementTypeTest PROPERTIES DEPEND
 add_laravel_test(/Feature/GraphQL/CoverageTypeTest)
 set_tests_properties(/Feature/GraphQL/CoverageTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
 
+# Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
 add_laravel_test(/Browser/Pages/SitesIdPageTest)
 set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
 set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES RUN_SERIAL TRUE)
 
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
-set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES DEPENDS "/Feature/GraphQL/TestTypeTest;/Feature/GraphQL/TestMeasurementTypeTest;/Feature/GraphQL/NoteTypeTest;/Feature/GraphQL/BuildMeasurementTypeTest;/Feature/GraphQL/CoverageTypeTest;/Browser/Pages/SitesIdPageTest")
+set_property(TEST /Feature/PurgeUnusedProjectsCommand PROPERTY DEPENDS
+  /Feature/GraphQL/TestTypeTest
+  /Feature/GraphQL/TestMeasurementTypeTest
+  /Feature/GraphQL/NoteTypeTest
+  /Feature/GraphQL/BuildMeasurementTypeTest
+  /Feature/GraphQL/CoverageTypeTest
+  /Browser/Pages/SitesIdPageTest
+)
 
 add_laravel_test(/Browser/Pages/ProjectSitesPageTest)
 set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES DEPENDS /Feature/PurgeUnusedProjectsCommand)
