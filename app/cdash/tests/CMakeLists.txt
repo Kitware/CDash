@@ -254,7 +254,13 @@ set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES RUN_SERIAL T
 set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
-set_property(TEST /Feature/PurgeUnusedProjectsCommand PROPERTY DEPENDS
+set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+###################################################################################################
+
+cdash_install()
+set_property(TEST install_3 PROPERTY DEPENDS
   /Feature/SubmissionValidation
   /Feature/GraphQL/FilterTest
   /Feature/GraphQL/ProjectTypeTest
@@ -271,12 +277,8 @@ set_property(TEST /Feature/PurgeUnusedProjectsCommand PROPERTY DEPENDS
   /Browser/Pages/SitesIdPageTest
   /Feature/LdapIntegration
   /Browser/Pages/ProjectSitesPageTest
+  /Feature/PurgeUnusedProjectsCommand
 )
-
-###################################################################################################
-
-cdash_install()
-set_tests_properties(install_3 PROPERTIES DEPENDS /Feature/PurgeUnusedProjectsCommand)
 
 
 add_php_test(compressedtest)
