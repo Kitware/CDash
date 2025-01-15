@@ -33,6 +33,7 @@
     "laravel/socialite": "5.16.1",
     "laravel/ui": "4.6.0",
     "lcobucci/jwt": "5.4.2",
+    "league/flysystem-aws-s3-v3": "^3.29",
     "mll-lab/laravel-graphiql": "3.2.1",
     "nuwave/lighthouse": "6.47.0",
     "pear/archive_tar": "1.5.0",
