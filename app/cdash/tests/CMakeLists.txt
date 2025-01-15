@@ -219,6 +219,7 @@ add_laravel_test(/Feature/RouteAccessTest)
 set_tests_properties(/Feature/RouteAccessTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/Monitor)
+set_tests_properties(/Feature/Monitor PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Feature/Monitor PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/PasswordRotation)
