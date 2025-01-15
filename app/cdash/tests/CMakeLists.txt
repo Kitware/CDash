@@ -99,35 +99,8 @@ set_tests_properties(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuild
 add_unit_test(/CDash/Messaging/Subscription/UserSubscriptionBuilder)
 set_tests_properties(/CDash/Messaging/Subscription/UserSubscriptionBuilder PROPERTIES DEPENDS /CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
 
-add_unit_test(/CDash/Messaging/Topic/AuthoredTopic)
-set_tests_properties(/CDash/Messaging/Topic/AuthoredTopic PROPERTIES DEPENDS /CDash/Messaging/Subscription/UserSubscriptionBuilder)
-
-add_unit_test(/CDash/Messaging/Topic/BuildErrorTopic)
-set_tests_properties(/CDash/Messaging/Topic/BuildErrorTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/AuthoredTopic)
-
-add_unit_test(/CDash/Messaging/Topic/ConfigureTopic)
-set_tests_properties(/CDash/Messaging/Topic/ConfigureTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/BuildErrorTopic)
-
-add_unit_test(/CDash/Messaging/Topic/DynamicAnalysisTopic)
-set_tests_properties(/CDash/Messaging/Topic/DynamicAnalysisTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/ConfigureTopic)
-
-add_unit_test(/CDash/Messaging/Topic/EmailSentTopic)
-set_tests_properties(/CDash/Messaging/Topic/EmailSentTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/DynamicAnalysisTopic)
-
-add_unit_test(/CDash/Messaging/Topic/FixedTopic)
-set_tests_properties(/CDash/Messaging/Topic/FixedTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/EmailSentTopic)
-
-add_unit_test(/CDash/Messaging/Topic/MissingTestTopic)
-set_tests_properties(/CDash/Messaging/Topic/MissingTestTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/FixedTopic)
-
-add_unit_test(/CDash/Messaging/Topic/TestFailureTopic)
-set_tests_properties(/CDash/Messaging/Topic/TestFailureTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/MissingTestTopic)
-
-add_unit_test(/CDash/Messaging/Topic/TopicDecorator)
-set_tests_properties(/CDash/Messaging/Topic/TopicDecorator PROPERTIES DEPENDS /CDash/Messaging/Topic/TestFailureTopic)
-
 add_unit_test(/CDash/Messaging/Topic/UpdateErrorTopic)
-set_tests_properties(/CDash/Messaging/Topic/UpdateErrorTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/TopicDecorator)
+set_tests_properties(/CDash/Messaging/Topic/UpdateErrorTopic PROPERTIES DEPENDS /CDash/Messaging/Subscription/UserSubscriptionBuilder)
 
 add_unit_test(/CDash/Model/BuildError)
 set_tests_properties(/CDash/Model/BuildError PROPERTIES DEPENDS /CDash/Messaging/Topic/UpdateErrorTopic)
@@ -258,6 +231,33 @@ set_tests_properties(/Feature/UserCommand PROPERTIES DEPENDS /CDash/XmlHandler/U
 add_unit_test(/CDash/Database)
 set_tests_properties(/CDash/Database PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_unit_test(/CDash/Messaging/Topic/AuthoredTopic)
+set_tests_properties(/CDash/Messaging/Topic/AuthoredTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/BuildErrorTopic)
+set_tests_properties(/CDash/Messaging/Topic/BuildErrorTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/ConfigureTopic)
+set_tests_properties(/CDash/Messaging/Topic/ConfigureTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/DynamicAnalysisTopic)
+set_tests_properties(/CDash/Messaging/Topic/DynamicAnalysisTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/EmailSentTopic)
+set_tests_properties(/CDash/Messaging/Topic/EmailSentTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/FixedTopic)
+set_tests_properties(/CDash/Messaging/Topic/FixedTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/MissingTestTopic)
+set_tests_properties(/CDash/Messaging/Topic/MissingTestTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/TestFailureTopic)
+set_tests_properties(/CDash/Messaging/Topic/TestFailureTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/TopicDecorator)
+set_tests_properties(/CDash/Messaging/Topic/TopicDecorator PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 cdash_install()
@@ -283,6 +283,15 @@ set_property(TEST install_3 PROPERTY DEPENDS
   /Feature/Jobs/PruneAuthTokensTest
   /Feature/UserCommand
   /CDash/Database
+  /CDash/Messaging/Topic/AuthoredTopic
+  /CDash/Messaging/Topic/BuildErrorTopic
+  /CDash/Messaging/Topic/ConfigureTopic
+  /CDash/Messaging/Topic/DynamicAnalysisTopic
+  /CDash/Messaging/Topic/EmailSentTopic
+  /CDash/Messaging/Topic/FixedTopic
+  /CDash/Messaging/Topic/MissingTestTopic
+  /CDash/Messaging/Topic/TestFailureTopic
+  /CDash/Messaging/Topic/TopicDecorator
 )
 
 
