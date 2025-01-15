@@ -61,8 +61,6 @@ add_unit_test(/CDash/ServiceContainer)
 
 add_unit_test(/CDash/LinkifyCompilerOutput)
 
-add_unit_test(/CDash/Database)
-
 ###################################################################################################
 
 cdash_install()
@@ -256,6 +254,9 @@ set_tests_properties(/Feature/Jobs/PruneAuthTokensTest PROPERTIES DEPENDS /CDash
 add_laravel_test(/Feature/UserCommand)
 set_tests_properties(/Feature/UserCommand PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_unit_test(/CDash/Database)
+set_tests_properties(/CDash/Database PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 cdash_install()
@@ -280,6 +281,7 @@ set_property(TEST install_3 PROPERTY DEPENDS
   /Feature/Jobs/PruneJobsTest
   /Feature/Jobs/PruneAuthTokensTest
   /Feature/UserCommand
+  /CDash/Database
 )
 
 
