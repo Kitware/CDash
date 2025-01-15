@@ -42,19 +42,22 @@ if (CDASH_CONFIGURE_HTACCESS_FILE)
     set(phpunit_extra_arg "-d auto_prepend_file=${CMAKE_BINARY_DIR}/prepend_coverage.php")
 endif()
 
+###################################################################################################
+# Tests from this point to the next cdash_install() are expected to not need database or other
+# system resources.
+
 add_laravel_test(/Unit/app/ControllerNameTest)
 
 add_laravel_test(/Unit/app/FillableAttributesTest)
-
-cdash_install()
-set_tests_properties(install_2 PROPERTIES DEPENDS cypress/e2e/user-profile)
 
 add_laravel_test(/Unit/app/Validators/PasswordTest)
 
 add_laravel_test(/Unit/app/Middleware/InternalTest)
 
-add_laravel_test(/Feature/LdapIntegration)
-set_tests_properties(/Feature/LdapIntegration PROPERTIES DEPENDS install_2)
+###################################################################################################
+
+cdash_install()
+set_tests_properties(install_2 PROPERTIES DEPENDS cypress/e2e/user-profile)
 
 add_laravel_test(/Feature/CDashTest)
 set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_2)
@@ -240,6 +243,11 @@ add_laravel_test(/Browser/Pages/SitesIdPageTest)
 set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES RUN_SERIAL TRUE)
 
+# Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
+add_laravel_test(/Feature/LdapIntegration)
+set_tests_properties(/Feature/LdapIntegration PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Feature/LdapIntegration PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
 set_property(TEST /Feature/PurgeUnusedProjectsCommand PROPERTY DEPENDS
   /Feature/SubmissionValidation
@@ -267,6 +275,7 @@ set_tests_properties(/Feature/IncreaseSiteInformationCPUColumnsSizeMigration PRO
 add_laravel_test(/Feature/UploadStorageMigration)
 set_tests_properties(/Feature/UploadStorageMigration PROPERTIES DEPENDS /Feature/IncreaseSiteInformationCPUColumnsSizeMigration)
 
+###################################################################################################
 
 cdash_install()
 set_tests_properties(install_3 PROPERTIES DEPENDS /Feature/UploadStorageMigration)
