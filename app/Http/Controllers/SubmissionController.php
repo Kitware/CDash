@@ -137,7 +137,7 @@ final class SubmissionController extends AbstractProjectController
         $stored_filename = 'inbox/' . $filename;
         $xml_info = [];
         try {
-            $xml_info = SubmissionUtils::get_xml_type(fopen(Storage::path($stored_filename), 'r'), $stored_filename);
+            $xml_info = SubmissionUtils::get_xml_type(Storage::readStream($stored_filename), $stored_filename);
         } catch (BadSubmissionException $e) {
             $xml_info['xml_handler'] = '';
             $message = "Could not determine submission file type for: '{$stored_filename}'";
@@ -148,7 +148,7 @@ final class SubmissionController extends AbstractProjectController
         }
         if ($xml_info['xml_handler'] !== '') {
             // If validation is enabled and if this file has a corresponding schema, validate it
-            $validation_errors = $xml_info['xml_handler']::validate(storage_path('app/' . $stored_filename));
+            $validation_errors = $xml_info['xml_handler']::validate($stored_filename);
             if (count($validation_errors) > 0) {
                 $error_string = implode(PHP_EOL, $validation_errors);
 
