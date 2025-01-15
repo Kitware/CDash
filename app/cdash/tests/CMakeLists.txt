@@ -258,6 +258,9 @@ set_tests_properties(/CDash/Messaging/Topic/TestFailureTopic PROPERTIES DEPENDS 
 add_unit_test(/CDash/Messaging/Topic/TopicDecorator)
 set_tests_properties(/CDash/Messaging/Topic/TopicDecorator PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/RemoteWorkers)
+set_tests_properties(/Feature/RemoteWorkers PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 cdash_install()
@@ -292,6 +295,7 @@ set_property(TEST install_3 PROPERTY DEPENDS
   /CDash/Messaging/Topic/MissingTestTopic
   /CDash/Messaging/Topic/TestFailureTopic
   /CDash/Messaging/Topic/TopicDecorator
+  /Feature/RemoteWorkers
 )
 
 
@@ -651,9 +655,6 @@ set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS viewsubp
 
 add_php_test(misassignedconfigure)
 set_tests_properties(misassignedconfigure PROPERTIES DEPENDS /Feature/SubProjectDependencies)
-
-add_laravel_test(/Feature/RemoteWorkers)
-set_tests_properties(/Feature/RemoteWorkers PROPERTIES DEPENDS install_3)
 
 add_laravel_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 
