@@ -248,6 +248,10 @@ add_laravel_test(/Feature/LdapIntegration)
 set_tests_properties(/Feature/LdapIntegration PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Feature/LdapIntegration PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/MeasurementPositionMigration)
+set_tests_properties(/Feature/MeasurementPositionMigration PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Feature/MeasurementPositionMigration PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
 set_property(TEST /Feature/PurgeUnusedProjectsCommand PROPERTY DEPENDS
   /Feature/SubmissionValidation
@@ -265,16 +269,14 @@ set_property(TEST /Feature/PurgeUnusedProjectsCommand PROPERTY DEPENDS
   /Feature/PasswordRotation
   /Browser/Pages/SitesIdPageTest
   /Feature/LdapIntegration
+  /Feature/MeasurementPositionMigration
 )
 
 add_laravel_test(/Browser/Pages/ProjectSitesPageTest)
 set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES DEPENDS /Feature/PurgeUnusedProjectsCommand)
 
-add_laravel_test(/Feature/MeasurementPositionMigration)
-set_tests_properties(/Feature/MeasurementPositionMigration PROPERTIES DEPENDS /Browser/Pages/ProjectSitesPageTest)
-
 add_laravel_test(/Feature/RemoveMeasurementCheckboxesMigration)
-set_tests_properties(/Feature/RemoveMeasurementCheckboxesMigration PROPERTIES DEPENDS /Feature/MeasurementPositionMigration)
+set_tests_properties(/Feature/RemoveMeasurementCheckboxesMigration PROPERTIES DEPENDS /Browser/Pages/ProjectSitesPageTest)
 
 add_laravel_test(/Feature/IncreaseSiteInformationCPUColumnsSizeMigration)
 set_tests_properties(/Feature/IncreaseSiteInformationCPUColumnsSizeMigration PROPERTIES DEPENDS /Feature/RemoveMeasurementCheckboxesMigration)
