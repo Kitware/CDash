@@ -19,7 +19,7 @@ use CDash\Database;
 use CDash\Model\Build;
 use CDash\ServiceContainer;
 use PDOStatement;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 require_once 'include/common.php';

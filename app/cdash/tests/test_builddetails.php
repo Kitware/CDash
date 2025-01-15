@@ -68,7 +68,7 @@ class BuildDetailsTestCase extends KWWebTestCase
                 $response = json_decode($this->get(
                     $this->url . '/api/v1/viewBuildError.php?buildid=' . $build['id']));
 
-                $this->assertTrue(is_array($response->errors));
+                $this->assertIsArray($response->errors);
             }
         }
     }

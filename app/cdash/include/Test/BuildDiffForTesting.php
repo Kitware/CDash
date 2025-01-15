@@ -18,7 +18,7 @@
 namespace CDash\Test;
 
 use CDash\Model\Build;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 trait BuildDiffForTesting
 {

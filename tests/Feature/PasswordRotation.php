@@ -112,7 +112,7 @@ class PasswordRotation extends TestCase
         $password_rows = DB::table('password')
             ->where('userid', $this->user->id)
             ->get();
-        $this::assertEquals(2, count($password_rows));
+        $this::assertCount(2, $password_rows);
         $this->assertDatabaseMissing('password', ['password' => $password_hash]);
 
         // Verify that we can set our password back to the original one

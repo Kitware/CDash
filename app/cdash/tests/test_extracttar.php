@@ -12,7 +12,7 @@ class ExtractTarTestCase extends KWWebTestCase
         $result = extract_tar(dirname(__FILE__) . '/../config/config.php', 'foo');
 
         $this->assertFalse($result);
-        $this->assertTrue(is_readable($this->logfilename));
+        $this->assertIsReadable($this->logfilename);
 
         $logfileContents = file_get_contents($this->logfilename);
 

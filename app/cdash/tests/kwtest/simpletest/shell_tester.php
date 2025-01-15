@@ -286,7 +286,7 @@ class ShellTestCase extends SimpleTestCase
     public function assertFileExists($path, $message = '%s')
     {
         $message = sprintf($message, "File [$path] should exist");
-        return $this->assertTrue(file_exists($path), $message);
+        return $this->assertFileExists($path, $message);
     }
 
     /**
@@ -300,7 +300,7 @@ class ShellTestCase extends SimpleTestCase
     public function assertFileNotExists($path, $message = '%s')
     {
         $message = sprintf($message, "File [$path] should not exist");
-        return $this->assertFalse(file_exists($path), $message);
+        return $this->assertFileDoesNotExist($path, $message);
     }
 
     /**
