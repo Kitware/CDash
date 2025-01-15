@@ -278,13 +278,10 @@ set_property(TEST /Feature/PurgeUnusedProjectsCommand PROPERTY DEPENDS
   /Browser/Pages/ProjectSitesPageTest
 )
 
-add_laravel_test(/Feature/UploadStorageMigration)
-set_tests_properties(/Feature/UploadStorageMigration PROPERTIES DEPENDS /Feature/PurgeUnusedProjectsCommand)
-
 ###################################################################################################
 
 cdash_install()
-set_tests_properties(install_3 PROPERTIES DEPENDS /Feature/UploadStorageMigration)
+set_tests_properties(install_3 PROPERTIES DEPENDS /Feature/PurgeUnusedProjectsCommand)
 
 
 add_php_test(compressedtest)
