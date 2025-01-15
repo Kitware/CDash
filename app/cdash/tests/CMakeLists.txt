@@ -74,11 +74,8 @@ set_tests_properties(/Feature/Jobs/PruneAuthTokensTest PROPERTIES DEPENDS instal
 add_laravel_test(/Feature/LoginAndRegistration)
 set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /Feature/CDashTest)
 
-add_laravel_test(/Feature/Monitor)
-set_tests_properties(/Feature/Monitor PROPERTIES DEPENDS /Feature/LoginAndRegistration)
-
 add_laravel_test(/Feature/PasswordRotation)
-set_tests_properties(/Feature/PasswordRotation PROPERTIES DEPENDS /Feature/Monitor)
+set_tests_properties(/Feature/PasswordRotation PROPERTIES DEPENDS /Feature/LoginAndRegistration)
 
 add_laravel_test(/Feature/ProjectPermissions)
 set_tests_properties(/Feature/ProjectPermissions PROPERTIES DEPENDS /Feature/PasswordRotation)
@@ -238,6 +235,9 @@ set_tests_properties(/Feature/GraphQL/CoverageTypeTest PROPERTIES DEPENDS /CDash
 add_laravel_test(/Feature/RouteAccessTest)
 set_tests_properties(/Feature/RouteAccessTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/Monitor)
+set_tests_properties(/Feature/Monitor PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 # Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
 add_laravel_test(/Browser/Pages/SitesIdPageTest)
 set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES RUN_SERIAL TRUE)
@@ -261,6 +261,7 @@ set_property(TEST /Feature/PurgeUnusedProjectsCommand PROPERTY DEPENDS
   /Feature/GraphQL/BuildMeasurementTypeTest
   /Feature/GraphQL/CoverageTypeTest
   /Feature/RouteAccessTest
+  /Feature/Monitor
   /Browser/Pages/SitesIdPageTest
   /Feature/LdapIntegration
 )
