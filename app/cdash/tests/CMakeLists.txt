@@ -260,7 +260,7 @@ set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES DEPENDS /CDa
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
 set_property(TEST /Feature/PurgeUnusedProjectsCommand PROPERTY DEPENDS
   /Feature/SubmissionValidation
-  /Feature/GraphQL/FilterTypeTest
+  /Feature/GraphQL/FilterTest
   /Feature/GraphQL/ProjectTypeTest
   /Feature/GraphQL/SiteTypeTest
   /Feature/GraphQL/BuildTypeTest
