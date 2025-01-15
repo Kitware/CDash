@@ -65,12 +65,6 @@ set_tests_properties(install_2 PROPERTIES DEPENDS cypress/e2e/user-profile)
 add_laravel_test(/Feature/CDashTest)
 set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_2)
 
-add_laravel_test(/Feature/Jobs/PruneJobsTest)
-set_tests_properties(/Feature/Jobs/PruneJobsTest PROPERTIES DEPENDS install_2)
-
-add_laravel_test(/Feature/Jobs/PruneAuthTokensTest)
-set_tests_properties(/Feature/Jobs/PruneAuthTokensTest PROPERTIES DEPENDS install_2)
-
 add_laravel_test(/Feature/LoginAndRegistration)
 set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /Feature/CDashTest)
 
@@ -257,6 +251,14 @@ add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
 set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+# This could theoretically conflict with another test removing jobs from the submission tables in the future
+add_laravel_test(/Feature/Jobs/PruneJobsTest)
+set_tests_properties(/Feature/Jobs/PruneJobsTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+# This could theoretically conflict with another test using expired auth tokens
+add_laravel_test(/Feature/Jobs/PruneAuthTokensTest)
+set_tests_properties(/Feature/Jobs/PruneAuthTokensTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 cdash_install()
@@ -278,6 +280,8 @@ set_property(TEST install_3 PROPERTY DEPENDS
   /Feature/LdapIntegration
   /Browser/Pages/ProjectSitesPageTest
   /Feature/PurgeUnusedProjectsCommand
+  /Feature/Jobs/PruneJobsTest
+  /Feature/Jobs/PruneAuthTokensTest
 )
 
 
