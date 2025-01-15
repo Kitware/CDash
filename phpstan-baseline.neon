@@ -14003,21 +14003,6 @@ parameters:
 			path: app/cdash/include/ctestparser.php
 
 		-
-			message: "#^Parameter \\#1 \\$stream of function feof expects resource, mixed given\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fread expects resource, mixed given\\.$#"
-			count: 2
-			path: app/cdash/include/ctestparser.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function rewind expects resource, mixed given\\.$#"
-			count: 1
-			path: app/cdash/include/ctestparser.php
-
-		-
 			message: "#^Parameter \\#2 \\$data of function xml_parse expects string, string\\|false given\\.$#"
 			count: 2
 			path: app/cdash/include/ctestparser.php
