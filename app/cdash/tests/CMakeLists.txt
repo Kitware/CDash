@@ -61,6 +61,8 @@ add_unit_test(/CDash/ServiceContainer)
 
 add_unit_test(/CDash/LinkifyCompilerOutput)
 
+add_unit_test(/CDash/Database)
+
 ###################################################################################################
 
 cdash_install()
@@ -90,12 +92,9 @@ set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /Feature/GitHubWebho
 add_unit_test(/CDash/ConfigUseCase)
 set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/BuildUseCase)
 
-add_unit_test(/CDash/Database)
-set_tests_properties(/CDash/Database PROPERTIES DEPENDS /CDash/ConfigUseCase)
-
 add_unit_test(/CDash/Lib/Repository/GitHub)
 set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES
-    DEPENDS /CDash/Database
+    DEPENDS /CDash/ConfigUseCase
     DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
 )
 
