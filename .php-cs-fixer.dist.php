@@ -12,6 +12,7 @@ $finder = Finder::create()
     ->exclude('_build')
     ->exclude('resources')
     ->exclude('public')
+    ->exclude('app/cdash/tests/kwtest/simpletest')
     ->notPath('app/cdash/tests/config.test.local.php')
     ->in(__DIR__);
 
