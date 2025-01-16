@@ -79,9 +79,7 @@ class DatabaseSeeder extends Seeder
             throw new Exception('No submission files found for Trilinos project');
         }
 
-        $files_to_submit = array_map(function ($filename) {
-            return app_path("/cdash/tests/data/ActualTrilinosSubmission/$filename");
-        }, $files_to_submit);
+        $files_to_submit = array_map(fn ($filename) => app_path("/cdash/tests/data/ActualTrilinosSubmission/$filename"), $files_to_submit);
 
         $this->submitFiles($project->name, $files_to_submit, 1);
     }

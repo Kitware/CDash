@@ -116,9 +116,7 @@ final class BuildPropertiesController extends AbstractBuildController
         }
         $response['defecttypes'] = $defect_types;
 
-        $defect_types = array_filter($defect_types, function ($defect_type) {
-            return $defect_type['selected'];
-        });
+        $defect_types = array_filter($defect_types, fn ($defect_type) => $defect_type['selected']);
 
         // Construct an SQL SELECT clause for the requested types of defects.
         $defect_keys = [];

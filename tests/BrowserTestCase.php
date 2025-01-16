@@ -52,12 +52,10 @@ abstract class BrowserTestCase extends BaseTestCase
         $options = (new ChromeOptions())->addArguments(collect([
             '--window-size=1920,1080',
             '--disable-search-engine-choice-screen',
-        ])->unless($this->hasHeadlessDisabled(), function (Collection $items) {
-            return $items->merge([
-                '--disable-gpu',
-                '--headless=new',
-            ]);
-        })->all());
+        ])->unless($this->hasHeadlessDisabled(), fn (Collection $items) => $items->merge([
+            '--disable-gpu',
+            '--headless=new',
+        ]))->all());
 
         return RemoteWebDriver::create(
             'http://selenium:4444/wd/hub',

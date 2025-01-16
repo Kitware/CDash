@@ -1794,9 +1794,7 @@ final class CoverageController extends AbstractBuildController
 
         if (!empty($subproject_groups)) {
             // At this point it is safe to remove any empty $coveragegroups from our response.
-            $coveragegroups_response = array_filter($coveragegroups, function ($group) {
-                return $group['label'] === 'Total' || !empty($group['coverages']);
-            });
+            $coveragegroups_response = array_filter($coveragegroups, fn ($group) => $group['label'] === 'Total' || !empty($group['coverages']));
 
             // Report coveragegroups as a list, not an associative array.
             $coveragegroups_response = array_values($coveragegroups_response);

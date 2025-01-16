@@ -935,9 +935,7 @@ function extract_tar(string $filename, string $dirName): bool
  */
 function deepEncodeHTMLEntities(&$structure): void
 {
-    $encode = function ($string) {
-        return htmlspecialchars($string, ENT_QUOTES, 'UTF-8', false);
-    };
+    $encode = fn ($string) => htmlspecialchars($string, ENT_QUOTES, 'UTF-8', false);
 
     if (is_object($structure)) {
         $properties = get_object_vars($structure);

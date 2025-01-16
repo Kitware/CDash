@@ -255,9 +255,7 @@ abstract class UseCase
     {
         $subset = array_filter(
             $attributes,
-            function ($key) use ($keys) {
-                return empty($keys) || in_array($key, $keys);
-            },
+            fn ($key) => empty($keys) || in_array($key, $keys),
             ARRAY_FILTER_USE_KEY
         );
 
