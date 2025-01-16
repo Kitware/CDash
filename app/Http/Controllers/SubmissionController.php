@@ -88,7 +88,7 @@ final class SubmissionController extends AbstractProjectController
         // Check that the md5sum of the file matches what we were told to expect.
         $fp = request()->getContent(true);
         if (strlen($expected_md5) > 0) {
-            $md5sum = SubmissionUtils::md5FileHandle($fp);
+            $md5sum = SubmissionUtils::hashFileHandle($fp, 'md5');
             if ($md5sum != $expected_md5) {
                 abort(Response::HTTP_BAD_REQUEST, "md5 mismatch. expected: {$expected_md5}, received: {$md5sum}");
             }
@@ -232,18 +232,24 @@ final class SubmissionController extends AbstractProjectController
         }
 
         try {
-            $sha1sum = decrypt($request->input('sha1sum'));
+            $expected_sha1sum = decrypt($request->input('sha1sum'));
         } catch (DecryptException $e) {
             return response('This feature is disabled', Response::HTTP_CONFLICT);
         }
 
         $uploaded_file = array_values(request()->allFiles())[0];
-        $stored_path = $uploaded_file->storeAs('upload', $sha1sum);
+        $stored_path = $uploaded_file->storeAs('upload', $expected_sha1sum);
         if ($stored_path === false) {
             abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Failed to store uploaded file');
         }
 
-        if (sha1_file(Storage::path($stored_path)) !== $sha1sum) {
+        $fp = Storage::readStream($stored_path);
+        if ($fp === null) {
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Failed to store uploaded file');
+        }
+
+        $found_sha1sum = SubmissionUtils::hashFileHandle($fp, 'sha1');
+        if ($found_sha1sum !== $expected_sha1sum) {
             Storage::delete($stored_path);
             return response('Uploaded file does not match expected sha1sum', Response::HTTP_BAD_REQUEST);
         }

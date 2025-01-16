@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 require_once 'include/api_common.php';
 
@@ -829,7 +829,7 @@ final class BuildController extends AbstractBuildController
             ->with('urls', $urls);
     }
 
-    public function build_file(int $build_id, int $file_id): BinaryFileResponse
+    public function build_file(int $build_id, int $file_id): StreamedResponse
     {
         $this->setBuildById($build_id);
 
@@ -841,10 +841,22 @@ final class BuildController extends AbstractBuildController
         $uploadFile = new UploadFile();
         $uploadFile->Id = $file_id;
         $uploadFile->Fill();
-        return response()->file(Storage::path("upload/{$uploadFile->Sha1Sum}"), [
+
+        $fp = Storage::readStream("upload/{$uploadFile->Sha1Sum}");
+        if ($fp === null) {
+            abort(404, 'File not found');
+        }
+        $filename = $uploadFile->Filename;
+        $headers = [
             'Content-Type' => 'text/plain',
             'Content-Disposition' => "inline/attachment; filename={$uploadFile->Filename}",
-        ]);
+        ];
+        return response()->streamDownload(function () use ($fp) {
+            while (!feof($fp)) {
+                echo fread($fp, 1024);
+            }
+            fclose($fp);
+        }, $filename, $headers, 'inline');
     }
 
     public function ajaxBuildNote(): View
