@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Enums\ClassicPalette;
 use App\Enums\HighContrastPalette;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use LogicException;
@@ -15,6 +16,7 @@ use Tests\Traits\CreatesUsers;
 class Monitor extends TestCase
 {
     use CreatesUsers;
+    use DatabaseTruncation;
 
     protected User $normal_user;
     protected User $admin_user;

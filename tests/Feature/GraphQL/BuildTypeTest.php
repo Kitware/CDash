@@ -460,22 +460,24 @@ class BuildTypeTest extends TestCase
      */
     public function testBasicBuildFiltering(): void
     {
+        /** @var array<Build> $builds */
+        $builds = [];
         for ($i = 0; $i < 4; $i++) {
-            $this->project->builds()->create([
-                'name' => "build{$i}",
+            $builds[] = $this->project->builds()->create([
+                'name' => "build{$i}" . Str::uuid()->toString(),
                 'uuid' => Str::uuid()->toString(),
             ]);
         }
 
         $this->graphQL('
-            query {
+            query($buildname: String) {
                 projects {
                     edges {
                         node {
                             name
                             builds(filters: {
                                 eq: {
-                                    name: "build2"
+                                    name: $buildname
                                 }
                             }) {
                                 edges {
@@ -488,7 +490,9 @@ class BuildTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ', [
+            'buildname' => $builds[2]->name,
+        ])->assertJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -499,7 +503,7 @@ class BuildTypeTest extends TestCase
                                     'edges' => [
                                         [
                                             'node' => [
-                                                'name' => 'build2',
+                                                'name' => $builds[2]->name,
                                             ],
                                         ],
                                     ],

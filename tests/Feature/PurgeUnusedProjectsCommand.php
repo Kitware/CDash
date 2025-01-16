@@ -4,11 +4,14 @@ namespace Tests\Feature;
 
 use CDash\Model\Build;
 use CDash\Model\Project;
+use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class PurgeUnusedProjectsCommand extends TestCase
 {
+    use DatabaseTruncation;
+
     private Project $project1;
     private Project $project2;
 

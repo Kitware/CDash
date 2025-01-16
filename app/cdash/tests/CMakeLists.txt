@@ -42,55 +42,46 @@ if (CDASH_CONFIGURE_HTACCESS_FILE)
     set(phpunit_extra_arg "-d auto_prepend_file=${CMAKE_BINARY_DIR}/prepend_coverage.php")
 endif()
 
+###################################################################################################
+# Tests from this point to the next cdash_install() are expected to not need database or other
+# system resources.
+
 add_laravel_test(/Unit/app/ControllerNameTest)
 
 add_laravel_test(/Unit/app/FillableAttributesTest)
-
-cdash_install()
-set_tests_properties(install_2 PROPERTIES DEPENDS cypress/e2e/user-profile)
 
 add_laravel_test(/Unit/app/Validators/PasswordTest)
 
 add_laravel_test(/Unit/app/Middleware/InternalTest)
 
-add_laravel_test(/Feature/LdapIntegration)
-set_tests_properties(/Feature/LdapIntegration PROPERTIES DEPENDS install_2)
+# TODO: Is this test useful now?
+add_unit_test(/PHPUnitTest)
+
+add_unit_test(/CDash/ServiceContainer)
+
+add_unit_test(/CDash/LinkifyCompilerOutput)
+
+add_laravel_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
+
+###################################################################################################
+
+cdash_install()
+set_tests_properties(install_2 PROPERTIES DEPENDS cypress/e2e/user-profile)
 
 add_laravel_test(/Feature/CDashTest)
 set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_2)
 
-add_laravel_test(/Feature/Jobs/PruneJobsTest)
-set_tests_properties(/Feature/Jobs/PruneJobsTest PROPERTIES DEPENDS install_2)
-
-add_laravel_test(/Feature/Jobs/PruneAuthTokensTest)
-set_tests_properties(/Feature/Jobs/PruneAuthTokensTest PROPERTIES DEPENDS install_2)
-
 add_laravel_test(/Feature/LoginAndRegistration)
 set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /Feature/CDashTest)
 
-add_laravel_test(/Feature/Monitor)
-set_tests_properties(/Feature/Monitor PROPERTIES DEPENDS /Feature/LoginAndRegistration)
-
-add_laravel_test(/Feature/PasswordRotation)
-set_tests_properties(/Feature/PasswordRotation PROPERTIES DEPENDS /Feature/Monitor)
-
 add_laravel_test(/Feature/ProjectPermissions)
-set_tests_properties(/Feature/ProjectPermissions PROPERTIES DEPENDS /Feature/PasswordRotation)
-
-add_laravel_test(/Feature/UserCommand)
-set_tests_properties(/Feature/UserCommand PROPERTIES DEPENDS /Feature/ProjectPermissions)
-
-add_laravel_test(/Feature/RouteAccessTest)
-set_tests_properties(/Feature/RouteAccessTest PROPERTIES DEPENDS /Feature/UserCommand)
+set_tests_properties(/Feature/ProjectPermissions PROPERTIES DEPENDS /Feature/LoginAndRegistration)
 
 add_laravel_test(/Feature/SlowPageTest)
-set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /Feature/RouteAccessTest)
-
-add_unit_test(/PHPUnitTest)
-set_tests_properties(/PHPUnitTest PROPERTIES DEPENDS /Feature/SlowPageTest)
+set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /Feature/ProjectPermissions)
 
 add_laravel_test(/Feature/GitHubWebhook)
-set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /PHPUnitTest)
+set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /Feature/SlowPageTest)
 
 add_unit_test(/CDash/BuildUseCase)
 set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /Feature/GitHubWebhook)
@@ -98,53 +89,20 @@ set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /Feature/GitHubWebho
 add_unit_test(/CDash/ConfigUseCase)
 set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/BuildUseCase)
 
-add_unit_test(/CDash/Database)
-set_tests_properties(/CDash/Database PROPERTIES DEPENDS /CDash/ConfigUseCase)
-
 add_unit_test(/CDash/Lib/Repository/GitHub)
 set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES
-    DEPENDS /CDash/Database
+    DEPENDS /CDash/ConfigUseCase
     DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
 )
 
-add_unit_test(/CDash/LinkifyCompilerOutput)
-set_tests_properties(/CDash/LinkifyCompilerOutput PROPERTIES DEPENDS /CDash/Lib/Repository/GitHub)
-
 add_unit_test(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
-set_tests_properties(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder PROPERTIES DEPENDS /CDash/LinkifyCompilerOutput)
+set_tests_properties(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder PROPERTIES DEPENDS /CDash/Lib/Repository/GitHub)
 
 add_unit_test(/CDash/Messaging/Subscription/UserSubscriptionBuilder)
 set_tests_properties(/CDash/Messaging/Subscription/UserSubscriptionBuilder PROPERTIES DEPENDS /CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
 
-add_unit_test(/CDash/Messaging/Topic/AuthoredTopic)
-set_tests_properties(/CDash/Messaging/Topic/AuthoredTopic PROPERTIES DEPENDS /CDash/Messaging/Subscription/UserSubscriptionBuilder)
-
-add_unit_test(/CDash/Messaging/Topic/BuildErrorTopic)
-set_tests_properties(/CDash/Messaging/Topic/BuildErrorTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/AuthoredTopic)
-
-add_unit_test(/CDash/Messaging/Topic/ConfigureTopic)
-set_tests_properties(/CDash/Messaging/Topic/ConfigureTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/BuildErrorTopic)
-
-add_unit_test(/CDash/Messaging/Topic/DynamicAnalysisTopic)
-set_tests_properties(/CDash/Messaging/Topic/DynamicAnalysisTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/ConfigureTopic)
-
-add_unit_test(/CDash/Messaging/Topic/EmailSentTopic)
-set_tests_properties(/CDash/Messaging/Topic/EmailSentTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/DynamicAnalysisTopic)
-
-add_unit_test(/CDash/Messaging/Topic/FixedTopic)
-set_tests_properties(/CDash/Messaging/Topic/FixedTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/EmailSentTopic)
-
-add_unit_test(/CDash/Messaging/Topic/MissingTestTopic)
-set_tests_properties(/CDash/Messaging/Topic/MissingTestTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/FixedTopic)
-
-add_unit_test(/CDash/Messaging/Topic/TestFailureTopic)
-set_tests_properties(/CDash/Messaging/Topic/TestFailureTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/MissingTestTopic)
-
-add_unit_test(/CDash/Messaging/Topic/TopicDecorator)
-set_tests_properties(/CDash/Messaging/Topic/TopicDecorator PROPERTIES DEPENDS /CDash/Messaging/Topic/TestFailureTopic)
-
 add_unit_test(/CDash/Messaging/Topic/UpdateErrorTopic)
-set_tests_properties(/CDash/Messaging/Topic/UpdateErrorTopic PROPERTIES DEPENDS /CDash/Messaging/Topic/TopicDecorator)
+set_tests_properties(/CDash/Messaging/Topic/UpdateErrorTopic PROPERTIES DEPENDS /CDash/Messaging/Subscription/UserSubscriptionBuilder)
 
 add_unit_test(/CDash/Model/BuildError)
 set_tests_properties(/CDash/Model/BuildError PROPERTIES DEPENDS /CDash/Messaging/Topic/UpdateErrorTopic)
@@ -170,11 +128,8 @@ set_tests_properties(/CDash/NightlyTime PROPERTIES DEPENDS /CDash/MultipleSubpro
 add_unit_test(/CDash/Service/RepositoryService)
 set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/NightlyTime)
 
-add_unit_test(/CDash/ServiceContainer)
-set_tests_properties(/CDash/ServiceContainer PROPERTIES DEPENDS /CDash/Service/RepositoryService)
-
 add_unit_test(/CDash/TestUseCase)
-set_tests_properties(/CDash/TestUseCase PROPERTIES DEPENDS /CDash/ServiceContainer)
+set_tests_properties(/CDash/TestUseCase PROPERTIES DEPENDS /CDash/Service/RepositoryService)
 
 add_unit_test(/CDash/UpdateUseCase)
 set_tests_properties(/CDash/UpdateUseCase PROPERTIES DEPENDS /CDash/TestUseCase)
@@ -194,64 +149,156 @@ set_tests_properties(/CDash/XmlHandler/TestingHandler PROPERTIES DEPENDS /CDash/
 add_unit_test(/CDash/XmlHandler/UpdateHandler)
 set_tests_properties(/CDash/XmlHandler/UpdateHandler PROPERTIES DEPENDS /CDash/XmlHandler/TestingHandler)
 
+###################################################################################################
+# Tests from this point to the next cdash_install() are expected to be completely independent.
+# Tests may wipe the database, provided that they use RUN_SERIAL. All tests in this section should
+# depend upon the last test prior to this section.
 
+# Set this to RUN_SERIAL as we are changing the config and don't want to clobber other tests.
+# Only requires exclusive .env access.
 add_laravel_test(/Feature/SubmissionValidation)
-# Set this to RUN_SERIAL as we are changing the config and don't want to clobber other tests
 set_tests_properties(/Feature/SubmissionValidation PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Feature/SubmissionValidation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/FilterTest)
-set_tests_properties(/Feature/GraphQL/FilterTest PROPERTIES DEPENDS /Feature/SubmissionValidation)
+set_tests_properties(/Feature/GraphQL/FilterTest PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Feature/GraphQL/FilterTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/ProjectTypeTest)
-set_tests_properties(/Feature/GraphQL/ProjectTypeTest PROPERTIES DEPENDS /Feature/GraphQL/FilterTest)
+set_tests_properties(/Feature/GraphQL/ProjectTypeTest PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Feature/GraphQL/ProjectTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/SiteTypeTest)
-set_tests_properties(/Feature/GraphQL/SiteTypeTest PROPERTIES DEPENDS /Feature/GraphQL/ProjectTypeTest)
+set_tests_properties(/Feature/GraphQL/SiteTypeTest PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Feature/GraphQL/SiteTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/BuildTypeTest)
-set_tests_properties(/Feature/GraphQL/BuildTypeTest PROPERTIES DEPENDS /Feature/GraphQL/SiteTypeTest)
+set_tests_properties(/Feature/GraphQL/BuildTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/TestTypeTest)
-set_tests_properties(/Feature/GraphQL/TestTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
+set_tests_properties(/Feature/GraphQL/TestTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/TestMeasurementTypeTest)
-set_tests_properties(/Feature/GraphQL/TestMeasurementTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
+set_tests_properties(/Feature/GraphQL/TestMeasurementTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/NoteTypeTest)
-set_tests_properties(/Feature/GraphQL/NoteTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
+set_tests_properties(/Feature/GraphQL/NoteTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/BuildMeasurementTypeTest)
-set_tests_properties(/Feature/GraphQL/BuildMeasurementTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
+set_tests_properties(/Feature/GraphQL/BuildMeasurementTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/CoverageTypeTest)
-set_tests_properties(/Feature/GraphQL/CoverageTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
+set_tests_properties(/Feature/GraphQL/CoverageTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/RouteAccessTest)
+set_tests_properties(/Feature/RouteAccessTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/Monitor)
+set_tests_properties(/Feature/Monitor PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Feature/Monitor PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/PasswordRotation)
+set_tests_properties(/Feature/PasswordRotation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+# Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
 add_laravel_test(/Browser/Pages/SitesIdPageTest)
-set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
 set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+# Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
+add_laravel_test(/Feature/LdapIntegration)
+set_tests_properties(/Feature/LdapIntegration PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Feature/LdapIntegration PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+# TODO: Evaluate whether this test can be independent
+add_laravel_test(/Browser/Pages/ProjectSitesPageTest)
+set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
-set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES DEPENDS "/Feature/GraphQL/TestTypeTest;/Feature/GraphQL/TestMeasurementTypeTest;/Feature/GraphQL/NoteTypeTest;/Feature/GraphQL/BuildMeasurementTypeTest;/Feature/GraphQL/CoverageTypeTest;/Browser/Pages/SitesIdPageTest")
+set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_laravel_test(/Browser/Pages/ProjectSitesPageTest)
-set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES DEPENDS /Feature/PurgeUnusedProjectsCommand)
+# This could theoretically conflict with another test removing jobs from the submission tables in the future
+add_laravel_test(/Feature/Jobs/PruneJobsTest)
+set_tests_properties(/Feature/Jobs/PruneJobsTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_laravel_test(/Feature/MeasurementPositionMigration)
-set_tests_properties(/Feature/MeasurementPositionMigration PROPERTIES DEPENDS /Browser/Pages/ProjectSitesPageTest)
+# This could theoretically conflict with another test using expired auth tokens
+add_laravel_test(/Feature/Jobs/PruneAuthTokensTest)
+set_tests_properties(/Feature/Jobs/PruneAuthTokensTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_laravel_test(/Feature/RemoveMeasurementCheckboxesMigration)
-set_tests_properties(/Feature/RemoveMeasurementCheckboxesMigration PROPERTIES DEPENDS /Feature/MeasurementPositionMigration)
+add_laravel_test(/Feature/UserCommand)
+set_tests_properties(/Feature/UserCommand PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_laravel_test(/Feature/IncreaseSiteInformationCPUColumnsSizeMigration)
-set_tests_properties(/Feature/IncreaseSiteInformationCPUColumnsSizeMigration PROPERTIES DEPENDS /Feature/RemoveMeasurementCheckboxesMigration)
+add_unit_test(/CDash/Database)
+set_tests_properties(/CDash/Database PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_laravel_test(/Feature/UploadStorageMigration)
-set_tests_properties(/Feature/UploadStorageMigration PROPERTIES DEPENDS /Feature/IncreaseSiteInformationCPUColumnsSizeMigration)
+add_unit_test(/CDash/Messaging/Topic/AuthoredTopic)
+set_tests_properties(/CDash/Messaging/Topic/AuthoredTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_unit_test(/CDash/Messaging/Topic/BuildErrorTopic)
+set_tests_properties(/CDash/Messaging/Topic/BuildErrorTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/ConfigureTopic)
+set_tests_properties(/CDash/Messaging/Topic/ConfigureTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/DynamicAnalysisTopic)
+set_tests_properties(/CDash/Messaging/Topic/DynamicAnalysisTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/EmailSentTopic)
+set_tests_properties(/CDash/Messaging/Topic/EmailSentTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/FixedTopic)
+set_tests_properties(/CDash/Messaging/Topic/FixedTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/MissingTestTopic)
+set_tests_properties(/CDash/Messaging/Topic/MissingTestTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/TestFailureTopic)
+set_tests_properties(/CDash/Messaging/Topic/TestFailureTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/TopicDecorator)
+set_tests_properties(/CDash/Messaging/Topic/TopicDecorator PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/RemoteWorkers)
+set_tests_properties(/Feature/RemoteWorkers PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+###################################################################################################
 
 cdash_install()
-set_tests_properties(install_3 PROPERTIES DEPENDS /Feature/UploadStorageMigration)
+set_property(TEST install_3 PROPERTY DEPENDS
+  /Feature/SubmissionValidation
+  /Feature/GraphQL/FilterTest
+  /Feature/GraphQL/ProjectTypeTest
+  /Feature/GraphQL/SiteTypeTest
+  /Feature/GraphQL/BuildTypeTest
+  /Feature/GraphQL/TestTypeTest
+  /Feature/GraphQL/TestMeasurementTypeTest
+  /Feature/GraphQL/NoteTypeTest
+  /Feature/GraphQL/BuildMeasurementTypeTest
+  /Feature/GraphQL/CoverageTypeTest
+  /Feature/RouteAccessTest
+  /Feature/Monitor
+  /Feature/PasswordRotation
+  /Browser/Pages/SitesIdPageTest
+  /Feature/LdapIntegration
+  /Browser/Pages/ProjectSitesPageTest
+  /Feature/PurgeUnusedProjectsCommand
+  /Feature/Jobs/PruneJobsTest
+  /Feature/Jobs/PruneAuthTokensTest
+  /Feature/UserCommand
+  /CDash/Database
+  /CDash/Messaging/Topic/AuthoredTopic
+  /CDash/Messaging/Topic/BuildErrorTopic
+  /CDash/Messaging/Topic/ConfigureTopic
+  /CDash/Messaging/Topic/DynamicAnalysisTopic
+  /CDash/Messaging/Topic/EmailSentTopic
+  /CDash/Messaging/Topic/FixedTopic
+  /CDash/Messaging/Topic/MissingTestTopic
+  /CDash/Messaging/Topic/TestFailureTopic
+  /CDash/Messaging/Topic/TopicDecorator
+  /Feature/RemoteWorkers
+)
 
 
 add_php_test(compressedtest)
@@ -610,11 +657,6 @@ set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS viewsubp
 
 add_php_test(misassignedconfigure)
 set_tests_properties(misassignedconfigure PROPERTIES DEPENDS /Feature/SubProjectDependencies)
-
-add_laravel_test(/Feature/RemoteWorkers)
-set_tests_properties(/Feature/RemoteWorkers PROPERTIES DEPENDS install_3)
-
-add_laravel_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 
 add_subdirectory(ctest)
 add_subdirectory(autoremovebuilds)

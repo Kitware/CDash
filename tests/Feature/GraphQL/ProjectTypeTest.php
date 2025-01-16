@@ -4,6 +4,7 @@ namespace Tests\Feature\GraphQL;
 
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -14,6 +15,7 @@ class ProjectTypeTest extends TestCase
 {
     use CreatesUsers;
     use CreatesProjects;
+    use DatabaseTruncation;
 
     /**
      * @var array<Project>

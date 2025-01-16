@@ -4,6 +4,7 @@ namespace Tests\Feature\GraphQL;
 
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -13,6 +14,7 @@ class FilterTest extends TestCase
 {
     use CreatesProjects;
     use CreatesUsers;
+    use DatabaseTruncation;
 
     /**
      * @var array<Project>

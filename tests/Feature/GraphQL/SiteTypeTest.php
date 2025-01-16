@@ -5,6 +5,7 @@ namespace Tests\Feature\GraphQL;
 use App\Models\Project;
 use App\Models\Site;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -17,6 +18,7 @@ class SiteTypeTest extends TestCase
     use CreatesUsers;
     use CreatesProjects;
     use CreatesSites;
+    use DatabaseTruncation;
 
     /**
      * @var array<Project>
