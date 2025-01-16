@@ -30,4 +30,5 @@ return $config->setRules([
     'fully_qualified_strict_types' => ['import_symbols' => true],
     'global_namespace_import' => ['import_classes' => true, 'import_constants' => null, 'import_functions' => null],
     'phpdoc_align' => ['align' => 'left'],
+    'declare_strict_types' => false, // TODO: turn this back on.  Currently causes errors...
 ])->setFinder($finder);
