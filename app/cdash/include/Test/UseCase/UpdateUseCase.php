@@ -289,7 +289,7 @@ class UpdateUseCase extends UseCase
 
     public function randomizeCheckinDate(): string
     {
-        $random = rand(1, 9 * 60 * 60) + (9 * 60 * 60); // seconds between 8am and 5pm
+        $random = random_int(1, 9 * 60 * 60) + (9 * 60 * 60); // seconds between 8am and 5pm
         $time = strtotime("yesterday +{$random} seconds");
         return date('Y-m-d H:i:s -0500', $time);
     }

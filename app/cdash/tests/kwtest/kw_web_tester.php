@@ -135,7 +135,7 @@ class KWWebTestCase extends WebTestCase
             $file = config('cdash.coverage_dir') . DIRECTORY_SEPARATOR .
                 md5($_SERVER['SCRIPT_FILENAME']);
             file_put_contents(
-                $file . '.' . md5(uniqid(rand(), true)) . '.' . get_class(),
+                $file . '.' . md5(uniqid(random_int(0, getrandmax()), true)) . '.' . get_class(),
                 serialize($data)
             );
         }

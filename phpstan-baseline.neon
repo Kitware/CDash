@@ -12817,6 +12817,11 @@ parameters:
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createResults\\(\\) throws checked exception Random\\\\RandomException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
+
+		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createResultsElement\\(\\) has parameter \\$t with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
@@ -13018,6 +13023,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:isSequential\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
+
+		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:randomizeCheckinDate\\(\\) throws checked exception Random\\\\RandomException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
 
@@ -19373,6 +19383,11 @@ parameters:
 
 		-
 			message: "#^Method KWWebTestCase\\:\\:stopCodeCoverage\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			message: "#^Method KWWebTestCase\\:\\:stopCodeCoverage\\(\\) throws checked exception Random\\\\RandomException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 

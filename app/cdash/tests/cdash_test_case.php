@@ -13,7 +13,7 @@
 // of getcwd() value:
 //
 global $cdashpath;
-$cdashpath = str_replace('\\', '/', dirname(dirname(__FILE__)));
+$cdashpath = str_replace('\\', '/', dirname(__FILE__, 2));
 set_include_path($cdashpath . PATH_SEPARATOR . get_include_path());
 
 require_once 'tests/kwtest/kw_web_tester.php'; // KWWebTestCase
