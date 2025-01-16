@@ -19,6 +19,7 @@ $finder = Finder::create()
 $config = new Config();
 return $config->setRules([
     '@PSR12' => true,
+    '@PSR12:risky' => true,
     '@PHP82Migration' => true,
     '@PHP82Migration:risky' => true,
     '@Symfony' => true,
