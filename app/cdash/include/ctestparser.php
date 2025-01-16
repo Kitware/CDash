@@ -192,7 +192,7 @@ function ctest_parse($filehandle, string $filename, $projectid, $expected_md5 = 
         $xml_info['xml_handler'] = null;
         $xml_info['xml_type'] = '';
         $message = "Could not determine submission file type for: '{$filename}'";
-        Log::warning($message . PHP_EOL);
+        Log::warning($message);
         if ((bool) config('cdash.validate_xml_submissions') === true) {
             abort(400, $message);
         }

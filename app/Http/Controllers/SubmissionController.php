@@ -142,7 +142,7 @@ final class SubmissionController extends AbstractProjectController
         } catch (BadSubmissionException $e) {
             $xml_info['xml_handler'] = '';
             $message = "Could not determine submission file type for: '{$stored_filename}'";
-            Log::warning($message . PHP_EOL);
+            Log::warning($message);
             if ((bool) config('cdash.validate_xml_submissions') === true) {
                 abort(400, $message);
             }
