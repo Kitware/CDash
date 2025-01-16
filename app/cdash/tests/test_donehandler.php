@@ -105,7 +105,7 @@ class DoneHandlerTestCase extends KWWebTestCase
 
         $files = Storage::files('parsed');
         $contents = file_get_contents(Storage::path($files[0]));
-        $this->assertTrue(strpos($contents, 'Done retries="5"') !== false);
+        $this->assertTrue(str_contains($contents, 'Done retries="5"'));
 
         unlink($tmpfname);
         DatabaseCleanupUtils::removeBuild($build->Id);

@@ -26,7 +26,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 continue;
             }
 
-            if ($trilinosOnly && strpos($filename, 'TrilinosDriver') !== false) {
+            if ($trilinosOnly && str_contains($filename, 'TrilinosDriver')) {
                 continue;
             }
 

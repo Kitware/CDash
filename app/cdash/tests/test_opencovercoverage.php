@@ -56,7 +56,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
         $puturl = $this->url . "/submit.php?type=OpenCoverTar&md5=c0eeaf6be9838eacc75e652d6c85f925&filename=OpenCoverTest.tar&buildid=$buildid";
         $filename = dirname(__FILE__) . '/data/OpenCoverTest.tar';
         $put_result = $this->uploadfile($puturl, $filename);
-        if (strpos($put_result, '{"status":0}') === false) {
+        if (!str_contains($put_result, '{"status":0}')) {
             $this->fail(
                 "status:0 not found in PUT results:\n$put_result\n");
             return 1;
@@ -65,7 +65,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
         // Verify that the coverage data was successfully parsed.
         $content = $this->get(
             $this->url . "/viewCoverage.php?buildid=$buildid&status=6");
-        if (strpos($content, '47.37') === false) {
+        if (!str_contains($content, '47.37')) {
             $this->fail('\"47.37\" not found when expected');
             return 1;
         }
@@ -108,7 +108,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
         $filename = dirname(__FILE__) . '/data/OpenCoverTestWithDataJson.tar';
 
         $put_result = $this->uploadfile($puturl, $filename);
-        if (strpos($put_result, '{"status":0}') === false) {
+        if (!str_contains($put_result, '{"status":0}')) {
             $this->fail(
                 "status:0 not found in PUT results:\n$put_result\n");
             return 1;
@@ -117,7 +117,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
         // Verify that the coverage data was successfully parsed.
         $content = $this->get(
             $this->url . "/viewCoverage.php?buildid=$buildid&status=6");
-        if (strpos($content, '69.23') === false) {
+        if (!str_contains($content, '69.23')) {
             $this->fail('\"69.23\" not found when expected');
             return 1;
         }

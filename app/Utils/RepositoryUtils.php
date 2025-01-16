@@ -709,7 +709,7 @@ class RepositoryUtils
         }
 
         // Make sure we specify a protocol so this isn't interpreted as a relative path.
-        if (strpos($projecturl, '//') === false) {
+        if (!str_contains($projecturl, '//')) {
             $projecturl = '//' . $projecturl;
         }
         $repo_link = "<a class='cdash-link' href='$projecturl/blob/$revision";
@@ -776,7 +776,7 @@ class RepositoryUtils
         $repo = null;
         $repositories = $project->GetRepositories();
         foreach ($repositories as $repository) {
-            if (strpos($repository['url'], 'github.com') !== false) {
+            if (str_contains($repository['url'], 'github.com')) {
                 $repo = $repository;
                 break;
             }

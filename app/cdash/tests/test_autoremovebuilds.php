@@ -25,7 +25,7 @@ class AutoRemoveBuildsTestCase extends KWWebTestCase
         $output = ob_get_contents();
         ob_end_clean();
 
-        if (strpos($output, 'Usage: php') === false) {
+        if (!str_contains($output, 'Usage: php')) {
             $this->fail("Expected output not found from autoRemoveBuilds.php.\n$output\n");
         }
 
@@ -39,10 +39,10 @@ class AutoRemoveBuildsTestCase extends KWWebTestCase
         $output = ob_get_contents();
         ob_end_clean();
 
-        if (strpos($output, 'removing builds for InsightExample') === false) {
+        if (!str_contains($output, 'removing builds for InsightExample')) {
             $this->fail("Expected output not found from autoRemoveBuilds.php.\n$output\n");
             $error = 1;
-        } elseif (strpos($output, 'removing old buildids') === false) {
+        } elseif (!str_contains($output, 'removing old buildids')) {
             $this->fail("Autoremovebuilds failed to remove old build by buildgroup setting.\n$output\n");
             $error = 1;
         } else {

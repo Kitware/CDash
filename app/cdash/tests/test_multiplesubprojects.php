@@ -764,7 +764,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                 $log_stmt->bindParam(':buildid', $build['id'], PDO::PARAM_INT);
                 $log_stmt->execute();
                 $found_log = $log_stmt->fetchColumn();
-                if (strpos($found_log, $expected_log) === false) {
+                if (!str_contains($found_log, $expected_log)) {
                     $this->fail("Expected log {$expected_log} for {$build['label']}, found {$found_log}");
                 }
             }
@@ -793,7 +793,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $jsonobj = json_decode($content, true);
             $expected = "index.php?project=SubProjectExample&parentid={$parentid}";
             $found = $jsonobj['menu']['back'];
-            if (strpos($found, $expected) === false) {
+            if (!str_contains($found, $expected)) {
                 $this->fail("{$expected} not found in back link for {$page} ({$found})");
             }
         }

@@ -45,10 +45,10 @@ class NotesAPICase extends KWWebTestCase
         $driverFound = false;
         $cronFound = false;
         foreach ($response['notes'] as $note) {
-            if (strpos($note['name'], 'TrilinosDriverDashboard.cmake') !== false) {
+            if (str_contains($note['name'], 'TrilinosDriverDashboard.cmake')) {
                 $driverFound = true;
             }
-            if (strpos($note['name'], 'cron_driver.bat') !== false) {
+            if (str_contains($note['name'], 'cron_driver.bat')) {
                 $cronFound = true;
             }
         }

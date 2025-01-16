@@ -66,7 +66,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $output = $jsonobj['test']['output'];
 
         $not_expected = 'Executed 2 out of 2 tests';
-        if (strpos($output, $not_expected) !== false) {
+        if (str_contains($output, $not_expected)) {
             $this->fail('Unexpected output! Should not include test summary');
         }
 
@@ -295,7 +295,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $output = $jsonobj['test']['output'];
 
         $expected = 'FAIL: testDrakeFindResourceOrThrowInInstall (__main__.TestCommonInstall)';
-        if (strpos($output, $expected) === false) {
+        if (!str_contains($output, $expected)) {
             $this->fail("Expected output to include '$expected'");
         }
 
@@ -351,7 +351,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $output = $jsonobj['test']['output'];
 
         $expected = 'TIMEOUT';
-        if (strpos($output, $expected) === false) {
+        if (!str_contains($output, $expected)) {
             $this->fail("Expected output to include '$expected'");
         }
 
@@ -523,7 +523,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Check Details
         $expected = 'Completed';
-        if (strpos($jsonobj['test']['details'], $expected) === false) {
+        if (!str_contains($jsonobj['test']['details'], $expected)) {
             $this->fail("Expected output to include '$expected'");
         }
 
@@ -580,12 +580,12 @@ class BazelJSONTestCase extends KWWebTestCase
         $output = $jsonobj['test']['output'];
 
         $expected = '//automotive/maliput/multilane:multilane_builder_test';
-        if (strpos($output, $expected) === false) {
+        if (!str_contains($output, $expected)) {
             $this->fail("Expected output to include '$expected'");
         }
 
         $expected = 'multilane/multilane_builder_test/test.log';
-        if (strpos($output, $expected) === false) {
+        if (!str_contains($output, $expected)) {
             $this->fail("Expected output to include '$expected'");
         }
 
@@ -612,13 +612,13 @@ class BazelJSONTestCase extends KWWebTestCase
         $output = $jsonobj['test']['output'];
 
         $expected = 'automotive/maliput/multilane:multilane_lanes_test';
-        if (strpos($output, $expected) === false) {
+        if (!str_contains($output, $expected)) {
             $this->fail("Expected output to include '$expected'");
         }
 
         // Check Details
         $expected = 'Completed (Failed)';
-        if (strpos($jsonobj['test']['details'], $expected) === false) {
+        if (!str_contains($jsonobj['test']['details'], $expected)) {
             $this->fail("Expected output to include '$expected'");
         }
 
@@ -675,36 +675,36 @@ class BazelJSONTestCase extends KWWebTestCase
         $output = $jsonobj['test']['output'];
 
         $expected = 'Note: This is test shard 8 of 10.';
-        if (strpos($output, $expected) === false) {
+        if (!str_contains($output, $expected)) {
             $this->fail("Expected output to include '$expected'");
         }
         $expected = 'Note: This is test shard 9 of 10.';
-        if (strpos($output, $expected) === false) {
+        if (!str_contains($output, $expected)) {
             $this->fail("Expected output to include '$expected'");
         }
         $expected = 'Note: This is test shard 10 of 10.';
-        if (strpos($output, $expected) === false) {
+        if (!str_contains($output, $expected)) {
             $this->fail("Expected output to include '$expected'");
         }
         // 'TIMEOUT' has markup, skip looking for that to make test simpler
         $expected = 'in 3 out of 10 in 60.1s';
-        if (strpos($output, $expected) === false) {
+        if (!str_contains($output, $expected)) {
             $this->fail("Expected output to include '$expected'");
         }
         $expected = 'Stats over 10 runs';
-        if (strpos($output, $expected) === false) {
+        if (!str_contains($output, $expected)) {
             $this->fail("Expected output to include '$expected'");
         }
 
         // Check Details
         $expected = 'Completed (Timeout)';
-        if (strpos($jsonobj['test']['details'], $expected) === false) {
+        if (!str_contains($jsonobj['test']['details'], $expected)) {
             $this->fail("Expected output to include '$expected'");
         }
 
         // Check time - should be sum of all shards
         $expected = '3m 5s 750ms';
-        if (strpos($jsonobj['test']['time'], $expected) === false) {
+        if (!str_contains($jsonobj['test']['time'], $expected)) {
             $this->fail("Expected time to be $expected, found {$jsonobj['test']['time']}");
         }
 

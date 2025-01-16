@@ -17,7 +17,7 @@ class SiteStatisticsTestCase extends KWWebTestCase
     {
         $this->login();
         $content = $this->get($this->url . '/sites');
-        if (strpos($content, 'Busy time') === false) {
+        if (!str_contains($content, 'Busy time')) {
             $this->fail("'Busy time' not found on /sites");
         }
         $this->pass('Passed');

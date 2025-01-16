@@ -86,7 +86,7 @@ class QueryTests extends ResultsApi
         $match_length = 0;
 
         foreach ($this->testOutputExclude as $exclude) {
-            if (strpos($test_output, $exclude) !== false) {
+            if (str_contains($test_output, $exclude)) {
                 return false;
             }
         }

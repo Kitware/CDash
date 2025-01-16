@@ -472,7 +472,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
 
     private function removeSuppressedWarnings($input)
     {
-        if (strpos($input, '[CTest: warning suppressed]') === false) {
+        if (!str_contains($input, '[CTest: warning suppressed]')) {
             return $input;
         }
         // Iterate over the input string line-by-line,
@@ -483,10 +483,10 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         $line = strtok($input, $separator);
         $preserve = true;
         while ($line !== false) {
-            if (strpos($line, '[CTest: warning suppressed') !== false) {
+            if (str_contains($line, '[CTest: warning suppressed')) {
                 $preserve = false;
             }
-            if (strpos($line, '[CTest: warning matched') !== false) {
+            if (str_contains($line, '[CTest: warning matched')) {
                 $preserve = true;
             }
             if ($preserve) {

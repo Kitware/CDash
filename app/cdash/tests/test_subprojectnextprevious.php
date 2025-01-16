@@ -84,7 +84,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             $jsonobj = json_decode($content, true);
 
             // Verify 'Next' from build #1 points to build #2
-            if (strpos($jsonobj['menu']['next'], $path_to_second) === false) {
+            if (!str_contains($jsonobj['menu']['next'], $path_to_second)) {
                 $error_msg = "Expected 'Next' link not found on $page for $first_buildid";
                 $success = false;
                 break;
@@ -97,7 +97,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             }
 
             // Verify 'Current' from build #1 points to build #3
-            if (strpos($jsonobj['menu']['current'], $path_to_third) === false) {
+            if (!str_contains($jsonobj['menu']['current'], $path_to_third)) {
                 $error_msg = "Expected 'Current' link not found on $page for $first_buildid";
                 $success = false;
                 break;
@@ -108,7 +108,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             $jsonobj = json_decode($content, true);
 
             // Verify 'Previous' from build #2 points to build #1
-            if (strpos($jsonobj['menu']['previous'], $path_to_first) === false) {
+            if (!str_contains($jsonobj['menu']['previous'], $path_to_first)) {
                 $error_msg = "Expected 'Previous' link not found on $page for $second_buildid";
                 $success = false;
                 break;
@@ -121,7 +121,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             }
 
             // Verify 'Next' from build #2 points to build #3
-            if (strpos($jsonobj['menu']['next'], $path_to_third) === false) {
+            if (!str_contains($jsonobj['menu']['next'], $path_to_third)) {
                 $error_msg = "Expected 'Next' link not found on $page for $second_buildid";
                 $success = false;
                 break;
@@ -134,7 +134,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             }
 
             // Verify 'Current' from build #2 points to build #3
-            if (strpos($jsonobj['menu']['current'], $path_to_third) === false) {
+            if (!str_contains($jsonobj['menu']['current'], $path_to_third)) {
                 $error_msg = "Expected 'Current' link not found on $page for $second_buildid";
                 $success = false;
                 break;
@@ -145,7 +145,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             $jsonobj = json_decode($content, true);
 
             // Verify 'Previous' from build #3 points to build #2
-            if (strpos($jsonobj['menu']['previous'], $path_to_second) === false) {
+            if (!str_contains($jsonobj['menu']['previous'], $path_to_second)) {
                 $error_msg = "Expected 'Previous' link not found on $page for $third_buildid";
                 $success = false;
                 break;
@@ -171,13 +171,13 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         $jsonobj = json_decode($content, true);
 
         // Verify 'Next' from parent #1 points to parent #2
-        if (strpos($jsonobj['menu']['next'], "parentid=$second_parentid") === false) {
+        if (!str_contains($jsonobj['menu']['next'], "parentid=$second_parentid")) {
             $error_msg = "Expected 'Next' link not found for first parent build";
             $success = false;
         }
 
         // Verify 'Current' from parent #1 points to parent #3
-        if (strpos($jsonobj['menu']['current'], "parentid=$third_parentid") === false) {
+        if (!str_contains($jsonobj['menu']['current'], "parentid=$third_parentid")) {
             $error_msg = "Expected 'Current' link not found for first parent build";
             $success = false;
         }
@@ -187,19 +187,19 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         $jsonobj = json_decode($content, true);
 
         // Verify 'Previous' from parent #2 points to parent #1
-        if (strpos($jsonobj['menu']['previous'], "parentid=$first_parentid") === false) {
+        if (!str_contains($jsonobj['menu']['previous'], "parentid=$first_parentid")) {
             $error_msg = "Expected 'Previous' link not found for second parent build";
             $success = false;
         }
 
         // Verify 'Next' from parent #2 points to parent #3
-        if (strpos($jsonobj['menu']['next'], "parentid=$third_parentid") === false) {
+        if (!str_contains($jsonobj['menu']['next'], "parentid=$third_parentid")) {
             $error_msg = "Expected 'Next' link not found for second parent build";
             $success = false;
         }
 
         // Verify 'Current' from parent #2 points to parent #3
-        if (strpos($jsonobj['menu']['current'], "parentid=$third_parentid") === false) {
+        if (!str_contains($jsonobj['menu']['current'], "parentid=$third_parentid")) {
             $error_msg = "Expected 'Current' link not found for second parent build";
             $success = false;
         }
@@ -209,7 +209,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         $jsonobj = json_decode($content, true);
 
         // Verify 'Previous' from parent #3 points to parent #2
-        if (strpos($jsonobj['menu']['previous'], "parentid=$second_parentid") === false) {
+        if (!str_contains($jsonobj['menu']['previous'], "parentid=$second_parentid")) {
             $error_msg = "Expected 'Previous' link not found for third parent build";
             $success = false;
         }
@@ -298,15 +298,15 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         $this->get($this->url . "/api/v1/viewBuildError.php?type=1&buildid=$second_buildid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
-        if (strpos($jsonobj['menu']['next'], 'type=1') === false) {
+        if (!str_contains($jsonobj['menu']['next'], 'type=1')) {
             $error_msg = 'type=1 not found in Next link of viewBuildError.php';
             $success = false;
         }
-        if (strpos($jsonobj['menu']['previous'], 'type=1') === false) {
+        if (!str_contains($jsonobj['menu']['previous'], 'type=1')) {
             $error_msg = 'type=1 not found in Previous link of viewBuildError.php';
             $success = false;
         }
-        if (strpos($jsonobj['menu']['current'], 'type=1') === false) {
+        if (!str_contains($jsonobj['menu']['current'], 'type=1')) {
             $error_msg = 'type=1 not found in Current link of viewBuildError.php';
             $success = false;
         }

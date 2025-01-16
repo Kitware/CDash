@@ -54,7 +54,7 @@ class Repository
         $self = new ReflectionClass(__CLASS__);
         $viewers = [];
         foreach ($self->getConstants() as $key => $text) {
-            if (strpos($key, 'VIEWER_') === 0) {
+            if (str_starts_with($key, 'VIEWER_')) {
                 $value = strtolower(substr($key, strlen('VIEWER_')));
                 $viewers[$text] = $value;
             }

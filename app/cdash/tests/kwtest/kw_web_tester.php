@@ -105,7 +105,7 @@ class KWWebTestCase extends WebTestCase
         $this->stopCodeCoverage();
         unset($_SERVER['Authorization']);
         foreach (array_keys($_SERVER) as $key) {
-            if (strpos($key, 'HTTP_') === 0) {
+            if (str_starts_with($key, 'HTTP_')) {
                 unset($_SERVER[$key]);
             }
         }
@@ -151,7 +151,7 @@ class KWWebTestCase extends WebTestCase
      */
     public function findString($mystring, $findme)
     {
-        if (strpos($mystring, $findme) === false) {
+        if (!str_contains($mystring, $findme)) {
             return false;
         }
         return true;
@@ -580,7 +580,7 @@ class KWWebTestCase extends WebTestCase
         $this->logout();
         $content = $this->get("{$this->url}{$page}");
 
-        if (strpos($content, '<form method="POST" action="login" name="loginform" id="loginform">') === false) {
+        if (!str_contains($content, '<form method="POST" action="login" name="loginform" id="loginform">')) {
             $this->fail('Login not found when expected');
             return false;
         }
@@ -716,7 +716,7 @@ class CDashControllerBrowser extends SimpleBrowser
 
         if (!empty($query)) {
             foreach (explode('&', $query) as $parameter) {
-                if (strpos($parameter, '=') !== false) {
+                if (str_contains($parameter, '=')) {
                     [$key, $value] = explode('=', $parameter);
                     $this->setRequestKeyValuePair($parameters, $key, $value);
                 } else {

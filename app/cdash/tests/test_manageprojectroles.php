@@ -62,7 +62,7 @@ class ManageProjectRolesTestCase extends KWWebTestCase
         $content = $this->connect($this->url . '/manageProjectRoles.php');
         $lines = explode("\n", $content);
         foreach ($lines as $line) {
-            if (strpos($line, 'PublicDashboard') !== false) {
+            if (str_contains($line, 'PublicDashboard')) {
                 preg_match('#<option value="([0-9]+)"#', $line, $matches);
                 $this->projectid = $matches[1];
                 break;

@@ -75,7 +75,7 @@ class GitHub implements RepositoryInterface
 
         $repositories = $this->project->GetRepositories();
         foreach ($repositories as $repo) {
-            if (strpos($repo['url'], 'github.com') !== false) {
+            if (str_contains($repo['url'], 'github.com')) {
                 $this->installationId = $repo['username'];
                 break;
             }

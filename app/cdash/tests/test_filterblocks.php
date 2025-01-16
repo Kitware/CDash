@@ -72,7 +72,7 @@ class FilterBlocksTestCase extends KWWebTestCase
         // Verify the link to the child build is what we expect (no filter block).
         $build = $buildgroup['builds'][0];
         $expected = 'filtercount=2&showfilters=1&field1=subprojects&compare1=92&value1=Teuchos&field2=subprojects&compare2=92&value2=Mesquite&filtercombine=and';
-        $this->assertTrue(strpos($build['multiplebuildshyperlink'], $expected) !== false);
+        $this->assertTrue(str_contains($build['multiplebuildshyperlink'], $expected));
     }
 
     private function verifyTwoHutBuilds()
@@ -86,7 +86,7 @@ class FilterBlocksTestCase extends KWWebTestCase
         }
         foreach ($buildgroup['builds'] as $build) {
             $sitename = $build['site'];
-            if (strpos($sitename, 'hut') === false) {
+            if (!str_contains($sitename, 'hut')) {
                 $this->fail("Expected sitename to contain 'hut', instead got $sitename");
             }
         }

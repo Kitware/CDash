@@ -61,7 +61,7 @@ class IndexFiltersTestCase extends KWWebTestCase
 
         // ...and that it's the right build.
         $buildname = $buildgroup['builds'][0]['buildname'];
-        if (strpos($buildname, $expected) === false) {
+        if (!str_contains($buildname, $expected)) {
             $this->fail("Expected $expected to survive $field filter, instead got $buildname");
             return false;
         }

@@ -159,7 +159,7 @@ class AuthTokenTestCase extends KWWebTestCase
         $file = dirname(__FILE__) . '/data/InsightExperimentalExample/Insight_Experimental_Build.xml';
         $url = "{$this->url}/submit.php?project=AuthTokenProject";
         $result = $this->uploadfile($url, $file, $headers);
-        if (!$result || strpos($result, '<status>OK</status>') === false) {
+        if (!$result || !str_contains($result, '<status>OK</status>')) {
             return false;
         }
         return true;
@@ -204,7 +204,7 @@ class AuthTokenTestCase extends KWWebTestCase
         $file = dirname(__FILE__) . '/data/gcov.tar';
         $puturl = $this->url . "/submit.php?type=GcovTar&md5=5454e16948a1d58d897e174b75cc5633&filename=gcov.tar&buildid={$this->PostBuildId}";
         $put_result = $this->uploadfile($puturl, $file, $headers);
-        if (strpos($put_result, '{"status":0}') === false) {
+        if (!str_contains($put_result, '{"status":0}')) {
             return false;
         }
         return true;

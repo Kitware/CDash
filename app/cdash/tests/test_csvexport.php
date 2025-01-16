@@ -32,7 +32,7 @@ class ExportToCSVTestCase extends KWWebTestCase
 
         // Verify expected contents.
         $expected = 'DashboardSendTest,0.05,"Completed (OTHER_FAULT)",Failed';
-        if (strpos($content, $expected) === false) {
+        if (!str_contains($content, $expected)) {
             $this->fail('Expected content not found in CSV output');
         }
     }

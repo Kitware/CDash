@@ -199,7 +199,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
         // Check if this file belongs to a different SubProject.
         $buildid = $this->Build->Id;
         if (!empty($this->SubProjectPath)
-            && strpos($path, $this->SubProjectPath) === false
+            && !str_contains($path, $this->SubProjectPath)
         ) {
             // Find the SubProject that corresponds to this path.
             $subproject = SubProject::GetSubProjectFromPath($path, $this->Project->Id);
@@ -238,13 +238,13 @@ class GcovTarHandler extends AbstractSubmissionHandler
             // If this source file isn't from the source or binary directory
             // we shouldn't include it in our coverage report.
             if (!empty($this->SubProjectPath)
-                    && strpos($path, $this->SubProjectPath) !== false) {
+                    && str_contains($path, $this->SubProjectPath)) {
                 $path = substr($path, strpos($path, $this->SubProjectPath));
                 $path =
                     substr_replace($path, '.', 0, strlen($this->SubProjectPath));
-            } elseif (strpos($path, $this->SourceDirectory) !== false) {
+            } elseif (str_contains($path, $this->SourceDirectory)) {
                 $path = str_replace($this->SourceDirectory, '.', trim($path));
-            } elseif (strpos($path, $this->BinaryDirectory) !== false) {
+            } elseif (str_contains($path, $this->BinaryDirectory)) {
                 $path = str_replace($this->BinaryDirectory, '.', trim($path));
             } else {
                 return;
@@ -272,7 +272,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
         //   #include "src/../include/foo.h"
         // CDash will report the covered file as include/foo.h
         $pattern = "#/[^/]*?/\.\./#";
-        while (strpos($path, '/../') !== false) {
+        while (str_contains($path, '/../')) {
             $path = preg_replace($pattern, '/', $path, 1);
         }
 
@@ -336,16 +336,16 @@ class GcovTarHandler extends AbstractSubmissionHandler
                     // Parse branch coverage here.
                     if (substr($gcovLine, 0, 6) === 'branch') {
                         // Figure out whether this branch was covered or not.
-                        if (strpos($gcovLine, 'taken 0%') !== false) {
+                        if (str_contains($gcovLine, 'taken 0%')) {
                             $uncoveredBranches++;
                         } else {
                             $coveredBranches++;
                         }
 
                         // Also keep track of the different types of branches encountered.
-                        if (strpos($gcovLine, '(throw)') !== false) {
+                        if (str_contains($gcovLine, '(throw)')) {
                             $throwBranches++;
-                        } elseif (strpos($gcovLine, '(fallthrough)') !== false) {
+                        } elseif (str_contains($gcovLine, '(fallthrough)')) {
                             $fallthroughBranches++;
                         }
                     }
@@ -427,9 +427,9 @@ class GcovTarHandler extends AbstractSubmissionHandler
             }
 
             $path = $source['file'];
-            if (strpos($path, $this->SourceDirectory) !== false) {
+            if (str_contains($path, $this->SourceDirectory)) {
                 $path = str_replace($this->SourceDirectory, '.', trim($path));
-            } elseif (strpos($path, $this->BinaryDirectory) !== false) {
+            } elseif (str_contains($path, $this->BinaryDirectory)) {
                 $path = str_replace($this->BinaryDirectory, '.', trim($path));
             } else {
                 continue;

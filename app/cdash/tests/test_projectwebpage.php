@@ -114,7 +114,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         // Find specific fileid in response.
         $url = null;
         foreach ($jsonobj['aaData'] as $row) {
-            if (strpos($row[0], 'itkCannyEdgesDistanceAdvectionFieldFeatureGenerator.h') !== false) {
+            if (str_contains($row[0], 'itkCannyEdgesDistanceAdvectionFieldFeatureGenerator.h')) {
                 $url = substr($row[0], 28, 43);
             }
         }

@@ -62,8 +62,8 @@ class ConfigureAppendTestCase extends KWWebTestCase
         $this->assertEqual($configure->status, 3);
 
         $log = $configure->log;
-        $this->assertTrue(strpos($log, 'This is the first part of my configure') !== false);
-        $this->assertTrue(strpos($log, 'This is the second part of my configure') !== false);
+        $this->assertTrue(str_contains($log, 'This is the first part of my configure'));
+        $this->assertTrue(str_contains($log, 'This is the second part of my configure'));
 
         $this->assertEqual($build_results[0]->configureerrors, 3);
         $this->assertEqual($build_results[0]->configurewarnings, 5);

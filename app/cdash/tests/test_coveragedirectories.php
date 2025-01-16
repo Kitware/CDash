@@ -58,7 +58,7 @@ class CoverageDirectoriesTestCase extends KWWebTestCase
             return;
         }
 
-        if (strpos($jsonobj['aaData'][0][0], 'hello.cpp') === false) {
+        if (!str_contains($jsonobj['aaData'][0][0], 'hello.cpp')) {
             $this->fail('utils/ directory does not contain hello.cpp');
             return;
         }
@@ -106,7 +106,7 @@ class CoverageDirectoriesTestCase extends KWWebTestCase
         ];
 
         foreach ($expected_page_1 as $i => $value) {
-            if (strpos($jsonobj['aaData'][$i][0], $value) === false) {
+            if (!str_contains($jsonobj['aaData'][$i][0], $value)) {
                 $this->fail("Index $i is not $value");
                 return;
             }

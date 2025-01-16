@@ -54,7 +54,7 @@ class ManageCoverageTestCase extends KWWebTestCase
 
         $this->login();
         $content = $this->connect($this->url . "/manageCoverage.php?buildid=$buildid&projectid=$projectid");
-        if (strpos($content, 'simple.cxx') === false) {
+        if (!str_contains($content, 'simple.cxx')) {
             $this->fail("'simple.cxx' not found when expected for buildid=" . $buildid);
             return 1;
         }

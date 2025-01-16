@@ -23,7 +23,7 @@ class SubscriptionBuilderCollection extends Collection
 {
     public function add(SubscriptionBuilderInterface $builder)
     {
-        $this->addItem($builder, get_class($builder));
+        $this->addItem($builder, $builder::class);
         return $this;
     }
 }

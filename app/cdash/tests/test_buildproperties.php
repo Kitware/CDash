@@ -70,7 +70,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
         foreach ($this->Builds as $name => $build) {
             $numpass = 0;
             $numfail = 0;
-            if (strpos($name, 'failedtest') !== false) {
+            if (str_contains($name, 'failedtest')) {
                 $testcreator->testStatus = 'failed';
                 $numfail = 1;
             } else {

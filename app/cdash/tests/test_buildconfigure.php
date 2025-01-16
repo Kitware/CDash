@@ -29,7 +29,7 @@ class BuildConfigureTestCase extends KWWebTestCase
             $this->fail('configure with invalid buildid should not exist');
         }
         $log_contents = file_get_contents($this->logfilename);
-        if (strpos($log_contents, 'BuildId is not numeric') === false) {
+        if (!str_contains($log_contents, 'BuildId is not numeric')) {
             $this->fail("'BuildId is not numeric' not found from Exists()");
         }
 
@@ -38,7 +38,7 @@ class BuildConfigureTestCase extends KWWebTestCase
             $this->fail('Configure exists with null buildid');
         }
         $log_contents = file_get_contents($this->logfilename);
-        if (strpos($log_contents, 'BuildId not set') === false) {
+        if (!str_contains($log_contents, 'BuildId not set')) {
             $this->fail("'BuildId is not numeric' not found from Exists()");
         }
 

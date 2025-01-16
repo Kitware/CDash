@@ -66,7 +66,7 @@ class AttachedFilesTestCase extends KWWebTestCase
         }
 
         $contents = file_get_contents($decompressed_file);
-        $this->assertTrue(strpos($contents, 'This is my test output') !== false);
+        $this->assertTrue(str_contains($contents, 'This is my test output'));
 
         unlink($downloaded_file);
         unlink($decompressed_file);

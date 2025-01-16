@@ -119,8 +119,8 @@ class TimeStatusTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $menu = $jsonobj['menu'];
-        $this->assertTrue(strpos($menu['previous'], '?graph=time') !== false);
-        $this->assertTrue(strpos($menu['current'], '?graph=time') !== false);
+        $this->assertTrue(str_contains($menu['previous'], '?graph=time'));
+        $this->assertTrue(str_contains($menu['current'], '?graph=time'));
     }
 
     private function verify_field($expected, $found, $field, $id)
