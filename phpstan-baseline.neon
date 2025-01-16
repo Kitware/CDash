@@ -2401,12 +2401,17 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
+			message: "#^Cannot cast mixed to int\\.$#"
+			count: 1
+			path: app/Http/Controllers/RemoteProcessingController.php
+
+		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/Http/Controllers/RemoteProcessingController.php
 
 		-
-			message: "#^Parameter \\#1 \\$num of function pow expects float\\|int, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$value of method Carbon\\\\Carbon\\:\\:addSeconds\\(\\) expects int, \\(float\\|int\\) given\\.$#"
 			count: 1
 			path: app/Http/Controllers/RemoteProcessingController.php
 
@@ -3411,7 +3416,7 @@ parameters:
 
 		-
 			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
+			count: 2
 			path: app/Jobs/ProcessSubmission.php
 
 		-
@@ -3511,11 +3516,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$from of function rename expects string, \\(string\\|false\\) given\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			message: "#^Parameter \\#1 \\$num of function pow expects float\\|int, mixed given\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
