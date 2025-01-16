@@ -19,6 +19,7 @@ $config = new Config();
 return $config->setRules([
     '@PSR12' => true,
     '@PHP82Migration' => true,
+    '@PHP56Migration:risky' => true,
     '@Symfony' => true,
     'yoda_style' => false,
     'blank_line_before_statement' => false,
