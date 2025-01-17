@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -60,5 +61,13 @@ class AuthToken extends Model
     public function scopeExpired(Builder $query): void
     {
         $query->where('expires', '<', Carbon::now());
+    }
+
+    /**
+     * @return HasOne<User>
+     */
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'userid');
     }
 }
