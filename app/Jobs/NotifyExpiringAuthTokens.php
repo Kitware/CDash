@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\AuthTokenExpired;
+use App\Mail\AuthTokenExpiring;
 use App\Models\AuthToken;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -10,12 +10,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 
-/**
- * Removes expired auth tokens.
- */
-class PruneAuthTokens implements ShouldQueue
+class NotifyExpiringAuthTokens implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -27,13 +25,15 @@ class PruneAuthTokens implements ShouldQueue
      */
     public function handle(): void
     {
-        $expired_tokens = AuthToken::expired()->get();
-        foreach ($expired_tokens as $token) {
+        $tokens_expiring_7_days = AuthToken::with('user')
+            ->where('expires', '<=', Carbon::now()->addDays(7))
+            ->where('expires', '>', Carbon::now())
+            ->get();
+
+        foreach ($tokens_expiring_7_days as $token) {
             /** @var User $user */
             $user = $token->user;
-            Mail::to($user)->send(new AuthTokenExpired($token));
+            Mail::to($user)->send(new AuthTokenExpiring($token));
         }
-
-        AuthToken::expired()->delete();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\NotifyExpiringAuthTokens;
 use App\Jobs\PruneAuthTokens;
 use App\Jobs\PruneJobs;
 use Illuminate\Console\Scheduling\Schedule;
@@ -30,6 +31,10 @@ class Kernel extends ConsoleKernel
 
         $schedule->job(new PruneAuthTokens())
             ->hourly()
+            ->withoutOverlapping();
+
+        $schedule->job(new NotifyExpiringAuthTokens())
+            ->daily()
             ->withoutOverlapping();
 
         if (env('CDASH_AUTHENTICATION_PROVIDER') === 'ldap') {

@@ -223,8 +223,8 @@ set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES DEPENDS /CDa
 add_laravel_test(/Feature/Jobs/PruneJobsTest)
 set_tests_properties(/Feature/Jobs/PruneJobsTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-# This could theoretically conflict with another test using expired auth tokens
 add_laravel_test(/Feature/Jobs/PruneAuthTokensTest)
+set_tests_properties(/Feature/Jobs/PruneAuthTokensTest PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Feature/Jobs/PruneAuthTokensTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/UserCommand)
@@ -263,6 +263,16 @@ set_tests_properties(/CDash/Messaging/Topic/TopicDecorator PROPERTIES DEPENDS /C
 add_laravel_test(/Feature/RemoteWorkers)
 set_tests_properties(/Feature/RemoteWorkers PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/Jobs/NotifyExpiringAuthTokensTest)
+set_tests_properties(/Feature/Jobs/NotifyExpiringAuthTokensTest PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Feature/Jobs/NotifyExpiringAuthTokensTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/Mail/AuthTokenExpiringTest)
+set_tests_properties(/Feature/Mail/AuthTokenExpiringTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/Mail/AuthTokenExpiredTest)
+set_tests_properties(/Feature/Mail/AuthTokenExpiredTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 cdash_install()
@@ -298,6 +308,9 @@ set_property(TEST install_3 PROPERTY DEPENDS
   /CDash/Messaging/Topic/TestFailureTopic
   /CDash/Messaging/Topic/TopicDecorator
   /Feature/RemoteWorkers
+  /Feature/Jobs/NotifyExpiringAuthTokensTest
+  /Feature/Mail/AuthTokenExpiringTest
+  /Feature/Mail/AuthTokenExpiredTest
 )
 
 
