@@ -470,8 +470,12 @@ class BuildTypeTest extends TestCase
         }
 
         $this->graphQL('
-            query($buildname: String) {
-                projects {
+            query($projectid: ID, $buildname: String) {
+                projects(filters: {
+                    eq: {
+                        id: $projectid
+                    }
+                }) {
                     edges {
                         node {
                             name
@@ -491,6 +495,7 @@ class BuildTypeTest extends TestCase
                 }
             }
         ', [
+            'projectid' => $this->project->id,
             'buildname' => $builds[2]->name,
         ])->assertJson([
             'data' => [
