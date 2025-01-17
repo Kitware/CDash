@@ -75,7 +75,7 @@ class GitHub implements RepositoryInterface
 
         $repositories = $this->project->GetRepositories();
         foreach ($repositories as $repo) {
-            if (strpos($repo['url'], 'github.com') !== false) {
+            if (str_contains($repo['url'], 'github.com')) {
                 $this->installationId = $repo['username'];
                 break;
             }
@@ -182,9 +182,7 @@ class GitHub implements RepositoryInterface
         }
 
         $commitHash = $options['commit_hash'];
-        $params = array_filter($options, function ($key) {
-            return in_array($key, ['state', 'context', 'description', 'target_url'], true);
-        }, ARRAY_FILTER_USE_KEY);
+        $params = array_filter($options, fn ($key) => in_array($key, ['state', 'context', 'description', 'target_url'], true), ARRAY_FILTER_USE_KEY);
 
         $statuses = $this->apiClient
             ->api('repo')
@@ -256,9 +254,7 @@ class GitHub implements RepositoryInterface
             }
             $build_names[$build_name][] = $row;
         }
-        $build_names = array_filter($build_names, function ($k, $v) {
-            return count($k) > 1;
-        }, ARRAY_FILTER_USE_BOTH);
+        $build_names = array_filter($build_names, fn ($k, $v) => count($k) > 1, ARRAY_FILTER_USE_BOTH);
 
         // Find the ids of all the older builds that should not be included
         // in our report.
@@ -293,9 +289,7 @@ class GitHub implements RepositoryInterface
         }
 
         // Alphabetize this array by build name.
-        usort($output_rows, function ($a, $b) {
-            return strcmp((string) $a['name'], (string) $b['name']);
-        });
+        usort($output_rows, fn ($a, $b) => strcmp((string) $a['name'], (string) $b['name']));
 
         return $output_rows;
     }

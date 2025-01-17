@@ -42,7 +42,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->login();
         $this->get($this->url . '/removeBuilds.php?projectid=5');
         $this->clickSubmitByName('Submit');
-        if (strpos($this->getBrowser()->getContentAsText(), 'Removed') === false) {
+        if (!str_contains($this->getBrowser()->getContentAsText(), 'Removed')) {
             $this->fail("'Removed' not found when expected");
         }
     }

@@ -66,10 +66,10 @@ class DisabledTestsTestCase extends KWWebTestCase
 
         // Verify email was sent for the missing exe but not for the disabled test.
         $log_contents = file_get_contents($this->logfilename);
-        if (strpos($log_contents, 'ThisTestFails') === false) {
+        if (!str_contains($log_contents, 'ThisTestFails')) {
             $this->fail("No email sent for test 'ThisTestFails'");
         }
-        if (strpos($log_contents, 'ThisTestIsDisabled') !== false) {
+        if (str_contains($log_contents, 'ThisTestIsDisabled')) {
             $this->fail("Erroneous email sent for test 'ThisTestIsDisabled'");
         }
 

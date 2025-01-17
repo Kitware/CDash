@@ -213,7 +213,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                 // explicit measurement
 
                 // If it's an image we add it as an image
-                if (strpos($this->TestMeasurement->type, 'image') !== false) {
+                if (str_contains($this->TestMeasurement->type, 'image')) {
                     $image = $factory->create(Image::class);
                     $image->Extension = $this->TestMeasurement->type;
                     $image->Data = $this->TestMeasurement->value;

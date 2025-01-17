@@ -482,7 +482,7 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
                         $previous_revision = '';
 
                         // Look if we have a A or a M
-                        if (strpos(substr($ff, 0, 5), 'A') !== false) {
+                        if (str_contains(substr($ff, 0, 5), 'A')) {
                             $previous_revision = '-1'; // newly added file so we marked it as no prior revision
                         }
 

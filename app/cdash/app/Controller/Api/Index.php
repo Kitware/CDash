@@ -189,9 +189,7 @@ class Index extends ResultsApi
         $sql .= $this->limitSQL;
 
         $builds = DB::select($sql, $query_params);
-        return array_map(function ($item) {
-            return (array) $item;
-        }, $builds);
+        return array_map(fn ($item) => (array) $item, $builds);
     }
 
     public function getDynamicBuilds(): array

@@ -122,7 +122,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
         $filename = "$this->DataDir/$subproject/gcov.tar";
 
         $put_result = $this->uploadfile($puturl, $filename);
-        if (strpos($put_result, '{"status":0}') === false) {
+        if (!str_contains($put_result, '{"status":0}')) {
             $this->fail(
                 "status:0 not found in PUT results:\n$put_result\n");
             return 1;

@@ -666,9 +666,7 @@ final class BuildController extends AbstractBuildController
 
         $directoryarray = array_unique($directoryarray);
 
-        usort($directoryarray, function ($a, $b) {
-            return $a > $b ? 1 : 0;
-        });
+        usort($directoryarray, fn ($a, $b) => $a > $b ? 1 : 0);
         usort($updatearray1, function ($a, $b) {
             // Extract directory
             $filenamea = $a['filename'];
@@ -1009,9 +1007,7 @@ final class BuildController extends AbstractBuildController
         }
 
         if ($this->build->IsParentBuild()) {
-            $response['numSubprojects'] = count(array_unique(array_map(function ($buildError) {
-                return $buildError['subprojectid'];
-            }, $response['errors'])));
+            $response['numSubprojects'] = count(array_unique(array_map(fn ($buildError) => $buildError['subprojectid'], $response['errors'])));
         }
 
         $pageTimer->end($response);

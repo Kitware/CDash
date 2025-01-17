@@ -21,9 +21,7 @@ class InternalTest extends TestCase
         $request = Request::create('internal_url');
         $request->headers->set('Authorization', 'Bearer ' . $app_key);
 
-        $response = (new Internal())->handle($request, function () {
-            return response('internal content');
-        });
+        $response = (new Internal())->handle($request, fn () => response('internal content'));
 
         self::assertEquals(200, $response->getStatusCode());
         self::assertEquals('internal content', $response->getContent());
@@ -38,9 +36,7 @@ class InternalTest extends TestCase
         $request->headers->set('Authorization', 'Bearer abcdefg');
 
         $this->expectException(HttpException::class);
-        (new Internal())->handle($request, function () {
-            return response('internal content');
-        });
+        (new Internal())->handle($request, fn () => response('internal content'));
     }
 
     /**
@@ -51,8 +47,6 @@ class InternalTest extends TestCase
         $request = Request::create('internal_url');
 
         $this->expectException(HttpException::class);
-        (new Internal())->handle($request, function () {
-            return response('internal content');
-        });
+        (new Internal())->handle($request, fn () => response('internal content'));
     }
 }

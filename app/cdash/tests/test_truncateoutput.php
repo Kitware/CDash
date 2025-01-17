@@ -48,7 +48,7 @@ class TruncateOutputTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $expected = 'The rest of the test output was removed since it exceeds the threshold';
-        $this->assertTrue(strpos($jsonobj['test']['output'], $expected) !== false);
+        $this->assertTrue(str_contains($jsonobj['test']['output'], $expected));
 
         // Set a limit that will cause our test output to be truncated.
         file_put_contents($this->ConfigFile, "LARGE_TEXT_LIMIT=44\n", FILE_APPEND | LOCK_EX);

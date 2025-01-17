@@ -202,7 +202,7 @@ class DynamicAnalysisUseCase extends UseCase
             $faker = $this->getFaker();
             $num_defects = $faker->randomDigit;
             for ($i = 0; $i < $num_defects; $i++) {
-                $random = rand(0, 4);
+                $random = random_int(0, 4);
                 $properties['Results'][] = [
                     'type' => $posibilities[$random],
                     'value' => $faker->randomNumber(1),

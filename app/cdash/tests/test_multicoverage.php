@@ -97,7 +97,7 @@ class MultiCoverageTestCase extends KWWebTestCase
         $filename = dirname(__FILE__) . '/data/MultiCoverage/gcov.tar';
 
         $put_result = $this->uploadfile($puturl, $filename);
-        if (strpos($put_result, '{"status":0}') === false) {
+        if (!str_contains($put_result, '{"status":0}')) {
             $this->fail(
                 "status:0 not found in PUT results:\n$put_result\n");
             return false;
@@ -109,7 +109,7 @@ class MultiCoverageTestCase extends KWWebTestCase
     {
         // Make sure that it recorded the source file's label in our submission.
         $content = $this->get($this->url . "/viewCoverage.php?buildid=$this->BuildId");
-        if (strpos($content, '<td align="right">aggro</td>') === false) {
+        if (!str_contains($content, '<td align="right">aggro</td>')) {
             $this->fail('\"<td align="right">aggro</td>\" not found when expected');
             return 1;
         }
@@ -136,7 +136,7 @@ class MultiCoverageTestCase extends KWWebTestCase
 
                     // Make sure branch coverage is being displayed properly.
                     $content = $this->get($this->url . "/viewCoverageFile.php?buildid=$this->BuildId&fileid=$fileid");
-                    if (strpos($content, '<span class="error">  1/2</span><span class="normal">    2 |   if (i == 0)</span>') === false) {
+                    if (!str_contains($content, '<span class="error">  1/2</span><span class="normal">    2 |   if (i == 0)</span>')) {
                         $this->fail('\"<span class="error">  1/2</span><span class="normal">    2 |   if (i == 0)</span>\" not found when expected');
                         return 1;
                     }

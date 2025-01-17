@@ -59,11 +59,11 @@ class DynamicAnalysisLogsTestCase extends KWWebTestCase
             $this->fail('Failed to fill dynamic analysis object');
         }
 
-        if (strpos($DA->Log, 'Memcheck, a memory error detector') === false) {
+        if (!str_contains($DA->Log, 'Memcheck, a memory error detector')) {
             $this->fail('Failed to find beginning of log');
         }
 
-        if (strpos($DA->Log, 'Goodbye world') === false) {
+        if (!str_contains($DA->Log, 'Goodbye world')) {
             $this->fail('Failed to find end of log');
         }
     }

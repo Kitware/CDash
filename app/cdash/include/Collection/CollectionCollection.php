@@ -24,7 +24,7 @@ class CollectionCollection extends Collection
      */
     public function add(Collection $collection)
     {
-        $this->addItem($collection, get_class($collection));
+        $this->addItem($collection, $collection::class);
         return $this;
     }
 }

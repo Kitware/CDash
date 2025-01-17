@@ -38,9 +38,7 @@ class RepositoryTest extends TestCase
         $this->project->CvsUrl = 'https://github.com/foo/bar';
         $this->project->expects($this->once())
             ->method('GetRepositories')
-            ->willReturnCallback(function () {
-                return $this->repo;
-            });
+            ->willReturnCallback(fn () => $this->repo);
     }
 
     public function testGetRepositoryInterfaceReturnsGitHubService()

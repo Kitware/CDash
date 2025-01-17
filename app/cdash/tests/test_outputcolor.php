@@ -51,15 +51,15 @@ class OutputColorTestCase extends KWWebTestCase
         $output = $json_content['test']['output'];
 
         // Check for expected escape sequences.
-        if (strpos($output, "\x1B[32m") === false) {
+        if (!str_contains($output, "\x1B[32m")) {
             $this->fail('Could not find first escape sequence');
         }
 
-        if (strpos($output, "\x1B[91m") === false) {
+        if (!str_contains($output, "\x1B[91m")) {
             $this->fail('Could not find second escape sequence');
         }
 
-        if (strpos($output, "\x1B[0m") === false) {
+        if (!str_contains($output, "\x1B[0m")) {
             $this->fail('Could not find third escape sequence');
         }
 

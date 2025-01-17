@@ -111,7 +111,7 @@ final class RemoteProcessingController extends AbstractController
 
         // Requeue the file with exponential backoff.
         PendingSubmissions::IncrementForBuildId($buildid);
-        $delay = (int) pow(config('cdash.retry_base'), $retry_handler->Retries);
+        $delay = ((int) config('cdash.retry_base')) ** $retry_handler->Retries;
         ProcessSubmission::dispatch($filename, $projectid, $buildid, md5_file(Storage::path("inbox/{$filename}")))->delay(now()->addSeconds($delay));
         return response('OK', Response::HTTP_OK);
     }

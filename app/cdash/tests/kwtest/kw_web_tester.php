@@ -105,7 +105,7 @@ class KWWebTestCase extends WebTestCase
         $this->stopCodeCoverage();
         unset($_SERVER['Authorization']);
         foreach (array_keys($_SERVER) as $key) {
-            if (strpos($key, 'HTTP_') === 0) {
+            if (str_starts_with($key, 'HTTP_')) {
                 unset($_SERVER[$key]);
             }
         }
@@ -135,7 +135,7 @@ class KWWebTestCase extends WebTestCase
             $file = config('cdash.coverage_dir') . DIRECTORY_SEPARATOR .
                 md5($_SERVER['SCRIPT_FILENAME']);
             file_put_contents(
-                $file . '.' . md5(uniqid(rand(), true)) . '.' . get_class(),
+                $file . '.' . md5(uniqid(random_int(0, getrandmax()), true)) . '.' . get_class(),
                 serialize($data)
             );
         }
@@ -151,7 +151,7 @@ class KWWebTestCase extends WebTestCase
      */
     public function findString($mystring, $findme)
     {
-        if (strpos($mystring, $findme) === false) {
+        if (!str_contains($mystring, $findme)) {
             return false;
         }
         return true;
@@ -288,9 +288,7 @@ class KWWebTestCase extends WebTestCase
         $user = $this->getUser($this->actingAs['email']);
         Auth::shouldReceive('check')->andReturn(true);
         Auth::shouldReceive('user')->andReturn($user);
-        Auth::shouldReceive('userResolver')->andReturn(function () use ($user) {
-            return $user;
-        });
+        Auth::shouldReceive('userResolver')->andReturn(fn () => $user);
         Auth::shouldReceive('id')->andReturn($user->id);
         Auth::shouldReceive('guard')->andReturnSelf();
         Auth::shouldReceive('shouldUse')->andReturn('web');
@@ -582,7 +580,7 @@ class KWWebTestCase extends WebTestCase
         $this->logout();
         $content = $this->get("{$this->url}{$page}");
 
-        if (strpos($content, '<form method="POST" action="login" name="loginform" id="loginform">') === false) {
+        if (!str_contains($content, '<form method="POST" action="login" name="loginform" id="loginform">')) {
             $this->fail('Login not found when expected');
             return false;
         }
@@ -718,7 +716,7 @@ class CDashControllerBrowser extends SimpleBrowser
 
         if (!empty($query)) {
             foreach (explode('&', $query) as $parameter) {
-                if (strpos($parameter, '=') !== false) {
+                if (str_contains($parameter, '=')) {
                     [$key, $value] = explode('=', $parameter);
                     $this->setRequestKeyValuePair($parameters, $key, $value);
                 } else {

@@ -163,7 +163,7 @@ class TestOverview extends ResultsApi
 
             if ($status === 'passed') {
                 $all_tests[$test_name]['passed']++;
-            } elseif (strpos($row['details'], 'Timeout') !== false) {
+            } elseif (str_contains($row['details'], 'Timeout')) {
                 $all_tests[$test_name]['timeout']++;
             } else {
                 $all_tests[$test_name]['failed']++;

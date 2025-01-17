@@ -1160,7 +1160,7 @@ function generate_filter_sql($filter, $pageSpecificFilters)
 
     // Time durations can either be specified as a number of seconds,
     // or as a string representing a time interval.
-    if (strpos($field, 'duration') !== false) {
+    if (str_contains($field, 'duration')) {
         $input_value = trim($sql_value, "'");
         $sql_value = get_seconds_from_interval($input_value);
         if ($input_value !== $sql_value && $field === 'updateduration') {

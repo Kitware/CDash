@@ -41,9 +41,7 @@ Route::get('/logout', 'Auth\LoginController@logout');
 Route::get('/recoverPassword.php', 'UserController@recoverPassword');
 Route::post('/recoverPassword.php', 'UserController@recoverPassword');
 
-Route::get('/login.php', function () {
-    return redirect('/login', 301);
-});
+Route::get('/login.php', fn () => redirect('/login', 301));
 
 Route::get('ping', function (Response $response) {
     try {
@@ -268,9 +266,7 @@ Route::middleware(['auth'])->group(function () {
         Route::any('/ajax/findusers.php', 'ManageUsersController@ajaxFindUsers');
 
         Route::get('/monitor', 'MonitorController@monitor');
-        Route::get('/monitor.php', function () {
-            return redirect('/monitor', 301);
-        });
+        Route::get('/monitor.php', fn () => redirect('/monitor', 301));
     });
 });
 

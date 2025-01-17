@@ -2401,12 +2401,17 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
+			message: "#^Cannot cast mixed to int\\.$#"
+			count: 1
+			path: app/Http/Controllers/RemoteProcessingController.php
+
+		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/Http/Controllers/RemoteProcessingController.php
 
 		-
-			message: "#^Parameter \\#1 \\$num of function pow expects float\\|int, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$value of method Carbon\\\\Carbon\\:\\:addSeconds\\(\\) expects int, \\(float\\|int\\) given\\.$#"
 			count: 1
 			path: app/Http/Controllers/RemoteProcessingController.php
 
@@ -3411,7 +3416,7 @@ parameters:
 
 		-
 			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
+			count: 2
 			path: app/Jobs/ProcessSubmission.php
 
 		-
@@ -3511,11 +3516,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$from of function rename expects string, \\(string\\|false\\) given\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			message: "#^Parameter \\#1 \\$num of function pow expects float\\|int, mixed given\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
@@ -12817,6 +12817,11 @@ parameters:
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createResults\\(\\) throws checked exception Random\\\\RandomException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
+
+		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\DynamicAnalysisUseCase\\:\\:createResultsElement\\(\\) has parameter \\$t with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
@@ -13018,6 +13023,11 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:isSequential\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
+
+		-
+			message: "#^Method CDash\\\\Test\\\\UseCase\\\\UpdateUseCase\\:\\:randomizeCheckinDate\\(\\) throws checked exception Random\\\\RandomException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
 
@@ -19377,6 +19387,11 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
+			message: "#^Method KWWebTestCase\\:\\:stopCodeCoverage\\(\\) throws checked exception Random\\\\RandomException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
 			message: "#^Method KWWebTestCase\\:\\:submission\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -19467,22 +19482,22 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:858\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:856\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:858\\:\\:getSent\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:856\\:\\:getSent\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:858\\:\\:isError\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:856\\:\\:isError\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:858\\:\\:read\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:856\\:\\:read\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -19547,7 +19562,7 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, \\(int\\|string\\) given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_starts_with expects string, \\(int\\|string\\) given\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -19682,7 +19697,7 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:858\\:\\:\\$read has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:856\\:\\:\\$read has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -19771,7 +19786,7 @@ parameters:
 			path: app/cdash/tests/simple2.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/tests/singletest.php
 
@@ -20215,7 +20230,7 @@ parameters:
 			path: app/cdash/tests/test_attachedfiles.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_attachedfiles.php
 
@@ -20479,7 +20494,7 @@ parameters:
 			path: app/cdash/tests/test_autoremovebuilds.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, string\\|false given\\.$#"
 			count: 3
 			path: app/cdash/tests/test_autoremovebuilds.php
 
@@ -20743,8 +20758,13 @@ parameters:
 			path: app/cdash/tests/test_bazeljson.php
 
 		-
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, mixed given\\.$#"
+			count: 15
+			path: app/cdash/tests/test_bazeljson.php
+
+		-
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, mixed given\\.$#"
-			count: 16
+			count: 1
 			path: app/cdash/tests/test_bazeljson.php
 
 		-
@@ -20945,7 +20965,7 @@ parameters:
 			path: app/cdash/tests/test_buildconfigure.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, string\\|false given\\.$#"
 			count: 2
 			path: app/cdash/tests/test_buildconfigure.php
 
@@ -22037,7 +22057,7 @@ parameters:
 			path: app/cdash/tests/test_coveragedirectories.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, mixed given\\.$#"
 			count: 2
 			path: app/cdash/tests/test_coveragedirectories.php
 
@@ -22596,7 +22616,7 @@ parameters:
 			path: app/cdash/tests/test_disabledtests.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, string\\|false given\\.$#"
 			count: 2
 			path: app/cdash/tests/test_disabledtests.php
 
@@ -22664,7 +22684,7 @@ parameters:
 			path: app/cdash/tests/test_donehandler.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_donehandler.php
 
@@ -23494,7 +23514,7 @@ parameters:
 			path: app/cdash/tests/test_filterblocks.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, mixed given\\.$#"
 			count: 2
 			path: app/cdash/tests/test_filterblocks.php
 
@@ -23824,7 +23844,7 @@ parameters:
 			path: app/cdash/tests/test_indexfilters.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, mixed given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_indexfilters.php
 
@@ -25109,12 +25129,12 @@ parameters:
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, int\\|string\\|false\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, int\\|string\\|false\\|null given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, mixed given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_multiplesubprojects.php
 
@@ -25481,7 +25501,7 @@ parameters:
 			path: app/cdash/tests/test_notesapi.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, mixed given\\.$#"
 			count: 2
 			path: app/cdash/tests/test_notesapi.php
 
@@ -25693,7 +25713,7 @@ parameters:
 			path: app/cdash/tests/test_outputcolor.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, mixed given\\.$#"
 			count: 3
 			path: app/cdash/tests/test_outputcolor.php
 
@@ -25977,7 +25997,7 @@ parameters:
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, mixed given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
 
@@ -26860,7 +26880,7 @@ parameters:
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, mixed given\\.$#"
 			count: 15
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
@@ -27717,7 +27737,7 @@ parameters:
 			path: app/cdash/tests/test_timestatus.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, mixed given\\.$#"
 			count: 2
 			path: app/cdash/tests/test_timestatus.php
 
@@ -27860,7 +27880,7 @@ parameters:
 			path: app/cdash/tests/test_truncateoutput.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, mixed given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_truncateoutput.php
 
@@ -29074,12 +29094,17 @@ parameters:
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, array\\|string\\|false given\\.$#"
-			count: 4
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, array\\|string\\|false given\\.$#"
+			count: 3
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, string\\|null given\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/GcovTar_handler.php
+
+		-
+			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, array\\|string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
@@ -29110,7 +29135,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$offset of function substr expects int, int\\<0, max\\>\\|false given\\.$#"
-			count: 1
+			count: 2
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
@@ -30674,8 +30699,13 @@ parameters:
 			path: app/cdash/xml_handlers/note_handler.php
 
 		-
+			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, array\\<int, string\\>\\|string given\\.$#"
+			count: 3
+			path: app/cdash/xml_handlers/note_handler.php
+
+		-
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, array\\<int, string\\>\\|string given\\.$#"
-			count: 5
+			count: 2
 			path: app/cdash/xml_handlers/note_handler.php
 
 		-

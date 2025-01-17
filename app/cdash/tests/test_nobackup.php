@@ -65,7 +65,7 @@ class NoBackupTestCase extends KWWebTestCase
         $puturl = $this->url . "/submit.php?type=GcovTar&md5=5454e16948a1d58d897e174b75cc5633&filename=gcov.tar&buildid=$buildid";
         $filename = dirname(__FILE__) . '/data/gcov.tar';
         $put_result = $this->uploadfile($puturl, $filename);
-        if (strpos($put_result, '{"status":0}') === false) {
+        if (!str_contains($put_result, '{"status":0}')) {
             $this->fail(
                 "status:0 not found in PUT results:\n$put_result\n");
             return 1;

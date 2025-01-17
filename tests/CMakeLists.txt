@@ -60,7 +60,7 @@ endfunction()
 
 add_test(
   NAME php_style_check
-  COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/php-cs-fixer fix --dry-run
+  COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/php-cs-fixer fix --dry-run --allow-risky=yes
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 

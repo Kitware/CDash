@@ -120,7 +120,7 @@ class BuildErrorFilter
     {
         if ($filterString) {
             foreach (preg_split("/\R/", $filterString) as $filter) {
-                if (strpos($subject, $filter) !== false) {
+                if (str_contains($subject, $filter)) {
                     return true;
                 }
             }

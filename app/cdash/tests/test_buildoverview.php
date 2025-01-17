@@ -22,7 +22,7 @@ class BuildOverviewTestCase extends KWWebTestCase
             return 1;
         }
         $this->get($this->url . '/buildOverview.php?project=InsightExample');
-        if (strpos($this->getBrowser()->getContentAsText(), 'Build summary') === false) {
+        if (!str_contains($this->getBrowser()->getContentAsText(), 'Build summary')) {
             $this->fail("'Build summary' not found when expected");
             return 1;
         }

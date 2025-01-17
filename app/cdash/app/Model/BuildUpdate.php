@@ -425,9 +425,7 @@ class BuildUpdate
             $this->AddFile($file);
         }
 
-        usort($this->Files, function ($file1, $file2) {
-            return Str::afterLast('/', $file1->Filename) <=> Str::afterLast('/', $file2->Filename);
-        });
+        usort($this->Files, fn ($file1, $file2) => Str::afterLast('/', $file1->Filename) <=> Str::afterLast('/', $file2->Filename));
 
         return true;
     }

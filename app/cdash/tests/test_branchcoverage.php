@@ -105,7 +105,7 @@ class BranchCoverageTestCase extends KWWebTestCase
             $headers = ["Authorization: Bearer {$token}"];
         }
         $put_result = $this->uploadfile($puturl, $filename, $headers);
-        if (strpos($put_result, '{"status":0}') === false) {
+        if (!str_contains($put_result, '{"status":0}')) {
             $this->fail(
                 "status:0 not found in PUT results:\n$put_result\n");
             return 1;
@@ -118,7 +118,7 @@ class BranchCoverageTestCase extends KWWebTestCase
 
         // Make sure that it recorded the source file's label in our submission.
         $content = $this->get($url);
-        if (strpos($content, '<td align="right">Foo</td>') === false) {
+        if (!str_contains($content, '<td align="right">Foo</td>')) {
             $msg = '\"<td align="right">Foo</td>\" not found when expected'
                 . PHP_EOL . 'URL: ' . $url;
             $this->fail($msg);
@@ -134,7 +134,7 @@ class BranchCoverageTestCase extends KWWebTestCase
 
         // Make sure branch coverage is being displayed properly.
         $content = $this->get($this->url . "/viewCoverageFile.php?buildid=$this->buildid&fileid=$fileid");
-        if (strpos($content, '<span class="error">  1/2</span><span class="normal">    7 |   if (x &lt;= 0)</span>') === false) {
+        if (!str_contains($content, '<span class="error">  1/2</span><span class="normal">    7 |   if (x &lt;= 0)</span>')) {
             $this->fail('\"<span class="error">  1/2</span><span class="normal">    7 |   if (x &lt;= 0)</span>\" not found when expected');
             return 1;
         }

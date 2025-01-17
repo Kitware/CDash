@@ -155,7 +155,7 @@ class NoteHandler extends AbstractXmlHandler
                 case 'TIME':
                     // Prefer the <Time> element if it wasn't specified in
                     // scientific notation (CTest v3.11.0 or newer).
-                    if (strpos($data, 'e+') === false) {
+                    if (!str_contains($data, 'e+')) {
                         $this->Timestamp = $data;
                         $this->AdjustStartTime = false;
                     }
@@ -175,14 +175,14 @@ class NoteHandler extends AbstractXmlHandler
         // For some reasons the Australian time is not recognized by php
         // Actually an open bug in PHP 5.
         $offset = 0; // no offset by default
-        if (strpos($str, 'AEDT') !== false) {
+        if (str_contains($str, 'AEDT')) {
             $str = str_replace('AEDT', 'UTC', $str);
             $offset = 3600 * 11;
         } // We had more custom dates
-        elseif (strpos($str, 'Paris, Madrid') !== false) {
+        elseif (str_contains($str, 'Paris, Madrid')) {
             $str = str_replace('Paris, Madrid', 'UTC', $str);
             $offset = 3600 * 1;
-        } elseif (strpos($str, 'W. Europe Standard Time') !== false) {
+        } elseif (str_contains($str, 'W. Europe Standard Time')) {
             $str = str_replace('W. Europe Standard Time', 'UTC', $str);
             $offset = 3600 * 1;
         }

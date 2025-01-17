@@ -20,7 +20,7 @@ class RecoverPasswordTestCase extends KWWebTestCase
     {
         $this->login();
         $this->get($this->url . '/recoverPassword.php');
-        if (strpos($this->getBrowser()->getContentAsText(), 'your email address') === false) {
+        if (!str_contains($this->getBrowser()->getContentAsText(), 'your email address')) {
             $this->fail("'your email address' not found when expected.");
             return 1;
         }

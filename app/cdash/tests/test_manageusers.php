@@ -23,7 +23,7 @@ class ManageUsersTestCase extends KWWebTestCase
         // make sure we can visit the page while logged in
         $this->login();
         $content = $this->get($this->url . '/manageUsers.php');
-        if (strpos($content, 'Add new user') === false) {
+        if (!str_contains($content, 'Add new user')) {
             $this->fail("'Add new user' not found when expected");
             return 1;
         }
@@ -55,7 +55,7 @@ class ManageUsersTestCase extends KWWebTestCase
         }
         $content = $this->clickSubmitByName('adduser');
 
-        if (strpos($content, 'added successfully') === false) {
+        if (!str_contains($content, 'added successfully')) {
             $this->fail("'added successfully' not found in output.");
             return 1;
         }
