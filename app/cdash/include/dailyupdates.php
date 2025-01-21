@@ -1108,14 +1108,13 @@ function addDailyChanges(int $projectid): void
         ', [$projectid, $date]);
 
         // Clean the backup directories.
-        $timeframe = config('cdash.backup_timeframe');
+        $deletion_time_threshold = time() - (int) config('cdash.backup_timeframe') * 3600;
         $dirs_to_clean = ['parsed', 'failed', 'inprogress'];
         foreach ($dirs_to_clean as $dir_to_clean) {
             $files = Storage::allFiles($dir_to_clean);
-            foreach ($files as $filename) {
-                $filepath = Storage::path($filename);
-                if (file_exists($filepath) && is_file($filepath) && time() - filemtime($filepath) > $timeframe * 3600) {
-                    Storage::delete($filepath);
+            foreach ($files as $file) {
+                if (Storage::lastModified($file) < $deletion_time_threshold) {
+                    Storage::delete($file);
                 }
             }
         }
