@@ -108,7 +108,7 @@ class ProcessSubmission implements ShouldQueue
             return $response->ok();
         } else {
             // Increment retry count.
-            $retry_handler = new RetryHandler(Storage::path("inprogress/{$this->filename}"));
+            $retry_handler = new RetryHandler("inprogress/{$this->filename}");
             $retry_handler->increment();
 
             // Move file back to inbox.

@@ -33,11 +33,16 @@ class RetryHandler
      **/
     public function increment()
     {
-        if (!file_exists($this->FileName)) {
+        if (!Storage::exists($this->FileName)) {
             return false;
         }
 
-        $xml = simplexml_load_file($this->FileName);
+        $contents = Storage::get($this->FileName);
+        if ($contents === null) {
+            return false;
+        }
+
+        $xml = simplexml_load_string($contents);
         $attributes = $xml->attributes();
         if (isset($attributes['retries'])) {
             $this->Retries = intval($attributes['retries']) + 1;
@@ -46,6 +51,6 @@ class RetryHandler
         }
         $xml['retries'] = $this->Retries;
 
-        return $xml->asXML($this->FileName);
+        return Storage::put($this->FileName, $xml->asXML());
     }
 }
