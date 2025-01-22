@@ -9,9 +9,9 @@ class ExtractTarTestCase extends KWWebTestCase
 
     public function testExtractTarArchiveTarWithInvalidFile()
     {
-        $result = extract_tar(dirname(__FILE__) . '/../config/config.php', 'foo');
+        $result = extract_tar('this_file_does_not_exist');
 
-        $this->assertFalse($result);
+        $this->assertTrue($result === '');
         $this->assertTrue(is_readable($this->logfilename));
 
         $logfileContents = file_get_contents($this->logfilename);

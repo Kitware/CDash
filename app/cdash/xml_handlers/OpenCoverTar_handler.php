@@ -21,7 +21,6 @@ use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class OpenCoverTarHandler extends AbstractXmlHandler
 {
@@ -139,13 +138,9 @@ class OpenCoverTarHandler extends AbstractXmlHandler
      **/
     public function Parse($filename)
     {
-        // Create a new directory where we can extract our tarball.
-        $dirName = Storage::path('parsed') . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_FILENAME);
-        mkdir($dirName);
-        $this->tarDir = $dirName;
-        $result = extract_tar($filename, $dirName);
-        if ($result === false) {
-            Log::error('Could not extract ' . $filename . ' into ' . $dirName, [
+        $this->tarDir = extract_tar($filename);
+        if ($this->tarDir === '') {
+            Log::error("Could not extract {$filename}", [
                 'function' => 'OpenCoverTarHandler::Parse',
             ]);
             return false;
@@ -153,7 +148,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
 
         // Search for data.json
         $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($dirName),
+            new RecursiveDirectoryIterator($this->tarDir),
             RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($iterator as $fileinfo) {
             if ($fileinfo->getFilename() == 'data.json') {
@@ -225,7 +220,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
         }
 
         // Delete the directory when we're done.
-        DeleteDirectory($dirName);
+        DeleteDirectory($this->tarDir);
         return true;
     }
 

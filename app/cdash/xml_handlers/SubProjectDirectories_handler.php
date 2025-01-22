@@ -36,12 +36,20 @@ class SubProjectDirectoriesHandler extends AbstractSubmissionHandler
      **/
     public function Parse($filename)
     {
-        $open_list = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        if ($open_list === false) {
+        $open_list = [];
+        $fp = Storage::readStream($filename);
+        if ($fp === null) {
             Log::error("Could not open $filename for parsing", [
                 'function' => 'SubProjectDirectoriesHandler::Parse',
             ]);
             return false;
+        }
+        while (($line = fgets($fp)) !== false) {
+            $line = trim($line);
+            if ($line === '') {
+                continue;
+            }
+            $open_list[] = $line;
         }
 
         // Record the order that the packages were listed in.

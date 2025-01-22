@@ -216,8 +216,13 @@ class ProcessSubmission implements ShouldQueue
             return $handler;
         }
 
-        // Parse the XML file
-        $handler = ctest_parse($filehandle, $filename, $projectid, $expected_md5, $buildid);
+        // Special handling for unparsed (non-XML) submissions.
+        $handler = parse_put_submission($filename, $projectid, $expected_md5, $buildid);
+        if ($handler === false) {
+            // Otherwise, parse this submission as CTest XML.
+            $handler = ctest_parse($filehandle, $filename, $projectid, $expected_md5, $buildid);
+        }
+
         fclose($filehandle);
         unset($filehandle);
 

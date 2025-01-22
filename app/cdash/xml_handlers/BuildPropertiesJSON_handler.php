@@ -32,7 +32,14 @@ class BuildPropertiesJSONHandler extends AbstractSubmissionHandler
     public function Parse($filename)
     {
         // Test that this file contains valid JSON that PHP can decode.
-        $json_obj = json_decode(file_get_contents($filename), true);
+        $json_str = Storage::get($filename);
+        if ($json_str === null) {
+            Log::error("Failed to retrieve $filename from Storage", [
+                'function' => 'BuildPropertiesJSONHandler::Parse',
+            ]);
+            return false;
+        }
+        $json_obj = json_decode($json_str, true);
         if ($json_obj === null) {
             $err = json_last_error_msg();
             Log::error("Failed to parse $filename: $err", [
