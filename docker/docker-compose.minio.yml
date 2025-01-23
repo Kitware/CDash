@@ -1,0 +1,23 @@
+services:
+  cdash:
+    environment:
+      FILESYSTEM_DRIVER: s3
+      AWS_BUCKET: cdash
+      AWS_REGION: local
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_USE_PATH_STYLE_ENDPOINT: true
+      AWS_URL: http://minio:9000/cdash/
+      AWS_ENDPOINT: http://minio:9000
+  minio:
+    image: bitnami/minio:latest
+    ports:
+      - "9000:9000"
+    environment:
+      MINIO_DEFAULT_BUCKETS: "cdash"
+      MINIO_ROOT_USER: ${AWS_ACCESS_KEY_ID}
+      MINIO_ROOT_PASSWORD: ${AWS_SECRET_ACCESS_KEY}
+    volumes:
+      - miniodata:/bitnami/minio/data
+volumes:
+  miniodata:
