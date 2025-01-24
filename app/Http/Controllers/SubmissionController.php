@@ -136,17 +136,28 @@ final class SubmissionController extends AbstractProjectController
 
         // Figure out what type of XML file this is.
         $stored_filename = 'inbox/' . $filename;
-        $xml_info = SubmissionUtils::get_xml_type(fopen(Storage::path($stored_filename), 'r'), $stored_filename);
-
-        // If validation is enabled and if this file has a corresponding schema, validate it
-        $validation_errors = $xml_info['xml_handler']::validate(storage_path('app/' . $stored_filename));
-        if (count($validation_errors) > 0) {
-            $error_string = implode(PHP_EOL, $validation_errors);
-
-            // We always log validation failures, but we only send messages back to the client if configured to do so
-            Log::warning("Submission validation failed for file '$filename':" . PHP_EOL);
+        $xml_info = [];
+        try {
+            $xml_info = SubmissionUtils::get_xml_type(fopen(Storage::path($stored_filename), 'r'), $stored_filename);
+        } catch (BadSubmissionException $e) {
+            $xml_info['xml_handler'] = '';
+            $message = "Could not determine submission file type for: '{$stored_filename}'";
+            Log::warning($message);
             if ((bool) config('cdash.validate_xml_submissions') === true) {
-                abort(400, "XML validation failed: rejected file $filename:" . PHP_EOL . $error_string);
+                abort(400, $message);
+            }
+        }
+        if ($xml_info['xml_handler'] !== '') {
+            // If validation is enabled and if this file has a corresponding schema, validate it
+            $validation_errors = $xml_info['xml_handler']::validate(storage_path('app/' . $stored_filename));
+            if (count($validation_errors) > 0) {
+                $error_string = implode(PHP_EOL, $validation_errors);
+
+                // We always log validation failures, but we only send messages back to the client if configured to do so
+                Log::warning("Submission validation failed for file '$filename':" . PHP_EOL);
+                if ((bool) config('cdash.validate_xml_submissions') === true) {
+                    abort(400, "XML validation failed: rejected file $filename:" . PHP_EOL . $error_string);
+                }
             }
         }
 
