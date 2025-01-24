@@ -86,6 +86,8 @@ class UploadFileTestCase extends KWWebTestCase
         if (md5_file($tmp_file) !== SubmissionUtils::hashFileHandle(Storage::readStream($uploaded_filepath), 'md5')) {
             $this->fail("hash mismatch for downloaded file ($tmp_file) vs ($uploaded_filepath)");
         }
+
+        unlink($tmp_file);
     }
 
     // Make sure the build label has been set
