@@ -27,6 +27,8 @@ use CDash\ServiceContainer;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use League\Flysystem\UnableToReadFile;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 function xslt_process(XSLTProcessor $xsltproc,
     $xml_arg,
@@ -915,14 +917,14 @@ function create_aggregate_build($build, $siteid = null): Build
 
 /**
  * Extract a tarball within the local storage directory.
+ *
+ * @throws FileNotFoundException
+ * @throws UnableToReadFile
  */
 function extract_tar(string $stored_filepath): string
 {
     if (!Storage::exists($stored_filepath)) {
-        Log::error("{$stored_filepath} does not exist", [
-            'function' => 'extract_tar',
-        ]);
-        return '';
+        throw new FileNotFoundException($stored_filepath);
     }
 
     // Create a new directory where we can extract the tarball.
@@ -936,7 +938,7 @@ function extract_tar(string $stored_filepath): string
         $stored_filepath = 'tmp/' . basename($stored_filepath);
         $fp = Storage::readStream($remote_stored_filepath);
         if ($fp === null) {
-            return '';
+            throw UnableToReadFile::fromLocation($remote_stored_filepath);
         }
         Storage::disk('local')->put($stored_filepath, $fp);
     }
@@ -952,7 +954,7 @@ function extract_tar(string $stored_filepath): string
         }
         if ($tar_extract_result === false) {
             Storage::disk('local')->deleteDirectory($localTmpDirPath);
-            return '';
+            throw new RuntimeException("Unable to extract {$stored_filepath}");
         }
         return $dirName;
     } catch (PEAR_Exception $e) {
@@ -961,8 +963,8 @@ function extract_tar(string $stored_filepath): string
         }
         Storage::disk('local')->deleteDirectory($localTmpDirPath);
         report($e);
-        return '';
     }
+    return '';
 }
 
 /**

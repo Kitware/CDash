@@ -22,6 +22,8 @@ use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use League\Flysystem\UnableToReadFile;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 class JavaJSONTarHandler extends AbstractSubmissionHandler
 {
@@ -40,10 +42,15 @@ class JavaJSONTarHandler extends AbstractSubmissionHandler
     /**
      * Parse a tarball of JSON files.
      **/
-    public function Parse($filename)
+    public function Parse(string $filename): bool
     {
         // Extract the tarball.
-        $dirName = extract_tar($filename);
+        try {
+            $dirName = extract_tar($filename);
+        } catch (FileNotFoundException|UnableToReadFile $e) {
+            report($e);
+            return false;
+        }
         if ($dirName === '') {
             Log::error('Could not extract ' . $filename . ' into ' . $dirName, [
                 'function' => 'JavaJSONTarHandler::Parse',
