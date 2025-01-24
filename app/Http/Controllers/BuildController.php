@@ -842,6 +842,10 @@ final class BuildController extends AbstractBuildController
         $uploadFile->Id = $file_id;
         $uploadFile->Fill();
 
+        // The code below satisfies the following requirements:
+        // 1) Render text and images in browser (as opposed to forcing a download).
+        // 2) Download other files to the proper filename (not a numeric identifier).
+        // 3) Support downloading files that are larger than the PHP memory_limit.
         $fp = Storage::readStream("upload/{$uploadFile->Sha1Sum}");
         if ($fp === null) {
             abort(404, 'File not found');
