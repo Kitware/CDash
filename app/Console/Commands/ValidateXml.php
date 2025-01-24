@@ -6,6 +6,8 @@ use App\Exceptions\BadSubmissionException;
 use App\Utils\SubmissionUtils;
 use BadMethodCallException;
 use Illuminate\Console\Command;
+use League\Flysystem\UnableToReadFile;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 class ValidateXml extends Command
 {
@@ -68,6 +70,9 @@ class ValidateXml extends Command
             } catch (BadMethodCallException $e) {
                 $this->warn("WARNING: Skipped input file '{$input_xml_file}' as validation"
                     . ' of this file format is currently not supported.');
+                $has_skipped = true;
+            } catch (FileNotFoundException|UnableToReadFile $e) {
+                $this->error($e->getMessage());
                 $has_skipped = true;
             }
         }

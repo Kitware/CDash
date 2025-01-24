@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use League\Flysystem\UnableToReadFile;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 final class SubmissionController extends AbstractProjectController
@@ -148,7 +150,15 @@ final class SubmissionController extends AbstractProjectController
         }
         if ($xml_info['xml_handler'] !== '') {
             // If validation is enabled and if this file has a corresponding schema, validate it
-            $validation_errors = $xml_info['xml_handler']::validate($stored_filename);
+            $validation_errors = [];
+            try {
+                $validation_errors = $xml_info['xml_handler']::validate($stored_filename);
+            } catch (FileNotFoundException|UnableToReadFile $e) {
+                Log::warning($e->getMessage());
+                if ((bool) config('cdash.validate_xml_submissions') === true) {
+                    abort(400, "XML validation failed for $filename:" . PHP_EOL . $e->getMessage());
+                }
+            }
             if (count($validation_errors) > 0) {
                 $error_string = implode(PHP_EOL, $validation_errors);
 

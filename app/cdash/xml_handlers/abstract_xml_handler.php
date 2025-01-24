@@ -21,6 +21,8 @@ use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToReadFile;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 {
@@ -44,6 +46,9 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
      * Validate the given XML file based on its type
      *
      * @return array<string>
+     *
+     * @throws FileNotFoundException
+     * @throws UnableToReadFile
      */
     public static function validate(string $path): array
     {
@@ -62,7 +67,7 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
             $xml->load($path, LIBXML_PARSEHUGE);
         } else {
             if (!Storage::exists($path)) {
-                return ["ERROR: could not find {$path} for validation"];
+                throw new FileNotFoundException($path);
             }
             if (config('filesystem.default') === 'local') {
                 $xml->load(Storage::path($path), LIBXML_PARSEHUGE);
@@ -71,7 +76,7 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
                 // not a stream...
                 $fp = Storage::readStream($path);
                 if ($fp === null) {
-                    return ["ERROR: could not find {$path} for validation"];
+                    throw UnableToReadFile::fromLocation($path);
                 }
                 $local_path = 'tmp/' . basename($path);
                 Storage::disk('local')->put($local_path, $fp);
