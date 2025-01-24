@@ -291,7 +291,7 @@ class LoginAndRegistration extends TestCase
         Socialite::shouldReceive('driver')->with('pingidentity')->andReturn($provider);
 
         $response = $this->get('auth/pingidentity/callback');
-        $response->assertRedirect('/register?fname=Arlette&lname=Laguiller&email=cdash%40test.com');
+        $response->assertRedirect('/profile');
     }
 
     public function testNoFullNamePingIdentityProvider(): void
@@ -315,7 +315,7 @@ class LoginAndRegistration extends TestCase
         Socialite::shouldReceive('driver')->with('pingidentity')->andReturn($provider);
 
         $response = $this->get('auth/pingidentity/callback');
-        $response->assertRedirect('/register?fname=Pseudo&lname=&email=cdash%40test.com');
+        $response->assertRedirect('/profile');
     }
 
     public function testRegisterUserWhenDisabled(): void
