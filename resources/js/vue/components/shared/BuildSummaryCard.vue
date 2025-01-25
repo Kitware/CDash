@@ -61,54 +61,7 @@
         </div>
       </summary>
       <div class="tw-collapse-content tw-flex tw-flex-col">
-        <div class="tw-flex tw-flex-col tw-gap-4 tw-flex-nowrap tw-overflow-x-hidden tw-text-nowrap tw-text-center">
-          <div class="tw-flex tw-flex-row tw-gap-2 last:tw-gap-0">
-            <div
-              v-if="build.configureDuration > 0"
-              :style="{ width: `${(build.configureDuration / totalDuration) * 100}%` }"
-            >
-              <div class="tw-font-medium">
-                Configure
-              </div>
-              <div
-                class="tw-rounded-full tw-overflow-hidden"
-                :class="configureColor"
-                :title="humanReadableConfigureDuration"
-              >
-                {{ humanReadableConfigureDuration }}
-              </div>
-            </div>
-            <div
-              v-if="build.buildDuration > 0"
-              :style="{ width: `${(build.buildDuration / totalDuration) * 100}%` }"
-            >
-              <div class="tw-font-medium">
-                Build
-              </div>
-              <div
-                class="tw-rounded-full tw-overflow-hidden"
-                :class="buildColor"
-                :title="humanReadableBuildDuration"
-              >
-                {{ humanReadableBuildDuration }}
-              </div>
-            </div>
-            <div
-              v-if="build.testDuration > 0"
-              :style="{ width: `${(build.testDuration / totalDuration) * 100}%` }"
-            >
-              <div class="tw-font-medium">
-                Test
-              </div>
-              <div
-                class="tw-rounded-full tw-overflow-hidden"
-                :class="testColor"
-                :title="humanReadableTestDuration"
-              >
-                {{ humanReadableTestDuration }}
-              </div>
-            </div>
-          </div>
+        <div class="tw-flex tw-flex-col tw-gap-4 tw-flex-nowrap tw-text-nowrap tw-text-center">
           <div class="tw-flex tw-flex-row tw-gap-4">
             <div class="tw-flex tw-flex-col">
               <div class="tw-bg-white tw-divide-y tw-rounded tw-shadow tw-text-left">
@@ -155,10 +108,10 @@
               <div class="tw-text-lg tw-text-left">
                 Labels
               </div>
-              <div>
+              <div class="tw-flex tw-flex-row tw-flex-wrap tw-gap-2">
                 <span
                   v-for="label in build.labels.edges"
-                  class="tw-badge tw-badge-outline tw-text-xs tw-text-neutral-500 tw-mr-2"
+                  class="tw-badge tw-badge-outline tw-text-xs tw-text-neutral-500"
                 >
                   {{ label.node.text }}
                 </span>
