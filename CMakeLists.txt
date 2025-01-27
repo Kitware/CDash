@@ -10,6 +10,9 @@ configure_file(
 # to configure the testing install
 set(CDASH_SERVER localhost CACHE STRING "CDash testing server")
 set(CDASH_IMAGE "$ENV{BASE_IMAGE}" CACHE STRING "Docker image name")
+if(NOT DEFINED CDASH_STORAGE_TYPE)
+  set(CDASH_STORAGE_TYPE "local")
+endif()
 
 get_filename_component(CDASH_DIR_NAME_DEFAULT ${CDash_SOURCE_DIR} NAME)
 set(CDASH_DIR_NAME "${CDASH_DIR_NAME_DEFAULT}" CACHE STRING "URL suffix. Ie 'http://<CDASH_SERVER>/<CDASH_DIR_NAME>'")

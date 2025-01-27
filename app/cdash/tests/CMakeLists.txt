@@ -261,7 +261,10 @@ add_unit_test(/CDash/Messaging/Topic/TopicDecorator)
 set_tests_properties(/CDash/Messaging/Topic/TopicDecorator PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/RemoteWorkers)
-set_tests_properties(/Feature/RemoteWorkers PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_tests_properties(/Feature/RemoteWorkers PROPERTIES
+    DEPENDS /CDash/XmlHandler/UpdateHandler
+    DISABLED "$<NOT:$<STREQUAL:${CDASH_STORAGE_TYPE},local>>"
+)
 
 add_laravel_test(/Feature/Jobs/NotifyExpiringAuthTokensTest)
 set_tests_properties(/Feature/Jobs/NotifyExpiringAuthTokensTest PROPERTIES RUN_SERIAL TRUE)
