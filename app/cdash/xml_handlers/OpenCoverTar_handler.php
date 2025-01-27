@@ -20,8 +20,8 @@ use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToReadFile;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 class OpenCoverTarHandler extends AbstractXmlHandler
 {
@@ -137,23 +137,18 @@ class OpenCoverTarHandler extends AbstractXmlHandler
     /**
      * Parse a tarball of JSON files.
      **/
-    public function Parse($filename)
+    public function Parse(string $filename): bool
     {
-        // Create a new directory where we can extract our tarball.
-        $dirName = Storage::path('parsed') . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_FILENAME);
-        mkdir($dirName);
-        $this->tarDir = $dirName;
-        $result = extract_tar($filename, $dirName);
-        if ($result === false) {
-            Log::error('Could not extract ' . $filename . ' into ' . $dirName, [
-                'function' => 'OpenCoverTarHandler::Parse',
-            ]);
+        try {
+            $this->tarDir = extract_tar($filename);
+        } catch (FileNotFoundException|UnableToReadFile|RuntimeException $e) {
+            report($e);
             return false;
         }
 
         // Search for data.json
         $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($dirName),
+            new RecursiveDirectoryIterator($this->tarDir),
             RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($iterator as $fileinfo) {
             if ($fileinfo->getFilename() == 'data.json') {
@@ -225,7 +220,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
         }
 
         // Delete the directory when we're done.
-        DeleteDirectory($dirName);
+        DeleteDirectory($this->tarDir);
         return true;
     }
 

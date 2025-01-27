@@ -23,8 +23,8 @@ use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 use CDash\Model\Label;
 use CDash\Model\SubProject;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToReadFile;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 class GcovTarHandler extends AbstractSubmissionHandler
 {
@@ -65,18 +65,13 @@ class GcovTarHandler extends AbstractSubmissionHandler
     /**
      * Parse a tarball of .gcov files.
      **/
-    public function Parse($filename)
+    public function Parse(string $filename): bool
     {
-        // Create a new directory where we can extract our tarball.
-        $dirName = Storage::path('parsed') . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_FILENAME);
-        mkdir($dirName);
-
         // Extract the tarball.
-        $result = extract_tar($filename, $dirName);
-        if ($result === false) {
-            Log::error('Could not extract ' . $filename . ' into ' . $dirName, [
-                'function' => 'GcovTarHandler::Parse',
-            ]);
+        try {
+            $dirName = extract_tar($filename);
+        } catch (FileNotFoundException|UnableToReadFile|RuntimeException $e) {
+            report($e);
             return false;
         }
 

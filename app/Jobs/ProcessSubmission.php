@@ -99,6 +99,7 @@ class ProcessSubmission implements ShouldQueue
                 'filename' => $this->filename,
                 'buildid' => $buildid,
                 'projectid' => $this->projectid,
+                'md5' => $this->expected_md5,
             ]);
             if ($this->localFilename !== '') {
                 unlink($this->localFilename);
@@ -107,7 +108,7 @@ class ProcessSubmission implements ShouldQueue
             return $response->ok();
         } else {
             // Increment retry count.
-            $retry_handler = new RetryHandler(Storage::path("inprogress/{$this->filename}"));
+            $retry_handler = new RetryHandler("inprogress/{$this->filename}");
             $retry_handler->increment();
 
             // Move file back to inbox.
@@ -119,9 +120,9 @@ class ProcessSubmission implements ShouldQueue
             if (config('queue.default') === 'sqs-fifo') {
                 // Special handling for sqs-fifo, which does not support per-message delays.
                 sleep(10);
-                self::dispatch($this->filename, $this->projectid, $buildid, md5_file(Storage::path("inbox/{$this->filename}")));
+                self::dispatch($this->filename, $this->projectid, $buildid, $this->expected_md5);
             } else {
-                self::dispatch($this->filename, $this->projectid, $buildid, md5_file(Storage::path("inbox/{$this->filename}")))->delay(now()->addSeconds($delay));
+                self::dispatch($this->filename, $this->projectid, $buildid, $this->expected_md5)->delay(now()->addSeconds($delay));
             }
 
             return true;
@@ -215,8 +216,13 @@ class ProcessSubmission implements ShouldQueue
             return $handler;
         }
 
-        // Parse the XML file
-        $handler = ctest_parse($filehandle, $filename, $projectid, $expected_md5, $buildid);
+        // Special handling for unparsed (non-XML) submissions.
+        $handler = parse_put_submission($filename, $projectid, $expected_md5, $buildid);
+        if ($handler === false) {
+            // Otherwise, parse this submission as CTest XML.
+            $handler = ctest_parse($filehandle, $filename, $projectid, $expected_md5, $buildid);
+        }
+
         fclose($filehandle);
         unset($filehandle);
 
@@ -293,7 +299,7 @@ class ProcessSubmission implements ShouldQueue
         if ((bool) config('cdash.remote_workers') && is_string($filename)) {
             return $this->getRemoteSubmissionFileHandle($filename);
         } elseif (Storage::exists($filename)) {
-            return fopen(Storage::path($filename), 'r');
+            return Storage::readStream($filename);
         } else {
             \Log::error('Failed to get a file handle for submission (was type ' . gettype($filename) . ')');
             return false;

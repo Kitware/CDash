@@ -18,6 +18,7 @@ ctest_empty_binary_directory("${CTEST_BINARY_DIRECTORY}")
 set(cfg_options
   "-DCDASH_DIR_NAME="
   "-DCDASH_SERVER=localhost:8080"
+  "-DCDASH_STORAGE_TYPE=${STORAGE_TYPE}"
 )
 
 # Backup .env file

@@ -300,4 +300,13 @@ class SubmissionUtils
         }
         $pdo->commit();
     }
+
+    /** Return the hash of an open file handle */
+    public static function hashFileHandle(mixed $filehandle, string $algo): string
+    {
+        $hashContext = hash_init($algo);
+        hash_update_stream($hashContext, $filehandle);
+        rewind($filehandle);
+        return hash_final($hashContext);
+    }
 }

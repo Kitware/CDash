@@ -24,10 +24,6 @@ use CDash\Model\Project;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class CDashParseException extends RuntimeException
-{
-}
-
 /** Determine the descriptive filename for a submission file. */
 function generateBackupFileName($projectname, $subprojectname, $buildname,
     $sitename, $stamp, $fileNameWithExt)
@@ -65,11 +61,11 @@ function generateBackupFileName($projectname, $subprojectname, $buildname,
 }
 
 /** Function to handle new style submissions via HTTP PUT */
-function parse_put_submission($filehandler, $projectid, $expected_md5, ?int $buildid): AbstractSubmissionHandler|false
+function parse_put_submission(string $filename, int $projectid, ?string $expected_md5, ?int $buildid): AbstractSubmissionHandler|false
 {
     $db = Database::getInstance();
 
-    if (!$expected_md5) {
+    if ($expected_md5 === null) {
         return false;
     }
 
@@ -103,10 +99,6 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, ?int $bui
     }
     $sitename = $row['name'];
 
-    // Work directly off the open file handle.
-    $meta_data = stream_get_meta_data($filehandler);
-    $filename = $meta_data['uri'];
-
     // Include the handler file for this type of submission.
     $include_file = 'xml_handlers/' . $buildfile->type . '_handler.php';
     $valid_types = [
@@ -137,17 +129,16 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, ?int $bui
     $build->Id = $buildfile->buildid;
     $handler = new $className($build);
 
-    // Parse the file.
-    if (file_exists($filename)) {
-        $filepath = $filename;
-    } elseif (Storage::exists($filename)) {
-        $filepath = Storage::path($filename);
-    } else {
-        throw new CDashParseException('Failed to locate file ' . $filename);
+    // Make sure the file exists.
+    if (!Storage::exists($filename)) {
+        Log::error("Failed to locate file {$filename}");
+        return false;
     }
 
-    if ($handler->Parse($filepath) === false) {
-        throw new CDashParseException('Failed to parse file ' . $filename);
+    // Parse the file.
+    if ($handler->Parse($filename) === false) {
+        Log::error("Failed to parse file {$filename}");
+        return false;
     }
 
     $buildfile->delete();
@@ -162,19 +153,6 @@ function parse_put_submission($filehandler, $projectid, $expected_md5, ?int $bui
  */
 function ctest_parse($filehandle, string $filename, $projectid, $expected_md5 = '', ?int $buildid = null): AbstractSubmissionHandler|false
 {
-    // Check if this is a new style PUT submission.
-    try {
-        $handler = parse_put_submission($filehandle, $projectid, $expected_md5, $buildid);
-        if ($handler !== false) {
-            return $handler;
-        }
-    } catch (CDashParseException $e) {
-        Log::error($e->getMessage(), [
-            'function' => 'ctest_parse',
-        ]);
-        return false;
-    }
-
     // Try to get the IP of the build.
     $ip = null;
     if (array_key_exists('REMOTE_ADDR', $_SERVER)) {

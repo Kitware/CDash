@@ -14,6 +14,8 @@ submit_type="${submit_type:-Experimental}"
 
 site="${SITENAME:-$(hostname)}"
 
+storage_type="${STORAGE_TYPE:-local}"
+
 echo "site=$site"
 echo "database=$database"
 echo "ctest_driver=$ctest_driver"
@@ -40,6 +42,7 @@ docker exec cdash bash -c "\
     --schedule-random \
     -DSITENAME=\"${site}\" \
     -DDATABASE=\"${database}\" \
+    -DSTORAGE_TYPE=\"${storage_type}\" \
     -DSUBMIT_TYPE=\"${submit_type}\" \
     -S \"${ctest_driver}\" \
 "

@@ -20,6 +20,9 @@ use App\Utils\Stack;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToReadFile;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 {
@@ -43,6 +46,9 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
      * Validate the given XML file based on its type
      *
      * @return array<string>
+     *
+     * @throws FileNotFoundException
+     * @throws UnableToReadFile
      */
     public static function validate(string $path): array
     {
@@ -50,16 +56,36 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
             return [];
         }
 
-        $errors = [];
         // let us control the failures so we can continue
         // parsing files instead of crashing midway
         libxml_use_internal_errors(true);
 
         // load the input file to be validated
+        $local_path = '';
         $xml = new DOMDocument();
-        $xml->load($path, LIBXML_PARSEHUGE);
+        if (file_exists($path)) {
+            $xml->load($path, LIBXML_PARSEHUGE);
+        } else {
+            if (!Storage::exists($path)) {
+                throw new FileNotFoundException($path);
+            }
+            if (config('filesystem.default') === 'local') {
+                $xml->load(Storage::path($path), LIBXML_PARSEHUGE);
+            } else {
+                // Temporarily download the file because DOMDocument->load takes a path,
+                // not a stream...
+                $fp = Storage::readStream($path);
+                if ($fp === null) {
+                    throw UnableToReadFile::fromLocation($path);
+                }
+                $local_path = 'tmp/' . basename($path);
+                Storage::disk('local')->put($local_path, $fp);
+                $xml->load(Storage::disk('local')->path($local_path), LIBXML_PARSEHUGE);
+            }
+        }
 
         // run the validator and collect errors if there are any.
+        $errors = [];
         if (!$xml->schemaValidate(base_path(static::$schema_file))) {
             $validation_errors = libxml_get_errors();
             foreach ($validation_errors as $error) {
@@ -68,6 +94,10 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
                 }
             }
             libxml_clear_errors();
+        }
+
+        if (config('filesystem.default') !== 'local') {
+            Storage::disk('local')->delete($local_path);
         }
 
         return $errors;

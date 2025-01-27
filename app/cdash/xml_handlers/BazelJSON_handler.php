@@ -25,6 +25,7 @@ use CDash\Model\BuildError;
 use CDash\Model\BuildErrorFilter;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class BazelJSONHandler extends AbstractSubmissionHandler
 {
@@ -90,8 +91,8 @@ class BazelJSONHandler extends AbstractSubmissionHandler
      **/
     public function Parse($filename)
     {
-        $handle = fopen($filename, 'r');
-        if (!$handle) {
+        $handle = Storage::readStream($filename);
+        if ($handle === null) {
             Log::error("Could not open $filename for parsing", [
                 'function' => 'BazelJSONHandler::Parse',
             ]);

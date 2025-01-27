@@ -31,6 +31,11 @@ class DoneHandlerTestCase extends KWWebTestCase
 
     public function testDoneHandlerRemote()
     {
+        if (config('filesystem.default') !== 'local') {
+            // Skip this test case if we're already testing remote storage.
+            return;
+        }
+
         $this->ConfigFile = dirname(__FILE__) . '/../../../.env';
         $this->Original = file_get_contents($this->ConfigFile);
 
@@ -66,7 +71,7 @@ class DoneHandlerTestCase extends KWWebTestCase
         $this->assertTrue($build->Id > 0);
 
         // Generate a Done.xml file and submit it.
-        $tmpfname = tempnam(Storage::path('inbox'), 'Done');
+        $tmpfname = tempnam(Storage::disk('local')->path('tmp'), 'Done');
         $handle = fopen($tmpfname, 'w');
         fwrite($handle, "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Done><buildId>$build->Id</buildId><time>$timestamp</time></Done>");
         fclose($handle);
@@ -103,8 +108,7 @@ class DoneHandlerTestCase extends KWWebTestCase
             }
         }
 
-        $files = Storage::files('parsed');
-        $contents = file_get_contents(Storage::path($files[0]));
+        $contents = Storage::get(Storage::files('parsed')[0]);
         $this->assertTrue(str_contains($contents, 'Done retries="5"'));
 
         unlink($tmpfname);

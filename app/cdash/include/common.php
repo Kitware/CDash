@@ -27,6 +27,8 @@ use CDash\ServiceContainer;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use League\Flysystem\UnableToReadFile;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 function xslt_process(XSLTProcessor $xsltproc,
     $xml_arg,
@@ -914,20 +916,56 @@ function create_aggregate_build($build, $siteid = null): Build
 }
 
 /**
- * Extract a tarball to a given directory.
+ * Extract a tarball within the local storage directory.
+ *
+ * @throws FileNotFoundException
+ * @throws RuntimeException
+ * @throws UnableToReadFile
  */
-function extract_tar(string $filename, string $dirName): bool
+function extract_tar(string $stored_filepath): string
 {
+    if (!Storage::exists($stored_filepath)) {
+        throw new FileNotFoundException($stored_filepath);
+    }
+
+    // Create a new directory where we can extract the tarball.
+    $localTmpDirPath = 'tmp' . DIRECTORY_SEPARATOR . pathinfo($stored_filepath, PATHINFO_FILENAME);
+    Storage::disk('local')->makeDirectory($localTmpDirPath);
+    $dirName = Storage::disk('local')->path($localTmpDirPath);
+
+    if (config('filesystem.default') !== 'local') {
+        // Download this file to the local Storage tmp dir.
+        $remote_stored_filepath = $stored_filepath;
+        $stored_filepath = 'tmp/' . basename($stored_filepath);
+        $fp = Storage::readStream($remote_stored_filepath);
+        if ($fp === null) {
+            throw UnableToReadFile::fromLocation($remote_stored_filepath);
+        }
+        Storage::disk('local')->put($stored_filepath, $fp);
+    }
+
     try {
-        $tar = new Archive_Tar($filename);
+        $tar = new Archive_Tar(Storage::disk('local')->path($stored_filepath));
         $tar->setErrorHandling(PEAR_ERROR_CALLBACK, function ($pear_error) {
             throw new PEAR_Exception($pear_error->getMessage());
         });
-        return $tar->extract($dirName);
+        $tar_extract_result = $tar->extract($dirName);
+        if (config('filesystem.default') !== 'local') {
+            Storage::disk('local')->delete($stored_filepath);
+        }
+        if ($tar_extract_result === false) {
+            Storage::disk('local')->deleteDirectory($localTmpDirPath);
+            throw new RuntimeException("Unable to extract {$stored_filepath}");
+        }
+        return $dirName;
     } catch (PEAR_Exception $e) {
+        if (config('filesystem.default') !== 'local') {
+            Storage::disk('local')->delete($stored_filepath);
+        }
+        Storage::disk('local')->deleteDirectory($localTmpDirPath);
         report($e);
-        return false;
     }
+    throw new RuntimeException('Unable to determine valid extraction directory');
 }
 
 /**

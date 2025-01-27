@@ -1,5 +1,8 @@
 <?php
 
+use League\Flysystem\UnableToReadFile;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
+
 class ExtractTarTestCase extends KWWebTestCase
 {
     public function __construct()
@@ -9,14 +12,14 @@ class ExtractTarTestCase extends KWWebTestCase
 
     public function testExtractTarArchiveTarWithInvalidFile()
     {
-        $result = extract_tar(dirname(__FILE__) . '/../config/config.php', 'foo');
-
-        $this->assertFalse($result);
-        $this->assertTrue(is_readable($this->logfilename));
-
-        $logfileContents = file_get_contents($this->logfilename);
-
-        $this->assertTrue($this->findString($logfileContents, 'ERROR'));
-        $this->assertTrue($this->findString($logfileContents, 'extract_tar'));
+        $exception_thrown = false;
+        try {
+            extract_tar('this_file_does_not_exist');
+        } catch (FileNotFoundException|UnableToReadFile $e) {
+            $exception_thrown = true;
+        }
+        if (!$exception_thrown) {
+            $this->fail('No Exception thrown when expected');
+        }
     }
 }

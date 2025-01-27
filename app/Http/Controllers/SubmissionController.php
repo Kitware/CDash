@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use League\Flysystem\UnableToReadFile;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 final class SubmissionController extends AbstractProjectController
@@ -85,21 +87,20 @@ final class SubmissionController extends AbstractProjectController
         $authtoken = AuthTokenUtil::getBearerToken();
         $authtoken_hash = $authtoken === null || $authtoken === '' ? '' : AuthTokenUtil::hashToken($authtoken);
 
+        // Check that the md5sum of the file matches what we were told to expect.
+        $fp = request()->getContent(true);
+        if (strlen($expected_md5) > 0) {
+            $md5sum = SubmissionUtils::hashFileHandle($fp, 'md5');
+            if ($md5sum != $expected_md5) {
+                abort(Response::HTTP_BAD_REQUEST, "md5 mismatch. expected: {$expected_md5}, received: {$md5sum}");
+            }
+        }
+
         // Save the incoming file in the inbox directory.
         $filename = "{$projectname}_-_{$authtoken_hash}_-_" . Str::uuid()->toString() . "_-_{$expected_md5}.xml";
-        $fp = request()->getContent(true);
         if (!Storage::put("inbox/{$filename}", $fp)) {
             Log::error("Failed to save submission to inbox for $projectname (md5=$expected_md5)");
             abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Failed to save submission file.');
-        }
-
-        // Check that the md5sum of the file matches what we were told to expect.
-        if (strlen($expected_md5) > 0) {
-            $md5sum = md5_file(Storage::path("inbox/{$filename}"));
-            if ($md5sum != $expected_md5) {
-                Storage::delete("inbox/{$filename}");
-                abort(Response::HTTP_BAD_REQUEST, "md5 mismatch. expected: {$expected_md5}, received: {$md5sum}");
-            }
         }
 
         // Check if we can connect to the database before proceeding any further.
@@ -138,7 +139,7 @@ final class SubmissionController extends AbstractProjectController
         $stored_filename = 'inbox/' . $filename;
         $xml_info = [];
         try {
-            $xml_info = SubmissionUtils::get_xml_type(fopen(Storage::path($stored_filename), 'r'), $stored_filename);
+            $xml_info = SubmissionUtils::get_xml_type(Storage::readStream($stored_filename), $stored_filename);
         } catch (BadSubmissionException $e) {
             $xml_info['xml_handler'] = '';
             $message = "Could not determine submission file type for: '{$stored_filename}'";
@@ -149,7 +150,15 @@ final class SubmissionController extends AbstractProjectController
         }
         if ($xml_info['xml_handler'] !== '') {
             // If validation is enabled and if this file has a corresponding schema, validate it
-            $validation_errors = $xml_info['xml_handler']::validate(storage_path('app/' . $stored_filename));
+            $validation_errors = [];
+            try {
+                $validation_errors = $xml_info['xml_handler']::validate($stored_filename);
+            } catch (FileNotFoundException|UnableToReadFile $e) {
+                Log::warning($e->getMessage());
+                if ((bool) config('cdash.validate_xml_submissions') === true) {
+                    abort(400, "XML validation failed for $filename:" . PHP_EOL . $e->getMessage());
+                }
+            }
             if (count($validation_errors) > 0) {
                 $error_string = implode(PHP_EOL, $validation_errors);
 
@@ -233,18 +242,24 @@ final class SubmissionController extends AbstractProjectController
         }
 
         try {
-            $sha1sum = decrypt($request->input('sha1sum'));
+            $expected_sha1sum = decrypt($request->input('sha1sum'));
         } catch (DecryptException $e) {
             return response('This feature is disabled', Response::HTTP_CONFLICT);
         }
 
         $uploaded_file = array_values(request()->allFiles())[0];
-        $stored_path = $uploaded_file->storeAs('upload', $sha1sum);
+        $stored_path = $uploaded_file->storeAs('upload', $expected_sha1sum);
         if ($stored_path === false) {
             abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Failed to store uploaded file');
         }
 
-        if (sha1_file(Storage::path($stored_path)) !== $sha1sum) {
+        $fp = Storage::readStream($stored_path);
+        if ($fp === null) {
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Failed to store uploaded file');
+        }
+
+        $found_sha1sum = SubmissionUtils::hashFileHandle($fp, 'sha1');
+        if ($found_sha1sum !== $expected_sha1sum) {
             Storage::delete($stored_path);
             return response('Uploaded file does not match expected sha1sum', Response::HTTP_BAD_REQUEST);
         }

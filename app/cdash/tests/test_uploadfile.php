@@ -6,6 +6,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use App\Utils\SubmissionUtils;
 use Illuminate\Support\Facades\Storage;
 
 class UploadFileTestCase extends KWWebTestCase
@@ -63,8 +64,8 @@ class UploadFileTestCase extends KWWebTestCase
         $this->FileId = $query[0]['id'];
         $this->Sha1Sum = $query[0]['sha1sum'];
 
-        $uploaded_filepath = Storage::path('upload') . "/{$this->Sha1Sum}";
-        if (!file_exists($uploaded_filepath)) {
+        $uploaded_filepath = "upload/{$this->Sha1Sum}";
+        if (!Storage::exists($uploaded_filepath)) {
             $this->fail("File was not written to $uploaded_filepath");
             return;
         }
@@ -79,12 +80,14 @@ class UploadFileTestCase extends KWWebTestCase
         $body = $response->getBody();
         file_put_contents($tmp_file, $body);
 
-        if (filesize($tmp_file) !== filesize($uploaded_filepath)) {
+        if (filesize($tmp_file) !== Storage::size($uploaded_filepath)) {
             $this->fail('filesize mismatch for downloaded file');
         }
-        if (sha1_file($tmp_file) !== sha1_file($uploaded_filepath)) {
+        if (md5_file($tmp_file) !== SubmissionUtils::hashFileHandle(Storage::readStream($uploaded_filepath), 'md5')) {
             $this->fail("hash mismatch for downloaded file ($tmp_file) vs ($uploaded_filepath)");
         }
+
+        unlink($tmp_file);
     }
 
     // Make sure the build label has been set
