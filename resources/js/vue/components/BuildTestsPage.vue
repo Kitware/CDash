@@ -1,5 +1,7 @@
 <template>
   <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
+    <BuildSummaryCard :build-id="buildId" />
+
     <filter-builder
       filter-type="BuildTestsFiltersMultiFilterInput"
       primary-record-name="tests"
@@ -42,11 +44,13 @@ import DataTable from './shared/DataTable.vue';
 import gql from 'graphql-tag';
 import FilterBuilder from './shared/FilterBuilder.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
+import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 
 export default {
   name: 'BuildTestsPage',
 
   components: {
+    BuildSummaryCard,
     LoadingIndicator,
     FilterBuilder,
     DataTable,
