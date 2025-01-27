@@ -21,7 +21,6 @@ use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use League\Flysystem\UnableToReadFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
@@ -51,14 +50,8 @@ class JSCoverTarHandler extends AbstractSubmissionHandler
         // Extract the tarball.
         try {
             $dirName = extract_tar($filename);
-        } catch (FileNotFoundException|UnableToReadFile $e) {
+        } catch (FileNotFoundException|UnableToReadFile|RuntimeException $e) {
             report($e);
-            return false;
-        }
-        if ($dirName === '') {
-            Log::error('Could not extract ' . $filename . ' into ' . $dirName, [
-                'function' => 'JSCoverTarHandler::Parse',
-            ]);
             return false;
         }
 

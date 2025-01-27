@@ -919,6 +919,7 @@ function create_aggregate_build($build, $siteid = null): Build
  * Extract a tarball within the local storage directory.
  *
  * @throws FileNotFoundException
+ * @throws RuntimeException
  * @throws UnableToReadFile
  */
 function extract_tar(string $stored_filepath): string
@@ -964,7 +965,7 @@ function extract_tar(string $stored_filepath): string
         Storage::disk('local')->deleteDirectory($localTmpDirPath);
         report($e);
     }
-    return '';
+    throw new RuntimeException('Unable to determine valid extraction directory');
 }
 
 /**

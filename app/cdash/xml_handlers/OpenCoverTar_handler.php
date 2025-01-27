@@ -20,7 +20,6 @@ use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
-use Illuminate\Support\Facades\Log;
 use League\Flysystem\UnableToReadFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
@@ -142,14 +141,8 @@ class OpenCoverTarHandler extends AbstractXmlHandler
     {
         try {
             $this->tarDir = extract_tar($filename);
-        } catch (FileNotFoundException|UnableToReadFile $e) {
+        } catch (FileNotFoundException|UnableToReadFile|RuntimeException $e) {
             report($e);
-            return false;
-        }
-        if ($this->tarDir === '') {
-            Log::error("Could not extract {$filename}", [
-                'function' => 'OpenCoverTarHandler::Parse',
-            ]);
             return false;
         }
 
