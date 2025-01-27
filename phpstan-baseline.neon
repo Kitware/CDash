@@ -14013,11 +14013,6 @@ parameters:
 			path: app/cdash/include/dailyupdates.php
 
 		-
-			message: "#^Binary operation \"\\*\" between mixed and 3600 results in an error\\.$#"
-			count: 1
-			path: app/cdash/include/dailyupdates.php
-
-		-
 			message: """
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
@@ -14089,6 +14084,11 @@ parameters:
 
 		-
 			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
+			count: 1
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: "#^Cannot cast mixed to int\\.$#"
 			count: 1
 			path: app/cdash/include/dailyupdates.php
 
@@ -14310,11 +14310,6 @@ parameters:
 		-
 			message: "#^Only numeric types are allowed in \\-, int\\<0, max\\>\\|false given on the right side\\.$#"
 			count: 2
-			path: app/cdash/include/dailyupdates.php
-
-		-
-			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
-			count: 1
 			path: app/cdash/include/dailyupdates.php
 
 		-
