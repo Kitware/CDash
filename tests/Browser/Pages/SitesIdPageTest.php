@@ -4,17 +4,20 @@ namespace Tests\Browser\Pages;
 
 use App\Models\Project;
 use App\Models\Site;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesSites;
+use Tests\Traits\CreatesUsers;
 
 class SitesIdPageTest extends BrowserTestCase
 {
     use CreatesProjects;
     use CreatesSites;
+    use CreatesUsers;
 
     /**
      * @var array<Project>
@@ -25,6 +28,11 @@ class SitesIdPageTest extends BrowserTestCase
      * @var array<Site>
      */
     private array $sites = [];
+
+    /**
+     * @var array<User>
+     */
+    private array $users = [];
 
     public function tearDown(): void
     {
@@ -236,6 +244,44 @@ class SitesIdPageTest extends BrowserTestCase
                 ->whenAvailable('@site-details', function (Browser $browser) {
                     $browser->assertSee('No information available for this site.');
                 });
+        });
+    }
+
+    public function testClaimSiteFunctionality(): void
+    {
+        $this->sites['site1'] = $this->makeSite();
+        $this->users['user'] = $this->makeNormalUser();
+
+        $this->browse(function (Browser $browser) {
+            // We shouldn't see the claim/unclaim site button when we're logged out
+            $browser->visit("/sites/{$this->sites['site1']->id}")
+                ->assertMissing('@claim-site-button')
+                ->assertMissing('@unclaim-site-button')
+                ->whenAvailable('@site-maintainers-table', function (Browser $browser) {
+                    $browser->assertDontSee($this->users['user']->firstname);
+                });
+
+            $browser->loginAs($this->users['user'])
+                // Users who haven't claimed the site should be able to claim the site
+                ->visit("/sites/{$this->sites['site1']->id}")
+                ->waitFor('@claim-site-button')
+                ->assertVisible('@claim-site-button')
+                ->assertMissing('@unclaim-site-button')
+                ->whenAvailable('@site-maintainers-table', function (Browser $browser) {
+                    $browser->assertDontSee($this->users['user']->firstname);
+                })
+                // Claim the site and ensure that it shows up as expected
+                ->click('@claim-site-button')
+                ->waitFor('@unclaim-site-button')
+                ->assertVisible('@unclaim-site-button')
+                ->assertMissing('@claim-site-button')
+                ->waitForTextIn('@site-maintainers-table', "{$this->users['user']->firstname} {$this->users['user']->lastname} ({$this->users['user']->institution})")
+                // Unclaim the site and ensure that it disappears
+                ->click('@unclaim-site-button')
+                ->waitFor('@claim-site-button')
+                ->assertVisible('@claim-site-button')
+                ->assertMissing('@unclaim-site-button')
+                ->waitUntilMissingText("{$this->users['user']->firstname} {$this->users['user']->lastname} ({$this->users['user']->institution})");
         });
     }
 }

@@ -996,7 +996,7 @@ class SiteTypeTest extends TestCase
      * capability, but rather a quick smoke check to verify that the most basic
      * filters work for the sites relation, and that extra information is not leaked.
      */
-    public function testBasicBuildFiltering(): void
+    public function testBasicSiteFiltering(): void
     {
         $this->sites['site1'] = $this->makeSite();
         $this->projects['public1']->builds()->create([
@@ -1205,5 +1205,329 @@ class SiteTypeTest extends TestCase
                 ],
             ],
         ], true);
+    }
+
+    public function testFilterSiteMaintainers(): void
+    {
+        $this->sites['site1'] = $this->makeSite();
+
+        $this->sites['site1']->maintainers()->attach($this->users['normal']);
+        $this->sites['site1']->maintainers()->attach($this->users['admin']);
+
+        $this->graphQL('
+            query($siteid: ID, $userid: ID) {
+                site(id: $siteid) {
+                    maintainers(filters: {
+                        eq: {
+                            id: $userid
+                        }
+                    }) {
+                        edges {
+                            node {
+                                id
+                                email
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'siteid' => $this->sites['site1']->id,
+            'userid' => $this->users['normal']->id,
+        ])->assertJson([
+            'data' => [
+                'site' => [
+                    'maintainers' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'id' => (string) $this->users['normal']->id,
+                                    'email' => $this->users['normal']->email,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testClaimSiteMutationRejectsUnauthenticatedUser(): void
+    {
+        $this->sites['site1'] = $this->makeSite();
+
+        $this->graphQL('
+            mutation ($siteid: ID!) {
+                claimSite(input: {
+                    siteId: $siteid
+                }) {
+                    user {
+                        id
+                    }
+                    site {
+                        id
+                    }
+                    message
+                }
+            }
+        ', [
+            'siteid' => $this->sites['site1']->id,
+        ])->assertJson([
+            'data' => [
+                'claimSite' => [
+                    'user' => null,
+                    'site' => null,
+                    'message' => 'Authentication required to claim sites.',
+                ],
+            ],
+        ], true);
+    }
+
+    public function testClaimSiteMutationRejectsInvalidSiteId(): void
+    {
+        $this->actingAs($this->users['normal'])->graphQL('
+            mutation ($siteid: ID!) {
+                claimSite(input: {
+                    siteId: $siteid
+                }) {
+                    user {
+                        id
+                    }
+                    site {
+                        id
+                    }
+                    message
+                }
+            }
+        ', [
+            'siteid' => 123456789,
+        ])->assertJson([
+            'data' => [
+                'claimSite' => [
+                    'user' => null,
+                    'site' => null,
+                    'message' => 'Requested site not found.',
+                ],
+            ],
+        ], true);
+    }
+
+    public function testClaimSiteMutationAcceptsValidRequest(): void
+    {
+        $this->sites['site1'] = $this->makeSite();
+
+        self::assertNotContains($this->users['normal']->id, $this->sites['site1']->maintainers()->pluck('id'));
+
+        $this->actingAs($this->users['normal'])->graphQL('
+            mutation ($siteid: ID!) {
+                claimSite(input: {
+                    siteId: $siteid
+                }) {
+                    user {
+                        id
+                    }
+                    site {
+                        id
+                    }
+                    message
+                }
+            }
+        ', [
+            'siteid' => $this->sites['site1']->id,
+        ])->assertJson([
+            'data' => [
+                'claimSite' => [
+                    'user' => [
+                        'id' => (string) $this->users['normal']->id,
+                    ],
+                    'site' => [
+                        'id' => (string) $this->sites['site1']->id,
+                    ],
+                    'message' => null,
+                ],
+            ],
+        ], true);
+
+        self::assertContains($this->users['normal']->id, $this->sites['site1']->maintainers()->pluck('id'));
+    }
+
+    public function testClaimSiteMutationAcceptsClaimForPreviouslyClaimedSite(): void
+    {
+        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1']->maintainers()->attach($this->users['normal']);
+
+        self::assertContains($this->users['normal']->id, $this->sites['site1']->maintainers()->pluck('id'));
+
+        $this->actingAs($this->users['normal'])->graphQL('
+            mutation ($siteid: ID!) {
+                claimSite(input: {
+                    siteId: $siteid
+                }) {
+                    user {
+                        id
+                    }
+                    site {
+                        id
+                    }
+                    message
+                }
+            }
+        ', [
+            'siteid' => $this->sites['site1']->id,
+        ])->assertJson([
+            'data' => [
+                'claimSite' => [
+                    'user' => [
+                        'id' => (string) $this->users['normal']->id,
+                    ],
+                    'site' => [
+                        'id' => (string) $this->sites['site1']->id,
+                    ],
+                    'message' => null,
+                ],
+            ],
+        ], true);
+
+        self::assertContains($this->users['normal']->id, $this->sites['site1']->maintainers()->pluck('id'));
+    }
+
+    public function testUnclaimSiteMutationRejectsUnauthenticatedUser(): void
+    {
+        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1']->maintainers()->attach($this->users['normal']);
+
+        $this->graphQL('
+            mutation ($siteid: ID!) {
+                unclaimSite(input: {
+                    siteId: $siteid
+                }) {
+                    user {
+                        id
+                    }
+                    site {
+                        id
+                    }
+                    message
+                }
+            }
+        ', [
+            'siteid' => $this->sites['site1']->id,
+        ])->assertJson([
+            'data' => [
+                'unclaimSite' => [
+                    'user' => null,
+                    'site' => null,
+                    'message' => 'Authentication required to unclaim sites.',
+                ],
+            ],
+        ], true);
+    }
+
+    public function testUnclaimSiteMutationRejectsInvalidSiteId(): void
+    {
+        $this->actingAs($this->users['normal'])->graphQL('
+            mutation ($siteid: ID!) {
+                unclaimSite(input: {
+                    siteId: $siteid
+                }) {
+                    user {
+                        id
+                    }
+                    site {
+                        id
+                    }
+                    message
+                }
+            }
+        ', [
+            'siteid' => 123456789,
+        ])->assertJson([
+            'data' => [
+                'unclaimSite' => [
+                    'user' => null,
+                    'site' => null,
+                    'message' => 'Requested site not found.',
+                ],
+            ],
+        ], true);
+    }
+
+    public function testUnclaimSiteMutationAcceptsValidRequest(): void
+    {
+        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1']->maintainers()->attach($this->users['normal']);
+
+        self::assertContains($this->users['normal']->id, $this->sites['site1']->maintainers()->pluck('id'));
+
+        $this->actingAs($this->users['normal'])->graphQL('
+            mutation ($siteid: ID!) {
+                unclaimSite(input: {
+                    siteId: $siteid
+                }) {
+                    user {
+                        id
+                    }
+                    site {
+                        id
+                    }
+                    message
+                }
+            }
+        ', [
+            'siteid' => $this->sites['site1']->id,
+        ])->assertJson([
+            'data' => [
+                'unclaimSite' => [
+                    'user' => [
+                        'id' => (string) $this->users['normal']->id,
+                    ],
+                    'site' => [
+                        'id' => (string) $this->sites['site1']->id,
+                    ],
+                    'message' => null,
+                ],
+            ],
+        ], true);
+
+        self::assertNotContains($this->users['normal']->id, $this->sites['site1']->maintainers()->pluck('id'));
+    }
+
+    public function testUnclaimSiteMutationAcceptsUnclaimWhenNotClaimed(): void
+    {
+        $this->sites['site1'] = $this->makeSite();
+
+        self::assertNotContains($this->users['normal']->id, $this->sites['site1']->maintainers()->pluck('id'));
+
+        $this->actingAs($this->users['normal'])->graphQL('
+            mutation ($siteid: ID!) {
+                unclaimSite(input: {
+                    siteId: $siteid
+                }) {
+                    user {
+                        id
+                    }
+                    site {
+                        id
+                    }
+                    message
+                }
+            }
+        ', [
+            'siteid' => $this->sites['site1']->id,
+        ])->assertJson([
+            'data' => [
+                'unclaimSite' => [
+                    'user' => [
+                        'id' => (string) $this->users['normal']->id,
+                    ],
+                    'site' => [
+                        'id' => (string) $this->sites['site1']->id,
+                    ],
+                    'message' => null,
+                ],
+            ],
+        ], true);
+
+        self::assertNotContains($this->users['normal']->id, $this->sites['site1']->maintainers()->pluck('id'));
     }
 }

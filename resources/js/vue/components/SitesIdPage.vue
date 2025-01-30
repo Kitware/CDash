@@ -90,6 +90,48 @@
           </table>
         </loading-indicator>
       </div>
+      <div class="tw-flex tw-flex-col tw-border tw-rounded tw-p-4">
+        <div class="tw-flex tw-flex-row">
+          <div class="tw-text-2xl tw-font-black">
+            Maintainers
+          </div>
+          <template v-if="userId && siteMaintainers">
+            <button
+              v-if="siteMaintainers.site.maintainers.edges.some(({ node }) => parseInt(node.id) === userId)"
+              class="tw-ml-auto tw-btn tw-btn-outline tw-btn-sm"
+              data-test="unclaim-site-button"
+              @click="unclaimSite"
+            >
+              Unclaim Site
+            </button>
+            <button
+              v-else
+              class="tw-ml-auto tw-btn tw-btn-outline tw-btn-sm"
+              data-test="claim-site-button"
+              @click="claimSite"
+            >
+              Claim Site
+            </button>
+          </template>
+        </div>
+        <loading-indicator :is-loading="!siteMaintainers">
+          <table
+            class="tw-table"
+            data-test="site-maintainers-table"
+          >
+            <tbody>
+              <tr v-for="maintainer in siteMaintainers.site.maintainers.edges">
+                <th>
+                  {{ maintainer.node.firstname }} {{ maintainer.node.lastname }}
+                  <template v-if="maintainer.node.institution">
+                    ({{ maintainer.node.institution }})
+                  </template>
+                </th>
+              </tr>
+            </tbody>
+          </table>
+        </loading-indicator>
+      </div>
     </div>
     <div
       class="tw-text-nowrap tw-flex-shrink-0 tw-max-w-80"
@@ -192,6 +234,30 @@ import LoadingIndicator from './shared/LoadingIndicator.vue';
 import { DateTime } from 'luxon';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
+const SITE_MAINTAINERS_QUERY = gql`
+  query($siteid: ID) {
+    site(id: $siteid) {
+      id
+      maintainers {
+        edges {
+          node {
+            id
+            firstname
+            lastname
+            institution
+          }
+        }
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
+      }
+    }
+  }
+`;
+
 export default {
   components: {
     LoadingIndicator,
@@ -203,6 +269,11 @@ export default {
       type: Number,
       required: true,
     },
+
+    userId: {
+      type: [Number, null],
+      required: true,
+    },
   },
 
   apollo: {
@@ -210,6 +281,7 @@ export default {
       query: gql`
         query($siteid: ID, $after: String) {
           site(id: $siteid) {
+            id
             information(after: $after, first: 100) {
               edges {
                 node {
@@ -257,6 +329,7 @@ export default {
       query: gql`
         query($siteid: ID) {
           site(id: $siteid) {
+            id
             mostRecentInformation {
               description
               processorVendor
@@ -281,6 +354,25 @@ export default {
       },
     },
 
+    siteMaintainers: {
+      query: SITE_MAINTAINERS_QUERY,
+      update: data => data,
+      variables() {
+        return {
+          siteid: this.siteId,
+        };
+      },
+      result({data}) {
+        if (data && data.site.maintainers.pageInfo.hasNextPage) {
+          this.$apollo.queries.siteMaintainers.site.maintainers.fetchMore({
+            variables: {
+              after: data.site.maintainers.pageInfo.endCursor,
+            },
+          });
+        }
+      },
+    },
+
     projects: {
       query: gql`
         query($siteid: ID) {
@@ -291,9 +383,9 @@ export default {
                 name
                 description
                 sites(filters: {
-                    eq: {
-                        id: $siteid
-                    }
+                  eq: {
+                    id: $siteid
+                  }
                 }) {
                   edges {
                     node {
@@ -421,6 +513,85 @@ export default {
       default:
         return value;
       }
+    },
+
+    claimSite() {
+      this.$apollo.mutate({
+        mutation: gql`mutation ($siteid: ID!) {
+          claimSite(input: {siteId: $siteid}) {
+            user {
+              id
+              firstname
+              lastname
+              institution
+            }
+          }
+        }`,
+        variables: {
+          siteid: this.siteId,
+        },
+        update: (cache, { data: { claimSite } }) => {
+          const data = JSON.parse(JSON.stringify(cache.readQuery({
+            query: SITE_MAINTAINERS_QUERY,
+            variables: {
+              siteid: this.siteId,
+            },
+          })));
+          data.site.maintainers.edges.push({
+            node: {
+              ...claimSite.user,
+            },
+          });
+          cache.writeQuery({ query: SITE_MAINTAINERS_QUERY, data: data });
+        },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          claimSite: {
+            __typename: 'ClaimSiteMutationPayload',
+            user: {
+              __typename: 'User',
+              id: this.userId,
+              institution: '',
+              firstname: '',
+              lastname: '',
+            },
+          },
+        },
+      }).catch((error) => {
+        console.error(error);
+      });
+    },
+
+    unclaimSite() {
+      this.$apollo.mutate({
+        mutation: gql`mutation ($siteid: ID!) {
+          unclaimSite(input: {siteId: $siteid}) {
+            message
+          }
+        }`,
+        variables: {
+          siteid: this.siteId,
+        },
+        update: (cache) => {
+          const data = JSON.parse(JSON.stringify(cache.readQuery({
+            query: SITE_MAINTAINERS_QUERY,
+            variables: {
+              siteid: this.siteId,
+            },
+          })));
+          data.site.maintainers.edges = data.site.maintainers.edges.filter(({ node }) => parseInt(node.id) !== this.userId);
+          cache.writeQuery({ query: SITE_MAINTAINERS_QUERY, data: data });
+        },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          unclaimSite: {
+            __typename: 'UnclaimSiteMutationPayload',
+            message: '',
+          },
+        },
+      }).catch((error) => {
+        console.error(error);
+      });
     },
   },
 };

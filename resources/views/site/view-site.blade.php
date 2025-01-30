@@ -4,5 +4,5 @@
 ])
 
 @section('main_content')
-    <sites-id-page :site-id="{{ $site->id }}"></sites-id-page>
+    <sites-id-page :site-id="{{ $site->id }}" :user-id="@js(auth()->user()?->id)"></sites-id-page>
 @endsection

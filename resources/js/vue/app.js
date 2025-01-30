@@ -111,6 +111,7 @@ const apolloClient = new ApolloClient({
       },
       Site: {
         information: relayStylePagination(),
+        maintainers: relayStylePagination(),
       },
     },
   }),

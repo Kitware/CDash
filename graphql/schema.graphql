@@ -43,6 +43,18 @@ type Query {
 type Mutation {
   "Create a new project."
   createProject(input: CreateProjectInput! @spread): Project @create @canModel(ability: "create")
+
+  "Subscribe the current user to the specified site."
+  claimSite(input: ClaimSiteInput! @spread): ClaimSiteMutationPayload! @field(resolver: "ClaimSite")
+
+  "Unsubscribe the current user from the specified site."
+  unclaimSite(input: UnclaimSiteInput! @spread): UnclaimSiteMutationPayload! @field(resolver: "UnclaimSite")
+}
+
+
+interface MutationPayloadInterface {
+  "Optional error message."
+  message: String
 }
 
 
@@ -65,6 +77,15 @@ type User {
 
   "Whether or not the user is a global administrator."
   admin: Boolean!
+}
+
+input UserFilterInput {
+  id: ID
+  firstname: String
+  lastname: String
+  email: String
+  institution: String
+  admin: Boolean
 }
 
 
@@ -433,7 +454,9 @@ type Site {
   mostRecentInformation: SiteInformation @hasOne
 
   "The users who have signed up to maintain this site."
-  maintainers: [User!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
+  maintainers(
+    filters: _ @filter(inputType: "UserFilterInput")
+  ): [User!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
 }
 
 input SiteFilterInput {
@@ -442,6 +465,36 @@ input SiteFilterInput {
   ip: String
   latitude: Float
   longitude: Float
+}
+
+input ClaimSiteInput {
+  siteId: ID!
+}
+
+type ClaimSiteMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  "Site being claimed."
+  site: Site
+
+  "The user claiming the requested site."
+  user: User
+}
+
+type UnclaimSiteMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  "Site being unclaimed."
+  site: Site
+
+  "The user being detached from the requested site."
+  user: User
+}
+
+input UnclaimSiteInput {
+  siteId: ID!
 }
 
 
