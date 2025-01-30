@@ -200,7 +200,6 @@ set_tests_properties(/Feature/Monitor PROPERTIES DEPENDS /CDash/XmlHandler/Updat
 add_laravel_test(/Feature/PasswordRotation)
 set_tests_properties(/Feature/PasswordRotation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-# Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
 add_laravel_test(/Browser/Pages/SitesIdPageTest)
 set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)

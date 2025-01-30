@@ -242,6 +242,26 @@ parameters:
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Mutations/ClaimSite.php
+
+		-
+			message: "#^Parameter \\#1 \\$args \\(array\\{siteId\\: int\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\ClaimSite\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
+			count: 1
+			path: app/GraphQL/Mutations/ClaimSite.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Mutations/UnclaimSite.php
+
+		-
+			message: "#^Parameter \\#1 \\$args \\(array\\{siteId\\: int\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\UnclaimSite\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
+			count: 1
+			path: app/GraphQL/Mutations/UnclaimSite.php
+
+		-
 			message: "#^Cannot cast mixed to float\\.$#"
 			count: 1
 			path: app/GraphQL/Scalars/NonNegativeSeconds.php
@@ -31902,6 +31922,11 @@ parameters:
 		-
 			message: "#^Cannot access offset 0 on mixed\\.$#"
 			count: 3
+			path: tests/Feature/GraphQL/SiteTypeTest.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 8
 			path: tests/Feature/GraphQL/SiteTypeTest.php
 
 		-
