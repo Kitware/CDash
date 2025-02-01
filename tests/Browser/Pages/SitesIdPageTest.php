@@ -220,17 +220,23 @@ class SitesIdPageTest extends BrowserTestCase
             $browser->visit("/sites/{$this->sites['site1']->id}")
                 ->whenAvailable('@site-history', function (Browser $browser) {
                     // Can't use nth child with @ selector unfortunately
-                    $browser->assertSeeIn('[data-test="site-history-item"]:nth-child(1)', 'System Update');
-                    $browser->assertSeeIn('[data-test="site-history-item"]:nth-child(1)', '8.56 GiB');
-                    $browser->assertSeeIn('[data-test="site-history-item"]:nth-child(1)', '6');
+                    $browser->whenAvailable('[data-test="site-history-item"]:nth-child(1)', function (Browser $browser) {
+                        $browser->assertSee('System Update');
+                        $browser->assertSee('8.56 GiB');
+                        $browser->assertSee('6');
+                    });
 
-                    $browser->assertSeeIn('[data-test="site-history-item"]:nth-child(2)', 'System Update');
-                    $browser->assertSeeIn('[data-test="site-history-item"]:nth-child(2)', '8.56 GiB');
-                    $browser->assertSeeIn('[data-test="site-history-item"]:nth-child(2)', '4');
+                    $browser->whenAvailable('[data-test="site-history-item"]:nth-child(2)', function (Browser $browser) {
+                        $browser->assertSee('System Update');
+                        $browser->assertSee('8.56 GiB');
+                        $browser->assertSee('4');
+                    });
 
-                    $browser->assertSeeIn('[data-test="site-history-item"]:nth-child(3)', 'Site Created');
-                    $browser->assertSeeIn('[data-test="site-history-item"]:nth-child(3)', '5.54 GiB');
-                    $browser->assertSeeIn('[data-test="site-history-item"]:nth-child(3)', '2');
+                    $browser->whenAvailable('[data-test="site-history-item"]:nth-child(3)', function (Browser $browser) {
+                        $browser->assertSee('Site Created');
+                        $browser->assertSee('5.54 GiB');
+                        $browser->assertSee('2');
+                    });
                 });
         });
     }
