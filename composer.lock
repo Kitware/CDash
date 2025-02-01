@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "61aa41b2176ad3b7face8e2a3e5d2bd6",
+    "content-hash": "721f55041fd81acdaa787dfc6e8984e5",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -137,16 +137,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.336.6",
+            "version": "3.339.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "0a99dab427f0a1c082775301141aeac3558691ad"
+                "reference": "ea62ad03645ef7a1d3f1cda2de49f0869de3c582"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/0a99dab427f0a1c082775301141aeac3558691ad",
-                "reference": "0a99dab427f0a1c082775301141aeac3558691ad",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ea62ad03645ef7a1d3f1cda2de49f0869de3c582",
+                "reference": "ea62ad03645ef7a1d3f1cda2de49f0869de3c582",
                 "shasum": ""
             },
             "require": {
@@ -154,31 +154,31 @@
                 "ext-json": "*",
                 "ext-pcre": "*",
                 "ext-simplexml": "*",
-                "guzzlehttp/guzzle": "^6.5.8 || ^7.4.5",
-                "guzzlehttp/promises": "^1.4.0 || ^2.0",
-                "guzzlehttp/psr7": "^1.9.1 || ^2.4.5",
-                "mtdowling/jmespath.php": "^2.6",
-                "php": ">=7.2.5",
-                "psr/http-message": "^1.0 || ^2.0"
+                "guzzlehttp/guzzle": "^7.4.5",
+                "guzzlehttp/promises": "^2.0",
+                "guzzlehttp/psr7": "^2.4.5",
+                "mtdowling/jmespath.php": "^2.8.0",
+                "php": ">=8.1",
+                "psr/http-message": "^2.0"
             },
             "require-dev": {
                 "andrewsville/php-token-reflection": "^1.4",
                 "aws/aws-php-sns-message-validator": "~1.0",
                 "behat/behat": "~3.0",
-                "composer/composer": "^1.10.22",
+                "composer/composer": "^2.7.8",
                 "dms/phpunit-arraysubset-asserts": "^0.4.0",
                 "doctrine/cache": "~1.4",
                 "ext-dom": "*",
                 "ext-openssl": "*",
                 "ext-pcntl": "*",
                 "ext-sockets": "*",
-                "nette/neon": "^2.3",
                 "paragonie/random_compat": ">= 2",
                 "phpunit/phpunit": "^5.6.3 || ^8.5 || ^9.5",
-                "psr/cache": "^1.0 || ^2.0 || ^3.0",
-                "psr/simple-cache": "^1.0 || ^2.0 || ^3.0",
-                "sebastian/comparator": "^1.2.3 || ^4.0",
-                "yoast/phpunit-polyfills": "^1.0"
+                "psr/cache": "^2.0 || ^3.0",
+                "psr/simple-cache": "^2.0 || ^3.0",
+                "sebastian/comparator": "^1.2.3 || ^4.0 || ^5.0",
+                "symfony/filesystem": "^v6.4.0 || ^v7.1.0",
+                "yoast/phpunit-polyfills": "^2.0"
             },
             "suggest": {
                 "aws/aws-php-sns-message-validator": "To validate incoming SNS notifications",
@@ -227,11 +227,11 @@
                 "sdk"
             ],
             "support": {
-                "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
+                "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.336.6"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.339.4"
             },
-            "time": "2024-12-28T04:16:13+00:00"
+            "time": "2025-01-31T19:04:39+00:00"
         },
         {
             "name": "brick/math",
