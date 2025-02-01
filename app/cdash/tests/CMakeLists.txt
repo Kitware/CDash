@@ -65,11 +65,8 @@ add_laravel_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 
 ###################################################################################################
 
-cdash_install()
-set_tests_properties(install_2 PROPERTIES DEPENDS cypress/e2e/user-profile)
-
 add_laravel_test(/Feature/CDashTest)
-set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_2)
+set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_1)
 
 add_laravel_test(/Feature/LoginAndRegistration)
 set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /Feature/CDashTest)
@@ -278,7 +275,7 @@ set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /CDash/XmlHandler/
 ###################################################################################################
 
 cdash_install()
-set_property(TEST install_3 PROPERTY DEPENDS
+set_property(TEST install_2 PROPERTY DEPENDS
   /Feature/SubmissionValidation
   /Feature/GraphQL/FilterTest
   /Feature/GraphQL/ProjectTypeTest
@@ -318,7 +315,7 @@ set_property(TEST install_3 PROPERTY DEPENDS
 
 
 add_php_test(compressedtest)
-set_tests_properties(compressedtest PROPERTIES DEPENDS install_3)
+set_tests_properties(compressedtest PROPERTIES DEPENDS install_2)
 
 add_php_test(createpublicdashboard)
 set_tests_properties(createpublicdashboard PROPERTIES DEPENDS compressedtest)
