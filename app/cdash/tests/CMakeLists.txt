@@ -77,11 +77,8 @@ set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /Feature/C
 add_laravel_test(/Feature/ProjectPermissions)
 set_tests_properties(/Feature/ProjectPermissions PROPERTIES DEPENDS /Feature/LoginAndRegistration)
 
-add_laravel_test(/Feature/SlowPageTest)
-set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /Feature/ProjectPermissions)
-
 add_laravel_test(/Feature/GitHubWebhook)
-set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /Feature/SlowPageTest)
+set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /Feature/ProjectPermissions)
 
 add_unit_test(/CDash/BuildUseCase)
 set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /Feature/GitHubWebhook)
@@ -275,6 +272,9 @@ set_tests_properties(/Feature/Mail/AuthTokenExpiringTest PROPERTIES DEPENDS /CDa
 add_laravel_test(/Feature/Mail/AuthTokenExpiredTest)
 set_tests_properties(/Feature/Mail/AuthTokenExpiredTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/SlowPageTest)
+set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 cdash_install()
@@ -313,6 +313,7 @@ set_property(TEST install_3 PROPERTY DEPENDS
   /Feature/Jobs/NotifyExpiringAuthTokensTest
   /Feature/Mail/AuthTokenExpiringTest
   /Feature/Mail/AuthTokenExpiredTest
+  /Feature/SlowPageTest
 )
 
 
