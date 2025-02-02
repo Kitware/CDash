@@ -27,7 +27,7 @@ function(add_cypress_e2e_test TestName)
 
   add_test(
     NAME cypress/e2e/${TestName}
-    COMMAND ${NPX_EXE} cypress run
+    COMMAND xvfb-run -a ${NPX_EXE} cypress run
       --e2e
       --project ${CDash_SOURCE_DIR}
       --spec ${CDash_SOURCE_DIR}/tests/cypress/e2e/${TestName}.cy.js
