@@ -1,3 +1,9 @@
+# Completely independent Cypress tests
+add_cypress_e2e_test(user-profile)
+set_tests_properties(cypress/e2e/user-profile PROPERTIES DEPENDS install_1)
+
+
+# Cypress tests which require data from the legacy test suite
 add_cypress_e2e_test(manage-overview)
 set_tests_properties(cypress/e2e/manage-overview PROPERTIES DEPENDS simple2_async)
 
@@ -71,4 +77,7 @@ add_cypress_e2e_test(build-configure)
 set_tests_properties(cypress/e2e/build-configure PROPERTIES DEPENDS cypress/e2e/tests)
 
 add_cypress_e2e_test(all-projects)
-set_tests_properties(cypress/e2e/all-projects PROPERTIES DEPENDS cypress/e2e/build-configure)
+set_tests_properties(cypress/e2e/all-projects PROPERTIES DEPENDS projectindb)
+
+add_cypress_e2e_test(banner)
+set_tests_properties(cypress/e2e/banner PROPERTIES DEPENDS cypress/e2e/build-configure)

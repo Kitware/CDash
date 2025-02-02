@@ -276,6 +276,7 @@ set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /CDash/XmlHandler/
 
 cdash_install()
 set_property(TEST install_2 PROPERTY DEPENDS
+  cypress/e2e/user-profile
   /Feature/SubmissionValidation
   /Feature/GraphQL/FilterTest
   /Feature/GraphQL/ProjectTypeTest
@@ -362,11 +363,8 @@ set_tests_properties(image PROPERTIES DEPENDS committerinfo)
 add_php_test(displayimage)
 set_tests_properties(displayimage PROPERTIES DEPENDS image)
 
-add_cypress_e2e_test(banner)
-set_tests_properties(cypress/e2e/banner PROPERTIES DEPENDS displayimage)
-
 add_php_test(manageprojectroles)
-set_tests_properties(manageprojectroles PROPERTIES DEPENDS cypress/e2e/banner)
+set_tests_properties(manageprojectroles PROPERTIES DEPENDS displayimage)
 
 add_php_test(manageusers)
 set_tests_properties(manageusers PROPERTIES DEPENDS manageprojectroles)
