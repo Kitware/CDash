@@ -1,11 +1,3 @@
-function(add_vue_test TestName)
-  add_test(
-    NAME ${TestName}
-    COMMAND "node_modules/.bin/jest" "tests/${TestName}.spec.js"
-    WORKING_DIRECTORY "${CDash_SOURCE_DIR}"
-  )
-endfunction()
-
 function(set_app_url)
   if(DEFINED ENV{APP_URL})
     set(APP_URL "$ENV{APP_URL}" PARENT_SCOPE)
@@ -94,15 +86,10 @@ set_tests_properties(eslint PROPERTIES
   FAIL_REGULAR_EXPRESSION " \+[0-9]\+:[0-9]\+ \+warning"
 )
 
-add_vue_test(Spec/build-configure)
-add_vue_test(Spec/build-summary)
-add_vue_test(Spec/edit-project)
-add_vue_test(Spec/manage-measurements)
-add_vue_test(Spec/page-header/header-menu)
-add_vue_test(Spec/test-details)
-
 add_cypress_component_test(loading-indicator)
 
 cdash_install()
 
 add_subdirectory(cypress/e2e)
+
+add_subdirectory(Spec)
