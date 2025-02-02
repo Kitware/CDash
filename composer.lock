@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "48046bd05ebd6d8ecdd57a8b69362899",
+    "content-hash": "e3183d5ad95985fd18e5272770c1b3a4",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -3759,16 +3759,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v6.47.0",
+            "version": "v6.49.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "426307f95ec9dbdbbb40eaa7475215f5abbbc847"
+                "reference": "f6b46c159de97e266e1a7c1c52fa0ca2689a41bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/426307f95ec9dbdbbb40eaa7475215f5abbbc847",
-                "reference": "426307f95ec9dbdbbb40eaa7475215f5abbbc847",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/f6b46c159de97e266e1a7c1c52fa0ca2689a41bc",
+                "reference": "f6b46c159de97e266e1a7c1c52fa0ca2689a41bc",
                 "shasum": ""
             },
             "require": {
@@ -3833,6 +3833,7 @@
                         "Nuwave\\Lighthouse\\LighthouseServiceProvider",
                         "Nuwave\\Lighthouse\\Async\\AsyncServiceProvider",
                         "Nuwave\\Lighthouse\\Auth\\AuthServiceProvider",
+                        "Nuwave\\Lighthouse\\Bind\\BindServiceProvider",
                         "Nuwave\\Lighthouse\\Cache\\CacheServiceProvider",
                         "Nuwave\\Lighthouse\\GlobalId\\GlobalIdServiceProvider",
                         "Nuwave\\Lighthouse\\OrderBy\\OrderByServiceProvider",
@@ -3885,7 +3886,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2024-12-11T11:05:42+00:00"
+            "time": "2025-01-17T15:31:00+00:00"
         },
         {
             "name": "onelogin/php-saml",
