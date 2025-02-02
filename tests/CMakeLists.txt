@@ -32,24 +32,6 @@ function(add_cypress_e2e_test TestName)
   )
 endfunction()
 
-function(add_cypress_component_test TestName)
-  set_app_url()
-
-  add_test(
-    NAME cypress/component/${TestName}
-    COMMAND ${NPX_EXE} cypress run
-      --component
-      --project ${CDash_SOURCE_DIR}
-      --spec ${CDash_SOURCE_DIR}/tests/cypress/component/${TestName}.cy.js
-      --config baseUrl=${APP_URL}
-  )
-  # Cypress tries to put stuff in our home directory, which doesn't work for /var/www.
-  set_tests_properties(cypress/component/${TestName} PROPERTIES
-    ENVIRONMENT "HOME=${CDash_BINARY_DIR};"
-    DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
-  )
-endfunction()
-
 add_test(
   NAME php_style_check
   COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/php-cs-fixer fix --dry-run --allow-risky=yes
@@ -86,10 +68,8 @@ set_tests_properties(eslint PROPERTIES
   FAIL_REGULAR_EXPRESSION " \+[0-9]\+:[0-9]\+ \+warning"
 )
 
-add_cypress_component_test(loading-indicator)
-
 cdash_install()
 
 add_subdirectory(cypress/e2e)
-
+add_subdirectory(cypress/component)
 add_subdirectory(Spec)
