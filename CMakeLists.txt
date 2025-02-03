@@ -41,18 +41,6 @@ configure_file(
 # Any tests which need to perform file I/O write files here
 file(MAKE_DIRECTORY "/tmp/CDashTesting")
 
-# For coverage builds on apache web servers, provide a default
-# .htaccess file, but only if explicitly asked to:
-option(CDASH_CONFIGURE_HTACCESS_FILE "Create .htaccess file for coverage testing?" OFF)
-if(CDASH_CONFIGURE_HTACCESS_FILE)
-  # Yes, the output of this configure_file is intentionally in the
-  # source directory
-  configure_file(
-    ${testing_dir}/htaccess.in
-    ${CDash_SOURCE_DIR}/app/cdash/public/.htaccess
-  )
-endif()
-
 find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php REQUIRED)
 find_program(NPX_EXE NAMES npx PATHS c:/usr/bin/npx /usr/bin/npx REQUIRED)
 
